@@ -49,6 +49,8 @@
                 </jet-button>
             </div>
         </form>
+
+        <socialstream-providers v-if="$page.props.socialstream.show" />
     </jet-authentication-card>
 </template>
 
@@ -60,6 +62,7 @@
     import JetCheckbox from "@/Jetstream/Checkbox";
     import JetLabel from '@/Jetstream/Label'
     import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import SocialstreamProviders from '@/Socialstream/Providers'
 
     export default {
         components: {
@@ -69,7 +72,8 @@
             JetInput,
             JetCheckbox,
             JetLabel,
-            JetValidationErrors
+            JetValidationErrors,
+            SocialstreamProviders
         },
 
         data() {
