@@ -3,7 +3,6 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,12 +27,3 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
-
-Route::get('/auth/google', function () {
-    return Socialite::driver('google')->redirect();
-});
-
-Route::get('/auth/google/callback', function () {
-    $user = Socialite::driver('google')->user();
-    redirect('/');
-});
