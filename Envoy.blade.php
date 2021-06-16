@@ -3,23 +3,49 @@
 @setup
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, '.env.deploy');
     $dotenv->safeLoad();
-    $now = new DateTime();
-    $herokuConfigKeys = [
-        'APP_DEBUG',
+
+    $branch = "master";
+
+    $heroku_app = "bysdb-starter-kit";
+    $heroku_vars = [
+        'APP_NAME',
         'APP_ENV',
         'APP_KEY',
-        'APP_NAME',
-        'APP_URL',
+        'APP_DEBUG',
+        'DB_CONNECTION',
+        'DB_HOST',
+        'DB_PORT',
+        'DB_DATABASE',
+        'DB_USERNAME',
+        'DB_PASSWORD',
     ];
-    $herokuApp = "bysdb-starter-kit";
-    $branch = "master";
 @endsetup
 
-@task('heroku-set-config-vars')
-    echo "Heroku: set config variables";
+@story('heroku:deploy')
+    install-dependencies
+    heroku:config-set
+    heroku:push
+    heroku:migration
+@endstory
+
+@task('heroku:migration')
+    heroku run php artisan migrate --force
+@endtask
+
+@task('install-dependencies')
+    composer install
+    npm install
+    npm run prod
+@endtask
+
+@task('heroku:config-set')
     @foreach ($_ENV as $key => $value)
-        @if (in_array($key, $herokuConfigKeys))
-            heroku config:set {!! $key !!}={!! $value !!} -a {{ $herokuApp }}
+        @if (in_array($key, $heroku_vars))
+            heroku config:set {{ $key }}={{ $value }} -a {{ $heroku_app }}
         @endif
     @endforeach
+@endtask
+
+@task('heroku:push')
+    git push heroku master
 @endtask
