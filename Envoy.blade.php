@@ -26,10 +26,17 @@
     heroku:config-set
     heroku:push
     heroku:migration
+    heroku:clean-after-deploy
 @endstory
 
 @task('heroku:migration')
     heroku run php artisan migrate --force
+@endtask
+
+@task('heroku:clean-after-deploy')
+    heroku run php artisan optimize:clear
+    heroku run rm Envoy.blade.php
+    heroku run rm .env.deploy
 @endtask
 
 @task('install-dependencies')
