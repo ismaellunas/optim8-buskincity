@@ -38,10 +38,10 @@
 
                                 <hr class="navbar-divider">
 
-                                <form @submit.prevent="logout">
-                                    <jet-dropdown-link class="navbar-item">
+                                <form method="POST" @submit.prevent="logout">
+                                    <jet-responsive-nav-link as="button" class="navbar-item">
                                         Log Out
-                                    </jet-dropdown-link>
+                                    </jet-responsive-nav-link>
                                 </form>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
     import JetDropdown from '@/Jetstream/Dropdown'
     import JetDropdownLink from '@/Jetstream/DropdownLink'
     import JetNavLink from '@/Jetstream/NavLink'
-    //import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
+    import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
 
     export default {
         components: {
@@ -86,7 +86,7 @@
             JetDropdown,
             JetDropdownLink,
             JetNavLink,
-            //JetResponsiveNavLink,
+            JetResponsiveNavLink,
         },
 
         data() {
