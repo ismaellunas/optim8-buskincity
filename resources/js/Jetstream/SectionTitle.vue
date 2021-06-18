@@ -1,16 +1,14 @@
 <template>
-    <div class="md:col-span-1 flex justify-between">
-        <div class="px-4 sm:px-0">
-            <h3 class="text-lg font-medium text-gray-900">
-                <slot name="title"></slot>
-            </h3>
+    <div class="container py-4">
+        <h1 class="is-size-4 has-text-weight-semibold">
+            <slot name="title"></slot>
+        </h1>
 
-            <p class="mt-1 text-sm text-gray-600">
-                <slot name="description"></slot>
-            </p>
-        </div>
+        <h2 class="is-size-6">
+            <slot name="description"></slot>
+        </h2>
 
-        <div class="px-4 sm:px-0">
+        <div class="px-4 px-0-mobile">
             <slot name="aside"></slot>
         </div>
     </div>
