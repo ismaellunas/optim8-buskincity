@@ -22,7 +22,7 @@
                                     <span class=mr-3>
                                         Already have an account?
                                     </span>
-                                    <inertia-link href="/dashboard" class="">
+                                    <inertia-link :href="route('login')" class="">
                                         <button class="button">
                                             Log In
                                         </button>
