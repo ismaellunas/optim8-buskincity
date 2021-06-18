@@ -36,4 +36,9 @@ return [
         'redirect' => env('APP_URL').'/oauth/google/callback',
     ],
 
+    'facebook' => [
+        'client_id' => env('FACEBOOK_CLIENT_ID'),
+        'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+        'redirect' => env('APP_URL').'/oauth/facebook/callback',
+    ],
 ];
