@@ -1,37 +1,68 @@
 <template>
-    <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
+    <section class="hero is-fullheight">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="columns">
+                    <div class="column is-two-fifths has-text-left">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image is-3by4">
+                                    <img src="https://dummyimage.com/550x715/e5e5e5/ffffff.jpg">
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-three-fifths has-text-left">
+                        <div class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <inertia-link :href="route('login')">
+                                        <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                                        <span>Back</span>
+                                    </inertia-link>
+                                </div>
+                            </div>
+                            <div class="level-right">
+                                <div class="level-item">
+                                </div>
+                            </div>
+                        </div>
+                        <section class="section">
+                            <div class="columns">
+                                <div class="column is-9 is-offset-1">
+                                    <div class="mb-4">
+                                        Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
+                                    </div>
 
-        <div class="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
-        </div>
+                                    <div v-if="status" class="">
+                                        {{ status }}
+                                    </div>
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
-        </div>
+                                    <jet-validation-errors class="mb-4" />
 
-        <jet-validation-errors class="mb-4" />
+                                    <form @submit.prevent="submit">
+                                        <div>
+                                            <jet-label for="email" value="Email" />
+                                            <jet-input id="email" type="email" v-model="form.email" required autofocus />
+                                        </div>
 
-        <form @submit.prevent="submit">
-            <div>
-                <jet-label for="email" value="Email" />
-                <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required autofocus />
+                                        <div class="mt-4">
+                                            <jet-button class="button is-info" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                                Email Password Reset Link
+                                            </jet-button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
             </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Email Password Reset Link
-                </jet-button>
-            </div>
-        </form>
-    </jet-authentication-card>
+        </div>
+    </section>
 </template>
 
 <script>
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
     import JetButton from '@/Jetstream/Button'
     import JetInput from '@/Jetstream/Input'
     import JetLabel from '@/Jetstream/Label'
@@ -39,8 +70,6 @@
 
     export default {
         components: {
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
             JetButton,
             JetInput,
             JetLabel,
@@ -61,7 +90,8 @@
 
         methods: {
             submit() {
-                this.form.post(this.route('password.email'))
+                return false;
+                //this.form.post(this.route('password.email'))
             }
         }
     }

@@ -1,79 +1,161 @@
 <template>
-    <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
-
-        <jet-validation-errors class="mb-4" />
-
-        <form @submit.prevent="submit">
-            <div>
-                <jet-label for="name" value="Name" />
-                <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus autocomplete="name" />
-            </div>
-
-            <div class="mt-4">
-                <jet-label for="email" value="Email" />
-                <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required />
-            </div>
-
-            <div class="mt-4">
-                <jet-label for="password" value="Password" />
-                <jet-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
-            </div>
-
-            <div class="mt-4">
-                <jet-label for="password_confirmation" value="Confirm Password" />
-                <jet-input id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
-            </div>
-
-            <div class="mt-4" v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature">
-                <jet-label for="terms">
-                    <div class="flex items-center">
-                        <jet-checkbox name="terms" id="terms" v-model:checked="form.terms" />
-
-                        <div class="ml-2">
-                            I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
+    <section class="hero is-fullheight">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="columns">
+                    <div class="column is-two-fifths has-text-left">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image is-3by4">
+                                    <img src="https://dummyimage.com/550x715/e5e5e5/ffffff.jpg">
+                                </figure>
+                            </div>
                         </div>
                     </div>
-                </jet-label>
+                    <div class="column is-three-fifths has-text-left">
+                        <div class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <inertia-link :href="route('login')">
+                                        <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                                        <span>Back</span>
+                                    </inertia-link>
+                                </div>
+                            </div>
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <span class=mr-3>
+                                        Already have an account?
+                                    </span>
+                                    <inertia-link :href="route('login')" class="">
+                                        <button class="button">
+                                            Login
+                                        </button>
+                                    </inertia-link>
+                                </div>
+                            </div>
+                        </div>
+                        <section class="section">
+                            <div class="columns">
+                                <div class="column is-9 is-offset-1">
+                                    <h1 class="title">
+                                        Create Account
+                                    </h1>
+                                    <h2 class="subtitle">
+                                        Lorem ipsum dolor sit amet.
+                                    </h2>
+                                    <div class="has-text-left">
+                                        <!--
+                                        <form @submit.prevent="submit">
+                                            <div class="field">
+                                                <jet-label for="email" value="Email" />
+                                                <div class="control">
+                                                    <jet-input
+                                                        id="email"
+                                                        type="email"
+                                                        v-model="form.email"
+                                                        required
+                                                        autofocus
+                                                        placeholder="Enter your email"
+                                                        />
+                                                </div>
+                                            </div>
+                                            <div class="field">
+                                                <jet-label for="password" value="Password" />
+                                                <div class="control">
+                                                    <jet-input
+                                                        id="password"
+                                                        type="password"
+                                                        v-model="form.password"
+                                                        required
+                                                        autocomplete="current-password"
+                                                        placeholder="Enter your password"
+                                                        />
+                                                </div>
+                                            </div>
+                                            <div class="field columns">
+                                                <div class="column has-text-left">
+                                                    <label class="checkbox">
+                                                        <jet-checkbox name="remember" v-model:checked="form.remember" />
+                                                        <span>Remember me</span>
+                                                    </label>
+                                                </div>
+                                                <div class="column has-text-right">
+                                                    <inertia-link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                                                        Forgot your password?
+                                                    </inertia-link>
+                                                </div>
+                                            </div>
+                                            <jet-button class="button is-block is-info is-fullwidth">
+                                                Log In <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                            </jet-button>
+                                        </form>
+                                        -->
+
+                                        <jet-validation-errors class="mb-4" />
+
+                                        <form @submit.prevent="submit">
+                                            <div class="field">
+                                                <jet-label for="name" value="Name" />
+                                                <jet-input id="name" type="text" v-model="form.name" required autofocus autocomplete="name" />
+                                            </div>
+
+                                            <div class="field">
+                                                <jet-label for="email" value="Email" />
+                                                <jet-input id="email" type="email" v-model="form.email" required />
+                                            </div>
+
+                                            <div class="field">
+                                                <jet-label for="password" value="Password" />
+                                                <jet-input id="password" type="password" v-model="form.password" required autocomplete="new-password" />
+                                            </div>
+
+                                            <div class="field">
+                                                <jet-label for="password_confirmation" value="Confirm Password" />
+                                                <jet-input id="password_confirmation" type="password" v-model="form.password_confirmation" required autocomplete="new-password" />
+                                            </div>
+
+                                            <div class="flex mt-4">
+                                                <div class="columns is-gapless">
+                                                    <div class="column is-two-thirds">
+                                                        <span>
+                                                            By clicking on <b>Create Account</b> you agree with our Terms and Conditions
+                                                        </span>
+                                                    </div>
+                                                    <div class="column is-one-third has-text-right">
+                                                        <jet-button class="button is-info" :disabled="form.processing">
+                                                            Create Account
+                                                        </jet-button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
             </div>
+        </div>
+    </section>
 
-            <div class="flex items-center justify-end mt-4">
-                <inertia-link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                    Already registered?
-                </inertia-link>
-
-                <jet-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Register
-                </jet-button>
-            </div>
-        </form>
-
-        <socialstream-providers v-if="$page.props.socialstream.show" />
-    </jet-authentication-card>
 </template>
 
 <script>
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
     import JetButton from '@/Jetstream/Button'
     import JetInput from '@/Jetstream/Input'
     import JetCheckbox from "@/Jetstream/Checkbox";
-    import JetLabel from '@/Jetstream/Label'
     import JetValidationErrors from '@/Jetstream/ValidationErrors'
-    import SocialstreamProviders from '@/Socialstream/Providers'
+    import JetLabel from '@/Jetstream/Label'
 
     export default {
         components: {
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
             JetButton,
             JetInput,
             JetCheckbox,
-            JetLabel,
             JetValidationErrors,
-            SocialstreamProviders
+            JetLabel
         },
 
         data() {
@@ -83,7 +165,7 @@
                     email: '',
                     password: '',
                     password_confirmation: '',
-                    terms: false,
+                    terms: true,
                 })
             }
         },

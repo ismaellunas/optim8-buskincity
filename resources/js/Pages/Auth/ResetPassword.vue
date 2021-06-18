@@ -61,6 +61,7 @@
                     email: this.email,
                     password: '',
                     password_confirmation: '',
+                    processing: true,
                 })
             }
         },
