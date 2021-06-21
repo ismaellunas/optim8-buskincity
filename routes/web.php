@@ -27,3 +27,14 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
+
+Route::get('/user/privacy', function() {
+    echo "Privacy page";
+});
+Route::get('/user/service', function() {
+    echo "Service page";
+});
+Route::get('/user/remove-facebook', function() {
+    echo "Remove facebook account page";
+});
+
