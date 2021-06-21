@@ -37,4 +37,3 @@ Route::get('/user/service', function() {
 Route::get('/user/remove-facebook', function() {
     echo "Remove facebook account page";
 });
-
