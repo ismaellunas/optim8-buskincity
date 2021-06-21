@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="px-3 flex items-center justify-between">
+        <div class="px-3">
             <div class="flex items-center">
 
                 <facebook-icon class="h-6 w-6 mr-2" v-if="provider === 'facebook'"/>

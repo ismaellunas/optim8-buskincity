@@ -34,18 +34,21 @@
 
                 <div v-if="$page.props.socialstream.show">
                     <connected-accounts-form class="mt-10 sm:mt-0" />
+
+                    <jet-section-border />
                 </div>
 
                 <div v-if="$page.props.socialstream.hasPassword">
-                    <jet-section-border />
-
                     <logout-other-browser-sessions-form  :sessions="sessions" class="mt-10 sm:mt-0" />
+
+                    <jet-section-border />
                 </div>
 
                 <div v-if="$page.props.jetstream.hasAccountDeletionFeatures && $page.props.socialstream.hasPassword">
-                    <jet-section-border />
 
                     <delete-user-form class="mt-10 sm:mt-0" />
+
+                    <jet-section-border />
                 </div>
             </div>
         </div>

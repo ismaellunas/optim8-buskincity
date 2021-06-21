@@ -44,6 +44,11 @@
                 <jet-button @click="confirmLogout">
                     Log Out Other Browser Sessions
                 </jet-button>
+
+                <jet-action-message :on="form.recentlySuccessful" class="ml-3">
+                    Done.
+                </jet-action-message>
+
             </div>
 
             <!-- Log Out Other Devices Confirmation Modal -->
