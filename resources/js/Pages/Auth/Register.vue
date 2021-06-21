@@ -16,10 +16,10 @@
                         <div class="level">
                             <div class="level-left">
                                 <div class="level-item">
-                                    <inertia-link :href="route('login')">
+                                    <a @click.prevent="backOrOpenSocialList">
                                         <span class="icon"><i class="fas fa-arrow-left"></i></span>
                                         <span>Back</span>
-                                    </inertia-link>
+                                    </a>
                                 </div>
                             </div>
                             <div class="level-right">
@@ -36,7 +36,30 @@
                             </div>
                         </div>
                         <section class="section">
-                            <div class="columns">
+                            <div class="columns" v-bind:class="{'is-hidden': !isSocialMediaLogin}">
+                                <div class="column is-9 is-offset-1">
+                                    <h1 class="title">Sign Up</h1>
+                                    <h2 class="subtitle">
+                                        <span>Are you performer? </span>
+                                        <span>Sign Up Here</span>
+                                    </h2>
+                                    <div class="has-text-centered">
+
+                                        <sdb-social-media-list/>
+
+                                        <div class="h-line-wrapper">
+                                            <span class="h-line-words">or</span>
+                                        </div>
+                                        <a
+                                            class="box"
+                                            @click.prevent="toggleIsSocialMediaLogin"
+                                            >
+                                            <i class="fas fa-envelope"></i> Continue with <b>Email</b>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="columns" v-bind:class="{'is-hidden': isSocialMediaLogin}">
                                 <div class="column is-9 is-offset-1">
                                     <h1 class="title">
                                         Create Account
@@ -148,6 +171,7 @@
     import JetCheckbox from "@/Jetstream/Checkbox";
     import JetValidationErrors from '@/Jetstream/ValidationErrors'
     import JetLabel from '@/Jetstream/Label'
+    import SdbSocialMediaList from '@/Sdb/SocialMediaList'
 
     export default {
         components: {
@@ -155,11 +179,13 @@
             JetInput,
             JetCheckbox,
             JetValidationErrors,
-            JetLabel
+            JetLabel,
+            SdbSocialMediaList,
         },
 
         data() {
             return {
+                isSocialMediaLogin: true,
                 form: this.$inertia.form({
                     name: '',
                     email: '',
@@ -175,7 +201,17 @@
                 this.form.post(this.route('register'), {
                     onFinish: () => this.form.reset('password', 'password_confirmation'),
                 })
-            }
+            },
+            toggleIsSocialMediaLogin() {
+                this.isSocialMediaLogin = !this.isSocialMediaLogin;
+            },
+            backOrOpenSocialList() {
+                if (!this.isSocialMediaLogin) {
+                    this.toggleIsSocialMediaLogin();
+                } else {
+                    this.$inertia.get('/login');
+                }
+            },
         }
     }
 </script>

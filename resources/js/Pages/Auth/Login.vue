@@ -36,7 +36,6 @@
                             </div>
                         </div>
                         <section class="section">
-
                             <div class="columns" v-bind:class="{'is-hidden': !isSocialMediaLogin}">
                                 <div class="column is-9 is-offset-1">
                                     <h1 class="title">Log In</h1>
@@ -60,7 +59,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="columns" v-bind:class="{'is-hidden': isSocialMediaLogin}">
                                 <div class="column is-9 is-offset-1">
                                     <h1 class="title">
