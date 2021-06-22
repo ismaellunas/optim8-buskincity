@@ -9,27 +9,27 @@
         </template>
 
         <template #content>
-            <h3 class="text-lg font-medium text-gray-900" v-if="$page.props.socialstream.connectedAccounts.length === 0">
+            <h3 class="" v-if="$page.props.socialstream.connectedAccounts.length === 0">
                 You have no connected accounts.
             </h3>
-            <h3 class="text-lg font-medium text-gray-900" v-else>
+            <h3 class="" v-else>
                 Your connected accounts.
             </h3>
 
-            <div class="mt-3 ax-w-xl text-sm text-gray-600">
+            <div class="">
                 You are free to connect any social accounts to your profile and may remove any connected accounts at any time. If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.
             </div>
 
-            <div class="mt-5 space-y-6">
+            <div class="mt-5">
                 <div v-for="(provider) in $page.props.socialstream.providers" :key="provider">
                     <connected-account :provider="provider" :created-at="hasAccountForProvider(provider) ? getAccountForProvider(provider).created_at : null">
                         <template #action>
                             <template v-if="hasAccountForProvider(provider)">
-                                <div class="flex items-center space-x-6">
+                                <div class="flex is-justify-content-center my-2">
                                     <button
                                         v-if="$page.props.jetstream.managesProfilePhotos && getAccountForProvider(provider).avatar_path"
                                         @click="setProfilePhoto(getAccountForProvider(provider).id)"
-                                        class="cursor-pointer ml-6 text-sm text-gray-500 focus:outline-none">
+                                        class="cursor-pointer focus:outline-none">
                                         Use Avatar as Profile Photo
                                     </button>
 
