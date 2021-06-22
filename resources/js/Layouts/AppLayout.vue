@@ -1,73 +1,78 @@
 <template>
-    <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
-        <div class="container">
-            <div class="navbar-brand">
-                <inertia-link :href="route('dashboard')" class="navbar-item">
-                    <jet-application-mark class="" />
-                </inertia-link>
+    <div id="main-container-wrapper">
+        <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
+            <div class="container">
+                <div class="navbar-brand">
+                    <inertia-link :href="route('dashboard')" class="navbar-item">
+                        <jet-application-mark class="" />
+                    </inertia-link>
 
-                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>
-            </div>
-
-            <div id="navbarBasicExample" class="navbar-menu">
-                <div class="navbar-start">
-                    <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                        Dashboard
-                    </jet-nav-link>
+                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
                 </div>
 
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link">
-                                {{ $page.props.user.name }}
-                            </a>
+                <div id="navbarBasicExample" class="navbar-menu">
+                    <div class="navbar-start">
+                        <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
+                            Dashboard
+                        </jet-nav-link>
+                        <jet-nav-link href="/module" :active="route().current('dashboard')">
+                            Module
+                        </jet-nav-link>
+                    </div>
 
-                            <div class="navbar-dropdown is-boxed">
-                                <jet-dropdown-link :href="route('profile.show')" class="navbar-item">
-                                    Profile
-                                </jet-dropdown-link>
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <div class="navbar-item has-dropdown is-hoverable">
+                                <a class="navbar-link">
+                                    {{ $page.props.user.name }}
+                                </a>
 
-                                <jet-dropdown-link :href="route('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures" class="navbar-item">
-                                    API Tokens
-                                </jet-dropdown-link>
+                                <div class="navbar-dropdown is-boxed">
+                                    <jet-dropdown-link :href="route('profile.show')" class="navbar-item">
+                                        Profile
+                                    </jet-dropdown-link>
 
-                                <hr class="navbar-divider">
+                                    <jet-dropdown-link :href="route('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures" class="navbar-item">
+                                        API Tokens
+                                    </jet-dropdown-link>
 
-                                <form method="POST" @submit.prevent="logout">
-                                    <jet-responsive-nav-link as="button" class="navbar-item">
-                                        Log Out
-                                    </jet-responsive-nav-link>
-                                </form>
+                                    <hr class="navbar-divider">
+
+                                    <form method="POST" @submit.prevent="logout">
+                                        <jet-responsive-nav-link as="button" class="navbar-item">
+                                            Log Out
+                                        </jet-responsive-nav-link>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <!-- <jet-banner /> -->
+        <!-- <jet-banner /> -->
 
-    <section class="hero is-small is-primary">
-        <div class="hero-body">
-            <div class="container">
-                <p class="title">
-                    <slot name="header"></slot>
-                </p>
+        <section class="hero is-small is-primary">
+            <div class="hero-body">
+                <div class="container">
+                    <p class="title">
+                        <slot name="header"></slot>
+                    </p>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <div class="container mt-4">
-        <!-- Page Content -->
-        <main>
-            <slot></slot>
-        </main>
+        <div id="main-container" class="container mt-4">
+            <!-- Page Content -->
+            <main>
+                <slot></slot>
+            </main>
+        </div>
     </div>
 </template>
 
