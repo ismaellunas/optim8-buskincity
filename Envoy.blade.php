@@ -1,7 +1,8 @@
 @servers(['localhost' => '127.0.0.1'])
 
 @setup
-    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, '.env.deploy');
+    $env = "deploy";
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, ".env.$env");
     $dotenv->safeLoad();
 
     $branch = "master";
@@ -18,6 +19,10 @@
         'DB_DATABASE',
         'DB_USERNAME',
         'DB_PASSWORD',
+        'GOOGLE_CLIENT_ID',
+        'GOOGLE_CLIENT_SECRET',
+        'FACEBOOK_CLIENT_ID',
+        'FACEBOOK_CLIENT_SECRET',
     ];
 @endsetup
 
