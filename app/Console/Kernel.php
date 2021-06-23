@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use App\Models\Cron;
+//use App\Models\Cron;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -30,7 +30,8 @@ class Kernel extends ConsoleKernel
             ->command('telegram:send-trial-cron-message')
             ->everyMinute()
             ->when(function () {
-                return Cron::shouldIRun('telegram:send-trial-cron-message', 10); //returns true every 10 minutes
+                return true;
+                //return Cron::shouldIRun('telegram:send-trial-cron-message', 1); //returns true every 10 minutes
             });
     }
 
