@@ -3,6 +3,9 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UserRoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,4 +39,10 @@ Route::get('/user/service', function() {
 });
 Route::get('/user/remove-facebook', function() {
     echo "Remove facebook account page";
+});
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::resource('/roles', RoleController::class);
+    Route::resource('/permissions', PermissionController::class);
+    Route::resource('/user-roles', UserRoleController::class);
 });
