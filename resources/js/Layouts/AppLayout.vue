@@ -19,8 +19,14 @@
                         <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
                             Dashboard
                         </jet-nav-link>
-                        <jet-nav-link href="/module" :active="route().current('dashboard')">
-                            Module
+                        <jet-nav-link :href="route('roles.index')" :active="route().current('dashboard')">
+                            Roles
+                        </jet-nav-link>
+                        <jet-nav-link :href="route('permissions.index')" :active="route().current('dashboard')">
+                            Permissions
+                        </jet-nav-link>
+                        <jet-nav-link :href="route('user-roles.index')" :active="route().current('dashboard')">
+                            UserRole
                         </jet-nav-link>
                     </div>
 
