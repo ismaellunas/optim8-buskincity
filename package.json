@@ -12,7 +12,7 @@
     "devDependencies": {
         "@inertiajs/inertia": "^0.8.4",
         "@inertiajs/inertia-vue3": "^0.3.5",
-        "@inertiajs/progress": "^0.2.4",
+        "@inertiajs/progress": "^0.2.5",
         "@vue/compiler-sfc": "^3.0.5",
         "axios": "^0.21",
         "browser-sync": "^2.26.14",
@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "@ckeditor/ckeditor5-build-inline": "^28.0.0",
+        "@ckeditor/ckeditor5-vue": "^2.0.1",
         "bulma": "^0.9.2",
         "vuedraggable": "^4.0.3"
     }
