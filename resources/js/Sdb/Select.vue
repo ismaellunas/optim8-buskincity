@@ -7,7 +7,7 @@
 </template>
 
 <script>
-    import { useModelWrapper } from '@/Libs/functions';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         props: ['modelValue', 'class'],
