@@ -1,20 +1,22 @@
 <template>
-    <div class="select">
-        <select
-            :value="modelValue"
-            @input="$emit('update:modelValue', $event.target.value)"
-            ref="input"
-            >
+    <div class="select" :class="class" >
+        <select v-model="selected">
             <slot></slot>
         </select>
     </div>
 </template>
 
 <script>
-    export default {
-        props: ['modelValue'],
+    import { useModelWrapper } from '@/Libs/utils';
 
-        emits: ['update:modelValue'],
+    export default {
+        props: ['modelValue', 'class'],
+
+        setup(props, { emit }) {
+            return {
+                selected: useModelWrapper(props, emit),
+            };
+        },
 
         methods: {
             focus() {

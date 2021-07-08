@@ -23,6 +23,9 @@
         'GOOGLE_CLIENT_SECRET',
         'FACEBOOK_CLIENT_ID',
         'FACEBOOK_CLIENT_SECRET',
+        'CLOUDINARY_URL',
+        'CLOUDINARY_UPLOAD_PRESET',
+        'CLOUDINARY_NOTIFICATION_URL',
     ];
 @endsetup
 
