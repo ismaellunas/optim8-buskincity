@@ -10225,6 +10225,11 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   padding: 3rem 1.5rem 6rem;
 }
 
+.is-vertical-center {
+  display: flex;
+  align-items: center;
+}
+
 .h-line-wrapper {
   width: 100%;
   text-align: center;
@@ -10239,9 +10244,4 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 
 #main-container-wrapper {
   height: 100vh;
-}
-
-.is-vertical-center {
-  display: flex;
-  align-items: center;
 }
