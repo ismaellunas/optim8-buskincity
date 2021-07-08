@@ -11,12 +11,18 @@
             </figure>
         </div>
         <div class="card-content" v-if="isEditMode">
-            <button class="button" @click="isFormOpen = true" v-if="!isFormOpen">
+            <sdb-button
+                @click="isFormOpen = true"
+                type="button"
+                v-if="!isFormOpen"
+            >
                 <i class="fas fa-edit"></i>
-            </button>
+
+            </sdb-button>
             <upload-image-content
                 v-else
-                :route="route('pages.upload-image')"
+                :uploadRoute="route('pages.upload-image')"
+                v-model="content.cardImage.figure.image.src"
                 @close-form="closeForm"
                 @uploaded-image="updateImageSource"
             />
@@ -42,6 +48,7 @@
 </template>
 
 <script>
+    import SdbButton from '@/Sdb/Button';
     import SdbCkeditorInline from '@/Sdb/CkeditorInline'
     import UploadImageContent from '@/Blocks/Contents/UploadImage';
     import card from '@/ComponentStructures/card'
@@ -49,6 +56,7 @@
 
     export default {
         components: {
+            SdbButton,
             SdbCkeditorInline,
             UploadImageContent,
         },
