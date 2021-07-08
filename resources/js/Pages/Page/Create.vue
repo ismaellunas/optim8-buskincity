@@ -16,7 +16,6 @@
                                 v-model:meta_description="form.meta_description"
                                 v-model:meta_keywords="form.meta_keywords"
                                 v-model:status="form.status"
-                                :entityId="entityId"
                                 :errors="errors"
                                 :disableInput="disableInput"
                                 :statusOptions="statusOptions"
