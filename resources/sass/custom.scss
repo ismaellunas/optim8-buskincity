@@ -1,4 +1,9 @@
 // custom.scss
+.is-vertical-center {
+  display: flex;
+  align-items: center;
+}
+
 .h-line-wrapper {
   width: 100%; 
   text-align: center; 
