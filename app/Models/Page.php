@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Casts\AsCollection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
+
+class Page extends Model
+{
+    use HasFactory;
+    use MediaAlly;
+
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 1;
+
+    protected $casts = [
+        'data' => AsCollection::class,
+    ];
+
+    protected $fillable = [
+        'title',
+        'slug',
+        'data',
+    ];
+
+    public static function getStatusOptions(): array
+    {
+        return [
+            [
+                'id' => self::STATUS_INACTIVE,
+                'value' => 'Inactive',
+            ],
+            [
+                'id' => self::STATUS_ACTIVE,
+                'value' => 'Active',
+            ]
+        ];
+    }
+}
