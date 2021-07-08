@@ -1,12 +1,12 @@
 <template>
     <div class="column" :class="{'edit-mode-column': isEditMode}">
         <draggable
-            class="dragArea list-group"
-            v-model="components"
-            group="components"
             :emptyInsertThreshold="emptyInsertThreshold"
             @change="log"
+            class="dragArea list-group"
+            group="components"
             item-key="id"
+            v-model="components"
         >
             <template #item="{ element }">
                 <component

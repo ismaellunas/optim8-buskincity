@@ -3,8 +3,8 @@
         <template v-for="(column, index) in block.columns">
             <block-column
                 :id="column.id"
-                v-model="block.columns[index].components"
                 :isEditMode="isEditMode"
+                v-model="block.columns[index].components"
             />
         </template>
         <div class="edit-mode-buttons" v-if="isEditMode">
@@ -50,7 +50,6 @@
 
 <style scoped>
 .edit-mode-buttons {
-    /*opacity: 0;*/
     display: none;
     position: absolute;
     bottom: 0.5rem;
