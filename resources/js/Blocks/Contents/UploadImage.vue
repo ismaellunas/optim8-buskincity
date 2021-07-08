@@ -33,7 +33,11 @@
     import { useModelWrapper, isBlank } from '@/Libs/utils';
 
     export default {
-        props: ['uploadRoute', 'modelValue'],
+        props: [
+            'entityId',
+            'modelValue',
+            'uploadRoute',
+        ],
         setup(props, { emit }) {
             return {
                 imageSrc: useModelWrapper(props, emit),
@@ -45,7 +49,7 @@
             }
         },
         methods: {
-            submitFile(){
+            submitFile() {
                 let formData = new FormData();
                 let self = this;
 
@@ -66,7 +70,8 @@
                     self.imageSrc = response.data.imagePath;
                     self.closeForm();
                 })
-                .catch(function() {
+                .catch(function(error) {
+                    console.log(error);
                 });
             },
             onFileChange() {
