@@ -1,0 +1,13 @@
+.edit-mode-buttons {
+    /*opacity: 0;*/
+    display: none;
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0.5rem;
+}
+.edit-mode-content {
+    position: relative;
+}
+.edit-mode-content:hover .edit-mode-buttons {
+    display: block;
+}
