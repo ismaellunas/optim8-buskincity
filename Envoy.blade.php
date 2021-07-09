@@ -30,7 +30,9 @@
 @endsetup
 
 @story('heroku:deploy')
+    git-restore-and-stash
     install-dependencies
+    git-commit-deployment
     heroku:config-set
     heroku:push
     heroku:migration
@@ -51,6 +53,17 @@
     composer install
     npm install
     npm run prod
+@endtask
+
+@task('git-restore-and-stash')
+    git restore public/css/app.css
+    git restore public/js/app.js
+    git stash -u
+@endtask
+
+@task('git-commit-deployment')
+    git add .
+    git commit -m "Deploy on {{date("Y-m-d H:i:s")}}"
 @endtask
 
 @task('heroku:config-set')
