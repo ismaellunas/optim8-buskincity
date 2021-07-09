@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
+use App\Models\Media;
 use Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -130,15 +131,16 @@ class PageController extends Controller
 
     public function uploadImage(Request $request)
     {
-        if ($request->has('id')) {
-            $page = Page::findOrFail($request->input('id'));
-            $page->attachMedia($request->file('image'));
-        } else {
-            $uploadedFileUrl = Cloudinary::upload($request->file('image')
-                ->getRealPath())
-                ->getSecurePath();
-        }
-        return response()->json(['imagePath' => $uploadedFileUrl]);
+        $uploadedFile = Cloudinary::upload($request->file('image')->getRealPath());
+
+        $media = new Media();
+        $media->file_name = $uploadedFile->getFileName();
+        $media->file_url = $uploadedFile->getSecurePath();
+        $media->size = $uploadedFile->getSize();
+        $media->file_type = $uploadedFile->getFileType();
+        $media->save();
+
+        return response()->json(['imagePath' => $media->file_url]);
     }
 
     private function getValidate(Request $request/*, $id = null*/): void
