@@ -30,7 +30,9 @@
                                 <inertia-link :href="`/pages/${page.id}/edit`" class="button">
                                     Edit
                                 </inertia-link>
-                                <button class="button" @click="deleteRow(page)">Delete</button>
+                                <sdb-button class="is-danger" @click.prevent="deleteRow(page)">
+                                    Delete
+                                </sdb-button>
                             </td>
                         </tr>
                     </tbody>
@@ -41,11 +43,13 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout'
+    import AppLayout from '@/Layouts/AppLayout';
+    import SdbButton from '@/Sdb/Button';
 
     export default {
         components: {
             AppLayout,
+            SdbButton,
         },
         props: ['pages'],
         data() {
@@ -54,6 +58,8 @@
         },
         methods: {
             deleteRow(page) {
+                if (!confirm('Are you sure?')) return;
+                this.$inertia.delete(route('pages.destroy', {id: page.id}));
             }
         },
     }
