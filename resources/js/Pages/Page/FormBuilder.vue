@@ -25,14 +25,22 @@
         </div>
 
         <div class="column is-9">
-            <template v-for="(block, index) in data" :key="block.id">
-                <block-columns
-                    v-model="data[index]"
-                    :isEditMode="isEditMode"
-                    :id="block.id"
-                    @delete-block="deleteBlock"
-                    />
-            </template>
+            <draggable
+                :sort="true"
+                class="list-column"
+                group="columns"
+                item-key="id"
+                v-model="data"
+            >
+                <template #item="{element, index}">
+                    <block-columns
+                        v-model="data[index]"
+                        :isEditMode="isEditMode"
+                        :id="element.id"
+                        @delete-block="deleteBlock"
+                        />
+                </template>
+            </draggable>
 
             <div class="box columns is-multiline is-centered mt-3">
                 <div class="column is-2">
@@ -72,7 +80,7 @@
         props: {
             errors: Object,
             isEditMode: {type: Boolean, default: false},
-            modelValue: {type: Array, default: []},
+            modelValue: Array,
         },
         setup(props, { emit }) {
             return {
