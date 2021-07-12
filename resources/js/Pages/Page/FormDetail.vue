@@ -47,12 +47,14 @@
 </template>
 
 <script>
+    import HasPageErrors from '@/Mixins/HasPageErrors';
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbFormTextarea from '@/Sdb/Form/Textarea';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
+        mixins: [HasPageErrors],
         components: {
             SdbFormInput,
             SdbFormSelect,
@@ -78,6 +80,6 @@
                 status: useModelWrapper(props, emit, 'status'),
                 title: useModelWrapper(props, emit, 'title'),
             }
-        }
+        },
     }
 </script>
