@@ -42,11 +42,14 @@ class HandleInertiaRequests extends Middleware
                 'message' => fn () => $request->session()->get('message')
             ],
             'errors' => function () {
-                return (
-                    Session::has('errors')
-                    ? Session::get('errors')->getBag('default')->getMessages()
-                    : (object) []
-                );
+                if (Session::get('errors')) {
+                    $bags = [];
+                    foreach (Session::get('errors')->getBags() as $bag => $error) {
+                        $bags[$bag] = $error->getMessages();
+                    }
+                    return $bags;
+                }
+                return (object)[];
             },
         ]);
     }
