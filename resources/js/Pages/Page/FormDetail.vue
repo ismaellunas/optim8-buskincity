@@ -2,42 +2,42 @@
     <sdb-form-input
         label="Title"
         v-model="title"
-        :message="errors.title"
+        :message="error('title')"
         placeholder="e.g A Good News"
         :disabled="disableInput"
     />
     <sdb-form-input
         label="Slug"
         v-model="slug"
-        :message="errors.slug"
+        :message="error('slug')"
         placeholder="e.g. a-good-news"
         :disabled="disableInput"
     />
     <sdb-form-textarea
         label="Excerpt"
         v-model="excerpt"
-        :message="errors.excerpt"
+        :message="error('excerpt')"
         placeholder="..."
         :disabled="disableInput"
     />
     <sdb-form-textarea
         label="Meta Description"
         v-model="meta_description"
-        :message="errors.meta_description"
+        :message="error('meta_description')"
         placeholder="..."
         :disabled="disableInput"
     />
     <sdb-form-textarea
         label="Meta Keywords"
         v-model="meta_keywords"
-        :message="errors.meta_keywords"
+        :message="error('meta_keywords')"
         placeholder="Keyword1, Keyword2"
         :disabled="disableInput"
     />
     <sdb-form-select
         label="Status"
         v-model="status"
-        :message="errors.status"
+        :message="error('status')"
         :disabled="disableInput"
     >
         <option v-for="option in statusOptions" :value="option.id">
