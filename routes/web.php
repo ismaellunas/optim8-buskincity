@@ -52,6 +52,6 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
     Route::resource('/media', App\Http\Controllers\MediaController::class);
     Route::post(
         '/media/upload-image',
-        [App\Http\Controllers\PageController::class, 'uploadImage']
+        [App\Http\Controllers\MediaController::class, 'uploadImage']
     )->name('media.upload-image');
 });
