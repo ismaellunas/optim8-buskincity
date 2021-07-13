@@ -6,3 +6,11 @@ export function createColumn() {
         components: [],
     };
 }
+
+export function createBlock() {
+    return {
+        id: generateElementId(),
+        type: 'columns',
+        columns: [],
+    }
+}
