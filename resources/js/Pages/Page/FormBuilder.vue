@@ -27,8 +27,10 @@
         <div class="column is-9">
             <draggable
                 :sort="true"
-                class="list-column"
+                animation="300"
+                class="list-block-columns"
                 group="columns"
+                handle=".handle-columns"
                 item-key="id"
                 v-model="data"
             >
