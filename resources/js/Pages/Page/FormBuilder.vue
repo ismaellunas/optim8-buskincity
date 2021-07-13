@@ -22,6 +22,28 @@
                     </div>
                 </template>
             </draggable>
+
+            <draggable
+                class="dragColumnArea columns is-multiline"
+                :list="availableBlocks"
+                :group="{ name: 'columns', pull: 'clone', put: false }"
+                :clone="cloneBlock"
+                :sort="false"
+                @change="log"
+                item-key="name"
+            >
+                <template #item="{ element }">
+                    <div class="column is-half">
+                        <div class="card">
+                            <div class="card-content is-size-7">
+                                <div class="content">
+                                    {{ element.title }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </draggable>
         </div>
 
         <div class="column is-9">
@@ -43,27 +65,6 @@
                         />
                 </template>
             </draggable>
-
-            <div class="box columns is-multiline is-centered mt-3">
-                <div class="column is-2">
-                    <button type="button" class="button" @click="addColumnsBlock(1)">1 column</button>
-                </div>
-                <div class="column is-2">
-                    <button type="button" class="button" @click="addColumnsBlock(2)">2 columns</button>
-                </div>
-                <div class="column is-2">
-                    <button type="button" class="button" @click="addColumnsBlock(3)">3 columns</button>
-                </div>
-                <div class="column is-2">
-                    <button type="button" class="button" @click="addColumnsBlock(4)">4 columns</button>
-                </div>
-                <div class="column is-2">
-                    <button type="button" class="button" @click="addColumnsBlock(5)">5 columns</button>
-                </div>
-                <div class="column is-2">
-                    <button type="button" class="button" @click="addColumnsBlock(6)">6 columns</button>
-                </div>
-            </div>
         </div>
     </div>
 </template>
@@ -73,7 +74,7 @@
     import ComponentStructures from '@/ComponentStructures';
     import Draggable from "vuedraggable";
     import { generateElementId, useModelWrapper } from '@/Libs/utils'
-    import { createColumn } from '@/Libs/page-builder.js';
+    import { createBlock, createColumn } from '@/Libs/page-builder.js';
 
     export default {
         components: {
@@ -94,24 +95,17 @@
             log: function(evt) {
                 window.console.log(evt);
             },
+            cloneBlock(seletectedBlock) {
+                const clonedBlock = JSON.parse(JSON.stringify(seletectedBlock));
+                clonedBlock.id = generateElementId();
+                delete clonedBlock.title;
+
+                return clonedBlock;
+            },
             cloneComponent(seletectedComponent) {
                 const clonedContent = JSON.parse(JSON.stringify(seletectedComponent));
                 clonedContent.id = generateElementId();
                 return clonedContent;
-            },
-            addColumnsBlock(columnNumber) {
-                let block = {
-                    id: generateElementId(),
-                    numberOfColumns: parseInt(columnNumber),
-                    type: 'columns',
-                    columns: [],
-                };
-
-                for (let i = 0; i < columnNumber; i++) {
-                    block.columns.push(createColumn());
-                }
-
-                this.data.push(block);
             },
             deleteBlock(id) {
                 const removeIndex = this.data.map(block => block.id).indexOf(id);
@@ -125,6 +119,22 @@
                     components.push(ComponentStructures[property]);
                 }
                 return components;
+            },
+            availableBlocks() {
+                const maxColumnNumber = 6;
+                let blocks = [];
+
+                for (let i = 1; i <= maxColumnNumber; i++) {
+                    let block = createBlock();
+                    for (let colIndex = 1; colIndex <= i; colIndex++) {
+                        block.columns.push(createColumn());
+                    }
+                    block.id = '';
+                    block.title = i+' Column'+((i>1) ? 's' : '');
+                    blocks.push(block);
+                }
+
+                return blocks;
             }
         }
     }
