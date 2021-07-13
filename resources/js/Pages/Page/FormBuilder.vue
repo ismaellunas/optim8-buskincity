@@ -71,6 +71,7 @@
     import ComponentStructures from '@/ComponentStructures';
     import Draggable from "vuedraggable";
     import { generateElementId, useModelWrapper } from '@/Libs/utils'
+    import { createColumn } from '@/Libs/page-builder.js';
 
     export default {
         components: {
@@ -96,21 +97,16 @@
                 clonedContent.id = generateElementId();
                 return clonedContent;
             },
-            createColumn() {
-                return {
-                    id: generateElementId(),
-                    components: [],
-                };
-            },
             addColumnsBlock(columnNumber) {
                 let block = {
                     id: generateElementId(),
+                    numberOfColumns: parseInt(columnNumber),
                     type: 'columns',
                     columns: [],
                 };
 
                 for (let i = 0; i < columnNumber; i++) {
-                    block.columns.push(this.createColumn());
+                    block.columns.push(createColumn());
                 }
 
                 this.data.push(block);
