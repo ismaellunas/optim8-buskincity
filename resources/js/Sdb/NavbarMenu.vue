@@ -18,7 +18,7 @@
                     <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
                         Dashboard
                     </jet-nav-link>
-                    <jet-nav-link :href="route('pages.index')" :active="route().current('dashboard')">
+                    <jet-nav-link :href="route('admin.pages.index')" :active="route().current('dashboard')">
                         Pages
                     </jet-nav-link>
                     <jet-nav-link :href="route('admin.media.index')" :active="route().current('dashboard')">

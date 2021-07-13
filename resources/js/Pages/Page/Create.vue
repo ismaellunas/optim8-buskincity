@@ -35,9 +35,9 @@
                         <sdb-button class="is-link">Submit</sdb-button>
                     </div>
                     <div class="control">
-                        <inertia-link href="/pages" class="button is-link is-light">
+                        <sdb-button-link :href="route('admin.pages.index')" class="is-link is-light">
                             Cancel
-                        </inertia-link>
+                        </sdb-button-link>
                     </div>
                 </div>
             </form>
@@ -50,6 +50,7 @@
     import FormBuilder from './FormBuilder';
     import FormDetail from './FormDetail';
     import SdbButton from '@/Sdb/Button';
+    import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbTab from '@/Sdb/Tab';
     import SdbTabs from '@/Sdb/Tabs';
     import { Inertia } from "@inertiajs/inertia";
@@ -62,6 +63,7 @@
             FormBuilder,
             FormDetail,
             SdbButton,
+            SdbButtonLink,
             SdbTab,
             SdbTabs,
         },
@@ -86,7 +88,7 @@
                     meta_keywords: null,
                     status: 0,
                 });
-                submitRoute = route('pages.store');
+                submitRoute = route('admin.pages.store');
             } else {
                 form = reactive({
                     id: props.page.id,
@@ -99,14 +101,14 @@
                     status: props.page.status,
                     _method: "PUT",
                 });
-                submitRoute = route('pages.update', {id: props.page.id});
+                submitRoute = route('admin.pages.update', {id: props.page.id});
             }
 
             function submit() {
                 Inertia.post(submitRoute, form, {});
             };
 
-            const activeTab = ref(1);
+            const activeTab = ref(0);
 
             return {
                 form, 

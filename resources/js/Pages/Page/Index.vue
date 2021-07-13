@@ -7,9 +7,9 @@
         <div class="box">
             <div class="columns">
                 <div class="column">
-                    <inertia-link :href="route('pages.create')" class="button is-primary">
+                    <sdb-button-link :href="route('admin.pages.create')" class="is-primary">
                         Create
-                    </inertia-link>
+                    </sdb-button-link>
                 </div>
             </div>
 
@@ -27,10 +27,10 @@
                             <th>{{ page.title }}</th>
                             <td>{{ page.slug }}</td>
                             <td>
-                                <inertia-link :href="`/pages/${page.id}/edit`" class="button">
+                                <sdb-button-link :href="route('admin.pages.edit', {id: page.id})">
                                     Edit
-                                </inertia-link>
-                                <sdb-button class="is-danger" @click.prevent="deleteRow(page)">
+                                </sdb-button-link>
+                                <sdb-button class="is-danger ml-2" @click.prevent="deleteRow(page)">
                                     Delete
                                 </sdb-button>
                             </td>
@@ -45,11 +45,13 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import SdbButton from '@/Sdb/Button';
+    import SdbButtonLink from '@/Sdb/ButtonLink';
 
     export default {
         components: {
             AppLayout,
             SdbButton,
+            SdbButtonLink,
         },
         props: ['pages'],
         data() {
@@ -59,7 +61,7 @@
         methods: {
             deleteRow(page) {
                 if (!confirm('Are you sure?')) return;
-                this.$inertia.delete(route('pages.destroy', {id: page.id}));
+                this.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
             }
         },
     }

@@ -58,7 +58,7 @@ class PageController extends Controller
 
         $request->session()->flash('message', 'Page created successfully!');
 
-        return redirect()->route('pages.index');
+        return redirect()->route('admin.pages.index');
     }
 
     /**
@@ -113,7 +113,7 @@ class PageController extends Controller
 
         $request->session()->flash('message', 'Page updated successfully!');
 
-        return redirect()->route('pages.index');
+        return redirect()->route('admin.pages.index');
     }
 
     /**
@@ -126,7 +126,7 @@ class PageController extends Controller
     {
         $page->delete();
         $request->session()->flash('message', 'Page deleted successfully!');
-        return redirect()->route('pages.index');
+        return redirect()->route('admin.pages.index');
     }
 
     public function uploadImage(Request $request)
