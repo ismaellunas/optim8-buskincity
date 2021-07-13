@@ -3,19 +3,20 @@
         <div class="column is-3 p-1" v-if="isEditMode">
             <div class="field has-addons">
                 <div class="control is-expanded">
-                    <div class="select is-fullwidth is-small">
-                        <sdb-select v-model="block.numberOfColumns">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                            <option>6</option>
-                        </sdb-select>
-                    </div>
+                    <sdb-select
+                        class="is-fullwidth is-small"
+                        v-model="numberOfColumns"
+                        @change="onColumnChange"
+                    >
+                        <template v-for="columnNumber in columnOptions">
+                            <option>{{ columnNumber }}</option>
+                        </template>
+                    </sdb-select>
                 </div>
                 <div class="control">
-                    <button type="submit" class="button is-static is-small">Column(s)</button>
+                    <sdb-button type="button" class="is-static is-small">
+                        Column(s)
+                    </sdb-button>
                 </div>
             </div>
         </div>
@@ -52,6 +53,7 @@
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbButton from '@/Sdb/Button';
     import SdbSelect from '@/Sdb/Select';
+    import { createColumn } from '@/Libs/page-builder.js';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -69,6 +71,8 @@
         data() {
             return {
                 editModeWrapperClass: ['edit-mode-columns'],
+                numberOfColumns: this.block.numberOfColumns,
+                columnOptions: [1,2,3,4,5,6],
             };
         },
         setup(props, { emit }) {
@@ -79,7 +83,33 @@
         methods: {
             deleteBlock() {
                 this.$emit('delete-block', this.id)
-            }
+            },
+            onColumnChange(event) {
+                const numberOfColumns = parseInt(event.target.value);
+                const originalNumberOfColumns = parseInt(this.block.numberOfColumns);
+
+                if (numberOfColumns < originalNumberOfColumns) {
+                    const confirmText = 'Are you sure you want to decrease the number of column?';
+                    if (confirm(confirmText) === false) {
+                        const previousIndex = this.columnOptions.indexOf(originalNumberOfColumns);
+                        event.target.selectedIndex = previousIndex;
+                        this.numberOfColumns = originalNumberOfColumns;
+                        return;
+                    }
+
+                    const decreaseNumber = originalNumberOfColumns - numberOfColumns;
+                    for (let i = 0; i < decreaseNumber; i++) {
+                        this.block.columns.pop();
+                    }
+                } else {
+                    const increaseNumber = numberOfColumns - originalNumberOfColumns;
+                    for (let i = 0; i < increaseNumber; i++) {
+                        this.block.columns.push(createColumn());
+                    }
+                }
+                this.numberOfColumns = numberOfColumns;
+                this.block.numberOfColumns = numberOfColumns;
+            },
         },
         computed: {
             wrapperClass() {
