@@ -71,7 +71,7 @@
         data() {
             return {
                 editModeWrapperClass: ['edit-mode-columns'],
-                numberOfColumns: this.block.numberOfColumns,
+                numberOfColumns: this.block.columns.length,
                 columnOptions: [1,2,3,4,5,6],
             };
         },
@@ -89,7 +89,7 @@
             },
             onColumnChange(event) {
                 const numberOfColumns = parseInt(event.target.value);
-                const originalNumberOfColumns = parseInt(this.block.numberOfColumns);
+                const originalNumberOfColumns = this.block.columns.length;
 
                 if (numberOfColumns < originalNumberOfColumns) {
                     const confirmText = 'Are you sure you want to decrease the number of column?';
@@ -111,15 +111,21 @@
                     }
                 }
                 this.numberOfColumns = numberOfColumns;
-                this.block.numberOfColumns = numberOfColumns;
             },
         },
         computed: {
             wrapperClass() {
-                let wrapperClass = EditModeComponentMixin.computed.wrapperClass();
+                let wrapperClass = [];
+
+                wrapperClass = wrapperClass.concat(this.contentClass ?? []);
+
                 if (this.isEditMode) {
-                    wrapperClass.push('is-multiline', 'box', 'p-1', 'my-1');
+                    wrapperClass = wrapperClass.concat(
+                        this.editModeWrapperClass,
+                        ['is-multiline', 'box', 'p-1', 'my-1']
+                    );
                 }
+
                 return wrapperClass;
             },
         },
