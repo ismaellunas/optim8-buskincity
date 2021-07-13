@@ -45,10 +45,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('/roles', RoleController::class);
     Route::resource('/permissions', PermissionController::class);
     Route::resource('/user-roles', UserRoleController::class);
-    Route::post(
-        '/pages/upload-image',
-        [App\Http\Controllers\PageController::class, 'uploadImage']
-    )->name('pages.upload-image');
 });
 
 Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])->group(function () {

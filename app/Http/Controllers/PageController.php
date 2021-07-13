@@ -129,20 +129,6 @@ class PageController extends Controller
         return redirect()->route('admin.pages.index');
     }
 
-    public function uploadImage(Request $request)
-    {
-        $uploadedFile = Cloudinary::upload($request->file('image')->getRealPath());
-
-        $media = new Media();
-        $media->file_name = $uploadedFile->getFileName();
-        $media->file_url = $uploadedFile->getSecurePath();
-        $media->size = $uploadedFile->getSize();
-        $media->file_type = $uploadedFile->getFileType();
-        $media->save();
-
-        return response()->json(['imagePath' => $media->file_url]);
-    }
-
     private function getValidate(Request $request/*, $id = null*/): void
     {
         $data = [
