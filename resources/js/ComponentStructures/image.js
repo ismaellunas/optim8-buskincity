@@ -4,7 +4,7 @@ export default {
     content: {
         figure: {
             image: {
-                src: '',
+                src: null,
                 attrs: {
                     class: [],
                 },
