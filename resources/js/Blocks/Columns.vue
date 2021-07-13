@@ -23,7 +23,7 @@
         <div class="column is-9 p-1" v-if="isEditMode">
             <div class="field has-addons is-pulled-right">
                 <p class="control">
-                    <sdb-button type="button" class="is-small">
+                    <sdb-button type="button" class="is-small" @click="deleteBlock">
                         <span class="icon">
                             <i class="fas fa-trash"></i>
                         </span>
@@ -82,7 +82,10 @@
         },
         methods: {
             deleteBlock() {
-                this.$emit('delete-block', this.id)
+                const confirmText = 'Are you sure?';
+                if (confirm(confirmText) === true) {
+                    this.$emit('delete-block', this.id)
+                }
             },
             onColumnChange(event) {
                 const numberOfColumns = parseInt(event.target.value);
