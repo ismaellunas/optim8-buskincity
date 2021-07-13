@@ -21,6 +21,9 @@
                     <jet-nav-link :href="route('pages.index')" :active="route().current('dashboard')">
                         Pages
                     </jet-nav-link>
+                    <jet-nav-link :href="route('admin.media.index')" :active="route().current('dashboard')">
+                        Media
+                    </jet-nav-link>
                     <jet-nav-link :href="route('roles.index')" :active="route().current('dashboard')">
                         Roles
                     </jet-nav-link>

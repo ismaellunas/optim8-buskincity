@@ -3,12 +3,11 @@
         <form @submit.prevent="submitFile" class="is-clipped">
             <div class="field">
                 <div class="control">
-                    <input
-                        type="file"
-                        id="file"
-                        ref="file"
-                        @change="onFileChange()"
-                        />
+                    <sdb-input-file
+                        class="is-small"
+                        v-model="file"
+                        :accept="['image/png', 'image/jpeg']"
+                    />
                 </div>
             </div>
             <div class="field is-grouped is-pulled-right">
@@ -30,13 +29,18 @@
 
 <script>
     import NProgress from 'nprogress';
+    import SdbInputFile from '@/Sdb/InputFile';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
 
     export default {
+        components: {
+            SdbInputFile,
+        },
         props: [
             'entityId',
             'modelValue',
             'uploadRoute',
+            'extensions',
         ],
         setup(props, { emit }) {
             return {
