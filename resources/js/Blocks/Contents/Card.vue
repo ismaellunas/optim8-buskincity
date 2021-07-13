@@ -21,7 +21,7 @@
             </sdb-button>
             <upload-image-content
                 v-else
-                :uploadRoute="route('pages.upload-image')"
+                :uploadRoute="route('admin.media.upload-image')"
                 v-model="content.cardImage.figure.image.src"
                 @close-form="closeForm"
                 @uploaded-image="updateImageSource"

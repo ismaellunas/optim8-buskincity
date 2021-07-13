@@ -9,7 +9,7 @@
             <upload-image-content
                 v-else
                 :entityId="entityId"
-                :uploadRoute="route('pages.upload-image')"
+                :uploadRoute="route('admin.media.upload-image')"
                 @close-form="closeForm"
                 v-model="content.figure.image.src"
             />
