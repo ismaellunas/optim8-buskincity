@@ -8,6 +8,7 @@
                 :placeholder="placeholder"
                 :value="modelValue"
                 @input="$emit('update:modelValue', $event.target.value)"
+                :rows="rows"
             />
         </div>
 
@@ -27,6 +28,6 @@
             SdbTextarea,
         },
         emits: ['update:modelValue'],
-        props: ['label', 'message', 'modelValue', 'placeholder', 'disabled']
+        props: ['label', 'message', 'modelValue', 'placeholder', 'disabled', 'rows']
     }
 </script>
