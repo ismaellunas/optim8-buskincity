@@ -55,3 +55,5 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
         [App\Http\Controllers\MediaController::class, 'uploadImage']
     )->name('media.upload-image');
 });
+
+Route::get('/pages/{page}', [App\Http\Controllers\PageController::class, 'show'])->name('pages.show');
