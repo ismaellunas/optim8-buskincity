@@ -27,6 +27,6 @@
             SdbLabel,
         },
         emits: ['update:modelValue'],
-        props: ['label', 'message', 'modelValue', 'placeholder', 'disabled']
+        props: ['label', 'message', 'modelValue', 'placeholder', 'disabled', 'required']
     }
 </script>
