@@ -70,11 +70,9 @@ class PageController extends Controller
      */
     public function show(Page $page)
     {
-        /* @TODO: update to use slug
-        return Inertia::render('PageBuilder/Show', [
+        return Inertia::render('Page/Show', [
             'page' => $page,
         ]);
-         */
     }
 
     /**
