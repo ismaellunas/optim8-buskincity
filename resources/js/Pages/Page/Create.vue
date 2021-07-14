@@ -4,7 +4,7 @@
             <h2 class="">Page</h2>
         </template>
 
-        <div class="box">
+        <div class="box mb-6">
             <form method="post" @submit.prevent="submit">
                 <div class="mb-5">
                     <sdb-tabs v-model="activeTab" class="is-boxed">
@@ -14,7 +14,7 @@
                                 v-model:slug="form.slug"
                                 v-model:excerpt="form.excerpt"
                                 v-model:meta_description="form.meta_description"
-                                v-model:meta_keywords="form.meta_keywords"
+                                v-model:meta_title="form.meta_title"
                                 v-model:status="form.status"
                                 :errors="errors"
                                 :disableInput="disableInput"
@@ -30,14 +30,17 @@
                     </sdb-tabs>
                 </div>
 
-                <div class="field is-grouped">
-                    <div class="control">
-                        <sdb-button class="is-link">Submit</sdb-button>
-                    </div>
+                <div class="field is-grouped is-grouped-right">
                     <div class="control">
                         <sdb-button-link :href="route('admin.pages.index')" class="is-link is-light">
                             Cancel
                         </sdb-button-link>
+                    </div>
+                    <div class="control">
+                        <sdb-button class="is-link">
+                            <template v-if="isNew">Create</template>
+                            <template v-else>Update</template>
+                        </sdb-button>
                     </div>
                 </div>
             </form>
@@ -85,7 +88,7 @@
                     excerpt: null,
                     data: [],
                     meta_description: null,
-                    meta_keywords: null,
+                    meta_title: null,
                     status: 0,
                 });
                 submitRoute = route('admin.pages.store');
@@ -97,7 +100,7 @@
                     excerpt: props.page.excerpt,
                     data: props.page.data ?? [],
                     meta_description: props.page.meta_description,
-                    meta_keywords: props.page.meta_keywords,
+                    meta_title: props.page.meta_title,
                     status: props.page.status,
                     _method: "PUT",
                 });
