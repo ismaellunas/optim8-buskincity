@@ -58,7 +58,10 @@ class PageController extends Controller
 
         $request->session()->flash('message', 'Page created successfully!');
 
-        return redirect()->route('admin.pages.index');
+        return redirect()->route('admin.pages.edit', [
+            'page' => $page->id,
+            'tab' => 'builder'
+        ]);
     }
 
     /**
