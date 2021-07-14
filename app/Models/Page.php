@@ -21,9 +21,12 @@ class Page extends Model
     ];
 
     protected $fillable = [
-        'title',
-        'slug',
         'data',
+        'meta_description',
+        'meta_title',
+        'slug',
+        'title',
+        'status',
     ];
 
     public static function getStatusOptions(): array
