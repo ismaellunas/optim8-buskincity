@@ -6,6 +6,7 @@
             <sdb-select
                 :disabled="disabled"
                 :placeholder="placeholder"
+                :class="class"
                 v-model="selected"
             >
                 <slot></slot>
@@ -28,7 +29,7 @@
             SdbLabel,
             SdbSelect,
         },
-        props: ['label', 'message', 'modelValue', 'placeholder', 'disabled'],
+        props: ['label', 'message', 'modelValue', 'placeholder', 'disabled', 'class'],
         setup(props, { emit }) {
             return {
                 selected: useModelWrapper(props, emit),
