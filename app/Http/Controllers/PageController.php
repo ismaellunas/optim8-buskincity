@@ -132,11 +132,11 @@ class PageController extends Controller
         return redirect()->route('admin.pages.index');
     }
 
-    private function getValidate(Request $request/*, $id = null*/): void
+    private function getValidate(Request $request, $id = null): void
     {
         $data = [
             'title' => 'required',
-            'slug' => 'required'
+            'slug' => 'required|alpha_dash|unique:pages,slug,'.$id
         ];
         $this->validate($request, $data);
     }
