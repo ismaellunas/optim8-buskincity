@@ -1,7 +1,10 @@
 <template>
     <app-layout>
         <template #header>
-            <h2 class="">Page</h2>
+            <h1 class="title">
+                <template v-if="isNew">Create New Page</template>
+                <template v-else>Update Page</template>
+            </h1>
         </template>
 
         <div class="box mb-6">
