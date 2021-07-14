@@ -85,12 +85,13 @@ class PageController extends Controller
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Http\Response
      */
-    public function edit(Page $page)
+    public function edit(Request $request, Page $page)
     {
-        return Inertia::render('Page/Create', [
+        return Inertia::render('Page/Edit', [
             'page' => $page,
             'entityId' => $page->id,
             'statusOptions' => Page::getStatusOptions(),
+            'tabActive' => $request->get('tab'),
         ]);
     }
 
@@ -103,7 +104,7 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
-        $this->getValidate($request);
+        $this->getValidate($request, $page->id);
 
         $page->title = $request->input('title');
         $page->slug = $request->input('slug');
