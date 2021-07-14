@@ -1,5 +1,5 @@
 require('./bootstrap');
-require('../../node_modules/@fortawesome/fontawesome-free/js/fontawesome');
+require('../../node_modules/@fortawesome/fontawesome-free/js/all');
 
 // Import modules...
 import { createApp, h } from 'vue';
