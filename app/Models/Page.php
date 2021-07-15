@@ -46,4 +46,22 @@ class Page extends Model
             ],
         ];
     }
+
+    // Accessors
+    public function getHasMetaDescriptionAttribute(): bool
+    {
+        return !empty($this->meta_description);
+    }
+
+    public function getHasMetaTitleAttribute(): bool
+    {
+        return !empty($this->meta_title);
+    }
+
+    public function getStatusTextAttribute(): string
+    {
+        return collect(self::getStatusOptions())->first(function ($status, $key) {
+            return $this->status == $status['id'];
+        })['value'];
+    }
 }
