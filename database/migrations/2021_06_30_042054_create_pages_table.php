@@ -15,12 +15,12 @@ class CreatePagesTable extends Migration
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 256);
+            $table->string('title', 255);
             $table->text('excerpt')->nullable();
-            $table->string('slug', 256)->unique();
-            $table->text('meta_description')->nullable();
-            $table->text('meta_keywords')->nullable();
             $table->longText('data')->nullable();
+            $table->string('slug', 255)->unique();
+            $table->string('meta_title', 255)->nullable();
+            $table->string('meta_description', 255)->nullable();
             $table->tinyInteger('status')->default(0);
             $table
                 ->foreignId('author_id')
