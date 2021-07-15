@@ -1,13 +1,13 @@
 <template>
     <div v-if="links.length > 3">
         <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-            <inertia-link
+            <a
                 class="pagination-previous"
                 :href="previousLink.url"
                 :disabled="isBlank(previousLink.url) ? 1 : null"
                 v-html="previousLink.label"
                 />
-            <inertia-link
+            <a
                 class="pagination-next"
                 :disabled="isBlank(nextLink.url) ? 1 : null"
                 :href="nextLink.url"
