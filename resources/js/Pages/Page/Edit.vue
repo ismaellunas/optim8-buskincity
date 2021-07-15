@@ -6,6 +6,8 @@
 
         <sdb-error-notifications :errors="$page.props.errors"/>
 
+        <sdb-flash-notifications :flash="$page.props.flash"/>
+
         <div class="box mb-6">
             <page-form
                 :form="form"
@@ -24,6 +26,7 @@
     import AppLayout from '@/Layouts/AppLayout';
     import PageForm from '@/Pages/Page/Form';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import SdbFlashNotifications from '@/Sdb/FlashNotifications';
     import { Inertia } from "@inertiajs/inertia";
     import { isBlank } from '@/Libs/utils';
     import { reactive, ref } from "vue";
@@ -33,6 +36,7 @@
             AppLayout,
             PageForm,
             SdbErrorNotifications,
+            SdbFlashNotifications,
         },
         props: {
             page: Object,
