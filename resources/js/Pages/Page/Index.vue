@@ -47,17 +47,27 @@
                             <td><i class="far fa-check-circle" v-if="page.hasMetaDescription"></i></td>
                             <td>
                                 <div class="level-right">
-                                    <sdb-button-link class="is-ghost has-text-black" :href="route('admin.pages.edit', {id: page.id})">
+                                    <sdb-button
+                                        class="is-ghost has-text-black"
+                                        type="button"
+                                        @click="openShow(page)"
+                                    >
                                         <span class="icon is-small">
                                             <i class="far fa-eye"></i>
                                         </span>
-                                    </sdb-button-link>
-                                    <sdb-button-link class="is-ghost has-text-black" :href="route('admin.pages.edit', {id: page.id})">
+                                    </sdb-button>
+                                    <sdb-button-link
+                                        class="is-ghost has-text-black"
+                                        :href="route('admin.pages.edit', {id: page.id})"
+                                    >
                                         <span class="icon is-small">
                                             <i class="fas fa-pen"></i>
                                         </span>
                                     </sdb-button-link>
-                                    <sdb-button class="is-ghost has-text-black ml-1" @click.prevent="deleteRow(page)">
+                                    <sdb-button
+                                        class="is-ghost has-text-black ml-1"
+                                        @click.prevent="deleteRow(page)"
+                                    >
                                         <span class="icon is-small">
                                             <i class="far fa-trash-alt"></i>
                                         </span>
@@ -93,6 +103,9 @@
             deleteRow(page) {
                 if (!confirm('Are you sure?')) return;
                 this.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
+            },
+            openShow(page) {
+                window.open(this.route('pages.show', {id: page.id}), "_blank");
             },
             statusClass(status) {
                 let statusClass = ['is-small', 'is-rounded'];
