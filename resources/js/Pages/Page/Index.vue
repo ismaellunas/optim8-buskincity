@@ -38,6 +38,7 @@
                     </tbody>
                 </table>
             </div>
+            <sdb-pagination :links="records.links"></sdb-pagination>
         </div>
     </app-layout>
 </template>
@@ -46,12 +47,14 @@
     import AppLayout from '@/Layouts/AppLayout';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
+    import SdbPagination from '@/Sdb/Pagination';
 
     export default {
         components: {
             AppLayout,
             SdbButton,
             SdbButtonLink,
+            SdbPagination,
         },
         props: ['pages'],
         data() {
