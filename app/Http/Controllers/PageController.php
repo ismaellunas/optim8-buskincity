@@ -20,7 +20,7 @@ class PageController extends Controller
     public function index()
     {
         return Inertia::render('Page/Index', [
-            'pages' => Page::all(['id','title', 'slug']),
+            'records' => $this->getRecords(),
         ]);
     }
 
