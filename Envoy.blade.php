@@ -58,6 +58,7 @@
 @task('git-restore-and-stash')
     git restore public/css/app.css
     git restore public/js/app.js
+    git restore public/mix-manifest.json
     git stash -u
 @endtask
 
