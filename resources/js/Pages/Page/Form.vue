@@ -2,7 +2,7 @@
     <form method="post" @submit.prevent="submit">
         <div class="mb-5">
             <sdb-tabs v-model="activeTab" class="is-boxed">
-                <sdb-tab title="Detail">
+                <sdb-tab title="Details">
                     <form-detail
                         v-model:title="form.title"
                         v-model:slug="form.slug"
