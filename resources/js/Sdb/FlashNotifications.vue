@@ -1,5 +1,5 @@
 <template>
-    <div class="notification is-info" v-if="flash && isVisible">
+    <div class="notification is-info" v-if="hasMessage && isVisible">
         <button class="delete" @click.prevent="isVisible = false"></button>
         <div class="alert alert-success">
             {{ flash.message }}
@@ -15,7 +15,7 @@
             flash: Object,
         },
         mounted() {             
-            if (!isBlank(this.flash.message)) {
+            if (this.hasMessage) {
                 this.isVisible = true;
             }
         },
@@ -23,6 +23,11 @@
             return {
                 isVisible: false,
             };
+        },
+        computed: {
+            hasMessage() {
+                return (this.flash && !isBlank(this.flash.message));
+            },
         },
         watch: {
             flash: {
