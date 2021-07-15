@@ -2,6 +2,8 @@
     <app-layout>
         <template #header>Pages</template>
 
+        <sdb-flash-notifications :flash="$page.props.flash"/>
+
         <div class="box">
             <div class="columns">
                 <div class="column is-offset-10">
@@ -75,6 +77,7 @@
     import AppLayout from '@/Layouts/AppLayout';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
+    import SdbFlashNotifications from '@/Sdb/FlashNotifications';
     import SdbPagination from '@/Sdb/Pagination';
 
     export default {
@@ -82,6 +85,7 @@
             AppLayout,
             SdbButton,
             SdbButtonLink,
+            SdbFlashNotifications,
             SdbPagination,
         },
         props: ['records'],
