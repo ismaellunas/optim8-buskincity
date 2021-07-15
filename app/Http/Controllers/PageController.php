@@ -9,6 +9,9 @@ use Inertia\Inertia;
 
 class PageController extends Controller
 {
+    protected $model = Page::class;
+    protected $recordsPerPage = 15;
+
     /**
      * Display a listing of the resource.
      *
@@ -136,5 +139,19 @@ class PageController extends Controller
             'slug' => 'required|alpha_dash|unique:pages,slug,'.$id
         ];
         $this->validate($request, $data);
+    }
+
+    protected function getRecords()
+    {
+        $records = Page::orderBy('id', 'DESC')
+            ->select(['id', 'slug', 'title', 'meta_description', 'meta_title', 'status'])
+            ->paginate($this->recordsPerPage);
+
+        $records->getCollection()->transform(function ($record) {
+            $record->setAppends(['statusText', 'hasMetaDescription', 'hasMetaTitle']);
+            return $record;
+        });
+
+        return $records;
     }
 }
