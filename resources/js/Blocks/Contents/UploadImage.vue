@@ -10,17 +10,19 @@
                     />
                 </div>
             </div>
-            <div class="field is-grouped is-pulled-right">
+            <div class="field is-grouped is-centered">
                 <div class="control">
-                    <button class="button is-link is-small">Submit</button>
+                    <sdb-button class="is-link is-small" :disabled="!canUpload">
+                        Submit
+                    </sdb-button>
                 </div>
                 <div class="control">
-                    <button
+                    <sdb-button
                         type="button"
-                        class="button is-small"
+                        class="is-small"
                         @click="closeForm">
                         Cancel
-                    </button>
+                    </sdb-button>
                 </div>
             </div>
         </form>
@@ -29,12 +31,14 @@
 
 <script>
     import NProgress from 'nprogress';
+    import SdbButton from '@/Sdb/Button';
     import SdbInputFile from '@/Sdb/InputFile';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
 
     export default {
         components: {
             SdbInputFile,
+            SdbButton,
         },
         props: [
             'entityId',
@@ -78,16 +82,25 @@
                     console.log(error);
                 });
             },
+            /*
             onFileChange() {
                 this.file = this.$refs.file.files[0];
             },
+            */
+            resetForm() {
+                this.file = null;
+            },
             closeForm() {
+                this.file = null;
                 this.$emit('close-form');
-            }
+            },
+            removeImage() {
+                this.imageSrc = null;
+            },
         },
         computed: {
             canUpload() {
-                return isBlank(this.file);
+                return !isBlank(this.file);
             },
         }
     }
