@@ -2,11 +2,11 @@
     <div class="notification is-danger" v-if="isVisible && hasError">
         <button class="delete" @click.prevent="isVisible = false"></button>
         <ul class="alert alert-danger">
-            <li v-for="error in errors">
-                <template v-for="message in error">
+            <template v-for="error in errors">
+                <li v-for="message in error">
                     {{ message[0] }}
-                </template>
-            </li>
+                </li>
+            </template>
         </ul>
     </div>
 </template>

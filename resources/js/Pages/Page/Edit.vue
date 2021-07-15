@@ -4,6 +4,8 @@
             Update Page
         </template>
 
+        <sdb-error-notifications :errors="$page.props.errors"/>
+
         <div class="box mb-6">
             <page-form
                 :form="form"
@@ -21,6 +23,7 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import PageForm from '@/Pages/Page/Form';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import { Inertia } from "@inertiajs/inertia";
     import { isBlank } from '@/Libs/utils';
     import { reactive, ref } from "vue";
@@ -29,6 +32,7 @@
         components: {
             AppLayout,
             PageForm,
+            SdbErrorNotifications,
         },
         props: {
             page: Object,
