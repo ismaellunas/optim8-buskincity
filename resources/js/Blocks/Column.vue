@@ -27,6 +27,7 @@
     import ContentCard from '@/Blocks/Contents/Card'
     import ContentCardText from '@/Blocks/Contents/CardText'
     import Draggable from 'vuedraggable';
+    import Heading from '@/Blocks/Contents/Heading';
     import H1 from '@/Blocks/Contents/H1';
     import H2 from '@/Blocks/Contents/H2';
     import Image from '@/Blocks/Contents/Image';
@@ -38,6 +39,7 @@
             ContentCard,
             ContentCardText,
             Draggable,
+            Heading,
             H1,
             H2,
             Image,
