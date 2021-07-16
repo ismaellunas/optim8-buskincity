@@ -2,7 +2,7 @@
     <nav class="navbar is-dark">
         <div class="navbar-brand">
             <a class="navbar-item" href="https://bulma.io">
-                <img src="http://buskincity.spectrumweb.co.uk/assets/img/logo.png" alt="Buskin City" height="28" width="42">
+                <img src="https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752" alt="" height="28">
             </a>
             <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
                 <span></span>
