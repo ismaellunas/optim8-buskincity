@@ -111,7 +111,6 @@
                 let statusClass = ['is-small', 'is-rounded'];
                 switch(status) {
                     case 1 : statusClass.push('is-success'); break;
-                    case -1 : statusClass.push('is-danger'); break;
                     default: statusClass.push('is-primary');
                 };
                 return statusClass;
