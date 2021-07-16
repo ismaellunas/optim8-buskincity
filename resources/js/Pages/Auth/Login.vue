@@ -27,11 +27,9 @@
                                     <span class=mr-3>
                                         Don't have an account?
                                     </span>
-                                    <inertia-link :href="route('register')" class="">
-                                        <button class="button">
-                                            Sign Up
-                                        </button>
-                                    </inertia-link>
+                                    <sdb-button-link :href="route('register')">
+                                        Sign Up
+                                    </sdb-button-link>
                                 </div>
                             </div>
                         </div>
@@ -104,9 +102,9 @@
                                                     </label>
                                                 </div>
                                                 <div class="column has-text-right">
-                                                    <inertia-link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                                                    <sdb-link v-if="canResetPassword" :href="route('password.request')">
                                                         Forgot your password?
-                                                    </inertia-link>
+                                                    </sdb-link>
                                                 </div>
                                             </div>
 
@@ -130,6 +128,8 @@
     import JetCheckbox from '@/Jetstream/Checkbox'
     import JetInput from '@/Jetstream/Input'
     import JetLabel from '@/Jetstream/Label'
+    import SdbButtonLink from '@/Sdb/ButtonLink';
+    import SdbLink from '@/Sdb/Link';
     import SdbSocialMediaList from '@/Sdb/SocialMediaList'
 
     export default {
@@ -138,6 +138,8 @@
             JetCheckbox,
             JetInput,
             JetLabel,
+            SdbButtonLink,
+            SdbLink,
             SdbSocialMediaList,
         },
 

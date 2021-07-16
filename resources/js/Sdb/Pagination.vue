@@ -16,7 +16,7 @@
             <ul class="pagination-list">
                 <li v-for="link in paginationLinks">
                     <span class="pagination-ellipsis" v-if="isBlank(link.url)">&hellip;</span>
-                    <inertia-link v-else
+                    <sdb-link v-else
                         :href="link.url"
                         class="pagination-link"
                         :class="{'is-current': link.active}"
@@ -29,9 +29,13 @@
 </template>
 
 <script>
+    import SdbLink from '@/Sdb/Link';
     import { isBlank } from '@/Libs/utils';
 
     export default {
+        components: {
+            SdbLink,
+        },
         props: {
             links: Array,
         },

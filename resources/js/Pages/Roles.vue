@@ -16,7 +16,7 @@
                       </div>
                     </div>
 
-                    <button @click="openModal()" type="button" class="button">Create New Role</button>
+                    <sdb-button @click="openModal()" type="button">Create New Role</sdb-button>
 
                     <table class="table is-fullwidth is-striped">
                         <thead>
@@ -29,9 +29,9 @@
                             <tr v-for="row in roles">
                                 <td class="border px-4 py-2">{{ row.name }}</td>
                                 <td class="border px-4 py-2">
-                                    <button @click="edit(row)" class="button">Edit</button>
-                                    <inertia-link class="button" :href="`/roles/${row.id}/edit`"> Edit</inertia-link>
-                                    <button @click="deleteRow(row)" class="button">Delete</button>
+                                    <sdb-button @click="edit(row)">Edit</sdb-button>
+                                    <sdb-button-link :href="`/roles/${row.id}/edit`"> Edit</sdb-button-link>
+                                    <sdb-button @click="deleteRow(row)" class="is-danger">Delete</sdb-button>
                                 </td>
                             </tr>
                         </tbody>
@@ -77,11 +77,15 @@
 
 <script>
     import AppLayout from './../Layouts/AppLayout'
+    import SdbButton from '@/Sdb/Button';
+    import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbModal from '@/Sdb/Modal'
 
     export default {
         components: {
             AppLayout,
+            SdbButton,
+            SdbButtonLink,
             SdbModal,
         },
         props: ['roles', 'permissions', 'errors'],

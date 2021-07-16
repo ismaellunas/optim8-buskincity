@@ -2,9 +2,9 @@
     <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
         <div class="container">
             <div class="navbar-brand">
-                <inertia-link :href="route('dashboard')" class="navbar-item">
+                <sdb-link :href="route('dashboard')" class="navbar-item">
                     <jet-application-mark class="" />
-                </inertia-link>
+                </sdb-link>
 
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                     <span aria-hidden="true"></span>
@@ -73,6 +73,7 @@
     import JetDropdownLink from '@/Jetstream/DropdownLink';
     import JetNavLink from '@/Jetstream/NavLink';
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink';
+    import SdbLink from '@/Sdb/Link';
 
     export default {
         components: {
@@ -81,6 +82,7 @@
             JetDropdownLink,
             JetNavLink,
             JetResponsiveNavLink,
+            SdbLink,
         },
         methods: {
             switchToTeam(team) {

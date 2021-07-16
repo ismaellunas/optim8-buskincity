@@ -16,10 +16,10 @@
                         <div class="level">
                             <div class="level-left">
                                 <div class="level-item">
-                                    <inertia-link :href="route('login')">
+                                    <sdb-link :href="route('login')">
                                         <span class="icon"><i class="fas fa-arrow-left"></i></span>
                                         <span>Back</span>
-                                    </inertia-link>
+                                    </sdb-link>
                                 </div>
                             </div>
                             <div class="level-right">
@@ -67,13 +67,15 @@
     import JetInput from '@/Jetstream/Input'
     import JetLabel from '@/Jetstream/Label'
     import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import SdbLink from '@/Sdb/Link';
 
     export default {
         components: {
             JetButton,
             JetInput,
             JetLabel,
-            JetValidationErrors
+            JetValidationErrors,
+            SdbLink,
         },
 
         props: {

@@ -8,14 +8,17 @@
             <slot></slot>
         </a>
 
-        <inertia-link :href="href" class="block px-4 py-2" v-else>
+        <sdb-link :href="href" class="block px-4 py-2" v-else>
             <slot></slot>
-        </inertia-link>
+        </sdb-link>
     </div>
 </template>
 
 <script>
+    import SdbLink from '@/Sdb/Link';
+
     export default {
+        components: { SdbLink },
         props: ['href', 'as']
     }
 </script>

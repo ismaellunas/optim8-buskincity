@@ -27,11 +27,9 @@
                                     <span class=mr-3>
                                         Already have an account?
                                     </span>
-                                    <inertia-link :href="route('login')" class="">
-                                        <button class="button">
-                                            Login
-                                        </button>
-                                    </inertia-link>
+                                    <sdb-button-link :href="route('login')" class="">
+                                        Login
+                                    </sdb-button-link>
                                 </div>
                             </div>
                         </div>
@@ -171,6 +169,7 @@
     import JetCheckbox from "@/Jetstream/Checkbox";
     import JetValidationErrors from '@/Jetstream/ValidationErrors'
     import JetLabel from '@/Jetstream/Label'
+    import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbSocialMediaList from '@/Sdb/SocialMediaList'
 
     export default {
@@ -180,6 +179,7 @@
             JetCheckbox,
             JetValidationErrors,
             JetLabel,
+            SdbButtonLink,
             SdbSocialMediaList,
         },
 

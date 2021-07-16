@@ -1,15 +1,15 @@
 <template>
 <app-layout>
     <template #header>
-        <h2 class="">Media</h2>
+        Media
     </template>
 
     <div class="box">
         <div class="columns">
             <div class="column">
-                <inertia-link :href="route(baseRouteName+'.create')" class="button is-primary">
+                <sdb-button-link :href="route(baseRouteName+'.create')" class="is-primary">
                     Upload
-                </inertia-link>
+                </sdb-button-link>
             </div>
         </div>
 
@@ -32,11 +32,6 @@
                         </th>
                         <td>{{ record.size }}</td>
                         <td>
-                            <!--
-                            <inertia-link :href="getEditRoute(record.id)" class="button">
-                                Edit
-                            </inertia-link>
-                            -->
                             <sdb-button class="is-danger ml-2" @click.prevent="deleteRecord(record)">
                                 Delete
                             </sdb-button>
@@ -52,11 +47,13 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import SdbButton from '@/Sdb/Button';
+    import SdbButtonLink from '@/Sdb/ButtonLink';
 
     export default {
         components: {
             AppLayout,
             SdbButton,
+            SdbButtonLink,
         },
         props: ['records', 'baseRouteName'],
         methods: {

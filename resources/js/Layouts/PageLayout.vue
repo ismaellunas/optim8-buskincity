@@ -1,9 +1,9 @@
 <template>
     <nav class="navbar is-dark">
         <div class="navbar-brand">
-            <a class="navbar-item" href="https://bulma.io">
+            <sdb-link class="navbar-item" href="/">
                 <img src="https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752" alt="" height="28">
-            </a>
+            </sdb-link>
             <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
                 <span></span>
                 <span></span>
@@ -13,12 +13,12 @@
 
         <div id="navbarExampleTransparentExample" class="navbar-menu">
             <div class="navbar-start">
-                <inertia-link href="/" class="navbar-item">Home</inertia-link>
+                <sdb-link href="/" class="navbar-item">Home</sdb-link>
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <inertia-link href="/" class="navbar-link">More</inertia-link>
+                    <sdb-link href="/" class="navbar-link">More</sdb-link>
                     <div class="navbar-dropdown is-boxed">
-                        <inertia-link href="/" class="navbar-item">Page 1</inertia-link>
-                        <inertia-link href="/" class="navbar-item">Page 2</inertia-link>
+                        <sdb-link href="/" class="navbar-item">Page 1</sdb-link>
+                        <sdb-link href="/" class="navbar-item">Page 2</sdb-link>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                         </div>
                     </div>
                 </div>
-                <inertia-link :href="route('login')" class="navbar-item pr-5">Login</inertia-link>
+                <sdb-link :href="route('login')" class="navbar-item pr-5">Login</sdb-link>
             </div>
         </div>
     </nav>
@@ -47,9 +47,11 @@
 </template>
 
 <script>
+    import SdbLink from '@/Sdb/Link';
+
     export default {
         props: ['socialstream', 'jetstream', 'user', 'errorBags', 'flash'],
-        components: {},
+        components: { SdbLink },
         data() {
             return {
             }

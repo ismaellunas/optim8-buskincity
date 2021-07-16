@@ -4,14 +4,20 @@
             <slot></slot>
         </button>
 
-        <inertia-link :href="href" :class="classes" v-else>
+        <sdb-link :href="href" :class="classes" v-else>
             <slot></slot>
-        </inertia-link>
+        </sdb-link>
     </div>
 </template>
 
 <script>
+    import SdbLink from '@/Sdb/Link';
+
     export default {
+        components: {
+            SdbLink,
+        },
+
         props: ['active', 'href', 'as'],
 
         computed: {

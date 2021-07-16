@@ -1,7 +1,7 @@
 <template>
     <app-layout>
         <template #header>
-            <h2 class="">Media</h2>
+            Media
         </template>
 
         <div class="box">
@@ -19,12 +19,12 @@
 
                 <div class="field is-grouped mt-4">
                     <div class="control">
-                        <button class="button is-link">Submit</button>
+                        <sdb-button class="is-link">Submit</sdb-button>
                     </div>
                     <div class="control">
-                        <inertia-link :href="route(baseRouteName+'.index')" class="button">
+                        <sdb-button-link :href="route(baseRouteName+'.index')">
                             Cancel
-                        </inertia-link>
+                        </sdb-button-link>
                     </div>
                 </div>
             </form>
@@ -35,6 +35,7 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import SdbButton from '@/Sdb/Button';
+    import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbInput from '@/Sdb/Input';
     import { Inertia } from "@inertiajs/inertia";
     import { isBlank } from '@/Libs/utils';
@@ -45,6 +46,7 @@
         components: {
             AppLayout,
             SdbButton,
+            SdbButtonLink,
             SdbInput,
         },
         props: {
