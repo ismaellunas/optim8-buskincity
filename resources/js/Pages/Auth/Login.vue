@@ -111,7 +111,7 @@
                                             </div>
 
                                             <jet-button class="button is-block is-info is-fullwidth">
-                                                Log In <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                                Log In <i class="fas fa-sign-in-alt"></i>
                                             </jet-button>
                                         </form>
                                     </div>
