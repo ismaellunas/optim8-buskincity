@@ -52,7 +52,7 @@ class PageController extends Controller
         $page->excerpt = $request->input('excerpt');
         $page->meta_description = $request->input('meta_description');
         $page->meta_title = $request->input('meta_title');
-        $page->status = $request->input('status', Page::STATUS_INACTIVE);
+        $page->status = $request->input('status', Page::STATUS_DRAFT);
         $page->data = $request->input('data');
         $page->author_id = Auth::id();
         $page->save();
@@ -110,7 +110,7 @@ class PageController extends Controller
         $page->excerpt = $request->input('excerpt');
         $page->meta_description = $request->input('meta_description');
         $page->meta_title = $request->input('meta_title');
-        $page->status = $request->input('status', Page::STATUS_INACTIVE);
+        $page->status = $request->input('status', Page::STATUS_DRAFT);
         $page->data = $request->input('data');
         $page->save();
 
