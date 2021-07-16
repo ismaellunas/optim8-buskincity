@@ -48,7 +48,7 @@
             </draggable>
         </div>
 
-        <div class="column is-9">
+        <div class="column is-9" :class="{'has-background-grey-lighter has-text-centered': !hasBlok}">
             <draggable
                 :sort="true"
                 animation="300"
@@ -57,6 +57,7 @@
                 handle=".handle-columns"
                 item-key="id"
                 v-model="data"
+                empty-insert-threshold="5"
             >
                 <template #item="{element, index}">
                     <block-columns
@@ -137,6 +138,9 @@
                 }
 
                 return blocks;
+            },
+            hasBlok() {
+                return this.data.length > 0;
             }
         }
     }
