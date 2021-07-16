@@ -12,9 +12,8 @@ class Page extends Model
     use HasFactory;
     use MediaAlly;
 
-    const STATUS_INACTIVE = -1;
     const STATUS_DRAFT = 0;
-    const STATUS_ACTIVE = 1;
+    const STATUS_PUBLISH = 1;
 
     protected $casts = [
         'data' => AsCollection::class,
@@ -37,13 +36,9 @@ class Page extends Model
                 'value' => 'Draft',
             ],
             [
-                'id' => self::STATUS_ACTIVE,
-                'value' => 'Active',
-            ],
-            [
-                'id' => self::STATUS_INACTIVE,
-                'value' => 'Inactive',
-            ],
+                'id' => self::STATUS_PUBLISH,
+                'value' => 'Publish',
+            ]
         ];
     }
 
