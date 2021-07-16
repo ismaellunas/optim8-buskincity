@@ -1,5 +1,5 @@
 <template>
-    <Link class="button" :class="class">
+    <Link>
         <slot></slot>
     </Link>
 </template>
@@ -8,9 +8,6 @@
     import { Link } from '@inertiajs/inertia-vue3';
 
     export default {
-        components: {
-            Link,
-        },
-        props: ['class'],
+        components: { Link }
     }
 </script>
