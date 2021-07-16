@@ -1,16 +1,15 @@
 <template>
-    <Link class="button" :class="class">
+    <sdb-link class="button">
         <slot></slot>
-    </Link>
+    </sdb-link>
 </template>
 
 <script>
-    import { Link } from '@inertiajs/inertia-vue3';
+    import SdbLink from '@/Sdb/Link';
 
     export default {
         components: {
-            Link,
-        },
-        props: ['class'],
+            SdbLink,
+        }
     }
 </script>
