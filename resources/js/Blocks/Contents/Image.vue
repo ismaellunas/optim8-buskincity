@@ -1,5 +1,12 @@
 <template>
     <div>
+        <sdb-toolbar-content
+            v-if="isEditMode"
+            :can-edit="canEdit"
+            @edit-content="toggleEdit"
+            @delete-content="deleteContent"
+        />
+
         <div class="edit-mode-toolbar-content" v-if="isEditMode">
             <div class="field has-addons is-pulled-right">
                 <p class="control" v-if="canEdit">
@@ -45,6 +52,7 @@
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import EditModeContentMixin from '@/Mixins/EditModeContent';
     import SdbButton from '@/Sdb/Button';
+    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import UploadImageContent from '@/Blocks/Contents/UploadImage';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
 
