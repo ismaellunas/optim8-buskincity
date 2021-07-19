@@ -47,8 +47,9 @@
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbTab from '@/Sdb/Tab';
     import SdbTabs from '@/Sdb/Tabs';
-    import { isBlank } from '@/Libs/utils';
-    import { ref } from "vue";
+    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import { ref, reactive } from "vue";
+    import { Inertia } from '@inertiajs/inertia';
 
     export default {
         components: {
@@ -60,31 +61,32 @@
             SdbTabs,
         },
         props: {
-            form: Object,
-            errors: Object,
+            errors: {},
             isEditMode: Boolean,
             isNew: Boolean,
             statusOptions: Array,
             submit: Function,
-            tabActive: String,
+            tabActive: {},
+            modelValue: {},
         },
-        setup(props) {
+        setup(props, { emit }) {
             let activeTab = null;
 
             if (!isBlank(props.tabActive) && props.tabActive === 'builder') {
                 activeTab = ref(1);
             } else {
-                activeTab = ref(0);
+                activeTab = ref(1);
             }
 
             return {
                 activeTab,
+                form: useModelWrapper(props, emit),
             };
         },
         data() {
             return {
                 disableInput: false,
             };
-        }
+        },
     }
 </script>

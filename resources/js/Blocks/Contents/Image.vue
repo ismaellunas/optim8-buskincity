@@ -1,31 +1,25 @@
 <template>
-    <figure class="image" :class="{'edit-mode-content': isEditMode}">
-        <img :src="imageSrc" :alt="content.figure.attrs.alt">
-
-        <div class="card-content" v-if="isEditMode">
-            <sdb-button type="button" @click="isFormOpen = true" v-if="!isFormOpen">
-                <i class="fas fa-edit"></i>
-            </sdb-button>
+    <div>
+        <figure class="image">
+            <img :src="imageSrc" :alt="content.figure.attrs.alt" v-if="hasImage">
             <upload-image-content
-                v-else
                 :entityId="entityId"
                 :uploadRoute="route('admin.media.upload-image')"
                 @close-form="closeForm"
                 v-model="content.figure.image.src"
             />
+        </figure>
+
+        <div class="card-content has-background-info-light" v-if="isFormDisplayed">
         </div>
-        <div class="edit-mode-buttons" v-if="isEditMode">
-            <button class="button is-small" type="button" @click="deleteContent">
-                <i class="fa fa-trash" aria-hidden="true"></i>
-            </button>
-        </div>
-    </figure>
+    </div>
 </template>
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import EditModeContentMixin from '@/Mixins/EditModeContent';
     import SdbButton from '@/Sdb/Button';
+    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import UploadImageContent from '@/Blocks/Contents/UploadImage';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
 
@@ -35,6 +29,8 @@
             DeletableContentMixin
         ],
         components: {
+            SdbButton,
+            SdbToolbarContent,
             UploadImageContent,
             SdbButton,
         },
@@ -56,9 +52,9 @@
             };
         },
         methods: {
-            closeForm() {
-                this.isFormOpen = false;
-            }
+            toggleEdit() {
+                this.isFormOpen = !this.isFormOpen;
+            },
         },
         computed: {
             hasImage() {
@@ -70,8 +66,19 @@
                 }
                 return 'https://bulma.io/images/placeholders/640x480.png';
             },
+            /* @overide */
+            canEdit() {
+                return this.isEditMode && this.hasImage;
+            },
+            isFormDisplayed() {
+                return this.isEditMode && (
+                    !this.hasImage
+                    || (this.isEditMode && this.isFormOpen)
+                );
+            },
+            closeForm() {
+                this.isFormOpen = false;
+            },
         }
     }
 </script>
-
-<style scoped src="../../../css/column-content.css"></style>

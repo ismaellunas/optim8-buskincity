@@ -1,74 +1,83 @@
 <template>
-    <div class="card" :class="{'edit-mode-content': isEditMode}">
-       <div class="card-image">
-            <figure class="image is-4by3">
-                <template v-if="hasImage">
-                    <img :src="image.src" alt="image.attrs.alt">
-                </template>
-                <template v-else>
-                    <img src="https://bulma.io/images/placeholders/1280x960.png">
-                </template>
-            </figure>
-        </div>
-        <div class="card-content" v-if="isEditMode">
-            <sdb-button
-                @click="isFormOpen = true"
-                type="button"
-                v-if="!isFormOpen"
-            >
-                <i class="fas fa-edit"></i>
+    <div>
+        <sdb-toolbar-content
+            v-if="isEditMode"
+            @delete-content="deleteContent"
+        />
 
-            </sdb-button>
-            <upload-image-content
-                v-else
-                :uploadRoute="route('admin.media.upload-image')"
-                v-model="content.cardImage.figure.image.src"
-                @close-form="closeForm"
-                @uploaded-image="updateImageSource"
-            />
-        </div>
-        <div class="card-content">
-            <div class="content">
-                <template v-if="isEditMode">
-                    <sdb-ckeditor-inline
-                        v-model="content.cardContent.content.html"
-                        />
-                </template>
-                <template v-else>
-                    <div v-html="content.cardContent.content.html"></div>
-                </template>
+        <div class="card">
+            <div class="card-image">
+                <figure class="image" :class="figure.attrs.class" v-if="hasImage">
+                    <img :src="image.src" alt="image.attrs.alt">
+                </figure>
+
+                <sdb-button
+                    type="button"
+                    class="is-overlay is-small"
+                    @click="toggleEdit"
+                    v-if="isEditMode && hasImage">
+                    <span class="icon">
+                        <i class="fas fa-times" v-if="isFormDisplayed"></i>
+                        <i class="fas fa-pen" v-else></i>
+                    </span>
+                </sdb-button>
+
+                <div class="card-content has-background-info-light" v-if="isFormDisplayed">
+                    <upload-image-content
+                        :uploadRoute="route('admin.media.upload-image')"
+                        v-model="content.cardImage.figure.image.src"
+                        @close-form="closeForm"
+                        @uploaded-image="updateImageSource"
+                    />
+                </div>
             </div>
-        </div>
-        <div class="edit-mode-buttons" v-if="isEditMode">
-            <button class="button is-small" type="button" @click="deleteContent">
-                <i class="fa fa-trash" aria-hidden="true"></i>
-            </button>
+            <div class="card-content">
+                <div class="content">
+                    <template v-if="isEditMode">
+                        <sdb-ckeditor-inline
+                            v-model="content.cardContent.content.html"
+                            />
+                    </template>
+                    <template v-else>
+                        <div v-html="content.cardContent.content.html"></div>
+                    </template>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import DeletableContentMixin from '@/Mixins/DeletableContent';
+    import EditModeContentMixin from '@/Mixins/EditModeContent';
     import SdbButton from '@/Sdb/Button';
     import SdbCkeditorInline from '@/Sdb/CkeditorInline'
+    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import UploadImageContent from '@/Blocks/Contents/UploadImage';
     import card from '@/ComponentStructures/card'
     import { useModelWrapper, emitModelValue, isBlank } from '@/Libs/utils'
 
     export default {
+        mixins: [
+            EditModeContentMixin,
+            DeletableContentMixin
+        ],
         components: {
             SdbButton,
             SdbCkeditorInline,
+            SdbToolbarContent,
             UploadImageContent,
         },
         props: {
             id: {},
-            isEditMode: {type: Boolean, default: false},
+            //isEditMode: {type: Boolean, default: false},
             modelValue: {},
         },
         setup(props, { emit }) {
             return {
                 content: useModelWrapper(props, emit),
                 image: props.modelValue.cardImage.figure.image,
+                figure: props.modelValue.cardImage.figure,
             };
         },
         data() {
@@ -78,23 +87,26 @@
             };
         },
         methods: {
-            deleteContent() {
-                this.$emit('delete-content', this.id);
-            },
             updateImageSource(imagePath) {
                 this.content.cardImage.figure.image.src = imagePath;
                 emitModelValue(this.$emit, this.content);
             },
-            closeForm() {
-                this.isFormOpen = false;
-            }
+            toggleForm() {
+                this.isFormOpen = !this.isFormOpen;
+            },
+            toggleEdit() {
+                this.isFormOpen = !this.isFormOpen;
+            },
         },
         computed: {
             hasImage() {
                 return !isBlank(this.content.cardImage.figure.image.src);
+            },
+            isFormDisplayed() {
+                return !this.hasImage || (
+                    this.hasImage && this.isFormOpen
+                );
             }
         }
     }
 </script>
-
-<style scoped src="../../../css/column-content.css"></style>

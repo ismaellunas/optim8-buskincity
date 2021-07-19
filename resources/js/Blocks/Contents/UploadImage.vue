@@ -1,26 +1,29 @@
 <template>
     <div>
-        <form @submit.prevent="submitFile" class="is-clipped">
+        <form @submit.prevent="submitFile">
             <div class="field">
                 <div class="control">
                     <sdb-input-file
-                        class="is-small"
+                        class="is-small is-centered"
                         v-model="file"
                         :accept="['image/png', 'image/jpeg']"
                     />
                 </div>
             </div>
-            <div class="field is-grouped is-centered">
-                <div class="control">
-                    <sdb-button class="is-link is-small" :disabled="!canUpload">
-                        Submit
+            <div class="columns is-centered">
+                <div class="column">
+                    <sdb-button
+                        class="is-link is-small is-fullwidth"
+                        :disabled="!canUpload">
+                        Upload
                     </sdb-button>
                 </div>
-                <div class="control">
+                <div class="column is-one-third">
                     <sdb-button
-                        type="button"
-                        class="is-small"
-                        @click="closeForm">
+                        :disabled="!canUpload"
+                        @click="closeForm"
+                        class="is-small is-fullwidth"
+                        type="button">
                         Cancel
                     </sdb-button>
                 </div>
@@ -91,7 +94,7 @@
                 this.file = null;
             },
             closeForm() {
-                this.file = null;
+                this.resetForm();
                 this.$emit('close-form');
             },
             removeImage() {
