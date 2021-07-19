@@ -33,11 +33,11 @@ class Page extends Model
         return [
             [
                 'id' => self::STATUS_DRAFT,
-                'value' => 'Draft',
+                'value' => __('Draft'),
             ],
             [
                 'id' => self::STATUS_PUBLISH,
-                'value' => 'Publish',
+                'value' => __('Published'),
             ]
         ];
     }
