@@ -1,9 +1,8 @@
 <template>
-    <div class="file is-centered is-boxed has-name">
+    <div class="file has-name">
         <label class="file-label">
             <input
                 :accept="accept.join(', ')"
-                :class="class"
                 @change="onFileChange"
                 class="file-input"
                 type="file"
@@ -12,7 +11,7 @@
                 <span class="file-icon">
                     <i class="fas fa-upload"></i>
                 </span>
-                <span class="file-label">
+                <span class="file-label" v-if="!file">
                     Choose a file...
                 </span>
             </span>
@@ -30,7 +29,6 @@
         props: {
             modelValue: {},
             accept: Array,
-            class: {},
         },
         setup(props, { emit }) {
             return {
