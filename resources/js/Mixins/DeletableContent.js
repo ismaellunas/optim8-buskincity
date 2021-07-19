@@ -9,7 +9,9 @@ export default {
     },
     methods: {
         deleteContent() {
-            this.$emit(this.emitDeleteContentName, this.id);
+            if (confirm('Are you sure?')) {
+                this.$emit(this.emitDeleteContentName, this.id);
+            }
         }
     }
 }
