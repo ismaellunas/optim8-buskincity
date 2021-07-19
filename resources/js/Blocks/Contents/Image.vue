@@ -1,25 +1,44 @@
 <template>
-    <figure class="image" :class="{'edit-mode-content': isEditMode}">
-        <img :src="imageSrc" :alt="content.figure.attrs.alt">
+    <div>
+        <div class="edit-mode-toolbar-content" v-if="isEditMode">
+            <div class="field has-addons is-pulled-right">
+                <p class="control" v-if="canEdit">
+                    <sdb-button type="button" class="is-small" @click="toggleEdit">
+                        <span class="icon">
+                            <i class="fas fa-pen"></i>
+                        </span>
+                    </sdb-button>
+                </p>
+                <p class="control">
+                    <sdb-button type="button" class="is-small" @click="deleteContent">
+                        <span class="icon">
+                            <i class="fas fa-trash"></i>
+                        </span>
+                    </sdb-button>
+                </p>
+                <p class="control">
+                    <sdb-button type="button" class="is-small handle-content">
+                        <span class="icon">
+                            <i class="fas fa-arrows-alt"></i>
+                        </span>
+                    </sdb-button>
+                </p>
+            </div>
+        </div>
 
-        <div class="card-content" v-if="isEditMode">
-            <sdb-button type="button" @click="isFormOpen = true" v-if="!isFormOpen">
-                <i class="fas fa-edit"></i>
-            </sdb-button>
+        <figure class="image" :class="{'edit-mode-content': isEditMode}">
+            <img :src="imageSrc" :alt="content.figure.attrs.alt" v-if="hasImage">
+        </figure>
+
+        <div class="card-content" v-if="isFormDisplayed">
             <upload-image-content
-                v-else
                 :entityId="entityId"
                 :uploadRoute="route('admin.media.upload-image')"
                 @close-form="closeForm"
                 v-model="content.figure.image.src"
             />
         </div>
-        <div class="edit-mode-buttons" v-if="isEditMode">
-            <button class="button is-small" type="button" @click="deleteContent">
-                <i class="fa fa-trash" aria-hidden="true"></i>
-            </button>
-        </div>
-    </figure>
+    </div>
 </template>
 
 <script>
@@ -56,9 +75,9 @@
             };
         },
         methods: {
-            closeForm() {
-                this.isFormOpen = false;
-            }
+            toggleEdit() {
+                this.isFormOpen = !this.isFormOpen;
+            },
         },
         computed: {
             hasImage() {
@@ -70,8 +89,18 @@
                 }
                 return 'https://bulma.io/images/placeholders/640x480.png';
             },
+            /* @overide */
+            canEdit() {
+                return this.isEditMode && this.hasImage;
+            },
+            isFormDisplayed() {
+                return !this.hasImage || (
+                    this.isEditMode && this.isFormOpen
+                );
+            },
+            closeForm() {
+                this.isFormOpen = false;
+            },
         }
     }
 </script>
-
-<style scoped src="../../../css/column-content.css"></style>

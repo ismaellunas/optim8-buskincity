@@ -5,6 +5,7 @@
             @change="log"
             class="dragArea list-group"
             group="components"
+            handle=".handle-content"
             item-key="id"
             v-model="components"
         >
