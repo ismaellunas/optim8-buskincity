@@ -18,28 +18,9 @@ use App\Http\Controllers\UserRoleController;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
-
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
-
-Route::get('/user/privacy', function() {
-    echo "Privacy page";
-});
-Route::get('/user/service', function() {
-    echo "Service page";
-});
-Route::get('/user/remove-facebook', function() {
-    echo "Remove facebook account page";
-});
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('/roles', RoleController::class);
@@ -57,4 +38,23 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
 });
 
 /* ---------- FRONTEND ---------- */
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
+
+Route::get('/user/privacy', function() {
+    echo "Privacy page";
+});
+Route::get('/user/service', function() {
+    echo "Service page";
+});
+Route::get('/user/remove-facebook', function() {
+    echo "Remove facebook account page";
+});
+
 Route::get('/pages/{page:slug}', [App\Http\Controllers\PageController::class, 'show'])->name('pages.show');
