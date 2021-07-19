@@ -7,4 +7,9 @@ export default {
             editModeWrapperClass: ['edit-mode-content'],
         };
     },
+    computed: {
+        canEdit() {
+            return this.isEditMode;
+        }
+    }
 }
