@@ -42,7 +42,7 @@
             <block-column
                 :id="column.id"
                 :isEditMode="isEditMode"
-                v-model="block.columns[index].components"
+                :components="block.columns[index].components"
             />
         </template>
     </div>
