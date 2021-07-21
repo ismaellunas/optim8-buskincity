@@ -8,7 +8,7 @@
 
         <div class="box mb-6">
             <page-form
-                :form="form"
+                v-model="form"
                 :errors="errors"
                 :isNew="isNew"
                 :isEditMode="isEditMode"
