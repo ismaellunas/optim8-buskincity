@@ -56,7 +56,7 @@
                 group="columns"
                 handle=".handle-columns"
                 item-key="id"
-                v-model="data"
+                :list="data"
                 empty-insert-threshold="5"
             >
                 <template #item="{element, index}">
@@ -76,7 +76,7 @@
     import BlockColumns from '@/Blocks/Columns'
     import ComponentStructures from '@/ComponentStructures';
     import Draggable from "vuedraggable";
-    import { generateElementId, useModelWrapper } from '@/Libs/utils'
+    import { isBlank, generateElementId, useModelWrapper } from '@/Libs/utils'
     import { createBlock, createColumn } from '@/Libs/page-builder.js';
 
     export default {
@@ -87,7 +87,7 @@
         props: {
             errors: Object,
             isEditMode: {type: Boolean, default: false},
-            modelValue: Array,
+            modelValue: {type: Array, default: []},
         },
         setup(props, { emit }) {
             return {
@@ -140,7 +140,7 @@
                 return blocks;
             },
             hasBlok() {
-                return this.data.length > 0;
+                return isBlank(this.data) ? false : this.data.length > 0;
             }
         }
     }
