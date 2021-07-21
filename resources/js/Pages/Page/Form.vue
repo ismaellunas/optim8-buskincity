@@ -75,7 +75,7 @@
             if (!isBlank(props.tabActive) && props.tabActive === 'builder') {
                 activeTab = ref(1);
             } else {
-                activeTab = ref(1);
+                activeTab = ref(0);
             }
 
             return {
