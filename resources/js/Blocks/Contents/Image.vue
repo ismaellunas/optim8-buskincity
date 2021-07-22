@@ -1,6 +1,6 @@
 <template>
     <div>
-        <sdb-toolbar-content @delete-content="deleteContent"/>
+        <sdb-toolbar-content @delete-content="deleteContent" v-if="isEditMode"/>
 
         <figure class="image" v-if="hasImage">
             <img :src="imageSrc" :alt="content.figure.attrs.alt">

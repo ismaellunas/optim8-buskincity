@@ -7,6 +7,7 @@
             class="dragArea list-group"
             empty-insert-threshold="5"
             group="components"
+            handle=".handle-content"
             item-key="id"
         >
             <template #item="{ element, index }">

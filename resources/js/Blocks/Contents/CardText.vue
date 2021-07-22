@@ -1,6 +1,6 @@
 <template>
     <div>
-        <sdb-toolbar-content @delete-content="deleteContent"/>
+        <sdb-toolbar-content @delete-content="deleteContent" v-if="isEditMode"/>
 
         <div class="card sdb-card-text">
             <div class="card-content">

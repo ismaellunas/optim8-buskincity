@@ -105,7 +105,7 @@
                 this.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
             },
             openShow(page) {
-                window.open(this.route('pages.show', {id: page.id}), "_blank");
+                window.open(this.route('pages.show', page.slug), "_blank");
             },
             statusClass(status) {
                 let statusClass = ['is-small', 'is-rounded'];
