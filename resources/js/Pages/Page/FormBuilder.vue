@@ -50,14 +50,14 @@
 
         <div class="column is-9" :class="{'has-background-grey-lighter has-text-centered': !hasBlok}">
             <draggable
+                :list="data"
                 :sort="true"
                 animation="300"
                 class="list-block-columns"
+                empty-insert-threshold="5"
                 group="columns"
                 handle=".handle-columns"
                 item-key="id"
-                :list="data"
-                empty-insert-threshold="5"
             >
                 <template #item="{element, index}">
                     <block-columns
