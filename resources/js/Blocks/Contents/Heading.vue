@@ -1,24 +1,26 @@
 <template>
-    <template v-if="isEditMode">
-        <h1 class="title" :class="wrapperClass">
-            <sdb-ckeditor-inline v-model="content.heading.html" :config="editorConfig"/>
+    <div>
+        <sdb-toolbar-content
+            v-if="isEditMode"
+            @delete-content="deleteContent"
+        />
 
-            <div class="edit-mode-buttons">
-                <button class="button is-small" type="button" @click="deleteContent">
-                    <i class="fa fa-trash" aria-hidden="true"></i>
-                </button>
-            </div>
-        </h1>
-    </template>
-    <template v-else>
-        <div :class="wrapperClass" v-html="content.heading.html"></div>
-    </template>
+        <template v-if="isEditMode">
+            <h1 class="title" :class="wrapperClass">
+                <sdb-ckeditor-inline v-model="content.heading.html" :config="editorConfig"/>
+            </h1>
+        </template>
+        <template v-else>
+            <div :class="wrapperClass" v-html="content.heading.html"></div>
+        </template>
+    </div>
 </template>
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import EditModeContentMixin from '@/Mixins/EditModeContent';
     import SdbCkeditorInline from '@/Sdb/CkeditorInline';
+    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { heading as editorConfig } from '@/Libs/ckeditor-configs';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -29,10 +31,12 @@
         ],
         components: {
             SdbCkeditorInline,
+            SdbToolbarContent,
         },
         props: {
             class: {type: Array},
             id: {},
+            isEditMode: {type: Boolean, default: false},
             modelValue: {},
         },
         data() {
@@ -49,13 +53,3 @@
         },
     }
 </script>
-
-<style scoped>
-.edit-mode-content {
-    border: 1px dotted;
-}
-.edit-mode-buttons {
-    line-height: 0.5;
-}
-</style>
-<style scoped src="../../../css/column-content.css"></style>

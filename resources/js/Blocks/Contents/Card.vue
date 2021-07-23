@@ -14,7 +14,7 @@
                 <sdb-button
                     type="button"
                     class="is-overlay is-small"
-                    @click="toggleEdit"
+                    @click.prevent="toggleEdit"
                     v-if="isEditMode && hasImage">
                     <span class="icon">
                         <i class="fas fa-times" v-if="isFormDisplayed"></i>
@@ -26,7 +26,6 @@
                     <upload-image-content
                         :uploadRoute="route('admin.media.upload-image')"
                         v-model="content.cardImage.figure.image.src"
-                        @close-form="closeForm"
                         @uploaded-image="updateImageSource"
                     />
                 </div>
@@ -54,7 +53,6 @@
     import SdbCkeditorInline from '@/Sdb/CkeditorInline'
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import UploadImageContent from '@/Blocks/Contents/UploadImage';
-    import card from '@/ComponentStructures/card'
     import { useModelWrapper, emitModelValue, isBlank } from '@/Libs/utils'
 
     export default {
@@ -70,7 +68,7 @@
         },
         props: {
             id: {},
-            //isEditMode: {type: Boolean, default: false},
+            isEditMode: {type: Boolean, default: false},
             modelValue: {},
         },
         setup(props, { emit }) {
@@ -82,7 +80,6 @@
         },
         data() {
             return {
-                defaultData: card,
                 isFormOpen: false,
             };
         },
@@ -91,11 +88,8 @@
                 this.content.cardImage.figure.image.src = imagePath;
                 emitModelValue(this.$emit, this.content);
             },
-            toggleForm() {
-                this.isFormOpen = !this.isFormOpen;
-            },
             toggleEdit() {
-                this.isFormOpen = !this.isFormOpen;
+                this.isFormOpen = !(this.isFormOpen);
             },
         },
         computed: {
