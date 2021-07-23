@@ -31,6 +31,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('/pages', App\Http\Controllers\PageController::class);
     Route::resource('/media', App\Http\Controllers\MediaController::class);
+    Route::resource('/categories', App\Http\Controllers\CategoryController::class);
     Route::post(
         '/media/upload-image',
         [App\Http\Controllers\MediaController::class, 'uploadImage']
