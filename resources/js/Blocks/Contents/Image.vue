@@ -3,6 +3,15 @@
         <sdb-toolbar-content @delete-content="deleteContent" v-if="isEditMode"/>
 
         <figure class="image" v-if="hasImage">
+            <sdb-button
+                type="button"
+                class="is-small is-overlay"
+                @click="toggleEdit"
+                v-if="isEditMode">
+                <span class="icon" v-if="isFormDisplayed"><i class="fas fa-times-circle"></i></span>
+                <span class="icon" v-else><i class="fas fa-pen"></i></span>
+            </sdb-button>
+
             <img :src="imageSrc" :alt="content.figure.attrs.alt">
         </figure>
 
