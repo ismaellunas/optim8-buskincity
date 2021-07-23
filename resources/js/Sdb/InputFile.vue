@@ -11,7 +11,7 @@
                 <span class="file-icon">
                     <i class="fas fa-upload"></i>
                 </span>
-                <span class="file-label" v-if="!file">
+                <span class="file-label" v-if="!hasFile">
                     Choose a file...
                 </span>
             </span>
@@ -45,8 +45,11 @@
             }
         },
         computed: {
+            hasFile() {
+                return !isBlank(this.file);
+            },
             fileName() {
-                if (!isBlank(this.file)) {
+                if (this.hasFile) {
                     return this.file.name
                 }
                 return "...";
