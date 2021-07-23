@@ -10,7 +10,7 @@
 
         <div class="box mb-6">
             <page-form
-                :form="form"
+                v-model="form"
                 :errors="errors"
                 :isNew="isNew"
                 :isEditMode="isEditMode"
@@ -29,7 +29,8 @@
     import SdbFlashNotifications from '@/Sdb/FlashNotifications';
     import { Inertia } from "@inertiajs/inertia";
     import { isBlank } from '@/Libs/utils';
-    import { reactive, ref } from "vue";
+    import { reactive } from 'vue';
+    import { useForm } from '@inertiajs/inertia-vue3'
 
     export default {
         components: {
@@ -46,12 +47,12 @@
             tabActive: String,
         },
         setup(props) {
-            const form = reactive({
+            let form = reactive({
                 id: props.page.id,
                 title: props.page.title,
                 slug: props.page.slug,
                 excerpt: props.page.excerpt,
-                data: props.page.data ?? [],
+                data: props.page.data,
                 meta_description: props.page.meta_description,
                 meta_title: props.page.meta_title,
                 status: props.page.status,
@@ -63,8 +64,7 @@
             function submit() {
                 Inertia.put(
                     submitRoute,
-                    form,
-                    {}
+                    form
                 );
             };
 

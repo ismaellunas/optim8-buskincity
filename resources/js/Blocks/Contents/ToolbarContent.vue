@@ -1,11 +1,6 @@
 <template>
     <div class="edit-mode-toolbar-content">
         <div class="field has-addons is-pulled-right">
-            <p class="control" v-if="canEdit">
-                <sdb-button type="button" class="is-small" @click="editContent">
-                    <span class="icon"><i class="fas fa-pen"></i></span>
-                </sdb-button>
-            </p>
             <p class="control" v-if="canDelete">
                 <sdb-button type="button" class="is-small" @click="deleteContent">
                     <span class="icon"><i class="fas fa-trash"></i></span>
@@ -24,17 +19,16 @@
     import SdbButton from '@/Sdb/Button';
 
     export default {
+        components: {
+            SdbButton,
+        },
         props: {
-            canEdit: {type: Boolean, default: true},
             canDelete: {type: Boolean, default: true},
             canMove: {type: Boolean, default: true},
         },
         methods: {
             deleteContent() {
                 this.$emit('delete-content');
-            },
-            editContent() {
-                this.$emit('edit-content');
             },
         }
     }

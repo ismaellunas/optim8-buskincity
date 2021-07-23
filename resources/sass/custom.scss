@@ -15,3 +15,15 @@
     padding:0 10px;
   }
 }
+
+.edit-mode-toolbar-content {
+  position: relative;
+  .field {
+    position: absolute;
+    right: -0.75rem;
+    top: -0.75rem;
+    .control {
+      z-index: 1;
+    }
+  }
+}

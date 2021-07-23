@@ -1,49 +1,16 @@
 <template>
     <div>
-        <sdb-toolbar-content
-            v-if="isEditMode"
-            :can-edit="canEdit"
-            @edit-content="toggleEdit"
-            @delete-content="deleteContent"
-        />
-
-        <div class="edit-mode-toolbar-content" v-if="isEditMode">
-            <div class="field has-addons is-pulled-right">
-                <p class="control" v-if="canEdit">
-                    <sdb-button type="button" class="is-small" @click="toggleEdit">
-                        <span class="icon">
-                            <i class="fas fa-pen"></i>
-                        </span>
-                    </sdb-button>
-                </p>
-                <p class="control">
-                    <sdb-button type="button" class="is-small" @click="deleteContent">
-                        <span class="icon">
-                            <i class="fas fa-trash"></i>
-                        </span>
-                    </sdb-button>
-                </p>
-                <p class="control">
-                    <sdb-button type="button" class="is-small handle-content">
-                        <span class="icon">
-                            <i class="fas fa-arrows-alt"></i>
-                        </span>
-                    </sdb-button>
-                </p>
-            </div>
-        </div>
-
-        <figure class="image" :class="{'edit-mode-content': isEditMode}">
+        <figure class="image">
             <img :src="imageSrc" :alt="content.figure.attrs.alt" v-if="hasImage">
-        </figure>
-
-        <div class="card-content" v-if="isFormDisplayed">
             <upload-image-content
                 :entityId="entityId"
                 :uploadRoute="route('admin.media.upload-image')"
                 @close-form="closeForm"
                 v-model="content.figure.image.src"
             />
+        </figure>
+
+        <div class="card-content has-background-info-light" v-if="isFormDisplayed">
         </div>
     </div>
 </template>
@@ -62,6 +29,8 @@
             DeletableContentMixin
         ],
         components: {
+            SdbButton,
+            SdbToolbarContent,
             UploadImageContent,
             SdbButton,
         },
@@ -102,8 +71,9 @@
                 return this.isEditMode && this.hasImage;
             },
             isFormDisplayed() {
-                return !this.hasImage || (
-                    this.isEditMode && this.isFormOpen
+                return this.isEditMode && (
+                    !this.hasImage
+                    || (this.isEditMode && this.isFormOpen)
                 );
             },
             closeForm() {

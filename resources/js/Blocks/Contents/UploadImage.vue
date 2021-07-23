@@ -10,19 +10,19 @@
                     />
                 </div>
             </div>
-            <div class="field has-text-centered">
-                <div class="control">
-                    <sdb-button class="is-link is-small" :disabled="!canUpload">
+            <div class="columns is-centered">
+                <div class="column">
+                    <sdb-button
+                        class="is-link is-small is-fullwidth"
+                        :disabled="!canUpload">
                         Upload
                     </sdb-button>
                 </div>
-            </div>
-            <div class="field has-text-centered">
-                <div class="control">
+                <div class="column is-one-third">
                     <sdb-button
                         :disabled="!canUpload"
                         @click="closeForm"
-                        class="is-small"
+                        class="is-small is-fullwidth"
                         type="button">
                         Cancel
                     </sdb-button>
