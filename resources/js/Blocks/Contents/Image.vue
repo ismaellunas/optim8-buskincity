@@ -1,16 +1,18 @@
 <template>
     <div>
-        <figure class="image">
-            <img :src="imageSrc" :alt="content.figure.attrs.alt" v-if="hasImage">
+        <sdb-toolbar-content @delete-content="deleteContent"/>
+
+        <figure class="image" v-if="hasImage">
+            <img :src="imageSrc" :alt="content.figure.attrs.alt">
+        </figure>
+
+        <div class="card-content has-background-info-light" v-if="isFormDisplayed">
             <upload-image-content
                 :entityId="entityId"
                 :uploadRoute="route('admin.media.upload-image')"
                 @close-form="closeForm"
                 v-model="content.figure.image.src"
             />
-        </figure>
-
-        <div class="card-content has-background-info-light" v-if="isFormDisplayed">
         </div>
     </div>
 </template>
