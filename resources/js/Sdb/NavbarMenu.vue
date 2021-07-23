@@ -21,18 +21,49 @@
                     <jet-nav-link :href="route('admin.pages.index')" :active="route().current('dashboard')">
                         Pages
                     </jet-nav-link>
-                    <jet-nav-link :href="route('admin.media.index')" :active="route().current('dashboard')">
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            Blog
+                        </a>
+                        <div class="navbar-dropdown">
+                            <sdb-link :href="route('dashboard')" class="navbar-item">
+                                Posts
+                            </sdb-link>
+                            <sdb-link :href="route('admin.categories.index')" class="navbar-item">
+                                Categories
+                            </sdb-link>
+                        </div>
+                    </div>
+                    <jet-nav-link
+                        :href="route('admin.media.index')"
+                        :active="route().current('admin.media.index')">
                         Media
                     </jet-nav-link>
-                    <jet-nav-link :href="route('roles.index')" :active="route().current('dashboard')">
-                        Roles
-                    </jet-nav-link>
-                    <jet-nav-link :href="route('permissions.index')" :active="route().current('dashboard')">
-                        Permissions
-                    </jet-nav-link>
-                    <jet-nav-link :href="route('user-roles.index')" :active="route().current('dashboard')">
-                        UserRole
-                    </jet-nav-link>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            UAC
+                        </a>
+                        <div class="navbar-dropdown">
+                            <jet-nav-link
+                                class="navbar-item"
+                                :href="route('roles.index')"
+                                :active="route().current('roles.index')">
+                                Roles
+                            </jet-nav-link>
+                            <jet-nav-link
+                                class="navbar-item"
+                                :href="route('permissions.index')"
+                                :active="route().current('permissions.index')">
+                                Permissions
+                            </jet-nav-link>
+                            <jet-nav-link
+                                class="navbar-item"
+                                :href="route('user-roles.index')"
+                                :active="route().current('user-roles.index')">
+                                UserRole
+                            </jet-nav-link>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="navbar-end">
