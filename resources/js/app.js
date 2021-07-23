@@ -5,7 +5,6 @@ require('../../node_modules/@fortawesome/fontawesome-free/js/all');
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3'
 import { InertiaProgress } from '@inertiajs/progress';
-import { Head, Link } from '@inertiajs/inertia-vue3';
 import CKEditor from '@ckeditor/ckeditor5-vue';
 
 createInertiaApp({
@@ -17,8 +16,6 @@ createInertiaApp({
             .mixin({ methods: { route } })
             .use(plugin)
             .use(CKEditor)
-            .component('InertiaHead', Head)
-            .component('InertiaLink', Link)
             .mount(el)
     },
 })
