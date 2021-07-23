@@ -27,10 +27,8 @@
     import PageForm from '@/Pages/Page/Form';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbFlashNotifications from '@/Sdb/FlashNotifications';
-    import { Inertia } from "@inertiajs/inertia";
-    import { isBlank } from '@/Libs/utils';
+    import { Inertia } from '@inertiajs/inertia';
     import { reactive } from 'vue';
-    import { useForm } from '@inertiajs/inertia-vue3'
 
     export default {
         components: {
@@ -52,7 +50,7 @@
                 title: props.page.title,
                 slug: props.page.slug,
                 excerpt: props.page.excerpt,
-                data: props.page.data,
+                data: props.page.data ?? [],
                 meta_description: props.page.meta_description,
                 meta_title: props.page.meta_title,
                 status: props.page.status,
