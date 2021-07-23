@@ -1,22 +1,23 @@
 <template>
     <div class="column" :class="{'edit-mode-column': isEditMode}">
         <draggable
-            :emptyInsertThreshold="emptyInsertThreshold"
+            :list="components"
             @change="log"
+            animation="300"
             class="dragArea list-group"
+            empty-insert-threshold="5"
             group="components"
             handle=".handle-content"
             item-key="id"
-            v-model="components"
         >
-            <template #item="{ element }">
+            <template #item="{ element, index }">
                 <component
                     :entityId="entityId"
                     :id="element.id"
                     :is="element.componentName"
                     :isEditMode="isEditMode"
                     @delete-content="deleteContent"
-                    v-model="element.content"
+                    v-model="components[index].content"
                 >
             </component>
             </template>
@@ -49,11 +50,10 @@
             id: {},
             isEditMode: {default: false},
             isDebugMode: {default: false},
-            modelValue: {}, // components
+            components: {type: Array, default: []},
         },
         setup(props, { emit }) {
             return {
-                components: useModelWrapper(props, emit),
                 entityId: usePage().props.value.entityId ?? null,
             };
         },
@@ -83,9 +83,6 @@
                 if (!isBlank(id)) {
                     const removeIndex = this.components.map(block => block.id).indexOf(id);
                     this.components.splice(removeIndex, 1);
-                }
-                else {
-                    console.log(id);
                 }
             }
         }
