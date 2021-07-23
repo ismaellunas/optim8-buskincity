@@ -4,7 +4,7 @@
             <div class="field">
                 <div class="control">
                     <sdb-input-file
-                        class="is-small is-centered"
+                        class="is-small is-fullwidth"
                         v-model="file"
                         :accept="['image/png', 'image/jpeg']"
                     />
