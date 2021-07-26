@@ -108,14 +108,14 @@
             SdbPagination,
             SdbTag,
         },
-        props: ['records'],
+        props: ['records', 'defaultLocale'],
         methods: {
             deleteRow(page) {
                 if (!confirm('Are you sure?')) return;
                 this.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
             },
             openShow(page) {
-                window.open(this.route('pages.show', page.slug), "_blank");
+                window.open(this.route('pages.show', [this.defaultLocale, page.slug]), "_blank");
             },
             statusClass(status) {
                 let statusClass = ['is-small', 'is-rounded'];
