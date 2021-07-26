@@ -26,8 +26,9 @@
                             <th>Title</th>
                             <th>Slug</th>
                             <th>Status</th>
-                            <th>Meta Title</th>
-                            <th>Meta Description</th>
+                            <th>M.Title</th>
+                            <th>M.Description</th>
+                            <th>Language</th>
                             <th>
                                 <div class="level-right">Actions</div>
                             </th>
@@ -39,12 +40,19 @@
                             <td>{{ page.title }}</td>
                             <td>{{ page.slug }}</td>
                             <td>
-                                <sdb-button :class="statusClass(page.status)" type="button">
+                                <sdb-tag :class="statusClass(page.status)">
                                     {{ page.statusText }}
-                                </sdb-button>
+                                </sdb-tag>
                             </td>
                             <td><i class="far fa-check-circle" v-if="page.hasMetaTitle"></i></td>
                             <td><i class="far fa-check-circle" v-if="page.hasMetaDescription"></i></td>
+                            <td>
+                                <sdb-tag
+                                    v-for="translation in page.translations"
+                                    class="is-info mr-1">
+                                    {{ translation.locale.toUpperCase() }}
+                                </sdb-tag>
+                            </td>
                             <td>
                                 <div class="level-right">
                                     <sdb-button
@@ -89,6 +97,7 @@
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbFlashNotifications from '@/Sdb/FlashNotifications';
     import SdbPagination from '@/Sdb/Pagination';
+    import SdbTag from '@/Sdb/Tag';
 
     export default {
         components: {
@@ -97,6 +106,7 @@
             SdbButtonLink,
             SdbFlashNotifications,
             SdbPagination,
+            SdbTag,
         },
         props: ['records'],
         methods: {
@@ -111,7 +121,7 @@
                 let statusClass = ['is-small', 'is-rounded'];
                 switch(status) {
                     case 1 : statusClass.push('is-success'); break;
-                    default: statusClass.push('is-primary');
+                    default: statusClass.push('is-light');
                 };
                 return statusClass;
             }
