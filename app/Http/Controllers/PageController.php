@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-class PageController extends Controller
+class PageController extends CrudController
 {
     protected $model = Page::class;
-    protected $recordsPerPage = 15;
+    protected $baseRouteName = 'admin.pages';
 
     /**
      * Display a listing of the resource.
