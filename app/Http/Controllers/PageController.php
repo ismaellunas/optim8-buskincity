@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
+use App\Services\TranslationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -21,6 +22,7 @@ class PageController extends CrudController
     {
         return Inertia::render('Page/Index', [
             'records' => $this->getRecords(),
+            'defaultLocale' => TranslationService::getDefaultLocale(),
         ]);
     }
 
