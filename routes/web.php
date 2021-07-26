@@ -40,12 +40,7 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
 
 /* ---------- FRONTEND ---------- */
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect(app()->getLocale());
 });
 
 Route::get('/user/privacy', function() {
@@ -58,4 +53,19 @@ Route::get('/user/remove-facebook', function() {
     echo "Remove facebook account page";
 });
 
-Route::get('/pages/{page:slug}', [App\Http\Controllers\PageController::class, 'show'])->name('pages.show');
+Route::group([
+    'prefix' => '{locale}',
+    'where' => ['locale' => '[a-zA-Z]{2}'],
+    'middleware' => 'setLocale',
+], function () {
+    Route::get('/', function () {
+        return Inertia::render('Welcome', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+        ]);
+    });
+
+    Route::get('/pages/{page_translation}', [App\Http\Controllers\PageController::class, 'show'])->name('pages.show');
+});
