@@ -4,12 +4,12 @@ namespace App\Services;
 
 class TranslationService
 {
-    public static function getDefaultLocaleCode(): string
+    public static function getDefaultLocale(): string
     {
         return config('app.locale');
     }
 
-    public static function getLocaleAndCodeOptions(): array
+    public static function getLocaleOptions(): array
     {
         return [
             [
