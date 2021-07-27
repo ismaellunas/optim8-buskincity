@@ -38,4 +38,11 @@ class TranslationService
             self::getLocaleOptions()
         );
     }
+
+    public static function getLanguageFromLocale($locale): null|string
+    {
+        $firstOption = collect(self::getLocaleOptions())
+            ->firstWhere('id', $locale);
+        return empty($firstOption) ? null : $firstOption['name'];
+    }
 }
