@@ -30,4 +30,12 @@ class TranslationService
             ],
         ];
     }
+
+    public static function getLocales(): array
+    {
+        return array_map(
+            function ($option) { return $option['id']; },
+            self::getLocaleOptions()
+        );
+    }
 }
