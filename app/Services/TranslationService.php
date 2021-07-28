@@ -4,6 +4,8 @@ namespace App\Services;
 
 class TranslationService
 {
+    public static $localeKey = 'locale';
+
     public static function getDefaultLocale(): string
     {
         return config('app.locale');
@@ -44,5 +46,26 @@ class TranslationService
         $firstOption = collect(self::getLocaleOptions())
             ->firstWhere('id', $locale);
         return empty($firstOption) ? null : $firstOption['name'];
+    }
+
+    public static function hasLanguage(): bool
+    {
+        return session()->has(self::$localeKey);
+    }
+
+    public static function currentLanguage(): string
+    {
+        return session(self::$localeKey) ?? self::getDefaultLocale();
+    }
+
+    public static function setLanguage(string $locale): void
+    {
+        session()->put(self::$localeKey, $locale);
+    }
+
+    public static function setLanguageAndAppLocale(string $locale): void
+    {
+        self::setLanguage($locale);
+        app()->setLocale($locale);
     }
 }
