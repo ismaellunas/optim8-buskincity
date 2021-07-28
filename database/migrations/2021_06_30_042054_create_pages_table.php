@@ -15,17 +15,12 @@ class CreatePagesTable extends Migration
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 255);
-            $table->text('excerpt')->nullable();
-            $table->longText('data')->nullable();
-            $table->string('slug', 255)->unique();
-            $table->string('meta_title', 255)->nullable();
-            $table->string('meta_description', 255)->nullable();
-            $table->tinyInteger('status')->default(0);
             $table
                 ->foreignId('author_id')
                 ->nullable()
-                ->constrained('users');
+                ->constrained('users')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
             $table->timestamps();
         });
     }
