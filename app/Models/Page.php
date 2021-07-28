@@ -7,15 +7,13 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
+use App\Models\PageTranslation;
 
 class Page extends Model implements TranslatableContract
 {
     use HasFactory;
     use MediaAlly;
     use Translatable;
-
-    const STATUS_DRAFT = 0;
-    const STATUS_PUBLISH = 1;
 
     public $translatedAttributes = [
         'data',
@@ -31,11 +29,11 @@ class Page extends Model implements TranslatableContract
     {
         return [
             [
-                'id' => self::STATUS_DRAFT,
+                'id' => PageTranslation::STATUS_DRAFT,
                 'value' => __('Draft'),
             ],
             [
-                'id' => self::STATUS_PUBLISH,
+                'id' => PageTranslation::STATUS_PUBLISH,
                 'value' => __('Published'),
             ]
         ];
