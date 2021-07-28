@@ -2,30 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\AsCollection;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 
-class Page extends Model
+class Page extends Model implements TranslatableContract
 {
     use HasFactory;
     use MediaAlly;
+    use Translatable;
 
     const STATUS_DRAFT = 0;
     const STATUS_PUBLISH = 1;
 
-    protected $casts = [
-        'data' => AsCollection::class,
-    ];
-
-    protected $fillable = [
+    public $translatedAttributes = [
         'data',
+        'except',
         'meta_description',
         'meta_title',
         'slug',
-        'title',
         'status',
+        'title',
     ];
 
     public static function getStatusOptions(): array
