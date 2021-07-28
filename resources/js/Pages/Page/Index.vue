@@ -47,23 +47,15 @@
                             <td><i class="far fa-check-circle" v-if="page.hasMetaTitle"></i></td>
                             <td><i class="far fa-check-circle" v-if="page.hasMetaDescription"></i></td>
                             <td>
-                                <sdb-tag
+                                <sdb-button
                                     v-for="translation in page.translations"
-                                    class="is-info mr-1">
-                                    {{ translation.locale.toUpperCase() }}
-                                </sdb-tag>
+                                    @click="openShow(translation.locale, page)"
+                                    class="is-info px-2 mr-1 is-small">
+                                    {{ translation.locale?.toUpperCase() }}
+                                </sdb-button>
                             </td>
                             <td>
                                 <div class="level-right">
-                                    <sdb-button
-                                        class="is-ghost has-text-black"
-                                        type="button"
-                                        @click="openShow(page)"
-                                    >
-                                        <span class="icon is-small">
-                                            <i class="far fa-eye"></i>
-                                        </span>
-                                    </sdb-button>
                                     <sdb-button-link
                                         class="is-ghost has-text-black"
                                         :href="route('admin.pages.edit', {id: page.id})"
@@ -114,8 +106,8 @@
                 if (!confirm('Are you sure?')) return;
                 this.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
             },
-            openShow(page) {
-                window.open(this.route('pages.show', [this.defaultLocale, page.slug]), "_blank");
+            openShow(locale, page) {
+                window.open(this.route('pages.show', [locale, page.slug]), "_blank");
             },
             statusClass(status) {
                 let statusClass = ['is-small', 'is-rounded'];
