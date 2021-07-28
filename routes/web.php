@@ -3,9 +3,10 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserRoleController;
+use App\Services\TranslationService as TranslationSv;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +30,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 });
 
 Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::resource('/pages', App\Http\Controllers\PageController::class);
+    Route::resource('/pages', App\Http\Controllers\PageController::class)
+        ->except(['show']);
     Route::resource('/media', App\Http\Controllers\MediaController::class);
     Route::resource('/categories', App\Http\Controllers\CategoryController::class);
     Route::post(
@@ -40,7 +42,17 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
 
 /* ---------- FRONTEND ---------- */
 Route::get('/', function () {
-    return redirect(app()->getLocale());
+    return redirect(TranslationSv::currentLanguage());
+});
+
+Route::get('language/{new_locale}', App\Http\Controllers\ChangeLanguageController::class)
+    ->where('new_locale', '[a-zA-Z]{2}')
+    ->name('language.change');
+
+Route::name('status-code.')->group(function () {
+    Route::get('404', function () {
+        return Inertia::render('PageNotFound');
+    })->name('404');
 });
 
 Route::get('/user/privacy', function() {
@@ -67,5 +79,6 @@ Route::group([
         ]);
     });
 
-    Route::get('/pages/{page_translation}', [App\Http\Controllers\PageController::class, 'show'])->name('pages.show');
+    Route::get('/pages/{page_translation}', [App\Http\Controllers\PageController::class, 'show'])
+        ->name('pages.show');
 });
