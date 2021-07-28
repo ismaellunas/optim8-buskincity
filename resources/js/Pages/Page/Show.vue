@@ -1,9 +1,10 @@
 <template>
-    <page-layout>
-        <Head>
-            <title>{{page.meta_title}}</title>
-             <meta head-key="description" name="description" :content="page.meta_description" />
-        </Head>
+    <Head>
+        <title>{{page.meta_title}}</title>
+        <meta head-key="description" name="description" :content="page.meta_description" />
+    </Head>
+
+    <div id="main-container" class="container mt-4">
         <template v-for="(block, index) in page.data">
             <block-columns
                 v-model="page.data[index]"
@@ -11,7 +12,8 @@
                 :id="block.id"
                 />
         </template>
-    </page-layout>
+    </div>
+
 </template>
 
 <script>
@@ -20,9 +22,9 @@
     import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
+        layout: PageLayout,
         components: {
             BlockColumns,
-            PageLayout,
             Head,
         },
         props: {
