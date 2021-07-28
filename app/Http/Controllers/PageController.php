@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
+use App\Models\PageTranslation;
 use App\Services\TranslationService;
+use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class PageController extends CrudController
@@ -34,7 +37,10 @@ class PageController extends CrudController
     public function create()
     {
         return Inertia::render('Page/Create', [
-            'statusOptions' => Page::getStatusOptions(),
+            'page' => new $this->model,
+            'statusOptions' => $this->model::getStatusOptions(),
+            'defaultLocale' => TranslationService::getDefaultLocale(),
+            'localeOptions' => TranslationService::getLocaleOptions(),
         ]);
     }
 
@@ -47,24 +53,22 @@ class PageController extends CrudController
     public function store(Request $request)
     {
         $this->getValidate($request);
+        $inputs = $request->input('translations', []);
 
-        $page = new Page();
-        $page->title = $request->input('title');
-        $page->slug = $request->input('slug');
-        $page->excerpt = $request->input('excerpt');
-        $page->meta_description = $request->input('meta_description');
-        $page->meta_title = $request->input('meta_title');
-        $page->status = $request->input('status', Page::STATUS_DRAFT);
-        $page->data = $request->input('data');
+        $page = new $this->model;
+        $locale = array_key_first($inputs);
+        $pageTranslation = $page->translate($locale);
+        $this->getValidate($request, $pageTranslation->id ?? null);
+
+        $validatedData = $request->all();
+        $page->fill($validatedData);
         $page->author_id = Auth::id();
+
         $page->save();
 
         $request->session()->flash('message', 'Page created successfully!');
 
-        return redirect()->route('admin.pages.edit', [
-            'page' => $page->id,
-            'tab' => 'builder'
-        ]);
+        return redirect()->route('admin.pages.index');
     }
 
     /**
@@ -73,11 +77,26 @@ class PageController extends CrudController
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Http\Response
      */
-    public function show(Page $page)
+    public function show(string $locale, PageTranslation $pageTranslation)
     {
-        return Inertia::render('Page/Show', [
-            'page' => $page,
-        ]);
+        if ($pageTranslation->locale != $locale) {
+            $page = $pageTranslation->page;
+            if ($page->hasTranslation($locale)) {
+                $pageTranslation = $page->translate($locale);
+                $pageTranslation->locale;
+                return redirect()->route('pages.show', [
+                    'locale' => $locale,
+                    'page_translation' => $pageTranslation->slug
+                ]);
+            } else {
+                return redirect()->route('status-code.404');
+            }
+        } else {
+            return Inertia::render('Page/Show', [
+                'page' => $pageTranslation,
+            ]);
+        }
+
     }
 
     /**
@@ -86,13 +105,14 @@ class PageController extends CrudController
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, Page $page)
+    public function edit(Page $page)
     {
         return Inertia::render('Page/Edit', [
             'page' => $page,
             'entityId' => $page->id,
-            'statusOptions' => Page::getStatusOptions(),
-            'tabActive' => $request->get('tab'),
+            'statusOptions' => $this->model::getStatusOptions(),
+            'defaultLocale' => TranslationService::getDefaultLocale(),
+            'localeOptions' => TranslationService::getLocaleOptions(),
         ]);
     }
 
@@ -105,20 +125,17 @@ class PageController extends CrudController
      */
     public function update(Request $request, Page $page)
     {
-        $this->getValidate($request, $page->id);
+        $locale = array_key_first($request->input('translations', []));
+        $pageTranslation = $page->translate($locale);
 
-        $page->title = $request->input('title');
-        $page->slug = $request->input('slug');
-        $page->excerpt = $request->input('excerpt');
-        $page->meta_description = $request->input('meta_description');
-        $page->meta_title = $request->input('meta_title');
-        $page->status = $request->input('status', Page::STATUS_DRAFT);
-        $page->data = $request->input('data');
+        $this->getValidate($request, $pageTranslation->id ?? null);
+
+        $page->fill($request->input('translations'));
         $page->save();
 
-        $request->session()->flash('message', 'Page updated successfully!');
+        $this->generateFlashMessage('Page updated successfully!');
 
-        return redirect()->route('admin.pages.index');
+        return redirect()->route($this->baseRouteName.'.edit', $page->id);
     }
 
     /**
@@ -134,22 +151,40 @@ class PageController extends CrudController
         return redirect()->route('admin.pages.index');
     }
 
-    protected function getValidate(Request $request, $id = null)
+    protected function getValidate(Request $request, $id = null): array
     {
-        $request->validate([
-            'title' => ['required'],
-            'slug' => [
+        $rules = RuleFactory::make([
+            '%title%' => 'sometimes|string',
+            '%slug%' => [
+                'sometimes',
                 'required',
                 'alpha_dash',
-                'unique:pages,slug'.($id ? ",{$id}" : "")
+                'unique:page_translations,slug'.($id ? ",{$id}" : "")
             ],
         ]);
+
+        $inputs = $request->input('translations', []);
+        $messages = [];
+        $locales = array_keys($inputs);
+        $attributes = ['title', 'slug'];
+        $inputs = $request->input('translations');
+
+        $customAttributes = $this->generateCustomAttributes($locales, $attributes);
+
+        $validator = $this->getValidationFactory()
+             ->make($inputs, $rules, $messages, $customAttributes);
+        return $validator->validate();
     }
 
     protected function getRecords()
     {
         $records = Page::orderBy('id', 'DESC')
-            ->select(['id', 'slug', 'title', 'meta_description', 'meta_title', 'status'])
+            ->select(['id'])
+            ->with([
+                'translations' => function ($q) {
+                    $q->select(['id', 'page_id', 'slug', 'title', 'meta_description', 'meta_title', 'status', 'locale']);
+                },
+            ])
             ->paginate($this->recordsPerPage);
 
         $records->getCollection()->transform(function ($record) {
@@ -158,5 +193,20 @@ class PageController extends CrudController
         });
 
         return $records;
+    }
+
+    public function generateCustomAttributes($locales, $attributes)
+    {
+        $translatedAttributes = [];
+        foreach ($locales as $locale) {
+            foreach ($attributes as $attribute) {
+                $attributeKey = $locale.'.'.$attribute;
+                $translatedAttributes[$attributeKey] = (
+                    Str::title($attribute).
+                    " (".TranslationService::getLanguageFromLocale($locale).")"
+                );
+            }
+        }
+        return $translatedAttributes;
     }
 }
