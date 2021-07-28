@@ -14,13 +14,12 @@
         <div id="navbarExampleTransparentExample" class="navbar-menu">
             <div class="navbar-start">
                 <sdb-link href="/" class="navbar-item">Home</sdb-link>
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <sdb-link href="/" class="navbar-link">More</sdb-link>
-                    <div class="navbar-dropdown is-boxed">
-                        <sdb-link href="/" class="navbar-item">Page 1</sdb-link>
-                        <sdb-link href="/" class="navbar-item">Page 2</sdb-link>
-                    </div>
-                </div>
+                <sdb-link
+                    v-for="menuItem in menus.navbar"
+                    :href="menuItem.link"
+                    class="navbar-item">
+                    {{ menuItem.title }}
+                </sdb-link>
             </div>
 
             <div class="navbar-end">
@@ -31,31 +30,46 @@
                         </div>
                     </div>
                 </div>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <span class="navbar-link">{{ currentLanguage.toUpperCase() }}</span>
+                    <div class="navbar-dropdown is-boxed">
+                        <sdb-link
+                            v-for="language in availableLanguages"
+                            :href="route('language.change', [language.id])" class="navbar-item">
+                            {{ language.id.toUpperCase() }}
+                        </sdb-link>
+                    </div>
+                </div>
                 <sdb-link :href="route('login')" class="navbar-item pr-5">Login</sdb-link>
             </div>
         </div>
     </nav>
 
-    <div id="main-container-wrapper">
-        <div id="main-container" class="container mt-4">
-            <!-- Page Content -->
-            <main>
-                <slot></slot>
-            </main>
-        </div>
-    </div>
+    <slot></slot>
+
 </template>
 
 <script>
     import SdbLink from '@/Sdb/Link';
 
     export default {
-        props: ['socialstream', 'jetstream', 'user', 'errorBags', 'flash'],
+        props: [
+            'currentLanguage',
+            'languageOptions',
+            'menus',
+            'user',
+            //'errorBags',
+            //'flash',
+            //'jetstream',
+            //'socialstream',
+        ],
         components: { SdbLink },
-        data() {
-            return {
-            }
-        },
-        methods: {}
+        computed: {
+            availableLanguages() {
+                return this
+                    .languageOptions
+                    .filter(option => option.id !== this.currentLanguage);
+            },
+        }
     }
 </script>
