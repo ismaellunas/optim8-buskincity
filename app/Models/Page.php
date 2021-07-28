@@ -33,7 +33,7 @@ class Page extends Model implements TranslatableContract
                 'value' => __('Draft'),
             ],
             [
-                'id' => PageTranslation::STATUS_PUBLISH,
+                'id' => PageTranslation::STATUS_PUBLISHED,
                 'value' => __('Published'),
             ]
         ];
