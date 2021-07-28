@@ -60,15 +60,14 @@ class PageController extends CrudController
         $pageTranslation = $page->translate($locale);
         $this->getValidate($request, $pageTranslation->id ?? null);
 
-        $validatedData = $request->all();
-        $page->fill($validatedData);
+        $page->fill($inputs);
         $page->author_id = Auth::id();
 
         $page->save();
 
         $request->session()->flash('message', 'Page created successfully!');
 
-        return redirect()->route('admin.pages.index');
+        return redirect()->route('admin.pages.edit', $page->id);
     }
 
     /**

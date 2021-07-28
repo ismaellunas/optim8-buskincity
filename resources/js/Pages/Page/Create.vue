@@ -8,12 +8,15 @@
 
         <div class="box mb-6">
             <page-form
-                v-model="form"
+                v-model="form.translations[selectedLocale]"
                 :errors="errors"
                 :isNew="isNew"
                 :isEditMode="isEditMode"
                 :statusOptions="statusOptions"
-                :submit="submit"
+                :localeOptions="localeOptions"
+                :selectedLocale="selectedLocale"
+                @change-locale="changeLocale"
+                @on-submit="onSubmit"
             />
         </div>
     </app-layout>
@@ -23,9 +26,9 @@
     import AppLayout from '@/Layouts/AppLayout';
     import PageForm from '@/Pages/Page/Form';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import { Inertia } from "@inertiajs/inertia";
+    import { getEmptyPageTranslation } from '@/Libs/page';
     import { isBlank } from '@/Libs/utils';
-    import { reactive, ref } from "vue";
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -34,38 +37,48 @@
             SdbErrorNotifications,
         },
         props: {
+            page: Object,
             errors: Object,
-            statusOptions: Array,
             tabActive: String,
+            defaultLocale: {default: 'en'},
+            // options:
+            localeOptions: {type: Array, default: []},
+            statusOptions: {type: Array, default: []},
         },
         setup(props) {
-            const form = reactive({
-                title: null,
-                slug: null,
-                excerpt: null,
-                data: [],
-                meta_description: null,
-                meta_title: null,
-                status: 0,
-            });
-
-            const submitRoute = route('admin.pages.store');
-
-            function submit() {
-                Inertia.post(submitRoute, form, {});
+            const translationForm = {
+                translations: {
+                    en: getEmptyPageTranslation()
+                }
             };
 
-            return {
-                form, 
-                submit,
-            };
+            return { form: useForm(translationForm) };
         },
         data() {
             return {
                 disableInput: false,
                 isEditMode: true,
                 isNew: true,
+                selectedLocale: this.defaultLocale,
             };
+        },
+        methods: {
+            onSubmit() {
+                const submitRoute = route('admin.pages.store');
+                this.form.post(submitRoute);
+            },
+            changeLocale(locale) {
+                const confirmationMessage = (
+                    'It looks like you have been editing something. '
+                    + 'If you leave before saving, your changes will be lost.'
+                );
+
+                this.$swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please provide English (EN) translation first!'
+                })
+            },
         }
     }
 </script>

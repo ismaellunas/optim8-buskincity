@@ -1,5 +1,19 @@
 <template>
-    <form method="post" @submit.prevent="submit">
+    <div class="columns my-0">
+        <div class="column py-0">
+            <p class="buttons is-pulled-right">
+                <sdb-button
+                    v-for="locale in localeOptions"
+                    @click="$emit('change-locale', locale.id)"
+                    :class="['is-small is-link is-rounded', locale.id == selectedLocale ? '' : 'is-light' ]"
+                    >
+                    {{ locale.name }}
+                </sdb-button>
+            </p>
+        </div>
+    </div>
+
+    <form method="post" @submit.prevent="$emit('on-submit')">
         <div class="mb-5">
             <sdb-tabs v-model="activeTab" class="is-boxed">
                 <sdb-tab title="Details">
@@ -18,7 +32,7 @@
                 <sdb-tab title="Builder">
                     <form-builder
                         v-model="form.data"
-                        :isEditMode="isEditMode && !isNew"
+                        :isEditMode="isEditMode"
                         />
                 </sdb-tab>
             </sdb-tabs>
@@ -26,7 +40,9 @@
 
         <div class="field is-grouped is-grouped-right">
             <div class="control">
-                <sdb-button-link :href="route('admin.pages.index')" class="is-link is-light">
+                <sdb-button-link
+                    :href="route('admin.pages.index')"
+                    class="is-link is-light">
                     Cancel
                 </sdb-button-link>
             </div>
@@ -60,14 +76,16 @@
             SdbTab,
             SdbTabs,
         },
+        emits: ['change-locale', 'on-submit'],
         props: {
             errors: {},
             isEditMode: Boolean,
             isNew: Boolean,
             statusOptions: Array,
-            submit: Function,
             tabActive: {},
             modelValue: {},
+            localeOptions: Array,
+            selectedLocale: String,
         },
         setup(props, { emit }) {
             let activeTab = null;

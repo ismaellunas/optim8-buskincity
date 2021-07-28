@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\TranslationService as TranslationSv;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Illuminate\Support\Facades\Session;
@@ -51,6 +52,8 @@ class HandleInertiaRequests extends Middleware
                 }
                 return (object)[];
             },
+            'languageOptions' => TranslationSv::getLocaleOptions(),
+            'currentLanguage' => TranslationSv::currentLanguage(),
         ]);
     }
 }
