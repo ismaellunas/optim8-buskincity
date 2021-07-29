@@ -7,11 +7,11 @@ export default {
     methods: {
             openModal() {
                 this.isModalOpen = true;
-                this.afterModalOpen();
+                this.onShownModal();
             },
             closeModal() {
                 this.isModalOpen = false;
             },
-            afterModalOpen() {},
+            onShownModal() {},
     }
 }
