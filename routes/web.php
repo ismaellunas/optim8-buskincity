@@ -38,6 +38,9 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
         '/media/upload-image',
         [App\Http\Controllers\MediaController::class, 'uploadImage']
     )->name('media.upload-image');
+
+    Route::get('/media-list/image', [App\Http\Controllers\MediaController::class, 'listImages'])
+        ->name('media.list.image');
 });
 
 /* ---------- FRONTEND ---------- */
