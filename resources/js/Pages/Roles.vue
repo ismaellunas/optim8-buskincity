@@ -38,36 +38,38 @@
                     </table>
 
                     <sdb-modal v-show="isOpen" @close="closeModal()">
-                        <form action="">
-                            <div class="field">
-                                <label class="label">Name</label>
-                                <div class="control">
-                                    <input class="input" type="text" placeholder="Text input" v-model="form.name">
-                                </div>
+                        <div class="box">
+                            <form action="">
+                                <div class="field">
+                                    <label class="label">Name</label>
+                                    <div class="control">
+                                        <input class="input" type="text" placeholder="Text input" v-model="form.name">
+                                    </div>
 
-                                <div class="columns my-3">
-                                    <div class="column" v-for="permission in permissions">
-                                        <label class="checkbox">
-                                            <input type="checkbox" v-bind:value="permission.id" v-model="form.permissions">
-                                            <span class="ml-2">
-                                                {{ permission.name }}
-                                            </span>
-                                        </label>
+                                    <div class="columns my-3">
+                                        <div class="column" v-for="permission in permissions">
+                                            <label class="checkbox">
+                                                <input type="checkbox" v-bind:value="permission.id" v-model="form.permissions">
+                                                <span class="ml-2">
+                                                    {{ permission.name }}
+                                                </span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="field is-grouped">
-                                <div class="control">
-                                    <button wire:click.prevent="store()" v-show="!editMode" @click="save(form)" type="button" class="button is-link">Save</button>
+                                <div class="field is-grouped">
+                                    <div class="control">
+                                        <button wire:click.prevent="store()" v-show="!editMode" @click="save(form)" type="button" class="button is-link">Save</button>
+                                    </div>
+                                    <div class="control">
+                                        <button wire:click.prevent="store()" v-show="editMode" @click="update(form)" type="button" class="button is-link">Update</button>
+                                    </div>
+                                    <div class="control">
+                                        <button @click="closeModal()" type="button" class="button is-link is-light">Cancel</button>
+                                    </div>
                                 </div>
-                                <div class="control">
-                                    <button wire:click.prevent="store()" v-show="editMode" @click="update(form)" type="button" class="button is-link">Update</button>
-                                </div>
-                                <div class="control">
-                                    <button @click="closeModal()" type="button" class="button is-link is-light">Cancel</button>
-                                </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </sdb-modal>
                 </div>
             </div>
