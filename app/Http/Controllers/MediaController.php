@@ -143,4 +143,9 @@ class MediaController extends Controller
 
         return response()->json(['imagePath' => $media->file_url]);
     }
+
+    public function listImages(Request $request)
+    {
+        return $request->ajax() ? Media::orderBy('id', 'DESC')->paginate(8) : abort(404);
+    }
 }
