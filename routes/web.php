@@ -79,6 +79,6 @@ Route::group([
         ]);
     });
 
-    Route::get('/pages/{page_translation}', [App\Http\Controllers\PageController::class, 'show'])
+    Route::get('/{page_translation}', [App\Http\Controllers\PageController::class, 'show'])
         ->name('pages.show');
 });
