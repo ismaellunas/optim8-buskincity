@@ -64,7 +64,7 @@
     import SdbTab from '@/Sdb/Tab';
     import SdbTabs from '@/Sdb/Tabs';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
-    import { ref, reactive } from "vue";
+    import { ref } from "vue";
     import { Inertia } from '@inertiajs/inertia';
 
     export default {
