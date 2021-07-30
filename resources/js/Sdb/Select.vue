@@ -1,6 +1,6 @@
 <template>
     <div class="select" :class="class" >
-        <select v-model="selected" @change="$emit('change')">
+        <select v-model="selected" @change="$emit('change', $event)">
             <slot></slot>
         </select>
     </div>
