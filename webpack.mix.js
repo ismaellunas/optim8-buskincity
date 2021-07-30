@@ -23,6 +23,9 @@ mix.js('resources/js/app.js', 'public/js').vue()
 if (mix.inProduction()) {
     mix.version();
 } else {
+    mix.sass('resources/sass/local.scss', 'public/css');
+    mix.js('resources/js/local.js', 'public/js');
+
     mix.browserSync({
         proxy: 'http://localhost:8000'
     });
