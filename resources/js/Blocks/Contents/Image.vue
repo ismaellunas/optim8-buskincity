@@ -33,54 +33,13 @@
             </div>
         </div>
 
-        <sdb-modal-card
-            :content-class="['is-huge']"
-            :is-close-hidden="false"
-            @close="closeModal()"
+        <sdb-image-browser-modal
+            :data="modalImages"
+            @close="closeModal"
+            @on-clicked-pagination="getImagesRequest"
+            @on-selected-image="selectImage"
             v-show="isModalOpen"
-            >
-            <template v-slot:header>
-                <p class="modal-card-title">Images</p>
-                <sdb-button
-                    @click="closeModal()"
-                    class="delete is-primary"
-                    type="button"
-                    aria-label="close"
-                />
-            </template>
-
-            <template v-slot:footer>
-                <sdb-pagination
-                    :links="modalImages.links ?? []"
-                    :is-ajax="true"
-                    @on-clicked-pagination="getImagesRequest"
-                />
-            </template>
-
-            <div class="columns is-multiline">
-                <div class="column is-3" v-for="image in modalImages.data">
-                    <div class="card">
-                        <div class="card-image">
-                            <figure class="image is-4by3">
-                            <img :src="image.file_url" :alt="image.file_name">
-                            </figure>
-                        </div>
-                        <div class="card-content p-2">
-                            <div class="content">
-                                <p>{{ image.file_name }}</p>
-                            </div>
-                        </div>
-                        <footer class="card-footer">
-                            <sdb-button
-                                @click.prevent="selectImage(image)"
-                                class="card-footer-item">
-                                Select
-                            </sdb-button>
-                        </footer>
-                    </div>
-                </div>
-            </div>
-        </sdb-modal-card>
+        />
     </div>
 </template>
 
@@ -89,9 +48,7 @@
     import EditModeContentMixin from '@/Mixins/EditModeContent';
     import HasModalMixin from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
-    import SdbLink from '@/Sdb/Link';
-    import SdbModalCard from '@/Sdb/ModalCard';
-    import SdbPagination from '@/Sdb/Pagination';
+    import SdbImageBrowserModal from '@/Sdb/ImageBrowserModal';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import UploadImageContent from '@/Blocks/Contents/UploadImage';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
@@ -104,9 +61,7 @@
         ],
         components: {
             SdbButton,
-            SdbLink,
-            SdbModalCard,
-            SdbPagination,
+            SdbImageBrowserModal,
             SdbToolbarContent,
             UploadImageContent,
         },
@@ -142,15 +97,19 @@
                 const self = this;
                 axios.get(url)
                     .then(function (response) {
-                        console.log(response.data);
-                        self.modalImages = response.data;
+                        self.setModalImages(response.data);
                     })
                     .catch(function (error) {
-                        //console.log(error);
-                    })
-                    .then(function () {
-                        // always executed
+                        self.$swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                        })
+                        self.closeModal();
                     });
+            },
+            setModalImages(data) {
+                this.modalImages = data;
             },
             selectImage(image) {
                 this.content.figure.image.src = image.file_url;
