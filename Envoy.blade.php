@@ -7,7 +7,7 @@
 
     $branch = "master";
 
-    $heroku_app = "bysdb-starter-kit";
+    $heroku_app = "platform752";
     $heroku_vars = [
         'APP_NAME',
         'APP_ENV',
@@ -28,6 +28,14 @@
         'CLOUDINARY_NOTIFICATION_URL',
     ];
 @endsetup
+
+@story('heroku:deploy-simple')
+    install-dependencies
+    heroku:config-set
+    heroku:push
+    heroku:migration
+    heroku:clean-after-deploy
+@endstory
 
 @story('heroku:deploy')
     git-restore-and-stash
@@ -77,4 +85,12 @@
 
 @task('heroku:push')
     git push heroku master
+@endtask
+
+@task('heroku:postgresql-create-free')
+    heroku addons:create heroku-postgresql:hobby-dev
+@endtask
+
+@task('heroku:postgresql-credentials')
+    heroku pg:credentials:url
 @endtask
