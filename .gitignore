@@ -16,3 +16,5 @@ yarn-error.log
 /.idea
 /.vscode
 public/js/resources_js_Pages*
+public/css/local.css
+public/js/local.js
