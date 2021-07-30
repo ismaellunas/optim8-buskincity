@@ -52,8 +52,8 @@
 </template>
 
 <script>
-    import SdbModalCard from '@/Sdb/ModalCard';
     import SdbButton from '@/Sdb/Button';
+    import SdbModalCard from '@/Sdb/ModalCard';
     import SdbPagination from '@/Sdb/Pagination';
     import { isBlank } from '@/Libs/utils';
 
@@ -72,11 +72,6 @@
         methods: {
             onClickedPagination(url) {
                 this.$emit('on-clicked-pagination', url);
-            }
-        },
-        computed: {
-            links() {
-                return isBlank(this.data?.links) ? [] : this.data.links;
             }
         },
     }
