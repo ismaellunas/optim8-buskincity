@@ -1,17 +1,25 @@
 <template>
-    <div>
+    <div @click="$emit('setting-content', id)" class="page-component">
         <sdb-toolbar-content
             v-if="isEditMode"
             @delete-content="deleteContent"
+            @setting-content="$emit('setting-content', id)"
         />
 
         <template v-if="isEditMode">
-            <h1 class="title" :class="wrapperClass">
-                <sdb-ckeditor-inline v-model="content.heading.html" :config="editorConfig"/>
-            </h1>
+            <component :is="headingTag" :class="headingClass">
+                <sdb-ckeditor-inline
+                    v-model="entity.content.heading.html"
+                    :config="editorConfig"
+                />
+            </component>
         </template>
         <template v-else>
-            <div :class="wrapperClass" v-html="content.heading.html"></div>
+            <component
+                :is="headingTag"
+                :class="headingClass"
+                v-html="entity.content.heading.html"
+            />
         </template>
     </div>
 </template>
@@ -37,7 +45,7 @@
             class: {type: Array},
             id: {},
             isEditMode: {type: Boolean, default: false},
-            modelValue: {},
+            modelValue: {type: Object},
         },
         data() {
             return {
@@ -45,11 +53,21 @@
             };
         },
         setup(props, { emit }) {
-            const content = props.modelValue;
             return {
-                content: useModelWrapper(props, emit),
-                contentClass: content.heading.attrs.class ?? [],
+                entity: useModelWrapper(props, emit),
+                config: props.modelValue.config,
             };
         },
+        computed: {
+            headingTag() {
+                return this.config?.tag ?? 'h1';
+            },
+            headingClass() {
+                let classes = [];
+                classes.push(this.config?.type ?? 'title');
+                classes.push(this.config?.size ?? 'is-1');
+                return classes;
+            }
+        }
     }
 </script>
