@@ -9,6 +9,7 @@
         <div class="box mb-6">
             <page-form
                 v-model="form.translations[selectedLocale]"
+                v-model:content-config-id="contentConfigId"
                 :errors="errors"
                 :isNew="isNew"
                 :isEditMode="isEditMode"
@@ -28,6 +29,7 @@
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { isBlank } from '@/Libs/utils';
+    import { ref, onMounted, onUnmounted } from 'vue';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -52,7 +54,36 @@
                 }
             };
 
-            return { form: useForm(translationForm) };
+            const contentConfigId = ref('');
+
+            function onClickedPage(event) {
+                const isFound = event.path.find((elm) => {
+                    if (!isBlank(elm.classList)) {
+                        return (
+                            elm.classList.value.includes('page-builder-content-config')
+                            || elm.classList.value.includes('page-component')
+                        );
+                    }
+                    return false;
+                })
+
+                if (isFound === undefined && contentConfigId.value) {
+                    contentConfigId.value = '';
+                }
+            }
+
+            onMounted(() => {
+                window.addEventListener("click", onClickedPage);
+            });
+
+            onUnmounted(() => {
+                window.removeEventListener("click", onClickedPage);
+            });
+
+            return {
+                form: useForm(translationForm),
+                contentConfigId
+            };
         },
         data() {
             return {
