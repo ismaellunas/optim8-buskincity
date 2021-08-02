@@ -33,6 +33,7 @@
                     <form-builder
                         v-model="form.data"
                         :isEditMode="isEditMode"
+                        v-model:content-config-id="contentConfigId"
                         />
                 </sdb-tab>
             </sdb-tabs>
@@ -76,7 +77,7 @@
             SdbTab,
             SdbTabs,
         },
-        emits: ['change-locale', 'on-submit'],
+        emits: ['change-locale', 'on-submit', 'update:contentConfigId'],
         props: {
             errors: {},
             isEditMode: Boolean,
@@ -86,6 +87,7 @@
             modelValue: {},
             localeOptions: Array,
             selectedLocale: String,
+            contentConfigId: {},
         },
         setup(props, { emit }) {
             let activeTab = null;
@@ -99,6 +101,7 @@
             return {
                 activeTab,
                 form: useModelWrapper(props, emit),
+                contentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
             };
         },
         data() {
