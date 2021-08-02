@@ -42,7 +42,6 @@
             SdbToolbarContent,
         },
         props: {
-            class: {type: Array},
             id: {},
             isEditMode: {type: Boolean, default: false},
             modelValue: {type: Object},
