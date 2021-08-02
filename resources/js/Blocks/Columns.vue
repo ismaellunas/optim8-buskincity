@@ -43,6 +43,8 @@
                 :id="column.id"
                 :isEditMode="isEditMode"
                 :components="block.columns[index].components"
+                :data-entities="entities"
+                @setting-content="$emit('setting-content', $event)"
             />
         </template>
     </div>
@@ -67,6 +69,7 @@
             id: {},
             isEditMode: {default: false},
             modelValue: {},
+            dataEntities: {},
         },
         data() {
             return {
@@ -78,6 +81,7 @@
         setup(props, { emit }) {
             return {
                 block: useModelWrapper(props, emit),
+                entities: useModelWrapper(props, emit, 'dataEntities'),
             };
         },
         methods: {
