@@ -12,12 +12,12 @@
         >
             <template #item="{ element, index }">
                 <component
-                    :entityId="entityId"
                     :id="element.id"
                     :is="element.componentName"
                     :isEditMode="isEditMode"
                     @delete-content="deleteContent"
-                    v-model="components[index].content"
+                    @setting-content="settingContent"
+                    v-model="dataEntities[element.id]"
                 >
             </component>
             </template>
@@ -30,8 +30,6 @@
     import ContentCardText from '@/Blocks/Contents/CardText'
     import Draggable from 'vuedraggable';
     import Heading from '@/Blocks/Contents/Heading';
-    import H1 from '@/Blocks/Contents/H1';
-    import H2 from '@/Blocks/Contents/H2';
     import Image from '@/Blocks/Contents/Image';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3'
@@ -42,8 +40,6 @@
             ContentCardText,
             Draggable,
             Heading,
-            H1,
-            H2,
             Image,
         },
         props: {
@@ -51,6 +47,7 @@
             isEditMode: {default: false},
             isDebugMode: {default: false},
             components: {type: Array, default: []},
+            dataEntities: {},
         },
         setup(props, { emit }) {
             return {
@@ -81,10 +78,19 @@
             },
             deleteContent(id) {
                 if (!isBlank(id)) {
-                    const removeIndex = this.components.map(block => block.id).indexOf(id);
-                    this.components.splice(removeIndex, 1);
+                    this.components.splice(
+                        this.components.map(block => block.id).indexOf(id),
+                        1
+                    );
+
+                    delete this.dataEntities[id];
+
+                    this.settingContent('');
                 }
-            }
+            },
+            settingContent(event) {
+                this.$emit('setting-content', event)
+            },
         }
     }
 </script>
