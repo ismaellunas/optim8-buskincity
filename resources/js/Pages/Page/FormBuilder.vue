@@ -1,6 +1,6 @@
 <template>
     <div class="columns">
-        <div class="column is-3 is-narrow">
+        <div class="column is-3 is-narrow" v-if="!isComponentConfigOpen">
             <draggable
                 class="dragArea columns is-multiline"
                 :disabled="!isEditMode"
@@ -8,8 +8,9 @@
                 :group="{ name: 'components', pull: 'clone', put: false }"
                 :clone="cloneComponent"
                 :sort="false"
+                @end="onEnd"
                 @change="log"
-                item-key="component"
+                item-key="id"
             >
                 <template #item="{ element }">
                     <div class="column is-half">
@@ -48,9 +49,13 @@
             </draggable>
         </div>
 
+        <div class="column is-3 is-narrow page-builder-content-config" v-else>
+            <sdb-component-config v-model="data.entities[contentConfigId]" />
+        </div>
+
         <div class="column is-9" :class="{'has-background-grey-lighter has-text-centered': !hasBlok}">
             <draggable
-                :list="data"
+                :list="data.structures"
                 :sort="true"
                 animation="300"
                 class="list-block-columns"
@@ -61,10 +66,12 @@
             >
                 <template #item="{element, index}">
                     <block-columns
-                        v-model="data[index]"
+                        v-model="data.structures[index]"
+                        v-model:data-entities="data.entities"
                         :isEditMode="isEditMode"
                         :id="element.id"
                         @delete-block="deleteBlock"
+                        @setting-content="settingContent"
                         />
                 </template>
             </draggable>
@@ -76,6 +83,7 @@
     import BlockColumns from '@/Blocks/Columns'
     import ComponentStructures from '@/ComponentStructures';
     import Draggable from "vuedraggable";
+    import SdbComponentConfig from '@/Sdb/ComponentConfig';
     import { isBlank, generateElementId, useModelWrapper } from '@/Libs/utils'
     import { createBlock, createColumn } from '@/Libs/page-builder.js';
 
@@ -83,20 +91,41 @@
         components: {
             BlockColumns,
             Draggable,
+            SdbComponentConfig,
         },
         props: {
             errors: Object,
             isEditMode: {type: Boolean, default: false},
-            modelValue: {type: Array, default: []},
+            modelValue: {type: Object},
+            contentConfigId: {},
         },
         setup(props, { emit }) {
             return {
                 data: useModelWrapper(props, emit),
+                contentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
+            };
+        },
+        data() {
+            return {
+                isDebugMode: false,
+                clonedComponent: null,
             };
         },
         methods: {
             log: function(evt) {
-                window.console.log(evt);
+                if (this.isDebugMode) {
+                    console.log(evt);
+                }
+            },
+            isComponentCloned(evt) {
+                return (evt.pullMode === "clone");
+            },
+            onEnd(evt) {
+                const component = this.clonedComponent;
+
+                if (!this.isComponentCloned(evt)) {
+                    delete this.data.entities[component.id];
+                }
             },
             cloneBlock(seletectedBlock) {
                 const clonedBlock = JSON.parse(JSON.stringify(seletectedBlock));
@@ -106,13 +135,22 @@
                 return clonedBlock;
             },
             cloneComponent(seletectedComponent) {
-                const clonedContent = JSON.parse(JSON.stringify(seletectedComponent));
-                clonedContent.id = generateElementId();
-                return clonedContent;
+                this.clonedComponent = JSON.parse(JSON.stringify(seletectedComponent));
+                this.clonedComponent.id = generateElementId();
+
+                this.data.entities[this.clonedComponent.id] = this.clonedComponent;
+
+                return {
+                    id: this.clonedComponent.id,
+                    componentName: this.clonedComponent.componentName,
+                };
             },
             deleteBlock(id) {
-                const removeIndex = this.data.map(block => block.id).indexOf(id);
-                this.data.splice(removeIndex, 1);
+                const removeIndex = this.data.structures.map(block => block.id).indexOf(id);
+                this.data.structures.splice(removeIndex, 1);
+            },
+            settingContent(id) {
+                this.contentConfigId = id;
             }
         },
         computed: {
@@ -140,8 +178,14 @@
                 return blocks;
             },
             hasBlok() {
-                return isBlank(this.data) ? false : this.data.length > 0;
-            }
+                return isBlank(this.data.structures) ? false : this.data.structures.length > 0;
+            },
+            isComponentConfigOpen() {
+                return (
+                    !isBlank(this.contentConfigId)
+                    && this.data.entities[this.contentConfigId]
+                );
+            },
         }
     }
 </script>
