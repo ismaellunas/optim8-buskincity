@@ -27,6 +27,7 @@ export const config = {
                 type: "select",
                 label: "Size",
                 options: [
+                    { value: "", name: "(Default)" },
                     { value: "is-small", name: "Small" },
                     { value: "is-normal", name: "Normal" },
                     { value: "is-medium", name: "Medium" },
