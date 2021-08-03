@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div @click="$emit('setting-content', id)" class="page-component">
         <sdb-toolbar-content
             v-if="isEditMode"
             @delete-content="deleteContent"
@@ -7,23 +7,24 @@
 
         <div class="card">
             <div class="card-image">
-                <figure class="image" :class="figure.attrs.class" v-if="hasImage">
-                    <img :src="image.src" alt="image.attrs.alt">
+                <figure class="image" :class="figureClass" v-if="hasImage">
+                    <img :src="image.src" :class="imgClass">
                 </figure>
 
                 <sdb-button
+                    v-if="isEditMode && hasImage"
                     type="button"
                     class="is-overlay is-small"
-                    @click.prevent="toggleEdit"
-                    v-if="isEditMode && hasImage">
+                    @click="toggleEdit"
+                >
                     <span class="icon" v-if="isFormDisplayed"><i class="fas fa-times-circle"></i></span>
                     <span class="icon" v-else><i class="fas fa-pen"></i></span>
                 </sdb-button>
 
                 <div class="card-content has-background-info-light" v-if="isFormDisplayed">
                     <upload-image-content
-                        :uploadRoute="route('admin.media.upload-image')"
-                        v-model="content.cardImage.figure.image.src"
+                        v-model="entity.content.cardImage.figure.image.src"
+                        :upload-route="route('admin.media.upload-image')"
                         @uploaded-image="updateImageSource"
                     />
                     <div class="divider my-2">OR</div>
@@ -37,26 +38,24 @@
                     </div>
                 </div>
             </div>
-            <div class="card-content">
+            <div class="card-content" v-if="isCardContentDisplayed">
                 <div class="content">
                     <template v-if="isEditMode">
-                        <sdb-ckeditor-inline
-                            v-model="content.cardContent.content.html"
-                            />
+                        <sdb-ckeditor-inline v-model="entity.content.cardContent.content.html"/>
                     </template>
                     <template v-else>
-                        <div v-html="content.cardContent.content.html"></div>
+                        <div v-html="entity.content.cardContent.content.html"></div>
                     </template>
                 </div>
             </div>
         </div>
 
         <sdb-image-browser-modal
+            v-if="isModalOpen"
             :data="modalImages"
             @close="closeModal"
             @on-clicked-pagination="getImagesRequest"
             @on-selected-image="selectImage"
-            v-show="isModalOpen"
         />
     </div>
 </template>
@@ -71,6 +70,7 @@
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import UploadImageContent from '@/Blocks/Contents/UploadImage';
     import { useModelWrapper, emitModelValue, isBlank } from '@/Libs/utils'
+    import { isEmpty } from 'lodash';
 
     export default {
         mixins: [
@@ -92,9 +92,10 @@
         },
         setup(props, { emit }) {
             return {
-                content: useModelWrapper(props, emit),
-                image: props.modelValue.cardImage.figure.image,
-                figure: props.modelValue.cardImage.figure,
+                config: props.modelValue.config,
+                entity: useModelWrapper(props, emit),
+                figure: props.modelValue.content.cardImage.figure,
+                image: props.modelValue.content.cardImage.figure.image,
             };
         },
         data() {
@@ -105,8 +106,8 @@
         },
         methods: {
             updateImageSource(imagePath) {
-                this.content.cardImage.figure.image.src = imagePath;
-                emitModelValue(this.$emit, this.content);
+                this.entity.content.cardImage.figure.image.src = imagePath;
+                emitModelValue(this.$emit, this.entity.content);
             },
             toggleEdit() {
                 this.isFormOpen = !this.isFormOpen;
@@ -133,17 +134,34 @@
                 this.modalImages = data;
             },
             selectImage(image) {
-                this.content.cardImage.figure.image.src = image.file_url;
+                this.entity.content.cardImage.figure.image.src = image.file_url;
                 this.closeModal();
             },
         },
         computed: {
             hasImage() {
-                return !isBlank(this.content.cardImage.figure.image.src);
+                return !isBlank(this.entity.content.cardImage.figure.image.src);
             },
             isFormDisplayed() {
                 return !this.hasImage || (this.hasImage && this.isFormOpen);
-            }
+            },
+            figureClass() {
+                let classes = [];
+                classes.push(this.config?.image?.fixedSquare ?? '');
+                classes.push(this.config?.image?.ratio ?? '');
+                return classes;
+            },
+            imgClass() {
+                let classes = [];
+                classes.push(this.config?.image?.rounded ?? '');
+                return classes;
+            },
+            isCardContentDisplayed() {
+                if (this.isEditMode) {
+                    return true;
+                }
+                return !isEmpty(this.entity.content.cardContent.content.html);
+            },
         }
     }
 </script>

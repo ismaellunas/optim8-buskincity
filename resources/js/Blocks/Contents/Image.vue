@@ -1,26 +1,37 @@
 <template>
-    <div>
-        <sdb-toolbar-content @delete-content="deleteContent" v-if="isEditMode"/>
+    <div
+        class="page-component"
+        @click="$emit('setting-content', id)"
+    >
+        <sdb-toolbar-content
+            v-if="isEditMode"
+            @delete-content="deleteContent"
+        />
 
-        <figure class="image" v-if="hasImage">
+        <figure
+            v-if="hasImage"
+            :class="figureClass"
+            class="image"
+        >
             <sdb-button
-                type="button"
+                v-if="isEditMode"
                 class="is-small is-overlay"
+                type="button"
                 @click="toggleEdit"
-                v-if="isEditMode">
+            >
                 <span class="icon" v-if="isFormDisplayed"><i class="fas fa-times-circle"></i></span>
                 <span class="icon" v-else><i class="fas fa-pen"></i></span>
             </sdb-button>
 
-            <img :src="imageSrc" :alt="content.figure.attrs.alt">
+            <img :src="imageSrc" :alt="entity.content.figure.image?.alt ?? ''" :class="imgClass">
         </figure>
 
         <div class="card-content has-background-info-light" v-if="isFormDisplayed">
             <upload-image-content
-                :entityId="entityId"
-                :uploadRoute="route('admin.media.upload-image')"
+                v-model="entity.content.figure.image.src"
+                :entity-id="entityId"
+                :upload-route="route('admin.media.upload-image')"
                 @close-form="closeForm"
-                v-model="content.figure.image.src"
             />
             <div class="divider my-2">OR</div>
             <div class="block has-text-centered">
@@ -34,11 +45,11 @@
         </div>
 
         <sdb-image-browser-modal
+            v-if="isModalOpen"
             :data="modalImages"
             @close="closeModal"
             @on-clicked-pagination="getImagesRequest"
             @on-selected-image="selectImage"
-            v-show="isModalOpen"
         />
     </div>
 </template>
@@ -79,8 +90,8 @@
         },
         setup(props, { emit }) {
             return {
-                content: useModelWrapper(props, emit),
-                contentClass: props.modelValue.figure.attrs.class ?? [],
+                config: props.modelValue.config,
+                entity: useModelWrapper(props, emit),
             };
         },
         methods: {
@@ -112,19 +123,19 @@
                 this.modalImages = data;
             },
             selectImage(image) {
-                this.content.figure.image.src = image.file_url;
+                this.entity.content.figure.image.src = image.file_url;
                 this.closeModal();
             },
         },
         computed: {
             hasImage() {
-                return !isBlank(this.content.figure.image.src);
+                return !isBlank(this.entity.content.figure.image.src);
             },
             imageSrc() {
                 if (this.hasImage) {
-                    return this.content.figure.image.src;
+                    return this.entity.content.figure.image.src;
                 }
-                return 'https://bulma.io/images/placeholders/640x480.png';
+                return "";
             },
             /* @overide */
             canEdit() {
@@ -135,6 +146,17 @@
                     !this.hasImage
                     || (this.isEditMode && this.isFormOpen)
                 );
+            },
+            figureClass() {
+                let classes = [];
+                classes.push(this.config?.image?.fixedSquare ?? "");
+                classes.push(this.config?.image?.ratio ?? "");
+                return classes;
+            },
+            imgClass() {
+                let classes = [];
+                classes.push(this.config?.image?.rounded ?? "");
+                return classes;
             },
         }
     }

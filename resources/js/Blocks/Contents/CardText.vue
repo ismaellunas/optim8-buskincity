@@ -1,15 +1,18 @@
 <template>
-    <div>
-        <sdb-toolbar-content @delete-content="deleteContent" v-if="isEditMode"/>
+    <div @click="$emit('setting-content', id)" class="page-component">
+        <sdb-toolbar-content
+            v-if="isEditMode"
+            @delete-content="deleteContent"
+        />
 
         <div class="card sdb-card-text">
             <div class="card-content">
-                <div class="content">
+                <div class="content" :class="cardContentClass">
                     <template v-if="isEditMode">
-                        <sdb-ckeditor-inline v-model="content.cardContent.content.html"/>
+                        <sdb-ckeditor-inline v-model="entity.content.cardContent.content.html"/>
                     </template>
                     <template v-else>
-                        <div v-html="content.cardContent.content.html"></div>
+                        <div v-html="entity.content.cardContent.content.html"></div>
                     </template>
                 </div>
             </div>
@@ -18,11 +21,17 @@
 </template>
 
 <script>
+    import DeletableContentMixin from '@/Mixins/DeletableContent';
+    import EditModeContentMixin from '@/Mixins/EditModeContent';
     import SdbCkeditorInline from '@/Sdb/CkeditorInline'
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils'
 
     export default {
+        mixins: [
+            EditModeContentMixin,
+            DeletableContentMixin
+        ],
         components: {
             SdbCkeditorInline,
             SdbToolbarContent,
@@ -34,12 +43,15 @@
         },
         setup(props, { emit }) {
             return {
-                content: useModelWrapper(props, emit),
+                config: props.modelValue.config,
+                entity: useModelWrapper(props, emit),
             };
         },
-        methods: {
-            deleteContent() {
-                this.$emit('delete-content', this.id);
+        computed: {
+            cardContentClass() {
+                let classes = [];
+                classes.push(this.config.content?.size ?? 'is-normal');
+                return classes;
             },
         }
     }

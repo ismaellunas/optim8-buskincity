@@ -1,13 +1,12 @@
 <template>
-    <div @click="$emit('setting-content', id)" class="page-component">
-        <sdb-toolbar-content
-            v-if="isEditMode"
-            @delete-content="deleteContent"
-            @setting-content="$emit('setting-content', id)"
-        />
+    <div class="page-component" @click="$emit('setting-content', id)">
+        <sdb-toolbar-content v-if="isEditMode" @delete-content="deleteContent"/>
 
         <template v-if="isEditMode">
-            <component :is="headingTag" :class="headingClass">
+            <component
+                :class="headingClass"
+                :is="headingTag"
+            >
                 <sdb-ckeditor-inline
                     v-model="entity.content.heading.html"
                     :config="editorConfig"
@@ -16,8 +15,8 @@
         </template>
         <template v-else>
             <component
-                :is="headingTag"
                 :class="headingClass"
+                :is="headingTag"
                 v-html="entity.content.heading.html"
             />
         </template>
@@ -31,6 +30,7 @@
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { heading as editorConfig } from '@/Libs/ckeditor-configs';
     import { useModelWrapper } from '@/Libs/utils';
+    import { last } from 'lodash';
 
     export default {
         mixins: [
@@ -59,12 +59,15 @@
         },
         computed: {
             headingTag() {
-                return this.config?.tag ?? 'h1';
+                return this.config.heading?.tag ?? 'h1';
             },
             headingClass() {
                 let classes = [];
-                classes.push(this.config?.type ?? 'title');
-                classes.push(this.config?.size ?? 'is-1');
+                classes.push(this.config.heading?.type ?? 'title');
+
+                const number = last(this.headingTag);
+                classes.push('is-'+number);
+
                 return classes;
             }
         }
