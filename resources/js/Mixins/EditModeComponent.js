@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash';
+
 export default {
     props: {
         isEditMode: Boolean,
@@ -20,5 +22,8 @@ export default {
 
             return wrapperClass;
         },
-    },
+        canEdit() {
+            return !isEmpty(this.isEditMode) && this.isEditMode;
+        }
+    }
 }
