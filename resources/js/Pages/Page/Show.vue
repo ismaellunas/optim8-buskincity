@@ -5,9 +5,10 @@
     </Head>
 
     <div id="main-container" class="container mt-4">
-        <template v-for="(block, index) in page.data">
+        <template v-for="(block, index) in page.data.structures">
             <block-columns
-                v-model="page.data[index]"
+                v-model="page.data.structures[index]"
+                v-model:data-entities="page.data.entities"
                 :isEditMode="false"
                 :id="block.id"
                 />
