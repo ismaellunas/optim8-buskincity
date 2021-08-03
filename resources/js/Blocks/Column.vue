@@ -26,8 +26,8 @@
 </template>
 
 <script>
-    import ContentCard from '@/Blocks/Contents/Card'
-    import ContentCardText from '@/Blocks/Contents/CardText'
+    import Card from '@/Blocks/Contents/Card';
+    import CardText from '@/Blocks/Contents/CardText';
     import Draggable from 'vuedraggable';
     import Heading from '@/Blocks/Contents/Heading';
     import Image from '@/Blocks/Contents/Image';
@@ -36,8 +36,8 @@
 
     export default {
         components: {
-            ContentCard,
-            ContentCardText,
+            Card,
+            CardText,
             Draggable,
             Heading,
             Image,
