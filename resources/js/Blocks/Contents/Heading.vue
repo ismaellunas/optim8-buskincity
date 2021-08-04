@@ -4,20 +4,19 @@
 
         <template v-if="isEditMode">
             <component
-                :class="headingClass"
                 :is="headingTag"
+                :class="headingClass"
+                contenteditable
+                @blur="onEdit"
+                v-text="entity.content.heading.html"
             >
-                <sdb-ckeditor-inline
-                    v-model="entity.content.heading.html"
-                    :config="editorConfig"
-                />
             </component>
         </template>
         <template v-else>
             <component
-                :class="headingClass"
                 :is="headingTag"
-                v-html="entity.content.heading.html"
+                :class="headingClass"
+                v-text="entity.content.heading.html"
             />
         </template>
     </div>
@@ -26,7 +25,6 @@
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import EditModeContentMixin from '@/Mixins/EditModeContent';
-    import SdbCkeditorInline from '@/Sdb/CkeditorInline';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { heading as editorConfig } from '@/Libs/ckeditor-configs';
     import { useModelWrapper } from '@/Libs/utils';
@@ -38,7 +36,6 @@
             DeletableContentMixin
         ],
         components: {
-            SdbCkeditorInline,
             SdbToolbarContent,
         },
         props: {
@@ -46,16 +43,16 @@
             isEditMode: {type: Boolean, default: false},
             modelValue: {type: Object},
         },
-        data() {
-            return {
-                editorConfig: editorConfig,
-            };
-        },
         setup(props, { emit }) {
             return {
                 entity: useModelWrapper(props, emit),
                 config: props.modelValue.config,
             };
+        },
+        methods: {
+            onEdit(evt){
+                this.entity.content.heading.html = evt.target.innerText;
+            },
         },
         computed: {
             headingTag() {
