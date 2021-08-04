@@ -1,5 +1,5 @@
 <template>
-    <div class="page-component" @click="$emit('setting-content', id)">
+    <div>
         <sdb-toolbar-content v-if="isEditMode" @delete-content="deleteContent"/>
 
         <template v-if="isEditMode">
