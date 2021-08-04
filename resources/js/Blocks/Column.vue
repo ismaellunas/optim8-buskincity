@@ -1,27 +1,38 @@
 <template>
-    <div class="column" :class="{'edit-mode-column': isEditMode}">
+    <div class="column" :class="columnClass">
         <draggable
+            v-if="isEditMode"
             :list="components"
-            @change="log"
+            :empty-insert-threshold="emptyInsertThreshold"
             animation="300"
             class="dragArea list-group"
-            empty-insert-threshold="5"
             group="components"
             handle=".handle-content"
             item-key="id"
+            @change="log"
         >
             <template #item="{ element, index }">
                 <component
-                    :id="element.id"
                     :is="element.componentName"
-                    :isEditMode="isEditMode"
-                    @delete-content="deleteContent"
-                    @setting-content="settingContent"
+                    :id="element.id"
                     v-model="dataEntities[element.id]"
-                >
-            </component>
+                    :is-edit-mode="isEditMode"
+                    class="page-component"
+                    @click="settingContent(element.id)"
+                    @delete-content="deleteContent"
+                />
             </template>
         </draggable>
+
+        <template v-else>
+            <component
+                :is="element.componentName"
+                v-for="(element, index) in components"
+                :id="element.id"
+                v-model="dataEntities[element.id]"
+                :is-edit-mode="isEditMode"
+            />
+        </template>
     </div>
 </template>
 
@@ -63,6 +74,13 @@
             },
             emptyInsertThreshold() {
                 return this.isDraggableEmpty ? 50 : 5;
+            },
+            columnClass() {
+                let classes = [];
+                if (this.isEditMode) {
+                    classes.push("edit-mode-column");
+                }
+                return classes;
             }
         },
         methods: {
@@ -94,8 +112,3 @@
         }
     }
 </script>
-<style scoped>
-.edit-mode-column {
-    border: 1px #D3D3D3 dashed;
-}
-</style>
