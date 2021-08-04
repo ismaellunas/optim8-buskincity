@@ -5,13 +5,13 @@
         @close="$emit('close')"
         >
         <template v-slot:header>
-        <p class="modal-card-title">{{ title }}</p>
-            <sdb-button
-                @click="$emit('close')"
-                class="delete is-primary"
-                type="button"
-                aria-label="close"
-            />
+            <p class="modal-card-title">{{ title }}</p>
+                <sdb-button
+                    @click="$emit('close')"
+                    class="delete is-primary"
+                    type="button"
+                    aria-label="close"
+                />
         </template>
 
         <template v-slot:footer>
@@ -23,9 +23,12 @@
         </template>
 
         <div class="columns is-multiline">
-            <div class="column is-3" v-for="image in data?.data">
+            <div class="column is-2" v-for="image in data?.data">
                 <div class="card">
-                    <div class="card-image">
+                    <div
+                        class="card-image"
+                        @click="$emit('on-selected-image', image)"
+                    >
                         <figure class="image is-4by3">
                             <img
                                 :src="image.file_url"
@@ -34,17 +37,10 @@
                         </figure>
                     </div>
                     <div class="card-content p-2">
-                        <div class="content">
+                        <div class="content" style="overflow-wrap: break-word;">
                             <p>{{ image.file_name }}</p>
                         </div>
                     </div>
-                    <footer class="card-footer">
-                        <sdb-button
-                            @click.prevent="$emit('on-selected-image', image)"
-                            class="card-footer-item">
-                            Select
-                        </sdb-button>
-                    </footer>
                 </div>
             </div>
         </div>
