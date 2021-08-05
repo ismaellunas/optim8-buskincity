@@ -32,6 +32,13 @@
     border: 1px #D3D3D3 dashed;
 }
 
+#side-menu-page-builder {
+    position: sticky;
+    max-height: 100vh;
+    top: 0;
+    bottom: 0;
+}
+
 
 // https://raw.githubusercontent.com/postare/bulma-modal-fx/master/src/_scss/components/_modal-fx.scss
 $transition-duration: .3s;

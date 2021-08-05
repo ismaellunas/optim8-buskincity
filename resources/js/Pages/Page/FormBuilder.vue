@@ -1,56 +1,63 @@
 <template>
     <div class="columns">
-        <div class="column is-3 is-narrow" v-if="!isComponentConfigOpen">
-            <draggable
-                class="dragArea columns is-multiline"
-                :disabled="!isEditMode"
-                :list="availableComponents"
-                :group="{ name: 'components', pull: 'clone', put: false }"
-                :clone="cloneComponent"
-                :sort="false"
-                @end="onEnd"
-                @change="log"
-                item-key="id"
-            >
-                <template #item="{ element }">
-                    <div class="column is-half">
-                        <div class="card" :class="{'has-text-grey-light': !isEditMode}">
-                            <div class="card-content is-size-7">
-                                <div class="content is-center">
-                                    {{ element.title }}
+        <div class="column is-3 is-narrow">
+            <div id="side-menu-page-builder">
+                <template v-if="!isComponentConfigOpen">
+                    <draggable
+                        class="dragArea columns is-multiline"
+                        :disabled="!isEditMode"
+                        :list="availableComponents"
+                        :group="{ name: 'components', pull: 'clone', put: false }"
+                        :clone="cloneComponent"
+                        :sort="false"
+                        @end="onEnd"
+                        @change="log"
+                        item-key="id"
+                    >
+                        <template #item="{ element }">
+                            <div class="column is-half">
+                                <div class="card" :class="{'has-text-grey-light': !isEditMode}">
+                                    <div class="card-content is-size-7">
+                                        <div class="content is-center">
+                                            {{ element.title }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </template>
-            </draggable>
+                        </template>
+                    </draggable>
 
-            <draggable
-                class="dragColumnArea columns is-multiline"
-                :disabled="!isEditMode"
-                :list="availableBlocks"
-                :group="{ name: 'columns', pull: 'clone', put: false }"
-                :clone="cloneBlock"
-                :sort="false"
-                @change="log"
-                item-key="name"
-            >
-                <template #item="{ element }">
-                    <div class="column is-half">
-                        <div class="card" :class="{'has-text-grey-light': !isEditMode}">
-                            <div class="card-content is-size-7">
-                                <div class="content">
-                                    {{ element.title }}
+                    <draggable
+                        class="dragColumnArea columns is-multiline"
+                        :disabled="!isEditMode"
+                        :list="availableBlocks"
+                        :group="{ name: 'columns', pull: 'clone', put: false }"
+                        :clone="cloneBlock"
+                        :sort="false"
+                        @change="log"
+                        item-key="name"
+                    >
+                        <template #item="{ element }">
+                            <div class="column is-half">
+                                <div class="card" :class="{'has-text-grey-light': !isEditMode}">
+                                    <div class="card-content is-size-7">
+                                        <div class="content">
+                                            {{ element.title }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </template>
+                    </draggable>
                 </template>
-            </draggable>
-        </div>
 
-        <div class="column is-3 is-narrow page-builder-content-config" v-else>
-            <sdb-component-config v-model="data.entities[contentConfigId]" />
+                <template v-else>
+                    <sdb-component-config
+                        v-model="data.entities[contentConfigId]"
+                        class="page-builder-content-config"
+                    />
+                </template>
+            </div>
         </div>
 
         <div class="column is-9" :class="{'has-background-grey-lighter has-text-centered': !hasBlok}">
