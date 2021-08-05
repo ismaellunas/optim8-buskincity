@@ -11,14 +11,14 @@
     },
     "devDependencies": {
         "@creativebulma/bulma-divider": "^1.1.0",
-        "@inertiajs/inertia": "^0.10.0",
-        "@inertiajs/inertia-vue3": "^0.5.1",
+        "@inertiajs/inertia": "^0.10.1",
+        "@inertiajs/inertia-vue3": "^0.5.2",
         "@inertiajs/progress": "^0.2.6",
         "@vue/compiler-sfc": "^3.1.5",
         "axios": "^0.21",
         "browser-sync": "^2.27.4",
         "browser-sync-webpack-plugin": "^2.3.0",
-        "laravel-mix": "^6.0.25",
+        "laravel-mix": "^6.0.27",
         "lodash": "^4.17.21",
         "postcss": "^8.3.5",
         "postcss-import": "^12.0.1",
@@ -29,7 +29,7 @@
         "vue-loader": "^16.3.1"
     },
     "dependencies": {
-        "@ckeditor/ckeditor5-build-inline": "^28.0.0",
+        "@bayusdb/ckeditor5-build-inline-custom": "^0.0.1",
         "@ckeditor/ckeditor5-vue": "^2.0.1",
         "@fortawesome/fontawesome-free": "^5.15.3",
         "bulma": "^0.9.3",
