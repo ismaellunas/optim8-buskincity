@@ -61,10 +61,8 @@
             headingClass() {
                 let classes = [];
                 classes.push(this.config.heading?.type ?? 'title');
-
-                const number = last(this.headingTag);
-                classes.push('is-'+number);
-
+                classes.push('is-' + last(this.headingTag));
+                classes.push(this.config.heading?.alignment ?? "");
                 return classes;
             }
         }

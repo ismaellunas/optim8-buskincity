@@ -1,3 +1,5 @@
+import { alignments, defaultOption } from './style-options';
+
 export default {
     title: "Heading",
     componentName: "Heading",
@@ -10,6 +12,7 @@ export default {
         heading: {
             tag: "h1",
             type: "title",
+            alignment: null,
         }
     }
 };
@@ -37,21 +40,12 @@ export const config = {
                     { value: "title", name: "Title"},
                     { value: "subtitle", name: "Subtitle"},
                 ],
-            }
-            /*
-            size: {
-                type: "select",
-                label: "Size",
-                options: [
-                    { value: "is-1", name: "1"},
-                    { value: "is-2", name: "2"},
-                    { value: "is-3", name: "3"},
-                    { value: "is-4", name: "4"},
-                    { value: "is-5", name: "5"},
-                    { value: "is-6", name: "6"},
-                ],
             },
-            */
+            alignment: {
+                type: "select",
+                label: "Alignment",
+                options: defaultOption.concat(alignments),
+            },
         },
     }
 };
