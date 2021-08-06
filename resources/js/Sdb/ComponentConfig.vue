@@ -28,6 +28,15 @@
                                 {{ option.name }}
                             </option>
                         </sdb-form-select>
+
+                        <component
+                            :is="config.component"
+                            v-else-if="config.component"
+                            v-model="entity.config[ groupName ][ key ]"
+                            :label="config.label"
+                        >
+
+                        </component>
                     </template>
                 </div>
             </div>
@@ -36,6 +45,7 @@
 </template>
 
 <script>
+    import TRBL from '@/Blocks/Configs/TRBL';
     import SdbFormSelect from '@/Sdb/Form/Select';
     import configs from '@/ComponentStructures/configs';
     import { camelCase } from "lodash";
@@ -44,6 +54,7 @@
     export default {
         components: {
             SdbFormSelect,
+            TRBL,
         },
         props: ['modelValue'],
         setup(props, { emit }) {
