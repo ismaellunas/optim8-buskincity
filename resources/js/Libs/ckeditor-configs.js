@@ -1,5 +1,5 @@
 export let common = {
-    toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', ],
+    toolbar: [ 'heading', '|', 'bold', 'italic', 'link', '|', 'alignment', 'bulletedList', 'numberedList', 'blockQuote', ],
     //autoParagraph: false,
     //enterMode: 2,
     //shiftEnterMode: 1,
