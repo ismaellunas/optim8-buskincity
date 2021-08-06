@@ -62,14 +62,16 @@
 
         <div class="column is-9" :class="{'has-background-grey-lighter has-text-centered': !hasBlok}">
             <draggable
-                :list="data.structures"
-                :sort="true"
                 animation="300"
                 class="list-block-columns"
                 empty-insert-threshold="5"
                 group="columns"
                 handle=".handle-columns"
                 item-key="id"
+                :force-fallback="true"
+                :list="data.structures"
+                :scroll-sensitivity="200"
+                :sort="true"
             >
                 <template #item="{element, index}">
                     <block-columns
