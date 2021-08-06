@@ -1,7 +1,7 @@
 <template>
     <editor
         v-model="content"
-        :api-key="apiKey"
+        api-key="gumlypbnhr1ushb1hnnynxp4n6osqza60b3hn7hdtfa6khjb"
         :init="editorConfig"
     >
     </editor>
@@ -17,7 +17,6 @@
     },
     data() {
         return {
-            apiKey: "gumlypbnhr1ushb1hnnynxp4n6osqza60b3hn7hdtfa6khjb",
             editorConfig: editorConfig,
         };
     }

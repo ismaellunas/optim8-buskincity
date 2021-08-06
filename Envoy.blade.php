@@ -59,7 +59,7 @@
 
 @task('install-dependencies')
     composer install
-    npm install
+    yarn install
     npm run prod
 @endtask
 
