@@ -42,6 +42,7 @@
     import Draggable from 'vuedraggable';
     import Heading from '@/Blocks/Contents/Heading';
     import Image from '@/Blocks/Contents/Image';
+    import Text from '@/Blocks/Contents/Text';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3'
 
@@ -52,6 +53,7 @@
             Draggable,
             Heading,
             Image,
+            Text,
         },
         props: {
             id: {},
