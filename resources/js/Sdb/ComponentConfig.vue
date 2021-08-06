@@ -45,8 +45,8 @@
 </template>
 
 <script>
-    import TRBL from '@/Blocks/Configs/TRBL';
     import SdbFormSelect from '@/Sdb/Form/Select';
+    import TRBL from '@/Blocks/Configs/TRBL';
     import configs from '@/ComponentStructures/configs';
     import { camelCase } from "lodash";
     import { useModelWrapper } from '@/Libs/utils'
