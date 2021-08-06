@@ -32,8 +32,9 @@
                 <sdb-tab title="Builder">
                     <form-builder
                         v-model="form.data"
-                        :isEditMode="isEditMode"
                         v-model:content-config-id="contentConfigId"
+                        :is-edit-mode="isEditMode"
+                        id="page-form-builder"
                         />
                 </sdb-tab>
             </sdb-tabs>
