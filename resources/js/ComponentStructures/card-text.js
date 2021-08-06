@@ -1,3 +1,5 @@
+import { contentSizes, defaultOption } from './style-options';
+
 export default {
     title: 'Card Text',
     componentName: 'CardText',
@@ -14,7 +16,7 @@ export default {
     },
     config: {
         content: {
-            size: "",
+            size: null,
         }
     }
 }
@@ -26,13 +28,7 @@ export const config = {
             size: {
                 type: "select",
                 label: "Size",
-                options: [
-                    { value: "", name: "(Default)" },
-                    { value: "is-small", name: "Small" },
-                    { value: "is-normal", name: "Normal" },
-                    { value: "is-medium", name: "Medium" },
-                    { value: "is-large", name: "Large" },
-                ]
+                options: defaultOption.concat(contentSizes),
             }
         }
     }
