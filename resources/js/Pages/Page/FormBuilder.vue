@@ -62,13 +62,12 @@
 
         <div class="column is-9" :class="{'has-background-grey-lighter has-text-centered': !hasBlok}">
             <draggable
-                animation="300"
                 class="list-block-columns"
-                empty-insert-threshold="5"
                 group="columns"
                 handle=".handle-columns"
                 item-key="id"
-                :force-fallback="true"
+                :animation="300"
+                :empty-insert-threshold="5"
                 :list="data.structures"
                 :scroll-sensitivity="200"
                 :sort="true"

@@ -2,13 +2,13 @@
     <div class="column" :class="columnClass">
         <draggable
             v-if="isEditMode"
-            :list="components"
-            :empty-insert-threshold="emptyInsertThreshold"
-            animation="300"
             class="dragArea list-group"
             group="components"
             handle=".handle-content"
             item-key="id"
+            :animation="300"
+            :empty-insert-threshold="emptyInsertThreshold"
+            :list="components"
             @change="log"
         >
             <template #item="{ element, index }">
