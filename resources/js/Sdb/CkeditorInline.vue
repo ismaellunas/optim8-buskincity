@@ -7,7 +7,8 @@
 </template>
 
 <script>
-    import InlineEditor from '@ckeditor/ckeditor5-build-inline';
+    //import InlineEditor from '@ckeditor/ckeditor5-build-inline';
+    import InlineEditor from '@bayusdb/ckeditor5-build-inline-custom';
     import { useModelWrapper } from '@/Libs/utils'
     import { common } from '@/Libs/ckeditor-configs';
 
