@@ -6,7 +6,7 @@
         />
 
         <div class="card">
-            <div class="card-image">
+            <div class="card-image" :class="cardImageClass">
                 <figure class="image" :class="figureClass" v-if="hasImage">
                     <img :src="image.src" :class="imgClass">
                 </figure>
@@ -154,6 +154,16 @@
             imgClass() {
                 let classes = [];
                 classes.push(this.config?.image?.rounded ?? '');
+                return classes;
+            },
+            cardImageClass() {
+                let classes = [];
+                const suffix = {top: 't', right: 'r', bottom: 'b', left: 'l'};
+                if (this.config?.image?.padding) {
+                    for (const [key, value] of Object.entries(this.config.image.padding)) {
+                        classes.push( 'p'+suffix[key]+'-'+value );
+                    }
+                }
                 return classes;
             },
             isCardContentDisplayed() {

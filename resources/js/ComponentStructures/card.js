@@ -30,6 +30,12 @@ export default {
             // figure
             fixedSquare: "", // is-16x16, etc..
             ratio: "is-4by3", // is-square
+            padding: {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+            }
         }
     }
 }
@@ -75,6 +81,10 @@ export const config = {
                     { value: "is-128x128", name: "128x128 px" },
                 ],
             },
+            padding: {
+                label: "Padding",
+                component: "TRBL",
+            }
         }
     },
     /*
