@@ -8,17 +8,20 @@
 </template>
 
 <script>
-  import Editor from '@tinymce/tinymce-vue';
-  import { textComponent as editorConfig } from '@/Libs/tinymce-configs';
+    import Editor from '@tinymce/tinymce-vue';
+    import { textComponent as editorConfig } from '@/Libs/tinymce-configs';
+    import { useModelWrapper } from '@/Libs/utils'
 
-  export default {
-    components: {
-      editor: Editor
-    },
-    data() {
-        return {
-            editorConfig: editorConfig,
-        };
+    export default {
+        components: {
+            editor: Editor
+        },
+        props: ['modelValue'],
+        setup(props, { emit }) {
+            return {
+                content: useModelWrapper(props, emit),
+                editorConfig: editorConfig,
+            };
+        },
     }
-  }
 </script>
