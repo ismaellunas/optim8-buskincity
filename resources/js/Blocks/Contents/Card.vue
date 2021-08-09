@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :class="wrapperClass">
         <sdb-toolbar-content
             v-if="isEditMode"
             @delete-content="deleteContent"
@@ -38,10 +38,16 @@
                     </div>
                 </div>
             </div>
-            <div class="card-content" v-if="isCardContentDisplayed">
-                <div class="content">
+            <div
+                v-if="isCardContentDisplayed"
+                class="card-content"
+            >
+                <div
+                    class="content"
+                    :class="cardContentClass"
+                >
                     <template v-if="isEditMode">
-                        <sdb-ckeditor-inline v-model="entity.content.cardContent.content.html"/>
+                        <sdb-editor v-model="entity.content.cardContent.content.html"/>
                     </template>
                     <template v-else>
                         <div v-html="entity.content.cardContent.content.html"></div>
@@ -65,12 +71,13 @@
     import EditModeContentMixin from '@/Mixins/EditModeContent';
     import HasModalMixin from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
-    import SdbCkeditorInline from '@/Sdb/CkeditorInline'
+    import SdbEditor from '@/Sdb/EditorTinymce';
     import SdbImageBrowserModal from '@/Sdb/ImageBrowserModal';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import UploadImageContent from '@/Blocks/Contents/UploadImage';
-    import { useModelWrapper, emitModelValue, isBlank } from '@/Libs/utils'
-    import { isEmpty } from 'lodash';
+    import { concat, isEmpty } from 'lodash';
+    import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
+    import { emitModelValue, useModelWrapper } from '@/Libs/utils';
 
     export default {
         mixins: [
@@ -80,7 +87,7 @@
         ],
         components: {
             SdbButton,
-            SdbCkeditorInline,
+            SdbEditor,
             SdbImageBrowserModal,
             SdbToolbarContent,
             UploadImageContent,
@@ -140,7 +147,7 @@
         },
         computed: {
             hasImage() {
-                return !isBlank(this.entity.content.cardImage.figure.image.src);
+                return !isEmpty(this.entity.content.cardImage.figure.image.src);
             },
             isFormDisplayed() {
                 return !this.hasImage || (this.hasImage && this.isFormOpen);
@@ -165,6 +172,18 @@
                     }
                 }
                 return classes;
+            },
+            cardContentClass() {
+                return concat(
+                    this.config.content?.size,
+                    this.config.content?.alignment
+                ).filter(Boolean);
+            },
+            wrapperClass() {
+                return concat(
+                    createPaddingClasses(this.config.wrapper?.padding),
+                    createMarginClasses(this.config.wrapper?.margin)
+                ).filter(Boolean);
             },
             isCardContentDisplayed() {
                 if (this.isEditMode) {
