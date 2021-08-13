@@ -14,6 +14,7 @@
                 v-if="isEditMode"
                 class="is-small is-overlay"
                 type="button"
+                style="z-index: 1"
                 @click="toggleEdit"
             >
                 <span class="icon" v-if="isFormDisplayed"><i class="fas fa-times-circle"></i></span>
