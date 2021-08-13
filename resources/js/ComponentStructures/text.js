@@ -1,4 +1,4 @@
-import { contentSizes, defaultOption } from './style-options';
+import { contentSizes, defaultOption, alignments } from './style-options';
 
 export default {
     title: 'Text',
@@ -9,6 +9,21 @@ export default {
     config: {
         text: {
             size: null,
+            alignment: null,
+        },
+        wrapper: {
+            margin: {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+            },
+            padding: {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+            },
         }
     }
 };
@@ -22,6 +37,24 @@ export const config = {
                 label: "Size",
                 options: defaultOption.concat(contentSizes)
             },
+            alignment: {
+                type: "select",
+                label: "Alignment",
+                options: defaultOption.concat(alignments)
+            },
+        }
+    },
+    wrapper: {
+        label: "Wrapper",
+        config: {
+            margin: {
+                component: "TRBL",
+                label: "Margin",
+            },
+            padding: {
+                component: "TRBL",
+                label: "Padding",
+            }
         }
     }
 };
