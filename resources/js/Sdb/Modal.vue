@@ -1,17 +1,15 @@
 <template>
-    <div>
-        <div class="modal is-active">
-            <div class="modal-background"></div>
-            <div class="modal-content" :class="contentClass">
-                <slot></slot>
-            </div>
-            <button
-                class="modal-close is-large"
-                type="button"
-                @click="$emit('close')"
-                v-show="!isCloseHidden">
-            </button>
+    <div class="modal is-active">
+        <div class="modal-background"></div>
+        <div class="modal-content" :class="contentClass">
+            <slot></slot>
         </div>
+        <button
+            class="modal-close is-large"
+            type="button"
+            @click="$emit('close')"
+            v-show="!isCloseHidden">
+        </button>
     </div>
 </template>
 
