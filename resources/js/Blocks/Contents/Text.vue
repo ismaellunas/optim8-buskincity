@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :class="wrapperClass">
         <sdb-toolbar-content
             v-if="isEditMode"
             @delete-content="deleteContent"
@@ -11,7 +11,7 @@
         >
             <sdb-tinymce
                 v-model="entity.content.html"
-                :class="ckeditorClass"
+                :class="editorClass"
             />
         </div>
         <div
