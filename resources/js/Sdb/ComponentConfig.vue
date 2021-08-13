@@ -58,8 +58,20 @@
         },
         props: ['modelValue'],
         setup(props, { emit }) {
+            const entity = useModelWrapper(props, emit);
+
+            let componentConfig = configs[ camelCase(entity.value.componentName) ];
+
+            for (const [groupKey, group] of Object.entries(componentConfig)) {
+                for (const [key, value] of Object.entries(group)) {
+                    if (entity.value.config[groupKey] === undefined) {
+                        entity.value.config[groupKey] = {};
+                    }
+                }
+            }
+
             return {
-                entity: useModelWrapper(props, emit),
+                entity,
             };
         },
         computed: {
