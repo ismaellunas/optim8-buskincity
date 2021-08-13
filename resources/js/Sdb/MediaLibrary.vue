@@ -45,6 +45,18 @@
                             </div>
 
                             <footer class="card-footer">
+
+                                <sdb-button
+                                    v-if="isImage(media)"
+                                    class="card-footer-item p-2 is-borderless is-shadowless is-info is-inverted"
+                                    title="Preview"
+                                    @click="previewImage(media)"
+                                >
+                                    <span class="icon is-small">
+                                        <i class="fas fa-expand"></i>
+                                    </span>
+                                </sdb-button>
+
                                 <slot name="actions" :media="media"></slot>
                             </footer>
                         </div>
@@ -91,15 +103,26 @@
                 </div>
             </div>
         </div>
+
+        <sdb-modal
+            v-show="isModalOpen"
+            @close="closeModal()"
+        >
+            <p class="image">
+                <img :src="previewImageSrc" alt="">
+            </p>
+        </sdb-modal>
     </div>
 </template>
 
 <script>
     import HasPageErrors from '@/Mixins/HasPageErrors';
     import HasModalMixin from '@/Mixins/HasModal';
+    import SdbButton from '@/Sdb/Button';
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormUploadMedia from '@/Sdb/Form/UploadMedia';
     import SdbInputFile from '@/Sdb/InputFile';
+    import SdbModal from '@/Sdb/Modal';
     import SdbPagination from '@/Sdb/Pagination';
     import { isEmpty } from 'lodash';
     import { reactive, ref } from "vue";
@@ -111,9 +134,11 @@
             HasModalMixin,
         ],
         components: {
+            SdbButton,
             SdbFormInput,
             SdbFormUploadMedia,
             SdbInputFile,
+            SdbModal,
             SdbPagination,
         },
         props: {
@@ -142,6 +167,11 @@
                 submit,
             };
         },
+        data() {
+            return {
+                previewImageSrc: null,
+            };
+        },
         methods: {
             isImage(media) {
                 return media.file_type === "image";
@@ -153,6 +183,10 @@
                 if (this.isImage(media)) {
                     console.log('edit-media');
                 }
+            },
+            previewImage(media) {
+                this.previewImageSrc = media.file_url;
+                this.openModal();
             },
         },
         computed: {
