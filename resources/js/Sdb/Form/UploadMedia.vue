@@ -108,7 +108,7 @@
     import SdbInputFile from '@/Sdb/InputFile';
     import SdbModalCard from '@/Sdb/ModalCard';
     import Compressor from 'compressorjs';
-    import { useModelWrapper, isBlank, urlToFile } from '@/Libs/utils';
+    import { useModelWrapper, isBlank } from '@/Libs/utils';
 
     import VueCropper from 'vue-cropperjs';
     import 'cropperjs/dist/cropper.css';
