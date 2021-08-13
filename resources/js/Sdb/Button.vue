@@ -1,7 +1,6 @@
 <template>
     <button
         class="button"
-        :class="class"
         :type="type"
         >
         <slot></slot>
@@ -14,9 +13,6 @@
             type: {
                 type: String,
                 default: 'submit',
-            },
-            class: {
-                default: ['is-primary'],
             },
         }
     }
