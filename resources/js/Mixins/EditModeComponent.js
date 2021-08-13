@@ -10,15 +10,6 @@ export default {
         };
     },
     computed: {
-        wrapperClass() {
-            let wrapperClass = [];
-
-            if (this.isEditMode) {
-                wrapperClass = wrapperClass.concat(this.editModeWrapperClass);
-            }
-
-            return wrapperClass;
-        },
         canEdit() {
             return !isEmpty(this.isEditMode) && this.isEditMode;
         }
