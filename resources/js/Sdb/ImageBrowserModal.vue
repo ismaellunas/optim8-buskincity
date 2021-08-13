@@ -1,9 +1,9 @@
 <template>
     <sdb-modal-card
         :content-class="['is-huge']"
-        :is-close-hidden="false"
+        :is-close-hidden="true"
         @close="$emit('close')"
-        >
+    >
         <template v-slot:header>
             <p class="modal-card-title">{{ title }}</p>
                 <sdb-button
@@ -16,59 +16,57 @@
 
         <template v-slot:footer>
             <sdb-pagination
-                :links="data?.links ?? []"
                 :is-ajax="true"
-                @on-clicked-pagination="onClickedPagination"
+                :links="data?.links ?? []"
+                @on-clicked-pagination="$emit('on-clicked-pagination', $event)"
             />
         </template>
 
-        <div class="columns is-multiline">
-            <div class="column is-2" v-for="image in data?.data">
-                <div class="card">
-                    <div
-                        class="card-image"
-                        @click="$emit('on-selected-image', image)"
-                    >
-                        <figure class="image is-4by3">
-                            <img
-                                :src="image.file_url"
-                                :alt="image.file_name"
-                            />
-                        </figure>
-                    </div>
-                    <div class="card-content p-2">
-                        <div class="content" style="overflow-wrap: break-word;">
-                            <p>{{ image.file_name }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <sdb-media-library
+            :is-pagination-displayed="false"
+            :records="data"
+            :upload-route="route('admin.media.upload-image')"
+            @on-clicked-media="$emit('on-clicked-media', media)"
+            @on-media-upload-success="$emit('on-media-upload-success', $event)"
+        >
+            <template v-slot:actions="slotProps">
+                <sdb-link
+                    class="card-footer-item p-2"
+                    preserve-scroll
+                    preserve-state
+                    @click="$emit('on-media-selected', slotProps.media, $event)"
+                >
+                    Select
+                </sdb-link>
+            </template>
+        </sdb-media-library>
     </sdb-modal-card>
 </template>
 
 <script>
     import SdbButton from '@/Sdb/Button';
+    import SdbLink from '@/Sdb/Link';
+    import SdbMediaLibrary from '@/Sdb/MediaLibrary';
     import SdbModalCard from '@/Sdb/ModalCard';
     import SdbPagination from '@/Sdb/Pagination';
-    import { isBlank } from '@/Libs/utils';
 
     export default {
         components: {
             SdbButton,
+            SdbLink,
             SdbModalCard,
             SdbPagination,
+            SdbMediaLibrary,
         },
-        emits: ['close', 'on-clicked-pagination', 'on-selected-image'],
+        emits: [
+            'close',
+            'on-clicked-pagination',
+            'on-media-selected',
+            'on-media-upload-success'
+        ],
         props: {
             data: {},
-            isCloseHidden: {},
             title: {type: String, default: 'Images'},
-        },
-        methods: {
-            onClickedPagination(url) {
-                this.$emit('on-clicked-pagination', url);
-            }
         },
     }
 </script>
