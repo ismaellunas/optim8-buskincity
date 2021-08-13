@@ -128,6 +128,7 @@
     import JetCheckbox from '@/Jetstream/Checkbox'
     import JetInput from '@/Jetstream/Input'
     import JetLabel from '@/Jetstream/Label'
+    import JetValidationErrors from '@/Jetstream/ValidationErrors';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbLink from '@/Sdb/Link';
     import SdbSocialMediaList from '@/Sdb/SocialMediaList'
@@ -138,6 +139,7 @@
             JetCheckbox,
             JetInput,
             JetLabel,
+            JetValidationErrors,
             SdbButtonLink,
             SdbLink,
             SdbSocialMediaList,
