@@ -123,8 +123,7 @@
 
                 if (this.isEditMode) {
                     wrapperClass = wrapperClass.concat(
-                        this.editModeWrapperClass,
-                        ['is-multiline', 'box', 'p-1', 'my-1']
+                        'edit-mode-columns', 'is-multiline', 'box', 'p-1', 'my-1'
                     );
                 }
 
