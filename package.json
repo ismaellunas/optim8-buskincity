@@ -34,6 +34,8 @@
         "@fortawesome/fontawesome-free": "^5.15.3",
         "@tinymce/tinymce-vue": "^4.0.4",
         "bulma": "^0.9.3",
+        "compressorjs": "^1.0.7",
+        "vue-cropperjs": "^5.0.0",
         "vue-sweetalert2": "^5.0.2",
         "vuedraggable": "^4.0.3"
     }
