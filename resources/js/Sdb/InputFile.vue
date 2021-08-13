@@ -1,12 +1,13 @@
 <template>
-    <div class="file has-name">
+    <div class="file" :class="wrapperClass">
         <label class="file-label">
             <input
-                :accept="accept.join(', ')"
-                @change="onFileChange"
                 class="file-input"
+                ref="fileInput"
                 type="file"
-                />
+                :accept="accept.join(', ')"
+                @input="pickFile"
+            />
             <span class="file-cta">
                 <span class="file-icon">
                     <i class="fas fa-upload"></i>
@@ -15,7 +16,8 @@
                     Choose a file...
                 </span>
             </span>
-            <span class="file-name">
+
+            <span v-if="isNameDisplayed" class="file-name">
                 {{ fileName }}
             </span>
         </label>
@@ -23,12 +25,14 @@
 </template>
 
 <script>
-    import { useModelWrapper, isBlank } from '@/Libs/utils';
+    import { isEmpty, concat } from 'lodash';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         props: {
+            accept: {type: Array, default: []},
+            isNameDisplayed: {type: Boolean, default: true},
             modelValue: {},
-            accept: Array,
         },
         setup(props, { emit }) {
             return {
@@ -36,23 +40,33 @@
             };
         },
         methods: {
-            onFileChange(event) {
-                let files = event.target.files || event.dataTransfer.files;
-                if (!files.length) {
-                    return;
+            pickFile() {
+                let input = this.$refs.fileInput
+                let file = input.files
+                if (file && file[0]) {
+                    let reader = new FileReader
+                    reader.onload = (event) => {
+                        this.$emit('on-file-picked', event);
+                    }
+                    reader.readAsDataURL(file[0])
+                    this.file = file[0];
                 }
-                this.file = files[0];
-            }
+            },
         },
         computed: {
             hasFile() {
-                return !isBlank(this.file);
+                return !isEmpty(this.file);
             },
             fileName() {
                 if (this.hasFile) {
                     return this.file.name
                 }
                 return "...";
+            },
+            wrapperClass() {
+                return concat(
+                    this.isNameDisplayed ? 'has-name': null,
+                ).filter(Boolean);
             },
         },
     }
