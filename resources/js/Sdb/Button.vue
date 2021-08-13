@@ -1,8 +1,8 @@
 <template>
     <button
+        class="button"
         :class="class"
         :type="type"
-        class="button"
         >
         <slot></slot>
     </button>
