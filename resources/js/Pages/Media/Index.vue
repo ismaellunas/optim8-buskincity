@@ -33,7 +33,6 @@
     import AppLayout from '@/Layouts/AppLayout';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbLink from '@/Sdb/Link';
     import SdbMediaLibrary from '@/Sdb/MediaLibrary';
 
     export default {
@@ -41,7 +40,6 @@
             AppLayout,
             SdbButton,
             SdbButtonLink,
-            SdbLink,
             SdbMediaLibrary,
         },
         props: {
@@ -51,7 +49,6 @@
         },
         methods: {
             getEditRoute(id) {
-                // return this.baseRouteName.replace('.', '/')+'/'+id+'/edit';
                 return route(this.baseRouteName+'.edit', {id});
             },
             deleteRecord(record) {
