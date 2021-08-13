@@ -137,6 +137,7 @@
                 if (event) event.preventDefault();
                 this.entity.content.cardImage.figure.image.src = image.file_url;
                 this.closeModal();
+                this.isFormOpen = false;
             },
         },
         computed: {

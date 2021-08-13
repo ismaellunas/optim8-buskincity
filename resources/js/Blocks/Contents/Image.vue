@@ -87,9 +87,6 @@
             toggleEdit() {
                 this.isFormOpen = !this.isFormOpen;
             },
-            closeForm() {
-                this.isFormOpen = false;
-            },
             onShownModal() { /* @overide */
                 this.getImagesRequest(route('admin.media.list.image'));
             },
@@ -119,6 +116,7 @@
                 if (event) event.preventDefault();
                 this.entity.content.figure.image.src = image.file_url;
                 this.closeModal();
+                this.isFormOpen = false;
             },
         },
         computed: {
