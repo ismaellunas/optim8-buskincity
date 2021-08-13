@@ -39,7 +39,8 @@
             :data="modalImages"
             @close="closeModal"
             @on-clicked-pagination="getImagesRequest"
-            @on-selected-image="selectImage"
+            @on-media-upload-success="updateImageSource"
+            @on-media-selected="selectImage"
         />
     </div>
 </template>
@@ -109,7 +110,12 @@
             setModalImages(data) {
                 this.modalImages = data;
             },
-            selectImage(image) {
+            updateImageSource(response) {
+                this.entity.content.figure.image.src = response.data.imagePath;
+                this.closeModal();
+            },
+            selectImage(image, event) {
+                if (event) event.preventDefault();
                 this.entity.content.figure.image.src = image.file_url;
                 this.closeModal();
             },

@@ -55,7 +55,8 @@
             :data="modalImages"
             @close="closeModal"
             @on-clicked-pagination="getImagesRequest"
-            @on-selected-image="selectImage"
+            @on-media-upload-success="updateImageSource"
+            @on-media-selected="selectImage"
         />
     </div>
 </template>
@@ -104,9 +105,9 @@
             };
         },
         methods: {
-            updateImageSource(imagePath) {
-                this.entity.content.cardImage.figure.image.src = imagePath;
-                emitModelValue(this.$emit, this.entity.content);
+            updateImageSource(response) {
+                this.entity.content.cardImage.figure.image.src = response.data.imagePath;
+                this.closeModal();
             },
             toggleEdit() {
                 this.isFormOpen = !this.isFormOpen;
@@ -132,7 +133,8 @@
             setModalImages(data) {
                 this.modalImages = data;
             },
-            selectImage(image) {
+            selectImage(image, event) {
+                if (event) event.preventDefault();
                 this.entity.content.cardImage.figure.image.src = image.file_url;
                 this.closeModal();
             },
