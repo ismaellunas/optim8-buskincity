@@ -30,14 +30,16 @@
             @on-media-upload-success="$emit('on-media-upload-success', $event)"
         >
             <template v-slot:actions="slotProps">
-                <sdb-link
-                    class="card-footer-item p-2"
-                    preserve-scroll
-                    preserve-state
+                <sdb-button
+                    class="card-footer-item p-2 is-borderless is-shadowless is-inverted"
+                    title="Select"
                     @click="$emit('on-media-selected', slotProps.media, $event)"
                 >
-                    Select
-                </sdb-link>
+                    <span class="icon is-small">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    &nbsp; Select
+                </sdb-button>
             </template>
         </sdb-media-library>
     </sdb-modal-card>
@@ -45,7 +47,6 @@
 
 <script>
     import SdbButton from '@/Sdb/Button';
-    import SdbLink from '@/Sdb/Link';
     import SdbMediaLibrary from '@/Sdb/MediaLibrary';
     import SdbModalCard from '@/Sdb/ModalCard';
     import SdbPagination from '@/Sdb/Pagination';
@@ -53,7 +54,6 @@
     export default {
         components: {
             SdbButton,
-            SdbLink,
             SdbModalCard,
             SdbPagination,
             SdbMediaLibrary,
