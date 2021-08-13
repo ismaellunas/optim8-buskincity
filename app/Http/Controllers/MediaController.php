@@ -13,7 +13,7 @@ class MediaController extends Controller
     protected $model = Media::class;
 
     protected $baseRouteName = 'admin.media';
-    protected $recordsPerPage = 10;
+    protected $recordsPerPage = 12;
 
     /**
      * Display a listing of the resource.
