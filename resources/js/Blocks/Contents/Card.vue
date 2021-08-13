@@ -22,12 +22,6 @@
                 </sdb-button>
 
                 <div class="card-content has-background-info-light" v-if="isFormDisplayed">
-                    <upload-image-content
-                        v-model="entity.content.cardImage.figure.image.src"
-                        :upload-route="route('admin.media.upload-image')"
-                        @uploaded-image="updateImageSource"
-                    />
-                    <div class="divider my-2">OR</div>
                     <div class="block has-text-centered">
                         <sdb-button @click="openModal()" type="button">
                             <span>Open Media</span>
@@ -74,7 +68,6 @@
     import SdbEditor from '@/Sdb/EditorTinymce';
     import SdbImageBrowserModal from '@/Sdb/ImageBrowserModal';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import UploadImageContent from '@/Blocks/Contents/UploadImage';
     import { concat, isEmpty } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
     import { emitModelValue, useModelWrapper } from '@/Libs/utils';
@@ -90,7 +83,6 @@
             SdbEditor,
             SdbImageBrowserModal,
             SdbToolbarContent,
-            UploadImageContent,
         },
         props: {
             id: {},
