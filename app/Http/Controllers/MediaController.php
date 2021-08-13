@@ -124,6 +124,7 @@ class MediaController extends Controller
                    ->getImageTag($record->file_name)
                    ->resize(Resize::pad(96))
                    ->serialize();
+            $record->_thumbnail_url = $record->thumbnailUrl;
             return $record;
         });
 
@@ -146,6 +147,13 @@ class MediaController extends Controller
 
     public function listImages(Request $request)
     {
-        return $request->ajax() ? Media::orderBy('id', 'DESC')->paginate(8) : abort(404);
+        $records = Media::orderBy('id', 'DESC')->paginate($this->recordsPerPage);
+
+        $records->getCollection()->transform(function ($record) {
+            $record->_thumbnail_url = $record->thumbnailUrl;
+            return $record;
+        });
+
+        return $request->ajax() ? $records : abort(404);
     }
 }
