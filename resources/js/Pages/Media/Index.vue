@@ -14,7 +14,15 @@
                 <!--
                 <sdb-link class="card-footer-item p-2" @click.prevent="editRecord(slotProps.media)">Edit</sdb-link>
                 -->
-                <sdb-link class="card-footer-item p-2" @click.prevent="deleteRecord(slotProps.media)">Delete</sdb-link>
+                <sdb-button
+                    class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
+                    title="Delete"
+                    @click="deleteRecord(slotProps.media)"
+                >
+                    <span class="icon is-small">
+                        <i class="far fa-trash-alt"></i>
+                    </span>
+                </sdb-button>
             </template>
         </sdb-media-library>
     </div>
