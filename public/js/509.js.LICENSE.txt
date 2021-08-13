@@ -1,9 +1,4 @@
 /*!
- * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see LICENSE.md.
- */
-
-/*!
  * Compressor.js v1.0.7
  * https://fengyuanchen.github.io/compressorjs
  *
@@ -21,11 +16,4 @@
  * Released under the MIT license
  *
  * Date: 2021-06-12T08:00:17.411Z
- */
-
-/**!
- * Sortable 1.10.2
- * @author	RubaXa   <trash@rubaxa.org>
- * @author	owenm    <owen23355@gmail.com>
- * @license MIT
  */
