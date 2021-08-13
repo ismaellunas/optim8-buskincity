@@ -25,12 +25,12 @@
 </template>
 
 <script>
-    //import SdbCkeditorInline from '@/Sdb/CkeditorInline';
-    //import SdbEditorTiptap from '@/Sdb/EditorTiptap';
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import EditModeContentMixin from '@/Mixins/EditModeContent';
     import SdbTinymce from '@/Sdb/EditorTinymce';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import { concat } from 'lodash';
+    import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -39,8 +39,6 @@
             EditModeContentMixin,
         ],
         components: {
-            //SdbCkeditorInline,
-            //SdbEditorTiptap,
             SdbTinymce,
             SdbToolbarContent,
         },
@@ -56,16 +54,22 @@
         },
         computed: {
             contentClass() {
-                let classes = [];
-                classes.push(this.config.text?.alignment ?? '');
-                classes.push(this.config.text?.size ?? '');
-                return classes.filter(Boolean);
+                return concat(
+                    (this.config.text?.alignment ?? ''),
+                    (this.config.text?.size ?? '')
+                ).filter(Boolean);
             },
-            ckeditorClass() {
-                let classes = [];
-                classes.push(this.config.text?.alignment ?? '');
-                return classes.filter(Boolean);
+            editorClass() {
+                return concat(
+                    (this.config.text?.alignment ?? '')
+                ).filter(Boolean);
             },
+            wrapperClass() {
+                return concat(
+                    createPaddingClasses(this.config.wrapper?.padding),
+                    createMarginClasses(this.config.wrapper?.margin)
+                ).filter(Boolean);
+            }
         }
     }
 </script>
