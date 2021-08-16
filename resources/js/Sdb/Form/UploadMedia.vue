@@ -112,6 +112,24 @@
                                         <i class="fas fa-redo-alt"></i>
                                     </span>
                                 </sdb-button>
+                                <sdb-button
+                                    title="Flip Horizontal"
+                                    :disabled="isUploading"
+                                    @click="flipX($event)"
+                                >
+                                    <span class="icon is-small">
+                                        <i class="fas fa-arrows-alt-h"></i>
+                                    </span>
+                                </sdb-button>
+                                <sdb-button
+                                    title="Flip Vertical"
+                                    :disabled="isUploading"
+                                    @click="flipY($event)"
+                                >
+                                    <span class="icon is-small">
+                                        <i class="fas fa-arrows-alt-v"></i>
+                                    </span>
+                                </sdb-button>
                             </div>
                         </div>
                     </div>
