@@ -170,12 +170,10 @@
             entityId: {},
             modelValue: {},
             uploadRoute: {},
-            //isUploading: {type: Boolean, default: false},
         },
         setup(props, { emit }) {
             return {
                 imageSrc: useModelWrapper(props, emit),
-                //isUploading: useModelWrapper(props, emit, 'isUploading')
             };
         },
         data() {
