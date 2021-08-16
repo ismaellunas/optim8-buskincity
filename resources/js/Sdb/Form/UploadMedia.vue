@@ -95,6 +95,7 @@
                                     Reset
                                 </sdb-button>
                                 <sdb-button
+                                    title="Rotate Counterclockwise"
                                     :disabled="isUploading"
                                     @click="rotateLeft"
                                 >
@@ -103,6 +104,7 @@
                                     </span>
                                 </sdb-button>
                                 <sdb-button
+                                    title="Rotate Clockwise"
                                     :disabled="isUploading"
                                     @click="rotateRight"
                                 >
@@ -124,6 +126,7 @@
                             <sdb-button
                                 @click="submitFile"
                                 :class="{'is-loading': isUploading}"
+                                :disabled="!canUpload"
                             >
                                 Upload
                             </sdb-button>
