@@ -192,6 +192,10 @@
             }
         },
         methods: {
+            closeModal() { /* @override */
+                this.resetData();
+                this.isModalOpen = false;
+            },
             submitFile() {
                 const self = this;
                 const canvas = this.getCropper().getCroppedCanvas();
