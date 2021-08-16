@@ -6,6 +6,7 @@
                 ref="fileInput"
                 type="file"
                 :accept="accept.join(', ')"
+                @click="resetFile"
                 @input="pickFile"
             />
             <span class="file-cta">
@@ -40,6 +41,9 @@
             };
         },
         methods: {
+            resetFile() {
+                this.$refs.fileInput.value = null;
+            },
             pickFile() {
                 let input = this.$refs.fileInput
                 let file = input.files
