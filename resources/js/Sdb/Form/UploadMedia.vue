@@ -236,8 +236,11 @@
                 .catch(function(error) {
                     console.log(error);
                 }).then(() => {
+                    const cropper = self.getCropper();
+                    if (cropper) {
+                        cropper.enable();
+                    }
                     self.isUploading = false;
-                    self.getCropper().enable();
                 });
             },
             resetData() {
