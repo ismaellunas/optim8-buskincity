@@ -25,6 +25,7 @@
                     aria-label="close"
                     class="delete is-primary"
                     type="button"
+                    :disabled="isUploading"
                     @click="closeModal()"
                 />
             </template>
@@ -35,10 +36,7 @@
                         <div class="columns">
                             <div class="column">
                                 <div class="buttons has-addons">
-                                    <sdb-button :class="{'is-primary': (aspectRatio == null)}" @click="setAspectRatio(null)">Free</sdb-button>
-                                    <sdb-button :class="{'is-primary': (aspectRatio == 16/9)}" @click="setAspectRatio(16/9)">16:9</sdb-button>
-                                    <sdb-button :class="{'is-primary': (aspectRatio == 4/3)}" @click="setAspectRatio(4/3)">4:3</sdb-button>
-                                    <sdb-button :class="{'is-primary': (aspectRatio == 1)}" @click="setAspectRatio(1)">1:1</sdb-button>
+                                    <!-- ratio -->
                                 </div>
                             </div>
                             <div class="column">
@@ -59,20 +57,55 @@
                         <div class="columns">
                             <div class="column">
                                 <div class="buttons has-addons">
-                                    <sdb-button :class="{'is-primary': (aspectRatio == null)}" @click="setAspectRatio(null)">Free</sdb-button>
-                                    <sdb-button :class="{'is-primary': (aspectRatio == 16/9)}" @click="setAspectRatio(16/9)">16:9</sdb-button>
-                                    <sdb-button :class="{'is-primary': (aspectRatio == 4/3)}" @click="setAspectRatio(4/3)">4:3</sdb-button>
-                                    <sdb-button :class="{'is-primary': (aspectRatio == 1)}" @click="setAspectRatio(1)">1:1</sdb-button>
+                                    <sdb-button
+                                        :class="{'is-primary': (aspectRatio == null)}"
+                                        :disabled="isUploading"
+                                        @click="setAspectRatio(null)"
+                                    >
+                                        Free
+                                    </sdb-button>
+                                    <sdb-button
+                                        :class="{'is-primary': (aspectRatio == 16/9)}"
+                                        :disabled="isUploading"
+                                        @click="setAspectRatio(16/9)"
+                                    >
+                                        16:9
+                                    </sdb-button>
+                                    <sdb-button
+                                        :class="{'is-primary': (aspectRatio == 4/3)}"
+                                        :disabled="isUploading"
+                                        @click="setAspectRatio(4/3)"
+                                    >
+                                        4:3
+                                    </sdb-button>
+                                    <sdb-button
+                                        :class="{'is-primary': (aspectRatio == 1)}"
+                                        :disabled="isUploading"
+                                        @click="setAspectRatio(1)"
+                                    >
+                                        1:1
+                                    </sdb-button>
                                 </div>
                             </div>
                             <div class="column">
-                                <sdb-button @click="reset">Reset</sdb-button>
-                                <sdb-button @click="rotateLeft">
+                                <sdb-button
+                                    :disabled="isUploading"
+                                    @click="reset"
+                                >
+                                    Reset
+                                </sdb-button>
+                                <sdb-button
+                                    :disabled="isUploading"
+                                    @click="rotateLeft"
+                                >
                                     <span class="icon is-small">
                                         <i class="fas fa-undo-alt"></i>
                                     </span>
                                 </sdb-button>
-                                <sdb-button @click="rotateRight">
+                                <sdb-button
+                                    :disabled="isUploading"
+                                    @click="rotateRight"
+                                >
                                     <span class="icon is-small">
                                         <i class="fas fa-redo-alt"></i>
                                     </span>
@@ -82,8 +115,18 @@
                     </div>
                     <div class="column">
                         <div class="is-pulled-right">
-                            <sdb-button class="button" @click="closeModal">Cancel</sdb-button>
-                            <sdb-button @click="submitFile">Upload</sdb-button>
+                            <sdb-button
+                                class="button"
+                                :disabled="isUploading"
+                                @click="closeModal"
+                            >
+                                Cancel</sdb-button>
+                            <sdb-button
+                                @click="submitFile"
+                                :class="{'is-loading': isUploading}"
+                            >
+                                Upload
+                            </sdb-button>
                         </div>
                         <div class="is-clearfix"></div>
                     </div>
@@ -123,19 +166,21 @@
             SdbModalCard,
             VueCropper,
         },
-        props: [
-            'entityId',
-            'modelValue',
-            'uploadRoute',
-            //'extensions',
-        ],
+        props: {
+            entityId: {},
+            modelValue: {},
+            uploadRoute: {},
+            //isUploading: {type: Boolean, default: false},
+        },
         setup(props, { emit }) {
             return {
                 imageSrc: useModelWrapper(props, emit),
+                //isUploading: useModelWrapper(props, emit, 'isUploading')
             };
         },
         data() {
             return {
+                isUploading: false,
                 acceptedTypes: ['image/png', 'image/jpeg'],
                 file: null,
                 previewFile: null,
@@ -174,6 +219,9 @@
                     formData.append('id', this.entityId);
                 }
 
+                self.isUploading = true;
+                self.getCropper().disable();
+
                 axios.post(this.uploadRoute, formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -190,6 +238,8 @@
                 .catch(function(error) {
                     console.log(error);
                 }).then(() => {
+                    self.isUploading = false;
+                    self.getCropper().enable();
                 });
             },
             resetData() {
