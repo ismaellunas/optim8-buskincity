@@ -34,6 +34,7 @@
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbMediaLibrary from '@/Sdb/MediaLibrary';
+    import { success as successAlert } from '@/Libs/alert';
 
     export default {
         components: {
@@ -60,6 +61,7 @@
             },
             onMediaUploadSuccess(response) {
                 this.$inertia.reload();
+                successAlert('File has been uploaded');
             },
         },
     }
