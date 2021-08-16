@@ -155,6 +155,7 @@
     import SdbModalCard from '@/Sdb/ModalCard';
     import Compressor from 'compressorjs';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
+    import { reactive } from "vue";
 
     import VueCropper from 'vue-cropperjs';
     import 'cropperjs/dist/cropper.css';
@@ -173,11 +174,16 @@
             entityId: {},
             modelValue: {},
             uploadRoute: {},
+            isDebugMode: {type: Boolean, default: false},
         },
         setup(props, { emit }) {
             return {
                 imageSrc: useModelWrapper(props, emit),
+                cropper: reactive({}),
             };
+        },
+        mounted() {
+            this.cropper = this.$refs.cropper;
         },
         data() {
             return {
@@ -201,7 +207,7 @@
             },
             submitFile() {
                 const self = this;
-                const canvas = this.getCropper().getCroppedCanvas();
+                const canvas = self.cropper.getCroppedCanvas();
                 canvas.toBlob((blob) => {
                     new Compressor(blob, {
                         quality: 0.8,
@@ -225,7 +231,7 @@
                 }
 
                 self.isUploading = true;
-                self.getCropper().disable();
+                self.cropper.disable();
 
                 axios.post(this.uploadRoute, formData, {
                     headers: {
@@ -243,9 +249,8 @@
                 .catch(function(error) {
                     console.log(error);
                 }).then(() => {
-                    const cropper = self.getCropper();
-                    if (cropper) {
-                        cropper.enable();
+                    if (this.cropper) {
+                        this.cropper.enable();
                     }
                     self.isUploading = false;
                 });
@@ -260,17 +265,13 @@
                 this.openModal();
             },
             cropAndReplace() {
-                const cropper = this.getCropper();
-                const canvas = cropper.getCroppedCanvas();
+                const canvas = this.cropper.getCroppedCanvas();
                 this.previewFileSrc = canvas.toDataURL();
-                cropper
+                this.cropper
                     .setDragMode("move")
                     .replace(this.previewFileSrc, false);
 
                 this.disableCropMode();
-            },
-            getCropper() {
-                return this.$refs.cropper;
             },
             rotateRight() {
                 this.$refs.cropper.rotate(90);
@@ -280,28 +281,44 @@
             },
             enableCropMode() {
                 this.mode = this.modeOptions.crop;
-                const cropper = this.getCropper();
-                cropper.initCrop();
-                cropper.setDragMode("crop");
+                this.cropper
+                    .initCrop()
+                    .setDragMode("crop");
+            },
+            flipY(event) {
+                const dom = event.currentTarget;
+                let scale = dom.getAttribute('data-scale');
+                scale = scale ? -scale : -1;
+                this.cropper.scaleY(scale);
+                dom.setAttribute('data-scale', scale);
+            },
+            flipX(event) {
+                const dom = event.currentTarget;
+                let scale = dom.getAttribute('data-scale');
+                scale = scale ? -scale : -1;
+                this.cropper.scaleX(scale);
+                dom.setAttribute('data-scale', scale);
             },
             disableCropMode() {
-                this.getCropper()
+                this.cropper
                     .reset()
                     .clear()
                     .setDragMode('move');
                 this.mode = null;
             },
             reset() {
-                this.getCropper()
+                this.cropper
                     .reset()
                     .setAspectRatio(null);
             },
             setAspectRatio(ratio) {
-                this.getCropper().setAspectRatio(ratio);
+                this.cropper.setAspectRatio(ratio);
                 this.aspectRatio = ratio;
             },
             updateImageData() {
-                this.imageData = this.$refs.cropper.getData(true)
+                if (this.isDebugMode) {
+                    this.imageData = this.$refs.cropper.getData(true)
+                }
             },
         },
         computed: {
