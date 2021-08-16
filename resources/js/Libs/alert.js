@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2';
 import { assign } from 'lodash';
 
+const timer = 1700;
 const defaultConfig = {
     scrollbarPadding: false,
 };
@@ -12,7 +13,7 @@ export function success(message = "Your work has been saved") {
             icon: 'success',
             title: message,
             showConfirmButton: false,
-            timer: 1500,
+            timer: timer,
         }
     ));
 };
