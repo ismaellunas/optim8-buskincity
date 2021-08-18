@@ -9,7 +9,7 @@
             <div class="card-content">
                 <div class="content" :class="cardContentClass">
                     <template v-if="isEditMode">
-                        <sdb-ckeditor-inline v-model="entity.content.cardContent.content.html"/>
+                        <sdb-editor v-model="entity.content.cardContent.content.html"/>
                     </template>
                     <template v-else>
                         <div v-html="entity.content.cardContent.content.html"></div>
@@ -23,7 +23,7 @@
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import EditModeContentMixin from '@/Mixins/EditModeContent';
-    import SdbCkeditorInline from '@/Sdb/CkeditorInline'
+    import SdbEditor from '@/Sdb/EditorTinymce';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils'
 
@@ -33,7 +33,7 @@
             DeletableContentMixin
         ],
         components: {
-            SdbCkeditorInline,
+            SdbEditor,
             SdbToolbarContent,
         },
         props: {

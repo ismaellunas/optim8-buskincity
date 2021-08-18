@@ -26,7 +26,6 @@
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import EditModeContentMixin from '@/Mixins/EditModeContent';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import { heading as editorConfig } from '@/Libs/ckeditor-configs';
     import { useModelWrapper } from '@/Libs/utils';
     import { last } from 'lodash';
 
