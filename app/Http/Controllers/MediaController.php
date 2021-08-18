@@ -114,9 +114,14 @@ class MediaController extends Controller
         return redirect()->route($this->baseRouteName.'.index');
     }
 
-    public function getRecords()//: Collection
+    public function getRecords()
     {
         $records = $this->model::orderBy('id', 'DESC')
+            ->with([
+                'translations' => function ($q) {
+                    $q->select(['id', 'media_id', 'alt', 'locale']);
+                },
+            ])
             ->paginate($this->recordsPerPage);
 
         $records->getCollection()->transform(function ($record) {
