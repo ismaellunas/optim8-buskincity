@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Media;
+use App\Services\TranslationService;
 use Cloudinary\Transformation\Resize;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -25,6 +25,8 @@ class MediaController extends Controller
         return Inertia::render('Media/Index', [
             'records' => $this->getRecords(),
             'baseRouteName' => $this->baseRouteName,
+            'defaultLocale' => TranslationService::getDefaultLocale(),
+            'localeOptions' => TranslationService::getLocaleOptions(),
         ]);
     }
 
