@@ -92,9 +92,45 @@ class MediaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Media $media)
     {
-        //
+        $data = [];
+        $fileName = $request->input('file_name');
+
+        if ($media->file_name != $fileName) {
+            $isExists = Media::where('file_name', $fileName)
+                ->where('id', '<>', $media->id)
+                ->exists();
+
+            if ($isExists) {
+                $fileName .= '_'.Str::lower(Str::random(6));
+            }
+
+            $response = cloudinary()->uploadApi()->rename(
+                $media->file_name,
+                $request->input('file_name')
+            );
+
+            $data['file_name'] = $response['public_id'];
+            $data['file_url'] = $response['secure_url'];
+            $data['version'] = $response['version'];
+        }
+
+        foreach ($request->input('translations') as $locale => $translation) {
+            $data[$locale] = $translation;
+        }
+
+        $assignedLocales = array_keys($media->getTranslationsArray());
+        $providedLocales = array_keys($request->input('translations', []));
+        $localeToBeDeleted = array_diff($assignedLocales, $providedLocales);
+
+        $media->update($data);
+
+        if (!empty($localeToBeDeleted)) {
+            $media->deleteTranslations($localeToBeDeleted);
+        }
+
+        return redirect()->back();
     }
 
     /**
