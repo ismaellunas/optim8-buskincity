@@ -6,6 +6,7 @@ use App\Models\Media;
 use App\Services\TranslationService;
 use Cloudinary\Transformation\Resize;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class MediaController extends Controller
@@ -53,10 +54,7 @@ class MediaController extends Controller
         $uploadedFile = cloudinary()->upload($request->file('file')->getRealPath());
 
         $media = new Media();
-        $media->file_name = $uploadedFile->getFileName();
-        $media->file_url = $uploadedFile->getSecurePath();
-        $media->size = $uploadedFile->getSize();
-        $media->file_type = $uploadedFile->getFileType();
+        $this->setMediaData($media, $uploadedFile);
         $media->save();
 
         return redirect()->route($this->baseRouteName.'.index');
@@ -140,16 +138,33 @@ class MediaController extends Controller
 
     public function uploadImage(Request $request)
     {
-        $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath());
+        $fileName = pathinfo($request->input('filename'))['filename'];
+
+        if (Media::where('file_name', $fileName)->exists()) {
+            $fileName .= '_'.Str::lower(Str::random(6));
+        }
+
+        $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath(), [
+            'public_id' => $fileName,
+        ]);
 
         $media = new Media();
-        $media->file_name = $uploadedFile->getFileName();
-        $media->file_url = $uploadedFile->getSecurePath();
-        $media->size = $uploadedFile->getSize();
-        $media->file_type = $uploadedFile->getFileType();
+        $this->setMediaData($media, $uploadedFile);
         $media->save();
 
         return response()->json(['imagePath' => $media->file_url]);
+    }
+
+    public function updateImage(Request $request, Media $media)
+    {
+        $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath(), ['public_id' => $media->file_name]);
+
+        $this->setMediaData($media, $uploadedFile);
+        $media->save();
+
+        return $request->ajax()
+            ? redirect()->back()
+            : response()->json(['imagePath' => $media->file_url]);
     }
 
     public function listImages(Request $request)
@@ -162,5 +177,16 @@ class MediaController extends Controller
         });
 
         return $request->ajax() ? $records : abort(404);
+    }
+
+    protected function setMediaData(Media &$media, $asset)
+    {
+        $media->extension = $asset->getExtension();
+        $media->file_name = $asset->getFileName();
+        $media->file_type = $asset->getFileType();
+        $media->file_url = $asset->getSecurePath();
+        $media->size = $asset->getSize();
+        $media->version = $asset->getVersion();
+        $media->assets = $asset->getResponse();
     }
 }
