@@ -1,30 +1,30 @@
 <template>
-    <div class="field">
-        <sdb-label>{{ label }}</sdb-label>
+    <sdb-form-field>
+        <template v-slot:label>{{ label }}</template>
 
-        <div class="control">
-            <sdb-input
-                :value="modelValue"
-                :placeholder="placeholder"
-                @input="$emit('update:modelValue', $event.target.value)"
-                :disabled="disabled"
-            />
-        </div>
+        <sdb-input
+            :disabled="disabled"
+            :placeholder="placeholder"
+            :value="modelValue"
+            @input="$emit('update:modelValue', $event.target.value)"
+        />
 
-        <sdb-input-error :message="message"/>
-    </div>
+        <template v-slot:error>
+            <sdb-input-error :message="message"/>
+        </template>
+    </sdb-form-field>
 </template>
 
 <script>
+    import SdbFormField from '@/Sdb/Form/Field';
     import SdbInput from '@/Sdb/Input';
     import SdbInputError from '@/Sdb/InputError';
-    import SdbLabel from '@/Sdb/Label';
 
     export default {
         components: {
+            SdbFormField,
             SdbInput,
             SdbInputError,
-            SdbLabel,
         },
         emits: ['update:modelValue'],
         props: ['label', 'message', 'modelValue', 'placeholder', 'disabled', 'required']
