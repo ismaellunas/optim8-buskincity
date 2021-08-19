@@ -92,6 +92,10 @@ return [
             'driver' => 'octane',
         ],
 
+        'none' => [ // NOTE: this is used for local environment
+            'driver' => 'null',
+        ],
+
     ],
 
     /*
