@@ -242,7 +242,8 @@
                 const self = this;
                 let formData = new FormData();
 
-                formData.append('image', file, fileName);
+                formData.set('image', file, fileName);
+                formData.set('filename', fileName);
 
                 if (!isBlank(this.entityId)) {
                     formData.append('id', this.entityId);
