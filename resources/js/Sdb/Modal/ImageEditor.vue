@@ -200,7 +200,11 @@
             SdbModalCard,
             VueCropper,
         },
-        emits: ['close', 'on-media-upload-success', 'update:cropper', 'update:modelValue'],
+        emits: [
+            'close',
+            'update:cropper',
+            'update:modelValue'
+        ],
         props: {
             modelValue: {},
             isDebugMode: {type: Boolean, default: false},
@@ -218,19 +222,18 @@
         },
         data() {
             return {
-                file: null,
-                state: null,
-                stateOptions: {
-                    crop: "crop",
-                    resize: "resize",
-                    none: null,
-                },
                 aspectRatio: null,
                 imageData: null,
                 isUploading: false,
                 resize: {
                     width: null,
                     height: null,
+                },
+                state: null,
+                stateOptions: {
+                    crop: "crop",
+                    resize: "resize",
+                    none: null,
                 },
             }
         },
@@ -251,10 +254,12 @@
                     .setDragMode('move');
                 this.state = null;
             },
-            resetData() {
-                this.file = null;
-                //this.previewFile = null;
-                this.previewFileSrc = null;
+            getCanvasBlob(canvas) {
+                return new Promise(function(resolve, reject) {
+                    canvas.toBlob(function(blob) {
+                        resolve(blob)
+                    }, 'image/jpeg', 0.8);
+                })
             },
             cropAndReplace() {
                 const self = this;
@@ -267,13 +272,6 @@
                 });
 
                 this.disableState();
-            },
-            getCanvasBlob(canvas) {
-                return new Promise(function(resolve, reject) {
-                    canvas.toBlob(function(blob) {
-                        resolve(blob)
-                    }, 'image/jpeg', 0.95);
-                })
             },
             resizeAndReplace() {
                 const self = this;
@@ -315,6 +313,7 @@
                 this.cropper
                     .reset()
                     .setAspectRatio(null);
+                this.aspectRatio = null;
             },
             setAspectRatio(ratio) {
                 this.cropper.setAspectRatio(ratio);
@@ -322,7 +321,7 @@
             },
             updateImageData() {
                 if (this.isDebugMode) {
-                    this.imageData = this.$refs.cropper.getData(true)
+                    this.imageData = this.cropper.getData(true)
                 }
             },
         },
