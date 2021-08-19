@@ -33,9 +33,13 @@ class Media extends CloudinaryMedia implements TranslatableContract
     public function getThumbnailUrlAttribute()
     {
         $result = cloudinary()
-           ->getImageTag($this->file_name)
-           ->resize(Resize::thumbnail()->width(300)->height(300))
-           ->serializeAttributes();
+            ->getImageTag(
+                empty($this->version)
+                ? $this->file_name
+                : 'v'.$this->version.'/'.$this->file_name
+            )
+            ->resize(Resize::thumbnail()->width(300)->height(300))
+            ->serializeAttributes();
 
         return strval(str_replace(['src=', '"'], ['', ''], $result));
     }
