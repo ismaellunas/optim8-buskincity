@@ -10,11 +10,14 @@ class CreateMediaTable extends Migration
     {
         Schema::create('media', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->morphs('medially');
+            $table->string('file_name', 191)->unique();
+            $table->string('extension', 15);
+            $table->string('file_type', 31);
+            $table->string('version', 15)->nullable();
             $table->text('file_url');
-            $table->string('file_name');
-            $table->string('file_type')->nullable();
-            $table->unsignedBigInteger('size');
+            $table->unsignedBigInteger('size')->default(0);
+            $table->json('assets')->nullable();
+            $table->nullableMorphs('medially');
             $table->timestamps();
         });
     }
