@@ -187,6 +187,7 @@
     import SdbModalCard from '@/Sdb/ModalCard';
     import { reactive } from "vue";
     import { useModelWrapper, isBlank } from '@/Libs/utils';
+    import { isEmpty } from 'lodash';
 
     import VueCropper from 'vue-cropperjs';
     import 'cropperjs/dist/cropper.css';
@@ -275,9 +276,17 @@
             },
             resizeAndReplace() {
                 const self = this;
+                let resizeData = {};
+
+                for (const property in self.resize) {
+                    if (!isEmpty(self.resize[property])) {
+                        resizeData[property] = self.resize[property];
+                    }
+                }
+
                 this.cropper.initCrop();
                 this
-                    .getCanvasBlob(this.cropper.getCroppedCanvas(this.resize))
+                    .getCanvasBlob(this.cropper.getCroppedCanvas(resizeData))
                     .then(blob => {
                         const objectURL = URL.createObjectURL(blob);
                         self.previewFileSrc = objectURL;
