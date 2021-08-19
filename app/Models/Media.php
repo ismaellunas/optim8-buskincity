@@ -6,6 +6,7 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use CloudinaryLabs\CloudinaryLaravel\Model\Media as CloudinaryMedia;
 use Cloudinary\Transformation\Resize;
+use Illuminate\Database\Eloquent\Casts\AsCollection;
 
 class Media extends CloudinaryMedia implements TranslatableContract
 {
@@ -17,6 +18,10 @@ class Media extends CloudinaryMedia implements TranslatableContract
 
     public $fillable = [
         'file_name'
+    ];
+
+    protected $casts = [
+        'assets' => AsCollection::class,
     ];
 
     public function scopeImage($query)
