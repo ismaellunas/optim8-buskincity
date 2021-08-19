@@ -11,9 +11,14 @@
             @on-media-upload-success="onMediaUploadSuccess"
         >
             <template v-slot:actions="slotProps">
-                <!--
-                <sdb-link class="card-footer-item p-2" @click.prevent="editRecord(slotProps.media)">Edit</sdb-link>
-                -->
+                <sdb-button
+                    class="card-footer-item p-2 is-borderless is-shadowless is-primary is-inverted"
+                    @click="openEditMedia(slotProps.media)"
+                >
+                    <span class="icon is-small">
+                        <i class="fas fa-pen"></i>
+                    </span>
+                </sdb-button>
                 <sdb-button
                     class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
                     title="Delete"
@@ -26,27 +31,116 @@
             </template>
         </sdb-media-library>
     </div>
+
+    <sdb-modal-card
+        v-if="isEditing"
+        :content-class="['is-huge']"
+        :is-close-hidden="true"
+        @close="closeEditMedia"
+    >
+        <template v-slot:header>
+            <p class="modal-card-title">Media Detail</p>
+            <sdb-button
+                @click="closeEditMedia"
+                class="delete is-primary"
+                type="button"
+                aria-label="close"
+            />
+        </template>
+        <div class="columns">
+            <div class="column">
+                <div class="card">
+                    <div class="card-image">
+                        <figure class="image">
+                            <img :src="selectedMedia.file_url" :style="{maxHeight: 500+'px'}">
+                        </figure>
+                    </div>
+                    <footer class="card-footer">
+                        <sdb-button
+                            class="card-footer-item is-borderless is-shadowless"
+                            @click="isImageEditing = true"
+                        >
+                            Edit Image
+                        </sdb-button>
+                    </footer>
+                </div>
+            </div>
+            <div class="column">
+                <media-form
+                    :media="selectedMedia"
+                    :localeOptions="localeOptions"
+                    @on-success-submit="closeEditMedia"
+                    @cancel="closeEditMedia"
+                />
+            </div>
+        </div>
+    </sdb-modal-card>
+
+    <sdb-modal-image-editor
+        v-if="isImageEditing"
+        v-model="selectedMedia.file_url"
+        v-model:cropper="cropper"
+        :file-name="selectedMedia.file_name"
+        :is-processing="isUploading"
+        :update-image="updateImage"
+        @close="closeImageEditorModal"
+    >
+        <template v-slot:actions="slotProps">
+            <sdb-button
+                class="button"
+                :disabled="isUploading"
+                @click="isImageEditing = false"
+            >
+                Cancel
+            </sdb-button>
+            <sdb-button
+                @click="updateImage"
+                :class="{'is-loading': isUploading, 'is-primary': true}"
+                :disabled="!canUpload"
+            >
+                Save
+            </sdb-button>
+        </template>
+    </sdb-modal-image-editor>
 </app-layout>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import MediaForm from '@/Pages/Media/Form';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbMediaLibrary from '@/Sdb/MediaLibrary';
+    import SdbModalCard from '@/Sdb/ModalCard';
+    import SdbModalImageEditor from '@/Sdb/Modal/ImageEditor';
     import { success as successAlert } from '@/Libs/alert';
+    import { isBlank } from '@/Libs/utils';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
             AppLayout,
+            MediaForm,
             SdbButton,
             SdbButtonLink,
             SdbMediaLibrary,
+            SdbModalCard,
+            SdbModalImageEditor,
         },
         props: {
             records: {},
             baseRouteName: {},
             files: {default: []},
+            localeOptions: Array,
+        },
+        data() {
+            return {
+                cropper: null,
+                isEditing: false,
+                isImageEditing: false,
+                isUploading: false,
+                selectedMedia: null,
+            };
         },
         methods: {
             getEditRoute(id) {
@@ -56,13 +150,63 @@
                 if (!confirm('Are you sure?')) return;
                 this.$inertia.delete(route(this.baseRouteName+'.destroy', {id: record.id}));
             },
-            editRecord(media) {
-                console.log('mediaId: ' + media.id);
-            },
             onMediaUploadSuccess(response) {
                 this.$inertia.reload();
                 successAlert('File has been uploaded');
             },
+            openEditMedia(media) {
+                this.selectedMedia = media;
+                this.isEditing = true;
+            },
+            closeEditMedia(media) {
+                this.isEditing = false;
+            },
+            closeImageEditorModal() {
+                this.isImageEditing = false;
+            },
+            updateImage() {
+                const self = this;
+                const media = this.selectedMedia;
+                const url = route('admin.media.update-image', media.id);
+                const cropper = this.cropper;
+                const canvas = cropper.getCroppedCanvas();
+
+                self.isUploading = true;
+
+                canvas.toBlob((blob) => {
+
+                    cropper.disable();
+
+                    const form = useForm({
+                        image: blob,
+                        filename: media.file_name,
+                    });
+
+                    form.post(url, {
+                        preserveState: true,
+                        preserveScroll: true,
+                        onSuccess: (page) => {
+                            self.isImageEditing = false;
+                            const updatedMedia = page.props.records.data.find((record) => record.id === media.id);
+                            self.selectedMedia.file_url = updatedMedia.file_url;
+                        },
+                        onError: (errors) => {
+                            console.log(error);
+                        },
+                        onFinish: () => {
+                            if (cropper) {
+                                cropper.enable();
+                            }
+                            self.isUploading = false;
+                        },
+                    });
+                });
+            },
+        },
+        computed: {
+            canUpload() {
+                return !this.isUploading;
+            }
         },
     }
 </script>
