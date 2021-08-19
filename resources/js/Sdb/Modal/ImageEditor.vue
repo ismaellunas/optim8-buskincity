@@ -4,7 +4,7 @@
         :is-close-hidden="true"
     >
         <template v-slot:header>
-            <p class="modal-card-title mb-1">Image Editor : {{ file?.name ?? ''}}</p>
+            <p class="modal-card-title mb-1">Image Editor : {{ fileName ?? ''}}</p>
             <sdb-button
                 aria-label="close"
                 class="delete is-primary"
@@ -207,9 +207,10 @@
             'update:modelValue'
         ],
         props: {
-            modelValue: {},
-            isDebugMode: {type: Boolean, default: false},
             cropper: {},
+            isDebugMode: {type: Boolean, default: false},
+            fileName: String,
+            modelValue: {},
             updateImage: {},
         },
         setup(props, { emit }) {
@@ -257,20 +258,22 @@
             },
             getCanvasBlob(canvas) {
                 return new Promise(function(resolve, reject) {
-                    canvas.toBlob(function(blob) {
-                        resolve(blob)
-                    }, 'image/jpeg', 0.8);
+                    canvas.toBlob(
+                        (blob) => { resolve(blob); },
+                        'image/jpeg',
+                        0.8
+                    );
                 })
             },
             cropAndReplace() {
                 const self = this;
-                const canvas = this.cropper.getCroppedCanvas();
-                this.getCanvasBlob(canvas).then(blob => {
-                    const objectURL = URL.createObjectURL(blob);
-                    self.previewFileSrc = objectURL;
-                    self.cropper
-                        .replace(objectURL, false);
-                });
+                this
+                    .getCanvasBlob(this.cropper.getCroppedCanvas())
+                    .then(blob => {
+                        const objectURL = URL.createObjectURL(blob);
+                        self.previewFileSrc = objectURL;
+                        self.cropper.replace(objectURL, false);
+                    });
 
                 this.disableState();
             },
