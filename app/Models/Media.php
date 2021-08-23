@@ -31,7 +31,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
     }
 
     // Accessors:
-    public function getThumbnailUrlAttribute()
+    public function getThumbnailUrlAttribute(): string
     {
         $result = cloudinary()
             ->getImageTag(
