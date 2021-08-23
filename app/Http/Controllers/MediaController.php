@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Media;
+use App\Services\MediaService;
 use App\Services\TranslationService;
+use Carbon\Carbon;
 use Cloudinary\Transformation\Resize;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -198,6 +200,29 @@ class MediaController extends Controller
 
         $this->setMediaData($media, $uploadedFile);
         $media->save();
+
+        return $request->ajax()
+            ? redirect()->back()
+            : response()->json(['imagePath' => $media->file_url]);
+    }
+
+    public function saveAsMedia(Request $request, Media $media)
+    {
+        $uploadedFile = cloudinary()->upload(
+            $request->file('image')->getRealPath(),
+            ['public_id' => MediaService::getUniqueFileName($media->file_name)]
+        );
+
+        $replicatedMedia = $media->replicate();
+        $this->setMediaData($replicatedMedia, $uploadedFile);
+        $replicatedMedia->created_at = Carbon::now();
+        $replicatedMedia->save();
+
+        $replicatedMedia
+            ->translations()
+            ->saveMany($media->translations->map(function ($translation, $key) {
+                return $translation->replicate();
+            }));
 
         return $request->ajax()
             ? redirect()->back()

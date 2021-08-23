@@ -42,6 +42,10 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
         '/media/update-image/{medium}',
         [App\Http\Controllers\MediaController::class, 'updateImage']
     )->name('media.update-image');
+    Route::post(
+        '/media/save-as-media/{medium}',
+        [App\Http\Controllers\MediaController::class, 'saveAsMedia']
+    )->name('media.save-as-media');
 
     Route::get('/media-list/image', [App\Http\Controllers\MediaController::class, 'listImages'])
         ->name('media.list.image');
