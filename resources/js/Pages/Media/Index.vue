@@ -147,6 +147,9 @@
                 isImageEditing: false,
                 isUploading: false,
                 selectedMedia: null,
+                messageText: {
+                    successSaveAsMedia: "A new media has been created",
+                },
             };
         },
         methods: {
@@ -193,9 +196,47 @@
                         preserveState: true,
                         preserveScroll: true,
                         onSuccess: (page) => {
-                            self.isImageEditing = false;
                             const updatedMedia = page.props.records.data.find((record) => record.id === media.id);
                             self.selectedMedia.file_url = updatedMedia.file_url;
+                            self.closeImageEditorModal();
+                        },
+                        onError: (errors) => {
+                            console.log(error);
+                        },
+                        onFinish: () => {
+                            if (cropper) {
+                                cropper.enable();
+                            }
+                            self.isUploading = false;
+                        },
+                    });
+                });
+            },
+            saveAsImage() {
+                const self = this;
+                const media = this.selectedMedia;
+                const url = route('admin.media.save-as-media', media.id);
+                const cropper = this.cropper;
+                const canvas = cropper.getCroppedCanvas();
+
+                self.isUploading = true;
+
+                canvas.toBlob((blob) => {
+
+                    cropper.disable();
+
+                    const form = useForm({
+                        image: blob,
+                        filename: media.file_name,
+                    });
+
+                    form.post(url, {
+                        preserveState: true,
+                        preserveScroll: true,
+                        onSuccess: (page) => {
+                            self.closeImageEditorModal();
+                            self.closeEditMedia();
+                            successAlert(self.messageText.successSaveAsMedia);
                         },
                         onError: (errors) => {
                             console.log(error);
