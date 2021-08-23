@@ -87,18 +87,25 @@
     >
         <template v-slot:actions="slotProps">
             <sdb-button
-                class="button"
+                @click="updateImage"
+                :class="{'is-loading': isUploading, 'is-link': true}"
+                :disabled="!canUpload"
+            >
+                Save
+            </sdb-button>
+            <sdb-button
+                @click="saveAsImage"
+                :class="{'is-loading': isUploading, 'is-primary': true}"
+                :disabled="!canUpload"
+            >
+                Save As New
+            </sdb-button>
+            <sdb-button
+                class="is-link is-light"
                 :disabled="isUploading"
                 @click="isImageEditing = false"
             >
                 Cancel
-            </sdb-button>
-            <sdb-button
-                @click="updateImage"
-                :class="{'is-loading': isUploading, 'is-primary': true}"
-                :disabled="!canUpload"
-            >
-                Save
             </sdb-button>
         </template>
     </sdb-modal-image-editor>
