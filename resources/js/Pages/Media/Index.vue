@@ -94,7 +94,7 @@
                 Save
             </sdb-button>
             <sdb-button
-                @click="saveAsImage"
+                @click="saveAsImageConfirm"
                 :class="{'is-loading': isUploading, 'is-primary': true}"
                 :disabled="!canUpload"
             >
@@ -120,7 +120,7 @@
     import SdbMediaLibrary from '@/Sdb/MediaLibrary';
     import SdbModalCard from '@/Sdb/ModalCard';
     import SdbModalImageEditor from '@/Sdb/Modal/ImageEditor';
-    import { success as successAlert } from '@/Libs/alert';
+    import { success as successAlert, confirm as confirmAlert } from '@/Libs/alert';
     import { isBlank } from '@/Libs/utils';
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -216,6 +216,10 @@
                         },
                     });
                 });
+            },
+            saveAsImageConfirm() {
+                confirmAlert("Are you sure?", "You will create a new image")
+                    .then((result) => result.isConfirmed ? this.saveAsImage() : false);
             },
             saveAsImage() {
                 const self = this;
