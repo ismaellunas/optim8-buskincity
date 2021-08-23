@@ -39,7 +39,7 @@
                             </div>
 
                             <div class="card-content p-2">
-                                <div class="content" style="overflow: hidden;">
+                                <div class="content" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
                                     <p>{{ media.file_name }}</p>
                                 </div>
                             </div>
@@ -84,20 +84,14 @@
                     </div>
                     <div class="card-content">
                         <div class="content">
-                            <sdb-form-input
-                                label="Name"
-                                v-model="selectedMedia.file_name"
-                                :message="error('file_name')"
-                                :disabled="true"
-                                required
-                            />
-                            <sdb-form-input
-                                label="Size"
-                                v-model="selectedMedia.size"
-                                :message="error('size')"
-                                :disabled="true"
-                                required
-                            />
+                            <sdb-form-field>
+                                <template v-slot:label>Name</template>
+                                <p>{{ selectedMedia.file_name }}</p>
+                            </sdb-form-field>
+                            <sdb-form-field>
+                                <template v-slot:label>Size</template>
+                                <p>{{ selectedMedia.readable_size }}</p>
+                            </sdb-form-field>
                         </div>
                     </div>
                 </div>
@@ -119,6 +113,7 @@
     import HasPageErrors from '@/Mixins/HasPageErrors';
     import HasModalMixin from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
+    import SdbFormField from '@/Sdb/Form/Field';
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormUploadMedia from '@/Sdb/Form/UploadMedia';
     import SdbInputFile from '@/Sdb/InputFile';
@@ -135,6 +130,7 @@
         ],
         components: {
             SdbButton,
+            SdbFormField,
             SdbFormInput,
             SdbFormUploadMedia,
             SdbInputFile,
