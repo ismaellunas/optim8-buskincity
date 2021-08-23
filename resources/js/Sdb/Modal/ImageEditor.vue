@@ -9,7 +9,7 @@
                 aria-label="close"
                 class="delete is-primary"
                 type="button"
-                :disabled="isUploading"
+                :disabled="isProcessing"
                 @click="$emit('close')"
             />
         </template>
@@ -24,28 +24,28 @@
                     <div class="buttons has-addons is-centered">
                         <sdb-button
                             :class="{'is-primary': (aspectRatio == null)}"
-                            :disabled="isUploading"
+                            :disabled="isProcessing"
                             @click="setAspectRatio(null)"
                         >
                             Free
                         </sdb-button>
                         <sdb-button
                             :class="{'is-primary': (aspectRatio == 16/9)}"
-                            :disabled="isUploading"
+                            :disabled="isProcessing"
                             @click="setAspectRatio(16/9)"
                         >
                             16:9
                         </sdb-button>
                         <sdb-button
                             :class="{'is-primary': (aspectRatio == 4/3)}"
-                            :disabled="isUploading"
+                            :disabled="isProcessing"
                             @click="setAspectRatio(4/3)"
                         >
                             4:3
                         </sdb-button>
                         <sdb-button
                             :class="{'is-primary': (aspectRatio == 1)}"
-                            :disabled="isUploading"
+                            :disabled="isProcessing"
                             @click="setAspectRatio(1)"
                         >
                             1:1
@@ -75,7 +75,7 @@
                                 <template v-slot:label>Width</template>
                                 <sdb-input
                                     v-model="resize.width"
-                                    :disabled="isUploading"
+                                    :disabled="isProcessing"
                                 />
                             </sdb-form-field-horizontal>
                         </div>
@@ -84,7 +84,7 @@
                                 <template v-slot:label>Height</template>
                                 <sdb-input
                                     v-model="resize.height"
-                                    :disabled="isUploading"
+                                    :disabled="isProcessing"
                                 />
                             </sdb-form-field-horizontal>
                         </div>
@@ -106,49 +106,49 @@
 
             <template v-else>
                 <div class="column"></div>
-                <div class="column is-8 has-text-centered">
+                <div class="column has-text-centered">
                     <div class="columns">
                         <div class="column py-0">
                             <sdb-button-icon
                                 icon="fas fa-crop-alt"
                                 icon-class="is-small"
                                 title="Crop"
-                                :disabled="isUploading"
+                                :disabled="isProcessing"
                                 @click="enableCropState"
                             />
                             <sdb-button-icon
                                 icon="fas fa-undo-alt"
                                 icon-class="is-small"
                                 title="Rotate Counterclockwise"
-                                :disabled="isUploading"
+                                :disabled="isProcessing"
                                 @click="rotateLeft"
                             />
                             <sdb-button-icon
                                 icon="fas fa-redo-alt"
                                 icon-class="is-small"
                                 title="Rotate Clockwise"
-                                :disabled="isUploading"
+                                :disabled="isProcessing"
                                 @click="rotateRight"
                             />
                             <sdb-button-icon
                                 icon="fas fa-arrows-alt-h"
                                 icon-class="is-small"
                                 title="Flip Horizontal"
-                                :disabled="isUploading"
+                                :disabled="isProcessing"
                                 @click="flipX($event)"
                             />
                             <sdb-button-icon
                                 icon="fas fa-arrows-alt-v"
                                 icon-class="is-small"
                                 title="Flip Vertical"
-                                :disabled="isUploading"
+                                :disabled="isProcessing"
                                 @click="flipY($event)"
                             />
                             <sdb-button-icon
                                 icon="fas fa-expand"
                                 icon-class="is-small"
                                 title="Resize"
-                                :disabled="isUploading"
+                                :disabled="isProcessing"
                                 @click="enableResizeState"
                             />
                         </div>
@@ -208,8 +208,9 @@
         ],
         props: {
             cropper: {},
-            isDebugMode: {type: Boolean, default: false},
             fileName: String,
+            isDebugMode: {type: Boolean, default: false},
+            isProcessing: {Boolean, default: false},
             modelValue: {},
             updateImage: {},
         },
@@ -226,7 +227,6 @@
             return {
                 aspectRatio: null,
                 imageData: null,
-                isUploading: false,
                 resize: {
                     width: null,
                     height: null,
