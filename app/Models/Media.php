@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\HumanReadable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use CloudinaryLabs\CloudinaryLaravel\Model\Media as CloudinaryMedia;
@@ -42,5 +43,10 @@ class Media extends CloudinaryMedia implements TranslatableContract
             ->serializeAttributes();
 
         return strval(str_replace(['src=', '"'], ['', ''], $result));
+    }
+
+    public function getReadableSizeAttribute(): string
+    {
+        return HumanReadable::bytesToHuman($this->size);
     }
 }
