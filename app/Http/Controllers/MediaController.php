@@ -166,6 +166,7 @@ class MediaController extends Controller
                    ->resize(Resize::pad(96))
                    ->serialize();
             $record->_thumbnail_url = $record->thumbnailUrl;
+            $record->readable_size = $record->readableSize;
             return $record;
         });
 
