@@ -1,19 +1,34 @@
 import Swal from 'sweetalert2';
-import { assign } from 'lodash';
+import { assign, clone } from 'lodash';
 
 const timer = 1800;
 const defaultConfig = {
     scrollbarPadding: false,
 };
 
-export function success(message = "Your work has been saved") {
+export function success(title, message) {
     Swal.fire(assign(
-        defaultConfig,
+        clone(defaultConfig),
         {
             icon: 'success',
-            title: message,
+            title: title,
+            text: message,
             showConfirmButton: false,
             timer: timer,
         }
     ));
 };
+
+export function confirm(title, message, confirmButtonText = "Yes") {
+    return Swal.fire(assign(
+        clone(defaultConfig),
+        {
+            title: title,
+            text: message,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: confirmButtonText,
+        }
+    ));
+}
