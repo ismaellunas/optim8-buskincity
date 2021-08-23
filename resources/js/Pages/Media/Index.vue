@@ -69,7 +69,7 @@
                 <media-form
                     :media="selectedMedia"
                     :localeOptions="localeOptions"
-                    @on-success-submit="closeEditMedia"
+                    @on-success-submit="onSuccessSubmit"
                     @cancel="closeEditMedia"
                 />
             </div>
@@ -149,6 +149,7 @@
                 selectedMedia: null,
                 messageText: {
                     successSaveAsMedia: "A new media has been created",
+                    successSubmitForm: "Media has been updated",
                 },
             };
         },
@@ -173,6 +174,10 @@
             },
             closeImageEditorModal() {
                 this.isImageEditing = false;
+            },
+            onSuccessSubmit() {
+                this.closeEditMedia();
+                successAlert(this.messageText.successSubmitForm);
             },
             updateImage() {
                 const self = this;
