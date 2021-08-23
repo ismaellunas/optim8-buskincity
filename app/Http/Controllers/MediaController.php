@@ -100,22 +100,17 @@ class MediaController extends Controller
         $fileName = $request->input('file_name');
 
         if ($media->file_name != $fileName) {
-            $isExists = Media::where('file_name', $fileName)
-                ->where('id', '<>', $media->id)
-                ->exists();
-
-            if ($isExists) {
-                $fileName .= '_'.Str::lower(Str::random(6));
-            }
+            $fileName = MediaService::getUniqueFileName($fileName);
 
             $response = cloudinary()->uploadApi()->rename(
                 $media->file_name,
-                $request->input('file_name')
+                $fileName
             );
 
             $data['file_name'] = $response['public_id'];
             $data['file_url'] = $response['secure_url'];
             $data['version'] = $response['version'];
+            $data['assets'] = $response;
         }
 
         foreach ($request->input('translations') as $locale => $translation) {
