@@ -1,7 +1,7 @@
 import Swal from 'sweetalert2';
 import { assign } from 'lodash';
 
-const timer = 1700;
+const timer = 1800;
 const defaultConfig = {
     scrollbarPadding: false,
 };
