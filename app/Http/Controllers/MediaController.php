@@ -174,9 +174,7 @@ class MediaController extends Controller
     {
         $fileName = pathinfo($request->input('filename'))['filename'];
 
-        if (Media::where('file_name', $fileName)->exists()) {
-            $fileName .= '_'.Str::lower(Str::random(6));
-        }
+        $fileName = MediaService::getUniqueFileName($fileName);
 
         $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath(), [
             'public_id' => $fileName,
