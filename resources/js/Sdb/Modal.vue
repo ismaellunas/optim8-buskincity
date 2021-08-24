@@ -17,7 +17,7 @@
     export default {
         emits: ['close'],
         props: {
-            contentClass: [String, Array],
+            contentClass: [Array, Object, String],
             isCloseHidden: {type: Boolean, default: false},
         },
     }
