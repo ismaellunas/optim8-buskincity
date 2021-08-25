@@ -51,6 +51,11 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
         ->name('media.list.image');
 });
 
+Route::name('api.admin.')->prefix('api/admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::post('/media', [App\Http\Controllers\MediaController::class, 'apiStore'])
+        ->name('media.store');
+});
+
 /* ---------- FRONTEND ---------- */
 Route::get('/', function () {
     return redirect(TranslationSv::currentLanguage());
