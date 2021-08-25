@@ -50,13 +50,13 @@
             </div>
         </div>
 
-        <sdb-image-browser-modal
+        <sdb-modal-image-browser
             v-if="isModalOpen"
             :data="modalImages"
             @close="closeModal"
             @on-clicked-pagination="getImagesRequest"
-            @on-media-upload-success="updateImageSource"
             @on-media-selected="selectImage"
+            @on-media-submitted="updateImageSource"
         />
     </div>
 </template>
@@ -67,7 +67,7 @@
     import HasModalMixin from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
     import SdbEditor from '@/Sdb/EditorTinymce';
-    import SdbImageBrowserModal from '@/Sdb/ImageBrowserModal';
+    import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat, isEmpty } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
@@ -82,7 +82,7 @@
         components: {
             SdbButton,
             SdbEditor,
-            SdbImageBrowserModal,
+            SdbModalImageBrowser,
             SdbToolbarContent,
         },
         props: {
@@ -106,7 +106,7 @@
         },
         methods: {
             updateImageSource(response) {
-                this.entity.content.cardImage.figure.image.src = response.data.imagePath;
+                this.entity.content.cardImage.figure.image.src = response.data.file_url;
                 this.closeModal();
             },
             toggleEdit() {
