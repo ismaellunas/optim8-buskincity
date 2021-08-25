@@ -25,6 +25,17 @@ class Media extends CloudinaryMedia implements TranslatableContract
         'assets' => AsCollection::class,
     ];
 
+    public static $imageExtensions = [
+        'jpeg',
+        'jpg',
+        'png',
+    ];
+
+    public static $dimensions = [
+        'height' => 300,
+        'width' => 300,
+    ];
+
     public function scopeImage($query)
     {
         return $query->where('file_type', 'image');
