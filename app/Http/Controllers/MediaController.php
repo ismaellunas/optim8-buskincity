@@ -86,13 +86,20 @@ class MediaController extends Controller
      */
     public function store(Request $request)
     {
-        $uploadedFile = cloudinary()->upload($request->file('file')->getRealPath());
+        $this->storeProcess($request);
+        return redirect()->back();
+    }
 
-        $media = new Media();
-        $this->setMediaData($media, $uploadedFile);
-        $media->save();
-
-        return redirect()->route($this->baseRouteName.'.index');
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function apiStore(Request $request)
+    {
+        $media = $this->storeProcess($request);
+        return $media->attributesToArray();
     }
 
     /**
