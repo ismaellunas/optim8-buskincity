@@ -45,6 +45,39 @@ class MediaController extends Controller
         ]);
     }
 
+    protected function storeProcess(Request $request)
+    {
+        $fileName = $request->input('file_name');
+        $fileName = MediaService::getUniqueFileName($fileName);
+        $extension = $request->file->extension();
+
+        $mediaDataOptions = [];
+        $uploadFileOptions = [
+            'public_id' => $fileName,
+        ];
+
+        if (!in_array($extension, Media::$imageExtensions)) {
+            $mediaDataOptions['extension'] = $extension;
+            $uploadFileOptions['resource_type'] = 'auto';
+        }
+
+        $uploadedFile = cloudinary()->upload(
+            $request->file('file')->getRealPath(),
+            $uploadFileOptions,
+        );
+
+        $media = new Media();
+        $this->setMediaData($media, $uploadedFile, $mediaDataOptions);
+        $media->save();
+
+        foreach ($request->input('translations') as $locale => $translation) {
+            $data[$locale] = $translation;
+        }
+        $media->update($data);
+
+        return $media;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
