@@ -213,7 +213,7 @@
     import SdbInput from '@/Sdb/Input';
     import SdbModalCard from '@/Sdb/ModalCard';
     import { reactive } from "vue";
-    import { useModelWrapper, isBlank } from '@/Libs/utils';
+    import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
 
     import VueCropper from 'vue-cropperjs';
@@ -283,19 +283,9 @@
                     .setDragMode('move');
                 this.state = null;
             },
-            getCanvasBlob(canvas) {
-                return new Promise(function(resolve, reject) {
-                    canvas.toBlob(
-                        (blob) => { resolve(blob); },
-                        'image/jpeg',
-                        0.8
-                    );
-                })
-            },
             cropAndReplace() {
                 const self = this;
-                this
-                    .getCanvasBlob(this.cropper.getCroppedCanvas())
+                getCanvasBlob(this.cropper.getCroppedCanvas())
                     .then(blob => {
                         const objectURL = URL.createObjectURL(blob);
                         self.previewFileSrc = objectURL;
@@ -315,8 +305,7 @@
                 }
 
                 this.cropper.initCrop();
-                this
-                    .getCanvasBlob(this.cropper.getCroppedCanvas(resizeData))
+                getCanvasBlob(this.cropper.getCroppedCanvas(resizeData))
                     .then(blob => {
                         const objectURL = URL.createObjectURL(blob);
                         self.previewFileSrc = objectURL;
