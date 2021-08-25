@@ -36,7 +36,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
 
     public function scopeImage($query)
     {
-        return $query->where('file_type', 'image');
+        return $query->whereIn('extension', self::$imageExtensions);
     }
 
     // Accessors:
