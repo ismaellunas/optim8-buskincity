@@ -35,7 +35,7 @@
             </div>
         </div>
 
-        <sdb-image-browser-modal
+        <sdb-modal-image-browser
             v-if="isModalOpen"
             :data="modalImages"
             @close="closeModal"
@@ -51,7 +51,7 @@
     import EditModeContentMixin from '@/Mixins/EditModeContent';
     import HasModalMixin from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
-    import SdbImageBrowserModal from '@/Sdb/Modal/ImageBrowser';
+    import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
 
@@ -63,7 +63,7 @@
         ],
         components: {
             SdbButton,
-            SdbImageBrowserModal,
+            SdbModalImageBrowser,
             SdbToolbarContent,
         },
         props: {
