@@ -124,3 +124,17 @@ $modal-bg-color: rgba($black,.86);
         background-color: $modal-bg-color;
     }
 }
+
+.card-equal-height {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .card-image {
+        height: inherit;
+    }
+
+    .card-footer {
+        margin-top: auto;
+    }
+}
