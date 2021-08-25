@@ -6,6 +6,7 @@
         >
             <i :class="icon"></i>
         </span>
+        <slot></slot>
     </sdb-button>
 </template>
 
