@@ -263,19 +263,22 @@ class MediaController extends Controller
 
     public function listImages(Request $request)
     {
-        $records = Media::orderBy('id', 'DESC')->paginate($this->recordsPerPage);
+        $records = Media::image()
+            ->orderBy('id', 'DESC')
+            ->paginate($this->recordsPerPage);
 
         $records->getCollection()->transform(function ($record) {
             $record->_thumbnail_url = $record->thumbnailUrl;
+            $record->is_image = $record->isImage;
             return $record;
         });
 
         return $request->ajax() ? $records : abort(404);
     }
 
-    protected function setMediaData(Media &$media, $asset)
+    protected function setMediaData(Media &$media, $asset, $options = [])
     {
-        $media->extension = $asset->getExtension();
+        $media->extension = $options['extension'] ?? $asset->getExtension();
         $media->file_name = $asset->getFileName();
         $media->file_type = $asset->getFileType();
         $media->file_url = $asset->getSecurePath();
