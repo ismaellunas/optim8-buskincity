@@ -40,7 +40,7 @@
             :data="modalImages"
             @close="closeModal"
             @on-clicked-pagination="getImagesRequest"
-            @on-media-upload-success="updateImageSource"
+            @on-media-submitted="updateImageSource"
             @on-media-selected="selectImage"
         />
     </div>
@@ -51,7 +51,7 @@
     import EditModeContentMixin from '@/Mixins/EditModeContent';
     import HasModalMixin from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
-    import SdbImageBrowserModal from '@/Sdb/ImageBrowserModal';
+    import SdbImageBrowserModal from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
 
@@ -109,7 +109,7 @@
                 this.modalImages = data;
             },
             updateImageSource(response) {
-                this.entity.content.figure.image.src = response.data.imagePath;
+                this.entity.content.figure.image.src = response.data.file_url;
                 this.closeModal();
             },
             selectImage(image, event) {
