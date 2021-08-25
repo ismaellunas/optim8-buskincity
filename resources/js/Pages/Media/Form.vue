@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="submit(form, media.id)">
+    <form>
         <sdb-form-input
             label="Name"
             v-model="form.file_name"
@@ -8,51 +8,57 @@
             required
         />
 
-        <sdb-form-field>
-            <template v-slot:label>{{ text.alternative_text }}</template>
-        </sdb-form-field>
+        <template v-if="isImage">
+            <sdb-form-field>
+                <template v-slot:label>{{ label.alternative_text }}</template>
+            </sdb-form-field>
 
-        <template v-for="option in localeOptions" :key="option.id">
-            <sdb-form-field-horizontal
-                v-if="form.translations[ option.id ]"
-            >
-                <template v-slot:label>
-                    {{ option.id.toUpperCase() }}
-                </template>
-                <div class="columns">
-                    <div class="column is-three-quarters">
-                        <sdb-input
-                            v-model="form.translations[ option.id ].alt"
-                            :disabled="isInputDisabled"
-                        />
+            <template v-for="option in localeOptions" :key="option.id" >
+                <sdb-form-field-horizontal
+                    v-if="form.translations[ option.id ]"
+                >
+                    <template v-slot:label>
+                        {{ option.id.toUpperCase() }}
+                    </template>
+                    <div class="columns">
+                        <div class="column is-three-quarters">
+                            <sdb-input
+                                v-model="form.translations[ option.id ].alt"
+                                :disabled="isInputDisabled"
+                            />
+                        </div>
+                        <div class="column">
+                            <sdb-button-icon
+                                v-if="option.id !== defaultLocale"
+                                icon="fas fa-minus"
+                                type="button"
+                                @click="deleteTranslation(option.id)"
+                            />
+                        </div>
                     </div>
-                    <div class="column">
-                        <sdb-button-icon
-                            v-if="option.id !== defaultLocale"
-                            icon="fas fa-minus"
-                            type="button"
-                            @click="deleteTranslation(option.id)"
-                        />
-                    </div>
-                </div>
+                </sdb-form-field-horizontal>
+            </template>
+
+            <sdb-form-field-horizontal>
+                <sdb-select v-model="selectedLocale">
+                    <template v-for="locale in availableLocales">
+                        <option :value="locale.id">{{ locale.name }}</option>
+                    </template>
+                </sdb-select>
+                <sdb-button-icon
+                    icon="fas fa-plus"
+                    type="button"
+                    @click="addTranslation"
+                />
             </sdb-form-field-horizontal>
         </template>
 
-        <sdb-form-field-horizontal>
-            <sdb-select v-model="selectedLocale">
-                <template v-for="locale in availableLocales">
-                    <option :value="locale.id">{{ locale.name }}</option>
-                </template>
-            </sdb-select>
-            <sdb-button-icon
-                icon="fas fa-plus"
-                type="button"
-                @click="addTranslation"
-            />
-        </sdb-form-field-horizontal>
-
         <div class="field is-grouped is-pulled-right">
-            <sdb-button class="is-link">
+            <sdb-button
+                class="is-link"
+                type="button"
+                @click="submit(form, media.id)"
+            >
                 Submit
             </sdb-button>
             <sdb-button
@@ -75,10 +81,11 @@
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbInput from '@/Sdb/Input';
     import SdbSelect from '@/Sdb/Select';
-    import { isEmpty } from 'lodash';
+    import { buildFormData } from '@/Libs/utils';
     import { getTranslation } from '@/Libs/translation';
-    import { useForm } from '@inertiajs/inertia-vue3'
-    import { ref } from "vue";
+    import { isEmpty } from 'lodash';
+    import { reactive, ref } from "vue";
+    import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     function generateNewTranslation() {
         return {
@@ -108,10 +115,13 @@
             SdbInput,
             SdbSelect,
         },
+        emits: [
+            'cancel',
+            'on-success-submit',
+        ],
         props: {
+            isAjax: {type: Boolean, default: false},
             media: Object,
-            localeOptions: Array,
-            defaultLocale: {type: String, default: "en"},
         },
         setup(props, { emit }) {
             let translations = {};
@@ -126,35 +136,72 @@
                 });
             }
 
-            const form = useForm({
+            let form = reactive({
+                _method: 'post',
+                file: null,
                 file_name: props.media.file_name,
                 translations: translations,
             });
 
+            const localeOptions = usePage().props.value.languageOptions;
+
             const firstAvailabeLocale = getFirstAvailableLocale(
                 translations,
-                props.localeOptions
+                localeOptions
             );
+
             const selectedLocale = ref(firstAvailabeLocale?.id ?? null);
 
-            function submit(currentForm, id) {
-                currentForm.put(route('admin.media.update', id), {
-                    onSuccess: (response) => {
-                        emit('on-success-submit', response);
+            function submit(currentForm, id = null) {
+                let url = null;
+                if (props.media.id) {
+                    url = route('admin.media.update', props.media.id);
+                    currentForm._method = 'put';
+                } else {
+                    if (props.isAjax) {
+                        url = route('api.admin.media.store');
+                    } else {
+                        url = route('admin.media.store');
                     }
-                });
+                    currentForm.file = props.media.file;
+                }
+
+                if (props.isAjax) {
+                    const formData = new FormData();
+                    buildFormData(formData, currentForm);
+
+                    axios.post(
+                        url,
+                        formData,
+                        {headers: {'Content-Type': 'multipart/form-data'}}
+                    ).then(function(response) {
+                        console.log(response);
+                        emit('on-success-submit', response);
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                    });
+                } else {
+                    useForm(currentForm).post(url, {
+                        onSuccess: (page) => {
+                            emit('on-success-submit', page);
+                        }
+                    });
+                }
             };
 
             return {
+                defaultLocale: usePage().props.value.currentLanguage,
                 form,
-                submit,
+                localeOptions,
                 selectedLocale,
+                submit,
             };
         },
         data() {
             return {
                 isInputDisabled: false,
-                text: {
+                label: {
                     alternative_text: 'Alternative Text',
                 },
             };
@@ -180,6 +227,9 @@
                     this.form.translations,
                     this.localeOptions
                 );
+            },
+            isImage() {
+                return this.media.is_image;
             }
         },
     }
