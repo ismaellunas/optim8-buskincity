@@ -40,6 +40,11 @@ class Media extends CloudinaryMedia implements TranslatableContract
     }
 
     // Accessors:
+    public function getIsImageAttribute(): bool
+    {
+        return in_array($this->extension, self::$imageExtensions);
+    }
+
     public function getThumbnailUrlAttribute(): string
     {
         $result = cloudinary()
