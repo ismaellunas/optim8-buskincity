@@ -8,7 +8,6 @@ use App\Services\TranslationService;
 use Carbon\Carbon;
 use Cloudinary\Transformation\Resize;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class MediaController extends Controller
@@ -29,7 +28,6 @@ class MediaController extends Controller
             'records' => $this->getRecords(),
             'baseRouteName' => $this->baseRouteName,
             'defaultLocale' => TranslationService::getDefaultLocale(),
-            'localeOptions' => TranslationService::getLocaleOptions(),
         ]);
     }
 
