@@ -18,11 +18,17 @@
 
             <template v-if="isCropState">
                 <div class="column">
-                    <sdb-button @click="reset">Reset</sdb-button>
+                    <sdb-button
+                        type="button"
+                        @click="reset"
+                    >
+                        Reset
+                    </sdb-button>
                 </div>
                 <div class="column">
                     <div class="buttons has-addons is-centered">
                         <sdb-button
+                            type="button"
                             :class="{'is-primary': (aspectRatio == null)}"
                             :disabled="isProcessing"
                             @click="setAspectRatio(null)"
@@ -30,6 +36,7 @@
                             Free
                         </sdb-button>
                         <sdb-button
+                            type="button"
                             :class="{'is-primary': (aspectRatio == 16/9)}"
                             :disabled="isProcessing"
                             @click="setAspectRatio(16/9)"
@@ -37,6 +44,7 @@
                             16:9
                         </sdb-button>
                         <sdb-button
+                            type="button"
                             :class="{'is-primary': (aspectRatio == 4/3)}"
                             :disabled="isProcessing"
                             @click="setAspectRatio(4/3)"
@@ -44,6 +52,7 @@
                             4:3
                         </sdb-button>
                         <sdb-button
+                            type="button"
                             :class="{'is-primary': (aspectRatio == 1)}"
                             :disabled="isProcessing"
                             @click="setAspectRatio(1)"
@@ -54,9 +63,15 @@
                 </div>
                 <div class="column">
                     <div class="is-pulled-right">
-                        <sdb-button @click="disableState">Cancel</sdb-button>
+                        <sdb-button
+                            type="button"
+                            @click="disableState"
+                        >
+                            Cancel
+                        </sdb-button>
                         <sdb-button
                             class="is-primary"
+                            type="button"
                             @click="cropAndReplace"
                         >
                             Done
@@ -92,9 +107,15 @@
                 </div>
                 <div class="column">
                     <div class="is-pulled-right">
-                        <sdb-button @click="disableState">Cancel</sdb-button>
+                        <sdb-button
+                            type="button"
+                            @click="disableState"
+                        >
+                            Cancel
+                        </sdb-button>
                         <sdb-button
                             class="is-primary"
+                            type="button"
                             @click="resizeAndReplace"
                         >
                             Resize
@@ -110,9 +131,10 @@
                     <div class="columns">
                         <div class="column py-0">
                             <sdb-button-icon
-                                icon="fas fa-crop-alt"
                                 icon-class="is-small"
+                                icon="fas fa-crop-alt"
                                 title="Crop"
+                                type="button"
                                 :disabled="isProcessing"
                                 @click="enableCropState"
                             />
@@ -120,6 +142,7 @@
                                 icon="fas fa-undo-alt"
                                 icon-class="is-small"
                                 title="Rotate Counterclockwise"
+                                type="button"
                                 :disabled="isProcessing"
                                 @click="rotateLeft"
                             />
@@ -127,6 +150,7 @@
                                 icon="fas fa-redo-alt"
                                 icon-class="is-small"
                                 title="Rotate Clockwise"
+                                type="button"
                                 :disabled="isProcessing"
                                 @click="rotateRight"
                             />
@@ -134,6 +158,7 @@
                                 icon="fas fa-arrows-alt-h"
                                 icon-class="is-small"
                                 title="Flip Horizontal"
+                                type="button"
                                 :disabled="isProcessing"
                                 @click="flipX($event)"
                             />
@@ -141,6 +166,7 @@
                                 icon="fas fa-arrows-alt-v"
                                 icon-class="is-small"
                                 title="Flip Vertical"
+                                type="button"
                                 :disabled="isProcessing"
                                 @click="flipY($event)"
                             />
@@ -148,6 +174,7 @@
                                 icon="fas fa-expand"
                                 icon-class="is-small"
                                 title="Resize"
+                                type="button"
                                 :disabled="isProcessing"
                                 @click="enableResizeState"
                             />
