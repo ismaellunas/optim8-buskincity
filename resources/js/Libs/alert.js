@@ -19,9 +19,10 @@ export function success(title, message) {
     ));
 };
 
-export function confirm(title, message, confirmButtonText = "Yes") {
+export function confirm(title, message, confirmButtonText = "Yes", additionalConfig = {}) {
     return Swal.fire(assign(
         clone(defaultConfig),
+        additionalConfig,
         {
             title: title,
             text: message,
@@ -31,4 +32,8 @@ export function confirm(title, message, confirmButtonText = "Yes") {
             confirmButtonText: confirmButtonText,
         }
     ));
+}
+
+export function confirmDelete(title, message, confirmButtonText = "Yes") {
+    return confirm(title, message, confirmButtonText, {icon: 'warning'});
 }
