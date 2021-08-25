@@ -49,3 +49,32 @@ export function isEmpty(obj) {
 export function isBlank(obj) {
     return isEmpty(obj) || (typeof obj === 'string' && /\S/.test(obj) === false);
 }
+
+/* @return Promise */
+export function getCanvasBlob(canvas, imageType = 'image/jpeg', quality = 0.8) {
+    return new Promise(function(resolve) {
+        canvas.toBlob(
+            (blob) => { resolve(blob); },
+            imageType,
+            quality
+        );
+    })
+};
+
+export function buildFormData(formData, data, parentKey) {
+    if (
+        data
+        && typeof data === 'object'
+        && !(data instanceof Date)
+        && !(data instanceof File)
+        && !(data instanceof Blob)
+    ) {
+        Object.keys(data).forEach(key => {
+            buildFormData(formData, data[key], parentKey ? `${parentKey}[${key}]` : key);
+        });
+    } else {
+        const value = data == null ? '' : data;
+
+        formData.append(parentKey, value);
+    }
+}
