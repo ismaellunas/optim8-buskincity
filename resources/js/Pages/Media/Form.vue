@@ -175,7 +175,6 @@
                         formData,
                         {headers: {'Content-Type': 'multipart/form-data'}}
                     ).then(function(response) {
-                        console.log(response);
                         emit('on-success-submit', response);
                     })
                     .catch(function(error) {
