@@ -13,6 +13,9 @@ class Media extends CloudinaryMedia implements TranslatableContract
 {
     use Translatable;
 
+    const THUMBNAIL_HEIGHT = 300;
+    const THUMBNAIL_WIDTH = 300;
+
     public $translatedAttributes = [
         'alt',
     ];
@@ -29,11 +32,6 @@ class Media extends CloudinaryMedia implements TranslatableContract
         'jpeg',
         'jpg',
         'png',
-    ];
-
-    public static $dimensions = [
-        'height' => 300,
-        'width' => 300,
     ];
 
     public function scopeImage($query)
