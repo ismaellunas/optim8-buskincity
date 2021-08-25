@@ -202,6 +202,7 @@ class MediaController extends Controller
                    ->serialize();
             $record->_thumbnail_url = $record->thumbnailUrl;
             $record->readable_size = $record->readableSize;
+            $record->is_image = $record->isImage;
             return $record;
         });
 
