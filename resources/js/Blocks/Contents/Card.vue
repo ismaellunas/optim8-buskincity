@@ -54,7 +54,7 @@
             v-if="isModalOpen"
             :data="modalImages"
             @close="closeModal"
-            @on-clicked-pagination="getImagesRequest"
+            @on-clicked-pagination="getImagesList"
             @on-media-selected="selectImage"
             @on-media-submitted="updateImage"
         />
@@ -127,25 +127,13 @@
                 this.isFormOpen = !this.isFormOpen;
             },
             onShownModal() { /* @overide */
-                this.getImagesRequest(route('admin.media.list.image'));
+                this.getImagesList(route('admin.media.list.image'));
             },
-            getImagesRequest(url) {
-                const self = this;
-                axios.get(url)
-                    .then(function (response) {
-                        self.setModalImages(response.data);
-                    })
-                    .catch(function (error) {
-                        self.$swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Something went wrong!',
-                        })
-                        self.closeModal();
-                    });
-            },
-            setModalImages(data) {
+            onImageListLoadedSuccess(data) { /* @override Mixins/ContainImageContent */
                 this.modalImages = data;
+            },
+            onImageListLoadedFail(error) { /* @override Mixins/ContainImageContent */
+                this.closeModal();
             },
         },
         computed: {
