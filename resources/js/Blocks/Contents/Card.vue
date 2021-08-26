@@ -62,10 +62,10 @@
 </template>
 
 <script>
-    import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import EditModeContentMixin from '@/Mixins/EditModeContent';
-    import HasModalMixin from '@/Mixins/HasModal';
     import MixinContainImageContent from '@/Mixins/ContainImageContent';
+    import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinEditModeContent from '@/Mixins/EditModeContent';
+    import MixinHasModal from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
     import SdbEditor from '@/Sdb/EditorTinymce';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
@@ -76,18 +76,18 @@
     import { emitModelValue, isBlank, useModelWrapper } from '@/Libs/utils';
 
     export default {
-        mixins: [
-            EditModeContentMixin,
-            DeletableContentMixin,
-            HasModalMixin,
-            MixinContainImageContent,
-        ],
         components: {
             SdbButton,
             SdbEditor,
             SdbModalImageBrowser,
             SdbToolbarContent,
         },
+        mixins: [
+            MixinContainImageContent,
+            MixinDeletableContent,
+            MixinEditModeContent,
+            MixinHasModal,
+        ],
         props: {
             id: {},
             isEditMode: {type: Boolean, default: false},

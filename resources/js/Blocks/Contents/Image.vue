@@ -47,10 +47,10 @@
 </template>
 
 <script>
-    import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import EditModeContentMixin from '@/Mixins/EditModeContent';
-    import HasModalMixin from '@/Mixins/HasModal';
     import MixinContainImageContent from '@/Mixins/ContainImageContent';
+    import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinEditModeContent from '@/Mixins/EditModeContent';
+    import MixinHasModal from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
@@ -64,10 +64,10 @@
             SdbToolbarContent,
         },
         mixins: [
-            DeletableContentMixin,
-            EditModeContentMixin,
-            HasModalMixin,
             MixinContainImageContent,
+            MixinDeletableContent,
+            MixinEditModeContent,
+            MixinHasModal,
         ],
         props: {
             id: {},
