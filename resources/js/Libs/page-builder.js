@@ -1,4 +1,5 @@
 import { generateElementId } from './utils';
+import { isEmpty, remove } from 'lodash';
 
 export function createColumn() {
     return {
@@ -35,3 +36,24 @@ export function createPaddingClasses(trbl) {
 export function createMarginClasses(trbl) {
     return createTrblClasses(trbl, 'm');
 };
+
+export function onPageEditorClicked(event, contentConfigId) {
+    const path = event.path || (event.composedPath && event.composedPath());
+    if (path) {
+        const isFound = path.find((elm) => {
+            if (!isEmpty(elm.classList)) {
+                return (
+                    elm.classList.value.includes('page-builder-content-config')
+                    || elm.classList.value.includes('page-component')
+                );
+            }
+            return false;
+        })
+
+        if (isFound === undefined && contentConfigId.value) {
+            contentConfigId.value = '';
+        }
+    } else {
+        contentConfigId.value = '';
+    }
+}
