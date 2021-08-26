@@ -78,9 +78,9 @@
         },
         data() {
             return {
+                image: this.entity.content.figure.image,
                 isFormOpen: false,
                 modalImages: [],
-                image: this.entity.content.figure.image,
             };
         },
         setup(props, { emit }) {
