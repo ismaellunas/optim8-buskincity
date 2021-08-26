@@ -37,3 +37,10 @@ export function confirm(title, message, confirmButtonText = "Yes", additionalCon
 export function confirmDelete(title, message, confirmButtonText = "Yes") {
     return confirm(title, message, confirmButtonText, {icon: 'warning'});
 }
+export function oops(title = "Oops...", message = "Something went wrong!") {
+    return Swal.fire({
+        icon: 'error',
+        title: title,
+        text: message,
+    })
+}
