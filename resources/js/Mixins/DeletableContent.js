@@ -1,7 +1,10 @@
+import { confirmDelete } from '@/Libs/alert';
+
 export default {
     props: [
         'id',
     ],
+    emits: ['delete-content'],
     data() {
         return {
             emitDeleteContentName: 'delete-content',
@@ -9,9 +12,15 @@ export default {
     },
     methods: {
         deleteContent() {
-            if (confirm('Are you sure?')) {
-                this.$emit(this.emitDeleteContentName, this.id);
-            }
-        }
+            const self = this;
+            confirmDelete('Are you sure?').then((result) => {
+                if (result.isConfirmed) {
+                    self.$emit(self.emitDeleteContentName, self.id);
+
+                    self.onContentDeleted();
+                }
+            })
+        },
+        onContentDeleted() {},
     }
 }
