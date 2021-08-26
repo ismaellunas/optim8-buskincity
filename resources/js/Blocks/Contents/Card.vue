@@ -56,7 +56,7 @@
             @close="closeModal"
             @on-clicked-pagination="getImagesRequest"
             @on-media-selected="selectImage"
-            @on-media-submitted="updateImageSource"
+            @on-media-submitted="updateImage"
         />
     </div>
 </template>
@@ -65,19 +65,22 @@
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import EditModeContentMixin from '@/Mixins/EditModeContent';
     import HasModalMixin from '@/Mixins/HasModal';
+    import MixinContainImageContent from '@/Mixins/ContainImageContent';
     import SdbButton from '@/Sdb/Button';
     import SdbEditor from '@/Sdb/EditorTinymce';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat, isEmpty } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
-    import { emitModelValue, useModelWrapper } from '@/Libs/utils';
+    import { detachImageFromMedia } from '@/Libs/page-builder';
+    import { emitModelValue, isBlank, useModelWrapper } from '@/Libs/utils';
 
     export default {
         mixins: [
             EditModeContentMixin,
             DeletableContentMixin,
             HasModalMixin,
+            MixinContainImageContent,
         ],
         components: {
             SdbButton,
@@ -89,24 +92,35 @@
             id: {},
             isEditMode: {type: Boolean, default: false},
             modelValue: {},
+            dataMedia: {},
+            images: {},
         },
         setup(props, { emit }) {
             return {
-                config: props.modelValue.config,
+                //figure: props.modelValue.content.cardImage.figure,
+                config: props.modelValue?.config,
                 entity: useModelWrapper(props, emit),
-                figure: props.modelValue.content.cardImage.figure,
-                image: props.modelValue.content.cardImage.figure.image,
+                pageMedia: useModelWrapper(props, emit, 'dataMedia'),
             };
         },
         data() {
             return {
+                image: this.entity.content.cardImage.figure.image,
                 isFormOpen: false,
                 modalImages: [],
             };
         },
         methods: {
-            updateImageSource(response) {
-                this.entity.content.cardImage.figure.image.src = response.data.file_url;
+            onContentDeleted() { /* @override Mixins/DeletableContent */
+                if (!isBlank(this.image.mediaId)) {
+                    detachImageFromMedia(this.image.mediaId, this.pageMedia);
+                }
+            },
+            onImageSelected() { /* @override Mixins/ContainImageContent */
+                this.closeModal();
+                this.isFormOpen = false;
+            },
+            onImageUpdated() { /* @override Mixins/ContainImageContent */
                 this.closeModal();
             },
             toggleEdit() {
@@ -132,12 +146,6 @@
             },
             setModalImages(data) {
                 this.modalImages = data;
-            },
-            selectImage(image, event) {
-                if (event) event.preventDefault();
-                this.entity.content.cardImage.figure.image.src = image.file_url;
-                this.closeModal();
-                this.isFormOpen = false;
             },
         },
         computed: {
