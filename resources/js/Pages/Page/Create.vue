@@ -28,7 +28,7 @@
     import PageForm from '@/Pages/Page/Form';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import { getEmptyPageTranslation } from '@/Libs/page';
-    import { isBlank } from '@/Libs/utils';
+    import { onPageEditorClicked } from '@/Libs/page-builder';
     import { ref, onMounted, onUnmounted } from 'vue';
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -56,29 +56,18 @@
 
             const contentConfigId = ref('');
 
-            function onClickedPage(event) {
-                const isFound = event.path.find((elm) => {
-                    if (!isBlank(elm.classList)) {
-                        return (
-                            elm.classList.value.includes('page-builder-content-config')
-                            || elm.classList.value.includes('page-component')
-                        );
-                    }
-                    return false;
-                })
-
-                if (isFound === undefined && contentConfigId.value) {
-                    contentConfigId.value = '';
-                }
+            function pageListener(event) {
+                onPageEditorClicked(event, contentConfigId);
             }
 
             onMounted(() => {
-                window.addEventListener("click", onClickedPage);
+                window.addEventListener("click", pageListener);
             });
 
             onUnmounted(() => {
-                window.removeEventListener("click", onClickedPage);
+                window.removeEventListener("click", pageListener);
             });
+
 
             return {
                 form: useForm(translationForm),
