@@ -21,7 +21,7 @@
                 <span class="icon" v-else><i class="fas fa-pen"></i></span>
             </sdb-button>
 
-            <img :src="imageSrc" :alt="entity.content.figure.image?.alt ?? ''" :class="imgClass">
+            <img :src="imageSrc" :alt="altText" :class="imgClass">
         </figure>
 
         <div class="card-content has-background-info-light" v-if="isFormDisplayed">
@@ -40,8 +40,8 @@
             :data="modalImages"
             @close="closeModal"
             @on-clicked-pagination="getImagesRequest"
-            @on-media-submitted="updateImageSource"
             @on-media-selected="selectImage"
+            @on-media-submitted="updateImage"
         />
     </div>
 </template>
@@ -50,45 +50,64 @@
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import EditModeContentMixin from '@/Mixins/EditModeContent';
     import HasModalMixin from '@/Mixins/HasModal';
+    import MixinContainImageContent from '@/Mixins/ContainImageContent';
     import SdbButton from '@/Sdb/Button';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
+    import { detachImageFromMedia } from '@/Libs/page-builder';
 
     export default {
-        mixins: [
-            DeletableContentMixin,
-            EditModeContentMixin,
-            HasModalMixin,
-        ],
         components: {
             SdbButton,
             SdbModalImageBrowser,
             SdbToolbarContent,
         },
+        mixins: [
+            DeletableContentMixin,
+            EditModeContentMixin,
+            HasModalMixin,
+            MixinContainImageContent,
+        ],
         props: {
             id: {},
             entityId: {},
             modelValue: {},
+            dataMedia: {},
+            images: {},
         },
         data() {
             return {
                 isFormOpen: false,
                 modalImages: [],
+                image: this.entity.content.figure.image,
             };
         },
         setup(props, { emit }) {
             return {
-                config: props.modelValue.config,
+                config: props.modelValue?.config,
                 entity: useModelWrapper(props, emit),
+                pageMedia: useModelWrapper(props, emit, 'dataMedia'),
             };
         },
         methods: {
             toggleEdit() {
                 this.isFormOpen = !this.isFormOpen;
             },
-            onShownModal() { /* @overide */
+            onContentDeleted() { /* @override Mixins/DeletableContent */
+                if (!isBlank(this.image.mediaId)) {
+                    detachImageFromMedia(this.image.mediaId, this.pageMedia);
+                }
+            },
+            onShownModal() { /* @override */
                 this.getImagesRequest(route('admin.media.list.image'));
+            },
+            onImageSelected() { /* @override Mixins/ContainImageContent */
+                this.closeModal();
+                this.isFormOpen = false;
+            },
+            onImageUpdated() { /* @override Mixins/ContainImageContent */
+                this.closeModal();
             },
             getImagesRequest(url) {
                 const self = this;
@@ -107,16 +126,6 @@
             },
             setModalImages(data) {
                 this.modalImages = data;
-            },
-            updateImageSource(response) {
-                this.entity.content.figure.image.src = response.data.file_url;
-                this.closeModal();
-            },
-            selectImage(image, event) {
-                if (event) event.preventDefault();
-                this.entity.content.figure.image.src = image.file_url;
-                this.closeModal();
-                this.isFormOpen = false;
             },
         },
         computed: {
