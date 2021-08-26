@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-image" :class="cardImageClass">
                 <figure class="image" :class="figureClass" v-if="hasImage">
-                    <img :src="image.src" :class="imgClass">
+                    <img :src="image.src" :class="imgClass" :alt="altText">
                 </figure>
 
                 <sdb-button
@@ -181,6 +181,17 @@
                     return true;
                 }
                 return !isEmpty(this.entity.content.cardContent.content.html);
+            },
+            altText() {
+                if (this.images) {
+                    const image = this
+                        .images
+                        .find(image => image.id === this.entity.content.cardImage.figure.image.mediaId);
+                    if (image) {
+                        return image.alt;
+                    }
+                }
+                return "";
             },
         }
     }

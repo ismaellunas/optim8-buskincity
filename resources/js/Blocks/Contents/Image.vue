@@ -7,14 +7,14 @@
 
         <figure
             v-if="hasImage"
-            :class="figureClass"
             class="image"
+            :class="figureClass"
         >
             <sdb-button
                 v-if="isEditMode"
                 class="is-small is-overlay"
-                type="button"
                 style="z-index: 1"
+                type="button"
                 @click="toggleEdit"
             >
                 <span class="icon" v-if="isFormDisplayed"><i class="fas fa-times-circle"></i></span>
@@ -146,6 +146,17 @@
                 let classes = [];
                 classes.push(this.config?.image?.rounded ?? "");
                 return classes;
+            },
+            altText() {
+                if (this.images) {
+                    const image = this
+                        .images
+                        .find(image => image.id === this.entity.content.figure.image.mediaId);
+                    if (image) {
+                        return image.alt;
+                    }
+                }
+                return "";
             },
         }
     }
