@@ -1,5 +1,5 @@
 import { generateElementId } from './utils';
-import { isEmpty, remove } from 'lodash';
+import { isEmpty } from 'lodash';
 
 export function createColumn() {
     return {
