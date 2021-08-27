@@ -278,8 +278,11 @@ class MediaController extends Controller
             ->paginate($this->recordsPerPage);
 
         $records->getCollection()->transform(function ($record) {
-            $record->_thumbnail_url = $record->thumbnailUrl;
+            $record->file_name_without_extension = $record->fileNameWithoutExtension;
             $record->is_image = $record->isImage;
+            $record->readable_size = $record->readableSize;
+            $record->thumbnail_url = $record->thumbnailUrl;
+
             return $record;
         });
 
