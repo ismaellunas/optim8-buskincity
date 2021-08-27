@@ -15,7 +15,7 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
-    import SdbMediaLibrary from '@/Sdb/MediaLibraryAll';
+    import SdbMediaLibrary from '@/Sdb/MediaLibrary';
     import { success as successAlert } from '@/Libs/alert';
 
     export default {

@@ -48,7 +48,7 @@
 <script>
     import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
-    import SdbMediaLibrary from '@/Sdb/MediaLibraryAll';
+    import SdbMediaLibrary from '@/Sdb/MediaLibrary';
     import SdbModalCard from '@/Sdb/ModalCard';
     import SdbPagination from '@/Sdb/Pagination';
 
