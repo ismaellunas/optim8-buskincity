@@ -55,8 +55,9 @@ class HandleInertiaRequests extends Middleware
                 return (object)[];
             },
             'menus' => MenuService::generateMenus(TranslationSv::currentLanguage()),
-            'languageOptions' => TranslationSv::getLocaleOptions(),
             'currentLanguage' => TranslationSv::currentLanguage(),
+            'defaultLanguage' => TranslationSv::getDefaultLocale(),
+            'languageOptions' => TranslationSv::getLocaleOptions(),
         ]);
     }
 }
