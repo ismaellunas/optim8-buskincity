@@ -8,12 +8,10 @@ export default {
             figure: {
                 image: {
                     id: null,
+                    mediaId: null,
                     src: "",
                     attrs: [],
                 },
-                //attrs: {
-                //    class: [],
-                //},
             }
         },
         cardContent: {
@@ -25,7 +23,6 @@ export default {
             },
             media: {},
         },
-        imagesIds: []
     },
     config: {
         image: {
