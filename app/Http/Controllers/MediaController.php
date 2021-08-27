@@ -210,13 +210,11 @@ class MediaController extends Controller
             ->paginate($this->recordsPerPage);
 
         $records->getCollection()->transform(function ($record) {
-            $record->tag_url = cloudinary()
-                   ->getImageTag($record->file_name)
-                   ->resize(Resize::pad(96))
-                   ->serialize();
-            $record->_thumbnail_url = $record->thumbnailUrl;
-            $record->readable_size = $record->readableSize;
+            $record->thumbnail_url = $record->thumbnailUrl;
+            $record->file_name_without_extension = $record->fileNameWithoutExtension;
             $record->is_image = $record->isImage;
+            $record->readable_size = $record->readableSize;
+
             return $record;
         });
 
