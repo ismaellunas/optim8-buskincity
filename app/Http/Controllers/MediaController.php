@@ -6,8 +6,8 @@ use App\Models\Media;
 use App\Services\MediaService;
 use App\Services\TranslationService;
 use Carbon\Carbon;
-use Cloudinary\Transformation\Resize;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class MediaController extends Controller
@@ -48,15 +48,24 @@ class MediaController extends Controller
         $fileName = $request->input('file_name');
         $fileName = MediaService::getUniqueFileName($fileName);
         $extension = $request->file->extension();
+        $mimeType = $request->file->getMimeType();
 
         $mediaDataOptions = [];
         $uploadFileOptions = [
             'public_id' => $fileName,
         ];
 
-        if (!in_array($extension, Media::$imageExtensions)) {
-            $mediaDataOptions['extension'] = $extension;
+        if (!Str::startsWith($mimeType, 'image/')) {
             $uploadFileOptions['resource_type'] = 'auto';
+        }
+
+        if ( !(
+            Str::startsWith($mimeType, 'image/')
+            || Str::startsWith($mimeType, 'video/')
+            || $extension == 'pdf'
+        )) {
+            $mediaDataOptions['extension'] = $extension;
+            $uploadFileOptions['public_id'] .= '.'.$extension;
         }
 
         $uploadedFile = cloudinary()->upload(
