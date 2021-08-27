@@ -5,6 +5,7 @@
             v-model="form.file_name"
             :message="error('name')"
             :disabled="isInputDisabled"
+            @on-keypress="keyPressFileName"
             required
         />
 
@@ -25,6 +26,7 @@
                             <sdb-input
                                 v-model="form.translations[ option.id ].alt"
                                 :disabled="isInputDisabled"
+                                @keypress="keyPressAltText"
                             />
                         </div>
                         <div class="column">
@@ -80,7 +82,7 @@
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbInput from '@/Sdb/Input';
     import SdbSelect from '@/Sdb/Select';
-    import { buildFormData } from '@/Libs/utils';
+    import { buildFormData, regexHtmlAttribute, regexFileName } from '@/Libs/utils';
     import { getTranslation } from '@/Libs/translation';
     import { isEmpty } from 'lodash';
     import { reactive, ref } from "vue";
@@ -218,6 +220,23 @@
             deleteTranslation(locale) {
                 delete this.form.translations[locale];
             },
+            keyPressFileName(event) {
+                // @see https://stackoverflow.com/questions/61938667/vue-js-how-to-allow-an-user-to-type-only-letters-in-an-input-field
+                let char = String.fromCharCode(event.keyCode);
+                if (char === ' ' || char === '_') {
+                    event.target.value += '-';
+                } else if ((new RegExp('^['+regexFileName+']+$')).test(char)) {
+                    return true;
+                }
+                event.preventDefault();
+            },
+            keyPressAltText(event) {
+                let char = String.fromCharCode(event.keyCode);
+                if ((new RegExp('^['+regexHtmlAttribute+']*$')).test(char)) {
+                    return true;
+                }
+                event.preventDefault();
+            }
         },
         computed: {
             availableLocales() {

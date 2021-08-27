@@ -1,5 +1,8 @@
 import { computed } from 'vue'
 
+export const regexHtmlAttribute = "a-zA-Z0-9_ \-";
+export const regexFileName = "a-zA-Z0-9\-";
+
 export function uniqueId() {
     /* @see https://gist.github.com/gordonbrander/2230317#gistcomment-1713405*/
     return (Date.now().toString(36) + Math.random().toString(36).substr(2, 5)).toUpperCase();
