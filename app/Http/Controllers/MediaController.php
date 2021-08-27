@@ -46,18 +46,11 @@ class MediaController extends Controller
     protected function storeProcess(Request $request)
     {
         $fileName = $request->input('file_name');
-        $fileName = MediaService::getUniqueFileName($fileName);
         $extension = $request->file->extension();
         $mimeType = $request->file->getMimeType();
 
         $mediaDataOptions = [];
-        $uploadFileOptions = [
-            'public_id' => $fileName,
-        ];
-
-        if (!Str::startsWith($mimeType, 'image/')) {
-            $uploadFileOptions['resource_type'] = 'auto';
-        }
+        $uploadFileOptions['resource_type'] = 'auto';
 
         if ( !(
             Str::startsWith($mimeType, 'image/')
@@ -65,8 +58,14 @@ class MediaController extends Controller
             || $extension == 'pdf'
         )) {
             $mediaDataOptions['extension'] = $extension;
-            $uploadFileOptions['public_id'] .= '.'.$extension;
         }
+
+        $fileName = MediaService::getUniqueFileName(
+            $fileName,
+            [],
+            $mediaDataOptions['extension'] ?? null
+        );
+        $uploadFileOptions['public_id'] = $fileName;
 
         $uploadedFile = cloudinary()->upload(
             $request->file('file')->getRealPath(),
