@@ -94,7 +94,7 @@ class MediaController extends Controller
     public function store(Request $request)
     {
         $this->storeProcess($request);
-        return redirect()->back();
+        return redirect()->route($this->baseRouteName.'.index');
     }
 
     /**
