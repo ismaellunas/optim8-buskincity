@@ -3,7 +3,7 @@ export function getEmptyPageTranslation() {
         title: null,
         slug: null,
         excerpt: null,
-        data: {"structures": [], "entities": {}},
+        data: {"structures": [], "entities": {}, "media": []},
         meta_description: null,
         meta_title: null,
         status: 0,
