@@ -83,17 +83,16 @@
                                     type="button"
                                     @click="deleteRecord(media)"
                                 />
-                                <sdb-button
+                                <sdb-button-link-download
                                     v-if="isDownloadEnabled"
-                                    class="button card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
+                                    class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
                                     title="Download"
-                                    type="button"
-                                    @click.prevent="download(media)"
+                                    :href="media.file_url"
                                 >
                                     <span class="icon is-small">
                                         <i class="fas fa-download"></i>
                                     </span>
-                                </sdb-button>
+                                </sdb-button-link-download>
 
                                 <slot name="actions" :media="media"></slot>
                             </footer>
@@ -265,6 +264,7 @@
     import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
+    import SdbButtonLinkDownload from '@/Sdb/ButtonLinkDownload';
     import SdbFormField from '@/Sdb/Form/Field';
     import SdbInputFile from '@/Sdb/InputFile';
     import SdbModal from '@/Sdb/Modal';
@@ -296,6 +296,7 @@
             SdbButton,
             SdbButtonIcon,
             SdbButtonLink,
+            SdbButtonLinkDownload,
             SdbFormField,
             SdbInputFile,
             SdbModal,
@@ -502,16 +503,6 @@
                     }
                 }
                 return "far fa-file-alt";
-            },
-            download(media) {
-                const fileName = media.file_url.substring(media.file_url.lastIndexOf('/')+1);
-                const a = document.createElement('a');
-                a.href = media.file_url;
-                a.download = fileName;
-                a.target = '_blank';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
             }
         },
         computed: {
