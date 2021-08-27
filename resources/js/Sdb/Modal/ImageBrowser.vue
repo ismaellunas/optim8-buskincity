@@ -28,6 +28,7 @@
             :is-edit-enabled="false"
             :is-pagination-displayed="false"
             :records="data"
+            :accepted-types="acceptedTypes"
             @on-media-submitted="$emit('on-media-submitted', $event)"
         >
             <template v-slot:actions="slotProps">
@@ -51,6 +52,7 @@
     import SdbMediaLibrary from '@/Sdb/MediaLibrary';
     import SdbModalCard from '@/Sdb/ModalCard';
     import SdbPagination from '@/Sdb/Pagination';
+    import { acceptedImageTypes } from '@/Libs/defaults';
 
     export default {
         components: {
@@ -69,6 +71,11 @@
         props: {
             data: {},
             title: {type: String, default: 'Images'},
+        },
+        data() {
+            return {
+                acceptedTypes: acceptedImageTypes,
+            };
         },
     }
 </script>
