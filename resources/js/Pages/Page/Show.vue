@@ -11,6 +11,7 @@
                 v-model:data-entities="page.data.entities"
                 :isEditMode="false"
                 :id="block.id"
+                :images="images"
                 />
         </template>
     </div>
@@ -31,6 +32,7 @@
         props: {
             page: Object,
             errors: Object,
+            images: {},
         },
     }
 </script>
