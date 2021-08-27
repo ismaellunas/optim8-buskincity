@@ -83,17 +83,17 @@
                                     type="button"
                                     @click="deleteRecord(media)"
                                 />
-                                <a
-                                    :href="media.file_url"
+                                <sdb-button
+                                    v-if="isDownloadEnabled"
                                     class="button card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
-                                    download
-                                    target="_blank"
-                                    title="Delete"
+                                    title="Download"
+                                    type="button"
+                                    @click.prevent="download(media)"
                                 >
                                     <span class="icon is-small">
                                         <i class="fas fa-download"></i>
                                     </span>
-                                </a>
+                                </sdb-button>
 
                                 <slot name="actions" :media="media"></slot>
                             </footer>
@@ -313,6 +313,7 @@
             acceptedTypes: {default: acceptedFileTypes},
             isEditEnabled: {type: Boolean, default: true},
             isDeleteEnabled: {type: Boolean, default: true},
+            isDownloadEnabled: {type: Boolean, default: true},
         },
         setup(props) {
             return {
@@ -501,6 +502,16 @@
                     }
                 }
                 return "far fa-file-alt";
+            },
+            download(media) {
+                const fileName = media.file_url.substring(media.file_url.lastIndexOf('/')+1);
+                const a = document.createElement('a');
+                a.href = media.file_url;
+                a.download = fileName;
+                a.target = '_blank';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
             }
         },
         computed: {
