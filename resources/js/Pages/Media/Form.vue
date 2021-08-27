@@ -1,5 +1,5 @@
 <template>
-    <form>
+    <form @submit.prevent="submit(form, media.id)">
         <sdb-form-input
             label="Name"
             v-model="form.file_name"
@@ -56,8 +56,7 @@
         <div class="field is-grouped is-pulled-right">
             <sdb-button
                 class="is-link"
-                type="button"
-                @click="submit(form, media.id)"
+                :disabled="!canSubmit"
             >
                 Submit
             </sdb-button>
@@ -229,6 +228,9 @@
             },
             isImage() {
                 return this.media.is_image;
+            },
+            canSubmit() {
+                return !isEmpty(this.form.file_name);
             }
         },
     }
