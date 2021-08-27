@@ -87,12 +87,6 @@
                 media: useModelWrapper(props, emit, 'dataMedia'),
             };
         },
-        created() {
-            // NOTE update page.data.media
-            if (this.media === undefined) {
-                this.media = [];
-            }
-        },
         methods: {
             deleteBlock() {
                 const confirmText = 'Are you sure?';

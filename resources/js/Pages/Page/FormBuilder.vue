@@ -114,6 +114,12 @@
                 contentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
             };
         },
+        created() {
+            // NOTE fix page.data
+            if (!this.data?.media) {
+                this.data.media = [];
+            }
+        },
         data() {
             return {
                 isDebugMode: false,
