@@ -22,7 +22,11 @@ class Media extends CloudinaryMedia implements TranslatableContract
     ];
 
     public $fillable = [
-        'file_name'
+        'assets',
+        'file_name',
+        'file_url',
+        'file_type',
+        'version',
     ];
 
     protected $casts = [
