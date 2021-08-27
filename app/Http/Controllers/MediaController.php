@@ -268,9 +268,7 @@ class MediaController extends Controller
                 return $translation->replicate();
             }));
 
-        return $request->ajax()
-            ? redirect()->back()
-            : response()->json(['imagePath' => $media->file_url]);
+        return redirect()->back();
     }
 
     public function listImages(Request $request)
