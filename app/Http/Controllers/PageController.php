@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Media;
 use App\Models\Page;
 use App\Models\PageTranslation;
 use App\Services\TranslationService;
@@ -91,11 +92,26 @@ class PageController extends CrudController
                 return redirect()->route('status-code.404');
             }
         } else {
+            $images = [];
+            if (!empty($pageTranslation->data['media'])) {
+                $mediaIds = collect($pageTranslation->data['media'])->pluck('id');
+
+                $images = Media::whereIn('id', $mediaIds)
+                    ->image()
+                    ->with([
+                        'translations' => function ($q) use ($locale) {
+                            $q->select(['id', 'locale', 'alt', 'media_id']);
+                            $q->where('locale', $locale);
+                        },
+                    ])
+                    ->get(['id']);
+            }
+
             return Inertia::render('Page/Show', [
                 'page' => $pageTranslation,
+                'images' => $images,
             ]);
         }
-
     }
 
     /**
