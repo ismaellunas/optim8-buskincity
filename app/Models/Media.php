@@ -8,6 +8,7 @@ use Astrotomic\Translatable\Translatable;
 use CloudinaryLabs\CloudinaryLaravel\Model\Media as CloudinaryMedia;
 use Cloudinary\Transformation\Resize;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
+use Illuminate\Support\Str;
 
 class Media extends CloudinaryMedia implements TranslatableContract
 {
@@ -40,6 +41,14 @@ class Media extends CloudinaryMedia implements TranslatableContract
     }
 
     // Accessors:
+    public function getFileNameWithoutExtensionAttribute(): string
+    {
+        if (!in_array($this->file_type, ['image', 'video'])) {
+            return Str::replaceLast('.'.$this->extension, '', $this->file_name);
+        }
+        return $this->file_name;
+    }
+
     public function getIsImageAttribute(): bool
     {
         return in_array($this->extension, self::$imageExtensions);
