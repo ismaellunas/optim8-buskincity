@@ -7,6 +7,7 @@
             :placeholder="placeholder"
             :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"
+            @keypress="$emit('on-keypress', $event)"
         />
 
         <template v-slot:error>
@@ -26,7 +27,7 @@
             SdbInput,
             SdbInputError,
         },
-        emits: ['update:modelValue'],
+        emits: ['update:modelValue', 'on-keypress'],
         props: ['label', 'message', 'modelValue', 'placeholder', 'disabled', 'required']
     }
 </script>
