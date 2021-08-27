@@ -146,11 +146,17 @@ class MediaController extends Controller
         $fileName = $request->input('file_name');
 
         if ($media->file_name != $fileName) {
-            $fileName = MediaService::getUniqueFileName($fileName);
+
+            $fileName = MediaService::getUniqueFileName(
+                $fileName,
+                [],
+                ($media->file_type != 'image' ? $media->extension : null)
+            );
 
             $response = cloudinary()->uploadApi()->rename(
                 $media->file_name,
-                $fileName
+                $fileName,
+                ["resource_type" => $media->file_type]
             );
 
             $data['file_name'] = $response['public_id'];
