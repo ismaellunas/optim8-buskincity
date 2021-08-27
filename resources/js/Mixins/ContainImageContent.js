@@ -1,6 +1,6 @@
-import { attachImageToMedia, detachImageFromMedia } from '@/Libs/page-builder';
-import { oops as oopsAlert } from '@/Libs/alert';
 import { isBlank } from '@/Libs/utils';
+import { oops as oopsAlert } from '@/Libs/alert';
+import { remove } from 'lodash';
 
 export default {
     setup() {
@@ -17,15 +17,41 @@ export default {
         }
     },
     methods: {
+        attachImageToMedia(imageId, media) {
+            const existingMedia = media.find(media => media.id === imageId);
+
+            if (existingMedia) {
+                existingMedia.numberOfUsage++;
+            } else {
+                media.push({
+                    id: imageId,
+                    is_image: true,
+                    numberOfUsage: 1,
+                });
+            }
+        },
+        detachImageFromMedia(imageId, media) {
+            const existingMedia = media.find(media => media.id === imageId);
+
+            if (existingMedia) {
+                existingMedia.numberOfUsage--;
+
+                if (existingMedia.numberOfUsage === 0) {
+                    remove(media, function (medium) {
+                        return medium.id == existingMedia.id;
+                    })
+                }
+            }
+        },
         selectImage(image) {
             if (!isBlank(this.image.mediaId)) {
-                detachImageFromMedia(this.image.mediaId, this.pageMedia);
+                this.detachImageFromMedia(this.image.mediaId, this.pageMedia);
             }
 
             this.image.src = image.file_url;
             this.image.mediaId = image.id;
 
-            attachImageToMedia(image.id, this.pageMedia);
+            this.attachImageToMedia(image.id, this.pageMedia);
 
             this.onImageSelected();
         },

@@ -72,7 +72,6 @@
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat, isEmpty } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
-    import { detachImageFromMedia } from '@/Libs/page-builder';
     import { emitModelValue, isBlank, useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -113,7 +112,7 @@
         methods: {
             onContentDeleted() { /* @override Mixins/DeletableContent */
                 if (!isBlank(this.image.mediaId)) {
-                    detachImageFromMedia(this.image.mediaId, this.pageMedia);
+                    this.detachImageFromMedia(this.image.mediaId, this.pageMedia);
                 }
             },
             onImageSelected() { /* @override Mixins/ContainImageContent */

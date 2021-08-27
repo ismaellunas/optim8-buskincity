@@ -55,7 +55,6 @@
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
-    import { detachImageFromMedia } from '@/Libs/page-builder';
 
     export default {
         components: {
@@ -96,7 +95,7 @@
             },
             onContentDeleted() { /* @override Mixins/DeletableContent */
                 if (!isBlank(this.image.mediaId)) {
-                    detachImageFromMedia(this.image.mediaId, this.pageMedia);
+                    this.detachImageFromMedia(this.image.mediaId, this.pageMedia);
                 }
             },
             onShownModal() { /* @override */
