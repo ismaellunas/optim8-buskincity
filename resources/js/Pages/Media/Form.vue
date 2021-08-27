@@ -1,9 +1,9 @@
 <template>
     <form @submit.prevent="submit(form, media.id)">
         <sdb-form-input
-            label="Name"
+            label="File Name"
             v-model="form.file_name"
-            :message="error('name')"
+            :message="error('file_name')"
             :disabled="isInputDisabled"
             @on-keypress="keyPressFileName"
             required
