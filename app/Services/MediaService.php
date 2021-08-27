@@ -7,12 +7,14 @@ use Illuminate\Support\Str;
 
 class MediaService
 {
-    public static function isFileNameExists(string $fileName, $exceptedIds = []): bool
-    {
+    public static function isFileNameExists(
+        string $fileName,
+        array $excludedIds = []
+    ): bool {
         $queryBuilder = Media::where('file_name', $fileName);
 
-        if (!empty($exceptedIds)) {
-            $queryBuilder->whereIn('id', $exceptedIds);
+        if (!empty($excludedIds)) {
+            $queryBuilder->whereIn('id', $excludedIds);
         }
 
         return $queryBuilder->exists();
