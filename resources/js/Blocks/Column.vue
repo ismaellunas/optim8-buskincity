@@ -16,8 +16,9 @@
                     :is="element.componentName"
                     :id="element.id"
                     v-model="dataEntities[element.id]"
-                    :is-edit-mode="isEditMode"
                     class="page-component"
+                    :is-edit-mode="isEditMode"
+                    :data-media="dataMedia"
                     @click="settingContent(element.id)"
                     @delete-content="deleteContent"
                 />
@@ -30,6 +31,7 @@
                 v-for="(element, index) in components"
                 :id="element.id"
                 v-model="dataEntities[element.id]"
+                :data-media="dataMedia"
                 :is-edit-mode="isEditMode"
             />
         </template>
@@ -61,6 +63,7 @@
             isDebugMode: {default: false},
             components: {type: Array, default: []},
             dataEntities: {},
+            dataMedia: {},
         },
         setup(props, { emit }) {
             return {

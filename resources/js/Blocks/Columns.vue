@@ -44,6 +44,7 @@
                 :isEditMode="isEditMode"
                 :components="block.columns[index].components"
                 :data-entities="entities"
+                :data-media="media"
                 @setting-content="$emit('setting-content', $event)"
             />
         </template>
@@ -66,10 +67,11 @@
             SdbSelect,
         },
         props: {
+            dataEntities: {},
+            dataMedia: {},
             id: {},
             isEditMode: {default: false},
             modelValue: {},
-            dataEntities: {},
         },
         data() {
             return {
@@ -82,6 +84,7 @@
             return {
                 block: useModelWrapper(props, emit),
                 entities: useModelWrapper(props, emit, 'dataEntities'),
+                media: useModelWrapper(props, emit, 'dataMedia'),
             };
         },
         methods: {

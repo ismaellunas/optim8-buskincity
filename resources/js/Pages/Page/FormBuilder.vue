@@ -76,6 +76,7 @@
                     <block-columns
                         v-model="data.structures[index]"
                         v-model:data-entities="data.entities"
+                        v-model:data-media="data.media"
                         :isEditMode="isEditMode"
                         :id="element.id"
                         @delete-block="deleteBlock"
