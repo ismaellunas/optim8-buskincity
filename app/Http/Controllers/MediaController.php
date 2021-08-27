@@ -196,7 +196,7 @@ class MediaController extends Controller
 
         $request->session()->flash('message', 'Media deleted successfully!'.$media->file_name);
 
-        return redirect()->route($this->baseRouteName.'.index');
+        return redirect()->back();
     }
 
     public function getRecords()
