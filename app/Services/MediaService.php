@@ -32,11 +32,12 @@ class MediaService
         }
 
         if (self::isFileNameExists($searchFileName, $excludedIds)) {
-            $fileName .= (
-                '_'.Str::lower(Str::random(6)).
-                ($extension ? '.'.$extension : '')
+            return self::getUniqueFileName(
+                $fileName.'-'.Str::lower(Str::random(6)),
+                [],
+                $extension
             );
         }
-        return $fileName;
+        return $fileName.($extension ? '.'.$extension : '');
     }
 }
