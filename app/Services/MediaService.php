@@ -18,10 +18,22 @@ class MediaService
         return $queryBuilder->exists();
     }
 
-    public static function getUniqueFileName(string $fileName, $exceptedIds = []): string
-    {
-        if (self::isFileNameExists($fileName, $exceptedIds)) {
-            $fileName .= '_'.Str::lower(Str::random(6));
+    public static function getUniqueFileName(
+        string $fileName,
+        array $excludedIds = [],
+        string $extension = null
+    ): string {
+        $searchFileName = $fileName;
+
+        if (!empty($extension)) {
+            $searchFileName .= '.'.$extension;
+        }
+
+        if (self::isFileNameExists($searchFileName, $excludedIds)) {
+            $fileName .= (
+                '_'.Str::lower(Str::random(6)).
+                ($extension ? '.'.$extension : '')
+            );
         }
         return $fileName;
     }
