@@ -55,6 +55,7 @@
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -73,11 +74,11 @@
             entityId: {},
             modelValue: {},
             dataMedia: {},
-            images: {},
         },
         data() {
             return {
                 image: this.entity.content.figure.image,
+                images: usePage().props.value.images,
                 isFormOpen: false,
                 modalImages: [],
             };
