@@ -45,7 +45,7 @@ class MediaService
     public static function getTranslationRules(): array
     {
         return RuleFactory::make([
-            'translations.%alt%' => 'sometimes|nullable|alpha_dash|max:255',
+            'translations.%alt%' => 'sometimes|nullable|string|max:255',
         ]);
     }
 }
