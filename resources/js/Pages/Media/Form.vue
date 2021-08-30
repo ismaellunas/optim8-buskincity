@@ -88,7 +88,7 @@
     import SdbInput from '@/Sdb/Input';
     import SdbInputError from '@/Sdb/InputError';
     import SdbSelect from '@/Sdb/Select';
-    import { isBlank,buildFormData, regexHtmlAttribute, regexFileName } from '@/Libs/utils';
+    import { isBlank,buildFormData, regexFileName } from '@/Libs/utils';
     import { getTranslation } from '@/Libs/translation';
     import { isEmpty } from 'lodash';
     import { reactive, ref } from "vue";
