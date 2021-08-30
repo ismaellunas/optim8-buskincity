@@ -3,7 +3,7 @@
         <sdb-form-input
             label="File Name"
             v-model="form.file_name"
-            :message="error('file_name')"
+            :message="error('file_name', 'default', formErrors)"
             :disabled="isInputDisabled"
             @on-keypress="keyPressFileName"
             required
@@ -25,9 +25,10 @@
                         <div class="column is-three-quarters">
                             <sdb-input
                                 v-model="form.translations[ option.id ].alt"
+                                maxlength="250"
                                 :disabled="isInputDisabled"
-                                @keypress="keyPressAltText"
                             />
+                            <sdb-input-error :message="error('translations.'+option.id+'.alt')"/>
                         </div>
                         <div class="column">
                             <sdb-button-icon
@@ -81,8 +82,9 @@
     import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbInput from '@/Sdb/Input';
+    import SdbInputError from '@/Sdb/InputError';
     import SdbSelect from '@/Sdb/Select';
-    import { buildFormData, regexHtmlAttribute, regexFileName } from '@/Libs/utils';
+    import { isBlank,buildFormData, regexHtmlAttribute, regexFileName } from '@/Libs/utils';
     import { getTranslation } from '@/Libs/translation';
     import { isEmpty } from 'lodash';
     import { reactive, ref } from "vue";
@@ -114,6 +116,7 @@
             SdbFormFieldHorizontal,
             SdbFormInput,
             SdbInput,
+            SdbInputError,
             SdbSelect,
         },
         emits: [
@@ -126,6 +129,7 @@
         },
         setup(props, { emit }) {
             let translations = {};
+            const defaultLocale = usePage().props.value.currentLanguage;
 
             if (isEmpty(props.media.translations)) {
                 translations.en = generateNewTranslation();
@@ -135,6 +139,10 @@
                         alt: translation.alt
                     };
                 });
+
+                if (!translations[defaultLocale]) {
+                    translations[defaultLocale] = generateNewTranslation();
+                }
             }
 
             let form = reactive({
@@ -153,49 +161,11 @@
 
             const selectedLocale = ref(firstAvailabeLocale?.id ?? null);
 
-            function submit(currentForm, id = null) {
-                let url = null;
-                if (props.media.id) {
-                    url = route('admin.media.update', props.media.id);
-                    currentForm._method = 'put';
-                } else {
-                    if (props.isAjax) {
-                        url = route('api.admin.media.store');
-                    } else {
-                        url = route('admin.media.store');
-                    }
-                    currentForm.file = props.media.file;
-                }
-
-                if (props.isAjax) {
-                    const formData = new FormData();
-                    buildFormData(formData, currentForm);
-
-                    axios.post(
-                        url,
-                        formData,
-                        {headers: {'Content-Type': 'multipart/form-data'}}
-                    ).then(function(response) {
-                        emit('on-success-submit', response);
-                    })
-                    .catch(function(error) {
-                        console.log(error);
-                    });
-                } else {
-                    useForm(currentForm).post(url, {
-                        onSuccess: (page) => {
-                            emit('on-success-submit', page);
-                        }
-                    });
-                }
-            };
-
             return {
-                defaultLocale: usePage().props.value.currentLanguage,
+                defaultLocale,
                 form,
                 localeOptions,
                 selectedLocale,
-                submit,
             };
         },
         data() {
@@ -204,6 +174,7 @@
                 label: {
                     alternative_text: 'Alternative Text',
                 },
+                formErrors: {},
             };
         },
         methods: {
@@ -230,12 +201,49 @@
                 }
                 event.preventDefault();
             },
-            keyPressAltText(event) {
-                let char = String.fromCharCode(event.keyCode);
-                if ((new RegExp('^['+regexHtmlAttribute+']*$')).test(char)) {
-                    return true;
+            submit() {
+                const currentForm = this.form;
+                const self = this;
+                let url = null;
+
+                if (this.media.id) {
+                    url = route('admin.media.update', this.media.id);
+                    currentForm._method = 'put';
+                } else {
+                    if (this.isAjax) {
+                        url = route('api.admin.media.store');
+                    } else {
+                        url = route('admin.media.store');
+                    }
+                    currentForm.file = this.media.file;
                 }
-                event.preventDefault();
+
+                if (this.isAjax) {
+                    const formData = new FormData();
+                    buildFormData(formData, currentForm);
+
+                    axios.post(
+                        url,
+                        formData,
+                        {headers: {'Content-Type': 'multipart/form-data'}}
+                    ).then(function(response) {
+                        self.$emit('on-success-submit', response);
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                    });
+                } else {
+                    const form = useForm(currentForm);
+                    form.post(url, {
+                        onSuccess: (page) => {
+                            self.$emit('on-success-submit', page);
+                            self.formErrors = {};
+                        },
+                        onError: errors => {
+                            self.formErrors = errors;
+                        },
+                    });
+                }
             }
         },
         computed: {
