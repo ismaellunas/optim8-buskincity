@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Media;
+use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Support\Str;
 
 class MediaService
@@ -39,5 +40,12 @@ class MediaService
             );
         }
         return $fileName.($extension ? '.'.$extension : '');
+    }
+
+    public static function getTranslationRules(): array
+    {
+        return RuleFactory::make([
+            'translations.%alt%' => 'sometimes|nullable|alpha_dash|max:255',
+        ]);
     }
 }

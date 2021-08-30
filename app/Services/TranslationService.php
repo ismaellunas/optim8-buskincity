@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Str;
+
 class TranslationService
 {
     public static $localeKey = 'locale';
@@ -67,5 +69,28 @@ class TranslationService
     {
         self::setLanguage($locale);
         app()->setLocale($locale);
+    }
+
+    /**
+     * @return array, example result = [
+     *   'en.name' => 'Name (English)',
+     * ]
+     */
+    public static function getCustomAttributes(
+        array $locales,
+        array $attributes,
+        string $prefix = 'translations.'
+    ): array {
+        $translatedAttributes = [];
+        foreach ($locales as $locale) {
+            foreach ($attributes as $attribute) {
+                $attributeKey = $prefix.$locale.'.'.$attribute;
+                $translatedAttributes[$attributeKey] = (
+                    Str::title(trans('validation.attributes.'.$attribute)).
+                    " (".TranslationService::getLanguageFromLocale($locale).")"
+                );
+            }
+        }
+        return $translatedAttributes;
     }
 }

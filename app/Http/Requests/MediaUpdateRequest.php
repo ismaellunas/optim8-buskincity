@@ -2,22 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\MediaStoreRequest;
 use App\Rules\AlphaNumericDash;
-use Astrotomic\Translatable\Validation\RuleFactory;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Services\MediaService;
 
-class MediaUpdateRequest extends FormRequest
+class MediaUpdateRequest extends MediaStoreRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,16 +15,15 @@ class MediaUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = RuleFactory::make([
-            'translations.%alt%' => 'sometimes|nullable|string|max:255',
-        ]);
-
-        return array_merge($rules, [
-            'file_name' => [
-                'required',
-                new AlphaNumericDash(),
-                'max:255'
-            ],
-        ]);
+        return array_merge(
+            MediaService::getTranslationRules(),
+            [
+                'file_name' => [
+                    'required',
+                    new AlphaNumericDash(),
+                    'max:250'
+                ],
+            ]
+        );
     }
 }

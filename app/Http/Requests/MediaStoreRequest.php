@@ -3,7 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Rules\AlphaNumericDash;
-use Astrotomic\Translatable\Validation\RuleFactory;
+use App\Services\MediaService;
+use App\Services\TranslationService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MediaStoreRequest extends FormRequest
@@ -25,24 +26,29 @@ class MediaStoreRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = RuleFactory::make([
-            'translations.%alt%' => 'sometimes|nullable|string|max:255',
-        ]);
-
         return array_merge(
-            $rules,
+            MediaService::getTranslationRules(),
             [
                 'file_name' => [
                     'required',
                     new AlphaNumericDash(),
-                    'max:255',
+                    'max:250',
                 ],
                 'file' => [
                     'required',
                     'file',
-                    'max:50000', // 10MB
+                    'max:50000',
                 ],
             ]
         );
+    }
+
+    public function attributes(): array
+    {
+        $attrs = TranslationService::getCustomAttributes(
+            array_keys($this->input('translations', [])),
+            ['alt']
+        );
+        return $attrs;
     }
 }
