@@ -1,4 +1,6 @@
 <template>
+    <sdb-error-notifications :errors="formErrors"/>
+
     <form @submit.prevent="submit(form, media.id)">
         <sdb-form-input
             label="File Name"
@@ -79,6 +81,7 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbFormField from '@/Sdb/Form/Field';
     import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbFormInput from '@/Sdb/Form/Input';
@@ -113,6 +116,7 @@
         components: {
             SdbButton,
             SdbButtonIcon,
+            SdbErrorNotifications,
             SdbFormField,
             SdbFormFieldHorizontal,
             SdbFormInput,
