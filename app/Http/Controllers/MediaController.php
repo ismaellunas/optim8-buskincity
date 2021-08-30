@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MediaStoreRequest;
+use App\Http\Requests\MediaUpdateRequest;
 use App\Models\Media;
-use App\Services\MediaService;
-use App\Services\TranslationService;
+use App\Services\{
+    MediaService,
+    TranslationService
+};
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -60,11 +64,11 @@ class MediaController extends Controller
             $mediaDataOptions['extension'] = $extension;
         }
 
-        $fileName = MediaService::getUniqueFileName(
+        $fileName = Str::lower(MediaService::getUniqueFileName(
             $fileName,
             [],
             $mediaDataOptions['extension'] ?? null
-        );
+        ));
         $uploadFileOptions['public_id'] = $fileName;
 
         $uploadedFile = cloudinary()->upload(
@@ -90,7 +94,7 @@ class MediaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MediaStoreRequest $request)
     {
         $this->storeProcess($request);
         return redirect()->route($this->baseRouteName.'.index');
@@ -102,7 +106,7 @@ class MediaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function apiStore(Request $request)
+    public function apiStore(MediaStoreRequest $request)
     {
         $media = $this->storeProcess($request);
         return $media->attributesToArray();
@@ -140,18 +144,18 @@ class MediaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Media $media)
+    public function update(MediaUpdateRequest $request, Media $media)
     {
         $data = [];
         $fileName = $request->input('file_name');
 
         if ($media->file_name != $fileName) {
 
-            $fileName = MediaService::getUniqueFileName(
+            $fileName = Str::lower(MediaService::getUniqueFileName(
                 $fileName,
                 [],
                 ($media->file_type != 'image' ? $media->extension : null)
-            );
+            ));
 
             $response = cloudinary()->uploadApi()->rename(
                 $media->file_name,
