@@ -18,121 +18,86 @@
             </div>
         </div>
 
-        <div class="columns">
-            <div class="column is-three-quarters">
-                <div class="columns is-multiline">
-                    <div
-                        v-for="media in records?.data"
-                        class="column"
-                        :class="itemClass"
-                    >
-                        <div
-                            class="card card-equal-height"
-                            :class="{'has-background-primary-light': (media.id == selectedMediaId)}"
-                            @click="onMediaClick(media)"
+        <div class="columns is-multiline">
+            <div
+                v-for="media in records?.data"
+                class="column"
+                :class="itemClass"
+            >
+                <div class="card card-equal-height">
+                    <div class="card-image px-2 pt-2 has-text-centered">
+                        <figure v-if="isImage(media)">
+                            <img
+                                :src="media.thumbnail_url"
+                                :alt="media.file_name_without_extension"
+                            />
+                        </figure>
+                        <span
+                            v-else
+                            class="icon is-large"
+                            style="margin-top: 2rem;"
                         >
-                            <div class="card-image px-2 pt-2 has-text-centered">
-                                <figure v-if="isImage(media)">
-                                    <img
-                                        :src="media.thumbnail_url"
-                                        :alt="media.file_name_without_extension"
-                                    />
-                                </figure>
-                                <span
-                                    v-else
-                                    class="icon is-large"
-                                    style="margin-top: 2rem;"
-                                >
-                                    <span class="fa-stack fa-lg" style="width: auto">
-                                        <i :class="[mediaIconThumbnail(media), 'fa-4x']"></i>
-                                    </span>
-                                </span>
-                            </div>
+                            <span class="fa-stack fa-lg" style="width: auto">
+                                <i :class="[mediaIconThumbnail(media), 'fa-4x']"></i>
+                            </span>
+                        </span>
+                    </div>
 
-                            <div class="card-content p-2">
-                                <div
-                                    class="content"
-                                    style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
-                                >
-                                    <p>{{ media.file_name_without_extension }}</p>
-                                </div>
-                            </div>
-
-                            <footer class="card-footer">
-
-                                <sdb-button-icon
-                                    v-if="isImage(media)"
-                                    class="card-footer-item p-2 is-borderless is-shadowless is-info is-inverted"
-                                    icon="fas fa-expand"
-                                    title="Preview"
-                                    type="button"
-                                    @click="previewImage(media)"
-                                />
-                                <sdb-button-icon
-                                    v-if="isEditEnabled"
-                                    class="card-footer-item p-2 is-borderless is-shadowless is-primary is-inverted"
-                                    icon="fas fa-pen"
-                                    type="button"
-                                    @click="openEditModal(media)"
-                                />
-                                <sdb-button-icon
-                                    v-if="isDeleteEnabled"
-                                    class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
-                                    icon="far fa-trash-alt"
-                                    title="Delete"
-                                    type="button"
-                                    @click="deleteRecord(media)"
-                                />
-                                <sdb-button-link-download
-                                    v-if="isDownloadEnabled"
-                                    class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
-                                    title="Download"
-                                    :href="media.file_url"
-                                >
-                                    <span class="icon is-small">
-                                        <i class="fas fa-download"></i>
-                                    </span>
-                                </sdb-button-link-download>
-
-                                <slot name="actions" :media="media"></slot>
-                            </footer>
+                    <div class="card-content p-2">
+                        <div
+                            class="content"
+                            style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
+                        >
+                            <p>{{ media.file_name_without_extension }}</p>
                         </div>
                     </div>
 
-                    <div v-if="isPaginationDisplayed" class="column is-full">
-                        <sdb-pagination
-                            :is-ajax="isAjax"
-                            :links="records?.links ?? []"
+                    <footer class="card-footer">
+
+                        <sdb-button-icon
+                            v-if="isImage(media)"
+                            class="card-footer-item p-2 is-borderless is-shadowless is-info is-inverted"
+                            icon="fas fa-expand"
+                            title="Preview"
+                            type="button"
+                            @click="previewImage(media)"
                         />
-                    </div>
+                        <sdb-button-icon
+                            v-if="isEditEnabled"
+                            class="card-footer-item p-2 is-borderless is-shadowless is-primary is-inverted"
+                            icon="fas fa-pen"
+                            type="button"
+                            @click="openEditModal(media)"
+                        />
+                        <sdb-button-icon
+                            v-if="isDeleteEnabled"
+                            class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
+                            icon="far fa-trash-alt"
+                            title="Delete"
+                            type="button"
+                            @click="deleteRecord(media)"
+                        />
+                        <sdb-button-link-download
+                            v-if="isDownloadEnabled"
+                            class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
+                            title="Download"
+                            :href="media.file_url"
+                        >
+                            <span class="icon is-small">
+                                <i class="fas fa-download"></i>
+                            </span>
+                        </sdb-button-link-download>
+
+                        <slot name="actions" :media="media"></slot>
+                    </footer>
                 </div>
             </div>
-            <div class="column">
-                <div
-                    v-if="selectedMedia"
-                    class="card has-background-primary-light"
-                >
-                    <header class="card-header">
-                        <p class="card-header-title">Detail</p>
-                    </header>
-                    <div class="card-image p-2">
-                        <figure class="image">
-                            <img :src="selectedMedia.thumbnail_url ?? ''" alt="">
-                        </figure>
-                    </div>
-                    <div class="card-content">
-                        <div class="content">
-                            <sdb-form-field>
-                                <template v-slot:label>Name</template>
-                                <p>{{ selectedMedia.file_name_without_extension }}</p>
-                            </sdb-form-field>
-                            <sdb-form-field>
-                                <template v-slot:label>Size</template>
-                                <p>{{ selectedMedia.readable_size }}</p>
-                            </sdb-form-field>
-                        </div>
-                    </div>
-                </div>
+
+            <div v-if="isPaginationDisplayed" class="column is-full">
+                <sdb-pagination
+                    :is-ajax="isAjax"
+                    :links="records?.links ?? []"
+                />
             </div>
         </div>
 
@@ -316,11 +281,6 @@
             isDeleteEnabled: {type: Boolean, default: true},
             isDownloadEnabled: {type: Boolean, default: true},
         },
-        setup(props) {
-            return {
-                selectedMediaId: ref(null),
-            };
-        },
         data() {
             return {
                 cropper: null,
@@ -342,9 +302,6 @@
                     (media?.is_image)
                     || (media?.file && media.file.type.startsWith("image"))
                 );
-            },
-            onMediaClick(media) {
-                this.selectedMediaId = media.id;
             },
             previewImage(media) {
                 this.previewImageSrc = media.file_url;
@@ -506,26 +463,6 @@
             }
         },
         computed: {
-            selectedMedia() {
-                if (isEmpty(this.records.data)) {
-                    return null;
-                }
-
-                if (this.selectedMediaId === null) {
-                    return this.records.data[0];
-                }
-
-                const self = this;
-                let selectedMedia = this.records.data.find((media) => {
-                    return media.id == self.selectedMediaId;
-                });
-
-                if (isEmpty(selectedMedia)) {
-                    selectedMedia = this.records.data[0];
-                }
-
-                return selectedMedia;
-            },
             previewFileSrc() {
                 return this.formMedia?.file_url ?? this.formMedia?.file ?? '';
             },
