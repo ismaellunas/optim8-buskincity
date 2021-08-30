@@ -80,10 +80,12 @@ class MediaController extends Controller
         $this->setMediaData($media, $uploadedFile, $mediaDataOptions);
         $media->save();
 
-        foreach ($request->input('translations') as $locale => $translation) {
-            $data[$locale] = $translation;
+        if ($request->has('translations')) {
+            foreach ($request->input('translations') as $locale => $translation) {
+                $data[$locale] = $translation;
+            }
+            $media->update($data);
         }
-        $media->update($data);
 
         return $media;
     }
