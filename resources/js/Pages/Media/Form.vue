@@ -5,6 +5,7 @@
             v-model="form.file_name"
             :message="error('file_name', 'default', formErrors)"
             :disabled="isInputDisabled"
+            maxlength="250"
             @on-keypress="keyPressFileName"
             required
         />
@@ -25,7 +26,7 @@
                         <div class="column is-three-quarters">
                             <sdb-input
                                 v-model="form.translations[ option.id ].alt"
-                                maxlength="250"
+                                maxlength="255"
                                 :disabled="isInputDisabled"
                             />
                             <sdb-input-error :message="error('translations.'+option.id+'.alt')"/>
