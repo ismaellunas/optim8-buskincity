@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\MediaStoreRequest;
-use App\Http\Requests\MediaUpdateRequest;
+use App\Http\Requests\{
+    MediaStoreRequest,
+    MediaUpdateImageRequest,
+    MediaUpdateRequest
+};
 use App\Models\Media;
 use App\Services\{
     MediaService,
@@ -244,7 +247,7 @@ class MediaController extends Controller
         return response()->json(['imagePath' => $media->file_url]);
     }
 
-    public function updateImage(Request $request, Media $media)
+    public function updateImage(MediaUpdateImageRequest $request, Media $media)
     {
         $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath(), ['public_id' => $media->file_name]);
 
