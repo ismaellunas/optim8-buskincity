@@ -3,8 +3,10 @@ import { isBlank } from '@/Libs/utils';
 
 export default {
     methods: {
-        error(field, errorBag = 'default') {
-            const errors = usePage().props.value.errors;
+        error(field, errorBag = 'default', errors = null) {
+            if (!errors) {
+                errors = usePage().props.value.errors;
+            }
             if (
                 isBlank(errors)
                 || !errors.hasOwnProperty(errorBag)
