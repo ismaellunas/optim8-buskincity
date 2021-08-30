@@ -77,16 +77,12 @@
                             type="button"
                             @click="deleteRecord(media)"
                         />
-                        <sdb-button-link-download
+                        <sdb-button-download
                             v-if="isDownloadEnabled"
                             class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
                             title="Download"
-                            :href="media.file_url"
-                        >
-                            <span class="icon is-small">
-                                <i class="fas fa-download"></i>
-                            </span>
-                        </sdb-button-link-download>
+                            :url="media.file_url"
+                        />
 
                         <slot name="actions" :media="media"></slot>
                     </footer>
@@ -229,7 +225,7 @@
     import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbButtonLinkDownload from '@/Sdb/ButtonLinkDownload';
+    import SdbButtonDownload from '@/Sdb/ButtonDownload';
     import SdbFormField from '@/Sdb/Form/Field';
     import SdbInputFile from '@/Sdb/InputFile';
     import SdbModal from '@/Sdb/Modal';
@@ -261,7 +257,7 @@
             SdbButton,
             SdbButtonIcon,
             SdbButtonLink,
-            SdbButtonLinkDownload,
+            SdbButtonDownload,
             SdbFormField,
             SdbInputFile,
             SdbModal,
