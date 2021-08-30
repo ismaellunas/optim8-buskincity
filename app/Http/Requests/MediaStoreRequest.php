@@ -26,6 +26,8 @@ class MediaStoreRequest extends FormRequest
      */
     public function rules()
     {
+        $oneMB = 1024;
+
         return array_merge(
             MediaService::getTranslationRules(),
             [
@@ -37,7 +39,7 @@ class MediaStoreRequest extends FormRequest
                 'file' => [
                     'required',
                     'file',
-                    'max:50000',
+                    'max:'.$oneMB * 50,
                 ],
             ]
         );
