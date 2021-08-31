@@ -6,7 +6,6 @@ export default {
     content: {
         figure: {
             image: {
-                src: null,
                 mediaId: null,
             },
         },
