@@ -24,7 +24,10 @@
             <img :src="imageSrc" :alt="altText" :class="imgClass">
         </figure>
 
-        <div class="card-content has-background-info-light" v-if="isFormDisplayed">
+        <div
+            v-if="isFormDisplayed"
+            class="card-content has-background-info-light"
+        >
             <div class="block has-text-centered">
                 <sdb-button @click="openModal()" type="button">
                     <span>Open Media</span>
@@ -74,10 +77,11 @@
             entityId: {},
             modelValue: {},
             dataMedia: {},
+            selectedLocale: String,
         },
         data() {
             return {
-                image: this.entity.content.figure.image,
+                entityImage: this.entity.content.figure.image,
                 images: usePage().props.value.images,
                 isFormOpen: false,
                 modalImages: [],
@@ -95,8 +99,8 @@
                 this.isFormOpen = !this.isFormOpen;
             },
             onContentDeleted() { /* @override Mixins/DeletableContent */
-                if (!isBlank(this.image.mediaId)) {
-                    this.detachImageFromMedia(this.image.mediaId, this.pageMedia);
+                if (!isBlank(this.entityImage.mediaId)) {
+                    this.detachImageFromMedia(this.entityImage.mediaId, this.pageMedia);
                 }
             },
             onShownModal() { /* @override */
@@ -117,15 +121,6 @@
             },
         },
         computed: {
-            hasImage() {
-                return !isBlank(this.entity.content.figure.image.src);
-            },
-            imageSrc() {
-                if (this.hasImage) {
-                    return this.entity.content.figure.image.src;
-                }
-                return "";
-            },
             /* @overide */
             canEdit() {
                 return this.isEditMode && this.hasImage;
@@ -146,17 +141,6 @@
                 let classes = [];
                 classes.push(this.config?.image?.rounded ?? "");
                 return classes;
-            },
-            altText() {
-                if (this.images) {
-                    const image = this
-                        .images
-                        .find(image => image.id === this.entity.content.figure.image.mediaId);
-                    if (image) {
-                        return image.alt;
-                    }
-                }
-                return "";
             },
         }
     }

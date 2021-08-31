@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-image" :class="cardImageClass">
                 <figure class="image" :class="figureClass" v-if="hasImage">
-                    <img :src="image.src" :class="imgClass" :alt="altText">
+                    <img :src="imageSrc" :class="imgClass" :alt="altText">
                 </figure>
 
                 <sdb-button
@@ -93,27 +93,28 @@
             isEditMode: {type: Boolean, default: false},
             modelValue: {},
             dataMedia: {},
+            selectedLocale: String,
         },
         setup(props, { emit }) {
             return {
                 //figure: props.modelValue.content.cardImage.figure,
                 config: props.modelValue?.config,
                 entity: useModelWrapper(props, emit),
-                images: usePage().props.value.images,
                 pageMedia: useModelWrapper(props, emit, 'dataMedia'),
             };
         },
         data() {
             return {
-                image: this.entity.content.cardImage.figure.image,
+                entityImage: this.entity.content.cardImage.figure.image,
+                images: usePage().props.value.images,
                 isFormOpen: false,
                 modalImages: [],
             };
         },
         methods: {
             onContentDeleted() { /* @override Mixins/DeletableContent */
-                if (!isBlank(this.image.mediaId)) {
-                    this.detachImageFromMedia(this.image.mediaId, this.pageMedia);
+                if (!isBlank(this.entityImage.mediaId)) {
+                    this.detachImageFromMedia(this.entityImage.mediaId, this.pageMedia);
                 }
             },
             onImageSelected() { /* @override Mixins/ContainImageContent */
@@ -137,9 +138,6 @@
             },
         },
         computed: {
-            hasImage() {
-                return !isEmpty(this.entity.content.cardImage.figure.image.src);
-            },
             isFormDisplayed() {
                 return !this.hasImage || (this.hasImage && this.isFormOpen);
             },
@@ -181,17 +179,6 @@
                     return true;
                 }
                 return !isEmpty(this.entity.content.cardContent.content.html);
-            },
-            altText() {
-                if (this.images) {
-                    const image = this
-                        .images
-                        .find(image => image.id === this.entity.content.cardImage.figure.image.mediaId);
-                    if (image) {
-                        return image.alt;
-                    }
-                }
-                return "";
             },
         }
     }
