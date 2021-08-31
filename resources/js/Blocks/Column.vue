@@ -19,6 +19,7 @@
                     class="page-component"
                     :is-edit-mode="isEditMode"
                     :data-media="dataMedia"
+                    :selected-locale="selectedLocale"
                     @click="settingContent(element.id)"
                     @delete-content="deleteContent"
                 />
@@ -33,6 +34,7 @@
                 v-model="dataEntities[element.id]"
                 :data-media="dataMedia"
                 :is-edit-mode="isEditMode"
+                :selected-locale="selectedLocale"
             />
         </template>
     </div>
@@ -64,6 +66,7 @@
             components: {type: Array, default: []},
             dataEntities: {},
             dataMedia: {},
+            selectedLocale: String,
         },
         setup(props, { emit }) {
             return {

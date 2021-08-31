@@ -24,17 +24,18 @@
                         v-model:meta_description="form.meta_description"
                         v-model:meta_title="form.meta_title"
                         v-model:status="form.status"
-                        :errors="errors"
                         :disableInput="disableInput"
+                        :errors="errors"
                         :statusOptions="statusOptions"
                         />
                 </sdb-tab>
                 <sdb-tab title="Builder">
                     <form-builder
+                        id="page-form-builder"
                         v-model="form.data"
                         v-model:content-config-id="contentConfigId"
                         :is-edit-mode="isEditMode"
-                        id="page-form-builder"
+                        :selected-locale="selectedLocale"
                         />
                 </sdb-tab>
             </sdb-tabs>

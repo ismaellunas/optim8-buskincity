@@ -74,11 +74,12 @@
             >
                 <template #item="{element, index}">
                     <block-columns
+                        :id="element.id"
                         v-model="data.structures[index]"
                         v-model:data-entities="data.entities"
                         v-model:data-media="data.media"
                         :isEditMode="isEditMode"
-                        :id="element.id"
+                        :selected-locale="selectedLocale"
                         @delete-block="deleteBlock"
                         @setting-content="settingContent"
                         />
@@ -107,6 +108,7 @@
             isEditMode: {type: Boolean, default: false},
             modelValue: {type: Object},
             contentConfigId: {},
+            selectedLocale: String,
         },
         setup(props, { emit }) {
             return {

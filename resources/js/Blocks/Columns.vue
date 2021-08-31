@@ -45,6 +45,7 @@
                 :components="block.columns[index].components"
                 :data-entities="entities"
                 :data-media="media"
+                :selected-locale="selectedLocale"
                 @setting-content="$emit('setting-content', $event)"
             />
         </template>
@@ -72,6 +73,7 @@
             id: {},
             isEditMode: {default: false},
             modelValue: {},
+            selectedLocale: String,
         },
         data() {
             return {
