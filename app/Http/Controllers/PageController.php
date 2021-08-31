@@ -93,23 +93,29 @@ class PageController extends CrudController
             }
         } else {
             $images = [];
+            $locales = array_unique([
+                TranslationService::getDefaultLocale(),
+                $locale,
+            ]);
+
             if (!empty($pageTranslation->data['media'])) {
                 $mediaIds = collect($pageTranslation->data['media'])->pluck('id');
 
                 $images = Media::whereIn('id', $mediaIds)
                     ->image()
                     ->with([
-                        'translations' => function ($q) use ($locale) {
+                        'translations' => function ($q) use ($locales) {
                             $q->select(['id', 'locale', 'alt', 'media_id']);
-                            $q->where('locale', $locale);
+                            $q->whereIn('locale', $locales);
                         },
                     ])
-                    ->get(['id']);
+                    ->get(['id', 'file_url']);
             }
 
             return Inertia::render('Page/Show', [
-                'page' => $pageTranslation,
+                'currentLanguage' => TranslationService::currentLanguage(),
                 'images' => $images,
+                'page' => $pageTranslation,
             ]);
         }
     }
