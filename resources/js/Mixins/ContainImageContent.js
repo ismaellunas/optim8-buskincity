@@ -1,6 +1,6 @@
+import { isArray, remove } from 'lodash';
 import { isBlank } from '@/Libs/utils';
 import { oops as oopsAlert } from '@/Libs/alert';
-import { remove } from 'lodash';
 
 export default {
     setup() {
@@ -10,10 +10,10 @@ export default {
     },
     data() {
         return {
-            image: {
+            entityImage: {
                 mediaId: null,
-                src: null,
             },
+            images: null,
         }
     },
     methods: {
@@ -44,12 +44,20 @@ export default {
             }
         },
         selectImage(image) {
-            if (!isBlank(this.image.mediaId)) {
-                this.detachImageFromMedia(this.image.mediaId, this.pageMedia);
+            const locale = this.selectedLocale;
+            const entityImage = this.entityImage;
+            const pageImages = this.images;
+
+            if (!isBlank(entityImage.mediaId)) {
+                this.detachImageFromMedia(entityImage.mediaId, this.pageMedia);
             }
 
-            this.image.src = image.file_url;
-            this.image.mediaId = image.id;
+            if (!pageImages[ locale ]) {
+                pageImages[ locale ] = []
+            }
+            pageImages[locale].push(image);
+
+            entityImage.mediaId = image.id;
 
             this.attachImageToMedia(image.id, this.pageMedia);
 
