@@ -7,10 +7,11 @@
     <div id="main-container" class="container mt-4">
         <template v-for="(block, index) in page.data.structures">
             <block-columns
+                :id="block.id"
                 v-model="page.data.structures[index]"
                 v-model:data-entities="page.data.entities"
-                :isEditMode="false"
-                :id="block.id"
+                :is-edit-mode="false"
+                :selected-locale="currentLanguage"
                 />
         </template>
     </div>
@@ -29,9 +30,10 @@
             Head,
         },
         props: {
-            page: Object,
+            currentLanguage: String,
             errors: Object,
             images: {},
+            page: Object,
         },
     }
 </script>
