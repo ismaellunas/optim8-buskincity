@@ -39,25 +39,22 @@ export default {
                 if (existingMedia.numberOfUsage === 0) {
                     remove(media, function (medium) {
                         return medium.id == existingMedia.id;
-                    })
+                    });
                 }
             }
         },
         selectImage(image) {
             const locale = this.selectedLocale;
-            const entityImage = this.entityImage;
-            const pageImages = this.images;
-
-            if (!isBlank(entityImage.mediaId)) {
-                this.detachImageFromMedia(entityImage.mediaId, this.pageMedia);
+            if (!isBlank(this.entityImage.mediaId)) {
+                this.detachImageFromMedia(this.entityImage.mediaId, this.pageMedia);
             }
 
-            if (!pageImages[ locale ]) {
-                pageImages[ locale ] = []
+            if (!this.images[ locale ]) {
+                this.images[ locale ] = [];
             }
-            pageImages[locale].push(image);
+            this.images[locale].push(image);
 
-            entityImage.mediaId = image.id;
+            this.entityImage.mediaId = image.id;
 
             this.attachImageToMedia(image.id, this.pageMedia);
 
