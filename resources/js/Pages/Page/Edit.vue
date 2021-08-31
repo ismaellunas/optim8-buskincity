@@ -36,7 +36,7 @@
     import { isBlank } from '@/Libs/utils';
     import { onPageEditorClicked } from '@/Libs/page-builder';
     import { ref, onMounted, onUnmounted } from 'vue';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -49,21 +49,20 @@
             page: Object,
             errors: Object,
             tabActive: {default: 0},
-            defaultLocale: {type: String, default: 'en'},
             // options:
-            localeOptions: {type: Array, default: []},
             statusOptions: {type: Array, default: []},
         },
         setup(props) {
             const translationForm = { translations: {} };
+            const defaultLocale = usePage().props.value.defaultLanguage;
 
-            let translatedPage = getTranslation(props.page, props.defaultLocale);
+            let translatedPage = getTranslation(props.page, defaultLocale);
 
             if (isBlank(translatedPage)) {
                 translatedPage = getEmptyPageTranslation();
             }
 
-            translationForm.translations.[props.defaultLocale] = JSON.parse(JSON.stringify(translatedPage));
+            translationForm.translations.[defaultLocale] = JSON.parse(JSON.stringify(translatedPage));
 
             const contentConfigId = ref('');
 
@@ -80,8 +79,10 @@
             });
 
             return {
+                contentConfigId,
+                defaultLocale,
                 form: useForm(translationForm),
-                contentConfigId
+                localeOptions: usePage().props.value.languageOptions,
             };
         },
         data() {
