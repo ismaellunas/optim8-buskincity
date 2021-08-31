@@ -122,12 +122,32 @@ class PageController extends CrudController
      */
     public function edit(Page $page)
     {
+        $images = [];
+
+        $page->load('translations');
+
+        foreach ($page->translations as $translation) {
+            if (!empty($translation->data['media'])) {
+                $locale = $translation->locale;
+                $mediaIds = collect($translation->data['media'])->pluck('id');
+
+                $images[$locale] = Media::whereIn('id', $mediaIds)
+                    ->image()
+                    ->with([
+                        'translations' => function ($q) use ($locale) {
+                            $q->select(['id', 'locale', 'alt', 'media_id']);
+                            $q->where('locale', $locale);
+                        },
+                    ])
+                    ->get(['id', 'file_url']);
+            }
+        }
+
         return Inertia::render('Page/Edit', [
             'page' => $page,
             'entityId' => $page->id,
             'statusOptions' => $this->model::getStatusOptions(),
-            'defaultLocale' => TranslationService::getDefaultLocale(),
-            'localeOptions' => TranslationService::getLocaleOptions(),
+            'images' => $images,
         ]);
     }
 
