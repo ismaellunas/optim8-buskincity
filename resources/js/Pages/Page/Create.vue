@@ -30,7 +30,7 @@
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { onPageEditorClicked } from '@/Libs/page-builder';
     import { ref, onMounted, onUnmounted } from 'vue';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -42,9 +42,6 @@
             page: Object,
             errors: Object,
             tabActive: String,
-            defaultLocale: {default: 'en'},
-            // options:
-            localeOptions: {type: Array, default: []},
             statusOptions: {type: Array, default: []},
         },
         setup(props) {
@@ -70,8 +67,10 @@
 
 
             return {
+                contentConfigId,
+                defaultLocale: usePage().props.value.defaultLanguage,
                 form: useForm(translationForm),
-                contentConfigId
+                localeOptions: usePage().props.value.languageOptions,
             };
         },
         data() {
