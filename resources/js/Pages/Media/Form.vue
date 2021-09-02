@@ -3,61 +3,64 @@
 
     <form @submit.prevent="submit(form, media.id)">
         <sdb-form-input
-            label="File Name"
             v-model="form.file_name"
+            label="File Name"
+            maxlength="250"
+            required
             :message="error('file_name', 'default', formErrors)"
             :disabled="isInputDisabled"
-            maxlength="250"
             @on-keypress="keyPressFileName"
-            required
         />
 
-        <template v-if="isImage">
-            <sdb-form-field>
-                <template v-slot:label>{{ label.alternative_text }}</template>
-            </sdb-form-field>
-
-            <template v-for="option in localeOptions" :key="option.id" >
-                <sdb-form-field-horizontal
-                    v-if="form.translations[ option.id ]"
+        <div class="tabs is-boxed">
+            <ul>
+                <li
+                    v-for="option in usedLocales"
+                    :class="{'is-active': option.id == activeTab}"
+                    :key="option.id"
                 >
-                    <template v-slot:label>
-                        {{ option.id.toUpperCase() }}
-                    </template>
-                    <div class="columns">
-                        <div class="column is-three-quarters">
-                            <sdb-input
-                                v-model="form.translations[ option.id ].alt"
-                                maxlength="255"
-                                :disabled="isInputDisabled"
-                            />
-                            <sdb-input-error :message="error('translations.'+option.id+'.alt')"/>
-                        </div>
-                        <div class="column">
-                            <sdb-button-icon
-                                v-if="option.id !== defaultLocale"
-                                icon="fas fa-minus"
-                                type="button"
-                                @click="deleteTranslation(option.id)"
-                            />
-                        </div>
-                    </div>
-                </sdb-form-field-horizontal>
-            </template>
-
-            <sdb-form-field-horizontal>
-                <sdb-select v-model="selectedLocale">
-                    <template v-for="locale in availableLocales">
-                        <option :value="locale.id">{{ locale.name }}</option>
-                    </template>
-                </sdb-select>
-                <sdb-button-icon
-                    icon="fas fa-plus"
-                    type="button"
-                    @click="addTranslation"
-                />
-            </sdb-form-field-horizontal>
-        </template>
+                    <a @click.prevent="setActiveTab(option.id)" >
+                        <span>{{ option.id.toUpperCase() }}</span>
+                        <sdb-button-delete
+                            v-if="option.id !== defaultLocale"
+                            class="ml-1"
+                            type="button"
+                            @click.once.stop="deleteTranslation($event, option.id)"
+                        />
+                    </a>
+                </li>
+                <li v-if="availableLocales.length">
+                    <sdb-select v-model="selectedLocale">
+                        <template v-for="locale in availableLocales">
+                            <option :value="locale.id">{{ locale.name }}</option>
+                        </template>
+                    </sdb-select>
+                    <sdb-button-icon
+                        icon="fas fa-plus"
+                        type="button"
+                        @click="addTranslation"
+                    />
+                </li>
+            </ul>
+        </div>
+        <div v-if="form.translations[activeTab]" class="content">
+            <sdb-form-input
+                v-if="isImage"
+                v-model="form.translations[activeTab].alt"
+                maxlength="255"
+                :disabled="isInputDisabled"
+                :label="label.alternative_text"
+                :message="error('translations.'+ activeTab +'.alt')"
+            />
+            <sdb-form-textarea
+                :label="label.description"
+                v-model="form.translations[ activeTab ].description"
+                placeholder="..."
+                rows="3"
+                :message="error('translations.'+ activeTab +'.description')"
+                :disabled="isInputDisabled"
+            />
+        </div>
 
         <div class="field is-grouped is-pulled-right">
             <sdb-button
@@ -80,23 +83,22 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
+    import SdbButtonDelete from '@/Sdb/ButtonDelete';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbFormField from '@/Sdb/Form/Field';
-    import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbInput from '@/Sdb/Input';
-    import SdbInputError from '@/Sdb/InputError';
+    import SdbFormTextarea from '@/Sdb/Form/Textarea';
     import SdbSelect from '@/Sdb/Select';
-    import { isBlank,buildFormData, regexFileName } from '@/Libs/utils';
     import { getTranslation } from '@/Libs/translation';
-    import { isEmpty } from 'lodash';
+    import { buildFormData, regexFileName } from '@/Libs/utils';
+    import { isEmpty, keys, last } from 'lodash';
     import { reactive, ref } from "vue";
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     function generateNewTranslation() {
         return {
             alt: '',
+            description: '',
         };
     };
 
@@ -110,18 +112,17 @@
     };
 
     export default {
+        name: 'MediaForm',
         mixins: [
             MixinHasPageErrors,
         ],
         components: {
             SdbButton,
+            SdbButtonDelete,
             SdbButtonIcon,
             SdbErrorNotifications,
-            SdbFormField,
-            SdbFormFieldHorizontal,
             SdbFormInput,
-            SdbInput,
-            SdbInputError,
+            SdbFormTextarea,
             SdbSelect,
         },
         emits: [
@@ -141,7 +142,8 @@
             } else {
                 props.media.translations.forEach(translation => {
                     translations[translation.locale] = {
-                        alt: translation.alt
+                        alt: translation.alt ?? null,
+                        description: translation.description ?? null,
                     };
                 });
 
@@ -167,6 +169,7 @@
             const selectedLocale = ref(firstAvailabeLocale?.id ?? null);
 
             return {
+                activeTab: ref(defaultLocale),
                 defaultLocale,
                 form,
                 localeOptions,
@@ -178,23 +181,46 @@
                 isInputDisabled: false,
                 label: {
                     alternative_text: 'Alternative Text',
+                    description: 'Description',
                 },
                 formErrors: {},
             };
         },
         methods: {
-            addTranslation() {
-                this.form.translations[this.selectedLocale] = generateNewTranslation();
-
+            resetFirstAvailableLocale() {
                 const firstAvailabeLocale = getFirstAvailableLocale(
                     this.form.translations,
                     this.localeOptions,
                 );
 
-                this.selectedLocale = firstAvailabeLocale?.id ?? null;
+                if (firstAvailabeLocale) {
+                    this.selectedLocale = firstAvailabeLocale?.id ?? null;
+                }
             },
-            deleteTranslation(locale) {
+            createNewTranslation(locale) {
+                this.form.translations[locale] = generateNewTranslation();
+            },
+            setActiveTab(locale) {
+                if (this.activeTab !== locale) {
+                    this.activeTab = locale;
+                }
+            },
+            addTranslation() {
+                const locale = this.selectedLocale;
+                this.createNewTranslation(locale);
+                this.setActiveTab(locale);
+                this.resetFirstAvailableLocale();
+            },
+            deleteTranslation(event, locale) {
                 delete this.form.translations[locale];
+
+                const locales = keys(this.form.translations);
+
+                if (! locales.includes(this.activeTab)) {
+                    this.setActiveTab(last(locales));
+                }
+
+                this.resetFirstAvailableLocale();
             },
             keyPressFileName(event) {
                 // @see https://stackoverflow.com/questions/61938667/vue-js-how-to-allow-an-user-to-type-only-letters-in-an-input-field
@@ -261,6 +287,12 @@
                     this.form.translations,
                     this.localeOptions
                 );
+            },
+            usedLocales() {
+                const locales = keys(this.form.translations);
+                return this.localeOptions.filter(locale => {
+                    return locales.includes(locale.id);
+                });
             },
             isImage() {
                 return this.media.is_image;
