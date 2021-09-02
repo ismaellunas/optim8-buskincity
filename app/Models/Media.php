@@ -19,6 +19,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
 
     public $translatedAttributes = [
         'alt',
+        'description',
     ];
 
     public $fillable = [

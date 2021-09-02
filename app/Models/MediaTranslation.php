@@ -11,5 +11,6 @@ class MediaTranslation extends Model
 
     protected $fillable = [
         'alt',
+        'description',
     ];
 }
