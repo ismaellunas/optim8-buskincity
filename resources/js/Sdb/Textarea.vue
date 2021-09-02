@@ -1,16 +1,15 @@
 <template>
     <textarea
-        :class="class"
+        class="textarea"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
-        class="textarea"
-        >
+    >
     </textarea>
 </template>
 
 <script>
     export default {
-        props: ['modelValue', 'class', 'hasError'],
+        props: ['modelValue', 'hasError'],
         emits: ['update:modelValue'],
         methods: {
             //focus() {
