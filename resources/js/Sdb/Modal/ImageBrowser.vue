@@ -29,6 +29,7 @@
             :is-pagination-displayed="false"
             :records="data"
             :accepted-types="acceptedTypes"
+            :search="search"
             @on-media-submitted="$emit('on-media-submitted', $event)"
         >
             <template v-slot:actions="slotProps">
@@ -71,6 +72,7 @@
         props: {
             data: {},
             title: {type: String, default: 'Images'},
+            search: Function,
         },
         data() {
             return {
