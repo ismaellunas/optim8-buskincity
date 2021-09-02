@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 
 class TranslationService
@@ -85,8 +86,17 @@ class TranslationService
         foreach ($locales as $locale) {
             foreach ($attributes as $attribute) {
                 $attributeKey = $prefix.$locale.'.'.$attribute;
+
+                $translationKey = 'validation.attributes.'.$attribute;
+
+                $attributeName = $attribute;
+
+                if (Lang::has($translationKey)) {
+                    $attributeName = trans('validation.attributes.'.$attribute);
+                }
+
                 $translatedAttributes[$attributeKey] = (
-                    Str::title(trans('validation.attributes.'.$attribute)).
+                    Str::title($attributeName).
                     " (".TranslationService::getLanguageFromLocale($locale).")"
                 );
             }
