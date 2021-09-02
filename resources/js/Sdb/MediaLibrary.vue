@@ -106,6 +106,7 @@
                             v-if="isDownloadEnabled"
                             class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
                             title="Download"
+                            type="button"
                             :url="media.file_url"
                         />
 
@@ -248,9 +249,9 @@
     import HasModalMixin from '@/Mixins/HasModal';
     import MediaForm from '@/Pages/Media/Form';
     import SdbButton from '@/Sdb/Button';
+    import SdbButtonDownload from '@/Sdb/ButtonDownload';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbButtonDownload from '@/Sdb/ButtonDownload';
     import SdbFormField from '@/Sdb/Form/Field';
     import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbInput from '@/Sdb/Input';
@@ -282,9 +283,9 @@
         components: {
             MediaForm,
             SdbButton,
+            SdbButtonDownload,
             SdbButtonIcon,
             SdbButtonLink,
-            SdbButtonDownload,
             SdbFormField,
             SdbFormFieldHorizontal,
             SdbInput,
