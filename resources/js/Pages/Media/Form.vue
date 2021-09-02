@@ -199,8 +199,12 @@
             keyPressFileName(event) {
                 // @see https://stackoverflow.com/questions/61938667/vue-js-how-to-allow-an-user-to-type-only-letters-in-an-input-field
                 let char = String.fromCharCode(event.keyCode);
-                if (char === ' ' || char === '_') {
+                const lastCharacter = event.target.value.slice(-1);
+
+                if ( (char === ' ' || char === '_') && (lastCharacter !== '-')) {
                     event.target.value += '-';
+                } else if (char === '-' && lastCharacter === '-') {
+                    event.target.value += '';
                 } else if ((new RegExp('^['+regexFileName+']+$')).test(char)) {
                     return true;
                 }
