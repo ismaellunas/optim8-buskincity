@@ -15,8 +15,8 @@
 
     <form method="post" @submit.prevent="$emit('on-submit')">
         <div class="mb-5">
-            <sdb-tabs v-model="activeTab" class="is-boxed">
-                <sdb-tab title="Details">
+            <sdb-provide-inject-tabs v-model="activeTab" class="is-boxed">
+                <sdb-provide-inject-tab title="Details">
                     <form-detail
                         v-model:title="form.title"
                         v-model:slug="form.slug"
@@ -27,18 +27,18 @@
                         :disableInput="disableInput"
                         :errors="errors"
                         :statusOptions="statusOptions"
-                        />
-                </sdb-tab>
-                <sdb-tab title="Builder">
+                    />
+                </sdb-provide-inject-tab>
+                <sdb-provide-inject-tab title="Builder">
                     <form-builder
                         id="page-form-builder"
                         v-model="form.data"
                         v-model:content-config-id="contentConfigId"
                         :is-edit-mode="isEditMode"
                         :selected-locale="selectedLocale"
-                        />
-                </sdb-tab>
-            </sdb-tabs>
+                    />
+                </sdb-provide-inject-tab>
+            </sdb-provide-inject-tabs>
         </div>
 
         <div class="field is-grouped is-grouped-right">
@@ -64,8 +64,8 @@
     import FormDetail from './FormDetail';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbTab from '@/Sdb/ProvideInjectTab/Tab';
-    import SdbTabs from '@/Sdb/ProvideInjectTab/Tabs';
+    import SdbProvideInjectTab from '@/Sdb/ProvideInjectTab/Tab';
+    import SdbProvideInjectTabs from '@/Sdb/ProvideInjectTab/Tabs';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { ref } from "vue";
     import { Inertia } from '@inertiajs/inertia';
@@ -76,8 +76,8 @@
             FormDetail,
             SdbButton,
             SdbButtonLink,
-            SdbTab,
-            SdbTabs,
+            SdbProvideInjectTab,
+            SdbProvideInjectTabs,
         },
         emits: ['change-locale', 'on-submit', 'update:contentConfigId'],
         props: {
