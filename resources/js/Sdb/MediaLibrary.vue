@@ -349,7 +349,8 @@
                 let fileName = this.file.name
                     .split('.').slice(0, -1).join('.')
                     .toLowerCase()
-                    .replace(/[^a-z0-9]/gi, '-');
+                    .replace(/[^a-z0-9]/gi, '-')
+                    .replace(/-+/g, "-")
 
                 this.formMedia = {
                     file: this.file,
