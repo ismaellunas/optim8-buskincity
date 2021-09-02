@@ -46,6 +46,7 @@ class MediaService
     {
         return RuleFactory::make([
             'translations.%alt%' => 'sometimes|nullable|string|max:255',
+            'translations.%description%' => 'sometimes|nullable|string|max:500',
         ]);
     }
 }
