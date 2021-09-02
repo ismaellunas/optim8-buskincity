@@ -13,6 +13,7 @@ use App\Services\{
     TranslationService
 };
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -29,10 +30,10 @@ class MediaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Media/Index', [
-            'records' => $this->getRecords(),
+            'records' => $this->getRecords($request->term),
             'baseRouteName' => $this->baseRouteName,
             'defaultLocale' => TranslationService::getDefaultLocale(),
         ]);
@@ -208,15 +209,27 @@ class MediaController extends Controller
         return redirect()->back();
     }
 
-    public function getRecords()
+    public function getRecords(string $term = null, array $scopeNames = [])
     {
-        $records = $this->model::orderBy('id', 'DESC')
+        $query = $this->model::orderBy('id', 'DESC')
+            ->when($term, function (Builder $query, $term) {
+                $query->where('file_name', 'LIKE', '%'.$term.'%');
+                $query->orWhereHas('translations', function (Builder $query) use ($term) {
+                    $query->where('alt', 'LIKE', '%'.$term.'%');
+                    $query->orWhere('description', 'LIKE', '%'.$term.'%');
+                });
+            })
             ->with([
                 'translations' => function ($q) {
-                    $q->select(['id', 'media_id', 'alt', 'locale']);
+                    $q->select(['id', 'media_id', 'alt', 'description', 'locale']);
                 },
-            ])
-            ->paginate($this->recordsPerPage);
+            ]);
+
+        foreach ($scopeNames as $scopeName) {
+            $query->{$scopeName}();
+        }
+
+        $records = $query->paginate($this->recordsPerPage);
 
         $records->getCollection()->transform(function ($record) {
             $record->thumbnail_url = $record->thumbnailUrl;
@@ -282,18 +295,7 @@ class MediaController extends Controller
 
     public function listImages(Request $request)
     {
-        $records = Media::image()
-            ->orderBy('id', 'DESC')
-            ->paginate($this->recordsPerPage);
-
-        $records->getCollection()->transform(function ($record) {
-            $record->file_name_without_extension = $record->fileNameWithoutExtension;
-            $record->is_image = $record->isImage;
-            $record->readable_size = $record->readableSize;
-            $record->thumbnail_url = $record->thumbnailUrl;
-
-            return $record;
-        });
+        $records = $this->getRecords($request->term, ['image']);
 
         return $request->ajax() ? $records : abort(404);
     }
