@@ -64,8 +64,8 @@
     import FormDetail from './FormDetail';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbTab from '@/Sdb/Tab';
-    import SdbTabs from '@/Sdb/Tabs';
+    import SdbTab from '@/Sdb/ProvideInjectTab/Tab';
+    import SdbTabs from '@/Sdb/ProvideInjectTab/Tabs';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { ref } from "vue";
     import { Inertia } from '@inertiajs/inertia';
