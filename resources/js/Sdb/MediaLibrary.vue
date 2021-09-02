@@ -61,10 +61,9 @@
                         <span
                             v-else
                             class="icon is-large"
-                            style="margin-top: 2rem;"
                         >
-                            <span class="fa-stack fa-lg" style="width: auto">
-                                <i :class="[mediaIconThumbnail(media), 'fa-4x']"></i>
+                            <span class="fa-stack fa-lg">
+                                <i :class="[mediaIconThumbnail(media), 'fa-5x']"></i>
                             </span>
                         </span>
                     </div>
@@ -171,16 +170,16 @@
                     </div>
                     <div
                         v-else
-                        class="content has-text-centered"
+                        class="card"
+                        style="height: 90%"
                     >
-                        <span class="icon is-large" >
-                            <span
-                                class="fa-stack fa-lg"
-                                style="width: auto"
-                            >
-                                <i :class="[mediaIconThumbnail(formMedia), 'fa-6x']"></i>
+                        <div class="card-image" style="height: inherit">
+                            <span class="icon is-large" style="width: 100%">
+                                <span class="fa-stack fa-lg">
+                                    <i :class="[mediaIconThumbnail(formMedia), 'fa-6x']"></i>
+                                </span>
                             </span>
-                        </span>
+                        </div>
                     </div>
                 </div>
                 <div class="column">
