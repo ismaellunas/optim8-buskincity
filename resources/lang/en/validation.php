@@ -157,6 +157,7 @@ return [
         'es.name' => 'Name (Spanish)',
         'de.name' => 'Name (German)',
         'alt' => 'Alternative Text',
+        'description' => 'Description',
     ],
 
 ];

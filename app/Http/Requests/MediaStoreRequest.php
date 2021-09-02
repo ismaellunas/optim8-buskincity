@@ -49,7 +49,7 @@ class MediaStoreRequest extends FormRequest
     {
         $attrs = TranslationService::getCustomAttributes(
             array_keys($this->input('translations', [])),
-            ['alt']
+            ['alt', 'description']
         );
         return $attrs;
     }
