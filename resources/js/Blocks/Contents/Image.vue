@@ -41,6 +41,7 @@
         <sdb-modal-image-browser
             v-if="isModalOpen"
             :data="modalImages"
+            :search="search"
             @close="closeModal"
             @on-clicked-pagination="getImagesList"
             @on-media-selected="selectImage"
@@ -118,6 +119,9 @@
             },
             onImageUpdated() { /* @override Mixins/ContainImageContent */
                 this.closeModal();
+            },
+            search(term) {
+                this.getImagesList(route('admin.media.list.image', {term: term}));
             },
         },
         computed: {

@@ -7,6 +7,7 @@
     <div class="box">
         <sdb-media-library
             :records="records"
+            :search="search"
             @on-media-submitted="onMediaUploadSuccess"
         />
     </div>
@@ -30,6 +31,16 @@
             onMediaUploadSuccess(response) {
                 successAlert('File has been uploaded');
             },
+            search(term) {
+                this.$inertia.get(
+                    route('admin.media.index', {term: term}),
+                    {},
+                    {
+                        replace: true,
+                        preserveState: true,
+                    }
+                );
+            }
         },
     }
 </script>

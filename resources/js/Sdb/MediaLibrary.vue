@@ -19,6 +19,32 @@
         </div>
 
         <div class="columns is-multiline">
+
+            <div class="column is-full">
+                <sdb-form-field-horizontal>
+                    <template v-slot:label>
+                        Search
+                    </template>
+                    <div class="columns">
+                        <div class="column is-three-quarters">
+                            <sdb-input
+                                v-model="term"
+                                maxlength="255"
+                                :disabled="isSearching"
+                                @keyup.enter.prevent="search(term)"
+                            />
+                        </div>
+                        <div class="column">
+                            <sdb-button-icon
+                                icon="fas fa-search"
+                                type="button"
+                                @click="search(term)"
+                            />
+                        </div>
+                    </div>
+                </sdb-form-field-horizontal>
+            </div>
+
             <div
                 v-for="media in records?.data"
                 class="column"
@@ -227,6 +253,8 @@
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbButtonDownload from '@/Sdb/ButtonDownload';
     import SdbFormField from '@/Sdb/Form/Field';
+    import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
+    import SdbInput from '@/Sdb/Input';
     import SdbInputFile from '@/Sdb/InputFile';
     import SdbModal from '@/Sdb/Modal';
     import SdbModalCard from '@/Sdb/ModalCard';
@@ -259,6 +287,8 @@
             SdbButtonLink,
             SdbButtonDownload,
             SdbFormField,
+            SdbFormFieldHorizontal,
+            SdbInput,
             SdbInputFile,
             SdbModal,
             SdbModalCard,
@@ -276,6 +306,7 @@
             isEditEnabled: {type: Boolean, default: true},
             isDeleteEnabled: {type: Boolean, default: true},
             isDownloadEnabled: {type: Boolean, default: true},
+            search: Function,
         },
         data() {
             return {
@@ -290,6 +321,7 @@
                     successSaveAsMedia: "A new media has been created",
                     successSubmitForm: "Media has been updated",
                 },
+                term: '',
             };
         },
         methods: {
