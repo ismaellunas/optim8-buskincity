@@ -40,8 +40,6 @@ class PageController extends CrudController
         return Inertia::render('Page/Create', [
             'page' => new $this->model,
             'statusOptions' => $this->model::getStatusOptions(),
-            'defaultLocale' => TranslationService::getDefaultLocale(),
-            'localeOptions' => TranslationService::getLocaleOptions(),
         ]);
     }
 
