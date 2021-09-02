@@ -39,6 +39,19 @@
     bottom: 0;
 }
 
+/* media thumbnail icon */
+.card-image {
+    .icon {
+        height: 100%;
+        .fa-stack {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
 
 // https://raw.githubusercontent.com/postare/bulma-modal-fx/master/src/_scss/components/_modal-fx.scss
 $transition-duration: .3s;
