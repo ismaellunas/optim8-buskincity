@@ -30,32 +30,32 @@
 
             <sdb-button-icon
                 v-if="isImage"
-                class="card-footer-item p-2 is-borderless is-shadowless is-info is-inverted"
                 icon="fas fa-expand"
                 title="Preview"
                 type="button"
+                :class="[actionClass, 'is-info']"
                 @click="$emit('on-preview-clicked', medium)"
             />
             <sdb-button-icon
                 v-if="isEditEnabled"
-                class="card-footer-item p-2 is-borderless is-shadowless is-primary is-inverted"
                 icon="fas fa-pen"
                 type="button"
+                :class="[actionClass, 'is-primary']"
                 @click="$emit('on-edit-clicked', medium)"
             />
             <sdb-button-icon
                 v-if="isDeleteEnabled"
-                class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
                 icon="far fa-trash-alt"
                 title="Delete"
                 type="button"
+                :class="[actionClass, 'is-danger']"
                 @click="$emit('on-delete-clicked', medium)"
             />
             <sdb-button-download
                 v-if="isDownloadEnabled"
-                class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
                 title="Download"
                 type="button"
+                :class="[actionClass, 'is-link']"
                 :url="medium.file_url"
             />
 
@@ -86,7 +86,10 @@
             'on-edit-clicked',
             'on-preview-clicked',
         ],
-        methods: {
+        data() {
+            return {
+                actionClass: "card-footer-item p-2 is-borderless is-shadowless is-inverted",
+            };
         },
         computed: {
             isImage() {
