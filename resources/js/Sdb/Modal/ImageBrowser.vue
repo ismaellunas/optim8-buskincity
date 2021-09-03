@@ -36,10 +36,10 @@
         >
             <template v-slot:actions="slotProps">
                 <sdb-button-icon
-                    class="card-footer-item p-2 is-borderless is-shadowless is-inverted"
+                    icon="fas fa-check"
                     title="Select"
                     type="button"
-                    icon="fas fa-check"
+                    :class="{'is-borderless is-shadowless is-inverted is-primary': true, 'card-footer-item  p-2': queryParams.view !== 'list'}"
                     @click="$emit('on-media-selected', slotProps.media, $event)"
                 >
                     <span>Select</span>
