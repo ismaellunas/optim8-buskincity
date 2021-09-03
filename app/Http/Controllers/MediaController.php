@@ -237,6 +237,7 @@ class MediaController extends Controller
             $record->file_name_without_extension = $record->fileNameWithoutExtension;
             $record->is_image = $record->isImage;
             $record->readable_size = $record->readableSize;
+            $record->date_modified = $record->updated_at->format('d/m/Y H:m');
 
             return $record;
         });
