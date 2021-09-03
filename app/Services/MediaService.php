@@ -12,7 +12,7 @@ class MediaService
         string $fileName,
         array $excludedIds = []
     ): bool {
-        $queryBuilder = Media::where('file_name', $fileName);
+        $queryBuilder = Media::whereRaw('LOWER(file_name) = LOWER(?)', [$fileName]);
 
         if (!empty($excludedIds)) {
             $queryBuilder->whereIn('id', $excludedIds);
