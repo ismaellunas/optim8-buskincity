@@ -21,104 +21,98 @@
         <div class="columns is-multiline">
 
             <div class="column is-full">
-                <sdb-form-field-horizontal>
-                    <template v-slot:label>
-                        Search
-                    </template>
-                    <div class="columns">
-                        <div class="column is-three-quarters">
-                            <sdb-input
-                                v-model="term"
-                                maxlength="255"
-                                :disabled="isSearching"
-                                @keyup.enter.prevent="search(term)"
-                            />
-                        </div>
-                        <div class="column">
+                <div class="columns">
+                    <div class="column">
+                        <sdb-form-field-horizontal>
+                            <template v-slot:label>
+                                Search
+                            </template>
+                            <div class="columns">
+                                <div class="column is-three-quarters">
+                                    <sdb-input
+                                        v-model="term"
+                                        maxlength="255"
+                                        @keyup.enter.prevent="search(term)"
+                                    />
+                                </div>
+                                <div class="column">
+                                    <sdb-button-icon
+                                        icon="fas fa-search"
+                                        type="button"
+                                        @click="search(term)"
+                                    />
+                                </div>
+                            </div>
+                        </sdb-form-field-horizontal>
+                    </div>
+                    <div class="column is-one-fifth">
+                        <p class="buttons is-pulled-right">
                             <sdb-button-icon
-                                icon="fas fa-search"
+                                icon="fas fa-th"
+                                title="Gallery View"
                                 type="button"
-                                @click="search(term)"
+                                :class="{'is-primary': displayView === 'gallery'}"
+                                @click="setDisplayView('gallery')"
                             />
-                        </div>
-                    </div>
-                </sdb-form-field-horizontal>
-            </div>
-
-            <div
-                v-for="media in records?.data"
-                class="column"
-                :class="itemClass"
-            >
-                <div class="card card-equal-height">
-                    <div class="card-image px-2 pt-2 has-text-centered">
-                        <figure v-if="isImage(media)">
-                            <img
-                                :src="media.thumbnail_url"
-                                :alt="media.file_name_without_extension"
+                            <sdb-button-icon
+                                icon="fas fa-th-list"
+                                title="List View"
+                                type="button"
+                                :class="{'is-primary': displayView === 'list'}"
+                                @click="setDisplayView('list')"
                             />
-                        </figure>
-                        <span
-                            v-else
-                            class="icon is-large"
-                        >
-                            <span class="fa-stack fa-lg">
-                                <i :class="[mediaIconThumbnail(media), 'fa-5x']"></i>
-                            </span>
-                        </span>
+                        </p>
                     </div>
-
-                    <div class="card-content p-2">
-                        <div
-                            class="content"
-                            style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
-                        >
-                            <p>{{ media.file_name_without_extension }}</p>
-                        </div>
-                    </div>
-
-                    <footer class="card-footer">
-
-                        <sdb-button-icon
-                            v-if="isImage(media)"
-                            class="card-footer-item p-2 is-borderless is-shadowless is-info is-inverted"
-                            icon="fas fa-expand"
-                            title="Preview"
-                            type="button"
-                            @click="previewImage(media)"
-                        />
-                        <sdb-button-icon
-                            v-if="isEditEnabled"
-                            class="card-footer-item p-2 is-borderless is-shadowless is-primary is-inverted"
-                            icon="fas fa-pen"
-                            type="button"
-                            @click="openEditModal(media)"
-                        />
-                        <sdb-button-icon
-                            v-if="isDeleteEnabled"
-                            class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
-                            icon="far fa-trash-alt"
-                            title="Delete"
-                            type="button"
-                            @click="deleteRecord(media)"
-                        />
-                        <sdb-button-download
-                            v-if="isDownloadEnabled"
-                            class="card-footer-item p-2 is-borderless is-shadowless is-danger is-inverted"
-                            title="Download"
-                            type="button"
-                            :url="media.file_url"
-                        />
-
-                        <slot name="actions" :media="media"></slot>
-                    </footer>
                 </div>
             </div>
+
+            <sdb-media-gallery
+                v-if="displayView === 'gallery'"
+                :media="records.data"
+            >
+                <template v-slot:default="{ medium }">
+                    <sdb-media-gallery-item
+                        :is-delete-enabled="isDeleteEnabled"
+                        :is-download-enabled="isDownloadEnabled"
+                        :is-edit-enabled="isEditEnabled"
+                        :medium="medium"
+                        @on-delete-clicked="deleteRecord"
+                        @on-edit-clicked="openEditModal"
+                        @on-preview-clicked="previewImage"
+                    >
+                        <template v-slot:actions="{medium}">
+                            <slot name="actions" :media="medium"></slot>
+                        </template>
+                    </sdb-media-gallery-item>
+                </template>
+            </sdb-media-gallery>
+
+            <sdb-media-list
+                v-else
+                :media="records.data"
+            >
+                <template v-slot:default="{ medium }">
+                    <sdb-media-list-item
+                        :is-delete-enabled="isDeleteEnabled"
+                        :is-download-enabled="isDownloadEnabled"
+                        :is-edit-enabled="isEditEnabled"
+                        :medium="medium"
+                        @on-delete-clicked="deleteRecord"
+                        @on-edit-clicked="openEditModal"
+                        @on-preview-clicked="previewImage"
+                    >
+                        <template v-slot:actions="{medium}">
+                            <slot name="actions" :media="medium"></slot>
+                        </template>
+                    </sdb-media-list-item>
+                </template>
+            </sdb-media-list>
 
             <div v-if="isPaginationDisplayed" class="column is-full">
                 <sdb-pagination
                     :is-ajax="isAjax"
                     :links="records?.links ?? []"
+                    :query-params="queryParams"
                 />
             </div>
         </div>
@@ -266,6 +260,10 @@
     import { includes, isEmpty } from 'lodash';
     import { reactive, ref } from "vue";
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import SdbMediaGallery from '@/Sdb/Media/Gallery';
+    import SdbMediaGalleryItem from '@/Sdb/Media/GalleryItem';
+    import SdbMediaList from '@/Sdb/Media/List';
+    import SdbMediaListItem from '@/Sdb/Media/ListItem';
 
     function getEmptyFormMedia() {
         return {
@@ -276,6 +274,7 @@
     };
 
     export default {
+        name: 'MediaLibrary',
         mixins: [
             HasPageErrors,
             HasModalMixin,
@@ -294,12 +293,19 @@
             SdbModalCard,
             SdbModalImageEditor,
             SdbPagination,
+            SdbMediaGallery,
+            SdbMediaGalleryItem,
+            SdbMediaList,
+            SdbMediaListItem,
         },
-        emits: ['on-media-submitted'],
+        emits: [
+            'on-media-submitted',
+            'on-view-changed'
+        ],
         props: {
             isAjax: {type: Boolean, default: false},
             isPaginationDisplayed: {type: Boolean, default: true},
-            itemClass: {default: ['is-3']},
+            //itemClass: {default: ['is-3']},
             records: {},
             baseRouteName: {default: 'admin.media'},
             acceptedTypes: {default: acceptedFileTypes},
@@ -307,6 +313,13 @@
             isDeleteEnabled: {type: Boolean, default: true},
             isDownloadEnabled: {type: Boolean, default: true},
             search: Function,
+            queryParams: { type: Object },
+        },
+        setup(props) {
+            return {
+                displayView: ref(props.queryParams.view ?? 'gallery'),
+                term: ref(props.queryParams.term),
+            };
         },
         data() {
             return {
@@ -321,7 +334,6 @@
                     successSaveAsMedia: "A new media has been created",
                     successSubmitForm: "Media has been updated",
                 },
-                term: '',
             };
         },
         methods: {
@@ -490,7 +502,11 @@
                     }
                 }
                 return "far fa-file-alt";
-            }
+            },
+            setDisplayView(displayView) {
+                this.displayView = displayView;
+                this.$emit('on-view-changed', displayView);
+            },
         },
         computed: {
             previewFileSrc() {
