@@ -1,5 +1,5 @@
 <template>
-    <table class="table is-striped is-hoverable is-fullwidth">
+    <sdb-table class="is-striped is-hoverable is-fullwidth">
         <thead>
             <tr>
                 <th></th>
@@ -17,14 +17,19 @@
                 <slot :medium="medium"></slot>
             </template>
         </tbody>
-    </table>
+    </sdb-table>
 </template>
 
 <script>
+    import SdbTable from '@/Sdb/Table';
+
     export default {
-        name: 'MediaList', 
+        name: 'MediaList',
+        components: {
+            SdbTable,
+        },
         props: {
             media: {},
         },
-    }
+    };
 </script>
