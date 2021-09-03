@@ -80,6 +80,9 @@ export default {
         setTerm(term) {
             this.imageListQueryParams['term'] = term;
         },
+        setView(view) {
+            this.imageListQueryParams['view'] = view;
+        },
         onImageSelected() {},
         onImageUpdated() {},
         onImageListLoadedSuccess(data) {},
