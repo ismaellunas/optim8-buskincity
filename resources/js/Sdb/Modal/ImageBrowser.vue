@@ -74,9 +74,9 @@
         ],
         props: {
             data: {},
-            title: {type: String, default: 'Images'},
-            search: Function,
             queryParams: Object,
+            search: Function,
+            title: {type: String, default: 'Images'},
         },
         data() {
             return {
