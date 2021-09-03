@@ -65,12 +65,13 @@
                 </div>
             </div>
 
-            <sdb-media-gallery
-                v-if="view === 'gallery'"
+            <component
+                :is="isGalleryView ? 'SdbMediaGallery' : 'SdbMediaList'"
                 :media="records.data"
             >
                 <template v-slot:default="{ medium }">
-                    <sdb-media-gallery-item
+                    <component
+                        :is="isGalleryView ? 'SdbMediaGalleryItem' : 'SdbMediaListItem'"
                         :is-delete-enabled="isDeleteEnabled"
                         :is-download-enabled="isDownloadEnabled"
                         :is-edit-enabled="isEditEnabled"
@@ -79,33 +80,13 @@
                         @on-edit-clicked="openEditModal"
                         @on-preview-clicked="previewImage"
                     >
-                        <template v-slot:actions="{medium}">
-                            <slot name="actions" :media="medium"></slot>
-                        </template>
-                    </sdb-media-gallery-item>
-                </template>
-            </sdb-media-gallery>
 
-            <sdb-media-list
-                v-else
-                :media="records.data"
-            >
-                <template v-slot:default="{ medium }">
-                    <sdb-media-list-item
-                        :is-delete-enabled="isDeleteEnabled"
-                        :is-download-enabled="isDownloadEnabled"
-                        :is-edit-enabled="isEditEnabled"
-                        :medium="medium"
-                        @on-delete-clicked="deleteRecord"
-                        @on-edit-clicked="openEditModal"
-                        @on-preview-clicked="previewImage"
-                    >
                         <template v-slot:actions="{medium}">
                             <slot name="actions" :media="medium"></slot>
                         </template>
-                    </sdb-media-list-item>
+                    </component>
                 </template>
-            </sdb-media-list>
+            </component>
 
             <div v-if="isPaginationDisplayed" class="column is-full">
                 <sdb-pagination
@@ -508,6 +489,9 @@
             },
             isProcessing() {
                 return this.isUploading;
+            },
+            isGalleryView() {
+                return this.view === 'gallery';
             },
         },
     }
