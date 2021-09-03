@@ -35,6 +35,7 @@ class MediaController extends Controller
         return Inertia::render('Media/Index', [
             'baseRouteName' => $this->baseRouteName,
             'defaultLocale' => TranslationService::getDefaultLocale(),
+            'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->all('term', 'view')),
             'records' => $this->getRecords($request->term),
         ]);
