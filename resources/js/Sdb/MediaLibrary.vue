@@ -50,15 +50,15 @@
                                 icon="fas fa-th"
                                 title="Gallery View"
                                 type="button"
-                                :class="{'is-primary': displayView === 'gallery'}"
-                                @click="setDisplayView('gallery')"
+                                :class="{'is-primary': view === 'gallery'}"
+                                @click="setView('gallery')"
                             />
                             <sdb-button-icon
                                 icon="fas fa-th-list"
                                 title="List View"
                                 type="button"
-                                :class="{'is-primary': displayView === 'list'}"
-                                @click="setDisplayView('list')"
+                                :class="{'is-primary': view === 'list'}"
+                                @click="setView('list')"
                             />
                         </p>
                     </div>
@@ -66,7 +66,7 @@
             </div>
 
             <sdb-media-gallery
-                v-if="displayView === 'gallery'"
+                v-if="view === 'gallery'"
                 :media="records.data"
             >
                 <template v-slot:default="{ medium }">
@@ -242,9 +242,7 @@
     import HasPageErrors from '@/Mixins/HasPageErrors';
     import MediaForm from '@/Pages/Media/Form';
     import SdbButton from '@/Sdb/Button';
-    import SdbButtonDownload from '@/Sdb/ButtonDownload';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbFormField from '@/Sdb/Form/Field';
     import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbInput from '@/Sdb/Input';
@@ -260,9 +258,9 @@
     import { acceptedFileTypes, acceptedImageTypes } from '@/Libs/defaults';
     import { confirm as confirmAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { getCanvasBlob } from '@/Libs/utils';
-    import { includes, isEmpty } from 'lodash';
-    import { reactive, ref } from "vue";
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { includes } from 'lodash';
+    import { ref } from "vue";
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     function getEmptyFormMedia() {
         return {
@@ -281,9 +279,7 @@
         components: {
             MediaForm,
             SdbButton,
-            SdbButtonDownload,
             SdbButtonIcon,
-            SdbButtonLink,
             SdbFormField,
             SdbFormFieldHorizontal,
             SdbInput,
@@ -302,21 +298,20 @@
             'on-view-changed'
         ],
         props: {
-            isAjax: {type: Boolean, default: false},
-            isPaginationDisplayed: {type: Boolean, default: true},
-            //itemClass: {default: ['is-3']},
-            records: {},
-            baseRouteName: {default: 'admin.media'},
             acceptedTypes: {default: acceptedFileTypes},
-            isEditEnabled: {type: Boolean, default: true},
+            baseRouteName: {default: 'admin.media'},
+            isAjax: {type: Boolean, default: false},
             isDeleteEnabled: {type: Boolean, default: true},
             isDownloadEnabled: {type: Boolean, default: true},
-            search: Function,
+            isEditEnabled: {type: Boolean, default: true},
+            isPaginationDisplayed: {type: Boolean, default: true},
             queryParams: { type: Object },
+            records: {},
+            search: Function,
         },
         setup(props) {
             return {
-                displayView: ref(props.queryParams.view ?? 'gallery'),
+                view: ref(props.queryParams.view ?? 'gallery'),
                 term: ref(props.queryParams.term),
             };
         },
@@ -502,9 +497,9 @@
                 }
                 return "far fa-file-alt";
             },
-            setDisplayView(displayView) {
-                this.displayView = displayView;
-                this.$emit('on-view-changed', displayView);
+            setView(view) {
+                this.view = view;
+                this.$emit('on-view-changed', view);
             },
         },
         computed: {
@@ -513,9 +508,6 @@
             },
             isProcessing() {
                 return this.isUploading;
-            },
-            isNew() {
-                return !this.formMedia?.id;
             },
         },
     }
