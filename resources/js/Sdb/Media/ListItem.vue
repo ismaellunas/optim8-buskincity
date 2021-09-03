@@ -47,7 +47,7 @@
                 />
                 <sdb-button-download
                     v-if="isDownloadEnabled"
-                    :class="[actionClass, 'is-danger']"
+                    :class="[actionClass, 'is-link']"
                     title="Download"
                     type="button"
                     :url="medium.file_url"
