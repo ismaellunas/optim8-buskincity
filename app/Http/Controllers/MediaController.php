@@ -215,10 +215,10 @@ class MediaController extends Controller
     {
         $query = $this->model::orderBy('id', 'DESC')
             ->when($term, function (Builder $query, $term) {
-                $query->where('file_name', 'LIKE', '%'.$term.'%');
+                $query->where('file_name', 'ILIKE', '%'.$term.'%');
                 $query->orWhereHas('translations', function (Builder $query) use ($term) {
-                    $query->where('alt', 'LIKE', '%'.$term.'%');
-                    $query->orWhere('description', 'LIKE', '%'.$term.'%');
+                    $query->where('alt', 'ILIKE', '%'.$term.'%');
+                    $query->orWhere('description', 'ILIKE', '%'.$term.'%');
                 });
             })
             ->with([
