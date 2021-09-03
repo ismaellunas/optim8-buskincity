@@ -13,6 +13,8 @@ export default {
             entityImage: {
                 mediaId: null,
             },
+            imageListQueryParams: {},
+            imageListRouteName: 'admin.media.list.image',
             images: null,
         }
     },
@@ -66,7 +68,7 @@ export default {
         },
         getImagesList(url) {
             const self = this;
-            axios.get(url)
+            axios.get(url, {params: this.imageListQueryParams})
                 .then(function (response) {
                     self.onImageListLoadedSuccess(response.data)
                 })
@@ -74,6 +76,9 @@ export default {
                     oopsAlert();
                     self.onImageListLoadedFail(error);
                 });
+        },
+        setTerm(term) {
+            this.imageListQueryParams['term'] = term;
         },
         onImageSelected() {},
         onImageUpdated() {},
@@ -89,6 +94,10 @@ export default {
             return localeImages.find(image => {
                 return image.id === mediaId;
             });
+        },
+        search(term) {
+            this.setTerm(term);
+            this.getImagesList(route(this.imageListRouteName));
         },
     },
     computed: {
