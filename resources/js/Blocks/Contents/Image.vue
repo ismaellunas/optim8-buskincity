@@ -42,6 +42,7 @@
             v-if="isModalOpen"
             :data="modalImages"
             :search="search"
+            :term="imageListQueryParams.term"
             @close="closeModal"
             @on-clicked-pagination="getImagesList"
             @on-media-selected="selectImage"
@@ -105,7 +106,8 @@
                 }
             },
             onShownModal() { /* @override */
-                this.getImagesList(route('admin.media.list.image'));
+                this.setTerm('');
+                this.getImagesList(route(this.imageListRouteName));
             },
             onImageListLoadedSuccess(data) { /* @override Mixins/ContainImageContent */
                 this.modalImages = data;
@@ -119,9 +121,6 @@
             },
             onImageUpdated() { /* @override Mixins/ContainImageContent */
                 this.closeModal();
-            },
-            search(term) {
-                this.getImagesList(route('admin.media.list.image', {term: term}));
             },
         },
         computed: {

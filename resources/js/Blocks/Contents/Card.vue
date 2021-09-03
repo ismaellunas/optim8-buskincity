@@ -53,6 +53,8 @@
         <sdb-modal-image-browser
             v-if="isModalOpen"
             :data="modalImages"
+            :search="search"
+            :term="imageListQueryParams.term"
             @close="closeModal"
             @on-clicked-pagination="getImagesList"
             @on-media-selected="selectImage"
@@ -128,7 +130,8 @@
                 this.isFormOpen = !this.isFormOpen;
             },
             onShownModal() { /* @overide */
-                this.getImagesList(route('admin.media.list.image'));
+                this.setTerm('');
+                this.getImagesList(route(this.imageListRouteName));
             },
             onImageListLoadedSuccess(data) { /* @override Mixins/ContainImageContent */
                 this.modalImages = data;
