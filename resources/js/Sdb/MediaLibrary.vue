@@ -7,7 +7,6 @@
                         <div class="control">
                             <sdb-input-file
                                 v-model="file"
-                                class="is-fullwidth"
                                 :accept="acceptedTypes"
                                 :is-name-displayed="false"
                                 @on-file-picked="onFilePicked"
