@@ -7,10 +7,10 @@
         <template v-slot:header>
             <p class="modal-card-title">{{ title }}</p>
             <sdb-button
-                @click="$emit('close')"
+                aria-label="close"
                 class="delete is-primary"
                 type="button"
-                aria-label="close"
+                @click="$emit('close')"
             />
         </template>
 
@@ -23,14 +23,14 @@
         </template>
 
         <sdb-media-library
+            :accepted-types="acceptedTypes"
             :is-ajax="true"
             :is-delete-enabled="false"
             :is-edit-enabled="false"
             :is-pagination-displayed="false"
-            :records="data"
-            :accepted-types="acceptedTypes"
-            :search="search"
             :query-params="queryParams"
+            :records="data"
+            :search="search"
             @on-media-submitted="$emit('on-media-submitted', $event)"
             @on-view-changed="$emit('on-view-changed', $event)"
         >
