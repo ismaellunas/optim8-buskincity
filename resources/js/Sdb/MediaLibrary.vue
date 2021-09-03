@@ -239,8 +239,8 @@
 </template>
 
 <script>
-    import HasPageErrors from '@/Mixins/HasPageErrors';
     import HasModalMixin from '@/Mixins/HasModal';
+    import HasPageErrors from '@/Mixins/HasPageErrors';
     import MediaForm from '@/Pages/Media/Form';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonDownload from '@/Sdb/ButtonDownload';
@@ -250,6 +250,10 @@
     import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbInput from '@/Sdb/Input';
     import SdbInputFile from '@/Sdb/InputFile';
+    import SdbMediaGallery from '@/Sdb/Media/Gallery';
+    import SdbMediaGalleryItem from '@/Sdb/Media/GalleryItem';
+    import SdbMediaList from '@/Sdb/Media/List';
+    import SdbMediaListItem from '@/Sdb/Media/ListItem';
     import SdbModal from '@/Sdb/Modal';
     import SdbModalCard from '@/Sdb/ModalCard';
     import SdbModalImageEditor from '@/Sdb/Modal/ImageEditor';
@@ -260,10 +264,6 @@
     import { includes, isEmpty } from 'lodash';
     import { reactive, ref } from "vue";
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
-    import SdbMediaGallery from '@/Sdb/Media/Gallery';
-    import SdbMediaGalleryItem from '@/Sdb/Media/GalleryItem';
-    import SdbMediaList from '@/Sdb/Media/List';
-    import SdbMediaListItem from '@/Sdb/Media/ListItem';
 
     function getEmptyFormMedia() {
         return {
@@ -289,14 +289,14 @@
             SdbFormFieldHorizontal,
             SdbInput,
             SdbInputFile,
-            SdbModal,
-            SdbModalCard,
-            SdbModalImageEditor,
-            SdbPagination,
             SdbMediaGallery,
             SdbMediaGalleryItem,
             SdbMediaList,
             SdbMediaListItem,
+            SdbModal,
+            SdbModalCard,
+            SdbModalImageEditor,
+            SdbPagination,
         },
         emits: [
             'on-media-submitted',
