@@ -70,11 +70,11 @@ class MediaController extends Controller
             $mediaDataOptions['extension'] = $extension;
         }
 
-        $fileName = Str::lower(MediaService::getUniqueFileName(
-            $fileName,
+        $fileName = MediaService::getUniqueFileName(
+            Str::lower($fileName),
             [],
             $mediaDataOptions['extension'] ?? null
-        ));
+        );
         $uploadFileOptions['public_id'] = $fileName;
 
         $uploadedFile = cloudinary()->upload(
