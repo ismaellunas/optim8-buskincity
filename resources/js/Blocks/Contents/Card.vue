@@ -53,12 +53,13 @@
         <sdb-modal-image-browser
             v-if="isModalOpen"
             :data="modalImages"
+            :query-params="imageListQueryParams"
             :search="search"
-            :term="imageListQueryParams.term"
             @close="closeModal"
             @on-clicked-pagination="getImagesList"
             @on-media-selected="selectImage"
             @on-media-submitted="updateImage"
+            @on-view-changed="setView"
         />
     </div>
 </template>
