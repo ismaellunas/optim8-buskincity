@@ -30,7 +30,9 @@
             :records="data"
             :accepted-types="acceptedTypes"
             :search="search"
+            :query-params="queryParams"
             @on-media-submitted="$emit('on-media-submitted', $event)"
+            @on-view-changed="$emit('on-view-changed', $event)"
         >
             <template v-slot:actions="slotProps">
                 <sdb-button-icon
@@ -68,11 +70,13 @@
             'on-clicked-pagination',
             'on-media-selected',
             'on-media-submitted',
+            'on-view-changed',
         ],
         props: {
             data: {},
             title: {type: String, default: 'Images'},
             search: Function,
+            queryParams: Object,
         },
         data() {
             return {
