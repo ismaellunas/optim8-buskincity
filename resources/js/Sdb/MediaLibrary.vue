@@ -129,9 +129,10 @@
                         class="card"
                     >
                         <div class="card-image">
-                            <figure class="image">
-                                <img :src="previewFileSrc" :style="{maxHeight: 500+'px'}"/>
-                            </figure>
+                            <sdb-image
+                                :src="previewFileSrc"
+                                :img-style="{maxHeight: 500+'px'}"
+                            />
                         </div>
                         <footer class="card-footer">
                             <sdb-button
@@ -226,6 +227,7 @@
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbFormField from '@/Sdb/Form/Field';
     import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
+    import SdbImage from '@/Sdb/Image';
     import SdbInput from '@/Sdb/Input';
     import SdbInputFile from '@/Sdb/InputFile';
     import SdbMediaGallery from '@/Sdb/Media/Gallery';
@@ -263,6 +265,7 @@
             SdbButtonIcon,
             SdbFormField,
             SdbFormFieldHorizontal,
+            SdbImage,
             SdbInput,
             SdbInputFile,
             SdbMediaGallery,

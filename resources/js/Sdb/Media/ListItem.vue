@@ -1,12 +1,11 @@
 <template>
     <tr>
         <td>
-            <figure
+            <sdb-image
                 v-if="medium.is_image"
-                class="image is-48x48"
-            >
-                <img :src="medium.thumbnail_url">
-            </figure>
+                square="is-48x48"
+                :src="medium.thumbnail_url"
+            />
             <span 
                 v-else
                 class="icon is-large has-text-centered"
@@ -63,12 +62,14 @@
     import MixinMediaItem from '@/Mixins/MediaItem';
     import SdbButtonDownload from '@/Sdb/ButtonDownload';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
+    import SdbImage from '@/Sdb/Image';
 
     export default {
         name: 'MediaListItem',
         components: {
             SdbButtonDownload,
             SdbButtonIcon,
+            SdbImage,
         },
         mixins: [
             MixinMediaItem,

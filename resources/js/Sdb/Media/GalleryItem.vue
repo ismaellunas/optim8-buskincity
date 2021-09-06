@@ -1,12 +1,11 @@
 <template>
     <div class="card card-equal-height">
         <div class="card-image px-2 pt-2 has-text-centered">
-            <figure v-if="isImage">
-                <img
-                    :alt="medium.file_name_without_extension"
-                    :src="medium.thumbnail_url"
-                />
-            </figure>
+            <sdb-image
+                v-if="isImage"
+                :alt="medium.file_name_without_extension"
+                :src="medium.thumbnail_url"
+            />
             <span
                 v-else
                 class="icon is-large"
@@ -68,12 +67,14 @@
     import MixinMediaItem from '@/Mixins/MediaItem';
     import SdbButtonDownload from '@/Sdb/ButtonDownload';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
+    import SdbImage from '@/Sdb/Image';
 
     export default {
         name: 'MediaGalleryItem',
         components: {
             SdbButtonDownload,
             SdbButtonIcon,
+            SdbImage,
         },
         mixins: [
             MixinMediaItem,
