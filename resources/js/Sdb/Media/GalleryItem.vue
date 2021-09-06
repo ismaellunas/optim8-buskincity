@@ -38,6 +38,7 @@
             <sdb-button-icon
                 v-if="isEditEnabled"
                 icon="fas fa-pen"
+                title="Edit"
                 type="button"
                 :class="[actionClass, 'is-primary']"
                 @click="$emit('on-edit-clicked', medium)"

@@ -33,6 +33,7 @@
                     v-if="isEditEnabled"
                     :class="[actionClass, 'is-primary']"
                     icon="fas fa-pen"
+                    title="Edit"
                     type="button"
                     @click="$emit('on-edit-clicked', medium)"
                 />
