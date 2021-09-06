@@ -2,6 +2,7 @@
     <div
         v-for="medium in media"
         :class="class"
+        :key="medium.id"
     >
         <slot :medium="medium"></slot>
     </div>

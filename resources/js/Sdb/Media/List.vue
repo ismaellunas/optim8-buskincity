@@ -13,7 +13,10 @@
             </tr>
         </thead>
         <tbody>
-            <template v-for="medium in media">
+            <template
+                v-for="medium in media"
+                :key="medium.id"
+            >
                 <slot :medium="medium"></slot>
             </template>
         </tbody>
