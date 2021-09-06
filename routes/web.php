@@ -35,10 +35,6 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
     Route::resource('/media', App\Http\Controllers\MediaController::class);
     Route::resource('/categories', App\Http\Controllers\CategoryController::class);
     Route::post(
-        '/media/upload-image',
-        [App\Http\Controllers\MediaController::class, 'uploadImage']
-    )->name('media.upload-image');
-    Route::post(
         '/media/update-image/{medium}',
         [App\Http\Controllers\MediaController::class, 'updateImage']
     )->name('media.update-image');

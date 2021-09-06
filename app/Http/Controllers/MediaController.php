@@ -179,24 +179,6 @@ class MediaController extends Controller
         return redirect()->back();
     }
 
-    public function uploadImage(Request $request)
-    {
-        $fileName = pathinfo($request->input('filename'))['filename'];
-
-        $fileName = MediaService::getUniqueFileName($fileName);
-
-        $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath(), [
-            'public_id' => $fileName,
-        ]);
-
-        $media = new Media();
-        $this->setMediaData($media, $uploadedFile);
-        $media->save();
-
-        return response()->json(['imagePath' => $media->file_url]);
-    }
-     */
-
     public function updateImage(MediaUpdateImageRequest $request, Media $media)
     {
         $media = $this->mediaService->replace(
@@ -236,16 +218,5 @@ class MediaController extends Controller
         );
 
         return $request->ajax() ? $records : abort(404);
-    }
-
-    protected function setMediaData(Media &$media, $asset, $options = [])
-    {
-        $media->extension = $options['extension'] ?? $asset->getExtension();
-        $media->file_name = $asset->getFileName();
-        $media->file_type = $asset->getFileType();
-        $media->file_url = $asset->getSecurePath();
-        $media->size = $asset->getSize();
-        $media->version = $asset->getVersion();
-        $media->assets = $asset->getResponse();
     }
 }
