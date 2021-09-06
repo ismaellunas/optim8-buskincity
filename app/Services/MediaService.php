@@ -2,10 +2,14 @@
 
 namespace App\Services;
 
+use App\Entities\MediaAsset;
+use App\Interfaces\MediaStorage;
 use App\Models\Media;
 use Astrotomic\Translatable\Validation\RuleFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\File\UploadedFile as File;
 
 class MediaService
 {
@@ -92,5 +96,53 @@ class MediaService
 
             return $record;
         });
+    }
+
+    protected function fillMediaWithMediaAsset(
+        Media &$media,
+        MediaAsset $asset
+    ) {
+        $media->assets = $asset->assets;
+        $media->extension = $asset->extension;
+        $media->file_name = $asset->fileName;
+        $media->file_type = $asset->fileType;
+        $media->file_url = $asset->fileUrl;
+        $media->size = $asset->size;
+        $media->version = $asset->version;
+    }
+
+    public function upload(
+        File $file,
+        string $fileName,
+        MediaStorage $mediaStorage
+    ): Media {
+        $media = new Media();
+
+        $extension = null;
+
+        $clientExtension = $file->getClientOriginalExtension();
+        $mimeType =  $file->getMimeType();
+
+        if ( !(
+            Str::startsWith($mimeType, 'image/')
+            || Str::startsWith($mimeType, 'video/')
+            || $clientExtension == 'pdf'
+        )) {
+            $extension = $clientExtension;
+        }
+
+        $fileName = MediaService::getUniqueFileName(
+            Str::lower($fileName),
+            [],
+            $extension
+        );
+
+        $this->fillMediaWithMediaAsset(
+            $media,
+            $mediaStorage->upload($file, $fileName, $extension)
+        );
+        $media->save();
+
+        return $media;
     }
 }
