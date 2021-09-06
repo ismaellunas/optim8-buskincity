@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\CloudinaryStorage;
 use App\Http\Requests\{
     MediaStoreRequest,
     MediaUpdateImageRequest,
@@ -12,9 +13,7 @@ use App\Services\{
     MediaService,
     TranslationService
 };
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class MediaController extends Controller
@@ -63,36 +62,11 @@ class MediaController extends Controller
 
     protected function storeProcess(Request $request)
     {
-        $fileName = $request->input('file_name');
-        $extension = $request->file->extension();
-        $mimeType = $request->file->getMimeType();
-
-        $mediaDataOptions = [];
-        $uploadFileOptions['resource_type'] = 'auto';
-
-        if ( !(
-            Str::startsWith($mimeType, 'image/')
-            || Str::startsWith($mimeType, 'video/')
-            || $extension == 'pdf'
-        )) {
-            $mediaDataOptions['extension'] = $extension;
-        }
-
-        $fileName = MediaService::getUniqueFileName(
-            Str::lower($fileName),
-            [],
-            $mediaDataOptions['extension'] ?? null
+        $media = $this->mediaService->upload(
+            $request->file,
+            $request->input('file_name'),
+            new CloudinaryStorage()
         );
-        $uploadFileOptions['public_id'] = $fileName;
-
-        $uploadedFile = cloudinary()->upload(
-            $request->file('file')->getRealPath(),
-            $uploadFileOptions,
-        );
-
-        $media = new Media();
-        $this->setMediaData($media, $uploadedFile, $mediaDataOptions);
-        $media->save();
 
         if ($request->has('translations')) {
             foreach ($request->input('translations') as $locale => $translation) {
@@ -166,23 +140,11 @@ class MediaController extends Controller
         $fileName = $request->input('file_name');
 
         if ($media->file_name != $fileName) {
-
-            $fileName = Str::lower(MediaService::getUniqueFileName(
+            $media = $this->mediaService->rename(
+                $media,
                 $fileName,
-                [],
-                ($media->file_type != 'image' ? $media->extension : null)
-            ));
-
-            $response = cloudinary()->uploadApi()->rename(
-                $media->file_name,
-                $fileName,
-                ["resource_type" => $media->file_type]
+                new CloudinaryStorage()
             );
-
-            $data['file_name'] = $response['public_id'];
-            $data['file_url'] = $response['secure_url'];
-            $data['version'] = $response['version'];
-            $data['assets'] = $response;
         }
 
         foreach ($request->input('translations') as $locale => $translation) {
@@ -210,9 +172,7 @@ class MediaController extends Controller
      */
     public function destroy(Request $request, Media $media)
     {
-        cloudinary()->destroy($media->file_name);
-
-        $media->delete();
+        $this->mediaService->destroy($media, new CloudinaryStorage());
 
         $request->session()->flash('message', 'Media deleted successfully!'.$media->file_name);
 
@@ -235,13 +195,15 @@ class MediaController extends Controller
 
         return response()->json(['imagePath' => $media->file_url]);
     }
+     */
 
     public function updateImage(MediaUpdateImageRequest $request, Media $media)
     {
-        $uploadedFile = cloudinary()->upload($request->file('image')->getRealPath(), ['public_id' => $media->file_name]);
-
-        $this->setMediaData($media, $uploadedFile);
-        $media->save();
+        $media = $this->mediaService->replace(
+            $request->file('image'),
+            $media,
+            new CloudinaryStorage()
+        );
 
         return $request->ajax()
             ? redirect()->back()
@@ -250,15 +212,11 @@ class MediaController extends Controller
 
     public function saveAsMedia(Request $request, Media $media)
     {
-        $uploadedFile = cloudinary()->upload(
-            $request->file('image')->getRealPath(),
-            ['public_id' => MediaService::getUniqueFileName($media->file_name)]
+        $replicatedMedia = $this->mediaService->duplicateImage(
+            $request->file('image'),
+            $media,
+            new CloudinaryStorage()
         );
-
-        $replicatedMedia = $media->replicate();
-        $this->setMediaData($replicatedMedia, $uploadedFile);
-        $replicatedMedia->created_at = Carbon::now();
-        $replicatedMedia->save();
 
         $replicatedMedia
             ->translations()
