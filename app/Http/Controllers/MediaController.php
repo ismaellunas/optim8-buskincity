@@ -13,17 +13,23 @@ use App\Services\{
     TranslationService
 };
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class MediaController extends Controller
 {
+    private $mediaService;
+
     protected $model = Media::class;
 
     protected $baseRouteName = 'admin.media';
     protected $recordsPerPage = 12;
+
+    public function __construct(MediaService $mediaService)
+    {
+        $this->mediaService = $mediaService;
+    }
 
     /**
      * Display a listing of the resource.
@@ -37,7 +43,9 @@ class MediaController extends Controller
             'defaultLocale' => TranslationService::getDefaultLocale(),
             'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->all('term', 'view')),
-            'records' => $this->getRecords($request->term),
+            'records' => $this
+                ->mediaService
+                ->getRecords($request->term, [], $this->recordsPerPage),
         ]);
     }
 
@@ -211,41 +219,6 @@ class MediaController extends Controller
         return redirect()->back();
     }
 
-    public function getRecords(string $term = null, array $scopeNames = [])
-    {
-        $query = $this->model::orderBy('id', 'DESC')
-            ->when($term, function (Builder $query, $term) {
-                $query->where('file_name', 'ILIKE', '%'.$term.'%');
-                $query->orWhereHas('translations', function (Builder $query) use ($term) {
-                    $query->where('alt', 'ILIKE', '%'.$term.'%');
-                    $query->orWhere('description', 'ILIKE', '%'.$term.'%');
-                });
-            })
-            ->with([
-                'translations' => function ($q) {
-                    $q->select(['id', 'media_id', 'alt', 'description', 'locale']);
-                },
-            ]);
-
-        foreach ($scopeNames as $scopeName) {
-            $query->{$scopeName}();
-        }
-
-        $records = $query->paginate($this->recordsPerPage);
-
-        $records->getCollection()->transform(function ($record) {
-            $record->thumbnail_url = $record->thumbnailUrl;
-            $record->file_name_without_extension = $record->fileNameWithoutExtension;
-            $record->is_image = $record->isImage;
-            $record->readable_size = $record->readableSize;
-            $record->date_modified = $record->updated_at->format('d/m/Y H:m');
-
-            return $record;
-        });
-
-        return $records;
-    }
-
     public function uploadImage(Request $request)
     {
         $fileName = pathinfo($request->input('filename'))['filename'];
@@ -298,7 +271,11 @@ class MediaController extends Controller
 
     public function listImages(Request $request)
     {
-        $records = $this->getRecords($request->term, ['image']);
+        $records = $this->mediaService->getRecords(
+            $request->term,
+            ['image'],
+            $this->recordsPerPage
+        );
 
         return $request->ajax() ? $records : abort(404);
     }
