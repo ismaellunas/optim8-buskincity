@@ -145,4 +145,72 @@ class MediaService
 
         return $media;
     }
+
+    public function duplicateImage(
+        File $file,
+        Media $media,
+        MediaStorage $mediaStorage
+    ): Media {
+        $replicatedMedia = $media->replicate();
+
+        $this->fillMediaWithMediaAsset(
+            $replicatedMedia,
+            $mediaStorage->upload(
+                $file,
+                MediaService::getUniqueFileName($replicatedMedia->file_name)
+            )
+        );
+        $replicatedMedia->created_at = Carbon::now();
+        $replicatedMedia->save();
+
+        return $replicatedMedia;
+    }
+
+    public function replace(
+        File $file,
+        Media $media,
+        MediaStorage $mediaStorage
+    ): Media {
+        $this->fillMediaWithMediaAsset(
+            $media,
+            $mediaStorage->upload($file, $media->file_name)
+        );
+        $media->save();
+
+        return $media;
+    }
+
+    public function rename(
+        Media $media,
+        string $fileName,
+        MediaStorage $mediaStorage
+    ): Media {
+        $fileName = MediaService::getUniqueFileName(
+            Str::lower($fileName),
+            [],
+            ($media->file_type != 'image' ? $media->extension : null)
+        );
+
+        $asset = $mediaStorage->rename(
+            $media->file_name,
+            $fileName,
+            $media->file_type
+        );
+
+        $data = [];
+        $data['file_name'] = $asset->fileName;
+        $data['file_url'] = $asset->fileUrl;
+        $data['version'] = $asset->version;
+        $data['assets'] = $asset->assets;
+
+        $media->update($data);
+
+        return $media;
+    }
+
+    public function destroy(Media $media, MediaStorage $mediaStorage)
+    {
+        $mediaStorage->destroy($media->file_name, $media->file_type);
+        $media->delete();
+    }
 }
