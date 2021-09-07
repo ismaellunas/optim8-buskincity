@@ -62,7 +62,7 @@
                 translatedPage = getEmptyPageTranslation();
             }
 
-            translationForm.translations.[defaultLocale] = JSON.parse(JSON.stringify(translatedPage));
+            translationForm.translations[defaultLocale] = JSON.parse(JSON.stringify(translatedPage));
 
             const contentConfigId = ref('');
 
