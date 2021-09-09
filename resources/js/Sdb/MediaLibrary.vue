@@ -9,6 +9,7 @@
                                 v-model="file"
                                 :accept="acceptedTypes"
                                 :is-name-displayed="false"
+                                :disabled="isProcessing"
                                 @on-file-picked="onFilePicked"
                             />
                         </div>
@@ -239,7 +240,7 @@
     import SdbModalImageEditor from '@/Sdb/Modal/ImageEditor';
     import SdbPagination from '@/Sdb/Pagination';
     import { acceptedFileTypes, acceptedImageTypes } from '@/Libs/defaults';
-    import { confirm as confirmAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
+    import { confirm as confirmAlert, confirmDelete, success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { getCanvasBlob } from '@/Libs/utils';
     import { includes } from 'lodash';
     import { ref } from "vue";
@@ -307,10 +308,13 @@
                 isEditing: false,
                 isImageEditing: false,
                 isUploading: false,
+                isDeleting: false,
+                loader: null,
                 previewImageSrc: null,
                 messageText: {
                     successSaveAsMedia: "A new media has been created",
                     successSubmitForm: "Media has been updated",
+                    successDeleteMedia: "Deleted",
                 },
             };
         },
@@ -358,8 +362,29 @@
             },
             deleteRecord(record) {
                 confirmDelete('Are you sure?').then((result) => {
+                    const self = this;
+                    let loader = null;
+
                     if (result.isConfirmed) {
-                        this.$inertia.delete(route(this.baseRouteName+'.destroy', {id: record.id}));
+                        this.$inertia.delete(
+                            route(this.baseRouteName+'.destroy', {id: record.id}),
+                            {
+                                onStart: visit => {
+                                    loader = self.$loading.show();
+                                    self.isDeleting = true;
+                                },
+                                onSuccess: page => {
+                                    successAlert(self.messageText.successDeleteMedia);
+                                },
+                                onError: errors => {
+                                    oopsAlert();
+                                },
+                                onFinish: visit => {
+                                    loader.hide();
+                                    self.isDeleting = false;
+                                },
+                            }
+                        );
                     }
                 });
             },
@@ -402,6 +427,7 @@
                     form.post(url, {
                         preserveState: true,
                         preserveScroll: true,
+                        onStart: () => self.onStartLoadingOverlay(),
                         onSuccess: (page) => {
                             const updatedMedia = page.props.records.data.find((record) => record.id === media.id);
                             self.formMedia.file_url = updatedMedia.file_url;
@@ -417,6 +443,7 @@
                                 cropper.enable();
                             }
                             self.isUploading = false;
+                            self.onEndLoadingOverlay();
                         },
                     });
                 });
@@ -444,6 +471,7 @@
                     form.post(url, {
                         preserveState: true,
                         preserveScroll: true,
+                        onStart: () => self.onStartLoadingOverlay(),
                         onSuccess: (page) => {
                             self.closeImageEditorModal();
                             self.closeEditModal();
@@ -459,6 +487,7 @@
                                 self.cropper.enable();
                             }
                             self.isUploading = false;
+                            self.onEndLoadingOverlay();
                         },
                     });
                 });
@@ -485,13 +514,19 @@
                 this.view = view;
                 this.$emit('on-view-changed', view);
             },
+            onStartLoadingOverlay() {
+                this.loader = this.$loading.show();
+            },
+            onEndLoadingOverlay() {
+                this.loader.hide();
+            },
         },
         computed: {
             previewFileSrc() {
                 return this.formMedia?.file_url ?? this.formMedia?.file ?? '';
             },
             isProcessing() {
-                return this.isUploading;
+                return this.isUploading || this.isDeleting;
             },
             isGalleryView() {
                 return this.view === 'gallery';

@@ -47,6 +47,7 @@
         data() {
             return {
                 displayView: 'gallery',
+                loader: null,
             };
         },
         methods: {
@@ -66,6 +67,8 @@
                     {
                         replace: true,
                         preserveState: true,
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onFinish: () => this.onEndLoadingOverlay(),
                     }
                 );
             },
@@ -77,9 +80,17 @@
                     {
                         replace: true,
                         preserveState: true,
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onFinish: () => this.onEndLoadingOverlay(),
                     }
                 );
-            }
+            },
+            onStartLoadingOverlay() {
+                this.loader = this.$loading.show();
+            },
+            onEndLoadingOverlay() {
+                this.loader.hide();
+            },
         },
     }
 </script>
