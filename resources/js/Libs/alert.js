@@ -22,7 +22,6 @@ export function success(title, message) {
 export function confirm(title, message, confirmButtonText = "Yes", additionalConfig = {}) {
     return Swal.fire(assign(
         clone(defaultConfig),
-        additionalConfig,
         {
             title: title,
             text: message,
@@ -30,7 +29,8 @@ export function confirm(title, message, confirmButtonText = "Yes", additionalCon
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: confirmButtonText,
-        }
+        },
+        additionalConfig
     ));
 }
 
