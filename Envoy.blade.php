@@ -44,6 +44,7 @@
     heroku:config-set
     heroku:push
     heroku:migration
+    heroku:route-list
     heroku:clean-after-deploy
 @endstory
 
@@ -93,4 +94,8 @@
 
 @task('heroku:postgresql-credentials')
     heroku pg:credentials:url
+@endtask
+
+@task('heroku:route-list')
+    heroku run php artisan route:list --path="admin"
 @endtask
