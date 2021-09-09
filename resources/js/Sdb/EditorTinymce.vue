@@ -16,11 +16,11 @@
         components: {
             editor: Editor
         },
-        props: ['modelValue'],
+        props: ['modelValue', 'config'],
         setup(props, { emit }) {
             return {
                 content: useModelWrapper(props, emit),
-                editorConfig: editorConfig,
+                editorConfig: props.config ?? editorConfig,
             };
         },
     }
