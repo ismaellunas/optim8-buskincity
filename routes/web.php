@@ -45,6 +45,7 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
 
     Route::get('/media-list/image', [App\Http\Controllers\MediaController::class, 'listImages'])
         ->name('media.list.image');
+    Route::resource('/posts', App\Http\Controllers\PostController::class);
 });
 
 Route::name('api.admin.')->prefix('api/admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
