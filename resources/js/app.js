@@ -5,6 +5,7 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3'
 import { InertiaProgress } from '@inertiajs/progress';
 import VueSweetalert2 from 'vue-sweetalert2';
+import VueLoading from 'vue-loading-overlay';
 
 createInertiaApp({
     title: title => `${title} - My App`,
@@ -15,6 +16,7 @@ createInertiaApp({
             .mixin({ methods: { route } })
             .use(plugin)
             .use(VueSweetalert2)
+            .use(VueLoading, {color: '#3280bf', loader: 'dots', opacity: 0.3})
             .mount(el)
     },
 })
