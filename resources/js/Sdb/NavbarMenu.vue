@@ -26,7 +26,7 @@
                             Blog
                         </a>
                         <div class="navbar-dropdown">
-                            <sdb-link :href="route('dashboard')" class="navbar-item">
+                            <sdb-link :href="route('admin.posts.index')" class="navbar-item">
                                 Posts
                             </sdb-link>
                             <sdb-link :href="route('admin.categories.index')" class="navbar-item">
