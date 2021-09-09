@@ -32,15 +32,24 @@ export function confirm(title, message, confirmButtonText = "Yes", additionalCon
         },
         additionalConfig
     ));
-}
+};
 
-export function confirmDelete(title, message, confirmButtonText = "Yes") {
-    return confirm(title, message, confirmButtonText, {icon: 'warning'});
-}
+export function confirmDelete(
+    title = 'Are you sure?',
+    message,
+    confirmButtonText = "Yes"
+) {
+    return confirm(title, message, confirmButtonText, {
+        icon: 'warning',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+    });
+};
+
 export function oops(title = "Oops...", message = "Something went wrong!") {
     return Swal.fire({
         icon: 'error',
         title: title,
         text: message,
     })
-}
+};
