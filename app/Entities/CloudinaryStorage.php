@@ -3,10 +3,10 @@
 namespace App\Entities;
 
 use App\Entities\CloudinaryAsset;
-use App\Interfaces\MediaStorage;
+use App\Contracts\MediaStorageInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile as File;
 
-class CloudinaryStorage implements MediaStorage
+class CloudinaryStorage implements MediaStorageInterface
 {
     public function upload(
         File $file,

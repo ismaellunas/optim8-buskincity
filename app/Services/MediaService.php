@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Entities\MediaAsset;
-use App\Interfaces\MediaStorage;
+use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Models\Media;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Carbon\Carbon;
