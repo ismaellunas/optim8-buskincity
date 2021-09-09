@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Contracts\PublishableInterface;
 use App\Models\Category;
+use App\Models\Media;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,7 +14,7 @@ class Post extends Model implements PublishableInterface
 
     protected $fillable = [
         'content',
-        'cover',
+        'cover_image_id',
         'excerpt',
         'locale',
         'meta_description',
@@ -24,9 +25,15 @@ class Post extends Model implements PublishableInterface
         'title',
     ];
 
+    /* Relationship: */
     public function categories()
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    public function coverImage()
+    {
+        return $this->hasOne(Media::class, 'id', 'cover_image_id');
     }
 
     public static function getStatusOptions(): array
