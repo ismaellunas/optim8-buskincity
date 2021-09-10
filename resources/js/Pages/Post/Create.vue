@@ -2,6 +2,8 @@
 <app-layout>
     <template #header>Post</template>
 
+    <sdb-error-notifications :errors="$page.props.errors"/>
+
     <div class="box mb-6">
         <post-form
             v-model="form"
@@ -19,6 +21,7 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import PostForm from '@/Pages/Post/Form';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
 
@@ -26,6 +29,7 @@
         components: {
             AppLayout,
             PostForm,
+            SdbErrorNotifications,
         },
         props: {
             categoryOptions: Array,
