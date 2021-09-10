@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Services\PostService;
-use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PostController extends CrudController
@@ -49,7 +50,7 @@ class PostController extends CrudController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
         $post = new Post();
         $data = $request->only([
@@ -111,7 +112,7 @@ class PostController extends CrudController
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
         $post->fill($request->only([
             'locale',
