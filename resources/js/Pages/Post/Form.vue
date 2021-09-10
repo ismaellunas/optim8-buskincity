@@ -11,6 +11,7 @@
                         :disabled="disableInput"
                         required
                         @on-blur="populateSlug"
+                        @on-keypress="keyPressTitle"
                     />
                 </div>
                 <div class="column is-half">
@@ -351,6 +352,12 @@
                     return true;
                 }
                 event.preventDefault();
+            },
+            keyPressTitle(event) {
+                if (event.keyCode == 13) {
+                    this.populateSlug(event);
+                }
+                return true;
             },
         },
         computed: {
