@@ -77,6 +77,8 @@
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
+                        self.form.slug = page.props.post.slug;
+                        self.form.isDirty = false;
                     },
                     onFinish: () => {
                         self.loader.hide();
