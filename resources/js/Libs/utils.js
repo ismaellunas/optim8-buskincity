@@ -1,6 +1,7 @@
 import { computed } from 'vue'
 
 export const regexFileName = "a-z0-9\-";
+export const regexSlug = regexFileName;
 
 export function uniqueId() {
     /* @see https://gist.github.com/gordonbrander/2230317#gistcomment-1713405*/
@@ -86,3 +87,17 @@ export function serialize(params) {
         return encodeURIComponent(key) + '=' + encodeURIComponent(params[key])
     }).join('&');
 };
+
+export function convertToSlug(text) {
+    let result = text
+        .toLowerCase()
+        .replace(/ /g,'-')
+        .replace(/[-]+/g, '-')
+        .replace(/[^\w-]+/g,'');
+
+    if (result && result.slice(-1) === '-') {
+        return result.slice(0, -1);
+    }
+
+    return result;
+}
