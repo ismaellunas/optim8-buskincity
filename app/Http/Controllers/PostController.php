@@ -67,6 +67,14 @@ class PostController extends CrudController
         ]);
         $post->fill($data);
         $post->author_id = auth()->id();
+
+        $isExists = Post::where('slug', $request->input('slug'))
+            ->exists();
+
+        if ($isExists) {
+            $post->slug = $request->input('slug') . '-' . date('ymdHis');
+        }
+
         $post->save();
 
         if (!empty($request->input('categories'))) {
@@ -126,6 +134,14 @@ class PostController extends CrudController
             'status',
             'scheduled_on',
         ]));
+
+        $isExists = Post::where('slug', $request->input('slug'))
+            ->where('id', '<>', $post->id)
+            ->exists();
+
+        if ($isExists) {
+            $post->slug = $request->input('slug') . '-' . date('ymdHis');
+        }
         $post->save();
 
         if (!empty($request->input('categories'))) {
