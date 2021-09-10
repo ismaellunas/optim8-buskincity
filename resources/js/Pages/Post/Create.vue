@@ -83,6 +83,3 @@
         },
     };
 </script>
-
-<style scoped>
-</style>
