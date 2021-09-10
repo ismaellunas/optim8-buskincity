@@ -6,6 +6,10 @@ const defaultConfig = {
     scrollbarPadding: false,
 };
 
+function scrollToTop() {
+    window.scrollTo(0,0);
+};
+
 export function success(title, message) {
     Swal.fire(assign(
         clone(defaultConfig),
@@ -15,6 +19,7 @@ export function success(title, message) {
             text: message,
             showConfirmButton: false,
             timer: timer,
+            didClose: () => scrollToTop(),
         }
     ));
 };
@@ -47,9 +52,13 @@ export function confirmDelete(
 };
 
 export function oops(title = "Oops...", message = "Something went wrong!") {
-    return Swal.fire({
-        icon: 'error',
-        title: title,
-        text: message,
-    })
+    return Swal.fire(assign(
+        clone(defaultConfig),
+        {
+            icon: 'error',
+            title: title,
+            text: message,
+            didClose: () => scrollToTop(),
+        }
+    ));
 };
