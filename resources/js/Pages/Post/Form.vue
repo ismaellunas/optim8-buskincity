@@ -10,16 +10,38 @@
                         placeholder="e.g A Good News"
                         :disabled="disableInput"
                         required
+                        @on-blur="populateSlug"
                     />
                 </div>
                 <div class="column is-half">
-                    <sdb-form-input
-                        label="Slug"
-                        v-model="form.slug"
-                        :message="error('slug')"
-                        placeholder="e.g. a-good-news"
-                        :disabled="disableInput"
-                    />
+                    <sdb-label>Slug</sdb-label>
+
+                    <sdb-field class="has-addons mb-0">
+                        <div class="control is-expanded">
+                            <sdb-input
+                                v-model="form.slug"
+                                :disabled="isSlugDisabled"
+                                placeholder="e.g. a-good-news"
+                                @keypress="keyPressSlug"
+                            />
+                        </div>
+                        <div class="control">
+                            <sdb-button-icon
+                                v-show="isSlugDisabled"
+                                icon="fas fa-pen"
+                                type="button"
+                                @click="isSlugDisabled = false"
+                            />
+                            <sdb-button-icon
+                                v-show="!isSlugDisabled"
+                                icon="fas fa-ban"
+                                type="button"
+                                @click="isSlugDisabled = true"
+                            />
+                        </div>
+                    </sdb-field>
+
+                    <sdb-input-error :message="error('slug')"/>
                 </div>
             </div>
             <div class="columns">
@@ -187,6 +209,11 @@
     import { ref } from 'vue';
     import { isEmpty, sortBy, pull } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
+    import { convertToSlug, regexSlug } from '@/Libs/utils';
+
+    import SdbField from '@/Sdb/Field';
+    import SdbInput from '@/Sdb/Input';
+    import SdbInputError from '@/Sdb/InputError';
 
     export default {
         name: 'PostForm',
@@ -201,6 +228,10 @@
             SdbImage,
             SdbLabel,
             SdbModalImageBrowser,
+
+            SdbField,
+            SdbInput,
+            SdbInputError,
         },
         mixins: [
             MixinHasModal,
@@ -270,6 +301,7 @@
                     }
                 },
                 acceptedTypes: acceptedImageTypes,
+                isSlugDisabled: true,
             };
         },
         methods: {
@@ -300,6 +332,25 @@
             updateImage(response) {
                 this.selectFile(response.data);
                 this.closeModal();
+            },
+            populateSlug(event) {
+                if (isEmpty(this.form.slug)) {
+                    this.form.slug = convertToSlug(this.form.title);
+                }
+            },
+            keyPressSlug(event) {
+                // @see https://stackoverflow.com/questions/61938667/vue-js-how-to-allow-an-user-to-type-only-letters-in-an-input-field
+                let char = String.fromCharCode(event.keyCode);
+                const lastCharacter = event.target.value.slice(-1);
+
+                if ( (char === ' ' || char === '_') && (lastCharacter !== '-')) {
+                    event.target.value += '-';
+                } else if (char === '-' && lastCharacter === '-') {
+                    event.target.value += '';
+                } else if ((new RegExp('^['+regexSlug+']+$')).test(char)) {
+                    return true;
+                }
+                event.preventDefault();
             },
         },
         computed: {
