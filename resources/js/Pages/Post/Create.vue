@@ -48,9 +48,9 @@
                 locale: defaultLocale,
                 meta_description: null,
                 meta_title: null,
-                slug: null,
+                slug: '',
                 status: 0,
-                title: null,
+                title: '',
             };
 
             return {
