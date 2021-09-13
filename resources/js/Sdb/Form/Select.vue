@@ -4,10 +4,10 @@
 
         <div class="control">
             <sdb-select
+                v-model="selected"
                 :disabled="disabled"
                 :placeholder="placeholder"
                 :class="class"
-                v-model="selected"
             >
                 <slot></slot>
             </sdb-select>
@@ -24,6 +24,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
+        name: 'SdbFormSelect',
         components: {
             SdbInputError,
             SdbLabel,
