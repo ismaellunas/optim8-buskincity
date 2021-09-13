@@ -133,6 +133,7 @@
 
             return {
                 queryParams: ref(queryParams),
+                term: ref(props.pageQueryParams?.term ?? null),
             };
         },
         data() {
@@ -146,7 +147,10 @@
                 const self = this;
                 confirmDelete().then(result => {
                     if (result.isConfirmed) {
-                        self.$inertia.delete(route(this.baseRouteName+'.destroy', record.id));
+                        self.$inertia.delete(route(
+                            this.baseRouteName+'.destroy',
+                            record.id
+                        ));
                     }
                 })
             },
