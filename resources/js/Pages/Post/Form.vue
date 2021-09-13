@@ -134,12 +134,11 @@
                 :disabled="disableInput"
                 rows="2"
             />
-            <sdb-form-text-editor
+            <sdb-form-text-editor-full
                 v-model="form.content"
                 label="Content"
                 :disabled="disableInput"
                 :message="error('content')"
-                :config="fullEditorConfig"
             />
             <sdb-form-input
                 label="Meta Title"
@@ -197,13 +196,12 @@
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormInputAddons from '@/Sdb/Form/InputAddons';
     import SdbFormSelect from '@/Sdb/Form/Select';
-    import SdbFormTextEditor from '@/Sdb/Form/TextEditor';
+    import SdbFormTextEditorFull from '@/Sdb/Form/TextEditorFull';
     import SdbFormTextarea from '@/Sdb/Form/Textarea';
     import SdbImage from '@/Sdb/Image';
     import SdbLabel from '@/Sdb/Label';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import { acceptedImageTypes } from '@/Libs/defaults';
-    import { fullEditorConfig } from '@/Libs/tinymce-configs';
     import { ref } from 'vue';
     import { isEmpty, sortBy, pull } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
@@ -218,7 +216,7 @@
             SdbFormInput,
             SdbFormInputAddons,
             SdbFormSelect,
-            SdbFormTextEditor,
+            SdbFormTextEditorFull,
             SdbFormTextarea,
             SdbImage,
             SdbLabel,
@@ -249,48 +247,6 @@
             return {
                 disableInput: false,
                 baseRouteName: 'admin.posts',
-                fullEditorConfig: {
-                    height: 300,
-                    menubar: false,
-                    plugins: [
-                        'advlist autolink lists link image charmap print preview anchor',
-                        'searchreplace visualblocks code fullscreen',
-                        'insertdatetime media table paste code wordcount hr code'
-                    ],
-                    block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3',
-                    toolbar: 'fullscreen | formatselect | ' +
-                    'bold italic underline strikethrough blockquote | ' +
-                    'forecolor backcolor | alignleft aligncenter alignright alignjustify | ' +
-                    'bullist numlist outdent indent hr | anchor link table charmap code | ' +
-                    'removeformat image',
-                    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                    contextmenu: 'link image',
-                    file_picker_types: 'image', //'file image media'
-                    file_picker_callback : function(callback, value, meta) {
-                        var x = window.innerWidth || document.documentElement.clientWidth || document.getElementsByTagName('body')[0].clientWidth;
-                        var y = window.innerHeight|| document.documentElement.clientHeight|| document.getElementsByTagName('body')[0].clientHeight;
-
-                        //var cmsURL = editor_config.path_absolute + 'laravel-filemanager?editor=' + meta.fieldname;
-                        //if (meta.filetype == 'image') {
-                        //    cmsURL = cmsURL + "&type=Images";
-                        //} else {
-                        //    cmsURL = cmsURL + "&type=Files";
-                        //}
-
-                        tinyMCE.activeEditor.windowManager.openUrl({
-                            //url : cmsURL,
-                            url : route('admin.media.index'),
-                            title : 'Filemanager',
-                            width : x * 0.8,
-                            height : y * 0.8,
-                            resizable : "yes",
-                            close_previous : "no",
-                            onMessage: (api, message) => {
-                                callback(message.content);
-                            }
-                        });
-                    }
-                },
                 acceptedTypes: acceptedImageTypes,
                 isSlugDisabled: true,
             };
