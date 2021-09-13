@@ -11,7 +11,9 @@ export default {
             },
             closeModal() {
                 this.isModalOpen = false;
+                this.onCloseModal();
             },
             onShownModal() {},
+            onCloseModal() {},
     }
 }
