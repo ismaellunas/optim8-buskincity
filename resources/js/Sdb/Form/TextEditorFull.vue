@@ -23,7 +23,7 @@
         @close="closeModal"
         @on-clicked-pagination="getImagesList"
         @on-media-selected="selectFile"
-        @on-media-submitted="updateImage"
+        @on-media-submitted="onMediaSubmitted"
         @on-view-changed="setView"
     />
 </template>
