@@ -15,34 +15,30 @@
                     />
                 </div>
                 <div class="column is-half">
-                    <sdb-label>Slug</sdb-label>
-
-                    <sdb-field class="has-addons mb-0">
-                        <div class="control is-expanded">
-                            <sdb-input
-                                v-model="form.slug"
-                                :disabled="isSlugDisabled"
-                                placeholder="e.g. a-good-news"
-                                @keypress="keyPressSlug"
-                            />
-                        </div>
-                        <div class="control">
-                            <sdb-button-icon
-                                v-show="isSlugDisabled"
-                                icon="fas fa-pen"
-                                type="button"
-                                @click="isSlugDisabled = false"
-                            />
-                            <sdb-button-icon
-                                v-show="!isSlugDisabled"
-                                icon="fas fa-ban"
-                                type="button"
-                                @click="isSlugDisabled = true"
-                            />
-                        </div>
-                    </sdb-field>
-
-                    <sdb-input-error :message="error('slug')"/>
+                    <sdb-form-input-addons
+                        v-model="form.slug"
+                        label="Slug"
+                        placeholder="e.g. a-good-news"
+                        :disabled="isSlugDisabled || disableInput"
+                        @on-keypress="keyPressSlug"
+                    >
+                        <template v-slot:afterInput>
+                            <div class="control">
+                                <sdb-button-icon
+                                    v-show="isSlugDisabled"
+                                    icon="fas fa-pen"
+                                    type="button"
+                                    @click="isSlugDisabled = false"
+                                />
+                                <sdb-button-icon
+                                    v-show="!isSlugDisabled"
+                                    icon="fas fa-ban"
+                                    type="button"
+                                    @click="isSlugDisabled = true"
+                                />
+                            </div>
+                        </template>
+                    </sdb-form-input-addons>
                 </div>
             </div>
             <div class="columns">
@@ -199,6 +195,7 @@
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbFormInputAddons from '@/Sdb/Form/InputAddons';
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbFormTextEditor from '@/Sdb/Form/TextEditor';
     import SdbFormTextarea from '@/Sdb/Form/Textarea';
@@ -212,10 +209,6 @@
     import { useModelWrapper } from '@/Libs/utils';
     import { convertToSlug, regexSlug } from '@/Libs/utils';
 
-    import SdbField from '@/Sdb/Field';
-    import SdbInput from '@/Sdb/Input';
-    import SdbInputError from '@/Sdb/InputError';
-
     export default {
         name: 'PostForm',
         components: {
@@ -223,16 +216,13 @@
             SdbButtonIcon,
             SdbButtonLink,
             SdbFormInput,
+            SdbFormInputAddons,
             SdbFormSelect,
             SdbFormTextEditor,
             SdbFormTextarea,
             SdbImage,
             SdbLabel,
             SdbModalImageBrowser,
-
-            SdbField,
-            SdbInput,
-            SdbInputError,
         },
         mixins: [
             MixinHasModal,
