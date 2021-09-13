@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Services\PostService;
-//use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PostController extends CrudController
@@ -18,15 +18,11 @@ class PostController extends CrudController
         $this->postService = $postService;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Post/Index', [
-            'records' => $this->postService->getRecords(),
+            'pageQueryParams' => array_filter($request->only('term', 'view')),
+            'records' => $this->postService->getRecords($request->term),
         ]);
     }
 
