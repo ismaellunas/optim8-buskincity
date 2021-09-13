@@ -9,6 +9,7 @@
             v-model="form"
             :errors="errors"
             :is-new="true"
+            :is-processing="isProcessing"
             :status-options="statusOptions"
             :locale-options="localeOptions"
             :category-options="categoryOptions"
@@ -63,6 +64,7 @@
         data() {
             return {
                 baseRouteName: 'admin.posts',
+                isProcessing: false,
             };
         },
         methods: {
@@ -71,12 +73,14 @@
                 this.form.post(route(this.baseRouteName+'.store'), {
                     onStart: () => {
                         self.loader = self.$loading.show();
+                        self.isProcessing = true;
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                     },
                     onFinish: () => {
                         self.loader.hide();
+                        self.isProcessing = false;
                     }
                 });
             },
