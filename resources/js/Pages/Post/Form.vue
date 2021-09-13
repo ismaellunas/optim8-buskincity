@@ -44,26 +44,34 @@
             <div class="columns">
                 <div class="column is-half">
                     <sdb-form-select
-                        label="Language"
                         v-model="form.locale"
-                        :message="error('locale')"
-                        :disabled="disableInput"
                         class="is-fullwidth"
+                        label="Language"
+                        :disabled="disableInput"
+                        :message="error('locale')"
                     >
-                        <option v-for="option in localeOptions" :value="option.id" :key="option.id">
+                        <option
+                            v-for="option in localeOptions"
+                            :key="option.id"
+                            :value="option.id"
+                        >
                             {{ option.id.toUpperCase() }}
                         </option>
                     </sdb-form-select>
                 </div>
                 <div class="column is-half">
                     <sdb-form-select
-                        label="Status"
                         v-model="form.status"
-                        :message="error('status')"
-                        :disabled="disableInput"
                         class="is-fullwidth"
+                        label="Status"
+                        :disabled="disableInput"
+                        :message="error('status')"
                     >
-                        <option v-for="option in statusOptions" :value="option.id" :key="option.id">
+                        <option
+                            v-for="option in statusOptions"
+                            :key="option.id"
+                            :value="option.id"
+                        >
                             {{ option.value }}
                         </option>
                     </sdb-form-select>
@@ -75,8 +83,8 @@
                 <div class="buttons">
                     <sdb-button
                         v-for="category in sortedCategoryOptions"
-                        type="button"
                         :key="category.id"
+                        type="button"
                         :class="{'is-primary': form.categories.includes(category.id)}"
                         @click="selectCategory(category)"
                     >
