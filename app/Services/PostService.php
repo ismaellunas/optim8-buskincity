@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Database\Eloquent\Builder;
 
 class PostService
 {
@@ -21,6 +22,12 @@ class PostService
                     ]);
                 },
             ])
+            ->when($term, function (Builder $query, $term) {
+                $query->where('title', 'ILIKE', '%'.$term.'%');
+                $query->orWhere('content', 'ILIKE', '%'.$term.'%');
+                $query->orWhere('excerpt', 'ILIKE', '%'.$term.'%');
+                $query->orWhere('slug', 'ILIKE', '%'.$term.'%');
+            })
             ->paginate($recordsPerPage);
 
         $this->transformRecords($records);
@@ -39,7 +46,6 @@ class PostService
 
             return $record;
         });
-
     }
 
     public function getCategoryOptions(): array
