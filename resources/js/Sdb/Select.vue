@@ -1,6 +1,10 @@
 <template>
-    <div class="select" :class="class" >
-        <select v-model="selected" @change="$emit('change', $event)">
+    <div class="select" :class="class">
+        <select
+            v-model="selected"
+            :disabled="disabled"
+            @change="$emit('change', $event)"
+        >
             <slot></slot>
         </select>
     </div>
@@ -10,7 +14,8 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        props: ['modelValue', 'class'],
+        name: 'SdbSelect',
+        props: ['modelValue', 'class', 'disabled'],
         emits: ['change', 'update:modelValue'],
 
         setup(props, { emit }) {
@@ -24,5 +29,5 @@
                 this.$refs.input.focus()
             }
         }
-    }
+    };
 </script>
