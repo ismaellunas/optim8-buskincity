@@ -4,7 +4,7 @@
 
     <sdb-error-notifications :errors="$page.props.errors"/>
 
-    <div class="box mb-6">
+    <div class="mb-6">
         <post-form
             v-model="form"
             :errors="errors"
