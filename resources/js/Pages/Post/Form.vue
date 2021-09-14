@@ -1,187 +1,217 @@
 <template>
-    <form method="post" @submit.prevent="$emit('on-submit')">
-        <fieldset :disabled="isProcessing">
-            <div class="mb-5">
-                <div class="columns">
-                    <div class="column is-half">
-                        <sdb-form-input
-                            label="Title"
-                            v-model="form.title"
-                            :message="error('title')"
-                            placeholder="e.g A Good News"
-                            :disabled="isInputDisabled"
-                            required
-                            @on-blur="populateSlug"
-                            @on-keypress="keyPressTitle"
-                        />
-                    </div>
-                    <div class="column is-half">
-                        <sdb-form-input-addons
-                            v-model="form.slug"
-                            label="Slug"
-                            placeholder="e.g. a-good-news"
-                            :disabled="isSlugDisabled || isInputDisabled"
-                            :message="error('slug')"
-                            @on-keypress="keyPressSlug"
-                        >
-                            <template v-slot:afterInput>
-                                <div class="control">
-                                    <sdb-button-icon
-                                        v-show="isSlugDisabled"
-                                        icon="fas fa-pen"
-                                        type="button"
-                                        @click="isSlugDisabled = false"
-                                    />
-                                    <sdb-button-icon
-                                        v-show="!isSlugDisabled"
-                                        icon="fas fa-ban"
-                                        type="button"
-                                        @click="isSlugDisabled = true"
-                                    />
-                                </div>
-                            </template>
-                        </sdb-form-input-addons>
-                    </div>
-                </div>
-                <div class="columns">
-                    <div class="column is-half">
-                        <sdb-form-select
-                            v-model="form.locale"
-                            class="is-fullwidth"
-                            label="Language"
-                            :disabled="isInputDisabled"
-                            :message="error('locale')"
-                        >
-                            <option
-                                v-for="option in localeOptions"
-                                :key="option.id"
-                                :value="option.id"
-                            >
-                                {{ option.id.toUpperCase() }}
-                            </option>
-                        </sdb-form-select>
-                    </div>
-                    <div class="column is-half">
-                        <sdb-form-select
-                            v-model="form.status"
-                            class="is-fullwidth"
-                            label="Status"
-                            :disabled="isInputDisabled"
-                            :message="error('status')"
-                        >
-                            <option
-                                v-for="option in statusOptions"
-                                :key="option.id"
-                                :value="option.id"
-                            >
-                                {{ option.value }}
-                            </option>
-                        </sdb-form-select>
-                    </div>
-                </div>
-                <div class="field">
-                    <sdb-label>Category</sdb-label>
+    <form
+        class="columns"
+        method="post"
+        @submit.prevent="$emit('on-submit')"
+    >
+        <div class="column is-two-thirds">
+            <fieldset :disabled="isProcessing" class="box">
 
-                    <div class="buttons">
-                        <sdb-button
-                            v-for="category in sortedCategoryOptions"
-                            :key="category.id"
+                <sdb-tab class="is-boxed">
+                    <sdb-tab-list
+                        v-for="tab, index in tabs"
+                        :key="index"
+                        :is-active="activeTab === index"
+                    >
+                        <a @click.prevent="setActiveTab(index)">
+                            {{ tab.title }}
+                        </a>
+                    </sdb-tab-list>
+                </sdb-tab>
+
+                <div v-show="activeTab === 'content'">
+                    <sdb-form-input
+                        label="Title"
+                        v-model="form.title"
+                        :message="error('title')"
+                        placeholder="e.g A Good News"
+                        :disabled="isInputDisabled"
+                        required
+                        @on-blur="populateSlug"
+                        @on-keypress="keyPressTitle"
+                    />
+
+                    <sdb-form-input-addons
+                        v-model="form.slug"
+                        label="Slug"
+                        placeholder="e.g. a-good-news"
+                        :disabled="isSlugDisabled || isInputDisabled"
+                        :message="error('slug')"
+                        @on-keypress="keyPressSlug"
+                    >
+                        <template v-slot:afterInput>
+                            <div class="control">
+                                <sdb-button-icon
+                                    v-show="isSlugDisabled"
+                                    icon="fas fa-pen"
+                                    type="button"
+                                    @click="isSlugDisabled = false"
+                                />
+                                <sdb-button-icon
+                                    v-show="!isSlugDisabled"
+                                    icon="fas fa-ban"
+                                    type="button"
+                                    @click="isSlugDisabled = true"
+                                />
+                            </div>
+                        </template>
+                    </sdb-form-input-addons>
+
+                    <sdb-form-select
+                        v-model="form.locale"
+                        class="is-fullwidth"
+                        label="Language"
+                        :disabled="isInputDisabled"
+                        :message="error('locale')"
+                    >
+                        <option
+                            v-for="option in localeOptions"
+                            :key="option.id"
+                            :value="option.id"
+                        >
+                            {{ option.id.toUpperCase() }}
+                        </option>
+                    </sdb-form-select>
+
+                    <div class="field">
+                        <sdb-label>Category</sdb-label>
+
+                        <div class="buttons">
+                            <sdb-button
+                                v-for="category in sortedCategoryOptions"
+                                :key="category.id"
+                                type="button"
+                                :class="{'is-primary': form.categories.includes(category.id)}"
+                                @click="selectCategory(category)"
+                            >
+                                {{ category.value }}
+                            </sdb-button>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <sdb-label>Thumbnail</sdb-label>
+
+                        <sdb-button-icon
+                            v-if="!hasCover"
+                            class="is-borderless is-shadowless is-inverted"
+                            icon="far fa-image"
                             type="button"
-                            :class="{'is-primary': form.categories.includes(category.id)}"
-                            @click="selectCategory(category)"
+                            @click="openModal()"
                         >
-                            {{ category.value }}
-                        </sdb-button>
-                    </div>
-                </div>
-                <div class="field">
-                    <sdb-label>Thumbnail</sdb-label>
-
-                    <sdb-button-icon
-                        v-if="!hasCover"
-                        class="is-borderless is-shadowless is-inverted"
-                        icon="far fa-image"
-                        type="button"
-                        @click="openModal()"
-                    >
-                        <span>Open Media</span>
-                    </sdb-button-icon>
-                    <div
-                        v-else
-                        class="columns is-mobile"
-                    >
-                        <div class="column is-half is-offset-one-quarter">
-                            <div class="card" >
-                                <div class="card-image">
-                                    <sdb-image :src="coverSrc"></sdb-image>
+                            <span>Open Media</span>
+                        </sdb-button-icon>
+                        <div
+                            v-else
+                            class="columns is-mobile"
+                        >
+                            <div class="column is-half is-offset-one-quarter">
+                                <div class="card" >
+                                    <div class="card-image">
+                                        <sdb-image :src="coverSrc"></sdb-image>
+                                    </div>
+                                    <footer class="card-footer">
+                                        <sdb-button-icon
+                                            class="card-footer-item is-borderless is-shadowless is-inverted"
+                                            icon="far fa-image"
+                                            type="button"
+                                            @click="openModal"
+                                        >
+                                            <span>Open Media</span>
+                                        </sdb-button-icon>
+                                        <sdb-button
+                                            class="card-footer-item is-borderless is-shadowless is-inverted"
+                                            type="button"
+                                            @click="removeCover"
+                                        >
+                                            <span>Remove</span>
+                                        </sdb-button>
+                                    </footer>
                                 </div>
-                                <footer class="card-footer">
-                                    <sdb-button-icon
-                                        class="card-footer-item is-borderless is-shadowless is-inverted"
-                                        icon="far fa-image"
-                                        type="button"
-                                        @click="openModal"
-                                    >
-                                        <span>Open Media</span>
-                                    </sdb-button-icon>
-                                    <sdb-button
-                                        class="card-footer-item is-borderless is-shadowless is-inverted"
-                                        type="button"
-                                        @click="removeCover"
-                                    >
-                                        <span>Remove</span>
-                                    </sdb-button>
-                                </footer>
                             </div>
                         </div>
                     </div>
-                </div>
-                <sdb-form-textarea
-                    label="Excerpt"
-                    v-model="form.excerpt"
-                    :message="error('excerpt')"
-                    placeholder="..."
-                    :disabled="isInputDisabled"
-                    rows="2"
-                />
-                <sdb-form-text-editor-full
-                    v-model="form.content"
-                    label="Content"
-                    :disabled="isInputDisabled"
-                    :message="error('content')"
-                />
-                <sdb-form-input
-                    label="Meta Title"
-                    v-model="form.meta_title"
-                    :message="error('meta_title')"
-                    placeholder="meta title"
-                    :disabled="isInputDisabled"
-                />
-                <sdb-form-input
-                    label="Meta Description"
-                    v-model="form.meta_description"
-                    :message="error('meta_description')"
-                    placeholder="meta description"
-                    :disabled="isInputDisabled"
-                />
-            </div>
 
-            <div class="field is-grouped is-grouped-right">
-                <div class="control">
-                    <sdb-button-link
-                        :href="route(baseRouteName+'.index')"
-                        class="is-link is-light">
-                        Cancel
-                    </sdb-button-link>
+                    <sdb-form-textarea
+                        label="Excerpt"
+                        v-model="form.excerpt"
+                        :message="error('excerpt')"
+                        placeholder="..."
+                        :disabled="isInputDisabled"
+                        rows="2"
+                    />
+
+                    <sdb-form-text-editor-full
+                        v-model="form.content"
+                        label="Content"
+                        :disabled="isInputDisabled"
+                        :message="error('content')"
+                    />
                 </div>
-                <div class="control">
-                    <sdb-button class="is-link">
-                        <template v-if="isNew">Create</template>
-                        <template v-else>Update</template>
-                    </sdb-button>
+
+                <div v-show="activeTab === 'seo'">
+                    <sdb-form-input
+                        label="Meta Title"
+                        v-model="form.meta_title"
+                        :message="error('meta_title')"
+                        placeholder="meta title"
+                        :disabled="isInputDisabled"
+                    />
+
+                    <sdb-form-input
+                        label="Meta Description"
+                        v-model="form.meta_description"
+                        :message="error('meta_description')"
+                        placeholder="meta description"
+                        :disabled="isInputDisabled"
+                    />
                 </div>
-            </div>
-        </fieldset>
+            </fieldset>
+        </div>
+
+        <div class="column">
+            <fieldset
+                class="box"
+                :disabled="isProcessing"
+            >
+                <sdb-tab>
+                    <sdb-tab-list>
+                        Publish Options
+                    </sdb-tab-list>
+                </sdb-tab>
+                <sdb-form-select
+                    v-model="form.status"
+                    class="is-fullwidth"
+                    label="Status"
+                    :disabled="isInputDisabled"
+                    :message="error('status')"
+                >
+                    <option
+                        v-for="option in statusOptions"
+                        :key="option.id"
+                        :value="option.id"
+                    >
+                        {{ option.value }}
+                    </option>
+                </sdb-form-select>
+
+            </fieldset>
+                <div class="field is-grouped is-grouped-right">
+                    <div class="control">
+                        <sdb-button-link
+                            :href="route(baseRouteName+'.index')"
+                            class="is-link is-light">
+                            Cancel
+                        </sdb-button-link>
+                    </div>
+                    <div class="control">
+                        <sdb-button class="is-link">
+                            <template v-if="isNew">Create</template>
+                            <template v-else>Update</template>
+                        </sdb-button>
+                    </div>
+                </div>
+        </div>
     </form>
 
     <sdb-modal-image-browser
@@ -212,9 +242,12 @@
     import SdbImage from '@/Sdb/Image';
     import SdbLabel from '@/Sdb/Label';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
+    import SdbTab from '@/Sdb/Tab';
+    import SdbTabList from '@/Sdb/TabList';
+    import SdbLink from '@/Sdb/Link';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { ref } from 'vue';
-    import { isEmpty, sortBy, pull } from 'lodash';
+    import { head, isEmpty, keys, pull, sortBy } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
     import { convertToSlug, regexSlug } from '@/Libs/utils';
 
@@ -232,6 +265,9 @@
             SdbImage,
             SdbLabel,
             SdbModalImageBrowser,
+            SdbTab,
+            SdbTabList,
+            SdbLink,
         },
         mixins: [
             MixinHasModal,
@@ -241,24 +277,29 @@
         emits: ['on-submit'],
         props: {
             categoryOptions: Array,
+            coverImage: {type: Object, default:  {file_url: null}},
             errors: {},
             isNew: Boolean,
             isProcessing: Boolean,
             localeOptions: {},
             modelValue: {},
             statusOptions: Array,
-            coverImage: {type: Object, default:  {file_url: null}},
         },
         setup(props, { emit }) {
             return {
                 coverSrc: ref(props.coverImage?.file_url ?? null),
                 form: useModelWrapper(props, emit),
+                tabs: {
+                    content: { title: "Content"},
+                    seo: { title: "SEO"},
+                },
             };
         },
         data() {
             return {
-                baseRouteName: 'admin.posts',
                 acceptedTypes: acceptedImageTypes,
+                activeTab: head(keys(this.tabs)),
+                baseRouteName: 'admin.posts',
                 isSlugDisabled: true,
             };
         },
@@ -315,6 +356,9 @@
                     this.populateSlug(event);
                 }
                 return true;
+            },
+            setActiveTab(index) {
+                this.activeTab = index;
             },
         },
         computed: {
