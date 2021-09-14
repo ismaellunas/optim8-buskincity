@@ -12,6 +12,8 @@ class Post extends Model implements PublishableInterface
 {
     use HasFactory;
 
+    const STATUS_SCHEDULED = 2;
+
     protected $fillable = [
         'content',
         'cover_image_id',
@@ -46,7 +48,11 @@ class Post extends Model implements PublishableInterface
             [
                 'id' => PublishableInterface::STATUS_PUBLISHED,
                 'value' => __('Published'),
-            ]
+            ],
+            [
+                'id' => self::STATUS_SCHEDULED,
+                'value' => __('Scheduled'),
+            ],
         ];
     }
 
