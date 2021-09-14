@@ -195,22 +195,33 @@
                     </option>
                 </sdb-form-select>
 
-            </fieldset>
-                <div class="field is-grouped is-grouped-right">
-                    <div class="control">
-                        <sdb-button-link
-                            :href="route(baseRouteName+'.index')"
-                            class="is-link is-light">
-                            Cancel
-                        </sdb-button-link>
-                    </div>
-                    <div class="control">
-                        <sdb-button class="is-link">
-                            <template v-if="isNew">Create</template>
-                            <template v-else>Update</template>
-                        </sdb-button>
-                    </div>
+                <div
+                    v-if="form.status === 2"
+                    class="field"
+                >
+                    <sdb-label>Scheduled At</sdb-label>
+
+                    <sdb-date-time
+                        v-model="form.scheduled_at"
+                    />
                 </div>
+            </fieldset>
+
+            <div class="field is-grouped is-grouped-right">
+                <div class="control">
+                    <sdb-button-link
+                        :href="route(baseRouteName+'.index')"
+                        class="is-link is-light">
+                        Cancel
+                    </sdb-button-link>
+                </div>
+                <div class="control">
+                    <sdb-button class="is-link">
+                        <template v-if="isNew">Create</template>
+                        <template v-else>Update</template>
+                    </sdb-button>
+                </div>
+            </div>
         </div>
     </form>
 
@@ -234,6 +245,7 @@
     import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
+    import SdbDateTime from '@/Sdb/DateTime';
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormInputAddons from '@/Sdb/Form/InputAddons';
     import SdbFormSelect from '@/Sdb/Form/Select';
@@ -241,15 +253,15 @@
     import SdbFormTextarea from '@/Sdb/Form/Textarea';
     import SdbImage from '@/Sdb/Image';
     import SdbLabel from '@/Sdb/Label';
+    import SdbLink from '@/Sdb/Link';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbTab from '@/Sdb/Tab';
     import SdbTabList from '@/Sdb/TabList';
-    import SdbLink from '@/Sdb/Link';
     import { acceptedImageTypes } from '@/Libs/defaults';
-    import { ref } from 'vue';
-    import { head, isEmpty, keys, pull, sortBy } from 'lodash';
-    import { useModelWrapper } from '@/Libs/utils';
     import { convertToSlug, regexSlug } from '@/Libs/utils';
+    import { head, isEmpty, keys, pull, sortBy } from 'lodash';
+    import { ref } from 'vue';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'PostForm',
@@ -257,6 +269,7 @@
             SdbButton,
             SdbButtonIcon,
             SdbButtonLink,
+            SdbDateTime,
             SdbFormInput,
             SdbFormInputAddons,
             SdbFormSelect,
@@ -264,10 +277,10 @@
             SdbFormTextarea,
             SdbImage,
             SdbLabel,
+            SdbLink,
             SdbModalImageBrowser,
             SdbTab,
             SdbTabList,
-            SdbLink,
         },
         mixins: [
             MixinHasModal,
