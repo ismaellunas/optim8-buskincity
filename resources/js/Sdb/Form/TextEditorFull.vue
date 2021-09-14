@@ -79,14 +79,16 @@
                         'Header 2=h2; '+
                         'Header 3=h3'
                     ),
-                    toolbar: (
+                    toolbar1: (
                         'fullscreen | formatselect | ' +
                         'bold italic underline strikethrough blockquote | ' +
                         'forecolor backcolor | ' +
+                        'removeformat image'
+                    ),
+                    toolbar2: (
                         'alignleft aligncenter alignright alignjustify | ' +
                         'bullist numlist outdent indent hr | ' +
-                        'anchor link table charmap code | ' +
-                        'removeformat image'
+                        'anchor link table charmap code | '
                     ),
                     contextmenu: 'link image',
                     file_picker_types: 'image', //'file image media'
