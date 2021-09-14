@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="field">
         <sdb-label>{{ label }}</sdb-label>
 
         <sdb-field class="has-addons mb-0">
