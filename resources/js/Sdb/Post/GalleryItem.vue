@@ -44,7 +44,9 @@
         <footer class="card-footer">
 
             <sdb-button-link
+                v-if="isEditEnabled"
                 title="Edit"
+                type="button"
                 :class="[actionClass,'is-ghost', 'has-text-black']"
                 :href="editLink"
             >
@@ -54,6 +56,7 @@
             </sdb-button-link>
 
             <sdb-button-icon
+                v-if="isDeleteEnabled"
                 icon="far fa-trash-alt"
                 title="Delete"
                 type="button"
@@ -88,6 +91,8 @@
         ],
         props: {
             editLink: String,
+            isDeleteEnabled: {type: Boolean, default: true},
+            isEditEnabled: {type: Boolean, default: true},
             record: Object,
         },
         emits: [

@@ -37,7 +37,10 @@
 
                 <div class="media-right">
                     <sdb-button-link
+                        v-if="isEditEnabled"
                         class="is-ghost has-text-black"
+                        title="Edit"
+                        type="button"
                         :href="editLink"
                     >
                         <span class="icon is-small">
@@ -46,6 +49,7 @@
                     </sdb-button-link>
 
                     <sdb-button-icon
+                        v-if="isDeleteEnabled"
                         class="is-ghost has-text-black ml-1"
                         icon="far fa-trash-alt"
                         type="button"
@@ -82,6 +86,8 @@
         ],
         props: {
             editLink: String,
+            isDeleteEnabled: {type: Boolean, default: true},
+            isEditEnabled: {type: Boolean, default: true},
             record: Object,
         },
         emits: [
