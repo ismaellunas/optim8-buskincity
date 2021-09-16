@@ -21,10 +21,14 @@ class Post extends Model implements PublishableInterface
         'locale',
         'meta_description',
         'meta_title',
-        'scheduled_on',
+        'scheduled_at',
         'slug',
         'status',
         'title',
+    ];
+
+    protected $casts = [
+        'scheduled_at' => 'datetime',
     ];
 
     /* Relationship: */
