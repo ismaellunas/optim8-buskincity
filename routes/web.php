@@ -3,9 +3,13 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\UserRoleController;
+use App\Http\Controllers\{
+    Frontend\PostController as FrontendPostController,
+    PermissionController,
+    PostController,
+    RoleController,
+    UserRoleController
+};
 use App\Services\TranslationService as TranslationSv;
 
 /*
@@ -45,7 +49,7 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
 
     Route::get('/media-list/image', [App\Http\Controllers\MediaController::class, 'listImages'])
         ->name('media.list.image');
-    Route::resource('/posts', App\Http\Controllers\PostController::class);
+    Route::resource('/posts', PostController::class);
 });
 
 Route::name('api.admin.')->prefix('api/admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
