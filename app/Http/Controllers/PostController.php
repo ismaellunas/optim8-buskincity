@@ -63,7 +63,6 @@ class PostController extends CrudController
             'meta_description',
             'cover_image_id',
             'status',
-            'scheduled_on',
         ]);
         $post->fill($data);
         $post->author_id = auth()->id();
@@ -132,7 +131,6 @@ class PostController extends CrudController
             'meta_description',
             'cover_image_id',
             'status',
-            'scheduled_on',
         ]));
 
         $isExists = Post::where('slug', $request->input('slug'))
