@@ -42,6 +42,22 @@ class Post extends Model implements PublishableInterface
         return $this->hasOne(Media::class, 'id', 'cover_image_id');
     }
 
+    /* Scope: */
+    public function scopePublished($query)
+    {
+        return $query->where('status', self::STATUS_PUBLISHED);
+    }
+
+    public function scopeScheduled($query)
+    {
+        return $query->where('status', self::STATUS_SCHEDULED);
+    }
+
+    public function scopeDraft($query)
+    {
+        return $query->where('status', self::STATUS_DRAFT);
+    }
+
     public static function getStatusOptions(): array
     {
         return [
