@@ -46,6 +46,11 @@ class MenuService
             }
         }
 
+        $menus['navbar'][] = [
+            'title' => 'Blog',
+            'link' => route('blog.index', [$locale]),
+        ];
+
         return $menus;
     }
 }
