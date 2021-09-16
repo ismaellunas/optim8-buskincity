@@ -45,23 +45,13 @@
                             </div>
                         </sdb-form-field-horizontal>
                     </div>
+
                     <div class="column is-one-fifth">
-                        <p class="buttons is-pulled-right">
-                            <sdb-button-icon
-                                icon="fas fa-th"
-                                title="Gallery View"
-                                type="button"
-                                :class="{'is-primary': view === 'gallery'}"
-                                @click="setView('gallery')"
-                            />
-                            <sdb-button-icon
-                                icon="fas fa-th-list"
-                                title="List View"
-                                type="button"
-                                :class="{'is-primary': view === 'list'}"
-                                @click="setView('list')"
-                            />
-                        </p>
+                        <sdb-buttons-display-view
+                            v-model="view"
+                            class="buttons is-pulled-right"
+                            @on-view-changed="$emit('on-view-changed', $event)"
+                        />
                     </div>
                 </div>
             </div>
@@ -226,6 +216,7 @@
     import MediaForm from '@/Pages/Media/Form';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
+    import SdbButtonsDisplayView from '@/Sdb/ButtonsDisplayView';
     import SdbFormField from '@/Sdb/Form/Field';
     import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbImage from '@/Sdb/Image';
@@ -264,6 +255,7 @@
             MediaForm,
             SdbButton,
             SdbButtonIcon,
+            SdbButtonsDisplayView,
             SdbFormField,
             SdbFormFieldHorizontal,
             SdbImage,
@@ -509,10 +501,6 @@
                     }
                 }
                 return "far fa-file-alt";
-            },
-            setView(view) {
-                this.view = view;
-                this.$emit('on-view-changed', view);
             },
             onStartLoadingOverlay() {
                 this.loader = this.$loading.show();
