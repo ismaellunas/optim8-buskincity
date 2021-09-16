@@ -25,7 +25,7 @@ class PostController extends CrudController
             'pageNumber' => $request->page,
             'records' => $this->postService->getRecords(
                 $request->term,
-                array_filter([$request->status ?? 'published']), 4
+                array_filter([$request->status ?? 'published'])
             ),
         ]);
     }
@@ -99,7 +99,6 @@ class PostController extends CrudController
      */
     public function show(Post $post)
     {
-        //
     }
 
     /**
