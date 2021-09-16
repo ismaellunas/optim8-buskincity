@@ -54,6 +54,11 @@
                 slug: props.post.slug,
                 status: props.post.status,
                 title: props.post.title,
+                scheduled_at: (
+                    (props.post.scheduled_at)
+                    ? new Date(props.post.scheduled_at)
+                    : new Date()
+                ),
             };
 
             return {

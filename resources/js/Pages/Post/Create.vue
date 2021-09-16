@@ -52,6 +52,7 @@
                 slug: '',
                 status: 0,
                 title: '',
+                scheduled_at: null,
             };
 
             return {
