@@ -23,7 +23,7 @@ class CreatePostsTable extends Migration
             $table->string('meta_title', 255)->nullable();
             $table->string('meta_description', 255)->nullable();
             $table->tinyInteger('status')->default(0);
-            $table->dateTime('scheduled_on')->nullable();
+            $table->dateTime('scheduled_at')->nullable();
             $table
                 ->foreignId('cover_image_id')
                 ->nullable()
