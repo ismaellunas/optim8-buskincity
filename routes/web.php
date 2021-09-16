@@ -96,6 +96,13 @@ Route::group([
         ]);
     });
 
+    Route::get('/blog', [FrontendPostController::class, 'index'])
+        ->name('blog.index');
+
+    Route::get('blog/{slug}', [FrontendPostController::class, 'show'])
+        ->where('slug', '[\w\d\-\_]+')
+        ->name('blog.show');
+
     Route::get('/{page_translation}', [App\Http\Controllers\PageController::class, 'show'])
         ->name('pages.show');
 });
