@@ -20,6 +20,7 @@
         :data="media"
         :query-params="imageListQueryParams"
         :search="search"
+        :style="{zIndex: 1200}"
         @close="closeModal"
         @on-clicked-pagination="getImagesList"
         @on-media-selected="selectFile"
