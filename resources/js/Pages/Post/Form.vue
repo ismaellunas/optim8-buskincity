@@ -253,7 +253,6 @@
     import SdbFormTextarea from '@/Sdb/Form/Textarea';
     import SdbImage from '@/Sdb/Image';
     import SdbLabel from '@/Sdb/Label';
-    import SdbLink from '@/Sdb/Link';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbTab from '@/Sdb/Tab';
     import SdbTabList from '@/Sdb/TabList';
@@ -277,7 +276,6 @@
             SdbFormTextarea,
             SdbImage,
             SdbLabel,
-            SdbLink,
             SdbModalImageBrowser,
             SdbTab,
             SdbTabList,
