@@ -55,6 +55,44 @@ class PostService
         return $records;
     }
 
+    public function getBlogRecords(
+        string $term,
+        int $recordsPerPage = 10,
+        string $locale = 'en'
+    ) {
+        $records = Post::orderBy('id', 'DESC')
+            ->where('locale', $locale)
+            ->when($term, function ($query, $term) {
+                $query->search($term);
+            })
+            ->alreadyPublishedAt(Carbon::now('UTC')->toDateTimeString())
+            ->with([
+                'coverImage' => function ($query) {
+                    $query->select([
+                        'extension',
+                        'file_name',
+                        'file_url',
+                        'id',
+                        'version',
+                    ]);
+                },
+                'categories' => function ($query) {
+                    $tableName = Category::getTableName();
+                    $query->select([$tableName.'.id']);
+                    $query->with([
+                        'translations' => function ($query) {
+                            $query->select('id', 'name', 'category_id', 'locale');
+                        },
+                    ]);
+                },
+            ])
+            ->paginate($recordsPerPage);
+
+        $this->transformRecords($records);
+
+        return $records;
+    }
+
     public function transformRecords($records)
     {
         $records->getCollection()->transform(function ($record) {
