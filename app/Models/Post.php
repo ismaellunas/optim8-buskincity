@@ -71,6 +71,15 @@ class Post extends Model implements PublishableInterface
         });
     }
 
+    public function scopeSearch($query, string $term)
+    {
+        return $query
+            ->where('title', 'ILIKE', '%'.$term.'%')
+            ->orWhere('content', 'ILIKE', '%'.$term.'%')
+            ->orWhere('excerpt', 'ILIKE', '%'.$term.'%')
+            ->orWhere('slug', 'ILIKE', '%'.$term.'%');
+    }
+
     public static function getStatusOptions(): array
     {
         return [
