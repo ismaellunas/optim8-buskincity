@@ -74,6 +74,12 @@ class PostController extends CrudController
             $post->slug = $request->input('slug') . '-' . date('ymdHis');
         }
 
+        if ($request->status == Post::STATUS_SCHEDULED) {
+            $post->scheduled_at = $request->scheduled_at;
+        } else {
+            $post->scheduled_at = null;
+        }
+
         $post->save();
 
         if (!empty($request->input('categories'))) {
@@ -140,9 +146,16 @@ class PostController extends CrudController
         if ($isExists) {
             $post->slug = $request->input('slug') . '-' . date('ymdHis');
         }
+
+        if ($request->status == Post::STATUS_SCHEDULED) {
+            $post->scheduled_at = $request->scheduled_at;
+        } else {
+            $post->scheduled_at = null;
+        }
+
         $post->save();
 
-        if (!empty($request->input('categories'))) {
+        if ($request->has('categories')) {
             $post->categories()->sync($request->input('categories'));
         }
 
