@@ -4,13 +4,17 @@ namespace App\Services;
 
 use App\Models\Category;
 use App\Models\Post;
+use App\Services\TranslationService;
 use Illuminate\Database\Eloquent\Builder;
 
 class PostService
 {
-    public function getRecords(string $term = null, int $recordsPerPage = 15)
-    {
-        $records = Post::orderBy('id', 'DESC')
+    public function getRecords(
+        string $term = null,
+        array $scopeNames = [],
+        int $recordsPerPage = 15
+    ) {
+        $query = Post::orderBy('id', 'DESC')
             ->with([
                 'coverImage' => function ($query) {
                     $query->select([
@@ -21,14 +25,30 @@ class PostService
                         'version',
                     ]);
                 },
+                'categories' => function ($query) {
+                    $tableName = Category::getTableName();
+                    $query->select([$tableName.'.id']);
+                    $query->with([
+                        'translations' => function ($query) {
+                            $query
+                                ->select('id', 'name', 'category_id', 'locale')
+                                ->where('locale', TranslationService::getDefaultLocale());
+                        },
+                    ]);
+                },
             ])
             ->when($term, function (Builder $query, $term) {
                 $query->where('title', 'ILIKE', '%'.$term.'%');
                 $query->orWhere('content', 'ILIKE', '%'.$term.'%');
                 $query->orWhere('excerpt', 'ILIKE', '%'.$term.'%');
                 $query->orWhere('slug', 'ILIKE', '%'.$term.'%');
-            })
-            ->paginate($recordsPerPage);
+            });
+
+        foreach ($scopeNames as $scopeName) {
+            $query->{$scopeName}();
+        }
+
+        $records = $query->paginate($recordsPerPage);
 
         $this->transformRecords($records);
 
