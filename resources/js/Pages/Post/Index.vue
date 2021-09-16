@@ -46,67 +46,64 @@
         </div>
 
         <div class="table-container">
-            <sdb-table class="is-striped is-hoverable is-fullwidth">
-                <tbody>
-                    <tr v-for="record in records.data" :key="record.id">
-                        <td>
-                            <article class="media">
-                                <sdb-image
-                                    v-if="record.thumbnail_url"
-                                    class="media-left"
-                                    ratio="is-64x64"
-                                    :src="record.thumbnail_url"
-                                />
+            <sdb-tab>
+                <ul>
+                    <sdb-tab-list
+                        v-for="tab, index in tabs"
+                        :key="index"
+                        :is-active="isTabActive(index)"
+                    >
+                        <a @click.prevent="setActiveTab(index)">
+                            {{ tab.title }}
+                        </a>
+                    </sdb-tab-list>
+                </ul>
 
-                                <div v-else class="media-left" style="width: 64px;"></div>
+                <sdb-buttons-display-view
+                    v-model="view"
+                    @on-view-changed="onViewChanged"
+                />
+            </sdb-tab>
 
-                                <div class="media-content">
-                                    <div class="content">
-                                        <p>
-                                            <strong>{{ record.title }}</strong> {{ record.locale }}
-                                            <br>
-                                            {{ record.excerpt }}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="media-right">
-                                    <sdb-button-link
-                                        class="is-ghost has-text-black"
-                                        :href="route(baseRouteName+'.edit', {id: record.id})"
-                                    >
-                                        <span class="icon is-small">
-                                            <i class="fas fa-pen"></i>
-                                        </span>
-                                    </sdb-button-link>
-                                    <sdb-button-icon
-                                        class="is-ghost has-text-black ml-1"
-                                        icon="far fa-trash-alt"
-                                        type="button"
-                                        @click="deleteRecord(record)"
-                                    />
-                                </div>
-                            </article>
-                        </td>
-                    </tr>
-                </tbody>
-            </sdb-table>
+            <component
+                :is="isGalleryView ? 'SdbPostGallery' : 'SdbPostList'"
+                :records="records.data"
+            >
+                <template v-slot:default="{record}">
+                    <component
+                        :is="isGalleryView ? 'SdbPostGalleryItem' : 'SdbPostListItem'"
+                        :record="record"
+                        :edit-link="route(baseRouteName+'.edit', record.id)"
+                        @on-delete-clicked="deleteRecord"
+                    />
+                </template>
+            </component>
         </div>
-        <sdb-pagination :links="records.links"></sdb-pagination>
+        <sdb-pagination
+            :links="records.links"
+            :query-params="queryParams"
+        />
     </div>
 </app-layout>
 </template>
 
 <script>
+    import MixinHasTab from '@/Mixins/HasTab';
     import AppLayout from '@/Layouts/AppLayout';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
+    import SdbButtonsDisplayView from '@/Sdb/ButtonsDisplayView';
     import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
-    import SdbImage from '@/Sdb/Image';
     import SdbInput from '@/Sdb/Input';
     import SdbPagination from '@/Sdb/Pagination';
-    import SdbTable from '@/Sdb/Table';
+    import SdbPostGallery from '@/Sdb/Post/Gallery';
+    import SdbPostGalleryItem from '@/Sdb/Post/GalleryItem';
+    import SdbPostList from '@/Sdb/Post/List';
+    import SdbPostListItem from '@/Sdb/Post/ListItem';
+    import SdbTab from '@/Sdb/Tab';
+    import SdbTabList from '@/Sdb/TabList';
     import { confirmDelete } from '@/Libs/alert';
-    import { merge } from 'lodash';
+    import { clone, keys, head, merge } from 'lodash';
     import { ref } from 'vue';
 
     export default {
@@ -114,12 +111,20 @@
             AppLayout,
             SdbButtonIcon,
             SdbButtonLink,
+            SdbButtonsDisplayView,
             SdbFormFieldHorizontal,
-            SdbImage,
             SdbInput,
             SdbPagination,
-            SdbTable,
+            SdbPostGallery,
+            SdbPostGalleryItem,
+            SdbPostList,
+            SdbPostListItem,
+            SdbTab,
+            SdbTabList,
         },
+        mixins: [
+            MixinHasTab
+        ],
         props: {
             pageNumber: String,
             pageQueryParams: Object,
@@ -134,10 +139,17 @@
             return {
                 queryParams: ref(queryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
+                view: ref(props.pageQueryParams?.view ?? 'gallery'),
+                tabs: {
+                    published: { title: 'Published'},
+                    scheduled: {title: 'Scheduled'},
+                    draft: {title: 'Draft'},
+                },
             };
         },
         data() {
             return {
+                activeTab: this.queryParams?.status ?? head(keys(this.tabs)),
                 baseRouteName: 'admin.posts',
                 loader: null,
             };
@@ -147,10 +159,14 @@
                 const self = this;
                 confirmDelete().then(result => {
                     if (result.isConfirmed) {
-                        self.$inertia.delete(route(
-                            this.baseRouteName+'.destroy',
-                            record.id
-                        ));
+                        self.$inertia.delete(
+                            route(self.baseRouteName+'.destroy', record.id),
+                            {},
+                            {
+                                onStart: () => this.onStartLoadingOverlay(),
+                                onFinish: () => this.onEndLoadingOverlay(),
+                            }
+                        );
                     }
                 })
             },
@@ -172,6 +188,41 @@
             },
             onEndLoadingOverlay() {
                 this.loader.hide();
+            },
+            onTabSelected(tab) {
+                this.queryParams['status'] = tab;
+                this.$inertia.get(
+                    route(this.baseRouteName+'.index', this.queryParams),
+                    {},
+                    {
+                        only: ['records', 'pageQueryParams'],
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onFinish: () => this.onEndLoadingOverlay(),
+                    }
+                );
+            },
+            onViewChanged(view) {
+                this.queryParams['view'] = view;
+                const clonedQueryParam = clone(this.queryParams);
+
+                this.$inertia.get(
+                    route(
+                        this.baseRouteName+'.index',
+                        merge(clonedQueryParam, {page: this.pageNumber})
+                    ),
+                    {},
+                    {
+                        replace: true,
+                        preserveState: true,
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onFinish: () => this.onEndLoadingOverlay(),
+                    }
+                );
+            },
+        },
+        computed: {
+            isGalleryView() {
+                return this.view === 'gallery';
             },
         },
     };
