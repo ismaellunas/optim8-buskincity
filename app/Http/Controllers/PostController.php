@@ -21,8 +21,12 @@ class PostController extends CrudController
     public function index(Request $request)
     {
         return Inertia::render('Post/Index', [
-            'pageQueryParams' => array_filter($request->only('term', 'view')),
-            'records' => $this->postService->getRecords($request->term),
+            'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
+            'pageNumber' => $request->page,
+            'records' => $this->postService->getRecords(
+                $request->term,
+                array_filter([$request->status ?? 'published']), 4
+            ),
         ]);
     }
 
