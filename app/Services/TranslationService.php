@@ -11,7 +11,7 @@ class TranslationService
 
     public static function getDefaultLocale(): string
     {
-        return 'en';
+        return config('app.fallback_locale');
     }
 
     public static function getLocaleOptions(): array
