@@ -8,18 +8,20 @@
             <fieldset :disabled="isProcessing" class="box">
 
                 <sdb-tab class="is-boxed">
-                    <sdb-tab-list
-                        v-for="tab, index in tabs"
-                        :key="index"
-                        :is-active="activeTab === index"
-                    >
-                        <a @click.prevent="setActiveTab(index)">
-                            {{ tab.title }}
-                        </a>
-                    </sdb-tab-list>
+                    <ul>
+                        <sdb-tab-list
+                            v-for="(tab, index) in tabs"
+                            :key="index"
+                            :is-active="isTabActive(index)"
+                        >
+                            <a @click.prevent="setActiveTab(index)">
+                                {{ tab.title }}
+                            </a>
+                        </sdb-tab-list>
+                    </ul>
                 </sdb-tab>
 
-                <div v-show="activeTab === 'content'">
+                <div v-show="isTabActive('content')">
                     <sdb-form-input
                         label="Title"
                         v-model="form.title"
@@ -149,7 +151,7 @@
                     />
                 </div>
 
-                <div v-show="activeTab === 'seo'">
+                <div v-show="isTabActive('seo')">
                     <sdb-form-input
                         label="Meta Title"
                         v-model="form.meta_title"
@@ -241,6 +243,7 @@
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import MixinHasTab from '@/Mixins/HasTab';
     import MixinImageLibrary from '@/Mixins/MediaLibrary';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
@@ -283,6 +286,7 @@
         mixins: [
             MixinHasModal,
             MixinHasPageErrors,
+            MixinHasTab,
             MixinImageLibrary,
         ],
         emits: ['on-submit'],
@@ -367,9 +371,6 @@
                     this.populateSlug(event);
                 }
                 return true;
-            },
-            setActiveTab(index) {
-                this.activeTab = index;
             },
         },
         computed: {
