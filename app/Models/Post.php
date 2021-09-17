@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Media;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Jobs\ProcessPublishScheduledPost;
 
 class Post extends Model implements PublishableInterface
 {
@@ -117,5 +118,15 @@ class Post extends Model implements PublishableInterface
         $this->status = Post::STATUS_PUBLISHED;
         $this->scheduled_at = null;
         $this->save();
+    }
+
+    protected static function booted()
+    {
+        static::saved(function ($post) {
+            if ($post->isChangedToScheduled) {
+                ProcessPublishScheduledPost::dispatch($post)
+                    ->delay($post->scheduled_at);
+            }
+        });
     }
 }
