@@ -26,6 +26,7 @@
         'CLOUDINARY_URL',
         'CLOUDINARY_UPLOAD_PRESET',
         'CLOUDINARY_NOTIFICATION_URL',
+        'QUEUE_CONNECTION',
     ];
 @endsetup
 
