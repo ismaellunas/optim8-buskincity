@@ -112,4 +112,10 @@ class Post extends Model implements PublishableInterface
         ];
     }
 
+    public function publish(): void
+    {
+        $this->status = Post::STATUS_PUBLISHED;
+        $this->scheduled_at = null;
+        $this->save();
+    }
 }
