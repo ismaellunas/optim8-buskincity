@@ -80,6 +80,20 @@ class Post extends Model implements PublishableInterface
             ->orWhere('slug', 'ILIKE', '%'.$term.'%');
     }
 
+    /* Accessors: */
+    public function getIsScheduledAttribute(): bool
+    {
+        return $this->status == self::STATUS_SCHEDULED;
+    }
+
+    public function getIsChangedToScheduledAttribute(): bool
+    {
+        return (
+            $this->isScheduled
+            && ($this->isDirty('scheduled_at') || $this->isDirty('status'))
+        );
+    }
+
     public static function getStatusOptions(): array
     {
         return [
