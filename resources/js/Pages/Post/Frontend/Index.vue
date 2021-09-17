@@ -36,17 +36,16 @@
 
         <div class="table-container">
             <component
-                :is="isGalleryView ? 'SdbPostGallery' : 'SdbPostList'"
+                :is="'SdbPostList'"
                 :records="records.data"
             >
                 <template v-slot:default="{record}">
                     <component
-                        :is="isGalleryView ? 'SdbPostGalleryItem' : 'SdbPostListItem'"
+                        :is="'SdbPostListItem'"
                         :edit-link="route(baseRouteName+'.show', {locale: currentLanguage, slug: record.slug})"
                         :is-delete-enabled="false"
                         :is-edit-enabled="false"
                         :record="record"
-                        @on-delete-clicked="deleteRecord"
                     />
                 </template>
             </component>
@@ -60,21 +59,16 @@
 
 <script>
     import PageLayout from '@/Layouts/PageLayout';
-    import { Head } from '@inertiajs/inertia-vue3';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbButtonsDisplayView from '@/Sdb/ButtonsDisplayView';
     import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbInput from '@/Sdb/Input';
     import SdbPagination from '@/Sdb/Pagination';
-    import SdbPostGallery from '@/Sdb/Post/Gallery';
-    import SdbPostGalleryItem from '@/Sdb/Post/GalleryItem';
     import SdbPostList from '@/Sdb/Post/List';
     import SdbPostListItem from '@/Sdb/Post/ListItem';
-    import SdbTab from '@/Sdb/Tab';
-    import SdbTabList from '@/Sdb/TabList';
+    import { Head } from '@inertiajs/inertia-vue3';
+    import { merge, identity, pickBy } from 'lodash';
     import { confirmDelete } from '@/Libs/alert';
-    import { clone, keys, head, merge } from 'lodash';
     import { ref } from 'vue';
 
     export default {
@@ -83,68 +77,41 @@
             Head,
             SdbButtonIcon,
             SdbButtonLink,
-            SdbButtonsDisplayView,
             SdbFormFieldHorizontal,
             SdbInput,
             SdbPagination,
-            SdbPostGallery,
-            SdbPostGalleryItem,
             SdbPostList,
             SdbPostListItem,
-            SdbTab,
-            SdbTabList,
         },
         props: {
+            currentLanguage: String,
+            errors: Object,
             pageNumber: String,
             pageQueryParams: Object,
             records: {},
-            currentLanguage: String,
-            errors: Object,
         },
         setup(props) {
-            const queryParams = merge(
-                {view: 'gallery'},
-                props.pageQueryParams
-            );
+            const queryParams = merge({}, props.pageQueryParams);
 
             return {
                 queryParams: ref(queryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
-                view: ref(props.pageQueryParams?.view ?? 'list'),
-                tabs: {
-                    published: { title: 'Published'},
-                    scheduled: {title: 'Scheduled'},
-                    draft: {title: 'Draft'},
-                },
             };
         },
         data() {
             return {
-                activeTab: this.queryParams?.status ?? head(keys(this.tabs)),
                 baseRouteName: 'blog',
                 loader: null,
             };
         },
         methods: {
-            deleteRecord(record) {
-                const self = this;
-                confirmDelete().then(result => {
-                    if (result.isConfirmed) {
-                        self.$inertia.delete(
-                            route(self.baseRouteName+'.destroy', record.id),
-                            {},
-                            {
-                                onStart: () => this.onStartLoadingOverlay(),
-                                onFinish: () => this.onEndLoadingOverlay(),
-                            }
-                        );
-                    }
-                })
-            },
             search(term) {
                 this.queryParams['term'] = term;
                 this.$inertia.get(
-                    route(this.baseRouteName+'.index', this.queryParams),
+                    route(
+                        this.baseRouteName+'.index',
+                        pickBy(this.queryParams, identity)
+                    ),
                     {},
                     {
                         replace: true,
@@ -159,41 +126,6 @@
             },
             onEndLoadingOverlay() {
                 this.loader.hide();
-            },
-            onTabSelected(tab) {
-                this.queryParams['status'] = tab;
-                this.$inertia.get(
-                    route(this.baseRouteName+'.index', this.queryParams),
-                    {},
-                    {
-                        only: ['records', 'pageQueryParams'],
-                        onStart: () => this.onStartLoadingOverlay(),
-                        onFinish: () => this.onEndLoadingOverlay(),
-                    }
-                );
-            },
-            onViewChanged(view) {
-                this.queryParams['view'] = view;
-                const clonedQueryParam = clone(this.queryParams);
-
-                this.$inertia.get(
-                    route(
-                        this.baseRouteName+'.index',
-                        merge(clonedQueryParam, {page: this.pageNumber})
-                    ),
-                    {},
-                    {
-                        replace: true,
-                        preserveState: true,
-                        onStart: () => this.onStartLoadingOverlay(),
-                        onFinish: () => this.onEndLoadingOverlay(),
-                    }
-                );
-            },
-        },
-        computed: {
-            isGalleryView() {
-                return this.view === 'gallery';
             },
         },
     };
