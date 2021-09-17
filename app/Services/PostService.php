@@ -66,7 +66,7 @@ class PostService
             ->when($term, function ($query, $term) {
                 $query->search($term);
             })
-            ->alreadyPublishedAt(Carbon::now('UTC')->toDateTimeString())
+            ->published()
             ->with([
                 'coverImage' => function ($query) {
                     $query->select([
