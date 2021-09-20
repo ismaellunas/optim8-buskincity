@@ -139,4 +139,14 @@ class PostService
         }
         return $slug;
     }
+
+    public function getFirstBySlug(
+        string $slug,
+        string $locale
+    ): ?Post {
+        return Post::where('slug', $slug)
+            ->published()
+            ->where('locale', $locale)
+            ->first();
+    }
 }
