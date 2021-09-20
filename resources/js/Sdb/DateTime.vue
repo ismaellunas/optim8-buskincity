@@ -2,7 +2,7 @@
     <bulma-calendar
         ref="datetimepicker"
         :value="modelValue"
-        @input="updateDate"
+        @input="$emit('update:modelValue', $event)"
         :options="options"
     />
 </template>
@@ -11,25 +11,22 @@
     import BulmaCalendar from "bulma-calendar/dist/components/vue/bulma_calendar";
 
     export default {
+        name: 'SdbDateTime',
         components: {
             BulmaCalendar,
         },
         props: {
             modelValue: Date|Array|null,
+            options: {
+                type: Object,
+                default: {}
+            }
         },
         emits: ['update:modelValue'],
-        data() {
-            return {
-                options: {},
-            };
-        },
         methods: {
             focus() {
                 this.$refs.input.focus()
             },
-            updateDate(date) {
-                this.$emit('update:modelValue', date);
-            }
         },
     };
 </script>
