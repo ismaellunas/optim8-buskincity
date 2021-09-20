@@ -158,6 +158,7 @@ return [
         'de.name' => 'Name (German)',
         'alt' => 'Alternative Text',
         'description' => 'Description',
+        'scheduled_at' => 'Scheduled At',
     ],
 
 ];
