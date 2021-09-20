@@ -126,4 +126,17 @@ class PostService
             })
             ->exists();
     }
+
+    public static function getUniqueSlug(
+        string $slug,
+        array $excludedIds = null
+    ): string {
+        if (self::isSlugExists($slug, $excludedIds)) {
+            $slug = self::getUniqueSlug(
+                $slug.'-'.date('ymdHis'),
+                $excludedIds
+            );
+        }
+        return $slug;
+    }
 }
