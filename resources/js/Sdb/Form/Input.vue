@@ -23,12 +23,35 @@
     import SdbInputError from '@/Sdb/InputError';
 
     export default {
+        name: 'SdbFormInput',
         components: {
             SdbFormField,
             SdbInput,
             SdbInputError,
         },
-        emits: ['update:modelValue', 'on-keypress', 'on-blur'],
-        props: ['label', 'message', 'modelValue', 'placeholder', 'disabled', 'required'],
-    }
+        emits: [
+            'update:modelValue',
+            'on-keypress',
+            'on-blur'
+        ],
+        props: {
+            label: {
+                type: String
+            },
+            message: {
+                type: Object,
+            },
+            modelValue: {
+                type: [String, Number]
+            },
+            placeholder: {
+                type: String
+            },
+            disabled: {
+                type: Boolean,
+                default: false
+            },
+            required: {},
+        }
+    };
 </script>
