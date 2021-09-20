@@ -3,6 +3,7 @@
         v-model="content"
         api-key="gumlypbnhr1ushb1hnnynxp4n6osqza60b3hn7hdtfa6khjb"
         :init="editorConfig"
+        :disabled="disabled"
     >
     </editor>
 </template>
@@ -13,15 +14,25 @@
     import { useModelWrapper } from '@/Libs/utils'
 
     export default {
+        name: 'SdbEditorTinymce',
         components: {
             editor: Editor
         },
-        props: ['modelValue', 'config'],
+        props: {
+            modelValue: {},
+            config: {
+                type: Object
+            },
+            disabled: {
+                type: Boolean,
+                default: false
+            },
+        },
         setup(props, { emit }) {
             return {
                 content: useModelWrapper(props, emit),
                 editorConfig: props.config ?? editorConfig,
             };
         },
-    }
+    };
 </script>
