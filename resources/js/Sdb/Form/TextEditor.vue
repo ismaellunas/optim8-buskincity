@@ -7,7 +7,6 @@
                 v-model="editorValue"
                 :disabled="disabled"
                 :placeholder="placeholder"
-                :rows="rows"
                 :config="config"
             />
         </div>
@@ -35,14 +34,16 @@
                 editorValue: useModelWrapper(props, emit),
             };
         },
-        props: [
-            'config',
-            'disabled',
-            'label',
-            'message',
-            'modelValue',
-            'placeholder',
-            'rows',
-        ],
-    }
+        props: {
+            config: Object,
+            disabled: {
+                type: Boolean,
+                default: false
+            },
+            label: String,
+            message: Object,
+            modelValue: {},
+            placeholder: String,
+        }
+    };
 </script>
