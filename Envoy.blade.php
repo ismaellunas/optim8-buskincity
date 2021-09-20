@@ -32,21 +32,25 @@
 
 @story('heroku:deploy-simple')
     install-dependencies
+    heroku maintenance:on
     heroku:config-set
     heroku:push
     heroku:migration
     heroku:clean-after-deploy
+    heroku maintenance:off
 @endstory
 
 @story('heroku:deploy')
     git-restore-and-stash
     install-dependencies
     git-commit-deployment
+    heroku maintenance:on
     heroku:config-set
     heroku:push
     heroku:migration
     heroku:route-list
     heroku:clean-after-deploy
+    heroku maintenance:off
 @endstory
 
 @task('heroku:migration')
