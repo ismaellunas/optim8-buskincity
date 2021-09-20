@@ -42,7 +42,10 @@ class PostRequest extends FormRequest
             ],
             'meta_description' => ['max:250'],
             'meta_title' => ['max:250'],
-            'scheduled_on' => ['date'],
+            'scheduled_at' => [
+                'date',
+                'required_if:status,'.Post::STATUS_SCHEDULED
+            ],
             'status' => [
                 'integer',
                 'in:'.collect(Post::getStatusOptions())->implode('id', ','),
@@ -54,8 +57,14 @@ class PostRequest extends FormRequest
         ];
     }
 
-    public function attributes(): array
+    public function messages(): array
     {
-        return [];
+        return [
+            'scheduled_at.required_if' => (
+                'The :attribute field is required when :other is '.
+                collect(Post::getStatusOptions())
+                    ->firstWhere('id', Post::STATUS_SCHEDULED)['value']
+            ),
+        ];
     }
 }
