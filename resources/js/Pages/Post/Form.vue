@@ -27,7 +27,6 @@
                         v-model="form.title"
                         :message="error('title')"
                         placeholder="e.g A Good News"
-                        :disabled="isInputDisabled"
                         required
                         @on-blur="populateSlug"
                         @on-keypress="keyPressTitle"
@@ -63,7 +62,6 @@
                         v-model="form.locale"
                         class="is-fullwidth"
                         label="Language"
-                        :disabled="isInputDisabled"
                         :message="error('locale')"
                     >
                         <option
@@ -139,7 +137,6 @@
                         v-model="form.excerpt"
                         :message="error('excerpt')"
                         placeholder="..."
-                        :disabled="isInputDisabled"
                         rows="2"
                     />
 
@@ -157,7 +154,6 @@
                         v-model="form.meta_title"
                         :message="error('meta_title')"
                         placeholder="meta title"
-                        :disabled="isInputDisabled"
                     />
 
                     <sdb-form-input
@@ -165,7 +161,6 @@
                         v-model="form.meta_description"
                         :message="error('meta_description')"
                         placeholder="meta description"
-                        :disabled="isInputDisabled"
                     />
                 </div>
             </fieldset>
