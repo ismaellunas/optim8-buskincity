@@ -115,4 +115,15 @@ class PostService
             ];
         })->all();
     }
+
+    public static function isSlugExists(
+        string $slug,
+        array $excludedIds = null
+    ): bool {
+        return Post::where('slug', $slug)
+            ->when($excludedIds, function ($query) use ($excludedIds) {
+                $query->where('id', '<>', $excludedIds);
+            })
+            ->exists();
+    }
 }
