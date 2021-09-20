@@ -60,19 +60,6 @@ class Post extends Model implements PublishableInterface
         return $query->where('status', self::STATUS_DRAFT);
     }
 
-    public function scopeAlreadyPublishedAt($query, string $dateTime)
-    {
-        return $query->where(function ($query) use ($dateTime) {
-            $query
-                ->where(function ($query) use ($dateTime) {
-                    $query
-                        ->scheduled()
-                        ->where('scheduled_at', '<=', $dateTime);
-                })
-                ->orWhere->published();
-        });
-    }
-
     public function scopeSearch($query, string $term)
     {
         return $query
