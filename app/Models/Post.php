@@ -5,9 +5,10 @@ namespace App\Models;
 use App\Contracts\PublishableInterface;
 use App\Models\Category;
 use App\Models\Media;
+use App\Services\PostService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Jobs\ProcessPublishScheduledPost;
+use Illuminate\Support\Str;
 
 class Post extends Model implements PublishableInterface
 {
@@ -120,13 +121,26 @@ class Post extends Model implements PublishableInterface
         $this->save();
     }
 
-    protected static function booted()
+    public function saveFromInputs(array $inputs)
     {
-        static::saved(function ($post) {
-            if ($post->isChangedToScheduled) {
-                ProcessPublishScheduledPost::dispatch($post)
-                    ->delay($post->scheduled_at);
-            }
-        });
+        $this->fill($inputs);
+
+        $this->slug = PostService::getUniqueSlug(
+            Str::slug($inputs['slug'], '-', $this->locale),
+            ($this->id ? [$this->id] : null)
+        );
+
+        if ($inputs['status'] == Post::STATUS_SCHEDULED) {
+            $this->scheduled_at = $inputs['scheduled_at'];
+        } else {
+            $this->scheduled_at = null;
+        }
+
+        return $this->save();
+    }
+
+    public function syncCategories(array $categoryIds)
+    {
+        return $this->categories()->sync($categoryIds);
     }
 }
