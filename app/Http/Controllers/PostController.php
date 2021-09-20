@@ -53,37 +53,22 @@ class PostController extends CrudController
     public function store(PostRequest $request)
     {
         $post = new Post();
-        $data = $request->only([
-            'locale',
-            'title',
-            'slug',
+
+        $post->saveFromInputs($request->only([
             'content',
-            'excerpt',
-            'meta_title',
-            'meta_description',
             'cover_image_id',
+            'excerpt',
+            'locale',
+            'meta_description',
+            'meta_title',
+            'scheduled_at',
+            'slug',
             'status',
-        ]);
-        $post->fill($data);
-        $post->author_id = auth()->id();
+            'title',
+        ]));
 
-        $isExists = Post::where('slug', $request->input('slug'))
-            ->exists();
-
-        if ($isExists) {
-            $post->slug = $request->input('slug') . '-' . date('ymdHis');
-        }
-
-        if ($request->status == Post::STATUS_SCHEDULED) {
-            $post->scheduled_at = $request->scheduled_at;
-        } else {
-            $post->scheduled_at = null;
-        }
-
-        $post->save();
-
-        if (!empty($request->input('categories'))) {
-            $post->categories()->attach($request->input('categories'));
+        if ($request->has('categories')) {
+            $post->syncCategories($request->input('categories'));
         }
 
         $this->generateFlashMessage('Post created successfully!');
@@ -126,36 +111,21 @@ class PostController extends CrudController
      */
     public function update(PostRequest $request, Post $post)
     {
-        $post->fill($request->only([
-            'locale',
-            'title',
-            'slug',
+        $post->saveFromInputs($request->only([
             'content',
-            'excerpt',
-            'meta_title',
-            'meta_description',
             'cover_image_id',
+            'excerpt',
+            'locale',
+            'meta_description',
+            'meta_title',
+            'slug',
             'status',
+            'title',
+            'scheduled_at',
         ]));
 
-        $isExists = Post::where('slug', $request->input('slug'))
-            ->where('id', '<>', $post->id)
-            ->exists();
-
-        if ($isExists) {
-            $post->slug = $request->input('slug') . '-' . date('ymdHis');
-        }
-
-        if ($request->status == Post::STATUS_SCHEDULED) {
-            $post->scheduled_at = $request->scheduled_at;
-        } else {
-            $post->scheduled_at = null;
-        }
-
-        $post->save();
-
         if ($request->has('categories')) {
-            $post->categories()->sync($request->input('categories'));
+            $post->syncCategories($request->input('categories'));
         }
 
         $this->generateFlashMessage('Post updated successfully!');
