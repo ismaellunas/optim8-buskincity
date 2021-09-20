@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Post;
 use App\Services\PostService;
 use App\Services\TranslationService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Carbon\Carbon;
 
 class PostController extends Controller
 {
@@ -39,10 +37,7 @@ class PostController extends Controller
 
     public function show(string $locale, string $slug)
     {
-        $post = Post::where('slug', $slug)
-            ->alreadyPublishedAt(Carbon::now('UTC')->toDateTimeString())
-            ->where('locale', $locale)
-            ->first();
+        $post = $this->postService->getFirstBySlug($slug, $locale);
 
         if (!$post) {
             return redirect()->route($this->baseRouteName.'.index', ['locale'=>$locale]);
