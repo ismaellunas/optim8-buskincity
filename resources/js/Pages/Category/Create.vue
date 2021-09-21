@@ -8,13 +8,14 @@
 
         <div class="box mb-6">
             <category-form
+                :base-route="baseRoute"
+                :default-locale="defaultLocale"
                 :errors="errors"
-                :isNew="isNew"
-                :isEditMode="isEditMode"
-                :submit="submit"
-                :localeOptions="localeOptions"
-                :defaultLocale="defaultLocale"
-                :baseRoute="baseRoute"
+                :is-edit-mode="isEditMode"
+                :is-input-disabled="isProcessing"
+                :is-new="isNew"
+                :locale-options="localeOptions"
+                @on-submit="submit"
             />
         </div>
     </app-layout>
