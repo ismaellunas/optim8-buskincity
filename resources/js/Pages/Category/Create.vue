@@ -26,6 +26,7 @@
     import CategoryForm from '@/Pages/Category/Form';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -35,9 +36,13 @@
         },
         props: {
             baseRoute: String,
-            defaultLocale: String,
             errors: Object,
-            localeOptions: Array,
+        },
+        setup() {
+            return {
+                defaultLocale: usePage().props.value.defaultLanguage,
+                localeOptions: usePage().props.value.languageOptions,
+            };
         },
         data() {
             return {

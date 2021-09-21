@@ -35,8 +35,6 @@ class CategoryController extends CrudController
         return Inertia::render('Category/Create', [
             'record' => new $this->model,
             'baseRoute' => 'admin.categories',
-            'defaultLocale' => TranslationService::getDefaultLocale(),
-            'localeOptions' => TranslationService::getLocaleOptions(),
         ]);
     }
 
@@ -81,8 +79,6 @@ class CategoryController extends CrudController
         return Inertia::render('Category/Edit', [
             'record' => $category,
             'baseRoute' => 'admin.categories',
-            'defaultLocale' => TranslationService::getDefaultLocale(),
-            'localeOptions' => TranslationService::getLocaleOptions(),
         ]);
     }
 
