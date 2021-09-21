@@ -1,6 +1,6 @@
 <template>
-    <div class="field">
-        <sdb-label>{{ label }}</sdb-label>
+    <sdb-field>
+        <sdb-label :is-required="required">{{ label }}</sdb-label>
 
         <sdb-field class="has-addons mb-0">
             <div class="control is-expanded">
@@ -19,7 +19,7 @@
         </sdb-field>
 
         <sdb-input-error :message="message"/>
-    </div>
+    </sdb-field>
 </template>
 
 <script>
@@ -41,13 +41,19 @@
             'on-keypress',
             'update:modelValue',
         ],
-        props: [
-            'disabled',
-            'label',
-            'message',
-            'modelValue',
-            'placeholder',
-            'required',
-        ],
-    }
+        props: {
+            disabled: {
+                type: Boolean,
+                default: false
+            },
+            label: String,
+            message: Object|null,
+            modelValue: {},
+            placeholder: String,
+            required: {
+                type: Boolean,
+                default: false
+            },
+        },
+    };
 </script>
