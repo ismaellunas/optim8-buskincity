@@ -1,21 +1,20 @@
 <template>
     <app-layout>
-        <template #header>Update Category</template>
+        <template #header>Edit Category</template>
 
         <sdb-error-notifications :errors="$page.props.errors"/>
 
-        <sdb-flash-notifications :flash="$page.props.flash"/>
-
         <div class="box mb-6">
             <category-form
+                :base-route="baseRoute"
                 :category="record"
+                :default-locale="defaultLocale"
                 :errors="errors"
-                :isNew="isNew"
-                :isEditMode="isEditMode"
-                :submit="submit"
-                :localeOptions="localeOptions"
-                :defaultLocale="defaultLocale"
-                :baseRoute="baseRoute"
+                :is-edit-mode="isEditMode"
+                :is-input-disabled="isProcessing"
+                :is-new="isNew"
+                :locale-options="localeOptions"
+                @on-submit="submit"
             />
         </div>
     </app-layout>
@@ -25,16 +24,13 @@
     import AppLayout from '@/Layouts/AppLayout';
     import CategoryForm from '@/Pages/Category/Form';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbFlashNotifications from '@/Sdb/FlashNotifications';
-    import { Inertia } from '@inertiajs/inertia';
-    import { reactive } from 'vue';
+    import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
 
     export default {
         components: {
             AppLayout,
             CategoryForm,
             SdbErrorNotifications,
-            SdbFlashNotifications,
         },
         props: {
             baseRoute: String,
@@ -43,24 +39,36 @@
             localeOptions: Array,
             record: Object,
         },
-        setup(props) {
-            function submit(form) {
-                Inertia.put(
-                    route(props.baseRoute + '.update', props.record.id),
-                    form
-                );
-            };
-
-            return {
-                submit,
-            };
-        },
         data() {
             return {
-                disableInput: false,
                 isEditMode: true,
                 isNew: false,
+                isProcessing: false,
+                loader: null,
             };
-        }
-    }
+        },
+        methods: {
+            submit(form) {
+                const self = this;
+
+                self.$inertia.put(
+                    route(self.baseRoute + '.update', self.record.id),
+                    form,
+                    {
+                        onStart: () => {
+                            self.loader = self.$loading.show();
+                            self.isProcessing = true;
+                        },
+                        onSuccess: (page) => {
+                            successAlert(page.props.flash.message);
+                        },
+                        onFinish: () => {
+                            self.loader.hide();
+                            self.isProcessing = false;
+                        },
+                    }
+                );
+            },
+        },
+    };
 </script>
