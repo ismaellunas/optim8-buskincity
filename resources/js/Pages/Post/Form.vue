@@ -36,6 +36,7 @@
                         v-model="form.slug"
                         label="Slug"
                         placeholder="e.g. a-good-news"
+                        required
                         :disabled="isSlugDisabled || isInputDisabled"
                         :message="error('slug')"
                         @on-keypress="keyPressSlug"
@@ -62,6 +63,7 @@
                         v-model="form.locale"
                         class="is-fullwidth"
                         label="Language"
+                        required
                         :message="error('locale')"
                     >
                         <option
@@ -180,6 +182,7 @@
                     v-model="form.status"
                     class="is-fullwidth"
                     label="Status"
+                    required
                     :disabled="isInputDisabled"
                     :message="error('status')"
                 >
