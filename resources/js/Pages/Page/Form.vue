@@ -68,7 +68,6 @@
     import SdbProvideInjectTabs from '@/Sdb/ProvideInjectTab/Tabs';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { ref } from "vue";
-    import { Inertia } from '@inertiajs/inertia';
 
     export default {
         components: {
