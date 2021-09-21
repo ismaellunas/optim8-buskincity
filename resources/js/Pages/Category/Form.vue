@@ -1,85 +1,94 @@
 <template>
-    <form method="post" @submit.prevent="submit(form)">
-        <div class="mb-5">
-            <div class="columns is-multiline">
-                <div class="column is-half" v-for="(translation, index) in form">
-                    <div class="columns">
-                        <div class="column">
-                            <sdb-form-input
-                                :disabled="disableInput"
-                                :label="`Name (${index.toUpperCase()})`"
-                                :message="error('form.en.name')"
-                                placeholder=""
-                                required
-                                v-model="form[index].name"
-                            />
-                        </div>
-                        <div class="column is-one-fifth">
-                            <div class="field" v-if="index !== defaultLocale">
-                                <sdb-label>&nbsp;</sdb-label>
-                                <div class="control">
-                                    <sdb-button
-                                        class="is-danger"
-                                        @click.prevent="removeTranslation(index)">
-                                        <span class="icon">
-                                            <i class="fas fa-minus"></i>
-                                        </span>
-                                    </sdb-button>
+    <form
+        method="post"
+        @submit.prevent="$emit('on-submit', form)"
+    >
+        <p class="title is-3">Form Category</p>
+        <hr>
+
+        <fieldset :disabled="isInputDisabled">
+            <div class="mb-5">
+                <div class="columns is-multiline">
+                    <div class="column is-half" v-for="(translation, index) in form">
+                        <div class="columns">
+                            <div class="column">
+                                <sdb-form-input
+                                    v-model="form[index].name"
+                                    placeholder=""
+                                    :label="`Category Name (${index.toUpperCase()})`"
+                                    :message="error('form.en.name')"
+                                    :required="index === defaultLocale"
+                                />
+                            </div>
+                            <div class="column is-one-fifth">
+                                <div class="field" v-if="index !== defaultLocale">
+                                    <sdb-label>&nbsp;</sdb-label>
+                                    <div class="control">
+                                        <sdb-button
+                                            class="is-danger"
+                                            @click.prevent="removeTranslation(index)">
+                                            <span class="icon">
+                                                <i class="fas fa-minus"></i>
+                                            </span>
+                                        </sdb-button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="mb-5" v-if="availableLocales.length">
-            <div class="control is-expanded">
-                <sdb-select v-model="selectedLocale">
-                    <option
-                        v-for="locale in availableLocales"
-                        :value="locale.id">
-                        {{ locale.name }}
-                    </option>
-                </sdb-select>
-                <sdb-button @click.prevent="addTranslation" class="is-link is-light">
-                    <span class="icon">
-                        <i class="fas fa-plus"></i>
-                    </span>
-                </sdb-button>
+            <div class="mb-5" v-if="availableLocales.length">
+                <div class="control is-expanded">
+                    <sdb-select v-model="selectedLocale">
+                        <option
+                            v-for="locale in availableLocales"
+                            :value="locale.id">
+                            {{ locale.name }}
+                        </option>
+                    </sdb-select>
+                    <sdb-button @click.prevent="addTranslation" class="is-link is-light">
+                        <span class="icon">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                    </sdb-button>
+                </div>
+                <div class="control">
+                </div>
             </div>
-            <div class="control">
-            </div>
-        </div>
 
-        <div class="field is-grouped is-grouped-right">
-            <div class="control">
-                <sdb-button-link :href="route(baseRoute+'.index')" class="is-link is-light">
-                    Cancel
-                </sdb-button-link>
+            <div class="field is-grouped is-grouped-right">
+                <div class="control">
+                    <sdb-button-link :href="route(baseRoute+'.index')" class="is-link is-light">
+                        Cancel
+                    </sdb-button-link>
+                </div>
+                <div class="control">
+                    <sdb-button class="is-link">
+                        <template v-if="isNew">Create</template>
+                        <template v-else>Update</template>
+                    </sdb-button>
+                </div>
             </div>
-            <div class="control">
-                <sdb-button class="is-link">
-                    <template v-if="isNew">Create</template>
-                    <template v-else>Update</template>
-                </sdb-button>
-            </div>
-        </div>
+        </fieldset>
     </form>
 </template>
 
 <script>
     import HasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
-    import SdbLabel from '@/Sdb/Label';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbLabel from '@/Sdb/Label';
     import SdbSelect from '@/Sdb/Select';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
-    import { ref, reactive } from "vue";
-    import { Inertia } from '@inertiajs/inertia';
+    import { reactive } from "vue";
 
     export default {
-        mixins: [HasPageErrors],
+        name: 'CategoryForm',
+        mixins: [
+            HasPageErrors
+        ],
         components: {
             SdbButton,
             SdbLabel,
@@ -88,16 +97,18 @@
             SdbSelect,
         },
         props: {
-            disableInput: {type: Boolean, default: false},
             baseRoute: String,
             category: Object,
             defaultLocale: String,
+            isInputDisabled: {type: Boolean, default: false},
             errors: {},
             isEditMode: Boolean,
             isNew: Boolean,
             localeOptions: Array,
-            submit: Function,
         },
+        emits: [
+           'on-submit',
+        ],
         setup(props, { emit }) {
             let providedLocales = [];
             let fields = {};
@@ -157,5 +168,5 @@
                 return !isBlank(this.availableLocales);
             }
         },
-    }
+    };
 </script>
