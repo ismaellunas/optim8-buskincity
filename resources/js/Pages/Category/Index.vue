@@ -66,6 +66,7 @@
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbTable from '@/Sdb/Table';
+    import { confirmDelete } from '@/Libs/alert';
 
     export default {
         components: {
@@ -83,8 +84,14 @@
         },
         methods: {
             deleteRow(record) {
-                if (!confirm('Are you sure?')) return;
-                this.$inertia.delete(route(this.baseRoute+'.destroy', record.id));
+                const self = this;
+                confirmDelete().then((result) => {
+                    if (result.isConfirmed) {
+                        self.$inertia.delete(
+                            route(self.baseRoute+'.destroy', record.id)
+                        );
+                    }
+                });
             },
         },
     };
