@@ -24,8 +24,6 @@
     import AppLayout from '@/Layouts/AppLayout';
     import CategoryForm from '@/Pages/Category/Form';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import { Inertia } from "@inertiajs/inertia";
-    import { reactive, ref } from "vue";
 
     export default {
         components: {
