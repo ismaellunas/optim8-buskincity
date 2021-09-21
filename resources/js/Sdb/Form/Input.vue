@@ -1,5 +1,7 @@
 <template>
-    <sdb-form-field>
+    <sdb-form-field
+        :is-required="required"
+    >
         <template v-slot:label>{{ label }}</template>
 
         <sdb-input
@@ -51,7 +53,10 @@
                 type: Boolean,
                 default: false
             },
-            required: {},
+            required: {
+                type: Boolean,
+                default: false
+            },
         }
     };
 </script>
