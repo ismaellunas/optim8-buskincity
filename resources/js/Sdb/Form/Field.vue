@@ -1,6 +1,6 @@
 <template>
     <sdb-field>
-        <sdb-label>
+        <sdb-label :is-required="isRequired">
             <slot name="label"></slot>
         </sdb-label>
 
@@ -17,9 +17,16 @@
     import SdbLabel from '@/Sdb/Label';
 
     export default {
+        name: 'SdbFormField',
         components: {
             SdbField,
             SdbLabel,
         },
-    }
+        props: {
+            isRequired: {
+                type: Boolean,
+                default: false,
+            }
+        }
+    };
 </script>
