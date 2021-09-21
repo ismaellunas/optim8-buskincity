@@ -2,8 +2,6 @@
     <app-layout>
         <template #header>Category</template>
 
-        <sdb-flash-notifications :flash="$page.props.flash"/>
-
         <div class="box">
             <div class="columns">
                 <div class="column is-offset-10">
@@ -19,7 +17,7 @@
             </div>
 
             <div class="table-container">
-                <table class="table is-striped is-hoverable is-fullwidth">
+                <sdb-table class="is-striped is-hoverable is-fullwidth">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -55,7 +53,7 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </sdb-table>
             </div>
             <sdb-pagination :links="records.links"></sdb-pagination>
         </div>
@@ -66,16 +64,16 @@
     import AppLayout from '@/Layouts/AppLayout';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbFlashNotifications from '@/Sdb/FlashNotifications';
     import SdbPagination from '@/Sdb/Pagination';
+    import SdbTable from '@/Sdb/Table';
 
     export default {
         components: {
             AppLayout,
             SdbButton,
             SdbButtonLink,
-            SdbFlashNotifications,
             SdbPagination,
+            SdbTable,
         },
         props: ['records'],
         data() {
@@ -89,7 +87,5 @@
                 this.$inertia.delete(route(this.baseRoute+'.destroy', record.id));
             },
         },
-        computed: {
-        }
-    }
+    };
 </script>
