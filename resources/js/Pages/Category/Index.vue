@@ -10,7 +10,7 @@
                             <span class="icon is-small">
                                 <i class="fas fa-plus"></i>
                             </span>
-                            <span>Create New</span>
+                            <span>Add New</span>
                         </sdb-button-link>
                     </div>
                 </div>
@@ -21,7 +21,9 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
+                            <th v-for="locale in localeOptions" :key="locale.id">
+                                {{ locale.name }}
+                            </th>
                             <th>
                                 <div class="level-right">Actions</div>
                             </th>
@@ -30,7 +32,9 @@
                     <tbody>
                         <tr v-for="record in records.data" :key="record.id">
                             <th>{{ record.id }}</th>
-                            <th>{{ record.name }}</th>
+                            <td v-for="locale in localeOptions" :key="locale.id">
+                                {{ getNameByLocale(record, locale.id) }}
+                            </td>
                             <td>
                                 <div class="level-right">
                                     <sdb-button-link
@@ -67,6 +71,7 @@
     import SdbPagination from '@/Sdb/Pagination';
     import SdbTable from '@/Sdb/Table';
     import { confirmDelete } from '@/Libs/alert';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -77,6 +82,12 @@
             SdbTable,
         },
         props: ['records'],
+        setup() {
+            return {
+                defaultLocale: usePage().props.value.defaultLanguage,
+                localeOptions: usePage().props.value.languageOptions,
+            };
+        },
         data() {
             return {
                 baseRoute: 'admin.categories',
@@ -93,6 +104,13 @@
                     }
                 });
             },
+            getNameByLocale(record, locale) {
+                const translation = record.translations.find(translation => translation.locale === locale);
+                if (translation) {
+                    return translation.name;
+                }
+                return "";
+            }
         },
     };
 </script>

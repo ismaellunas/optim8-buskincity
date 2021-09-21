@@ -128,6 +128,11 @@ class CategoryController extends CrudController
     protected function getRecords()
     {
         return $this->model::orderBy('id', 'DESC')
+            ->with([
+                'translations' => function ($query) {
+                    $query->select('id', 'name', 'category_id', 'locale');
+                },
+            ])
             ->paginate($this->recordsPerPage);
     }
 
