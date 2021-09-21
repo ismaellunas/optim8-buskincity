@@ -25,6 +25,7 @@
     import AppLayout from '@/Layouts/AppLayout';
     import CategoryForm from '@/Pages/Category/Form';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
 
     export default {
         components: {
@@ -34,28 +35,36 @@
         },
         props: {
             baseRoute: String,
+            defaultLocale: String,
             errors: Object,
             localeOptions: Array,
-            defaultLocale: String,
-        },
-        setup(props) {
-            function submit(form) {
-                Inertia.post(
-                    route(props.baseRoute + '.store'),
-                    form
-                );
-            };
-
-            return {
-                submit,
-            };
         },
         data() {
             return {
-                disableInput: false,
                 isEditMode: true,
                 isNew: true,
+                isProcessing: false,
+                loader: null,
             };
-        }
-    }
+        },
+        methods: {
+            submit(form) {
+                const self = this;
+
+                this.$inertia.post(route(this.baseRoute + '.store'), form, {
+                    onStart: () => {
+                        self.loader = self.$loading.show();
+                        self.isProcessing = true;
+                    },
+                    onSuccess: (page) => {
+                        successAlert(page.props.flash.message);
+                    },
+                    onFinish: () => {
+                        self.loader.hide();
+                        self.isProcessing = false;
+                    },
+                });
+            },
+        },
+    };
 </script>
