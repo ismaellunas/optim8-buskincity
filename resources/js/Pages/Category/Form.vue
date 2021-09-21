@@ -110,7 +110,7 @@
         emits: [
            'on-submit',
         ],
-        setup(props, { emit }) {
+        setup(props) {
             let providedLocales = [];
             let fields = {};
 
