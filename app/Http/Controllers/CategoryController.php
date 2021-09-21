@@ -8,10 +8,10 @@ use Inertia\Inertia;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use App\Services\TranslationService;
 
-class CategoryController extends Controller
+class CategoryController extends CrudController
 {
     protected $model = Category::class;
-    protected $recordsPerPage = 15;
+    protected $baseRouteName = 'admin.categories';
 
     /**
      * Display a listing of the resource.
