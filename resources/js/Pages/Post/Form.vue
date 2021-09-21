@@ -5,7 +5,7 @@
         @submit.prevent="$emit('on-submit')"
     >
         <div class="column is-two-thirds">
-            <fieldset :disabled="isProcessing" class="box">
+            <fieldset :disabled="isInputDisabled" class="box">
 
                 <sdb-tab class="is-boxed">
                     <ul>
@@ -171,7 +171,7 @@
         <div class="column">
             <fieldset
                 class="box"
-                :disabled="isProcessing"
+                :disabled="isInputDisabled"
             >
                 <sdb-tab>
                     <sdb-tab-list>
