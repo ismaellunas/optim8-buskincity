@@ -81,6 +81,7 @@
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbLabel from '@/Sdb/Label';
     import SdbSelect from '@/Sdb/Select';
+    import { confirmDelete } from '@/Libs/alert';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { reactive } from "vue";
 
@@ -150,11 +151,13 @@
                 this.updateSelectedLocale();
             },
             removeTranslation(locale) {
-                if (confirm('Are you sure?')) {
-                    delete this.form[locale];
-
-                    this.updateSelectedLocale();
-                }
+                const self = this;
+                confirmDelete().then((result) => {
+                    if (result.isConfirmed) {
+                        delete self.form[locale];
+                        self.updateSelectedLocale();
+                    }
+                });
             },
         },
         computed: {
