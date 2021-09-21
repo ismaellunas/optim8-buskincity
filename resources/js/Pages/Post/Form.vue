@@ -192,16 +192,13 @@
                     </option>
                 </sdb-form-select>
 
-                <div
+                <sdb-form-date-time
                     v-if="form.status === 2"
-                    class="field"
-                >
-                    <sdb-label>Scheduled At</sdb-label>
-
-                    <sdb-date-time
-                        v-model="form.scheduled_at"
-                    />
-                </div>
+                    v-model="form.scheduled_at"
+                    label="Scheduled At"
+                    required
+                    :message="error('scheduled_at')"
+                />
             </fieldset>
 
             <div class="field is-grouped is-grouped-right">
@@ -243,7 +240,7 @@
     import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbDateTime from '@/Sdb/DateTime';
+    import SdbFormDateTime from '@/Sdb/Form/DateTime';
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormInputAddons from '@/Sdb/Form/InputAddons';
     import SdbFormSelect from '@/Sdb/Form/Select';
@@ -266,7 +263,7 @@
             SdbButton,
             SdbButtonIcon,
             SdbButtonLink,
-            SdbDateTime,
+            SdbFormDateTime,
             SdbFormInput,
             SdbFormInputAddons,
             SdbFormSelect,
