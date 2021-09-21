@@ -1,7 +1,7 @@
 <template>
     <app-layout>
         <template #header>
-            Create New Category
+            Add New Category
         </template>
 
         <sdb-error-notifications :errors="$page.props.errors"/>
