@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CategoryController extends CrudController
@@ -86,13 +85,7 @@ class CategoryController extends CrudController
         return redirect()->route($this->baseRouteName.'.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request, Category $category)
+    public function destroy(Category $category)
     {
         $category->delete();
 
