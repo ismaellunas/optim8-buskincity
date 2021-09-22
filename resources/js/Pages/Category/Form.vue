@@ -9,24 +9,28 @@
         <fieldset :disabled="isInputDisabled">
             <div class="mb-5">
                 <div class="columns is-multiline">
-                    <div class="column is-half" v-for="(translation, index) in form">
+                    <div
+                        v-for="translation in sortedExistingLocales"
+                        :key="translation"
+                        class="column is-half"
+                    >
                         <div class="columns">
                             <div class="column">
                                 <sdb-form-input
-                                    v-model="form[index].name"
+                                    v-model="form[translation].name"
                                     placeholder=""
-                                    :label="`Category Name (${index.toUpperCase()})`"
+                                    :label="`Category Name (${translation.toUpperCase()})`"
                                     :message="error('form.en.name')"
-                                    :required="index === defaultLocale"
+                                    :required="translation === defaultLocale"
                                 />
                             </div>
                             <div class="column is-one-fifth">
-                                <div class="field" v-if="index !== defaultLocale">
+                                <div class="field" v-if="translation !== defaultLocale">
                                     <sdb-label>&nbsp;</sdb-label>
                                     <div class="control">
                                         <sdb-button
                                             class="is-danger"
-                                            @click.prevent="removeTranslation(index)">
+                                            @click.prevent="removeTranslation(translation)">
                                             <span class="icon">
                                                 <i class="fas fa-minus"></i>
                                             </span>
@@ -84,6 +88,7 @@
     import { confirmDelete } from '@/Libs/alert';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { reactive } from "vue";
+    import { pull, sortBy } from 'lodash';
 
     export default {
         name: 'CategoryForm',
@@ -139,11 +144,17 @@
             updateSelectedLocale() {
                 const usedLocales = Object.keys(this.form);
 
-                const firstAvailabeLocale = this.localeOptions.find(localeOption => {
-                    return !usedLocales.includes(localeOption.id);
-                });
+                if (this.hasAvailableLocales) {
+                    const firstAvailabeLocale = this
+                        .availableLocales
+                        .find((localeOption) => {
+                            return !usedLocales.includes(localeOption.id);
+                        });
 
-                this.selectedLocale = firstAvailabeLocale?.id;
+                    this.selectedLocale = firstAvailabeLocale?.id;
+                } else {
+                    this.selectedLocale = null;
+                }
             },
             addTranslation() {
                 this.form[this.selectedLocale] = {name: null};
@@ -163,12 +174,20 @@
         computed: {
             availableLocales() {
                 const usedLocales = Object.keys(this.form);
-                return this.localeOptions.filter(localeOption => {
+                return sortBy(this.localeOptions.filter(localeOption => {
                     return !usedLocales.includes(localeOption.id);
-                });
+                }), ['name']);
             },
             hasAvailableLocales() {
                 return !isBlank(this.availableLocales);
+            },
+            sortedExistingLocales() {
+                const sortedExistingLocales = pull(
+                    Object.keys(this.form),
+                    this.defaultLocale
+                );
+                sortedExistingLocales.unshift(this.defaultLocale);
+                return sortedExistingLocales;
             }
         },
     };
