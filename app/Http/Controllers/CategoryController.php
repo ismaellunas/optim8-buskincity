@@ -34,7 +34,7 @@ class CategoryController extends CrudController
     {
         return Inertia::render('Category/Create', [
             'record' => new $this->model,
-            'baseRoute' => 'admin.categories',
+            'baseRoute' => $this->baseRouteName,
         ]);
     }
 
@@ -52,9 +52,9 @@ class CategoryController extends CrudController
         $record->fill($validatedData);
         $record->save();
 
-        $request->session()->flash('message', 'Category created successfully!');
+        $this->generateFlashMessage('Category created successfully!');
 
-        return redirect()->route('admin.categories.index');
+        return redirect()->route($this->baseRouteName.'.index');
     }
 
     /**
@@ -97,9 +97,9 @@ class CategoryController extends CrudController
             $category->deleteTranslations($unusedLocales);
         }
 
-        $request->session()->flash('message', 'Category updated successfully!');
+        $this->generateFlashMessage('Category updated successfully!');
 
-        return redirect()->route('admin.categories.index');
+        return redirect()->route($this->baseRouteName.'.index');
     }
 
     /**
@@ -112,9 +112,9 @@ class CategoryController extends CrudController
     {
         $category->delete();
 
-        $request->session()->flash('message', 'Category deleted successfully!');
+        $this->generateFlashMessage('Category deleted successfully!');
 
-        return redirect()->route('admin.categories.index');
+        return redirect()->route($this->baseRouteName.'.index');
     }
 
     protected function getRecords()
