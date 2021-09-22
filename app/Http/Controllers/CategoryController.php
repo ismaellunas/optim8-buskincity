@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Astrotomic\Translatable\Validation\RuleFactory;
 use App\Services\TranslationService;
 
 class CategoryController extends CrudController
@@ -44,9 +44,9 @@ class CategoryController extends CrudController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $validatedData = $this->getValidate($request);
+        $validatedData = $request->validated();
 
         $record = new $this->model;
         $record->fill($validatedData);
@@ -78,21 +78,13 @@ class CategoryController extends CrudController
     {
         return Inertia::render('Category/Edit', [
             'record' => $category,
-            'baseRoute' => 'admin.categories',
+            'baseRoute' => $this->baseRouteName,
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Category $category)
+    public function update(CategoryRequest $request, Category $category)
     {
-        $validatedData = $this->getValidate($request);
-
+        $validatedData = $request->validated();
 
         $providedLocales = array_keys($category->getTranslationsArray());
         $validatedLocales = array_keys($validatedData);
@@ -134,14 +126,5 @@ class CategoryController extends CrudController
                 },
             ])
             ->paginate($this->recordsPerPage);
-    }
-
-    protected function getValidate(Request $request, $id = null)
-    {
-        $rules = RuleFactory::make([
-            '%name%' => 'sometimes|string',
-        ]);
-
-        return $request->validate($rules);
     }
 }
