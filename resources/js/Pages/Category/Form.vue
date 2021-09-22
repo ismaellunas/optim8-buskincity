@@ -14,31 +14,23 @@
                         :key="translation"
                         class="column is-half"
                     >
-                        <div class="columns">
-                            <div class="column">
-                                <sdb-form-input
-                                    v-model="form[translation].name"
-                                    placeholder=""
-                                    :label="`Category Name (${translation.toUpperCase()})`"
-                                    :message="error('form.en.name')"
-                                    :required="translation === defaultLocale"
-                                />
-                            </div>
-                            <div class="column is-one-fifth">
-                                <div class="field" v-if="translation !== defaultLocale">
-                                    <sdb-label>&nbsp;</sdb-label>
-                                    <div class="control">
-                                        <sdb-button
-                                            class="is-danger"
-                                            @click.prevent="removeTranslation(translation)">
-                                            <span class="icon">
-                                                <i class="fas fa-minus"></i>
-                                            </span>
-                                        </sdb-button>
-                                    </div>
+                        <sdb-form-input-addons
+                            v-model="form[translation].name"
+                            :label="`Category Name (${translation.toUpperCase()})`"
+                            :message="error(translation+'.name')"
+                        >
+                            <template v-slot:afterInput>
+                                <div class="control">
+                                    <sdb-button-icon
+                                        v-if="translation !== defaultLocale"
+                                        class="is-danger"
+                                        icon="fas fa-minus"
+                                        type="button"
+                                        @click.prevent="removeTranslation(translation)"
+                                    />
                                 </div>
-                            </div>
-                        </div>
+                            </template>
+                        </sdb-form-input-addons>
                     </div>
                 </div>
             </div>
@@ -82,7 +74,7 @@
     import HasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbFormInputAddons from '@/Sdb/Form/InputAddons';
     import SdbLabel from '@/Sdb/Label';
     import SdbSelect from '@/Sdb/Select';
     import { confirmDelete } from '@/Libs/alert';
@@ -97,9 +89,9 @@
         ],
         components: {
             SdbButton,
-            SdbLabel,
             SdbButtonLink,
-            SdbFormInput,
+            SdbFormInputAddons,
+            SdbLabel,
             SdbSelect,
         },
         props: {
