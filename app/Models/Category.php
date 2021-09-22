@@ -12,4 +12,10 @@ class Category extends BaseModel implements TranslatableContract
     use Translatable;
 
     public $translatedAttributes = ['name'];
+
+    public function saveFromInputs(array $inputs): bool
+    {
+        $this->fill($inputs);
+        return $this->save();
+    }
 }
