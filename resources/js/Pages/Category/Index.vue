@@ -16,6 +16,32 @@
                 </div>
             </div>
 
+            <div class="columns">
+                <div class="column">
+                    <sdb-form-field-horizontal>
+                        <template v-slot:label>
+                            Search
+                        </template>
+                        <div class="columns">
+                            <div class="column is-three-quarters">
+                                <sdb-input
+                                    v-model="term"
+                                    maxlength="255"
+                                    @keyup.enter.prevent="search(term)"
+                                />
+                            </div>
+                            <div class="column">
+                                <sdb-button-icon
+                                    icon="fas fa-search"
+                                    type="button"
+                                    @click="search(term)"
+                                />
+                            </div>
+                        </div>
+                    </sdb-form-field-horizontal>
+                </div>
+            </div>
+
             <div class="table-container">
                 <sdb-table class="is-striped is-hoverable is-fullwidth">
                     <thead>
@@ -67,30 +93,45 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import SdbButton from '@/Sdb/Button';
+    import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
+    import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
+    import SdbInput from '@/Sdb/Input';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbTable from '@/Sdb/Table';
     import { confirmDelete } from '@/Libs/alert';
+    import { merge } from 'lodash';
+    import { ref } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
             AppLayout,
             SdbButton,
+            SdbButtonIcon,
             SdbButtonLink,
+            SdbFormFieldHorizontal,
+            SdbInput,
             SdbPagination,
             SdbTable,
         },
-        props: ['records'],
-        setup() {
+        props: {
+            pageNumber: String,
+            pageQueryParams: Object,
+            records: Object,
+        },
+        setup(props) {
             return {
                 defaultLocale: usePage().props.value.defaultLanguage,
                 localeOptions: usePage().props.value.languageOptions,
+                queryParams: ref(merge({},props.pageQueryParams)),
+                term: ref(props.pageQueryParams?.term ?? null),
             };
         },
         data() {
             return {
                 baseRoute: 'admin.categories',
+                loader: null,
             };
         },
         methods: {
@@ -110,7 +151,26 @@
                     return translation.name;
                 }
                 return "";
-            }
+            },
+            search(term) {
+                this.queryParams['term'] = term;
+                this.$inertia.get(
+                    route(this.baseRoute+'.index'),
+                    this.queryParams,
+                    {
+                        replace: true,
+                        preserveState: true,
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onFinish: () => this.onEndLoadingOverlay(),
+                    }
+                );
+            },
+            onStartLoadingOverlay() {
+                this.loader = this.$loading.show();
+            },
+            onEndLoadingOverlay() {
+                this.loader.hide();
+            },
         },
     };
 </script>
