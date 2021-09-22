@@ -43,13 +43,12 @@
                             {{ locale.name }}
                         </option>
                     </sdb-select>
-                    <sdb-button @click.prevent="addTranslation" class="is-link is-light">
-                        <span class="icon">
-                            <i class="fas fa-plus"></i>
-                        </span>
-                    </sdb-button>
-                </div>
-                <div class="control">
+                    <sdb-button-icon
+                        icon="fas fa-plus"
+                        type="button"
+                        class="is-link is-light"
+                        @click.prevent="addTranslation"
+                    />
                 </div>
             </div>
 
@@ -73,6 +72,7 @@
 <script>
     import HasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
+    import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbFormInputAddons from '@/Sdb/Form/InputAddons';
     import SdbLabel from '@/Sdb/Label';
@@ -89,6 +89,7 @@
         ],
         components: {
             SdbButton,
+            SdbButtonIcon,
             SdbButtonLink,
             SdbFormInputAddons,
             SdbLabel,
