@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\{
+    CategoryController,
     Frontend\PostController as FrontendPostController,
     PermissionController,
     PostController,
@@ -37,7 +38,7 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
     Route::resource('/pages', App\Http\Controllers\PageController::class)
         ->except(['show']);
     Route::resource('/media', App\Http\Controllers\MediaController::class);
-    Route::resource('/categories', App\Http\Controllers\CategoryController::class);
+    Route::resource('/categories', CategoryController::class);
     Route::post(
         '/media/update-image/{medium}',
         [App\Http\Controllers\MediaController::class, 'updateImage']
