@@ -37,19 +37,11 @@ class CategoryController extends CrudController
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(CategoryRequest $request)
     {
-        $validatedData = $request->validated();
-
         $record = new $this->model;
-        $record->fill($validatedData);
-        $record->save();
+
+        $record->saveFromInputs($request->validated());
 
         $this->generateFlashMessage('Category created successfully!');
 
@@ -85,16 +77,9 @@ class CategoryController extends CrudController
     {
         $validatedData = $request->validated();
 
-        $providedLocales = array_keys($category->getTranslationsArray());
-        $validatedLocales = array_keys($validatedData);
+        $category->saveFromInputs($validatedData);
 
-        $category->fill($validatedData);
-        $category->save();
-
-        $unusedLocales = array_diff($providedLocales, $validatedLocales);
-        if (!empty($unusedLocales)) {
-            $category->deleteTranslations($unusedLocales);
-        }
+        $category->syncTranslations(array_keys($validatedData));
 
         $this->generateFlashMessage('Category updated successfully!');
 
