@@ -15,7 +15,7 @@ class CategoryRequest extends FormRequest
     public function rules()
     {
         return RuleFactory::make([
-            '%name%' => 'sometimes|string',
+            '%name%' => 'sometimes|required',
         ]);
     }
 }
