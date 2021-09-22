@@ -4,22 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Services\CategoryService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class CategoryController extends CrudController
 {
     protected $model = Category::class;
     protected $baseRouteName = 'admin.categories';
+    protected $categoryService;
+
+    public function __construct(CategoryService $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Category/Index', [
-            'records' => $this->getRecords(),
+            'pageQueryParams' => array_filter($request->only('term')),
+            'pageNumber' => $request->page,
+            'records' => $this
+                ->categoryService
+                ->getRecords($request->term, $this->recordsPerPage),
         ]);
     }
 
