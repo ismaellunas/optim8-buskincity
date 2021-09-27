@@ -2,19 +2,17 @@
 
 namespace App\Models;
 
+use App\Contracts\PublishableInterface;
 use App\Models\Page;
+use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
+use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\AsCollection;
-use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 
-class PageTranslation extends Model
+class PageTranslation extends Model implements PublishableInterface
 {
     use HasFactory;
     use MediaAlly;
-
-    const STATUS_DRAFT = 0;
-    const STATUS_PUBLISHED = 1;
 
     protected $fillable = [
         'data',
