@@ -5,6 +5,7 @@
             :disabled="disabled"
             @change="$emit('change', $event)"
         >
+            <option v-if="placeholder" :value=null>{{ placeholder }}</option>
             <slot></slot>
         </select>
     </div>
@@ -15,7 +16,7 @@
 
     export default {
         name: 'SdbSelect',
-        props: ['modelValue', 'class', 'disabled'],
+        props: ['modelValue', 'class', 'disabled', 'placeholder'],
         emits: ['change', 'update:modelValue'],
 
         setup(props, { emit }) {
