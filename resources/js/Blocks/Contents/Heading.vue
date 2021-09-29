@@ -24,14 +24,14 @@
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import EditModeContentMixin from '@/Mixins/EditModeContent';
+    import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils';
     import { last } from 'lodash';
 
     export default {
         mixins: [
-            EditModeContentMixin,
+            EditModeComponentMixin,
             DeletableContentMixin
         ],
         components: {

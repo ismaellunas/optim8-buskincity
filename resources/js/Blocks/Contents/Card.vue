@@ -72,7 +72,7 @@
 <script>
     import MixinContainImageContent from '@/Mixins/ContainImageContent';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
-    import MixinEditModeContent from '@/Mixins/EditModeContent';
+    import MixinEditModeComponent from '@/Mixins/EditModeComponent';
     import MixinHasModal from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
     import SdbEditor from '@/Sdb/EditorTinymce';
@@ -95,7 +95,7 @@
         mixins: [
             MixinContainImageContent,
             MixinDeletableContent,
-            MixinEditModeContent,
+            MixinEditModeComponent,
             MixinHasModal,
         ],
         props: {
