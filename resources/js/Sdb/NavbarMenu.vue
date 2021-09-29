@@ -39,6 +39,11 @@
                         :active="route().current('admin.media.index')">
                         Media
                     </jet-nav-link>
+                    <jet-nav-link
+                        :href="route('admin.users.index')"
+                        :active="route().current('admin.users.*')">
+                        Users
+                    </jet-nav-link>
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                             UAC
