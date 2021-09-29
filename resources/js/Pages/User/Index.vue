@@ -38,7 +38,7 @@
                         <span class="icon is-small">
                             <i class="fas fa-plus"></i>
                         </span>
-                        <span>Create New</span>
+                        <span>Add New</span>
                     </sdb-button-link>
                 </div>
             </div>
