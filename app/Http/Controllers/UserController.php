@@ -1,0 +1,143 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\{
+    UserPasswordRequest,
+    UserStoreRequest,
+    UserUpdateRequest
+};
+use App\Models\User;
+use App\Services\UserService;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+class UserController extends CrudController
+{
+    private $userService;
+    protected $baseRouteName = 'admin.users';
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        return Inertia::render('User/Index', [
+            'baseRouteName' => $this->baseRouteName,
+            'pageNumber' => $request->page,
+            'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
+            'records' => $this->userService->getRecords(),
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return Inertia::render('User/Create', [
+            'record' => new User(),
+            'roleOptions' => $this->userService->getRoleOptions(),
+        ]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(UserStoreRequest $request)
+    {
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $this->userService->hashPassword($request->password),
+        ]);
+
+        $this->generateFlashMessage('User created successfully!');
+
+        return redirect()->route($this->baseRouteName.'.index');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function show(User $user)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(User $user)
+    {
+        $user->load(['roles' => function ($query) {
+            $query->select(['id', 'name']);
+            $query->limit(1);
+        }]);
+
+        $user->roles->makeHidden('pivot');
+
+        return Inertia::render('User/Edit', [
+            'record' => $user,
+            'roleOptions' => $this->userService->getRoleOptions(),
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UserUpdateRequest $request, User $user)
+    {
+        $user->update($request->only([
+            'name',
+            'email',
+        ]));
+
+        $this->generateFlashMessage('User updated successfully!');
+
+        return redirect()->back();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(User $user)
+    {
+        //
+    }
+
+    public function updatePassword(UserPasswordRequest $request, User $user)
+    {
+        $user->password = $this->userService->hashPassword($request->password);
+        $user->save();
+
+        $this->generateFlashMessage('Password updated successfully!');
+
+        return redirect()->back();
+    }
+}
