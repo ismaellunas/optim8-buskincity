@@ -1,40 +1,32 @@
 <template>
-                <sdb-form-input
-                    v-model="form.name"
-                    label="Name"
-                    required
-                    :message="error('name')"
-                ></sdb-form-input>
+    <sdb-form-input
+        v-model="form.name"
+        label="Name"
+        required
+        :message="error('name')"
+    ></sdb-form-input>
 
-                <sdb-form-input
-                    v-model="form.email"
-                    label="Email"
-                    required
-                    :message="error('email')"
-                ></sdb-form-input>
+    <sdb-form-input
+        v-model="form.email"
+        label="Email"
+        required
+        :message="error('email')"
+    ></sdb-form-input>
 
-                <!--
-                <sdb-form-input
-                    v-model="form.password"
-                    label="Password"
-                    type="password"
-                    :message="error('name')"
-                ></sdb-form-input>
-                -->
-                <sdb-form-select
-                    v-model="form.role"
-                    label="Role"
-                    placeholder="- Select a Role -"
-                    :message="error('role')"
-                >
-                    <option
-                        v-for="option in roleOptions"
-                        :key="option.id"
-                        :value="option.id"
-                    >
-                        {{ option.value }}
-                    </option>
-                </sdb-form-select>
+    <sdb-form-select
+        v-model="form.role"
+        label="Role"
+        placeholder="- Select a Role -"
+        :message="error('role')"
+    >
+        <option
+            v-for="option in roleOptions"
+            :key="option.id"
+            :value="option.id"
+        >
+            {{ option.value }}
+        </option>
+    </sdb-form-select>
 
 </template>
 
@@ -54,12 +46,7 @@
         mixins: [
             MixinHasPageErrors,
         ],
-        emits: ['on-submit'],
         props: {
-            baseRouteName: {
-                type: String,
-                required: true,
-            },
             errors: {},
             isNew: Boolean,
             isProcessing: Boolean,
