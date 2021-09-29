@@ -36,7 +36,7 @@
                     </div>
                     <jet-nav-link
                         :href="route('admin.media.index')"
-                        :active="route().current('admin.media.index')">
+                        :active="route().current('admin.media.*')">
                         Media
                     </jet-nav-link>
                     <jet-nav-link
