@@ -29,12 +29,6 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::resource('/roles', RoleController::class);
-    Route::resource('/permissions', PermissionController::class);
-    Route::resource('/user-roles', UserRoleController::class);
-});
-
 Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('/pages', App\Http\Controllers\PageController::class)
         ->except(['show']);
@@ -55,6 +49,9 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
     Route::resource('/users', UserController::class);
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword'])
         ->name('users.password');
+    Route::resource('/roles', RoleController::class);
+    Route::resource('/permissions', PermissionController::class);
+    Route::resource('/user-roles', UserRoleController::class);
 });
 
 Route::name('api.admin.')->prefix('api/admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
