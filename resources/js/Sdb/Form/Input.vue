@@ -9,6 +9,7 @@
             :disabled="disabled"
             :required="required ? true : false"
             :value="modelValue"
+            :class="{'is-danger': message}"
             @input="$emit('update:modelValue', $event.target.value)"
             @keypress="$emit('on-keypress', $event)"
             @blur="$emit('on-blur', $event)"
