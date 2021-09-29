@@ -51,14 +51,14 @@
                         <div class="navbar-dropdown">
                             <jet-nav-link
                                 class="navbar-item"
-                                :href="route('roles.index')"
-                                :active="route().current('roles.index')">
+                                :href="route('admin.roles.index')"
+                                :active="route().current('admin.roles.*')">
                                 Roles
                             </jet-nav-link>
                             <jet-nav-link
                                 class="navbar-item"
-                                :href="route('permissions.index')"
-                                :active="route().current('permissions.index')">
+                                :href="route('admin.permissions.index')"
+                                :active="route().current('admin.permissions.*')">
                                 Permissions
                             </jet-nav-link>
                             <jet-nav-link
