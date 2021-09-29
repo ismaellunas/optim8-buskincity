@@ -176,8 +176,8 @@
                     {
                         replace: true,
                         preserveState: true,
-                        onStart: () => this.onStartLoadingOverlay(),
-                        onFinish: () => this.onEndLoadingOverlay(),
+                        onStart: this.onStartLoadingOverlay,
+                        onFinish: this.onEndLoadingOverlay,
                     }
                 );
             },
