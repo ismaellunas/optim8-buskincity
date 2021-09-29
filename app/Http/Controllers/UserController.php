@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Jetstream\DeleteUser;
 use App\Http\Requests\{
     UserPasswordRequest,
     UserStoreRequest,
@@ -14,12 +15,15 @@ use Inertia\Inertia;
 
 class UserController extends CrudController
 {
+    private $deleteUser;
     private $userService;
+
     protected $baseRouteName = 'admin.users';
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, DeleteUser $deleteUser)
     {
         $this->userService = $userService;
+        $this->deleteUser = $deleteUser;
     }
 
     /**
@@ -131,7 +135,11 @@ class UserController extends CrudController
      */
     public function destroy(User $user)
     {
-        //
+        $this->deleteUser->delete($user);
+
+        $this->generateFlashMessage('User deleted successfully!');
+
+        return redirect()->back();
     }
 
     public function updatePassword(UserPasswordRequest $request, User $user)
