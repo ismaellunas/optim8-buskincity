@@ -5,8 +5,10 @@
         <template v-slot:label>{{ label }}</template>
 
         <sdb-input
+            :autocomplete="autocomplete"
             :disabled="disabled"
             :placeholder="placeholder"
+            :type="type"
             :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"
             @keypress="$emit('on-keypress', $event)"
@@ -37,6 +39,9 @@
             'on-blur'
         ],
         props: {
+            autocomplete: {
+                type: String,
+            },
             label: {
                 type: String
             },
@@ -56,6 +61,10 @@
             required: {
                 type: Boolean,
                 default: false
+            },
+            type: {
+                type: String,
+                default: "text",
             },
         }
     };
