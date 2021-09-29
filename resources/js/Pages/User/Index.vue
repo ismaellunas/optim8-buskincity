@@ -134,12 +134,6 @@
             return {
                 queryParams: ref(queryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
-                //view: ref(props.pageQueryParams?.view ?? 'gallery'),
-                //tabs: {
-                //    published: { title: 'Published'},
-                //    scheduled: {title: 'Scheduled'},
-                //    draft: {title: 'Draft'},
-                //},
             };
         },
         data() {
@@ -182,8 +176,6 @@
                     }
                 );
             },
-        },
-        computed: {
         },
     };
 </script>
