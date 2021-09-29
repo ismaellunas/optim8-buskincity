@@ -26,7 +26,7 @@
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import EditModeContentMixin from '@/Mixins/EditModeContent';
+    import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbTinymce from '@/Sdb/EditorTinymce';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat } from 'lodash';
@@ -36,7 +36,7 @@
     export default {
         mixins: [
             DeletableContentMixin,
-            EditModeContentMixin,
+            EditModeComponentMixin,
         ],
         components: {
             SdbTinymce,
