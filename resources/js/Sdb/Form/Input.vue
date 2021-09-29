@@ -5,10 +5,9 @@
         <template v-slot:label>{{ label }}</template>
 
         <sdb-input
-            :autocomplete="autocomplete"
+            v-bind="$attrs"
             :disabled="disabled"
-            :placeholder="placeholder"
-            :type="type"
+            :required="required ? true : false"
             :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"
             @keypress="$emit('on-keypress', $event)"
@@ -28,6 +27,7 @@
 
     export default {
         name: 'SdbFormInput',
+        inheritAttrs: false,
         components: {
             SdbFormField,
             SdbInput,
@@ -39,9 +39,6 @@
             'on-blur'
         ],
         props: {
-            autocomplete: {
-                type: String,
-            },
             label: {
                 type: String
             },
@@ -51,9 +48,6 @@
             modelValue: {
                 type: [String, Number]
             },
-            placeholder: {
-                type: String
-            },
             disabled: {
                 type: Boolean,
                 default: false
@@ -62,10 +56,6 @@
                 type: Boolean,
                 default: false
             },
-            type: {
-                type: String,
-                default: "text",
-            },
-        }
+        },
     };
 </script>
