@@ -66,6 +66,15 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    public function scopeSearch($query, string $term)
+    {
+        return $query->where(function ($query) use ($term) {
+            $query
+                ->where('name', 'ILIKE', '%'.$term.'%')
+                ->orWhere('email', 'ILIKE', '%'.$term.'%');
+        });
+    }
+
     /**
      * Get the URL to the user's profile photo.
      *

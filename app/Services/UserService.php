@@ -9,15 +9,20 @@ use Spatie\Permission\Models\Role;
 
 class UserService
 {
-    public function getRecords(): LengthAwarePaginator
-    {
+    public function getRecords(
+        string $term = null,
+        int $perPage = 15
+    ): LengthAwarePaginator {
         return User::orderBy('id', 'DESC')
+            ->when($term, function ($query) use ($term) {
+                $query->search($term);
+            })
             ->select([
                 'id',
                 'name',
                 'email',
             ])
-            ->paginate();
+            ->paginate($perPage);
     }
 
     public function getRoleOptions(): array

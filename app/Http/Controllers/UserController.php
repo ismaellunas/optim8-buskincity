@@ -33,7 +33,10 @@ class UserController extends CrudController
             'baseRouteName' => $this->baseRouteName,
             'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
-            'records' => $this->userService->getRecords(),
+            'records' => $this->userService->getRecords(
+                $request->term,
+                $this->recordsPerPage
+            ),
         ]);
     }
 
