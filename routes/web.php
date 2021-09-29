@@ -9,6 +9,7 @@ use App\Http\Controllers\{
     PermissionController,
     PostController,
     RoleController,
+    UserController,
     UserRoleController
 };
 use App\Services\TranslationService as TranslationSv;
@@ -51,6 +52,9 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
     Route::get('/media-list/image', [App\Http\Controllers\MediaController::class, 'listImages'])
         ->name('media.list.image');
     Route::resource('/posts', PostController::class);
+    Route::resource('/users', UserController::class);
+    Route::put('/users/{user}/password', [UserController::class, 'updatePassword'])
+        ->name('users.password');
 });
 
 Route::name('api.admin.')->prefix('api/admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
