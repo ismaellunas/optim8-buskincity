@@ -102,7 +102,7 @@
     import SdbInput from '@/Sdb/Input';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbTable from '@/Sdb/Table';
-    import { confirmDelete } from '@/Libs/alert';
+    import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from 'vue';
 
@@ -117,8 +117,6 @@
             SdbPagination,
             SdbTable,
         },
-        mixins: [
-        ],
         props: {
             pageNumber: String,
             pageQueryParams: Object,
@@ -148,14 +146,21 @@
                     if (result.isConfirmed) {
                         self.$inertia.delete(
                             route(self.baseRouteName+'.destroy', record.id),
-                            {},
                             {
-                                onStart: () => this.onStartLoadingOverlay(),
-                                onFinish: () => this.onEndLoadingOverlay(),
+                                onStart: self.onStartLoadingOverlay,
+                                onFinish: self.onEndLoadingOverlay,
+                                onError: self.onError,
+                                onSuccess: self.onSuccess,
                             }
                         );
                     }
                 })
+            },
+            onError(errors) {
+                oopsAlert();
+            },
+            onSuccess(page) {
+                successAlert(page.props.flash.message);
             },
             onStartLoadingOverlay() {
                 this.loader = this.$loading.show();
