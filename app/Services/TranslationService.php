@@ -44,7 +44,7 @@ class TranslationService
         );
     }
 
-    public static function getLanguageFromLocale($locale): null|string
+    public static function getLanguageFromLocale($locale): ?string
     {
         $firstOption = collect(self::getLocaleOptions())
             ->firstWhere('id', $locale);
