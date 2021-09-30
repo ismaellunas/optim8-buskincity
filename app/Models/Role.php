@@ -15,6 +15,7 @@ class Role extends SpatieRole
     public function saveFromInputs(array $inputs)
     {
         $this->name = $inputs['name'];
+        $this->guard_name = 'web';
         $this->save();
     }
 }

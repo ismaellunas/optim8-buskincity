@@ -66,10 +66,7 @@ class RoleController extends CrudController
 
         $role = new Role();
 
-        $role->saveFromInputs([
-            'name' => $request->name,
-            'guard_name' => 'web',
-        ]);
+        $role->saveFromInputs($validated);
 
         $role->syncPermissions($request->permissions);
 
