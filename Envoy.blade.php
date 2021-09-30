@@ -57,7 +57,6 @@
     heroku run php artisan optimize:clear
     heroku run rm Envoy.blade.php
     heroku run rm .env.deploy
-    heroku run rm -rf .development_script
 @endtask
 
 @task('install-dependencies')
