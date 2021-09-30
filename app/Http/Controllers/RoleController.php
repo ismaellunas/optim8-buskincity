@@ -2,33 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
+use App\Services\RoleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
-class RoleController extends Controller
+class RoleController extends CrudController
 {
+    private $roleService;
+
+    protected $baseRouteName = 'admin.roles';
+
+    public function __construct(RoleService $roleService)
+    {
+        $this->roleService = $roleService;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $roles = Role::
-            with([
-                'permissions' => function ($q) {
-                    $q->select('id', 'name');
-                },
-            ])
-            ->get();
-        $permissions = Permission::orderBy('name')->get();
-
-        return Inertia::render('Roles', [
-            'roles' => $roles,
-            'permissions' => $permissions,
+        return Inertia::render('Role/Index', [
+            'baseRouteName' => $this->baseRouteName,
+            'pageNumber' => $request->page,
+            'pageQueryParams' => array_filter($request->only('term')),
+            'records' => $this->roleService->getRecords(
+                $request->term,
+                $this->recordsPerPage,
+            ),
         ]);
     }
 
@@ -39,7 +44,9 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Role/Edit');
+        return Inertia::render('Role/Create', $this->getData([
+            'permissions' => $this->roleService->getPermissionOptions(),
+        ]));
     }
 
     /**
@@ -51,70 +58,64 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required'],
+            'name' => [
+                'required',
+                'max:255',
+            ],
         ]);
 
-        Role::create(['name' => $validated['name']]);
+        $role = new Role();
 
-        return redirect()
-            ->back()
-            ->with('message', 'Role Created Successfully.');
+        $role->saveFromInputs([
+            'name' => $request->name,
+            'guard_name' => 'web',
+        ]);
+
+        $role->syncPermissions($request->permissions);
+
+        $this->generateFlashMessage('Role created successfully!');
+
+        return redirect()->back();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show(Role $role)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit(Role $role)
     {
-        return Inertia::render('Role/Edit');
+        $role->load('permissions');
+
+        return Inertia::render('Role/Edit', [
+            'baseRouteName' => $this->baseRouteName,
+            'permissions' => $this->roleService->getPermissionOptions(),
+            'record' => $role,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request/*, $id*/)
+    public function update(Request $request, Role $role)
     {
         Validator::make($request->all(), [
             'name' => ['required'],
         ])->validate();
-  
-        if ($request->has('id')) {
-            Role::find($request->input('id'))->update($request->all());
-            return redirect()
-                ->back()
-                ->with('message', 'Role Updated Successfully.');
-        }
+
+        $role->name = $request->name;
+        $role->save();
+
+        $role->syncPermissions($request->permissions);
+
+        $this->generateFlashMessage('Role updated successfully!');
+
+        return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request/*, $id*/)
+    public function destroy(Request $request, Role $role)
     {
-        if ($request->has('id')) {
-            Role::find($request->input('id'))->delete();
-            return redirect()->back();
-        }
+        $role->delete();
+
+        $this->generateFlashMessage('Role deleted successfully!');
+
+        return redirect()->back();
     }
 }
