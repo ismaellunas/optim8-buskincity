@@ -1,39 +1,46 @@
 <template>
-    <label class="checkbox">
+    <label
+        class="checkbox"
+        :disabled=disabled
+    >
         <input
-            type="checkbox"
-            :value="value"
             v-model="proxyChecked"
-            class=""
-            />
+            type="checkbox"
+            :disabled=disabled
+            :value="value"
+        />
         <slot></slot>
     </label>
 </template>
 
 <script>
-export default {
-    emits: ['update:checked'],
+    export default {
+        name: 'SdbCheckbox',
 
-    props: {
-        checked: {
-            type: [Array, Boolean],
-            default: false,
-        },
-        value: {
-            default: null,
-        },
-    },
-
-    computed: {
-        proxyChecked: {
-            get() {
-                return this.checked;
+        props: {
+            checked: {
+                type: [Array, Boolean],
+                default: false,
             },
-
-            set(val) {
-                this.$emit("update:checked", val);
+            disabled: {
+                default: null,
+            },
+            value: {
+                default: null,
             },
         },
-    },
-}
+
+        emits: ['update:checked'],
+
+        computed: {
+            proxyChecked: {
+                get() {
+                    return this.checked;
+                },
+                set(val) {
+                    this.$emit("update:checked", val);
+                },
+            },
+        },
+    };
 </script>
