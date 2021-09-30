@@ -12,4 +12,14 @@ abstract class CrudController extends Controller
     {
         session()->flash('message', $message);
     }
+
+    protected function getData(array $additionalData = []): array
+    {
+        return array_merge(
+            [
+                'baseRouteName' => $this->baseRouteName,
+            ],
+            $additionalData
+        );
+    }
 }
