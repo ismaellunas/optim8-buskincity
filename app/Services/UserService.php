@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 class UserService
 {
@@ -27,7 +27,7 @@ class UserService
 
     public function getRoleOptions(): array
     {
-        return Role::whereNotIn('name', [config('permission.super_admin_name')])
+        return Role::withoutSuperAdmin()
             ->get(['id', 'name'])
             ->map(function ($role) {
                 return [
