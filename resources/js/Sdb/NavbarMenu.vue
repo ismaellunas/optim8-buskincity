@@ -44,17 +44,18 @@
                         :active="route().current('admin.users.*')">
                         Users
                     </jet-nav-link>
+                    <jet-nav-link
+                        class="navbar-item"
+                        :href="route('admin.roles.index')"
+                        :active="route().current('admin.roles.*')">
+                        Roles
+                    </jet-nav-link>
+                    <!--
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">
                             UAC
                         </a>
                         <div class="navbar-dropdown">
-                            <jet-nav-link
-                                class="navbar-item"
-                                :href="route('admin.roles.index')"
-                                :active="route().current('admin.roles.*')">
-                                Roles
-                            </jet-nav-link>
                             <jet-nav-link
                                 class="navbar-item"
                                 :href="route('admin.permissions.index')"
@@ -63,12 +64,13 @@
                             </jet-nav-link>
                             <jet-nav-link
                                 class="navbar-item"
-                                :href="route('user-roles.index')"
-                                :active="route().current('user-roles.index')">
+                                :href="route('admin.user-roles.index')"
+                                :active="route().current('admin.user-roles.index')">
                                 UserRole
                             </jet-nav-link>
                         </div>
                     </div>
+                    -->
                 </div>
 
                 <div class="navbar-end">
