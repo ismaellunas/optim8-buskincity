@@ -18,13 +18,11 @@
                 >
                     <user-profile-form
                         v-model="form"
-                        :errors="errors"
                         :role-options="roleOptions"
                     ></user-profile-form>
 
                     <user-password-form
                         v-model="form"
-                        :errors="errors"
                     ></user-password-form>
 
                     <div class="field is-grouped is-grouped-right">

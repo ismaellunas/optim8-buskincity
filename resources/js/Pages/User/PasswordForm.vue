@@ -32,8 +32,6 @@
             MixinHasPageErrors,
         ],
         props: {
-            errors: {},
-            isProcessing: Boolean,
             modelValue: {},
         },
         setup(props, { emit }) {

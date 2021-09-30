@@ -20,12 +20,7 @@
 
                     <user-profile-form
                         v-model="profileForm"
-                        :errors="errors"
-                        :is-new="false"
-                        :is-processing="isProcessing"
-                        :base-route-name="baseRouteName"
                         :role-options="roleOptions"
-                        @on-submit="onSubmit"
                     ></user-profile-form>
 
                     <div class="field is-grouped is-grouped-right">
@@ -61,10 +56,8 @@
 
                     <user-password-form
                         v-model="passwordForm"
-                        :errors="passwordForm.errors"
-                        :is-processing="isProcessing"
-                        @on-submit="onPasswordSubmit"
                     ></user-password-form>
+
                     <div class="field is-grouped is-grouped-right">
                         <div class="control">
                             <sdb-button class="is-link">

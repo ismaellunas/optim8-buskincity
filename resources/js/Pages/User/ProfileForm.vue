@@ -47,9 +47,6 @@
             MixinHasPageErrors,
         ],
         props: {
-            errors: {},
-            isNew: Boolean,
-            isProcessing: Boolean,
             modelValue: {},
             roleOptions: Array,
         },
