@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-//use Illuminate\Http\Request;
-
-class CrudController extends Controller
+abstract class CrudController extends Controller
 {
     protected $model;
     protected $recordsPerPage = 15;
