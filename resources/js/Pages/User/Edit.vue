@@ -18,10 +18,10 @@
                     <h3 class="title is-3">Profile</h3>
                     <hr/>
 
-                    <user-profile-form
+                    <form-user-profile
                         v-model="profileForm"
                         :role-options="roleOptions"
-                    ></user-profile-form>
+                    ></form-user-profile>
 
                     <div class="field is-grouped is-grouped-right">
                         <div class="control">
@@ -54,9 +54,9 @@
                     <h3 class="title is-3">Password</h3>
                     <hr/>
 
-                    <user-password-form
+                    <form-user-password
                         v-model="passwordForm"
-                    ></user-password-form>
+                    ></form-user-password>
 
                     <div class="field is-grouped is-grouped-right">
                         <div class="control">
@@ -79,8 +79,8 @@
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import UserPasswordForm from '@/Pages/User/PasswordForm';
-    import UserProfileForm from '@/Pages/User/ProfileForm';
+    import FormUserPassword from '@/Pages/User/FormPassword';
+    import FormUserProfile from '@/Pages/User/FormProfile';
     import { map } from 'lodash';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
     import { success as successAlert } from '@/Libs/alert';
@@ -91,8 +91,8 @@
             SdbButton,
             SdbButtonLink,
             SdbErrorNotifications,
-            UserPasswordForm,
-            UserProfileForm,
+            FormUserPassword,
+            FormUserProfile,
         },
         props: {
             errors: Object,
