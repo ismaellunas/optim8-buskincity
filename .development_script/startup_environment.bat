@@ -1,4 +1,4 @@
-@echo off
+@echo on
 
 copy .env.example .env
 call composer install
