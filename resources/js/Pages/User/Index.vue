@@ -50,6 +50,7 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
+                        <th>Email</th>
                         <th>
                             <div class="level-right">Actions</div>
                         </th>
@@ -59,6 +60,7 @@
                     <tr v-for="record in records.data" :key="record.id">
                         <th>{{ record.id }}</th>
                         <td>{{ record.name }}</td>
+                        <td>{{ record.email }}</td>
                         <td>
                             <div class="level-right">
                                 <sdb-button-link
