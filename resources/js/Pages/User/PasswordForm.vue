@@ -23,7 +23,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'PasswordForm',
+        name: 'UserPasswordForm',
         components: {
             SdbFormInput,
             SdbFormSelect,

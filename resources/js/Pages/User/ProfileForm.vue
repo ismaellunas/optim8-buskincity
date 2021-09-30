@@ -38,7 +38,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'UserForm',
+        name: 'UserProfileForm',
         components: {
             SdbFormInput,
             SdbFormSelect,
