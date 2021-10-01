@@ -34,7 +34,7 @@
                         </div>
                         <div class="control">
                             <sdb-button class="is-link">
-                                Update
+                                Create
                             </sdb-button>
                         </div>
                     </div>
