@@ -25,6 +25,15 @@ export const contentSizes = [
     { value: "is-large", name: "Large" },
 ];
 
+export const colors = [
+    { value: "is-primary", name: "Primary" },
+    { value: "is-link", name: "Link" },
+    { value: "is-info", name: "Info" },
+    { value: "is-success", name: "Success" },
+    { value: "is-warning", name: "warning" },
+    { value: "is-danger", name: "Danger" },
+];
+
 export const suffixNumbers = [
     { value: "1", name: "1"},
     { value: "2", name: "2"},
