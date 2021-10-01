@@ -45,6 +45,7 @@
     import CardText from '@/Blocks/Contents/CardText';
     import Draggable from 'vuedraggable';
     import Heading from '@/Blocks/Contents/Heading';
+    import Hero from '@/Blocks/Contents/Hero';
     import Image from '@/Blocks/Contents/Image';
     import Text from '@/Blocks/Contents/Text';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
@@ -56,6 +57,7 @@
             CardText,
             Draggable,
             Heading,
+            Hero,
             Image,
             Text,
         },
