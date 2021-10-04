@@ -1,5 +1,6 @@
 import card from './card';
 import cardText from './card-text';
+import footer from './footer';
 import heading from './heading';
 import hero from './hero';
 import image from './image';
@@ -14,4 +15,5 @@ export default {
     image: image,
     message: message,
     text: text,
+    footer: footer,
 }
