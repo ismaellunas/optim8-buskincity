@@ -46,7 +46,6 @@
     import SdbTinymce from '@/Sdb/EditorTinymce';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat } from 'lodash';
-    import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
