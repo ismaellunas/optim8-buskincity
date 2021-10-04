@@ -3,6 +3,7 @@ import cardText from './card-text';
 import heading from './heading';
 import hero from './hero';
 import image from './image';
+import message from './message';
 import text from './text';
 
 export default {
@@ -11,5 +12,6 @@ export default {
     heading: heading,
     hero: hero,
     image: image,
+    message: message,
     text: text,
 }
