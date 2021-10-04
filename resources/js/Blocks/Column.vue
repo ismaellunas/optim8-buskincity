@@ -44,6 +44,7 @@
     import Card from '@/Blocks/Contents/Card';
     import CardText from '@/Blocks/Contents/CardText';
     import Draggable from 'vuedraggable';
+    import Faq from '@/Blocks/Contents/Faq';
     import Footer from '@/Blocks/Contents/Footer';
     import Heading from '@/Blocks/Contents/Heading';
     import Hero from '@/Blocks/Contents/Hero';
@@ -57,6 +58,7 @@
         components: {
             Card,
             CardText,
+            Faq,
             Draggable,
             Heading,
             Hero,
