@@ -44,6 +44,7 @@
     import Card from '@/Blocks/Contents/Card';
     import CardText from '@/Blocks/Contents/CardText';
     import Draggable from 'vuedraggable';
+    import Footer from '@/Blocks/Contents/Footer';
     import Heading from '@/Blocks/Contents/Heading';
     import Hero from '@/Blocks/Contents/Hero';
     import Image from '@/Blocks/Contents/Image';
@@ -62,6 +63,7 @@
             Image,
             Message,
             Text,
+            Footer,
         },
         props: {
             id: {},

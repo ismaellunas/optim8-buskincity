@@ -1,4 +1,4 @@
-import { contentSizes, defaultOption, alignments, colors } from './style-options';
+import { contentSizes, defaultOption, colors } from './style-options';
 
 export default {
     title: 'Message',
