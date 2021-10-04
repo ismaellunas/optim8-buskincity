@@ -47,6 +47,7 @@
     import Heading from '@/Blocks/Contents/Heading';
     import Hero from '@/Blocks/Contents/Hero';
     import Image from '@/Blocks/Contents/Image';
+    import Message from '@/Blocks/Contents/Message';
     import Text from '@/Blocks/Contents/Text';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3'
@@ -59,6 +60,7 @@
             Heading,
             Hero,
             Image,
+            Message,
             Text,
         },
         props: {
