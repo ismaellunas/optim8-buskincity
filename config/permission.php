@@ -152,5 +152,5 @@ return [
         'store' => 'default',
     ],
 
-    'super_admin_name' => 'Super Administrator',
+    'super_admin_role' => 'Super Administrator',
 ];
