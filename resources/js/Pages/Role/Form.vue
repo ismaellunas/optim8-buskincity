@@ -82,7 +82,7 @@
                         return permission.isAll;
                     })
 
-                    if (this.form.permissions.includes(allPermission.value)) {
+                    if (allPermission && this.form.permissions.includes(allPermission.value)) {
                         return true;
                     }
 
