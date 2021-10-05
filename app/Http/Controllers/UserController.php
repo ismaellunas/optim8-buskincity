@@ -122,6 +122,12 @@ class UserController extends CrudController
             'email',
         ]));
 
+        if ($request->role) {
+            $user->assignRole($request->role);
+        } else {
+            $user->syncRoles([]);
+        }
+
         $this->generateFlashMessage('User updated successfully!');
 
         return redirect()->back();
