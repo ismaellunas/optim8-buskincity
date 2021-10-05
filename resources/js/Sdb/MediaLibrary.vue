@@ -1,6 +1,9 @@
 <template>
     <div>
-        <div class="columns">
+        <div
+            v-if="isUploadEnabled"
+            class="columns"
+        >
             <div class="column is-full">
                 <div class="content box">
                     <div class="field">
@@ -282,6 +285,7 @@
             isDownloadEnabled: {type: Boolean, default: true},
             isEditEnabled: {type: Boolean, default: true},
             isPaginationDisplayed: {type: Boolean, default: true},
+            isUploadEnabled: {type: Boolean, default: true},
             queryParams: { type: Object },
             records: {},
             search: Function,

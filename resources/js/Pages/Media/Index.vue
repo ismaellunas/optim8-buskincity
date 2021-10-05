@@ -6,10 +6,14 @@
 
     <div class="box">
         <sdb-media-library
-            :records="records"
-            :search="search"
             :display-view="displayView"
             :query-params="queryParams"
+            :records="records"
+            :search="search"
+            :is-delete-enabled="can.delete"
+            :is-download-enabled="can.read"
+            :is-edit-enabled="can.edit"
+            :is-upload-enabled="can.add"
             @on-media-submitted="onMediaUploadSuccess"
             @on-view-changed="onViewChanged"
         />
@@ -30,6 +34,7 @@
             SdbMediaLibrary,
         },
         props: {
+            can: {},
             records: {},
             pageNumber: String,
             pageQueryParams: Object,
