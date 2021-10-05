@@ -4,9 +4,13 @@ namespace App\Providers;
 
 use App\Models\Category;
 use App\Models\ConnectedAccount;
+use App\Models\Media;
+use App\Models\Page;
 use App\Models\Post;
 use App\Policies\CategoryPolicy;
 use App\Policies\ConnectedAccountPolicy;
+use App\Policies\MediaPolicy;
+use App\Policies\PagePolicy;
 use App\Policies\PostPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -19,9 +23,11 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        ConnectedAccount::class => ConnectedAccountPolicy::class,
-        Post::class => PostPolicy::class,
         Category::class => CategoryPolicy::class,
+        ConnectedAccount::class => ConnectedAccountPolicy::class,
+        Media::class => MediaPolicy::class,
+        Page::class => PagePolicy::class,
+        Post::class => PostPolicy::class,
     ];
 
     /**
