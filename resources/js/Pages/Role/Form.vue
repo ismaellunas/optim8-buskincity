@@ -7,7 +7,7 @@
         :message="error('name')"
     ></sdb-form-input>
 
-    <div class="columns">
+    <div class="columns is-multiline">
         <div
             v-for="(permissions, groupName) in permissionOptions"
             :key="groupName"
