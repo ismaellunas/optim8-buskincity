@@ -24,4 +24,14 @@ abstract class CrudController extends Controller
             $additionalData
         );
     }
+
+    protected function getCreateTitle(): string
+    {
+        return 'Add New '.$this->title;
+    }
+
+    protected function getEditTitle(): string
+    {
+        return 'Edit '.$this->title;
+    }
 }
