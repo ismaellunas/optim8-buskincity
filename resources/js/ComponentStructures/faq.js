@@ -13,14 +13,7 @@ export default {
             }
         },
         faqContent: {
-            contents: [
-                question,
-                {
-                    question: "Test 2",
-                    answer: "Testing",
-                    childs: [],
-                }
-            ],
+            contents: [],
             template: {
                 question: question,
             },
