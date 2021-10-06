@@ -5,37 +5,40 @@
             @delete-content="deleteContent"
         />
         <div class="hero-body">
-            <p
-                v-if="isEditMode"
-                class="title"
-            >
-                <sdb-tinymce
-                    v-model="entity.content.body.title.html"
+            <template v-if="isEditMode">
+                <component
+                    is="p"
+                    class="title"
                     :class="editorClass"
+                    contenteditable
+                    @blur="onEditTitle"
+                    v-text="entity.content.body.title.html"
+                >
+                </component>
+            </template>
+            <template v-else>
+                <component
+                    is="p"
+                    class="title"
+                    v-text="entity.content.body.title.html"
                 />
-            </p>
-            <p
-                v-else
-                class="title"
-                v-html="entity.content.body.title.html"
-            >
-            </p>
+            </template>
 
-            <p
+            <div
                 v-if="isEditMode"
-                class="subtitle"
+                class="subtitle content"
             >
                 <sdb-tinymce
                     v-model="entity.content.body.subtitle.html"
                     :class="editorClass"
                 />
-            </p>
-            <p
+            </div>
+            <div
                 v-else
-                class="subtitle"
+                class="subtitle content"
                 v-html="entity.content.body.subtitle.html"
             >
-            </p>
+            </div>
         </div>
     </div>
 </template>
@@ -80,6 +83,11 @@
                     (this.config.hero?.color ?? ''),
                 ).filter(Boolean);
             }
+        },
+        methods: {
+            onEditTitle(evt){
+                this.entity.content.body.title.html = evt.target.innerText;
+            },
         }
     }
 </script>

@@ -4,20 +4,20 @@
             v-if="isEditMode"
             @delete-content="deleteContent"
         />
-        <p
+        <div
             v-if="isEditMode"
-            class="message-body"
+            class="message-body content"
         >
             <sdb-tinymce
                 v-model="entity.content.html"
             />
-        </p>
-        <p
+        </div>
+        <div
             v-else
-            class="message-body"
+            class="message-body content"
             v-html="entity.content.html"
         >
-        </p>
+        </div>
     </article>
 </template>
 
