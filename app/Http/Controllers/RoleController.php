@@ -50,6 +50,7 @@ class RoleController extends CrudController
     {
         return Inertia::render('Role/Create', $this->getData([
             'permissions' => $this->roleService->getPermissionOptions(),
+            'title' => $this->getCreateTitle(),
         ]));
     }
 
@@ -88,11 +89,11 @@ class RoleController extends CrudController
     {
         $role->load('permissions');
 
-        return Inertia::render('Role/Edit', [
-            'baseRouteName' => $this->baseRouteName,
+        return Inertia::render('Role/Edit', $this->getData([
             'permissions' => $this->roleService->getPermissionOptions(),
             'record' => $role,
-        ]);
+            'title' => $this->getEditTitle(),
+        ]));
     }
 
     public function update(Request $request, Role $role)
