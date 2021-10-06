@@ -43,6 +43,13 @@ class PermissionSeeder extends Seeder
             'media.add',
             'media.delete',
 
+            'user.*',
+            'user.browse',
+            'user.read',
+            'user.edit',
+            'user.add',
+            'user.delete',
+
             /*  BREAD:
             'browse',
             'read',
