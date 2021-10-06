@@ -2,7 +2,7 @@
 
     <sdb-form-input
         v-model="form.name"
-        label="Name"
+        label="Role Name"
         required
         :message="error('name')"
     ></sdb-form-input>
