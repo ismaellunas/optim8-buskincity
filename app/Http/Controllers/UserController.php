@@ -50,6 +50,7 @@ class UserController extends CrudController
                 $request->term,
                 $this->recordsPerPage
             ),
+            'title' => $this->getIndexTitle(),
         ]));
     }
 
@@ -60,10 +61,11 @@ class UserController extends CrudController
      */
     public function create()
     {
-        return Inertia::render('User/Create', [
+        return Inertia::render('User/Create', $this->getData([
             'record' => new User(),
             'roleOptions' => $this->userService->getRoleOptions(),
-        ]);
+            'title' => $this->getCreateTitle(),
+        ]));
     }
 
     /**
@@ -111,10 +113,11 @@ class UserController extends CrudController
 
         $user->roles->makeHidden('pivot');
 
-        return Inertia::render('User/Edit', [
+        return Inertia::render('User/Edit', $this->getData([
             'record' => $user,
             'roleOptions' => $this->userService->getRoleOptions(),
-        ]);
+            'title' => $this->getEditTitle(),
+        ]));
     }
 
     /**
