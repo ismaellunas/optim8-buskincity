@@ -105,7 +105,7 @@
             const userProfileForm = {
                 name: user.name,
                 email: user.email,
-                role: user.roles[0].id ?? null,
+                role: (user.roles[0]) ? user.roles[0].id : null,
             };
 
             return {
