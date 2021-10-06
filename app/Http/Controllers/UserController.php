@@ -8,6 +8,7 @@ use App\Http\Requests\{
     UserStoreRequest,
     UserUpdateRequest
 };
+use App\Models\Role;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -135,7 +136,12 @@ class UserController extends CrudController
         ]));
 
         if ($request->role) {
-            $user->assignRole($request->role);
+            $role = Role::find($request->role);
+
+            if (!$user->hasRole($role)) {
+                $user->syncRoles([]);
+                $user->assignRole($request->role);
+            }
         } else {
             $user->syncRoles([]);
         }
