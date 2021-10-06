@@ -63,13 +63,6 @@ class RoleController extends CrudController
      */
     public function store(RoleRequest $request)
     {
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'max:255',
-            ],
-        ]);
-
         $role = new Role();
 
         $role->saveFromInputs($validated);
@@ -99,10 +92,6 @@ class RoleController extends CrudController
 
     public function update(RoleRequest $request, Role $role)
     {
-        Validator::make($request->all(), [
-            'name' => ['required'],
-        ])->validate();
-
         $role->name = $request->name;
         $role->save();
 
