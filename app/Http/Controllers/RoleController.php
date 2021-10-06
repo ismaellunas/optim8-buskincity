@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RoleRequest;
 use App\Models\Role;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
@@ -60,7 +61,7 @@ class RoleController extends CrudController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
         $validated = $request->validate([
             'name' => [
@@ -96,7 +97,7 @@ class RoleController extends CrudController
         ]));
     }
 
-    public function update(Request $request, Role $role)
+    public function update(RoleRequest $request, Role $role)
     {
         Validator::make($request->all(), [
             'name' => ['required'],
