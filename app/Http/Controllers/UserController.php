@@ -24,6 +24,8 @@ class UserController extends CrudController
     {
         $this->userService = $userService;
         $this->deleteUser = $deleteUser;
+
+        $this->authorizeResource(User::class, 'user');
     }
 
     /**
@@ -33,15 +35,21 @@ class UserController extends CrudController
      */
     public function index(Request $request)
     {
-        return Inertia::render('User/Index', [
-            'baseRouteName' => $this->baseRouteName,
+        $user = auth()->user();
+
+        return Inertia::render('User/Index', $this->getData([
+            'can' => [
+                'add' => $user->can('user.add'),
+                'delete' => $user->can('user.delete'),
+                'edit' => $user->can('user.edit'),
+            ],
             'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
             'records' => $this->userService->getRecords(
                 $request->term,
                 $this->recordsPerPage
             ),
-        ]);
+        ]));
     }
 
     /**
