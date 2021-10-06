@@ -43,7 +43,13 @@
                                     <form @submit.prevent="submit">
                                         <div>
                                             <jet-label for="email" value="Email" />
-                                            <jet-input id="email" type="email" v-model="form.email" required autofocus />
+                                            <jet-input 
+                                                id="email" 
+                                                type="email" 
+                                                v-model="form.email" 
+                                                required 
+                                                autofocus 
+                                            />
                                         </div>
 
                                         <div class="mt-4">
