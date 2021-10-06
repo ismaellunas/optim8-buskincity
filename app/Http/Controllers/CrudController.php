@@ -7,6 +7,7 @@ abstract class CrudController extends Controller
     protected $model;
     protected $recordsPerPage = 15;
     protected $baseRouteName;
+    protected $title;
 
     protected function generateFlashMessage($message): void
     {
@@ -18,6 +19,7 @@ abstract class CrudController extends Controller
         return array_merge(
             [
                 'baseRouteName' => $this->baseRouteName,
+                'title' => $this->title,
             ],
             $additionalData
         );
