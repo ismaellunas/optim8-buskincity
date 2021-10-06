@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class RoleController extends CrudController
@@ -13,6 +14,7 @@ class RoleController extends CrudController
     private $roleService;
 
     protected $baseRouteName = 'admin.roles';
+    protected $title = 'Role';
 
     public function __construct(RoleService $roleService)
     {
@@ -26,15 +28,15 @@ class RoleController extends CrudController
      */
     public function index(Request $request)
     {
-        return Inertia::render('Role/Index', [
-            'baseRouteName' => $this->baseRouteName,
+        return Inertia::render('Role/Index', $this->getData([
             'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->only('term')),
             'records' => $this->roleService->getRecords(
                 $request->term,
                 $this->recordsPerPage,
             ),
-        ]);
+            'title' => Str::plural($this->title),
+        ]));
     }
 
     /**
