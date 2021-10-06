@@ -19,6 +19,8 @@ class RoleController extends CrudController
     public function __construct(RoleService $roleService)
     {
         $this->roleService = $roleService;
+
+        $this->authorizeResource(Role::class, 'role');
     }
 
     /**
