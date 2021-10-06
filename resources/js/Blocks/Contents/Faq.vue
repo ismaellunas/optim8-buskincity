@@ -6,31 +6,34 @@
                 @delete-content="deleteContent"
             />
             <div class="hero-body">
-                <p
-                    v-if="isEditMode"
-                    class="title"
-                >
-                    <sdb-tinymce
-                        v-model="entity.content.heroContent.body.title.html"
+                <template v-if="isEditMode">
+                    <component
+                        is="p"
+                        class="title"
                         :class="editorClass"
-                    />
-                </p>
-                <p
-                    v-else
-                    class="title"
-                    v-html="entity.content.heroContent.body.title.html"
-                >
-                </p>
+                        contenteditable
+                        @blur="onEditTitle"
+                        v-text="entity.content.heroContent.body.title.html"
+                    >
+                    </component>
+                </template>
+
+                <template v-else>
+                    <component
+                        is="p"
+                        class="title"
+                        v-text="entity.content.heroContent.body.title.html"
+                    >
+                    </component>
+                </template>
             </div>
         </div>
-        <div class="columns px-4">
-            <div class="column">
-                <nested-question
-                    :items="entity.content.faqContent.contents"
-                    :is-edit-mode="isEditMode"
-                ></nested-question>
-            </div>
-        </div>
+        <nested-question
+            :items="entity.content.faqContent.contents"
+            :is-edit-mode="isEditMode"
+            :template="entity.content.faqContent.template"
+            is-child-open="false"
+        ></nested-question>
     </main>
 </template>
 
@@ -75,6 +78,11 @@
                     (this.config.hero?.color ?? ''),
                 ).filter(Boolean);
             }
+        },
+        methods: {
+            onEditTitle(evt){
+                this.entity.content.heroContent.body.title.html = evt.target.innerText;
+            },
         }
     }
 </script>
