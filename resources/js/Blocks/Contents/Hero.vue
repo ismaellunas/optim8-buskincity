@@ -24,23 +24,21 @@
                 />
             </template>
 
-            <p
+            <div
                 v-if="isEditMode"
-                class="subtitle"
+                class="subtitle content"
             >
-                <div class="content">
-                    <sdb-tinymce
-                        v-model="entity.content.body.subtitle.html"
-                        :class="editorClass"
-                    />
-                </div>
-            </p>
-            <p
+                <sdb-tinymce
+                    v-model="entity.content.body.subtitle.html"
+                    :class="editorClass"
+                />
+            </div>
+            <div
                 v-else
-                class="subtitle"
+                class="subtitle content"
                 v-html="entity.content.body.subtitle.html"
             >
-            </p>
+            </div>
         </div>
     </div>
 </template>
