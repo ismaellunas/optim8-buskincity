@@ -4,6 +4,7 @@
         v-model="form.name"
         label="Role Name"
         required
+        maxlength="255"
         :message="error('name')"
     ></sdb-form-input>
 
