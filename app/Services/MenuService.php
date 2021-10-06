@@ -89,7 +89,7 @@ class MenuService
                 ),
                 'children' => [
                     [
-                        'title' => 'Post',
+                        'title' => 'Posts',
                         'link' => route('admin.posts.index'),
                         'isActive' => $request->routeIs('admin.posts.*'),
                         'isEnabled' => $user->can('viewAny', Post::class),
@@ -109,7 +109,7 @@ class MenuService
                 'isEnabled' => $user->can('viewAny', Media::class),
             ],
             [
-                'title' => 'Users',
+                'title' => 'All Users',
                 'link' => route('admin.users.index'),
                 'isActive' => $request->routeIs('admin.users.*'),
                 'isEnabled' => $user->can('viewAny', User::class),
