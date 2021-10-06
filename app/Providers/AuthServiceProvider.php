@@ -8,6 +8,7 @@ use App\Models\{
     Media,
     Page,
     Post,
+    Role,
     User
 };
 use App\Policies\{
@@ -16,6 +17,7 @@ use App\Policies\{
     MediaPolicy,
     PagePolicy,
     PostPolicy,
+    RolePolicy,
     UserPolicy
 };
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -34,6 +36,7 @@ class AuthServiceProvider extends ServiceProvider
         Media::class => MediaPolicy::class,
         Page::class => PagePolicy::class,
         Post::class => PostPolicy::class,
+        Role::class => RolePolicy::class,
         User::class => UserPolicy::class,
     ];
 
