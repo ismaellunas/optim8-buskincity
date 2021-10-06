@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
+
 abstract class CrudController extends Controller
 {
     protected $model;
@@ -33,5 +35,10 @@ abstract class CrudController extends Controller
     protected function getEditTitle(): string
     {
         return 'Edit '.$this->title;
+    }
+
+    protected function getIndexTitle(): string
+    {
+        return Str::plural($this->title);
     }
 }
