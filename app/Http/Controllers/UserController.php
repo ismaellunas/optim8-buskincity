@@ -19,6 +19,7 @@ class UserController extends CrudController
     private $userService;
 
     protected $baseRouteName = 'admin.users';
+    protected $title = 'User';
 
     public function __construct(UserService $userService, DeleteUser $deleteUser)
     {

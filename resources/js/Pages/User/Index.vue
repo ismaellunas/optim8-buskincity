@@ -1,6 +1,6 @@
 <template>
 <app-layout>
-    <template v-slot:header>User</template>
+    <template v-slot:header>{{ title }}</template>
 
     <div class="box">
         <div class="columns">
@@ -130,6 +130,7 @@
             pageNumber: String,
             pageQueryParams: Object,
             records: {},
+            title: String,
         },
         setup(props) {
             const queryParams = merge(
