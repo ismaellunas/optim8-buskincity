@@ -2,16 +2,22 @@
 
 namespace App\Providers;
 
-use App\Models\Category;
-use App\Models\ConnectedAccount;
-use App\Models\Media;
-use App\Models\Page;
-use App\Models\Post;
-use App\Policies\CategoryPolicy;
-use App\Policies\ConnectedAccountPolicy;
-use App\Policies\MediaPolicy;
-use App\Policies\PagePolicy;
-use App\Policies\PostPolicy;
+use App\Models\{
+    Category,
+    ConnectedAccount,
+    Media,
+    Page,
+    Post,
+    User
+};
+use App\Policies\{
+    CategoryPolicy,
+    ConnectedAccountPolicy,
+    MediaPolicy,
+    PagePolicy,
+    PostPolicy,
+    UserPolicy
+};
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -28,6 +34,7 @@ class AuthServiceProvider extends ServiceProvider
         Media::class => MediaPolicy::class,
         Page::class => PagePolicy::class,
         Post::class => PostPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**
