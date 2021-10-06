@@ -71,7 +71,7 @@ class RoleController extends CrudController
 
         $this->generateFlashMessage('Role created successfully!');
 
-        return redirect()->back();
+        return redirect()->route($this->baseRouteName.'.index');
     }
 
     public function show(Role $role)
@@ -99,7 +99,7 @@ class RoleController extends CrudController
 
         $this->generateFlashMessage('Role updated successfully!');
 
-        return redirect()->back();
+        return redirect()->route($this->baseRouteName.'.index');
     }
 
     public function destroy(Request $request, Role $role)
