@@ -1,40 +1,35 @@
 <template>
-    <main>
-        <div class="hero" :class="heroClass">
-            <sdb-toolbar-content
-                v-if="isEditMode"
-                @delete-content="deleteContent"
-            />
-            <div class="hero-body">
-                <template v-if="isEditMode">
-                    <component
-                        is="p"
-                        class="title"
-                        :class="editorClass"
-                        contenteditable
-                        @blur="onEditTitle"
-                        v-text="entity.content.heroContent.body.title.html"
-                    >
-                    </component>
-                </template>
+    <div>
+        <sdb-toolbar-content
+            v-if="isEditMode"
+            @delete-content="deleteContent"
+        />
+        <template v-if="isEditMode">
+            <component
+                :is="headingTag"
+                :class="headingClass"
+                contenteditable
+                @blur="onEditHeading"
+                v-text="entity.content.heading.html"
+            >
+            </component>
+        </template>
 
-                <template v-else>
-                    <component
-                        is="p"
-                        class="title"
-                        v-text="entity.content.heroContent.body.title.html"
-                    >
-                    </component>
-                </template>
-            </div>
-        </div>
-        <nested-question
+        <template v-else>
+            <component
+                :is="headingTag"
+                :class="headingClass"
+                v-text="entity.content.heading.html"
+            >
+            </component>
+        </template>
+        <question-answer
             :items="entity.content.faqContent.contents"
             :is-edit-mode="isEditMode"
             :template="entity.content.faqContent.template"
-            is-child-open="false"
-        ></nested-question>
-    </main>
+        ></question-answer>
+
+    </div>
 </template>
 
 <script>
@@ -42,8 +37,8 @@
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbTinymce from '@/Sdb/EditorTinymce';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import NestedQuestion from '@/Blocks/Contents/Faq/NestedQuestion';
-    import { concat } from 'lodash';
+    import QuestionAnswer from '@/Blocks/Contents/Faq/QuestionAnswer';
+    import { last } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -54,11 +49,11 @@
         components: {
             SdbTinymce,
             SdbToolbarContent,
-            NestedQuestion,
+            QuestionAnswer,
         },
         props: {
-            id: {},
-            modelValue: {},
+            id: {type: String},
+            modelValue: {type: Object},
         },
         setup(props, { emit }) {
             return {
@@ -67,21 +62,20 @@
             };
         },
         computed: {
-            editorClass() {
-                return concat(
-                    (this.config.hero?.alignment ?? '')
-                ).filter(Boolean);
+            headingTag() {
+                return this.config.heading?.tag ?? 'h1';
             },
-            heroClass() {
-                return concat(
-                    (this.config.hero?.alignment ?? ''),
-                    (this.config.hero?.color ?? ''),
-                ).filter(Boolean);
-            }
+            headingClass() {
+                let classes = [];
+                classes.push(this.config.heading?.type ?? 'title');
+                classes.push('is-' + last(this.headingTag));
+                classes.push(this.config.heading?.alignment ?? "");
+                return classes;
+            },
         },
         methods: {
-            onEditTitle(evt){
-                this.entity.content.heroContent.body.title.html = evt.target.innerText;
+            onEditHeading(evt){
+                this.entity.content.heading.html = evt.target.innerText;
             },
         }
     }
