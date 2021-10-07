@@ -125,6 +125,8 @@ class UserController extends CrudController
             $query->limit(1);
         }]);
 
+        $user->append('isSuperAdministrator');
+
         $user->roles->makeHidden('pivot');
 
         return Inertia::render('User/Edit', $this->getData([
