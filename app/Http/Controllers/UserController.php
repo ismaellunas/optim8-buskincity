@@ -39,6 +39,18 @@ class UserController extends CrudController
     {
         $user = auth()->user();
 
+        if ($user->isSuperAdministrator) {
+            $records = $this
+                ->userService
+                ->getRecords($request->term, $this->recordsPerPage);
+        } else {
+            $records = $this
+                ->userService
+                ->getNoSuperAdministratorRecords($request->term, $this->recordsPerPage);
+        }
+
+        $this->userService->transformRecords($records, $user);
+
         return Inertia::render('User/Index', $this->getData([
             'can' => [
                 'add' => $user->can('user.add'),
@@ -47,10 +59,7 @@ class UserController extends CrudController
             ],
             'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
-            'records' => $this->userService->getRecords(
-                $request->term,
-                $this->recordsPerPage
-            ),
+            'records' => $records,
             'title' => $this->getIndexTitle(),
         ]));
     }
