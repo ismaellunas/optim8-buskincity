@@ -34,7 +34,7 @@
                                         Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
                                     </div>
 
-                                    <div v-if="status" class="">
+                                    <div v-if="status" class="notification is-info">
                                         {{ status }}
                                     </div>
 
@@ -43,12 +43,12 @@
                                     <form @submit.prevent="submit">
                                         <div>
                                             <jet-label for="email" value="Email" />
-                                            <jet-input 
-                                                id="email" 
-                                                type="email" 
-                                                v-model="form.email" 
-                                                required 
-                                                autofocus 
+                                            <jet-input
+                                                id="email"
+                                                v-model="form.email"
+                                                type="email"
+                                                required
+                                                autofocus
                                             />
                                         </div>
 
