@@ -181,8 +181,7 @@ class UserController extends CrudController
 
     public function updatePassword(UserPasswordRequest $request, User $user)
     {
-        $user->password = $this->userService->hashPassword($request->password);
-        $user->save();
+        $user->savePassword($request->password);
 
         $this->generateFlashMessage('Password updated successfully!');
 
