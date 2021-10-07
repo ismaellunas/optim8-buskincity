@@ -1,16 +1,12 @@
-import { defaultOption, alignments, colors } from './style-options';
+import { defaultOption, alignments } from './style-options';
 import { question } from './faq-options';
 
 export default {
     title: 'FAQ',
     componentName: 'Faq',
     content: {
-        heroContent: {
-            body: {
-                title: {
-                    html: "FAQ",
-                },
-            }
+        heading: {
+            html: "FAQ",
         },
         faqContent: {
             contents: [],
@@ -20,27 +16,43 @@ export default {
         },
     },
     config: {
-        hero: {
+        heading: {
+            tag: "h1",
+            type: "title",
             alignment: null,
-            color: null,
         }
     }
 };
 
 export const config = {
-    hero: {
-        label: "Hero",
+    heading: {
+        label: "Heading",
         config: {
+            tag: {
+                type: "select",
+                label: "Heading",
+                options: [
+                    { value: "h1", name: "H1" },
+                    { value: "h2", name: "H2" },
+                    { value: "h3", name: "H3" },
+                    { value: "h4", name: "H4" },
+                    { value: "h5", name: "H5" },
+                    { value: "h6", name: "H6" },
+                ],
+            },
+            type: {
+                type: "select",
+                label: "Type",
+                options: [
+                    { value: "title", name: "Title"},
+                    { value: "subtitle", name: "Subtitle"},
+                ],
+            },
             alignment: {
                 type: "select",
                 label: "Alignment",
-                options: defaultOption.concat(alignments)
+                options: defaultOption.concat(alignments),
             },
-            color: {
-                type: "select",
-                label: "Color",
-                options: defaultOption.concat(colors)
-            },
-        }
+        },
     }
 };
