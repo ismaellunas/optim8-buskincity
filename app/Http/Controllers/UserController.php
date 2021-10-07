@@ -145,20 +145,18 @@ class UserController extends CrudController
      */
     public function update(UserUpdateRequest $request, User $user)
     {
-        $user->update($request->only([
+        $user->saveFromInputs($request->only([
             'name',
             'email',
         ]));
 
-        if ($request->role) {
-            $role = Role::find($request->role);
-
-            if (!$user->hasRole($role)) {
+        if (!$user->isSuperAdministrator) {
+            if ($request->role && !$user->hasRole($request->role)) {
                 $user->syncRoles([]);
                 $user->assignRole($request->role);
+            } else {
+                $user->syncRoles([]);
             }
-        } else {
-            $user->syncRoles([]);
         }
 
         $this->generateFlashMessage('User updated successfully!');
