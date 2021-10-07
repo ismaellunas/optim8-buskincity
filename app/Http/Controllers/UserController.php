@@ -8,6 +8,7 @@ use App\Http\Requests\{
     UserStoreRequest,
     UserUpdateRequest
 };
+use App\Models\Role;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -19,11 +20,14 @@ class UserController extends CrudController
     private $userService;
 
     protected $baseRouteName = 'admin.users';
+    protected $title = 'User';
 
     public function __construct(UserService $userService, DeleteUser $deleteUser)
     {
         $this->userService = $userService;
         $this->deleteUser = $deleteUser;
+
+        $this->authorizeResource(User::class, 'user');
     }
 
     /**
@@ -33,15 +37,22 @@ class UserController extends CrudController
      */
     public function index(Request $request)
     {
-        return Inertia::render('User/Index', [
-            'baseRouteName' => $this->baseRouteName,
+        $user = auth()->user();
+
+        return Inertia::render('User/Index', $this->getData([
+            'can' => [
+                'add' => $user->can('user.add'),
+                'delete' => $user->can('user.delete'),
+                'edit' => $user->can('user.edit'),
+            ],
             'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
             'records' => $this->userService->getRecords(
                 $request->term,
                 $this->recordsPerPage
             ),
-        ]);
+            'title' => $this->getIndexTitle(),
+        ]));
     }
 
     /**
@@ -51,10 +62,11 @@ class UserController extends CrudController
      */
     public function create()
     {
-        return Inertia::render('User/Create', [
+        return Inertia::render('User/Create', $this->getData([
             'record' => new User(),
             'roleOptions' => $this->userService->getRoleOptions(),
-        ]);
+            'title' => $this->getCreateTitle(),
+        ]));
     }
 
     /**
@@ -102,10 +114,11 @@ class UserController extends CrudController
 
         $user->roles->makeHidden('pivot');
 
-        return Inertia::render('User/Edit', [
+        return Inertia::render('User/Edit', $this->getData([
             'record' => $user,
             'roleOptions' => $this->userService->getRoleOptions(),
-        ]);
+            'title' => $this->getEditTitle(),
+        ]));
     }
 
     /**
@@ -121,6 +134,17 @@ class UserController extends CrudController
             'name',
             'email',
         ]));
+
+        if ($request->role) {
+            $role = Role::find($request->role);
+
+            if (!$user->hasRole($role)) {
+                $user->syncRoles([]);
+                $user->assignRole($request->role);
+            }
+        } else {
+            $user->syncRoles([]);
+        }
 
         $this->generateFlashMessage('User updated successfully!');
 

@@ -1,6 +1,6 @@
 <template>
 <app-layout>
-    <template v-slot:header>User</template>
+    <template v-slot:header>{{ title }}</template>
 
     <div class="box">
         <div class="columns">
@@ -30,7 +30,10 @@
                 </div>
             </div>
             <div class="column">
-                <div class="is-pulled-right">
+                <div
+                    v-if="can.add"
+                    class="is-pulled-right"
+                >
                     <sdb-button-link
                         class="is-primary"
                         :href="route(baseRouteName+'.create')"
@@ -64,6 +67,7 @@
                         <td>
                             <div class="level-right">
                                 <sdb-button-link
+                                    v-if="can.edit"
                                     class="is-ghost has-text-black"
                                     :href="route(baseRouteName + '.edit', record.id)"
                                 >
@@ -72,6 +76,7 @@
                                     </span>
                                 </sdb-button-link>
                                 <sdb-button
+                                    v-if="can.delete"
                                     class="is-ghost has-text-black ml-1"
                                     @click.prevent="deleteRecord(record)"
                                 >
@@ -120,10 +125,12 @@
             SdbTable,
         },
         props: {
+            baseRouteName: String,
+            can: Object,
             pageNumber: String,
             pageQueryParams: Object,
-            baseRouteName: String,
             records: {},
+            title: String,
         },
         setup(props) {
             const queryParams = merge(

@@ -66,6 +66,22 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    /* Relationship: */
+    public function pages()
+    {
+        return $this->hasMany(Media::class, 'author_id');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'author_id');
+    }
+
+    public function media()
+    {
+        return $this->hasMany(Media::class, 'author_id');
+    }
+
     public function scopeSearch($query, string $term)
     {
         return $query->where(function ($query) use ($term) {

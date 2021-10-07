@@ -1,6 +1,6 @@
 <template>
 <app-layout>
-    <template #header>Add New User</template>
+    <template #header>{{ title }}</template>
 
     <sdb-error-notifications :errors="$page.props.errors"/>
 
@@ -70,6 +70,7 @@
         props: {
             errors: Object,
             roleOptions: {},
+            title: String,
         },
         setup(props) {
             const form = {

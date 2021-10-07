@@ -9,7 +9,9 @@ class PostObserver
 {
     public function creating(Post $post)
     {
-        $post->author_id = auth()->id();
+        if (auth()->check()) {
+            $post->author_id = auth()->id();
+        }
     }
 
     public function saved(Post $post)

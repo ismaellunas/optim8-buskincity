@@ -28,6 +28,7 @@ class MediaController extends Controller
     public function __construct(MediaService $mediaService)
     {
         $this->mediaService = $mediaService;
+        $this->authorizeResource(Media::class, 'media');
     }
 
     /**
@@ -37,7 +38,15 @@ class MediaController extends Controller
      */
     public function index(Request $request)
     {
+        $user = auth()->user();
+
         return Inertia::render('Media/Index', [
+            'can' => [
+                'add' => $user->can('media.add'),
+                'delete' => $user->can('media.delete'),
+                'edit' => $user->can('media.edit'),
+                'read' => $user->can('media.read'),
+            ],
             'baseRouteName' => $this->baseRouteName,
             'defaultLocale' => TranslationService::getDefaultLocale(),
             'pageNumber' => $request->page,

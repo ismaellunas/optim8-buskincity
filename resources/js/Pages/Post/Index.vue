@@ -5,7 +5,10 @@
     <div class="box">
         <div class="columns">
             <div class="column is-offset-10">
-                <div class="is-pulled-right">
+                <div
+                    v-if="can.add"
+                    class="is-pulled-right"
+                >
                     <sdb-button-link
                         class="is-primary"
                         :href="route(baseRouteName+'.create')"
@@ -72,6 +75,8 @@
                 <template v-slot:default="{record}">
                     <component
                         :is="isGalleryView ? 'SdbPostGalleryItem' : 'SdbPostListItem'"
+                        :is-delete-enabled="can.delete"
+                        :is-edit-enabled="can.edit"
                         :record="record"
                         :edit-link="route(baseRouteName+'.edit', record.id)"
                         @on-delete-clicked="deleteRecord"
@@ -126,6 +131,7 @@
             MixinHasTab
         ],
         props: {
+            can: {},
             pageNumber: String,
             pageQueryParams: Object,
             records: {},

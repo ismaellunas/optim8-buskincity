@@ -1,6 +1,6 @@
 <template>
 <app-layout>
-    <template #header>User</template>
+    <template #header>{{ title }}</template>
 
     <sdb-error-notifications :errors="$page.props.errors"/>
 
@@ -98,13 +98,14 @@
             errors: Object,
             record: Object,
             roleOptions: {},
+            title: String,
         },
         setup(props, { emit }) {
             const user = props.record;
             const userProfileForm = {
                 name: user.name,
                 email: user.email,
-                role: user.roles[0] ?? null,
+                role: (user.roles[0]) ? user.roles[0].id : null,
             };
 
             return {

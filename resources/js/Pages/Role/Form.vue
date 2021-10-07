@@ -2,12 +2,13 @@
 
     <sdb-form-input
         v-model="form.name"
-        label="Name"
+        label="Role Name"
         required
+        maxlength="255"
         :message="error('name')"
     ></sdb-form-input>
 
-    <div class="columns">
+    <div class="columns is-multiline">
         <div
             v-for="(permissions, groupName) in permissionOptions"
             :key="groupName"
@@ -25,9 +26,9 @@
                         <div class="field">
                             <div class="control">
                                 <sdb-checkbox
-                                    :value=permission.value
                                     v-model:checked="form.permissions"
                                     :disabled="permissionDisabled(permission, permissions)"
+                                    :value=permission.value
                                     @change="onPermissionClicked(permission, permissions)"
                                 >
                                     &nbsp; {{ permission.title }}
@@ -46,8 +47,8 @@
     import SdbCheckbox from '@/Sdb/Checkbox';
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormSelect from '@/Sdb/Form/Select';
-    import { ref } from 'vue';
     import { pull } from 'lodash';
+    import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -82,7 +83,7 @@
                         return permission.isAll;
                     })
 
-                    if (this.form.permissions.includes(allPermission.value)) {
+                    if (allPermission && this.form.permissions.includes(allPermission.value)) {
                         return true;
                     }
 

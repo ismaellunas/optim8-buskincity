@@ -54,7 +54,13 @@ class HandleInertiaRequests extends Middleware
                 }
                 return (object)[];
             },
-            'menus' => MenuService::generateMenus(TranslationSv::currentLanguage()),
+            'menus' => fn () => (
+                    $request->routeIs('admin.*')
+                    || $request->routeIs('dashboard')
+                    || $request->routeIs('profile.*')
+                )
+                ? MenuService::generateBackendMenu($request)
+                : MenuService::generateMenus(TranslationSv::currentLanguage()),
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
             'languageOptions' => TranslationSv::getLocaleOptions(),

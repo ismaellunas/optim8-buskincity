@@ -1,6 +1,6 @@
 <template>
 <app-layout>
-    <template #header>Role</template>
+    <template #header>{{ title }}</template>
 
     <sdb-error-notifications :errors="$page.props.errors"/>
 
@@ -15,9 +15,6 @@
                     class="box"
                     :disabled="isProcessing"
                 >
-                    <h3 class="title is-3">Profile</h3>
-                    <hr/>
-
                     <form-role
                         v-model="form"
                         :errors="errors"
@@ -69,6 +66,7 @@
             errors: Object,
             permissions: {},
             record: Object,
+            title: String,
         },
         setup(props) {
             const role = props.record;

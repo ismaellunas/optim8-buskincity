@@ -40,6 +40,13 @@ class Media extends CloudinaryMedia implements TranslatableContract
         'png',
     ];
 
+    // Relationships:
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    // Scopes:
     public function scopeImage($query)
     {
         return $query->whereIn('extension', self::$imageExtensions);
