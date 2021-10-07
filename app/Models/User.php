@@ -110,4 +110,17 @@ class User extends Authenticatable
     {
         return $this->hasRole(config('permission.super_admin_role'));
     }
+
+    public function saveFromInputs(array $inputs)
+    {
+        $this->name = $inputs['name'];
+        $this->email = $inputs['email'];
+        $this->save();
+    }
+
+    public function savePassword(string $password)
+    {
+        $this->password = UserService::hashPassword($password);
+        $this->save();
+    }
 }
