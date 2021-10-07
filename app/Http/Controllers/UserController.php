@@ -86,11 +86,15 @@ class UserController extends CrudController
      */
     public function store(UserStoreRequest $request)
     {
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $this->userService->hashPassword($request->password),
-        ]);
+        $user = new User();
+
+        $user->saveFromInputs($request->validated());
+
+        $user->savePassword($request->password);
+
+        if ($request->has('role')) {
+            $user->assignRole($request->role);
+        }
 
         $this->generateFlashMessage('User created successfully!');
 
