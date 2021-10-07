@@ -38,7 +38,7 @@ class UserService
             ->all();
     }
 
-    public function hashPassword($password): string
+    public static function hashPassword($password): string
     {
         return Hash::make($password);
     }
