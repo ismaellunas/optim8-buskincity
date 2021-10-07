@@ -39,6 +39,12 @@ class Page extends Model implements TranslatableContract
         ];
     }
 
+    // Relationships:
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
     // Accessors
     public function getHasMetaDescriptionAttribute(): bool
     {

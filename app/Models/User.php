@@ -67,6 +67,11 @@ class User extends Authenticatable
     ];
 
     /* Relationship: */
+    public function pages()
+    {
+        return $this->hasMany(Media::class, 'author_id');
+    }
+
     public function posts()
     {
         return $this->hasMany(Post::class, 'author_id');
