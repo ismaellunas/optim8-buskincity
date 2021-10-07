@@ -51,6 +51,16 @@ class UserService
             ->paginate($perPage);
     }
 
+    public function transformRecords(AbstractPaginator $records, User $actor)
+    {
+        $records->getCollection()->transform(function ($user) use ($actor) {
+            $user->can = [
+                'delete_user' => $actor->can('delete', $user),
+            ];
+            return $user;
+        });
+    }
+
     public function getRoleOptions(): array
     {
         return Role::withoutSuperAdmin()
