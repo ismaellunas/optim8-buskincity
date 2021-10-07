@@ -45,11 +45,8 @@
     import CardText from '@/Blocks/Contents/CardText';
     import Draggable from 'vuedraggable';
     import Faq from '@/Blocks/Contents/Faq';
-    import Footer from '@/Blocks/Contents/Footer';
     import Heading from '@/Blocks/Contents/Heading';
-    import Hero from '@/Blocks/Contents/Hero';
     import Image from '@/Blocks/Contents/Image';
-    import Message from '@/Blocks/Contents/Message';
     import Text from '@/Blocks/Contents/Text';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3'
@@ -61,11 +58,8 @@
             Faq,
             Draggable,
             Heading,
-            Hero,
             Image,
-            Message,
             Text,
-            Footer,
         },
         props: {
             id: {},
