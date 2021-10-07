@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -103,5 +104,10 @@ class User extends Authenticatable
         }
 
         return $this->getPhotoUrl();
+    }
+
+    public function getIsSuperAdministratorAttribute(): bool
+    {
+        return $this->hasRole(config('permission.super_admin_role'));
     }
 }
