@@ -28,14 +28,18 @@
                                     {{ menu.title }}
                                 </a>
                                 <div class="navbar-dropdown">
-                                    <sdb-link
+                                    <template
                                         v-for="childMenu in menu.children"
-                                        class="navbar-item"
-                                        :href="childMenu.link"
-                                        :class="{'is-active': menu.isActive}"
                                     >
-                                        {{ childMenu.title }}
-                                    </sdb-link>
+                                        <sdb-link
+                                            v-if="childMenu.isEnabled"
+                                            class="navbar-item"
+                                            :href="childMenu.link"
+                                            :class="{'is-active': menu.isActive}"
+                                        >
+                                            {{ childMenu.title }}
+                                        </sdb-link>
+                                    </template>
                                 </div>
                             </div>
                         </template>

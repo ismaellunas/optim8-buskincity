@@ -39,6 +39,18 @@ class UserController extends CrudController
     {
         $user = auth()->user();
 
+        if ($user->isSuperAdministrator) {
+            $records = $this
+                ->userService
+                ->getRecords($request->term, $this->recordsPerPage);
+        } else {
+            $records = $this
+                ->userService
+                ->getNoSuperAdministratorRecords($request->term, $this->recordsPerPage);
+        }
+
+        $this->userService->transformRecords($records, $user);
+
         return Inertia::render('User/Index', $this->getData([
             'can' => [
                 'add' => $user->can('user.add'),
@@ -47,10 +59,7 @@ class UserController extends CrudController
             ],
             'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
-            'records' => $this->userService->getRecords(
-                $request->term,
-                $this->recordsPerPage
-            ),
+            'records' => $records,
             'title' => $this->getIndexTitle(),
         ]));
     }
@@ -77,11 +86,15 @@ class UserController extends CrudController
      */
     public function store(UserStoreRequest $request)
     {
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $this->userService->hashPassword($request->password),
-        ]);
+        $user = new User();
+
+        $user->saveFromInputs($request->validated());
+
+        $user->savePassword($request->password);
+
+        if ($request->has('role')) {
+            $user->assignRole($request->role);
+        }
 
         $this->generateFlashMessage('User created successfully!');
 
@@ -112,6 +125,8 @@ class UserController extends CrudController
             $query->limit(1);
         }]);
 
+        $user->append('isSuperAdministrator');
+
         $user->roles->makeHidden('pivot');
 
         return Inertia::render('User/Edit', $this->getData([
@@ -130,20 +145,18 @@ class UserController extends CrudController
      */
     public function update(UserUpdateRequest $request, User $user)
     {
-        $user->update($request->only([
+        $user->saveFromInputs($request->only([
             'name',
             'email',
         ]));
 
-        if ($request->role) {
-            $role = Role::find($request->role);
-
-            if (!$user->hasRole($role)) {
+        if (!$user->isSuperAdministrator) {
+            if ($request->role && !$user->hasRole($request->role)) {
                 $user->syncRoles([]);
                 $user->assignRole($request->role);
+            } else {
+                $user->syncRoles([]);
             }
-        } else {
-            $user->syncRoles([]);
         }
 
         $this->generateFlashMessage('User updated successfully!');
@@ -168,8 +181,7 @@ class UserController extends CrudController
 
     public function updatePassword(UserPasswordRequest $request, User $user)
     {
-        $user->password = $this->userService->hashPassword($request->password);
-        $user->save();
+        $user->savePassword($request->password);
 
         $this->generateFlashMessage('Password updated successfully!');
 

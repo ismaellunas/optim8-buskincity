@@ -20,6 +20,7 @@
 
                     <form-user-profile
                         v-model="profileForm"
+                        :can-set-role="!record.isSuperAdministrator"
                         :role-options="roleOptions"
                     ></form-user-profile>
 
@@ -105,8 +106,11 @@
             const userProfileForm = {
                 name: user.name,
                 email: user.email,
-                role: (user.roles[0]) ? user.roles[0].id : null,
             };
+
+            if (!props.record.isSuperAdministrator) {
+                userProfileForm['role'] = (user.roles[0]) ? user.roles[0].id : null;
+            }
 
             return {
                 profileForm: useForm(userProfileForm),
