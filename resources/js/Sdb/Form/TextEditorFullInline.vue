@@ -28,7 +28,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'SdbFormTextEditorFull',
+        name: 'SdbFormTextEditorFullInline',
         components: {
             SdbModalImageBrowser,
             SdbTextEditor,
