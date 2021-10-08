@@ -23,11 +23,11 @@
             >
             </component>
         </template>
-        <question-answer
+        <faq-question-answer
             :items="entity.content.faqContent.contents"
             :is-edit-mode="isEditMode"
             :template="entity.content.faqContent.template"
-        ></question-answer>
+        ></faq-question-answer>
 
     </div>
 </template>
@@ -37,11 +37,12 @@
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbTinymce from '@/Sdb/EditorTinymce';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import QuestionAnswer from '@/Blocks/Contents/Faq/QuestionAnswer';
+    import FaqQuestionAnswer from '@/Blocks/Contents/Faq/QuestionAnswer';
     import { last } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
+        name: 'Faq',
         mixins: [
             DeletableContentMixin,
             EditModeComponentMixin,
@@ -49,7 +50,7 @@
         components: {
             SdbTinymce,
             SdbToolbarContent,
-            QuestionAnswer,
+            FaqQuestionAnswer,
         },
         props: {
             id: {type: String},
