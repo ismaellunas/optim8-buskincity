@@ -1,5 +1,4 @@
 import { defaultOption, alignments } from './style-options';
-import { question } from './faq-options';
 
 export default {
     title: 'FAQ',
@@ -11,7 +10,11 @@ export default {
         faqContent: {
             contents: [],
             template: {
-                question: question,
+                question: {
+                    id: null,
+                    question: null,
+                    answer: null,
+                },
             },
         },
     },
