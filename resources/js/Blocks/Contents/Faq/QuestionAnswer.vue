@@ -81,6 +81,8 @@
     import { confirmDelete } from '@/Libs/alert';
 
     export default {
+        name: 'FaqQuestionAnswer',
+
         components: {
             draggable,
             SdbButton,
