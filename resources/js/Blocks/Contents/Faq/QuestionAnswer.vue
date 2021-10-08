@@ -44,7 +44,7 @@
                                 class="content border-dash"
                                 style="width: 100%"
                             >
-                                <sdb-form-text-editor-full-floating
+                                <sdb-form-text-editor-full-inline
                                     v-model="element.answer"
                                 />
                             </div>
@@ -74,7 +74,7 @@
 <script>
     import draggable from "vuedraggable";
     import SdbButton from '@/Sdb/Button';
-    import SdbFormTextEditorFullFloating from '@/Sdb/Form/TextEditorFullFloating';
+    import SdbFormTextEditorFullInline from '@/Sdb/Form/TextEditorFullInline';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { generateElementId } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
@@ -84,7 +84,7 @@
         components: {
             draggable,
             SdbButton,
-            SdbFormTextEditorFullFloating,
+            SdbFormTextEditorFullInline,
             SdbToolbarContent,
         },
 
