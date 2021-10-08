@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Casts\AsPageTranslationDataCollection;
 use App\Contracts\PublishableInterface;
 use App\Models\Page;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
-use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,7 +25,7 @@ class PageTranslation extends Model implements PublishableInterface
     ];
 
     protected $casts = [
-        'data' => AsCollection::class,
+        'data' => AsPageTranslationDataCollection::class,
     ];
 
     public function getRouteKeyName()
