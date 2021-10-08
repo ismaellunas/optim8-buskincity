@@ -21,12 +21,12 @@ class UserStoreRequest extends FormRequest
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->route('user')->id)
+                Rule::unique('users')->ignore($this->route('user'))
             ],
             'password' => $this->passwordRules(),
             'role' => [
                 'nullable',
-                Rule::in($this->getRoleIds),
+                Rule::in($this->getRoleIds()),
             ],
         ];
     }
@@ -39,6 +39,6 @@ class UserStoreRequest extends FormRequest
             $query->withoutSuperAdmin();
         }
 
-        return $query->pluck('id')->all();
+        return $query->get()->pluck('id')->all();
     }
 }
