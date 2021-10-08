@@ -47,7 +47,10 @@ class MenuService
             if (!empty($translation)) {
                 $menus['navbar'][] = [
                     'title' => $translation->title,
-                    'link' => route('pages.show', [$locale, $translation->slug]),
+                    'link' => route('frontend.pages.show', [
+                        'locale' => $locale,
+                        'page_translation' => $translation->slug,
+                    ]),
                 ];
             }
         }
