@@ -33,6 +33,16 @@ class AsPageTranslationDataCollection implements Castable
 
             public function set($model, $key, $value, $attributes)
             {
+                if (
+                    $key == 'data'
+                    && !is_a($value, Collection::class)
+                    && is_array($value)
+                    && array_key_exists('entities', $value)
+                    && empty($value['entities'])
+                ) {
+                    $value['entities'] = new \stdClass();
+                }
+
                 return [$key => json_encode($value)];
             }
         };
