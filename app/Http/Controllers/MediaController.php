@@ -200,8 +200,12 @@ class MediaController extends Controller
             : response()->json(['imagePath' => $media->file_url]);
     }
 
-    public function saveAsMedia(Request $request, Media $media)
+    public function saveAsMedia(MediaUpdateImageRequest $request, Media $media)
     {
+        if ($request->user()->cannot('update', $media)) {
+            abort(403);
+        }
+
         $replicatedMedia = $this->mediaService->duplicateImage(
             $request->file('image'),
             $media,
