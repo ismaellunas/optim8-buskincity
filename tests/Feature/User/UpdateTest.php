@@ -15,6 +15,7 @@ class UpdateTest extends TestCase
     use WithFaker;
 
     private $user;
+    private $baseRouteName = 'admin.users';
 
     protected function setUp(): void
     {
@@ -29,14 +30,6 @@ class UpdateTest extends TestCase
         $this->user->assignRole(config('permission.super_admin_role'));
     }
 
-    private function generateUpdateInputs(): array
-    {
-        return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->email(),
-        ];
-    }
-
     /**
      * @test
      */
@@ -45,11 +38,14 @@ class UpdateTest extends TestCase
         // Arrange
         $user = User::factory()->create();
 
-        $inputs = $this->generateUpdateInputs();
+        $inputs = [
+            'email' => $user->email,
+            'name' => $this->faker->name(),
+        ];
 
         // Act
         $response = $this->put(
-            route('admin.users.update', $user->id),
+            route($this->baseRouteName.'.update', $user->id),
             $inputs
         );
 
