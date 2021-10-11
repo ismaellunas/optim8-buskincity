@@ -5,7 +5,10 @@
         <div class="box">
             <div class="columns">
                 <div class="column is-offset-10">
-                    <div class="is-pulled-right">
+                    <div
+                        v-if="can.add"
+                        class="is-pulled-right"
+                    >
                         <sdb-button-link :href="route(baseRoute+'.create')" class="is-primary">
                             <span class="icon is-small">
                                 <i class="fas fa-plus"></i>
@@ -64,6 +67,7 @@
                             <td>
                                 <div class="level-right">
                                     <sdb-button-link
+                                        v-if="can.edit"
                                         class="is-ghost has-text-black"
                                         :href="route(baseRoute + '.edit', record.id)"
                                     >
@@ -72,6 +76,7 @@
                                         </span>
                                     </sdb-button-link>
                                     <sdb-button
+                                        v-if="can.delete"
                                         class="is-ghost has-text-black ml-1"
                                         @click.prevent="deleteRow(record)"
                                     >
@@ -116,6 +121,7 @@
             SdbTable,
         },
         props: {
+            can: {},
             pageNumber: String,
             pageQueryParams: Object,
             records: Object,

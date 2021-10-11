@@ -16,11 +16,19 @@ class PostController extends CrudController
     public function __construct(PostService $postService)
     {
         $this->postService = $postService;
+        $this->authorizeResource(Post::class, 'post');
     }
 
     public function index(Request $request)
     {
+        $user = auth()->user();
+
         return Inertia::render('Post/Index', [
+            'can' => [
+                'add' => $user->can('post.add'),
+                'delete' => $user->can('post.delete'),
+                'edit' => $user->can('post.edit'),
+            ],
             'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
             'pageNumber' => $request->page,
             'records' => $this->postService->getRecords(

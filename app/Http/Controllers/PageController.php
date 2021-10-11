@@ -17,6 +17,11 @@ class PageController extends CrudController
     protected $model = Page::class;
     protected $baseRouteName = 'admin.pages';
 
+    public function __construct()
+    {
+        $this->authorizeResource(Page::class, 'page');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +29,15 @@ class PageController extends CrudController
      */
     public function index()
     {
+        $user = auth()->user();
+
         return Inertia::render('Page/Index', [
+            'can' => [
+                'add' => $user->can('page.add'),
+                'delete' => $user->can('page.delete'),
+                'edit' => $user->can('page.edit'),
+                'read' => $user->can('page.read'),
+            ],
             'records' => $this->getRecords(),
             'defaultLocale' => TranslationService::getDefaultLocale(),
         ]);

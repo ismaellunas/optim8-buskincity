@@ -7,7 +7,10 @@
         <div class="box">
             <div class="columns">
                 <div class="column is-offset-10">
-                    <div class="is-pulled-right">
+                    <div
+                        v-if="can.add"
+                        class="is-pulled-right"
+                    >
                         <sdb-button-link :href="route('admin.pages.create')" class="is-primary">
                             <span class="icon is-small">
                                 <i class="fas fa-plus"></i>
@@ -57,6 +60,7 @@
                             <td>
                                 <div class="level-right">
                                     <sdb-button-link
+                                        v-if="can.edit"
                                         class="is-ghost has-text-black"
                                         :href="route('admin.pages.edit', {id: page.id})"
                                     >
@@ -65,6 +69,7 @@
                                         </span>
                                     </sdb-button-link>
                                     <sdb-button
+                                        v-if="can.delete"
                                         class="is-ghost has-text-black ml-1"
                                         @click.prevent="deleteRow(page)"
                                     >
@@ -100,14 +105,23 @@
             SdbPagination,
             SdbTag,
         },
-        props: ['records', 'defaultLocale'],
+        props: ['can', 'records', 'defaultLocale'],
         methods: {
             deleteRow(page) {
                 if (!confirm('Are you sure?')) return;
                 this.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
             },
+
             openShow(locale, page) {
-                window.open(this.route('pages.show', [locale, page.slug]), "_blank");
+                if (this.can.read) {
+                    window.open(
+                        route('frontend.pages.show', {
+                            locale: locale,
+                            page_translation: page.slug
+                        }),
+                        "_blank"
+                    );
+                }
             },
             statusClass(status) {
                 let statusClass = ['is-small', 'is-rounded'];

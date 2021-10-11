@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -66,6 +67,22 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    /* Relationship: */
+    public function pages()
+    {
+        return $this->hasMany(Media::class, 'author_id');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'author_id');
+    }
+
+    public function media()
+    {
+        return $this->hasMany(Media::class, 'author_id');
+    }
+
     public function scopeSearch($query, string $term)
     {
         return $query->where(function ($query) use ($term) {
@@ -87,5 +104,23 @@ class User extends Authenticatable
         }
 
         return $this->getPhotoUrl();
+    }
+
+    public function getIsSuperAdministratorAttribute(): bool
+    {
+        return $this->hasRole(config('permission.super_admin_role'));
+    }
+
+    public function saveFromInputs(array $inputs)
+    {
+        $this->name = $inputs['name'];
+        $this->email = $inputs['email'];
+        $this->save();
+    }
+
+    public function savePassword(string $password)
+    {
+        $this->password = UserService::hashPassword($password);
+        $this->save();
     }
 }

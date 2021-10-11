@@ -2,19 +2,13 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UserUpdateRequest extends FormRequest
+class UserUpdateRequest extends UserStoreRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
-        return [
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
@@ -24,5 +18,16 @@ class UserUpdateRequest extends FormRequest
                 Rule::unique('users')->ignore($this->route('user')->id)
             ],
         ];
+
+        if ($this->user->isSuperAdministrator) {
+            $rules['role'] = ['prohibited'];
+        } else {
+            $rules['role'] = [
+                'nullable',
+                Rule::in($this->getRoleIds()),
+            ];
+        }
+
+        return $rules;
     }
 }

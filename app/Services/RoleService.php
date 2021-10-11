@@ -14,6 +14,7 @@ class RoleService
         int $perPage = 15
     ): LengthAwarePaginator {
         return Role::withoutSuperAdmin()
+            ->orderBy('id', 'DESC')
             ->when($term, function ($query) use ($term) {
                 $query->where('name', 'ILIKE', '%'.$term.'%');
             })

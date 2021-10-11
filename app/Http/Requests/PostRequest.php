@@ -43,6 +43,7 @@ class PostRequest extends FormRequest
             'meta_description' => ['max:250'],
             'meta_title' => ['max:250'],
             'scheduled_at' => [
+                'nullable',
                 'date',
                 'required_if:status,'.Post::STATUS_SCHEDULED
             ],

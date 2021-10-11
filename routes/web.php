@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\{
     CategoryController,
+    Frontend\PageController as FrontendPageController,
     Frontend\PostController as FrontendPostController,
     PermissionController,
     PostController,
@@ -105,6 +106,6 @@ Route::group([
         ->where('slug', '[\w\d\-\_]+')
         ->name('blog.show');
 
-    Route::get('/{page_translation}', [App\Http\Controllers\PageController::class, 'show'])
-        ->name('pages.show');
+    Route::get('/{page_translation}', [FrontendPageController::class, 'show'])
+        ->name('frontend.pages.show');
 });

@@ -18,7 +18,7 @@ class CreatePageTranslationsTable extends Migration
             $table->string('locale', 15)->index();
             $table->string('title', 255);
             $table->text('excerpt')->nullable();
-            $table->longText('data')->nullable();
+            $table->longText('data');
             $table->string('slug', 255)->unique();
             $table->string('meta_title', 255)->nullable();
             $table->string('meta_description', 255)->nullable();

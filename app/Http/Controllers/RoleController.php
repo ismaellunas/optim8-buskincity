@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RoleRequest;
 use App\Models\Role;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class RoleController extends CrudController
@@ -13,10 +15,13 @@ class RoleController extends CrudController
     private $roleService;
 
     protected $baseRouteName = 'admin.roles';
+    protected $title = 'Role';
 
     public function __construct(RoleService $roleService)
     {
         $this->roleService = $roleService;
+
+        $this->authorizeResource(Role::class, 'role');
     }
 
     /**
@@ -26,15 +31,15 @@ class RoleController extends CrudController
      */
     public function index(Request $request)
     {
-        return Inertia::render('Role/Index', [
-            'baseRouteName' => $this->baseRouteName,
+        return Inertia::render('Role/Index', $this->getData([
             'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->only('term')),
             'records' => $this->roleService->getRecords(
                 $request->term,
                 $this->recordsPerPage,
             ),
-        ]);
+            'title' => Str::plural($this->title),
+        ]));
     }
 
     /**
@@ -46,6 +51,7 @@ class RoleController extends CrudController
     {
         return Inertia::render('Role/Create', $this->getData([
             'permissions' => $this->roleService->getPermissionOptions(),
+            'title' => $this->getCreateTitle(),
         ]));
     }
 
@@ -55,24 +61,17 @@ class RoleController extends CrudController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'max:255',
-            ],
-        ]);
-
         $role = new Role();
 
-        $role->saveFromInputs($validated);
+        $role->saveFromInputs($request->validated());
 
         $role->syncPermissions($request->permissions);
 
         $this->generateFlashMessage('Role created successfully!');
 
-        return redirect()->back();
+        return redirect()->route($this->baseRouteName.'.index');
     }
 
     public function show(Role $role)
@@ -84,19 +83,15 @@ class RoleController extends CrudController
     {
         $role->load('permissions');
 
-        return Inertia::render('Role/Edit', [
-            'baseRouteName' => $this->baseRouteName,
+        return Inertia::render('Role/Edit', $this->getData([
             'permissions' => $this->roleService->getPermissionOptions(),
             'record' => $role,
-        ]);
+            'title' => $this->getEditTitle(),
+        ]));
     }
 
-    public function update(Request $request, Role $role)
+    public function update(RoleRequest $request, Role $role)
     {
-        Validator::make($request->all(), [
-            'name' => ['required'],
-        ])->validate();
-
         $role->name = $request->name;
         $role->save();
 
@@ -104,7 +99,7 @@ class RoleController extends CrudController
 
         $this->generateFlashMessage('Role updated successfully!');
 
-        return redirect()->back();
+        return redirect()->route($this->baseRouteName.'.index');
     }
 
     public function destroy(Request $request, Role $role)
