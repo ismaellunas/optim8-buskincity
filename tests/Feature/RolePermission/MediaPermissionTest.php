@@ -287,4 +287,32 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
         // Assert
         $response->assertForbidden();
     }
+
+    /**
+     * @test
+     */
+    public function listImagesCanBeAccessedByUserWithMediaBrowsePermission()
+    {
+        // Act
+        $this->givePermissionToRole('browse');
+
+        $response = $this->get(route($this->baseRouteName.'.index'));
+
+        // Assert
+        $response->assertSuccessful();
+    }
+
+    /**
+     * @test
+     */
+    public function listImagesCannotBeAccessedByUserWhoHasNoMediaBrowsePermission()
+    {
+        // Act
+        $this->revokePermissionToRole('browse');
+
+        $response = $this->get(route($this->baseRouteName.'.list.image'));
+
+        // Assert
+        $response->assertForbidden();
+    }
 }
