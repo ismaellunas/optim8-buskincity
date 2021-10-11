@@ -119,7 +119,6 @@ class MediaController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -130,10 +129,6 @@ class MediaController extends Controller
      */
     public function edit(Media $media)
     {
-        return Inertia::render('Media/Create', [
-            'record' => $media,
-            'baseRouteName' => $this->baseRouteName,
-        ]);
     }
 
     /**
