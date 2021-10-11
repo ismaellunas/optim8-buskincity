@@ -245,4 +245,46 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
         // Assert
         $response->assertForbidden();
     }
+
+    /**
+     * @test
+     */
+    public function saveAsMediaCanBeAccessedByUserWhoHasMediaEditPermission()
+    {
+        // Arrange
+        $media = Media::factory()->create();
+
+        $this->mockMediaService('duplicateImage', $media);
+
+        // Act
+        $this->givePermissionToRole('edit');
+
+        $response = $this->post(
+            route($this->baseRouteName.'.save-as-media', ['medium' => $media->id]),
+            ['image' => UploadedFile::fake()->image('photo1.jpg')]
+        );
+
+        // Assert
+        $response->assertStatus(302);
+    }
+
+    /**
+     * @test
+     */
+    public function saveAsMediaCannotBeAccessedByUserWhoHasNoMediaEditPermission()
+    {
+        // Arrange
+        $media = Media::factory()->create();
+
+        // Act
+        $this->revokePermissionToRole('edit');
+
+        $response = $this->post(
+            route($this->baseRouteName.'.save-as-media', ['medium' => $media->id]),
+            []
+        );
+
+        // Assert
+        $response->assertForbidden();
+    }
 }
