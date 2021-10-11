@@ -15,6 +15,7 @@ class CreateTest extends TestCase
     use WithFaker;
 
     private $user;
+    private $baseRouteName = 'admin.users';
 
     protected function setUp(): void
     {
@@ -49,10 +50,7 @@ class CreateTest extends TestCase
         $inputs = $this->generateStoreInputs();
 
         // Act
-        $response = $this->post(
-            route('admin.users.store'),
-            $inputs
-        );
+        $response = $this->post(route($this->baseRouteName.'.store'), $inputs);
 
         // Assert
         $response->assertSessionHasNoErrors();
@@ -74,10 +72,7 @@ class CreateTest extends TestCase
         );
 
         // Act
-        $response = $this->post(
-            route('admin.users.store'),
-            $inputs
-        );
+        $response = $this->post(route($this->baseRouteName.'.store'), $inputs);
 
         $createdUser = User::whereEmail($inputs['email'])->first();
 
