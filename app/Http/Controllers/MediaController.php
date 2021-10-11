@@ -28,7 +28,7 @@ class MediaController extends Controller
     public function __construct(MediaService $mediaService)
     {
         $this->mediaService = $mediaService;
-        $this->authorizeResource(Media::class, 'media');
+        $this->authorizeResource(Media::class, 'medium');
     }
 
     /**
