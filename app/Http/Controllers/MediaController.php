@@ -223,6 +223,10 @@ class MediaController extends Controller
 
     public function listImages(Request $request)
     {
+        if ($request->user()->cannot('viewAny', Media::class)) {
+            abort(403);
+        }
+
         $records = $this->mediaService->getRecords(
             $request->term,
             ['image'],
