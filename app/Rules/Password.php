@@ -10,6 +10,4 @@ class Password extends FortifyPassword implements Rule
     protected $requireUppercase = true;
 
     protected $requireNumeric = true;
-
-    protected $requireSpecialCharacter = true;
 }
