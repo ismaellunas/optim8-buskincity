@@ -31,7 +31,8 @@ class DatabaseSeeder extends Seeder
         $administratorRole->syncPermissions($wildcardPermissions);
 
         $superAdminUser = User::factory()->create([
-            'name' => 'Super Administrator',
+            'first_name' => 'Super',
+            'last_name' => 'Administrator',
             'email' => 'super.administrator@sdbagency.com',
         ]);
 
@@ -39,7 +40,8 @@ class DatabaseSeeder extends Seeder
 
         $adminUser = User::factory()
             ->create([
-                'name' => 'Administrator',
+                'first_name' => 'Admin',
+                'last_name' => 'Administrator',
                 'email' => 'admin@sdbagency.com',
             ]);
 

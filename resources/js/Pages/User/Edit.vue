@@ -104,7 +104,8 @@
         setup(props, { emit }) {
             const user = props.record;
             const userProfileForm = {
-                name: user.name,
+                first_name: user.first_name,
+                last_name: user.last_name,
                 email: user.email,
             };
 

@@ -146,7 +146,8 @@ class UserController extends CrudController
     public function update(UserUpdateRequest $request, User $user)
     {
         $user->saveFromInputs($request->only([
-            'name',
+            'first_name',
+            'last_name',
             'email',
         ]));
 
