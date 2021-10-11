@@ -185,6 +185,10 @@ class MediaController extends Controller
 
     public function updateImage(MediaUpdateImageRequest $request, Media $media)
     {
+        if ($request->user()->cannot('update', $media)) {
+            abort(403);
+        }
+
         $media = $this->mediaService->replace(
             $request->file('image'),
             $media,
