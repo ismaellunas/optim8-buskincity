@@ -5,15 +5,21 @@ namespace App\Services;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-    public function getRecords(
-        string $term = null,
-        int $perPage = 15
-    ): LengthAwarePaginator {
+    private function getBuilderRecords(
+        string $term = null
+    ): Builder {
         return User::orderBy('id', 'DESC')
+            ->with([
+                'roles' => function ($query) {
+                    $query->select('id', 'name');
+                }
+            ])
             ->when($term, function ($query) use ($term) {
                 $query->search($term);
             })
@@ -21,8 +27,38 @@ class UserService
                 'id',
                 'name',
                 'email',
-            ])
+            ]);
+    }
+
+    public function getRecords(
+        string $term = null,
+        int $perPage = 15
+    ): LengthAwarePaginator {
+        return $this
+            ->getBuilderRecords($term)
             ->paginate($perPage);
+    }
+
+    public function getNoSuperAdministratorRecords(
+        string $term = null,
+        int $perPage = 15
+    ) {
+        return $this
+            ->getBuilderRecords($term)
+            ->whereDoesntHave('roles', function ($query) {
+                $query->where('name', config('permission.super_admin_role'));
+            })
+            ->paginate($perPage);
+    }
+
+    public function transformRecords(AbstractPaginator $records, User $actor)
+    {
+        $records->getCollection()->transform(function ($user) use ($actor) {
+            $user->can = [
+                'delete_user' => $actor->can('delete', $user),
+            ];
+            return $user;
+        });
     }
 
     public function getRoleOptions(): array
@@ -38,7 +74,7 @@ class UserService
             ->all();
     }
 
-    public function hashPassword($password): string
+    public static function hashPassword($password): string
     {
         return Hash::make($password);
     }

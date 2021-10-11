@@ -76,7 +76,7 @@
                                     </span>
                                 </sdb-button-link>
                                 <sdb-button
-                                    v-if="can.delete"
+                                    v-if="can.delete && record.can.delete_user"
                                     class="is-ghost has-text-black ml-1"
                                     @click.prevent="deleteRecord(record)"
                                 >
