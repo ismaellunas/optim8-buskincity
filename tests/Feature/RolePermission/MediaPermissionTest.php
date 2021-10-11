@@ -281,7 +281,7 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
 
         $response = $this->post(
             route($this->baseRouteName.'.save-as-media', ['medium' => $media->id]),
-            []
+            ['image' => UploadedFile::fake()->image('photo1.jpg')]
         );
 
         // Assert
