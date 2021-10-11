@@ -66,6 +66,7 @@ class User extends Authenticatable
      */
     protected $appends = [
         'profile_photo_url',
+        'full_name',
     ];
 
     /* Relationship: */
@@ -84,9 +85,9 @@ class User extends Authenticatable
         return $this->hasMany(Media::class, 'author_id');
     }
 
-    public function getFullName()
+    public function getFullNameAttribute()
     {
-        return trim(ucwords($this->first_name) . ' ' . ucwords($this->last_name));
+        return trim(ucfirst($this->first_name) . ' ' . ucfirst($this->last_name));
     }
 
     public function scopeSearch($query, string $term)

@@ -62,7 +62,7 @@
                 <tbody>
                     <tr v-for="record in records.data" :key="record.id">
                         <th>{{ record.id }}</th>
-                        <td>{{ record.first_name + ' ' + record.last_name }}</td>
+                        <td>{{ record.full_name }}</td>
                         <td>{{ record.email }}</td>
                         <td>
                             <div class="level-right">
