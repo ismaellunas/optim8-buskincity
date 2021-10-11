@@ -202,4 +202,47 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
         // Assert
         $response->assertForbidden();
     }
+
+    /**
+     * @test
+     */
+    public function updateImageCanBeAccessedByUserWhoHasMediaEditPermission()
+    {
+        // Arrange
+        $media = Media::factory()->create();
+
+        $this->mockMediaService('replace', $media);
+
+        // Act
+        $this->givePermissionToRole('edit');
+
+        $response = $this->post(
+            route($this->baseRouteName.'.update-image', ['medium' => $media->id]),
+            ['image' => UploadedFile::fake()->image('photo1.jpg')]
+        );
+
+        // Assert
+        $response->assertSessionHasNoErrors();
+        $response->assertSuccessful();
+    }
+
+    /**
+     * @test
+     */
+    public function updateImageCannotBeAccessedByUserWhoHasNoMediaEditPermission()
+    {
+        // Arrange
+        $media = Media::factory()->create();
+
+        // Act
+        $this->revokePermissionToRole('edit');
+
+        $response = $this->post(
+            route($this->baseRouteName.'.update-image', ['medium' => $media->id]),
+            ['image' => UploadedFile::fake()->image('photo1.jpg')]
+        );
+
+        // Assert
+        $response->assertForbidden();
+    }
 }
