@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'one_mb' => 1024,
+    'one_megabyte' => 1024,
 ];
