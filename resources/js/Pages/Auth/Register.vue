@@ -117,8 +117,13 @@
 
                                         <form @submit.prevent="submit">
                                             <div class="field">
-                                                <jet-label for="name" value="Name" />
-                                                <jet-input id="name" type="text" v-model="form.name" required autofocus autocomplete="name" />
+                                                <jet-label for="first_name" value="First Name" />
+                                                <jet-input id="first_name" type="text" v-model="form.first_name" required autofocus autocomplete="first_name" />
+                                            </div>
+
+                                            <div class="field">
+                                                <jet-label for="last_name" value="Last Name" />
+                                                <jet-input id="last_name" type="text" v-model="form.last_name" required autofocus autocomplete="last_name" />
                                             </div>
 
                                             <div class="field">
@@ -187,7 +192,8 @@
             return {
                 isSocialMediaLogin: true,
                 form: this.$inertia.form({
-                    name: '',
+                    first_name: '',
+                    last_name: '',
                     email: '',
                     password: '',
                     password_confirmation: '',
