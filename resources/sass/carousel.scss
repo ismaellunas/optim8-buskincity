@@ -1,0 +1,56 @@
+.carousel {
+    width: 100%;
+    height: 500px;
+    position: relative;
+    overflow: hidden;
+    background-color: #ccc;
+}
+
+.carousel-button {
+    position: absolute;
+    top: 50%;
+}
+
+.carousel-button:hover {
+    cursor: pointer;
+}
+
+.prev {
+    left: 0;
+    z-index: 3;
+}
+
+.next {
+    right: 0;
+    z-index: 3;
+}
+
+.carousel-slide > figure > img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.carousel > .carousel-indicator {
+    position: absolute;
+    z-index: 3;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+}
+
+.carousel-indicator-item {
+    width: 15px;
+    height: 15px;
+    background-color: hsl(204, 86%, 53%);
+    opacity: 0.5;
+    margin: 0.2em;
+    border-radius: 50%;
+    float: left;
+}
+
+.carousel-indicator > .active {
+    opacity: 1;
+}
