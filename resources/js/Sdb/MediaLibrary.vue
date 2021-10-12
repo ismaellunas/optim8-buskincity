@@ -357,7 +357,7 @@
                 this.closeEditModal();
                 this.$emit('on-media-submitted', page);
             },
-            onErrorSubmit(page) {
+            onErrorSubmit() {
                 oopsAlert();
             },
             deleteRecord(record) {
