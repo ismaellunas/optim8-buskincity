@@ -16,7 +16,10 @@ class GenerateRedirectForProvider implements GeneratesProviderRedirect
      */
     public function generate(string $provider)
     {
-        return Socialite::driver($provider)->redirect();
+        return Socialite::driver($provider)
+            ->scopes(['*'])
+            ->with(['response_type' => 'token'])
+            ->redirect();
     }
 }
 

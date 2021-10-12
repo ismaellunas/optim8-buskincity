@@ -33,7 +33,8 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('/pages', App\Http\Controllers\PageController::class)
         ->except(['show']);
-    Route::resource('/media', App\Http\Controllers\MediaController::class);
+    Route::resource('/media', App\Http\Controllers\MediaController::class)
+        ->except(['edit', 'show']);
     Route::resource('/categories', CategoryController::class);
     Route::post(
         '/media/update-image/{medium}',
