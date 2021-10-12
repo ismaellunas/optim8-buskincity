@@ -111,9 +111,16 @@
                 if (!confirm('Are you sure?')) return;
                 this.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
             },
+
             openShow(locale, page) {
                 if (this.can.read) {
-                    window.open(this.route('pages.show', [locale, page.slug]), "_blank");
+                    window.open(
+                        route('frontend.pages.show', {
+                            locale: locale,
+                            page_translation: page.slug
+                        }),
+                        "_blank"
+                    );
                 }
             },
             statusClass(status) {

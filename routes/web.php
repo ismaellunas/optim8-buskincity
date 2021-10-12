@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\{
     CategoryController,
+    Frontend\PageController as FrontendPageController,
     Frontend\PostController as FrontendPostController,
     PermissionController,
     PostController,
@@ -32,7 +33,8 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('/pages', App\Http\Controllers\PageController::class)
         ->except(['show']);
-    Route::resource('/media', App\Http\Controllers\MediaController::class);
+    Route::resource('/media', App\Http\Controllers\MediaController::class)
+        ->except(['edit', 'show']);
     Route::resource('/categories', CategoryController::class);
     Route::post(
         '/media/update-image/{medium}',
@@ -105,6 +107,6 @@ Route::group([
         ->where('slug', '[\w\d\-\_]+')
         ->name('blog.show');
 
-    Route::get('/{page_translation}', [App\Http\Controllers\PageController::class, 'show'])
-        ->name('pages.show');
+    Route::get('/{page_translation}', [FrontendPageController::class, 'show'])
+        ->name('frontend.pages.show');
 });

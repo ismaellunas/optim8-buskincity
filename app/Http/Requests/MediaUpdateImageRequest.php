@@ -23,12 +23,11 @@ class MediaUpdateImageRequest extends FormRequest
      */
     public function rules()
     {
-        $oneMB = 1024;
         return [
             'image' => [
                 'required',
                 'file',
-                'max:'.$oneMB * 50,
+                'max:'.config('constants.one_megabyte') * 50,
             ],
         ];
     }
