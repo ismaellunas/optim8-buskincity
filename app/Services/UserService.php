@@ -79,4 +79,15 @@ class UserService
     {
         return Hash::make($password);
     }
+
+    public static function splitName(string $name): array
+    {
+        $name = explode(' ', $name);
+        $firstName = $name[0];
+        $lastName = $name[count($name) - 1];
+        return [
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+        ];
+    }
 }
