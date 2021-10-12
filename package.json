@@ -33,7 +33,6 @@
         "@tinymce/tinymce-vue": "^4.0.4",
         "bulma": "^0.9.3",
         "bulma-calendar": "^6.1.12",
-        "bulma-carousel": "^4.0.24",
         "compressorjs": "^1.0.7",
         "js-file-downloader": "^1.1.22",
         "vue-cropperjs": "^5.0.0",
