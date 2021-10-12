@@ -62,6 +62,7 @@
             message: {},
             modelValue: {},
             placeholder: String,
+            height: {type: Number, default: 500},
         },
         emits: ['update:modelValue'],
         setup(props, { emit }) {
@@ -125,7 +126,7 @@
         computed: {
             editorConfig() {
                 const editorConfig = {
-                    height: 500,
+                    height: this.height,
                     menubar: false,
                     plugins: [
                         'advlist autolink lists link image charmap print preview ' +
