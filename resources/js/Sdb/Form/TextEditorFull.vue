@@ -18,6 +18,8 @@
         v-if="isModalOpen"
         title="Image Library"
         :data="media"
+        :is-download-enabled="isDownloadEnabled"
+        :is-upload-enabled="isUploadEnabled"
         :query-params="imageListQueryParams"
         :search="search"
         :style="{zIndex: 1200}"
@@ -53,6 +55,9 @@
         props: {
             config: Object,
             disabled: {type: Boolean, default: false},
+            isDownloadEnabled: {type: Boolean, default: true},
+            isMediaEnabled: {type: Boolean, default: true},
+            isUploadEnabled: {type: Boolean, default: true},
             label: String,
             message: {},
             modelValue: {},
@@ -66,35 +71,6 @@
         },
         data() {
             return {
-                editorConfig: {
-                    height: 500,
-                    menubar: false,
-                    plugins: [
-                        'advlist autolink lists link image charmap print preview ' +
-                        'anchor searchreplace visualblocks code fullscreen',
-                        'insertdatetime media table paste code wordcount hr code'
-                    ],
-                    block_formats: (
-                        'Paragraph=p; '+
-                        'Header 1=h1; '+
-                        'Header 2=h2; '+
-                        'Header 3=h3'
-                    ),
-                    toolbar1: (
-                        'fullscreen | formatselect | ' +
-                        'bold italic underline strikethrough blockquote | ' +
-                        'forecolor backcolor | ' +
-                        'removeformat image'
-                    ),
-                    toolbar2: (
-                        'alignleft aligncenter alignright alignjustify | ' +
-                        'bullist numlist outdent indent hr | ' +
-                        'anchor link table charmap code | '
-                    ),
-                    contextmenu: 'link image',
-                    file_picker_types: 'image', //'file image media'
-                    file_picker_callback: this.filePickerCallback,
-                },
                 tinyMceImage: {
                     file: null,
                     element: null,
@@ -146,5 +122,45 @@
                 };
             },
         },
+        computed: {
+            editorConfig() {
+                const editorConfig = {
+                    height: 500,
+                    menubar: false,
+                    plugins: [
+                        'advlist autolink lists link image charmap print preview ' +
+                        'anchor searchreplace visualblocks code fullscreen',
+                        'insertdatetime media table paste code wordcount hr code'
+                    ],
+                    block_formats: (
+                        'Paragraph=p; '+
+                        'Header 1=h1; '+
+                        'Header 2=h2; '+
+                        'Header 3=h3'
+                    ),
+                    toolbar2: (
+                        'alignleft aligncenter alignright alignjustify | ' +
+                        'bullist numlist outdent indent hr | ' +
+                        'anchor link table charmap code | '
+                    ),
+                    contextmenu: 'link image',
+                    file_picker_types: 'image', //'file image media'
+                    file_picker_callback: this.filePickerCallback,
+                };
+
+                editorConfig.toolbar1 = (
+                    'fullscreen | formatselect | ' +
+                    'bold italic underline strikethrough blockquote | ' +
+                    'forecolor backcolor | ' +
+                    'removeformat'
+                );
+
+                if (this.isMediaEnabled) {
+                    editorConfig.toolbar1 += ' image';
+                }
+
+                return editorConfig;
+            },
+        }
     };
 </script>
