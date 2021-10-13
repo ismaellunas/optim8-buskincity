@@ -36,12 +36,6 @@ class Media extends CloudinaryMedia implements TranslatableContract
         'assets' => AsCollection::class,
     ];
 
-    public static $imageExtensions = [
-        'jpeg',
-        'jpg',
-        'png',
-    ];
-
     // Relationships:
     public function author()
     {
