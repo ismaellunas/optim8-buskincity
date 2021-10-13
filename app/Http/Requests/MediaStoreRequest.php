@@ -26,6 +26,8 @@ class MediaStoreRequest extends FormRequest
      */
     public function rules()
     {
+        $mimes = MediaService::getExtensions();
+
         return array_merge(
             MediaService::getTranslationRules(),
             [
@@ -38,6 +40,7 @@ class MediaStoreRequest extends FormRequest
                     'required',
                     'file',
                     'max:'.config('constants.one_megabyte') * 50,
+                    'mimes:'.implode(',', $mimes),
                 ],
             ]
         );
