@@ -50,10 +50,11 @@ class MediaController extends Controller
             'baseRouteName' => $this->baseRouteName,
             'defaultLocale' => TranslationService::getDefaultLocale(),
             'pageNumber' => $request->page,
-            'pageQueryParams' => array_filter($request->all('term', 'view')),
+            'pageQueryParams' => array_filter($request->all('term', 'view', 'types')),
+            'acceptedTypes' => $this->mediaService->getDottedExtensions(),
             'records' => $this
                 ->mediaService
-                ->getRecords($request->term, [], $this->recordsPerPage),
+                ->getRecords($request->term, $request->types, $this->recordsPerPage),
         ]);
     }
 
