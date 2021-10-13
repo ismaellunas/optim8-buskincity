@@ -23,7 +23,7 @@ class MediaFactory extends Factory
     {
         return [
             'file_name' => $this->faker->unixTime(),
-            'extension' => collect(Media::$imageExtensions)->random(),
+            'extension' => collect(config('constants.file_extensions.image'))->random(),
             'file_type' => 'image',
             'file_url' => $this->faker->imageUrl(360, 360, null, true, null, true),
             'size' => $this->faker->numberBetween(512),
