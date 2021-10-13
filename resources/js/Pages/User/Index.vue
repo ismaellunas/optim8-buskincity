@@ -242,12 +242,6 @@
                     }
                 );
             },
-            displayRoleName(user) {
-                if (isEmpty(user.roles)) {
-                    return '';
-                }
-                return user.roles[0].name;
-            },
         },
     };
 </script>
