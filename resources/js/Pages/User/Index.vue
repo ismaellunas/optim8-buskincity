@@ -88,12 +88,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="record in records.data" :key="record.id">
-                        <th>{{ record.id }}</th>
-                        <td>{{ record.name }}</td>
-                        <td>{{ record.email }}</td>
-                        <td>{{ displayRoleName(record) }}</td>
-                        <td>
+                    <user-list-item
+                        v-for="record in records.data"
+                        :user="record"
+                    >
+                        <template v-slot:actions>
                             <div class="level-right">
                                 <sdb-button-link
                                     v-if="can.edit"
@@ -114,8 +113,8 @@
                                     </span>
                                 </sdb-button>
                             </div>
-                        </td>
-                    </tr>
+                        </template>
+                    </user-list-item>
                 </tbody>
             </sdb-table>
         </div>
@@ -141,6 +140,7 @@
     import SdbInput from '@/Sdb/Input';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbTable from '@/Sdb/Table';
+    import UserListItem from '@/Pages/User/ListItem';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { isEmpty, merge } from 'lodash';
     import { ref } from 'vue';
@@ -158,6 +158,7 @@
             SdbInput,
             SdbPagination,
             SdbTable,
+            UserListItem,
         },
         props: {
             baseRouteName: String,
