@@ -36,6 +36,12 @@
                 >
                     <template v-slot:trigger>
                         <span>Filter</span>
+                        <span
+                            v-if="roles.length > 0"
+                            class="ml-1"
+                        >
+                            ({{roles.length}})
+                        </span>
                         <span class="icon is-small">
                             <i class="fas fa-angle-down" aria-hidden="true"></i>
                         </span>
@@ -44,6 +50,7 @@
                     <sdb-dropdown-item>
                         Filter by Role
                     </sdb-dropdown-item>
+
                     <sdb-dropdown-item v-for="role in roleOptions">
                         <sdb-checkbox
                             v-model:checked="roles"
