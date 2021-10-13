@@ -29,6 +29,33 @@
                     </sdb-form-field-horizontal>
                 </div>
             </div>
+
+            <div class="column">
+                <sdb-dropdown
+                    :close-on-click="false"
+                >
+                    <template v-slot:trigger>
+                        <span>Filter</span>
+                        <span class="icon is-small">
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                    </template>
+
+                    <sdb-dropdown-item>
+                        Filter by Role
+                    </sdb-dropdown-item>
+                    <sdb-dropdown-item v-for="role in roleOptions">
+                        <sdb-checkbox
+                            v-model:checked="roles"
+                            :value="role.id"
+                            @change="onRoleChanged"
+                        >
+                            &nbsp; {{ role.value }}
+                        </sdb-checkbox>
+                    </sdb-dropdown-item>
+                </sdb-dropdown>
+            </div>
+
             <div class="column">
                 <div
                     v-if="can.add"
@@ -107,12 +134,15 @@
     import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
+    import SdbCheckbox from '@/Sdb/Checkbox';
+    import SdbDropdown from '@/Sdb/Dropdown';
+    import SdbDropdownItem from '@/Sdb/DropdownItem';
     import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbInput from '@/Sdb/Input';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbTable from '@/Sdb/Table';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { merge } from 'lodash';
+    import { isEmpty, merge } from 'lodash';
     import { ref } from 'vue';
 
     export default {
@@ -121,6 +151,9 @@
             SdbButton,
             SdbButtonIcon,
             SdbButtonLink,
+            SdbCheckbox,
+            SdbDropdown,
+            SdbDropdownItem,
             SdbFormFieldHorizontal,
             SdbInput,
             SdbPagination,
@@ -132,6 +165,7 @@
             pageNumber: String,
             pageQueryParams: Object,
             records: {},
+            roleOptions: Object,
             title: String,
         },
         setup(props) {
@@ -143,6 +177,7 @@
             return {
                 queryParams: ref(queryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
+                roles: ref(props.pageQueryParams?.roles ?? []),
             };
         },
         data() {
@@ -187,6 +222,20 @@
                     {
                         replace: true,
                         preserveState: true,
+                        onStart: this.onStartLoadingOverlay,
+                        onFinish: this.onEndLoadingOverlay,
+                    }
+                );
+            },
+            onRoleChanged(event) {
+                this.queryParams['roles'] = this.roles;
+                this.$inertia.get(
+                    route(this.baseRouteName+'.index'),
+                    this.queryParams,
+                    {
+                        replace: true,
+                        preserveState: true,
+                        preserveScroll: true,
                         onStart: this.onStartLoadingOverlay,
                         onFinish: this.onEndLoadingOverlay,
                     }
