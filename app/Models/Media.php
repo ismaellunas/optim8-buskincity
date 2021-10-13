@@ -45,7 +45,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
     // Scopes:
     public function scopeImage($query)
     {
-        return $query->whereIn('extension', self::$imageExtensions);
+        return $query->whereIn('extension', config('constants.extensions.image'));
     }
 
     // Accessors:
@@ -59,7 +59,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
 
     public function getIsImageAttribute(): bool
     {
-        return in_array($this->extension, self::$imageExtensions);
+        return in_array($this->extension, config('constants.extensions.image'));
     }
 
     public function getThumbnailUrlAttribute(): string
