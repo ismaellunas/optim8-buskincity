@@ -48,6 +48,26 @@ class Media extends CloudinaryMedia implements TranslatableContract
         return $query->whereIn('extension', config('constants.extensions.image'));
     }
 
+    public function scopeVideo($query)
+    {
+        return $query->whereIn('extension', config('constants.extensions.video'));
+    }
+
+    public function scopeDocument($query)
+    {
+        return $query->whereIn('extension', config('constants.extensions.document'));
+    }
+
+    public function scopeSpreadsheet($query)
+    {
+        return $query->whereIn('extension', config('constants.extensions.spreadsheet'));
+    }
+
+    public function scopePresentation($query)
+    {
+        return $query->whereIn('extension', config('constants.extensions.presentation'));
+    }
+
     // Accessors:
     public function getFileNameWithoutExtensionAttribute(): string
     {
