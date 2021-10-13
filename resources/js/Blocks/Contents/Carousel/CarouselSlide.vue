@@ -1,7 +1,6 @@
 <template>
     <transition :name="direction" mode="in-out">
         <div v-show="visibleSlide === index" class="carousel-slide">
-            <!-- <img :src="entity.mediaId" alt=""> -->
             <sdb-image
                 v-if="hasImage"
                 :src="imageSrc"
