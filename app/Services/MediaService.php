@@ -220,4 +220,14 @@ class MediaService
             ->flatten()
             ->all();
     }
+
+    public static function getDottedExtensions(): array
+    {
+        return array_map(
+            function ($extension) {
+                return '.'.$extension;
+            },
+            self::getExtensions()
+        );
+    }
 }
