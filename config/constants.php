@@ -2,7 +2,7 @@
 
 return [
     'one_megabyte' => 1024,
-    'file_extensions' => [
+    'extensions' => [
         'image' => [
             'jpeg',
             'jpg',
