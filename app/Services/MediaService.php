@@ -213,4 +213,11 @@ class MediaService
         $mediaStorage->destroy($media->file_name, $media->file_type);
         $media->delete();
     }
+
+    public static function getExtensions(): array
+    {
+        return collect(config('constants.extensions'))
+            ->flatten()
+            ->all();
+    }
 }
