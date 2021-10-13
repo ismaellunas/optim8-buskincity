@@ -86,7 +86,7 @@
                 !this.isEditMode
                 && (
                     this.config.carousel.autoPlay === "active"
-                    && this.config.carousel.autoPlay !== null
+                    && this.config.carousel.autoPlay !== ""
                 )
             ) {
                 setInterval(() => {
