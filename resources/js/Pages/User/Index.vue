@@ -54,6 +54,7 @@
                         <th>#</th>
                         <th>Name</th>
                         <th>Email</th>
+                        <th>Role</th>
                         <th>
                             <div class="level-right">Actions</div>
                         </th>
@@ -64,6 +65,7 @@
                         <th>{{ record.id }}</th>
                         <td>{{ record.name }}</td>
                         <td>{{ record.email }}</td>
+                        <td>{{ displayRoleName(record) }}</td>
                         <td>
                             <div class="level-right">
                                 <sdb-button-link
@@ -189,6 +191,12 @@
                         onFinish: this.onEndLoadingOverlay,
                     }
                 );
+            },
+            displayRoleName(user) {
+                if (isEmpty(user.roles)) {
+                    return '';
+                }
+                return user.roles[0].name;
             },
         },
     };
