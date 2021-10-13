@@ -11,8 +11,6 @@
 </template>
 
 <script>
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
     import { isEmpty } from 'lodash';
 
     export default {
