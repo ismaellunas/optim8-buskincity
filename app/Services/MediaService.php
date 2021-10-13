@@ -57,7 +57,7 @@ class MediaService
 
     public function getRecords(
         string $term = null,
-        array $scopeNames = [],
+        ?array $scopeNames = null,
         int $recordsPerPage = 12
     ) {
         $query = Media::orderBy('id', 'DESC')
@@ -74,8 +74,14 @@ class MediaService
                 },
             ]);
 
-        foreach ($scopeNames as $scopeName) {
-            $query->{$scopeName}();
+        if ($scopeNames) {
+            $query->where(function ($query) use ($scopeNames) {
+                foreach ($scopeNames as $scopeName) {
+                    $query->orWhere(function ($query) use ($scopeName) {
+                        $query->{$scopeName}();
+                    });
+                }
+            });
         }
 
         $records = $query->paginate($recordsPerPage);
