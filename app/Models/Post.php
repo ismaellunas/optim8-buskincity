@@ -7,10 +7,9 @@ use App\Models\Category;
 use App\Models\Media;
 use App\Services\PostService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Post extends Model implements PublishableInterface
+class Post extends BaseModel implements PublishableInterface
 {
     use HasFactory;
 
