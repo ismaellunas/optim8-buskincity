@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Entities\CloudinaryStorage;
 use App\Http\Requests\{
+    MediaSaveAsImageRequest,
     MediaStoreRequest,
     MediaUpdateImageRequest,
     MediaUpdateRequest
@@ -199,10 +200,6 @@ class MediaController extends Controller
 
     public function saveAsImage(MediaSaveAsImageRequest $request, Media $media)
     {
-        if ($request->user()->cannot('update', $media)) {
-            abort(403);
-        }
-
         $replicatedMedia = $this->mediaService->duplicateImage(
             $request->file('image'),
             $media,
