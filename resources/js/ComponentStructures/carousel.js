@@ -1,9 +1,11 @@
+import { defaultOption, imageRatios } from './style-options';
+
 export default {
     title: 'Carousel',
     componentName: 'Carousel',
     content: {
         carousel: {
-            image: [
+            images: [
                 {
                     mediaId: null,
                 }
@@ -16,7 +18,9 @@ export default {
     config: {
         carousel: {
             numberOfSliders: 1,
-            autoPlay: "active",
+            autoPlay: true,
+            // figure
+            ratio: "is-16by9",
         }
     }
 }
@@ -41,9 +45,14 @@ export const config = {
                 type: "select",
                 label: "Auto Play",
                 options: [
-                    { value: "", name: "No"},
-                    { value: "active", name: "Yes"},
+                    { value: false, name: "No"},
+                    { value: true, name: "Yes"},
                 ],
+            },
+            ratio: {
+                type: "select",
+                label: "Ratio",
+                options: defaultOption.concat(imageRatios)
             },
         }
     }
