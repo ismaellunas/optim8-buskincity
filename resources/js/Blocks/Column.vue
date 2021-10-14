@@ -88,7 +88,6 @@
             columnClass() {
                 let classes = [];
                 if (this.isEditMode) {
-                    classes.push("is-12");
                     classes.push("edit-mode-column");
                 }
                 return classes;
