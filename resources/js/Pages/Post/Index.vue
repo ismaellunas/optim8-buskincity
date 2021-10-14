@@ -240,11 +240,10 @@
                     }
                 })
             },
-            search(term) {
-                this.queryParams['term'] = term;
+            refreshWithQueryParams() {
                 this.$inertia.get(
-                    route(this.baseRouteName+'.index', this.queryParams),
-                    {},
+                    route(this.baseRouteName+'.index'),
+                    this.queryParams,
                     {
                         replace: true,
                         preserveState: true,
@@ -252,6 +251,10 @@
                         onFinish: () => this.onEndLoadingOverlay(),
                     }
                 );
+            },
+            search(term) {
+                this.queryParams['term'] = term;
+                this.refreshWithQueryParams();
             },
             onStartLoadingOverlay() {
                 this.loader = this.$loading.show();
@@ -291,29 +294,11 @@
             },
             onLanguagesChanged() {
                 this.queryParams['languages'] = this.languages;
-                this.$inertia.get(
-                    route(this.baseRouteName+'.index'),
-                    this.queryParams,
-                    {
-                        replace: true,
-                        preserveState: true,
-                        onStart: () => this.onStartLoadingOverlay(),
-                        onFinish: () => this.onEndLoadingOverlay(),
-                    }
-                );
+                this.refreshWithQueryParams();
             },
             onCategoriesChanged() {
                 this.queryParams['categories'] = this.categories;
-                this.$inertia.get(
-                    route(this.baseRouteName+'.index'),
-                    this.queryParams,
-                    {
-                        replace: true,
-                        preserveState: true,
-                        onStart: () => this.onStartLoadingOverlay(),
-                        onFinish: () => this.onEndLoadingOverlay(),
-                    }
-                );
+                this.refreshWithQueryParams();
             },
         },
         computed: {
