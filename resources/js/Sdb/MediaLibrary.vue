@@ -505,7 +505,7 @@
             saveAsImage() {
                 const self = this;
                 const media = this.formMedia;
-                const url = route(this.baseRouteName+'.save-as-media', media.id);
+                const url = route(this.baseRouteName+'.save-as-image', media.id);
 
                 self.isUploading = true;
 

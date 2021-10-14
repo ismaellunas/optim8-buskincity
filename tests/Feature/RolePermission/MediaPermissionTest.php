@@ -260,7 +260,7 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
         $this->givePermissionToRole('edit');
 
         $response = $this->post(
-            route($this->baseRouteName.'.save-as-media', ['medium' => $media->id]),
+            route($this->baseRouteName.'.save-as-image', ['medium' => $media->id]),
             ['image' => UploadedFile::fake()->image('photo1.jpg')]
         );
 
@@ -280,7 +280,7 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
         $this->revokePermissionToRole('edit');
 
         $response = $this->post(
-            route($this->baseRouteName.'.save-as-media', ['medium' => $media->id]),
+            route($this->baseRouteName.'.save-as-image', ['medium' => $media->id]),
             ['image' => UploadedFile::fake()->image('photo1.jpg')]
         );
 
