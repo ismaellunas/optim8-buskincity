@@ -4,7 +4,82 @@
 
     <div class="box">
         <div class="columns">
-            <div class="column is-offset-10">
+            <div class="column">
+                <div class="is-pulled-left">
+                    <sdb-form-field-horizontal>
+                        <template v-slot:label>
+                            Search
+                        </template>
+                        <div class="columns">
+                            <div class="column is-three-quarters">
+                                <sdb-input
+                                    v-model="term"
+                                    maxlength="255"
+                                    @keyup.enter.prevent="search(term)"
+                                />
+                            </div>
+                            <div class="column">
+                                <sdb-button-icon
+                                    icon="fas fa-search"
+                                    type="button"
+                                    @click="search(term)"
+                                />
+                            </div>
+                        </div>
+                    </sdb-form-field-horizontal>
+                </div>
+            </div>
+
+            <div class="column">
+                <sdb-dropdown
+                    :close-on-click="false"
+                >
+                    <template v-slot:trigger>
+                        <span>Filter</span>
+                        <span
+                            v-if="filterCounter"
+                            class="ml-1"
+                        >
+                            ({{ filterCounter }})
+                        </span>
+                        <span class="icon is-small">
+                            <i class="fas fa-angle-down" aria-hidden="true"></i>
+                        </span>
+                    </template>
+
+                    <sdb-dropdown-item>
+                        Categories
+                    </sdb-dropdown-item>
+
+                    <sdb-dropdown-item v-for="category in categoryOptions">
+                        <sdb-checkbox
+                            v-model:checked="categories"
+                            :value="category.id"
+                            @change="onCategoriesChanged"
+                        >
+                            &nbsp; {{ category.value }}
+                        </sdb-checkbox>
+                    </sdb-dropdown-item>
+
+                    <hr class="dropdown-divider">
+
+                    <sdb-dropdown-item>
+                        Languages
+                    </sdb-dropdown-item>
+
+                    <sdb-dropdown-item v-for="language in languageOptions">
+                        <sdb-checkbox
+                            v-model:checked="languages"
+                            :value="language.id"
+                            @change="onLanguagesChanged"
+                        >
+                            &nbsp; {{ language.name }}
+                        </sdb-checkbox>
+                    </sdb-dropdown-item>
+                </sdb-dropdown>
+            </div>
+
+            <div class="column">
                 <div
                     v-if="can.add"
                     class="is-pulled-right"
@@ -23,29 +98,6 @@
         </div>
 
         <div class="columns">
-            <div class="column">
-                <sdb-form-field-horizontal>
-                    <template v-slot:label>
-                        Search
-                    </template>
-                    <div class="columns">
-                        <div class="column is-three-quarters">
-                            <sdb-input
-                                v-model="term"
-                                maxlength="255"
-                                @keyup.enter.prevent="search(term)"
-                            />
-                        </div>
-                        <div class="column">
-                            <sdb-button-icon
-                                icon="fas fa-search"
-                                type="button"
-                                @click="search(term)"
-                            />
-                        </div>
-                    </div>
-                </sdb-form-field-horizontal>
-            </div>
         </div>
 
         <div class="table-container">
@@ -98,6 +150,9 @@
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbButtonsDisplayView from '@/Sdb/ButtonsDisplayView';
+    import SdbCheckbox from '@/Sdb/Checkbox';
+    import SdbDropdown from '@/Sdb/Dropdown';
+    import SdbDropdownItem from '@/Sdb/DropdownItem';
     import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbInput from '@/Sdb/Input';
     import SdbPagination from '@/Sdb/Pagination';
@@ -110,6 +165,7 @@
     import { confirmDelete } from '@/Libs/alert';
     import { clone, keys, head, merge } from 'lodash';
     import { ref } from 'vue';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -117,6 +173,9 @@
             SdbButtonIcon,
             SdbButtonLink,
             SdbButtonsDisplayView,
+            SdbCheckbox,
+            SdbDropdown,
+            SdbDropdownItem,
             SdbFormFieldHorizontal,
             SdbInput,
             SdbPagination,
@@ -132,6 +191,8 @@
         ],
         props: {
             can: {},
+            categoryOptions: Object,
+            languageOptions: Object,
             pageNumber: String,
             pageQueryParams: Object,
             records: {},
@@ -143,6 +204,9 @@
             );
 
             return {
+                categories: ref(props.pageQueryParams?.categories ?? []),
+                localeOptions: ref(usePage().props.value.languageOptions ?? []),
+                languages: ref(props.pageQueryParams?.languages ?? []),
                 queryParams: ref(queryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
                 view: ref(props.pageQueryParams?.view ?? 'gallery'),
@@ -225,10 +289,39 @@
                     }
                 );
             },
+            onLanguagesChanged() {
+                this.queryParams['languages'] = this.languages;
+                this.$inertia.get(
+                    route(this.baseRouteName+'.index'),
+                    this.queryParams,
+                    {
+                        replace: true,
+                        preserveState: true,
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onFinish: () => this.onEndLoadingOverlay(),
+                    }
+                );
+            },
+            onCategoriesChanged() {
+                this.queryParams['categories'] = this.categories;
+                this.$inertia.get(
+                    route(this.baseRouteName+'.index'),
+                    this.queryParams,
+                    {
+                        replace: true,
+                        preserveState: true,
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onFinish: () => this.onEndLoadingOverlay(),
+                    }
+                );
+            },
         },
         computed: {
             isGalleryView() {
                 return this.view === 'gallery';
+            },
+            filterCounter() {
+                return this.categories.length + this.languages.length;
             },
         },
     };
