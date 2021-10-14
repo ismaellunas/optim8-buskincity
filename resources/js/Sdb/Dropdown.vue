@@ -51,10 +51,6 @@
                 type: Boolean,
                 default: false
             },
-            menuId: {
-                type: String,
-                default: 'dropdown-menu'
-            },
             closeOnClick: {
                 type: Boolean,
                 default: true
@@ -62,7 +58,11 @@
             isHoverable: {
                 type: Boolean,
                 default: false
-            }
+            },
+            menuId: {
+                type: String,
+                default: 'dropdown-menu'
+            },
         },
 
         setup(props) {
