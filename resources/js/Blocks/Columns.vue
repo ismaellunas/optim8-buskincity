@@ -41,6 +41,7 @@
         <template v-for="(column, index) in block.columns">
             <block-column
                 :id="column.id"
+                :can="can"
                 :isEditMode="isEditMode"
                 :components="block.columns[index].components"
                 :data-entities="entities"
@@ -68,6 +69,7 @@
             SdbSelect,
         },
         props: {
+            can: Object,
             dataEntities: {},
             dataMedia: {},
             id: {},

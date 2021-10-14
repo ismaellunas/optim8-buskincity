@@ -128,6 +128,7 @@
         emits: [
             'cancel',
             'on-success-submit',
+            'on-error-submit',
         ],
         props: {
             isAjax: {type: Boolean, default: false},
@@ -269,7 +270,7 @@
                         self.$emit('on-success-submit', response);
                     })
                     .catch(function(error) {
-                        console.log(error);
+                        self.$emit('on-error-submit', error);
                     }).then(() => {
                         self.loader.hide();
                         self.isInputDisabled = false;

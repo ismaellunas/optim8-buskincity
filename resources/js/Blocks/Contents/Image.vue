@@ -30,7 +30,11 @@
             class="card-content has-background-info-light"
         >
             <div class="block has-text-centered">
-                <sdb-button @click="openModal()" type="button">
+                <sdb-button
+                    type="button"
+                    :disabled="!can.media.browse"
+                    @click="openModal()"
+                >
                     <span>Open Media</span>
                     <span class="icon is-small">
                         <i class="far fa-image"></i>
@@ -42,6 +46,8 @@
         <sdb-modal-image-browser
             v-if="isModalOpen"
             :data="modalImages"
+            :is-download-enabled="can.media.read"
+            :is-upload-enabled="can.media.add"
             :query-params="imageListQueryParams"
             :search="search"
             @close="closeModal"
@@ -79,6 +85,7 @@
             MixinHasModal,
         ],
         props: {
+            can: Object,
             id: {},
             entityId: {},
             modelValue: {},

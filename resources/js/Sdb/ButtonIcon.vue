@@ -14,6 +14,7 @@
     import SdbButton from '@/Sdb/Button';
 
     export default {
+        name: 'SdbButtonIcon',
         components: {
             SdbButton,
         },
