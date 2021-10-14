@@ -64,6 +64,11 @@ class Post extends BaseModel implements PublishableInterface
         return $query->where('status', self::STATUS_DRAFT);
     }
 
+    public function scopeInLanguages($query, array $locales)
+    {
+        return $query->whereIn('locale', $locales);
+    }
+
     public function scopeSearch($query, string $term)
     {
         return $query
