@@ -87,7 +87,7 @@
             },
 
             selectItem() {
-                    this.isActive = !this.closeOnClick;
+                this.isActive = !this.closeOnClick;
             },
 
             toggle() {
@@ -106,7 +106,7 @@
                     const children = this.$refs.dropdownMenu.querySelectorAll('*')
                     for (const child of children) {
                         if (el === child) {
-                            return true
+                            return true;
                         }
                     }
                 }
@@ -118,23 +118,23 @@
                     const children = this.$refs.trigger.querySelectorAll('*')
                     for (const child of children) {
                         if (el === child) {
-                            return true
+                            return true;
                         }
                     }
                 }
-                return false
+                return false;
             },
 
             clickedOutside(event) {
                 const target = event.target;
                 if (!this.isInWhiteList(target)) {
-                    this.isActive = false
+                    this.isActive = false;
                 }
             },
 
             keyPress({ key }) {
                 if (this.isActive && (key === 'Escape' || key === 'Esc')) {
-                    this.isActive = false
+                    this.isActive = false;
                 }
             },
         },
