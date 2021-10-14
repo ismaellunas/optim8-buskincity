@@ -9,7 +9,6 @@
             class="dropdown-trigger"
             @click="toggle"
             @mouseenter="onHover"
-            @mouseout="onMouseOut"
         >
             <sdb-button
                 :aria-controls="menuId"
@@ -27,7 +26,6 @@
             ref="dropdownMenu"
             class="dropdown-menu"
             role="menu"
-            @mouseout.self="onMouseOut"
         >
             <div class="dropdown-content">
                 <slot></slot>
@@ -82,12 +80,6 @@
         },
 
         methods: {
-            onMouseOut(event) {
-                if (this.isHoverable && !this.isInWhiteList(event)) {
-                    this.isActive = false;
-                }
-            },
-
             onHover() {
                 if (this.isHoverable) {
                     this.isActive = true;
