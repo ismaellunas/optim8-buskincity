@@ -28,6 +28,7 @@ class MediaUpdateImageRequest extends FormRequest
                 'required',
                 'file',
                 'max:'.config('constants.one_megabyte') * 50,
+                'mimes:'.implode(',', config('constants.extensions.image')),
             ],
         ];
     }
