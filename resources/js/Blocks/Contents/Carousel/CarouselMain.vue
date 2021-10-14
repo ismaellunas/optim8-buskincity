@@ -1,5 +1,5 @@
 <template>
-    <div class="carousel">
+    <figure class="carousel image" :class="config.carousel?.ratio">
         <slot></slot>
 
         <span
@@ -27,7 +27,7 @@
                 </div>
             </template>
         </div>
-    </div>
+    </figure>
 </template>
 
 <script>
@@ -35,8 +35,11 @@
         name: 'CarouselMain',
 
         props: {
-            visibleSlide: { type: Number, default: 0 },
+            config: { type: Object, required: true },
             totalImage: { type: Number, default: 0 },
+            visibleSlide: { type: Number, default: 0 },
         },
+
+        emits: ['prev', 'next'],
     }
 </script>

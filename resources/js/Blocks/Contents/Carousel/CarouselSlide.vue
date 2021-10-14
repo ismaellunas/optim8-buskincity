@@ -3,8 +3,9 @@
         <div v-show="visibleSlide === index" class="carousel-slide">
             <sdb-image
                 v-if="hasImage"
-                :src="imageSrc"
                 :alt="altText"
+                :ratio="config?.carousel?.ratio"
+                :src="imageSrc"
             >
                 <sdb-button
                     v-if="isEditMode"
@@ -20,7 +21,6 @@
             <div
                 v-if="isFormDisplayed"
                 class="card-content has-background-info-light is-flex is-justify-content-center is-align-items-center card-custom"
-                style="height: 500px"
             >
                 <sdb-button
                     v-if="isEditMode"
@@ -33,7 +33,7 @@
                     <span class="icon" v-else><i class="fas fa-pen"></i></span>
                 </sdb-button>
                 <div class="block has-text-centered">
-                    <sdb-button @click="openModal()" type="button">
+                    <sdb-button @click="$emit('openModal', index)" type="button">
                         <span>Open Media</span>
                         <span class="icon is-small">
                             <i class="far fa-image"></i>
@@ -41,18 +41,6 @@
                     </sdb-button>
                 </div>
             </div>
-
-            <sdb-modal-image-browser
-                v-if="isModalOpen"
-                :data="modalImages"
-                :query-params="imageListQueryParams"
-                :search="search"
-                @close="closeModal"
-                @on-clicked-pagination="getImagesList"
-                @on-media-selected="selectImage"
-                @on-media-submitted="updateImage"
-                @on-view-changed="setView"
-            />
         </div>
     </transition>
 </template>
@@ -61,13 +49,10 @@
     import MixinContainImageContent from '@/Mixins/ContainImageContent';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinEditModeComponent from '@/Mixins/EditModeComponent';
-    import MixinHasModal from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
     import SdbImage from '@/Sdb/Image';
-    import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
-    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'CarouselSlide',
@@ -75,7 +60,6 @@
         components: {
             SdbButton,
             SdbImage,
-            SdbModalImageBrowser,
             SdbToolbarContent,
         },
 
@@ -83,25 +67,27 @@
             MixinContainImageContent,
             MixinDeletableContent,
             MixinEditModeComponent,
-            MixinHasModal,
         ],
 
         props: {
-            index: { type: Number, default: 0 },
-            dataMedia: {},
-            selectedLocale: String,
-            entityMedia: { type: Object },
-            visibleSlide: { type: Number, default: 0 },
+            config: { type: Object, required: true },
+            dataImages: { type: Object, required: true },
+            dataMedia: { type: Array },
             direction: { type: String, required: true },
+            entityMedia: { type: Object },
+            index: { type: Number, default: 0 },
             isEditMode: { type: Boolean },
+            selectedLocale: String,
+            visibleSlide: { type: Number, default: 0 },
         },
+
+        emits: ['openModal'],
 
         data() {
             return {
                 entityImage: this.entityMedia,
-                images: usePage().props.value.images ?? {},
+                images: this.dataImages ?? {},
                 isFormOpen: false,
-                modalImages: [],
             };
         },
 
@@ -113,10 +99,6 @@
         },
 
         computed: {
-            /* @overide */
-            canEdit() {
-                return this.isEditMode && this.hasImage;
-            },
             isFormDisplayed() {
                 return this.isEditMode && (
                     !this.hasImage
@@ -125,31 +107,17 @@
             },
         },
 
+        watch: {
+            'entityImage.mediaId': function(from) {
+                if (!isBlank(from)) {
+                    this.isFormOpen = false;
+                }
+            },
+        },
+
         methods: {
             toggleEdit() {
                 this.isFormOpen = !this.isFormOpen;
-            },
-            onContentDeleted() { /* @override Mixins/DeletableContent */
-                if (!isBlank(this.entityImage.mediaId)) {
-                    this.detachImageFromMedia(this.entityImage.mediaId, this.pageMedia);
-                }
-            },
-            onShownModal() { /* @override */
-                this.setTerm('');
-                this.getImagesList(route(this.imageListRouteName));
-            },
-            onImageListLoadedSuccess(data) { /* @override Mixins/ContainImageContent */
-                this.modalImages = data;
-            },
-            onImageListLoadedFail(error) { /* @override Mixins/ContainImageContent */
-                this.closeModal();
-            },
-            onImageSelected() { /* @override Mixins/ContainImageContent */
-                this.closeModal();
-                this.isFormOpen = false;
-            },
-            onImageUpdated() { /* @override Mixins/ContainImageContent */
-                this.closeModal();
             },
         },
     }

@@ -3,74 +3,88 @@
         <sdb-toolbar-content
             v-if="isEditMode"
             @delete-content="deleteContent"
+            style="z-index: 3"
         />
 
         <div class="container">
             <carousel-main
-                :visible-slide="visibleSlide"
+                :config="config"
                 :total-image="entityImages.length"
-                @prev="prevSlide"
+                :visible-slide="visibleSlide"
                 @next="nextSlide"
+                @prev="prevSlide"
             >
                 <template
                     v-for="(entityImage, index) in entityImages"
                     :key="index"
                 >
                     <carousel-slide
+                        :config="config"
+                        :data-images="images"
                         :data-media="dataMedia"
-                        :selected-locale="selectedLocale"
-                        :index="index"
-                        :entity-media="entityImage"
-                        :visible-slide="visibleSlide"
                         :direction="direction"
+                        :entity-media="entityImage"
+                        :index="index"
                         :is-edit-mode="isEditMode"
+                        :selected-locale="selectedLocale"
+                        :visible-slide="visibleSlide"
+                        @openModal="openModalMedia(index)"
                     >
                     </carousel-slide>
                 </template>
             </carousel-main>
+
+            <sdb-modal-image-browser
+                v-if="isModalOpen"
+                :data="modalImages"
+                :query-params="imageListQueryParams"
+                :search="search"
+                @close="closeModal"
+                @on-clicked-pagination="getImagesList"
+                @on-media-selected="selectImage"
+                @on-media-submitted="updateImage"
+                @on-view-changed="setView"
+            />
         </div>
     </div>
 </template>
 
 <script>
-    import MixinDeletableContent from '@/Mixins/DeletableContent';
-    import MixinEditModeComponent from '@/Mixins/EditModeComponent';
-    import SdbButton from '@/Sdb/Button';
-    import SdbSelect from '@/Sdb/Select';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import { useModelWrapper } from '@/Libs/utils';
-    import { cloneDeep } from 'lodash';
     import CarouselMain from './Carousel/CarouselMain.vue';
     import CarouselSlide from './Carousel/CarouselSlide.vue';
+    import MixinContainImageContent from '@/Mixins/ContainImageContent';
+    import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinEditModeComponent from '@/Mixins/EditModeComponent';
+    import MixinHasModal from '@/Mixins/HasModal';
+    import SdbButton from '@/Sdb/Button';
+    import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
+    import SdbSelect from '@/Sdb/Select';
+    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import { cloneDeep } from 'lodash';
+    import { useModelWrapper, isBlank } from '@/Libs/utils';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
-            SdbButton,
-            SdbSelect,
-            SdbToolbarContent,
             CarouselMain,
             CarouselSlide,
+            SdbButton,
+            SdbModalImageBrowser,
+            SdbSelect,
+            SdbToolbarContent,
         },
 
         mixins: [
+            MixinContainImageContent,
             MixinDeletableContent,
             MixinEditModeComponent,
+            MixinHasModal,
         ],
 
         props: {
-            modelValue: {},
             dataMedia: {},
+            modelValue: {},
             selectedLocale: String,
-        },
-
-        data() {
-            return {
-                entityImages: this.entity.content.carousel.image,
-                entityTemplate: this.entity.content.template,
-                direction: 'left',
-                sliderOptions: [1,2,3,4,5,6],
-                visibleSlide: 0,
-            };
         },
 
         setup(props, { emit }) {
@@ -81,14 +95,27 @@
             };
         },
 
+        data() {
+            return {
+                direction: 'left',
+                entityImages: this.entity.content.carousel.images,
+                entityTemplate: this.entity.content.template,
+                images: usePage().props.value.images ?? {},
+                indexModify: null,
+                modalImages: [],
+                sliderOptions: [1,2,3,4,5,6],
+                visibleSlide: 0,
+            };
+        },
+
+        computed: {
+            isAutoPlay() {
+                return this.config.carousel.autoPlay;
+            },
+        },
+
         mounted() {
-            if (
-                !this.isEditMode
-                && (
-                    this.config.carousel.autoPlay === "active"
-                    && this.config.carousel.autoPlay !== ""
-                )
-            ) {
+            if (!this.isEditMode && this.isAutoPlay) {
                 setInterval(() => {
                     this.nextSlide();
                 }, 6000);
@@ -96,7 +123,7 @@
         },
 
         watch: {
-            'config.carousel.numberOfSliders': function(to, from) {
+            'config.carousel.numberOfSliders': function() {
                 const numberOfSliders = parseInt(this.config.carousel.numberOfSliders);
                 const originalNumberOfSliders = this.entityImages.length;
 
@@ -107,8 +134,11 @@
                         return;
                     }
 
+                    let index = this.entityImages.length;
                     const decreaseNumber = originalNumberOfSliders - numberOfSliders;
                     for (let i = 0; i < decreaseNumber; i++) {
+                        index--;
+                        this.detachImageFromMedia(this.entityImages[index].mediaId, this.pageMedia);
                         this.entityImages.pop();
                     }
                     this.visibleSlide = 0;
@@ -120,7 +150,7 @@
                     }
                 }
                 this.config.carousel.numberOfSliders = numberOfSliders;
-            }
+            },
         },
 
         methods: {
@@ -140,6 +170,66 @@
                     this.visibleSlide++;
                 }
                 this.direction = 'left';
+            },
+
+            openModalMedia(index) {
+                this.indexModify = index;
+                this.openModal();
+            },
+
+            onShownModal() { /* @override */
+                this.setTerm('');
+                this.getImagesList(route(this.imageListRouteName));
+            },
+
+            onImageListLoadedSuccess(data) { /* @override Mixins/ContainImageContent */
+                this.modalImages = data;
+            },
+
+            selectImage(image) { /* @override Mixins/ContainImageContent */
+                const locale = this.selectedLocale;
+                if (!isBlank(this.entityImages[this.indexModify].mediaId)) {
+                    this.detachImageFromMedia(this.entityImages[this.indexModify].mediaId, this.pageMedia);
+                }
+
+                if (!this.images[ locale ]) {
+                    this.images[ locale ] = [];
+                }
+                this.images[locale].push(image);
+
+                this.entityImages[this.indexModify].mediaId = image.id;
+
+                this.attachImageToMedia(image.id, this.pageMedia);
+
+                this.onImageSelected();
+            },
+
+            updateImage(response) {
+                this.selectImage(response.data);
+                this.onImageUpdated();
+            },
+
+            onImageListLoadedFail(error) { /* @override Mixins/ContainImageContent */
+                this.closeModal();
+            },
+
+            onImageSelected() { /* @override Mixins/ContainImageContent */
+                this.closeModal();
+            },
+
+            onImageUpdated() { /* @override Mixins/ContainImageContent */
+                this.closeModal();
+            },
+
+            onContentDeleted() { /* @override Mixins/DeletableContent */
+                const countImage = this.entityImages.length;
+                if (countImage > 0) {
+                    for (let i = 0; i < countImage; i++) {
+                        if (!isBlank(this.entityImages[i].mediaId)) {
+                            this.detachImageFromMedia(this.entityImages[i].mediaId, this.pageMedia);
+                        }
+                    }
+                }
             },
         },
     }
