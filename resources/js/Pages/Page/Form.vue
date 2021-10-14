@@ -34,6 +34,7 @@
                         id="page-form-builder"
                         v-model="form.data"
                         v-model:content-config-id="contentConfigId"
+                        :can="can"
                         :is-edit-mode="isEditMode"
                         :selected-locale="selectedLocale"
                     />
@@ -80,6 +81,7 @@
         },
         emits: ['change-locale', 'on-submit', 'update:contentConfigId'],
         props: {
+            can: Object,
             errors: {},
             isEditMode: Boolean,
             isNew: Boolean,
