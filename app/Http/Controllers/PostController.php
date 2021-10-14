@@ -45,7 +45,18 @@ class PostController extends CrudController
      */
     public function create()
     {
+        $user = auth()->user();
+
         return Inertia::render('Post/Create', [
+            'can' => [
+                'media' => [
+                    'browse' => $user->can('media.browse'),
+                    'read' => $user->can('media.edit'),
+                    'edit' => $user->can('media.edit'),
+                    'add' => $user->can('media.add'),
+                    'delete' => $user->can('media.delete'),
+                ],
+            ],
             'categoryOptions' => $this->postService->getCategoryOptions(),
             'post' => new Post(),
             'statusOptions' => Post::getStatusOptions(),
@@ -102,7 +113,18 @@ class PostController extends CrudController
      */
     public function edit(Post $post)
     {
+        $user = auth()->user();
+
         return Inertia::render('Post/Edit', [
+            'can' => [
+                'media' => [
+                    'browse' => $user->can('media.browse'),
+                    'read' => $user->can('media.edit'),
+                    'edit' => $user->can('media.edit'),
+                    'add' => $user->can('media.add'),
+                    'delete' => $user->can('media.delete'),
+                ],
+            ],
             'categoryOptions' => $this->postService->getCategoryOptions(),
             'coverImage' => $post->coverImage,
             'post' => $post->load('categories'),

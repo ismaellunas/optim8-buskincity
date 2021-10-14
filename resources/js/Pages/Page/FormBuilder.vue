@@ -78,6 +78,7 @@
                         v-model="data.structures[index]"
                         v-model:data-entities="data.entities"
                         v-model:data-media="data.media"
+                        :can="can"
                         :isEditMode="isEditMode"
                         :selected-locale="selectedLocale"
                         @delete-block="deleteBlock"
@@ -104,6 +105,7 @@
             SdbComponentConfig,
         },
         props: {
+            can: Object,
             errors: Object,
             isEditMode: {type: Boolean, default: false},
             modelValue: {type: Object},

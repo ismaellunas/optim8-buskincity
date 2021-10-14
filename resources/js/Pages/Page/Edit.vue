@@ -12,6 +12,7 @@
             <page-form
                 v-model="form.translations[selectedLocale]"
                 v-model:content-config-id="contentConfigId"
+                :can="can"
                 :errors="errors"
                 :isNew="isNew"
                 :isEditMode="isEditMode"
@@ -46,6 +47,7 @@
             SdbFlashNotifications,
         },
         props: {
+            can: Object,
             page: Object,
             errors: Object,
             tabActive: {default: 0},
