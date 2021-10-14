@@ -9,7 +9,6 @@
             class="dropdown-trigger"
             @click="toggle"
             @mouseenter="onHover"
-            @mouseout="onMouseOut"
         >
             <sdb-button
                 :aria-controls="menuId"
@@ -27,7 +26,6 @@
             ref="dropdownMenu"
             class="dropdown-menu"
             role="menu"
-            @mouseout.self="onMouseOut"
         >
             <div class="dropdown-content">
                 <slot></slot>
@@ -38,9 +36,8 @@
 
 <script>
     import SdbButton from '@/Sdb/Button';
-    import { onMounted, onUnmounted, ref } from "vue";
     import { isBlank, isEmpty } from "@/Libs/utils";
-    import { uniqueId } from "lodash";
+    import { ref } from "vue";
 
     export default {
         name: 'SdbDropdown',
@@ -54,10 +51,6 @@
                 type: Boolean,
                 default: false
             },
-            menuId: {
-                type: String,
-                default: 'dropdown-menu'
-            },
             closeOnClick: {
                 type: Boolean,
                 default: true
@@ -65,7 +58,11 @@
             isHoverable: {
                 type: Boolean,
                 default: false
-            }
+            },
+            menuId: {
+                type: String,
+                default: 'dropdown-menu'
+            },
         },
 
         setup(props) {
@@ -83,12 +80,6 @@
         },
 
         methods: {
-            onMouseOut(event) {
-                if (this.isHoverable && !this.isInWhiteList(event)) {
-                    this.isActive = false;
-                }
-            },
-
             onHover() {
                 if (this.isHoverable) {
                     this.isActive = true;
@@ -96,7 +87,7 @@
             },
 
             selectItem() {
-                    this.isActive = !this.closeOnClick;
+                this.isActive = !this.closeOnClick;
             },
 
             toggle() {
@@ -115,7 +106,7 @@
                     const children = this.$refs.dropdownMenu.querySelectorAll('*')
                     for (const child of children) {
                         if (el === child) {
-                            return true
+                            return true;
                         }
                     }
                 }
@@ -127,23 +118,23 @@
                     const children = this.$refs.trigger.querySelectorAll('*')
                     for (const child of children) {
                         if (el === child) {
-                            return true
+                            return true;
                         }
                     }
                 }
-                return false
+                return false;
             },
 
             clickedOutside(event) {
                 const target = event.target;
                 if (!this.isInWhiteList(target)) {
-                    this.isActive = false
+                    this.isActive = false;
                 }
             },
 
             keyPress({ key }) {
                 if (this.isActive && (key === 'Escape' || key === 'Esc')) {
-                    this.isActive = false
+                    this.isActive = false;
                 }
             },
         },
