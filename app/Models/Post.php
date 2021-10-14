@@ -69,6 +69,16 @@ class Post extends BaseModel implements PublishableInterface
         return $query->whereIn('locale', $locales);
     }
 
+    public function scopeInCategories($query, array $categoryIds)
+    {
+        return $query->whereHas(
+            'categories',
+            function ($query) use ($categoryIds) {
+                $query->whereIn(Category::getTableName().'.id', $categoryIds);
+            }
+        );
+    }
+
     public function scopeSearch($query, string $term)
     {
         return $query
