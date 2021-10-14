@@ -38,9 +38,8 @@
 
 <script>
     import SdbButton from '@/Sdb/Button';
-    import { onMounted, onUnmounted, ref } from "vue";
     import { isBlank, isEmpty } from "@/Libs/utils";
-    import { uniqueId } from "lodash";
+    import { ref } from "vue";
 
     export default {
         name: 'SdbDropdown',
