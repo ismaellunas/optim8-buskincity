@@ -191,6 +191,7 @@
                         :media="formMedia"
                         :isAjax="isAjax"
                         @on-success-submit="onSuccessSubmit"
+                        @on-error-submit="onErrorSubmit"
                         @cancel="closeEditModal"
                     />
                 </div>
@@ -405,6 +406,9 @@
                 this.formMedia = getEmptyFormMedia();
                 this.closeEditModal();
                 this.$emit('on-media-submitted', page);
+            },
+            onErrorSubmit() {
+                oopsAlert();
             },
             deleteRecord(record) {
                 confirmDelete('Are you sure?').then((result) => {
