@@ -75,15 +75,14 @@
                                                 required
                                                 autofocus
                                                 :message="error('first_name')"
-                                            />
+                                            ></sdb-form-input>
 
                                             <sdb-form-input 
                                                 label="Last Name"
                                                 v-model="form.last_name"
-                                                required
-                                                autofocus
+                                                required                                                
                                                 :message="error('last_name')"
-                                            />
+                                            ></sdb-form-input>
 
                                             <sdb-form-input
                                                 v-model="form.email"

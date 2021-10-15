@@ -90,10 +90,7 @@
                                             <div class="field columns">
                                                 <div class="column has-text-left">
                                                     <label class="checkbox">
-                                                        <sdb-checkbox
-                                                            name="remember"
-                                                            v-model:checked="form.remember"
-                                                        >
+                                                        <sdb-checkbox name="remember" v-model:checked="form.remember">
                                                             <span class="pl-1">Remember me</span>
                                                         </sdb-checkbox>
                                                     </label>
@@ -108,6 +105,7 @@
                                             <sdb-button class="button is-block is-info is-fullwidth" :disabled="form.processing">
                                                  Log In <i class="fas fa-sign-in-alt"></i>
                                             </sdb-button>
+                                            
                                         </form>
                                     </div>
                                 </div>

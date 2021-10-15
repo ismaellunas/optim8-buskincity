@@ -41,26 +41,28 @@
                 <jet-input-error :message="form.errors.photo" class="mt-2" />
             </div>
 
-            <!-- First Name -->
-            <div class="col-span-6 sm:col-span-4">
-                <jet-label for="first_name" value="First Name" />
-                <jet-input id="first_name" type="text" class="mt-1 block w-full" v-model="form.first_name" autocomplete="first_name" />
-                <jet-input-error :message="form.errors.first_name" class="mt-2" />
-            </div>
+            <sdb-form-input 
+                label="First Name"
+                v-model="form.first_name"
+                required
+                :message="form.errors.first_name"
+            ></sdb-form-input>
 
-            <!-- Last Name -->
-            <div class="col-span-6 sm:col-span-4">
-                <jet-label for="last_name" value="Last Name" />
-                <jet-input id="last_name" type="text" class="mt-1 block w-full" v-model="form.last_name" autocomplete="last_name" />
-                <jet-input-error :message="form.errors.last_name" class="mt-2" />
-            </div>
+            <sdb-form-input 
+                label="Last Name"
+                v-model="form.last_name"
+                required
+                :message="form.errors.last_name"
+            ></sdb-form-input>
 
-            <!-- Email -->
-            <div class="col-span-6 sm:col-span-4">
-                <jet-label for="email" value="Email" />
-                <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" />
-                <jet-input-error :message="form.errors.email" class="mt-2" />
-            </div>
+            <sdb-form-input
+                v-model="form.email"
+                label="Email"
+                required
+                type="email"
+                :message="form.errors.email"
+            ></sdb-form-input>
+
         </template>
 
         <template #actions>
@@ -83,6 +85,9 @@
     import JetLabel from '@/Jetstream/Label'
     import JetActionMessage from '@/Jetstream/ActionMessage'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton'
+    import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
 
     export default {
         components: {
@@ -93,7 +98,12 @@
             JetInputError,
             JetLabel,
             JetSecondaryButton,
+            SdbFormInput,
+            SdbErrorNotifications,
         },
+        mixins: [
+            MixinHasPageErrors,
+        ],
 
         props: ['user'],
 
