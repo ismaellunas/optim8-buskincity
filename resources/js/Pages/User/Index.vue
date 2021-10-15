@@ -95,11 +95,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="record in records.data" :key="record.id">
-                        <th>{{ record.id }}</th>
-                        <td>{{ record.full_name }}</td>
-                        <td>{{ record.email }}</td>
-                        <td>
+                     <user-list-item
+                        v-for="record in records.data"
+                        :user="record"
+                    >
+                        <template v-slot:actions>
                             <div class="level-right">
                                 <sdb-button-link
                                     v-if="can.edit"
