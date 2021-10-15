@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Media;
 use App\Rules\AlphaNumericDash;
 use App\Services\MediaService;
 use App\Services\TranslationService;
@@ -16,7 +17,7 @@ class MediaStoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return auth()->user()->can('create', Media::class);
     }
 
     /**
@@ -26,6 +27,8 @@ class MediaStoreRequest extends FormRequest
      */
     public function rules()
     {
+        $mimes = MediaService::getExtensions();
+
         return array_merge(
             MediaService::getTranslationRules(),
             [
@@ -38,6 +41,7 @@ class MediaStoreRequest extends FormRequest
                     'required',
                     'file',
                     'max:'.config('constants.one_megabyte') * 50,
+                    'mimes:'.implode(',', $mimes),
                 ],
             ]
         );

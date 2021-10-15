@@ -17,6 +17,7 @@
                     :id="element.id"
                     v-model="dataEntities[element.id]"
                     class="page-component"
+                    :can="can"
                     :is-edit-mode="isEditMode"
                     :data-media="dataMedia"
                     :selected-locale="selectedLocale"
@@ -62,6 +63,7 @@
             Text,
         },
         props: {
+            can: Object,
             id: {},
             isEditMode: {default: false},
             isDebugMode: {default: false},

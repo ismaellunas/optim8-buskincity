@@ -26,8 +26,10 @@
             :accepted-types="acceptedTypes"
             :is-ajax="true"
             :is-delete-enabled="false"
+            :is-download-enabled="isDownloadEnabled"
             :is-edit-enabled="false"
             :is-pagination-displayed="false"
+            :is-upload-enabled="isUploadEnabled"
             :query-params="queryParams"
             :records="data"
             :search="search"
@@ -74,6 +76,8 @@
         ],
         props: {
             data: {},
+            isDownloadEnabled: {type: Boolean, default: true},
+            isUploadEnabled: {type: Boolean, default: true},
             queryParams: Object,
             search: Function,
             title: {type: String, default: 'Images'},
