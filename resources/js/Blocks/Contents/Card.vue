@@ -123,7 +123,7 @@
         data() {
             return {
                 entityImage: this.entity.content.cardImage.figure.image,
-                images: usePage().props.value.images,
+                images: usePage().props.value.images ?? {},
                 isFormOpen: false,
                 modalImages: [],
             };
