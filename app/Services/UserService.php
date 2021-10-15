@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Hash;
 class UserService
 {
     private function getBuilderRecords(
-        string $term = null
+        string $term = null,
+        ?array $scopes = null
     ): Builder {
         return User::orderBy('id', 'DESC')
             ->with([
@@ -23,6 +24,13 @@ class UserService
             ->when($term, function ($query) use ($term) {
                 $query->search($term);
             })
+            ->when($scopes, function ($query) use ($scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    if (!is_null($value)) {
+                        $query->$scopeName($value);
+                    }
+                }
+            })
             ->select([
                 'id',
                 'name',
@@ -32,19 +40,21 @@ class UserService
 
     public function getRecords(
         string $term = null,
-        int $perPage = 15
+        int $perPage = 15,
+        ?array $scopes = null
     ): LengthAwarePaginator {
         return $this
-            ->getBuilderRecords($term)
+            ->getBuilderRecords($term, $scopes)
             ->paginate($perPage);
     }
 
     public function getNoSuperAdministratorRecords(
         string $term = null,
-        int $perPage = 15
-    ) {
+        int $perPage = 15,
+        ?array $scopes = null
+    ): LengthAwarePaginator {
         return $this
-            ->getBuilderRecords($term)
+            ->getBuilderRecords($term, $scopes)
             ->whereDoesntHave('roles', function ($query) {
                 $query->where('name', config('permission.super_admin_role'));
             })

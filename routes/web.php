@@ -47,8 +47,10 @@ Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])
 
     Route::get('/media-list/image', [App\Http\Controllers\MediaController::class, 'listImages'])
         ->name('media.list.image');
-    Route::resource('/posts', PostController::class);
-    Route::resource('/users', UserController::class);
+    Route::resource('/posts', PostController::class)
+        ->except(['show']);
+    Route::resource('/users', UserController::class)
+        ->except(['show']);
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword'])
         ->name('users.password');
     Route::resource('/roles', RoleController::class);
