@@ -36,12 +36,6 @@ class Media extends CloudinaryMedia implements TranslatableContract
         'assets' => AsCollection::class,
     ];
 
-    public static $imageExtensions = [
-        'jpeg',
-        'jpg',
-        'png',
-    ];
-
     // Relationships:
     public function author()
     {
@@ -51,7 +45,27 @@ class Media extends CloudinaryMedia implements TranslatableContract
     // Scopes:
     public function scopeImage($query)
     {
-        return $query->whereIn('extension', self::$imageExtensions);
+        return $query->whereIn('extension', config('constants.extensions.image'));
+    }
+
+    public function scopeVideo($query)
+    {
+        return $query->whereIn('extension', config('constants.extensions.video'));
+    }
+
+    public function scopeDocument($query)
+    {
+        return $query->whereIn('extension', config('constants.extensions.document'));
+    }
+
+    public function scopeSpreadsheet($query)
+    {
+        return $query->whereIn('extension', config('constants.extensions.spreadsheet'));
+    }
+
+    public function scopePresentation($query)
+    {
+        return $query->whereIn('extension', config('constants.extensions.presentation'));
     }
 
     // Accessors:
@@ -65,7 +79,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
 
     public function getIsImageAttribute(): bool
     {
-        return in_array($this->extension, self::$imageExtensions);
+        return in_array($this->extension, config('constants.extensions.image'));
     }
 
     public function getThumbnailUrlAttribute(): string
