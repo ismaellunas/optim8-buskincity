@@ -33,7 +33,11 @@
                     <span class="icon" v-else><i class="fas fa-pen"></i></span>
                 </sdb-button>
                 <div class="block has-text-centered">
-                    <sdb-button @click="$emit('openModal', index)" type="button">
+                    <sdb-button
+                        @click="$emit('openModal', index)"
+                        type="button"
+                        style="z-index: 1"
+                    >
                         <span>Open Media</span>
                         <span class="icon is-small">
                             <i class="far fa-image"></i>
@@ -138,7 +142,6 @@
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 2;
     }
 
     .left-enter-active {
