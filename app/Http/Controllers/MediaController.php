@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Entities\CloudinaryStorage;
 use App\Http\Requests\{
+    MediaSaveAsImageRequest,
     MediaStoreRequest,
     MediaUpdateImageRequest,
     MediaUpdateRequest
@@ -28,7 +29,7 @@ class MediaController extends Controller
     public function __construct(MediaService $mediaService)
     {
         $this->mediaService = $mediaService;
-        $this->authorizeResource(Media::class, 'media');
+        $this->authorizeResource(Media::class, 'medium');
     }
 
     /**
@@ -50,10 +51,11 @@ class MediaController extends Controller
             'baseRouteName' => $this->baseRouteName,
             'defaultLocale' => TranslationService::getDefaultLocale(),
             'pageNumber' => $request->page,
-            'pageQueryParams' => array_filter($request->all('term', 'view')),
+            'pageQueryParams' => array_filter($request->all('term', 'view', 'types')),
+            'acceptedTypes' => $this->mediaService->getDottedExtensions(),
             'records' => $this
                 ->mediaService
-                ->getRecords($request->term, [], $this->recordsPerPage),
+                ->getRecords($request->term, $request->types, $this->recordsPerPage),
         ]);
     }
 
@@ -119,7 +121,6 @@ class MediaController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -130,10 +131,6 @@ class MediaController extends Controller
      */
     public function edit(Media $media)
     {
-        return Inertia::render('Media/Create', [
-            'record' => $media,
-            'baseRouteName' => $this->baseRouteName,
-        ]);
     }
 
     /**
@@ -201,7 +198,7 @@ class MediaController extends Controller
             : response()->json(['imagePath' => $media->file_url]);
     }
 
-    public function saveAsMedia(Request $request, Media $media)
+    public function saveAsImage(MediaSaveAsImageRequest $request, Media $media)
     {
         $replicatedMedia = $this->mediaService->duplicateImage(
             $request->file('image'),
@@ -220,6 +217,10 @@ class MediaController extends Controller
 
     public function listImages(Request $request)
     {
+        if ($request->user()->cannot('viewAny', Media::class)) {
+            abort(403);
+        }
+
         $records = $this->mediaService->getRecords(
             $request->term,
             ['image'],

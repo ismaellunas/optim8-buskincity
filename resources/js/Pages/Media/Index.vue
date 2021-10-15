@@ -6,16 +6,19 @@
 
     <div class="box">
         <sdb-media-library
+            :accepted-types="acceptedTypes"
             :display-view="displayView"
-            :query-params="queryParams"
-            :records="records"
-            :search="search"
             :is-delete-enabled="can.delete"
             :is-download-enabled="can.read"
             :is-edit-enabled="can.edit"
+            :is-filter-enabled="true"
             :is-upload-enabled="can.add"
+            :query-params="queryParams"
+            :records="records"
+            :search="search"
             @on-media-submitted="onMediaUploadSuccess"
             @on-view-changed="onViewChanged"
+            @on-type-changed="onTypeChanged"
         />
     </div>
 </app-layout>
@@ -38,6 +41,7 @@
             records: {},
             pageNumber: String,
             pageQueryParams: Object,
+            acceptedTypes: Array,
         },
         setup(props) {
             const queryParams = merge(
@@ -96,6 +100,19 @@
             onEndLoadingOverlay() {
                 this.loader.hide();
             },
+            onTypeChanged(types) {
+                this.queryParams['types'] = types;
+                this.$inertia.get(
+                    route('admin.media.index'),
+                    this.queryParams,
+                    {
+                        replace: true,
+                        preserveState: true,
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onFinish: () => this.onEndLoadingOverlay(),
+                    }
+                );
+            }
         },
     }
 </script>

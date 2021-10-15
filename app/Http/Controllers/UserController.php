@@ -40,13 +40,17 @@ class UserController extends CrudController
         $user = auth()->user();
 
         if ($user->isSuperAdministrator) {
-            $records = $this
-                ->userService
-                ->getRecords($request->term, $this->recordsPerPage);
+            $records = $this->userService->getRecords(
+                $request->term,
+                $this->recordsPerPage,
+                ['inRoles' => $request->roles ?? null]
+            );
         } else {
-            $records = $this
-                ->userService
-                ->getNoSuperAdministratorRecords($request->term, $this->recordsPerPage);
+            $records = $this->userService->getNoSuperAdministratorRecords(
+                $request->term,
+                $this->recordsPerPage,
+                ['inRoles' => $request->roles ?? null]
+            );
         }
 
         $this->userService->transformRecords($records, $user);
@@ -58,8 +62,9 @@ class UserController extends CrudController
                 'edit' => $user->can('user.edit'),
             ],
             'pageNumber' => $request->page,
-            'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
+            'pageQueryParams' => array_filter($request->only('term', 'view', 'roles')),
             'records' => $records,
+            'roleOptions' => $this->userService->getRoleOptions(),
             'title' => $this->getIndexTitle(),
         ]));
     }

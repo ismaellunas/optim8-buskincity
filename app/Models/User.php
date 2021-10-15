@@ -99,6 +99,13 @@ class User extends Authenticatable
         });
     }
 
+    public function scopeInRoles($query, array $roleIds)
+    {
+        return $query->whereHas('roles', function ($query) use ($roleIds) {
+            $query->whereIn('id', $roleIds);
+        });
+    }
+
     /**
      * Get the URL to the user's profile photo.
      *

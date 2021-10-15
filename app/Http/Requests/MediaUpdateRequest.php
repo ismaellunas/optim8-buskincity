@@ -2,17 +2,17 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\MediaStoreRequest;
 use App\Rules\AlphaNumericDash;
 use App\Services\MediaService;
+use Illuminate\Foundation\Http\FormRequest;
 
-class MediaUpdateRequest extends MediaStoreRequest
+class MediaUpdateRequest extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
+    public function authorize()
+    {
+        return true;
+    }
+
     public function rules()
     {
         return array_merge(

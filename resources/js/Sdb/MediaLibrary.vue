@@ -49,6 +49,40 @@
                         </sdb-form-field-horizontal>
                     </div>
 
+                    <div
+                        v-if="isFilterEnabled"
+                        class="column"
+                    >
+                        <sdb-dropdown
+                            :close-on-click="false"
+                        >
+                            <template v-slot:trigger>
+                                <span>Filter</span>
+                                <span
+                                    v-if="types.length > 0"
+                                    class="ml-1"
+                                >
+                                    ({{types.length}})
+                                </span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                </span>
+                            </template>
+
+                            <sdb-dropdown-item
+                                v-for="(type, typeIndex) in typeOptions"
+                                >
+                                <sdb-checkbox
+                                    v-model:checked="types"
+                                    :value="typeIndex"
+                                    @change="$emit('on-type-changed', types)"
+                                >
+                                    &nbsp;{{type}}
+                                </sdb-checkbox>
+                            </sdb-dropdown-item>
+                        </sdb-dropdown>
+                    </div>
+
                     <div class="column is-one-fifth">
                         <sdb-buttons-display-view
                             v-model="view"
@@ -157,6 +191,7 @@
                         :media="formMedia"
                         :isAjax="isAjax"
                         @on-success-submit="onSuccessSubmit"
+                        @on-error-submit="onErrorSubmit"
                         @cancel="closeEditModal"
                     />
                 </div>
@@ -220,6 +255,9 @@
     import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonsDisplayView from '@/Sdb/ButtonsDisplayView';
+    import SdbCheckbox from '@/Sdb/Checkbox';
+    import SdbDropdown from '@/Sdb/Dropdown';
+    import SdbDropdownItem from '@/Sdb/DropdownItem';
     import SdbFormField from '@/Sdb/Form/Field';
     import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbImage from '@/Sdb/Image';
@@ -259,6 +297,9 @@
             SdbButton,
             SdbButtonIcon,
             SdbButtonsDisplayView,
+            SdbCheckbox,
+            SdbDropdown,
+            SdbDropdownItem,
             SdbFormField,
             SdbFormFieldHorizontal,
             SdbImage,
@@ -278,22 +319,32 @@
             'on-view-changed'
         ],
         props: {
-            acceptedTypes: {default: acceptedFileTypes},
+            acceptedTypes: {type: Array, default: acceptedFileTypes},
             baseRouteName: {default: 'admin.media'},
             isAjax: {type: Boolean, default: false},
             isDeleteEnabled: {type: Boolean, default: true},
             isDownloadEnabled: {type: Boolean, default: true},
             isEditEnabled: {type: Boolean, default: true},
+            isFilterEnabled: {type: Boolean, default: false},
             isPaginationDisplayed: {type: Boolean, default: true},
             isUploadEnabled: {type: Boolean, default: true},
             queryParams: { type: Object },
             records: {},
             search: Function,
+            typeOptions: {type: Object, default: {
+                'image': "Image",
+                'video': "Video",
+                'document': "Document",
+                'spreadsheet': "Spreadsheet",
+                'presentation': "Presentation",
+                'presentation': "Presentation",
+            }},
         },
         setup(props) {
             return {
                 view: ref(props.queryParams.view ?? 'gallery'),
                 term: ref(props.queryParams.term),
+                types: ref(props.queryParams?.types ?? []),
             };
         },
         data() {
@@ -355,6 +406,9 @@
                 this.formMedia = getEmptyFormMedia();
                 this.closeEditModal();
                 this.$emit('on-media-submitted', page);
+            },
+            onErrorSubmit() {
+                oopsAlert();
             },
             deleteRecord(record) {
                 confirmDelete('Are you sure?').then((result) => {
@@ -451,7 +505,7 @@
             saveAsImage() {
                 const self = this;
                 const media = this.formMedia;
-                const url = route(this.baseRouteName+'.save-as-media', media.id);
+                const url = route(this.baseRouteName+'.save-as-image', media.id);
 
                 self.isUploading = true;
 

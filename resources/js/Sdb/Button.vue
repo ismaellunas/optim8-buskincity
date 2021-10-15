@@ -9,6 +9,7 @@
 
 <script>
     export default {
+        name: 'SdbButton',
         props: {
             type: {
                 type: String,
