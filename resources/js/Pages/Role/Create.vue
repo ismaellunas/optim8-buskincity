@@ -1,6 +1,6 @@
 <template>
 <app-layout>
-    <template #header>Add New Role</template>
+    <template #header>{{ title }}</template>
 
     <sdb-error-notifications :errors="$page.props.errors"/>
 
@@ -15,9 +15,6 @@
                     class="box"
                     :disabled="isProcessing"
                 >
-                    <h3 class="title is-3">Profile</h3>
-                    <hr/>
-
                     <form-role
                         v-model="form"
                         :errors="errors"
@@ -34,7 +31,7 @@
                         </div>
                         <div class="control">
                             <sdb-button class="is-link">
-                                Update
+                                Create
                             </sdb-button>
                         </div>
                     </div>
@@ -68,6 +65,7 @@
             baseRouteName: String,
             errors: Object,
             permissions: {},
+            title: String,
         },
         setup(props) {
             const role = props.record;

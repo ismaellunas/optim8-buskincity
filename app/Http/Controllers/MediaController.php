@@ -28,6 +28,7 @@ class MediaController extends Controller
     public function __construct(MediaService $mediaService)
     {
         $this->mediaService = $mediaService;
+        $this->authorizeResource(Media::class, 'medium');
     }
 
     /**
@@ -37,7 +38,15 @@ class MediaController extends Controller
      */
     public function index(Request $request)
     {
+        $user = auth()->user();
+
         return Inertia::render('Media/Index', [
+            'can' => [
+                'add' => $user->can('media.add'),
+                'delete' => $user->can('media.delete'),
+                'edit' => $user->can('media.edit'),
+                'read' => $user->can('media.read'),
+            ],
             'baseRouteName' => $this->baseRouteName,
             'defaultLocale' => TranslationService::getDefaultLocale(),
             'pageNumber' => $request->page,
@@ -110,7 +119,6 @@ class MediaController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -121,10 +129,6 @@ class MediaController extends Controller
      */
     public function edit(Media $media)
     {
-        return Inertia::render('Media/Create', [
-            'record' => $media,
-            'baseRouteName' => $this->baseRouteName,
-        ]);
     }
 
     /**
@@ -181,6 +185,10 @@ class MediaController extends Controller
 
     public function updateImage(MediaUpdateImageRequest $request, Media $media)
     {
+        if ($request->user()->cannot('update', $media)) {
+            abort(403);
+        }
+
         $media = $this->mediaService->replace(
             $request->file('image'),
             $media,
@@ -192,8 +200,12 @@ class MediaController extends Controller
             : response()->json(['imagePath' => $media->file_url]);
     }
 
-    public function saveAsMedia(Request $request, Media $media)
+    public function saveAsMedia(MediaUpdateImageRequest $request, Media $media)
     {
+        if ($request->user()->cannot('update', $media)) {
+            abort(403);
+        }
+
         $replicatedMedia = $this->mediaService->duplicateImage(
             $request->file('image'),
             $media,
@@ -211,6 +223,10 @@ class MediaController extends Controller
 
     public function listImages(Request $request)
     {
+        if ($request->user()->cannot('viewAny', Media::class)) {
+            abort(403);
+        }
+
         $records = $this->mediaService->getRecords(
             $request->term,
             ['image'],

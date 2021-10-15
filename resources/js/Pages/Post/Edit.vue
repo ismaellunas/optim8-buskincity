@@ -7,6 +7,7 @@
     <div class="mb-6">
         <post-form
             v-model="form"
+            :can="can"
             :errors="errors"
             :is-new="false"
             :is-processing="isProcessing"
@@ -35,6 +36,7 @@
             SdbErrorNotifications,
         },
         props: {
+            can: Object,
             categoryOptions: Array,
             errors: Object,
             post: Object,

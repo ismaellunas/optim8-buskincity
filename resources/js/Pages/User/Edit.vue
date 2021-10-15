@@ -1,6 +1,6 @@
 <template>
 <app-layout>
-    <template #header>User</template>
+    <template #header>{{ title }}</template>
 
     <sdb-error-notifications :errors="$page.props.errors"/>
 
@@ -20,6 +20,7 @@
 
                     <form-user-profile
                         v-model="profileForm"
+                        :can-set-role="!record.isSuperAdministrator"
                         :role-options="roleOptions"
                     ></form-user-profile>
 
@@ -98,14 +99,18 @@
             errors: Object,
             record: Object,
             roleOptions: {},
+            title: String,
         },
         setup(props, { emit }) {
             const user = props.record;
             const userProfileForm = {
                 name: user.name,
                 email: user.email,
-                role: user.roles[0] ?? null,
             };
+
+            if (!props.record.isSuperAdministrator) {
+                userProfileForm['role'] = (user.roles[0]) ? user.roles[0].id : null;
+            }
 
             return {
                 profileForm: useForm(userProfileForm),

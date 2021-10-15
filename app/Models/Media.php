@@ -8,10 +8,12 @@ use Astrotomic\Translatable\Translatable;
 use CloudinaryLabs\CloudinaryLaravel\Model\Media as CloudinaryMedia;
 use Cloudinary\Transformation\Resize;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 
 class Media extends CloudinaryMedia implements TranslatableContract
 {
+    use HasFactory;
     use Translatable;
 
     const THUMBNAIL_HEIGHT = 300;
@@ -40,6 +42,13 @@ class Media extends CloudinaryMedia implements TranslatableContract
         'png',
     ];
 
+    // Relationships:
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    // Scopes:
     public function scopeImage($query)
     {
         return $query->whereIn('extension', self::$imageExtensions);

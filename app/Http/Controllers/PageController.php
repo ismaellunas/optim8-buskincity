@@ -17,6 +17,11 @@ class PageController extends CrudController
     protected $model = Page::class;
     protected $baseRouteName = 'admin.pages';
 
+    public function __construct()
+    {
+        $this->authorizeResource(Page::class, 'page');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +29,15 @@ class PageController extends CrudController
      */
     public function index()
     {
+        $user = auth()->user();
+
         return Inertia::render('Page/Index', [
+            'can' => [
+                'add' => $user->can('page.add'),
+                'delete' => $user->can('page.delete'),
+                'edit' => $user->can('page.edit'),
+                'read' => $user->can('page.read'),
+            ],
             'records' => $this->getRecords(),
             'defaultLocale' => TranslationService::getDefaultLocale(),
         ]);
@@ -37,7 +50,18 @@ class PageController extends CrudController
      */
     public function create()
     {
+        $user = auth()->user();
+
         return Inertia::render('Page/Create', [
+            'can' => [
+                'media' => [
+                    'browse' => $user->can('media.browse'),
+                    'read' => $user->can('media.read'),
+                    'edit' => $user->can('media.edit'),
+                    'add' => $user->can('media.add'),
+                    'delete' => $user->can('media.delete'),
+                ]
+            ],
             'page' => new $this->model,
             'statusOptions' => $this->model::getStatusOptions(),
         ]);
@@ -147,7 +171,18 @@ class PageController extends CrudController
             }
         }
 
+        $user = auth()->user();
+
         return Inertia::render('Page/Edit', [
+            'can' => [
+                'media' => [
+                    'browse' => $user->can('media.browse'),
+                    'read' => $user->can('media.read'),
+                    'edit' => $user->can('media.edit'),
+                    'add' => $user->can('media.add'),
+                    'delete' => $user->can('media.delete'),
+                ]
+            ],
             'page' => $page,
             'entityId' => $page->id,
             'statusOptions' => $this->model::getStatusOptions(),
