@@ -99,6 +99,7 @@
                             class="is-borderless is-shadowless is-inverted"
                             icon="far fa-image"
                             type="button"
+                            :disabled="!can.media.browse"
                             @click="openModal()"
                         >
                             <span>Open Media</span>
@@ -146,6 +147,9 @@
                         v-model="form.content"
                         label="Content"
                         :disabled="isInputDisabled"
+                        :is-download-enabled="can.media.read"
+                        :is-media-enabled="can.media.browse"
+                        :is-upload-enabled="can.media.add"
                         :message="error('content')"
                     />
                 </div>
@@ -225,6 +229,8 @@
     <sdb-modal-image-browser
         v-if="isModalOpen"
         :data="media"
+        :is-download-enabled="can.media.read"
+        :is-upload-enabled="can.media.add"
         :query-params="imageListQueryParams"
         :search="search"
         @close="closeModal"
@@ -286,6 +292,7 @@
         ],
         emits: ['on-submit'],
         props: {
+            can: Object,
             categoryOptions: Array,
             coverImage: {type: Object, default:  {file_url: null}},
             errors: {},

@@ -13,7 +13,7 @@ class MediaUpdateImageRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->can('update', $this->route('medium'));
     }
 
     /**
@@ -23,12 +23,12 @@ class MediaUpdateImageRequest extends FormRequest
      */
     public function rules()
     {
-        $oneMB = 1024;
         return [
             'image' => [
                 'required',
                 'file',
-                'max:'.$oneMB * 50,
+                'max:'.config('constants.one_megabyte') * 50,
+                'mimes:'.implode(',', config('constants.extensions.image')),
             ],
         ];
     }

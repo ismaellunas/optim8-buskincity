@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class UpdateMediallyBecomeNullableIntoMediaTable extends Migration
@@ -26,9 +28,19 @@ class UpdateMediallyBecomeNullableIntoMediaTable extends Migration
      */
     public function down()
     {
-        Schema::table('media', function (Blueprint $table) {
-            $table->string('medially_type', 255)->nullable(false)->change();
-            $table->foreignId('medially_id')->nullable(false)->change();
-        });
+        DB::beginTransaction();
+        try {
+            Schema::table('media', function (Blueprint $table) {
+                $table->string('medially_type', 255)->nullable(false)->change();
+                $table->foreignId('medially_id')->nullable(false)->change();
+            });
+            DB::commit();
+        } catch (QueryException $e) {
+            if ($e->getCode() != 23502) {
+                throw $e;
+            } else {
+                DB::rollBack();
+            }
+        }
     }
 }

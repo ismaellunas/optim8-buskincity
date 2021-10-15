@@ -21,12 +21,35 @@ class PermissionSeeder extends Seeder
             'page.edit',
             'page.add',
             'page.delete',
+
             'post.*',
             'post.browse',
             'post.read',
             'post.edit',
             'post.add',
             'post.delete',
+
+            'category.*',
+            'category.browse',
+            'category.read',
+            'category.edit',
+            'category.add',
+            'category.delete',
+
+            'media.*',
+            'media.browse',
+            'media.read',
+            'media.edit',
+            'media.add',
+            'media.delete',
+
+            'user.*',
+            'user.browse',
+            'user.read',
+            'user.edit',
+            'user.add',
+            'user.delete',
+
             /*  BREAD:
             'browse',
             'read',

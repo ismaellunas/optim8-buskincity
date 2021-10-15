@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Services\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -67,12 +68,35 @@ class User extends Authenticatable implements MustVerifyEmail
         'profile_photo_url',
     ];
 
+    /* Relationship: */
+    public function pages()
+    {
+        return $this->hasMany(Media::class, 'author_id');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'author_id');
+    }
+
+    public function media()
+    {
+        return $this->hasMany(Media::class, 'author_id');
+    }
+
     public function scopeSearch($query, string $term)
     {
         return $query->where(function ($query) use ($term) {
             $query
                 ->where('name', 'ILIKE', '%'.$term.'%')
                 ->orWhere('email', 'ILIKE', '%'.$term.'%');
+        });
+    }
+
+    public function scopeInRoles($query, array $roleIds)
+    {
+        return $query->whereHas('roles', function ($query) use ($roleIds) {
+            $query->whereIn('id', $roleIds);
         });
     }
 
@@ -88,5 +112,23 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $this->getPhotoUrl();
+    }
+
+    public function getIsSuperAdministratorAttribute(): bool
+    {
+        return $this->hasRole(config('permission.super_admin_role'));
+    }
+
+    public function saveFromInputs(array $inputs)
+    {
+        $this->name = $inputs['name'];
+        $this->email = $inputs['email'];
+        $this->save();
+    }
+
+    public function savePassword(string $password)
+    {
+        $this->password = UserService::hashPassword($password);
+        $this->save();
     }
 }

@@ -15,62 +15,44 @@
 
             <div id="navbarBasicExample" class="navbar-menu">
                 <div class="navbar-start">
-                    <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                        Dashboard
-                    </jet-nav-link>
-                    <jet-nav-link :href="route('admin.pages.index')" :active="route().current('dashboard')">
-                        Pages
-                    </jet-nav-link>
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                            Blog
-                        </a>
-                        <div class="navbar-dropdown">
-                            <sdb-link :href="route('admin.posts.index')" class="navbar-item">
-                                Posts
-                            </sdb-link>
-                            <sdb-link :href="route('admin.categories.index')" class="navbar-item">
-                                Categories
-                            </sdb-link>
-                        </div>
-                    </div>
-                    <jet-nav-link
-                        :href="route('admin.media.index')"
-                        :active="route().current('admin.media.*')">
-                        Media
-                    </jet-nav-link>
-                    <jet-nav-link
-                        :href="route('admin.users.index')"
-                        :active="route().current('admin.users.*')">
-                        Users
-                    </jet-nav-link>
-                    <jet-nav-link
-                        class="navbar-item"
-                        :href="route('admin.roles.index')"
-                        :active="route().current('admin.roles.*')">
-                        Roles
-                    </jet-nav-link>
-                    <!--
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link">
-                            UAC
-                        </a>
-                        <div class="navbar-dropdown">
+                    <template
+                        v-for="(menu, index) in navMenus"
+                        :key="index"
+                    >
+                        <template v-if="menu.children && menu.isEnabled">
+                            <div class="navbar-item has-dropdown is-hoverable">
+                                <a
+                                    class="navbar-link"
+                                    :class="{'is-active': menu.isActive}"
+                                >
+                                    {{ menu.title }}
+                                </a>
+                                <div class="navbar-dropdown">
+                                    <template
+                                        v-for="childMenu in menu.children"
+                                    >
+                                        <sdb-link
+                                            v-if="childMenu.isEnabled"
+                                            class="navbar-item"
+                                            :href="childMenu.link"
+                                            :class="{'is-active': menu.isActive}"
+                                        >
+                                            {{ childMenu.title }}
+                                        </sdb-link>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                        <template v-else>
                             <jet-nav-link
-                                class="navbar-item"
-                                :href="route('admin.permissions.index')"
-                                :active="route().current('admin.permissions.*')">
-                                Permissions
+                                v-if="menu.isEnabled"
+                                :active="menu.isActive"
+                                :href="menu.link"
+                            >
+                                {{ menu.title }}
                             </jet-nav-link>
-                            <jet-nav-link
-                                class="navbar-item"
-                                :href="route('admin.user-roles.index')"
-                                :active="route().current('admin.user-roles.index')">
-                                UserRole
-                            </jet-nav-link>
-                        </div>
-                    </div>
-                    -->
+                        </template>
+                    </template>
                 </div>
 
                 <div class="navbar-end">
@@ -112,6 +94,8 @@
     import JetNavLink from '@/Jetstream/NavLink';
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink';
     import SdbLink from '@/Sdb/Link';
+    import { computed } from 'vue';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -121,6 +105,12 @@
             JetNavLink,
             JetResponsiveNavLink,
             SdbLink,
+        },
+        setup() {
+            const navMenus = computed(() => usePage().props.value.menus.nav);
+            return {
+                navMenus,
+            };
         },
         methods: {
             switchToTeam(team) {

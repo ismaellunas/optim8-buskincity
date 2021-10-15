@@ -14,6 +14,7 @@
     ></sdb-form-input>
 
     <sdb-form-select
+        v-if="canSetRole"
         v-model="form.role"
         label="Role"
         placeholder="- Select a Role -"
@@ -47,6 +48,7 @@
             MixinHasPageErrors,
         ],
         props: {
+            canSetRole: {type: Boolean, default: true},
             modelValue: {},
             roleOptions: Array,
         },

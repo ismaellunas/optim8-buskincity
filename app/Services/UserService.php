@@ -5,24 +5,70 @@ namespace App\Services;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
-    public function getRecords(
+    private function getBuilderRecords(
         string $term = null,
-        int $perPage = 15
-    ): LengthAwarePaginator {
+        ?array $scopes = null
+    ): Builder {
         return User::orderBy('id', 'DESC')
+            ->with([
+                'roles' => function ($query) {
+                    $query->select('id', 'name');
+                }
+            ])
             ->when($term, function ($query) use ($term) {
                 $query->search($term);
+            })
+            ->when($scopes, function ($query) use ($scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    if (!is_null($value)) {
+                        $query->$scopeName($value);
+                    }
+                }
             })
             ->select([
                 'id',
                 'name',
                 'email',
-            ])
+            ]);
+    }
+
+    public function getRecords(
+        string $term = null,
+        int $perPage = 15,
+        ?array $scopes = null
+    ): LengthAwarePaginator {
+        return $this
+            ->getBuilderRecords($term, $scopes)
             ->paginate($perPage);
+    }
+
+    public function getNoSuperAdministratorRecords(
+        string $term = null,
+        int $perPage = 15,
+        ?array $scopes = null
+    ): LengthAwarePaginator {
+        return $this
+            ->getBuilderRecords($term, $scopes)
+            ->whereDoesntHave('roles', function ($query) {
+                $query->where('name', config('permission.super_admin_role'));
+            })
+            ->paginate($perPage);
+    }
+
+    public function transformRecords(AbstractPaginator $records, User $actor)
+    {
+        $records->getCollection()->transform(function ($user) use ($actor) {
+            $user->can = [
+                'delete_user' => $actor->can('delete', $user),
+            ];
+            return $user;
+        });
     }
 
     public function getRoleOptions(): array
@@ -38,7 +84,7 @@ class UserService
             ->all();
     }
 
-    public function hashPassword($password): string
+    public static function hashPassword($password): string
     {
         return Hash::make($password);
     }

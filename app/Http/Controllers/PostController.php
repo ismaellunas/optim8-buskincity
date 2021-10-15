@@ -16,16 +16,35 @@ class PostController extends CrudController
     public function __construct(PostService $postService)
     {
         $this->postService = $postService;
+        $this->authorizeResource(Post::class, 'post');
     }
 
     public function index(Request $request)
     {
+        $user = auth()->user();
+
         return Inertia::render('Post/Index', [
-            'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
+            'can' => [
+                'add' => $user->can('post.add'),
+                'delete' => $user->can('post.delete'),
+                'edit' => $user->can('post.edit'),
+            ],
+            'categoryOptions' => $this->postService->getCategoryOptions(),
+            'pageQueryParams' => array_filter($request->only(
+                'term',
+                'view',
+                'status',
+                'languages',
+                'categories'
+            )),
             'pageNumber' => $request->page,
             'records' => $this->postService->getRecords(
                 $request->term,
-                array_filter([$request->status ?? 'published'])
+                array_filter([
+                    $request->status ?? 'published',
+                    'inLanguages' => $request->languages,
+                    'inCategories' => $request->categories,
+                ])
             ),
         ]);
     }
@@ -37,7 +56,18 @@ class PostController extends CrudController
      */
     public function create()
     {
+        $user = auth()->user();
+
         return Inertia::render('Post/Create', [
+            'can' => [
+                'media' => [
+                    'browse' => $user->can('media.browse'),
+                    'read' => $user->can('media.edit'),
+                    'edit' => $user->can('media.edit'),
+                    'add' => $user->can('media.add'),
+                    'delete' => $user->can('media.delete'),
+                ],
+            ],
             'categoryOptions' => $this->postService->getCategoryOptions(),
             'post' => new Post(),
             'statusOptions' => Post::getStatusOptions(),
@@ -94,7 +124,18 @@ class PostController extends CrudController
      */
     public function edit(Post $post)
     {
+        $user = auth()->user();
+
         return Inertia::render('Post/Edit', [
+            'can' => [
+                'media' => [
+                    'browse' => $user->can('media.browse'),
+                    'read' => $user->can('media.edit'),
+                    'edit' => $user->can('media.edit'),
+                    'add' => $user->can('media.add'),
+                    'delete' => $user->can('media.delete'),
+                ],
+            ],
             'categoryOptions' => $this->postService->getCategoryOptions(),
             'coverImage' => $post->coverImage,
             'post' => $post->load('categories'),

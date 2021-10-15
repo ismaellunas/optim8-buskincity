@@ -17,6 +17,7 @@ class CategoryController extends CrudController
     public function __construct(CategoryService $categoryService)
     {
         $this->categoryService = $categoryService;
+        $this->authorizeResource(Category::class, 'category');
     }
 
     /**
@@ -26,7 +27,14 @@ class CategoryController extends CrudController
      */
     public function index(Request $request)
     {
+        $user = auth()->user();
+
         return Inertia::render('Category/Index', [
+            'can' => [
+                'add' => $user->can('category.add'),
+                'delete' => $user->can('category.delete'),
+                'edit' => $user->can('category.edit'),
+            ],
             'pageQueryParams' => array_filter($request->only('term')),
             'pageNumber' => $request->page,
             'records' => $this

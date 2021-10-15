@@ -82,10 +82,24 @@ export function buildFormData(formData, data, parentKey) {
     }
 };
 
-export function serialize(params) {
-    return Object.keys(params).map((key) => {
-        return encodeURIComponent(key) + '=' + encodeURIComponent(params[key])
-    }).join('&');
+// @see https://stackoverflow.com/questions/1714786/query-string-encoding-of-a-javascript-object
+export function serialize(obj, prefix) {
+    var queryString = [];
+    var p;
+
+    for (p in obj) {
+        if (obj.hasOwnProperty(p)) {
+            var k = prefix ? prefix + "[" + p + "]" : p;
+            var v = obj[p];
+
+            queryString.push(
+                (v !== null && typeof v === "object")
+                ? serialize(v, k)
+                : encodeURIComponent(k) + "=" + encodeURIComponent(v)
+            );
+        }
+    }
+    return queryString.join("&");
 };
 
 export function convertToSlug(text) {

@@ -44,8 +44,12 @@ class PostService
                 $query->orWhere('slug', 'ILIKE', '%'.$term.'%');
             });
 
-        foreach ($scopeNames as $scopeName) {
-            $query->{$scopeName}();
+        foreach ($scopeNames as $scopeName => $value) {
+            if (is_int($scopeName)) {
+                $query->{$value}();
+            } else {
+                $query->{$scopeName}($value);
+            }
         }
 
         $records = $query->paginate($recordsPerPage);

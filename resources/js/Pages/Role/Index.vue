@@ -1,6 +1,6 @@
 <template>
 <app-layout>
-    <template v-slot:header>Roles</template>
+    <template v-slot:header>{{ title }}</template>
 
     <div class="box">
         <div class="columns">
@@ -118,10 +118,11 @@
             SdbTable,
         },
         props: {
+            baseRouteName: String,
             pageNumber: String,
             pageQueryParams: Object,
-            baseRouteName: String,
             records: {},
+            title: String,
         },
         setup(props) {
             const queryParams = merge(

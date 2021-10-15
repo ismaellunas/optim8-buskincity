@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\{
     CategoryController,
+    Frontend\PageController as FrontendPageController,
     Frontend\PostController as FrontendPostController,
     PermissionController,
     PostController,
@@ -32,21 +33,24 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('/pages', App\Http\Controllers\PageController::class)
         ->except(['show']);
-    Route::resource('/media', App\Http\Controllers\MediaController::class);
+    Route::resource('/media', App\Http\Controllers\MediaController::class)
+        ->except(['edit', 'show']);
     Route::resource('/categories', CategoryController::class);
     Route::post(
         '/media/update-image/{medium}',
         [App\Http\Controllers\MediaController::class, 'updateImage']
     )->name('media.update-image');
     Route::post(
-        '/media/save-as-media/{medium}',
-        [App\Http\Controllers\MediaController::class, 'saveAsMedia']
-    )->name('media.save-as-media');
+        '/media/save-as-image/{medium}',
+        [App\Http\Controllers\MediaController::class, 'saveAsImage']
+    )->name('media.save-as-image');
 
     Route::get('/media-list/image', [App\Http\Controllers\MediaController::class, 'listImages'])
         ->name('media.list.image');
-    Route::resource('/posts', PostController::class);
-    Route::resource('/users', UserController::class);
+    Route::resource('/posts', PostController::class)
+        ->except(['show']);
+    Route::resource('/users', UserController::class)
+        ->except(['show']);
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword'])
         ->name('users.password');
     Route::resource('/roles', RoleController::class);
@@ -105,6 +109,6 @@ Route::group([
         ->where('slug', '[\w\d\-\_]+')
         ->name('blog.show');
 
-    Route::get('/{page_translation}', [App\Http\Controllers\PageController::class, 'show'])
-        ->name('pages.show');
+    Route::get('/{page_translation}', [FrontendPageController::class, 'show'])
+        ->name('frontend.pages.show');
 });
