@@ -113,33 +113,46 @@
                                         </form>
                                         -->
 
-                                        <jet-validation-errors class="mb-4" />
-
                                         <form @submit.prevent="submit">
-                                            <div class="field">
-                                                <jet-label for="first_name" value="First Name" />
-                                                <jet-input id="first_name" type="text" v-model="form.first_name" required autofocus autocomplete="first_name" />
-                                            </div>
 
-                                            <div class="field">
-                                                <jet-label for="last_name" value="Last Name" />
-                                                <jet-input id="last_name" type="text" v-model="form.last_name" required autofocus autocomplete="last_name" />
-                                            </div>
+                                            <sdb-form-input 
+                                                label="First Name"
+                                                v-model="form.first_name"
+                                                required
+                                                autofocus
+                                                :message="error('first_name')"
+                                            />
 
-                                            <div class="field">
-                                                <jet-label for="email" value="Email" />
-                                                <jet-input id="email" type="email" v-model="form.email" required />
-                                            </div>
+                                            <sdb-form-input 
+                                                label="Last Name"
+                                                v-model="form.last_name"
+                                                required
+                                                autofocus
+                                                :message="error('last_name')"
+                                            />
 
-                                            <div class="field">
-                                                <jet-label for="password" value="Password" />
-                                                <jet-input id="password" type="password" v-model="form.password" required autocomplete="new-password" />
-                                            </div>
+                                            <sdb-form-input
+                                                v-model="form.email"
+                                                label="Email"
+                                                required
+                                                type="email"
+                                                :message="error('email')"
+                                            ></sdb-form-input>
 
-                                            <div class="field">
-                                                <jet-label for="password_confirmation" value="Confirm Password" />
-                                                <jet-input id="password_confirmation" type="password" v-model="form.password_confirmation" required autocomplete="new-password" />
-                                            </div>
+                                            <sdb-form-input
+                                                v-model="form.password"
+                                                autocomplete="new-password"
+                                                label="Password"
+                                                type="password"
+                                                :message="error('password')"
+                                            ></sdb-form-input>
+
+                                            <sdb-form-input
+                                                v-model="form.password_confirmation"
+                                                label="Password Confirmation"
+                                                type="password"
+                                                :message="error('password_confirmation')"
+                                            ></sdb-form-input>
 
                                             <div class="flex mt-4">
                                                 <div class="columns is-gapless">
@@ -169,24 +182,30 @@
 </template>
 
 <script>
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import JetButton from '@/Jetstream/Button'
     import JetInput from '@/Jetstream/Input'
     import JetCheckbox from "@/Jetstream/Checkbox";
-    import JetValidationErrors from '@/Jetstream/ValidationErrors'
     import JetLabel from '@/Jetstream/Label'
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbSocialMediaList from '@/Sdb/SocialMediaList'
+    import SdbFormInput from '@/Sdb/Form/Input';
 
     export default {
         components: {
             JetButton,
             JetInput,
             JetCheckbox,
-            JetValidationErrors,
             JetLabel,
             SdbButtonLink,
             SdbSocialMediaList,
+            SdbFormInput,
+            SdbErrorNotifications,
         },
+        mixins: [
+            MixinHasPageErrors,
+        ],
 
         data() {
             return {
