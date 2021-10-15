@@ -66,52 +66,6 @@
                                         Lorem ipsum dolor sit amet.
                                     </h2>
                                     <div class="has-text-left">
-                                        <!--
-                                        <form @submit.prevent="submit">
-                                            <div class="field">
-                                                <jet-label for="email" value="Email" />
-                                                <div class="control">
-                                                    <jet-input
-                                                        id="email"
-                                                        type="email"
-                                                        v-model="form.email"
-                                                        required
-                                                        autofocus
-                                                        placeholder="Enter your email"
-                                                        />
-                                                </div>
-                                            </div>
-                                            <div class="field">
-                                                <jet-label for="password" value="Password" />
-                                                <div class="control">
-                                                    <jet-input
-                                                        id="password"
-                                                        type="password"
-                                                        v-model="form.password"
-                                                        required
-                                                        autocomplete="current-password"
-                                                        placeholder="Enter your password"
-                                                        />
-                                                </div>
-                                            </div>
-                                            <div class="field columns">
-                                                <div class="column has-text-left">
-                                                    <label class="checkbox">
-                                                        <jet-checkbox name="remember" v-model:checked="form.remember" />
-                                                        <span>Remember me</span>
-                                                    </label>
-                                                </div>
-                                                <div class="column has-text-right">
-                                                    <inertia-link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                                                        Forgot your password?
-                                                    </inertia-link>
-                                                </div>
-                                            </div>
-                                            <jet-button class="button is-block is-info is-fullwidth">
-                                                Log In <i class="fa fa-sign-in" aria-hidden="true"></i>
-                                            </jet-button>
-                                        </form>
-                                        -->
 
                                         <form @submit.prevent="submit">
 
@@ -162,9 +116,9 @@
                                                         </span>
                                                     </div>
                                                     <div class="column is-one-third has-text-right">
-                                                        <jet-button class="button is-info" :disabled="form.processing">
+                                                        <sdb-button class="button is-info" :disabled="form.processing">
                                                             Create Account
-                                                        </jet-button>
+                                                        </sdb-button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -183,25 +137,19 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import JetButton from '@/Jetstream/Button'
-    import JetInput from '@/Jetstream/Input'
-    import JetCheckbox from "@/Jetstream/Checkbox";
-    import JetLabel from '@/Jetstream/Label'
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbSocialMediaList from '@/Sdb/SocialMediaList'
     import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbButton from '@/Sdb/Button';
 
     export default {
         components: {
-            JetButton,
-            JetInput,
-            JetCheckbox,
-            JetLabel,
             SdbButtonLink,
             SdbSocialMediaList,
             SdbFormInput,
             SdbErrorNotifications,
+            SdbButton
         },
         mixins: [
             MixinHasPageErrors,
