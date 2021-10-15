@@ -70,7 +70,7 @@ class PageController extends Controller
 
         } else {
 
-            return Inertia::render($this->baseComponentName.'/Show', [
+            return Inertia::render($this->baseComponentName.'/ShowFrontend', [
                 'currentLanguage' => TranslationService::currentLanguage(),
                 'images' => $this->getPageImages($pageTranslation, $locale),
                 'page' => $pageTranslation,
