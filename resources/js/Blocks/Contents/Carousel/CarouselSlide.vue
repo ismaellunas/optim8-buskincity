@@ -112,10 +112,13 @@
         },
 
         watch: {
-            'entityImage.mediaId': function(from) {
-                if (!isBlank(from)) {
-                    this.isFormOpen = false;
-                }
+            'entityImage.mediaId': {
+                handler: function(from) {
+                    if (!isBlank(from)) {
+                        this.isFormOpen = false;
+                    }
+                },
+                deep: true,
             },
         },
 
