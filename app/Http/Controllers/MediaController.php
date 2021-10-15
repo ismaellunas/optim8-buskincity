@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Entities\CloudinaryStorage;
 use App\Http\Requests\{
+    MediaSaveAsImageRequest,
     MediaStoreRequest,
     MediaUpdateImageRequest,
     MediaUpdateRequest
@@ -50,10 +51,11 @@ class MediaController extends Controller
             'baseRouteName' => $this->baseRouteName,
             'defaultLocale' => TranslationService::getDefaultLocale(),
             'pageNumber' => $request->page,
-            'pageQueryParams' => array_filter($request->all('term', 'view')),
+            'pageQueryParams' => array_filter($request->all('term', 'view', 'types')),
+            'acceptedTypes' => $this->mediaService->getDottedExtensions(),
             'records' => $this
                 ->mediaService
-                ->getRecords($request->term, [], $this->recordsPerPage),
+                ->getRecords($request->term, $request->types, $this->recordsPerPage),
         ]);
     }
 
@@ -185,10 +187,6 @@ class MediaController extends Controller
 
     public function updateImage(MediaUpdateImageRequest $request, Media $media)
     {
-        if ($request->user()->cannot('update', $media)) {
-            abort(403);
-        }
-
         $media = $this->mediaService->replace(
             $request->file('image'),
             $media,
@@ -200,12 +198,8 @@ class MediaController extends Controller
             : response()->json(['imagePath' => $media->file_url]);
     }
 
-    public function saveAsMedia(MediaUpdateImageRequest $request, Media $media)
+    public function saveAsImage(MediaSaveAsImageRequest $request, Media $media)
     {
-        if ($request->user()->cannot('update', $media)) {
-            abort(403);
-        }
-
         $replicatedMedia = $this->mediaService->duplicateImage(
             $request->file('image'),
             $media,
