@@ -197,6 +197,7 @@
                 }
                 this.images[locale].push(image);
 
+                this.setImageNull();
                 this.entityImages[this.indexModify].mediaId = image.id;
 
                 this.attachImageToMedia(image.id, this.pageMedia);
@@ -230,6 +231,10 @@
                         }
                     }
                 }
+            },
+
+            setImageNull() {
+                this.entityImages[this.indexModify].mediaId = null;
             },
         },
     }
