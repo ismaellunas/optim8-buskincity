@@ -7,10 +7,9 @@ use App\Models\Category;
 use App\Models\Media;
 use App\Services\PostService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Post extends Model implements PublishableInterface
+class Post extends BaseModel implements PublishableInterface
 {
     use HasFactory;
 
@@ -63,6 +62,21 @@ class Post extends Model implements PublishableInterface
     public function scopeDraft($query)
     {
         return $query->where('status', self::STATUS_DRAFT);
+    }
+
+    public function scopeInLanguages($query, array $locales)
+    {
+        return $query->whereIn('locale', $locales);
+    }
+
+    public function scopeInCategories($query, array $categoryIds)
+    {
+        return $query->whereHas(
+            'categories',
+            function ($query) use ($categoryIds) {
+                $query->whereIn(Category::getTableName().'.id', $categoryIds);
+            }
+        );
     }
 
     public function scopeSearch($query, string $term)

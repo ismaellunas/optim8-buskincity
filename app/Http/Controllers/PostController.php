@@ -29,11 +29,22 @@ class PostController extends CrudController
                 'delete' => $user->can('post.delete'),
                 'edit' => $user->can('post.edit'),
             ],
-            'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
+            'categoryOptions' => $this->postService->getCategoryOptions(),
+            'pageQueryParams' => array_filter($request->only(
+                'term',
+                'view',
+                'status',
+                'languages',
+                'categories'
+            )),
             'pageNumber' => $request->page,
             'records' => $this->postService->getRecords(
                 $request->term,
-                array_filter([$request->status ?? 'published'])
+                array_filter([
+                    $request->status ?? 'published',
+                    'inLanguages' => $request->languages,
+                    'inCategories' => $request->categories,
+                ])
             ),
         ]);
     }
