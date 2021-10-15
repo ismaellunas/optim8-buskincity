@@ -23,12 +23,12 @@ return [
             'docx',
         ],
         'spreadsheet' => [
-            'ppt',
-            'pptx',
-        ],
-        'presentation' => [
             'xls',
             'xlsx',
+        ],
+        'presentation' => [
+            'ppt',
+            'pptx',
         ],
     ],
 ];
