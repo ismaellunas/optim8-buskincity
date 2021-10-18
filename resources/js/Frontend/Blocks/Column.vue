@@ -2,7 +2,8 @@
     <div class="column">
         <component
             :is="element.componentName"
-            v-for="(element, index) in components"
+            v-for="(element) in components"
+            :key="element.id"
             :id="element.id"
             v-model="dataEntities[element.id]"
             :data-media="dataMedia"

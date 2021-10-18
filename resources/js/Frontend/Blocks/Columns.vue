@@ -1,6 +1,9 @@
 <template>
     <div class="columns">
-        <template v-for="(column, index) in block.columns">
+        <template
+            v-for="(column, index) in block.columns"
+            :key="column.id"
+        >
             <block-column
                 :id="column.id"
                 :components="block.columns[index].components"
