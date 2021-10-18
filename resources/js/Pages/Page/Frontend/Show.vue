@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import BlockColumns from '@/Blocks/Columns';
+    import BlockColumns from '@/Frontend/Blocks/Columns';
     import PageLayout from '@/Layouts/PageLayout';
     import { Head } from '@inertiajs/inertia-vue3';
 
