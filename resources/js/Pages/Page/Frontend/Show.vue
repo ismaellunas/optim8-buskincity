@@ -10,7 +10,6 @@
                 :id="block.id"
                 v-model="page.data.structures[index]"
                 v-model:data-entities="page.data.entities"
-                :is-edit-mode="false"
                 :selected-locale="currentLanguage"
                 />
         </template>
@@ -32,7 +31,6 @@
         props: {
             currentLanguage: String,
             errors: Object,
-            images: {},
             page: Object,
         },
     }
