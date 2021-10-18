@@ -16,7 +16,7 @@
                             ref="photo"
                             @change="updatePhotoPreview">
 
-                <jet-label for="photo" value="Photo" />
+                <sdb-label for="photo" value="Photo" />
 
                 <!-- Current Profile Photo -->
                 <div class="mt-2" v-show="! photoPreview">
@@ -30,27 +30,36 @@
                     </span>
                 </div>
 
-                <jet-secondary-button class="mt-2 mr-2" type="button" @click.prevent="selectNewPhoto">
+                <sdb-button 
+                    @click.prevent="selectNewPhoto"
+                    type="button" 
+                    class="is-warning mt-2 mr-2" 
+                >
                     Select A New Photo
-                </jet-secondary-button>
+                </sdb-button>
 
-                <jet-secondary-button type="button" class="mt-2" @click.prevent="deletePhoto" v-if="user.profile_photo_path">
+                <sdb-button 
+                    v-if="user.profile_photo_path"
+                    @click.prevent="deletePhoto" 
+                    type="button" 
+                    class="is-warning mt-2" 
+                >
                     Remove Photo
-                </jet-secondary-button>
+                </sdb-button>
 
                 <jet-input-error :message="form.errors.photo" class="mt-2" />
             </div>
 
             <sdb-form-input 
-                label="First Name"
                 v-model="form.first_name"
+                label="First Name"
                 required
                 :message="form.errors.first_name"
             ></sdb-form-input>
 
             <sdb-form-input 
-                label="Last Name"
                 v-model="form.last_name"
+                label="Last Name"
                 required
                 :message="form.errors.last_name"
             ></sdb-form-input>
@@ -66,40 +75,40 @@
         </template>
 
         <template #actions>
-            <jet-action-message :on="form.recentlySuccessful" class="mr-3">
+            <sdb-action-message :on="form.recentlySuccessful" class="mr-3">
                 Saved.
-            </jet-action-message>
+            </sdb-action-message>
 
-            <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <sdb-button 
+                :class="{ 'opacity-25': form.processing }" 
+                :disabled="form.processing"
+                class="is-primary"
+            >
                 Save
-            </jet-button>
+            </sdb-button>
         </template>
     </jet-form-section>
 </template>
 
 <script>
-    import JetButton from '@/Jetstream/Button'
-    import JetFormSection from '@/Jetstream/FormSection'
-    import JetInput from '@/Jetstream/Input'
-    import JetInputError from '@/Jetstream/InputError'
-    import JetLabel from '@/Jetstream/Label'
-    import JetActionMessage from '@/Jetstream/ActionMessage'
-    import JetSecondaryButton from '@/Jetstream/SecondaryButton'
+    import JetFormSection from '@/Jetstream/FormSection';
+    import JetInputError from '@/Jetstream/InputError';
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import SdbActionMessage from '@/Sdb/ActionMessage';
+    import SdbButton from '@/Sdb/Button';
+    import SdbLabel from '@/Sdb/Label';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
 
     export default {
         components: {
-            JetActionMessage,
-            JetButton,
             JetFormSection,
-            JetInput,
             JetInputError,
-            JetLabel,
-            JetSecondaryButton,
             SdbFormInput,
             SdbErrorNotifications,
+            SdbActionMessage,
+            SdbButton,
+            SdbLabel,
         },
         mixins: [
             MixinHasPageErrors,
