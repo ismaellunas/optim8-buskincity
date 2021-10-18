@@ -6,7 +6,6 @@
             :key="element.id"
             :id="element.id"
             v-model="dataEntities[element.id]"
-            :data-media="dataMedia"
             :selected-locale="selectedLocale"
         />
     </div>
@@ -25,7 +24,6 @@
             id: {},
             components: {type: Array, default: []},
             dataEntities: {},
-            dataMedia: {},
             selectedLocale: String,
         },
         setup(props, { emit }) {
@@ -33,11 +31,5 @@
                 entityId: usePage().props.value.entityId ?? null,
             };
         },
-        computed: {
-            //
-        },
-        methods: {
-            //
-        }
     }
 </script>

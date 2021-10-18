@@ -30,28 +30,15 @@
         },
         props: {
             dataEntities: {},
-            dataMedia: {},
             id: {},
             modelValue: {},
             selectedLocale: String,
-        },
-        data() {
-            return {
-                //
-            };
         },
         setup(props, { emit }) {
             return {
                 block: useModelWrapper(props, emit),
                 entities: useModelWrapper(props, emit, 'dataEntities'),
-                media: useModelWrapper(props, emit, 'dataMedia'),
             };
-        },
-        methods: {
-            //
-        },
-        computed: {
-            //
         },
     };
 </script>

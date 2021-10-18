@@ -47,15 +47,12 @@
             id: {},
             isEditMode: {type: Boolean, default: false},
             modelValue: {},
-            dataMedia: {},
             selectedLocale: String,
         },
         setup(props, { emit }) {
             return {
-                //figure: props.modelValue.content.cardImage.figure,
                 config: props.modelValue?.config,
                 entity: useModelWrapper(props, emit),
-                pageMedia: useModelWrapper(props, emit, 'dataMedia'),
             };
         },
         data() {
@@ -63,9 +60,6 @@
                 entityImage: this.entity.content.cardImage.figure.image,
                 images: usePage().props.value.images ?? {},
             };
-        },
-        methods: {
-            //
         },
         computed: {
             cardImageClass() {
