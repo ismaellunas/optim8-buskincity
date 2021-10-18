@@ -25,7 +25,7 @@
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils';
     import { last } from 'lodash';
 

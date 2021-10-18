@@ -42,13 +42,13 @@
 </template>
 
 <script>
-    import Card from '@/Blocks/Contents/Card';
-    import CardText from '@/Blocks/Contents/CardText';
+    import Card from '@/Blocks/Backend/Contents/Card';
+    import CardText from '@/Blocks/Backend/Contents/CardText';
     import Draggable from 'vuedraggable';
-    import Heading from '@/Blocks/Contents/Heading';
-    import Image from '@/Blocks/Contents/Image';
-    import Text from '@/Blocks/Contents/Text';
-    import { useModelWrapper, isBlank } from '@/Libs/utils';
+    import Heading from '@/Blocks/Backend/Contents/Heading';
+    import Image from '@/Blocks/Backend/Contents/Image';
+    import Text from '@/Blocks/Backend/Contents/Text';
+    import { isBlank } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3'
 
     export default {

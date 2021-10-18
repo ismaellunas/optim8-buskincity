@@ -1,7 +1,6 @@
 <template>
     <div :class="wrapperClass">
         <sdb-toolbar-content
-            v-if="isEditMode"
             @delete-content="deleteContent"
         />
 
@@ -17,7 +16,7 @@
                 />
 
                 <sdb-button
-                    v-if="isEditMode && hasImage"
+                    v-if="hasImage"
                     type="button"
                     class="is-overlay is-small"
                     @click="toggleEdit"
@@ -41,20 +40,12 @@
                     </div>
                 </div>
             </div>
-            <div
-                v-if="isCardContentDisplayed"
-                class="card-content"
-            >
+            <div class="card-content">
                 <div
                     class="content"
                     :class="cardContentClass"
                 >
-                    <template v-if="isEditMode">
-                        <sdb-editor v-model="entity.content.cardContent.content.html"/>
-                    </template>
-                    <template v-else>
-                        <div v-html="entity.content.cardContent.content.html"></div>
-                    </template>
+                    <sdb-editor v-model="entity.content.cardContent.content.html"/>
                 </div>
             </div>
         </div>
@@ -78,16 +69,15 @@
 <script>
     import MixinContainImageContent from '@/Mixins/ContainImageContent';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
-    import MixinEditModeComponent from '@/Mixins/EditModeComponent';
     import MixinHasModal from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
     import SdbEditor from '@/Sdb/EditorTinymce';
     import SdbImage from '@/Sdb/Image';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import { concat, isEmpty } from 'lodash';
+    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
+    import { concat } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
-    import { emitModelValue, isBlank, useModelWrapper } from '@/Libs/utils';
+    import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -101,20 +91,17 @@
         mixins: [
             MixinContainImageContent,
             MixinDeletableContent,
-            MixinEditModeComponent,
             MixinHasModal,
         ],
         props: {
             can: Object,
             id: {},
-            isEditMode: {type: Boolean, default: false},
             modelValue: {},
             dataMedia: {},
             selectedLocale: String,
         },
         setup(props, { emit }) {
             return {
-                //figure: props.modelValue.content.cardImage.figure,
                 config: props.modelValue?.config,
                 entity: useModelWrapper(props, emit),
                 pageMedia: useModelWrapper(props, emit, 'dataMedia'),
@@ -180,13 +167,7 @@
                     createPaddingClasses(this.config.wrapper?.padding),
                     createMarginClasses(this.config.wrapper?.margin)
                 ).filter(Boolean);
-            },
-            isCardContentDisplayed() {
-                if (this.isEditMode) {
-                    return true;
-                }
-                return !isEmpty(this.entity.content.cardContent.content.html);
-            },
-        }
+            }
+        },
     }
 </script>

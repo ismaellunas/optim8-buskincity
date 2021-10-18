@@ -67,7 +67,7 @@
     import SdbButton from '@/Sdb/Button';
     import SdbImage from '@/Sdb/Image';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3';
 

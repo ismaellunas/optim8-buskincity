@@ -54,7 +54,7 @@
 </template>
 
 <script>
-    import BlockColumn from '@/Blocks/Column';
+    import BlockColumn from '@/Blocks/Backend/Column';
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbButton from '@/Sdb/Button';
     import SdbSelect from '@/Sdb/Select';
