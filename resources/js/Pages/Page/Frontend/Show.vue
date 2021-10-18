@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import BlockColumns from '@/Frontend/Blocks/Columns';
+    import BlockColumns from '@/Blocks/Frontend/Columns';
     import PageLayout from '@/Layouts/PageLayout';
     import { Head } from '@inertiajs/inertia-vue3';
 
