@@ -46,7 +46,7 @@
         props: {
             id: {},
             isEditMode: {type: Boolean, default: false},
-            modelValue: {},
+            modelValue: {type: Object, required: true},
             selectedLocale: String,
         },
         setup(props, { emit }) {

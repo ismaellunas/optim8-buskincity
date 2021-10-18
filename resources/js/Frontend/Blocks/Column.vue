@@ -21,9 +21,9 @@
             Card,
         },
         props: {
-            id: {},
             components: {type: Array, default: []},
-            dataEntities: {},
+            dataEntities: {type: Object, default: {}},
+            id: String,
             selectedLocale: String,
         },
         setup(props, { emit }) {

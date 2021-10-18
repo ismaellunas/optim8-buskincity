@@ -29,9 +29,9 @@
             SdbSelect,
         },
         props: {
-            dataEntities: {},
-            id: {},
-            modelValue: {},
+            dataEntities: {type: Object, default: {}},
+            id: String,
+            modelValue: {type: Object, required: true},
             selectedLocale: String,
         },
         setup(props, { emit }) {
