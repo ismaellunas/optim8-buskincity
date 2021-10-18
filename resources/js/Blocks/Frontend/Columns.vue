@@ -8,7 +8,6 @@
                 :id="column.id"
                 :components="block.columns[index].components"
                 :data-entities="entities"
-                :data-media="media"
                 :selected-locale="selectedLocale"
             />
         </template>
