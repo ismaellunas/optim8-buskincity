@@ -12,7 +12,7 @@
 </template>
 
 <script>
-    import Card from '@/Frontend/Blocks/Contents/Card';
+    import Card from '@/Blocks/Frontend/Contents/Card';
     import { usePage } from '@inertiajs/inertia-vue3'
 
     export default {

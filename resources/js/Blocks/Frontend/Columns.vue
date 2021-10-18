@@ -16,7 +16,7 @@
 </template>
 
 <script>
-    import BlockColumn from '@/Frontend/Blocks/Column';
+    import BlockColumn from '@/Blocks/Frontend/Column';
     import SdbButton from '@/Sdb/Button';
     import SdbSelect from '@/Sdb/Select';
     import { useModelWrapper } from '@/Libs/utils';
