@@ -1,24 +1,15 @@
 <template>
     <div>
-        <sdb-toolbar-content v-if="isEditMode" @delete-content="deleteContent"/>
+        <sdb-toolbar-content @delete-content="deleteContent"/>
 
-        <template v-if="isEditMode">
-            <component
-                :is="headingTag"
-                :class="headingClass"
-                contenteditable
-                @blur="onEdit"
-                v-text="entity.content.heading.html"
-            >
-            </component>
-        </template>
-        <template v-else>
-            <component
-                :is="headingTag"
-                :class="headingClass"
-                v-text="entity.content.heading.html"
-            />
-        </template>
+        <component
+            :is="headingTag"
+            :class="headingClass"
+            contenteditable
+            @blur="onEdit"
+            v-text="entity.content.heading.html"
+        >
+        </component>
     </div>
 </template>
 
@@ -30,33 +21,40 @@
     import { last } from 'lodash';
 
     export default {
+        name: 'Heading',
+
         mixins: [
             EditModeComponentMixin,
             DeletableContentMixin
         ],
+
         components: {
             SdbToolbarContent,
         },
+
         props: {
-            id: {},
-            isEditMode: {type: Boolean, default: false},
+            id: String,
             modelValue: {type: Object},
         },
+
         setup(props, { emit }) {
             return {
                 entity: useModelWrapper(props, emit),
                 config: props.modelValue.config,
             };
         },
+
         methods: {
             onEdit(evt){
                 this.entity.content.heading.html = evt.target.innerText;
             },
         },
+
         computed: {
             headingTag() {
                 return this.config.heading?.tag ?? 'h1';
             },
+
             headingClass() {
                 let classes = [];
                 classes.push(this.config.heading?.type ?? 'title');
