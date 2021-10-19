@@ -38,7 +38,10 @@
                 </p>
             </div>
         </div>
-        <template v-for="(column, index) in block.columns">
+        <template
+            v-for="(column, index) in block.columns"
+            :key="column.id"
+        >
             <block-column
                 :id="column.id"
                 :can="can"

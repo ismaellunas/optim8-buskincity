@@ -11,7 +11,7 @@
             :list="components"
             @change="log"
         >
-            <template #item="{ element, index }">
+            <template #item="{ element }">
                 <component
                     :is="element.componentName"
                     :id="element.id"
@@ -30,7 +30,8 @@
         <template v-else>
             <component
                 :is="element.componentName"
-                v-for="(element, index) in components"
+                v-for="element in components"
+                :key="element.id"
                 :id="element.id"
                 v-model="dataEntities[element.id]"
                 :data-media="dataMedia"
