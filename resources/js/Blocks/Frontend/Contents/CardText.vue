@@ -14,6 +14,8 @@
     import { useModelWrapper } from '@/Libs/utils'
 
     export default {
+        name: 'CardText',
+
         props: {
             id: String,
             modelValue: {type: Object, required: true},

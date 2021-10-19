@@ -81,6 +81,7 @@
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'Card',
         components: {
             SdbButton,
             SdbEditor,
