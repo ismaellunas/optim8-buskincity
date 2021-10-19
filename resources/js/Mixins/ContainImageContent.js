@@ -1,8 +1,12 @@
-import { isArray, remove } from 'lodash';
+import MixinGetImageContent from '@/Mixins/GetImageContent';
+import { remove } from 'lodash';
 import { isBlank } from '@/Libs/utils';
 import { oops as oopsAlert } from '@/Libs/alert';
 
 export default {
+    mixins: [
+        MixinGetImageContent,
+    ],
     setup() {
         return {
             pageMedia: [],
@@ -10,12 +14,8 @@ export default {
     },
     data() {
         return {
-            entityImage: {
-                mediaId: null,
-            },
             imageListQueryParams: {},
             imageListRouteName: 'admin.media.list.image',
-            images: null,
         }
     },
     methods: {
@@ -87,59 +87,9 @@ export default {
         onImageUpdated() {},
         onImageListLoadedSuccess(data) {},
         onImageListLoadedFail(error) {},
-        getImageFromPageImages(pageImages, locale, mediaId) {
-            const localeImages = (
-                isArray(pageImages)
-                ? pageImages
-                : pageImages[locale]
-            );
-
-            return localeImages.find(image => {
-                return image.id === mediaId;
-            });
-        },
         search(term) {
             this.setTerm(term);
             this.getImagesList(route(this.imageListRouteName));
         },
     },
-    computed: {
-        hasImage() {
-            return (!isBlank(this.entityImage.mediaId));
-        },
-        imageSrc() {
-            const mediaId = this.entityImage.mediaId;
-            if (mediaId) {
-                const image = this.getImageFromPageImages(
-                    this.images,
-                    this.selectedLocale,
-                    mediaId
-                );
-
-                if (image) {
-                    return image.file_url;
-                }
-            }
-            return "";
-        },
-        altText() {
-            const mediaId = this.entityImage.mediaId;
-            if (mediaId) {
-                const image = this.getImageFromPageImages(
-                    this.images,
-                    this.selectedLocale,
-                    mediaId
-                );
-
-                if (image?.translations) {
-                    const translation = (
-                        image.translations.find(trans => trans.locale === this.selectedLocale)
-                        ?? image.translations[0]
-                    );
-                    return translation?.alt;
-                }
-            }
-            return "";
-        },
-    }
 };
