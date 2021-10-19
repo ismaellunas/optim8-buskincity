@@ -42,7 +42,7 @@
             <block-column
                 :id="column.id"
                 :can="can"
-                :isEditMode="isEditMode"
+                :is-edit-mode="isEditMode"
                 :components="block.columns[index].components"
                 :data-entities="entities"
                 :data-media="media"
