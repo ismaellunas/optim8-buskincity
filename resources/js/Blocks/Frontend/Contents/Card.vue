@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import MixinContainImageContent from '@/Mixins/ContainImageContent';
+    import MixinGetImageContent from '@/Mixins/GetImageContent';
     import SdbButton from '@/Sdb/Button';
     import SdbImage from '@/Sdb/Image';
     import { concat, isEmpty } from 'lodash';
@@ -41,10 +41,10 @@
             SdbImage,
         },
         mixins: [
-            MixinContainImageContent,
+            MixinGetImageContent,
         ],
         props: {
-            id: {},
+            id: String,
             isEditMode: {type: Boolean, default: false},
             modelValue: {type: Object, required: true},
             selectedLocale: String,
