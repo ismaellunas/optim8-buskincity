@@ -16,14 +16,12 @@
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbEditor from '@/Sdb/EditorTinymce';
     import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils'
 
     export default {
         mixins: [
-            EditModeComponentMixin,
             DeletableContentMixin
         ],
         components: {
