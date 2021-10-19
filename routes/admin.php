@@ -52,7 +52,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('/user-roles', UserRoleController::class);
 
     Route::get('dashboard', function () {
-        return Inertia::render('Auth/Admin/Dashboard');
+        return Inertia::render('AdminDashboard');
     });
 });
 
