@@ -46,7 +46,6 @@
         ],
         props: {
             id: String,
-            isEditMode: {type: Boolean, default: false},
             modelValue: {type: Object, required: true},
             selectedLocale: String,
         },
