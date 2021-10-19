@@ -1,7 +1,6 @@
 <template>
     <div>
         <sdb-toolbar-content
-            v-if="isEditMode"
             @delete-content="deleteContent"
         />
 
@@ -14,7 +13,6 @@
             :square="this.config?.image?.fixedSquare"
         >
             <sdb-button
-                v-if="isEditMode"
                 class="is-small is-overlay"
                 style="z-index: 1"
                 type="button"
@@ -62,7 +60,6 @@
 <script>
     import MixinContainImageContent from '@/Mixins/ContainImageContent';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
-    import MixinEditModeComponent from '@/Mixins/EditModeComponent';
     import MixinHasModal from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
     import SdbImage from '@/Sdb/Image';
@@ -81,15 +78,14 @@
         mixins: [
             MixinContainImageContent,
             MixinDeletableContent,
-            MixinEditModeComponent,
             MixinHasModal,
         ],
         props: {
             can: Object,
-            id: {},
+            id: String,
             entityId: {},
-            modelValue: {},
-            dataMedia: {},
+            modelValue: Object,
+            dataMedia: {type: Array, default: []},
             selectedLocale: String,
         },
         data() {
@@ -137,13 +133,10 @@
         computed: {
             /* @overide */
             canEdit() {
-                return this.isEditMode && this.hasImage;
+                return this.hasImage;
             },
             isFormDisplayed() {
-                return this.isEditMode && (
-                    !this.hasImage
-                    || (this.isEditMode && this.isFormOpen)
-                );
+                return !this.hasImage || this.isFormOpen;
             },
         }
     }
