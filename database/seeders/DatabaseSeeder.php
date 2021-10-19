@@ -25,10 +25,17 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
         ]);
 
+        // Wildcard permissions
         $wildcardPermissions = Permission::where('name', 'LIKE', '%.*')->get();
 
         $administratorRole = Role::whereName('Administrator')->first();
         $administratorRole->syncPermissions($wildcardPermissions);
+
+        // System Permissions
+        $systemPermissions = Permission::where('name', 'LIKE', 'system.%')->get();
+        foreach ($systemPermissions as $permission) {
+            $administratorRole->givePermissionTo($permission);
+        }
 
         $superAdminUser = User::factory()->create([
             'name' => 'Super Administrator',
