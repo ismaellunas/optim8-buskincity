@@ -73,3 +73,5 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
         ]))
         ->name('login.attempt');
 });
+
+Route::redirect('/', '/admin/login');
