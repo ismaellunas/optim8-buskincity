@@ -53,7 +53,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('dashboard', function () {
         return Inertia::render('AdminDashboard');
-    });
+    })->middleware(['can:system.dashboard']);
 });
 
 Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->group(function () {
