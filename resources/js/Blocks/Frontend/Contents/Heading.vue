@@ -9,7 +9,6 @@
 </template>
 
 <script>
-    import { useModelWrapper } from '@/Libs/utils';
     import { last } from 'lodash';
 
     export default {
@@ -17,13 +16,12 @@
 
         props: {
             id: String,
-            modelValue: {type: Object},
+            entity: {type: Object, default: {}},
         },
 
-        setup(props, { emit }) {
+        setup(props) {
             return {
-                entity: useModelWrapper(props, emit),
-                config: props.modelValue.config,
+                config: props.entity?.config,
             };
         },
 
