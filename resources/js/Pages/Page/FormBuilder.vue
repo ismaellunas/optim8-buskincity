@@ -81,6 +81,7 @@
                         :can="can"
                         :isEditMode="isEditMode"
                         :selected-locale="selectedLocale"
+                        :data-images="dataImages"
                         @delete-block="deleteBlock"
                         @setting-content="settingContent"
                         />
@@ -111,6 +112,7 @@
             modelValue: {type: Object},
             contentConfigId: {},
             selectedLocale: String,
+            dataImages: {type: Object, default: {}},
         },
         setup(props, { emit }) {
             return {

@@ -1,11 +1,11 @@
-import MixinGetImageContent from '@/Mixins/GetImageContent';
-import { remove } from 'lodash';
+import MixinHasImageContent from '@/Mixins/HasImageContent';
+import { remove, forEach } from 'lodash';
 import { isBlank } from '@/Libs/utils';
 import { oops as oopsAlert } from '@/Libs/alert';
 
 export default {
     mixins: [
-        MixinGetImageContent,
+        MixinHasImageContent,
     ],
     setup() {
         return {
@@ -46,6 +46,7 @@ export default {
             }
         },
         selectImage(image) {
+            let hasImage = false;
             const locale = this.selectedLocale;
             if (!isBlank(this.entityImage.mediaId)) {
                 this.detachImageFromMedia(this.entityImage.mediaId, this.pageMedia);
@@ -54,7 +55,17 @@ export default {
             if (!this.images[ locale ]) {
                 this.images[ locale ] = [];
             }
-            this.images[locale].push(image);
+
+            forEach(this.images[ locale ], function(value) {
+                if (value.id === image.id) {
+                    value = image;
+                    hasImage = true;
+                }
+            });
+
+            if (!hasImage) {
+                this.images[locale].push(image);
+            }
 
             this.entityImage.mediaId = image.id;
 

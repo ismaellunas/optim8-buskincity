@@ -4,8 +4,8 @@
             :is="element.componentName"
             v-for="(element) in components"
             :key="element.id"
+            :entity="dataEntities[element.id]"
             :id="element.id"
-            v-model="dataEntities[element.id]"
             :selected-locale="selectedLocale"
         />
     </div>
