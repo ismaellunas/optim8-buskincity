@@ -94,7 +94,7 @@
         ],
         props: {
             can: Object,
-            dataImages: {},
+            dataImages: {type: Object, default: {}},
             dataMedia: {},
             id: {},
             modelValue: {},

@@ -112,7 +112,7 @@
             modelValue: {type: Object},
             contentConfigId: {},
             selectedLocale: String,
-            dataImages: {},
+            dataImages: {type: Object, default: {}},
         },
         setup(props, { emit }) {
             return {

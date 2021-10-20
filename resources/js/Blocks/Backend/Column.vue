@@ -69,7 +69,7 @@
             isDebugMode: {default: false},
             components: {type: Array, default: []},
             dataEntities: {},
-            dataImages: {},
+            dataImages: {type: Object, default: {}},
             dataMedia: {},
             selectedLocale: String,
         },

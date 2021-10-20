@@ -75,7 +75,7 @@
         props: {
             can: Object,
             dataEntities: {},
-            dataImages: {},
+            dataImages: {type: Object, default: {}},
             dataMedia: {},
             id: {},
             isEditMode: {default: false},
