@@ -78,7 +78,6 @@
     import { concat } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
-    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -95,9 +94,10 @@
         ],
         props: {
             can: Object,
+            dataImages: {},
+            dataMedia: {},
             id: {},
             modelValue: {},
-            dataMedia: {},
             selectedLocale: String,
         },
         setup(props, { emit }) {
@@ -105,12 +105,13 @@
                 config: props.modelValue?.config,
                 entity: useModelWrapper(props, emit),
                 pageMedia: useModelWrapper(props, emit, 'dataMedia'),
+                pageImages: useModelWrapper(props, emit, 'dataImages'),
             };
         },
         data() {
             return {
                 entityImage: this.entity.content.cardImage.figure.image,
-                images: usePage().props.value.images ?? {},
+                images: this.pageImages,
                 isFormOpen: false,
                 modalImages: [],
             };
