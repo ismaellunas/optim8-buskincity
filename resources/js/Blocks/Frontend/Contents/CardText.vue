@@ -11,18 +11,15 @@
 </template>
 
 <script>
-    import { useModelWrapper } from '@/Libs/utils'
-
     export default {
         props: {
             id: String,
-            modelValue: {type: Object, required: true},
+            entity: {type: Object, default: {}},
         },
 
-        setup(props, { emit }) {
+        setup(props) {
             return {
-                config: props.modelValue.config,
-                entity: useModelWrapper(props, emit),
+                config: props.entity?.config,
             };
         },
 
