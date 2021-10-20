@@ -13,9 +13,8 @@
 </template>
 
 <script>
-    import MixinGetImageContent from '@/Mixins/GetImageContent';
+    import MixinHasImageContent from '@/Mixins/HasImageContent';
     import SdbImage from '@/Sdb/Image';
-    import { useModelWrapper } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -24,17 +23,16 @@
             SdbImage,
         },
         mixins: [
-            MixinGetImageContent,
+            MixinHasImageContent,
         ],
         props: {
             id: String,
-            modelValue: Object,
+            entity: {type: Object, default: {}},
             selectedLocale: String,
         },
-        setup(props, { emit }) {
+        setup(props) {
             return {
-                config: props.modelValue?.config,
-                entity: useModelWrapper(props, emit),
+                config: props.entity?.config,
             };
         },
         data() {

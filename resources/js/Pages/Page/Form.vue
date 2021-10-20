@@ -35,6 +35,7 @@
                         v-model="form.data"
                         v-model:content-config-id="contentConfigId"
                         :can="can"
+                        :data-images="images"
                         :is-edit-mode="isEditMode"
                         :selected-locale="selectedLocale"
                     />
@@ -69,6 +70,7 @@
     import SdbProvideInjectTabs from '@/Sdb/ProvideInjectTab/Tabs';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { ref } from "vue";
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -110,6 +112,7 @@
         data() {
             return {
                 disableInput: false,
+                images: usePage().props.value.images ?? {},
             };
         },
     }

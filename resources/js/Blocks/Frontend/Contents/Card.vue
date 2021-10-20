@@ -27,12 +27,11 @@
 </template>
 
 <script>
-    import MixinGetImageContent from '@/Mixins/GetImageContent';
+    import MixinHasImageContent from '@/Mixins/HasImageContent';
     import SdbButton from '@/Sdb/Button';
     import SdbImage from '@/Sdb/Image';
     import { concat, isEmpty } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
-    import { useModelWrapper } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -42,17 +41,16 @@
             SdbImage,
         },
         mixins: [
-            MixinGetImageContent,
+            MixinHasImageContent,
         ],
         props: {
             id: String,
-            modelValue: {type: Object, required: true},
+            entity: {type: Object, default: {}},
             selectedLocale: String,
         },
-        setup(props, { emit }) {
+        setup(props) {
             return {
-                config: props.modelValue?.config,
-                entity: useModelWrapper(props, emit),
+                config: props.entity?.config,
             };
         },
         data() {
