@@ -45,10 +45,11 @@
             <block-column
                 :id="column.id"
                 :can="can"
-                :is-edit-mode="isEditMode"
                 :components="block.columns[index].components"
                 :data-entities="entities"
+                :data-images="dataImages"
                 :data-media="media"
+                :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
                 @setting-content="$emit('setting-content', $event)"
             />
@@ -74,6 +75,7 @@
         props: {
             can: Object,
             dataEntities: {},
+            dataImages: {type: Object, default: {}},
             dataMedia: {},
             id: {},
             isEditMode: {default: false},
