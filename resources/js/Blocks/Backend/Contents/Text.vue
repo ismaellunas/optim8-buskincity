@@ -1,11 +1,9 @@
 <template>
     <div :class="wrapperClass">
         <sdb-toolbar-content
-            v-if="isEditMode"
             @delete-content="deleteContent"
         />
         <div
-            v-if="isEditMode"
             class="content"
             :class="contentClass"
         >
@@ -14,19 +12,11 @@
                 :class="editorClass"
             />
         </div>
-        <div
-            v-else
-            class="content"
-            :class="contentClass"
-            v-html="entity.content.html"
-        >
-        </div>
     </div>
 </template>
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbTinymce from '@/Sdb/EditorTinymce';
     import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { concat } from 'lodash';
@@ -34,17 +24,17 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
+        name: 'Text',
         mixins: [
             DeletableContentMixin,
-            EditModeComponentMixin,
         ],
         components: {
             SdbTinymce,
             SdbToolbarContent,
         },
         props: {
-            id: {},
-            modelValue: {},
+            id: String,
+            modelValue: Object,
         },
         setup(props, { emit }) {
             return {
