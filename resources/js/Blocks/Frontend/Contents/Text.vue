@@ -12,18 +12,16 @@
 <script>
     import { concat } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
-    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'Text',
         props: {
             id: String,
-            modelValue: Object,
+            entity: {type: Object, default: {}},
         },
-        setup(props, { emit }) {
+        setup(props) {
             return {
-                config: props.modelValue.config,
-                entity: useModelWrapper(props, emit),
+                config: props.entity?.config,
             };
         },
         computed: {
