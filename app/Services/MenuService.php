@@ -73,57 +73,63 @@ class MenuService
                 'link' => route('dashboard'),
                 'isActive' => $request->routeIs('dashboard'),
                 'isEnabled' => true,
-            ],
-            [
-                'title' => 'Pages',
-                'link' => route('admin.pages.index'),
-                'isActive' => $request->routeIs('admin.pages.*'),
-                'isEnabled' => $user->can('viewAny', Page::class),
-            ],
-            [
-                'title' => 'Blog',
-                'isActive' => (
-                    $request->routeIs('admin.posts.*')
-                    || $request->routeIs('admin.categories.*')
-                ),
-                'isEnabled' => (
-                    $user->can('viewAny', Post::class)
-                    || $user->can('viewAny', Category::class)
-                ),
-                'children' => [
-                    [
-                        'title' => 'Posts',
-                        'link' => route('admin.posts.index'),
-                        'isActive' => $request->routeIs('admin.posts.*'),
-                        'isEnabled' => $user->can('viewAny', Post::class),
-                    ],
-                    [
-                        'title' => 'Categories',
-                        'link' => route('admin.categories.index'),
-                        'isActive' => $request->routeIs('admin.categories.*'),
-                        'isEnabled' => $user->can('viewAny', Category::class),
+            ]
+        ];
+
+        if ($user->can('system.dashboard') && $request->routeIs('admin.*')) {
+
+            $menus = array_merge( $menus, [
+                [
+                    'title' => 'Pages',
+                    'link' => route('admin.pages.index'),
+                    'isActive' => $request->routeIs('admin.pages.*'),
+                    'isEnabled' => $user->can('viewAny', Page::class),
+                ],
+                [
+                    'title' => 'Blog',
+                    'isActive' => (
+                        $request->routeIs('admin.posts.*')
+                        || $request->routeIs('admin.categories.*')
+                    ),
+                    'isEnabled' => (
+                        $user->can('viewAny', Post::class)
+                        || $user->can('viewAny', Category::class)
+                    ),
+                    'children' => [
+                        [
+                            'title' => 'Posts',
+                            'link' => route('admin.posts.index'),
+                            'isActive' => $request->routeIs('admin.posts.*'),
+                            'isEnabled' => $user->can('viewAny', Post::class),
+                        ],
+                        [
+                            'title' => 'Categories',
+                            'link' => route('admin.categories.index'),
+                            'isActive' => $request->routeIs('admin.categories.*'),
+                            'isEnabled' => $user->can('viewAny', Category::class),
+                        ],
                     ],
                 ],
-            ],
-            [
-                'title' => 'Media',
-                'link' => route('admin.media.index'),
-                'isActive' => $request->routeIs('admin.media.*'),
-                'isEnabled' => $user->can('viewAny', Media::class),
-            ],
-            [
-                'title' => 'All Users',
-                'link' => route('admin.users.index'),
-                'isActive' => $request->routeIs('admin.users.*'),
-                'isEnabled' => $user->can('viewAny', User::class),
-            ],
-            [
-                'title' => 'Roles',
-                'link' => route('admin.roles.index'),
-                'isActive' => $request->routeIs('admin.roles.*'),
-                'isEnabled' => $user->can('viewAny', Role::class),
-            ],
-        ];
+                [
+                    'title' => 'Media',
+                    'link' => route('admin.media.index'),
+                    'isActive' => $request->routeIs('admin.media.*'),
+                    'isEnabled' => $user->can('viewAny', Media::class),
+                ],
+                [
+                    'title' => 'All Users',
+                    'link' => route('admin.users.index'),
+                    'isActive' => $request->routeIs('admin.users.*'),
+                    'isEnabled' => $user->can('viewAny', User::class),
+                ],
+                [
+                    'title' => 'Roles',
+                    'link' => route('admin.roles.index'),
+                    'isActive' => $request->routeIs('admin.roles.*'),
+                    'isEnabled' => $user->can('viewAny', Role::class),
+                ],
+            ]);
+        }
 
         return [
             'nav' => $menus,
