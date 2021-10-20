@@ -66,9 +66,9 @@
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
-    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'Image',
         components: {
             SdbButton,
             SdbImage,
@@ -85,22 +85,24 @@
             id: String,
             entityId: {},
             modelValue: Object,
+            dataImages: {type: Object, default: {}},
             dataMedia: {type: Array, default: []},
             selectedLocale: String,
-        },
-        data() {
-            return {
-                entityImage: this.entity.content.figure.image,
-                images: usePage().props.value.images ?? {},
-                isFormOpen: false,
-                modalImages: [],
-            };
         },
         setup(props, { emit }) {
             return {
                 config: props.modelValue?.config,
                 entity: useModelWrapper(props, emit),
                 pageMedia: useModelWrapper(props, emit, 'dataMedia'),
+                pageImages: useModelWrapper(props, emit, 'dataImages'),
+            };
+        },
+        data() {
+            return {
+                entityImage: this.entity.content.figure.image,
+                images: this.pageImages,
+                isFormOpen: false,
+                modalImages: [],
             };
         },
         methods: {
