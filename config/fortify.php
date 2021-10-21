@@ -156,4 +156,9 @@ return [
         'dashboard' => '/dashboard',
         'login' => '/login',
     ],
+
+    'routes' => [
+        'admin_login_attempt' => 'admin.login.attempt',
+        'admin_login' => 'admin.login',
+    ],
 ];

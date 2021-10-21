@@ -27,7 +27,7 @@
 </template>
 
 <script>
-    import MixinHasImageContent from '@/Mixins/HasImageContent';
+    import MixinContentHasImage from '@/Mixins/ContentHasImage';
     import SdbButton from '@/Sdb/Button';
     import SdbImage from '@/Sdb/Image';
     import { concat, isEmpty } from 'lodash';
@@ -41,7 +41,7 @@
             SdbImage,
         },
         mixins: [
-            MixinHasImageContent,
+            MixinContentHasImage,
         ],
         props: {
             id: String,
