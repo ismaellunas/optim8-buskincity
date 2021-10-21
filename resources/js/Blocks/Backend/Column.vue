@@ -73,7 +73,7 @@
             dataMedia: {},
             selectedLocale: String,
         },
-        setup(props, { emit }) {
+        setup() {
             return {
                 entityId: usePage().props.value.entityId ?? null,
             };
