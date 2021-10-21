@@ -1,11 +1,11 @@
-import MixinHasImageContent from '@/Mixins/HasImageContent';
+import MixinContentHasImage from '@/Mixins/ContentHasImage';
 import { remove, forEach } from 'lodash';
 import { isBlank } from '@/Libs/utils';
 import { oops as oopsAlert } from '@/Libs/alert';
 
 export default {
     mixins: [
-        MixinHasImageContent,
+        MixinContentHasImage,
     ],
     setup() {
         return {

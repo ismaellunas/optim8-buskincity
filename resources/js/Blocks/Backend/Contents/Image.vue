@@ -58,7 +58,7 @@
 </template>
 
 <script>
-    import MixinContainImageContent from '@/Mixins/ContainImageContent';
+    import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinHasModal from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
@@ -76,7 +76,7 @@
             SdbToolbarContent,
         },
         mixins: [
-            MixinContainImageContent,
+            MixinContentHasMediaLibrary,
             MixinDeletableContent,
             MixinHasModal,
         ],
@@ -118,17 +118,17 @@
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
             },
-            onImageListLoadedSuccess(data) { /* @override Mixins/ContainImageContent */
+            onImageListLoadedSuccess(data) { /* @override Mixins/ContentHasMediaLibrary */
                 this.modalImages = data;
             },
-            onImageListLoadedFail(error) { /* @override Mixins/ContainImageContent */
+            onImageListLoadedFail(error) { /* @override Mixins/ContentHasMediaLibrary */
                 this.closeModal();
             },
-            onImageSelected() { /* @override Mixins/ContainImageContent */
+            onImageSelected() { /* @override Mixins/ContentHasMediaLibrary */
                 this.closeModal();
                 this.isFormOpen = false;
             },
-            onImageUpdated() { /* @override Mixins/ContainImageContent */
+            onImageUpdated() { /* @override Mixins/ContentHasMediaLibrary */
                 this.closeModal();
             },
         },

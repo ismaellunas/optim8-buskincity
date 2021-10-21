@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
+use App\Actions\AuthenticateLoginAttempt;
+use App\Actions\AuthenticateLoginView;
 use App\Actions\Jetstream\DeleteUser;
 use App\Http\Responses\LoginResponse;
 use App\Http\Responses\LogoutResponse;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Inertia\Inertia;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use Laravel\Fortify\Contracts\LogoutResponse as LogoutResponseContract;
 use Laravel\Fortify\Fortify;
@@ -38,18 +38,9 @@ class JetstreamServiceProvider extends ServiceProvider
 
         if (config('jetstream.stack') === 'inertia') {
 
-            Fortify::loginView(function () {
-                $componentName = 'Auth/Login';
+            Fortify::loginView([new AuthenticateLoginView(), '__invoke']);
 
-                if (Route::currentRouteName() == 'admin.login') {
-                    $componentName = 'Auth/Admin/Login';
-                }
-
-                return Inertia::render($componentName, [
-                    'canResetPassword' => Route::has('password.request'),
-                    'status' => session('status'),
-                ]);
-            });
+            Fortify::authenticateUsing([new AuthenticateLoginAttempt(), '__invoke']);
 
             $this->app->instance(LoginResponseContract::class, new LoginResponse());
 
