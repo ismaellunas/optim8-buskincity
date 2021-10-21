@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import MixinHasImageContent from '@/Mixins/HasImageContent';
+    import MixinContentHasImage from '@/Mixins/ContentHasImage';
     import SdbImage from '@/Sdb/Image';
     import { usePage } from '@inertiajs/inertia-vue3';
 
@@ -23,7 +23,7 @@
             SdbImage,
         },
         mixins: [
-            MixinHasImageContent,
+            MixinContentHasImage,
         ],
         props: {
             id: String,
