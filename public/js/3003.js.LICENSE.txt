@@ -1,0 +1,32 @@
+/*!
+ * Cropper.js v1.5.12
+ * https://fengyuanchen.github.io/cropperjs
+ *
+ * Copyright 2015-present Chen Fengyuan
+ * Released under the MIT license
+ *
+ * Date: 2021-06-12T08:00:17.411Z
+ */
+
+/*!
+ * JS File Downloader v 1.1.21
+ * https://github.com/AleeeKoi/js-file-downloader
+ *
+ * Copyright Alessandro Pellizzari
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ */
+
+/*! ./exception */
+
+/*! exports provided: DownloadException, downloadException */
+
+/*! exports provided: default */
+
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+
+/*!**************************!*\
+  !*** ./src/exception.js ***!
+  \**************************/
