@@ -24,7 +24,9 @@
                                         <span>Lorem ipsum dolor sit amet.</span>
                                     </h2>
                                     <div class="has-text-left">
-                                        <jet-validation-errors class="mb-4" />
+
+                                        <sdb-error-notifications :errors="$page.props.errors"/>
+
                                         <form @submit.prevent="submit">
                                             <div class="field">
                                                 <jet-label for="email" value="Email" />
@@ -95,8 +97,8 @@
     import JetCheckbox from '@/Jetstream/Checkbox'
     import JetInput from '@/Jetstream/Input'
     import JetLabel from '@/Jetstream/Label'
-    import JetValidationErrors from '@/Jetstream/ValidationErrors';
     import SdbButtonLink from '@/Sdb/ButtonLink';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbLink from '@/Sdb/Link';
 
     export default {
@@ -105,8 +107,8 @@
             JetCheckbox,
             JetInput,
             JetLabel,
-            JetValidationErrors,
             SdbButtonLink,
+            SdbErrorNotifications,
             SdbLink,
         },
 
