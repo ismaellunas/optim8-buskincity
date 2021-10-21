@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Actions;
+
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+
+class AuthenticateLoginView
+{
+    public function __invoke()
+    {
+        $componentName = 'Auth/Login';
+
+        if (Route::currentRouteName() == config('fortify.routes.admin_login')) {
+            $componentName = 'Auth/Admin/Login';
+        }
+
+        return Inertia::render($componentName, [
+            'canResetPassword' => Route::has('password.request'),
+            'status' => session('status'),
+        ]);
+    }
+}
