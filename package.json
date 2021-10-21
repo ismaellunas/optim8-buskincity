@@ -35,7 +35,6 @@
         "bulma-calendar": "^6.1.12",
         "compressorjs": "^1.0.7",
         "js-file-downloader": "^1.1.22",
-        "node-sass": "^6.0.1",
         "vue-cropperjs": "^5.0.0",
         "vue-loading-overlay": "^4.0",
         "vue-sweetalert2": "^5.0.2",
