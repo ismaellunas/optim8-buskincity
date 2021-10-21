@@ -66,6 +66,7 @@
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
+    import { inject } from "vue";
 
     export default {
         name: 'Image',
@@ -85,22 +86,21 @@
             id: String,
             entityId: {},
             modelValue: Object,
-            dataImages: {type: Object, default: {}},
             dataMedia: {type: Array, default: []},
             selectedLocale: String,
         },
         setup(props, { emit }) {
             return {
                 config: props.modelValue?.config,
+                dataImages: inject('dataImages'),
                 entity: useModelWrapper(props, emit),
                 pageMedia: useModelWrapper(props, emit, 'dataMedia'),
-                pageImages: useModelWrapper(props, emit, 'dataImages'),
             };
         },
         data() {
             return {
                 entityImage: this.entity.content.figure.image,
-                images: this.pageImages,
+                images: this.dataImages,
                 isFormOpen: false,
                 modalImages: [],
             };
