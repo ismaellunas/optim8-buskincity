@@ -58,7 +58,7 @@
 </template>
 
 <script>
-    import MixinContainImageContent from '@/Mixins/ContainImageContent';
+    import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinHasModal from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
@@ -66,6 +66,7 @@
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
+    import { inject } from "vue";
 
     export default {
         name: 'Image',
@@ -76,7 +77,7 @@
             SdbToolbarContent,
         },
         mixins: [
-            MixinContainImageContent,
+            MixinContentHasMediaLibrary,
             MixinDeletableContent,
             MixinHasModal,
         ],
@@ -85,22 +86,21 @@
             id: String,
             entityId: {},
             modelValue: Object,
-            dataImages: {type: Object, default: {}},
             dataMedia: {type: Array, default: []},
             selectedLocale: String,
         },
         setup(props, { emit }) {
             return {
                 config: props.modelValue?.config,
+                dataImages: inject('dataImages'),
                 entity: useModelWrapper(props, emit),
                 pageMedia: useModelWrapper(props, emit, 'dataMedia'),
-                pageImages: useModelWrapper(props, emit, 'dataImages'),
             };
         },
         data() {
             return {
                 entityImage: this.entity.content.figure.image,
-                images: this.pageImages,
+                images: this.dataImages,
                 isFormOpen: false,
                 modalImages: [],
             };
@@ -118,17 +118,17 @@
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
             },
-            onImageListLoadedSuccess(data) { /* @override Mixins/ContainImageContent */
+            onImageListLoadedSuccess(data) { /* @override Mixins/ContentHasMediaLibrary */
                 this.modalImages = data;
             },
-            onImageListLoadedFail(error) { /* @override Mixins/ContainImageContent */
+            onImageListLoadedFail(error) { /* @override Mixins/ContentHasMediaLibrary */
                 this.closeModal();
             },
-            onImageSelected() { /* @override Mixins/ContainImageContent */
+            onImageSelected() { /* @override Mixins/ContentHasMediaLibrary */
                 this.closeModal();
                 this.isFormOpen = false;
             },
-            onImageUpdated() { /* @override Mixins/ContainImageContent */
+            onImageUpdated() { /* @override Mixins/ContentHasMediaLibrary */
                 this.closeModal();
             },
         },
