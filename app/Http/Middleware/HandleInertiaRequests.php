@@ -55,9 +55,12 @@ class HandleInertiaRequests extends Middleware
                 return (object)[];
             },
             'menus' => fn () => (
-                    $request->routeIs('admin.*')
-                    || $request->routeIs('dashboard')
-                    || $request->routeIs('profile.*')
+                    auth()->check()
+                    && (
+                        $request->routeIs('admin.*')
+                        || $request->routeIs('dashboard')
+                        || $request->routeIs('profile.*')
+                    )
                 )
                 ? MenuService::generateBackendMenu($request)
                 : MenuService::generateMenus(TranslationSv::currentLanguage()),

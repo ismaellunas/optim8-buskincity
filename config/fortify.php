@@ -142,4 +142,18 @@ return [
         ]),
     ],
 
+    /*
+     | ------------------------------------------------------------------------
+     | Additionals
+     | ------------------------------------------------------------------------
+     */
+
+    'admin_home' => RouteServiceProvider::HOME_ADMIN,
+
+    'redirects' => [
+        'admin_dashboard' => '/admin/dashboard',
+        'admin_login' => '/admin/login',
+        'dashboard' => '/dashboard',
+        'login' => '/login',
+    ],
 ];
