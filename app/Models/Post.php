@@ -84,9 +84,9 @@ class Post extends BaseModel implements PublishableInterface
     {
         return $query
             ->where('title', 'ILIKE', '%'.$term.'%')
-            ->orWhere('content', 'ILIKE', '%'.$term.'%')
             ->orWhere('excerpt', 'ILIKE', '%'.$term.'%')
-            ->orWhere('slug', 'ILIKE', '%'.$term.'%');
+            ->orWhere('slug', 'ILIKE', '%'.$term.'%')
+            ->orWhere('plain_text_content', 'ILIKE', '%'.$term.'%');
     }
 
     /* Accessors: */
@@ -130,6 +130,8 @@ class Post extends BaseModel implements PublishableInterface
 
     public function saveFromInputs(array $inputs)
     {
+        $inputs['plain_text_content'] = strip_tags(html_entity_decode($inputs['content']));
+
         $this->fill($inputs);
 
         $this->slug = PostService::getUniqueSlug(
