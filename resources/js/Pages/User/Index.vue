@@ -95,7 +95,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                     <user-list-item
+                    <user-list-item
                         v-for="record in records.data"
                         :user="record"
                     >

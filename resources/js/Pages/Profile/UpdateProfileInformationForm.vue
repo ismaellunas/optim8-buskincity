@@ -31,18 +31,18 @@
                 </div>
 
                 <sdb-button 
-                    @click.prevent="selectNewPhoto"
-                    type="button" 
                     class="is-warning mt-2 mr-2" 
+                    type="button" 
+                    @click.prevent="selectNewPhoto"
                 >
                     Select A New Photo
                 </sdb-button>
 
                 <sdb-button 
                     v-if="user.profile_photo_path"
-                    @click.prevent="deletePhoto" 
-                    type="button" 
                     class="is-warning mt-2" 
+                    type="button" 
+                    @click.prevent="deletePhoto" 
                 >
                     Remove Photo
                 </sdb-button>
