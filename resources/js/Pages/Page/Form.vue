@@ -35,7 +35,6 @@
                         v-model="form.data"
                         v-model:content-config-id="contentConfigId"
                         :can="can"
-                        :data-images="images"
                         :is-edit-mode="isEditMode"
                         :selected-locale="selectedLocale"
                     />
@@ -69,7 +68,7 @@
     import SdbProvideInjectTab from '@/Sdb/ProvideInjectTab/Tab';
     import SdbProvideInjectTabs from '@/Sdb/ProvideInjectTab/Tabs';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
-    import { ref } from "vue";
+    import { provide, ref } from "vue";
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -103,6 +102,9 @@
                 activeTab = ref(0);
             }
 
+            // Set provide and inject of images data
+            provide('dataImages', usePage().props.value.images ?? {});
+
             return {
                 activeTab,
                 form: useModelWrapper(props, emit),
@@ -112,8 +114,7 @@
         data() {
             return {
                 disableInput: false,
-                images: usePage().props.value.images ?? {},
             };
-        },
+        }
     }
 </script>

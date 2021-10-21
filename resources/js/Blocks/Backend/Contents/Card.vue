@@ -78,6 +78,7 @@
     import { concat } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import { inject } from "vue";
 
     export default {
         components: {
@@ -94,7 +95,6 @@
         ],
         props: {
             can: Object,
-            dataImages: {type: Object, default: {}},
             dataMedia: {},
             id: {},
             modelValue: {},
@@ -103,15 +103,15 @@
         setup(props, { emit }) {
             return {
                 config: props.modelValue?.config,
+                dataImages: inject('dataImages'),
                 entity: useModelWrapper(props, emit),
                 pageMedia: useModelWrapper(props, emit, 'dataMedia'),
-                pageImages: useModelWrapper(props, emit, 'dataImages'),
             };
         },
         data() {
             return {
                 entityImage: this.entity.content.cardImage.figure.image,
-                images: this.pageImages,
+                images: this.dataImages,
                 isFormOpen: false,
                 modalImages: [],
             };

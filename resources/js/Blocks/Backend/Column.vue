@@ -19,7 +19,6 @@
                     class="page-component"
                     :can="can"
                     :is-edit-mode="isEditMode"
-                    :data-images="dataImages"
                     :data-media="dataMedia"
                     :selected-locale="selectedLocale"
                     @click="settingContent(element.id)"
@@ -69,7 +68,6 @@
             isDebugMode: {default: false},
             components: {type: Array, default: []},
             dataEntities: {},
-            dataImages: {type: Object, default: {}},
             dataMedia: {},
             selectedLocale: String,
         },
