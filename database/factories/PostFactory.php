@@ -28,7 +28,7 @@ class PostFactory extends Factory
             'locale' => config('app.fallback_locale'),
             'title' => $title,
             'slug' => Str::slug($title),
-            'status' => Post::STATUS_DRAFT,
+            'status' => Post::STATUS_DRAFT
         ];
     }
 
@@ -36,12 +36,13 @@ class PostFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $content = "";
-            foreach ($this->faker->paragraphs(3) as $paragraph) {
+            foreach ($this->faker->paragraphs(25) as $paragraph) {
                 $content .= "<p>$paragraph</p>";
             }
 
             return [
                 'content' => $content,
+                'plain_text_content' => strip_tags($content),
             ];
         });
     }

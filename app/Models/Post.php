@@ -26,6 +26,7 @@ class Post extends BaseModel implements PublishableInterface
         'slug',
         'status',
         'title',
+        'plain_text_content',
     ];
 
     protected $casts = [
