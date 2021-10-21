@@ -19,7 +19,6 @@
                     class="page-component"
                     :can="can"
                     :is-edit-mode="isEditMode"
-                    :data-images="dataImages"
                     :data-media="dataMedia"
                     :selected-locale="selectedLocale"
                     @click="settingContent(element.id)"
@@ -32,8 +31,8 @@
             <component
                 :is="element.componentName"
                 v-for="element in components"
-                :key="element.id"
                 :id="element.id"
+                :key="element.id"
                 v-model="dataEntities[element.id]"
                 :data-media="dataMedia"
                 :is-edit-mode="isEditMode"
@@ -69,11 +68,10 @@
             isDebugMode: {default: false},
             components: {type: Array, default: []},
             dataEntities: {},
-            dataImages: {type: Object, default: {}},
             dataMedia: {},
             selectedLocale: String,
         },
-        setup(props, { emit }) {
+        setup() {
             return {
                 entityId: usePage().props.value.entityId ?? null,
             };

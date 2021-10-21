@@ -332,7 +332,7 @@
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
             },
-            onImageSelected() { /* @override Mixins/ContainImageContent */
+            onImageSelected() { /* @override Mixins/ContentHasMediaLibrary */
                 this.closeModal();
                 this.isFormOpen = false;
             },

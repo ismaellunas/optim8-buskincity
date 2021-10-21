@@ -47,7 +47,6 @@
                 :can="can"
                 :components="block.columns[index].components"
                 :data-entities="entities"
-                :data-images="dataImages"
                 :data-media="media"
                 :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
@@ -75,7 +74,6 @@
         props: {
             can: Object,
             dataEntities: {},
-            dataImages: {type: Object, default: {}},
             dataMedia: {},
             id: {},
             isEditMode: {default: false},

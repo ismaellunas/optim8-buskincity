@@ -2,6 +2,7 @@
 
 namespace App\Http\Responses;
 
+use App\Services\LoginService;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Http\Responses\LoginResponse as FortifyLoginResponse;
 
@@ -15,7 +16,7 @@ class LoginResponse extends FortifyLoginResponse
             $home = 'dashboard';
 
             if (
-                $request->route()->getName() == 'admin.login.attempt'
+                LoginService::isAdminLoginAttemptRoute($request->route())
                 && $request->user()->can('system.dashboard')
             ) {
                 $home = 'admin_dashboard';
