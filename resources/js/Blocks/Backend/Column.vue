@@ -32,8 +32,8 @@
             <component
                 :is="element.componentName"
                 v-for="element in components"
-                :key="element.id"
                 :id="element.id"
+                :key="element.id"
                 v-model="dataEntities[element.id]"
                 :data-media="dataMedia"
                 :is-edit-mode="isEditMode"
