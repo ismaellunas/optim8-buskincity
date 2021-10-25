@@ -23,8 +23,8 @@
 
                 <div v-show="isTabActive('content')">
                     <sdb-form-input
-                        label="Title"
                         v-model="form.title"
+                        label="Title"
                         :message="error('title')"
                         placeholder="e.g A Good News"
                         required

@@ -2,9 +2,9 @@
     <div class="columns">
         <div class="column is-4">
             <sdb-form-input
-                label="Title"
                 v-model="title"
                 :message="error('title')"
+                label="Title"
                 placeholder="e.g A Good News"
                 :disabled="disableInput"
                 required
@@ -21,9 +21,9 @@
         </div>
         <div class="column is-4">
             <sdb-form-select
-                label="Status"
                 v-model="status"
                 :message="error('status')"
+                label="Status"
                 :disabled="disableInput"
                 class="is-fullwidth"
             >
@@ -34,24 +34,24 @@
         </div>
     </div>
     <sdb-form-textarea
-        label="Excerpt"
         v-model="excerpt"
         :message="error('excerpt')"
+        label="Excerpt"
         placeholder="..."
         :disabled="disableInput"
         rows="2"
     />
     <sdb-form-input
-        label="Meta Title"
         v-model="meta_title"
         :message="error('meta_title')"
+        label="Meta Title"
         placeholder="meta title"
         :disabled="disableInput"
     />
     <sdb-form-input
-        label="Meta Description"
         v-model="meta_description"
         :message="error('meta_description')"
+        label="Meta Description"
         placeholder="meta description"
         :disabled="disableInput"
     />
@@ -81,6 +81,7 @@
             'errors',
             'disableInput',
             'statusOptions',
+            'selectedLocale',
         ],
         setup(props, { emit }) {
             return {
