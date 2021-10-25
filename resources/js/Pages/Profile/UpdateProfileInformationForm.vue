@@ -30,19 +30,19 @@
                     </span>
                 </div>
 
-                <sdb-button 
-                    class="is-warning mt-2 mr-2" 
-                    type="button" 
+                <sdb-button
+                    class="is-warning mt-2 mr-2"
+                    type="button"
                     @click.prevent="selectNewPhoto"
                 >
                     Select A New Photo
                 </sdb-button>
 
-                <sdb-button 
+                <sdb-button
                     v-if="user.profile_photo_path"
-                    class="is-warning mt-2" 
-                    type="button" 
-                    @click.prevent="deletePhoto" 
+                    class="is-warning mt-2"
+                    type="button"
+                    @click.prevent="deletePhoto"
                 >
                     Remove Photo
                 </sdb-button>
@@ -50,14 +50,14 @@
                 <jet-input-error :message="form.errors.photo" class="mt-2" />
             </div>
 
-            <sdb-form-input 
+            <sdb-form-input
                 v-model="form.first_name"
                 label="First Name"
                 required
                 :message="form.errors.first_name"
             ></sdb-form-input>
 
-            <sdb-form-input 
+            <sdb-form-input
                 v-model="form.last_name"
                 label="Last Name"
                 required
@@ -75,12 +75,12 @@
         </template>
 
         <template #actions>
-            <sdb-action-message :on="form.recentlySuccessful" class="mr-3">
+            <sdb-action-message :isActive="form.recentlySuccessful" class="mr-3">
                 Saved.
             </sdb-action-message>
 
-            <sdb-button 
-                :class="{ 'opacity-25': form.processing }" 
+            <sdb-button
+                :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 class="is-primary"
             >

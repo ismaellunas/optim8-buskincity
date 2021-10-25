@@ -86,7 +86,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Media::class, 'author_id');
     }
 
-    public function getFullNameAttribute()
+    public function getFullNameAttribute(): string
     {
         return trim(ucfirst($this->first_name) . ' ' . ucfirst($this->last_name));
     }

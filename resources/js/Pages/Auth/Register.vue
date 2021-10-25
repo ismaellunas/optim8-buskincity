@@ -69,18 +69,18 @@
 
                                         <form @submit.prevent="submit">
 
-                                            <sdb-form-input 
-                                                label="First Name"
+                                            <sdb-form-input
                                                 v-model="form.first_name"
+                                                label="First Name"
                                                 required
                                                 autofocus
                                                 :message="error('first_name')"
                                             ></sdb-form-input>
 
-                                            <sdb-form-input 
-                                                label="Last Name"
+                                            <sdb-form-input
                                                 v-model="form.last_name"
-                                                required                                                
+                                                label="Last Name"
+                                                required
                                                 :message="error('last_name')"
                                             ></sdb-form-input>
 
@@ -94,7 +94,6 @@
 
                                             <sdb-form-input
                                                 v-model="form.password"
-                                                autocomplete="new-password"
                                                 label="Password"
                                                 type="password"
                                                 :message="error('password')"

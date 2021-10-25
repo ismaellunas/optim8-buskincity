@@ -51,7 +51,7 @@
                                             v-if="canRegister"
                                             class="box"
                                             @click.prevent="toggleIsSocialMediaLogin"
-                                            >
+                                        >
                                             <i class="fas fa-envelope"></i> Continue with <b>Email</b>
                                         </a>
                                     </div>
@@ -66,7 +66,7 @@
                                         <span>Lorem ipsum dolor sit amet.</span>
                                     </h2>
                                     <div class="has-text-left">
-                                        
+
                                         <form @submit.prevent="submit">
 
                                             <sdb-form-input
@@ -105,7 +105,6 @@
                                             <sdb-button class="button is-block is-info is-fullwidth" :disabled="form.processing">
                                                  Log In <i class="fas fa-sign-in-alt"></i>
                                             </sdb-button>
-                                            
                                         </form>
                                     </div>
                                 </div>

@@ -1,7 +1,7 @@
 <template>
     <div>
         <transition leave-active-class="transition ease-in duration-1000" leave-from-class="opacity-100" leave-to-class="opacity-0">
-            <div v-show="on" class="text-sm text-gray-600">
+            <div v-if="isActive" class="text-sm text-gray-600">
                 <slot />
             </div>
         </transition>
@@ -11,6 +11,11 @@
 <script>
     export default {
         name: 'SdbActionMessage',
-        props: ['on'],
+        props: {
+            isActive: {
+                type: Boolean,
+                default: false
+            }
+        },
     }
 </script>
