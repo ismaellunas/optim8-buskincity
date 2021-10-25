@@ -41,19 +41,13 @@
                                                         />
                                                 </div>
                                             </div>
-                                            <div class="field">
-                                                <jet-label for="password" value="Password" />
-                                                <div class="control">
-                                                    <jet-input
-                                                        id="password"
-                                                        type="password"
-                                                        v-model="form.password"
-                                                        required
-                                                        autocomplete="current-password"
-                                                        placeholder="Enter your password"
-                                                        />
-                                                </div>
-                                            </div>
+                                            <sdb-form-password
+                                                v-model="form.password"
+                                                autocomplete="current-password"
+                                                label="Password"
+                                                placeholder="Enter your password"
+                                                :required="true"
+                                            ></sdb-form-password>
                                             <div class="field columns">
                                                 <div class="column has-text-left">
                                                     <label class="checkbox">
@@ -99,6 +93,7 @@
     import JetLabel from '@/Jetstream/Label'
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import SdbFormPassword from '@/Sdb/Form/Password';
     import SdbLink from '@/Sdb/Link';
 
     export default {
@@ -109,6 +104,7 @@
             JetLabel,
             SdbButtonLink,
             SdbErrorNotifications,
+            SdbFormPassword,
             SdbLink,
         },
 
