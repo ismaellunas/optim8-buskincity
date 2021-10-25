@@ -1,32 +1,28 @@
 <template>
-    <sdb-form-input
+    <sdb-form-password
         v-model="form.password"
         autocomplete="new-password"
         label="Password"
-        type="password"
         :message="error('password')"
-    ></sdb-form-input>
+        :required="true"
+    ></sdb-form-password>
 
-    <sdb-form-input
+    <sdb-form-password
         v-model="form.password_confirmation"
         label="Password Confirmation"
-        type="password"
         :message="error('password_confirmation')"
-    ></sdb-form-input>
+    ></sdb-form-password>
 </template>
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormSelect from '@/Sdb/Form/Select';
-    import { ref } from 'vue';
+    import SdbFormPassword from '@/Sdb/Form/Password';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'UserPasswordForm',
         components: {
-            SdbFormInput,
-            SdbFormSelect,
+            SdbFormPassword,
         },
         mixins: [
             MixinHasPageErrors,
