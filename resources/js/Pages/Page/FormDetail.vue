@@ -3,8 +3,8 @@
         <div class="column is-4">
             <sdb-form-input
                 v-model="title"
-                :message="error('title')"
                 label="Title"
+                :message="error(selectedLocale+'.title')"
                 placeholder="e.g A Good News"
                 :disabled="disableInput"
                 required
@@ -16,14 +16,15 @@
                 v-model="slug"
                 :message="error('slug')"
                 placeholder="e.g. a-good-news"
+                :message="error(selectedLocale+'.slug')"
                 :disabled="disableInput"
             />
         </div>
         <div class="column is-4">
             <sdb-form-select
                 v-model="status"
-                :message="error('status')"
                 label="Status"
+                :message="error(selectedLocale+'.status')"
                 :disabled="disableInput"
                 class="is-fullwidth"
             >
@@ -35,7 +36,6 @@
     </div>
     <sdb-form-textarea
         v-model="excerpt"
-        :message="error('excerpt')"
         label="Excerpt"
         placeholder="..."
         :disabled="disableInput"
