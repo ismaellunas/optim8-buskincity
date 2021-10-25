@@ -5,10 +5,10 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 module.exports = {
   mode: 'production',
   entry: {
-    "app": './resources/sass/app.scss',
+    "app": './resources/sass/theme_backend.sass',
   },
   output: {
-    path: path.resolve(__dirname, 'public/css'),
+    path: path.resolve(__dirname, 'storage/theme/css'),
     filename: '[name].sass.bundle.js',
 	},
   module: {
