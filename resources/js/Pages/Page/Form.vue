@@ -27,6 +27,7 @@
                         :disableInput="disableInput"
                         :errors="errors"
                         :statusOptions="statusOptions"
+                        :selected-locale="selectedLocale"
                     />
                 </sdb-provide-inject-tab>
                 <sdb-provide-inject-tab title="Builder">
