@@ -6,9 +6,9 @@
         :message="message"
         :required="required"
         placeholder="e.g. a-good-news"
-        @blur="$emit('on-blur', $event)"
         @input="$emit('update:modelValue', $event.target.value)"
         @on-keypress="keyPressSlug"
+        @on-blur="$emit('on-blur', $event)"
     >
         <template v-slot:afterInput>
             <div class="control">
@@ -50,7 +50,10 @@
             required: {type: Boolean, default: true},
         },
 
-        emits: ['update:modelValue'],
+        emits: [
+            'update:modelValue',
+            'on-blur'
+        ],
 
         setup(props, { emit }) {
             return {
