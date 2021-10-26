@@ -9,7 +9,7 @@
                         v-if="can.add"
                         class="is-pulled-right"
                     >
-                        <sdb-button-link :href="route(baseRoute+'.create')" class="is-primary">
+                        <sdb-button-link :href="route(baseRouteName+'.create')" class="is-primary">
                             <span class="icon is-small">
                                 <i class="fas fa-plus"></i>
                             </span>
@@ -21,27 +21,10 @@
 
             <div class="columns">
                 <div class="column">
-                    <sdb-form-field-horizontal>
-                        <template v-slot:label>
-                            Search
-                        </template>
-                        <div class="columns">
-                            <div class="column is-three-quarters">
-                                <sdb-input
-                                    v-model="term"
-                                    maxlength="255"
-                                    @keyup.enter.prevent="search(term)"
-                                />
-                            </div>
-                            <div class="column">
-                                <sdb-button-icon
-                                    icon="fas fa-search"
-                                    type="button"
-                                    @click="search(term)"
-                                />
-                            </div>
-                        </div>
-                    </sdb-form-field-horizontal>
+                    <sdb-filter-search
+                        v-model="term"
+                        @search="search"
+                    ></sdb-filter-search>
                 </div>
             </div>
 
@@ -69,7 +52,7 @@
                                     <sdb-button-link
                                         v-if="can.edit"
                                         class="is-ghost has-text-black"
-                                        :href="route(baseRoute + '.edit', record.id)"
+                                        :href="route(baseRouteName + '.edit', record.id)"
                                     >
                                         <span class="icon is-small">
                                             <i class="fas fa-pen"></i>
@@ -97,10 +80,11 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
+    import SdbFilterSearch from '@/Sdb/Filter/Search';
     import SdbInput from '@/Sdb/Input';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbTable from '@/Sdb/Table';
@@ -115,12 +99,16 @@
             SdbButton,
             SdbButtonIcon,
             SdbButtonLink,
-            SdbFormFieldHorizontal,
+            SdbFilterSearch,
             SdbInput,
             SdbPagination,
             SdbTable,
         },
+        mixins: [
+            MixinFilterDataHandle,,
+        ],
         props: {
+            baseRouteName: String,
             can: {},
             pageNumber: String,
             pageQueryParams: Object,
@@ -136,7 +124,6 @@
         },
         data() {
             return {
-                baseRoute: 'admin.categories',
                 loader: null,
             };
         },
@@ -146,7 +133,7 @@
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
                         self.$inertia.delete(
-                            route(self.baseRoute+'.destroy', record.id)
+                            route(self.baseRouteName+'.destroy', record.id)
                         );
                     }
                 });
@@ -157,25 +144,6 @@
                     return translation.name;
                 }
                 return "";
-            },
-            search(term) {
-                this.queryParams['term'] = term;
-                this.$inertia.get(
-                    route(this.baseRoute+'.index'),
-                    this.queryParams,
-                    {
-                        replace: true,
-                        preserveState: true,
-                        onStart: () => this.onStartLoadingOverlay(),
-                        onFinish: () => this.onEndLoadingOverlay(),
-                    }
-                );
-            },
-            onStartLoadingOverlay() {
-                this.loader = this.$loading.show();
-            },
-            onEndLoadingOverlay() {
-                this.loader.hide();
             },
         },
     };
