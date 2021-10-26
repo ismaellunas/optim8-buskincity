@@ -32,6 +32,7 @@
 
 @story('heroku:deploy-simple')
     install-dependencies
+    git-commit-deployment
     heroku:config-set
     heroku:push
     heroku:migration
