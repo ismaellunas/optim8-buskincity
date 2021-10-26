@@ -64,6 +64,7 @@
 @task('install-dependencies')
     composer install
     yarn install
+    rm public/js/*
     npm run prod
 @endtask
 
