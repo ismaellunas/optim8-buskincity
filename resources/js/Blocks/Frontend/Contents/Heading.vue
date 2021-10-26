@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import { last } from 'lodash';
+    import { last, concat } from 'lodash';
 
     export default {
         name: 'Heading',
@@ -31,11 +31,11 @@
             },
 
             headingClass() {
-                let classes = [];
-                classes.push(this.config.heading?.type ?? 'title');
-                classes.push('is-' + last(this.headingTag));
-                classes.push(this.config.heading?.alignment ?? "");
-                return classes;
+                return concat(
+                    this.config.heading?.type ?? "title",
+                    'is-' + last(this.headingTag),
+                    this.config.heading?.alignment ?? "",
+                ).filter(Boolean);
             }
         }
     }

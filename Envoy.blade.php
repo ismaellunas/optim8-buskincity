@@ -57,6 +57,7 @@
     heroku run php artisan optimize:clear
     heroku run rm Envoy.blade.php
     heroku run rm .env.deploy
+    heroku maintenance:off
 @endtask
 
 @task('install-dependencies')
@@ -78,6 +79,7 @@
 @endtask
 
 @task('heroku:config-set')
+    heroku maintenance:on
     @foreach ($_ENV as $key => $value)
         @if (in_array($key, $heroku_vars))
             heroku config:set {{ $key }}={{ $value }} -a {{ $heroku_app }}
