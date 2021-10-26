@@ -76,8 +76,7 @@
 @endtask
 
 @task('git-commit-deployment')
-    git add .
-    git commit -m "Deploy on {{date("Y-m-d H:i:s")}}"
+    git add . && git diff --staged --quiet || git commit -m "Deploy on {{date("Y-m-d H:i:s")}}"
 @endtask
 
 @task('heroku:config-set')
