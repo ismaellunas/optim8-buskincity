@@ -59,7 +59,7 @@ class HandleInertiaRequests extends Middleware
                     && (
                         $request->routeIs('admin.*')
                         || $request->routeIs('dashboard')
-                        || $request->routeIs('profile.*')
+                        || $request->routeIs('user.profile.*')
                     )
                 )
                 ? MenuService::generateBackendMenu($request)
