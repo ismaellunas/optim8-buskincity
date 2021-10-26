@@ -30,6 +30,7 @@ class CategoryController extends CrudController
         $user = auth()->user();
 
         return Inertia::render('Category/Index', [
+            'baseRouteName' => $this->baseRouteName,
             'can' => [
                 'add' => $user->can('category.add'),
                 'delete' => $user->can('category.delete'),
