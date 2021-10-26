@@ -332,10 +332,6 @@
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
             },
-            onImageSelected() { /* @override Mixins/ContentHasMediaLibrary */
-                this.closeModal();
-                this.isFormOpen = false;
-            },
             selectFile(file) {
                 this.form.cover_image_id = file.id;
                 this.coverSrc = file.file_url;
