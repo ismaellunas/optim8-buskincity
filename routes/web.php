@@ -9,6 +9,7 @@ use App\Services\TranslationService as TranslationSv;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,9 +22,19 @@ use Inertia\Inertia;
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+Route::group(['middleware' => config('jetstream.middleware', ['web'])], function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    Route::get('/profile', [UserProfileController::class, 'show'])
+        ->name('user.profile.show');
+
+    // Set 404 page for default user profile
+    Route::get('/user/profile', function () {
+        return abort(404);
+    })->name('profile.show');
+});
 
 Route::get('/', function () {
     return redirect(TranslationSv::currentLanguage());
