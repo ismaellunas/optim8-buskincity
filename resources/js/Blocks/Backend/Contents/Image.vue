@@ -1,7 +1,6 @@
 <template>
     <div>
         <sdb-toolbar-content
-            v-if="isEditMode"
             @delete-content="deleteContent"
         />
 
@@ -14,7 +13,6 @@
             :square="this.config?.image?.fixedSquare"
         >
             <sdb-button
-                v-if="isEditMode"
                 class="is-small is-overlay"
                 style="z-index: 1"
                 type="button"
@@ -62,16 +60,16 @@
 <script>
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
-    import MixinEditModeComponent from '@/Mixins/EditModeComponent';
     import MixinHasModal from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
     import SdbImage from '@/Sdb/Image';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
     import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { inject } from "vue";
 
     export default {
+        name: 'Image',
         components: {
             SdbButton,
             SdbImage,
@@ -81,30 +79,30 @@
         mixins: [
             MixinContentHasMediaLibrary,
             MixinDeletableContent,
-            MixinEditModeComponent,
             MixinHasModal,
         ],
         props: {
             can: Object,
-            id: {},
+            id: String,
             entityId: {},
-            modelValue: {},
-            dataMedia: {},
+            modelValue: Object,
+            dataMedia: {type: Array, default: []},
             selectedLocale: String,
-        },
-        data() {
-            return {
-                entityImage: this.entity.content.figure.image,
-                images: usePage().props.value.images ?? {},
-                isFormOpen: false,
-                modalImages: [],
-            };
         },
         setup(props, { emit }) {
             return {
                 config: props.modelValue?.config,
+                dataImages: inject('dataImages'),
                 entity: useModelWrapper(props, emit),
                 pageMedia: useModelWrapper(props, emit, 'dataMedia'),
+            };
+        },
+        data() {
+            return {
+                entityImage: this.entity.content.figure.image,
+                images: this.dataImages,
+                isFormOpen: false,
+                modalImages: [],
             };
         },
         methods: {
@@ -137,13 +135,10 @@
         computed: {
             /* @overide */
             canEdit() {
-                return this.isEditMode && this.hasImage;
+                return this.hasImage;
             },
             isFormDisplayed() {
-                return this.isEditMode && (
-                    !this.hasImage
-                    || (this.isEditMode && this.isFormOpen)
-                );
+                return !this.hasImage || this.isFormOpen;
             },
         }
     }
