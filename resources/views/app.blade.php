@@ -1,7 +1,3 @@
-@php
-    $urlCss = \App\Models\Setting::where('key', 'url_css')->first(['key', 'value']);
-@endphp
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -15,18 +11,13 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
         <!-- Styles -->
-        @if ($urlCss)
-            <link rel="stylesheet" href="{{ $urlCss->value }}">
-        @else
-            <link rel="stylesheet" href="{{ mix('css/app.css') }}">
-        @endif
+        <link rel="stylesheet" href="{{ mix('css/additional.css') }}">
 
         <!-- Scripts -->
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
 
         @env ('production')
-            <!-- Styles -->
             <!-- Scripts -->
             <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/solid.js" integrity="sha384-9xA4r2/2cctd+IZZKLvI1hmeHZ5Yp8xXkS6J8inDtdyZCqhEHVcTGmSUCbNED5Ae" crossorigin="anonymous"></script>
             <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/regular.js" integrity="sha384-bPKzNk+f6IzEi89cU+jf3bwWzJQqo+U1/QYUijuD7XD9WO3MSrrAVVEglIOCo6VD" crossorigin="anonymous"></script>
@@ -35,8 +26,6 @@
         @endenv
 
         @env ('local')
-            <!-- Styles -->
-            <link rel="stylesheet" href="{{ mix('css/local.css') }}">
             <!-- Scripts -->
             <script src="{{ mix('js/local.js') }}" defer></script>
         @endenv
