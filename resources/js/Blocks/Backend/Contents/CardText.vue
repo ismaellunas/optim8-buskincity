@@ -1,19 +1,13 @@
 <template>
     <div>
         <sdb-toolbar-content
-            v-if="isEditMode"
             @delete-content="deleteContent"
         />
 
         <div class="card sdb-card-text">
             <div class="card-content">
                 <div class="content" :class="cardContentClass">
-                    <template v-if="isEditMode">
-                        <sdb-editor v-model="entity.content.cardContent.content.html"/>
-                    </template>
-                    <template v-else>
-                        <div v-html="entity.content.cardContent.content.html"></div>
-                    </template>
+                    <sdb-editor v-model="entity.content.cardContent.content.html"/>
                 </div>
             </div>
         </div>
@@ -22,14 +16,12 @@
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbEditor from '@/Sdb/EditorTinymce';
     import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils'
 
     export default {
         mixins: [
-            EditModeComponentMixin,
             DeletableContentMixin
         ],
         components: {
@@ -37,9 +29,8 @@
             SdbToolbarContent,
         },
         props: {
-            id: {},
-            isEditMode: {type: Boolean, default: false},
-            modelValue: {},
+            id: String,
+            modelValue: {type: Object, required: true},
         },
         setup(props, { emit }) {
             return {

@@ -13,12 +13,14 @@
 
 <script>
     import Card from '@/Blocks/Frontend/Contents/Card';
+    import CardText from '@/Blocks/Frontend/Contents/CardText';
     import { usePage } from '@inertiajs/inertia-vue3'
 
     export default {
         name: 'BlockColumn',
         components: {
             Card,
+            CardText,
         },
         props: {
             components: {type: Array, default: []},
