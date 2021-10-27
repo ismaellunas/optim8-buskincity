@@ -86,7 +86,10 @@ class PageController extends CrudController
         $page->fill($inputs);
         $page->author_id = Auth::id();
 
+        $page->storeEntitiesAsPlainText();
+
         $page->save();
+
 
         $request->session()->flash('message', 'Page created successfully!');
 
