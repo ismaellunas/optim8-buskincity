@@ -128,6 +128,21 @@ class MenuService
                     'isActive' => $request->routeIs('admin.roles.*'),
                     'isEnabled' => $user->can('viewAny', Role::class),
                 ],
+                [
+                    'title' => 'Theme',
+                    'isActive' => (
+                        $request->routeIs('admin.theme.*')
+                    ),
+                    'isEnabled' => true,
+                    'children' => [
+                        [
+                            'title' => 'Header',
+                            'link' => route('admin.theme.header.index'),
+                            'isActive' => $request->routeIs('admin.theme.header.*'),
+                            'isEnabled' => true,
+                        ],
+                    ],
+                ],
             ]);
         }
 
