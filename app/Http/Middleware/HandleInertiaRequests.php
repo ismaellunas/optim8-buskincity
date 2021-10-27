@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Setting;
 use App\Services\MenuService;
 use App\Services\TranslationService as TranslationSv;
 use Illuminate\Http\Request;
@@ -67,6 +68,17 @@ class HandleInertiaRequests extends Middleware
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
             'languageOptions' => TranslationSv::getLocaleOptions(),
+            'css.backend' => [
+                'app' => mix('css/app.css')->toHtml(),
+            ],
+            'css.frontend' => function () {
+                $urlCss = Setting::where('key', 'url_css')->first(['key', 'value']);
+                return [
+                    'app' => (
+                        $urlCss->value ?? mix('css/app.css')->toHtml()
+                    ),
+                ];
+            },
         ]);
     }
 }
