@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Media;
 use App\Models\Page;
 use App\Models\PageTranslation;
+use App\Services\PageService;
 use App\Services\TranslationService;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Http\Request;
@@ -16,10 +17,12 @@ class PageController extends CrudController
 {
     protected $model = Page::class;
     protected $baseRouteName = 'admin.pages';
+    protected $pageService;
 
-    public function __construct()
+    public function __construct(PageService $pageService)
     {
         $this->authorizeResource(Page::class, 'page');
+        $this->pageService = $pageService;
     }
 
     /**
@@ -80,16 +83,16 @@ class PageController extends CrudController
 
         $page = new $this->model;
         $locale = array_key_first($inputs);
+        $inputs[$locale]['plain_text_content'] = $this->pageService->transformComponentToText($inputs[$locale]['data']);
+
         $pageTranslation = $page->translate($locale);
+
         $this->getValidate($request, $pageTranslation->id ?? null);
 
         $page->fill($inputs);
         $page->author_id = Auth::id();
 
-        $page->storeEntitiesAsPlainText();
-
         $page->save();
-
 
         $request->session()->flash('message', 'Page created successfully!');
 
@@ -202,12 +205,18 @@ class PageController extends CrudController
      */
     public function update(Request $request, Page $page)
     {
+
         $locale = array_key_first($request->input('translations', []));
+
+        $inputs = $request->input('translations');
+
         $pageTranslation = $page->translate($locale);
+
+        $inputs[$locale]['plain_text_content'] = $this->pageService->transformComponentToText($inputs[$locale]['data']);
 
         $this->getValidate($request, $pageTranslation->id ?? null);
 
-        $page->fill($request->input('translations'));
+        $page->fill($inputs);
         $page->save();
 
         $this->generateFlashMessage('Page updated successfully!');

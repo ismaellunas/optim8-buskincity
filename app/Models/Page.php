@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Entities\Components\Text;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,6 +23,8 @@ class Page extends Model implements TranslatableContract
         'slug',
         'status',
         'title',
+        'locale',
+        'plain_text_content',
     ];
 
     public static function getStatusOptions(): array
@@ -62,19 +63,5 @@ class Page extends Model implements TranslatableContract
         return collect(self::getStatusOptions())->first(function ($status, $key) {
             return $this->status == $status['id'];
         })['value'];
-    }
-
-    // Store to new column
-    public function storeEntitiesAsPlainText()
-    {
-        $string = "";
-        foreach($this->data['entities'] as $entity)
-        {
-            $class = '\\App\\Entities\\Components\\' . $entity['componentName'];
-            $class = new $class($entity);
-            $string .= $class->getText() . ' ';
-        }
-
-        dd(trim($string));
     }
 }
