@@ -12,6 +12,8 @@
 
 <script>
     export default {
+        name: 'CardText',
+
         props: {
             id: String,
             entity: {type: Object, default: {}},

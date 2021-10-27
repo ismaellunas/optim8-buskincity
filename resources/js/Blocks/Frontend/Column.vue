@@ -14,6 +14,7 @@
 <script>
     import Card from '@/Blocks/Frontend/Contents/Card';
     import CardText from '@/Blocks/Frontend/Contents/CardText';
+    import Heading from '@/Blocks/Frontend/Contents/Heading';
     import { usePage } from '@inertiajs/inertia-vue3'
 
     export default {
@@ -21,6 +22,7 @@
         components: {
             Card,
             CardText,
+            Heading,
         },
         props: {
             components: {type: Array, default: []},

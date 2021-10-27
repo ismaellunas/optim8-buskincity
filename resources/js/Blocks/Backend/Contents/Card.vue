@@ -81,6 +81,7 @@
     import { inject } from "vue";
 
     export default {
+        name: 'Card',
         components: {
             SdbButton,
             SdbEditor,

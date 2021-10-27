@@ -1,51 +1,28 @@
 <template>
     <div>
-        <sdb-toolbar-content @delete-content="deleteContent"/>
-
         <component
             :is="headingTag"
             :class="headingClass"
-            contenteditable
-            @blur="onEdit"
             v-text="entity.content.heading.html"
-        >
-        </component>
+        />
     </div>
 </template>
 
 <script>
-    import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
-    import { useModelWrapper } from '@/Libs/utils';
     import { last, concat } from 'lodash';
 
     export default {
         name: 'Heading',
 
-        mixins: [
-            DeletableContentMixin
-        ],
-
-        components: {
-            SdbToolbarContent,
-        },
-
         props: {
             id: String,
-            modelValue: {type: Object},
+            entity: {type: Object, default: {}},
         },
 
-        setup(props, { emit }) {
+        setup(props) {
             return {
-                entity: useModelWrapper(props, emit),
-                config: props.modelValue.config,
+                config: props.entity?.config,
             };
-        },
-
-        methods: {
-            onEdit(evt){
-                this.entity.content.heading.html = evt.target.innerText;
-            },
         },
 
         computed: {

@@ -21,6 +21,7 @@
     import { useModelWrapper } from '@/Libs/utils'
 
     export default {
+        name: 'CardText',
         mixins: [
             DeletableContentMixin
         ],
