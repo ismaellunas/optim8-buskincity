@@ -68,7 +68,7 @@ class MenuService
         $user = $request->user();
 
         $menus = [
-            [
+            'dashboard' => [
                 'title' => 'Dashboard',
                 'link' => route('dashboard'),
                 'isActive' => $request->routeIs('dashboard'),
@@ -78,7 +78,13 @@ class MenuService
 
         if ($user->can('system.dashboard') && $request->routeIs('admin.*')) {
 
-            $menus = array_merge( $menus, [
+            $menus = [
+                [
+                    'title' => 'Dashboard',
+                    'link' => route('admin.dashboard'),
+                    'isActive' => $request->routeIs('admin.dashboard'),
+                    'isEnabled' => true,
+                ],
                 [
                     'title' => 'Pages',
                     'link' => route('admin.pages.index'),
@@ -128,7 +134,7 @@ class MenuService
                     'isActive' => $request->routeIs('admin.roles.*'),
                     'isEnabled' => $user->can('viewAny', Role::class),
                 ],
-            ]);
+            ];
         }
 
         return [
