@@ -10,6 +10,10 @@ use App\Http\Controllers\{
     UserController,
     UserRoleController
 };
+use App\Http\Controllers\Theme\{
+    HeaderController,
+    NavigationController,
+};
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
@@ -54,6 +58,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('AdminDashboard');
     })->middleware(['can:system.dashboard']);
+
+    Route::prefix('theme')->name('theme.')->group(function () {
+        Route::prefix('header')->name('header.')->group(function () {
+            Route::resource('navigation', NavigationController::class);
+            Route::get('/', [HeaderController::class, 'index'])->name('index');
+
+        });
+    });
 });
 
 Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->group(function () {
