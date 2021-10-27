@@ -38,14 +38,17 @@
                 </p>
             </div>
         </div>
-        <template v-for="(column, index) in block.columns">
+        <template
+            v-for="(column, index) in block.columns"
+            :key="column.id"
+        >
             <block-column
                 :id="column.id"
                 :can="can"
-                :isEditMode="isEditMode"
                 :components="block.columns[index].components"
                 :data-entities="entities"
                 :data-media="media"
+                :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
                 @setting-content="$emit('setting-content', $event)"
             />
@@ -54,7 +57,7 @@
 </template>
 
 <script>
-    import BlockColumn from '@/Blocks/Column';
+    import BlockColumn from '@/Blocks/Backend/Column';
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbButton from '@/Sdb/Button';
     import SdbSelect from '@/Sdb/Select';

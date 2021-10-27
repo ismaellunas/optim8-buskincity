@@ -1,8 +1,12 @@
-import { isArray, remove } from 'lodash';
+import MixinContentHasImage from '@/Mixins/ContentHasImage';
+import { remove, forEach } from 'lodash';
 import { isBlank } from '@/Libs/utils';
 import { oops as oopsAlert } from '@/Libs/alert';
 
 export default {
+    mixins: [
+        MixinContentHasImage,
+    ],
     setup() {
         return {
             pageMedia: [],
@@ -10,12 +14,8 @@ export default {
     },
     data() {
         return {
-            entityImage: {
-                mediaId: null,
-            },
             imageListQueryParams: {},
             imageListRouteName: 'admin.media.list.image',
-            images: null,
         }
     },
     methods: {
@@ -46,6 +46,7 @@ export default {
             }
         },
         selectImage(image) {
+            let hasImage = false;
             const locale = this.selectedLocale;
             if (!isBlank(this.entityImage.mediaId)) {
                 this.detachImageFromMedia(this.entityImage.mediaId, this.pageMedia);
@@ -54,7 +55,17 @@ export default {
             if (!this.images[ locale ]) {
                 this.images[ locale ] = [];
             }
-            this.images[locale].push(image);
+
+            forEach(this.images[ locale ], function(value) {
+                if (value.id === image.id) {
+                    value = image;
+                    hasImage = true;
+                }
+            });
+
+            if (!hasImage) {
+                this.images[locale].push(image);
+            }
 
             this.entityImage.mediaId = image.id;
 
@@ -87,59 +98,9 @@ export default {
         onImageUpdated() {},
         onImageListLoadedSuccess(data) {},
         onImageListLoadedFail(error) {},
-        getImageFromPageImages(pageImages, locale, mediaId) {
-            const localeImages = (
-                isArray(pageImages)
-                ? pageImages
-                : pageImages[locale]
-            );
-
-            return localeImages.find(image => {
-                return image.id === mediaId;
-            });
-        },
         search(term) {
             this.setTerm(term);
             this.getImagesList(route(this.imageListRouteName));
         },
     },
-    computed: {
-        hasImage() {
-            return (!isBlank(this.entityImage.mediaId));
-        },
-        imageSrc() {
-            const mediaId = this.entityImage.mediaId;
-            if (mediaId) {
-                const image = this.getImageFromPageImages(
-                    this.images,
-                    this.selectedLocale,
-                    mediaId
-                );
-
-                if (image) {
-                    return image.file_url;
-                }
-            }
-            return "";
-        },
-        altText() {
-            const mediaId = this.entityImage.mediaId;
-            if (mediaId) {
-                const image = this.getImageFromPageImages(
-                    this.images,
-                    this.selectedLocale,
-                    mediaId
-                );
-
-                if (image?.translations) {
-                    const translation = (
-                        image.translations.find(trans => trans.locale === this.selectedLocale)
-                        ?? image.translations[0]
-                    );
-                    return translation?.alt;
-                }
-            }
-            return "";
-        },
-    }
 };

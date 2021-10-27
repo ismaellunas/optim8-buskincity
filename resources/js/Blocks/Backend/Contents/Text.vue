@@ -28,7 +28,7 @@
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbTinymce from '@/Sdb/EditorTinymce';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { concat } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
     import { useModelWrapper } from '@/Libs/utils';
