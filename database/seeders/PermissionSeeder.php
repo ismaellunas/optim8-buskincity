@@ -50,6 +50,8 @@ class PermissionSeeder extends Seeder
             'user.add',
             'user.delete',
 
+            'system.dashboard',
+
             /*  BREAD:
             'browse',
             'read',
