@@ -31,4 +31,13 @@ return [
             'pptx',
         ],
     ],
+
+    'theme_colors' => [
+        'color_primary' => '#00d1b2',
+        'color_link' => '#485fc7',
+        'color_info' => '#3e8ed0',
+        'color_success' => '#48c78e',
+        'color_warning' => '#ffe08a',
+        'color_danger' => '#f14668',
+    ],
 ];
