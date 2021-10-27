@@ -60,14 +60,14 @@
 </template>
 
 <script>
-    import MixinContainImageContent from '@/Mixins/ContainImageContent';
+    import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinEditModeComponent from '@/Mixins/EditModeComponent';
     import MixinHasModal from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
     import SdbImage from '@/Sdb/Image';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3';
 
@@ -79,7 +79,7 @@
             SdbToolbarContent,
         },
         mixins: [
-            MixinContainImageContent,
+            MixinContentHasMediaLibrary,
             MixinDeletableContent,
             MixinEditModeComponent,
             MixinHasModal,
@@ -120,17 +120,17 @@
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
             },
-            onImageListLoadedSuccess(data) { /* @override Mixins/ContainImageContent */
+            onImageListLoadedSuccess(data) { /* @override Mixins/ContentHasMediaLibrary */
                 this.modalImages = data;
             },
-            onImageListLoadedFail(error) { /* @override Mixins/ContainImageContent */
+            onImageListLoadedFail(error) { /* @override Mixins/ContentHasMediaLibrary */
                 this.closeModal();
             },
-            onImageSelected() { /* @override Mixins/ContainImageContent */
+            onImageSelected() { /* @override Mixins/ContentHasMediaLibrary */
                 this.closeModal();
                 this.isFormOpen = false;
             },
-            onImageUpdated() { /* @override Mixins/ContainImageContent */
+            onImageUpdated() { /* @override Mixins/ContentHasMediaLibrary */
                 this.closeModal();
             },
         },
