@@ -2,16 +2,37 @@
 
 namespace App\Services;
 
-use App\Models\Category;
-use App\Models\Media;
-use App\Models\Page;
-use App\Models\Post;
-use App\Models\Role;
-use App\Models\User;
+use App\Models\{
+    Category,
+    Media,
+    Menu,
+    Page,
+    Post,
+    Role,
+    User,
+};
+use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
 class MenuService
 {
+    public function getRecords(
+        int $perPage = 15
+    ): LengthAwarePaginator {
+        return Menu::orderBy('id', 'DESC')
+            ->paginate($perPage);
+    }
+
+    public function getLastSaved()
+    {
+        $menu = Menu::orderBy('id', 'DESC')->first();
+        if ($menu) {
+            return Carbon::parse($menu->updated_at)->format('M d, Y \a\t h:m');
+        }
+        return '-';
+    }
+
     public static function generateMenus($locale)
     {
         $menus = [
