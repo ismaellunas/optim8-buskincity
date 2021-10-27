@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Setting;
 use App\Services\MenuService;
+use App\Services\SettingService;
 use App\Services\TranslationService as TranslationSv;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -71,14 +71,9 @@ class HandleInertiaRequests extends Middleware
             'css.backend' => [
                 'app' => mix('css/app.css')->toHtml(),
             ],
-            'css.frontend' => function () {
-                $urlCss = Setting::where('key', 'url_css')->first(['key', 'value']);
-                return [
-                    'app' => (
-                        $urlCss->value ?? mix('css/app.css')->toHtml()
-                    ),
-                ];
-            },
+            'css.frontend' => [
+                'app' => SettingService::getFrontendCssUrl(),
+            ]
         ]);
     }
 }
