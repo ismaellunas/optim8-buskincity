@@ -16,6 +16,7 @@
     import CardText from '@/Blocks/Frontend/Contents/CardText';
     import Heading from '@/Blocks/Frontend/Contents/Heading';
     import Image from '@/Blocks/Frontend/Contents/Image';
+    import Text from '@/Blocks/Frontend/Contents/Text';
     import { usePage } from '@inertiajs/inertia-vue3'
 
     export default {
@@ -25,6 +26,7 @@
             CardText,
             Heading,
             Image,
+            Text,
         },
         props: {
             components: {type: Array, default: []},
