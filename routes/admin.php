@@ -129,6 +129,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::prefix('theme')->name('theme.')->group(function () {
         Route::prefix('header')->name('header.')->group(function () {
             Route::resource('navigation', NavigationController::class);
+            Route::post('navigation/menu-items', [NavigationController::class, 'storeMenuItem'])->name('navigation.store.menu_item');
+            Route::put('navigation/{menuItem}/menu-items', [NavigationController::class, 'updateMenuItem'])->name('navigation.update.menu_item');
+            Route::delete('navigation/{menuItem}/menu-items', [NavigationController::class, 'deleteMenuItem'])->name('navigation.destroy.menu_item');
             Route::get('/', [HeaderController::class, 'index'])->name('index');
 
         });
