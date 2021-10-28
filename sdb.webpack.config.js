@@ -1,14 +1,15 @@
 const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = {
   mode: 'production',
   entry: {
-    "app": './resources/sass/app.scss',
+    "app": './resources/sass/theme_backend.sass',
   },
   output: {
-    path: path.resolve(__dirname, 'public/css'),
-    filename: 'css/app.css',
+    path: path.resolve(__dirname, 'storage/theme/css'),
+    filename: '[name].sass.bundle.js',
 	},
   module: {
     rules: [
@@ -17,23 +18,27 @@ module.exports = {
         use: [
           MiniCssExtractPlugin.loader,
           "css-loader",
-          "postcss-loader",
           {
             loader: "sass-loader",
             options: {
               implementation: require("sass"),
-              sassOptions: {
-                outputStyle: "compressed",
-              },
             },
           },
         ],
       },
     ],
   },
+  optimization: {
+    minimizer: [
+      // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
+      // `...`,
+      new CssMinimizerPlugin(),
+    ],
+  },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'app.css',
+      filename: "[name].css",
+      chunkFilename: "[id].css",
     })
   ]
 };
