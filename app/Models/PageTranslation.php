@@ -39,4 +39,12 @@ class PageTranslation extends Model implements PublishableInterface
     {
         return $this->belongsTo(Page::class);
     }
+
+    public function scopeSearch($query, string $term)
+    {
+        return $query
+            ->where('plain_text_content', 'ILIKE', '%'.$term.'%')
+            ->orWhere('title', 'ILIKE', '%'.$term.'%')
+            ->orWhere('excerpt', 'ILIKE', '%'.$term.'%');
+    }
 }

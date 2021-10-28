@@ -142,3 +142,6 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
 });
 
 Route::redirect('/', '/admin/login');
+
+
+Route::get('/get-search', [PageController::class, 'getSearch']);

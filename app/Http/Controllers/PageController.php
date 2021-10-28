@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Media;
 use App\Models\Page;
 use App\Models\PageTranslation;
-use App\Services\PageService;
+use App\Services\PageTranslationService;
 use App\Services\TranslationService;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class PageController extends CrudController
     protected $baseRouteName = 'admin.pages';
     protected $pageService;
 
-    public function __construct(PageService $pageService)
+    public function __construct(PageTranslationService $pageService)
     {
         $this->authorizeResource(Page::class, 'page');
         $this->pageService = $pageService;
@@ -294,5 +294,12 @@ class PageController extends CrudController
             }
         }
         return $translatedAttributes;
+    }
+
+    public function getSearch(Request $request)
+    {
+        $text = $request->get('term') ?? '';
+        $page = $this->pageService->getPageRecords($text);
+        return $page;
     }
 }
