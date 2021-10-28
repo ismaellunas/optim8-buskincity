@@ -143,7 +143,7 @@
             SdbErrorNotifications,
             SdbButton,
             SdbButtonLink,
-            SdbCheckbox
+            SdbCheckbox,
             SdbLink,
             SdbSocialMediaList,
         },
