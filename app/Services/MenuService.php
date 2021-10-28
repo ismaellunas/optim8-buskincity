@@ -26,7 +26,7 @@ class MenuService
 
     public function getLastSaved()
     {
-        $menu = Menu::orderBy('id', 'DESC')->first();
+        $menu = Menu::orderBy('updated_at', 'DESC')->first();
         if ($menu) {
             return Carbon::parse($menu->updated_at)->format('M d, Y \a\t h:m');
         }
