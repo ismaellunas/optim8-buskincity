@@ -44,8 +44,10 @@
                             <sdb-input-color
                                 v-model="form[color.key]"
                             />
-                            <p v-if="error(color.key)">
-                                {{ error(color.key) }}
+                            <p v-if="form.errors?.default && form.errors.default[color.key]">
+                                <sdb-input-error
+                                    :message="error(color.key)"
+                                />
                             </p>
                         </div>
                     </div>
@@ -61,6 +63,7 @@
     import SdbButton from '@/Sdb/Button';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbInputColor from '@/Sdb/InputColor';
+    import SdbInputError from '@/Sdb/InputError';
     import { forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
     import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
@@ -73,6 +76,7 @@
             SdbButton,
             SdbErrorNotifications,
             SdbInputColor,
+            SdbInputError,
         },
 
         mixins: [
@@ -142,6 +146,7 @@
                 const self = this;
                 confirmAlert('Are you sure you want to reset?')
                     .then((result) => {
+                        self.form.clearErrors();
                         if (result.isConfirmed) {
                             self.form.reset();
                         }
