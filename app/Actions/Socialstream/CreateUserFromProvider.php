@@ -3,6 +3,7 @@
 namespace App\Actions\Socialstream;
 
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
@@ -39,8 +40,10 @@ class CreateUserFromProvider implements CreatesUserFromProvider
     public function create(string $provider, ProviderUser $providerUser)
     {
         return DB::transaction(function () use ($provider, $providerUser) {
+            $name = UserService::splitName($providerUser->getName() ?? $providerUser->getNickname());
             return tap(User::create([
-                'name' => $providerUser->getName() ?? $providerUser->getNickname(),
+                'first_name' => $name['firstName'],
+                'last_name' => $name['lastName'],
                 'email' => $providerUser->getEmail(),
             ]), function (User $user) use ($provider, $providerUser) {
                 $user->markEmailAsVerified();

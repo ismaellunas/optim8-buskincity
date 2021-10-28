@@ -59,7 +59,7 @@
                     <div class="navbar-item">
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link">
-                                {{ $page.props.user.name }}
+                                {{ $page.props.user.full_name }}
                             </a>
 
                             <div class="navbar-dropdown is-boxed">
