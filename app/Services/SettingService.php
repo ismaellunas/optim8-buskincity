@@ -73,4 +73,11 @@ class SettingService
             $folder
         );
     }
+
+    public function saveCssUrl(string $url): bool
+    {
+        $setting = Setting::firstOrNew(['key' => 'url_css']);
+        $setting->value = $url;
+        return $setting->save();
+    }
 }
