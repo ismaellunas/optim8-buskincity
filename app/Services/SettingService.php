@@ -7,6 +7,7 @@ use App\Entities\MediaAsset;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Process\Process;
 use \finfo;
 
 class SettingService
@@ -79,5 +80,12 @@ class SettingService
         $setting = Setting::firstOrNew(['key' => 'url_css']);
         $setting->value = $url;
         return $setting->save();
+    }
+
+    public function clearStorageTheme(): bool
+    {
+        $process = new Process(['rm', '-rf', 'storage/theme']);
+        $process->run();
+        return $process->isSuccessful();
     }
 }

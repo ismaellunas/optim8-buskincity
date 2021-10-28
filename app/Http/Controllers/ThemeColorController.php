@@ -65,6 +65,8 @@ class ThemeColorController extends CrudController
 
         $this->settingService->saveCssUrl($asset->fileUrl);
 
+        $this->settingService->clearStorageTheme();
+
         $this->generateFlashMessage('Colors updated successfully!');
 
         return redirect()->route($this->baseRouteName.'.edit');
