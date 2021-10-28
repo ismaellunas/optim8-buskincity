@@ -41,7 +41,7 @@ class SettingService
 
     public function generateThemeCss()
     {
-        exec('cd .. && npx webpack --config sdb.webpack.config.js');
+        exec('cd .. && npx webpack --config webpack.config.sdb.js');
     }
 
     public function uploadThemeCssToCloudStorage(string $folderPrefix = null): MediaAsset
