@@ -123,6 +123,19 @@ class MenuService
                     'isEnabled' => $user->can('viewAny', Media::class),
                 ],
                 [
+                    'title' => 'Theme',
+                    'isActive' => $request->routeIs('admin.theme.*'),
+                    'isEnabled' => $user->hasRole('Administrator'),
+                    'children' => [
+                        [
+                            'title' => 'Colors',
+                            'link' => route('admin.theme.color.edit'),
+                            'isActive' => $request->routeIs('admin.theme.color.*'),
+                            'isEnabled' => $user->hasRole('Administrator'),
+                        ],
+                    ],
+                ],
+                [
                     'title' => 'All Users',
                     'link' => route('admin.users.index'),
                     'isActive' => $request->routeIs('admin.users.*'),
