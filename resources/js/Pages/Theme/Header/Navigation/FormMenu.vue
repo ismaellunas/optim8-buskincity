@@ -38,7 +38,7 @@
     import { success as successAlert } from '@/Libs/alert';
 
     export default {
-        name: 'ModalForm',
+        name: 'ModalFormMenu',
 
         components: {
             SdbButton,
