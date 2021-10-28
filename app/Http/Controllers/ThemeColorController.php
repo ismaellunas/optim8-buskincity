@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ThemeColorRequest;
 use App\Models\Setting;
 use App\Services\SettingService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Inertia\Inertia;
 
@@ -43,7 +43,7 @@ class ThemeColorController extends CrudController
         );
     }
 
-    public function update(Request $request)
+    public function update(ThemeColorRequest $request)
     {
         $colors = $request->all();
 
