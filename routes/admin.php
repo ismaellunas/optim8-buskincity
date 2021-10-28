@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     PermissionController,
     PostController,
     RoleController,
+    ThemeColorController,
     UserController,
     UserRoleController
 };
@@ -59,6 +60,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('AdminDashboard');
     })->middleware(['can:system.dashboard'])->name('dashboard');
+
+    Route::name('theme.')->prefix('theme')->group(function () {
+        Route::get('/color', [ThemeColorController::class, 'edit'])->name('color.edit');
+        Route::post('/color', [ThemeColorController::class, 'update'])->name('color.update');
+    });
 });
 
 Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->group(function () {
