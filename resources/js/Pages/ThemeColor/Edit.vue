@@ -20,7 +20,7 @@
                             type="button"
                             @click="resetColors"
                         >
-                            Reset
+                            Reset All
                         </sdb-button>
                     </div>
 
