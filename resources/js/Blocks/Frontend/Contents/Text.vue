@@ -1,45 +1,27 @@
 <template>
     <div :class="wrapperClass">
-        <sdb-toolbar-content
-            @delete-content="deleteContent"
-        />
         <div
             class="content"
             :class="contentClass"
+            v-html="entity.content.html"
         >
-            <sdb-tinymce
-                v-model="entity.content.html"
-                :class="editorClass"
-            />
         </div>
     </div>
 </template>
 
 <script>
-    import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import SdbTinymce from '@/Sdb/EditorTinymce';
-    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { concat } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
-    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'Text',
-        mixins: [
-            DeletableContentMixin,
-        ],
-        components: {
-            SdbTinymce,
-            SdbToolbarContent,
-        },
         props: {
             id: String,
-            modelValue: Object,
+            entity: {type: Object, default: {}},
         },
-        setup(props, { emit }) {
+        setup(props) {
             return {
-                config: props.modelValue.config,
-                entity: useModelWrapper(props, emit),
+                config: props.entity?.config,
             };
         },
         computed: {
@@ -47,11 +29,6 @@
                 return concat(
                     (this.config.text?.alignment ?? ''),
                     (this.config.text?.size ?? '')
-                ).filter(Boolean);
-            },
-            editorClass() {
-                return concat(
-                    (this.config.text?.alignment ?? '')
                 ).filter(Boolean);
             },
             wrapperClass() {
