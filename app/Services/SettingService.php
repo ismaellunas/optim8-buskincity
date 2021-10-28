@@ -33,4 +33,9 @@ class SettingService
 
         $disk->put('sdb_variables.sass', $variablesSass);
     }
+
+    public function generateThemeCss()
+    {
+        exec('cd .. && npx webpack --config sdb.webpack.config.js');
+    }
 }
