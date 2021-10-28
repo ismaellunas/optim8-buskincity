@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
+use App\Entities\CloudinaryStorage;
+use App\Entities\MediaAsset;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use \finfo;
 
 class SettingService
 {
@@ -37,5 +41,36 @@ class SettingService
     public function generateThemeCss()
     {
         exec('cd .. && npx webpack --config sdb.webpack.config.js');
+    }
+
+    public function uploadThemeCssToCloudStorage(string $folderPrefix = null): MediaAsset
+    {
+        $file_name = 'theme/css/app.css';
+        $file_path = storage_path($file_name);
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+
+        $file = new UploadedFile(
+            $file_path,
+            $file_name,
+            $finfo->file($file_path),
+            filesize($file_path),
+            0,
+            false
+        );
+
+        $storage = new CloudinaryStorage();
+
+        $folder = "assets";
+
+        if ($folderPrefix) {
+            $folder = $folderPrefix.'_'.$folder;
+        }
+
+        return $storage->upload(
+            $file,
+            "app.css",
+            "css",
+            $folder
+        );
     }
 }
