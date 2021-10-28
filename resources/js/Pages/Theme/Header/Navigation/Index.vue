@@ -97,11 +97,11 @@
             </div>
             <sdb-pagination :links="records.links"></sdb-pagination>
         </div>
-        <modal-form
+        <modal-form-menu
             v-if="isModalOpen"
             :base-route-name="baseRouteName"
             @close="closeModal()"
-        ></modal-form>
+        ></modal-form-menu>
     </app-layout>
 </template>
 
@@ -109,7 +109,7 @@
     import AppLayout from '@/Layouts/AppLayout';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasTab from '@/Mixins/HasTab';
-    import ModalForm from './Form';
+    import ModalFormMenu from './FormMenu';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
@@ -122,7 +122,7 @@
     export default {
         components: {
             AppLayout,
-            ModalForm,
+            ModalFormMenu,
             SdbButton,
             SdbButtonLink,
             SdbErrorNotifications,
