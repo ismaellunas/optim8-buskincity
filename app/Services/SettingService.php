@@ -19,6 +19,19 @@ class SettingService
         return $urlCss->value ?? mix('css/app.css')->toHtml();
     }
 
+    public function getColors(): array
+    {
+        return Setting::where('group', 'theme_color')
+            ->get([
+                'display_name',
+                'key',
+                'value',
+                'order',
+            ])
+            ->keyBy('key')
+            ->all();
+    }
+
     public function generateVariablesSass()
     {
         $colors = Setting::where('group', 'theme_color')

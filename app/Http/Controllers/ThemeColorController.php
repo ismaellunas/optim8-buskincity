@@ -24,21 +24,11 @@ class ThemeColorController extends CrudController
     {
         $defaultColors = config('constants.theme_colors');
 
-        $colors = Setting::where('group', 'theme_color')
-            ->get([
-                'display_name',
-                'key',
-                'value',
-                'order',
-            ])
-            ->keyBy('key')
-            ->all();
-
         return Inertia::render(
             'ThemeColor/Edit',
             $this->getData([
                 'defaultColors' => $defaultColors,
-                'colors' => $colors,
+                'colors' => $this->settingService->getColors(),
             ])
         );
     }
