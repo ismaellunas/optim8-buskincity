@@ -84,7 +84,11 @@ class SettingService
 
     public function clearStorageTheme(): bool
     {
-        $process = new Process(['rm', '-rf', 'storage/theme']);
+        $process = new Process([
+            'rm',
+            '-rf',
+            '..'.DIRECTORY_SEPARATOR.'storage'.DIRECTORY_SEPARATOR.'theme'
+        ]);
         $process->run();
         return $process->isSuccessful();
     }
