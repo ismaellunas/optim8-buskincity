@@ -39,7 +39,7 @@ class PostService
             ])
             ->when($term, function (Builder $query, $term) {
                 $query->where('title', 'ILIKE', '%'.$term.'%');
-                $query->orWhere('content', 'ILIKE', '%'.$term.'%');
+                $query->orWhere('plain_text_content', 'ILIKE', '%'.$term.'%');
                 $query->orWhere('excerpt', 'ILIKE', '%'.$term.'%');
                 $query->orWhere('slug', 'ILIKE', '%'.$term.'%');
             });
