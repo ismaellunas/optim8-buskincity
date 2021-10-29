@@ -22,6 +22,17 @@ class Menu extends Model
         $this->save();
     }
 
+    // Scope
+    public function scopeHeader($query)
+    {
+        return $query->where('type', self::TYPE_HEADER);
+    }
+
+    public function scopeFooter($query)
+    {
+        return $query->where('type', self::TYPE_FOOTER);
+    }
+
     // Relation
     public function menuItems()
     {
