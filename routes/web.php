@@ -30,7 +30,7 @@ Route::group(['middleware' => config('jetstream.middleware', ['web'])], function
     Route::get('/profile', [UserProfileController::class, 'show'])
         ->name('user.profile.show');
 
-    // Set 404 page for default user profile
+    // Set redirect to dashboard page for default user profile
     Route::get('/user/profile', function () {
         return redirect()->route('dashboard');
     })->name('profile.show');
