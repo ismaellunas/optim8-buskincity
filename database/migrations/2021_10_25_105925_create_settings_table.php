@@ -18,6 +18,7 @@ class CreateSettingsTable extends Migration
             $table->string('key', 255)->unique();
             $table->string('display_name', 255)->nullable();
             $table->text('value')->nullable();
+            $table->tinyInteger('order')->default(1);
             $table->string('group', 127)->nullable();
         });
     }

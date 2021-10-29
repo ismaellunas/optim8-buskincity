@@ -1,4 +1,12 @@
 <template>
+    <Head>
+        <link
+            v-for="css in $page.props.css.frontend"
+            rel="stylesheet"
+            :href="css"
+        >
+    </Head>
+
     <section class="hero is-fullheight">
         <div class="hero-body">
             <div class="container has-text-centered">
@@ -103,7 +111,7 @@
                                             </div>
 
                                             <sdb-button class="button is-block is-info is-fullwidth" :disabled="form.processing">
-                                                 Log In <i class="fas fa-sign-in-alt"></i>
+                                                Log In <i class="fas fa-sign-in-alt"></i>
                                             </sdb-button>
                                         </form>
                                     </div>
@@ -123,19 +131,21 @@
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
+    import SdbCheckbox from '@/Sdb/Checkbox';
     import SdbLink from '@/Sdb/Link';
     import SdbSocialMediaList from '@/Sdb/SocialMediaList'
-    import SdbCheckbox from '@/Sdb/Checkbox';
+    import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
+            Head,
             SdbFormInput,
             SdbErrorNotifications,
             SdbButton,
             SdbButtonLink,
+            SdbCheckbox,
             SdbLink,
             SdbSocialMediaList,
-            SdbCheckbox
         },
         mixins: [
             MixinHasPageErrors,
