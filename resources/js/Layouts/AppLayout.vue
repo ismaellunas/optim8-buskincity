@@ -1,9 +1,15 @@
 <template>
+    <Head>
+        <link
+            v-for="css in $page.props.css.backend"
+            rel="stylesheet"
+            :href="css"
+        >
+    </Head>
+
     <div id="main-container-wrapper">
 
         <sdb-navbar-menu />
-
-        <!-- <jet-banner /> -->
 
         <section class="hero is-small is-primary mb-4">
             <div class="hero-body">
@@ -22,13 +28,15 @@
 </template>
 
 <script>
-    //import JetBanner from '@/Jetstream/Banner'
     import SdbNavbarMenu from '@/Sdb/NavbarMenu';
+    import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'LayoutApp',
+
         components: {
-            //JetBanner,
+            Head,
             SdbNavbarMenu,
         },
-    }
+    };
 </script>

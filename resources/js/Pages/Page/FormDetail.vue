@@ -2,28 +2,29 @@
     <div class="columns">
         <div class="column is-4">
             <sdb-form-input
-                label="Title"
                 v-model="title"
-                :message="error('title')"
+                label="Title"
+                :message="error(selectedLocale+'.title')"
                 placeholder="e.g A Good News"
                 :disabled="disableInput"
                 required
+                @on-blur="populateSlug"
+                @on-keypress="keyPressTitle"
             />
         </div>
         <div class="column is-4">
-            <sdb-form-input
-                label="Slug"
+            <sdb-form-slug
                 v-model="slug"
-                :message="error('slug')"
-                placeholder="e.g. a-good-news"
+                label="Slug"
+                :message="error(selectedLocale+'.slug')"
                 :disabled="disableInput"
             />
         </div>
         <div class="column is-4">
             <sdb-form-select
-                label="Status"
                 v-model="status"
-                :message="error('status')"
+                label="Status"
+                :message="error(selectedLocale+'.status')"
                 :disabled="disableInput"
                 class="is-fullwidth"
             >
@@ -34,24 +35,24 @@
         </div>
     </div>
     <sdb-form-textarea
-        label="Excerpt"
         v-model="excerpt"
-        :message="error('excerpt')"
+        label="Excerpt"
+        :message="error(selectedLocale+'.excerpt')"
         placeholder="..."
         :disabled="disableInput"
         rows="2"
     />
     <sdb-form-input
-        label="Meta Title"
         v-model="meta_title"
-        :message="error('meta_title')"
+        label="Meta Title"
+        :message="error(selectedLocale+'.meta_title')"
         placeholder="meta title"
         :disabled="disableInput"
     />
     <sdb-form-input
-        label="Meta Description"
         v-model="meta_description"
-        :message="error('meta_description')"
+        label="Meta Description"
+        :message="error(selectedLocale+'.meta_description')"
         placeholder="meta description"
         :disabled="disableInput"
     />
@@ -61,14 +62,17 @@
     import HasPageErrors from '@/Mixins/HasPageErrors';
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormSelect from '@/Sdb/Form/Select';
+    import SdbFormSlug from '@/Sdb/Form/Slug';
     import SdbFormTextarea from '@/Sdb/Form/Textarea';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, convertToSlug } from '@/Libs/utils';
+    import { isEmpty } from 'lodash';
 
     export default {
         mixins: [HasPageErrors],
         components: {
             SdbFormInput,
             SdbFormSelect,
+            SdbFormSlug,
             SdbFormTextarea,
         },
         props: [
@@ -81,6 +85,7 @@
             'errors',
             'disableInput',
             'statusOptions',
+            'selectedLocale',
         ],
         setup(props, { emit }) {
             return {
@@ -92,5 +97,18 @@
                 title: useModelWrapper(props, emit, 'title'),
             }
         },
+        methods: {
+            keyPressTitle(event) {
+                if (event.keyCode == 13) {
+                    this.populateSlug(event);
+                }
+                return true;
+            },
+            populateSlug(event) {
+                if (isEmpty(this.slug) && !isEmpty(this.title)) {
+                    this.slug = convertToSlug(this.title);
+                }
+            },
+        }
     }
 </script>
