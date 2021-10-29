@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             PermissionSeeder::class,
+            SettingSeeder::class,
         ]);
 
         // Wildcard permissions
@@ -38,7 +39,8 @@ class DatabaseSeeder extends Seeder
         }
 
         $superAdminUser = User::factory()->create([
-            'name' => 'Super Administrator',
+            'first_name' => 'Super',
+            'last_name' => 'Administrator',
             'email' => 'super.administrator@sdbagency.com',
         ]);
 
@@ -46,7 +48,8 @@ class DatabaseSeeder extends Seeder
 
         $adminUser = User::factory()
             ->create([
-                'name' => 'Administrator',
+                'first_name' => 'Admin',
+                'last_name' => 'Administrator',
                 'email' => 'admin@sdbagency.com',
             ]);
 

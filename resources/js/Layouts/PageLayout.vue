@@ -1,5 +1,13 @@
 <template>
-    <nav class="navbar is-dark">
+    <Head>
+        <link
+            v-for="css in $page.props.css.frontend"
+            rel="stylesheet"
+            :href="css"
+        >
+    </Head>
+
+    <nav class="navbar is-primary">
         <div class="navbar-brand">
             <sdb-link class="navbar-item" href="/">
                 <img src="https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752" alt="" height="28">
@@ -51,8 +59,11 @@
 
 <script>
     import SdbLink from '@/Sdb/Link';
+    import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'LayoutPage',
+
         props: [
             'currentLanguage',
             'languageOptions',
@@ -63,7 +74,12 @@
             //'jetstream',
             //'socialstream',
         ],
-        components: { SdbLink },
+
+        components: {
+            Head,
+            SdbLink,
+        },
+
         computed: {
             availableLanguages() {
                 return this
