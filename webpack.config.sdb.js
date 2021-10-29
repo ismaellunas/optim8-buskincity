@@ -5,7 +5,7 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 module.exports = {
   mode: 'production',
   entry: {
-    "app": './resources/sass/theme_backend.sass',
+    "app": './resources/sass/theme_app.scss',
   },
   output: {
     path: path.resolve(__dirname, 'storage/theme/css'),
@@ -30,8 +30,6 @@ module.exports = {
   },
   optimization: {
     minimizer: [
-      // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
-      // `...`,
       new CssMinimizerPlugin(),
     ],
   },

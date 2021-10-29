@@ -1,4 +1,12 @@
 <template>
+    <Head>
+        <link
+            v-for="css in $page.props.css.backend"
+            rel="stylesheet"
+            :href="css"
+        >
+    </Head>
+
     <section class="hero is-fullheight">
         <div class="hero-body">
             <div class="container has-text-centered">
@@ -100,9 +108,11 @@
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbLink from '@/Sdb/Link';
+    import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
+            Head,
             JetButton,
             JetCheckbox,
             JetInput,

@@ -89,7 +89,7 @@ class MenuService
         $user = $request->user();
 
         $menus = [
-            [
+            'dashboard' => [
                 'title' => 'Dashboard',
                 'link' => route('dashboard'),
                 'isActive' => $request->routeIs('dashboard'),
@@ -99,7 +99,13 @@ class MenuService
 
         if ($user->can('system.dashboard') && $request->routeIs('admin.*')) {
 
-            $menus = array_merge( $menus, [
+            $menus = [
+                [
+                    'title' => 'Dashboard',
+                    'link' => route('admin.dashboard'),
+                    'isActive' => $request->routeIs('admin.dashboard'),
+                    'isEnabled' => true,
+                ],
                 [
                     'title' => 'Pages',
                     'link' => route('admin.pages.index'),
@@ -138,6 +144,25 @@ class MenuService
                     'isEnabled' => $user->can('viewAny', Media::class),
                 ],
                 [
+                    'title' => 'Theme',
+                    'isActive' => $request->routeIs('admin.theme.*'),
+                    'isEnabled' => $user->hasRole('Administrator'),
+                    'children' => [
+                        [
+                            'title' => 'Colors',
+                            'link' => route('admin.theme.color.edit'),
+                            'isActive' => $request->routeIs('admin.theme.color.*'),
+                            'isEnabled' => $user->hasRole('Administrator'),
+                        ],
+                        [
+                            'title' => 'Font Size',
+                            'link' => route('admin.theme.font-size.edit'),
+                            'isActive' => $request->routeIs('admin.theme.font-size.*'),
+                            'isEnabled' => $user->hasRole('Administrator'),
+                        ],
+                    ],
+                ],
+                [
                     'title' => 'All Users',
                     'link' => route('admin.users.index'),
                     'isActive' => $request->routeIs('admin.users.*'),
@@ -164,7 +189,7 @@ class MenuService
                         ],
                     ],
                 ],
-            ]);
+            ];
         }
 
         return [
