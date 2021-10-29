@@ -133,6 +133,12 @@ class MenuService
                             'isActive' => $request->routeIs('admin.theme.color.*'),
                             'isEnabled' => $user->hasRole('Administrator'),
                         ],
+                        [
+                            'title' => 'Font Size',
+                            'link' => route('admin.theme.font-size.edit'),
+                            'isActive' => $request->routeIs('admin.theme.font-size.*'),
+                            'isEnabled' => $user->hasRole('Administrator'),
+                        ],
                     ],
                 ],
                 [

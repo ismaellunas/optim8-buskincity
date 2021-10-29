@@ -1,5 +1,5 @@
 $primary: {{ $color_primary }}
-$link: {{ $color_link }} 
+$link: {{ $color_link }}
 $info: {{ $color_info }}
 $success: {{ $color_success }}
 $warning: {{ $color_warning }}
