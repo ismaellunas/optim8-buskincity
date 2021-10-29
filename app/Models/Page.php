@@ -47,7 +47,8 @@ class Page extends Model implements TranslatableContract
         return $query->whereHas('translation', function ($query) use ($term) {
             $query
                 ->where('title', 'ILIKE', '%'.$term.'%')
-                ->orWhere('slug', 'ILIKE', '%'.$term.'%');
+                ->orWhere('slug', 'ILIKE', '%'.$term.'%')
+                ->orWhere('plain_text_content', 'ILIKE', '%'.$term.'%');
         });
     }
 

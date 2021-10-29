@@ -24,8 +24,6 @@ class PageController extends CrudController
 
     public function __construct(PageService $pageService)
     {
-        $this->pageService = $pageService;
-
         $this->authorizeResource(Page::class, 'page');
         $this->pageService = $pageService;
     }

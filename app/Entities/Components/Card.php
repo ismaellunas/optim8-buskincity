@@ -3,6 +3,7 @@
 namespace App\Entities\Components;
 
 use App\Contracts\PageBuilderComponentInterface;
+use App\Helpers\HtmlToText;
 
 class Card implements PageBuilderComponentInterface
 {
@@ -15,6 +16,6 @@ class Card implements PageBuilderComponentInterface
 
     public function getText(): string
     {
-        return strip_tags(html_entity_decode($this->data['content']['cardContent']['content']['html']));
+        return HtmlToText::convert($this->data['content']['cardContent']['content']['html']);
     }
 }
