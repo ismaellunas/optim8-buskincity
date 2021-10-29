@@ -32,6 +32,19 @@ class SettingService
             ->all();
     }
 
+    public function getFontSizes(): array
+    {
+        return Setting::where('group', 'font_size')
+            ->get([
+                'display_name',
+                'key',
+                'value',
+                'order',
+            ])
+            ->keyBy('key')
+            ->all();
+    }
+
     public function generateVariablesSass()
     {
         $colors = Setting::where('group', 'theme_color')
