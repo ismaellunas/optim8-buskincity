@@ -50,6 +50,13 @@ class PermissionSeeder extends Seeder
             'user.add',
             'user.delete',
 
+            'theme.header.*',
+            'theme.header.browse',
+            'theme.header.read',
+            'theme.header.edit',
+            'theme.header.add',
+            'theme.header.delete',
+
             'system.dashboard',
 
             /*  BREAD:
