@@ -22,7 +22,7 @@ use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 |
 */
 
-Route::group(['middleware' => config('jetstream.middleware', ['web'])], function () {
+Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
