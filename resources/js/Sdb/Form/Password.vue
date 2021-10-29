@@ -4,11 +4,12 @@
 
         <sdb-field class="has-addons mb-0">
             <div class="control is-expanded">
-                <sdb-input
+                <sdb-input-password
                     ref="input"
                     v-bind="$attrs"
                     :type="type"
                     :disabled="disabled"
+                    :has-error="hasError"
                     :placeholder="placeholder"
                     :required="required"
                     :value="modelValue"
@@ -41,7 +42,7 @@
 <script>
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbField from '@/Sdb/Field';
-    import SdbInput from '@/Sdb/Input';
+    import SdbInputPassword from '@/Sdb/InputPassword';
     import SdbInputError from '@/Sdb/InputError';
     import SdbLabel from '@/Sdb/Label';
 
@@ -50,7 +51,7 @@
         components: {
             SdbButtonIcon,
             SdbField,
-            SdbInput,
+            SdbInputPassword,
             SdbInputError,
             SdbLabel,
         },
@@ -79,6 +80,11 @@
                 type: 'password',
                 isShowPassword: false,
             };
+        },
+        computed: {
+            hasError() {
+                return this.message ? true : false;
+            },
         },
         methods: {
             changeTypeInput() {
