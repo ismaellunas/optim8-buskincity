@@ -66,75 +66,45 @@
                                         Lorem ipsum dolor sit amet.
                                     </h2>
                                     <div class="has-text-left">
-                                        <!--
-                                        <form @submit.prevent="submit">
-                                            <div class="field">
-                                                <jet-label for="email" value="Email" />
-                                                <div class="control">
-                                                    <jet-input
-                                                        id="email"
-                                                        type="email"
-                                                        v-model="form.email"
-                                                        required
-                                                        autofocus
-                                                        placeholder="Enter your email"
-                                                        />
-                                                </div>
-                                            </div>
-                                            <div class="field">
-                                                <jet-label for="password" value="Password" />
-                                                <div class="control">
-                                                    <jet-input
-                                                        id="password"
-                                                        type="password"
-                                                        v-model="form.password"
-                                                        required
-                                                        autocomplete="current-password"
-                                                        placeholder="Enter your password"
-                                                        />
-                                                </div>
-                                            </div>
-                                            <div class="field columns">
-                                                <div class="column has-text-left">
-                                                    <label class="checkbox">
-                                                        <jet-checkbox name="remember" v-model:checked="form.remember" />
-                                                        <span>Remember me</span>
-                                                    </label>
-                                                </div>
-                                                <div class="column has-text-right">
-                                                    <inertia-link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
-                                                        Forgot your password?
-                                                    </inertia-link>
-                                                </div>
-                                            </div>
-                                            <jet-button class="button is-block is-info is-fullwidth">
-                                                Log In <i class="fa fa-sign-in" aria-hidden="true"></i>
-                                            </jet-button>
-                                        </form>
-                                        -->
-
-                                        <jet-validation-errors class="mb-4" />
 
                                         <form @submit.prevent="submit">
-                                            <div class="field">
-                                                <jet-label for="name" value="Name" />
-                                                <jet-input id="name" type="text" v-model="form.name" required autofocus autocomplete="name" />
-                                            </div>
 
-                                            <div class="field">
-                                                <jet-label for="email" value="Email" />
-                                                <jet-input id="email" type="email" v-model="form.email" required />
-                                            </div>
+                                            <sdb-form-input
+                                                v-model="form.first_name"
+                                                label="First Name"
+                                                required
+                                                autofocus
+                                                :message="error('first_name')"
+                                            ></sdb-form-input>
 
-                                            <div class="field">
-                                                <jet-label for="password" value="Password" />
-                                                <jet-input id="password" type="password" v-model="form.password" required autocomplete="new-password" />
-                                            </div>
+                                            <sdb-form-input
+                                                v-model="form.last_name"
+                                                label="Last Name"
+                                                required
+                                                :message="error('last_name')"
+                                            ></sdb-form-input>
 
-                                            <div class="field">
-                                                <jet-label for="password_confirmation" value="Confirm Password" />
-                                                <jet-input id="password_confirmation" type="password" v-model="form.password_confirmation" required autocomplete="new-password" />
-                                            </div>
+                                            <sdb-form-input
+                                                v-model="form.email"
+                                                label="Email"
+                                                required
+                                                type="email"
+                                                :message="error('email')"
+                                            ></sdb-form-input>
+
+                                            <sdb-form-input
+                                                v-model="form.password"
+                                                label="Password"
+                                                type="password"
+                                                :message="error('password')"
+                                            ></sdb-form-input>
+
+                                            <sdb-form-input
+                                                v-model="form.password_confirmation"
+                                                label="Password Confirmation"
+                                                type="password"
+                                                :message="error('password_confirmation')"
+                                            ></sdb-form-input>
 
                                             <div class="flex mt-4">
                                                 <div class="columns is-gapless">
@@ -144,9 +114,9 @@
                                                         </span>
                                                     </div>
                                                     <div class="column is-one-third has-text-right">
-                                                        <jet-button class="button is-info" :disabled="form.processing">
+                                                        <sdb-button class="button is-info" :disabled="form.processing">
                                                             Create Account
-                                                        </jet-button>
+                                                        </sdb-button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -164,30 +134,31 @@
 </template>
 
 <script>
-    import JetButton from '@/Jetstream/Button'
-    import JetInput from '@/Jetstream/Input'
-    import JetCheckbox from "@/Jetstream/Checkbox";
-    import JetValidationErrors from '@/Jetstream/ValidationErrors'
-    import JetLabel from '@/Jetstream/Label'
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbSocialMediaList from '@/Sdb/SocialMediaList'
+    import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbButton from '@/Sdb/Button';
 
     export default {
         components: {
-            JetButton,
-            JetInput,
-            JetCheckbox,
-            JetValidationErrors,
-            JetLabel,
             SdbButtonLink,
             SdbSocialMediaList,
+            SdbFormInput,
+            SdbErrorNotifications,
+            SdbButton
         },
+        mixins: [
+            MixinHasPageErrors,
+        ],
 
         data() {
             return {
                 isSocialMediaLogin: true,
                 form: this.$inertia.form({
-                    name: '',
+                    first_name: '',
+                    last_name: '',
                     email: '',
                     password: '',
                     password_confirmation: '',

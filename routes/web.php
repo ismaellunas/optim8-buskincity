@@ -49,6 +49,10 @@ Route::get('/user/remove-facebook', function() {
     echo "Remove facebook account page";
 });
 
+Route::get('test-theme', function () {
+    return Inertia::render('TestTheme');
+});
+
 Route::group([
     'prefix' => '{locale}',
     'where' => ['locale' => '[a-zA-Z]{2}'],

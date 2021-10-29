@@ -33,7 +33,8 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
     ];
@@ -66,6 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $appends = [
         'profile_photo_url',
+        'full_name',
     ];
 
     /* Relationship: */
@@ -82,6 +84,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function media()
     {
         return $this->hasMany(Media::class, 'author_id');
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return trim(ucfirst($this->first_name) . ' ' . ucfirst($this->last_name));
     }
 
     public function scopeSearch($query, string $term)
@@ -121,7 +128,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function saveFromInputs(array $inputs)
     {
-        $this->name = $inputs['name'];
+        $this->first_name = $inputs['first_name'];
+        $this->last_name = $inputs['last_name'];
         $this->email = $inputs['email'];
         $this->save();
     }

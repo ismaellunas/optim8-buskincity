@@ -7,12 +7,19 @@ use App\Http\Controllers\{
     PermissionController,
     PostController,
     RoleController,
+    ThemeColorController,
+    ThemeFontSizeController,
     UserController,
     UserRoleController
 };
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+
+use App\Entities\CloudinaryStorage;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Setting;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +60,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('dashboard', function () {
         return Inertia::render('AdminDashboard');
-    })->middleware(['can:system.dashboard']);
+    })->middleware(['can:system.dashboard'])->name('dashboard');
+
+    Route::name('theme.')->prefix('theme')->group(function () {
+        Route::get('/color', [ThemeColorController::class, 'edit'])->name('color.edit');
+        Route::post('/color', [ThemeColorController::class, 'update'])->name('color.update');
+        Route::get('/font-size', [ThemeFontSizeController::class, 'edit'])->name('font-size.edit');
+        Route::post('/font-size', [ThemeFontSizeController::class, 'update'])->name('font-size.update');
+    });
 });
 
 Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->group(function () {

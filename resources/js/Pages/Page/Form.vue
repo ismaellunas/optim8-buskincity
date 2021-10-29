@@ -27,6 +27,7 @@
                         :disableInput="disableInput"
                         :errors="errors"
                         :statusOptions="statusOptions"
+                        :selected-locale="selectedLocale"
                     />
                 </sdb-provide-inject-tab>
                 <sdb-provide-inject-tab title="Builder">
@@ -68,7 +69,8 @@
     import SdbProvideInjectTab from '@/Sdb/ProvideInjectTab/Tab';
     import SdbProvideInjectTabs from '@/Sdb/ProvideInjectTab/Tabs';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
-    import { ref } from "vue";
+    import { provide, ref } from "vue";
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -101,6 +103,9 @@
                 activeTab = ref(0);
             }
 
+            // Set provide and inject of images data
+            provide('dataImages', usePage().props.value.images ?? {});
+
             return {
                 activeTab,
                 form: useModelWrapper(props, emit),
@@ -111,6 +116,6 @@
             return {
                 disableInput: false,
             };
-        },
+        }
     }
 </script>

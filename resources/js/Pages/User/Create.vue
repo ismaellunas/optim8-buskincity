@@ -74,7 +74,8 @@
         },
         setup(props) {
             const form = {
-                name: null,
+                first_name: null,
+                last_name: null,
                 email: null,
                 role: null,
                 password: null,

@@ -23,8 +23,8 @@
 
                 <div v-show="isTabActive('content')">
                     <sdb-form-input
-                        label="Title"
                         v-model="form.title"
+                        label="Title"
                         :message="error('title')"
                         placeholder="e.g A Good News"
                         required
@@ -32,32 +32,12 @@
                         @on-keypress="keyPressTitle"
                     />
 
-                    <sdb-form-input-addons
+                    <sdb-form-slug
                         v-model="form.slug"
                         label="Slug"
-                        placeholder="e.g. a-good-news"
-                        required
-                        :disabled="isSlugDisabled || isInputDisabled"
                         :message="error('slug')"
-                        @on-keypress="keyPressSlug"
-                    >
-                        <template v-slot:afterInput>
-                            <div class="control">
-                                <sdb-button-icon
-                                    v-show="isSlugDisabled"
-                                    icon="fas fa-pen"
-                                    type="button"
-                                    @click="isSlugDisabled = false"
-                                />
-                                <sdb-button-icon
-                                    v-show="!isSlugDisabled"
-                                    icon="fas fa-ban"
-                                    type="button"
-                                    @click="isSlugDisabled = true"
-                                />
-                            </div>
-                        </template>
-                    </sdb-form-input-addons>
+                        :disabled="isInputDisabled"
+                    />
 
                     <sdb-form-select
                         v-model="form.locale"
@@ -251,7 +231,7 @@
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbFormDateTime from '@/Sdb/Form/DateTime';
     import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormInputAddons from '@/Sdb/Form/InputAddons';
+    import SdbFormSlug from '@/Sdb/Form/Slug';
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbFormTextEditorFull from '@/Sdb/Form/TextEditorFull';
     import SdbFormTextarea from '@/Sdb/Form/Textarea';
@@ -261,7 +241,7 @@
     import SdbTab from '@/Sdb/Tab';
     import SdbTabList from '@/Sdb/TabList';
     import { acceptedImageTypes } from '@/Libs/defaults';
-    import { convertToSlug, regexSlug } from '@/Libs/utils';
+    import { convertToSlug } from '@/Libs/utils';
     import { head, isEmpty, keys, pull, sortBy } from 'lodash';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
@@ -274,7 +254,7 @@
             SdbButtonLink,
             SdbFormDateTime,
             SdbFormInput,
-            SdbFormInputAddons,
+            SdbFormSlug,
             SdbFormSelect,
             SdbFormTextEditorFull,
             SdbFormTextarea,
@@ -332,10 +312,6 @@
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
             },
-            onImageSelected() { /* @override Mixins/ContainImageContent */
-                this.closeModal();
-                this.isFormOpen = false;
-            },
             selectFile(file) {
                 this.form.cover_image_id = file.id;
                 this.coverSrc = file.file_url;
@@ -353,20 +329,6 @@
                 if (isEmpty(this.form.slug)) {
                     this.form.slug = convertToSlug(this.form.title);
                 }
-            },
-            keyPressSlug(event) {
-                // @see https://stackoverflow.com/questions/61938667/vue-js-how-to-allow-an-user-to-type-only-letters-in-an-input-field
-                let char = String.fromCharCode(event.keyCode);
-                const lastCharacter = event.target.value.slice(-1);
-
-                if ( (char === ' ' || char === '_') && (lastCharacter !== '-')) {
-                    event.target.value += '-';
-                } else if (char === '-' && lastCharacter === '-') {
-                    event.target.value += '';
-                } else if ((new RegExp('^['+regexSlug+']+$')).test(char)) {
-                    return true;
-                }
-                event.preventDefault();
             },
             keyPressTitle(event) {
                 if (event.keyCode == 13) {
