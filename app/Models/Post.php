@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Contracts\PublishableInterface;
+use App\Helpers\HtmlToText;
 use App\Models\Category;
 use App\Models\Media;
 use App\Services\PostService;
@@ -130,7 +131,7 @@ class Post extends BaseModel implements PublishableInterface
 
     public function saveFromInputs(array $inputs)
     {
-        $inputs['plain_text_content'] = $this->convertToPlainText($inputs['content']);
+        $inputs['plain_text_content'] = HtmlToText::convert($inputs['content']);
 
         $this->fill($inputs);
 
@@ -151,10 +152,5 @@ class Post extends BaseModel implements PublishableInterface
     public function syncCategories(array $categoryIds)
     {
         return $this->categories()->sync($categoryIds);
-    }
-
-    public function convertToPlainText(string $content): string
-    {
-        return preg_replace( "/\r|\n/", " ", strip_tags(html_entity_decode($content)));
     }
 }
