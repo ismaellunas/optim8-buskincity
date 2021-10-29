@@ -8,7 +8,6 @@
         placeholder="e.g. a-good-news"
         @input="$emit('update:modelValue', $event.target.value)"
         @on-keypress="keyPressSlug"
-        @on-blur="$emit('on-blur', $event)"
     >
         <template v-slot:afterInput>
             <div class="control">
@@ -52,7 +51,6 @@
 
         emits: [
             'update:modelValue',
-            'on-blur'
         ],
 
         setup(props, { emit }) {
