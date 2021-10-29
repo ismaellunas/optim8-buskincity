@@ -11,6 +11,12 @@ use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
+    private $menuService;
+
+    public function __construct(MenuService $menuService)
+    {
+        $this->menuService = $menuService;
+    }
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -64,7 +70,7 @@ class HandleInertiaRequests extends Middleware
                     )
                 )
                 ? MenuService::generateBackendMenu($request)
-                : MenuService::generateMenus(TranslationSv::currentLanguage()),
+                : $this->menuService->generateMenus(TranslationSv::currentLanguage()),
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
             'languageOptions' => TranslationSv::getLocaleOptions(),
