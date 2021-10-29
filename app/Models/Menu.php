@@ -10,9 +10,11 @@ class Menu extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'is_active',
+        'type',
     ];
+
+    const TYPE_HEADER = 1;
+    const TYPE_FOOTER = 2;
 
     public function saveFromInputs(array $inputs)
     {
