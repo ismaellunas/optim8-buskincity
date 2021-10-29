@@ -22,12 +22,40 @@
         <div id="navbarExampleTransparentExample" class="navbar-menu">
             <div class="navbar-start">
                 <sdb-link href="/" class="navbar-item">Home</sdb-link>
-                <sdb-link
-                    v-for="menuItem in menus.navbar"
-                    :href="menuItem.link"
-                    class="navbar-item">
-                    {{ menuItem.title }}
-                </sdb-link>
+                <template
+                    v-for="(menu, index) in menus"
+                    :key="index"
+                >
+                    <template v-if="menu.children.length > 0">
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a
+                                class="navbar-link"
+                            >
+                                {{ menu.title }}
+                            </a>
+                            <div class="navbar-dropdown">
+                                <template
+                                    v-for="childMenu in menu.children"
+                                >
+                                    <sdb-link
+                                        class="navbar-item"
+                                        :href="childMenu.link"
+                                    >
+                                        {{ childMenu.title }}
+                                    </sdb-link>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <sdb-link
+                            class="navbar-item"
+                            :href="menu.link"
+                        >
+                            {{ menu.title }}
+                        </sdb-link>
+                    </template>
+                </template>
             </div>
 
             <div class="navbar-end">
