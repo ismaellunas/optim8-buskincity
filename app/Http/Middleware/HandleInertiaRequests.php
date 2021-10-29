@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\TranslationService as TranslationSv;
 use App\Services\MenuService;
+use App\Services\TranslationService as TranslationSv;
 use Illuminate\Http\Request;
-use Inertia\Middleware;
 use Illuminate\Support\Facades\Session;
+use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {

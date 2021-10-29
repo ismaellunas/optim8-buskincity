@@ -16,11 +16,11 @@
                             ref="photo"
                             @change="updatePhotoPreview">
 
-                <jet-label for="photo" value="Photo" />
+                <sdb-label for="photo" value="Photo" />
 
                 <!-- Current Profile Photo -->
                 <div class="mt-2" v-show="! photoPreview">
-                    <img :src="user.profile_photo_url" :alt="user.name" class="rounded-full h-20 w-20 object-cover">
+                    <img :src="user.profile_photo_url" :alt="user.full_name" class="rounded-full h-20 w-20 object-cover">
                 </div>
 
                 <!-- New Profile Photo Preview -->
@@ -30,63 +30,89 @@
                     </span>
                 </div>
 
-                <jet-secondary-button class="mt-2 mr-2" type="button" @click.prevent="selectNewPhoto">
+                <sdb-button
+                    class="is-warning mt-2 mr-2"
+                    type="button"
+                    @click.prevent="selectNewPhoto"
+                >
                     Select A New Photo
-                </jet-secondary-button>
+                </sdb-button>
 
-                <jet-secondary-button type="button" class="mt-2" @click.prevent="deletePhoto" v-if="user.profile_photo_path">
+                <sdb-button
+                    v-if="user.profile_photo_path"
+                    class="is-warning mt-2"
+                    type="button"
+                    @click.prevent="deletePhoto"
+                >
                     Remove Photo
-                </jet-secondary-button>
+                </sdb-button>
 
                 <jet-input-error :message="form.errors.photo" class="mt-2" />
             </div>
 
-            <!-- Name -->
-            <div class="col-span-6 sm:col-span-4">
-                <jet-label for="name" value="Name" />
-                <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autocomplete="name" />
-                <jet-input-error :message="form.errors.name" class="mt-2" />
-            </div>
+            <sdb-form-input
+                v-model="form.first_name"
+                label="First Name"
+                required
+                :message="form.errors.first_name"
+            ></sdb-form-input>
 
-            <!-- Email -->
-            <div class="col-span-6 sm:col-span-4">
-                <jet-label for="email" value="Email" />
-                <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" />
-                <jet-input-error :message="form.errors.email" class="mt-2" />
-            </div>
+            <sdb-form-input
+                v-model="form.last_name"
+                label="Last Name"
+                required
+                :message="form.errors.last_name"
+            ></sdb-form-input>
+
+            <sdb-form-input
+                v-model="form.email"
+                label="Email"
+                required
+                type="email"
+                :message="form.errors.email"
+            ></sdb-form-input>
+
         </template>
 
         <template #actions>
-            <jet-action-message :on="form.recentlySuccessful" class="mr-3">
+            <sdb-action-message :isActive="form.recentlySuccessful" class="mr-3">
                 Saved.
-            </jet-action-message>
+            </sdb-action-message>
 
-            <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <sdb-button
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                class="is-primary"
+            >
                 Save
-            </jet-button>
+            </sdb-button>
         </template>
     </jet-form-section>
 </template>
 
 <script>
-    import JetButton from '@/Jetstream/Button'
-    import JetFormSection from '@/Jetstream/FormSection'
-    import JetInput from '@/Jetstream/Input'
-    import JetInputError from '@/Jetstream/InputError'
-    import JetLabel from '@/Jetstream/Label'
-    import JetActionMessage from '@/Jetstream/ActionMessage'
-    import JetSecondaryButton from '@/Jetstream/SecondaryButton'
+    import JetFormSection from '@/Jetstream/FormSection';
+    import JetInputError from '@/Jetstream/InputError';
+    import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import SdbActionMessage from '@/Sdb/ActionMessage';
+    import SdbButton from '@/Sdb/Button';
+    import SdbLabel from '@/Sdb/Label';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
 
     export default {
         components: {
-            JetActionMessage,
-            JetButton,
             JetFormSection,
-            JetInput,
             JetInputError,
-            JetLabel,
-            JetSecondaryButton,
+            SdbFormInput,
+            SdbErrorNotifications,
+            SdbActionMessage,
+            SdbButton,
+            SdbLabel,
         },
+        mixins: [
+            MixinHasPageErrors,
+        ],
 
         props: ['user'],
 
@@ -94,7 +120,8 @@
             return {
                 form: this.$inertia.form({
                     _method: 'PUT',
-                    name: this.user.name,
+                    first_name: this.user.first_name,
+                    last_name: this.user.last_name,
                     email: this.user.email,
                     photo: null,
                 }),
