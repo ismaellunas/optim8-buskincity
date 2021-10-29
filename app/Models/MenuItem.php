@@ -52,9 +52,47 @@ class MenuItem extends BaseModel implements TranslatableContract
         }
     }
 
+    public function updateFormatMenuItems(array $inputs)
+    {
+        $this->updateMenuItemData($inputs);
+    }
+
+    private function updateMenuItemData(array $menuItems, $parentId = null)
+    {
+        $order = 1;
+
+        foreach ($menuItems as $menuItem) {
+            if (count($menuItem['children']) > 0) {
+                $this->updateMenuItemData($menuItem['children'], $menuItem['id']);
+            }
+
+            $menuItem = $this->where('id', $menuItem['id'])->first();
+            $menuItem->order = $order;
+            $menuItem->parent_id = $parentId;
+            $menuItem->save();
+
+            $order++;
+        }
+    }
+
     // Relation
     public function menu()
     {
         return $this->belongsTo(Menu::class, 'menu_id');
+    }
+
+    public function page()
+    {
+        return $this->belongsTo(Page::class, 'page_id');
+    }
+
+    public function post()
+    {
+        return $this->belongsTo(Post::class, 'post_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
     }
 }

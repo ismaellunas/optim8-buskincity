@@ -6,6 +6,7 @@ use App\Models\{
     Category,
     Media,
     Menu,
+    MenuItem,
     Page,
     Post,
     Role,
@@ -21,68 +22,118 @@ class MenuService
         int $perPage = 15
     ): LengthAwarePaginator {
         return Menu::orderBy('id', 'DESC')
+            ->with('menuItems')
+            ->header()
             ->paginate($perPage);
     }
 
-    public function getLastSaved()
+    public function getMenuItemLastSaved()
     {
-        $menu = Menu::orderBy('updated_at', 'DESC')->first();
+        $menu = MenuItem::orderBy('updated_at', 'DESC')
+            ->whereHas('menu', function ($query) {
+                $query->where('type', Menu::TYPE_HEADER);
+            })
+            ->first();
+
         if ($menu) {
             return Carbon::parse($menu->updated_at)->format('M d, Y \a\t h:m');
         }
+
         return '-';
     }
 
-    public static function generateMenus($locale)
+    private function getMenuItems($menuId = null): array
     {
-        $menus = [
-            'navbar' => [],
-        ];
+        return MenuItem::orderBy('order', 'ASC')
+            ->orderBy('parent_id', 'ASC')
+            ->whereHas('menu', function ($query) {
+                $query->where('type', Menu::TYPE_HEADER);
+            })
+            ->get()
+            ->toArray();
+    }
 
-        $rawMenus = [];
+    private function generateMenuItems($locale, $menuItems, $parentId = null): array
+    {
+        $menus = [];
+        foreach ($menuItems as $menuItem) {
+            if ($menuItem['parent_id'] == $parentId) {
+                $children = $this->generateMenuItems($locale, $menuItems, $menuItem['id']);
 
-        $pages = Page::take(2)->get();
-        foreach ($pages as $page) {
-            $rawMenus[] = [
-                'class' => \App\Models\Page::class,
-                'id' => $page->id,
-                'order' => $page->id,
-            ];
-        }
+                if ($children) {
+                    $menuItem['children'] = $children;
+                } else {
+                    $menuItem['children'] = [];
+                }
 
-        /* TODO: remove this after menu feature is created
-        $rawMenus = [
-            [
-                'class' => \App\Models\Page::class,
-                'id' => 56,
-                'order' => 0,
-            ], ...
-        ];
-         */
+                $className = "\App\Menus\\".$menuItem['type']."Menu";
+                $typeMenu = new $className($locale, $menuItem['id']);
+                $menuItem['title'] = $typeMenu->getTitle();
+                $menuItem['link'] = $typeMenu->getUrl();
 
-        $sortedRawMenus = collect($rawMenus)->sortBy('order');
-
-        foreach ($sortedRawMenus as $rawMenu) {
-            $objMenu = $rawMenu['class']::find($rawMenu['id']);
-            $translation = $objMenu->translateOrDefault($locale);
-            if (!empty($translation)) {
-                $menus['navbar'][] = [
-                    'title' => $translation->title,
-                    'link' => route('frontend.pages.show', [
-                        'locale' => $locale,
-                        'page_translation' => $translation->slug,
-                    ]),
-                ];
+                $menus[] = $menuItem;
             }
         }
 
-        $menus['navbar'][] = [
-            'title' => 'Blog',
-            'link' => route('blog.index', [$locale]),
-        ];
-
         return $menus;
     }
+
+    public function generateMenus($locale = "en")
+    {
+        $menuItems = $this->getMenuItems();
+        return $this->generateMenuItems($locale, $menuItems);
+    }
+
+    // public static function generateMenus($locale)
+    // {
+    //     $menus = [
+    //         'navbar' => [],
+    //     ];
+
+    //     $rawMenus = [];
+
+    //     $pages = Page::take(2)->get();
+    //     foreach ($pages as $page) {
+    //         $rawMenus[] = [
+    //             'class' => \App\Models\Page::class,
+    //             'id' => $page->id,
+    //             'order' => $page->id,
+    //         ];
+    //     }
+
+    //     /* TODO: remove this after menu feature is created
+    //     $rawMenus = [
+    //         [
+    //             'class' => \App\Models\Page::class,
+    //             'id' => 56,
+    //             'order' => 0,
+    //         ], ...
+    //     ];
+    //      */
+
+    //     $sortedRawMenus = collect($rawMenus)->sortBy('order');
+
+    //     foreach ($sortedRawMenus as $rawMenu) {
+    //         $objMenu = $rawMenu['class']::find($rawMenu['id']);
+    //         $translation = $objMenu->translateOrDefault($locale);
+    //         if (!empty($translation)) {
+    //             $menus['navbar'][] = [
+    //                 'title' => $translation->title,
+    //                 'link' => route('frontend.pages.show', [
+    //                     'locale' => $locale,
+    //                     'page_translation' => $translation->slug,
+    //                 ]),
+    //             ];
+    //         }
+    //     }
+
+    //     $menus['navbar'][] = [
+    //         'title' => 'Blog',
+    //         'link' => route('blog.index', [$locale]),
+    //     ];
+
+    //     return $menus;
+    // }
 
     public static function generateBackendMenu(Request $request): array
     {

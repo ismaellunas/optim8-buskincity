@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Theme;
 
 use App\Http\Controllers\CrudController;
-use App\Http\Requests\{
-    MenuRequest,
-    MenuItemRequest,
-};
+use App\Http\Requests\MenuItemRequest;
 use App\Models\{
     Menu,
     MenuItem,
@@ -21,7 +18,7 @@ use Inertia\Inertia;
 class NavigationController extends CrudController
 {
     protected $baseRouteName = 'admin.theme.header.navigation';
-    protected $componentName = 'Theme/Header/Navigation/';
+    protected $componentName = 'ThemeHeader/Navigation/';
     protected $modelMenu = Menu::class;
     protected $modelMenuItem = MenuItem::class;
     private $menuService;
@@ -42,8 +39,13 @@ class NavigationController extends CrudController
     {
         return Inertia::render($this->componentName.'Index', [
             'baseRouteName' => $this->baseRouteName,
-            'lastSaved' => $this->menuService->getLastSaved(),
-            'records' => $this->menuService->getRecords(),
+            'categories' => $this->getRecordCategories(),
+            'menu' => $this->modelMenu::header()->first(),
+            'menuItemLastSaved' => $this->menuService->getMenuItemLastSaved(),
+            'menuItems' => $this->menuService->generateMenus(),
+            'pages' => $this->getRecordPages(),
+            'posts' => $this->getRecordPosts(),
+            'types' => $this->modelMenuItem::TYPES,
         ]);
     }
 
@@ -63,26 +65,15 @@ class NavigationController extends CrudController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(MenuRequest $request)
+    public function store(MenuItemRequest $request)
     {
-        $menu = new Menu();
-        $menu->saveFromInputs($request->validated());
-
-        $this->updateActiveMenu($menu->id);
-        $this->generateFlashMessage('Menu created successfully!');
-
-        return redirect()->route($this->baseRouteName.'.index');
-    }
-
-    public function storeMenuItem(MenuItemRequest $request)
-    {
-        $inputs = $this->generateCustomAttributes($request->validated());
+        $inputs = $this->generateCustomAttributes($request->all());
         $menuItem = new MenuItem();
         $menuItem->saveFromInputs($inputs);
 
         $this->generateFlashMessage('Menu item created successfully!');
 
-        return redirect()->route($this->baseRouteName.'.edit', $menuItem->menu_id);
+        return redirect()->route($this->baseRouteName.'.index');
     }
 
     /**
@@ -104,16 +95,7 @@ class NavigationController extends CrudController
      */
     public function edit(Menu $navigation)
     {
-        $menu = $navigation;
-        return Inertia::render($this->componentName.'Edit', [
-            'baseRouteName' => $this->baseRouteName,
-            'menu' => $menu,
-            'menuItems' => $menu->menuItems,
-            'types' => $this->modelMenuItem::TYPES,
-            'categories' => $this->getRecordCategories(),
-            'pages' => $this->getRecordPages(),
-            'posts' => $this->getRecordPosts(),
-        ]);
+        //
     }
 
     /**
@@ -123,24 +105,30 @@ class NavigationController extends CrudController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    public function updateMenuItem(
+    public function update(
         MenuItemRequest $request,
-        MenuItem $menuItem
+        MenuItem $navigation
     ) {
-        $inputs = $this->generateCustomAttributes($request->validated());
+        $inputs = $this->generateCustomAttributes($request->all());
 
-        $menuItem->saveFromInputs($inputs);
+        $navigation->saveFromInputs($inputs);
 
-        $menuItem->syncTranslations(array_keys($inputs));
+        $navigation->syncTranslations(array_keys($inputs));
 
         $this->generateFlashMessage('Menu item updated successfully!');
 
-        return redirect()->route($this->baseRouteName.'.edit', $menuItem->menu_id);
+        return redirect()->route($this->baseRouteName.'.index');
+    }
+
+    public function updateFormat(Request $request)
+    {
+        $menuItems = new $this->modelMenuItem;
+
+        $menuItems->updateFormatMenuItems($request->all());
+
+        $this->generateFlashMessage('Menu item updated successfully!');
+
+        return redirect()->route($this->baseRouteName.'.index');
     }
     /**
      * Remove the specified resource from storage.
@@ -148,32 +136,13 @@ class NavigationController extends CrudController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Menu $navigation)
+    public function destroy(MenuItem $navigation)
     {
-        $menu = $navigation;
-        $menu->delete();
+        $navigation->delete();
 
         $this->generateFlashMessage('User deleted successfully!');
 
-        return redirect()->back();
-    }
-
-    public function deleteMenuItem(MenuItem $menuItem)
-    {
-        $menuItem->delete();
-
-        $this->generateFlashMessage('User deleted successfully!');
-
-        return redirect()->back();
-    }
-
-    private function updateActiveMenu($menuId)
-    {
-        $menus = $this->modelMenu::whereNotIn('id', [$menuId])->get();
-        foreach ($menus as $menu) {
-            $menu->is_active = false;
-            $menu->save();
-        }
+        return redirect()->route($this->baseRouteName.'.index');
     }
 
     private function getRecordPages()
@@ -184,7 +153,7 @@ class NavigationController extends CrudController
 
     private function getRecordPosts()
     {
-        $posts = Post::all();
+        $posts = Post::published()->get();
         return $posts->sortBy('title');
     }
 
@@ -200,9 +169,9 @@ class NavigationController extends CrudController
             ->where('menu_id', $inputs['menu_id'])
             ->first();
 
-        if ($lastMenuItem) {
+        if ($lastMenuItem && $inputs['id'] === null) {
             $inputs['order'] = $lastMenuItem->order + 1;
-        } else {
+        } else if (!$lastMenuItem && $inputs['id'] === null) {
             $inputs['order'] = 1;
         }
 
