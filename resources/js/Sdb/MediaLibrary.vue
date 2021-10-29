@@ -26,27 +26,10 @@
             <div class="column is-full">
                 <div class="columns">
                     <div class="column">
-                        <sdb-form-field-horizontal>
-                            <template v-slot:label>
-                                Search
-                            </template>
-                            <div class="columns">
-                                <div class="column is-three-quarters">
-                                    <sdb-input
-                                        v-model="term"
-                                        maxlength="255"
-                                        @keyup.enter.prevent="search(term)"
-                                    />
-                                </div>
-                                <div class="column">
-                                    <sdb-button-icon
-                                        icon="fas fa-search"
-                                        type="button"
-                                        @click="search(term)"
-                                    />
-                                </div>
-                            </div>
-                        </sdb-form-field-horizontal>
+                        <sdb-filter-search
+                            v-model="term"
+                            @search="search"
+                        ></sdb-filter-search>
                     </div>
 
                     <div
@@ -258,8 +241,8 @@
     import SdbCheckbox from '@/Sdb/Checkbox';
     import SdbDropdown from '@/Sdb/Dropdown';
     import SdbDropdownItem from '@/Sdb/DropdownItem';
+    import SdbFilterSearch from '@/Sdb/Filter/Search';
     import SdbFormField from '@/Sdb/Form/Field';
-    import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbImage from '@/Sdb/Image';
     import SdbInput from '@/Sdb/Input';
     import SdbInputFile from '@/Sdb/InputFile';
@@ -300,8 +283,8 @@
             SdbCheckbox,
             SdbDropdown,
             SdbDropdownItem,
+            SdbFilterSearch,
             SdbFormField,
-            SdbFormFieldHorizontal,
             SdbImage,
             SdbInput,
             SdbInputFile,

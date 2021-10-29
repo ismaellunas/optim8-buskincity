@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Media;
 use App\Models\Page;
 use App\Models\PageTranslation;
-use App\Services\PageTranslationService;
-use App\Services\TranslationService;
+use App\Services\{
+    PageService,
+    TranslationService,
+};
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,12 +17,15 @@ use Inertia\Inertia;
 
 class PageController extends CrudController
 {
+
     protected $model = Page::class;
     protected $baseRouteName = 'admin.pages';
     protected $pageService;
 
-    public function __construct(PageTranslationService $pageService)
+    public function __construct(PageService $pageService)
     {
+        $this->pageService = $pageService;
+
         $this->authorizeResource(Page::class, 'page');
         $this->pageService = $pageService;
     }
@@ -30,18 +35,23 @@ class PageController extends CrudController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
 
         return Inertia::render('Page/Index', [
+            'baseRouteName' => $this->baseRouteName,
             'can' => [
                 'add' => $user->can('page.add'),
                 'delete' => $user->can('page.delete'),
                 'edit' => $user->can('page.edit'),
                 'read' => $user->can('page.read'),
             ],
-            'records' => $this->getRecords(),
+            'pageQueryParams' => array_filter($request->only('term')),
+            'records' => $this->pageService->getRecords(
+                $request->term,
+                $this->recordsPerPage,
+            ),
             'defaultLocale' => TranslationService::getDefaultLocale(),
         ]);
     }
@@ -260,25 +270,6 @@ class PageController extends CrudController
         $validator = $this->getValidationFactory()
              ->make($inputs, $rules, $messages, $customAttributes);
         return $validator->validate();
-    }
-
-    protected function getRecords()
-    {
-        $records = Page::orderBy('id', 'DESC')
-            ->select(['id'])
-            ->with([
-                'translations' => function ($q) {
-                    $q->select(['id', 'page_id', 'slug', 'title', 'meta_description', 'meta_title', 'status', 'locale']);
-                },
-            ])
-            ->paginate($this->recordsPerPage);
-
-        $records->getCollection()->transform(function ($record) {
-            $record->setAppends(['statusText', 'hasMetaDescription', 'hasMetaTitle']);
-            return $record;
-        });
-
-        return $records;
     }
 
     public function generateCustomAttributes($locales, $attributes)

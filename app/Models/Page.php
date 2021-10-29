@@ -41,6 +41,16 @@ class Page extends Model implements TranslatableContract
         ];
     }
 
+    // Scopes:
+    public function scopeSearch($query, string $term)
+    {
+        return $query->whereHas('translation', function ($query) use ($term) {
+            $query
+                ->where('title', 'ILIKE', '%'.$term.'%')
+                ->orWhere('slug', 'ILIKE', '%'.$term.'%');
+        });
+    }
+
     // Relationships:
     public function author()
     {
