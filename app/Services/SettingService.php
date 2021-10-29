@@ -47,14 +47,20 @@ class SettingService
 
     public function generateVariablesSass()
     {
-        $colors = Setting::where('group', 'theme_color')
-            ->get(['key', 'value'])
-            ->pluck('value', 'key')
-            ->all();
-
         $variablesSass = view('theme_options.colors_sass', array_merge(
             config('constants.theme_colors'),
-            $colors
+            Setting::where('group', 'theme_color')
+                ->get(['key', 'value'])
+                ->pluck('value', 'key')
+                ->all()
+        ));
+
+        $variablesSass .= view('theme_options.font_size_sass', array_merge(
+            config('constants.theme_colors'),
+            Setting::where('group', 'font_size')
+                ->get(['key', 'value'])
+                ->pluck('value', 'key')
+                ->all()
         ));
 
         $disk = Storage::build([
@@ -63,6 +69,16 @@ class SettingService
         ]);
 
         $disk->put('sdb_variables.sass', $variablesSass);
+
+        $variablesAfterSass = view('theme_options.font_size_sass', array_merge(
+            config('constants.theme_font_sizes'),
+            Setting::where('group', 'font_size')
+                ->get(['key', 'value'])
+                ->pluck('value', 'key')
+                ->all()
+        ));
+
+        $disk->put('sdb_variables_after.sass', $variablesAfterSass);
     }
 
     public function generateThemeCss()
