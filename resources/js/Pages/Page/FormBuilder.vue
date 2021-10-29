@@ -91,7 +91,7 @@
 </template>
 
 <script>
-    import BlockColumns from '@/Blocks/Columns'
+    import BlockColumns from '@/Blocks/Backend/Columns'
     import ComponentStructures from '@/ComponentStructures';
     import Draggable from "vuedraggable";
     import SdbComponentConfig from '@/Sdb/ComponentConfig';
