@@ -9,7 +9,7 @@ use Inertia\Inertia;
 class HeaderController extends Controller
 {
     private $baseRouteName = 'admin.theme.header';
-    private $componentName = 'Theme/Header/';
+    private $componentName = 'ThemeHeader/';
 
     public function index()
     {
