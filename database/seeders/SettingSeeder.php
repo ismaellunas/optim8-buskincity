@@ -63,60 +63,62 @@ class SettingSeeder extends Seeder
             Setting::factory()->create($setting);
         }
 
+        $defaultFontSizes = config('constants.theme_font_sizes');
+
         $fontSizes = [
             [
                 "key" => "font_size_heading_1",
                 "display_name" => "Heading 1",
-                "value" => 2,
+                "value" => $defaultFontSizes['font_size_heading_1'],
                 "group" => "font_size",
                 "order" => "1"
             ],
             [
                 "key" => "font_size_heading_2",
                 "display_name" => "Heading 2",
-                "value" => 1.75,
+                "value" => $defaultFontSizes['font_size_heading_2'],
                 "group" => "font_size",
                 "order" => "2"
             ],
             [
                 "key" => "font_size_heading_3",
                 "display_name" => "Heading 3",
-                "value" => 1.5,
+                "value" => $defaultFontSizes['font_size_heading_3'],
                 "group" => "font_size",
                 "order" => "3"
             ],
             [
                 "key" => "font_size_heading_4",
                 "display_name" => "Heading 4",
-                "value" => 1.25,
+                "value" => $defaultFontSizes['font_size_heading_4'],
                 "group" => "font_size",
                 "order" => "4"
             ],
             [
                 "key" => "font_size_heading_5",
                 "display_name" => "Heading 5",
-                "value" => 1.125,
+                "value" => $defaultFontSizes['font_size_heading_5'],
                 "group" => "font_size",
                 "order" => "5"
             ],
             [
                 "key" => "font_size_heading_6",
                 "display_name" => "Heading 6",
-                "value" => 1,
+                "value" => $defaultFontSizes['font_size_heading_6'],
                 "group" => "font_size",
                 "order" => "6"
             ],
             [
                 "key" => "font_size_text",
                 "display_name" => "Text",
-                "value" => null,
+                "value" => $defaultFontSizes['font_size_text'],
                 "group" => "font_size",
                 "order" => "7"
             ],
             [
                 "key" => "font_size_small",
                 "display_name" => "Small",
-                "value" => null,
+                "value" => $defaultFontSizes['font_size_small'],
                 "group" => "font_size",
                 "order" => "8"
             ]
