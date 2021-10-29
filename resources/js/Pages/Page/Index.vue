@@ -6,7 +6,15 @@
 
         <div class="box">
             <div class="columns">
-                <div class="column is-offset-10">
+                <div class="column">
+                    <div class="is-pulled-left">
+                        <sdb-filter-search
+                            v-model="term"
+                            @search="search"
+                        ></sdb-filter-search>
+                    </div>
+                </div>
+                <div class="column">
                     <div
                         v-if="can.add"
                         class="is-pulled-right"
@@ -90,28 +98,52 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
+    import SdbFilterSearch from '@/Sdb/Filter/Search';
     import SdbFlashNotifications from '@/Sdb/FlashNotifications';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbTag from '@/Sdb/Tag';
+    import { merge } from 'lodash';
+    import { ref } from 'vue';
 
     export default {
         components: {
             AppLayout,
             SdbButton,
             SdbButtonLink,
+            SdbFilterSearch,
             SdbFlashNotifications,
             SdbPagination,
             SdbTag,
         },
-        props: ['can', 'records', 'defaultLocale'],
+        mixins: [
+            MixinFilterDataHandle,
+        ],
+        props: [
+            'baseRouteName',
+            'can',
+            'defaultLocale',
+            'pageQueryParams',
+            'records',
+        ],
+        setup(props) {
+            const queryParams = merge(
+                {},
+                props.pageQueryParams
+            );
+
+            return {
+                queryParams: ref(queryParams),
+                term: ref(props.pageQueryParams?.term ?? null),
+            };
+        },
         methods: {
             deleteRow(page) {
                 if (!confirm('Are you sure?')) return;
                 this.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
             },
-
             openShow(locale, page) {
                 if (this.can.read) {
                     window.open(
@@ -130,7 +162,7 @@
                     default: statusClass.push('is-light');
                 };
                 return statusClass;
-            }
+            },
         },
     }
 </script>
