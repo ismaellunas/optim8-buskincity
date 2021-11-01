@@ -1,13 +1,11 @@
 <template>
-    <Head>
-        <link
-            v-for="css in $page.props.css.backend"
-            rel="stylesheet"
-            :href="css"
-        >
-    </Head>
-
     <div id="main-container-wrapper">
+        <Head>
+            <link
+                rel="stylesheet"
+                :href="$page.props.css.backend.app"
+            >
+        </Head>
 
         <sdb-navbar-menu />
 
@@ -15,14 +13,17 @@
             <div class="hero-body">
                 <div class="container">
                     <p class="title">
-                        <slot name="header"></slot>
+                        <slot name="header" />
                     </p>
                 </div>
             </div>
         </section>
 
-        <div id="main-container" class="container mb-2">
-            <slot></slot>
+        <div
+            id="main-container"
+            class="container mb-2"
+        >
+            <slot />
         </div>
     </div>
 </template>
