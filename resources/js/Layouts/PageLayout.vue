@@ -10,7 +10,7 @@
     <nav class="navbar is-primary">
         <div class="navbar-brand">
             <sdb-link class="navbar-item" href="/">
-                <img src="https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752" alt="" height="28">
+                <img :src="logoUrl" alt="" height="28">
             </sdb-link>
             <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">
                 <span></span>
@@ -87,7 +87,7 @@
 
 <script>
     import SdbLink from '@/Sdb/Link';
-    import { Head } from '@inertiajs/inertia-vue3';
+    import { Head, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'LayoutPage',
@@ -108,11 +108,21 @@
             SdbLink,
         },
 
+        setup() {
+            return {
+                menuSettings: usePage().props.value.menuSettings,
+            };
+        },
+
         computed: {
             availableLanguages() {
                 return this
                     .languageOptions
                     .filter(option => option.id !== this.currentLanguage);
+            },
+
+            logoUrl() {
+                return this.menuSettings.header_logo_url.value ?? "https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752";
             },
         }
     }
