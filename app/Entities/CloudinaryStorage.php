@@ -12,7 +12,7 @@ class CloudinaryStorage implements MediaStorageInterface
         File $file,
         string $fileName = null,
         string $extension = null,
-        string $folder = null,
+        string $folder = null
     ): CloudinaryAsset {
 
         $options = [
