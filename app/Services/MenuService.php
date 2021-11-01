@@ -36,7 +36,7 @@ class MenuService
             ->first();
 
         if ($menu) {
-            return Carbon::parse($menu->updated_at)->format('M d, Y \a\t h:m');
+            return Carbon::parse($menu->updated_at)->format('M d, Y \a\t h:i');
         }
 
         return '-';
