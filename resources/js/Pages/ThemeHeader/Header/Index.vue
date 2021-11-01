@@ -19,11 +19,16 @@
                 </ul>
             </sdb-tab>
 
-            <div class="columns">
-                <div class="column">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias quisquam soluta dolores optio temporibus corrupti hic molestiae repudiandae non nostrum labore minima quia, aliquid autem iure numquam mollitia adipisci quas.
-                </div>
-            </div>
+            <header-layout
+                :last-saved="headerLayoutLastSaved"
+                :setting="settings['header_layout']"
+            ></header-layout>
+
+            <hr>
+            <header-logo
+                :last-saved="headerLogoUrlLastSaved"
+                :setting="settings['header_logo_url']"
+            ></header-logo>
         </div>
     </app-layout>
 </template>
@@ -31,20 +36,29 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinHasTab from '@/Mixins/HasTab';
+    import SdbButton from '@/Sdb/Button';
     import SdbTab from '@/Sdb/Tab';
     import SdbTabList from '@/Sdb/TabList';
+    import HeaderLayout from './Layout';
+    import HeaderLogo from './Logo';
 
     export default {
         components: {
             AppLayout,
+            SdbButton,
             SdbTab,
             SdbTabList,
+            HeaderLayout,
+            HeaderLogo,
         },
         mixins: [
             MixinHasTab,
         ],
         props: {
             baseRouteName: String,
+            headerLayoutLastSaved: {type: String, default: '-'},
+            headerLogoUrlLastSaved: {type: String, default: '-'},
+            settings: {type: Object, required: true},
         },
         setup() {
             return {

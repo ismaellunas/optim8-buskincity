@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Theme;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\CrudController;
 use App\Http\Requests\MenuItemRequest;
 use App\Models\{
     Menu,
@@ -126,7 +125,7 @@ class NavigationController extends CrudController
 
         $menuItems->updateFormatMenuItems($request->all());
 
-        $this->generateFlashMessage('Menu item updated successfully!');
+        $this->generateFlashMessage('Menu Navigation Successfully Saved!');
 
         return redirect()->route($this->baseRouteName.'.index');
     }
@@ -138,11 +137,23 @@ class NavigationController extends CrudController
      */
     public function destroy(MenuItem $navigation)
     {
+        $this->updateParentId($navigation);
+
         $navigation->delete();
 
         $this->generateFlashMessage('User deleted successfully!');
 
         return redirect()->route($this->baseRouteName.'.index');
+    }
+
+    private function updateParentId($menuItem)
+    {
+        $childs = $this->modelMenuItem::where('parent_id', $menuItem->id)->get();
+
+        foreach ($childs as $child) {
+            $child->parent_id = $menuItem->parent_id;
+            $child->save();
+        }
     }
 
     private function getRecordPages()
