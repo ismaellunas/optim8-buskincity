@@ -127,5 +127,26 @@ class SettingSeeder extends Seeder
         foreach ($fontSizes as $fontSize) {
             Setting::factory()->create($fontSize);
         }
+
+        $headers = [
+            [
+                "key" => "header_layout",
+                "display_name" => null,
+                "value" => 1,
+                "group" => "header",
+                "order" => "1"
+            ],
+            [
+                "key" => "header_logo_url",
+                "display_name" => null,
+                "value" => null,
+                "group" => "header",
+                "order" => "2"
+            ],
+        ];
+
+        foreach ($headers as $header) {
+            Setting::factory()->create($header);
+        }
     }
 }
