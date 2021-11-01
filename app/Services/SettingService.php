@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
 use App\Models\Setting;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Process\Process;
@@ -43,6 +44,42 @@ class SettingService
             ])
             ->keyBy('key')
             ->all();
+    }
+
+    public function getHeader(): array
+    {
+        return Setting::where('group', 'header')
+            ->get([
+                'key',
+                'value',
+                'updated_at',
+            ])
+            ->keyBy('key')
+            ->all();
+    }
+
+    public function getHeaderLayoutLastSaved()
+    {
+        $settings = $this->getHeader();
+        $headerLayout = $settings['header_layout'];
+
+        if ($headerLayout) {
+            return Carbon::parse($headerLayout->updated_at)->format('M d, Y \a\t h:i');
+        }
+
+        return '-';
+    }
+
+    public function getHeaderLogoUrlLastSaved()
+    {
+        $settings = $this->getHeader();
+        $headerLogo = $settings['header_logo_url'];
+
+        if ($headerLogo) {
+            return Carbon::parse($headerLogo->updated_at)->format('M d, Y \a\t h:i');
+        }
+
+        return '-';
     }
 
     public function generateVariablesSass()
@@ -133,5 +170,30 @@ class SettingService
         ]);
         $process->run();
         return $process->isSuccessful();
+    }
+
+    public function uploadLogoToCloudStorage(array $inputs): MediaAsset
+    {
+        $storage = new CloudinaryStorage();
+
+        $folder = "assets/logo";
+
+        $this->deleteLogoOnCloudStorage($inputs['file_name']);
+
+        return $storage->upload(
+            $inputs['file'],
+            $inputs['file_name'],
+            $inputs['file_type'],
+            $folder
+        );
+    }
+
+    public function deleteLogoOnCloudStorage(
+        string $fileName = 'logo'
+    ) {
+        $storage = new CloudinaryStorage();
+        $fileName = 'assets/logo/'.$fileName;
+
+        $storage->destroy($fileName);
     }
 }
