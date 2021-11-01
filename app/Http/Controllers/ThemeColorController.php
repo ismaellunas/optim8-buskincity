@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ThemeColorRequest;
 use App\Models\Setting;
 use App\Services\SettingService;
-use Illuminate\Support\Facades\App;
 use Inertia\Inertia;
 
-class ThemeColorController extends CrudController
+class ThemeColorController extends ThemeOptionController
 {
     protected $baseRouteName = 'admin.theme.color';
     protected $title = 'Colors';
@@ -43,19 +42,7 @@ class ThemeColorController extends CrudController
             $setting->save();
         }
 
-        $this->settingService->generateVariablesSass();
-
-        $this->settingService->generateThemeCss();
-
-        $asset = $this->settingService->uploadThemeCssToCloudStorage(
-            !App::environment('production')
-            ? config('app.env')
-            : null
-        );
-
-        $this->settingService->saveCssUrl($asset->fileUrl);
-
-        $this->settingService->clearStorageTheme();
+        $this->generateNewStyleProcess($this->settingService);
 
         $this->generateFlashMessage('Colors updated successfully!');
 
