@@ -1,7 +1,9 @@
 <template>
     <sdb-modal-card>
         <template v-slot:header>
-            <p class="modal-card-title has-text-weight-bold">Add Menu Item</p>
+            <p class="modal-card-title has-text-weight-bold">
+                {{ menuItem.id ? 'Edit' : 'Add' }} Menu Item
+            </p>
             <button class="delete" aria-label="close" @click="$emit('close')"></button>
         </template>
         <form method="post">
@@ -106,7 +108,9 @@
                         <sdb-button
                             @click="onSubmit()"
                             class="is-primary ml-1"
-                        >Create</sdb-button>
+                        >
+                            {{ menuItem.id ? 'Update' : 'Create' }}
+                        </sdb-button>
                     </div>
                 </div>
             </div>
@@ -286,7 +290,8 @@
                 const form = merge(this.form, this.formLocale);
 
                 if (form.id === null) {
-                    this.$inertia.post(route(this.baseRouteName+'.store.menu_item'), form, {
+                    this.$inertia.post(route(this.baseRouteName+'.store'), form, {
+                        preserveState: true,
                         onStart: () => {
                             self.loader = self.$loading.show();
                             self.isProcessing = true;
@@ -298,10 +303,12 @@
                             self.loader.hide();
                             self.isProcessing = false;
                             this.$emit('close');
+                            this.$emit('updateMenu');
                         }
                     });
                 } else {
-                    this.$inertia.put(route(this.baseRouteName+'.update.menu_item', form.id), form, {
+                    this.$inertia.put(route(this.baseRouteName+'.update', form.id), form, {
+                        preserveState: true,
                         onStart: () => {
                             self.loader = self.$loading.show();
                             self.isProcessing = true;
@@ -313,6 +320,7 @@
                             self.loader.hide();
                             self.isProcessing = false;
                             this.$emit('close');
+                            this.$emit('updateMenu');
                         }
                     });
                 }

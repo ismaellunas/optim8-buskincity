@@ -32,13 +32,10 @@
                         <div class="is-pulled-right">
                             <sdb-button
                                 type="button"
-                                class="is-primary"
-                                @click.prevent="newRow()"
+                                class="is-primary ml-2"
+                                @click="updateFormatMenu()"
                             >
-                                <span class="icon is-small">
-                                    <i class="fas fa-plus"></i>
-                                </span>
-                                <span>Add Menu Item</span>
+                                <span>Save</span>
                             </sdb-button>
                         </div>
                     </div>
@@ -50,21 +47,11 @@
                             :isChild="false"
                             @edit-row="editRow"
                             @delete-row="deleteRow"
-                            @change="changeMenu"
+                            @change="checkNestedMenu"
+                            @open-form-modal="openFormModal()"
+                            @duplicate-menu-above="duplicateMenuAbove"
+                            @duplicate-menu-below="duplicateMenuBelow"
                         ></menu-nested>
-                    </div>
-                </div>
-            </div>
-            <div class="columns">
-                <div class="column">
-                    <div class="is-pulled-right">
-                        <sdb-button
-                            type="button"
-                            class="is-primary ml-2"
-                            @click="updateFormatMenu()"
-                        >
-                            <span>Save</span>
-                        </sdb-button>
                     </div>
                 </div>
             </div>
@@ -75,6 +62,7 @@
             :menu="menu"
             :menuItem="selectedMenuItems"
             @close="closeModal()"
+            @update-menu="updateMenuItems()"
         ></modal-form-menu-item>
     </app-layout>
 </template>
@@ -93,8 +81,7 @@
     import SdbFormInput from '@/Sdb/Form/Input';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { confirmDelete, oops as oopsAlert, success as successAlert  } from '@/Libs/alert';
-    import { merge, filter, forEach, cloneDeep } from 'lodash';
-    import { isEmpty, useModelWrapper } from '@/Libs/utils';
+    import { merge, forEach, cloneDeep } from 'lodash';
 
     export default {
         components: {
@@ -121,7 +108,7 @@
             menu: Object,
             menuItems: Object,
         },
-        setup(props, { emit }) {
+        setup(props) {
             const form = merge(
                 props.menu,
                 {
@@ -136,20 +123,18 @@
                     layout: { title: 'Layout'},
                     navigation: {title: 'Navigation'},
                 },
-                items: useModelWrapper(props, emit, 'menuItems'),
             }
         },
         data() {
             return {
-                // items: this.menuItems,
+                items: [],
                 selectedMenuItems: {},
                 lastMenuItems: [],
                 activeTab: 'navigation',
-                loader: null,
             };
         },
         mounted() {
-            this.updateLastDataMenu();
+            this.updateMenuItems();
         },
         methods: {
             onTabSelected(tab) {
@@ -160,18 +145,17 @@
                 this.$inertia.get(route(routeName));
             },
 
-            newRow() {
+            openFormModal() {
                 this.selectedMenuItems = {};
                 this.isModalOpen = true;
             },
 
-            changeMenu() {
+            checkNestedMenu() {
                 let self = this;
                 forEach(self.items, function(values) {
                     forEach(values.children, function(value) {
                         if (value['children'].length > 0) {
-                            // self.items = self.lastMenuItems;
-                            self.$emit('update:menuItems', self.lastMenuItems);
+                            self.items = self.lastMenuItems;
                             oopsAlert(null, "Cannot add nested menu more than 2");
                         }
                     });
@@ -189,37 +173,41 @@
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
                         self.$inertia.delete(
-                            route(self.baseRouteName+'.destroy', menuItemId)
+                            route(self.baseRouteName+'.destroy', menuItemId), {
+                                preserveState: true,
+                                onFinish: () => {
+                                    self.updateMenuItems();
+                                }
+                            }
                         );
                     }
                 });
             },
 
-            editRow(menuItemId) {
-                let menuItem = filter(this.menuItems, { id: menuItemId });
-                if (!isEmpty(menuItem)) {
-                    this.selectedMenuItems = menuItem[0];
-                } else {
-                    this.selectedMenuItems = {};
-                }
-
+            editRow(menuItem) {
+                this.selectedMenuItems = menuItem;
                 this.openModal();
+            },
+
+            updateMenuItems() {
+                this.items = this.menuItems;
+                this.updateLastDataMenu();
             },
 
             updateFormatMenu() {
                 this.$inertia.put(route(this.baseRouteName+'.update.format'), this.items, {
-                    onStart: () => {
-                        self.loader = self.$loading.show();
-                        self.isProcessing = true;
-                    },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                     },
-                    onFinish: () => {
-                        self.loader.hide();
-                        self.isProcessing = false;
-                    }
                 });
+            },
+
+            duplicateMenuAbove(menuItem) {
+                console.log(menuItem);
+            },
+
+            duplicateMenuBelow(menuItem) {
+                console.log(menuItem);
             },
         }
     }
