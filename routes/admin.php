@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\{
     CategoryController,
+    HeaderController,
     MediaController,
+    NavigationController,
     PageController,
     PermissionController,
     PostController,
@@ -10,11 +12,7 @@ use App\Http\Controllers\{
     ThemeColorController,
     ThemeFontSizeController,
     UserController,
-    UserRoleController
-};
-use App\Http\Controllers\Theme\{
-    HeaderController,
-    NavigationController,
+    UserRoleController,
 };
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -74,6 +72,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
         Route::prefix('header')->name('header.')->group(function () {
             Route::get('/', [HeaderController::class, 'index'])->name('index');
+            Route::post('/layout', [HeaderController::class, 'updateLayout'])->name('layout.update');
+            Route::post('/logo', [HeaderController::class, 'updateLogo'])->name('logo.update');
+
             Route::resource('navigation', NavigationController::class);
             Route::put('navigation/update/format', [NavigationController::class, 'updateFormat'])->name('navigation.update.format');
         });
