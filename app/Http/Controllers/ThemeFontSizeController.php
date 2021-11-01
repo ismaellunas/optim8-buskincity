@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ThemeFontSizeRequest;
 use App\Models\Setting;
 use App\Services\SettingService;
 use Illuminate\Http\Request;
@@ -33,7 +34,7 @@ class ThemeFontSizeController extends CrudController
         );
     }
 
-    public function update(Request $request)
+    public function update(ThemeFontSizeRequest $request)
     {
         $colors = $request->all();
 
