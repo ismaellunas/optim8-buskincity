@@ -187,4 +187,22 @@ class MenuService
             'nav' => $menus,
         ];
     }
+
+    public function getRecordPages()
+    {
+        $pages = Page::all();
+        return $pages->sortBy('title');
+    }
+
+    public function getRecordPosts()
+    {
+        $posts = Post::published()->get();
+        return $posts->sortBy('title');
+    }
+
+    public function getRecordCategories()
+    {
+        $categories = Category::all();
+        return $categories->sortBy('name');
+    }
 }
