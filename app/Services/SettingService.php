@@ -12,6 +12,11 @@ use \finfo;
 
 class SettingService
 {
+    private static function getThemeAdditionalCodeFileKey(string $key): string
+    {
+        return config("constants.theme_additional_code_files.{$key}.key");
+    }
+
     public static function getFrontendCssUrl(): string
     {
         $urlCss = Setting::where('key', 'url_css')->first(['key', 'value']);
