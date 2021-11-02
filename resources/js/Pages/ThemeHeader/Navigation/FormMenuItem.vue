@@ -16,6 +16,7 @@
                         v-model="formLocale[translation].title"
                         :label="`Title (${translation.toUpperCase()})`"
                         :message="error(translation+'.title')"
+                        required
                     >
                         <template v-slot:afterInput>
                             <div class="control">
@@ -35,6 +36,7 @@
                         <sdb-select v-model="selectedLocale">
                             <option
                                 v-for="locale in availableLocales"
+                                :key="locale.id"
                                 :value="locale.id">
                                 {{ locale.name }}
                             </option>
@@ -119,19 +121,19 @@
 </template>
 
 <script>
-    import HasPageErrors from '@/Mixins/HasPageErrors';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbFormInputAddons from '@/Sdb/Form/InputAddons';
-    import SdbSelect from '@/Sdb/Select';
+    import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbModalCard from '@/Sdb/ModalCard';
-    import { usePage } from '@inertiajs/inertia-vue3';
-    import { success as successAlert, confirmDelete } from '@/Libs/alert';
+    import SdbSelect from '@/Sdb/Select';
     import { isBlank } from '@/Libs/utils';
-    import { reactive } from "vue";
     import { pull, sortBy, merge } from 'lodash';
+    import { reactive } from "vue";
+    import { success as successAlert, confirmDelete } from '@/Libs/alert';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'ModalFormMenu',
@@ -140,25 +142,35 @@
             SdbButton,
             SdbButtonIcon,
             SdbFormInput,
-            SdbFormSelect,
             SdbFormInputAddons,
-            SdbSelect,
+            SdbFormSelect,
             SdbModalCard,
+            SdbSelect,
         },
 
         mixins: [
-            HasPageErrors,
+            MixinHasPageErrors,
         ],
 
         props: {
-            baseRouteName: String,
-            isShowModal: Boolean,
-            menu: Object,
+            baseRouteName: {
+                type: String,
+                required: true,
+            },
+            menu: {
+                type: Object,
+                required: true,
+            },
             menuItem: {
                 type: Object,
                 default: {},
             },
         },
+
+        emits: [
+            'close',
+            'syncMenuItems',
+        ],
 
         setup(props) {
             let providedLocales = [];
@@ -303,7 +315,7 @@
                             self.loader.hide();
                             self.isProcessing = false;
                             this.$emit('close');
-                            this.$emit('updateMenu');
+                            this.$emit('syncMenuItems');
                         }
                     });
                 } else {
@@ -320,7 +332,7 @@
                             self.loader.hide();
                             self.isProcessing = false;
                             this.$emit('close');
-                            this.$emit('updateMenu');
+                            this.$emit('syncMenuItems');
                         }
                     });
                 }

@@ -1,7 +1,7 @@
 <template>
     <app-layout>
         <template #header>
-            Main Menu
+            {{ title }}
         </template>
 
         <sdb-error-notifications :errors="$page.props.errors"/>
@@ -45,12 +45,10 @@
                         <menu-nested
                             :items="items"
                             :isChild="false"
-                            @edit-row="editRow"
-                            @delete-row="deleteRow"
                             @change="checkNestedMenu"
+                            @delete-row="deleteRow"
+                            @edit-row="editRow"
                             @open-form-modal="openFormModal()"
-                            @duplicate-menu-above="duplicateMenuAbove"
-                            @duplicate-menu-below="duplicateMenuBelow"
                         ></menu-nested>
                     </div>
                 </div>
@@ -62,23 +60,23 @@
             :menu="menu"
             :menuItem="selectedMenuItems"
             @close="closeModal()"
-            @update-menu="updateMenuItems()"
+            @sync-menu-items="syncMenuItems()"
         ></modal-form-menu-item>
     </app-layout>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
-    import MixinHasModal from '@/Mixins/HasModal';
-    import ModalFormMenuItem from './FormMenuItem';
-    import MixinHasTab from '@/Mixins/HasTab';
-    import SdbTab from '@/Sdb/Tab';
-    import SdbTabList from '@/Sdb/TabList';
     import MenuNested from './MenuNested';
+    import MixinHasModal from '@/Mixins/HasModal';
+    import MixinHasTab from '@/Mixins/HasTab';
+    import ModalFormMenuItem from './FormMenuItem';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';;
     import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbTab from '@/Sdb/Tab';
+    import SdbTabList from '@/Sdb/TabList';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { confirmDelete, oops as oopsAlert, success as successAlert  } from '@/Libs/alert';
     import { merge, forEach, cloneDeep } from 'lodash';
@@ -86,28 +84,44 @@
     export default {
         components: {
             AppLayout,
-            ModalFormMenuItem,
             MenuNested,
-            SdbTab,
-            SdbTabList,
+            ModalFormMenuItem,
             SdbButton,
             SdbButtonLink,
             SdbErrorNotifications,
             SdbFormInput,
+            SdbTab,
+            SdbTabList,
         },
-        emits: [
-            'update:menuItems',
-        ],
+
         mixins: [
             MixinHasModal,
             MixinHasTab,
         ],
+
         props: {
-            menuItemLastSaved: String,
-            baseRouteName: String,
-            menu: Object,
-            menuItems: Object,
+            baseRouteName: {
+                type: String,
+                required: true,
+            },
+            menu: {
+                type: Object,
+                required: true,
+            },
+            menuItemLastSaved: {
+                type: String,
+                default: "-",
+            },
+            menuItems: {
+                type: Array,
+                default: [],
+            },
+            title: {
+                type: String,
+                default: "-"
+            },
         },
+
         setup(props) {
             const form = merge(
                 props.menu,
@@ -125,17 +139,20 @@
                 },
             }
         },
+
         data() {
             return {
-                items: [],
-                selectedMenuItems: {},
-                lastMenuItems: [],
                 activeTab: 'navigation',
+                items: [],
+                lastMenuItems: [],
+                selectedMenuItems: {},
             };
         },
+
         mounted() {
-            this.updateMenuItems();
+            this.syncMenuItems();
         },
+
         methods: {
             onTabSelected(tab) {
                 let routeName = this.baseRouteName+'.index';
@@ -176,7 +193,7 @@
                             route(self.baseRouteName+'.destroy', menuItemId), {
                                 preserveState: true,
                                 onFinish: () => {
-                                    self.updateMenuItems();
+                                    self.syncMenuItems();
                                 }
                             }
                         );
@@ -189,7 +206,7 @@
                 this.openModal();
             },
 
-            updateMenuItems() {
+            syncMenuItems() {
                 this.items = this.menuItems;
                 this.updateLastDataMenu();
             },
@@ -198,16 +215,9 @@
                 this.$inertia.put(route(this.baseRouteName+'.update.format'), this.items, {
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
+                        this.syncMenuItems();
                     },
                 });
-            },
-
-            duplicateMenuAbove(menuItem) {
-                console.log(menuItem);
-            },
-
-            duplicateMenuBelow(menuItem) {
-                console.log(menuItem);
             },
         }
     }

@@ -74,8 +74,14 @@
         },
 
         props: {
-            lastSaved: {type: String, default: '-'},
-            setting: {type: Object, default: true},
+            lastSaved: {
+                type: String,
+                default: '-',
+            },
+            setting: {
+                type: Object,
+                default: true
+            },
         },
 
         setup() {

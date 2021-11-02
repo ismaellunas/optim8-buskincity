@@ -1,7 +1,7 @@
 <template>
     <app-layout>
         <template #header>
-            Header
+            {{ title }}
         </template>
 
         <div class="box mb-6">
@@ -35,35 +35,51 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import HeaderLayout from './Layout';
+    import HeaderLogo from './Logo';
     import MixinHasTab from '@/Mixins/HasTab';
     import SdbButton from '@/Sdb/Button';
     import SdbTab from '@/Sdb/Tab';
     import SdbTabList from '@/Sdb/TabList';
-    import HeaderLayout from './Layout';
-    import HeaderLogo from './Logo';
 
     export default {
         components: {
             AppLayout,
+            HeaderLayout,
+            HeaderLogo,
             SdbButton,
             SdbTab,
             SdbTabList,
-            HeaderLayout,
-            HeaderLogo,
         },
         mixins: [
             MixinHasTab,
         ],
         props: {
-            baseRouteName: String,
-            headerLayoutLastSaved: {type: String, default: '-'},
-            headerLogoUrlLastSaved: {type: String, default: '-'},
-            settings: {type: Object, required: true},
+            baseRouteName: {
+                type: String,
+                required: true
+            },
+            headerLayoutLastSaved: {
+                type: String,
+                default: '-'
+            },
+            headerLogoUrlLastSaved: {
+                type: String,
+                default: '-'
+            },
+            settings: {
+                type: Object,
+                required: true
+            },
+            title: {
+                type: String,
+                default: "-"
+            },
         },
         setup() {
             return {
                 tabs: {
-                    layout: { title: 'Layout'},
+                    layout: {title: 'Layout'},
                     navigation: {title: 'Navigation'},
                 },
             }

@@ -1,13 +1,13 @@
 <template>
     <draggable
         class="has-background-light"
-        :class="panelClass"
-        tag="nav"
         handle=".handle-menu"
-        :animation="300"
-        :list="items"
-        :group="{ name: 'g1' }"
         item-key="id"
+        tag="nav"
+        :animation="300"
+        :class="panelClass"
+        :group="{ name: 'g1' }"
+        :list="items"
     >
         <template #item="{ element }">
             <div>
@@ -37,31 +37,6 @@
                             </sdb-tag>
                         </div>
                         <div class="level-right">
-                            <!-- <sdb-dropdown
-                                :active="false"
-                            >
-                                <template v-slot:trigger>
-                                    <span class="icon is-small">
-                                        <i class="far fa-copy"></i>
-                                    </span>
-                                </template>
-                                <template v-slot:default>
-                                    <a
-                                        href="#"
-                                        class="dropdown-item"
-                                        @click.prevent="$emit('duplicateMenuAbove', element)"
-                                    >
-                                        Duplicate Menu Above
-                                    </a>
-                                    <a
-                                        href="#"
-                                        class="dropdown-item"
-                                        @click.prevent="$emit('duplicateMenuBelow', element)"
-                                    >
-                                        Duplicate Menu Below
-                                    </a>
-                                </template>
-                            </sdb-dropdown> -->
                             <sdb-button
                                 type="button"
                                 class="is-ghost has-text-black"
@@ -86,8 +61,8 @@
                 <menu-nested
                     v-if="!isChild"
                     :items="element.children"
-                    @edit-row="editRow"
                     @delete-row="deleteRow"
+                    @edit-row="editRow"
                 ></menu-nested>
             </div>
         </template>
@@ -107,7 +82,7 @@
 </template>
 
 <script>
-    import draggable from "vuedraggable";
+    import Draggable from "vuedraggable";
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbDropdown from '@/Sdb/Dropdown';
@@ -117,7 +92,7 @@
         name: 'MenuNested',
 
         components: {
-            draggable,
+            Draggable,
             SdbButton,
             SdbButtonLink,
             SdbDropdown,
@@ -128,18 +103,16 @@
             'deleteRow',
             'editRow',
             'openFormModal',
-            'duplicateMenuAbove',
-            'duplicateMenuBelow',
         ],
 
         props: {
-            items: {
-                type: Array,
-                default: [],
-            },
             isChild: {
                 type: Boolean,
                 default: true,
+            },
+            items: {
+                type: Array,
+                default: [],
             },
         },
 
@@ -160,14 +133,6 @@
 
             deleteRow(id) {
                 this.$emit('deleteRow', id);
-            },
-
-            duplicateMenuAbove(menuItem) {
-                this.$emit('duplicateMenuAbove', menuItem);
-            },
-
-            duplicateMenuBelow(menuItem) {
-                this.$emit('duplicateMenuBelow', menuItem);
             },
         },
     }

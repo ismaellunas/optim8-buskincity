@@ -1,4 +1,6 @@
 <template>
+    <sdb-error-notifications :errors="formErrors"/>
+
     <div class="columns">
         <div class="column">
             <div class="is-pulled-left">
@@ -11,15 +13,15 @@
         <div class="column">
             <sdb-image
                 v-if="setting.value !== null"
-                :src="setting.value"
-                style="width: 200px; border: 1px solid #000"
                 class="mb-2"
+                style="width: 200px; border: 1px solid #000"
+                :src="setting.value"
             ></sdb-image>
             <sdb-input-file
                 v-model="file"
                 :accept="acceptedTypes"
-                :is-name-displayed="false"
                 :disabled="isProcessing"
+                :is-name-displayed="false"
                 @on-file-picked="onFilePicked"
             />
         </div>
@@ -28,8 +30,9 @@
 
 <script>
     import SdbButton from '@/Sdb/Button';
-    import SdbInputFile from '@/Sdb/InputFile';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';;
     import SdbImage from '@/Sdb/Image';
+    import SdbInputFile from '@/Sdb/InputFile';
     import { success as successAlert  } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
     import { includes } from 'lodash';
@@ -47,13 +50,20 @@
 
         components: {
             SdbButton,
-            SdbInputFile,
+            SdbErrorNotifications,
             SdbImage,
+            SdbInputFile,
         },
 
         props: {
-            lastSaved: {type: String, default: '-'},
-            setting: {type: Object, default: true},
+            lastSaved: {
+                type: String,
+                default: '-'
+            },
+            setting: {
+                type: Object,
+                default: true
+            },
         },
 
         setup() {
@@ -71,9 +81,9 @@
                     '.jpg',
                     '.png',
                 ],
-                isUploading: false,
-                isDeleting: false,
                 formErrors: {},
+                isDeleting: false,
+                isUploading: false,
                 loader: null,
             };
         },
