@@ -15,7 +15,6 @@
                     :value="modelValue"
                     @input="$emit('update:modelValue', $event.target.value)"
                     @keypress="$emit('on-keypress', $event)"
-                    @blur="$emit('on-blur', $event)"
                 />
             </div>
 
@@ -71,7 +70,6 @@
             },
         },
         emits: [
-            'on-blur',
             'on-keypress',
             'update:modelValue',
         ],
