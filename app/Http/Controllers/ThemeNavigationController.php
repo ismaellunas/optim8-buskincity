@@ -14,59 +14,40 @@ use App\Services\MenuService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class NavigationController extends CrudController
+class ThemeNavigationController extends CrudController
 {
     protected $baseRouteName = 'admin.theme.header.navigation';
     protected $componentName = 'ThemeHeader/Navigation/';
     protected $modelMenu = Menu::class;
     protected $modelMenuItem = MenuItem::class;
+    protected $title = "Header";
     private $menuService;
 
     public function __construct(MenuService $menuService)
     {
-        $this->authorizeResource(Menu::class, 'menu');
-
         $this->menuService = $menuService;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return Inertia::render($this->componentName.'Index', [
-            'baseRouteName' => $this->baseRouteName,
-            'categories' => $this->getRecordCategories(),
-            'menu' => $this->modelMenu::header()->first(),
-            'menuItemLastSaved' => $this->menuService->getMenuItemLastSaved(),
-            'menuItems' => $this->menuService->generateMenus(),
-            'pages' => $this->getRecordPages(),
-            'posts' => $this->getRecordPosts(),
-            'types' => $this->modelMenuItem::TYPES,
-        ]);
+        return Inertia::render(
+            $this->componentName.'Index',
+            $this->getData([
+                'categories' => $this->menuService->getRecordCategories(),
+                'menu' => $this->modelMenu::header()->first(),
+                'menuItemLastSaved' => $this->menuService->getMenuItemLastSaved(),
+                'menuItems' => $this->menuService->generateMenus(),
+                'pages' => $this->menuService->getRecordPages(),
+                'posts' => $this->menuService->getRecordPosts(),
+                'types' => $this->modelMenuItem::TYPES,
+            ]),
+        );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(MenuItemRequest $request)
     {
         $inputs = $this->generateCustomAttributes($request->all());
+
         $menuItem = new MenuItem();
         $menuItem->saveFromInputs($inputs);
 
@@ -75,35 +56,6 @@ class NavigationController extends CrudController
         return redirect()->route($this->baseRouteName.'.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Menu $navigation)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(
         MenuItemRequest $request,
         MenuItem $navigation
@@ -129,12 +81,7 @@ class NavigationController extends CrudController
 
         return redirect()->route($this->baseRouteName.'.index');
     }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(MenuItem $navigation)
     {
         $this->updateParentId($navigation);
@@ -154,24 +101,6 @@ class NavigationController extends CrudController
             $child->parent_id = $menuItem->parent_id;
             $child->save();
         }
-    }
-
-    private function getRecordPages()
-    {
-        $pages = Page::all();
-        return $pages->sortBy('title');
-    }
-
-    private function getRecordPosts()
-    {
-        $posts = Post::published()->get();
-        return $posts->sortBy('title');
-    }
-
-    private function getRecordCategories()
-    {
-        $categories = Category::all();
-        return $categories->sortBy('name');
     }
 
     private function generateCustomAttributes($inputs)
