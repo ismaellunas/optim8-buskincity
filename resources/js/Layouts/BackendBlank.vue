@@ -7,23 +7,17 @@
             >
         </Head>
 
-        <div id="main-container-wrapper">
-            <sdb-navbar-menu />
-        </div>
-
         <slot />
     </div>
 </template>
 
 <script>
-    import SdbNavbarMenu from '@/Sdb/NavbarMenu';
     import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
-        name: 'LayoutGuest',
+        name: 'LayoutBackendBlank',
 
         components: {
-            SdbNavbarMenu,
             Head,
         },
     };
