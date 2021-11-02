@@ -2,44 +2,23 @@
     <sdb-field>
         <sdb-label>{{ label }}</sdb-label>
 
-        <sdb-field class="has-addons mb-0">
-            <div class="control is-expanded">
-                <sdb-input-password
-                    ref="input"
-                    v-bind="$attrs"
-                    :type="type"
-                    :disabled="disabled"
-                    :has-error="hasError"
-                    :placeholder="placeholder"
-                    :required="required"
-                    :value="modelValue"
-                    @input="$emit('update:modelValue', $event.target.value)"
-                    @keypress="$emit('on-keypress', $event)"
-                />
-            </div>
-
-            <div class="control">
-                <sdb-button-icon
-                    v-show="isShowPassword"
-                    icon="fas fa-eye-slash"
-                    type="button"
-                    @click="changeTypeInput()"
-                />
-                <sdb-button-icon
-                    v-show="!isShowPassword"
-                    icon="fas fa-eye"
-                    type="button"
-                    @click="changeTypeInput()"
-                />
-            </div>
-        </sdb-field>
+        <sdb-input-password
+            ref="input"
+            v-bind="$attrs"
+            v-model="modelValue"
+            :disabled="disabled"
+            :has-error="hasError"
+            :placeholder="placeholder"
+            :required="required"
+            @input="$emit('update:modelValue', $event.target.value)"
+            @keypress="$emit('on-keypress', $event)"
+        />
 
         <sdb-input-error :message="message"/>
     </sdb-field>
 </template>
 
 <script>
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbField from '@/Sdb/Field';
     import SdbInputPassword from '@/Sdb/InputPassword';
     import SdbInputError from '@/Sdb/InputError';
@@ -48,7 +27,6 @@
     export default {
         name: 'SdbFormPassword',
         components: {
-            SdbButtonIcon,
             SdbField,
             SdbInputPassword,
             SdbInputError,
@@ -73,25 +51,9 @@
             'on-keypress',
             'update:modelValue',
         ],
-        data() {
-            return {
-                type: 'password',
-                isShowPassword: false,
-            };
-        },
         computed: {
             hasError() {
                 return this.message ? true : false;
-            },
-        },
-        methods: {
-            changeTypeInput() {
-                this.isShowPassword = !this.isShowPassword;
-                if (this.isShowPassword) {
-                    this.type = 'text';
-                } else {
-                    this.type = 'password';
-                }
             },
         },
     };
