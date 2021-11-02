@@ -80,6 +80,19 @@ class SettingService
             ->all();
     }
 
+    public function getAdditionalCodes(): array
+    {
+        return Setting::where('group', 'additional_code')
+            ->get([
+                'display_name',
+                'key',
+                'value',
+                'order',
+            ])
+            ->keyBy('key')
+            ->all();
+    }
+
     public function generateVariablesSass()
     {
         $variablesSass = view('theme_options.colors_sass', array_merge(
