@@ -84,57 +84,6 @@ class MenuService
         return $this->generateMenuItems($locale, $menuItems);
     }
 
-    // public static function generateMenus($locale)
-    // {
-    //     $menus = [
-    //         'navbar' => [],
-    //     ];
-
-    //     $rawMenus = [];
-
-    //     $pages = Page::take(2)->get();
-    //     foreach ($pages as $page) {
-    //         $rawMenus[] = [
-    //             'class' => \App\Models\Page::class,
-    //             'id' => $page->id,
-    //             'order' => $page->id,
-    //         ];
-    //     }
-
-    //     /* TODO: remove this after menu feature is created
-    //     $rawMenus = [
-    //         [
-    //             'class' => \App\Models\Page::class,
-    //             'id' => 56,
-    //             'order' => 0,
-    //         ], ...
-    //     ];
-    //      */
-
-    //     $sortedRawMenus = collect($rawMenus)->sortBy('order');
-
-    //     foreach ($sortedRawMenus as $rawMenu) {
-    //         $objMenu = $rawMenu['class']::find($rawMenu['id']);
-    //         $translation = $objMenu->translateOrDefault($locale);
-    //         if (!empty($translation)) {
-    //             $menus['navbar'][] = [
-    //                 'title' => $translation->title,
-    //                 'link' => route('frontend.pages.show', [
-    //                     'locale' => $locale,
-    //                     'page_translation' => $translation->slug,
-    //                 ]),
-    //             ];
-    //         }
-    //     }
-
-    //     $menus['navbar'][] = [
-    //         'title' => 'Blog',
-    //         'link' => route('blog.index', [$locale]),
-    //     ];
-
-    //     return $menus;
-    // }
-
     public static function generateBackendMenu(Request $request): array
     {
         $user = $request->user();
