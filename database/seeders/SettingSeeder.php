@@ -127,5 +127,47 @@ class SettingSeeder extends Seeder
         foreach ($fontSizes as $fontSize) {
             Setting::factory()->create($fontSize);
         }
+
+        $additionalCodes = [
+            [
+                "key" => "tracking_code_inside_head",
+                "display_name" => "Tracking Codes: Inside <head>",
+                "value" => null,
+                "group" => "additional_code",
+                "order" => "1"
+            ],
+            [
+                "key" => "tracking_code_after_body",
+                "display_name" => "Tracking Codes: After <body>",
+                "value" => null,
+                "group" => "additional_code",
+                "order" => "2"
+            ],
+            [
+                "key" => "tracking_code_before_body",
+                "display_name" => "Tracking Codes: Before </body>",
+                "value" => null,
+                "group" => "additional_code",
+                "order" => "3"
+            ],
+            [
+                "key" => "additional_css",
+                "display_name" => "Additional CSS",
+                "value" => null,
+                "group" => "additional_code",
+                "order" => "4"
+            ],
+            [
+                "key" => "additional_javascript",
+                "display_name" => "Additional Javascript",
+                "value" => null,
+                "group" => "additional_code",
+                "order" => "5"
+            ]
+        ];
+
+        foreach ($additionalCodes as $additionalCode) {
+            Setting::factory()->create($additionalCode);
+        }
     }
 }

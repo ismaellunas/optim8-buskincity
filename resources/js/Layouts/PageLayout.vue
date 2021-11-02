@@ -5,7 +5,23 @@
                 rel="stylesheet"
                 :href="$page.props.css.frontend.app"
             >
+            <link
+                v-if="$page.props.css.frontend.additional_css"
+                rel="stylesheet"
+                :href="$page.props.css.frontend.additional_css"
+            >
+            <link
+                v-if="$page.props.css.frontend.tracking_code_inside_head"
+                rel="stylesheet"
+                :href="$page.props.css.frontend.tracking_code_inside_head"
+            >
         </Head>
+
+        <link
+            v-if="$page.props.css.frontend.tracking_code_after_body"
+            rel="stylesheet"
+            :href="$page.props.css.frontend.tracking_code_after_body"
+        >
 
         <nav class="navbar is-primary">
             <div class="navbar-brand">
@@ -88,13 +104,18 @@
         </nav>
 
         <slot />
-    </div>
 
+        <link
+            v-if="$page.props.css.frontend.tracking_code_before_body"
+            rel="stylesheet"
+            :href="$page.props.css.frontend.tracking_code_before_body"
+        >
+    </div>
 </template>
 
 <script>
     import SdbLink from '@/Sdb/Link';
-    import { Head } from '@inertiajs/inertia-vue3';
+    import { Head, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'LayoutPage',
@@ -111,12 +132,26 @@
             'user',
         ],
 
+        data() {
+            return {
+                'tracking_code_inside_head': ".button {color: red}",
+                'tracking_code_after_body': "",
+                'tracking_code_before_body': "",
+            };
+        },
+
         computed: {
             availableLanguages() {
                 return this
                     .languageOptions
                     .filter(option => option.id !== this.currentLanguage);
             },
-        }
+        },
+
+        mounted() {
+            let recaptchaScript = document.createElement('script');
+            recaptchaScript.setAttribute('src', usePage().props.value.js.frontend.additional_javascript);
+            document.body.appendChild(recaptchaScript);
+        },
     };
 </script>
