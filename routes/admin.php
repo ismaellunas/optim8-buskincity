@@ -2,15 +2,15 @@
 
 use App\Http\Controllers\{
     CategoryController,
-    HeaderController,
     MediaController,
-    NavigationController,
     PageController,
     PermissionController,
     PostController,
     RoleController,
     ThemeColorController,
     ThemeFontSizeController,
+    ThemeHeaderController,
+    ThemeNavigationController,
     UserController,
     UserRoleController,
 };
@@ -71,12 +71,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/font-size', [ThemeFontSizeController::class, 'update'])->name('font-size.update');
 
         Route::prefix('header')->name('header.')->group(function () {
-            Route::get('/', [HeaderController::class, 'index'])->name('index');
-            Route::post('/layout', [HeaderController::class, 'updateLayout'])->name('layout.update');
-            Route::post('/logo', [HeaderController::class, 'updateLogo'])->name('logo.update');
+            Route::get('/', [ThemeHeaderController::class, 'index'])->name('index');
+            Route::post('/layout', [ThemeHeaderController::class, 'updateLayout'])->name('layout.update');
+            Route::post('/logo', [ThemeHeaderController::class, 'updateLogo'])->name('logo.update');
 
-            Route::resource('navigation', NavigationController::class);
-            Route::put('navigation/update/format', [NavigationController::class, 'updateFormat'])->name('navigation.update.format');
+            Route::resource('navigation', ThemeNavigationController::class)
+                ->except(['create', 'show', 'edit']);
+            Route::put('navigation/update/format', [ThemeNavigationController::class, 'updateFormat'])->name('navigation.update.format');
         });
     });
 });
