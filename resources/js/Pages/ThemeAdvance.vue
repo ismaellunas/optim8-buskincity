@@ -40,6 +40,7 @@
                         <div class="column">
                             <sdb-textarea
                                 v-model="form[ additionalCode.key ]"
+                                class="code-editor"
                             />
                             <p v-if="false">
                                 <sdb-input-error
@@ -108,8 +109,7 @@
         },
 
         computed: {
-            sortedAdditionalCodes()
-            {
+            sortedAdditionalCodes() {
                 return sortBy(this.additionalCodes, ['order']);
             }
         },
@@ -146,3 +146,10 @@
         },
     };
 </script>
+
+<style scoped>
+.code-editor {
+    background-color: black;
+    color: #e5e5e5;
+}
+</style>
