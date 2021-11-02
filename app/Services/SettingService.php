@@ -12,7 +12,7 @@ use \finfo;
 
 class SettingService
 {
-    private static function getThemeAdditionalCodeFileKey(string $key): string
+    private static function getAdditionalCodeFileKey(string $key): string
     {
         return config("constants.theme_additional_code_files.{$key}.key");
     }
@@ -26,31 +26,31 @@ class SettingService
 
     public static function getTrackingCodeAfterBodyUrl(): ?string
     {
-        return Setting::where('key', self::getThemeAdditionalCodeFileKey('tracking_code_after_body'))
+        return Setting::where('key', self::getAdditionalCodeFileKey('tracking_code_after_body'))
             ->value('value');
     }
 
     public static function getTrackingCodeBeforeBodyUrl(): ?string
     {
-        return Setting::where('key', self::getThemeAdditionalCodeFileKey('tracking_code_before_body'))
+        return Setting::where('key', self::getAdditionalCodeFileKey('tracking_code_before_body'))
             ->value('value');
     }
 
     public static function getTrackingCodeInsideHeadUrl(): ?string
     {
-        return Setting::where('key', self::getThemeAdditionalCodeFileKey('tracking_code_inside_head'))
+        return Setting::where('key', self::getAdditionalCodeFileKey('tracking_code_inside_head'))
             ->value('value');
     }
 
     public static function getAdditionalCssUrl(): ?string
     {
-        return Setting::where('key', self::getThemeAdditionalCodeFileKey('additional_css'))
+        return Setting::where('key', self::getAdditionalCodeFileKey('additional_css'))
             ->value('value');
     }
 
     public static function getAdditionalJavascriptUrl(): ?string
     {
-        return Setting::where('key', self::getThemeAdditionalCodeFileKey('additional_javascript'))
+        return Setting::where('key', self::getAdditionalCodeFileKey('additional_javascript'))
             ->value('value');
     }
 
