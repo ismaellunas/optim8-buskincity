@@ -5,8 +5,8 @@ namespace App\Services;
 use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
 use App\Models\Setting;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Process\Process;
 use \finfo;
 
