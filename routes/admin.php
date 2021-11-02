@@ -17,11 +17,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
-use App\Entities\CloudinaryStorage;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Setting;
-
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
