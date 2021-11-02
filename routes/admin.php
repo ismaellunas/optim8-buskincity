@@ -62,7 +62,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return Inertia::render('AdminDashboard');
     })->middleware(['can:system.dashboard'])->name('dashboard');
 
-    Route::name('theme.')->prefix('theme')->group(function () {
+    Route::name('theme.')->prefix('theme')->middleware(['can:system.theme'])->group(function () {
         Route::get('/color', [ThemeColorController::class, 'edit'])->name('color.edit');
         Route::post('/color', [ThemeColorController::class, 'update'])->name('color.update');
         Route::get('/font-size', [ThemeFontSizeController::class, 'edit'])->name('font-size.edit');

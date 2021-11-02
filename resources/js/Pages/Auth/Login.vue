@@ -1,12 +1,4 @@
 <template>
-    <Head>
-        <link
-            v-for="css in $page.props.css.frontend"
-            rel="stylesheet"
-            :href="css"
-        >
-    </Head>
-
     <section class="hero is-fullheight">
         <div class="hero-body">
             <div class="container has-text-centered">
@@ -125,6 +117,7 @@
 </template>
 
 <script>
+    import LayoutBlank from '@/Layouts/BlankLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
@@ -134,11 +127,9 @@
     import SdbFormPassword from '@/Sdb/Form/Password';
     import SdbLink from '@/Sdb/Link';
     import SdbSocialMediaList from '@/Sdb/SocialMediaList'
-    import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
-            Head,
             SdbButton,
             SdbButtonLink,
             SdbCheckbox,
@@ -148,13 +139,16 @@
             SdbLink,
             SdbSocialMediaList,
         },
+
         mixins: [
             MixinHasPageErrors,
         ],
 
+        layout: LayoutBlank,
+
         props: {
             canResetPassword: Boolean,
-            status: String
+            status: {type: String, default: ""},
         },
 
         data() {
@@ -192,5 +186,5 @@
                 }
             },
         }
-    }
+    };
 </script>
