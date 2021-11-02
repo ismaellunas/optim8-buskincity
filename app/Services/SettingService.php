@@ -17,6 +17,11 @@ class SettingService
         return config("constants.theme_additional_code_files.{$key}.key");
     }
 
+    public function getAdditionalCodeFileName(string $key): string
+    {
+        return config("constants.theme_additional_code_files.{$key}.filename");
+    }
+
     public static function getFrontendCssUrl(): string
     {
         $urlCss = Setting::where('key', 'url_css')->first(['key', 'value']);
