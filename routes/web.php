@@ -30,7 +30,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/profile', [UserProfileController::class, 'show'])
         ->name('user.profile.show');
 
-    // Set redirect to dashboard page for default user profile
     Route::get('/user/profile', function () {
         return redirect()->route('dashboard');
     })->name('profile.show');
