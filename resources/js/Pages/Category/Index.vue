@@ -82,10 +82,8 @@
     import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import SdbButton from '@/Sdb/Button';
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbFilterSearch from '@/Sdb/Filter/Search';
-    import SdbInput from '@/Sdb/Input';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbTable from '@/Sdb/Table';
     import { confirmDelete } from '@/Libs/alert';
@@ -97,15 +95,13 @@
         components: {
             AppLayout,
             SdbButton,
-            SdbButtonIcon,
             SdbButtonLink,
             SdbFilterSearch,
-            SdbInput,
             SdbPagination,
             SdbTable,
         },
         mixins: [
-            MixinFilterDataHandle,,
+            MixinFilterDataHandle,
         ],
         props: {
             baseRouteName: String,
