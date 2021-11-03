@@ -63,8 +63,8 @@
                             </a>
 
                             <div class="navbar-dropdown is-boxed">
-                                <jet-dropdown-link :href="route('profile.show')" class="navbar-item">
-                                    Profile
+                                <jet-dropdown-link :href="navProfile.link" class="navbar-item">
+                                    {{ navProfile.title }}
                                 </jet-dropdown-link>
 
                                 <jet-dropdown-link :href="route('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures" class="navbar-item">
@@ -108,8 +108,10 @@
         },
         setup() {
             const navMenus = computed(() => usePage().props.value.menus.nav);
+            const navProfile = computed(() => usePage().props.value.menus.navProfile);
             return {
                 navMenus,
+                navProfile,
             };
         },
         methods: {

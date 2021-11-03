@@ -181,10 +181,21 @@ class MenuService
                     'isEnabled' => $user->can('viewAny', Role::class),
                 ],
             ];
+
+            $navProfile = [
+                'title' => 'Profile',
+                'link' => route('admin.profile.show'),
+            ];
+        } else {
+            $navProfile = [
+                'title' => 'Profile',
+                'link' => route('user.profile.show'),
+            ];
         }
 
         return [
             'nav' => $menus,
+            'navProfile' => $navProfile,
         ];
     }
 
