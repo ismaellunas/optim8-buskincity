@@ -10,6 +10,7 @@ use App\Http\Controllers\{
     ThemeColorController,
     ThemeFontSizeController,
     ThemeHeaderController,
+    ThemeFooterController,
     ThemeNavigationController,
     UserController,
     UserRoleController,
@@ -83,6 +84,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
                 ->except(['create', 'show', 'edit']);
             Route::put('navigation/update/format', [ThemeNavigationController::class, 'updateFormat'])->name('navigation.update.format');
         });
+
+        Route::get('/footer', [ThemeFooterController::class, 'edit'])->name('footer.edit');
+        Route::post('/footer/layout', [ThemeFooterController::class, 'updateLayout'])->name('footer.layout.update');
     });
 });
 

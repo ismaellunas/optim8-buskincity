@@ -155,6 +155,12 @@ class MenuService
                             'isEnabled' => true,
                         ],
                         [
+                            'title' => 'Footer',
+                            'link' => route('admin.theme.footer.edit'),
+                            'isActive' => $request->routeIs('admin.theme.footer.*'),
+                            'isEnabled' => true,
+                        ],
+                        [
                             'title' => 'Colors',
                             'link' => route('admin.theme.color.edit'),
                             'isActive' => $request->routeIs('admin.theme.color.*'),
