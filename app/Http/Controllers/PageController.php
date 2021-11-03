@@ -20,11 +20,8 @@ class PageController extends CrudController
 
     protected $model = Page::class;
     protected $baseRouteName = 'admin.pages';
-<<<<<<< HEAD
     protected $pageService;
-=======
     protected $title = "Pages";
->>>>>>> 86cbcab199c0a00c8287413546f853574b3e396b
 
     public function __construct(PageService $pageService)
     {
