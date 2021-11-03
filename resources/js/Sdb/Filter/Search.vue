@@ -58,7 +58,7 @@
                 if (term.length > 2 || term.length == 0) {
                     this.$emit('search', term);
                 }
-            }, 3000),
+            }, 600),
 
             reset() {
                 this.term = '';
