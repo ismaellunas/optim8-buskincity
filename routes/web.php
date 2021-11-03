@@ -9,6 +9,7 @@ use App\Services\TranslationService as TranslationSv;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,9 +22,18 @@ use Inertia\Inertia;
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    Route::get('/profile', [UserProfileController::class, 'show'])
+        ->name('user.profile.show');
+
+    Route::get('/user/profile', function () {
+        return redirect()->route('dashboard');
+    })->name('profile.show');
+});
 
 Route::get('/', function () {
     return redirect(TranslationSv::currentLanguage());
@@ -47,6 +57,10 @@ Route::get('/user/service', function() {
 });
 Route::get('/user/remove-facebook', function() {
     echo "Remove facebook account page";
+});
+
+Route::get('test-theme', function () {
+    return Inertia::render('TestTheme');
 });
 
 Route::group([

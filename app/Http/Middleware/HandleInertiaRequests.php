@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Services\MenuService;
+use App\Services\SettingService;
 use App\Services\TranslationService as TranslationSv;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -59,7 +60,7 @@ class HandleInertiaRequests extends Middleware
                     && (
                         $request->routeIs('admin.*')
                         || $request->routeIs('dashboard')
-                        || $request->routeIs('profile.*')
+                        || $request->routeIs('user.profile.*')
                     )
                 )
                 ? MenuService::generateBackendMenu($request)
@@ -67,6 +68,12 @@ class HandleInertiaRequests extends Middleware
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
             'languageOptions' => TranslationSv::getLocaleOptions(),
+            'css.backend' => [
+                'app' => mix('css/app.css')->toHtml(),
+            ],
+            'css.frontend' => [
+                'app' => SettingService::getFrontendCssUrl(),
+            ]
         ]);
     }
 }

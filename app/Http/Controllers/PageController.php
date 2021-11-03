@@ -20,7 +20,11 @@ class PageController extends CrudController
 
     protected $model = Page::class;
     protected $baseRouteName = 'admin.pages';
+<<<<<<< HEAD
     protected $pageService;
+=======
+    protected $title = "Pages";
+>>>>>>> 86cbcab199c0a00c8287413546f853574b3e396b
 
     public function __construct(PageService $pageService)
     {
@@ -37,8 +41,7 @@ class PageController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Page/Index', [
-            'baseRouteName' => $this->baseRouteName,
+        return Inertia::render('Page/Index', $this->getData([
             'can' => [
                 'add' => $user->can('page.add'),
                 'delete' => $user->can('page.delete'),
@@ -51,7 +54,7 @@ class PageController extends CrudController
                 $this->recordsPerPage,
             ),
             'defaultLocale' => TranslationService::getDefaultLocale(),
-        ]);
+        ]));
     }
 
     /**

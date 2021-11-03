@@ -131,14 +131,12 @@
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasTab from '@/Mixins/HasTab';
     import AppLayout from '@/Layouts/AppLayout';
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbButtonsDisplayView from '@/Sdb/ButtonsDisplayView';
     import SdbCheckbox from '@/Sdb/Checkbox';
     import SdbDropdown from '@/Sdb/Dropdown';
     import SdbDropdownItem from '@/Sdb/DropdownItem';
     import SdbFilterSearch from '@/Sdb/Filter/Search';
-    import SdbInput from '@/Sdb/Input';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbPostGallery from '@/Sdb/Post/Gallery';
     import SdbPostGalleryItem from '@/Sdb/Post/GalleryItem';
@@ -154,14 +152,12 @@
     export default {
         components: {
             AppLayout,
-            SdbButtonIcon,
             SdbButtonLink,
             SdbButtonsDisplayView,
             SdbCheckbox,
             SdbDropdown,
             SdbDropdownItem,
             SdbFilterSearch,
-            SdbInput,
             SdbPagination,
             SdbPostGallery,
             SdbPostGalleryItem,
@@ -171,7 +167,7 @@
             SdbTabList,
         },
         mixins: [
-            MixinFilterDataHandle,,
+            MixinFilterDataHandle,
             MixinHasTab,
         ],
         props: {

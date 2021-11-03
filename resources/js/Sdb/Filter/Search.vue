@@ -43,7 +43,8 @@
         },
 
         emits: [
-            'search'
+            'search',
+            'update:modelValue',
         ],
 
         setup(props, { emit }) {
@@ -57,7 +58,7 @@
                 if (term.length > 2 || term.length == 0) {
                     this.$emit('search', term);
                 }
-            }, 1000),
+            }, 750),
 
             reset() {
                 this.term = '';

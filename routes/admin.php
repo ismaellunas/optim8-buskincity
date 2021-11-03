@@ -7,12 +7,15 @@ use App\Http\Controllers\{
     PermissionController,
     PostController,
     RoleController,
+    ThemeColorController,
+    ThemeFontSizeController,
     UserController,
     UserRoleController
 };
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 use App\Entities\CloudinaryStorage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -58,68 +61,16 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('dashboard', function () {
         return Inertia::render('AdminDashboard');
-    })->middleware(['can:system.dashboard']);
+    })->middleware(['can:system.dashboard'])->name('dashboard');
 
-    Route::get('test-theme', function () {
+    Route::get('/profile', [UserProfileController::class, 'show'])
+        ->name('profile.show');
 
-        $defaultColors = [
-            'color_primary' => '#00d1b2',
-            'color_link' => '#485fc7',
-            'color_info' => '#3e8ed0',
-            'color_success' => '#48c78e',
-            'color_warning' => '#ffe08a',
-            'color_danger' => '#f14668',
-        ];
-
-        $colors = Setting::where('group', 'theme_color')
-            ->get(['key', 'value'])
-            ->pluck('value', 'key')
-            ->all();
-
-        $variablesSass = view('files.colors_sass', array_merge(
-            $defaultColors,
-            $colors
-        ));
-
-        $disk = Storage::build([
-            'driver' => 'local',
-            'root' => storage_path('theme/sass'),
-        ]);
-
-        $disk->put('sdb_variables.sass', $variablesSass);
-
-        $output=null;
-        $retval=null;
-        exec('cd .. && npx webpack --config sdb.webpack.config.js', $output, $retval);
-        echo "Returned with status $retval and output:\n";
-        //print_r($output);
-
-        $file_name = 'theme/css/app.css';
-        $file_path = storage_path($file_name);
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-
-        $file = new UploadedFile(
-            $file_path,
-            $file_name,
-            $finfo->file($file_path),
-            filesize($file_path),
-            0,
-            false
-        );
-
-        $storage = new CloudinaryStorage();
-
-        $asset = $storage->upload(
-            $file,
-            "app.css",
-            "css"
-        );
-
-        $setting = Setting::firstOrNew(['key' => 'url_css']);
-        $setting->value = $asset->fileUrl;
-        $setting->save();
-
-        echo "done";
+    Route::name('theme.')->prefix('theme')->middleware(['can:system.theme'])->group(function () {
+        Route::get('/color', [ThemeColorController::class, 'edit'])->name('color.edit');
+        Route::post('/color', [ThemeColorController::class, 'update'])->name('color.update');
+        Route::get('/font-size', [ThemeFontSizeController::class, 'edit'])->name('font-size.edit');
+        Route::post('/font-size', [ThemeFontSizeController::class, 'update'])->name('font-size.update');
     });
 });
 
