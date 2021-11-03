@@ -95,7 +95,8 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $query->where(function ($query) use ($term) {
             $query
-                ->where('name', 'ILIKE', '%'.$term.'%')
+                ->where('first_name', 'ILIKE', '%'.$term.'%')
+                ->where('last_name', 'ILIKE', '%'.$term.'%')
                 ->orWhere('email', 'ILIKE', '%'.$term.'%');
         });
     }
