@@ -18,15 +18,6 @@ use Illuminate\Http\Request;
 
 class MenuService
 {
-    public function getRecords(
-        int $perPage = 15
-    ): LengthAwarePaginator {
-        return Menu::orderBy('id', 'DESC')
-            ->with('menuItems')
-            ->header()
-            ->paginate($perPage);
-    }
-
     public function getMenuItemLastSaved()
     {
         $menu = MenuItem::orderBy('updated_at', 'DESC')
