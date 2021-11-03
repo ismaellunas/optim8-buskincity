@@ -1,15 +1,23 @@
 <template>
     <sdb-form-input
-        v-model="form.name"
-        label="Name"
+        v-model="form.first_name"
+        label="First Name"
         required
-        :message="error('name')"
+        :message="error('first_name')"
+    ></sdb-form-input>
+
+    <sdb-form-input
+        v-model="form.last_name"
+        label="Last Name"
+        required
+        :message="error('last_name')"
     ></sdb-form-input>
 
     <sdb-form-input
         v-model="form.email"
         label="Email"
         required
+        type="email"
         :message="error('email')"
     ></sdb-form-input>
 

@@ -32,6 +32,7 @@
 
 @story('heroku:deploy-simple')
     install-dependencies
+    git-commit-deployment
     heroku:config-set
     heroku:push
     heroku:migration
@@ -63,6 +64,7 @@
 @task('install-dependencies')
     composer install
     yarn install
+    rm public/js/*
     npm run prod
 @endtask
 
@@ -71,11 +73,11 @@
     git restore public/js/app.js
     git restore public/mix-manifest.json
     git stash -u
+    git pull
 @endtask
 
 @task('git-commit-deployment')
-    git add .
-    git commit -m "Deploy on {{date("Y-m-d H:i:s")}}"
+    git add . && git diff --staged --quiet || git commit -m "Deploy on {{date("Y-m-d H:i:s")}}"
 @endtask
 
 @task('heroku:config-set')
@@ -100,5 +102,5 @@
 @endtask
 
 @task('heroku:route-list')
-    heroku run php artisan route:list --path="admin"
+    heroku run php artisan route:list --path="admin" -c
 @endtask

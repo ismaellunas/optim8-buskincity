@@ -9,7 +9,8 @@ class UserUpdateRequest extends UserStoreRequest
     public function rules(): array
     {
         $rules = [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:128'],
+            'last_name' => ['required', 'string', 'max:128'],
             'email' => [
                 'required',
                 'string',

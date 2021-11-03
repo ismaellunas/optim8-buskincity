@@ -1,7 +1,7 @@
 <template>
     <tr>
         <th>{{ user.id }}</th>
-        <td>{{ user.name }}</td>
+        <td>{{ user.full_name }}</td>
         <td>{{ user.email }}</td>
         <td>{{ roleName }}</td>
         <td>

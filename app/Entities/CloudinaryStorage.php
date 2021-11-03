@@ -11,15 +11,22 @@ class CloudinaryStorage implements MediaStorageInterface
     public function upload(
         File $file,
         string $fileName = null,
-        string $extension = null
+        string $extension = null,
+        string $folder = null,
     ): CloudinaryAsset {
+
+        $options = [
+            'public_id' => $fileName,
+            'resource_type' => 'auto',
+        ];
+
+        if ($folder) {
+            $options['folder'] = $folder;
+        }
 
         $result = cloudinary()->upload(
             $file->getRealPath(),
-            [
-                'public_id' => $fileName,
-                'resource_type' => 'auto',
-            ]
+            $options
         );
 
         return CloudinaryAsset::createAssetFromApiResponse(

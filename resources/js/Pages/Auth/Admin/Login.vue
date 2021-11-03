@@ -97,7 +97,7 @@
     import JetCheckbox from '@/Jetstream/Checkbox'
     import JetInput from '@/Jetstream/Input'
     import JetLabel from '@/Jetstream/Label'
-    import SdbButtonLink from '@/Sdb/ButtonLink';
+    import LayoutBackendBlank from '@/Layouts/BackendBlank';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbLink from '@/Sdb/Link';
 
@@ -107,14 +107,15 @@
             JetCheckbox,
             JetInput,
             JetLabel,
-            SdbButtonLink,
             SdbErrorNotifications,
             SdbLink,
         },
 
+        layout: LayoutBackendBlank,
+
         props: {
             canResetPassword: Boolean,
-            status: String
+            status: {type: String, default: ""},
         },
 
         data() {
