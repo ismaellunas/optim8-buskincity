@@ -1,6 +1,6 @@
 <template>
     <app-layout>
-        <template #header>Pages</template>
+        <template #header>{{ title }}</template>
 
         <sdb-flash-notifications :flash="$page.props.flash"/>
 
@@ -127,6 +127,7 @@
             'defaultLocale',
             'pageQueryParams',
             'records',
+            'title',
         ],
         setup(props) {
             const queryParams = merge(

@@ -125,19 +125,19 @@ class MenuService
                 [
                     'title' => 'Theme',
                     'isActive' => $request->routeIs('admin.theme.*'),
-                    'isEnabled' => $user->hasRole('Administrator'),
+                    'isEnabled' => $user->can('system.theme'),
                     'children' => [
                         [
                             'title' => 'Colors',
                             'link' => route('admin.theme.color.edit'),
                             'isActive' => $request->routeIs('admin.theme.color.*'),
-                            'isEnabled' => $user->hasRole('Administrator'),
+                            'isEnabled' => true,
                         ],
                         [
                             'title' => 'Font Size',
                             'link' => route('admin.theme.font-size.edit'),
                             'isActive' => $request->routeIs('admin.theme.font-size.*'),
-                            'isEnabled' => $user->hasRole('Administrator'),
+                            'isEnabled' => true,
                         ],
                     ],
                 ],
@@ -154,10 +154,21 @@ class MenuService
                     'isEnabled' => $user->can('viewAny', Role::class),
                 ],
             ];
+
+            $navProfile = [
+                'title' => 'Profile',
+                'link' => route('admin.profile.show'),
+            ];
+        } else {
+            $navProfile = [
+                'title' => 'Profile',
+                'link' => route('user.profile.show'),
+            ];
         }
 
         return [
             'nav' => $menus,
+            'navProfile' => $navProfile,
         ];
     }
 }

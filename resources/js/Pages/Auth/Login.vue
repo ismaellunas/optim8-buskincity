@@ -1,12 +1,4 @@
 <template>
-    <Head>
-        <link
-            v-for="css in $page.props.css.frontend"
-            rel="stylesheet"
-            :href="css"
-        >
-    </Head>
-
     <section class="hero is-fullheight">
         <div class="hero-body">
             <div class="container has-text-centered">
@@ -86,14 +78,13 @@
                                                 :message="error('email')"
                                             ></sdb-form-input>
 
-                                            <sdb-form-input
+                                            <sdb-form-password
                                                 v-model="form.password"
-                                                autocomplete="new-password"
+                                                autocomplete="current-password"
                                                 label="Password"
-                                                type="password"
                                                 placeholder="Enter your password"
-                                                :message="error('password')"
-                                            ></sdb-form-input>
+                                                :required="true"
+                                            ></sdb-form-password>
 
                                             <div class="field columns">
                                                 <div class="column has-text-left">
@@ -126,34 +117,38 @@
 </template>
 
 <script>
+    import LayoutBlank from '@/Layouts/BlankLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbFormInput from '@/Sdb/Form/Input';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbCheckbox from '@/Sdb/Checkbox';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbFormPassword from '@/Sdb/Form/Password';
     import SdbLink from '@/Sdb/Link';
     import SdbSocialMediaList from '@/Sdb/SocialMediaList'
-    import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
-            Head,
-            SdbFormInput,
-            SdbErrorNotifications,
             SdbButton,
             SdbButtonLink,
             SdbCheckbox,
+            SdbErrorNotifications,
+            SdbFormInput,
+            SdbFormPassword,
             SdbLink,
             SdbSocialMediaList,
         },
+
         mixins: [
             MixinHasPageErrors,
         ],
 
+        layout: LayoutBlank,
+
         props: {
             canResetPassword: Boolean,
-            status: String
+            status: {type: String, default: ""},
         },
 
         data() {
@@ -191,5 +186,5 @@
                 }
             },
         }
-    }
+    };
 </script>
