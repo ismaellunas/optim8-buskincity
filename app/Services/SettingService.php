@@ -58,6 +58,18 @@ class SettingService
             ->all();
     }
 
+    public function getFooters(): array
+    {
+        return Setting::where('group', 'footer')
+            ->get([
+                'key',
+                'value',
+                'updated_at',
+            ])
+            ->keyBy('key')
+            ->all();
+    }
+
     public function getHeaderLayoutLastSaved()
     {
         $settings = $this->getHeader();
