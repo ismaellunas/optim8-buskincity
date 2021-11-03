@@ -1,6 +1,6 @@
 <template>
     <app-layout>
-        <template #header>Category</template>
+        <template #header>{{ title }}</template>
 
         <div class="box">
             <div class="columns">
@@ -113,6 +113,7 @@
             pageNumber: String,
             pageQueryParams: Object,
             records: Object,
+            title: String,
         },
         setup(props) {
             return {
