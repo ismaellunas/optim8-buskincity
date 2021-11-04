@@ -19,6 +19,7 @@
         'DB_DATABASE',
         'DB_USERNAME',
         'DB_PASSWORD',
+        'GOOGLE_API_KEY',
         'GOOGLE_CLIENT_ID',
         'GOOGLE_CLIENT_SECRET',
         'FACEBOOK_CLIENT_ID',
