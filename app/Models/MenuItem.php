@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+class MenuItem extends BaseModel
 {
     use HasFactory;
 
     protected $fillable = [
+        'locale',
+        'title',
         'type',
         'url',
         'order',
@@ -35,19 +38,32 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
         $this->save();
     }
 
-    {
-        }
-    }
-
     public function updateFormatMenuItems(array $inputs)
     {
-        $this->updateMenuItemData($inputs);
+        foreach ($inputs as $key => $input) {
+            $this->updateMenuItemData($input);
+        }
+    }
+    public function updateOrderMenuItem($inputs)
+    {
+        $menuItems = $this->where('menu_id', $inputs['menu_id'])
+            ->orderBy('order', 'ASC')
+            ->where('parent_id', $inputs['parent_id'])
+            ->where('order', '>=', $inputs['order'])
+            ->get();
+
+        $order = $inputs['order'] + 1;
+        foreach ($menuItems as $menuItem) {
+            $menuItem->order = $order;
+            $menuItem->save();
+
+            $order++;
+        }
     }
 
     private function updateMenuItemData(array $menuItems, $parentId = null)
     {
         $order = 1;
-
         foreach ($menuItems as $menuItem) {
             if (count($menuItem['children']) > 0) {
                 $this->updateMenuItemData($menuItem['children'], $menuItem['id']);
