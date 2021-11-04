@@ -82,10 +82,10 @@
         ],
 
         props: {
-            baseRouteName: {type: String, default: 'admin.theme.advance'},
-            additionalCodes: {type: Object, default: () => {}},
+            baseRouteName: {type: String, required: true},
+            additionalCodes: {type: Object, required: true},
             errors: {type: Object, default: () => {}},
-            title: {type: String, default: 'Theme'},
+            title: {type: String, required: true},
         },
 
         setup(props) {
