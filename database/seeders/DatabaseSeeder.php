@@ -82,7 +82,6 @@ class DatabaseSeeder extends Seeder
         Menu::factory()
             ->has(
                 MenuItem::factory()
-                    ->hasTranslations(1)
             )
             ->create();
 

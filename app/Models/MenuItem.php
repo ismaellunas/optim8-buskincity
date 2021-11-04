@@ -2,14 +2,10 @@
 
 namespace App\Models;
 
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
-use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class MenuItem extends BaseModel implements TranslatableContract
 {
     use HasFactory;
-    use Translatable;
 
     protected $fillable = [
         'type',
@@ -33,22 +29,13 @@ class MenuItem extends BaseModel implements TranslatableContract
         self::TYPE_CATEGORY,
     ];
 
-    public $translatedAttributes = ['title'];
-
     public function saveFromInputs($inputs)
     {
         $this->fill($inputs);
         $this->save();
     }
 
-    public function syncTranslations(array $providedLocales)
     {
-        $existingLocales = array_keys($this->getTranslationsArray());
-
-        $unusedLocales = array_diff($existingLocales, $providedLocales);
-
-        if (!empty($unusedLocales)) {
-            $this->deleteTranslations($unusedLocales);
         }
     }
 

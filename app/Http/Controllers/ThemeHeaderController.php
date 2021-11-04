@@ -103,8 +103,6 @@ class ThemeHeaderController extends CrudController
 
         $menuItem->saveFromInputs($inputs);
 
-        $menuItem->syncTranslations(array_keys($inputs));
-
         $this->generateFlashMessage('Menu item updated successfully!');
 
         return redirect()->route($this->baseRouteName.'.edit');
@@ -162,6 +160,7 @@ class ThemeHeaderController extends CrudController
     private function generateCustomValues($inputs)
     {
         $lastMenuItem = $this->modelMenuItem::orderBy('order', 'DESC')
+            ->where('locale', $inputs['locale'])
             ->where('menu_id', $inputs['menu_id'])
             ->first();
 
