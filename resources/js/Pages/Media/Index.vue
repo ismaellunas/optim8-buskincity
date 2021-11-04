@@ -26,6 +26,7 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import SdbMediaLibrary from '@/Sdb/MediaLibrary';
     import { success as successAlert } from '@/Libs/alert';
     import { merge, clone } from 'lodash';
@@ -36,7 +37,11 @@
             AppLayout,
             SdbMediaLibrary,
         },
+        mixins: [
+            MixinFilterDataHandle,
+        ],
         props: {
+            baseRouteName: String,
             can: {},
             records: {},
             pageNumber: String,
@@ -56,7 +61,6 @@
         data() {
             return {
                 displayView: 'gallery',
-                loader: null,
             };
         },
         methods: {
@@ -81,37 +85,9 @@
                     }
                 );
             },
-            search(term) {
-                this.queryParams['term'] = term;
-                this.$inertia.get(
-                    route('admin.media.index', this.queryParams),
-                    {},
-                    {
-                        replace: true,
-                        preserveState: true,
-                        onStart: () => this.onStartLoadingOverlay(),
-                        onFinish: () => this.onEndLoadingOverlay(),
-                    }
-                );
-            },
-            onStartLoadingOverlay() {
-                this.loader = this.$loading.show();
-            },
-            onEndLoadingOverlay() {
-                this.loader.hide();
-            },
             onTypeChanged(types) {
                 this.queryParams['types'] = types;
-                this.$inertia.get(
-                    route('admin.media.index'),
-                    this.queryParams,
-                    {
-                        replace: true,
-                        preserveState: true,
-                        onStart: () => this.onStartLoadingOverlay(),
-                        onFinish: () => this.onEndLoadingOverlay(),
-                    }
-                );
+                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             }
         },
     }
