@@ -10,7 +10,6 @@ use App\Http\Controllers\{
     ThemeColorController,
     ThemeFontSizeController,
     ThemeHeaderController,
-    ThemeNavigationController,
     UserController,
     UserRoleController,
 };
@@ -75,13 +74,17 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/font-size', [ThemeFontSizeController::class, 'update'])->name('font-size.update');
 
         Route::prefix('header')->name('header.')->group(function () {
-            Route::get('/', [ThemeHeaderController::class, 'index'])->name('index');
+            Route::get('/', [ThemeHeaderController::class, 'edit'])->name('edit');
+
+            // layout
             Route::post('/layout', [ThemeHeaderController::class, 'updateLayout'])->name('layout.update');
             Route::post('/logo', [ThemeHeaderController::class, 'updateLogo'])->name('logo.update');
 
-            Route::resource('navigation', ThemeNavigationController::class)
-                ->except(['create', 'show', 'edit']);
-            Route::put('navigation/update/format', [ThemeNavigationController::class, 'updateFormat'])->name('navigation.update.format');
+            // Navigation
+            Route::post('/menu', [ThemeHeaderController::class, 'store'])->name('store');
+            Route::post('/{menuItem}/update', [ThemeHeaderController::class, 'update'])->name('update');
+            Route::post('/update-format', [ThemeHeaderController::class, 'updateFormat'])->name('update-format');
+            Route::delete('/{menuItem}/destroy', [ThemeHeaderController::class, 'destroy'])->name('destroy');
         });
     });
 });
