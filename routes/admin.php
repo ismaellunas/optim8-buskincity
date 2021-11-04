@@ -83,6 +83,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             // Navigation
             Route::post('/menu', [ThemeHeaderController::class, 'store'])->name('store');
             Route::post('/{menuItem}/update', [ThemeHeaderController::class, 'update'])->name('update');
+            Route::post('/{type}/duplicate', [ThemeHeaderController::class, 'duplicateMenu'])->name('duplicate');
             Route::post('/update-format', [ThemeHeaderController::class, 'updateFormat'])->name('update-format');
             Route::delete('/{menuItem}/destroy', [ThemeHeaderController::class, 'destroy'])->name('destroy');
         });
