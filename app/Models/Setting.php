@@ -12,4 +12,8 @@ class Setting extends BaseModel
         'key',
         'value'
     ];
+
+    protected $casts = [
+        'updated_at' => 'datetime:M d, Y \a\t h:i',
+    ];
 }
