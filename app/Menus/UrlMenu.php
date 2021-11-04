@@ -10,22 +10,10 @@ class UrlMenu implements MenuInterface
 {
     public $id;
     private $menuItem;
-    private $locale;
 
-    function __construct($locale, $id)
+    function __construct($id)
     {
         $this->menuItem = MenuItem::find($id);
-        $this->locale = $locale;
-    }
-
-    function getTranslation(): object
-    {
-        return $this->menuItem->translateOrDefault($this->locale);
-    }
-
-    function getTitle(): string
-    {
-        return $this->getTranslation()->title;
     }
 
     function getUrl(): string

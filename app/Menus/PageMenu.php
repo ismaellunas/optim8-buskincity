@@ -10,32 +10,21 @@ class PageMenu implements MenuInterface
 {
     public $id;
     private $menuItem;
-    private $locale;
 
-    function __construct($locale, $id)
+    function __construct($id)
     {
         $this->menuItem = MenuItem::where('id', $id)
             ->with('page')
             ->first();
-        $this->locale = $locale;
-    }
-
-    function getTranslation(): object
-    {
-        return $this->menuItem->translateOrDefault($this->locale);
-    }
-
-    function getTitle(): string
-    {
-        return $this->getTranslation()->title;
     }
 
     function getUrl(): string
     {
-        $page = $this->menuItem->page->translateOrDefault($this->locale);
+        $locale = $this->menuItem->locale;
+        $page = $this->menuItem->page->translateOrDefault($locale);
 
         return route('frontend.pages.show', [
-            'locale' => $this->locale,
+            'locale' => $locale,
             'page_translation' => $page->slug,
         ]);
     }
