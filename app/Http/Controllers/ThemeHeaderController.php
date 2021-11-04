@@ -132,6 +132,23 @@ class ThemeHeaderController extends CrudController
         return redirect()->route($this->baseRouteName.'.edit');
     }
 
+    public function duplicateMenu(MenuItemRequest $request, $type)
+    {
+        $inputs = $request->all();
+
+        if ($type != 1) {
+            $inputs['order'] = (int)$inputs['order'] + 1;
+        }
+
+        $menuItem = new MenuItem();
+        $menuItem->updateOrderMenuItem($inputs);
+        $menuItem->saveFromInputs($inputs);
+
+        $this->generateFlashMessage('Menu item duplicate successfully!');
+
+        return redirect()->route($this->baseRouteName.'.edit');
+    }
+
     private function updateParentId($menuItem)
     {
         $childs = $this->modelMenuItem::where('parent_id', $menuItem->id)->get();
