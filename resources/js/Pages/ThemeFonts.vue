@@ -331,20 +331,17 @@
         ],
 
         props: {
-            baseRouteName: {type: String, default: 'admin.theme.advance'},
-            title: {type: String, default: 'Fonts'},
+            baseRouteName: {type: String, required: true},
+            title: {type: String, required: true},
             errors: {type: Object, default: () => {}},
-            uppercaseText: {type: Object, default: () => {}},
-            contentParagraphWidth: {type: Number, default: 1440},
-            headingsFont: {type: Object, default: () => {}},
-            mainTextFont: {type: Object, default: () => {}},
-            buttonsFont: {type: Object, default: () => {}},
-            uppercaseOptions: {type: Object, default: () => {}},
-            webfontsUrl: {type: String, default: ''},
-            baseUrlGoogleFont: {
-                type: String,
-                default: "https://fonts.googleapis.com/css2"
-            },
+            uppercaseText: {type: Object, required: true},
+            contentParagraphWidth: {type: Number, required: true},
+            headingsFont: {type: Object, required: true},
+            mainTextFont: {type: Object, required: true},
+            buttonsFont: {type: Object, required: true},
+            uppercaseOptions: {type: Object, required: true},
+            baseUrlGoogleFont: {type: String, required: true},
+            webfontsUrl: {type: String, required: true},
         },
 
         setup(props) {
