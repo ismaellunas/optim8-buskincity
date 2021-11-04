@@ -34,6 +34,7 @@ class ThemeFontRequest extends FormRequest
             ],
             'content_paragraph_width' => [
                 'required',
+                'min:0',
                 'integer',
             ],
 
