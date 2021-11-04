@@ -12,6 +12,7 @@ use App\Models\{
     Role,
     User,
 };
+use App\Services\TranslationService as TranslationSv;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
@@ -37,9 +38,13 @@ class MenuService
         return '-';
     }
 
-    private function getMenuItems(string $type): array
+    private function getMenuItems(
+        string $locale,
+        string $type
+    ): array
     {
-        return MenuItem::orderBy('order', 'ASC')
+        return MenuItem::where('locale', $locale)
+            ->orderBy('order', 'ASC')
             ->orderBy('parent_id', 'ASC')
             ->whereHas('menu', function ($query) use ($type) {
                 if ($type == "header") {
@@ -53,14 +58,13 @@ class MenuService
     }
 
     private function generateMenuItems(
-        string $locale,
         array $menuItems,
         $parentId = null
     ): array {
         $menus = [];
         foreach ($menuItems as $menuItem) {
             if ($menuItem['parent_id'] == $parentId) {
-                $children = $this->generateMenuItems($locale, $menuItems, $menuItem['id']);
+                $children = $this->generateMenuItems($menuItems, $menuItem['id']);
 
                 if ($children) {
                     $menuItem['children'] = $children;
@@ -69,8 +73,7 @@ class MenuService
                 }
 
                 $className = "\App\Menus\\".$menuItem['type']."Menu";
-                $typeMenu = new $className($locale, $menuItem['id']);
-                $menuItem['title'] = $typeMenu->getTitle();
+                $typeMenu = new $className($menuItem['id']);
                 $menuItem['link'] = $typeMenu->getUrl();
 
                 $menus[] = $menuItem;
@@ -81,11 +84,25 @@ class MenuService
     }
 
     public function generateMenus(
-        string $locale = "en",
+        ?string $locale = null,
         string $type = "header"
     ) :array {
-        $menuItems = $this->getMenuItems($type);
-        return $this->generateMenuItems($locale, $menuItems);
+        $menus = [];
+
+        if ($locale === null) {
+            $locales = TranslationSv::getLocaleOptions();
+        } else {
+            $locales = [
+                ["id" => $locale]
+            ];
+        }
+
+        foreach ($locales as $locale) {
+            $menuItems = $this->getMenuItems($locale['id'], $type);
+            $menus[$locale['id']] = $this->generateMenuItems($menuItems);
+        }
+
+        return $menus;
     }
 
     public static function generateBackendMenu(Request $request): array
