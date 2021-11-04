@@ -12,13 +12,17 @@ class CloudinaryStorage implements MediaStorageInterface
         File $file,
         string $fileName = null,
         string $extension = null,
-        string $folder = null
+        string $folder = null,
+        array $options = []
     ): CloudinaryAsset {
 
-        $options = [
-            'public_id' => $fileName,
-            'resource_type' => 'auto',
-        ];
+        $options = array_merge(
+            $options,
+            [
+                'public_id' => $fileName,
+                'resource_type' => 'auto',
+            ]
+        );
 
         if ($folder) {
             $options['folder'] = $folder;

@@ -160,7 +160,10 @@ class SettingService
             $inputs['file'],
             $inputs['file_name'],
             $inputs['file_type'],
-            $folder
+            $folder,
+            [
+                'invalidate' => true
+            ]
         );
     }
 
