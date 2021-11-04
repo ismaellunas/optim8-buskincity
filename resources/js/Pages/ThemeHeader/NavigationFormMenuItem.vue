@@ -1,10 +1,14 @@
 <template>
     <sdb-modal-card>
-        <template v-slot:header>
+        <template #header>
             <p class="modal-card-title has-text-weight-bold">
                 {{ menuItem.id ? 'Edit' : 'Add' }} Menu Item
             </p>
-            <button class="delete" aria-label="close" @click="$emit('close')"></button>
+            <button
+                class="delete"
+                aria-label="close"
+                @click="$emit('close')"
+            />
         </template>
         <form method="post">
             <fieldset>
@@ -18,7 +22,7 @@
                         :message="error(translation+'.title')"
                         required
                     >
-                        <template v-slot:afterInput>
+                        <template #afterInput>
                             <div class="control">
                                 <sdb-button-icon
                                     v-if="translation !== defaultLocale"
@@ -57,8 +61,13 @@
                     required
                     :message="error('type')"
                 >
-                    <template v-for="(type, index) in types" :key="index">
-                        <option :value="type">{{ type }}</option>
+                    <template
+                        v-for="(type, index) in types"
+                        :key="index"
+                    >
+                        <option :value="type">
+                            {{ type }}
+                        </option>
                     </template>
                 </sdb-form-select>
                 <sdb-form-input
@@ -66,7 +75,7 @@
                     v-model="form.url"
                     label="Url"
                     :message="error('url')"
-                ></sdb-form-input>
+                />
                 <sdb-form-select
                     v-if="isTypePage"
                     v-model="form.page_id"
@@ -74,8 +83,13 @@
                     class="is-fullwidth"
                     :message="error('page_id')"
                 >
-                    <template v-for="page in pages" :key="page.id">
-                        <option :value="page.id">{{ page.title }}</option>
+                    <template
+                        v-for="page in pages"
+                        :key="page.id"
+                    >
+                        <option :value="page.id">
+                            {{ page.title }}
+                        </option>
                     </template>
                 </sdb-form-select>
                 <sdb-form-select
@@ -85,8 +99,13 @@
                     class="is-fullwidth"
                     :message="error('post_id')"
                 >
-                    <template v-for="post in posts" :key="post.id">
-                        <option :value="post.id">{{ post.title }}</option>
+                    <template
+                        v-for="post in posts"
+                        :key="post.id"
+                    >
+                        <option :value="post.id">
+                            {{ post.title }}
+                        </option>
                     </template>
                 </sdb-form-select>
                 <sdb-form-select
@@ -96,20 +115,30 @@
                     class="is-fullwidth"
                     :message="error('category_id')"
                 >
-                    <template v-for="category in categories" :key="category.id">
-                        <option :value="category.id">{{ category.name }}</option>
+                    <template
+                        v-for="category in categories"
+                        :key="category.id"
+                    >
+                        <option :value="category.id">
+                            {{ category.name }}
+                        </option>
                     </template>
                 </sdb-form-select>
             </fieldset>
         </form>
-        <template v-slot:footer>
-            <div class="columns" style="width: 100%">
+        <template #footer>
+            <div
+                class="columns"
+                style="width: 100%"
+            >
                 <div class="column">
                     <div class="is-pulled-right">
-                        <sdb-button @click="$emit('close')">Cancel</sdb-button>
+                        <sdb-button @click="$emit('close')">
+                            Cancel
+                        </sdb-button>
                         <sdb-button
-                            @click="onSubmit()"
                             class="is-primary ml-1"
+                            @click="onSubmit()"
                         >
                             {{ menuItem.id ? 'Update' : 'Create' }}
                         </sdb-button>
@@ -136,7 +165,7 @@
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
-        name: 'ModalFormMenu',
+        name: 'NavigationFormMenu',
 
         components: {
             SdbButton,
@@ -319,7 +348,7 @@
                         }
                     });
                 } else {
-                    this.$inertia.put(route(this.baseRouteName+'.update', form.id), form, {
+                    this.$inertia.post(route(this.baseRouteName+'.update', form.id), form, {
                         preserveState: true,
                         onStart: () => {
                             self.loader = self.$loading.show();

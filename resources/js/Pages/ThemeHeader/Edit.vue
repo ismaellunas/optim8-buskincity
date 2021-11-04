@@ -4,6 +4,8 @@
             {{ title }}
         </template>
 
+        <sdb-error-notifications :errors="$page.props.errors"/>
+
         <div class="box mb-6">
             <sdb-tab>
                 <ul>
@@ -17,37 +19,50 @@
                         </a>
                     </sdb-tab-list>
                 </ul>
+
+                <sdb-button
+                    type="button"
+                    class="is-primary ml-2"
+                    @click="onSave(activeTab)"
+                >
+                    <span>Save</span>
+                </sdb-button>
             </sdb-tab>
 
-            <header-layout
-                :last-saved="headerLayoutLastSaved"
-                :setting="settings['header_layout']"
-            ></header-layout>
+            <layout
+                v-if="activeTab == 'layout'"
+                ref="layout"
+                :settings="settings"
+            />
 
-            <hr>
-            <header-logo
-                :last-saved="headerLogoUrlLastSaved"
-                :setting="settings['header_logo_url']"
-            ></header-logo>
+            <navigation
+                v-if="activeTab == 'navigation'"
+                ref="navigation"
+                :last-saved="menuItemLastSaved"
+                :menu-items="menuItems"
+                :menu="menu"
+            />
         </div>
     </app-layout>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
-    import HeaderLayout from './Layout';
-    import HeaderLogo from './Logo';
+    import Layout from './Layout';
+    import Navigation from './Navigation';
     import MixinHasTab from '@/Mixins/HasTab';
     import SdbButton from '@/Sdb/Button';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbTab from '@/Sdb/Tab';
     import SdbTabList from '@/Sdb/TabList';
 
     export default {
         components: {
             AppLayout,
-            HeaderLayout,
-            HeaderLogo,
+            Layout,
+            Navigation,
             SdbButton,
+            SdbErrorNotifications,
             SdbTab,
             SdbTabList,
         },
@@ -59,13 +74,19 @@
                 type: String,
                 required: true
             },
-            headerLayoutLastSaved: {
-                type: String,
-                default: '-'
+            menu: {
+                type: Object,
+                required: true,
             },
-            headerLogoUrlLastSaved: {
+            menuItems: {
+                type: Array,
+                default() {
+                    return [];
+                },
+            },
+            menuItemLastSaved: {
                 type: String,
-                default: '-'
+                default: "-",
             },
             settings: {
                 type: Object,
@@ -91,11 +112,16 @@
         },
         methods: {
             onTabSelected(tab) {
-                let routeName = this.baseRouteName+'.index';
-                if (tab === 'navigation') {
-                    routeName = 'admin.theme.header.navigation.index';
+                this.activeTab = tab;
+            },
+            onSave(tab) {
+                if (tab == 'layout') {
+                    this.$refs.layout.$refs.headerLayout.saveLayout();
                 }
-                this.$inertia.get(route(routeName));
+
+                if (tab == 'navigation') {
+                    this.$refs.navigation.updateFormatMenu();
+                }
             },
         }
     }

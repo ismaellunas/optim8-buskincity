@@ -1,35 +1,36 @@
 <template>
-    <sdb-error-notifications :errors="formErrors"/>
+    <div>
+        <sdb-error-notifications :errors="formErrors"/>
 
-    <div class="columns">
-        <div class="column">
-            <div class="is-pulled-left">
-                <b>Upload Logo</b><br>
-                Last Saved: {{ lastSaved }}
+        <div class="columns">
+            <div class="column">
+                <div class="is-pulled-left">
+                    <b>Upload Logo</b><br>
+                    Last Saved: {{ setting.updated_at }}
+                </div>
             </div>
         </div>
-    </div>
-    <div class="columns">
-        <div class="column">
-            <sdb-image
-                v-if="setting.value !== null"
-                class="mb-2"
-                style="width: 200px; border: 1px solid #000"
-                :src="setting.value"
-            ></sdb-image>
-            <sdb-input-file
-                v-model="file"
-                :accept="acceptedTypes"
-                :disabled="isProcessing"
-                :is-name-displayed="false"
-                @on-file-picked="onFilePicked"
-            />
+        <div class="columns">
+            <div class="column">
+                <sdb-image
+                    v-if="setting.value !== null"
+                    class="mb-2"
+                    style="width: 200px; border: 1px solid #000"
+                    :src="setting.value"
+                />
+                <sdb-input-file
+                    v-model="file"
+                    :accept="acceptedTypes"
+                    :disabled="isProcessing"
+                    :is-name-displayed="false"
+                    @on-file-picked="onFilePicked"
+                />
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    import SdbButton from '@/Sdb/Button';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';;
     import SdbImage from '@/Sdb/Image';
     import SdbInputFile from '@/Sdb/InputFile';
@@ -49,20 +50,15 @@
         name: 'HeaderLogo',
 
         components: {
-            SdbButton,
             SdbErrorNotifications,
             SdbImage,
             SdbInputFile,
         },
 
         props: {
-            lastSaved: {
-                type: String,
-                default: '-'
-            },
             setting: {
                 type: Object,
-                default: true
+                required: true
             },
         },
 
@@ -119,17 +115,18 @@
                 const form = useForm(currentForm);
                 form.post(
                     route(this.baseRouteName+".logo.update"), {
-                    onSuccess: (page) => {
-                        successAlert(page.props.flash.message);
-                        self.formErrors = {};
-                    },
-                    onError: errors => {
-                        self.formErrors = errors;
-                    },
-                    onFinish: () => {
-                        self.loader.hide();
-                    },
-                });
+                        onSuccess: (page) => {
+                            successAlert(page.props.flash.message);
+                            self.formErrors = {};
+                        },
+                        onError: errors => {
+                            self.formErrors = errors;
+                        },
+                        onFinish: () => {
+                            self.loader.hide();
+                        },
+                    }
+                );
             },
         },
     }

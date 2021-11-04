@@ -20,19 +20,26 @@
                             :class="isChild ? 'pl-4' : ''"
                         >
                             <span class="panel-icon handle-menu">
-                                <i class="fas fa-bars" aria-hidden="true"></i>
+                                <i
+                                    class="fas fa-bars"
+                                    aria-hidden="true"
+                                />
                             </span>
                             <span
                                 v-if="element.children.length > 0"
                                 class="panel-icon"
                             >
-                                <i class="fas fa-caret-down" aria-hidden="true"></i>
+                                <i
+                                    class="fas fa-caret-down"
+                                    aria-hidden="true"
+                                />
                             </span>
                             {{ element.title }}
                             <sdb-tag
                                 v-for="translation in element.translations"
                                 :key="translation.id"
-                                class="is-info px-2 ml-1 is-small">
+                                class="is-info px-2 ml-1 is-small"
+                            >
                                 {{ translation.locale?.toUpperCase() }}
                             </sdb-tag>
                         </div>
@@ -43,7 +50,7 @@
                                 @click="$emit('editRow', element)"
                             >
                                 <span class="icon is-small">
-                                    <i class="fas fa-pen"></i>
+                                    <i class="fas fa-pen" />
                                 </span>
                             </sdb-button>
                             <sdb-button
@@ -52,18 +59,18 @@
                                 @click="$emit('deleteRow', element.id)"
                             >
                                 <span class="icon is-small">
-                                    <i class="far fa-trash-alt"></i>
+                                    <i class="far fa-trash-alt" />
                                 </span>
                             </sdb-button>
                         </div>
                     </div>
                 </div>
-                <menu-nested
+                <navigation-menu
                     v-if="!isChild"
                     :items="element.children"
                     @delete-row="deleteRow"
                     @edit-row="editRow"
-                ></menu-nested>
+                />
             </div>
         </template>
         <template #footer>
@@ -73,7 +80,10 @@
                 @click.prevent="$emit('openFormModal')"
             >
                 <span class="panel-icon handle-menu has-text-link">
-                    <i class="fas fa-plus" aria-hidden="true"></i>
+                    <i
+                        class="fas fa-plus"
+                        aria-hidden="true"
+                    />
                 </span>
                 Add new menu item
             </a>
@@ -84,26 +94,16 @@
 <script>
     import Draggable from "vuedraggable";
     import SdbButton from '@/Sdb/Button';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbDropdown from '@/Sdb/Dropdown';
     import SdbTag from '@/Sdb/Tag';
 
     export default {
-        name: 'MenuNested',
+        name: 'NavigationMenu',
 
         components: {
             Draggable,
             SdbButton,
-            SdbButtonLink,
-            SdbDropdown,
             SdbTag,
         },
-
-        emits: [
-            'deleteRow',
-            'editRow',
-            'openFormModal',
-        ],
 
         props: {
             isChild: {
@@ -112,9 +112,17 @@
             },
             items: {
                 type: Array,
-                default: [],
+                default() {
+                    return [];
+                },
             },
         },
+
+        emits: [
+            'deleteRow',
+            'editRow',
+            'openFormModal',
+        ],
 
         computed: {
             panelClass() {
