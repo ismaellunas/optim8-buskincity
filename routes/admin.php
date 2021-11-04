@@ -16,6 +16,7 @@ use App\Http\Controllers\{
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +58,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('AdminDashboard');
     })->middleware(['can:system.dashboard'])->name('dashboard');
+
+    Route::get('/profile', [UserProfileController::class, 'show'])
+        ->name('profile.show');
 
     Route::name('theme.')->prefix('theme')->middleware(['can:system.theme'])->group(function () {
         Route::get('/color', [ThemeColorController::class, 'edit'])->name('color.edit');
