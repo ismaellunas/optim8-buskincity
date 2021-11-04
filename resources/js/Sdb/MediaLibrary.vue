@@ -26,27 +26,10 @@
             <div class="column is-full">
                 <div class="columns">
                     <div class="column">
-                        <sdb-form-field-horizontal>
-                            <template v-slot:label>
-                                Search
-                            </template>
-                            <div class="columns">
-                                <div class="column is-three-quarters">
-                                    <sdb-input
-                                        v-model="term"
-                                        maxlength="255"
-                                        @keyup.enter.prevent="search(term)"
-                                    />
-                                </div>
-                                <div class="column">
-                                    <sdb-button-icon
-                                        icon="fas fa-search"
-                                        type="button"
-                                        @click="search(term)"
-                                    />
-                                </div>
-                            </div>
-                        </sdb-form-field-horizontal>
+                        <sdb-filter-search
+                            v-model="term"
+                            @search="search"
+                        ></sdb-filter-search>
                     </div>
 
                     <div
@@ -253,15 +236,13 @@
     import HasPageErrors from '@/Mixins/HasPageErrors';
     import MediaForm from '@/Pages/Media/Form';
     import SdbButton from '@/Sdb/Button';
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonsDisplayView from '@/Sdb/ButtonsDisplayView';
     import SdbCheckbox from '@/Sdb/Checkbox';
     import SdbDropdown from '@/Sdb/Dropdown';
     import SdbDropdownItem from '@/Sdb/DropdownItem';
+    import SdbFilterSearch from '@/Sdb/Filter/Search';
     import SdbFormField from '@/Sdb/Form/Field';
-    import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
     import SdbImage from '@/Sdb/Image';
-    import SdbInput from '@/Sdb/Input';
     import SdbInputFile from '@/Sdb/InputFile';
     import SdbMediaGallery from '@/Sdb/Media/Gallery';
     import SdbMediaGalleryItem from '@/Sdb/Media/GalleryItem';
@@ -295,15 +276,13 @@
         components: {
             MediaForm,
             SdbButton,
-            SdbButtonIcon,
             SdbButtonsDisplayView,
             SdbCheckbox,
             SdbDropdown,
             SdbDropdownItem,
+            SdbFilterSearch,
             SdbFormField,
-            SdbFormFieldHorizontal,
             SdbImage,
-            SdbInput,
             SdbInputFile,
             SdbMediaGallery,
             SdbMediaGalleryItem,
