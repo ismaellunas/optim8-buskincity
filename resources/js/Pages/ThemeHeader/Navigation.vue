@@ -7,14 +7,30 @@
                     Last Saved: {{ lastSaved }}
                 </div>
             </div>
+            <div class="column">
+                <p class="buttons is-pulled-right">
+                    <sdb-button
+                        v-for="locale in localeOptions"
+                        :key="locale.id"
+                        :class="['is-small is-link is-rounded', locale.id == selectedLocale ? '' : 'is-light' ]"
+                        @click="changeLocale(locale.id)"
+                    >
+                        {{ locale.name }}
+                    </sdb-button>
+                </p>
+            </div>
         </div>
         <div class="columns">
             <div class="column">
                 <navigation-menu
-                    :items="items"
                     :is-child="false"
+                    :items="items[selectedLocale]"
+                    :locale-options="localeOptions"
+                    :selected-locale="selectedLocale"
                     @change="checkNestedMenu"
                     @delete-row="deleteRow"
+                    @duplicate-menu="duplicateMenu"
+                    @duplicate-menu-locale="duplicateMenuLocale"
                     @edit-row="editRow"
                     @open-form-modal="openFormModal()"
                 />
@@ -26,6 +42,7 @@
             :base-route-name="baseRouteName"
             :menu="menu"
             :menu-item="selectedMenuItems"
+            :selected-locale="selectedLocale"
             @close="closeModal()"
             @sync-menu-items="syncMenuItems()"
         />
@@ -33,12 +50,13 @@
 </template>
 
 <script>
-    import NavigationMenu from './NavigationMenu';
     import MixinHasModal from '@/Mixins/HasModal';
     import NavigationFormMenu from './NavigationFormMenuItem';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import NavigationMenu from './NavigationMenu';
+    import SdbButton from '@/Sdb/Button';
+    import { usePage } from '@inertiajs/inertia-vue3';
     import { confirmDelete, oops as oopsAlert, success as successAlert  } from '@/Libs/alert';
-    import { merge, forEach, cloneDeep } from 'lodash';
+    import { forEach, cloneDeep } from 'lodash';
 
     export default {
         name: 'Navigation',
@@ -46,6 +64,7 @@
         components: {
             NavigationFormMenu,
             NavigationMenu,
+            SdbButton,
         },
 
         mixins: [
@@ -62,9 +81,9 @@
                 default: "-",
             },
             menuItems: {
-                type: Array,
+                type: Object,
                 default() {
-                    return [];
+                    return {};
                 },
             },
             title: {
@@ -74,17 +93,9 @@
         },
 
         setup(props) {
-            const form = merge(
-                props.menu,
-                {
-                    menu_items: {
-                        en: [],
-                    }
-                }
-            );
             return {
                 baseRouteName: usePage().props.value.baseRouteName ?? null,
-                form: useForm(form),
+                localeOptions: usePage().props.value.languageOptions ?? [],
                 tabs: {
                     layout: { title: 'Layout'},
                     navigation: {title: 'Navigation'},
@@ -97,6 +108,8 @@
                 activeTab: 'navigation',
                 items: [],
                 lastMenuItems: [],
+                loader: null,
+                selectedLocale: 'en',
                 selectedMenuItems: {},
             };
         },
@@ -106,12 +119,8 @@
         },
 
         methods: {
-            onTabSelected(tab) {
-                let routeName = this.baseRouteName+'.index';
-                if (tab === 'layout') {
-                    routeName = 'admin.theme.header.index';
-                }
-                this.$inertia.get(route(routeName));
+            changeLocale(locale) {
+                this.selectedLocale = locale;
             },
 
             openFormModal() {
@@ -121,10 +130,10 @@
 
             checkNestedMenu() {
                 let self = this;
-                forEach(self.items, function(values) {
+                forEach(self.items[self.selectedLocale], function(values) {
                     forEach(values.children, function(value) {
                         if (value['children'].length > 0) {
-                            self.items = self.lastMenuItems;
+                            self.items[self.selectedLocale] = self.lastMenuItems[self.selectedLocale];
                             oopsAlert(null, "Cannot add nested menu more than 2");
                         }
                     });
@@ -167,10 +176,43 @@
                 this.$inertia.post(route(this.baseRouteName+'.update-format'), this.items, {
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
-                        this.syncMenuItems();
                     },
+                    onFinish: () => {
+                        this.syncMenuItems();
+                    }
                 });
             },
+
+            duplicateMenu(menuItem, type) {
+                menuItem['id'] = null;
+
+                this.$inertia.post(route(this.baseRouteName+'.duplicate', type), menuItem, {
+                    preserveState: true,
+                    onSuccess: (page) => {
+                        successAlert(page.props.flash.message);
+                    },
+                    onFinish: () => {
+                        this.syncMenuItems();
+                    }
+                });
+            },
+
+            duplicateMenuLocale(locale, menuItem) {
+                menuItem['id'] = null;
+                menuItem['locale'] = locale;
+                menuItem['parent_id'] = null;
+
+                this.$inertia.post(route(this.baseRouteName+'.store'), menuItem, {
+                    preserveState: true,
+                    onSuccess: () => {
+                        successAlert("Menu item duplicate successfully!");
+                    },
+                    onFinish: () => {
+                        this.syncMenuItems();
+                        this.selectedLocale = locale;
+                    }
+                });
+            }
         }
     }
 </script>

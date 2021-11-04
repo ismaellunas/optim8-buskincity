@@ -44,6 +44,41 @@
                             </sdb-tag>
                         </div>
                         <div class="level-right">
+                            <sdb-dropdown
+                                style-button="border: none"
+                            >
+                                <template #trigger>
+                                    <i
+                                        class="far fa-copy"
+                                    />
+                                </template>
+                                <template #default>
+                                    <template
+                                        v-for="localeOption in localeOptions"
+                                        :key="localeOption.id"
+                                    >
+                                        <a
+                                            v-if="localeOption.id != selectedLocale"
+                                            class="dropdown-item"
+                                            @click.prevent="duplicateMenuLocale(localeOption.id, element)"
+                                        >
+                                            Duplicate to {{ localeOption.name }}
+                                        </a>
+                                    </template>
+                                    <a
+                                        class="dropdown-item"
+                                        @click.prevent="duplicateMenu(element, 1)"
+                                    >
+                                        Duplicate Menu Above
+                                    </a>
+                                    <a
+                                        class="dropdown-item"
+                                        @click.prevent="duplicateMenu(element, 2)"
+                                    >
+                                        Duplicate Menu Below
+                                    </a>
+                                </template>
+                            </sdb-dropdown>
                             <sdb-button
                                 type="button"
                                 class="is-ghost has-text-black"
@@ -68,7 +103,11 @@
                 <navigation-menu
                     v-if="!isChild"
                     :items="element.children"
+                    :locale-options="localeOptions"
+                    :selected-locale="selectedLocale"
                     @delete-row="deleteRow"
+                    @duplicate-menu="duplicateMenu"
+                    @duplicate-menu-locale="duplicateMenuLocale"
                     @edit-row="editRow"
                 />
             </div>
@@ -94,6 +133,7 @@
 <script>
     import Draggable from "vuedraggable";
     import SdbButton from '@/Sdb/Button';
+    import SdbDropdown from '@/Sdb/Dropdown';
     import SdbTag from '@/Sdb/Tag';
 
     export default {
@@ -102,6 +142,7 @@
         components: {
             Draggable,
             SdbButton,
+            SdbDropdown,
             SdbTag,
         },
 
@@ -116,10 +157,22 @@
                     return [];
                 },
             },
+            localeOptions: {
+                type: Array,
+                default() {
+                    return [];
+                },
+            },
+            selectedLocale: {
+                type: String,
+                default: "en"
+            }
         },
 
         emits: [
             'deleteRow',
+            'duplicateMenu',
+            'duplicateMenuLocale',
             'editRow',
             'openFormModal',
         ],
@@ -141,6 +194,14 @@
 
             deleteRow(id) {
                 this.$emit('deleteRow', id);
+            },
+
+            duplicateMenu(menuItem, type) {
+                this.$emit('duplicateMenu', menuItem, type);
+            },
+
+            duplicateMenuLocale(locale, menuItem) {
+                this.$emit('duplicateMenuLocale', locale, menuItem);
             },
         },
     }

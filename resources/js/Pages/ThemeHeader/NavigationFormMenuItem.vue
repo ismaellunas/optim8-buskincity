@@ -12,48 +12,12 @@
         </template>
         <form method="post">
             <fieldset>
-                <template
-                    v-for="translation in sortedExistingLocales"
-                    :key="translation"
-                >
-                    <sdb-form-input-addons
-                        v-model="formLocale[translation].title"
-                        :label="`Title (${translation.toUpperCase()})`"
-                        :message="error(translation+'.title')"
-                        required
-                    >
-                        <template #afterInput>
-                            <div class="control">
-                                <sdb-button-icon
-                                    v-if="translation !== defaultLocale"
-                                    class="is-danger"
-                                    icon="fas fa-minus"
-                                    type="button"
-                                    @click.prevent="removeTranslation(translation)"
-                                />
-                            </div>
-                        </template>
-                    </sdb-form-input-addons>
-                </template>
-                <div v-if="availableLocales.length">
-                    <div class="control is-expanded">
-                        <sdb-select v-model="selectedLocale">
-                            <option
-                                v-for="locale in availableLocales"
-                                :key="locale.id"
-                                :value="locale.id">
-                                {{ locale.name }}
-                            </option>
-                        </sdb-select>
-                        <sdb-button-icon
-                            icon="fas fa-plus"
-                            type="button"
-                            class="is-link is-light"
-                            @click.prevent="addTranslation"
-                        />
-                    </div>
-                </div>
-                <hr>
+                <sdb-form-input
+                    v-model="form.title"
+                    label="Title"
+                    required
+                    :message="error('title')"
+                />
                 <sdb-form-select
                     v-model="form.type"
                     label="Type"
@@ -152,12 +116,9 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormInputAddons from '@/Sdb/Form/InputAddons';
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbModalCard from '@/Sdb/ModalCard';
-    import SdbSelect from '@/Sdb/Select';
     import { isBlank } from '@/Libs/utils';
     import { pull, sortBy, merge } from 'lodash';
     import { reactive } from "vue";
@@ -169,12 +130,9 @@
 
         components: {
             SdbButton,
-            SdbButtonIcon,
             SdbFormInput,
-            SdbFormInputAddons,
             SdbFormSelect,
             SdbModalCard,
-            SdbSelect,
         },
 
         mixins: [
@@ -194,6 +152,10 @@
                 type: Object,
                 default: {},
             },
+            selectedLocale: {
+                type: String,
+                default: "en",
+            },
         },
 
         emits: [
@@ -202,29 +164,15 @@
         ],
 
         setup(props) {
-            let providedLocales = [];
             let fields = {};
-            let fieldLocales = {};
 
             if (!isBlank(props.menuItem)) {
-                providedLocales = props.menuItem.translations.map(translation => {
-                    return translation.locale;
-                });
-
-                props.menuItem.translations.forEach(translation => {
-                    fieldLocales[translation.locale] = {title: translation.title};
-                });
-
                 fields = props.menuItem;
             } else {
-                providedLocales = ['en'];
-
-                fieldLocales = {
-                    en: {title: null},
-                };
-
                 fields = {
                     id: null,
+                    locale: props.selectedLocale,
+                    title: null,
                     type: 'Url',
                     url: null,
                     page_id: null,
@@ -238,14 +186,9 @@
                 categories: usePage().props.value.categories,
                 defaultLocale: usePage().props.value.defaultLanguage,
                 form: reactive(fields),
-                formLocale: reactive(fieldLocales),
-                localeOptions: usePage().props.value.languageOptions,
                 pages: usePage().props.value.pages,
                 posts: usePage().props.value.posts,
                 types: usePage().props.value.types,
-                selectedLocale: usePage().props.value.languageOptions.find((localeOption) => {
-                    return !providedLocales.includes(localeOption.id);
-                })?.id,
             };
         },
 
@@ -271,78 +214,24 @@
             isTypeCategory() {
                 return this.form.type == 'Category'
             },
-
-            availableLocales() {
-                const usedLocales = Object.keys(this.formLocale);
-                return sortBy(this.localeOptions.filter(localeOption => {
-                    return !usedLocales.includes(localeOption.id);
-                }), ['title']);
-            },
-
-            hasAvailableLocales() {
-                return !isBlank(this.availableLocales);
-            },
-
-            sortedExistingLocales() {
-                const sortedExistingLocales = pull(
-                    Object.keys(this.formLocale),
-                    this.defaultLocale
-                );
-                sortedExistingLocales.unshift(this.defaultLocale);
-                return sortedExistingLocales;
-            },
         },
 
         methods: {
-            addTranslation() {
-                this.formLocale[this.selectedLocale] = {title: null};
-
-                this.updateSelectedLocale();
-            },
-
-            updateSelectedLocale() {
-                const usedLocales = Object.keys(this.formLocale);
-
-                if (this.hasAvailableLocales) {
-                    const firstAvailabeLocale = this
-                        .availableLocales
-                        .find((localeOption) => {
-                            return !usedLocales.includes(localeOption.id);
-                        });
-
-                    this.selectedLocale = firstAvailabeLocale?.id;
-                } else {
-                    this.selectedLocale = null;
-                }
-            },
-
-            removeTranslation(locale) {
-                const self = this;
-                confirmDelete().then((result) => {
-                    if (result.isConfirmed) {
-                        delete self.formLocale[locale];
-                        self.updateSelectedLocale();
-                    }
-                });
-            },
-
             onSubmit() {
                 const self = this;
-                const form = merge(this.form, this.formLocale);
+                const form = this.form;
 
                 if (form.id === null) {
                     this.$inertia.post(route(this.baseRouteName+'.store'), form, {
                         preserveState: true,
                         onStart: () => {
                             self.loader = self.$loading.show();
-                            self.isProcessing = true;
                         },
                         onSuccess: (page) => {
                             successAlert(page.props.flash.message);
                         },
                         onFinish: () => {
                             self.loader.hide();
-                            self.isProcessing = false;
                             this.$emit('close');
                             this.$emit('syncMenuItems');
                         }
@@ -352,14 +241,12 @@
                         preserveState: true,
                         onStart: () => {
                             self.loader = self.$loading.show();
-                            self.isProcessing = true;
                         },
                         onSuccess: (page) => {
                             successAlert(page.props.flash.message);
                         },
                         onFinish: () => {
                             self.loader.hide();
-                            self.isProcessing = false;
                             this.$emit('close');
                             this.$emit('syncMenuItems');
                         }

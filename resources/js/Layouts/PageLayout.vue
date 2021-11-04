@@ -12,9 +12,8 @@
             :available-languages="availableLanguages"
             :current-language="currentLanguage"
             :logo-url="logoUrl"
-            :menus="menus"
-        >
-        </component>
+            :menus="menus[currentLanguage]"
+        />
 
         <slot />
     </div>

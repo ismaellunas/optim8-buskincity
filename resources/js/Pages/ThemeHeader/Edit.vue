@@ -4,7 +4,7 @@
             {{ title }}
         </template>
 
-        <sdb-error-notifications :errors="$page.props.errors"/>
+        <sdb-error-notifications :errors="$page.props.errors" />
 
         <div class="box mb-6">
             <sdb-tab>
@@ -79,9 +79,9 @@
                 required: true,
             },
             menuItems: {
-                type: Array,
+                type: Object,
                 default() {
-                    return [];
+                    return {};
                 },
             },
             menuItemLastSaved: {

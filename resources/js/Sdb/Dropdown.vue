@@ -17,7 +17,7 @@
                 class="button"
                 type="button"
             >
-                <slot name="trigger"></slot>
+                <slot name="trigger" />
             </sdb-button>
         </div>
 
@@ -29,7 +29,7 @@
             role="menu"
         >
             <div class="dropdown-content">
-                <slot></slot>
+                <slot />
             </div>
         </div>
     </div>
@@ -65,6 +65,7 @@
             },
             styleButton: {
                 type: String,
+                default: ""
             },
         },
 
