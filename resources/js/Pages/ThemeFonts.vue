@@ -307,9 +307,9 @@
     import SdbInput from '@/Sdb/Input';
     import SdbInputError from '@/Sdb/InputError';
     import SdbLabel from '@/Sdb/Label';
-    import { Head, useForm, usePage } from '@inertiajs/inertia-vue3';
-    import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
+    import { Head, useForm } from '@inertiajs/inertia-vue3';
     import { concat, isEmpty, replace } from 'lodash';
+    import { success as successAlert } from '@/Libs/alert';
 
     export default {
         name: 'ThemeOptionFonts',
@@ -332,13 +332,13 @@
 
         props: {
             baseRouteName: {type: String, default: 'admin.theme.advance'},
-            buttonsFont: {type: Object, default: () => {}},
-            contentParagraphWidth: {type: Number, default: 1440},
+            title: {type: String, default: 'Fonts'},
             errors: {type: Object, default: () => {}},
+            uppercaseText: {type: Object, default: () => {}},
+            contentParagraphWidth: {type: Number, default: 1440},
             headingsFont: {type: Object, default: () => {}},
             mainTextFont: {type: Object, default: () => {}},
-            title: {type: String, default: 'Fonts'},
-            uppercaseText: {type: Object, default: () => {}},
+            buttonsFont: {type: Object, default: () => {}},
             uppercaseOptions: {type: Object, default: () => {}},
             webfontsUrl: {type: String, default: ''},
             baseUrlGoogleFont: {
