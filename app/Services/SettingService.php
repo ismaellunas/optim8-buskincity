@@ -98,6 +98,25 @@ class SettingService
             ->all();
     }
 
+    public function getFont($key)
+    {
+        $setting = Setting::where('key', $key)->value('value');
+        $font = [];
+
+        if (!is_null($setting)) {
+            $font = json_decode($setting, true);
+        }
+
+        return (object) array_merge(
+            [
+                'family' => null,
+                'weight' => null,
+                'style' => null,
+            ],
+            $font
+        );
+    }
+
     public function generateVariablesSass()
     {
         $variablesSass = view('theme_options.colors_sass', array_merge(
