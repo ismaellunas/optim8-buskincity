@@ -18,20 +18,15 @@ use Illuminate\Http\Request;
 
 class MenuService
 {
-    public function getRecords(
-        int $perPage = 15
-    ): LengthAwarePaginator {
-        return Menu::orderBy('id', 'DESC')
-            ->with('menuItems')
-            ->header()
-            ->paginate($perPage);
-    }
-
-    public function getMenuItemLastSaved()
+    public function getMenuItemLastSaved(string $type)
     {
         $menu = MenuItem::orderBy('updated_at', 'DESC')
-            ->whereHas('menu', function ($query) {
-                $query->where('type', Menu::TYPE_HEADER);
+            ->whereHas('menu', function ($query) use ($type) {
+                if ($type == "header") {
+                    $query->header();
+                } else {
+                    $query->footer();
+                }
             })
             ->first();
 
@@ -42,19 +37,26 @@ class MenuService
         return '-';
     }
 
-    private function getMenuItems($menuId = null): array
+    private function getMenuItems(string $type): array
     {
         return MenuItem::orderBy('order', 'ASC')
             ->orderBy('parent_id', 'ASC')
-            ->whereHas('menu', function ($query) {
-                $query->where('type', Menu::TYPE_HEADER);
+            ->whereHas('menu', function ($query) use ($type) {
+                if ($type == "header") {
+                    $query->header();
+                } else {
+                    $query->footer();
+                }
             })
             ->get()
             ->toArray();
     }
 
-    private function generateMenuItems($locale, $menuItems, $parentId = null): array
-    {
+    private function generateMenuItems(
+        string $locale,
+        array $menuItems,
+        $parentId = null
+    ): array {
         $menus = [];
         foreach ($menuItems as $menuItem) {
             if ($menuItem['parent_id'] == $parentId) {
@@ -78,9 +80,11 @@ class MenuService
         return $menus;
     }
 
-    public function generateMenus($locale = "en")
-    {
-        $menuItems = $this->getMenuItems();
+    public function generateMenus(
+        string $locale = "en",
+        string $type = "header"
+    ) :array {
+        $menuItems = $this->getMenuItems($type);
         return $this->generateMenuItems($locale, $menuItems);
     }
 
@@ -150,7 +154,7 @@ class MenuService
                     'children' => [
                         [
                             'title' => 'Header',
-                            'link' => route('admin.theme.header.index'),
+                            'link' => route('admin.theme.header.edit'),
                             'isActive' => $request->routeIs('admin.theme.header.*'),
                             'isEnabled' => true,
                         ],
