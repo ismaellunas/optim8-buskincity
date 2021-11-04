@@ -25,7 +25,11 @@ class ThemeFontSizeRequest extends FormRequest
     public function rules()
     {
         return [
-            '*' => 'numeric',
+            '*' => [
+                'numeric',
+                'min:0',
+                'regex:/^\d+\.?\d*$/',
+            ],
         ];
     }
 
