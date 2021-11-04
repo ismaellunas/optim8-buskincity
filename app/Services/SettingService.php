@@ -58,30 +58,6 @@ class SettingService
             ->all();
     }
 
-    public function getHeaderLayoutLastSaved()
-    {
-        $settings = $this->getHeader();
-        $headerLayout = $settings['header_layout'];
-
-        if ($headerLayout) {
-            return Carbon::parse($headerLayout->updated_at)->format('M d, Y \a\t h:i');
-        }
-
-        return '-';
-    }
-
-    public function getHeaderLogoUrlLastSaved()
-    {
-        $settings = $this->getHeader();
-        $headerLogo = $settings['header_logo_url'];
-
-        if ($headerLogo) {
-            return Carbon::parse($headerLogo->updated_at)->format('M d, Y \a\t h:i');
-        }
-
-        return '-';
-    }
-
     public function generateVariablesSass()
     {
         $variablesSass = view('theme_options.colors_sass', array_merge(
