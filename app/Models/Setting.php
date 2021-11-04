@@ -12,6 +12,7 @@ class Setting extends BaseModel
 
     protected $fillable = [
         'key',
-        'value'
+        'value',
+        'group',
     ];
 }
