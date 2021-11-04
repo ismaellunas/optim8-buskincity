@@ -7,6 +7,7 @@ use App\Entities\MediaAsset;
 use App\Models\Setting;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 use \finfo;
 
@@ -96,6 +97,39 @@ class SettingService
             ])
             ->keyBy('key')
             ->all();
+    }
+
+    public function getUppercaseTextOptions(): array
+    {
+        $uppercaseTexts = [];
+
+        foreach (config('constants.theme_uppercases') as $uppercaseText) {
+            $uppercaseTexts[$uppercaseText] = Str::title(
+                Str::replace('_', ' ', $uppercaseText)
+            );
+        }
+
+        return $uppercaseTexts;
+    }
+
+    public function getUppercaseTexts(): array
+    {
+        $uppercaseText = Setting::where('key', 'uppercase_text')->value('value');
+
+        if (!is_null($uppercaseText)) {
+            return json_decode($uppercaseText);
+        }
+
+        return [];
+    }
+
+    public function getContentParagraphWidth(): int
+    {
+        $contentParagraphWidth = Setting::where('key', 'content_paragraph_width')->value('value');
+
+        return !is_null($contentParagraphWidth)
+            ? (int) $contentParagraphWidth
+            : config('constants.theme_content_paragraph_width');
     }
 
     public function getFont($key)
