@@ -6,27 +6,10 @@
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
-                    <sdb-form-field-horizontal>
-                        <template v-slot:label>
-                            Search
-                        </template>
-                        <div class="columns">
-                            <div class="column is-three-quarters">
-                                <sdb-input
-                                    v-model="term"
-                                    maxlength="255"
-                                    @keyup.enter.prevent="search(term)"
-                                />
-                            </div>
-                            <div class="column">
-                                <sdb-button-icon
-                                    icon="fas fa-search"
-                                    type="button"
-                                    @click="search(term)"
-                                />
-                            </div>
-                        </div>
-                    </sdb-form-field-horizontal>
+                    <sdb-filter-search
+                        v-model="term"
+                        @search="search"
+                    ></sdb-filter-search>
                 </div>
             </div>
 
@@ -145,16 +128,15 @@
 </template>
 
 <script>
+    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasTab from '@/Mixins/HasTab';
     import AppLayout from '@/Layouts/AppLayout';
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbButtonsDisplayView from '@/Sdb/ButtonsDisplayView';
     import SdbCheckbox from '@/Sdb/Checkbox';
     import SdbDropdown from '@/Sdb/Dropdown';
     import SdbDropdownItem from '@/Sdb/DropdownItem';
-    import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
-    import SdbInput from '@/Sdb/Input';
+    import SdbFilterSearch from '@/Sdb/Filter/Search';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbPostGallery from '@/Sdb/Post/Gallery';
     import SdbPostGalleryItem from '@/Sdb/Post/GalleryItem';
@@ -170,14 +152,12 @@
     export default {
         components: {
             AppLayout,
-            SdbButtonIcon,
             SdbButtonLink,
             SdbButtonsDisplayView,
             SdbCheckbox,
             SdbDropdown,
             SdbDropdownItem,
-            SdbFormFieldHorizontal,
-            SdbInput,
+            SdbFilterSearch,
             SdbPagination,
             SdbPostGallery,
             SdbPostGalleryItem,
@@ -187,7 +167,8 @@
             SdbTabList,
         },
         mixins: [
-            MixinHasTab
+            MixinFilterDataHandle,
+            MixinHasTab,
         ],
         props: {
             can: {},
@@ -240,28 +221,6 @@
                     }
                 })
             },
-            refreshWithQueryParams() {
-                this.$inertia.get(
-                    route(this.baseRouteName+'.index'),
-                    this.queryParams,
-                    {
-                        replace: true,
-                        preserveState: true,
-                        onStart: () => this.onStartLoadingOverlay(),
-                        onFinish: () => this.onEndLoadingOverlay(),
-                    }
-                );
-            },
-            search(term) {
-                this.queryParams['term'] = term;
-                this.refreshWithQueryParams();
-            },
-            onStartLoadingOverlay() {
-                this.loader = this.$loading.show();
-            },
-            onEndLoadingOverlay() {
-                this.loader.hide();
-            },
             onTabSelected(tab) {
                 this.queryParams['status'] = tab;
                 this.$inertia.get(
@@ -294,11 +253,11 @@
             },
             onLanguagesChanged() {
                 this.queryParams['languages'] = this.languages;
-                this.refreshWithQueryParams();
+                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
             onCategoriesChanged() {
                 this.queryParams['categories'] = this.categories;
-                this.refreshWithQueryParams();
+                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
         },
         computed: {

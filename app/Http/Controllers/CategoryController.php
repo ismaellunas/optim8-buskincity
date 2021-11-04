@@ -13,6 +13,7 @@ class CategoryController extends CrudController
     protected $model = Category::class;
     protected $baseRouteName = 'admin.categories';
     protected $categoryService;
+    protected $title = "Categories";
 
     public function __construct(CategoryService $categoryService)
     {
@@ -29,7 +30,7 @@ class CategoryController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Category/Index', [
+        return Inertia::render('Category/Index', $this->getData([
             'can' => [
                 'add' => $user->can('category.add'),
                 'delete' => $user->can('category.delete'),
@@ -40,7 +41,7 @@ class CategoryController extends CrudController
             'records' => $this
                 ->categoryService
                 ->getRecords($request->term, $this->recordsPerPage),
-        ]);
+        ]));
     }
 
     /**
