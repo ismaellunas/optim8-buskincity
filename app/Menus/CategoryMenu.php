@@ -20,9 +20,12 @@ class CategoryMenu implements MenuInterface
 
     function getUrl(): string
     {
-        return route('category.show', [
-            'locale' => $this->menuItem->locale,
-            'category' => $this->menuItem->category_id,
+        $locale = $this->menuItem->locale;
+        $categoryTranslation = $this->menuItem->category->translateOrDefault($locale);
+
+        return route('blog.index', [
+            'locale' => $locale,
+            'category' => $categoryTranslation->slug,
         ]);
     }
 }
