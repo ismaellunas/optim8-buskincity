@@ -279,7 +279,7 @@ class SettingService
         return $setting->save();
     }
 
-    public function saveAdditionalCodeUrl(string $key, string $url): bool
+    public function saveAdditionalCodeUrl(string $key, ?string $url): bool
     {
         $setting = Setting::firstOrNew([
             'key' => self::getAdditionalCodeFileKey($key)
