@@ -139,6 +139,12 @@ class MenuService
                             'isActive' => $request->routeIs('admin.theme.font-size.*'),
                             'isEnabled' => true,
                         ],
+                        [
+                            'title' => 'Advanced',
+                            'link' => route('admin.theme.advance.edit'),
+                            'isActive' => $request->routeIs('admin.theme.advance.*'),
+                            'isEnabled' => true,
+                        ],
                     ],
                 ],
                 [

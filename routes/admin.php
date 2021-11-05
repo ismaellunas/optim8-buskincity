@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     PermissionController,
     PostController,
     RoleController,
+    ThemeAdvanceController,
     ThemeColorController,
     ThemeFontSizeController,
     UserController,
@@ -16,11 +17,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
-
-use App\Entities\CloudinaryStorage;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Setting;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +67,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/color', [ThemeColorController::class, 'update'])->name('color.update');
         Route::get('/font-size', [ThemeFontSizeController::class, 'edit'])->name('font-size.edit');
         Route::post('/font-size', [ThemeFontSizeController::class, 'update'])->name('font-size.update');
+        Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');
+        Route::post('/advance', [ThemeAdvanceController::class, 'update'])->name('advance.update');
     });
 });
 
