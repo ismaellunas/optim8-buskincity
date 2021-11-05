@@ -8,8 +8,8 @@ use App\Models\Media;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\File\UploadedFile as File;
 
 class MediaService
 {
@@ -118,7 +118,7 @@ class MediaService
     }
 
     public function upload(
-        File $file,
+        UploadedFile $file,
         string $fileName,
         MediaStorage $mediaStorage
     ): Media {
@@ -153,7 +153,7 @@ class MediaService
     }
 
     public function duplicateImage(
-        File $file,
+        UploadedFile $file,
         Media $media,
         MediaStorage $mediaStorage
     ): Media {
@@ -173,7 +173,7 @@ class MediaService
     }
 
     public function replace(
-        File $file,
+        UploadedFile $file,
         Media $media,
         MediaStorage $mediaStorage
     ): Media {

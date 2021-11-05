@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     PermissionController,
     PostController,
     RoleController,
+    ThemeAdvanceController,
     ThemeColorController,
     ThemeFontSizeController,
     ThemeHeaderController,
@@ -17,11 +18,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
-
-use App\Entities\CloudinaryStorage;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Setting;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +83,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::post('/update-format', [ThemeHeaderController::class, 'updateFormat'])->name('update-format');
             Route::delete('/{menuItem}/destroy', [ThemeHeaderController::class, 'destroy'])->name('destroy');
         });
+
+        Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');
+        Route::post('/advance', [ThemeAdvanceController::class, 'update'])->name('advance.update');
     });
 });
 

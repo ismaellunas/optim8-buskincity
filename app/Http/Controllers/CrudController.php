@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\FlashNotifiable;
 use Illuminate\Support\Str;
 
 abstract class CrudController extends Controller
 {
+    use FlashNotifiable;
+
     protected $model;
     protected $recordsPerPage = 15;
     protected $baseRouteName;
     protected $title;
-
-    protected function generateFlashMessage($message): void
-    {
-        session()->flash('message', $message);
-    }
 
     protected function getData(array $additionalData = []): array
     {

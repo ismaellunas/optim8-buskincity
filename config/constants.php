@@ -50,4 +50,26 @@ return [
         'font_size_text' => 1,
         'font_size_small' => 0.75,
     ],
+    'theme_additional_code_files' => [
+        'tracking_code_inside_head' => [
+            'key' => 'tracking_code_inside_head_url',
+            'filename' => 'tracking_code_inside_head.css',
+        ],
+        'tracking_code_after_body' => [
+            'key' => 'tracking_code_after_body_url',
+            'filename' => 'tracking_code_after_body.css',
+        ],
+        'tracking_code_before_body' => [
+            'key' => 'tracking_code_before_body_url',
+            'filename' => 'tracking_code_before_body.css',
+        ],
+        'additional_css' => [
+            'key' => 'additional_css_url',
+            'filename' => 'additional_css.css',
+        ],
+        'additional_javascript' => [
+            'key' => 'additional_javascript_url',
+            'filename' => 'additional_javascript.js',
+        ],
+    ],
 ];

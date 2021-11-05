@@ -5,19 +5,58 @@ namespace App\Services;
 use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
 use App\Models\Setting;
-use Carbon\Carbon;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Process\Process;
 use \finfo;
 
 class SettingService
 {
+    private static function getAdditionalCodeFileKey(string $key): string
+    {
+        return config("constants.theme_additional_code_files.{$key}.key");
+    }
+
+    public function getAdditionalCodeFileName(string $key): string
+    {
+        return config("constants.theme_additional_code_files.{$key}.filename");
+    }
+
     public static function getFrontendCssUrl(): string
     {
         $urlCss = Setting::where('key', 'url_css')->first(['key', 'value']);
 
         return $urlCss->value ?? mix('css/app.css')->toHtml();
+    }
+
+    public static function getTrackingCodeAfterBodyUrl(): ?string
+    {
+        return Setting::where('key', self::getAdditionalCodeFileKey('tracking_code_after_body'))
+            ->value('value');
+    }
+
+    public static function getTrackingCodeBeforeBodyUrl(): ?string
+    {
+        return Setting::where('key', self::getAdditionalCodeFileKey('tracking_code_before_body'))
+            ->value('value');
+    }
+
+    public static function getTrackingCodeInsideHeadUrl(): ?string
+    {
+        return Setting::where('key', self::getAdditionalCodeFileKey('tracking_code_inside_head'))
+            ->value('value');
+    }
+
+    public static function getAdditionalCssUrl(): ?string
+    {
+        return Setting::where('key', self::getAdditionalCodeFileKey('additional_css'))
+            ->value('value');
+    }
+
+    public static function getAdditionalJavascriptUrl(): ?string
+    {
+        return Setting::where('key', self::getAdditionalCodeFileKey('additional_javascript'))
+            ->value('value');
     }
 
     public function getColors(): array
@@ -53,6 +92,19 @@ class SettingService
                 'key',
                 'value',
                 'updated_at',
+            ])
+            ->keyBy('key')
+            ->all();
+    }
+
+    public function getAdditionalCodes(): array
+    {
+        return Setting::where('group', 'additional_code')
+            ->get([
+                'display_name',
+                'key',
+                'value',
+                'order',
             ])
             ->keyBy('key')
             ->all();
@@ -130,10 +182,58 @@ class SettingService
         );
     }
 
+    public function uploadAdditionalCodeToCloudStorage(
+        string $filename,
+        string $value,
+        string $folderPrefix = null
+    ): MediaAsset {
+
+        $disk = Storage::build([
+            'driver' => 'local',
+            'root' => storage_path('theme/css'),
+        ]);
+
+        $disk->put($filename, $value);
+
+        $uploadedFileName = 'theme/css/'.$filename;
+        $uploadedFilePath = storage_path($uploadedFileName);
+
+        $file = new UploadedFile(
+            $uploadedFilePath,
+            $filename
+        );
+
+        $storage = new CloudinaryStorage();
+
+        $folder = "assets";
+
+        if ($folderPrefix) {
+            $folder = $folderPrefix.'_'.$folder;
+        }
+
+        return $storage->upload(
+            $file,
+            $filename,
+            pathinfo($filename, PATHINFO_EXTENSION),
+            $folder
+        );
+    }
+
     public function saveCssUrl(string $url): bool
     {
         $setting = Setting::firstOrNew(['key' => 'url_css']);
         $setting->value = $url;
+        return $setting->save();
+    }
+
+    public function saveAdditionalCodeUrl(string $key, string $url): bool
+    {
+        $setting = Setting::firstOrNew([
+            'key' => self::getAdditionalCodeFileKey($key)
+        ]);
+
+        $setting->value = $url;
+
         return $setting->save();
     }
 

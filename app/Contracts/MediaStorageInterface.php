@@ -3,7 +3,7 @@
 namespace App\Contracts;
 
 use App\Entities\MediaAsset;
-use Symfony\Component\HttpFoundation\File\UploadedFile as File;
+use Illuminate\Http\UploadedFile;
 
 interface MediaStorageInterface
 {
@@ -12,7 +12,7 @@ interface MediaStorageInterface
     public function rename(string $fromName, string $toName);
 
     public function upload(
-        File $file,
+        UploadedFile $file,
         string $fileName = null,
         string $extension = null,
         string $folder = null
