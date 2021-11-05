@@ -10,7 +10,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'storage/theme/css'),
     filename: '[name].sass.bundle.js',
-	},
+  },
   module: {
     rules: [
       {
