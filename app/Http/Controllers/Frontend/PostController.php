@@ -24,13 +24,14 @@ class PostController extends Controller
     public function index(Request $request)
     {
         return Inertia::render($this->baseComponentName.'/Index', [
-            'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
+            'pageQueryParams' => array_filter($request->only('term', 'view', 'status', 'category')),
             'pageNumber' => $request->page,
             'currentLanguage' => $this->translationService->currentLanguage(),
             'records' => $this->postService->getBlogRecords(
                 $request->term ?? '',
                 10,
-                $this->translationService->currentLanguage()
+                $this->translationService->currentLanguage(),
+                $request->category ?? null,
             ),
         ]);
     }
