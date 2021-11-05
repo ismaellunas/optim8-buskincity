@@ -60,7 +60,9 @@ Route::get('/user/remove-facebook', function() {
 });
 
 Route::get('test-theme', function () {
-    return Inertia::render('TestTheme');
+    return Inertia::render('TestTheme', [
+        'webfontsUrl' => 'https://www.googleapis.com/webfonts/v1/webfonts?sort=popularity&key='.config('constants.google_api_key'),
+    ]);
 });
 
 Route::group([
