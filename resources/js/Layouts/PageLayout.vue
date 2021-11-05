@@ -23,85 +23,13 @@
             :href="$page.props.css.frontend.tracking_code_after_body"
         >
 
-        <nav class="navbar is-primary">
-            <div class="navbar-brand">
-                <sdb-link
-                    class="navbar-item"
-                    href="/"
-                >
-                    <img
-                        src="https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752"
-                        alt=""
-                        height="28"
-                    >
-                </sdb-link>
-
-                <div
-                    class="navbar-burger burger"
-                    data-target="navbarExampleTransparentExample"
-                >
-                    <span />
-                    <span />
-                    <span />
-                </div>
-            </div>
-
-            <div
-                id="navbarExampleTransparentExample"
-                class="navbar-menu"
-            >
-                <div class="navbar-start">
-                    <sdb-link
-                        href="/"
-                        class="navbar-item"
-                    >
-                        Home
-                    </sdb-link>
-
-                    <sdb-link
-                        v-for="menuItem in menus.navbar"
-                        :key="menuItem.title"
-                        :href="menuItem.link"
-                        class="navbar-item"
-                    >
-                        {{ menuItem.title }}
-                    </sdb-link>
-                </div>
-
-                <div class="navbar-end">
-                    <div class="navbar-item">
-                        <div class="field">
-                            <div class="control">
-                                <input
-                                    class="input"
-                                    type="text"
-                                    placeholder="Search . . ."
-                                >
-                            </div>
-                        </div>
-                    </div>
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <span class="navbar-link">{{ currentLanguage.toUpperCase() }}</span>
-                        <div class="navbar-dropdown is-boxed">
-                            <sdb-link
-                                v-for="language in availableLanguages"
-                                :key="language.id"
-                                class="navbar-item"
-                                :href="route('language.change', [language.id])"
-                            >
-                                {{ language.id.toUpperCase() }}
-                            </sdb-link>
-                        </div>
-                    </div>
-                    <sdb-link
-                        :href="route('login')"
-                        class="navbar-item pr-5"
-                    >
-                        Login
-                    </sdb-link>
-                </div>
-            </div>
-        </nav>
+        <component
+            :is="navbarLayoutName"
+            :available-languages="availableLanguages"
+            :current-language="currentLanguage"
+            :logo-url="logoUrl"
+            :menus="menus[currentLanguage]"
+        />
 
         <slot />
 
@@ -114,7 +42,9 @@
 </template>
 
 <script>
-    import SdbLink from '@/Sdb/Link';
+    import SdbNavbarLayoutOne from '@/Sdb/Navbar/NavbarLayoutOne';
+    import SdbNavbarLayoutTwo from '@/Sdb/Navbar/NavbarLayoutTwo';
+    import SdbNavbarLayoutThree from '@/Sdb/Navbar/NavbarLayoutThree';
     import { Head, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -122,7 +52,9 @@
 
         components: {
             Head,
-            SdbLink,
+            SdbNavbarLayoutOne,
+            SdbNavbarLayoutTwo,
+            SdbNavbarLayoutThree,
         },
 
         props: [
@@ -131,6 +63,12 @@
             'menus',
             'user',
         ],
+
+        setup() {
+            return {
+                menuSettings: usePage().props.value.menuSettings,
+            };
+        },
 
         data() {
             return {
@@ -145,6 +83,31 @@
                 return this
                     .languageOptions
                     .filter(option => option.id !== this.currentLanguage);
+            },
+
+            logoUrl() {
+                return this.menuSettings.header_logo_url.value ?? "https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752";
+            },
+
+            navbarLayoutName() {
+                const layout = parseInt(this.menuSettings.header_layout.value);
+                switch (layout) {
+                case 1:
+                    return "SdbNavbarLayoutOne";
+                    break;
+
+                case 2:
+                    return "SdbNavbarLayoutTwo";
+                    break;
+
+                case 3:
+                    return "SdbNavbarLayoutThree";
+                    break;
+
+                default:
+                    return "SdbNavbarLayoutOne";
+                    break;
+                }
             },
         },
 

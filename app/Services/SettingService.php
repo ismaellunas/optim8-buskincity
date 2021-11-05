@@ -85,6 +85,18 @@ class SettingService
             ->all();
     }
 
+    public function getHeader(): array
+    {
+        return Setting::where('group', 'header')
+            ->get([
+                'key',
+                'value',
+                'updated_at',
+            ])
+            ->keyBy('key')
+            ->all();
+    }
+
     public function getAdditionalCodes(): array
     {
         return Setting::where('group', 'additional_code')
@@ -234,5 +246,33 @@ class SettingService
         ]);
         $process->run();
         return $process->isSuccessful();
+    }
+
+    public function uploadLogoToCloudStorage(array $inputs): MediaAsset
+    {
+        $storage = new CloudinaryStorage();
+
+        $folder = "assets/logo";
+
+        $this->deleteLogoOnCloudStorage($inputs['file_name']);
+
+        return $storage->upload(
+            $inputs['file'],
+            $inputs['file_name'],
+            $inputs['file_type'],
+            $folder,
+            [
+                'invalidate' => true
+            ]
+        );
+    }
+
+    public function deleteLogoOnCloudStorage(
+        string $fileName = 'logo'
+    ) {
+        $storage = new CloudinaryStorage();
+        $fileName = 'assets/logo/'.$fileName;
+
+        $storage->destroy($fileName);
     }
 }

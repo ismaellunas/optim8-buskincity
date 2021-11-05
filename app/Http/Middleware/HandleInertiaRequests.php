@@ -2,15 +2,28 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\MenuService;
-use App\Services\SettingService;
-use App\Services\TranslationService as TranslationSv;
+use App\Services\{
+    MenuService,
+    SettingService,
+    TranslationService as TranslationSv,
+};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
+    private $menuService;
+    private $settingService;
+
+    public function __construct(
+        MenuService $menuService,
+        SettingService $settingService
+    ) {
+        $this->menuService = $menuService;
+        $this->settingService = $settingService;
+    }
+
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -64,7 +77,8 @@ class HandleInertiaRequests extends Middleware
                     )
                 )
                 ? MenuService::generateBackendMenu($request)
-                : MenuService::generateMenus(TranslationSv::currentLanguage()),
+                : $this->menuService->generateMenus(TranslationSv::currentLanguage()),
+            'menuSettings' => $this->settingService->getHeader(),
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
             'languageOptions' => TranslationSv::getLocaleOptions(),
