@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'google_api_key' => env('GOOGLE_API_KEY'),
+
     'one_megabyte' => 1024,
     'extensions' => [
         'image' => [
@@ -72,4 +74,13 @@ return [
             'filename' => 'additional_javascript.js',
         ],
     ],
+    'theme_uppercases' => [
+        'site_title',
+        'main_navigation',
+        'h_elements',
+        'section_titles',
+        'site_description',
+        'buttons'
+    ],
+    'theme_content_paragraph_width' => 1440,
 ];

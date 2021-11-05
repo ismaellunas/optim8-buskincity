@@ -9,6 +9,7 @@ use App\Http\Controllers\{
     RoleController,
     ThemeAdvanceController,
     ThemeColorController,
+    ThemeFontController,
     ThemeFontSizeController,
     ThemeHeaderController,
     UserController,
@@ -86,6 +87,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
         Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');
         Route::post('/advance', [ThemeAdvanceController::class, 'update'])->name('advance.update');
+        Route::get('/fonts', [ThemeFontController::class, 'edit'])->name('fonts.edit');
+        Route::post('/fonts', [ThemeFontController::class, 'update'])->name('fonts.update');
     });
 });
 
