@@ -43,6 +43,9 @@
                         <div class="column">
                             <sdb-input
                                 v-model="form[fontSize.key]"
+                                maxlength="7"
+                                @blur="updateFontSizeNumber(fontSize.key)"
+                                @keypress="isNumber"
                             />
                             <p v-if="form.errors?.default && form.errors.default[fontSize.key]">
                                 <sdb-input-error
@@ -151,6 +154,18 @@
                             self.form.reset();
                         }
                     });
+            },
+            updateFontSizeNumber(fontSizeKey) {
+                if (! Number.isNaN(parseFloat(this.form[fontSizeKey]))) {
+                    this.form[fontSizeKey] = parseFloat(this.form[fontSizeKey]);
+                }
+            },
+            isNumber(event) {
+                let keyCode = (event.keyCode ? event.keyCode : event.which);
+
+                if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
+                    event.preventDefault();
+                }
             }
         },
     };

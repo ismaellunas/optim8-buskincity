@@ -11,8 +11,9 @@ use App\Http\Controllers\{
     ThemeColorController,
     ThemeFontController,
     ThemeFontSizeController,
+    ThemeHeaderController,
     UserController,
-    UserRoleController
+    UserRoleController,
 };
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -68,6 +69,22 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/color', [ThemeColorController::class, 'update'])->name('color.update');
         Route::get('/font-size', [ThemeFontSizeController::class, 'edit'])->name('font-size.edit');
         Route::post('/font-size', [ThemeFontSizeController::class, 'update'])->name('font-size.update');
+
+        Route::prefix('header')->name('header.')->group(function () {
+            Route::get('/', [ThemeHeaderController::class, 'edit'])->name('edit');
+
+            // layout
+            Route::post('/layout', [ThemeHeaderController::class, 'updateLayout'])->name('layout.update');
+            Route::post('/logo', [ThemeHeaderController::class, 'updateLogo'])->name('logo.update');
+
+            // Navigation
+            Route::post('/menu', [ThemeHeaderController::class, 'store'])->name('store');
+            Route::post('/{menuItem}/update', [ThemeHeaderController::class, 'update'])->name('update');
+            Route::post('/{type}/duplicate', [ThemeHeaderController::class, 'duplicateMenu'])->name('duplicate');
+            Route::post('/update-format', [ThemeHeaderController::class, 'updateFormat'])->name('update-format');
+            Route::delete('/{menuItem}/destroy', [ThemeHeaderController::class, 'destroy'])->name('destroy');
+        });
+
         Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');
         Route::post('/advance', [ThemeAdvanceController::class, 'update'])->name('advance.update');
         Route::get('/fonts', [ThemeFontController::class, 'edit'])->name('fonts.edit');

@@ -8,11 +8,13 @@ class Setting extends BaseModel
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = [
         'key',
         'value',
         'group',
+    ];
+
+    protected $casts = [
+        'updated_at' => 'datetime:M d, Y \a\t h:i',
     ];
 }
