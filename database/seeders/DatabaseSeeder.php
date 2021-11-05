@@ -2,12 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
-use App\Models\Page;
-use App\Models\Permission;
-use App\Models\Post;
-use App\Models\Role;
-use App\Models\User;
+use App\Models\{
+    Category,
+    Menu,
+    MenuItem,
+    Page,
+    Permission,
+    Post,
+    Role,
+    User,
+    Setting,
+};
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
@@ -72,6 +77,12 @@ class DatabaseSeeder extends Seeder
 
         Page::factory()
             ->hasTranslations(1)
+            ->create();
+
+        Menu::factory()
+            ->has(
+                MenuItem::factory()
+            )
             ->create();
     }
 }
