@@ -111,16 +111,13 @@
             };
         },
         methods: {
-            onTabSelected(tab) {
-                this.activeTab = tab;
-            },
             onSave(tab) {
                 if (tab == 'layout') {
                     this.$refs.layout.$refs.headerLayout.saveLayout();
                 }
 
                 if (tab == 'navigation') {
-                    this.$refs.navigation.updateFormatMenu();
+                    this.$refs.navigation.updateMenuItems();
                 }
             },
         }
