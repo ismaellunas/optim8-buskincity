@@ -12,6 +12,7 @@ use App\Http\Controllers\{
     ThemeFontController,
     ThemeFontSizeController,
     ThemeHeaderController,
+    ThemeHeaderMenuController,
     UserController,
     UserRoleController,
 };
@@ -72,17 +73,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
         Route::prefix('header')->name('header.')->group(function () {
             Route::get('/', [ThemeHeaderController::class, 'edit'])->name('edit');
-
-            // layout
             Route::post('/layout', [ThemeHeaderController::class, 'updateLayout'])->name('layout.update');
             Route::post('/logo', [ThemeHeaderController::class, 'updateLogo'])->name('logo.update');
-
-            // Navigation
-            Route::post('/menu', [ThemeHeaderController::class, 'store'])->name('store');
-            Route::post('/{menuItem}/update', [ThemeHeaderController::class, 'update'])->name('update');
-            Route::post('/{type}/duplicate', [ThemeHeaderController::class, 'duplicateMenu'])->name('duplicate');
-            Route::post('/update-format', [ThemeHeaderController::class, 'updateFormat'])->name('update-format');
-            Route::delete('/{menuItem}/destroy', [ThemeHeaderController::class, 'destroy'])->name('destroy');
+            Route::post('/menu-item', [ThemeHeaderMenuController::class, 'update'])->name('update-menu-item');
+            Route::delete('/{menuItem}/destroy', [ThemeHeaderMenuController::class, 'destroy'])->name('destroy');
         });
 
         Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');

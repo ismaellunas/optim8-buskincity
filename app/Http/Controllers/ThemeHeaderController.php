@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MenuItemRequest;
-use App\Http\Requests\ThemeHeaderLogoRequest as LogoRequest;
 use App\Models\{
     Menu,
     MenuItem,
@@ -52,7 +51,6 @@ class ThemeHeaderController extends ThemeOptionController
         );
     }
 
-    // Header handle
     public function updateLayout(Request $request)
     {
         $layout = $request->layout;
@@ -80,120 +78,5 @@ class ThemeHeaderController extends ThemeOptionController
         $this->generateFlashMessage('Header logo upload successfully!');
 
         return redirect()->route($this->baseRouteName.'.edit');
-    }
-
-    // Navigation handle
-    public function store(MenuItemRequest $request)
-    {
-        $inputs = $this->generateCustomValues($request->all());
-
-        $menuItem = new MenuItem();
-        $menuItem->saveFromInputs($inputs);
-
-        $this->generateFlashMessage('Menu item created successfully!');
-
-        return redirect()->route($this->baseRouteName.'.edit');
-    }
-
-    public function update(
-        MenuItemRequest $request,
-        MenuItem $menuItem
-    ) {
-        $inputs = $this->generateCustomValues($request->all());
-
-        $menuItem->saveFromInputs($inputs);
-
-        $this->generateFlashMessage('Menu item updated successfully!');
-
-        return redirect()->route($this->baseRouteName.'.edit');
-    }
-
-    public function updateFormat(Request $request)
-    {
-        $menuItems = new $this->modelMenuItem;
-
-        $menuItems->updateFormatMenuItems($request->all());
-
-        $this->generateFlashMessage('Menu navigation successfully Saved!');
-
-        return redirect()->route($this->baseRouteName.'.edit');
-    }
-
-    public function destroy(MenuItem $menuItem)
-    {
-        $this->updateParentId($menuItem);
-
-        $menuItem->delete();
-
-        $this->generateFlashMessage('Menu navigation deleted successfully!');
-
-        return redirect()->route($this->baseRouteName.'.edit');
-    }
-
-    public function duplicateMenu(MenuItemRequest $request, $type)
-    {
-        $inputs = $request->all();
-
-        if ($type != 1) {
-            $inputs['order'] = (int)$inputs['order'] + 1;
-        }
-
-        $menuItem = new MenuItem();
-        $menuItem->updateOrderMenuItem($inputs);
-        $menuItem->saveFromInputs($inputs);
-
-        $this->generateFlashMessage('Menu item duplicate successfully!');
-
-        return redirect()->route($this->baseRouteName.'.edit');
-    }
-
-    private function updateParentId($menuItem)
-    {
-        $childs = $this->modelMenuItem::where('parent_id', $menuItem->id)->get();
-
-        foreach ($childs as $child) {
-            $child->parent_id = $menuItem->parent_id;
-            $child->save();
-        }
-    }
-
-    private function generateCustomValues($inputs)
-    {
-        $lastMenuItem = $this->modelMenuItem::orderBy('order', 'DESC')
-            ->where('locale', $inputs['locale'])
-            ->where('menu_id', $inputs['menu_id'])
-            ->first();
-
-        if ($lastMenuItem && $inputs['id'] === null) {
-            $inputs['order'] = $lastMenuItem->order + 1;
-        } else if (!$lastMenuItem && $inputs['id'] === null) {
-            $inputs['order'] = 1;
-        }
-
-        if ($inputs['type'] == $this->modelMenuItem::TYPE_URL) {
-            $inputs['page_id'] = null;
-            $inputs['post_id'] = null;
-            $inputs['category_id'] = null;
-        }
-
-        if ($inputs['type'] == $this->modelMenuItem::TYPE_PAGE) {
-            $inputs['url'] = null;
-            $inputs['post_id'] = null;
-            $inputs['category_id'] = null;
-        }
-
-        if ($inputs['type'] == $this->modelMenuItem::TYPE_POST) {
-            $inputs['url'] = null;
-            $inputs['page_id'] = null;
-            $inputs['category_id'] = null;
-        }
-
-        if ($inputs['type'] == $this->modelMenuItem::TYPE_CATEGORY) {
-            $inputs['url'] = null;
-            $inputs['page_id'] = null;
-            $inputs['post_id'] = null;
-        }
-
-        return $inputs;
     }
 }
