@@ -20,7 +20,7 @@
 
                 <sdb-button
                     type="button"
-                    class="is-primary"
+                    class="is-primary ml-2"
                     @click="onSave(activeTab)"
                 >
                     <span>Save</span>
@@ -36,6 +36,9 @@
             <footer-navigation
                 v-if="isNavigation"
                 ref="footerNavigation"
+                :last-saved="menuItemLastSaved"
+                :menu-items="menuItems"
+                :menu="menu"
             />
         </div>
     </app-layout>
@@ -66,6 +69,18 @@
             baseRouteName: {
                 type: String,
                 required: true
+            },
+            menu: {
+                type: Object,
+                required: true,
+            },
+            menuItems: {
+                type: Object,
+                default:() => {},
+            },
+            menuItemLastSaved: {
+                type: String,
+                default: "-",
             },
             settings: {
                 type: Object,

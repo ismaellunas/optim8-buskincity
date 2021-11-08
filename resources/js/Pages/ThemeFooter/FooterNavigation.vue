@@ -4,7 +4,7 @@
             <div class="column">
                 <div class="is-pulled-left">
                     <b>Menu Navigation</b><br>
-                    Last Saved: -
+                    Last Saved: {{ lastSaved }}
                 </div>
             </div>
         </div>
@@ -24,7 +24,18 @@
         name: 'FooterNavigation',
 
         props: {
-            //
+            menu: {
+                type: Object,
+                required: true,
+            },
+            lastSaved: {
+                type: String,
+                default: "-",
+            },
+            menuItems: {
+                type: Object,
+                default:() => {},
+            },
         },
 
         setup() {
