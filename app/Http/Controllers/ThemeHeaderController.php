@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\MenuItemRequest;
+use App\Http\Requests\ThemeHeaderLogoRequest as LogoRequest;
 use App\Models\{
     Menu,
     MenuItem,
