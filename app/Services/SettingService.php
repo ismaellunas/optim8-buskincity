@@ -314,9 +314,7 @@ class SettingService
             $inputs['file_name'],
             $inputs['file_type'],
             $folder,
-            [
-                'invalidate' => true
-            ]
+            true,
         );
     }
 
