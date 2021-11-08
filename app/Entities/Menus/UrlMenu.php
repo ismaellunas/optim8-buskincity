@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Menus;
+namespace App\Entities\Menus;
 
 use App\Contracts\MenuInterface;
 
@@ -11,7 +11,7 @@ class UrlMenu implements MenuInterface
     public $id;
     private $menuItem;
 
-    function __construct($id)
+    function __construct($id = null)
     {
         $this->menuItem = MenuItem::find($id);
     }
@@ -19,5 +19,14 @@ class UrlMenu implements MenuInterface
     function getUrl(): string
     {
         return $this->menuItem->url ?? "";
+    }
+
+    function nullFields(): array
+    {
+        return [
+            'page_id',
+            'post_id',
+            'category_id',
+        ];
     }
 }

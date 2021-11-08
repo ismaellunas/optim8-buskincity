@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Menus;
+namespace App\Entities\Menus;
 
 use App\Contracts\MenuInterface;
 
@@ -11,7 +11,7 @@ class PostMenu implements MenuInterface
     public $id;
     private $menuItem;
 
-    function __construct($id)
+    function __construct($id = null)
     {
         $this->menuItem = MenuItem::where('id', $id)
             ->with('post')
@@ -24,5 +24,14 @@ class PostMenu implements MenuInterface
             'locale' => $this->menuItem->locale,
             'slug' => $this->menuItem->post->slug,
         ]);
+    }
+
+    function nullFields(): array
+    {
+        return [
+            'url',
+            'page_id',
+            'category_id',
+        ];
     }
 }
