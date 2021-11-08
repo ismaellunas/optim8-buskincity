@@ -32,50 +32,45 @@ class MenuItem extends BaseModel
         self::TYPE_CATEGORY,
     ];
 
-    public function saveFromInputs($inputs)
-    {
-        $this->fill($inputs);
-        $this->save();
-    }
-
-    public function updateFormatMenuItems(array $inputs)
+    public function updateMenuItems(array $inputs)
     {
         foreach ($inputs as $key => $input) {
-            $this->updateMenuItemData($input);
-        }
-    }
-    public function updateOrderMenuItem($inputs)
-    {
-        $menuItems = $this->where('menu_id', $inputs['menu_id'])
-            ->orderBy('order', 'ASC')
-            ->where('parent_id', $inputs['parent_id'])
-            ->where('order', '>=', $inputs['order'])
-            ->get();
-
-        $order = $inputs['order'] + 1;
-        foreach ($menuItems as $menuItem) {
-            $menuItem->order = $order;
-            $menuItem->save();
-
-            $order++;
+            $this->updateMenuItem($input);
         }
     }
 
-    private function updateMenuItemData(array $menuItems, $parentId = null)
+    private function updateMenuItem(array $inputs, $parentId = null)
     {
         $order = 1;
-        foreach ($menuItems as $menuItem) {
-            if (count($menuItem['children']) > 0) {
-                $this->updateMenuItemData($menuItem['children'], $menuItem['id']);
-            }
+        foreach ($inputs as $input) {
+            $input = $this->setNullInput($input);
+            $input['order'] = $order;
+            $input['parent_id'] = $parentId;
 
-            $menuItem = $this->where('id', $menuItem['id'])->first();
-            $menuItem->order = $order;
-            $menuItem->parent_id = $parentId;
-            $menuItem->save();
+            $menuItem = self::updateOrCreate([
+                'id' => $input['id'],
+                'locale' => $input['locale'],
+                'menu_id' => $input['menu_id'],
+            ], $input);
+
+            if (count($input['children']) > 0) {
+                $this->updateMenuItem($input['children'], $menuItem['id']);
+            }
 
             $order++;
         }
+    }
+
+    private function setNullInput($input)
+    {
+        $className = "\App\Entities\Menus\\".$input['type']."Menu";
+        $menu = new $className();
+
+        foreach ($menu->nullFields() as $nullField) {
+            $input[$nullField] = null;
+        }
+
+        return $input;
     }
 
     // Relation
