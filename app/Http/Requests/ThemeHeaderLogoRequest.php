@@ -27,7 +27,7 @@ class ThemeHeaderLogoRequest extends FormRequest
             'file' => [
                 'required',
                 'file',
-                'max:'.config('constants.one_megabyte'),
+                'max:'.config('constants.one_megabyte') * 50,
                 'mimes:jpeg,jpg,png',
             ],
         ];
