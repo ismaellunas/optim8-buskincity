@@ -84,5 +84,9 @@ class DatabaseSeeder extends Seeder
                 MenuItem::factory()
             )
             ->create();
+
+        Menu::factory()->create([
+            'type' => 2
+        ]);
     }
 }
