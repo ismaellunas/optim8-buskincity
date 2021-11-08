@@ -16,7 +16,7 @@ use App\Services\{
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ThemeHeaderController extends CrudController
+class ThemeHeaderController extends ThemeOptionController
 {
     private $menuService;
     private $settingService;
