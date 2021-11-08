@@ -62,12 +62,16 @@ class PostService
     public function getBlogRecords(
         string $term,
         int $recordsPerPage = 10,
-        string $locale = 'en'
+        string $locale = 'en',
+        ?string $categorySlug = null
     ) {
         $records = Post::orderBy('id', 'DESC')
             ->where('locale', $locale)
             ->when($term, function ($query, $term) {
                 $query->search($term);
+            })
+            ->when($categorySlug, function ($query, $categorySlug) {
+                $query->byCategory($categorySlug);
             })
             ->published()
             ->with([
@@ -85,7 +89,7 @@ class PostService
                     $query->select([$tableName.'.id']);
                     $query->with([
                         'translations' => function ($query) {
-                            $query->select('id', 'name', 'category_id', 'locale');
+                            $query->select('id', 'name', 'slug', 'category_id', 'locale');
                         },
                     ]);
                 },

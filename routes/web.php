@@ -86,8 +86,4 @@ Route::group([
 
     Route::get('/{page_translation}', [PageController::class, 'show'])
         ->name('frontend.pages.show');
-
-    Route::get('category/{category}', function ($category) {
-        echo "category page ".$category;
-    })->name('category.show');
 });

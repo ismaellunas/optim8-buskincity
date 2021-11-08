@@ -2,35 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ThemeHeaderLogoRequest as LogoRequest;
-use App\Models\Setting;
-use App\Services\SettingService;
+use App\Http\Requests\MenuItemRequest;
+use App\Models\{
+    Menu,
+    MenuItem,
+    Setting,
+};
+use App\Services\{
+    MenuService,
+    SettingService,
+};
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ThemeHeaderController extends CrudController
+class ThemeHeaderController extends ThemeOptionController
 {
+    private $menuService;
     private $settingService;
+    private $modelMenu = Menu::class;
+    private $modelMenuItem = MenuItem::class;
+
     protected $baseRouteName = 'admin.theme.header';
-    protected $componentName = 'ThemeHeader/Header/';
+    protected $componentName = 'ThemeHeader/';
     protected $title = "Header";
 
-    public function __construct(SettingService $settingService)
-    {
+    public function __construct(
+        MenuService $menuService,
+        SettingService $settingService
+    ) {
+        $this->menuService = $menuService;
         $this->settingService = $settingService;
     }
 
-    public function index()
+    public function edit()
     {
         return Inertia::render(
-            $this->componentName.'Index',
+            $this->componentName.'Edit',
             $this->getData([
-                'headerLayoutLastSaved' => $this->settingService
-                    ->getHeaderLayoutLastSaved(),
-                'headerLogoUrlLastSaved' => $this->settingService
-                    ->getHeaderLogoUrlLastSaved(),
-                'settings' => $this->settingService
-                    ->getHeader(),
+                'categories' => $this->menuService->getRecordCategories(),
+                'menu' => $this->modelMenu::header()->first(),
+                'menuItemLastSaved' => $this->menuService->getMenuItemLastSaved("header"),
+                'menuItems' => $this->menuService->generateMenus(),
+                'pages' => $this->menuService->getRecordPages(),
+                'posts' => $this->menuService->getRecordPosts(),
+                'settings' => $this->settingService->getHeader(),
+                'types' => $this->modelMenuItem::TYPES,
             ]),
         );
     }
@@ -45,7 +61,7 @@ class ThemeHeaderController extends CrudController
 
         $this->generateFlashMessage('Header layout updated successfully!');
 
-        return redirect()->route($this->baseRouteName.'.index');
+        return redirect()->route($this->baseRouteName.'.edit');
     }
 
     public function updateLogo(LogoRequest $request)
@@ -61,6 +77,6 @@ class ThemeHeaderController extends CrudController
 
         $this->generateFlashMessage('Header logo upload successfully!');
 
-        return redirect()->route($this->baseRouteName.'.index');
+        return redirect()->route($this->baseRouteName.'.edit');
     }
 }

@@ -2,16 +2,15 @@
 
 namespace App\Models;
 
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
-use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class MenuItem extends BaseModel implements TranslatableContract
+class MenuItem extends BaseModel
 {
     use HasFactory;
-    use Translatable;
 
     protected $fillable = [
+        'locale',
+        'title',
         'type',
         'url',
         'order',
@@ -33,46 +32,45 @@ class MenuItem extends BaseModel implements TranslatableContract
         self::TYPE_CATEGORY,
     ];
 
-    public $translatedAttributes = ['title'];
-
-    public function saveFromInputs($inputs)
+    public function updateMenuItems(array $inputs)
     {
-        $this->fill($inputs);
-        $this->save();
-    }
-
-    public function syncTranslations(array $providedLocales)
-    {
-        $existingLocales = array_keys($this->getTranslationsArray());
-
-        $unusedLocales = array_diff($existingLocales, $providedLocales);
-
-        if (!empty($unusedLocales)) {
-            $this->deleteTranslations($unusedLocales);
+        foreach ($inputs as $key => $input) {
+            $this->updateMenuItem($input);
         }
     }
 
-    public function updateFormatMenuItems(array $inputs)
-    {
-        $this->updateMenuItemData($inputs);
-    }
-
-    private function updateMenuItemData(array $menuItems, $parentId = null)
+    private function updateMenuItem(array $inputs, $parentId = null)
     {
         $order = 1;
+        foreach ($inputs as $input) {
+            $input = $this->setNullInput($input);
+            $input['order'] = $order;
+            $input['parent_id'] = $parentId;
 
-        foreach ($menuItems as $menuItem) {
-            if (count($menuItem['children']) > 0) {
-                $this->updateMenuItemData($menuItem['children'], $menuItem['id']);
+            $menuItem = self::updateOrCreate([
+                'id' => $input['id'],
+                'locale' => $input['locale'],
+                'menu_id' => $input['menu_id'],
+            ], $input);
+
+            if (count($input['children']) > 0) {
+                $this->updateMenuItem($input['children'], $menuItem['id']);
             }
-
-            $menuItem = $this->where('id', $menuItem['id'])->first();
-            $menuItem->order = $order;
-            $menuItem->parent_id = $parentId;
-            $menuItem->save();
 
             $order++;
         }
+    }
+
+    private function setNullInput($input)
+    {
+        $className = "\App\Entities\Menus\\".$input['type']."Menu";
+        $menu = new $className();
+
+        foreach ($menu->nullFields() as $nullField) {
+            $input[$nullField] = null;
+        }
+
+        return $input;
     }
 
     // Relation

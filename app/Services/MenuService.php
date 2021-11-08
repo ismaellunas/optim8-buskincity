@@ -12,17 +12,22 @@ use App\Models\{
     Role,
     User,
 };
+use App\Services\TranslationService as TranslationSv;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
 class MenuService
 {
-    public function getMenuItemLastSaved()
+    public function getMenuItemLastSaved(string $type)
     {
         $menu = MenuItem::orderBy('updated_at', 'DESC')
-            ->whereHas('menu', function ($query) {
-                $query->where('type', Menu::TYPE_HEADER);
+            ->whereHas('menu', function ($query) use ($type) {
+                if ($type == "header") {
+                    $query->header();
+                } else {
+                    $query->footer();
+                }
             })
             ->first();
 
@@ -33,23 +38,33 @@ class MenuService
         return '-';
     }
 
-    private function getMenuItems($menuId = null): array
+    private function getMenuItems(
+        string $locale,
+        string $type
+    ): array
     {
-        return MenuItem::orderBy('order', 'ASC')
+        return MenuItem::where('locale', $locale)
+            ->orderBy('order', 'ASC')
             ->orderBy('parent_id', 'ASC')
-            ->whereHas('menu', function ($query) {
-                $query->where('type', Menu::TYPE_HEADER);
+            ->whereHas('menu', function ($query) use ($type) {
+                if ($type == "header") {
+                    $query->header();
+                } else {
+                    $query->footer();
+                }
             })
             ->get()
             ->toArray();
     }
 
-    private function generateMenuItems($locale, $menuItems, $parentId = null): array
-    {
+    private function generateMenuItems(
+        array $menuItems,
+        $parentId = null
+    ): array {
         $menus = [];
         foreach ($menuItems as $menuItem) {
             if ($menuItem['parent_id'] == $parentId) {
-                $children = $this->generateMenuItems($locale, $menuItems, $menuItem['id']);
+                $children = $this->generateMenuItems($menuItems, $menuItem['id']);
 
                 if ($children) {
                     $menuItem['children'] = $children;
@@ -57,9 +72,8 @@ class MenuService
                     $menuItem['children'] = [];
                 }
 
-                $className = "\App\Menus\\".$menuItem['type']."Menu";
-                $typeMenu = new $className($locale, $menuItem['id']);
-                $menuItem['title'] = $typeMenu->getTitle();
+                $className = "\App\Entities\Menus\\".$menuItem['type']."Menu";
+                $typeMenu = new $className($menuItem['id']);
                 $menuItem['link'] = $typeMenu->getUrl();
 
                 $menus[] = $menuItem;
@@ -69,10 +83,26 @@ class MenuService
         return $menus;
     }
 
-    public function generateMenus($locale = "en")
-    {
-        $menuItems = $this->getMenuItems();
-        return $this->generateMenuItems($locale, $menuItems);
+    public function generateMenus(
+        ?string $locale = null,
+        string $type = "header"
+    ) :array {
+        $menus = [];
+
+        if ($locale === null) {
+            $locales = TranslationSv::getLocaleOptions();
+        } else {
+            $locales = [
+                ["id" => $locale]
+            ];
+        }
+
+        foreach ($locales as $locale) {
+            $menuItems = $this->getMenuItems($locale['id'], $type);
+            $menus[$locale['id']] = $this->generateMenuItems($menuItems);
+        }
+
+        return $menus;
     }
 
     public static function generateBackendMenu(Request $request): array
@@ -141,7 +171,7 @@ class MenuService
                     'children' => [
                         [
                             'title' => 'Header',
-                            'link' => route('admin.theme.header.index'),
+                            'link' => route('admin.theme.header.edit'),
                             'isActive' => $request->routeIs('admin.theme.header.*'),
                             'isEnabled' => true,
                         ],
@@ -158,9 +188,21 @@ class MenuService
                             'isEnabled' => true,
                         ],
                         [
-                            'title' => 'Font Size',
+                            'title' => 'Fonts',
+                            'link' => route('admin.theme.fonts.edit'),
+                            'isActive' => $request->routeIs('admin.theme.fonts.*'),
+                            'isEnabled' => true,
+                        ],
+                        [
+                            'title' => 'Font Sizes',
                             'link' => route('admin.theme.font-size.edit'),
                             'isActive' => $request->routeIs('admin.theme.font-size.*'),
+                            'isEnabled' => true,
+                        ],
+                        [
+                            'title' => 'Advanced',
+                            'link' => route('admin.theme.advance.edit'),
+                            'isActive' => $request->routeIs('admin.theme.advance.*'),
                             'isEnabled' => true,
                         ],
                     ],

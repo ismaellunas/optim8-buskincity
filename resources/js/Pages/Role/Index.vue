@@ -6,27 +6,10 @@
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
-                    <sdb-form-field-horizontal>
-                        <template v-slot:label>
-                            Search
-                        </template>
-                        <div class="columns">
-                            <div class="column is-three-quarters">
-                                <sdb-input
-                                    v-model="term"
-                                    maxlength="255"
-                                    @keyup.enter.prevent="search(term)"
-                                />
-                            </div>
-                            <div class="column">
-                                <sdb-button-icon
-                                    icon="fas fa-search"
-                                    type="button"
-                                    @click="search(term)"
-                                />
-                            </div>
-                        </div>
-                    </sdb-form-field-horizontal>
+                    <sdb-filter-search
+                        v-model="term"
+                        @search="search"
+                    ></sdb-filter-search>
                 </div>
             </div>
             <div class="column">
@@ -95,11 +78,10 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import SdbButton from '@/Sdb/Button';
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
-    import SdbInput from '@/Sdb/Input';
+    import SdbFilterSearch from '@/Sdb/Filter/Search';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbTable from '@/Sdb/Table';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -110,13 +92,14 @@
         components: {
             AppLayout,
             SdbButton,
-            SdbButtonIcon,
             SdbButtonLink,
-            SdbFormFieldHorizontal,
-            SdbInput,
+            SdbFilterSearch,
             SdbPagination,
             SdbTable,
         },
+        mixins: [
+            MixinFilterDataHandle,
+        ],
         props: {
             baseRouteName: String,
             pageNumber: String,
@@ -168,19 +151,6 @@
             },
             onEndLoadingOverlay() {
                 this.loader.hide();
-            },
-            search(term) {
-                this.queryParams['term'] = term;
-                this.$inertia.get(
-                    route(this.baseRouteName+'.index', this.queryParams),
-                    {},
-                    {
-                        replace: true,
-                        preserveState: true,
-                        onStart: this.onStartLoadingOverlay,
-                        onFinish: this.onEndLoadingOverlay,
-                    }
-                );
             },
         },
     };

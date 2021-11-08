@@ -7,11 +7,13 @@ use App\Http\Controllers\{
     PermissionController,
     PostController,
     RoleController,
+    ThemeAdvanceController,
     ThemeColorController,
+    ThemeFontController,
     ThemeFontSizeController,
-    ThemeHeaderController,
     ThemeFooterController,
-    ThemeNavigationController,
+    ThemeHeaderController,
+    ThemeHeaderMenuController,
     UserController,
     UserRoleController,
 };
@@ -19,11 +21,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
-
-use App\Entities\CloudinaryStorage;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Setting;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,17 +73,19 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/font-size', [ThemeFontSizeController::class, 'update'])->name('font-size.update');
 
         Route::prefix('header')->name('header.')->group(function () {
-            Route::get('/', [ThemeHeaderController::class, 'index'])->name('index');
+            Route::get('/', [ThemeHeaderController::class, 'edit'])->name('edit');
             Route::post('/layout', [ThemeHeaderController::class, 'updateLayout'])->name('layout.update');
             Route::post('/logo', [ThemeHeaderController::class, 'updateLogo'])->name('logo.update');
-
-            Route::resource('navigation', ThemeNavigationController::class)
-                ->except(['create', 'show', 'edit']);
-            Route::put('navigation/update/format', [ThemeNavigationController::class, 'updateFormat'])->name('navigation.update.format');
+            Route::post('/menu-item', [ThemeHeaderMenuController::class, 'update'])->name('update-menu-item');
+            Route::delete('/{menuItem}/destroy', [ThemeHeaderMenuController::class, 'destroy'])->name('destroy');
         });
 
         Route::get('/footer', [ThemeFooterController::class, 'edit'])->name('footer.edit');
         Route::post('/footer/layout', [ThemeFooterController::class, 'updateLayout'])->name('footer.layout.update');
+        Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');
+        Route::post('/advance', [ThemeAdvanceController::class, 'update'])->name('advance.update');
+        Route::get('/fonts', [ThemeFontController::class, 'edit'])->name('fonts.edit');
+        Route::post('/fonts', [ThemeFontController::class, 'update'])->name('fonts.update');
     });
 });
 

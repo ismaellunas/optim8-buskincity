@@ -6,6 +6,7 @@ use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class CategoryController extends CrudController
@@ -13,6 +14,7 @@ class CategoryController extends CrudController
     protected $model = Category::class;
     protected $baseRouteName = 'admin.categories';
     protected $categoryService;
+    protected $title = "Categories";
 
     public function __construct(CategoryService $categoryService)
     {
@@ -29,7 +31,7 @@ class CategoryController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Category/Index', [
+        return Inertia::render('Category/Index', $this->getData([
             'can' => [
                 'add' => $user->can('category.add'),
                 'delete' => $user->can('category.delete'),
@@ -40,7 +42,7 @@ class CategoryController extends CrudController
             'records' => $this
                 ->categoryService
                 ->getRecords($request->term, $this->recordsPerPage),
-        ]);
+        ]));
     }
 
     /**
@@ -59,8 +61,13 @@ class CategoryController extends CrudController
     public function store(CategoryRequest $request)
     {
         $record = new $this->model;
+        $inputs = $request->validated();
 
-        $record->saveFromInputs($request->validated());
+        foreach ($inputs as $key => $input) {
+            $inputs[$key]['slug'] = Str::of($input['name'])->slug('-');
+        }
+
+        $record->saveFromInputs($inputs);
 
         $this->generateFlashMessage('Category created successfully!');
 
@@ -94,11 +101,15 @@ class CategoryController extends CrudController
 
     public function update(CategoryRequest $request, Category $category)
     {
-        $validatedData = $request->validated();
+        $inputs = $request->validated();
 
-        $category->saveFromInputs($validatedData);
+        foreach ($inputs as $key => $input) {
+            $inputs[$key]['slug'] = Str::of($input['name'])->slug('-');
+        }
 
-        $category->syncTranslations(array_keys($validatedData));
+        $category->saveFromInputs($inputs);
+
+        $category->syncTranslations(array_keys($inputs));
 
         $this->generateFlashMessage('Category updated successfully!');
 

@@ -5,19 +5,59 @@ namespace App\Services;
 use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
 use App\Models\Setting;
-use Carbon\Carbon;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 use \finfo;
 
 class SettingService
 {
+    private static function getAdditionalCodeFileKey(string $key): string
+    {
+        return config("constants.theme_additional_code_files.{$key}.key");
+    }
+
+    public function getAdditionalCodeFileName(string $key): string
+    {
+        return config("constants.theme_additional_code_files.{$key}.filename");
+    }
+
     public static function getFrontendCssUrl(): string
     {
         $urlCss = Setting::where('key', 'url_css')->first(['key', 'value']);
 
         return $urlCss->value ?? mix('css/app.css')->toHtml();
+    }
+
+    public static function getTrackingCodeAfterBodyUrl(): ?string
+    {
+        return Setting::where('key', self::getAdditionalCodeFileKey('tracking_code_after_body'))
+            ->value('value');
+    }
+
+    public static function getTrackingCodeBeforeBodyUrl(): ?string
+    {
+        return Setting::where('key', self::getAdditionalCodeFileKey('tracking_code_before_body'))
+            ->value('value');
+    }
+
+    public static function getTrackingCodeInsideHeadUrl(): ?string
+    {
+        return Setting::where('key', self::getAdditionalCodeFileKey('tracking_code_inside_head'))
+            ->value('value');
+    }
+
+    public static function getAdditionalCssUrl(): ?string
+    {
+        return Setting::where('key', self::getAdditionalCodeFileKey('additional_css'))
+            ->value('value');
+    }
+
+    public static function getAdditionalJavascriptUrl(): ?string
+    {
+        return Setting::where('key', self::getAdditionalCodeFileKey('additional_javascript'))
+            ->value('value');
     }
 
     public function getColors(): array
@@ -70,28 +110,69 @@ class SettingService
             ->all();
     }
 
-    public function getHeaderLayoutLastSaved()
+    public function getAdditionalCodes(): array
     {
-        $settings = $this->getHeader();
-        $headerLayout = $settings['header_layout'];
-
-        if ($headerLayout) {
-            return Carbon::parse($headerLayout->updated_at)->format('M d, Y \a\t h:i');
-        }
-
-        return '-';
+        return Setting::where('group', 'additional_code')
+            ->get([
+                'display_name',
+                'key',
+                'value',
+                'order',
+            ])
+            ->keyBy('key')
+            ->all();
     }
 
-    public function getHeaderLogoUrlLastSaved()
+    public function getUppercaseTextOptions(): array
     {
-        $settings = $this->getHeader();
-        $headerLogo = $settings['header_logo_url'];
+        $uppercaseTexts = [];
 
-        if ($headerLogo) {
-            return Carbon::parse($headerLogo->updated_at)->format('M d, Y \a\t h:i');
+        foreach (config('constants.theme_uppercases') as $uppercaseText) {
+            $uppercaseTexts[$uppercaseText] = Str::title(
+                Str::replace('_', ' ', $uppercaseText)
+            );
         }
 
-        return '-';
+        return $uppercaseTexts;
+    }
+
+    public function getUppercaseTexts(): array
+    {
+        $uppercaseText = Setting::where('key', 'uppercase_text')->value('value');
+
+        if (!is_null($uppercaseText)) {
+            return json_decode($uppercaseText);
+        }
+
+        return [];
+    }
+
+    public function getContentParagraphWidth(): int
+    {
+        $contentParagraphWidth = Setting::where('key', 'content_paragraph_width')->value('value');
+
+        return !is_null($contentParagraphWidth)
+            ? (int) $contentParagraphWidth
+            : config('constants.theme_content_paragraph_width');
+    }
+
+    public function getFont($key)
+    {
+        $setting = Setting::where('key', $key)->value('value');
+        $font = [];
+
+        if (!is_null($setting)) {
+            $font = json_decode($setting, true);
+        }
+
+        return (object) array_merge(
+            [
+                'family' => null,
+                'weight' => null,
+                'style' => null,
+            ],
+            $font
+        );
     }
 
     public function generateVariablesSass()
@@ -166,10 +247,58 @@ class SettingService
         );
     }
 
+    public function uploadAdditionalCodeToCloudStorage(
+        string $filename,
+        string $value,
+        string $folderPrefix = null
+    ): MediaAsset {
+
+        $disk = Storage::build([
+            'driver' => 'local',
+            'root' => storage_path('theme/css'),
+        ]);
+
+        $disk->put($filename, $value);
+
+        $uploadedFileName = 'theme/css/'.$filename;
+        $uploadedFilePath = storage_path($uploadedFileName);
+
+        $file = new UploadedFile(
+            $uploadedFilePath,
+            $filename
+        );
+
+        $storage = new CloudinaryStorage();
+
+        $folder = "assets";
+
+        if ($folderPrefix) {
+            $folder = $folderPrefix.'_'.$folder;
+        }
+
+        return $storage->upload(
+            $file,
+            $filename,
+            pathinfo($filename, PATHINFO_EXTENSION),
+            $folder
+        );
+    }
+
     public function saveCssUrl(string $url): bool
     {
         $setting = Setting::firstOrNew(['key' => 'url_css']);
         $setting->value = $url;
+        return $setting->save();
+    }
+
+    public function saveAdditionalCodeUrl(string $key, ?string $url): bool
+    {
+        $setting = Setting::firstOrNew([
+            'key' => self::getAdditionalCodeFileKey($key)
+        ]);
+
+        $setting->value = $url;
+
         return $setting->save();
     }
 
@@ -196,7 +325,8 @@ class SettingService
             $inputs['file'],
             $inputs['file_name'],
             $inputs['file_type'],
-            $folder
+            $folder,
+            true,
         );
     }
 
