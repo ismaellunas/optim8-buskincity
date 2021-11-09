@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MenuItemRequest;
 use App\Models\MenuItem;
-use App\Services\MenuService;
 
 class ThemeHeaderMenuController extends ThemeOptionController
 {

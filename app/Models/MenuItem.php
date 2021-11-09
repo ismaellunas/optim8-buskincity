@@ -34,7 +34,7 @@ class MenuItem extends BaseModel
 
     public function updateMenuItems(array $inputs)
     {
-        foreach ($inputs as $key => $input) {
+        foreach ($inputs as $input) {
             $this->updateMenuItem($input);
         }
     }
