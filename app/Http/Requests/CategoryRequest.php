@@ -17,10 +17,6 @@ class CategoryRequest extends FormRequest
     {
         return RuleFactory::make([
             '%name%' => 'sometimes|required',
-            '%slug%' => [
-                'max:250',
-                new AlphaNumericDash()
-            ],
         ]);
     }
 }

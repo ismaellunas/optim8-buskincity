@@ -23,15 +23,15 @@ class PostCategoryController extends Controller
         $this->translationService = $translationService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, $locale, $categoryId)
     {
         return Inertia::render($this->baseComponentName.'/Index', [
             'baseRouteName' => $this->baseRouteName,
+            'categoryId' => (int)$categoryId,
             'pageQueryParams' => array_filter($request->only(
                 'term',
                 'view',
                 'status',
-                'slug'
             )),
             'pageNumber' => $request->page,
             'currentLanguage' => $this->translationService->currentLanguage(),
@@ -39,7 +39,7 @@ class PostCategoryController extends Controller
                 $request->term ?? '',
                 10,
                 $this->translationService->currentLanguage(),
-                $request->slug ?? null,
+                $categoryId
             ),
         ]);
     }

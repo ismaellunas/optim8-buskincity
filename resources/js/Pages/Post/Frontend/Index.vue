@@ -72,6 +72,10 @@
                 type: String,
                 required: true,
             },
+            categoryId: {
+                type: Number,
+                default: null,
+            },
             currentLanguage: String,
             errors: Object,
             pageNumber: String,
@@ -79,7 +83,7 @@
             records: {},
         },
         setup(props) {
-            const queryParams = merge({}, props.pageQueryParams);
+            const queryParams = merge({id: props.categoryId}, props.pageQueryParams);
 
             return {
                 queryParams: ref(queryParams),
