@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\MenuItem;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MenuItemRequest extends FormRequest
 {
@@ -14,32 +16,62 @@ class MenuItemRequest extends FormRequest
     public function rules()
     {
         return [
-            '*.*.locale' => 'sometimes|required|max:15',
-            '*.*.title' => 'sometimes|required|max:255',
-            '*.*.type' => 'sometimes|required|max:255',
+            '*.*.locale' => [
+                'sometimes',
+                'required',
+                'max:15',
+                Rule::in(config('constants.locale')),
+            ],
+            '*.*.title' => [
+                'sometimes',
+                'required',
+                'max:255',
+            ],
+            '*.*.type' => [
+                'sometimes',
+                'required',
+                'max:255',
+                Rule::in(MenuItem::TYPES),
+            ],
             '*.*.url' => 'nullable',
-            '*.*.page_id' => 'nullable',
-            '*.*.post_id' => 'nullable',
-            '*.*.category_id' => 'nullable',
-            '*.*.menu_id' => 'sometimes|required',
+            '*.*.page_id' => [
+                'nullable',
+                'integer',
+                'exists:pages,id'
+            ],
+            '*.*.post_id' => [
+                'nullable',
+                'integer',
+                'exists:posts,id'
+            ],
+            '*.*.category_id' => [
+                'nullable',
+                'integer',
+                'exists:categories,id'
+            ],
+            '*.*.menu_id' => [
+                'required',
+                'integer',
+                'exists:menus,id'
+            ],
         ];
     }
 
     public function messages()
     {
-        return [
-            'en.*.locale.required' => 'Locale (English) is required',
-            'en.*.title.required' => 'Title (English) is required',
-            'en.*.type.required' => 'Type (English) is required',
-            'sv.*.locale.required' => 'Locale (Swedish) is required',
-            'sv.*.title.required' => 'Title (Swedish) is required',
-            'sv.*.type.required' => 'Type (Swedish) is required',
-            'es.*.locale.required' => 'Locale (Spanish) is required',
-            'es.*.title.required' => 'Title (Spanish) is required',
-            'es.*.type.required' => 'Type (Spanish) is required',
-            'de.*.locale.required' => 'Locale (German) is required',
-            'de.*.title.required' => 'Title (German) is required',
-            'de.*.type.required' => 'Type (German) is required',
-        ];
+        $rule = [];
+        $columns = ['locale', 'title', 'type'];
+        $validations = ['required'];
+        $locales = config('constants.locale');
+
+        foreach ($locales as $locale) {
+            foreach ($validations as $validation) {
+                foreach ($columns as $column) {
+                    $rule[$locale.".*.".$column.".".$validation] = ucwords($column)." (".strtoupper($locale).") is ".$validation;
+                }
+            }
+        }
+
+        return $rule;
     }
 }
