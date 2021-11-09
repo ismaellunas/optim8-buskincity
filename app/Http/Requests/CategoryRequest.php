@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\AlphaNumericDash;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -16,6 +17,10 @@ class CategoryRequest extends FormRequest
     {
         return RuleFactory::make([
             '%name%' => 'sometimes|required',
+            '%slug%' => [
+                'max:250',
+                new AlphaNumericDash()
+            ],
         ]);
     }
 }
