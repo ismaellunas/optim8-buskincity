@@ -18,7 +18,6 @@
                             v-model="form[translation].name"
                             :label="`Category Name (${translation.toUpperCase()})`"
                             :message="error(translation+'.name')"
-                            @on-blur="populateSlug(translation)"
                         >
                             <template #afterInput>
                                 <div class="control">
@@ -32,12 +31,6 @@
                                 </div>
                             </template>
                         </sdb-form-input-addons>
-                        <sdb-form-slug
-                            v-model="form[translation].slug"
-                            :label="`Category Slug (${translation.toUpperCase()})`"
-                            :message="error(translation+'.slug')"
-                            :required="false"
-                        />
                     </div>
                 </div>
             </div>
@@ -82,11 +75,10 @@
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbFormInputAddons from '@/Sdb/Form/InputAddons';
-    import SdbFormSlug from '@/Sdb/Form/Slug';
     import SdbLabel from '@/Sdb/Label';
     import SdbSelect from '@/Sdb/Select';
     import { confirmDelete } from '@/Libs/alert';
-    import { isBlank, convertToSlug } from '@/Libs/utils';
+    import { isBlank } from '@/Libs/utils';
     import { reactive } from "vue";
     import { pull, sortBy, isEmpty } from 'lodash';
 
@@ -97,8 +89,6 @@
             SdbButtonIcon,
             SdbButtonLink,
             SdbFormInputAddons,
-            SdbFormSlug,
-            SdbLabel,
             SdbSelect,
         },
         mixins: [
@@ -115,7 +105,7 @@
             localeOptions: Array,
         },
         emits: [
-           'on-submit',
+            'on-submit',
         ],
         setup(props) {
             let providedLocales = [];
@@ -127,15 +117,12 @@
                 });
 
                 props.category.translations.forEach(translation => {
-                    fields[translation.locale] = {
-                        name: translation.name,
-                        slug: translation.slug
-                    };
+                    fields[translation.locale] = {name: translation.name};
                 });
             } else {
                 providedLocales = ['en'];
 
-                fields = { en: { name: null, slug: null } };
+                fields = { en: { name: null } };
             }
 
             return {
@@ -181,10 +168,7 @@
                 }
             },
             addTranslation() {
-                this.form[this.selectedLocale] = {
-                    name: null,
-                    slug: null,
-                };
+                this.form[this.selectedLocale] = {name: null,};
 
                 this.updateSelectedLocale();
             },
@@ -196,11 +180,6 @@
                         self.updateSelectedLocale();
                     }
                 });
-            },
-            populateSlug(translation) {
-                if (isEmpty(this.form[translation].slug)) {
-                    this.form[translation].slug = convertToSlug(this.form[translation].name);
-                }
             },
         },
     };

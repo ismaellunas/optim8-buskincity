@@ -31,7 +31,6 @@ class PostCategoryController extends Controller
                 'term',
                 'view',
                 'status',
-                'slug'
             )),
             'pageNumber' => $request->page,
             'currentLanguage' => $this->translationService->currentLanguage(),
@@ -39,7 +38,6 @@ class PostCategoryController extends Controller
                 $request->term ?? '',
                 10,
                 $this->translationService->currentLanguage(),
-                $request->slug ?? null,
             ),
         ]);
     }

@@ -21,11 +21,8 @@ class CategoryMenu implements MenuInterface
     function getUrl(): string
     {
         $locale = $this->menuItem->locale;
-        $categoryTranslation = $this->menuItem->category->translateOrDefault($locale);
-
         return route('blog.category.index', [
             'locale' => $locale,
-            'slug' => $categoryTranslation->slug,
         ]);
     }
 }
