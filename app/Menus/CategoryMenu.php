@@ -22,7 +22,8 @@ class CategoryMenu implements MenuInterface
     {
         $locale = $this->menuItem->locale;
         return route('blog.category.index', [
-            'locale' => $locale,
+            'locale' => $this->menuItem->locale,
+            'id' => $this->menuItem->category_id,
         ]);
     }
 }
