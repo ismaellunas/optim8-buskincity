@@ -18,8 +18,9 @@
                             v-model="form[translation].name"
                             :label="`Category Name (${translation.toUpperCase()})`"
                             :message="error(translation+'.name')"
+                            @on-blur="populateSlug(translation)"
                         >
-                            <template v-slot:afterInput>
+                            <template #afterInput>
                                 <div class="control">
                                     <sdb-button-icon
                                         v-if="translation !== defaultLocale"
@@ -31,6 +32,12 @@
                                 </div>
                             </template>
                         </sdb-form-input-addons>
+                        <sdb-form-slug
+                            v-model="form[translation].slug"
+                            :label="`Category Slug (${translation.toUpperCase()})`"
+                            :message="error(translation+'.slug')"
+                            :required="false"
+                        />
                     </div>
                 </div>
             </div>
@@ -75,26 +82,28 @@
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbFormInputAddons from '@/Sdb/Form/InputAddons';
+    import SdbFormSlug from '@/Sdb/Form/Slug';
     import SdbLabel from '@/Sdb/Label';
     import SdbSelect from '@/Sdb/Select';
     import { confirmDelete } from '@/Libs/alert';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import { isBlank, convertToSlug } from '@/Libs/utils';
     import { reactive } from "vue";
-    import { pull, sortBy } from 'lodash';
+    import { pull, sortBy, isEmpty } from 'lodash';
 
     export default {
         name: 'CategoryForm',
-        mixins: [
-            HasPageErrors
-        ],
         components: {
             SdbButton,
             SdbButtonIcon,
             SdbButtonLink,
             SdbFormInputAddons,
+            SdbFormSlug,
             SdbLabel,
             SdbSelect,
         },
+        mixins: [
+            HasPageErrors
+        ],
         props: {
             baseRoute: String,
             category: Object,
@@ -118,12 +127,15 @@
                 });
 
                 props.category.translations.forEach(translation => {
-                    fields[translation.locale] = {name: translation.name};
+                    fields[translation.locale] = {
+                        name: translation.name,
+                        slug: translation.slug
+                    };
                 });
             } else {
                 providedLocales = ['en'];
 
-                fields = { en: { name: null } };
+                fields = { en: { name: null, slug: null } };
             }
 
             return {
@@ -132,37 +144,6 @@
                     return !providedLocales.includes(localeOption.id);
                 })?.id,
             };
-        },
-        methods: {
-            updateSelectedLocale() {
-                const usedLocales = Object.keys(this.form);
-
-                if (this.hasAvailableLocales) {
-                    const firstAvailabeLocale = this
-                        .availableLocales
-                        .find((localeOption) => {
-                            return !usedLocales.includes(localeOption.id);
-                        });
-
-                    this.selectedLocale = firstAvailabeLocale?.id;
-                } else {
-                    this.selectedLocale = null;
-                }
-            },
-            addTranslation() {
-                this.form[this.selectedLocale] = {name: null};
-
-                this.updateSelectedLocale();
-            },
-            removeTranslation(locale) {
-                const self = this;
-                confirmDelete().then((result) => {
-                    if (result.isConfirmed) {
-                        delete self.form[locale];
-                        self.updateSelectedLocale();
-                    }
-                });
-            },
         },
         computed: {
             availableLocales() {
@@ -182,6 +163,45 @@
                 sortedExistingLocales.unshift(this.defaultLocale);
                 return sortedExistingLocales;
             }
+        },
+        methods: {
+            updateSelectedLocale() {
+                const usedLocales = Object.keys(this.form);
+
+                if (this.hasAvailableLocales) {
+                    const firstAvailabeLocale = this
+                        .availableLocales
+                        .find((localeOption) => {
+                            return !usedLocales.includes(localeOption.id);
+                        });
+
+                    this.selectedLocale = firstAvailabeLocale?.id;
+                } else {
+                    this.selectedLocale = null;
+                }
+            },
+            addTranslation() {
+                this.form[this.selectedLocale] = {
+                    name: null,
+                    slug: null,
+                };
+
+                this.updateSelectedLocale();
+            },
+            removeTranslation(locale) {
+                const self = this;
+                confirmDelete().then((result) => {
+                    if (result.isConfirmed) {
+                        delete self.form[locale];
+                        self.updateSelectedLocale();
+                    }
+                });
+            },
+            populateSlug(translation) {
+                if (isEmpty(this.form[translation].slug)) {
+                    this.form[translation].slug = convertToSlug(this.form[translation].name);
+                }
+            },
         },
     };
 </script>
