@@ -14,7 +14,7 @@ use App\Services\{
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class ThemeFooterController extends CrudController
+class ThemeFooterController extends ThemeOptionController
 {
     private $menuService;
     private $settingService;
@@ -50,7 +50,7 @@ class ThemeFooterController extends CrudController
         );
     }
 
-    public function updateLayout(Request $request)
+    public function update(Request $request)
     {
         $layout = $request->layout;
 
@@ -61,10 +61,5 @@ class ThemeFooterController extends CrudController
         $this->generateFlashMessage('Footer layout updated successfully!');
 
         return redirect()->route($this->baseRouteName.'.edit');
-    }
-
-    public function destroy($id)
-    {
-        //
     }
 }
