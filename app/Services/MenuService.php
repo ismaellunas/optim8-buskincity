@@ -16,6 +16,7 @@ use App\Services\TranslationService as TranslationSv;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class MenuService
 {
@@ -232,21 +233,43 @@ class MenuService
         ];
     }
 
-    public function getRecordPages()
+    public function getRecordPages(): Collection
     {
-        $pages = Page::all();
-        return $pages->sortBy('title');
+        return Page::with([
+                'translations' => function ($query) {
+                    $query->select([
+                        'id',
+                        'page_id',
+                        'locale',
+                        'title',
+                    ]);
+                },
+            ])
+            ->get(['id']);
     }
 
-    public function getRecordPosts()
+    public function getRecordPosts(): Collection
     {
-        $posts = Post::published()->get();
-        return $posts->sortBy('title');
+        return Post::published()->get([
+            'id',
+            'locale',
+            'status',
+            'title',
+        ]);
     }
 
-    public function getRecordCategories()
+    public function getRecordCategories(): Collection
     {
-        $categories = Category::all();
-        return $categories->sortBy('name');
+        return Category::with([
+                'translations' => function ($query) {
+                    $query->select([
+                        'id',
+                        'category_id',
+                        'locale',
+                        'name',
+                    ]);
+                },
+            ])
+            ->get(['id']);
     }
 }
