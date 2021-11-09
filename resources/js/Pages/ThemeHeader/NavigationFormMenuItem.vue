@@ -184,11 +184,11 @@
             }
 
             return {
-                categories: usePage().props.value.categories,
+                categories: sortBy(usePage().props.value.categories, [(category) => category.name]),
                 defaultLocale: usePage().props.value.defaultLanguage,
                 form: reactive(fields),
-                pages: usePage().props.value.pages,
-                posts: usePage().props.value.posts,
+                pages: sortBy(usePage().props.value.pages, [(page) => page.title]),
+                posts: sortBy(usePage().props.value.posts, [(post) => post.title]),
                 types: usePage().props.value.types,
             };
         },
