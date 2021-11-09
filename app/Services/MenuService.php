@@ -233,7 +233,7 @@ class MenuService
         ];
     }
 
-    public function getRecordPages(): Collection
+    public function getPageOptions(): array
     {
         return Page::with([
                 'translations' => function ($query) {
@@ -245,20 +245,33 @@ class MenuService
                     ]);
                 },
             ])
-            ->get(['id']);
+            ->get(['id'])
+            ->map(function ($page) {
+                return [
+                    'id' => $page->id,
+                    'value' => $page->title,
+                ];
+            })
+            ->all();
     }
 
-    public function getRecordPosts(): Collection
+    public function getPostOptions(): array
     {
         return Post::published()->get([
             'id',
             'locale',
             'status',
             'title',
-        ]);
+        ])->map(function ($post) {
+            return [
+                'id' => $post->id,
+                'value' => $post->title,
+            ];
+        })
+        ->all();
     }
 
-    public function getRecordCategories(): Collection
+    public function getCategoryOptions(): array
     {
         return Category::with([
                 'translations' => function ($query) {
@@ -270,6 +283,13 @@ class MenuService
                     ]);
                 },
             ])
-            ->get(['id']);
+            ->get(['id'])
+            ->map(function ($category) {
+                return [
+                    'id' => $category->id,
+                    'value' => $category->name,
+                ];
+            })
+            ->all();
     }
 }
