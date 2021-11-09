@@ -122,7 +122,8 @@
     import SdbModalCard from '@/Sdb/ModalCard';
     import { isBlank } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
-    import { usePage, useForm } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/inertia-vue3';
+    import { reactive } from 'vue';
 
     export default {
         name: 'NavigationFormMenu',
@@ -169,7 +170,7 @@
             if (!isBlank(props.menuItem)) {
                 fields = props.menuItem;
             } else {
-                fields = {
+                fields = reactive({
                     id: null,
                     locale: props.selectedLocale,
                     title: null,
@@ -182,7 +183,7 @@
                     post_id: null,
                     category_id: null,
                     children: [],
-                };
+                });
             }
 
             return {
