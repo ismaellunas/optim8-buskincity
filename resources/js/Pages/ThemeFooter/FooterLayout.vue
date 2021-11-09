@@ -58,7 +58,7 @@
         methods: {
             saveLayout() {
                 this.$inertia.post(
-                    route(this.baseRouteName+".layout.update"),
+                    route(this.baseRouteName+".update"),
                     this.form,
                     {
                         onSuccess: (page) => {

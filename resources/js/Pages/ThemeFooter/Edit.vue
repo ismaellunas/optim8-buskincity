@@ -120,6 +120,10 @@
                 if (tab == 'layout') {
                     this.$refs.footerLayout.saveLayout();
                 }
+
+                if (tab == 'navigation') {
+                    this.$refs.footerNavigation.updateMenuItems();
+                }
             },
         }
     }
