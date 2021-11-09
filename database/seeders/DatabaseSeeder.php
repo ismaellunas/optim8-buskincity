@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
         $adminUser->assignRole('Administrator');
 
         $category = Category::factory()
-            ->hasTranslations(1, ['name' => 'News'])
+            ->hasTranslations(1, ['name' => 'News', 'slug' => 'news'])
             ->create();
 
         Post::factory()
