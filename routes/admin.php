@@ -12,6 +12,7 @@ use App\Http\Controllers\{
     ThemeFontController,
     ThemeFontSizeController,
     ThemeFooterController,
+    ThemeFooterMenuController,
     ThemeHeaderController,
     ThemeHeaderMenuController,
     UserController,
@@ -80,8 +81,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::delete('/{menuItem}/destroy', [ThemeHeaderMenuController::class, 'destroy'])->name('destroy');
         });
 
-        Route::get('/footer', [ThemeFooterController::class, 'edit'])->name('footer.edit');
-        Route::post('/footer/layout', [ThemeFooterController::class, 'updateLayout'])->name('footer.layout.update');
+        Route::prefix('footer')->name('footer.')->group(function () {
+            Route::get('/', [ThemeFooterController::class, 'edit'])->name('edit');
+            Route::post('/', [ThemeFooterController::class, 'update'])->name('update');
+            Route::post('/menu-item', [ThemeFooterMenuController::class, 'update'])->name('update-menu-item');
+            Route::delete('/{menuItem}/destroy', [ThemeFooterMenuController::class, 'destroy'])->name('destroy');
+        });
+
         Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');
         Route::post('/advance', [ThemeAdvanceController::class, 'update'])->name('advance.update');
         Route::get('/fonts', [ThemeFontController::class, 'edit'])->name('fonts.edit');
