@@ -32,20 +32,22 @@ class MenuItem extends BaseModel
         self::TYPE_CATEGORY => 'Category',
     ];
 
-    public function updateMenuItems(array $inputs)
+    public function updateMenuItems(array $inputs, $menuId)
     {
-        foreach ($inputs as $input) {
-            $this->updateMenuItem($input);
-        }
+        $this->updateMenuItem($inputs, null, $menuId);
     }
 
-    private function updateMenuItem(array $inputs, $parentId = null)
-    {
+    private function updateMenuItem(
+        array $inputs,
+        $parentId = null,
+        $menuId = null
+    ) {
         $order = 1;
-        foreach ($inputs as $input) {
+        foreach ($inputs as $key => $input) {
             $input = $this->setNullInput($input);
             $input['order'] = $order;
             $input['parent_id'] = $parentId;
+            $input['menu_id'] = $menuId;
 
             $menuItem = self::updateOrCreate([
                 'id' => $input['id'],
@@ -53,7 +55,7 @@ class MenuItem extends BaseModel
             ], $input);
 
             if (count($input['children']) > 0) {
-                $this->updateMenuItem($input['children'], $menuItem['id']);
+                $this->updateMenuItem($input['children'], $menuItem['id'], $menuId);
             }
 
             $order++;

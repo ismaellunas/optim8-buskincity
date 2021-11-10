@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MenuItemRequest;
-use App\Models\MenuItem;
+use Illuminate\Http\Request;
+use App\Models\{
+    Menu,
+    MenuItem
+};
 
 class ThemeHeaderMenuController extends ThemeOptionController
 {
@@ -11,12 +15,18 @@ class ThemeHeaderMenuController extends ThemeOptionController
 
     protected $baseRouteName = 'admin.theme.header';
 
-    public function update(MenuItemRequest $request)
+    public function update(Request $request)
     {
         $inputs = $request->all();
 
         $menuItems = new $this->model;
-        $menuItems->updateMenuItems($inputs);
+
+        $menu = Menu::firstOrCreate([
+            'locale' => $inputs['locale'],
+            'type' => Menu::TYPE_HEADER,
+        ]);
+
+        $menuItems->updateMenuItems($inputs['menuItems'], $menu->id);
 
         $this->generateFlashMessage('Menu navigation successfully Saved!');
 
