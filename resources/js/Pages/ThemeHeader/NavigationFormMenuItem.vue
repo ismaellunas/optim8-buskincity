@@ -123,7 +123,7 @@
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbModalCard from '@/Sdb/ModalCard';
     import { isBlank } from '@/Libs/utils';
-    import { cloneDeep } from 'lodash';
+    import { cloneDeep, sortBy } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { reactive } from 'vue';
 
