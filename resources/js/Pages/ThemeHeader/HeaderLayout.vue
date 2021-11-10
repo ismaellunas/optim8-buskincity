@@ -12,8 +12,8 @@
             <div class="column is-3">
                 <div
                     class="card card-hover"
-                    :class="form.layout == 1 ? 'is-active' : ''"
-                    @click="form.layout = 1"
+                    :class="modelValue == 1 ? 'is-active' : ''"
+                    @click="updateFormLayout(1)"
                 >
                     <div class="card-content">
                         <div class="content">
@@ -25,8 +25,8 @@
             <div class="column is-3">
                 <div
                     class="card card-hover"
-                    :class="form.layout == 2 ? 'is-active' : ''"
-                    @click="form.layout = 2"
+                    :class="modelValue == 2 ? 'is-active' : ''"
+                    @click="updateFormLayout(2)"
                 >
                     <div class="card-content">
                         <div class="content">
@@ -38,8 +38,8 @@
             <div class="column is-3">
                 <div
                     class="card card-hover"
-                    :class="form.layout == 3 ? 'is-active' : ''"
-                    @click="form.layout = 3"
+                    :class="modelValue == 3 ? 'is-active' : ''"
+                    @click="updateFormLayout(3)"
                 >
                     <div class="card-content">
                         <div class="content">
@@ -53,18 +53,25 @@
 </template>
 
 <script>
-    import { success as successAlert  } from '@/Libs/alert';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'HeaderLayout',
 
         props: {
+            modelValue: {
+                type: Number,
+                required: true,
+            },
             setting: {
                 type: Object,
                 required: true
             },
         },
+
+        emits: [
+            'update:modelValue'
+        ],
 
         setup() {
             return {
@@ -72,25 +79,9 @@
             };
         },
 
-        data() {
-            return {
-                form: {
-                    layout: parseInt(this.setting.value),
-                },
-            };
-        },
-
         methods: {
-            saveLayout() {
-                this.$inertia.post(
-                    route(this.baseRouteName+".layout.update"),
-                    this.form,
-                    {
-                        onSuccess: (page) => {
-                            successAlert(page.props.flash.message);
-                        }
-                    }
-                )
+            updateFormLayout(value) {
+                this.$emit('update:modelValue', value);
             },
         },
     }
