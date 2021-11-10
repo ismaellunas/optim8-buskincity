@@ -26,12 +26,10 @@ class MenuItemFactory extends Factory
     public function definition()
     {
         return [
-            'locale' => config('app.fallback_locale'),
             'title' => "Dummy Menu",
             'type' => MenuItem::TYPE_PAGE,
             'order' => 1,
             'menu_id' => Menu::factory(),
-            'page_id' => Page::factory()->hasTranslations(1),
         ];
     }
 }
