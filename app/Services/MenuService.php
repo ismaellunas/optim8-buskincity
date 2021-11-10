@@ -39,18 +39,20 @@ class MenuService
     private function getMenuItems(
         string $locale,
         string $type
-    ): array
-    {
-        return MenuItem::where('locale', $locale)
-            ->orderBy('order', 'ASC')
-            ->orderBy('parent_id', 'ASC')
-            ->whereHas('menu', function ($query) use ($type) {
+    ): array {
+        return MenuItem::
+            whereHas('menu', function ($query) use ($type, $locale) {
+
+                $query->where('locale', $locale);
+
                 if ($type == "header") {
                     $query->header();
                 } else {
                     $query->footer();
                 }
             })
+            ->orderBy('order', 'ASC')
+            ->orderBy('parent_id', 'ASC')
             ->get()
             ->toArray();
     }
