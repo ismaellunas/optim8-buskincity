@@ -24,7 +24,7 @@
             <div class="column">
                 <navigation-menu
                     :is-child="false"
-                    :items="menuForm.menuItems"
+                    :items="menuForm.menu_items"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
                     @change="checkNestedMenuItems"
@@ -127,7 +127,7 @@
             getMenuForm(locale) {
                 return useForm({
                     locale: locale,
-                    menuItems: this.headerMenus[locale],
+                    menu_items: this.headerMenus[locale],
                 });
             },
 
