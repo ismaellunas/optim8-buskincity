@@ -11,22 +11,18 @@ use App\Models\{
 
 class ThemeHeaderMenuController extends ThemeOptionController
 {
-    private $model = MenuItem::class;
-
     protected $baseRouteName = 'admin.theme.header';
 
     public function update(Request $request)
     {
         $inputs = $request->all();
 
-        $menuItems = new $this->model;
-
         $menu = Menu::firstOrCreate([
             'locale' => $inputs['locale'],
             'type' => Menu::TYPE_HEADER,
         ]);
 
-        $menuItems->updateMenuItems($inputs['menuItems'], $menu->id);
+        $menu->syncMenuItems($inputs['menu_items']);
 
         $this->generateFlashMessage('Menu navigation successfully Saved!');
 
