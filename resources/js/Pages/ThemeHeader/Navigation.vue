@@ -168,16 +168,16 @@
 
             checkNestedMenuItems() {
                 let self = this;
-                forEach(self.items[self.selectedLocale], function(values) {
+                forEach(self.menuForm.menu_items, function(values) {
                     forEach(values.children, function(value) {
                         if (value['children'].length > 0) {
-                            self.items[self.selectedLocale] = self.lastMenuItems[self.selectedLocale];
+                            self.menuForm.menu_items = self.lastDataMenuItems;
                             oopsAlert(null, "Cannot add nested menu more than 2");
                         }
                     });
                 });
 
-                self.updateLastDataMenuItem();
+                self.updateLastDataMenuItems();
             },
 
             updateLastDataMenuItems() {
