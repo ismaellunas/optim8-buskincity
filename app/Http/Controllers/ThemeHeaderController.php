@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ThemeHeaderLayoutRequest as LayoutRequest;
+use App\Http\Requests\ThemeHeaderLayoutRequest;
 use App\Models\{
     Menu,
     MenuItem,
@@ -51,7 +51,7 @@ class ThemeHeaderController extends ThemeOptionController
         );
     }
 
-    public function update(LayoutRequest $request)
+    public function update(ThemeHeaderLayoutRequest $request)
     {
         $inputs = $request->all();
 
