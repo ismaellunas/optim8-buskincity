@@ -55,6 +55,12 @@
                     >
                         <option :value="option.id">
                             {{ option.value }}
+                            <template
+                                v-for="locale, index in option.locales"
+                                :key="index"
+                            >
+                                [{{ locale.toUpperCase() }}]
+                            </template>
                         </option>
                     </template>
                 </sdb-form-select>
@@ -70,7 +76,7 @@
                         :key="option.id"
                     >
                         <option :value="option.id">
-                            {{ option.value }}
+                            {{ option.value }} [{{ option.locale.toUpperCase() }}]
                         </option>
                     </template>
                 </sdb-form-select>
@@ -87,6 +93,12 @@
                     >
                         <option :value="option.id">
                             {{ option.value }}
+                            <template
+                                v-for="locale, index in option.locales"
+                                :key="index"
+                            >
+                                [{{ locale.toUpperCase() }}]
+                            </template>
                         </option>
                     </template>
                 </sdb-form-select>
