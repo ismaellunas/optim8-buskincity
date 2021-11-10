@@ -198,25 +198,11 @@
             },
 
             updateMenuItems() {
-                // this.items.post(route(this.baseRouteName+'.update-menu-item'), {
-                //     preserveScroll: true,
-                //     onSuccess: (page) => {
-                //         successAlert(page.props.flash.message);
-                //         this.syncMenuItems();
-                //     },
-                //     onError: () => {
-                //         this.items = useForm(this.lastMenuItems);
-                //     }
-                // });
-
                 this.menuForm.post(route(this.baseRouteName+'.update-menu-item'), {
                     preserveScroll: true,
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
-                        this.syncMenuItems();
-                    },
-                    onError: () => {
-                        this.items = useForm(this.lastMenuItems);
+                        this.updateLastDataMenuItems();
                     }
                 });
             },
