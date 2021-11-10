@@ -174,9 +174,8 @@
             } else {
                 fields = reactive({
                     id: null,
-                    locale: props.selectedLocale,
                     title: null,
-                    type: 'Url',
+                    type: 1,
                     url: null,
                     order: null,
                     parent_id: null,
@@ -207,19 +206,19 @@
 
         computed: {
             isTypeUrl() {
-                return this.form.type == 'Url';
+                return this.form.type == '1';
             },
 
             isTypePage() {
-                return this.form.type == 'Page';
+                return this.form.type == '2';
             },
 
             isTypePost() {
-                return this.form.type == 'Post';
+                return this.form.type == '3';
             },
 
             isTypeCategory() {
-                return this.form.type == 'Category'
+                return this.form.type == '4'
             },
         },
 
