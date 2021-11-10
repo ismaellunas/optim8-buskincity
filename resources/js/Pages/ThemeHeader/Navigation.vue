@@ -185,9 +185,7 @@
                 cloneMenuItem['parent_id'] = null;
                 cloneMenuItem['children'] = [];
 
-                this.items[locale].push(
-                    cloneDeep(cloneMenuItem)
-                );
+                this.items[locale].push(cloneMenuItem);
 
                 this.changeLocale(locale);
                 this.updateLastDataMenuItem();
