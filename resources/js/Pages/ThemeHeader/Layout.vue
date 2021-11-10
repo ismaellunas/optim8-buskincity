@@ -36,11 +36,17 @@
             },
         },
 
-        setup(props) {
+        setup() {
             return {
                 baseRouteName: usePage().props.value.baseRouteName ?? null,
+            };
+        },
+
+        data() {
+            return {
+                loader: null,
                 form: useForm({
-                    layout: parseInt(props.settings.header_layout.value),
+                    layout: parseInt(this.settings.header_layout.value),
                     logo: {
                         file: null,
                         file_name: null,
@@ -52,15 +58,9 @@
             };
         },
 
-        data() {
-            return {
-                loader: null,
-            };
-        },
-
         methods: {
             isFormDirty() {
-                return this.form.isDirty;
+                return this.form?.isDirty;
             },
 
             onSubmit() {
