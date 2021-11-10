@@ -21,6 +21,12 @@
                         </div>
                     </div>
                 </div>
+                <p
+                    class="has-text-weight-semibold mt-2"
+                    :class="modelValue == 1 ? 'has-text-link' : ''"
+                >
+                    Standard
+                </p>
             </div>
             <div class="column is-3">
                 <div
@@ -34,6 +40,12 @@
                         </div>
                     </div>
                 </div>
+                <p
+                    class="has-text-weight-semibold mt-2"
+                    :class="modelValue == 2 ? 'has-text-link' : ''"
+                >
+                    Centered Logo
+                </p>
             </div>
             <div class="column is-3">
                 <div
@@ -47,6 +59,12 @@
                         </div>
                     </div>
                 </div>
+                <p
+                    class="has-text-weight-semibold mt-2"
+                    :class="modelValue == 3 ? 'has-text-link' : ''"
+                >
+                    Standard With Social Media
+                </p>
             </div>
         </div>
     </div>
@@ -89,7 +107,7 @@
 
 <style scoped>
     .is-active {
-        border: 2px solid rgb(67, 67, 235);
+        border: 2px solid hsl(217, 71%, 53%);
     }
 
     .card-hover {
