@@ -17,40 +17,34 @@ class MenuItemRequest extends FormRequest
     public function rules()
     {
         return [
-            '*.*.locale' => [
-                'sometimes',
-                'required',
-                'max:15',
-                Rule::in(config('constants.locale')),
-            ],
-            '*.*.title' => [
+            'menu_items.*.title' => [
                 'sometimes',
                 'required',
                 'max:255',
             ],
-            '*.*.type' => [
+            'menu_items.*.type' => [
                 'sometimes',
                 'required',
-                'max:255',
+                'integer',
                 Rule::in(array_keys(MenuItem::TYPE_VALUES)),
             ],
-            '*.*.url' => 'nullable',
-            '*.*.page_id' => [
+            'menu_items.*.url' => 'nullable',
+            'menu_items.*.page_id' => [
                 'nullable',
                 'integer',
                 'exists:pages,id'
             ],
-            '*.*.post_id' => [
+            'menu_items.*.post_id' => [
                 'nullable',
                 'integer',
                 'exists:posts,id'
             ],
-            '*.*.category_id' => [
+            'menu_items.*.category_id' => [
                 'nullable',
                 'integer',
                 'exists:categories,id'
             ],
-            '*.*.menu_id' => [
+            'menu_items.*.menu_id' => [
                 'required',
                 'integer',
                 'exists:menus,id'
@@ -61,7 +55,6 @@ class MenuItemRequest extends FormRequest
     public function attributes()
     {
         $attr = [];
-        $locales = TranslationSv::getLocaleOptions();
         $columns = [
             'locale',
             'title',
@@ -72,11 +65,9 @@ class MenuItemRequest extends FormRequest
             'menu_id',
         ];
 
-        foreach ($locales as $locale) {
-            foreach ($columns as $column) {
-                for ($i = 0; $i < count($this[$locale['id']]); $i++) {
-                    $attr[$locale['id'].".".$i.".".$column] = ucwords(str_replace('_', ' ', $column))." (".$locale['name'].") ";
-                }
+        foreach ($columns as $column) {
+            for ($i = 0; $i < count($this['menu_items']); $i++) {
+                $attr["menu_items.".$i.".".$column] = ucwords(str_replace('_', ' ', $column))." (".strtoupper($this['locale']).") ";
             }
         }
 
