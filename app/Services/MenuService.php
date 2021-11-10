@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\{
     Category,
     Media,
+    Menu,
     MenuItem,
     Page,
     Post,
@@ -36,56 +37,9 @@ class MenuService
         return '-';
     }
 
-    private function getMenuItems(
-        string $locale,
-        string $type
-    ): array {
-        return MenuItem::
-            whereHas('menu', function ($query) use ($type, $locale) {
-
-                $query->where('locale', $locale);
-
-                if ($type == "header") {
-                    $query->header();
-                } else {
-                    $query->footer();
-                }
-            })
-            ->orderBy('order', 'ASC')
-            ->orderBy('parent_id', 'ASC')
-            ->get()
-            ->toArray();
-    }
-
-    private function generateMenuItems(
-        array $menuItems,
-        $parentId = null
-    ): array {
-        $menus = [];
-        foreach ($menuItems as $menuItem) {
-            if ($menuItem['parent_id'] == $parentId) {
-                $children = $this->generateMenuItems($menuItems, $menuItem['id']);
-
-                if ($children) {
-                    $menuItem['children'] = $children;
-                } else {
-                    $menuItem['children'] = [];
-                }
-
-                $className = "\App\Entities\Menus\\".MenuItem::TYPE_VALUES[$menuItem['type']]."Menu";
-                $typeMenu = new $className($menuItem['id']);
-                $menuItem['link'] = $typeMenu->getUrl();
-
-                $menus[] = $menuItem;
-            }
-        }
-
-        return $menus;
-    }
-
     public function generateMenus(
         ?string $locale = null,
-        string $type = "header"
+        string $type = Menu::TYPE_HEADER
     ) :array {
         $menus = [];
 
@@ -98,8 +52,7 @@ class MenuService
         }
 
         foreach ($locales as $locale) {
-            $menuItems = $this->getMenuItems($locale['id'], $type);
-            $menus[$locale['id']] = $this->generateMenuItems($menuItems);
+            $menus[$locale['id']] = Menu::generateMenuItems($locale['id']);
         }
 
         return $menus;
