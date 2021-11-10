@@ -10,7 +10,8 @@
                 @click="$emit('close')"
             />
         </template>
-        <form method="post">
+
+        <form @submit.prevent="onSubmit">
             <fieldset>
                 <sdb-form-input
                     v-model="form.title"
@@ -103,6 +104,7 @@
                         </sdb-button>
                         <sdb-button
                             class="is-primary ml-1"
+                            type="button"
                             @click="onSubmit()"
                         >
                             {{ menuItem.id ? 'Update' : 'Create' }}
