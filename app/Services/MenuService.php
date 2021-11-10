@@ -72,7 +72,7 @@ class MenuService
                     $menuItem['children'] = [];
                 }
 
-                $className = "\App\Entities\Menus\\".$menuItem['type']."Menu";
+                $className = "\App\Entities\Menus\\".MenuItem::TYPE_VALUES[$menuItem['type']]."Menu";
                 $typeMenu = new $className($menuItem['id']);
                 $menuItem['link'] = $typeMenu->getUrl();
 

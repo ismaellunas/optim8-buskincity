@@ -63,7 +63,7 @@ class MenuItem extends BaseModel
 
     private function setNullInput($input)
     {
-        $className = "\App\Entities\Menus\\".$input['type']."Menu";
+        $className = "\App\Entities\Menus\\".MenuItem::TYPE_VALUES[$input['type']]."Menu";
         $menu = new $className();
 
         foreach ($menu->nullFields() as $nullField) {
