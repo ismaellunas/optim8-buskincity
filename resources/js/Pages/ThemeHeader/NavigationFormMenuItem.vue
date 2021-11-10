@@ -27,11 +27,11 @@
                     :message="error('type')"
                 >
                     <template
-                        v-for="(type, index) in types"
-                        :key="index"
+                        v-for="option in typeOptions"
+                        :key="option.id"
                     >
-                        <option :value="type">
-                            {{ type }}
+                        <option :value="option.id">
+                            {{ option.value }}
                         </option>
                     </template>
                 </sdb-form-select>
@@ -195,7 +195,7 @@
                 firstFields: cloneDeep(fields),
                 pageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
                 postOptions: sortBy(usePage().props.value.postOptions, [(option) => option.value]),
-                types: usePage().props.value.types,
+                typeOptions: usePage().props.value.typeOptions,
             };
         },
 
