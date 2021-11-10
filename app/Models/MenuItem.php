@@ -32,48 +32,6 @@ class MenuItem extends BaseModel
         self::TYPE_CATEGORY => 'Category',
     ];
 
-    public function updateMenuItems(array $inputs, $menuId)
-    {
-        $this->updateMenuItem($inputs, null, $menuId);
-    }
-
-    private function updateMenuItem(
-        array $inputs,
-        $parentId = null,
-        $menuId = null
-    ) {
-        $order = 1;
-        foreach ($inputs as $key => $input) {
-            $input = $this->setNullInput($input);
-            $input['order'] = $order;
-            $input['parent_id'] = $parentId;
-            $input['menu_id'] = $menuId;
-
-            $menuItem = self::updateOrCreate([
-                'id' => $input['id'],
-                'menu_id' => $input['menu_id'],
-            ], $input);
-
-            if (count($input['children']) > 0) {
-                $this->updateMenuItem($input['children'], $menuItem['id'], $menuId);
-            }
-
-            $order++;
-        }
-    }
-
-    private function setNullInput($input)
-    {
-        $className = "\App\Entities\Menus\\".MenuItem::TYPE_VALUES[$input['type']]."Menu";
-        $menu = new $className();
-
-        foreach ($menu->nullFields() as $nullField) {
-            $input[$nullField] = null;
-        }
-
-        return $input;
-    }
-
     // Relation
     public function menu()
     {
