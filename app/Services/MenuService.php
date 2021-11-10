@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\{
     Category,
     Media,
-    Menu,
     MenuItem,
     Page,
     Post,
@@ -14,9 +13,7 @@ use App\Models\{
 };
 use App\Services\TranslationService as TranslationSv;
 use Carbon\Carbon;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 class MenuService
 {
