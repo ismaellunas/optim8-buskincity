@@ -5,7 +5,6 @@ namespace Database\Factories;
 use App\Models\{
     Menu,
     MenuItem,
-    Page,
 };
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -27,7 +26,7 @@ class MenuItemFactory extends Factory
     {
         return [
             'title' => "Dummy Menu",
-            'type' => MenuItem::TYPE_PAGE,
+            'type' => MenuItem::TYPE_URL,
             'order' => 1,
             'menu_id' => Menu::factory(),
         ];
