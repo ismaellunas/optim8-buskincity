@@ -55,7 +55,7 @@
     import NavigationMenu from './NavigationMenu';
     import SdbButton from '@/Sdb/Button';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
-    import { oops as oopsAlert, success as successAlert  } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert, confirm as confirmAlert } from '@/Libs/alert';
     import { forEach, cloneDeep } from 'lodash';
 
     export default {
@@ -128,6 +128,35 @@
                     menuItems: this.menuItems[locale],
                     locale: locale,
                 });
+                if (true) {
+                    const confirmationMessage = (
+                        'It looks like you have been editing something. '
+                        + 'If you leave before saving, your changes will be lost.'
+                    );
+
+                    confirmAlert(
+                        'Are you sure?',
+                        confirmationMessage,
+                        'Leave this',
+                        {
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Leave this',
+                            cancelButtonText: 'Continue Editing',
+                            scrollbarPadding: false,
+                        })
+                        .then((result) => {
+                            if (result.isDismissed) {
+                                return false;
+                            } else if(result.isConfirmed) {
+                                this.selectedLocale = locale;
+                            }
+                        });
+                } else {
+                    this.selectedLocale = locale;
+                }
             },
 
             openFormModal() {
