@@ -14,13 +14,13 @@ class PageMenu implements MenuInterface
     function __construct($id = null)
     {
         $this->menuItem = MenuItem::where('id', $id)
-            ->with('page')
+            ->with(['page', 'menu'])
             ->first();
     }
 
     function getUrl(): string
     {
-        $locale = $this->menuItem->locale;
+        $locale = $this->menuItem->menu->locale;
         $page = $this->menuItem->page->translateOrDefault($locale);
 
         return route('frontend.pages.show', [
