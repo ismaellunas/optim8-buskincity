@@ -209,9 +209,9 @@
 
                 confirmDelete("Are you sure?", message).then((result) => {
                     if (result.isConfirmed) {
+                        /*
                         self.deleteRow(items[index]);
 
-                        /*
                         forEach(items[index].children, function(item) {
                             self.deleteRow(item);
                         });
