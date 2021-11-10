@@ -13,7 +13,7 @@ class ThemeHeaderMenuController extends ThemeOptionController
 {
     protected $baseRouteName = 'admin.theme.header';
 
-    public function update(Request $request)
+    public function update(MenuItemRequest $request)
     {
         $inputs = $request->all();
 
