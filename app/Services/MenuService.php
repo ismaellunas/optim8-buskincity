@@ -246,9 +246,17 @@ class MenuService
             ])
             ->get(['id'])
             ->map(function ($page) {
+
+                $locales = $page
+                    ->translations
+                    ->map(function ($translation) {
+                        return $translation->locale;
+                    });
+
                 return [
                     'id' => $page->id,
                     'value' => $page->title,
+                    'locales' => $locales,
                 ];
             })
             ->all();
@@ -256,18 +264,20 @@ class MenuService
 
     public function getPostOptions(): array
     {
-        return Post::published()->get([
-            'id',
-            'locale',
-            'status',
-            'title',
-        ])->map(function ($post) {
-            return [
-                'id' => $post->id,
-                'value' => $post->title,
-            ];
-        })
-        ->all();
+        return Post::published()
+            ->get([
+                'id',
+                'locale',
+                'title',
+            ])
+            ->map(function ($post) {
+                return [
+                    'id' => $post->id,
+                    'value' => $post->title,
+                    'locale' => $post->locale,
+                ];
+            })
+            ->all();
     }
 
     public function getCategoryOptions(): array
@@ -284,9 +294,17 @@ class MenuService
             ])
             ->get(['id'])
             ->map(function ($category) {
+
+                $locales = $category
+                    ->translations
+                    ->map(function ($translation) {
+                        return $translation->locale;
+                    });
+
                 return [
                     'id' => $category->id,
                     'value' => $category->name,
+                    'locales' => $locales,
                 ];
             })
             ->all();
