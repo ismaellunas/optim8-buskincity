@@ -10,7 +10,8 @@
                 @click="onClose()"
             />
         </template>
-        <form method="post">
+
+        <form @submit.prevent="onSubmit">
             <fieldset>
                 <sdb-form-input
                     v-model="form.title"
@@ -49,11 +50,11 @@
                     :message="error('page_id')"
                 >
                     <template
-                        v-for="page in pages"
-                        :key="page.id"
+                        v-for="option in pageOptions"
+                        :key="option.id"
                     >
-                        <option :value="page.id">
-                            {{ page.title }}
+                        <option :value="option.id">
+                            {{ option.value }}
                         </option>
                     </template>
                 </sdb-form-select>
@@ -65,11 +66,11 @@
                     :message="error('post_id')"
                 >
                     <template
-                        v-for="post in posts"
-                        :key="post.id"
+                        v-for="option in postOptions"
+                        :key="option.id"
                     >
-                        <option :value="post.id">
-                            {{ post.title }}
+                        <option :value="option.id">
+                            {{ option.value }}
                         </option>
                     </template>
                 </sdb-form-select>
@@ -81,11 +82,11 @@
                     :message="error('category_id')"
                 >
                     <template
-                        v-for="category in categories"
-                        :key="category.id"
+                        v-for="option in categoryOptions"
+                        :key="option.id"
                     >
-                        <option :value="category.id">
-                            {{ category.name }}
+                        <option :value="option.id">
+                            {{ option.value }}
                         </option>
                     </template>
                 </sdb-form-select>
@@ -103,6 +104,7 @@
                         </sdb-button>
                         <sdb-button
                             class="is-primary ml-1"
+                            type="button"
                             @click="onSubmit()"
                         >
                             {{ menuItem.id ? 'Update' : 'Create' }}
@@ -187,12 +189,12 @@
             }
 
             return {
-                categories: usePage().props.value.categories,
+                categoryOptions: sortBy(usePage().props.value.categoryOptions, [(option) => option.value]),
                 defaultLocale: usePage().props.value.defaultLanguage,
                 form: fields,
                 firstFields: cloneDeep(fields),
-                pages: usePage().props.value.pages,
-                posts: usePage().props.value.posts,
+                pageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
+                postOptions: sortBy(usePage().props.value.postOptions, [(option) => option.value]),
                 types: usePage().props.value.types,
             };
         },
@@ -223,6 +225,7 @@
 
         methods: {
             onSubmit() {
+                const self = this;
                 const form = this.form;
 
                 if (isBlank(this.menuItem)) {

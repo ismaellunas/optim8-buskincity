@@ -39,12 +39,12 @@ class ThemeHeaderController extends ThemeOptionController
         return Inertia::render(
             $this->componentName.'Edit',
             $this->getData([
-                'categories' => $this->menuService->getRecordCategories(),
+                'categoryOptions' => $this->menuService->getCategoryOptions(),
                 'menu' => $this->modelMenu::header()->first(),
                 'menuItemLastSaved' => $this->menuService->getMenuItemLastSaved("header"),
                 'menuItems' => $this->menuService->generateMenus(),
-                'pages' => $this->menuService->getRecordPages(),
-                'posts' => $this->menuService->getRecordPosts(),
+                'pageOptions' => $this->menuService->getPageOptions(),
+                'postOptions' => $this->menuService->getPostOptions(),
                 'settings' => $this->settingService->getHeader(),
                 'types' => $this->modelMenuItem::TYPES,
             ]),

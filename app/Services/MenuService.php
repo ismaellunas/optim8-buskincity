@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\{
     Category,
     Media,
-    Menu,
     MenuItem,
     Page,
     Post,
@@ -14,7 +13,6 @@ use App\Models\{
 };
 use App\Services\TranslationService as TranslationSv;
 use Carbon\Carbon;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
 class MenuService
@@ -232,21 +230,63 @@ class MenuService
         ];
     }
 
-    public function getRecordPages()
+    public function getPageOptions(): array
     {
-        $pages = Page::all();
-        return $pages->sortBy('title');
+        return Page::with([
+                'translations' => function ($query) {
+                    $query->select([
+                        'id',
+                        'page_id',
+                        'locale',
+                        'title',
+                    ]);
+                },
+            ])
+            ->get(['id'])
+            ->map(function ($page) {
+                return [
+                    'id' => $page->id,
+                    'value' => $page->title,
+                ];
+            })
+            ->all();
     }
 
-    public function getRecordPosts()
+    public function getPostOptions(): array
     {
-        $posts = Post::published()->get();
-        return $posts->sortBy('title');
+        return Post::published()->get([
+            'id',
+            'locale',
+            'status',
+            'title',
+        ])->map(function ($post) {
+            return [
+                'id' => $post->id,
+                'value' => $post->title,
+            ];
+        })
+        ->all();
     }
 
-    public function getRecordCategories()
+    public function getCategoryOptions(): array
     {
-        $categories = Category::all();
-        return $categories->sortBy('name');
+        return Category::with([
+                'translations' => function ($query) {
+                    $query->select([
+                        'id',
+                        'category_id',
+                        'locale',
+                        'name',
+                    ]);
+                },
+            ])
+            ->get(['id'])
+            ->map(function ($category) {
+                return [
+                    'id' => $category->id,
+                    'value' => $category->name,
+                ];
+            })
+            ->all();
     }
 }
