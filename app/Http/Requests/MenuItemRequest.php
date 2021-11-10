@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\MenuItem;
+use App\Services\TranslationService as TranslationSv;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -57,21 +58,28 @@ class MenuItemRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function attributes()
     {
-        $rule = [];
-        $columns = ['locale', 'title', 'type'];
-        $validations = ['required'];
-        $locales = config('constants.locale');
+        $attr = [];
+        $locales = TranslationSv::getLocaleOptions();
+        $columns = [
+            'locale',
+            'title',
+            'type',
+            'page_id',
+            'post_id',
+            'category_id',
+            'menu_id',
+        ];
 
         foreach ($locales as $locale) {
-            foreach ($validations as $validation) {
-                foreach ($columns as $column) {
-                    $rule[$locale.".*.".$column.".".$validation] = ucwords($column)." (".strtoupper($locale).") is ".$validation;
+            foreach ($columns as $column) {
+                for ($i = 0; $i < count($this[$locale['id']]); $i++) {
+                    $attr[$locale['id'].".".$i.".".$column] = ucwords(str_replace('_', ' ', $column))." (".$locale['name'].") ";
                 }
             }
         }
 
-        return $rule;
+        return $attr;
     }
 }
