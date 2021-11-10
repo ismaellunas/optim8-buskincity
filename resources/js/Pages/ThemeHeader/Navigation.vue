@@ -120,40 +120,45 @@
         },
 
         methods: {
-            changeLocale(locale) {
-                this.selectedLocale = locale;
-                this.menuForm = useForm({
-                    menuItems: this.menuItems[locale],
+            isFormDirty() {
+                return this.menuForm.isDirty;
+            },
+
+            getMenuForm(locale) {
+                return useForm({
                     locale: locale,
+                    menuItems: this.headerMenus[locale],
                 });
-                if (true) {
+            },
+
+            changeLocale(locale) {
+                if (this.menuForm.isDirty) {
                     const confirmationMessage = (
                         'It looks like you have been editing something. '
                         + 'If you leave before saving, your changes will be lost.'
                     );
 
-                    confirmAlert(
-                        'Are you sure?',
-                        confirmationMessage,
-                        'Leave this',
-                        {
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#d33',
-                            cancelButtonColor: '#3085d6',
-                            confirmButtonText: 'Leave this',
-                            cancelButtonText: 'Continue Editing',
-                            scrollbarPadding: false,
-                        })
-                        .then((result) => {
-                            if (result.isDismissed) {
-                                return false;
-                            } else if(result.isConfirmed) {
-                                this.selectedLocale = locale;
-                            }
-                        });
+                    confirmAlert('Are you sure?', confirmationMessage, 'Leave this', {
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Leave this',
+                        cancelButtonText: 'Continue Editing',
+                        scrollbarPadding: false,
+                    }).then((result) => {
+                        if (result.isDismissed) {
+                            return false;
+                        } else if(result.isConfirmed) {
+                            this.selectedLocale = locale;
+
+                            this.menuForm = this.getMenuForm(locale);
+                        }
+                    });
                 } else {
                     this.selectedLocale = locale;
+
+                    this.menuForm = this.getMenuForm(locale);
                 }
             },
 

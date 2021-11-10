@@ -113,7 +113,11 @@
         methods: {
             setActiveTab(tab) {
                 if (tab == 'layout') {
-                    this.activeTab = tab;
+                    if (this.$refs.navigation.isFormDirty()) {
+                        this.confirmAlert(tab);
+                    } else {
+                        this.activeTab = tab;
+                    }
                 }
 
                 if (tab == 'navigation') {
@@ -154,7 +158,7 @@
                 }).then((result) => {
                     if (result.isDismissed) {
                         return false;
-                    } else if(result.isConfirmed) {
+                    } else if (result.isConfirmed) {
                         this.activeTab = tab;
                     }
                 })
