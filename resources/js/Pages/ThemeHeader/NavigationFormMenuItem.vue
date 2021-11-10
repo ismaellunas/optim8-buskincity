@@ -175,7 +175,7 @@
         emits: [
             'addMenuItem',
             'close',
-            'updateLastDataMenuItem',
+            'updateLastDataMenuItems',
         ],
 
         setup(props) {
@@ -243,7 +243,7 @@
                     this.$emit('close');
                     this.$emit('addMenuItem', form);
                 } else {
-                    this.$emit('updateLastDataMenuItem');
+                    this.$emit('updateLastDataMenuItems');
                     this.$emit('close');
                 }
             },

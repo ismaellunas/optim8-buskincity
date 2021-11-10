@@ -7,7 +7,7 @@
         :animation="300"
         :class="panelClass"
         :group="{ name: 'g1' }"
-        :list="items"
+        :list="menuItems"
     >
         <template #item="{ element, index }">
             <div>
@@ -91,7 +91,7 @@
                             <sdb-button
                                 type="button"
                                 class="is-ghost has-text-black ml-1"
-                                @click="deleteConfirm(index)"
+                                @click="deleteRow(index)"
                             >
                                 <span class="icon is-small">
                                     <i class="far fa-trash-alt" />
@@ -102,12 +102,12 @@
                 </div>
                 <navigation-menu
                     v-if="!isChild"
-                    :items="element.children"
+                    :menu-items="element.children"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
                     @duplicate-menu-item-locale="duplicateMenuItemLocale"
                     @edit-row="editRow"
-                    @update-last-data-menu-item="updateLastDataMenuItem"
+                    @update-last-data-menu-items="updateLastDataMenuItems"
                 />
             </div>
         </template>
@@ -130,14 +130,13 @@
 </template>
 
 <script>
-    import axios from 'axios';
     import Draggable from "vuedraggable";
     import SdbButton from '@/Sdb/Button';
     import SdbDropdown from '@/Sdb/Dropdown';
     import SdbTag from '@/Sdb/Tag';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { confirmDelete } from '@/Libs/alert';
-    import { forEach, cloneDeep } from 'lodash';
+    import { cloneDeep } from 'lodash';
 
     export default {
         name: 'NavigationMenu',
@@ -154,7 +153,7 @@
                 type: Boolean,
                 default: true,
             },
-            items: {
+            menuItems: {
                 type: Array,
                 default:() => {},
             },
@@ -169,12 +168,11 @@
         },
 
         emits: [
-            'deleteRow',
             'duplicateMenuItemLocale',
             'editRow',
-            'items',
+            'menuItems',
             'openFormModal',
-            'updateLastDataMenuItem'
+            'updateLastDataMenuItems'
         ],
 
         setup() {
@@ -198,67 +196,51 @@
                 this.$emit('editRow', menuItem);
             },
 
-            deleteConfirm(index) {
+            deleteRow(index) {
                 const self = this;
-                const items = this.items;
+                const menuItems = this.menuItems;
                 let message = "";
 
-                if (items[index].children.length > 0) {
+                if (menuItems[index].children.length > 0) {
                     message = "A nested menu will deleted too."
                 }
 
                 confirmDelete("Are you sure?", message).then((result) => {
                     if (result.isConfirmed) {
-                        /*
-                        self.deleteRow(items[index]);
-
-                        forEach(items[index].children, function(item) {
-                            self.deleteRow(item);
-                        });
-                        */
-
-                        self.$emit('items', items.splice(index, 1));
-                        self.updateLastDataMenuItem();
+                        self.$emit('menuItems', menuItems.splice(index, 1));
+                        self.updateLastDataMenuItems();
                     }
                 });
             },
 
-            deleteRow(items) {
-                if (items.id !== null) {
-                    axios.delete(
-                        route(this.baseRouteName+'.destroy', items.id)
-                    );
-                }
-            },
-
             duplicateMenuItemAbove(menuItem, index) {
-                const items = this.items;
+                const menuItems = this.menuItems;
                 const cloneMenuItem = cloneDeep(menuItem);
 
                 cloneMenuItem['id'] = null;
                 cloneMenuItem['children'] = [];
 
-                this.$emit('items', items.splice(index, 0, cloneMenuItem));
-                this.updateLastDataMenuItem();
+                this.$emit('menuItems', menuItems.splice(index, 0, cloneMenuItem));
+                this.updateLastDataMenuItems();
             },
 
             duplicateMenuItemBelow(menuItem, index) {
-                const items = this.items;
+                const menuItems = this.menuItems;
                 const cloneMenuItem = cloneDeep(menuItem);
 
                 cloneMenuItem['id'] = null;
                 cloneMenuItem['children'] = [];
 
-                this.$emit('items', items.splice(index + 1, 0, cloneMenuItem));
-                this.updateLastDataMenuItem();
+                this.$emit('menuItems', menuItems.splice(index + 1, 0, cloneMenuItem));
+                this.updateLastDataMenuItems();
             },
 
             duplicateMenuItemLocale(locale, menuItem) {
                 this.$emit('duplicateMenuItemLocale', locale, menuItem);
             },
 
-            updateLastDataMenuItem() {
-                this.$emit('updateLastDataMenuItem');
+            updateLastDataMenuItems() {
+                this.$emit('updateLastDataMenuItems');
             },
         },
     }

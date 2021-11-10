@@ -24,14 +24,14 @@
             <div class="column">
                 <navigation-menu
                     :is-child="false"
-                    :items="menuForm.menu_items"
+                    :menu-items="menuForm.menu_items"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
                     @change="checkNestedMenuItems"
                     @duplicate-menu-item-locale="duplicateMenuItemLocale"
                     @edit-row="editRow"
                     @open-form-modal="openFormModal()"
-                    @update-last-data-menu-item="updateLastDataMenuItem"
+                    @update-last-data-menu-items="updateLastDataMenuItems"
                 />
             </div>
         </div>
@@ -40,11 +40,11 @@
             v-if="isModalOpen"
             :base-route-name="baseRouteName"
             :menu="menu"
-            :menu-item="selectedMenuItems"
+            :menu-item="selectedMenuItem"
             :selected-locale="selectedLocale"
             @add-menu-item="addMenuItem"
             @close="closeModal()"
-            @update-last-data-menu-item="updateLastDataMenuItem"
+            @update-last-data-menu-items="updateLastDataMenuItems"
         />
     </section>
 </template>
@@ -105,18 +105,17 @@
         data() {
             return {
                 activeTab: 'navigation',
-                items: [],
-                lastMenuItems: [],
+                lastDataMenuItems: [],
                 loader: null,
                 menuForm: {},
                 selectedLocale: this.defaultLocale,
-                selectedMenuItems: {},
+                selectedMenuItem: {},
             };
         },
 
         mounted() {
-            this.syncMenuItems();
             this.menuForm = this.getMenuForm(this.selectedLocale);
+            this.updateLastDataMenuItems();
         },
 
         methods: {
@@ -127,7 +126,7 @@
             getMenuForm(locale) {
                 return useForm({
                     locale: locale,
-                    menu_items: this.headerMenus[locale],
+                    menu_items: cloneDeep(this.headerMenus[locale]),
                 });
             },
 
@@ -151,7 +150,7 @@
                             return false;
                         } else if(result.isConfirmed) {
                             this.selectedLocale = locale;
-
+                            this.menuForm.reset();
                             this.menuForm = this.getMenuForm(locale);
                         }
                     });
@@ -163,7 +162,7 @@
             },
 
             openFormModal() {
-                this.selectedMenuItems = {};
+                this.selectedMenuItem = {};
                 this.isModalOpen = true;
             },
 
@@ -181,28 +180,20 @@
                 self.updateLastDataMenuItem();
             },
 
-            updateLastDataMenuItem() {
-                const self = this;
-                forEach(self.localeOptions, function(value) {
-                    self.lastMenuItems[value.id] = cloneDeep(self.items[value.id]);
-                })
-            },
-
-            syncMenuItems() {
-                this.items = this.headerMenus;
-                this.updateLastDataMenuItem();
+            updateLastDataMenuItems() {
+                this.lastDataMenuItems = cloneDeep(this.menuForm.menu_items);
             },
 
             addMenuItem(menuItem) {
-                this.items[this.selectedLocale].push(
+                this.menuForm.menu_items.push(
                     cloneDeep(menuItem)
                 );
 
-                this.updateLastDataMenuItem();
+                this.updateLastDataMenuItems();
             },
 
             editRow(menuItem) {
-                this.selectedMenuItems = menuItem;
+                this.selectedMenuItem = menuItem;
                 this.openModal();
             },
 
@@ -239,7 +230,7 @@
                 this.items[locale].push(cloneMenuItem);
 
                 this.changeLocale(locale);
-                this.updateLastDataMenuItem();
+                this.updateLastDataMenuItems();
             },
         }
     }
