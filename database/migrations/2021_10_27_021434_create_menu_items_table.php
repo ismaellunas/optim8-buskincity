@@ -15,9 +15,8 @@ class CreateMenuItemsTable extends Migration
     {
         Schema::create('menu_items', function (Blueprint $table) {
             $table->id();
-            $table->string('locale', 15);
             $table->string('title');
-            $table->string('type')->default('Url');
+            $table->tinyInteger('type')->default(1);
             $table->string('url')->nullable();
             $table->integer('order')->default(1);
             $table->bigInteger('parent_id')->nullable();

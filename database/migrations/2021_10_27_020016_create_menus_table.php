@@ -15,6 +15,7 @@ class CreateMenusTable extends Migration
     {
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
+            $table->string('locale', 15);
             $table->tinyInteger('type')->default(1);
             $table->timestamps();
         });
