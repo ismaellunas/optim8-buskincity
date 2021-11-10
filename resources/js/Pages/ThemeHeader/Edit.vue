@@ -111,14 +111,53 @@
             };
         },
         methods: {
+            setActiveTab(tab) {
+                if (tab == 'layout') {
+                    this.activeTab = tab;
+                }
+
+                if (tab == 'navigation') {
+                    if (this.$refs.layout.isFormDirty()) {
+                        this.confirmAlert(tab)
+                    } else {
+                        this.activeTab = tab;
+                    }
+                }
+            },
+
             onSave(tab) {
                 if (tab == 'layout') {
-                    this.$refs.layout.$refs.headerLayout.saveLayout();
+                    this.$refs.layout.onSubmit();
                 }
 
                 if (tab == 'navigation') {
                     this.$refs.navigation.updateMenuItems();
                 }
+            },
+
+            confirmAlert(tab) {
+                const confirmationMessage = (
+                    'It looks like you have been editing something. '
+                    + 'If you leave before saving, your changes will be lost.'
+                );
+
+                this.$swal.fire({
+                    title: 'Are you sure?',
+                    text: confirmationMessage,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Leave this',
+                    cancelButtonText: 'Continue Editing',
+                    scrollbarPadding: false,
+                }).then((result) => {
+                    if (result.isDismissed) {
+                        return false;
+                    } else if(result.isConfirmed) {
+                        this.activeTab = tab;
+                    }
+                })
             },
         }
     }
