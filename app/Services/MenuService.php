@@ -291,4 +291,16 @@ class MenuService
             })
             ->all();
     }
+
+    public function getMenuItemTypeOptions(): array
+    {
+        return collect(MenuItem::TYPE_VALUES)
+            ->map(function ($item, $key) {
+                return [
+                    'id' => $key,
+                    'value' => $item,
+                ];
+            })
+            ->all();
+    }
 }
