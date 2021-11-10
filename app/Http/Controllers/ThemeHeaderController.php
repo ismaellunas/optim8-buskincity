@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ThemeHeaderLogoRequest as LogoRequest;
+use App\Http\Requests\ThemeHeaderLayoutRequest as LayoutRequest;
 use App\Models\{
     Menu,
     MenuItem,
@@ -51,31 +51,24 @@ class ThemeHeaderController extends ThemeOptionController
         );
     }
 
-    public function updateLayout(Request $request)
-    {
-        $layout = $request->layout;
-
-        $setting = Setting::firstOrNew(['key' => 'header_layout']);
-        $setting->value = $layout;
-        $setting->save();
-
-        $this->generateFlashMessage('Header layout updated successfully!');
-
-        return redirect()->route($this->baseRouteName.'.edit');
-    }
-
-    public function updateLogo(LogoRequest $request)
+    public function update(LayoutRequest $request)
     {
         $inputs = $request->all();
 
-        $upload = $this->settingService->uploadLogoToCloudStorage($inputs);
-
-        $setting = Setting::firstOrNew(['key' => 'header_logo_url']);
-        $setting->display_name = $upload->fileName;
-        $setting->value = $upload->fileUrl;
+        $setting = Setting::firstOrNew(['key' => 'header_layout']);
+        $setting->value = $inputs['layout'];
         $setting->save();
 
-        $this->generateFlashMessage('Header logo upload successfully!');
+        if ($request->hasFile('logo.file')) {
+            $upload = $this->settingService->uploadLogoToCloudStorage($inputs['logo']);
+
+            $setting = Setting::firstOrNew(['key' => 'header_logo_url']);
+            $setting->display_name = $upload->fileName;
+            $setting->value = $upload->fileUrl;
+            $setting->save();
+        }
+
+        $this->generateFlashMessage('Header layout updated successfully!');
 
         return redirect()->route($this->baseRouteName.'.edit');
     }
