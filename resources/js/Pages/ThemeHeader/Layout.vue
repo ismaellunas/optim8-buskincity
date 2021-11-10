@@ -59,6 +59,9 @@
         },
 
         methods: {
+            isFormDirty() {
+                return this.form.isDirty;
+            },
 
             onSubmit() {
                 const self = this;
