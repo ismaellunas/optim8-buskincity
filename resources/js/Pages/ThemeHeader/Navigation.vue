@@ -24,7 +24,7 @@
             <div class="column">
                 <navigation-menu
                     :is-child="false"
-                    :items="items[selectedLocale]"
+                    :items="menuForm.menuItems"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
                     @change="checkNestedMenuItems"
@@ -94,6 +94,7 @@
             return {
                 baseRouteName: usePage().props.value.baseRouteName ?? null,
                 localeOptions: usePage().props.value.languageOptions ?? [],
+                defaultLocale: usePage().props.value.defaultLanguage,
                 tabs: {
                     layout: { title: 'Layout'},
                     navigation: {title: 'Navigation'},
@@ -107,7 +108,11 @@
                 items: [],
                 lastMenuItems: [],
                 loader: null,
-                selectedLocale: 'en',
+                menuForm: useForm({
+                    menuItems: this.menuItems[this.defaultLocale],
+                    locale: this.defaultLocale,
+                }),
+                selectedLocale: this.defaultLocale,
                 selectedMenuItems: {},
             };
         },
@@ -119,6 +124,10 @@
         methods: {
             changeLocale(locale) {
                 this.selectedLocale = locale;
+                this.menuForm = useForm({
+                    menuItems: this.menuItems[locale],
+                    locale: locale,
+                });
             },
 
             openFormModal() {
@@ -148,12 +157,12 @@
             },
 
             syncMenuItems() {
-                this.items = useForm(this.menuItems);
+                this.items = this.menuItems;
                 this.updateLastDataMenuItem();
             },
 
             addMenuItem(menuItem) {
-                this.items[menuItem.locale].push(
+                this.items[this.selectedLocale].push(
                     cloneDeep(menuItem)
                 );
 
@@ -166,7 +175,18 @@
             },
 
             updateMenuItems() {
-                this.items.post(route(this.baseRouteName+'.update-menu-item'), {
+                // this.items.post(route(this.baseRouteName+'.update-menu-item'), {
+                //     preserveScroll: true,
+                //     onSuccess: (page) => {
+                //         successAlert(page.props.flash.message);
+                //         this.syncMenuItems();
+                //     },
+                //     onError: () => {
+                //         this.items = useForm(this.lastMenuItems);
+                //     }
+                // });
+
+                this.menuForm.post(route(this.baseRouteName+'.update-menu-item'), {
                     preserveScroll: true,
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
@@ -181,7 +201,6 @@
             duplicateMenuItemLocale(locale, menuItem) {
                 const cloneMenuItem = cloneDeep(menuItem);
                 cloneMenuItem['id'] = null;
-                cloneMenuItem['locale'] = locale;
                 cloneMenuItem['parent_id'] = null;
                 cloneMenuItem['children'] = [];
 
