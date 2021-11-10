@@ -37,22 +37,14 @@ class MenuService
         return '-';
     }
 
-    public function generateMenus(
-        ?string $locale = null,
-        string $type = Menu::TYPE_HEADER
-    ) :array {
+    public function getHeaderMenus(array $locales = []): array
+    {
         $menus = [];
 
-        if ($locale === null) {
-            $locales = TranslationSv::getLocaleOptions();
-        } else {
-            $locales = [
-                ["id" => $locale]
-            ];
-        }
+        $locales = array_merge([config('app.fallback_locale')], $locales);
 
         foreach ($locales as $locale) {
-            $menus[$locale['id']] = Menu::generateMenuItems($locale['id']);
+            $menus[$locale] = Menu::generateMenuItems($locale);
         }
 
         return $menus;

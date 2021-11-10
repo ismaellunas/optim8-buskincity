@@ -80,7 +80,7 @@
                 type: String,
                 default: "-",
             },
-            menuItems: {
+            headerMenus: {
                 type: Object,
                 default:() => {},
             },
@@ -108,10 +108,7 @@
                 items: [],
                 lastMenuItems: [],
                 loader: null,
-                menuForm: useForm({
-                    menuItems: this.menuItems[this.defaultLocale],
-                    locale: this.defaultLocale,
-                }),
+                menuForm: {},
                 selectedLocale: this.defaultLocale,
                 selectedMenuItems: {},
             };
@@ -119,6 +116,7 @@
 
         mounted() {
             this.syncMenuItems();
+            this.menuForm = this.getMenuForm(this.selectedLocale);
         },
 
         methods: {
@@ -186,7 +184,7 @@
             },
 
             syncMenuItems() {
-                this.items = this.menuItems;
+                this.items = this.headerMenus;
                 this.updateLastDataMenuItem();
             },
 

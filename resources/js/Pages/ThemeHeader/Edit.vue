@@ -39,7 +39,7 @@
                 v-if="activeTab == 'navigation'"
                 ref="navigation"
                 :last-saved="menuItemLastSaved"
-                :menu-items="menuItems"
+                :header-menus="headerMenus"
                 :menu="menu"
             />
         </div>
@@ -78,7 +78,7 @@
                 type: Object,
                 required: true,
             },
-            menuItems: {
+            headerMenus: {
                 type: Object,
                 default() {
                     return {};

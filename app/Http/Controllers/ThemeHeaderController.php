@@ -11,6 +11,7 @@ use App\Models\{
 use App\Services\{
     MenuService,
     SettingService,
+    TranslationService,
 };
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -42,7 +43,9 @@ class ThemeHeaderController extends ThemeOptionController
                 'categoryOptions' => $this->menuService->getCategoryOptions(),
                 'menu' => $this->modelMenu::header()->first(),
                 'menuItemLastSaved' => $this->menuService->getMenuItemLastSaved("header"),
-                'menuItems' => $this->menuService->generateMenus(),
+                'headerMenus' => $this->menuService->getHeaderMenus(
+                    TranslationService::getLocales()
+                ),
                 'pageOptions' => $this->menuService->getPageOptions(),
                 'postOptions' => $this->menuService->getPostOptions(),
                 'settings' => $this->settingService->getHeader(),
