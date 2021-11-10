@@ -14,14 +14,14 @@ class PostMenu implements MenuInterface
     function __construct($id = null)
     {
         $this->menuItem = MenuItem::where('id', $id)
-            ->with('post')
+            ->with(['post', 'menu'])
             ->first();
     }
 
     function getUrl(): string
     {
         return route('blog.show', [
-            'locale' => $this->menuItem->locale,
+            'locale' => $this->menuItem->menu->locale,
             'slug' => $this->menuItem->post->slug,
         ]);
     }

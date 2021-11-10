@@ -14,7 +14,7 @@ class CategoryMenu implements MenuInterface
     function __construct($id = null)
     {
         $this->menuItem = MenuItem::where('id', $id)
-            ->with('page')
+            ->with(['page', 'menu'])
             ->first();
     }
 
@@ -22,7 +22,7 @@ class CategoryMenu implements MenuInterface
     {
         $locale = $this->menuItem->locale;
         return route('blog.category.index', [
-            'locale' => $this->menuItem->locale,
+            'locale' => $this->menuItem->menu->locale,
             'id' => $this->menuItem->category_id,
         ]);
     }
