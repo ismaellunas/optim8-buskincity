@@ -49,7 +49,6 @@ class MenuItem extends BaseModel
 
             $menuItem = self::updateOrCreate([
                 'id' => $input['id'],
-                'locale' => $input['locale'],
                 'menu_id' => $input['menu_id'],
             ], $input);
 
