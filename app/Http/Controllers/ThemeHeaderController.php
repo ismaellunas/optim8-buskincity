@@ -46,7 +46,7 @@ class ThemeHeaderController extends ThemeOptionController
                 'pageOptions' => $this->menuService->getPageOptions(),
                 'postOptions' => $this->menuService->getPostOptions(),
                 'settings' => $this->settingService->getHeader(),
-                'types' => $this->modelMenuItem::TYPES,
+                'types' => array_keys(MenuItem::TYPE_VALUES),
             ]),
         );
     }

@@ -32,7 +32,7 @@ class MenuItemRequest extends FormRequest
                 'sometimes',
                 'required',
                 'max:255',
-                Rule::in(MenuItem::TYPES),
+                Rule::in(array_keys(MenuItem::TYPE_VALUES)),
             ],
             '*.*.url' => 'nullable',
             '*.*.page_id' => [
