@@ -211,9 +211,11 @@
                     if (result.isConfirmed) {
                         self.deleteRow(items[index]);
 
+                        /*
                         forEach(items[index].children, function(item) {
                             self.deleteRow(item);
                         });
+                        */
 
                         self.$emit('items', items.splice(index, 1));
                         self.updateLastDataMenuItem();
