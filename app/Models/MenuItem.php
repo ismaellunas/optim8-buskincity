@@ -9,7 +9,6 @@ class MenuItem extends BaseModel
     use HasFactory;
 
     protected $fillable = [
-        'locale',
         'title',
         'type',
         'url',
@@ -19,6 +18,14 @@ class MenuItem extends BaseModel
         'page_id',
         'post_id',
         'category_id',
+    ];
+
+    protected $attributes = [
+        'category_id' => null,
+        'page_id' => null,
+        'parent_id' => null,
+        'post_id' => null,
+        'url' => null,
     ];
 
     const TYPE_URL = 1;

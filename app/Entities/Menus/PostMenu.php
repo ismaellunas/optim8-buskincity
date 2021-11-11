@@ -4,34 +4,30 @@ namespace App\Entities\Menus;
 
 use App\Contracts\MenuInterface;
 
-use App\Models\MenuItem;
-
-class PostMenu implements MenuInterface
+class PostMenu extends BaseMenu implements MenuInterface
 {
-    public $id;
-    private $menuItem;
-
-    function __construct($id = null)
+    public function __construct(array $attributes = [])
     {
-        $this->menuItem = MenuItem::where('id', $id)
-            ->with(['post', 'menu'])
-            ->first();
+        parent::__construct($attributes);
+
+        $this->post_id = $attributes['post_id'] ?? null;
     }
 
-    function getUrl(): string
-    {
-        return route('blog.show', [
-            'locale' => $this->menuItem->menu->locale,
-            'slug' => $this->menuItem->post->slug,
-        ]);
-    }
-
-    function nullFields(): array
+    protected function getEagerLoads(): array
     {
         return [
-            'url',
-            'page_id',
-            'category_id',
+            'post' => function ($query) {
+                $query->select('id', 'locale', 'slug');
+            },
+            'menu',
         ];
+    }
+
+    public function getUrl(): string
+    {
+        return route('blog.show', [
+            'locale' => $this->getModel()->menu->locale,
+            'slug' => $this->getModel()->post->slug,
+        ]);
     }
 }

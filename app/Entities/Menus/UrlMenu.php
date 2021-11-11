@@ -4,29 +4,17 @@ namespace App\Entities\Menus;
 
 use App\Contracts\MenuInterface;
 
-use App\Models\MenuItem;
-
-class UrlMenu implements MenuInterface
+class UrlMenu extends BaseMenu implements MenuInterface
 {
-    public $id;
-    private $menuItem;
-
-    function __construct($id = null)
+    public function __construct(array $attributes = [])
     {
-        $this->menuItem = MenuItem::find($id);
+        parent::__construct($attributes);
+
+        $this->url = $attributes['url'] ?? null;
     }
 
-    function getUrl(): string
+    public function getUrl(): string
     {
         return $this->menuItem->url ?? "";
-    }
-
-    function nullFields(): array
-    {
-        return [
-            'page_id',
-            'post_id',
-            'category_id',
-        ];
     }
 }
