@@ -3,21 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MenuItemRequest;
-use App\Models\MenuItem;
-use App\Services\MenuService;
+use Illuminate\Http\Request;
+use App\Models\{
+    Menu,
+    MenuItem
+};
 
 class ThemeFooterMenuController extends ThemeOptionController
 {
-    private $model = MenuItem::class;
-
     protected $baseRouteName = 'admin.theme.footer';
 
     public function update(MenuItemRequest $request)
     {
         $inputs = $request->all();
 
-        $menuItems = new $this->model;
-        $menuItems->updateMenuItems($inputs);
+        $menu = Menu::firstOrCreate([
+            'locale' => $inputs['locale'],
+            'type' => Menu::TYPE_FOOTER,
+        ]);
+
+        $menu->syncMenuItems($inputs['menu_items']);
 
         $this->generateFlashMessage('Menu navigation successfully Saved!');
 
