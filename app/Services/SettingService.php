@@ -98,7 +98,7 @@ class SettingService
             ->all();
     }
 
-    public function getFooters(): array
+    public function getFooter(): array
     {
         return Setting::where('group', 'footer')
             ->get([
