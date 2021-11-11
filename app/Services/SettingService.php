@@ -314,7 +314,7 @@ class SettingService
             $folder = $folderPrefix.'_'.$folder;
         }
 
-        $this->deleteLogoOnCloudStorage($inputs['file_name']);
+        $this->deleteLogoOnCloudStorage($folder.'/'.$inputs['file_name']);
 
         return $storage->upload(
             $inputs['file'],
@@ -326,18 +326,9 @@ class SettingService
     }
 
     public function deleteLogoOnCloudStorage(
-        string $fileName = 'logo',
-        string $folderPrefix = null
+        string $fileName
     ) {
         $storage = new CloudinaryStorage();
-
-        $folder = "settings";
-
-        if ($folderPrefix) {
-            $folder = $folderPrefix.'_'.$folder;
-        }
-
-        $fileName = $folder.'/'.$fileName;
 
         $storage->destroy($fileName);
     }
