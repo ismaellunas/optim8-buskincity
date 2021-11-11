@@ -113,28 +113,35 @@ class Menu extends Model
     }
 
     private function updateMenuItems(
-        array $inputs,
+        array $menuItems,
         ?int $parentId = null
     ): array {
         $order = 1;
 
         $affectedIds = collect([]);
 
-        foreach ($inputs as $input) {
-            $input = $this->setNullInput($input);
-            $input['order'] = $order;
-            $input['parent_id'] = $parentId;
-            $input['menu_id'] = $this->id;
+        foreach ($menuItems as $menuItem) {
 
-            $menuItem = MenuItem::updateOrCreate([
-                'id' => $input['id'],
-                'menu_id' => $input['menu_id'],
-            ], $input);
+            $menuItem['order'] = $order;
+            $menuItem['parent_id'] = $parentId;
+            $menuItem['menu_id'] = $this->id;
 
-            if (count($input['children']) > 0) {
+            $className = self::getTypeMenuClass($menuItem['type']);
+
+            $typeMenu = new $className($menuItem);
+
+            $affectedMenuItem = MenuItem::updateOrCreate(
+                [
+                    'id' => $typeMenu->id,
+                    'menu_id' => $typeMenu->menu_id,
+                ],
+                $typeMenu->getAttributes()
+            );
+
+            if (count($menuItem['children']) > 0) {
                 $childrenIds = $this->updateMenuItems(
-                    $input['children'],
-                    $menuItem['id']
+                    $menuItem['children'],
+                    $affectedMenuItem['id']
                 );
 
                 $affectedIds->push($childrenIds);
@@ -142,7 +149,7 @@ class Menu extends Model
 
             $order++;
 
-            $affectedIds[] = $menuItem->id;
+            $affectedIds[] = $affectedMenuItem->id;
         }
 
         return $affectedIds->flatten()->all();
