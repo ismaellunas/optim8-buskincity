@@ -4,6 +4,8 @@
             {{ title }}
         </template>
 
+        <sdb-error-notifications :errors="$page.props.errors" />
+
         <div class="box mb-6">
             <sdb-tab>
                 <ul>
@@ -28,18 +30,18 @@
             </sdb-tab>
 
             <layout
-                v-if="isLayout"
+                v-if="activeTab == 'layout'"
                 ref="layout"
                 :settings="settings"
             />
 
-            <!-- <footer-navigation
-                v-if="isNavigation"
-                ref="footerNavigation"
+            <navigation
+                v-if="activeTab == 'navigation'"
+                ref="navigation"
                 :last-saved="menuItemLastSaved"
-                :menu-items="footerMenus"
+                :footer-menus="footerMenus"
                 :menu="menu"
-            /> -->
+            />
         </div>
     </app-layout>
 </template>
@@ -47,9 +49,10 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import Layout from './Layout';
-    import FooterNavigation from './FooterNavigation';
+    import Navigation from './Navigation';
     import MixinHasTab from '@/Mixins/HasTab';
     import SdbButton from '@/Sdb/Button';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbTab from '@/Sdb/Tab';
     import SdbTabList from '@/Sdb/TabList';
 
@@ -57,8 +60,9 @@
         components: {
             AppLayout,
             Layout,
-            FooterNavigation,
+            Navigation,
             SdbButton,
+            SdbErrorNotifications,
             SdbTab,
             SdbTabList,
         },
@@ -76,7 +80,9 @@
             },
             footerMenus: {
                 type: Object,
-                default:() => {},
+                default() {
+                    return {};
+                },
             },
             menuItemLastSaved: {
                 type: String,
@@ -104,18 +110,14 @@
                 activeTab: 'layout',
             };
         },
-        computed: {
-            isLayout() {
-                return this.activeTab == 'layout';
-            },
-            isNavigation() {
-                return this.activeTab == 'navigation';
-            },
-        },
         methods: {
-            onTabSelected(tab) {
+            setActiveTab(tab) {
                 if (tab == 'layout') {
-                    this.activeTab = tab;
+                    if (this.$refs.navigation.isFormDirty()) {
+                        this.confirmAlert(tab);
+                    } else {
+                        this.activeTab = tab;
+                    }
                 }
 
                 if (tab == 'navigation') {
@@ -126,15 +128,17 @@
                     }
                 }
             },
+
             onSave(tab) {
                 if (tab == 'layout') {
                     this.$refs.layout.onSubmit();
                 }
 
                 if (tab == 'navigation') {
-                    this.$refs.footerNavigation.updateMenuItems();
+                    this.$refs.navigation.updateMenuItems();
                 }
             },
+
             confirmAlert(tab) {
                 const confirmationMessage = (
                     'It looks like you have been editing something. '
