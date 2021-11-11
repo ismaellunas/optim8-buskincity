@@ -68,8 +68,8 @@ class Menu extends Model
                     $menuItem['children'] = [];
                 }
 
-                $className = "\App\Entities\Menus\\".MenuItem::TYPE_VALUES[$menuItem['type']]."Menu";
-                $typeMenu = new $className($menuItem['id']);
+                $className = self::getTypeMenuClass($menuItem['type']);
+                $typeMenu = new $className(['id' => $menuItem['id']]);
                 $menuItem['link'] = $typeMenu->getUrl();
 
                 $menus[] = $menuItem;
