@@ -117,6 +117,10 @@
         },
         methods: {
             setActiveTab(tab) {
+                if (tab === this.activeTab) {
+                    return false;
+                }
+
                 if (tab == 'layout') {
                     if (this.$refs.navigation.isFormDirty()) {
                         this.confirmAlert(tab);
