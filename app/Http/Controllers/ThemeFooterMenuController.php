@@ -28,9 +28,4 @@ class ThemeFooterMenuController extends ThemeOptionController
 
         return redirect()->route($this->baseRouteName.'.edit');
     }
-
-    public function destroy(MenuItem $menuItem)
-    {
-        $menuItem->delete();
-    }
 }
