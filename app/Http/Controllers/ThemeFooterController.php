@@ -10,6 +10,7 @@ use App\Models\{
 use App\Services\{
     MenuService,
     SettingService,
+    TranslationService,
 };
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -38,14 +39,16 @@ class ThemeFooterController extends ThemeOptionController
         return Inertia::render(
             $this->componentName.'Edit',
             $this->getData([
-                'categories' => $this->menuService->getRecordCategories(),
+                'categoryOptions' => $this->menuService->getCategoryOptions(),
                 'menu' => $this->modelMenu::footer()->first(),
                 'menuItemLastSaved' => $this->menuService->getMenuItemLastSaved("footer"),
-                'menuItems' => $this->menuService->generateMenus(null, "footer"),
-                'pages' => $this->menuService->getRecordPages(),
-                'posts' => $this->menuService->getRecordPosts(),
-                'settings' => $this->settingService->getFooters(),
-                'types' => $this->modelMenuItem::TYPES,
+                'footerMenus' => $this->menuService->getFooterMenus(
+                    TranslationService::getLocales()
+                ),
+                'pageOptions' => $this->menuService->getPageOptions(),
+                'postOptions' => $this->menuService->getPostOptions(),
+                'settings' => $this->settingService->getFooter(),
+                'typeOptions' => $this->menuService->getMenuItemTypeOptions(),
             ]),
         );
     }
