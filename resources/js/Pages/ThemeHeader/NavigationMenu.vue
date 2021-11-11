@@ -5,7 +5,7 @@
         item-key="id"
         tag="nav"
         :animation="300"
-        :class="panelClass"
+        :class="panelClasses"
         :group="{ name: 'g1' }"
         :list="menuItems"
     >
@@ -34,6 +34,7 @@
                 />
             </div>
         </template>
+
         <template #footer>
             <a
                 v-if="!isChild"
@@ -101,12 +102,12 @@
         },
 
         computed: {
-            panelClass() {
-                if (this.isChild) {
-                    return ['panel', 'childPanel'];
-                } else {
-                    return ['panel'];
-                }
+            panelClasses() {
+                return {
+                    'child-panel': this.isChild,
+                    'panel': true,
+                    'pl-4': true,
+                };
             },
         },
 
@@ -170,15 +171,11 @@
         cursor: pointer;
     }
 
-    .level {
-        width: 100%;
-    }
-
     .panel {
         min-height: 20px;
     }
 
-    .childPanel {
+    .child-panel {
         box-shadow: none !important;
         border-radius: 0 !important;
     }
