@@ -9,13 +9,13 @@ class Menu extends Model
 {
     use HasFactory;
 
+    const TYPE_HEADER = 1;
+    const TYPE_FOOTER = 2;
+
     protected $fillable = [
         'type',
         'locale',
     ];
-
-    const TYPE_HEADER = 1;
-    const TYPE_FOOTER = 2;
 
     public function saveFromInputs(array $inputs)
     {
