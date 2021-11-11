@@ -20,6 +20,14 @@ class MenuItem extends BaseModel
         'category_id',
     ];
 
+    protected $attributes = [
+        'category_id' => null,
+        'page_id' => null,
+        'parent_id' => null,
+        'post_id' => null,
+        'url' => null,
+    ];
+
     const TYPE_URL = 1;
     const TYPE_PAGE = 2;
     const TYPE_POST = 3;
