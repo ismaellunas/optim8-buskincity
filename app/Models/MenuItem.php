@@ -9,7 +9,6 @@ class MenuItem extends BaseModel
     use HasFactory;
 
     protected $fillable = [
-        'locale',
         'title',
         'type',
         'url',
