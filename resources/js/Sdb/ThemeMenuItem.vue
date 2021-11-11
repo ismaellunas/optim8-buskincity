@@ -53,13 +53,13 @@
                         </template>
                         <a
                             class="dropdown-item"
-                            @click.prevent="$emit('duplicate-menu-item-above', menuItem, index)"
+                            @click.prevent="$emit('duplicate-menu-item-above', menuItem, menuItemIndex)"
                         >
                             Duplicate Menu Above
                         </a>
                         <a
                             class="dropdown-item"
-                            @click.prevent="$emit('duplicate-menu-item-below', menuItem, index)"
+                            @click.prevent="$emit('duplicate-menu-item-below', menuItem, menuItemIndex)"
                         >
                             Duplicate Menu Below
                         </a>
@@ -79,7 +79,7 @@
                 <sdb-button
                     class="is-ghost has-text-black ml-1"
                     type="button"
-                    @click="$emit('delete-row', index)"
+                    @click="$emit('delete-row', menuItemIndex)"
                 >
                     <span class="icon is-small">
                         <i class="far fa-trash-alt" />
@@ -115,6 +115,10 @@
             },
             menuItem: {
                 type: Object,
+                required: true,
+            },
+            menuItemIndex: {
+                type: Number,
                 required: true,
             },
             selectedLocale: {

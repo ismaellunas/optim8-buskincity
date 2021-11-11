@@ -9,12 +9,13 @@
         :group="{ name: 'g1' }"
         :list="menuItems"
     >
-        <template #item="{ element }">
+        <template #item="{ element, index }">
             <div>
                 <theme-menu-item
-                    :menu-item="element"
-                    :locale-options="localeOptions"
                     :is-child="isChild"
+                    :locale-options="localeOptions"
+                    :menu-item-index="index"
+                    :menu-item="element"
                     :selected-locale="selectedLocale"
                     @delete-row="deleteRow"
                     @duplicate-menu-item-above="duplicateMenuItemAbove"
