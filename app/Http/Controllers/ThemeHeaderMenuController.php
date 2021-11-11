@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MenuItemRequest;
-use App\Models\{
-    Menu,
-    MenuItem
-};
+use App\Models\Menu;
 
 class ThemeHeaderMenuController extends ThemeOptionController
 {
@@ -26,10 +23,5 @@ class ThemeHeaderMenuController extends ThemeOptionController
         $this->generateFlashMessage('Menu navigation successfully Saved!');
 
         return redirect()->route($this->baseRouteName.'.edit');
-    }
-
-    public function destroy(MenuItem $menuItem)
-    {
-        $menuItem->delete();
     }
 }
