@@ -83,4 +83,10 @@ return [
         'buttons'
     ],
     'theme_content_paragraph_width' => 1440,
+    'locale' => [
+        'en',
+        'sv',
+        'es',
+        'de'
+    ],
 ];

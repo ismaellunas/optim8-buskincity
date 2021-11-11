@@ -24,14 +24,14 @@
             <div class="column">
                 <navigation-menu
                     :is-child="false"
-                    :items="items[selectedLocale]"
+                    :menu-items="menuForm.menu_items"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
                     @change="checkNestedMenuItems"
                     @duplicate-menu-item-locale="duplicateMenuItemLocale"
                     @edit-row="editRow"
                     @open-form-modal="openFormModal()"
-                    @update-last-data-menu-item="updateLastDataMenuItem"
+                    @update-last-data-menu-items="updateLastDataMenuItems"
                 />
             </div>
         </div>
@@ -40,11 +40,11 @@
             v-if="isModalOpen"
             :base-route-name="baseRouteName"
             :menu="menu"
-            :menu-item="selectedMenuItems"
+            :menu-item="selectedMenuItem"
             :selected-locale="selectedLocale"
             @add-menu-item="addMenuItem"
             @close="closeModal()"
-            @update-last-data-menu-item="updateLastDataMenuItem"
+            @update-last-data-menu-items="updateLastDataMenuItems"
         />
     </section>
 </template>
@@ -55,7 +55,7 @@
     import NavigationMenu from './NavigationMenu';
     import SdbButton from '@/Sdb/Button';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
-    import { oops as oopsAlert, success as successAlert  } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert, confirm as confirmAlert } from '@/Libs/alert';
     import { forEach, cloneDeep } from 'lodash';
 
     export default {
@@ -80,7 +80,7 @@
                 type: String,
                 default: "-",
             },
-            menuItems: {
+            headerMenus: {
                 type: Object,
                 default:() => {},
             },
@@ -94,6 +94,7 @@
             return {
                 baseRouteName: usePage().props.value.baseRouteName ?? null,
                 localeOptions: usePage().props.value.languageOptions ?? [],
+                defaultLocale: usePage().props.value.defaultLanguage,
                 tabs: {
                     layout: { title: 'Layout'},
                     navigation: {title: 'Navigation'},
@@ -104,76 +105,94 @@
         data() {
             return {
                 activeTab: 'navigation',
-                items: [],
-                lastMenuItems: [],
+                lastDataMenuItems: [],
                 loader: null,
-                selectedLocale: 'en',
-                selectedMenuItems: {},
+                menuForm: {},
+                selectedLocale: this.defaultLocale,
+                selectedMenuItem: {},
             };
         },
 
         mounted() {
-            this.syncMenuItems();
+            this.menuForm = this.getMenuForm(this.selectedLocale);
+            this.updateLastDataMenuItems();
         },
 
         methods: {
+            isFormDirty() {
+                return this.menuForm.isDirty;
+            },
+
+            getMenuForm(locale) {
+                return useForm({
+                    locale: locale,
+                    menu_items: cloneDeep(this.headerMenus[locale]),
+                });
+            },
+
             changeLocale(locale) {
-                this.selectedLocale = locale;
+                if (this.menuForm.isDirty) {
+                    this.confirmFormAlert().then((result) => {
+                        if (result.isDismissed) {
+                            return false;
+                        } else if(result.isConfirmed) {
+                            this.selectedLocale = locale;
+                            this.menuForm.reset();
+                            this.menuForm = this.getMenuForm(locale);
+
+                            this.updateLastDataMenuItems();
+                        }
+                    });
+                } else {
+                    this.selectedLocale = locale;
+
+                    this.menuForm = this.getMenuForm(locale);
+                    this.updateLastDataMenuItems();
+                }
             },
 
             openFormModal() {
-                this.selectedMenuItems = {};
+                this.selectedMenuItem = {};
                 this.isModalOpen = true;
             },
 
             checkNestedMenuItems() {
                 let self = this;
-                forEach(self.items[self.selectedLocale], function(values) {
-                    forEach(values.children, function(value) {
-                        if (value['children'].length > 0) {
-                            self.items[self.selectedLocale] = self.lastMenuItems[self.selectedLocale];
+                forEach(self.menuForm.menu_items, function(menuItem) {
+                    forEach(menuItem.children, function(child) {
+                        if (child['children'].length > 0) {
+                            self.menuForm.menu_items = self.lastDataMenuItems;
                             oopsAlert(null, "Cannot add nested menu more than 2");
                         }
                     });
                 });
 
-                self.updateLastDataMenuItem();
+                self.updateLastDataMenuItems();
             },
 
-            updateLastDataMenuItem() {
-                const self = this;
-                forEach(self.localeOptions, function(value) {
-                    self.lastMenuItems[value.id] = cloneDeep(self.items[value.id]);
-                })
-            },
-
-            syncMenuItems() {
-                this.items = useForm(this.menuItems);
-                this.updateLastDataMenuItem();
+            updateLastDataMenuItems() {
+                this.lastDataMenuItems = cloneDeep(this.menuForm.menu_items);
             },
 
             addMenuItem(menuItem) {
-                this.items[menuItem.locale].push(
+                this.menuForm.menu_items.push(
                     cloneDeep(menuItem)
                 );
 
-                this.updateLastDataMenuItem();
+                this.updateLastDataMenuItems();
             },
 
             editRow(menuItem) {
-                this.selectedMenuItems = menuItem;
+                this.selectedMenuItem = menuItem;
                 this.openModal();
             },
 
             updateMenuItems() {
-                this.items.post(route(this.baseRouteName+'.update-menu-item'), {
+                this.menuForm.post(route(this.baseRouteName+'.update-menu-item'), {
                     preserveScroll: true,
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
-                        this.syncMenuItems();
-                    },
-                    onError: () => {
-                        this.items = useForm(this.lastMenuItems);
+                        this.updateLastDataMenuItems();
                     }
                 });
             },
@@ -181,17 +200,48 @@
             duplicateMenuItemLocale(locale, menuItem) {
                 const cloneMenuItem = cloneDeep(menuItem);
                 cloneMenuItem['id'] = null;
-                cloneMenuItem['locale'] = locale;
                 cloneMenuItem['parent_id'] = null;
                 cloneMenuItem['children'] = [];
 
-                this.items[locale].push(
-                    cloneDeep(cloneMenuItem)
+                if (this.menuForm.isDirty) {
+                    this.confirmFormAlert().then((result) => {
+                        if (result.isDismissed) {
+                            return false;
+                        } else if(result.isConfirmed) {
+                            this.selectedLocale = locale;
+
+                            this.menuForm = this.getMenuForm(locale);
+                            this.menuForm.menu_items.push(cloneMenuItem);
+
+                            this.updateLastDataMenuItems();
+                        }
+                    });
+                } else {
+                    this.selectedLocale = locale;
+
+                    this.menuForm = this.getMenuForm(locale);
+                    this.menuForm.menu_items.push(cloneMenuItem);
+
+                    this.updateLastDataMenuItems();
+                }
+            },
+
+            confirmFormAlert() {
+                const confirmationMessage = (
+                    'It looks like you have been editing something. '
+                    + 'If you leave before saving, your changes will be lost.'
                 );
 
-                this.changeLocale(locale);
-                this.updateLastDataMenuItem();
+                return confirmAlert('Are you sure?', confirmationMessage, 'Leave this', {
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Leave this',
+                    cancelButtonText: 'Continue Editing',
+                    scrollbarPadding: false,
+                });
             },
         }
-    }
+    };
 </script>

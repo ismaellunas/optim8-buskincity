@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\MenuItem;
+use App\Services\TranslationService as TranslationSv;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MenuItemRequest extends FormRequest
 {
@@ -14,32 +17,64 @@ class MenuItemRequest extends FormRequest
     public function rules()
     {
         return [
-            '*.*.locale' => 'sometimes|required|max:15',
-            '*.*.title' => 'sometimes|required|max:255',
-            '*.*.type' => 'sometimes|required|max:255',
-            '*.*.url' => 'nullable',
-            '*.*.page_id' => 'nullable',
-            '*.*.post_id' => 'nullable',
-            '*.*.category_id' => 'nullable',
-            '*.*.menu_id' => 'sometimes|required',
+            'menu_items.*.title' => [
+                'sometimes',
+                'required',
+                'max:255',
+            ],
+            'menu_items.*.type' => [
+                'sometimes',
+                'required',
+                'integer',
+                Rule::in(array_keys(MenuItem::TYPE_VALUES)),
+            ],
+            'menu_items.*.url' => [
+                'nullable',
+                'url',
+            ],
+            'menu_items.*.page_id' => [
+                'nullable',
+                'integer',
+                'exists:pages,id'
+            ],
+            'menu_items.*.post_id' => [
+                'nullable',
+                'integer',
+                'exists:posts,id'
+            ],
+            'menu_items.*.category_id' => [
+                'nullable',
+                'integer',
+                'exists:categories,id'
+            ],
+            'menu_items.*.menu_id' => [
+                'required',
+                'integer',
+                'exists:menus,id'
+            ],
         ];
     }
 
-    public function messages()
+    public function attributes()
     {
-        return [
-            'en.*.locale.required' => 'Locale (English) is required',
-            'en.*.title.required' => 'Title (English) is required',
-            'en.*.type.required' => 'Type (English) is required',
-            'sv.*.locale.required' => 'Locale (Swedish) is required',
-            'sv.*.title.required' => 'Title (Swedish) is required',
-            'sv.*.type.required' => 'Type (Swedish) is required',
-            'es.*.locale.required' => 'Locale (Spanish) is required',
-            'es.*.title.required' => 'Title (Spanish) is required',
-            'es.*.type.required' => 'Type (Spanish) is required',
-            'de.*.locale.required' => 'Locale (German) is required',
-            'de.*.title.required' => 'Title (German) is required',
-            'de.*.type.required' => 'Type (German) is required',
+        $attr = [];
+        $columns = [
+            'locale',
+            'title',
+            'type',
+            'page_id',
+            'post_id',
+            'category_id',
+            'menu_id',
+            'url',
         ];
+
+        foreach ($columns as $column) {
+            for ($i = 0; $i < count($this['menu_items']); $i++) {
+                $attr["menu_items.".$i.".".$column] = ucwords(str_replace('_', ' ', $column))." (".strtoupper($this['locale']).") ";
+            }
+        }
+
+        return $attr;
     }
 }

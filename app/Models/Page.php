@@ -17,7 +17,7 @@ class Page extends Model implements TranslatableContract
 
     public $translatedAttributes = [
         'data',
-        'except',
+        'excerpt',
         'meta_description',
         'meta_title',
         'slug',

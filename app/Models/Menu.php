@@ -11,6 +11,7 @@ class Menu extends Model
 
     protected $fillable = [
         'type',
+        'locale',
     ];
 
     const TYPE_HEADER = 1;
@@ -20,6 +21,62 @@ class Menu extends Model
     {
         $this->fill($inputs);
         $this->save();
+    }
+
+    public static function generateMenuItems(
+        string $locale = 'en',
+        int $type = self::TYPE_HEADER
+    ): array {
+        $menu = self::getMenu($locale, $type);
+
+        return $menu ? self::createArrayMenuItems($menu) : [];
+    }
+
+    private static function getMenu(
+        string $locale,
+        int $type
+    ) {
+        return self::with([
+                'menuItems' => function ($query) {
+                    $query->orderBy('order', 'ASC')
+                        ->orderBy('parent_id', 'ASC');
+                }
+            ])
+            ->where('locale', $locale)
+            ->where(function ($query) use ($type) {
+                if ($type == self::TYPE_HEADER) {
+                    $query->header();
+                } else {
+                    $query->footer();
+                }
+            })
+            ->first();
+    }
+
+    private static function createArrayMenuItems(
+        object $menu,
+        ?int $parentId = null
+    ): array {
+        $menus = [];
+        foreach ($menu->menuItems as $menuItem) {
+            if ($menuItem['parent_id'] == $parentId) {
+                $children = self::createArrayMenuItems($menu, $menuItem['id']);
+
+                if ($children) {
+                    $menuItem['children'] = $children;
+                } else {
+                    $menuItem['children'] = [];
+                }
+
+                $className = "\App\Entities\Menus\\".MenuItem::TYPE_VALUES[$menuItem['type']]."Menu";
+                $typeMenu = new $className($menuItem['id']);
+                $menuItem['link'] = $typeMenu->getUrl();
+
+                $menus[] = $menuItem;
+            }
+        }
+
+        return $menus;
     }
 
     // Scope
@@ -37,5 +94,64 @@ class Menu extends Model
     public function menuItems()
     {
         return $this->hasMany(MenuItem::class, 'menu_id');
+    }
+
+    public function syncMenuItems(array $menuItems)
+    {
+        $affectedIds = $this->updateMenuItems($menuItems);
+
+        $unusedMenuItems = $this->menuItems->whereNotIn('id', $affectedIds);
+
+        foreach ($unusedMenuItems as $menuItem) {
+            $menuItem->delete();
+        }
+    }
+
+    private function updateMenuItems(
+        array $inputs,
+        ?int $parentId = null
+    ): array {
+        $order = 1;
+
+        $affectedIds = collect([]);
+
+        foreach ($inputs as $input) {
+            $input = $this->setNullInput($input);
+            $input['order'] = $order;
+            $input['parent_id'] = $parentId;
+            $input['menu_id'] = $this->id;
+
+            $menuItem = MenuItem::updateOrCreate([
+                'id' => $input['id'],
+                'menu_id' => $input['menu_id'],
+            ], $input);
+
+            if (count($input['children']) > 0) {
+                $childrenIds = $this->updateMenuItems(
+                    $input['children'],
+                    $menuItem['id']
+                );
+
+                $affectedIds->push($childrenIds);
+            }
+
+            $order++;
+
+            $affectedIds[] = $menuItem->id;
+        }
+
+        return $affectedIds->flatten()->all();
+    }
+
+    private function setNullInput($input)
+    {
+        $className = "\App\Entities\Menus\\".MenuItem::TYPE_VALUES[$input['type']]."Menu";
+        $menu = new $className();
+
+        foreach ($menu->nullFields() as $nullField) {
+            $input[$nullField] = null;
+        }
+
+        return $input;
     }
 }

@@ -5,112 +5,36 @@
         item-key="id"
         tag="nav"
         :animation="300"
-        :class="panelClass"
+        :class="panelClasses"
         :group="{ name: 'g1' }"
-        :list="items"
+        :list="menuItems"
     >
-        <template #item="{ element, index }">
+        <template #item="{ element }">
             <div>
-                <div
-                    class="panel-block p-4 has-background-white"
-                >
-                    <div class="level">
-                        <div
-                            class="level-left"
-                            :class="isChild ? 'pl-4' : ''"
-                        >
-                            <span class="panel-icon handle-menu">
-                                <i
-                                    class="fas fa-bars"
-                                    aria-hidden="true"
-                                />
-                            </span>
-                            <span
-                                v-if="element.children.length > 0"
-                                class="panel-icon"
-                            >
-                                <i
-                                    class="fas fa-caret-down"
-                                    aria-hidden="true"
-                                />
-                            </span>
-                            {{ element.title }}
-                            <sdb-tag
-                                v-for="translation in element.translations"
-                                :key="translation.id"
-                                class="is-info px-2 ml-1 is-small"
-                            >
-                                {{ translation.locale?.toUpperCase() }}
-                            </sdb-tag>
-                        </div>
-                        <div class="level-right">
-                            <sdb-dropdown
-                                style-button="border: none"
-                            >
-                                <template #trigger>
-                                    <i
-                                        class="far fa-copy"
-                                    />
-                                </template>
-                                <template #default>
-                                    <template
-                                        v-for="localeOption in localeOptions"
-                                        :key="localeOption.id"
-                                    >
-                                        <a
-                                            v-if="localeOption.id != selectedLocale"
-                                            class="dropdown-item"
-                                            @click.prevent="duplicateMenuItemLocale(localeOption.id, element)"
-                                        >
-                                            Duplicate to {{ localeOption.name }}
-                                        </a>
-                                    </template>
-                                    <a
-                                        class="dropdown-item"
-                                        @click.prevent="duplicateMenuItemAbove(element, index)"
-                                    >
-                                        Duplicate Menu Above
-                                    </a>
-                                    <a
-                                        class="dropdown-item"
-                                        @click.prevent="duplicateMenuItemBelow(element, index)"
-                                    >
-                                        Duplicate Menu Below
-                                    </a>
-                                </template>
-                            </sdb-dropdown>
-                            <sdb-button
-                                type="button"
-                                class="is-ghost has-text-black"
-                                @click="$emit('editRow', element)"
-                            >
-                                <span class="icon is-small">
-                                    <i class="fas fa-pen" />
-                                </span>
-                            </sdb-button>
-                            <sdb-button
-                                type="button"
-                                class="is-ghost has-text-black ml-1"
-                                @click="deleteConfirm(index)"
-                            >
-                                <span class="icon is-small">
-                                    <i class="far fa-trash-alt" />
-                                </span>
-                            </sdb-button>
-                        </div>
-                    </div>
-                </div>
+                <theme-menu-item
+                    :menu-item="element"
+                    :locale-options="localeOptions"
+                    :is-child="isChild"
+                    :selected-locale="selectedLocale"
+                    @delete-row="deleteRow"
+                    @duplicate-menu-item-above="duplicateMenuItemAbove"
+                    @duplicate-menu-item-below="duplicateMenuItemBelow"
+                    @duplicate-menu-item-locale="duplicateMenuItemLocale"
+                    @edit-row="$emit('editRow', $event)"
+                />
+
                 <navigation-menu
                     v-if="!isChild"
-                    :items="element.children"
+                    :menu-items="element.children"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
                     @duplicate-menu-item-locale="duplicateMenuItemLocale"
                     @edit-row="editRow"
-                    @update-last-data-menu-item="updateLastDataMenuItem"
+                    @update-last-data-menu-items="updateLastDataMenuItems"
                 />
             </div>
         </template>
+
         <template #footer>
             <a
                 v-if="!isChild"
@@ -130,23 +54,18 @@
 </template>
 
 <script>
-    import axios from 'axios';
     import Draggable from "vuedraggable";
-    import SdbButton from '@/Sdb/Button';
-    import SdbDropdown from '@/Sdb/Dropdown';
-    import SdbTag from '@/Sdb/Tag';
+    import ThemeMenuItem from '@/Sdb/ThemeMenuItem';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { confirmDelete } from '@/Libs/alert';
-    import { forEach, cloneDeep } from 'lodash';
+    import { cloneDeep } from 'lodash';
 
     export default {
         name: 'NavigationMenu',
 
         components: {
             Draggable,
-            SdbButton,
-            SdbDropdown,
-            SdbTag,
+            ThemeMenuItem,
         },
 
         props: {
@@ -154,7 +73,7 @@
                 type: Boolean,
                 default: true,
             },
-            items: {
+            menuItems: {
                 type: Array,
                 default:() => {},
             },
@@ -169,12 +88,11 @@
         },
 
         emits: [
-            'deleteRow',
-            'duplicateMenuItemLocale',
-            'editRow',
-            'items',
-            'openFormModal',
-            'updateLastDataMenuItem'
+            'duplicate-menu-item-locale',
+            'edit-row',
+            'menu-items',
+            'open-form-modal',
+            'update-last-data-menu-items'
         ],
 
         setup() {
@@ -184,79 +102,65 @@
         },
 
         computed: {
-            panelClass() {
-                if (this.isChild) {
-                    return ['panel', 'childPanel'];
-                } else {
-                    return ['panel'];
-                }
+            panelClasses() {
+                return {
+                    'child-panel': this.isChild,
+                    'panel': true,
+                    'pl-4': true,
+                };
             },
         },
 
         methods: {
             editRow(menuItem) {
-                this.$emit('editRow', menuItem);
+                this.$emit('edit-row', menuItem);
             },
 
-            deleteConfirm(index) {
+            deleteRow(index) {
                 const self = this;
-                const items = this.items;
+                const menuItems = this.menuItems;
                 let message = "";
 
-                if (items[index].children.length > 0) {
+                if (menuItems[index].children.length > 0) {
                     message = "A nested menu will deleted too."
                 }
 
                 confirmDelete("Are you sure?", message).then((result) => {
                     if (result.isConfirmed) {
-                        self.deleteRow(items[index]);
-
-                        forEach(items[index].children, function(item) {
-                            self.deleteRow(item);
-                        });
-
-                        self.$emit('items', items.splice(index, 1));
-                        self.updateLastDataMenuItem();
+                        self.$emit('menu-items', menuItems.splice(index, 1));
+                        self.updateLastDataMenuItems();
                     }
                 });
             },
 
-            deleteRow(items) {
-                if (items.id !== null) {
-                    axios.delete(
-                        route(this.baseRouteName+'.destroy', items.id)
-                    );
-                }
-            },
-
             duplicateMenuItemAbove(menuItem, index) {
-                const items = this.items;
+                const menuItems = this.menuItems;
                 const cloneMenuItem = cloneDeep(menuItem);
 
                 cloneMenuItem['id'] = null;
                 cloneMenuItem['children'] = [];
 
-                this.$emit('items', items.splice(index, 0, cloneMenuItem));
-                this.updateLastDataMenuItem();
+                this.$emit('menu-items', menuItems.splice(index, 0, cloneMenuItem));
+                this.updateLastDataMenuItems();
             },
 
             duplicateMenuItemBelow(menuItem, index) {
-                const items = this.items;
+                const menuItems = this.menuItems;
                 const cloneMenuItem = cloneDeep(menuItem);
 
                 cloneMenuItem['id'] = null;
                 cloneMenuItem['children'] = [];
 
-                this.$emit('items', items.splice(index + 1, 0, cloneMenuItem));
-                this.updateLastDataMenuItem();
+                this.$emit('menu-items', menuItems.splice(index + 1, 0, cloneMenuItem));
+                this.updateLastDataMenuItems();
             },
 
             duplicateMenuItemLocale(locale, menuItem) {
-                this.$emit('duplicateMenuItemLocale', locale, menuItem);
+                this.$emit('duplicate-menu-item-locale', locale, menuItem);
             },
 
-            updateLastDataMenuItem() {
-                this.$emit('updateLastDataMenuItem');
+            updateLastDataMenuItems() {
+                this.$emit('update-last-data-menu-items');
             },
         },
     }
@@ -267,15 +171,11 @@
         cursor: pointer;
     }
 
-    .level {
-        width: 100%;
-    }
-
     .panel {
         min-height: 20px;
     }
 
-    .childPanel {
+    .child-panel {
         box-shadow: none !important;
         border-radius: 0 !important;
     }

@@ -14,18 +14,16 @@ class CategoryMenu implements MenuInterface
     function __construct($id = null)
     {
         $this->menuItem = MenuItem::where('id', $id)
-            ->with('page')
+            ->with(['page', 'menu'])
             ->first();
     }
 
     function getUrl(): string
     {
         $locale = $this->menuItem->locale;
-        $categoryTranslation = $this->menuItem->category->translateOrDefault($locale);
-
-        return route('blog.index', [
-            'locale' => $locale,
-            'category' => $categoryTranslation->slug,
+        return route('blog.category.index', [
+            'locale' => $this->menuItem->menu->locale,
+            'id' => $this->menuItem->category_id,
         ]);
     }
 

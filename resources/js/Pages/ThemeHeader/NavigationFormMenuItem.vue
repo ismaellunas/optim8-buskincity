@@ -10,7 +10,8 @@
                 @click="onClose()"
             />
         </template>
-        <form method="post">
+
+        <form @submit.prevent="onSubmit">
             <fieldset>
                 <sdb-form-input
                     v-model="form.title"
@@ -26,11 +27,11 @@
                     :message="error('type')"
                 >
                     <template
-                        v-for="(type, index) in types"
-                        :key="index"
+                        v-for="option in typeOptions"
+                        :key="option.id"
                     >
-                        <option :value="type">
-                            {{ type }}
+                        <option :value="option.id">
+                            {{ option.value }}
                         </option>
                     </template>
                 </sdb-form-select>
@@ -49,11 +50,17 @@
                     :message="error('page_id')"
                 >
                     <template
-                        v-for="page in pages"
-                        :key="page.id"
+                        v-for="option in pageOptions"
+                        :key="option.id"
                     >
-                        <option :value="page.id">
-                            {{ page.title }}
+                        <option :value="option.id">
+                            {{ option.value }}
+                            <template
+                                v-for="locale, index in option.locales"
+                                :key="index"
+                            >
+                                [{{ locale.toUpperCase() }}]
+                            </template>
                         </option>
                     </template>
                 </sdb-form-select>
@@ -65,11 +72,11 @@
                     :message="error('post_id')"
                 >
                     <template
-                        v-for="post in posts"
-                        :key="post.id"
+                        v-for="option in postOptions"
+                        :key="option.id"
                     >
-                        <option :value="post.id">
-                            {{ post.title }}
+                        <option :value="option.id">
+                            {{ option.value }} [{{ option.locale.toUpperCase() }}]
                         </option>
                     </template>
                 </sdb-form-select>
@@ -81,11 +88,17 @@
                     :message="error('category_id')"
                 >
                     <template
-                        v-for="category in categories"
-                        :key="category.id"
+                        v-for="option in categoryOptions"
+                        :key="option.id"
                     >
-                        <option :value="category.id">
-                            {{ category.name }}
+                        <option :value="option.id">
+                            {{ option.value }}
+                            <template
+                                v-for="locale, index in option.locales"
+                                :key="index"
+                            >
+                                [{{ locale.toUpperCase() }}]
+                            </template>
                         </option>
                     </template>
                 </sdb-form-select>
@@ -103,6 +116,7 @@
                         </sdb-button>
                         <sdb-button
                             class="is-primary ml-1"
+                            type="button"
                             @click="onSubmit()"
                         >
                             {{ menuItem.id ? 'Update' : 'Create' }}
@@ -121,8 +135,9 @@
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbModalCard from '@/Sdb/ModalCard';
     import { isBlank } from '@/Libs/utils';
-    import { cloneDeep } from 'lodash';
-    import { usePage, useForm } from '@inertiajs/inertia-vue3';
+    import { cloneDeep, sortBy } from 'lodash';
+    import { usePage } from '@inertiajs/inertia-vue3';
+    import { reactive } from 'vue';
 
     export default {
         name: 'NavigationFormMenu',
@@ -160,7 +175,7 @@
         emits: [
             'addMenuItem',
             'close',
-            'updateLastDataMenuItem',
+            'updateLastDataMenuItems',
         ],
 
         setup(props) {
@@ -169,11 +184,10 @@
             if (!isBlank(props.menuItem)) {
                 fields = props.menuItem;
             } else {
-                fields = {
+                fields = reactive({
                     id: null,
-                    locale: props.selectedLocale,
                     title: null,
-                    type: 'Url',
+                    type: 1,
                     url: null,
                     order: null,
                     parent_id: null,
@@ -182,17 +196,17 @@
                     post_id: null,
                     category_id: null,
                     children: [],
-                };
+                });
             }
 
             return {
-                categories: usePage().props.value.categories,
+                categoryOptions: sortBy(usePage().props.value.categoryOptions, [(option) => option.value]),
                 defaultLocale: usePage().props.value.defaultLanguage,
                 form: fields,
                 firstFields: cloneDeep(fields),
-                pages: usePage().props.value.pages,
-                posts: usePage().props.value.posts,
-                types: usePage().props.value.types,
+                pageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
+                postOptions: sortBy(usePage().props.value.postOptions, [(option) => option.value]),
+                typeOptions: usePage().props.value.typeOptions,
             };
         },
 
@@ -204,31 +218,32 @@
 
         computed: {
             isTypeUrl() {
-                return this.form.type == 'Url';
+                return this.form.type == '1';
             },
 
             isTypePage() {
-                return this.form.type == 'Page';
+                return this.form.type == '2';
             },
 
             isTypePost() {
-                return this.form.type == 'Post';
+                return this.form.type == '3';
             },
 
             isTypeCategory() {
-                return this.form.type == 'Category'
+                return this.form.type == '4'
             },
         },
 
         methods: {
             onSubmit() {
+                const self = this;
                 const form = this.form;
 
                 if (isBlank(this.menuItem)) {
                     this.$emit('close');
                     this.$emit('addMenuItem', form);
                 } else {
-                    this.$emit('updateLastDataMenuItem');
+                    this.$emit('updateLastDataMenuItems');
                     this.$emit('close');
                 }
             },

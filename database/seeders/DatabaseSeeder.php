@@ -83,10 +83,8 @@ class DatabaseSeeder extends Seeder
             ->has(
                 MenuItem::factory()
             )
-            ->create();
-
-        Menu::factory()->create([
-            'type' => 2
-        ]);
+            ->create([
+                'locale' => config('app.fallback_locale')
+            ]);
     }
 }

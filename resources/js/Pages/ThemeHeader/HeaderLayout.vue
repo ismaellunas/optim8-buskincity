@@ -12,8 +12,8 @@
             <div class="column is-3">
                 <div
                     class="card card-hover"
-                    :class="form.layout == 1 ? 'is-active' : ''"
-                    @click="form.layout = 1"
+                    :class="modelValue == 1 ? 'is-active' : ''"
+                    @click="updateFormLayout(1)"
                 >
                     <div class="card-content">
                         <div class="content">
@@ -21,12 +21,18 @@
                         </div>
                     </div>
                 </div>
+                <p
+                    class="has-text-weight-semibold mt-2"
+                    :class="modelValue == 1 ? 'has-text-link' : ''"
+                >
+                    Standard
+                </p>
             </div>
             <div class="column is-3">
                 <div
                     class="card card-hover"
-                    :class="form.layout == 2 ? 'is-active' : ''"
-                    @click="form.layout = 2"
+                    :class="modelValue == 2 ? 'is-active' : ''"
+                    @click="updateFormLayout(2)"
                 >
                     <div class="card-content">
                         <div class="content">
@@ -34,12 +40,18 @@
                         </div>
                     </div>
                 </div>
+                <p
+                    class="has-text-weight-semibold mt-2"
+                    :class="modelValue == 2 ? 'has-text-link' : ''"
+                >
+                    Centered Logo
+                </p>
             </div>
             <div class="column is-3">
                 <div
                     class="card card-hover"
-                    :class="form.layout == 3 ? 'is-active' : ''"
-                    @click="form.layout = 3"
+                    :class="modelValue == 3 ? 'is-active' : ''"
+                    @click="updateFormLayout(3)"
                 >
                     <div class="card-content">
                         <div class="content">
@@ -47,24 +59,37 @@
                         </div>
                     </div>
                 </div>
+                <p
+                    class="has-text-weight-semibold mt-2"
+                    :class="modelValue == 3 ? 'has-text-link' : ''"
+                >
+                    Standard With Social Media
+                </p>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import { success as successAlert  } from '@/Libs/alert';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'HeaderLayout',
 
         props: {
+            modelValue: {
+                type: Number,
+                required: true,
+            },
             setting: {
                 type: Object,
                 required: true
             },
         },
+
+        emits: [
+            'update:modelValue'
+        ],
 
         setup() {
             return {
@@ -72,25 +97,9 @@
             };
         },
 
-        data() {
-            return {
-                form: {
-                    layout: parseInt(this.setting.value),
-                },
-            };
-        },
-
         methods: {
-            saveLayout() {
-                this.$inertia.post(
-                    route(this.baseRouteName+".layout.update"),
-                    this.form,
-                    {
-                        onSuccess: (page) => {
-                            successAlert(page.props.flash.message);
-                        }
-                    }
-                )
+            updateFormLayout(value) {
+                this.$emit('update:modelValue', value);
             },
         },
     }
@@ -98,7 +107,7 @@
 
 <style scoped>
     .is-active {
-        border: 2px solid rgb(67, 67, 235);
+        border: 2px solid hsl(217, 71%, 53%);
     }
 
     .card-hover {

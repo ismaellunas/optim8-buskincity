@@ -6,7 +6,6 @@ use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class CategoryController extends CrudController
@@ -63,10 +62,6 @@ class CategoryController extends CrudController
         $record = new $this->model;
         $inputs = $request->validated();
 
-        foreach ($inputs as $key => $input) {
-            $inputs[$key]['slug'] = Str::of($input['name'])->slug('-');
-        }
-
         $record->saveFromInputs($inputs);
 
         $this->generateFlashMessage('Category created successfully!');
@@ -102,10 +97,6 @@ class CategoryController extends CrudController
     public function update(CategoryRequest $request, Category $category)
     {
         $inputs = $request->validated();
-
-        foreach ($inputs as $key => $input) {
-            $inputs[$key]['slug'] = Str::of($input['name'])->slug('-');
-        }
 
         $category->saveFromInputs($inputs);
 
