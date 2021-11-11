@@ -158,9 +158,9 @@
 
             checkNestedMenuItems() {
                 let self = this;
-                forEach(self.menuForm.menu_items, function(values) {
-                    forEach(values.children, function(value) {
-                        if (value['children'].length > 0) {
+                forEach(self.menuForm.menu_items, function(menuItem) {
+                    forEach(menuItem.children, function(child) {
+                        if (child['children'].length > 0) {
                             self.menuForm.menu_items = self.lastDataMenuItems;
                             oopsAlert(null, "Cannot add nested menu more than 2");
                         }
@@ -243,5 +243,5 @@
                 });
             },
         }
-    }
+    };
 </script>
