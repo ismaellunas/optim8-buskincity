@@ -4,37 +4,41 @@ namespace App\Entities\Menus;
 
 use App\Contracts\MenuInterface;
 
-use App\Models\MenuItem;
-
-class PageMenu implements MenuInterface
+class PageMenu extends BaseMenu implements MenuInterface
 {
-    public $id;
-    private $menuItem;
-
-    function __construct($id = null)
+    public function __construct(array $attributes = [])
     {
-        $this->menuItem = MenuItem::where('id', $id)
-            ->with(['page', 'menu'])
-            ->first();
+        parent::__construct($attributes);
+
+        $this->page_id = $attributes['page_id'] ?? null;
     }
 
-    function getUrl(): string
+    protected function getEagerLoads(): array
     {
-        $locale = $this->menuItem->menu->locale;
-        $page = $this->menuItem->page->translateOrDefault($locale);
+        return [
+            'page' => function ($query) {
+                $query->select('id');
+                $query->with('translations', function ($query) {
+                    $query->select([
+                        'id',
+                        'page_id',
+                        'locale',
+                        'slug',
+                    ]);
+                });
+            },
+            'menu',
+        ];
+    }
+
+    public function getUrl(): string
+    {
+        $locale = $this->getModel()->menu->locale;
+        $page = $this->getModel()->page->translateOrDefault($locale);
 
         return route('frontend.pages.show', [
             'locale' => $locale,
             'page_translation' => $page->slug,
         ]);
-    }
-
-    function nullFields(): array
-    {
-        return [
-            'url',
-            'post_id',
-            'category_id',
-        ];
     }
 }
