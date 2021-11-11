@@ -9,18 +9,19 @@
         :group="{ name: 'g1' }"
         :list="menuItems"
     >
-        <template #item="{ element }">
+        <template #item="{ element, index }">
             <div>
                 <theme-menu-item
-                    :menu-item="element"
-                    :locale-options="localeOptions"
                     :is-child="isChild"
+                    :locale-options="localeOptions"
+                    :menu-item-index="index"
+                    :menu-item="element"
                     :selected-locale="selectedLocale"
                     @delete-row="deleteRow"
                     @duplicate-menu-item-above="duplicateMenuItemAbove"
                     @duplicate-menu-item-below="duplicateMenuItemBelow"
                     @duplicate-menu-item-locale="duplicateMenuItemLocale"
-                    @edit-row="$emit('editRow', $event)"
+                    @edit-row="$emit('edit-row', $event)"
                 />
 
                 <navigation-menu
@@ -39,7 +40,7 @@
             <a
                 v-if="!isChild"
                 class="panel-block p-4 has-background-white border-top has-text-link"
-                @click.prevent="$emit('openFormModal')"
+                @click.prevent="$emit('open-form-modal')"
             >
                 <span class="panel-icon handle-menu has-text-link">
                     <i
