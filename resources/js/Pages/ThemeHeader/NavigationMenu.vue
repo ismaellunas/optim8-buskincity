@@ -9,97 +9,20 @@
         :group="{ name: 'g1' }"
         :list="menuItems"
     >
-        <template #item="{ element, index }">
+        <template #item="{ element }">
             <div>
-                <div
-                    class="panel-block p-4 has-background-white"
-                >
-                    <div class="level">
-                        <div
-                            class="level-left"
-                            :class="isChild ? 'pl-4' : ''"
-                        >
-                            <span class="panel-icon handle-menu">
-                                <i
-                                    class="fas fa-bars"
-                                    aria-hidden="true"
-                                />
-                            </span>
-                            <span
-                                v-if="element.children.length > 0"
-                                class="panel-icon"
-                            >
-                                <i
-                                    class="fas fa-caret-down"
-                                    aria-hidden="true"
-                                />
-                            </span>
-                            {{ element.title }}
-                            <sdb-tag
-                                v-for="translation in element.translations"
-                                :key="translation.id"
-                                class="is-info px-2 ml-1 is-small"
-                            >
-                                {{ translation.locale?.toUpperCase() }}
-                            </sdb-tag>
-                        </div>
-                        <div class="level-right">
-                            <sdb-dropdown
-                                style-button="border: none"
-                            >
-                                <template #trigger>
-                                    <i
-                                        class="far fa-copy"
-                                    />
-                                </template>
-                                <template #default>
-                                    <template
-                                        v-for="localeOption in localeOptions"
-                                        :key="localeOption.id"
-                                    >
-                                        <a
-                                            v-if="localeOption.id != selectedLocale"
-                                            class="dropdown-item"
-                                            @click.prevent="duplicateMenuItemLocale(localeOption.id, element)"
-                                        >
-                                            Duplicate to {{ localeOption.name }}
-                                        </a>
-                                    </template>
-                                    <a
-                                        class="dropdown-item"
-                                        @click.prevent="duplicateMenuItemAbove(element, index)"
-                                    >
-                                        Duplicate Menu Above
-                                    </a>
-                                    <a
-                                        class="dropdown-item"
-                                        @click.prevent="duplicateMenuItemBelow(element, index)"
-                                    >
-                                        Duplicate Menu Below
-                                    </a>
-                                </template>
-                            </sdb-dropdown>
-                            <sdb-button
-                                type="button"
-                                class="is-ghost has-text-black"
-                                @click="$emit('editRow', element)"
-                            >
-                                <span class="icon is-small">
-                                    <i class="fas fa-pen" />
-                                </span>
-                            </sdb-button>
-                            <sdb-button
-                                type="button"
-                                class="is-ghost has-text-black ml-1"
-                                @click="deleteRow(index)"
-                            >
-                                <span class="icon is-small">
-                                    <i class="far fa-trash-alt" />
-                                </span>
-                            </sdb-button>
-                        </div>
-                    </div>
-                </div>
+                <theme-menu-item
+                    :menu-item="element"
+                    :locale-options="localeOptions"
+                    :is-child="isChild"
+                    :selected-locale="selectedLocale"
+                    @delete-row="deleteRow"
+                    @duplicate-menu-item-above="duplicateMenuItemAbove"
+                    @duplicate-menu-item-below="duplicateMenuItemBelow"
+                    @duplicate-menu-item-locale="duplicateMenuItemLocale"
+                    @edit-row="$emit('editRow', $event)"
+                />
+
                 <navigation-menu
                     v-if="!isChild"
                     :menu-items="element.children"
@@ -131,9 +54,7 @@
 
 <script>
     import Draggable from "vuedraggable";
-    import SdbButton from '@/Sdb/Button';
-    import SdbDropdown from '@/Sdb/Dropdown';
-    import SdbTag from '@/Sdb/Tag';
+    import ThemeMenuItem from '@/Sdb/ThemeMenuItem';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { confirmDelete } from '@/Libs/alert';
     import { cloneDeep } from 'lodash';
@@ -143,9 +64,7 @@
 
         components: {
             Draggable,
-            SdbButton,
-            SdbDropdown,
-            SdbTag,
+            ThemeMenuItem,
         },
 
         props: {
