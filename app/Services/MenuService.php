@@ -50,6 +50,19 @@ class MenuService
         return $menus;
     }
 
+    public function getFooterMenus(array $locales = []): array
+    {
+        $menus = [];
+
+        $locales = array_merge([config('app.fallback_locale')], $locales);
+
+        foreach ($locales as $locale) {
+            $menus[$locale] = Menu::generateMenuItems($locale, 2);
+        }
+
+        return $menus;
+    }
+
     public static function generateBackendMenu(Request $request): array
     {
         $user = $request->user();
