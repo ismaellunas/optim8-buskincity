@@ -88,11 +88,11 @@
         },
 
         emits: [
-            'duplicateMenuItemLocale',
-            'editRow',
-            'menuItems',
-            'openFormModal',
-            'updateLastDataMenuItems'
+            'duplicate-menu-item-locale',
+            'edit-row',
+            'menu-items',
+            'open-form-modal',
+            'update-last-data-menu-items'
         ],
 
         setup() {
@@ -113,7 +113,7 @@
 
         methods: {
             editRow(menuItem) {
-                this.$emit('editRow', menuItem);
+                this.$emit('edit-row', menuItem);
             },
 
             deleteRow(index) {
@@ -127,7 +127,7 @@
 
                 confirmDelete("Are you sure?", message).then((result) => {
                     if (result.isConfirmed) {
-                        self.$emit('menuItems', menuItems.splice(index, 1));
+                        self.$emit('menu-items', menuItems.splice(index, 1));
                         self.updateLastDataMenuItems();
                     }
                 });
@@ -140,7 +140,7 @@
                 cloneMenuItem['id'] = null;
                 cloneMenuItem['children'] = [];
 
-                this.$emit('menuItems', menuItems.splice(index, 0, cloneMenuItem));
+                this.$emit('menu-items', menuItems.splice(index, 0, cloneMenuItem));
                 this.updateLastDataMenuItems();
             },
 
@@ -151,16 +151,16 @@
                 cloneMenuItem['id'] = null;
                 cloneMenuItem['children'] = [];
 
-                this.$emit('menuItems', menuItems.splice(index + 1, 0, cloneMenuItem));
+                this.$emit('menu-items', menuItems.splice(index + 1, 0, cloneMenuItem));
                 this.updateLastDataMenuItems();
             },
 
             duplicateMenuItemLocale(locale, menuItem) {
-                this.$emit('duplicateMenuItemLocale', locale, menuItem);
+                this.$emit('duplicate-menu-item-locale', locale, menuItem);
             },
 
             updateLastDataMenuItems() {
-                this.$emit('updateLastDataMenuItems');
+                this.$emit('update-last-data-menu-items');
             },
         },
     }
