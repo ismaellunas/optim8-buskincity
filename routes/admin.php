@@ -82,7 +82,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
         Route::prefix('footer')->name('footer.')->group(function () {
             Route::get('/', [ThemeFooterController::class, 'edit'])->name('edit');
-            Route::post('/', [ThemeFooterController::class, 'update'])->name('update');
+            Route::post('/', [ThemeFooterController::class, 'update'])->name('layout.update');
             Route::post('/menu-item', [ThemeFooterMenuController::class, 'update'])->name('update-menu-item');
             Route::delete('/{menuItem}/destroy', [ThemeFooterMenuController::class, 'destroy'])->name('destroy');
         });
