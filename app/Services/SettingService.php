@@ -301,11 +301,18 @@ class SettingService
         return $process->isSuccessful();
     }
 
-    public function uploadLogoToCloudStorage(array $inputs): MediaAsset
-    {
+    public function uploadLogoToCloudStorage(
+        array $inputs,
+        string $folderPrefix = null
+    ): MediaAsset {
         $storage = new CloudinaryStorage();
 
-        $folder = "assets/logo";
+
+        $folder = "settings";
+
+        if ($folderPrefix) {
+            $folder = $folderPrefix.'_'.$folder;
+        }
 
         $this->deleteLogoOnCloudStorage($inputs['file_name']);
 
@@ -319,10 +326,18 @@ class SettingService
     }
 
     public function deleteLogoOnCloudStorage(
-        string $fileName = 'logo'
+        string $fileName = 'logo',
+        string $folderPrefix = null
     ) {
         $storage = new CloudinaryStorage();
-        $fileName = 'assets/logo/'.$fileName;
+
+        $folder = "settings";
+
+        if ($folderPrefix) {
+            $folder = $folderPrefix.'_'.$folder;
+        }
+
+        $fileName = $folder.'/'.$fileName;
 
         $storage->destroy($fileName);
     }
