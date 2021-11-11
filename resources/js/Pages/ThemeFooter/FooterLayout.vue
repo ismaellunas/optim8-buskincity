@@ -1,5 +1,5 @@
 <template>
-    <main>
+    <div>
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
@@ -12,8 +12,8 @@
             <div class="column is-6">
                 <div
                     class="card card-hover"
-                    :class="form.layout == 1 ? 'is-active' : ''"
-                    @click="form.layout = 1"
+                    :class="modelValue == 1 ? 'is-active' : ''"
+                    @click="updateFormLayout(1)"
                 >
                     <div class="card-content">
                         <div class="content">
@@ -21,25 +21,37 @@
                         </div>
                     </div>
                 </div>
-                Standard
+                <p
+                    class="has-text-weight-semibold mt-2"
+                    :class="modelValue == 1 ? 'has-text-link' : ''"
+                >
+                    Standard
+                </p>
             </div>
         </div>
-    </main>
+    </div>
 </template>
 
 <script>
-    import { success as successAlert  } from '@/Libs/alert';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'FooterLayout',
 
         props: {
+            modelValue: {
+                type: Number,
+                required: true,
+            },
             setting: {
                 type: Object,
                 required: true
             },
         },
+
+        emits: [
+            'update:modelValue'
+        ],
 
         setup() {
             return {
@@ -47,25 +59,9 @@
             };
         },
 
-        data() {
-            return {
-                form: {
-                    layout: parseInt(this.setting.value),
-                },
-            };
-        },
-
         methods: {
-            saveLayout() {
-                this.$inertia.post(
-                    route(this.baseRouteName+".update"),
-                    this.form,
-                    {
-                        onSuccess: (page) => {
-                            successAlert(page.props.flash.message);
-                        }
-                    }
-                )
+            updateFormLayout(value) {
+                this.$emit('update:modelValue', value);
             },
         },
     }
@@ -73,7 +69,7 @@
 
 <style scoped>
     .is-active {
-        border: 2px solid rgb(67, 67, 235);
+        border: 2px solid hsl(217, 71%, 53%);
     }
 
     .card-hover {

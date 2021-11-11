@@ -27,26 +27,26 @@
                 </sdb-button>
             </sdb-tab>
 
-            <footer-layout
+            <layout
                 v-if="isLayout"
-                ref="footerLayout"
-                :setting="settings.footer_layout"
+                ref="layout"
+                :settings="settings"
             />
 
-            <footer-navigation
+            <!-- <footer-navigation
                 v-if="isNavigation"
                 ref="footerNavigation"
                 :last-saved="menuItemLastSaved"
-                :menu-items="menuItems"
+                :menu-items="footerMenus"
                 :menu="menu"
-            />
+            /> -->
         </div>
     </app-layout>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
-    import FooterLayout from './FooterLayout';
+    import Layout from './Layout';
     import FooterNavigation from './FooterNavigation';
     import MixinHasTab from '@/Mixins/HasTab';
     import SdbButton from '@/Sdb/Button';
@@ -56,7 +56,7 @@
     export default {
         components: {
             AppLayout,
-            FooterLayout,
+            Layout,
             FooterNavigation,
             SdbButton,
             SdbTab,
@@ -74,7 +74,7 @@
                 type: Object,
                 required: true,
             },
-            menuItems: {
+            footerMenus: {
                 type: Object,
                 default:() => {},
             },
@@ -114,16 +114,50 @@
         },
         methods: {
             onTabSelected(tab) {
-                this.activeTab = tab;
+                if (tab == 'layout') {
+                    this.activeTab = tab;
+                }
+
+                if (tab == 'navigation') {
+                    if (this.$refs.layout.isFormDirty()) {
+                        this.confirmAlert(tab)
+                    } else {
+                        this.activeTab = tab;
+                    }
+                }
             },
             onSave(tab) {
                 if (tab == 'layout') {
-                    this.$refs.footerLayout.saveLayout();
+                    this.$refs.layout.onSubmit();
                 }
 
                 if (tab == 'navigation') {
                     this.$refs.footerNavigation.updateMenuItems();
                 }
+            },
+            confirmAlert(tab) {
+                const confirmationMessage = (
+                    'It looks like you have been editing something. '
+                    + 'If you leave before saving, your changes will be lost.'
+                );
+
+                this.$swal.fire({
+                    title: 'Are you sure?',
+                    text: confirmationMessage,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Leave this',
+                    cancelButtonText: 'Continue Editing',
+                    scrollbarPadding: false,
+                }).then((result) => {
+                    if (result.isDismissed) {
+                        return false;
+                    } else if (result.isConfirmed) {
+                        this.activeTab = tab;
+                    }
+                })
             },
         }
     }
