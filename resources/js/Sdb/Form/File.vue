@@ -11,7 +11,7 @@
             :accept="acceptedTypes"
             :disabled="disabled"
             :is-name-displayed="isNameDisplayed"
-            @on-file-picked="$emit('onFilePicked')"
+            @on-file-picked="$emit('onFilePicked', $event)"
         />
 
         <template #error>

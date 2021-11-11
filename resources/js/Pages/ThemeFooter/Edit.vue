@@ -33,6 +33,7 @@
                 v-if="activeTab == 'layout'"
                 ref="layout"
                 :settings="settings"
+                :links="links"
             />
 
             <navigation
@@ -83,6 +84,10 @@
                 default() {
                     return {};
                 },
+            },
+            links: {
+                type: Array,
+                default:() => [],
             },
             menuItemLastSaved: {
                 type: String,
