@@ -107,6 +107,11 @@ class Menu extends Model
         }
     }
 
+    private static function getTypeMenuClass(string $type)
+    {
+        return "\App\Entities\Menus\\".MenuItem::TYPE_VALUES[$type]."Menu";
+    }
+
     private function updateMenuItems(
         array $inputs,
         ?int $parentId = null
