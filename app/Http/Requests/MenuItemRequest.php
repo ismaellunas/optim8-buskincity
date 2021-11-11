@@ -28,7 +28,10 @@ class MenuItemRequest extends FormRequest
                 'integer',
                 Rule::in(array_keys(MenuItem::TYPE_VALUES)),
             ],
-            'menu_items.*.url' => 'nullable',
+            'menu_items.*.url' => [
+                'nullable',
+                'url',
+            ],
             'menu_items.*.page_id' => [
                 'nullable',
                 'integer',
@@ -63,6 +66,7 @@ class MenuItemRequest extends FormRequest
             'post_id',
             'category_id',
             'menu_id',
+            'url',
         ];
 
         foreach ($columns as $column) {
