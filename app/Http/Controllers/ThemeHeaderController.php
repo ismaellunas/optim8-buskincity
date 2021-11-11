@@ -14,6 +14,7 @@ use App\Services\{
     TranslationService,
 };
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Inertia\Inertia;
 
 class ThemeHeaderController extends ThemeOptionController
@@ -63,7 +64,10 @@ class ThemeHeaderController extends ThemeOptionController
         $setting->save();
 
         if ($request->hasFile('logo.file')) {
-            $upload = $this->settingService->uploadLogoToCloudStorage($inputs['logo']);
+            $upload = $this->settingService->uploadLogoToCloudStorage(
+                $inputs['logo'],
+                (!App::environment('production') ? config('app.env') : null)
+            );
 
             $setting = Setting::firstOrNew(['key' => 'header_logo_url']);
             $setting->display_name = $upload->fileName;
