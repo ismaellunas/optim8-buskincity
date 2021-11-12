@@ -23,16 +23,6 @@
                     @duplicate-menu-item-locale="duplicateMenuItemLocale"
                     @edit-row="$emit('edit-row', $event)"
                 />
-
-                <navigation-menu
-                    v-if="!isChild"
-                    :menu-items="element.children"
-                    :locale-options="localeOptions"
-                    :selected-locale="selectedLocale"
-                    @duplicate-menu-item-locale="duplicateMenuItemLocale"
-                    @edit-row="editRow"
-                    @update-last-data-menu-items="updateLastDataMenuItems"
-                />
             </div>
         </template>
 
