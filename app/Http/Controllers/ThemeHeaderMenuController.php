@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\MenuItemRequest;
+use App\Http\Requests\MenuRequest;
 use App\Models\Menu;
+use Illuminate\Http\Request;
 
 class ThemeHeaderMenuController extends ThemeOptionController
 {
     protected $baseRouteName = 'admin.theme.header';
 
-    public function update(MenuItemRequest $request)
+    public function update(MenuRequest $request)
     {
         $inputs = $request->all();
 
