@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ThemeHeaderLayoutRequest extends FormRequest
+class ThemeFooterLayoutRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,19 +25,35 @@ class ThemeHeaderLayoutRequest extends FormRequest
     {
         return [
             'layout' => ['required', 'integer'],
-            'logo.file' => [
+            'links.*.file' => [
+                'sometimes',
                 'nullable',
                 'file',
                 'max:'.config('constants.one_megabyte') * 50,
                 'mimes:'.implode(',', config('constants.extensions.image')),
+            ],
+            'links.*.url' => [
+                'sometimes',
+                'required',
+                'url',
             ],
         ];
     }
 
     public function attributes()
     {
-        return [
-            'logo.file' => 'Logo',
+        $attr = [];
+        $columns = [
+            'file',
+            'url',
         ];
+
+        foreach ($columns as $column) {
+            for ($i = 0; $i < count($this['links']); $i++) {
+                $attr["links.".$i.".".$column] = ucwords(str_replace('_', ' ', $column));
+            }
+        }
+
+        return $attr;
     }
 }

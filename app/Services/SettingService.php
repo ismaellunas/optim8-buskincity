@@ -98,6 +98,18 @@ class SettingService
             ->all();
     }
 
+    public function getFooter(): array
+    {
+        return Setting::where('group', 'footer')
+            ->get([
+                'key',
+                'value',
+                'updated_at',
+            ])
+            ->keyBy('key')
+            ->all();
+    }
+
     public function getAdditionalCodes(): array
     {
         return Setting::where('group', 'additional_code')

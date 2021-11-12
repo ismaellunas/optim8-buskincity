@@ -27,11 +27,9 @@
                     :menu-items="menuForm.menu_items"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
-                    @change="checkNestedMenuItems"
                     @duplicate-menu-item-locale="duplicateMenuItemLocale"
                     @edit-row="editRow"
                     @open-form-modal="openFormModal()"
-                    @update-last-data-menu-items="updateLastDataMenuItems"
                 />
             </div>
         </div>
@@ -44,7 +42,6 @@
             :selected-locale="selectedLocale"
             @add-menu-item="addMenuItem"
             @close="closeModal()"
-            @update-last-data-menu-items="updateLastDataMenuItems"
         />
     </section>
 </template>
@@ -56,7 +53,7 @@
     import SdbButton from '@/Sdb/Button';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
     import { oops as oopsAlert, success as successAlert, confirm as confirmAlert } from '@/Libs/alert';
-    import { forEach, cloneDeep } from 'lodash';
+    import { forEach, cloneDeep, isEmpty } from 'lodash';
 
     export default {
         name: 'Navigation',
@@ -80,7 +77,7 @@
                 type: String,
                 default: "-",
             },
-            headerMenus: {
+            footerMenus: {
                 type: Object,
                 default:() => {},
             },
@@ -105,7 +102,6 @@
         data() {
             return {
                 activeTab: 'navigation',
-                lastDataMenuItems: [],
                 loader: null,
                 menuForm: {},
                 selectedLocale: this.defaultLocale,
@@ -115,7 +111,6 @@
 
         mounted() {
             this.menuForm = this.getMenuForm(this.selectedLocale);
-            this.updateLastDataMenuItems();
         },
 
         methods: {
@@ -126,7 +121,9 @@
             getMenuForm(locale) {
                 return useForm({
                     locale: locale,
-                    menu_items: cloneDeep(this.headerMenus[locale]),
+                    menu_items: cloneDeep(
+                        !isEmpty(this.footerMenus) ? this.footerMenus[locale] : []
+                    ),
                 });
             },
 
@@ -139,15 +136,12 @@
                             this.selectedLocale = locale;
                             this.menuForm.reset();
                             this.menuForm = this.getMenuForm(locale);
-
-                            this.updateLastDataMenuItems();
                         }
                     });
                 } else {
                     this.selectedLocale = locale;
 
                     this.menuForm = this.getMenuForm(locale);
-                    this.updateLastDataMenuItems();
                 }
             },
 
@@ -156,30 +150,10 @@
                 this.isModalOpen = true;
             },
 
-            checkNestedMenuItems() {
-                let self = this;
-                forEach(self.menuForm.menu_items, function(menuItem) {
-                    forEach(menuItem.children, function(child) {
-                        if (child['children'].length > 0) {
-                            self.menuForm.menu_items = self.lastDataMenuItems;
-                            oopsAlert(null, "Cannot add nested menu more than 2");
-                        }
-                    });
-                });
-
-                self.updateLastDataMenuItems();
-            },
-
-            updateLastDataMenuItems() {
-                this.lastDataMenuItems = cloneDeep(this.menuForm.menu_items);
-            },
-
             addMenuItem(menuItem) {
                 this.menuForm.menu_items.push(
                     cloneDeep(menuItem)
                 );
-
-                this.updateLastDataMenuItems();
             },
 
             editRow(menuItem) {
@@ -196,11 +170,10 @@
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
-                        this.updateLastDataMenuItems();
                     },
                     onFinish: visit => {
                         self.loader.hide();
-                    }
+                    },
                 });
             },
 
@@ -219,8 +192,6 @@
 
                             this.menuForm = this.getMenuForm(locale);
                             this.menuForm.menu_items.push(cloneMenuItem);
-
-                            this.updateLastDataMenuItems();
                         }
                     });
                 } else {
@@ -228,8 +199,6 @@
 
                     this.menuForm = this.getMenuForm(locale);
                     this.menuForm.menu_items.push(cloneMenuItem);
-
-                    this.updateLastDataMenuItems();
                 }
             },
 

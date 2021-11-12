@@ -11,6 +11,8 @@ use App\Http\Controllers\{
     ThemeColorController,
     ThemeFontController,
     ThemeFontSizeController,
+    ThemeFooterController,
+    ThemeFooterMenuController,
     ThemeHeaderController,
     ThemeHeaderMenuController,
     UserController,
@@ -75,6 +77,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::get('/', [ThemeHeaderController::class, 'edit'])->name('edit');
             Route::post('/layout', [ThemeHeaderController::class, 'update'])->name('layout.update');
             Route::post('/menu-item', [ThemeHeaderMenuController::class, 'update'])->name('update-menu-item');
+        });
+
+        Route::prefix('footer')->name('footer.')->group(function () {
+            Route::get('/', [ThemeFooterController::class, 'edit'])->name('edit');
+            Route::post('/', [ThemeFooterController::class, 'update'])->name('layout.update');
+            Route::post('/menu-item', [ThemeFooterMenuController::class, 'update'])->name('update-menu-item');
         });
 
         Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');
