@@ -113,19 +113,29 @@
                             <h3><b>Headings Font</b></h3>
                         </div>
                         <div class="column">
-                            <sdb-form-select
-                                v-model="form.headings_font_family"
+                            <sdb-form-dropdown-search
                                 label="Font Family"
-                                :message="error('headings_font_family')"
+                                :close-on-click="true"
+                                @search="searchFont($event, 'headings_font_family')"
                             >
-                                <option
-                                    v-for="font in fonts"
-                                    :key="font.family"
-                                    :value="font.family"
+                                <template #trigger>
+                                    <span :style="{'min-width': '4rem'}">
+                                        {{ form.headings_font_family }}
+                                    </span>
+                                </template>
+
+                                <sdb-dropdown-item @click="form.headings_font_family = null">
+                                    (Default)
+                                </sdb-dropdown-item>
+
+                                <sdb-dropdown-item
+                                    v-for="(font, index) in filteredFonts.headings_font_family"
+                                    :key="index"
+                                    @click="form.headings_font_family = font.family"
                                 >
                                     {{ font.family }}
-                                </option>
-                            </sdb-form-select>
+                                </sdb-dropdown-item>
+                            </sdb-form-dropdown-search>
 
                             <sdb-form-select
                                 v-model="form.headings_font_weight"
@@ -172,19 +182,29 @@
                             <h3><b>Main Text Font</b></h3>
                         </div>
                         <div class="column">
-                            <sdb-form-select
-                                v-model="form.main_text_font_family"
+                            <sdb-form-dropdown-search
                                 label="Font Family"
-                                :message="error('main_text_font_family')"
+                                :close-on-click="true"
+                                @search="searchFont($event, 'main_text_font_family')"
                             >
-                                <option
-                                    v-for="font in fonts"
-                                    :key="font.family"
-                                    :value="font.family"
+                                <template #trigger>
+                                    <span :style="{'min-width': '4rem'}">
+                                        {{ form.main_text_font_family }}
+                                    </span>
+                                </template>
+
+                                <sdb-dropdown-item @click="form.main_text_font_family = null">
+                                    (Default)
+                                </sdb-dropdown-item>
+
+                                <sdb-dropdown-item
+                                    v-for="(font, index) in filteredFonts.main_text_font_family"
+                                    :key="index"
+                                    @click="form.main_text_font_family = font.family"
                                 >
                                     {{ font.family }}
-                                </option>
-                            </sdb-form-select>
+                                </sdb-dropdown-item>
+                            </sdb-form-dropdown-search>
 
                             <sdb-form-select
                                 v-model="form.main_text_font_weight"
@@ -231,19 +251,29 @@
                             <h3><b>Buttons Font</b></h3>
                         </div>
                         <div class="column">
-                            <sdb-form-select
-                                v-model="form.buttons_font_family"
-                                label="Font Family"
-                                :message="error('buttons_font_family')"
+                            <sdb-form-dropdown-search
+                                label="Font Weight"
+                                :close-on-click="true"
+                                @search="searchFont($event, 'buttons_font_family')"
                             >
-                                <option
-                                    v-for="font in fonts"
-                                    :key="font.family"
-                                    :value="font.family"
+                                <template #trigger>
+                                    <span :style="{'min-width': '4rem'}">
+                                        {{ form.buttons_font_family }}
+                                    </span>
+                                </template>
+
+                                <sdb-dropdown-item @click="form.buttons_font_family = null">
+                                    (Default)
+                                </sdb-dropdown-item>
+
+                                <sdb-dropdown-item
+                                    v-for="(font, index) in filteredFonts.buttons_font_family"
+                                    :key="index"
+                                    @click="form.buttons_font_family = font.family"
                                 >
                                     {{ font.family }}
-                                </option>
-                            </sdb-form-select>
+                                </sdb-dropdown-item>
+                            </sdb-form-dropdown-search>
 
                             <sdb-form-select
                                 v-model="form.buttons_font_weight"
@@ -302,13 +332,15 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
     import SdbCheckbox from '@/Sdb/Checkbox';
+    import SdbDropdownItem from '@/Sdb/DropdownItem';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import SdbFormDropdownSearch from '@/Sdb/Form/DropdownSearch';
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbInput from '@/Sdb/Input';
     import SdbInputError from '@/Sdb/InputError';
     import SdbLabel from '@/Sdb/Label';
     import { Head, useForm } from '@inertiajs/inertia-vue3';
-    import { concat, isEmpty, replace } from 'lodash';
+    import { concat, debounce, filter, isEmpty, replace } from 'lodash';
     import { success as successAlert } from '@/Libs/alert';
 
     export default {
@@ -319,10 +351,12 @@
             Head,
             SdbButton,
             SdbCheckbox,
+            SdbDropdownItem,
             SdbErrorNotifications,
+            SdbFormDropdownSearch,
+            SdbFormSelect,
             SdbInput,
             SdbInputError,
-            SdbFormSelect,
             SdbLabel,
         },
 
@@ -383,6 +417,11 @@
                     'is-italic': "Italic",
                     'is-underlined': "Underline",
                 },
+                filteredFonts: {
+                    'headings_font_family': [],
+                    'main_text_font_family': [],
+                    'buttons_font_family': [],
+                },
             };
         },
 
@@ -408,7 +447,13 @@
         },
 
         mounted() {
-            this.getFonts();
+            const self = this;
+            this.getFonts().then(function () {
+                let initFilteredFonts = self.fonts.slice(0, 10);
+                self.filteredFonts.headings_font_family = initFilteredFonts;
+                self.filteredFonts.main_text_font_family = initFilteredFonts;
+                self.filteredFonts.buttons_font_family = initFilteredFonts;
+            });
         },
 
         methods: {
@@ -436,7 +481,7 @@
 
                 self.loader = self.$loading.show();
 
-                axios.get(this.webfontsUrl)
+                return axios.get(this.webfontsUrl)
                     .then((response) => {
                         self.fonts = response.data.items;
                         self.loader.hide();
@@ -469,6 +514,15 @@
                     additionalClasses
                 ).filter(Boolean);
             },
+            searchFont: debounce(function(term, key) {
+                if (!isEmpty(term) && term.length > 2) {
+                    this.filteredFonts[ key ] = filter(this.fonts, function (font) {
+                        return new RegExp(term, 'i').test(font.family);
+                    }).slice(0, 10);
+                } else {
+                    this.filteredFonts[ key ] = this.fonts.slice(0, 10);
+                }
+            }, 750),
         },
     };
 </script>
