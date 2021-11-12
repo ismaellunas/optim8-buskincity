@@ -22,7 +22,7 @@ class MenuFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'locale' => config('app.fallback_locale'),
         ];
     }
 }

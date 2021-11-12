@@ -60,8 +60,9 @@ class CategoryController extends CrudController
     public function store(CategoryRequest $request)
     {
         $record = new $this->model;
+        $inputs = $request->validated();
 
-        $record->saveFromInputs($request->validated());
+        $record->saveFromInputs($inputs);
 
         $this->generateFlashMessage('Category created successfully!');
 
@@ -95,11 +96,11 @@ class CategoryController extends CrudController
 
     public function update(CategoryRequest $request, Category $category)
     {
-        $validatedData = $request->validated();
+        $inputs = $request->validated();
 
-        $category->saveFromInputs($validatedData);
+        $category->saveFromInputs($inputs);
 
-        $category->syncTranslations(array_keys($validatedData));
+        $category->syncTranslations(array_keys($inputs));
 
         $this->generateFlashMessage('Category updated successfully!');
 

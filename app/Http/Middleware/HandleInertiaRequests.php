@@ -77,7 +77,7 @@ class HandleInertiaRequests extends Middleware
                     )
                 )
                 ? MenuService::generateBackendMenu($request)
-                : $this->menuService->generateMenus(TranslationSv::currentLanguage()),
+                : $this->menuService->getHeaderMenus([TranslationSv::currentLanguage()]),
             'menuSettings' => $this->settingService->getHeader(),
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
