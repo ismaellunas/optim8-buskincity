@@ -39,7 +39,7 @@
                 v-if="activeTab == 'navigation'"
                 ref="navigation"
                 :last-saved="menuItemLastSaved"
-                :menu-items="menuItems"
+                :header-menus="headerMenus"
                 :menu="menu"
             />
         </div>
@@ -78,7 +78,7 @@
                 type: Object,
                 required: true,
             },
-            menuItems: {
+            headerMenus: {
                 type: Object,
                 default() {
                     return {};
@@ -111,17 +111,61 @@
             };
         },
         methods: {
-            onTabSelected(tab) {
-                this.activeTab = tab;
-            },
-            onSave(tab) {
+            setActiveTab(tab) {
+                if (tab === this.activeTab) {
+                    return false;
+                }
+
                 if (tab == 'layout') {
-                    this.$refs.layout.$refs.headerLayout.saveLayout();
+                    if (this.$refs.navigation.isFormDirty()) {
+                        this.confirmAlert(tab);
+                    } else {
+                        this.activeTab = tab;
+                    }
                 }
 
                 if (tab == 'navigation') {
-                    this.$refs.navigation.updateFormatMenu();
+                    if (this.$refs.layout.isFormDirty()) {
+                        this.confirmAlert(tab)
+                    } else {
+                        this.activeTab = tab;
+                    }
                 }
+            },
+
+            onSave(tab) {
+                if (tab == 'layout') {
+                    this.$refs.layout.onSubmit();
+                }
+
+                if (tab == 'navigation') {
+                    this.$refs.navigation.updateMenuItems();
+                }
+            },
+
+            confirmAlert(tab) {
+                const confirmationMessage = (
+                    'It looks like you have been editing something. '
+                    + 'If you leave before saving, your changes will be lost.'
+                );
+
+                this.$swal.fire({
+                    title: 'Are you sure?',
+                    text: confirmationMessage,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Leave this',
+                    cancelButtonText: 'Continue Editing',
+                    scrollbarPadding: false,
+                }).then((result) => {
+                    if (result.isDismissed) {
+                        return false;
+                    } else if (result.isConfirmed) {
+                        this.activeTab = tab;
+                    }
+                })
             },
         }
     }

@@ -301,30 +301,34 @@ class SettingService
         return $process->isSuccessful();
     }
 
-    public function uploadLogoToCloudStorage(array $inputs): MediaAsset
-    {
+    public function uploadLogoToCloudStorage(
+        array $inputs,
+        string $folderPrefix = null
+    ): MediaAsset {
         $storage = new CloudinaryStorage();
 
-        $folder = "assets/logo";
 
-        $this->deleteLogoOnCloudStorage($inputs['file_name']);
+        $folder = "settings";
+
+        if ($folderPrefix) {
+            $folder = $folderPrefix.'_'.$folder;
+        }
+
+        $this->deleteLogoOnCloudStorage($folder.'/'.$inputs['file_name']);
 
         return $storage->upload(
             $inputs['file'],
             $inputs['file_name'],
             $inputs['file_type'],
             $folder,
-            [
-                'invalidate' => true
-            ]
+            true,
         );
     }
 
     public function deleteLogoOnCloudStorage(
-        string $fileName = 'logo'
+        string $fileName
     ) {
         $storage = new CloudinaryStorage();
-        $fileName = 'assets/logo/'.$fileName;
 
         $storage->destroy($fileName);
     }

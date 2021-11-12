@@ -7,7 +7,7 @@
             <button
                 class="delete"
                 aria-label="close"
-                @click="$emit('close')"
+                @click="onClose()"
             />
         </template>
 
@@ -27,11 +27,11 @@
                     :message="error('type')"
                 >
                     <template
-                        v-for="(type, index) in types"
-                        :key="index"
+                        v-for="option in typeOptions"
+                        :key="option.id"
                     >
-                        <option :value="type">
-                            {{ type }}
+                        <option :value="option.id">
+                            {{ option.value }}
                         </option>
                     </template>
                 </sdb-form-select>
@@ -55,6 +55,12 @@
                     >
                         <option :value="option.id">
                             {{ option.value }}
+                            <template
+                                v-for="locale, index in option.locales"
+                                :key="index"
+                            >
+                                [{{ locale.toUpperCase() }}]
+                            </template>
                         </option>
                     </template>
                 </sdb-form-select>
@@ -70,7 +76,7 @@
                         :key="option.id"
                     >
                         <option :value="option.id">
-                            {{ option.value }}
+                            {{ option.value }} [{{ option.locale.toUpperCase() }}]
                         </option>
                     </template>
                 </sdb-form-select>
@@ -87,6 +93,12 @@
                     >
                         <option :value="option.id">
                             {{ option.value }}
+                            <template
+                                v-for="locale, index in option.locales"
+                                :key="index"
+                            >
+                                [{{ locale.toUpperCase() }}]
+                            </template>
                         </option>
                     </template>
                 </sdb-form-select>
@@ -99,7 +111,7 @@
             >
                 <div class="column">
                     <div class="is-pulled-right">
-                        <sdb-button @click="$emit('close')">
+                        <sdb-button @click="onClose()">
                             Cancel
                         </sdb-button>
                         <sdb-button
@@ -123,10 +135,9 @@
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbModalCard from '@/Sdb/ModalCard';
     import { isBlank } from '@/Libs/utils';
-    import { pull, sortBy, merge } from 'lodash';
-    import { reactive } from "vue";
-    import { success as successAlert, confirmDelete } from '@/Libs/alert';
+    import { cloneDeep, sortBy } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
+    import { reactive } from 'vue';
 
     export default {
         name: 'NavigationFormMenu',
@@ -153,7 +164,7 @@
             },
             menuItem: {
                 type: Object,
-                default: {},
+                default: () => {},
             },
             selectedLocale: {
                 type: String,
@@ -162,8 +173,9 @@
         },
 
         emits: [
+            'addMenuItem',
             'close',
-            'syncMenuItems',
+            'updateLastDataMenuItems',
         ],
 
         setup(props) {
@@ -172,26 +184,29 @@
             if (!isBlank(props.menuItem)) {
                 fields = props.menuItem;
             } else {
-                fields = {
+                fields = reactive({
                     id: null,
-                    locale: props.selectedLocale,
                     title: null,
-                    type: 'Url',
+                    type: 1,
                     url: null,
+                    order: null,
+                    parent_id: null,
+                    menu_id: props.menu.id,
                     page_id: null,
                     post_id: null,
                     category_id: null,
-                    menu_id: props.menu.id,
-                };
+                    children: [],
+                });
             }
 
             return {
                 categoryOptions: sortBy(usePage().props.value.categoryOptions, [(option) => option.value]),
                 defaultLocale: usePage().props.value.defaultLanguage,
-                form: reactive(fields),
+                form: fields,
+                firstFields: cloneDeep(fields),
                 pageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
                 postOptions: sortBy(usePage().props.value.postOptions, [(option) => option.value]),
-                types: usePage().props.value.types,
+                typeOptions: usePage().props.value.typeOptions,
             };
         },
 
@@ -203,19 +218,19 @@
 
         computed: {
             isTypeUrl() {
-                return this.form.type == 'Url';
+                return this.form.type == '1';
             },
 
             isTypePage() {
-                return this.form.type == 'Page';
+                return this.form.type == '2';
             },
 
             isTypePost() {
-                return this.form.type == 'Post';
+                return this.form.type == '3';
             },
 
             isTypeCategory() {
-                return this.form.type == 'Category'
+                return this.form.type == '4'
             },
         },
 
@@ -224,37 +239,28 @@
                 const self = this;
                 const form = this.form;
 
-                if (form.id === null) {
-                    this.$inertia.post(route(this.baseRouteName+'.store'), form, {
-                        preserveState: true,
-                        onStart: () => {
-                            self.loader = self.$loading.show();
-                        },
-                        onSuccess: (page) => {
-                            successAlert(page.props.flash.message);
-                        },
-                        onFinish: () => {
-                            self.loader.hide();
-                            this.$emit('close');
-                            this.$emit('syncMenuItems');
-                        }
-                    });
+                if (isBlank(this.menuItem)) {
+                    this.$emit('close');
+                    this.$emit('addMenuItem', form);
                 } else {
-                    this.$inertia.post(route(this.baseRouteName+'.update', form.id), form, {
-                        preserveState: true,
-                        onStart: () => {
-                            self.loader = self.$loading.show();
-                        },
-                        onSuccess: (page) => {
-                            successAlert(page.props.flash.message);
-                        },
-                        onFinish: () => {
-                            self.loader.hide();
-                            this.$emit('close');
-                            this.$emit('syncMenuItems');
-                        }
-                    });
+                    this.$emit('updateLastDataMenuItems');
+                    this.$emit('close');
                 }
+            },
+
+            onClose() {
+                this.resetForm();
+                this.$emit('close');
+            },
+
+            resetForm() {
+                const fields = this.firstFields;
+                this.form['title'] = fields['title'];
+                this.form['type'] = fields['type'];
+                this.form['url'] = fields['url'];
+                this.form['page_id'] = fields['page_id'];
+                this.form['post_id'] = fields['post_id'];
+                this.form['category_id'] = fields['category_id'];
             },
         },
     }

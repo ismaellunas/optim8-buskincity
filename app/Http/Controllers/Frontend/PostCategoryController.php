@@ -8,45 +8,39 @@ use App\Services\TranslationService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class PostController extends Controller
+class PostCategoryController extends Controller
 {
     protected $baseComponentName = 'Post/Frontend';
-    protected $baseRouteName = 'blog';
+    protected $baseRouteName = 'blog.category';
     protected $currentLanguage;
     protected $postService;
 
-    public function __construct(PostService $postService, TranslationService $translationService)
-    {
+    public function __construct(
+        PostService $postService,
+        TranslationService $translationService
+    ) {
         $this->postService = $postService;
         $this->translationService = $translationService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, $locale, $categoryId)
     {
         return Inertia::render($this->baseComponentName.'/Index', [
             'baseRouteName' => $this->baseRouteName,
-            'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
+            'categoryId' => (int)$categoryId,
+            'pageQueryParams' => array_filter($request->only(
+                'term',
+                'view',
+                'status',
+            )),
             'pageNumber' => $request->page,
             'currentLanguage' => $this->translationService->currentLanguage(),
             'records' => $this->postService->getBlogRecords(
                 $request->term ?? '',
                 10,
                 $this->translationService->currentLanguage(),
+                $categoryId
             ),
-        ]);
-    }
-
-    public function show(string $locale, string $slug)
-    {
-        $post = $this->postService->getFirstBySlug($slug, $locale);
-
-        if (!$post) {
-            return redirect()->route($this->baseRouteName.'.index', ['locale'=>$locale]);
-        }
-
-        return Inertia::render($this->baseComponentName.'/Show', [
-            'currentLanguage' => $this->translationService->currentLanguage(),
-            'post' => $post,
         ]);
     }
 }

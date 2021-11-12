@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\{
     Category,
     Media,
+    Menu,
     MenuItem,
     Page,
     Post,
@@ -36,68 +37,14 @@ class MenuService
         return '-';
     }
 
-    private function getMenuItems(
-        string $locale,
-        string $type
-    ): array
+    public function getHeaderMenus(array $locales = []): array
     {
-        return MenuItem::where('locale', $locale)
-            ->orderBy('order', 'ASC')
-            ->orderBy('parent_id', 'ASC')
-            ->whereHas('menu', function ($query) use ($type) {
-                if ($type == "header") {
-                    $query->header();
-                } else {
-                    $query->footer();
-                }
-            })
-            ->get()
-            ->toArray();
-    }
-
-    private function generateMenuItems(
-        array $menuItems,
-        $parentId = null
-    ): array {
-        $menus = [];
-        foreach ($menuItems as $menuItem) {
-            if ($menuItem['parent_id'] == $parentId) {
-                $children = $this->generateMenuItems($menuItems, $menuItem['id']);
-
-                if ($children) {
-                    $menuItem['children'] = $children;
-                } else {
-                    $menuItem['children'] = [];
-                }
-
-                $className = "\App\Menus\\".$menuItem['type']."Menu";
-                $typeMenu = new $className($menuItem['id']);
-                $menuItem['link'] = $typeMenu->getUrl();
-
-                $menus[] = $menuItem;
-            }
-        }
-
-        return $menus;
-    }
-
-    public function generateMenus(
-        ?string $locale = null,
-        string $type = "header"
-    ) :array {
         $menus = [];
 
-        if ($locale === null) {
-            $locales = TranslationSv::getLocaleOptions();
-        } else {
-            $locales = [
-                ["id" => $locale]
-            ];
-        }
+        $locales = array_merge([config('app.fallback_locale')], $locales);
 
         foreach ($locales as $locale) {
-            $menuItems = $this->getMenuItems($locale['id'], $type);
-            $menus[$locale['id']] = $this->generateMenuItems($menuItems);
+            $menus[$locale] = Menu::generateMenuItems($locale);
         }
 
         return $menus;
@@ -244,9 +191,17 @@ class MenuService
             ])
             ->get(['id'])
             ->map(function ($page) {
+
+                $locales = $page
+                    ->translations
+                    ->map(function ($translation) {
+                        return $translation->locale;
+                    });
+
                 return [
                     'id' => $page->id,
                     'value' => $page->title,
+                    'locales' => $locales,
                 ];
             })
             ->all();
@@ -254,18 +209,20 @@ class MenuService
 
     public function getPostOptions(): array
     {
-        return Post::published()->get([
-            'id',
-            'locale',
-            'status',
-            'title',
-        ])->map(function ($post) {
-            return [
-                'id' => $post->id,
-                'value' => $post->title,
-            ];
-        })
-        ->all();
+        return Post::published()
+            ->get([
+                'id',
+                'locale',
+                'title',
+            ])
+            ->map(function ($post) {
+                return [
+                    'id' => $post->id,
+                    'value' => $post->title,
+                    'locale' => $post->locale,
+                ];
+            })
+            ->all();
     }
 
     public function getCategoryOptions(): array
@@ -282,9 +239,29 @@ class MenuService
             ])
             ->get(['id'])
             ->map(function ($category) {
+
+                $locales = $category
+                    ->translations
+                    ->map(function ($translation) {
+                        return $translation->locale;
+                    });
+
                 return [
                     'id' => $category->id,
                     'value' => $category->name,
+                    'locales' => $locales,
+                ];
+            })
+            ->all();
+    }
+
+    public function getMenuItemTypeOptions(): array
+    {
+        return collect(MenuItem::TYPE_VALUES)
+            ->map(function ($item, $key) {
+                return [
+                    'id' => $key,
+                    'value' => $item,
                 ];
             })
             ->all();

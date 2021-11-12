@@ -112,9 +112,11 @@
         },
 
         mounted() {
-            let recaptchaScript = document.createElement('script');
-            recaptchaScript.setAttribute('src', usePage().props.value.js.frontend.additional_javascript);
-            document.body.appendChild(recaptchaScript);
+            if (usePage().props.value.js.frontend.additional_javascript) {
+                let script = document.createElement('script');
+                script.setAttribute('src', usePage().props.value.js.frontend.additional_javascript);
+                document.body.appendChild(script);
+            }
         },
     };
 </script>

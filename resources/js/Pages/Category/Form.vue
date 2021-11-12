@@ -19,7 +19,7 @@
                             :label="`Category Name (${translation.toUpperCase()})`"
                             :message="error(translation+'.name')"
                         >
-                            <template v-slot:afterInput>
+                            <template #afterInput>
                                 <div class="control">
                                     <sdb-button-icon
                                         v-if="translation !== defaultLocale"
@@ -78,23 +78,22 @@
     import SdbLabel from '@/Sdb/Label';
     import SdbSelect from '@/Sdb/Select';
     import { confirmDelete } from '@/Libs/alert';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import { isBlank } from '@/Libs/utils';
     import { reactive } from "vue";
-    import { pull, sortBy } from 'lodash';
+    import { pull, sortBy, isEmpty } from 'lodash';
 
     export default {
         name: 'CategoryForm',
-        mixins: [
-            HasPageErrors
-        ],
         components: {
             SdbButton,
             SdbButtonIcon,
             SdbButtonLink,
             SdbFormInputAddons,
-            SdbLabel,
             SdbSelect,
         },
+        mixins: [
+            HasPageErrors
+        ],
         props: {
             baseRoute: String,
             category: Object,
@@ -106,7 +105,7 @@
             localeOptions: Array,
         },
         emits: [
-           'on-submit',
+            'on-submit',
         ],
         setup(props) {
             let providedLocales = [];
@@ -133,37 +132,6 @@
                 })?.id,
             };
         },
-        methods: {
-            updateSelectedLocale() {
-                const usedLocales = Object.keys(this.form);
-
-                if (this.hasAvailableLocales) {
-                    const firstAvailabeLocale = this
-                        .availableLocales
-                        .find((localeOption) => {
-                            return !usedLocales.includes(localeOption.id);
-                        });
-
-                    this.selectedLocale = firstAvailabeLocale?.id;
-                } else {
-                    this.selectedLocale = null;
-                }
-            },
-            addTranslation() {
-                this.form[this.selectedLocale] = {name: null};
-
-                this.updateSelectedLocale();
-            },
-            removeTranslation(locale) {
-                const self = this;
-                confirmDelete().then((result) => {
-                    if (result.isConfirmed) {
-                        delete self.form[locale];
-                        self.updateSelectedLocale();
-                    }
-                });
-            },
-        },
         computed: {
             availableLocales() {
                 const usedLocales = Object.keys(this.form);
@@ -182,6 +150,37 @@
                 sortedExistingLocales.unshift(this.defaultLocale);
                 return sortedExistingLocales;
             }
+        },
+        methods: {
+            updateSelectedLocale() {
+                const usedLocales = Object.keys(this.form);
+
+                if (this.hasAvailableLocales) {
+                    const firstAvailabeLocale = this
+                        .availableLocales
+                        .find((localeOption) => {
+                            return !usedLocales.includes(localeOption.id);
+                        });
+
+                    this.selectedLocale = firstAvailabeLocale?.id;
+                } else {
+                    this.selectedLocale = null;
+                }
+            },
+            addTranslation() {
+                this.form[this.selectedLocale] = {name: null,};
+
+                this.updateSelectedLocale();
+            },
+            removeTranslation(locale) {
+                const self = this;
+                confirmDelete().then((result) => {
+                    if (result.isConfirmed) {
+                        delete self.form[locale];
+                        self.updateSelectedLocale();
+                    }
+                });
+            },
         },
     };
 </script>

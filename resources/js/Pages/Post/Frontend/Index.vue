@@ -1,36 +1,23 @@
 <template>
-    <Head>
-        <title>Blog</title>
-        <meta head-key="description" name="description" content="Blog" />
-    </Head>
-
     <div
         id="main-container"
         class="container mt-4"
     >
+        <Head>
+            <title>Blog</title>
+            <meta
+                head-key="description"
+                name="description"
+                content="Blog"
+            >
+        </Head>
+
         <div class="columns">
             <div class="column">
-                <sdb-form-field-horizontal>
-                    <template v-slot:label>
-                        Search
-                    </template>
-                    <div class="columns">
-                        <div class="column is-three-quarters">
-                            <sdb-input
-                                v-model="term"
-                                maxlength="255"
-                                @keyup.enter.prevent="search(term)"
-                            />
-                        </div>
-                        <div class="column">
-                            <sdb-button-icon
-                                icon="fas fa-search"
-                                type="button"
-                                @click="search(term)"
-                            />
-                        </div>
-                    </div>
-                </sdb-form-field-horizontal>
+                <sdb-filter-search
+                    v-model="term"
+                    @search="search"
+                />
             </div>
         </div>
 
@@ -39,10 +26,10 @@
                 :is="'SdbPostList'"
                 :records="records.data"
             >
-                <template v-slot:default="{record}">
+                <template #default="{record}">
                     <component
                         :is="'SdbPostListItem'"
-                        :edit-link="route(baseRouteName+'.show', {locale: currentLanguage, slug: record.slug})"
+                        :edit-link="route('blog.show', {locale: currentLanguage, slug: record.slug})"
                         :is-delete-enabled="false"
                         :is-edit-enabled="false"
                         :record="record"
@@ -59,31 +46,36 @@
 
 <script>
     import PageLayout from '@/Layouts/PageLayout';
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
-    import SdbInput from '@/Sdb/Input';
+    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
+    import SdbFilterSearch from '@/Sdb/Filter/Search';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbPostList from '@/Sdb/Post/List';
     import SdbPostListItem from '@/Sdb/Post/ListItem';
     import { Head } from '@inertiajs/inertia-vue3';
     import { merge, identity, pickBy } from 'lodash';
-    import { confirmDelete } from '@/Libs/alert';
     import { ref } from 'vue';
 
     export default {
-        layout: PageLayout,
         components: {
             Head,
-            SdbButtonIcon,
-            SdbButtonLink,
-            SdbFormFieldHorizontal,
-            SdbInput,
+            SdbFilterSearch,
             SdbPagination,
             SdbPostList,
             SdbPostListItem,
         },
+        mixins: [
+            MixinFilterDataHandle,
+        ],
+        layout: PageLayout,
         props: {
+            baseRouteName: {
+                type: String,
+                required: true,
+            },
+            categoryId: {
+                type: Number,
+                default: null,
+            },
             currentLanguage: String,
             errors: Object,
             pageNumber: String,
@@ -91,7 +83,7 @@
             records: {},
         },
         setup(props) {
-            const queryParams = merge({}, props.pageQueryParams);
+            const queryParams = merge({id: props.categoryId}, props.pageQueryParams);
 
             return {
                 queryParams: ref(queryParams),
@@ -100,7 +92,6 @@
         },
         data() {
             return {
-                baseRouteName: 'blog',
                 loader: null,
             };
         },
