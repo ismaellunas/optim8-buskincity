@@ -29,7 +29,7 @@ class ThemeHeaderLayoutRequest extends FormRequest
                 'nullable',
                 'file',
                 'max:'.config('constants.one_megabyte') * 50,
-                'mimes:jpeg,jpg,png',
+                'mimes:'.implode(',', config('constants.extensions.image')),
             ],
         ];
     }
