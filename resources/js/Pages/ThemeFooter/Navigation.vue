@@ -27,11 +27,9 @@
                     :menu-items="menuForm.menu_items"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
-                    @change="checkNestedMenuItems"
                     @duplicate-menu-item-locale="duplicateMenuItemLocale"
                     @edit-row="editRow"
                     @open-form-modal="openFormModal()"
-                    @update-last-data-menu-items="updateLastDataMenuItems"
                 />
             </div>
         </div>
@@ -44,7 +42,6 @@
             :selected-locale="selectedLocale"
             @add-menu-item="addMenuItem"
             @close="closeModal()"
-            @update-last-data-menu-items="updateLastDataMenuItems"
         />
     </section>
 </template>
@@ -105,7 +102,6 @@
         data() {
             return {
                 activeTab: 'navigation',
-                lastDataMenuItems: [],
                 loader: null,
                 menuForm: {},
                 selectedLocale: this.defaultLocale,
@@ -115,7 +111,6 @@
 
         mounted() {
             this.menuForm = this.getMenuForm(this.selectedLocale);
-            this.updateLastDataMenuItems();
         },
 
         methods: {
@@ -141,15 +136,12 @@
                             this.selectedLocale = locale;
                             this.menuForm.reset();
                             this.menuForm = this.getMenuForm(locale);
-
-                            this.updateLastDataMenuItems();
                         }
                     });
                 } else {
                     this.selectedLocale = locale;
 
                     this.menuForm = this.getMenuForm(locale);
-                    this.updateLastDataMenuItems();
                 }
             },
 
@@ -158,30 +150,10 @@
                 this.isModalOpen = true;
             },
 
-            checkNestedMenuItems() {
-                let self = this;
-                forEach(self.menuForm.menu_items, function(menuItem) {
-                    forEach(menuItem.children, function(child) {
-                        if (child['children'].length > 0) {
-                            self.menuForm.menu_items = self.lastDataMenuItems;
-                            oopsAlert(null, "Cannot add nested menu more than 2");
-                        }
-                    });
-                });
-
-                self.updateLastDataMenuItems();
-            },
-
-            updateLastDataMenuItems() {
-                this.lastDataMenuItems = cloneDeep(this.menuForm.menu_items);
-            },
-
             addMenuItem(menuItem) {
                 this.menuForm.menu_items.push(
                     cloneDeep(menuItem)
                 );
-
-                this.updateLastDataMenuItems();
             },
 
             editRow(menuItem) {
@@ -194,7 +166,6 @@
                     preserveScroll: true,
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
-                        this.updateLastDataMenuItems();
                     }
                 });
             },
@@ -214,8 +185,6 @@
 
                             this.menuForm = this.getMenuForm(locale);
                             this.menuForm.menu_items.push(cloneMenuItem);
-
-                            this.updateLastDataMenuItems();
                         }
                     });
                 } else {
@@ -223,8 +192,6 @@
 
                     this.menuForm = this.getMenuForm(locale);
                     this.menuForm.menu_items.push(cloneMenuItem);
-
-                    this.updateLastDataMenuItems();
                 }
             },
 
