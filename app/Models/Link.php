@@ -12,13 +12,17 @@ class Link extends Model
 {
     use HasFactory;
 
+    const TYPE_SOCIAL_MEDIA = 1;
+
     public $timestamps = false;
 
     protected $fillable = ['image_url', 'url', 'file_name'];
 
-    public function syncLinks(array $links)
-    {
-        $affectedIds = $this->updateLinks($links);
+    public function syncLinks(
+        array $links,
+        int $type
+    ) {
+        $affectedIds = $this->updateLinks($links, $type);
 
         $unusedMenuItems = self::whereNotIn('id', $affectedIds)->get();
 
@@ -31,8 +35,10 @@ class Link extends Model
         }
     }
 
-    private function updateLinks($links)
-    {
+    private function updateLinks(
+        array $links,
+        int $type
+    ) {
         $affectedIds = collect([]);
         foreach ($links as $link) {
             if ($link['file'] !== null) {
@@ -51,6 +57,7 @@ class Link extends Model
             $affectedLink = self::updateOrCreate(
                 [
                     'id' => $link['id'],
+                    'type' => $type,
                 ],
                 $link
             );

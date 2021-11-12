@@ -11,9 +11,10 @@ use Illuminate\Support\Str;
 
 class LinkService
 {
-    public function getRecords()
-    {
-        return Link::query()
+    public function getRecords(
+        int $type = Link::TYPE_SOCIAL_MEDIA
+    ) {
+        return Link::where('type', $type)
             ->get([
                 'id',
                 'image_url',

@@ -15,6 +15,7 @@ class CreateLinksTable extends Migration
     {
         Schema::create('links', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger('type')->default(1);
             $table->string('image_url')->nullable();
             $table->string('url');
             $table->string('file_name')->nullable();

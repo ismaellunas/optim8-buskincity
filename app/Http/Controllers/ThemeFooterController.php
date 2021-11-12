@@ -68,7 +68,7 @@ class ThemeFooterController extends ThemeOptionController
         $setting->save();
 
         $link = new $this->modelLink;
-        $link->syncLinks($request->links);
+        $link->syncLinks($request->links, $this->modelLink::TYPE_SOCIAL_MEDIA);
 
         $this->generateFlashMessage('Footer layout updated successfully!');
 
