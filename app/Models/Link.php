@@ -38,7 +38,7 @@ class Link extends Model
     private function updateLinks(
         array $links,
         int $type
-    ) {
+    ): array {
         $affectedIds = collect([]);
         foreach ($links as $link) {
             if ($link['file'] !== null) {
