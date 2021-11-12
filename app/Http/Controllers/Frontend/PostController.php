@@ -41,6 +41,14 @@ class PostController extends Controller
         $post = $this->postService->getFirstBySlug($slug, $locale);
 
         if (!$post) {
+            foreach (TranslationService::getLocaleOptions() as $locale) {
+                if (!$post) {
+                    $post = $this->postService->getFirstBySlug($slug, $locale['id']);
+                }
+            }
+        }
+
+        if (!$post) {
             return redirect()->route($this->baseRouteName.'.index', ['locale'=>$locale]);
         }
 
