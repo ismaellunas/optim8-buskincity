@@ -15,6 +15,6 @@ class UrlMenu extends BaseMenu implements MenuInterface
 
     public function getUrl(): string
     {
-        return $this->menuItem->url ?? "";
+        return $this->getModel()->url ?? "";
     }
 }
