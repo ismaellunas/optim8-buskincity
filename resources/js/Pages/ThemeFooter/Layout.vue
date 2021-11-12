@@ -80,10 +80,10 @@
                     route(self.baseRouteName+".layout.update"), {
                         onSuccess: (page) => {
                             successAlert(page.props.flash.message);
+                            this.form = this.getLayoutForm();
                         },
                         onFinish: () => {
                             self.loader.hide();
-                            this.form = this.getLayoutForm();
                         },
                     }
                 );

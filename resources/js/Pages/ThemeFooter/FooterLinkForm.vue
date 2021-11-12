@@ -123,7 +123,7 @@
 
             if (!isBlank(props.socialMedia)) {
                 fields = props.socialMedia;
-                fields.file = null;
+                fields.file = props.socialMedia?.file ?? null;
             } else {
                 fields = reactive({
                     id: null,
