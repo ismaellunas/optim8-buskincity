@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Menu extends Model
 {
@@ -53,6 +54,11 @@ class Menu extends Model
             ->first();
     }
 
+    private static function isInternalLink($url): bool
+    {
+        return Str::startsWith($url, config('app.url'));
+    }
+
     private static function createArrayMenuItems(
         object $menu,
         ?int $parentId = null
@@ -70,7 +76,9 @@ class Menu extends Model
 
                 $className = self::getTypeMenuClass($menuItem['type']);
                 $typeMenu = new $className(['id' => $menuItem['id']]);
+
                 $menuItem['link'] = $typeMenu->getUrl();
+                $menuItem['isInternalLink'] = self::isInternalLink($menuItem['link']);
 
                 $menus[] = $menuItem;
             }

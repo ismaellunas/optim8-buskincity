@@ -50,23 +50,23 @@
                                     v-for="childMenu in menu.children"
                                     :key="childMenu.id"
                                 >
-                                    <sdb-link
-                                        class="navbar-item"
-                                        :href="childMenu.link"
+                                    <sdb-navbar-item
+                                        :is-internal-link="childMenu.isInternalLink"
+                                        :url="childMenu.link"
                                     >
                                         {{ childMenu.title }}
-                                    </sdb-link>
+                                    </sdb-navbar-item>
                                 </template>
                             </div>
                         </div>
                     </template>
                     <template v-else>
-                        <sdb-link
-                            class="navbar-item"
-                            :href="menu.link"
+                        <sdb-navbar-item
+                            :is-internal-link="menu.isInternalLink"
+                            :url="menu.link"
                         >
                             {{ menu.title }}
-                        </sdb-link>
+                        </sdb-navbar-item>
                     </template>
                 </template>
             </div>
@@ -98,12 +98,14 @@
 
 <script>
     import SdbLink from '@/Sdb/Link';
+    import SdbNavbarItem from '@/Sdb/NavbarItem';
 
     export default {
         name: 'NavbarLayoutOne',
 
         components: {
             SdbLink,
+            SdbNavbarItem,
         },
 
         props: {
