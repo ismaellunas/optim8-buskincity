@@ -149,6 +149,20 @@ class SettingSeeder extends Seeder
             Setting::factory()->create($header);
         }
 
+        $footers = [
+            [
+                "key" => "footer_layout",
+                "display_name" => null,
+                "value" => 1,
+                "group" => "footer",
+                "order" => "1"
+            ],
+        ];
+
+        foreach ($footers as $footer) {
+            Setting::factory()->create($footer);
+        };
+
         $additionalCodes = [
             [
                 "key" => "tracking_code_inside_head",

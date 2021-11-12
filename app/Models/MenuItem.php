@@ -9,7 +9,6 @@ class MenuItem extends BaseModel
     use HasFactory;
 
     protected $fillable = [
-        'locale',
         'title',
         'type',
         'url',
@@ -21,62 +20,24 @@ class MenuItem extends BaseModel
         'category_id',
     ];
 
-    const TYPE_URL = 'Url';
-    const TYPE_PAGE = 'Page';
-    const TYPE_POST = 'Post';
-    const TYPE_CATEGORY = 'Category';
-    const TYPES = [
-        self::TYPE_URL,
-        self::TYPE_PAGE,
-        self::TYPE_POST,
-        self::TYPE_CATEGORY,
+    protected $attributes = [
+        'category_id' => null,
+        'page_id' => null,
+        'parent_id' => null,
+        'post_id' => null,
+        'url' => null,
     ];
 
-    public function saveFromInputs($inputs)
-    {
-        $this->fill($inputs);
-        $this->save();
-    }
-
-    public function updateFormatMenuItems(array $inputs)
-    {
-        foreach ($inputs as $key => $input) {
-            $this->updateMenuItemData($input);
-        }
-    }
-    public function updateOrderMenuItem($inputs)
-    {
-        $menuItems = $this->where('menu_id', $inputs['menu_id'])
-            ->orderBy('order', 'ASC')
-            ->where('parent_id', $inputs['parent_id'])
-            ->where('order', '>=', $inputs['order'])
-            ->get();
-
-        $order = $inputs['order'] + 1;
-        foreach ($menuItems as $menuItem) {
-            $menuItem->order = $order;
-            $menuItem->save();
-
-            $order++;
-        }
-    }
-
-    private function updateMenuItemData(array $menuItems, $parentId = null)
-    {
-        $order = 1;
-        foreach ($menuItems as $menuItem) {
-            if (count($menuItem['children']) > 0) {
-                $this->updateMenuItemData($menuItem['children'], $menuItem['id']);
-            }
-
-            $menuItem = $this->where('id', $menuItem['id'])->first();
-            $menuItem->order = $order;
-            $menuItem->parent_id = $parentId;
-            $menuItem->save();
-
-            $order++;
-        }
-    }
+    const TYPE_URL = 1;
+    const TYPE_PAGE = 2;
+    const TYPE_POST = 3;
+    const TYPE_CATEGORY = 4;
+    const TYPE_VALUES = [
+        self::TYPE_URL => 'Url',
+        self::TYPE_PAGE => 'Page',
+        self::TYPE_POST => 'Post',
+        self::TYPE_CATEGORY => 'Category',
+    ];
 
     // Relation
     public function menu()
