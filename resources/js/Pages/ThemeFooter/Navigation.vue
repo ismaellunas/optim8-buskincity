@@ -162,11 +162,18 @@
             },
 
             updateMenuItems() {
+                const self = this;
                 this.menuForm.post(route(this.baseRouteName+'.update-menu-item'), {
                     preserveScroll: true,
+                    onStart: visit => {
+                        self.loader = self.$loading.show();
+                    },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
-                    }
+                    },
+                    onFinish: visit => {
+                        self.loader.hide();
+                    },
                 });
             },
 
