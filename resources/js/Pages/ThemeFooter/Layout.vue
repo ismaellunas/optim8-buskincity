@@ -52,13 +52,24 @@
                 form: useForm({
                     layout: parseInt(this.settings.footer_layout.value),
                     links: cloneDeep(this.links),
-                })
+                }),
             };
+        },
+
+        mounted() {
+            this.form = this.getLayoutForm();
         },
 
         methods: {
             isFormDirty() {
                 return this.form?.isDirty;
+            },
+
+            getLayoutForm() {
+                return useForm({
+                    layout: parseInt(this.settings.footer_layout.value),
+                    links: cloneDeep(this.links),
+                });
             },
 
             onSubmit() {
@@ -72,6 +83,7 @@
                         },
                         onFinish: () => {
                             self.loader.hide();
+                            this.form = this.getLayoutForm();
                         },
                     }
                 );
