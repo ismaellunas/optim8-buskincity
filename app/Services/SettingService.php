@@ -4,7 +4,10 @@ namespace App\Services;
 
 use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
-use App\Models\Setting;
+use App\Models\{
+    Media,
+    Setting,
+};
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -108,6 +111,23 @@ class SettingService
             ])
             ->keyBy('key')
             ->all();
+    }
+
+    public function getLogo()
+    {
+        $setting = Setting::where('key', config("constants.theme_header.header_logo_media.key"))
+            ->first();
+
+        if ($setting->value !== null) {
+            return Media::select([
+                    'id',
+                    'file_url',
+                ])
+                ->where('id', $setting->value)
+                ->first();
+        } else {
+            return [];
+        }
     }
 
     public function getAdditionalCodes(): array
