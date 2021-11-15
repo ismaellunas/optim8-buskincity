@@ -7,7 +7,7 @@ use App\Services\TranslationService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class MenuItemRequest extends FormRequest
+class MenuRequest extends FormRequest
 {
     public function authorize()
     {
