@@ -23,10 +23,10 @@
                 />
                 <sdb-form-select
                     v-model="form.type"
-                    label="Type"
                     class="is-fullwidth"
+                    label="Type"
                     required
-                    :message="error('type')"
+                    :message="error('type', null, errors)"
                     @change="onChangedType"
                 >
                     <template
@@ -279,5 +279,5 @@
                 this.clearFieldsThatAffectedByType();
             }
         },
-    }
+    };
 </script>
