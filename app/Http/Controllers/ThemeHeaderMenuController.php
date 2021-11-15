@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MenuItemRequest;
 use App\Http\Requests\MenuRequest;
 use App\Models\Menu;
-use Illuminate\Http\Request;
 
 class ThemeHeaderMenuController extends ThemeOptionController
 {
@@ -24,5 +24,12 @@ class ThemeHeaderMenuController extends ThemeOptionController
         $this->generateFlashMessage('Menu navigation successfully Saved!');
 
         return redirect()->route($this->baseRouteName.'.edit');
+    }
+
+    public function apiValidateMenuItem(MenuItemRequest $request)
+    {
+        return [
+            'passed' => true
+        ];
     }
 }
