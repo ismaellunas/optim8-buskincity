@@ -24,6 +24,11 @@ class CreateMenuItemsTable extends Migration
                 ->constrained('menus')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->foreignId('media_id')
+                ->nullable()
+                ->constrained('media')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
             $table->foreignId('page_id')
                 ->nullable()
                 ->constrained('pages')
