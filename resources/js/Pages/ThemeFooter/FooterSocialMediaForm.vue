@@ -47,7 +47,7 @@
                     <div class="is-pulled-left">
                         <sdb-button
                             class="is-danger"
-                            @click.prevent="deleteLink(selectedIndex)"
+                            @click.prevent="deleteSocialMedia(selectedIndex)"
                         >
                             <span class="icon is-small">
                                 <i class="far fa-trash-alt" />
@@ -87,7 +87,7 @@
     import { reactive } from 'vue';
 
     export default {
-        name: 'NavigationFormMenu',
+        name: 'FooterSocialMediaForm',
 
         components: {
             SdbButton,
@@ -115,7 +115,7 @@
         emits: [
             'addSocialMedia',
             'close',
-            'deleteLink',
+            'deleteSocialMedia',
         ],
 
         setup(props) {
@@ -128,8 +128,10 @@
                 fields = reactive({
                     id: null,
                     file: null,
-                    image_url: null,
+                    local_url: null,
                     url: null,
+                    media_id: null,
+                    media: [],
                 });
             }
 
@@ -157,11 +159,11 @@
             },
 
             hasImage() {
-                return this.form.image_url;
+                return this.form.local_url || this.form.media?.file_url;
             },
 
             imgUrl() {
-                return this.form.image_url ?? null;
+                return this.form.local_url ?? this.form.media?.file_url;
             },
         },
 
@@ -183,16 +185,16 @@
             resetForm() {
                 const fields = this.firstFields;
                 this.form['file'] = fields['file'];
-                this.form['image_url'] = fields['image_url'];
+                this.form['local_url'] = fields['local_url'];
                 this.form['url'] = fields['url'];
             },
 
             onFilePicked(event) {
-                this.form['image_url'] = event.target.result;
+                this.form['local_url'] = event.target.result;
             },
 
-            deleteLink(index) {
-                this.$emit('deleteLink', index);
+            deleteSocialMedia(index) {
+                this.$emit('deleteSocialMedia', index);
             }
         },
     }

@@ -7,8 +7,8 @@
             />
 
             <hr>
-            <footer-link
-                v-model="form.links"
+            <footer-social-media
+                v-model="form.social_media_menus"
             />
         </form>
     </section>
@@ -16,7 +16,7 @@
 
 <script>
     import FooterLayout from './FooterLayout';
-    import FooterLink from './FooterLink';
+    import FooterSocialMedia from './FooterSocialMedia';
     import { success as successAlert  } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
     import { cloneDeep } from 'lodash';
@@ -26,7 +26,7 @@
 
         components: {
             FooterLayout,
-            FooterLink,
+            FooterSocialMedia,
         },
 
         props: {
@@ -34,7 +34,7 @@
                 type: Object,
                 required: true,
             },
-            links: {
+            socialMediaMenus: {
                 type: Array,
                 default:() => [],
             },
@@ -51,7 +51,7 @@
                 loader: null,
                 form: useForm({
                     layout: parseInt(this.settings.footer_layout.value),
-                    links: cloneDeep(this.links),
+                    social_media_menus: cloneDeep(this.socialMediaMenus),
                 }),
             };
         },
@@ -68,7 +68,7 @@
             getLayoutForm() {
                 return useForm({
                     layout: parseInt(this.settings.footer_layout.value),
-                    links: cloneDeep(this.links),
+                    social_media_menus: cloneDeep(this.socialMediaMenus),
                 });
             },
 
