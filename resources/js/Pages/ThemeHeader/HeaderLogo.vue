@@ -30,8 +30,8 @@
 <script>
     import SdbImage from '@/Sdb/Image';
     import SdbInputFile from '@/Sdb/InputFile';
-    import { includes } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
+    import { isEmpty } from 'lodash';
 
     export default {
         name: 'HeaderLogo',
@@ -42,6 +42,12 @@
         },
 
         props: {
+            logo: {
+                type: Object,
+                default() {
+                    return {};
+                },
+            },
             modelValue: {
                 type: Object,
                 required: true,
@@ -70,22 +76,17 @@
 
         computed: {
             hasImage() {
-                return this.setting.value !== null || this.formMedia.file_url !== null;
+                return !isEmpty(this.logo.file_url) || this.formMedia.file_url !== null;
             },
 
             imgUrl() {
-                return this.formMedia.file_url ?? null;
+                return this.formMedia.file_url ?? this.logo.file_url;
             },
         },
 
         methods: {
             onFilePicked(event) {
-                let fileType = this.formMedia.file.type.replace("image/", ".");
-
-                this.formMedia.file_name = "logo";
                 this.formMedia.file_url = event.target.result;
-                this.formMedia.file_type = fileType.replace(".", "");
-                this.formMedia.is_image = includes(this.acceptedTypes, fileType);
             },
         },
     }

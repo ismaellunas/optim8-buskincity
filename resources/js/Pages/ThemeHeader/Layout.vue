@@ -9,7 +9,8 @@
             <hr>
             <header-logo
                 v-model="form.logo"
-                :setting="settings.header_logo_url"
+                :logo="logo"
+                :setting="settings.header_logo_media_id"
             />
         </form>
     </section>
@@ -30,6 +31,12 @@
         },
 
         props: {
+            logo: {
+                type: Object,
+                default() {
+                    return {};
+                },
+            },
             settings: {
                 type: Object,
                 required: true,
@@ -49,10 +56,8 @@
                     layout: parseInt(this.settings.header_layout.value),
                     logo: {
                         file: null,
-                        file_name: null,
                         file_url: null,
-                        file_type: null,
-                        is_image: null,
+                        media_id: this.settings.header_logo_media_id.value,
                     }
                 })
             };
@@ -61,6 +66,17 @@
         methods: {
             isFormDirty() {
                 return this.form?.isDirty;
+            },
+
+            getUseForm() {
+                return useForm({
+                    layout: parseInt(this.settings.header_layout.value),
+                    logo: {
+                        file: null,
+                        file_url: null,
+                        media_id: this.settings.header_logo_media_id.value,
+                    }
+                });
             },
 
             onSubmit() {

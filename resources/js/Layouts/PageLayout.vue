@@ -66,6 +66,7 @@
 
         setup() {
             return {
+                logo: usePage().props.value.logo,
                 menuSettings: usePage().props.value.menuSettings,
             };
         },
@@ -86,7 +87,7 @@
             },
 
             logoUrl() {
-                return this.menuSettings.header_logo_url.value ?? "https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752";
+                return this.logo.file_url ?? "https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752";
             },
 
             navbarLayoutName() {

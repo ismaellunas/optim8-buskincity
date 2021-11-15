@@ -32,6 +32,7 @@
             <layout
                 v-if="activeTab == 'layout'"
                 ref="layout"
+                :logo="logo"
                 :settings="settings"
             />
 
@@ -79,6 +80,12 @@
                 required: true,
             },
             headerMenus: {
+                type: Object,
+                default() {
+                    return {};
+                },
+            },
+            logo: {
                 type: Object,
                 default() {
                     return {};
