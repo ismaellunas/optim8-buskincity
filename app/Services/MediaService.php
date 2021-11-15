@@ -72,7 +72,8 @@ class MediaService
                 'translations' => function ($q) {
                     $q->select(['id', 'media_id', 'alt', 'description', 'locale']);
                 },
-            ]);
+            ])
+            ->default();
 
         if ($scopeNames) {
             $query->where(function ($query) use ($scopeNames) {
