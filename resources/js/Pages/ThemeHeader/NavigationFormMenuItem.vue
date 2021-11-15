@@ -17,7 +17,7 @@
                     v-model="form.title"
                     label="Title"
                     required
-                    :message="error('title')"
+                    :message="error('title', null, errors)"
                 />
                 <sdb-form-select
                     v-model="form.type"
@@ -25,6 +25,7 @@
                     class="is-fullwidth"
                     required
                     :message="error('type')"
+                    @change="onChangedType"
                 >
                     <template
                         v-for="option in typeOptions"
@@ -40,14 +41,14 @@
                     v-model="form.url"
                     label="Url"
                     placeholder="e.g https:://example.com/"
-                    :message="error('url')"
+                    :message="error('url', null, errors)"
                 />
                 <sdb-form-select
                     v-if="isTypePage"
                     v-model="form.page_id"
                     label="Link Page"
                     class="is-fullwidth"
-                    :message="error('page_id')"
+                    :message="error('page_id', null, errors)"
                 >
                     <template
                         v-for="option in pageOptions"
@@ -69,7 +70,7 @@
                     v-model="form.post_id"
                     label="Link Post"
                     class="is-fullwidth"
-                    :message="error('post_id')"
+                    :message="error('post_id', null, errors)"
                 >
                     <template
                         v-for="option in postOptions"
@@ -85,7 +86,7 @@
                     v-model="form.category_id"
                     label="Link Category"
                     class="is-fullwidth"
-                    :message="error('category_id')"
+                    :message="error('category_id', null, errors)"
                 >
                     <template
                         v-for="option in categoryOptions"
@@ -170,19 +171,23 @@
                 type: String,
                 default: "en",
             },
+            errors: {
+                type: Object,
+                default: () => {},
+            },
         },
 
         emits: [
-            'addMenuItem',
+            'add-menu-item',
             'close',
-            'updateLastDataMenuItems',
+            'update-menu-item',
         ],
 
         setup(props) {
             let fields = {};
 
             if (!isBlank(props.menuItem)) {
-                fields = props.menuItem;
+                fields = reactive(cloneDeep(props.menuItem));
             } else {
                 fields = reactive({
                     id: null,
@@ -240,11 +245,9 @@
                 const form = this.form;
 
                 if (isBlank(this.menuItem)) {
-                    this.$emit('close');
-                    this.$emit('addMenuItem', form);
+                    this.$emit('add-menu-item', form);
                 } else {
-                    this.$emit('updateLastDataMenuItems');
-                    this.$emit('close');
+                    this.$emit('update-menu-item', form);
                 }
             },
 
@@ -262,6 +265,17 @@
                 this.form['post_id'] = fields['post_id'];
                 this.form['category_id'] = fields['category_id'];
             },
+
+            clearFieldsThatAffectedByType() {
+                this.form.url = null;
+                this.form.page_id = null;
+                this.form.post_id = null;
+                this.form.category_id = null;
+            },
+
+            onChangedType() {
+                this.clearFieldsThatAffectedByType();
+            }
         },
     }
 </script>
