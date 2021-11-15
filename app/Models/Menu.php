@@ -12,6 +12,7 @@ class Menu extends Model
 
     const TYPE_HEADER = 1;
     const TYPE_FOOTER = 2;
+    const TYPE_SOCIAL_MEDIA = 3;
 
     protected $fillable = [
         'type',
@@ -96,6 +97,11 @@ class Menu extends Model
     public function scopeFooter($query)
     {
         return $query->where('type', self::TYPE_FOOTER);
+    }
+
+    public function scopeSocialMedia($query)
+    {
+        return $query->where('type', self::TYPE_SOCIAL_MEDIA);
     }
 
     // Relation
