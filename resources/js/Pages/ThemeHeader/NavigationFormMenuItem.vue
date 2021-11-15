@@ -1,6 +1,6 @@
 <template>
     <sdb-modal-card
-        @close="onClose()"
+        @close="$emit('close')"
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
@@ -9,7 +9,7 @@
             <button
                 class="delete"
                 aria-label="close"
-                @click="onClose()"
+                @click="$emit('close')"
             />
         </template>
 
@@ -114,7 +114,7 @@
             >
                 <div class="column">
                     <div class="is-pulled-right">
-                        <sdb-button @click="onClose()">
+                        <sdb-button @click="$emit('close')">
                             Cancel
                         </sdb-button>
                         <sdb-button
@@ -137,10 +137,10 @@
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbModalCard from '@/Sdb/ModalCard';
-    import { isBlank } from '@/Libs/utils';
     import { cloneDeep, sortBy } from 'lodash';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { isBlank } from '@/Libs/utils';
     import { reactive } from 'vue';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'NavigationFormMenu',
@@ -161,6 +161,10 @@
                 type: String,
                 required: true,
             },
+            errors: {
+                type: Object,
+                default: () => {},
+            },
             menu: {
                 type: Object,
                 required: true,
@@ -172,10 +176,6 @@
             selectedLocale: {
                 type: String,
                 default: "en",
-            },
-            errors: {
-                type: Object,
-                default: () => {},
             },
         },
 
@@ -253,30 +253,11 @@
                 }
             },
 
-            onClose() {
-                this.resetForm();
-                this.$emit('close');
-            },
-
-            resetForm() {
-                const fields = this.firstFields;
-                this.form['title'] = fields['title'];
-                this.form['type'] = fields['type'];
-                this.form['url'] = fields['url'];
-                this.form['page_id'] = fields['page_id'];
-                this.form['post_id'] = fields['post_id'];
-                this.form['category_id'] = fields['category_id'];
-            },
-
-            clearFieldsThatAffectedByType() {
+            onChangedType() {
                 this.form.url = null;
                 this.form.page_id = null;
                 this.form.post_id = null;
                 this.form.category_id = null;
-            },
-
-            onChangedType() {
-                this.clearFieldsThatAffectedByType();
             }
         },
     };
