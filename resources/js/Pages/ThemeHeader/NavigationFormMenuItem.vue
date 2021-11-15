@@ -42,7 +42,7 @@
                     v-if="isTypeUrl"
                     v-model="form.url"
                     label="Url"
-                    placeholder="e.g https:://example.com/"
+                    placeholder="e.g https://www.example.com/"
                     :message="error('url', null, errors)"
                 />
                 <sdb-form-select
