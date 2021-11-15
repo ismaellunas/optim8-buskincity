@@ -14,99 +14,17 @@
         </template>
 
         <form @submit.prevent="onSubmit">
-            <fieldset>
-                <sdb-form-input
-                    v-model="form.title"
-                    label="Title"
-                    required
-                    :message="error('title', null, errors)"
-                />
-                <sdb-form-select
-                    v-model="form.type"
-                    class="is-fullwidth"
-                    label="Type"
-                    required
-                    :message="error('type', null, errors)"
-                    @change="onChangedType"
-                >
-                    <template
-                        v-for="option in typeOptions"
-                        :key="option.id"
-                    >
-                        <option :value="option.id">
-                            {{ option.value }}
-                        </option>
-                    </template>
-                </sdb-form-select>
-                <sdb-form-input
-                    v-if="isTypeUrl"
-                    v-model="form.url"
-                    label="Url"
-                    placeholder="e.g https://www.example.com/"
-                    :message="error('url', null, errors)"
-                />
-                <sdb-form-select
-                    v-if="isTypePage"
-                    v-model="form.page_id"
-                    label="Link Page"
-                    class="is-fullwidth"
-                    :message="error('page_id', null, errors)"
-                >
-                    <template
-                        v-for="option in pageOptions"
-                        :key="option.id"
-                    >
-                        <option :value="option.id">
-                            {{ option.value }}
-                            <template
-                                v-for="locale, index in option.locales"
-                                :key="index"
-                            >
-                                [{{ locale.toUpperCase() }}]
-                            </template>
-                        </option>
-                    </template>
-                </sdb-form-select>
-                <sdb-form-select
-                    v-if="isTypePost"
-                    v-model="form.post_id"
-                    label="Link Post"
-                    class="is-fullwidth"
-                    :message="error('post_id', null, errors)"
-                >
-                    <template
-                        v-for="option in postOptions"
-                        :key="option.id"
-                    >
-                        <option :value="option.id">
-                            {{ option.value }} [{{ option.locale.toUpperCase() }}]
-                        </option>
-                    </template>
-                </sdb-form-select>
-                <sdb-form-select
-                    v-if="isTypeCategory"
-                    v-model="form.category_id"
-                    label="Link Category"
-                    class="is-fullwidth"
-                    :message="error('category_id', null, errors)"
-                >
-                    <template
-                        v-for="option in categoryOptions"
-                        :key="option.id"
-                    >
-                        <option :value="option.id">
-                            {{ option.value }}
-                            <template
-                                v-for="locale, index in option.locales"
-                                :key="index"
-                            >
-                                [{{ locale.toUpperCase() }}]
-                            </template>
-                        </option>
-                    </template>
-                </sdb-form-select>
-            </fieldset>
+            <menu-item-fields
+                v-model="form"
+                :errors="errors"
+                :type-options="typeOptions"
+                :category-options="categoryOptions"
+                :page-options="pageOptions"
+                :post-options="postOptions"
+                @on-changed-type="onChangedType"
+            />
         </form>
+
         <template #footer>
             <div
                 class="columns"
@@ -132,10 +50,9 @@
 </template>
 
 <script>
+    import MenuItemFields from '@/Pages/ThemeHeader/MenuItemFields';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbModalCard from '@/Sdb/ModalCard';
     import { cloneDeep, sortBy } from 'lodash';
     import { isBlank } from '@/Libs/utils';
@@ -146,9 +63,8 @@
         name: 'NavigationFormMenu',
 
         components: {
+            MenuItemFields,
             SdbButton,
-            SdbFormInput,
-            SdbFormSelect,
             SdbModalCard,
         },
 
