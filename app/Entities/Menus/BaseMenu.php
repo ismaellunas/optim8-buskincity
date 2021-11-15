@@ -13,6 +13,7 @@ abstract class BaseMenu
     public $order;
     public $parent_id;
     public $menu_id;
+    public $media_id;
     public $page_id;
     public $post_id;
     public $category_id;
@@ -34,6 +35,7 @@ abstract class BaseMenu
         $this->order = $attributes['order'] ?? null;
         $this->parent_id = $attributes['parent_id'] ?? null;
         $this->menu_id = $attributes['menu_id'] ?? null;
+        $this->media_id = $attributes['media_id'] ?? null;
     }
 
     protected function getEagerLoads(): array
