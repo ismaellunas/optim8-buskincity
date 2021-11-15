@@ -25,14 +25,14 @@ class ThemeFooterLayoutRequest extends FormRequest
     {
         return [
             'layout' => ['required', 'integer'],
-            'links.*.file' => [
+            'social_media_menus.*.file' => [
                 'sometimes',
                 'nullable',
                 'file',
                 'max:'.config('constants.one_megabyte') * 50,
                 'mimes:'.implode(',', config('constants.extensions.image')),
             ],
-            'links.*.url' => [
+            'social_media_menus.*.url' => [
                 'sometimes',
                 'required',
                 'url',
@@ -49,8 +49,8 @@ class ThemeFooterLayoutRequest extends FormRequest
         ];
 
         foreach ($columns as $column) {
-            for ($i = 0; $i < count($this['links']); $i++) {
-                $attr["links.".$i.".".$column] = ucwords(str_replace('_', ' ', $column));
+            for ($i = 0; $i < count($this['social_media_menus']); $i++) {
+                $attr["social_media_menus.".$i.".".$column] = ucwords(str_replace('_', ' ', $column))." on social media";
             }
         }
 
