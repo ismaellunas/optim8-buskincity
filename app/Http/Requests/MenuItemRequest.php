@@ -22,7 +22,6 @@ class MenuItemRequest extends FormRequest
                 'max:255',
             ],
             'type' => [
-                'sometimes',
                 'required',
                 'integer',
                 Rule::in(array_keys(MenuItem::TYPE_VALUES)),
