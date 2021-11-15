@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Entities\CloudinaryStorage;
+use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 class Menu extends Model
@@ -179,5 +182,64 @@ class Menu extends Model
         }
 
         return $input;
+    }
+
+    public function syncSocialMedia(array $inputs)
+    {
+        $affectedIds = $this->updateSocialMedia($inputs);
+
+        $unusedMenuItems = $this->menuItems->whereNotIn('id', $affectedIds);
+
+        foreach ($unusedMenuItems as $socialMedia) {
+            if ($socialMedia['media_id'] !== null) {
+                $this->deleteMedia($socialMedia['media_id']);
+            }
+
+            $socialMedia->delete();
+        }
+    }
+
+    private function updateSocialMedia(array $inputs): array
+    {
+        $affectedIds = collect([]);
+        foreach ($inputs as $input) {
+            if (isset($input['file'])) {
+                $mediaService = new MediaService();
+
+                $upload = $mediaService->uploadSetting(
+                    $input['file'],
+                    Str::random(10),
+                    new CloudinaryStorage(),
+                    (!App::environment('production') ? config('app.env') : null)
+                );
+
+                if ($input['media_id'] !== null) {
+                    $this->deleteMedia($input['media_id']);
+                }
+
+                $input['media_id'] = $upload['id'];
+            }
+
+            $input['title'] = 'social-media';
+            $affectedSocialMedia = MenuItem::updateOrCreate(
+                [
+                    'id' => $input['id'],
+                    'menu_id' => $this->id,
+                ],
+                $input
+            );
+
+            $affectedIds->push($affectedSocialMedia->id);
+        }
+
+        return $affectedIds->flatten()->all();
+    }
+
+    private function deleteMedia($mediaId)
+    {
+        $media = Media::find($mediaId);
+
+        $mediaService = new MediaService();
+        $mediaService->destroy($media, new CloudinaryStorage());
     }
 }

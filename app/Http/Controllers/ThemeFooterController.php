@@ -61,6 +61,14 @@ class ThemeFooterController extends ThemeOptionController
         $setting->value = $layout;
         $setting->save();
 
+        $menu = Menu::firstOrCreate([
+            'type' => Menu::TYPE_SOCIAL_MEDIA,
+        ], [
+            'locale' => TranslationService::getDefaultLocale(),
+            'type' => Menu::TYPE_SOCIAL_MEDIA,
+        ]);
+
+        $menu->syncSocialMedia($request->social_media_menus);
 
         $this->generateFlashMessage('Footer layout updated successfully!');
 
