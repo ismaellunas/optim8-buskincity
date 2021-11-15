@@ -1,5 +1,7 @@
 <template>
-    <sdb-modal-card>
+    <sdb-modal-card
+        @close="onClose()"
+    >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
                 {{ menuItem.id ? 'Edit' : 'Add' }} Menu Item
