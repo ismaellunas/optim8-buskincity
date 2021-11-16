@@ -24,7 +24,7 @@ class ThemeFontSizeController extends ThemeOptionController
         $defaultFontSizes = config('constants.theme_font_sizes');
 
         return Inertia::render(
-            'ThemeFontSize/Edit',
+            'ThemeFontSize',
             $this->getData([
                 'defaultFontSizes' => $defaultFontSizes,
                 'fontSizes' => $this->settingService->getFontSizes(),
