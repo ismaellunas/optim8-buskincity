@@ -6,6 +6,7 @@ use App\Http\Requests\ThemeAdvanceRequest;
 use App\Models\Setting;
 use App\Services\SettingService;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ThemeAdvanceController extends ThemeOptionController
@@ -25,6 +26,7 @@ class ThemeAdvanceController extends ThemeOptionController
         return Inertia::render(
             'ThemeAdvance',
             $this->getData([
+                'trackingCodes' => $this->settingService->getTrackingCodes(),
                 'additionalCodes' => $this->settingService->getAdditionalCodes()
             ])
         );
