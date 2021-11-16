@@ -37,18 +37,20 @@
         <navigation-form-menu
             v-if="isModalOpen"
             :base-route-name="baseRouteName"
+            :errors="menuItemErrors"
             :menu="menu"
             :menu-item="selectedMenuItem"
             :selected-locale="selectedLocale"
             @add-menu-item="addMenuItem"
             @close="closeModal()"
+            @update-menu-item="updateMenuItem"
         />
     </section>
 </template>
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import NavigationFormMenu from './NavigationFormMenuItem';
+    import NavigationFormMenu from '@/Pages/ThemeHeader/NavigationFormMenuItem';
     import NavigationMenu from './NavigationMenu';
     import SdbButton from '@/Sdb/Button';
     import { forEach, cloneDeep, isEmpty } from 'lodash';
@@ -56,7 +58,7 @@
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
 
     export default {
-        name: 'Navigation',
+        name: 'ThemeFooterNavigation',
 
         components: {
             NavigationFormMenu,
@@ -106,6 +108,8 @@
                 menuForm: {},
                 selectedLocale: this.defaultLocale,
                 selectedMenuItem: {},
+                menuItemErrors: {},
+                validationRoute: route('admin.api.theme.header.menu-item.validate'),
             };
         },
 
@@ -147,17 +151,51 @@
 
             openFormModal() {
                 this.selectedMenuItem = {};
+                this.menuItemErrors = {};
                 this.isModalOpen = true;
             },
 
+            updateSelectedMenu(menuItem) {
+                this.selectedMenuItem['title'] = menuItem['title'];
+                this.selectedMenuItem['type'] = menuItem['type'];
+                this.selectedMenuItem['url'] = menuItem['url'];
+                this.selectedMenuItem['page_id'] = menuItem['page_id'];
+                this.selectedMenuItem['post_id'] = menuItem['post_id'];
+                this.selectedMenuItem['category_id'] = menuItem['category_id'];
+            },
+
             addMenuItem(menuItem) {
-                this.menuForm.menu_items.push(
-                    cloneDeep(menuItem)
-                );
+                const self = this;
+
+                axios.post(self.validationRoute, menuItem)
+                    .then(() => {
+                        self.menuForm.menu_items.push(
+                            cloneDeep(menuItem)
+                        );
+
+                        self.closeModal();
+                    })
+                    .catch((error) => {
+                        self.menuItemErrors = error.response.data.errors;
+                    })
+            },
+
+            updateMenuItem(menuItem) {
+                const self = this;
+
+                axios.post(self.validationRoute, menuItem)
+                    .then(() => {
+                        self.updateSelectedMenu(menuItem);
+                        self.closeModal();
+                    })
+                    .catch((error) => {
+                        self.menuItemErrors = error.response.data.errors;
+                    });
             },
 
             editRow(menuItem) {
                 this.selectedMenuItem = menuItem;
+                this.menuItemErrors = {};
                 this.openModal();
             },
 
