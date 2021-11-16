@@ -15,18 +15,8 @@
             >
                 <div class="field is-grouped is-grouped-right">
                     <div class="control">
-                        <sdb-button
-                            class="is-warning"
-                            type="button"
-                            @click="resetColors"
-                        >
-                            Reset All
-                        </sdb-button>
-                    </div>
-
-                    <div class="control">
                         <sdb-button class="is-link">
-                            Update
+                            Save
                         </sdb-button>
                     </div>
                 </div>
@@ -142,16 +132,6 @@
                     }
                 });
             },
-            resetColors() {
-                const self = this;
-                confirmAlert('Are you sure you want to reset?')
-                    .then((result) => {
-                        self.form.clearErrors();
-                        if (result.isConfirmed) {
-                            self.form.reset();
-                        }
-                    });
-            }
         },
     };
 </script>
