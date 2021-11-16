@@ -163,41 +163,48 @@ class SettingSeeder extends Seeder
             Setting::factory()->create($footer);
         };
 
-        $additionalCodes = [
+        $trackingCodes = [
             [
                 "key" => "tracking_code_inside_head",
                 "display_name" => "Tracking Codes: Inside <head>",
                 "value" => null,
-                "group" => "additional_code",
+                "group" => "tracking_code",
                 "order" => "1"
             ],
             [
                 "key" => "tracking_code_after_body",
                 "display_name" => "Tracking Codes: After <body>",
                 "value" => null,
-                "group" => "additional_code",
+                "group" => "tracking_code",
                 "order" => "2"
             ],
             [
                 "key" => "tracking_code_before_body",
                 "display_name" => "Tracking Codes: Before </body>",
                 "value" => null,
-                "group" => "additional_code",
+                "group" => "tracking_code",
                 "order" => "3"
             ],
+        ];
+
+        foreach ($trackingCodes as $trackingCode) {
+            Setting::factory()->create($trackingCode);
+        }
+
+        $additionalCodes = [
             [
                 "key" => "additional_css",
                 "display_name" => "Additional CSS",
                 "value" => null,
                 "group" => "additional_code",
-                "order" => "4"
+                "order" => "1"
             ],
             [
                 "key" => "additional_javascript",
                 "display_name" => "Additional Javascript",
                 "value" => null,
                 "group" => "additional_code",
-                "order" => "5"
+                "order" => "2"
             ]
         ];
 
