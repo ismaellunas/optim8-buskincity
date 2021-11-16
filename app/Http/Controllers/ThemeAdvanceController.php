@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ThemeAdvanceRequest;
 use App\Models\Setting;
 use App\Services\SettingService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Inertia\Inertia;
 
@@ -30,7 +30,7 @@ class ThemeAdvanceController extends ThemeOptionController
         );
     }
 
-    public function update(Request $request)
+    public function update(ThemeAdvanceRequest $request)
     {
         $additionalCodes = $request->all();
 
