@@ -34,28 +34,30 @@ class ThemeAdvanceController extends ThemeOptionController
 
     public function update(ThemeAdvanceRequest $request)
     {
-        $additionalCodes = $request->all();
-
-        foreach ($additionalCodes as $key => $additionalCode) {
+        foreach ($request->validated() as $key => $code) {
             $setting = Setting::firstOrNew(['key' => $key]);
 
-            $setting->value = $additionalCode;
+            $setting->value = $code;
 
             $setting->save();
 
-            $url = null;
+            if (
+                Str::startsWith($key, 'additional_')
+                && !empty($code)
+            ) {
+                $url = null;
+                $filename = $this->settingService->getAdditionalCodeFileName($key);
 
-            if (!empty($additionalCode)) {
                 $asset = $this->settingService->uploadAdditionalCodeToCloudStorage(
-                    $this->settingService->getAdditionalCodeFileName($key),
-                    $additionalCode,
+                    $filename,
+                    $code,
                     (!App::environment('production') ? config('app.env') : null)
                 );
 
                 $url = $asset->fileUrl;
-            }
 
-            $this->settingService->saveAdditionalCodeUrl($key, $url);
+                $this->settingService->saveAdditionalCodeUrl($key, $url);
+            }
         }
 
         $this->settingService->clearStorageTheme();
