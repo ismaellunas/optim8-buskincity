@@ -13,6 +13,7 @@ class MenuItem extends BaseModel
         'type',
         'url',
         'order',
+        'icon',
         'parent_id',
         'menu_id',
         'page_id',
@@ -58,10 +59,5 @@ class MenuItem extends BaseModel
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
-    }
-
-    public function media()
-    {
-        return $this->hasOne(Media::class, 'id', 'media_id');
     }
 }
