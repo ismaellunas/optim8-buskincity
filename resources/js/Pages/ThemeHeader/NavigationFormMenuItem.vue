@@ -140,7 +140,6 @@
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbModalCard from '@/Sdb/ModalCard';
     import { cloneDeep, sortBy } from 'lodash';
-    import { getNewMenuItem } from '@/Libs/menu-item';
     import { isBlank } from '@/Libs/utils';
     import { reactive } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
