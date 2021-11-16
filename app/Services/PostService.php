@@ -150,11 +150,13 @@ class PostService
 
     public function getFirstBySlug(
         string $slug,
-        string $locale
+        string $locale = null
     ): ?Post {
         return Post::where('slug', $slug)
             ->published()
-            ->where('locale', $locale)
+            ->when($locale, function ($query) use ($locale) {
+                $query->where('locale', $locale);
+            })
             ->first();
     }
 }
