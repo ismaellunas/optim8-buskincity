@@ -56,7 +56,7 @@
     import SdbInputError from '@/Sdb/InputError';
     import { forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
     import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'ThemeOptionColorEdit',
@@ -74,12 +74,30 @@
         ],
 
         props: {
-            baseRouteName: String,
-            can: Object,
-            colors: Object,
-            defaultColors: Object,
-            errors: Object,
-            title: String,
+            baseRouteName: {
+                type: String,
+                required: true,
+            },
+            can: {
+                type: Object,
+                default: () => {}
+            },
+            colors: {
+                type: Object,
+                required: true,
+            },
+            defaultColors: {
+                type: Object,
+                default: () => {}
+            },
+            errors: {
+                type: Object,
+                default: () => {}
+            },
+            title: {
+                type: String,
+                required: true,
+            },
         },
 
         setup(props) {
