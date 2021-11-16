@@ -25,12 +25,11 @@ class ThemeFooterLayoutRequest extends FormRequest
     {
         return [
             'layout' => ['required', 'integer'],
-            'social_media_menus.*.file' => [
+            'social_media_menus.*.icon' => [
                 'sometimes',
-                'nullable',
-                'file',
-                'max:'.config('constants.one_megabyte') * 50,
-                'mimes:'.implode(',', config('constants.extensions.image')),
+                'required',
+                'min:1',
+                'max:100',
             ],
             'social_media_menus.*.url' => [
                 'sometimes',
@@ -44,7 +43,7 @@ class ThemeFooterLayoutRequest extends FormRequest
     {
         $attr = [];
         $columns = [
-            'file',
+            'icon',
             'url',
         ];
 
