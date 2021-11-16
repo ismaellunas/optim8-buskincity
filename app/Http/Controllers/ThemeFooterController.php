@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ThemeFooterLayoutRequest as LayoutRequest;
+use App\Http\Requests\ThemeFooterLayoutRequest;
 use App\Models\{
     Menu,
     Setting,
@@ -53,7 +53,7 @@ class ThemeFooterController extends ThemeOptionController
         );
     }
 
-    public function update(LayoutRequest $request)
+    public function update(ThemeFooterLayoutRequest $request)
     {
         $layout = $request->layout;
 
