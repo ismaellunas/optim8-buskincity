@@ -6,8 +6,11 @@ use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
 use App\Models\Setting;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Illuminate\Support\{
+    Collection,
+    Facades\Storage,
+    Str,
+};
 use Symfony\Component\Process\Process;
 use \finfo;
 
@@ -60,30 +63,25 @@ class SettingService
             ->value('value');
     }
 
-    public function getColors(): array
+    private function getSettingsByGroup(string $groupName): Collection
     {
-        return Setting::where('group', 'theme_color')
+        return Setting::group($groupName)
             ->get([
                 'display_name',
                 'key',
                 'value',
                 'order',
-            ])
-            ->keyBy('key')
-            ->all();
+            ]);
+    }
+
+    public function getColors(): array
+    {
+        return $this->getSettingsByGroup('theme_color')->keyBy('key')->all();
     }
 
     public function getFontSizes(): array
     {
-        return Setting::where('group', 'font_size')
-            ->get([
-                'display_name',
-                'key',
-                'value',
-                'order',
-            ])
-            ->keyBy('key')
-            ->all();
+        return $this->getSettingsByGroup('font_size')->keyBy('key')->all();
     }
 
     public function getHeader(): array
@@ -112,15 +110,7 @@ class SettingService
 
     public function getAdditionalCodes(): array
     {
-        return Setting::where('group', 'additional_code')
-            ->get([
-                'display_name',
-                'key',
-                'value',
-                'order',
-            ])
-            ->keyBy('key')
-            ->all();
+        return $this->getSettingsByGroup('additional_code')->keyBy('key')->all();
     }
 
     public function getUppercaseTextOptions(): array
