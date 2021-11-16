@@ -14,15 +14,99 @@
         </template>
 
         <form @submit.prevent="onSubmit">
-            <menu-item-fields
-                v-model="form"
-                :errors="errors"
-                :type-options="typeOptions"
-                :category-options="categoryOptions"
-                :page-options="pageOptions"
-                :post-options="postOptions"
-                @on-changed-type="onChangedType"
-            />
+            <fieldset>
+                <sdb-form-input
+                    v-model="form.title"
+                    label="Title"
+                    required
+                    :message="error('title', null, errors)"
+                />
+
+                <sdb-form-select
+                    v-model="form.type"
+                    class="is-fullwidth"
+                    label="Type"
+                    required
+                    :message="error('type', null, errors)"
+                    @change="onChangedType"
+                >
+                    <option
+                        v-for="option in typeOptions"
+                        :key="option.id"
+                        :value="option.id"
+                    >
+                        {{ option.value }}
+                    </option>
+                </sdb-form-select>
+
+                <sdb-form-input
+                    v-if="isTypeUrl"
+                    v-model="form.url"
+                    label="Url"
+                    placeholder="e.g https://www.example.com/"
+                    :message="error('url', null, errors)"
+                />
+
+                <sdb-form-select
+                    v-if="isTypePage"
+                    v-model="form.page_id"
+                    label="Link Page"
+                    class="is-fullwidth"
+                    :message="error('page_id', null, errors)"
+                >
+                    <option
+                        v-for="option in pageOptions"
+                        :key="option.id"
+                        :value="option.id"
+                    >
+                        {{ option.value }}
+                        <span
+                            v-for="locale, index in option.locales"
+                            :key="index"
+                        >
+                            [{{ locale.toUpperCase() }}]
+                        </span>
+                    </option>
+                </sdb-form-select>
+
+                <sdb-form-select
+                    v-if="isTypePost"
+                    v-model="form.post_id"
+                    label="Link Post"
+                    class="is-fullwidth"
+                    :message="error('post_id', null, errors)"
+                >
+                    <option
+                        v-for="option in postOptions"
+                        :key="option.id"
+                        :value="option.id"
+                    >
+                        {{ option.value }} [{{ option.locale.toUpperCase() }}]
+                    </option>
+                </sdb-form-select>
+
+                <sdb-form-select
+                    v-if="isTypeCategory"
+                    v-model="form.category_id"
+                    label="Link Category"
+                    class="is-fullwidth"
+                    :message="error('category_id', null, errors)"
+                >
+                    <option
+                        v-for="option in categoryOptions"
+                        :key="option.id"
+                        :value="option.id"
+                    >
+                        {{ option.value }}
+                        <span
+                            v-for="locale, index in option.locales"
+                            :key="index"
+                        >
+                            [{{ locale.toUpperCase() }}]
+                        </span>
+                    </option>
+                </sdb-form-select>
+            </fieldset>
         </form>
 
         <template #footer>
@@ -50,11 +134,13 @@
 </template>
 
 <script>
-    import MenuItemFields from '@/Pages/ThemeHeader/MenuItemFields';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
+    import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbModalCard from '@/Sdb/ModalCard';
     import { cloneDeep, sortBy } from 'lodash';
+    import { getNewMenuItem } from '@/Libs/menu-item';
     import { isBlank } from '@/Libs/utils';
     import { reactive } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
@@ -63,8 +149,9 @@
         name: 'NavigationFormMenu',
 
         components: {
-            MenuItemFields,
             SdbButton,
+            SdbFormInput,
+            SdbFormSelect,
             SdbModalCard,
         },
 
