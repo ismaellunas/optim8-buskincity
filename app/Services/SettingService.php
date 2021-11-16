@@ -108,6 +108,11 @@ class SettingService
             ->all();
     }
 
+    public function getTrackingCodes(): array
+    {
+        return $this->getSettingsByGroup('tracking_code')->keyBy('key')->all();
+    }
+
     public function getAdditionalCodes(): array
     {
         return $this->getSettingsByGroup('additional_code')->keyBy('key')->all();
