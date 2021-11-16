@@ -15,7 +15,6 @@ class MenuItem extends BaseModel
         'order',
         'parent_id',
         'menu_id',
-        'media_id',
         'page_id',
         'post_id',
         'category_id',
