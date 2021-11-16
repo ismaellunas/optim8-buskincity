@@ -1,8 +1,8 @@
 <template>
-    <sdb-modal-card>
+    <sdb-modal-card @close="$emit('close')">
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ isCreate ? 'Add' : 'Edit' }} Menu Item
+                {{ isCreate ? 'Add' : 'Edit' }} Social Media
             </p>
             <button
                 class="delete"
@@ -13,19 +13,15 @@
 
         <form @submit.prevent="onSubmit">
             <fieldset>
-                <sdb-image
-                    v-if="hasImage"
-                    class="mb-2 is-48x48"
-                    :src="imgUrl"
-                />
-                <sdb-form-file
-                    v-model="form.file"
-                    label="Upload Image"
-                    :accepted-types="acceptedTypes"
+                <sdb-form-icon
+                    v-model="form.icon"
+                    label="Icon"
+                    placeholder="e.g fas fa-square-full"
                     required
-                    :message="error('file')"
-                    @on-file-picked="onFilePicked"
+                    :icon-classes="iconClasses"
+                    :message="error('icon')"
                 />
+
                 <sdb-form-input
                     v-model="form.url"
                     label="Link"
@@ -77,10 +73,10 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
-    import SdbFormFile from '@/Sdb/Form/File';
+    import SdbFormIcon from '@/Sdb/Form/Icon';
     import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbImage from '@/Sdb/Image';
     import SdbModalCard from '@/Sdb/ModalCard';
+    import fontawesomeClasses from '@/Json/fontawesome-classes';
     import { isBlank } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
@@ -91,9 +87,8 @@
 
         components: {
             SdbButton,
-            SdbFormFile,
+            SdbFormIcon,
             SdbFormInput,
-            SdbImage,
             SdbModalCard,
         },
 
@@ -113,9 +108,9 @@
         },
 
         emits: [
-            'addSocialMedia',
+            'add-social-media',
             'close',
-            'deleteSocialMedia',
+            'delete-social-media',
         ],
 
         setup(props) {
@@ -123,33 +118,19 @@
 
             if (!isBlank(props.socialMedia)) {
                 fields = props.socialMedia;
-                fields.file = props.socialMedia?.file ?? null;
             } else {
-                fields = reactive({
+                fields = {
                     id: null,
-                    file: null,
-                    local_url: null,
                     url: null,
-                    media_id: null,
-                    media: [],
-                });
+                    icon: null,
+                };
             }
 
             return {
                 baseRouteName: usePage().props.value.baseRouteName ?? null,
-                form: fields,
+                form: reactive(fields),
                 firstFields: cloneDeep(fields),
-            };
-        },
-
-        data() {
-            return {
-                loader: null,
-                acceptedTypes: [
-                    '.jpeg',
-                    '.jpg',
-                    '.png',
-                ],
+                iconClasses: fontawesomeClasses.fontawesome_branch,
             };
         },
 
@@ -157,21 +138,13 @@
             isCreate() {
                 return isBlank(this.socialMedia);
             },
-
-            hasImage() {
-                return this.form.local_url || this.form.media?.file_url;
-            },
-
-            imgUrl() {
-                return this.form.local_url ?? this.form.media?.file_url;
-            },
         },
 
         methods: {
             onSubmit() {
                 if (isBlank(this.socialMedia)) {
                     this.$emit('close');
-                    this.$emit('addSocialMedia', this.form);
+                    this.$emit('add-social-media', this.form);
                 } else {
                     this.$emit('close');
                 }
@@ -184,17 +157,12 @@
 
             resetForm() {
                 const fields = this.firstFields;
-                this.form['file'] = fields['file'];
-                this.form['local_url'] = fields['local_url'];
                 this.form['url'] = fields['url'];
-            },
-
-            onFilePicked(event) {
-                this.form['local_url'] = event.target.result;
+                this.form['icon'] = fields['icon'];
             },
 
             deleteSocialMedia(index) {
-                this.$emit('deleteSocialMedia', index);
+                this.$emit('delete-social-media', index);
             }
         },
     }
