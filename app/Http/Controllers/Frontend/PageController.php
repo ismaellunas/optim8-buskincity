@@ -14,23 +14,28 @@ class PageController extends Controller
     private $baseComponentName = 'Page/Frontend';
     private $baseRouteName = 'frontend.pages';
 
-    private function redirectToPageLocaleOr404(
+    private function redirectToPageLocaleOrDefaultLocale(
         PageTranslation $pageTranslation,
         string $locale
     ) {
         $page = $pageTranslation->page;
 
         if ($page->hasTranslation($locale)) {
-
             $pageTranslation = $page->translate($locale);
 
             return redirect()->route($this->baseRouteName.'.show', [
                 'locale' => $locale,
                 'page_translation' => $pageTranslation->slug
             ]);
-
         } else {
-            return redirect()->route('status-code.404');
+            $defaultLocale = TranslationService::getDefaultLocale();
+            $pageTranslation = $page->translate($defaultLocale);
+
+            return Inertia::render($this->baseComponentName.'/Show', [
+                'currentLanguage' => TranslationService::currentLanguage(),
+                'images' => $this->getPageImages($pageTranslation, $defaultLocale),
+                'page' => $pageTranslation,
+            ]);
         }
     }
 
@@ -66,7 +71,7 @@ class PageController extends Controller
     {
         if ($pageTranslation->locale != $locale) {
 
-            return $this->redirectToPageLocaleOr404($pageTranslation, $locale);
+            return $this->redirectToPageLocaleOrDefaultLocale($pageTranslation, $locale);
 
         } else {
 
