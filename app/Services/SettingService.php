@@ -4,7 +4,10 @@ namespace App\Services;
 
 use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
-use App\Models\Setting;
+use App\Models\{
+    Media,
+    Setting,
+};
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\{
     Collection,
@@ -106,6 +109,21 @@ class SettingService
             ])
             ->keyBy('key')
             ->all();
+    }
+
+    public function getLogoUrl(): string
+    {
+        $setting = Setting::where('key', config("constants.theme_header.header_logo_media.key"))
+            ->first();
+
+        $media = Media::select([
+                'id',
+                'file_url',
+            ])
+            ->where('id', $setting->value)
+            ->first();
+
+        return $media ? $media->file_url : "";
     }
 
     public function getTrackingCodes(): array
