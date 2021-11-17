@@ -56,11 +56,11 @@
     import NavigationMenu from './NavigationMenu';
     import SdbButton from '@/Sdb/Button';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
-    import { oops as oopsAlert, success as successAlert, confirm as confirmAlert } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { forEach, cloneDeep } from 'lodash';
 
     export default {
-        name: 'Navigation',
+        name: 'ThemeHeaderNavigation',
 
         components: {
             NavigationFormMenu,
@@ -112,6 +112,7 @@
                 selectedLocale: this.defaultLocale,
                 selectedMenuItem: {},
                 menuItemErrors: {},
+                validationRoute: route('admin.api.theme.header.menu-item.validate'),
             };
         },
 
@@ -134,10 +135,10 @@
 
             changeLocale(locale) {
                 if (this.menuForm.isDirty) {
-                    this.confirmFormAlert().then((result) => {
+                    confirmLeaveProgress().then((result) => {
                         if (result.isDismissed) {
                             return false;
-                        } else if(result.isConfirmed) {
+                        } else if (result.isConfirmed) {
                             this.selectedLocale = locale;
                             this.menuForm.reset();
                             this.menuForm = this.getMenuForm(locale);
@@ -179,7 +180,8 @@
 
             updateMenuItem(menuItem) {
                 const self = this;
-                return self.validateMenuItem(menuItem)
+
+                axios.post(self.validationRoute, menuItem)
                     .then(() => {
                         self.updateSelectedMenu(menuItem);
                         self.updateLastDataMenuItems();
@@ -199,18 +201,9 @@
                 this.selectedMenuItem['category_id'] = menuItem['category_id'];
             },
 
-            validateMenuItem(menuItem) {
-                const form = useForm(cloneDeep(menuItem));
-
-                return axios.post(
-                    route('admin.api.theme.header.menu-item.validate'),
-                    menuItem
-                );
-            },
-
             addMenuItem(menuItem) {
                 const self = this;
-                self.validateMenuItem(menuItem)
+                axios.post(self.validationRoute, menuItem)
                     .then(() => {
                         self.menuForm.menu_items.push(
                             cloneDeep(menuItem)
@@ -253,7 +246,7 @@
                 cloneMenuItem['children'] = [];
 
                 if (this.menuForm.isDirty) {
-                    this.confirmFormAlert().then((result) => {
+                    confirmLeaveProgress().then((result) => {
                         if (result.isDismissed) {
                             return false;
                         } else if(result.isConfirmed) {
@@ -273,23 +266,6 @@
 
                     this.updateLastDataMenuItems();
                 }
-            },
-
-            confirmFormAlert() {
-                const confirmationMessage = (
-                    'It looks like you have been editing something. '
-                    + 'If you leave before saving, your changes will be lost.'
-                );
-
-                return confirmAlert('Are you sure?', confirmationMessage, 'Leave this', {
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Leave this',
-                    cancelButtonText: 'Continue Editing',
-                    scrollbarPadding: false,
-                });
             },
         }
     };

@@ -31,16 +31,19 @@ class MenuItemRequest extends FormRequest
                 'url',
             ],
             'page_id' => [
+                'required_if:type,'.MenuItem::TYPE_PAGE,
                 'nullable',
                 'integer',
                 'exists:pages,id'
             ],
             'post_id' => [
+                'required_if:type,'.MenuItem::TYPE_POST,
                 'nullable',
                 'integer',
                 'exists:posts,id'
             ],
             'category_id' => [
+                'required_if:type,'.MenuItem::TYPE_CATEGORY,
                 'nullable',
                 'integer',
                 'exists:categories,id'
