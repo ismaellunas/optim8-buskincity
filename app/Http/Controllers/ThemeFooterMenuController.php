@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\MenuItemRequest;
-use Illuminate\Http\Request;
-use App\Models\{
-    Menu,
-    MenuItem
-};
+use App\Http\Requests\MenuRequest;
+use App\Models\Menu;
 
 class ThemeFooterMenuController extends ThemeOptionController
 {
     protected $baseRouteName = 'admin.theme.footer';
 
-    public function update(MenuItemRequest $request)
+    public function update(MenuRequest $request)
     {
         $inputs = $request->all();
 

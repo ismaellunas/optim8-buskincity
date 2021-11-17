@@ -21,6 +21,7 @@
                     required
                     :message="error('title', null, errors)"
                 />
+
                 <sdb-form-select
                     v-model="form.type"
                     class="is-fullwidth"
@@ -29,15 +30,15 @@
                     :message="error('type', null, errors)"
                     @change="onChangedType"
                 >
-                    <template
+                    <option
                         v-for="option in typeOptions"
                         :key="option.id"
+                        :value="option.id"
                     >
-                        <option :value="option.id">
-                            {{ option.value }}
-                        </option>
-                    </template>
+                        {{ option.value }}
+                    </option>
                 </sdb-form-select>
+
                 <sdb-form-input
                     v-if="isTypeUrl"
                     v-model="form.url"
@@ -45,6 +46,7 @@
                     placeholder="e.g https://www.example.com/"
                     :message="error('url', null, errors)"
                 />
+
                 <sdb-form-select
                     v-if="isTypePage"
                     v-model="form.page_id"
@@ -52,21 +54,21 @@
                     class="is-fullwidth"
                     :message="error('page_id', null, errors)"
                 >
-                    <template
+                    <option
                         v-for="option in pageOptions"
                         :key="option.id"
+                        :value="option.id"
                     >
-                        <option :value="option.id">
-                            {{ option.value }}
-                            <template
-                                v-for="locale, index in option.locales"
-                                :key="index"
-                            >
-                                [{{ locale.toUpperCase() }}]
-                            </template>
-                        </option>
-                    </template>
+                        {{ option.value }}
+                        <span
+                            v-for="locale, index in option.locales"
+                            :key="index"
+                        >
+                            [{{ locale.toUpperCase() }}]
+                        </span>
+                    </option>
                 </sdb-form-select>
+
                 <sdb-form-select
                     v-if="isTypePost"
                     v-model="form.post_id"
@@ -74,15 +76,15 @@
                     class="is-fullwidth"
                     :message="error('post_id', null, errors)"
                 >
-                    <template
+                    <option
                         v-for="option in postOptions"
                         :key="option.id"
+                        :value="option.id"
                     >
-                        <option :value="option.id">
-                            {{ option.value }} [{{ option.locale.toUpperCase() }}]
-                        </option>
-                    </template>
+                        {{ option.value }} [{{ option.locale.toUpperCase() }}]
+                    </option>
                 </sdb-form-select>
+
                 <sdb-form-select
                     v-if="isTypeCategory"
                     v-model="form.category_id"
@@ -90,23 +92,23 @@
                     class="is-fullwidth"
                     :message="error('category_id', null, errors)"
                 >
-                    <template
+                    <option
                         v-for="option in categoryOptions"
                         :key="option.id"
+                        :value="option.id"
                     >
-                        <option :value="option.id">
-                            {{ option.value }}
-                            <template
-                                v-for="locale, index in option.locales"
-                                :key="index"
-                            >
-                                [{{ locale.toUpperCase() }}]
-                            </template>
-                        </option>
-                    </template>
+                        {{ option.value }}
+                        <span
+                            v-for="locale, index in option.locales"
+                            :key="index"
+                        >
+                            [{{ locale.toUpperCase() }}]
+                        </span>
+                    </option>
                 </sdb-form-select>
             </fieldset>
         </form>
+
         <template #footer>
             <div
                 class="columns"
