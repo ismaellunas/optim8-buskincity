@@ -100,7 +100,6 @@
             },
 
             addSocialMedia(socialMedia) {
-                console.log(socialMedia);
                 this.socialMediaMenus.push(
                     cloneDeep(socialMedia)
                 );
