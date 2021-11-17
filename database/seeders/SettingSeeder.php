@@ -137,7 +137,7 @@ class SettingSeeder extends Seeder
                 "order" => "1"
             ],
             [
-                "key" => "header_logo_url",
+                "key" => "header_logo_media_id",
                 "display_name" => null,
                 "value" => null,
                 "group" => "header",

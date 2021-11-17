@@ -32,6 +32,7 @@
             <layout
                 v-if="activeTab == 'layout'"
                 ref="layout"
+                :logo-url="logoUrl"
                 :settings="settings"
             />
 
@@ -84,6 +85,10 @@
                 default() {
                     return {};
                 },
+            },
+            logoUrl: {
+                type: String,
+                default: "",
             },
             menuItemLastSaved: {
                 type: String,

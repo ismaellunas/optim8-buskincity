@@ -1,8 +1,8 @@
 <template>
-    <sdb-modal-card>
+    <sdb-modal-card @close="$emit('close')">
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ isCreate ? 'Add' : 'Edit' }} Menu Item
+                {{ isCreate ? 'Add' : 'Edit' }} Social Media
             </p>
             <button
                 class="delete"
@@ -13,25 +13,21 @@
 
         <form @submit.prevent="onSubmit">
             <fieldset>
-                <sdb-image
-                    v-if="hasImage"
-                    class="mb-2 is-48x48"
-                    :src="imgUrl"
-                />
-                <sdb-form-file
-                    v-model="form.file"
-                    label="Upload Image"
-                    :accepted-types="acceptedTypes"
+                <sdb-form-input-icon
+                    v-model="form.icon"
+                    label="Icon"
+                    placeholder="e.g fas fa-square-full"
                     required
-                    :message="error('file')"
-                    @on-file-picked="onFilePicked"
+                    :icon-classes="iconClasses"
+                    :message="error('icon', null, errors)"
                 />
+
                 <sdb-form-input
                     v-model="form.url"
                     label="Link"
                     placeholder="e.g https:://example.com/"
                     required
-                    :message="error('url')"
+                    :message="error('url', null, errors)"
                 />
             </fieldset>
         </form>
@@ -47,7 +43,7 @@
                     <div class="is-pulled-left">
                         <sdb-button
                             class="is-danger"
-                            @click.prevent="deleteLink(selectedIndex)"
+                            @click.prevent="deleteSocialMedia(selectedIndex)"
                         >
                             <span class="icon is-small">
                                 <i class="far fa-trash-alt" />
@@ -77,23 +73,22 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
-    import SdbFormFile from '@/Sdb/Form/File';
     import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbImage from '@/Sdb/Image';
+    import SdbFormInputIcon from '@/Sdb/Form/InputIcon';
     import SdbModalCard from '@/Sdb/ModalCard';
+    import fontawesomeBrandClasses from '@/Json/fontawesome-brand-classes';
     import { isBlank } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { reactive } from 'vue';
 
     export default {
-        name: 'NavigationFormMenu',
+        name: 'FooterSocialMediaForm',
 
         components: {
             SdbButton,
-            SdbFormFile,
             SdbFormInput,
-            SdbImage,
+            SdbFormInputIcon,
             SdbModalCard,
         },
 
@@ -102,6 +97,10 @@
         ],
 
         props: {
+            errors: {
+                type: Object,
+                default: () => {},
+            },
             socialMedia: {
                 type: Object,
                 default: () => {},
@@ -113,9 +112,10 @@
         },
 
         emits: [
-            'addSocialMedia',
+            'add-social-media',
             'close',
-            'deleteLink',
+            'delete-social-media',
+            'update-social-media',
         ],
 
         setup(props) {
@@ -123,31 +123,19 @@
 
             if (!isBlank(props.socialMedia)) {
                 fields = props.socialMedia;
-                fields.file = props.socialMedia?.file ?? null;
             } else {
-                fields = reactive({
+                fields = {
                     id: null,
-                    file: null,
-                    image_url: null,
                     url: null,
-                });
+                    icon: null,
+                };
             }
 
             return {
                 baseRouteName: usePage().props.value.baseRouteName ?? null,
-                form: fields,
+                form: reactive(fields),
                 firstFields: cloneDeep(fields),
-            };
-        },
-
-        data() {
-            return {
-                loader: null,
-                acceptedTypes: [
-                    '.jpeg',
-                    '.jpg',
-                    '.png',
-                ],
+                iconClasses: fontawesomeBrandClasses,
             };
         },
 
@@ -155,23 +143,14 @@
             isCreate() {
                 return isBlank(this.socialMedia);
             },
-
-            hasImage() {
-                return this.form.image_url;
-            },
-
-            imgUrl() {
-                return this.form.image_url ?? null;
-            },
         },
 
         methods: {
             onSubmit() {
                 if (isBlank(this.socialMedia)) {
-                    this.$emit('close');
-                    this.$emit('addSocialMedia', this.form);
+                    this.$emit('add-social-media', this.form);
                 } else {
-                    this.$emit('close');
+                    this.$emit('update-social-media', this.form);
                 }
             },
 
@@ -182,17 +161,12 @@
 
             resetForm() {
                 const fields = this.firstFields;
-                this.form['file'] = fields['file'];
-                this.form['image_url'] = fields['image_url'];
                 this.form['url'] = fields['url'];
+                this.form['icon'] = fields['icon'];
             },
 
-            onFilePicked(event) {
-                this.form['image_url'] = event.target.result;
-            },
-
-            deleteLink(index) {
-                this.$emit('deleteLink', index);
+            deleteSocialMedia(index) {
+                this.$emit('delete-social-media', index);
             }
         },
     }

@@ -63,6 +63,25 @@ class MenuService
         return $menus;
     }
 
+    public function getSocialMediaMenus()
+    {
+        $menu = Menu::with([
+            'menuItems' => function ($query) {
+                    $query->select([
+                            'id',
+                            'url',
+                            'icon',
+                            'menu_id',
+                        ]);
+                    $query->where('type', MenuItem::TYPE_URL);
+                }
+            ])
+            ->socialMedia()
+            ->first();
+
+        return $menu ? $menu->menuItems : [];
+    }
+
     public static function generateBackendMenu(Request $request): array
     {
         $user = $request->user();

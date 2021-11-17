@@ -12,6 +12,7 @@ class Menu extends Model
 
     const TYPE_HEADER = 1;
     const TYPE_FOOTER = 2;
+    const TYPE_SOCIAL_MEDIA = 3;
 
     protected $fillable = [
         'type',
@@ -98,6 +99,11 @@ class Menu extends Model
         return $query->where('type', self::TYPE_FOOTER);
     }
 
+    public function scopeSocialMedia($query)
+    {
+        return $query->where('type', self::TYPE_SOCIAL_MEDIA);
+    }
+
     // Relation
     public function menuItems()
     {
@@ -173,5 +179,35 @@ class Menu extends Model
         }
 
         return $input;
+    }
+
+    public function syncSocialMedia(array $inputs)
+    {
+        $affectedIds = $this->updateSocialMedia($inputs);
+
+        $unusedMenuItems = $this->menuItems->whereNotIn('id', $affectedIds);
+
+        foreach ($unusedMenuItems as $socialMedia) {
+            $socialMedia->delete();
+        }
+    }
+
+    private function updateSocialMedia(array $inputs): array
+    {
+        $affectedIds = collect([]);
+        foreach ($inputs as $input) {
+            $input['title'] = 'social-media';
+            $affectedSocialMedia = MenuItem::updateOrCreate(
+                [
+                    'id' => $input['id'],
+                    'menu_id' => $this->id,
+                ],
+                $input
+            );
+
+            $affectedIds->push($affectedSocialMedia->id);
+        }
+
+        return $affectedIds->flatten()->all();
     }
 }
