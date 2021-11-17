@@ -28,7 +28,6 @@ class ThemeFooterLayoutRequest extends FormRequest
             'social_media_menus.*.icon' => [
                 'sometimes',
                 'required',
-                'min:1',
                 'max:100',
             ],
             'social_media_menus.*.url' => [
