@@ -42,11 +42,9 @@
         },
 
         props: {
-            logo: {
-                type: Object,
-                default() {
-                    return {};
-                },
+            logoUrl: {
+                type: String,
+                default: "",
             },
             modelValue: {
                 type: Object,
@@ -76,11 +74,11 @@
 
         computed: {
             hasImage() {
-                return !isEmpty(this.logo.file_url) || this.formMedia.file_url !== null;
+                return !isEmpty(this.logoUrl) || this.formMedia.file_url !== null;
             },
 
             imgUrl() {
-                return this.formMedia.file_url ?? this.logo.file_url;
+                return this.formMedia.file_url ?? this.logoUrl;
             },
         },
 

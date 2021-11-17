@@ -9,7 +9,7 @@
             <hr>
             <header-logo
                 v-model="form.logo"
-                :logo="logo"
+                :logo-url="logoUrl"
                 :setting="settings.header_logo_media_id"
             />
         </form>
@@ -31,11 +31,9 @@
         },
 
         props: {
-            logo: {
-                type: Object,
-                default() {
-                    return {};
-                },
+            logoUrl: {
+                type: String,
+                default: "",
             },
             settings: {
                 type: Object,

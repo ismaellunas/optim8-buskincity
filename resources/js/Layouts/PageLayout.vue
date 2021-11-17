@@ -27,7 +27,7 @@
             :is="navbarLayoutName"
             :available-languages="availableLanguages"
             :current-language="currentLanguage"
-            :logo-url="logoUrl"
+            :logo-url="getLogoUrl"
             :menus="menus[currentLanguage]"
         />
 
@@ -46,6 +46,7 @@
     import SdbNavbarLayoutTwo from '@/Sdb/Navbar/NavbarLayoutTwo';
     import SdbNavbarLayoutThree from '@/Sdb/Navbar/NavbarLayoutThree';
     import { Head, usePage } from '@inertiajs/inertia-vue3';
+    import { isBlank } from '@/Libs/utils';
 
     export default {
         name: 'LayoutPage',
@@ -66,7 +67,7 @@
 
         setup() {
             return {
-                logo: usePage().props.value.logo,
+                logoUrl: usePage().props.value.logoUrl,
                 menuSettings: usePage().props.value.menuSettings,
             };
         },
@@ -80,14 +81,14 @@
         },
 
         computed: {
+            getLogoUrl() {
+                return !isBlank(this.logoUrl) ? this.logoUrl : "https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752";
+            },
+
             availableLanguages() {
                 return this
                     .languageOptions
                     .filter(option => option.id !== this.currentLanguage);
-            },
-
-            logoUrl() {
-                return this.logo.file_url ?? "https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752";
             },
 
             navbarLayoutName() {

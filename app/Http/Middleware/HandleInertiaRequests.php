@@ -68,7 +68,7 @@ class HandleInertiaRequests extends Middleware
                 }
                 return (object)[];
             },
-            'logo' => $this->settingService->getLogoUrl(),
+            'logoUrl' => $this->settingService->getLogoUrl(),
             'menus' => fn () => (
                     auth()->check()
                     && (
