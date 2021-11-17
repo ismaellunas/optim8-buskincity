@@ -76,7 +76,7 @@
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormInputIcon from '@/Sdb/Form/InputIcon';
     import SdbModalCard from '@/Sdb/ModalCard';
-    import fontawesomeBranchClasses from '@/Json/fontawesome-branch-classes';
+    import fontawesomeBrandClasses from '@/Json/fontawesome-brand-classes';
     import { isBlank } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
@@ -130,7 +130,7 @@
                 baseRouteName: usePage().props.value.baseRouteName ?? null,
                 form: reactive(fields),
                 firstFields: cloneDeep(fields),
-                iconClasses: fontawesomeBranchClasses,
+                iconClasses: fontawesomeBrandClasses,
             };
         },
 

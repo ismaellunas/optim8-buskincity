@@ -30,6 +30,28 @@
 
                 <fieldset :disabled="isProcessing">
                     <div
+                        v-for="trackingCode in sortedTrackingCodes"
+                        :key="trackingCode.key"
+                        class="columns"
+                    >
+                        <div class="column is-half">
+                            <h3><b>{{ trackingCode.display_name }}</b></h3>
+                        </div>
+                        <div class="column">
+                            <sdb-textarea
+                                v-model="form[ trackingCode.key ]"
+                                class="code-editor"
+                                rows="10"
+                            />
+                            <p v-if="false">
+                                <sdb-input-error
+                                    :message="error(trackingCode.key)"
+                                />
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
                         v-for="additionalCode in sortedAdditionalCodes"
                         :key="additionalCode.key"
                         class="columns"
@@ -41,6 +63,7 @@
                             <sdb-textarea
                                 v-model="form[ additionalCode.key ]"
                                 class="code-editor"
+                                rows="10"
                             />
                             <p v-if="false">
                                 <sdb-input-error
@@ -62,7 +85,7 @@
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbTextarea from '@/Sdb/Textarea';
     import SdbInputError from '@/Sdb/InputError';
-    import { forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
+    import { assign, forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
     import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
@@ -84,20 +107,31 @@
         props: {
             baseRouteName: {type: String, required: true},
             additionalCodes: {type: Object, required: true},
+            trackingCodes: {type: Object, required: true},
             errors: {type: Object, default: () => {}},
             title: {type: String, required: true},
         },
 
         setup(props) {
-            const form = mapValues(
+            const additionalCodeForm = mapValues(
                 props.additionalCodes,
                 (additionalCode) => {
                     return additionalCode.value;
                 }
             );
 
+            const trackingCodeForm = mapValues(
+                props.trackingCodes,
+                (trackingCode) => {
+                    return trackingCode.value;
+                }
+            );
+
             return {
-                form: useForm(form),
+                form: useForm(assign(
+                    additionalCodeForm,
+                    trackingCodeForm
+                )),
             };
         },
 
@@ -111,7 +145,10 @@
         computed: {
             sortedAdditionalCodes() {
                 return sortBy(this.additionalCodes, ['order']);
-            }
+            },
+            sortedTrackingCodes() {
+                return sortBy(this.trackingCodes, ['order']);
+            },
         },
 
         methods: {
@@ -133,16 +170,6 @@
                     }
                 });
             },
-            resetForm() {
-                const self = this;
-                confirmAlert('Are you sure you want to reset?')
-                    .then((result) => {
-                        self.form.clearErrors();
-                        if (result.isConfirmed) {
-                            self.form.reset();
-                        }
-                    });
-            }
         },
     };
 </script>
@@ -151,5 +178,7 @@
 .code-editor {
     background-color: black;
     color: #e5e5e5;
+    font-family: "Courier New";
+    font-size: 10pt;
 }
 </style>
