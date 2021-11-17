@@ -68,17 +68,6 @@
                 return this.form?.isDirty;
             },
 
-            getUseForm() {
-                return useForm({
-                    layout: parseInt(this.settings.header_layout.value),
-                    logo: {
-                        file: null,
-                        file_url: null,
-                        media_id: this.settings.header_logo_media_id.value,
-                    }
-                });
-            },
-
             onSubmit() {
                 const self = this;
                 self.loader = self.$loading.show({});
