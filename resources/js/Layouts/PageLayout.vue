@@ -10,18 +10,7 @@
                 rel="stylesheet"
                 :href="$page.props.css.frontend.additional_css"
             >
-            <link
-                v-if="$page.props.css.frontend.tracking_code_inside_head"
-                rel="stylesheet"
-                :href="$page.props.css.frontend.tracking_code_inside_head"
-            >
         </Head>
-
-        <link
-            v-if="$page.props.css.frontend.tracking_code_after_body"
-            rel="stylesheet"
-            :href="$page.props.css.frontend.tracking_code_after_body"
-        >
 
         <component
             :is="navbarLayoutName"
@@ -32,12 +21,6 @@
         />
 
         <slot />
-
-        <link
-            v-if="$page.props.css.frontend.tracking_code_before_body"
-            rel="stylesheet"
-            :href="$page.props.css.frontend.tracking_code_before_body"
-        >
     </div>
 </template>
 
@@ -69,14 +52,6 @@
             return {
                 logoUrl: usePage().props.value.logoUrl,
                 menuSettings: usePage().props.value.menuSettings,
-            };
-        },
-
-        data() {
-            return {
-                'tracking_code_inside_head': ".button {color: red}",
-                'tracking_code_after_body': "",
-                'tracking_code_before_body': "",
             };
         },
 
