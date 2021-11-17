@@ -19,7 +19,7 @@
                     placeholder="e.g fas fa-square-full"
                     required
                     :icon-classes="iconClasses"
-                    :message="error('icon')"
+                    :message="error('icon', null, errors)"
                 />
 
                 <sdb-form-input
@@ -27,7 +27,7 @@
                     label="Link"
                     placeholder="e.g https:://example.com/"
                     required
-                    :message="error('url')"
+                    :message="error('url', null, errors)"
                 />
             </fieldset>
         </form>
@@ -97,6 +97,10 @@
         ],
 
         props: {
+            errors: {
+                type: Object,
+                default: () => {},
+            },
             socialMedia: {
                 type: Object,
                 default: () => {},
@@ -111,6 +115,7 @@
             'add-social-media',
             'close',
             'delete-social-media',
+            'update-social-media',
         ],
 
         setup(props) {
@@ -143,10 +148,9 @@
         methods: {
             onSubmit() {
                 if (isBlank(this.socialMedia)) {
-                    this.$emit('close');
                     this.$emit('add-social-media', this.form);
                 } else {
-                    this.$emit('close');
+                    this.$emit('update-social-media', this.form);
                 }
             },
 
