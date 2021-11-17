@@ -113,7 +113,7 @@ class SettingService
             ->all();
     }
 
-    public function getLogo()
+    public function getLogoUrl(): object
     {
         $setting = Setting::where('key', config("constants.theme_header.header_logo_media.key"))
             ->first();
@@ -126,7 +126,7 @@ class SettingService
                 ->where('id', $setting->value)
                 ->first();
         } else {
-            return [];
+            return (object)[];
         }
     }
 
