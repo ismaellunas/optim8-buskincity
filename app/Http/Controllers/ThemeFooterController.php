@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ThemeFooterLayoutRequest;
+use App\Http\Requests\{
+    SocialMediaRequest,
+    ThemeFooterLayoutRequest
+};
 use App\Models\{
     Menu,
     Setting,
@@ -73,5 +76,12 @@ class ThemeFooterController extends ThemeOptionController
         $this->generateFlashMessage('Footer layout updated successfully!');
 
         return redirect()->route($this->baseRouteName.'.edit');
+    }
+
+    public function apiValidateSocialMedia(SocialMediaRequest $request)
+    {
+        return [
+            'passed' => true
+        ];
     }
 }
