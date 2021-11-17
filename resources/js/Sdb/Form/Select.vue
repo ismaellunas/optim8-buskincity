@@ -2,19 +2,21 @@
     <sdb-form-field
         :is-required="required"
     >
-        <template v-slot:label>{{ label }}</template>
+        <template #label>
+            {{ label }}
+        </template>
 
         <sdb-select
             v-model="selected"
+            v-bind="$attrs"
             :disabled="disabled"
             :placeholder="placeholder"
-            :class="class"
         >
-            <slot></slot>
+            <slot />
         </sdb-select>
 
-        <template v-slot:error>
-            <sdb-input-error :message="message"/>
+        <template #error>
+            <sdb-input-error :message="message" />
         </template>
     </sdb-form-field>
 </template>
@@ -27,21 +29,36 @@
 
     export default {
         name: 'SdbFormSelect',
+
         components: {
             SdbFormField,
             SdbInputError,
             SdbSelect,
         },
+
+        inheritAttrs: false,
+
         props: {
-            class: {},
             disabled: {
                 type: Boolean,
                 default: false
             },
-            label: String,
-            message: Object|null,
-            modelValue: {},
-            placeholder: String,
+            label: {
+                type: String,
+                default: ""
+            },
+            message: {
+                type: Object,
+                default: () => {}
+            },
+            modelValue: {
+                type: [Object, Array, String, Number, null],
+                required: true
+            },
+            placeholder: {
+                type: String,
+                default: ""
+            },
             required: {
                 type: Boolean,
                 default: false

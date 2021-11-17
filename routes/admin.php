@@ -95,6 +95,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/media', [MediaController::class, 'apiStore'])
         ->name('media.store');
+
+    Route::post('/theme/header/menu-item', [ThemeHeaderMenuController::class, 'apiValidateMenuItem'])
+        ->name('theme.header.menu-item.validate');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
