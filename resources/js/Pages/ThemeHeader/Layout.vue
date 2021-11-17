@@ -9,7 +9,8 @@
             <hr>
             <header-logo
                 v-model="form.logo"
-                :setting="settings.header_logo_url"
+                :logo-url="logoUrl"
+                :setting="settings.header_logo_media_id"
             />
         </form>
     </section>
@@ -30,6 +31,10 @@
         },
 
         props: {
+            logoUrl: {
+                type: String,
+                default: "",
+            },
             settings: {
                 type: Object,
                 required: true,
@@ -49,10 +54,8 @@
                     layout: parseInt(this.settings.header_layout.value),
                     logo: {
                         file: null,
-                        file_name: null,
                         file_url: null,
-                        file_type: null,
-                        is_image: null,
+                        media_id: this.settings.header_logo_media_id.value,
                     }
                 })
             };

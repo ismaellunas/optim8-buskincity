@@ -83,6 +83,11 @@ return [
         'buttons'
     ],
     'theme_content_paragraph_width' => 1440,
+    'theme_header' => [
+        'header_logo_media' => [
+            'key' => 'header_logo_media_id',
+        ],
+    ],
     'locale' => [
         'en',
         'sv',
