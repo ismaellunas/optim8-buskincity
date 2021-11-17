@@ -15,38 +15,31 @@
             >
                 <div class="field is-grouped is-grouped-right">
                     <div class="control">
-                        <sdb-button
-                            class="is-warning"
-                            type="button"
-                            @click="resetColors"
-                        >
-                            Reset All
-                        </sdb-button>
-                    </div>
-
-                    <div class="control">
                         <sdb-button class="is-link">
-                            Update
+                            Save
                         </sdb-button>
                     </div>
                 </div>
 
                 <fieldset :disabled="isProcessing">
                     <div
-                        v-for="color in sortedColors"
-                        :key="color.key"
+                        v-for="fontSize in sortedFontSizes"
+                        :key="fontSize.key"
                         class="columns"
                     >
                         <div class="column is-three-quarters">
-                            <h3>{{ color.display_name }}</h3>
+                            <h3>{{ fontSize.display_name }}</h3>
                         </div>
                         <div class="column">
-                            <sdb-input-color
-                                v-model="form[color.key]"
+                            <sdb-input
+                                v-model="form[fontSize.key]"
+                                maxlength="7"
+                                @blur="updateFontSizeNumber(fontSize.key)"
+                                @keypress="isNumber"
                             />
-                            <p v-if="form.errors?.default && form.errors.default[color.key]">
+                            <p v-if="form.errors?.default && form.errors.default[fontSize.key]">
                                 <sdb-input-error
-                                    :message="error(color.key)"
+                                    :message="error(fontSize.key)"
                                 />
                             </p>
                         </div>
@@ -62,20 +55,20 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbInputColor from '@/Sdb/InputColor';
+    import SdbInput from '@/Sdb/Input';
     import SdbInputError from '@/Sdb/InputError';
     import { forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
     import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
-        name: 'ThemeOptionColorEdit',
+        name: 'ThemeOptionFontSizeEdit',
 
         components: {
             AppLayout,
             SdbButton,
             SdbErrorNotifications,
-            SdbInputColor,
+            SdbInput,
             SdbInputError,
         },
 
@@ -84,25 +77,43 @@
         ],
 
         props: {
-            baseRouteName: String,
-            can: Object,
-            colors: Object,
-            defaultColors: Object,
-            errors: Object,
-            title: String,
+            baseRouteName: {
+                type: String,
+                required: true,
+            },
+            can: {
+                type: Object,
+                default: () => {}
+            },
+            fontSizes: {
+                type: Object,
+                required: true,
+            },
+            defaultFontSizes: {
+                type: Object,
+                default: () => {}
+            },
+            errors: {
+                type: Object,
+                default: () => {}
+            },
+            title: {
+                type: String,
+                required: true,
+            },
         },
 
         setup(props) {
-            const colors = mapValues(props.colors, (color) => {
-                return color.value;
+            const fontSizes = mapValues(props.fontSizes, (fontSize) => {
+                return fontSize.value;
             });
 
-            const form = mapValues(props.colors, (color, key) => {
-                const colorValue = props.colors[key].value;
-                if (isEmpty(colorValue) && has(props.defaultColors, key)) {
-                    colorValue = props.defaultColors[key];
+            const form = mapValues(props.fontSizes, (fontSize, key) => {
+                let fontSizeValue = props.fontSizes[key].value;
+                if (isEmpty(fontSizeValue) && has(props.defaultFontSizes, key)) {
+                    fontSizeValue = props.defaultFontSizes[key];
                 }
-                return colorValue;
+                return fontSizeValue;
             });
 
             return {
@@ -118,8 +129,8 @@
         },
 
         computed: {
-            sortedColors() {
-                return sortBy(this.colors, ['order']);
+            sortedFontSizes() {
+                return sortBy(this.fontSizes, ['order']);
             },
         },
 
@@ -142,15 +153,17 @@
                     }
                 });
             },
-            resetColors() {
-                const self = this;
-                confirmAlert('Are you sure you want to reset?')
-                    .then((result) => {
-                        self.form.clearErrors();
-                        if (result.isConfirmed) {
-                            self.form.reset();
-                        }
-                    });
+            updateFontSizeNumber(fontSizeKey) {
+                if (! Number.isNaN(parseFloat(this.form[fontSizeKey]))) {
+                    this.form[fontSizeKey] = parseFloat(this.form[fontSizeKey]);
+                }
+            },
+            isNumber(event) {
+                let keyCode = (event.keyCode ? event.keyCode : event.which);
+
+                if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
+                    event.preventDefault();
+                }
             }
         },
     };
