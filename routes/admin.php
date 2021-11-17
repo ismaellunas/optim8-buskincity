@@ -98,6 +98,9 @@ Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->gr
 
     Route::post('/theme/header/menu-item', [ThemeHeaderMenuController::class, 'apiValidateMenuItem'])
         ->name('theme.header.menu-item.validate');
+
+    Route::post('/theme/footer/social-media', [ThemeFooterController::class, 'apiValidateSocialMedia'])
+        ->name('theme.footer.social-media.validate');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {

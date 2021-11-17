@@ -43,11 +43,13 @@
 
         <footer-social-media-form
             v-if="isModalOpen"
+            :errors="socialMediaErrors"
             :social-media="selectedSocialMedia"
             :selected-index="selectedIndex"
             @add-social-media="addSocialMedia"
             @close="closeModal()"
             @delete-social-media="deleteSocialMedia"
+            @update-social-media="updateSocialMedia"
         />
     </div>
 </template>
@@ -87,8 +89,10 @@
 
         data() {
             return {
-                selectedSocialMedia: {},
                 selectedIndex: null,
+                selectedSocialMedia: {},
+                socialMediaErrors: {},
+                validationRoute: route('admin.api.theme.footer.social-media.validate'),
             };
         },
 
@@ -96,13 +100,34 @@
             openFormModal(socialMedia = null, index = null) {
                 this.selectedSocialMedia = socialMedia ?? {};
                 this.selectedIndex = index ?? null;
+                this.socialMediaErrors = {};
                 this.isModalOpen = true;
             },
 
             addSocialMedia(socialMedia) {
-                this.socialMediaMenus.push(
-                    cloneDeep(socialMedia)
-                );
+                const self = this;
+                axios.post(self.validationRoute, socialMedia)
+                    .then(() => {
+                        self.socialMediaMenus.push(
+                            cloneDeep(socialMedia)
+                        );
+                        self.closeModal();
+                    })
+                    .catch((error) => {
+                        self.socialMediaErrors = error.response.data.errors;
+                    });
+            },
+
+            updateSocialMedia(socialMedia) {
+                const self = this;
+
+                axios.post(self.validationRoute, socialMedia)
+                    .then(() => {
+                        self.closeModal();
+                    })
+                    .catch((error) => {
+                        self.socialMediaErrors = error.response.data.errors;
+                    });
             },
 
             deleteSocialMedia(index) {
