@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Models\MenuItem;
-use App\Services\TranslationService as TranslationSv;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -17,64 +16,43 @@ class MenuItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'menu_items.*.title' => [
+            'title' => [
                 'sometimes',
                 'required',
                 'max:255',
             ],
-            'menu_items.*.type' => [
-                'sometimes',
+            'type' => [
                 'required',
                 'integer',
                 Rule::in(array_keys(MenuItem::TYPE_VALUES)),
             ],
-            'menu_items.*.url' => [
+            'url' => [
                 'nullable',
                 'url',
             ],
-            'menu_items.*.page_id' => [
+            'page_id' => [
+                'required_if:type,'.MenuItem::TYPE_PAGE,
                 'nullable',
                 'integer',
                 'exists:pages,id'
             ],
-            'menu_items.*.post_id' => [
+            'post_id' => [
+                'required_if:type,'.MenuItem::TYPE_POST,
                 'nullable',
                 'integer',
                 'exists:posts,id'
             ],
-            'menu_items.*.category_id' => [
+            'category_id' => [
+                'required_if:type,'.MenuItem::TYPE_CATEGORY,
                 'nullable',
                 'integer',
                 'exists:categories,id'
             ],
-            'menu_items.*.menu_id' => [
+            'menu_id' => [
                 'required',
                 'integer',
                 'exists:menus,id'
             ],
         ];
-    }
-
-    public function attributes()
-    {
-        $attr = [];
-        $columns = [
-            'locale',
-            'title',
-            'type',
-            'page_id',
-            'post_id',
-            'category_id',
-            'menu_id',
-            'url',
-        ];
-
-        foreach ($columns as $column) {
-            for ($i = 0; $i < count($this['menu_items']); $i++) {
-                $attr["menu_items.".$i.".".$column] = ucwords(str_replace('_', ' ', $column))." (".strtoupper($this['locale']).") ";
-            }
-        }
-
-        return $attr;
     }
 }
