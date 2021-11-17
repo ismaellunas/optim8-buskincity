@@ -19,16 +19,12 @@ class CreateMenuItemsTable extends Migration
             $table->tinyInteger('type')->default(1);
             $table->string('url')->nullable();
             $table->integer('order')->default(1);
+            $table->string('icon', 100)->nullable();
             $table->bigInteger('parent_id')->nullable();
             $table->foreignId('menu_id')
                 ->constrained('menus')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->foreignId('media_id')
-                ->nullable()
-                ->constrained('media')
-                ->onUpdate('cascade')
-                ->onDelete('set null');
             $table->foreignId('page_id')
                 ->nullable()
                 ->constrained('pages')

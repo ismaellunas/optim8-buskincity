@@ -67,21 +67,13 @@ class MenuService
     {
         $menu = Menu::with([
             'menuItems' => function ($query) {
-                $query->select([
-                        'id',
-                        'url',
-                        'menu_id',
-                        'media_id',
-                    ]);
-                $query->where('type', MenuItem::TYPE_URL);
-                $query->with([
-                        'media' => function ($query) {
-                            $query->select([
-                                'id',
-                                'file_url'
-                            ]);
-                        }
-                    ]);
+                    $query->select([
+                            'id',
+                            'url',
+                            'icon',
+                            'menu_id',
+                        ]);
+                    $query->where('type', MenuItem::TYPE_URL);
                 }
             ])
             ->socialMedia()

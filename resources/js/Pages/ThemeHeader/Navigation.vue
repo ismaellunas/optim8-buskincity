@@ -39,12 +39,13 @@
         <navigation-form-menu
             v-if="isModalOpen"
             :base-route-name="baseRouteName"
+            :errors="menuItemErrors"
             :menu="menu"
             :menu-item="selectedMenuItem"
             :selected-locale="selectedLocale"
             @add-menu-item="addMenuItem"
             @close="closeModal()"
-            @update-last-data-menu-items="updateLastDataMenuItems"
+            @update-menu-item="updateMenuItem"
         />
     </section>
 </template>
@@ -110,6 +111,7 @@
                 menuForm: {},
                 selectedLocale: this.defaultLocale,
                 selectedMenuItem: {},
+                menuItemErrors: {},
             };
         },
 
@@ -153,6 +155,7 @@
 
             openFormModal() {
                 this.selectedMenuItem = {};
+                this.menuItemErrors = {};
                 this.isModalOpen = true;
             },
 
@@ -174,16 +177,55 @@
                 this.lastDataMenuItems = cloneDeep(this.menuForm.menu_items);
             },
 
-            addMenuItem(menuItem) {
-                this.menuForm.menu_items.push(
-                    cloneDeep(menuItem)
-                );
+            updateMenuItem(menuItem) {
+                const self = this;
+                return self.validateMenuItem(menuItem)
+                    .then(() => {
+                        self.updateSelectedMenu(menuItem);
+                        self.updateLastDataMenuItems();
+                        self.closeModal();
+                    })
+                    .catch((error) => {
+                        self.menuItemErrors = error.response.data.errors;
+                    });
+            },
 
-                this.updateLastDataMenuItems();
+            updateSelectedMenu(menuItem) {
+                this.selectedMenuItem['title'] = menuItem['title'];
+                this.selectedMenuItem['type'] = menuItem['type'];
+                this.selectedMenuItem['url'] = menuItem['url'];
+                this.selectedMenuItem['page_id'] = menuItem['page_id'];
+                this.selectedMenuItem['post_id'] = menuItem['post_id'];
+                this.selectedMenuItem['category_id'] = menuItem['category_id'];
+            },
+
+            validateMenuItem(menuItem) {
+                const form = useForm(cloneDeep(menuItem));
+
+                return axios.post(
+                    route('admin.api.theme.header.menu-item.validate'),
+                    menuItem
+                );
+            },
+
+            addMenuItem(menuItem) {
+                const self = this;
+                self.validateMenuItem(menuItem)
+                    .then(() => {
+                        self.menuForm.menu_items.push(
+                            cloneDeep(menuItem)
+                        );
+                        self.updateLastDataMenuItems();
+                        self.closeModal();
+                    })
+                    .catch((error) => {
+                        self.menuItemErrors = error.response.data.errors;
+                    });
             },
 
             editRow(menuItem) {
                 this.selectedMenuItem = menuItem;
+                this.menuItemErrors = {};
                 this.openModal();
             },
 

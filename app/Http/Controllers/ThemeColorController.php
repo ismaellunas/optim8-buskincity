@@ -24,7 +24,7 @@ class ThemeColorController extends ThemeOptionController
         $defaultColors = config('constants.theme_colors');
 
         return Inertia::render(
-            'ThemeColor/Edit',
+            'ThemeColor',
             $this->getData([
                 'defaultColors' => $defaultColors,
                 'colors' => $this->settingService->getColors(),

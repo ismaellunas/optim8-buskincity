@@ -26,12 +26,15 @@
                             :key="index"
                             class="column"
                         >
-                            <sdb-image
-                                class="is-48x48 image-pointer"
-                                rounded="is-rounded"
-                                :src="imgUrl(socialMedia)"
+                            <span
+                                class="icon icon-pointer has-background-grey-lighter p-5"
                                 @click.prevent="openFormModal(socialMedia, index)"
-                            />
+                            >
+                                <i
+                                    class="fa-2x"
+                                    :class="socialMedia.icon"
+                                />
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -52,7 +55,6 @@
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
-    import SdbImage from '@/Sdb/Image';
     import FooterSocialMediaForm from './FooterSocialMediaForm';
     import { useModelWrapper } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
@@ -63,7 +65,6 @@
 
         components: {
             SdbButton,
-            SdbImage,
             FooterSocialMediaForm,
         },
 
@@ -73,7 +74,7 @@
 
         props: {
             modelValue: {
-                type: Object,
+                type: Array,
                 required: true,
             },
         },
@@ -92,16 +93,6 @@
         },
 
         methods: {
-            imgUrl(socialMedia) {
-                if (socialMedia.local_url) {
-                    return socialMedia.local_url;
-                } else if (socialMedia.media?.file_url) {
-                    return socialMedia.media?.file_url;
-                } else {
-                    return "https://dummyimage.com/48x48/e5e5e5/000000.png";
-                }
-            },
-
             openFormModal(socialMedia = null, index = null) {
                 this.selectedSocialMedia = socialMedia ?? {};
                 this.selectedIndex = index ?? null;
@@ -127,7 +118,8 @@
 </script>
 
 <style scoped>
-    .image-pointer {
+    .icon-pointer {
         cursor: pointer;
+        border-radius: 100%;
     }
 </style>
