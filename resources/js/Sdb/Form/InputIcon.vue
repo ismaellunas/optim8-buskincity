@@ -6,7 +6,7 @@
             {{ label }}
         </template>
 
-        <sdb-icon
+        <sdb-input-icon
             ref="input"
             v-bind="$attrs"
             v-model="icon"
@@ -35,20 +35,18 @@
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import SdbFormField from '@/Sdb/Form/Field';
-    import SdbIcon from '@/Sdb/Icon';
     import SdbIconBrowser from '@/Sdb/Modal/IconBrowser';
     import SdbInputError from '@/Sdb/InputError';
-    import SdbLabel from '@/Sdb/Label';
+    import SdbInputIcon from '@/Sdb/InputIcon';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'SdbFormIcon',
+        name: 'SdbFormInputIcon',
         components: {
             SdbFormField,
-            SdbIcon,
             SdbIconBrowser,
             SdbInputError,
-            SdbLabel,
+            SdbInputIcon,
         },
         mixins: [
             MixinHasModal,

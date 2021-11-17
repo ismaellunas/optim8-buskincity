@@ -45,7 +45,7 @@
     import SdbField from '@/Sdb/Field';
 
     export default {
-        name: 'SdbIcon',
+        name: 'SdbInputIcon',
 
         components: {
             SdbButton,
