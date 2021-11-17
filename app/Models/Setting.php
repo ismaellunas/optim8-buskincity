@@ -17,4 +17,9 @@ class Setting extends BaseModel
     protected $casts = [
         'updated_at' => 'datetime:M d, Y \a\t h:i',
     ];
+
+    public function scopeGroup($query, string $groupName)
+    {
+        return $query->where('group', $groupName);
+    }
 }

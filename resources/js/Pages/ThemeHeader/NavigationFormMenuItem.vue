@@ -1,13 +1,15 @@
 <template>
-    <sdb-modal-card>
+    <sdb-modal-card
+        @close="$emit('close')"
+    >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ menuItem.id ? 'Edit' : 'Add' }} Menu Item
+                {{ isCreate ? 'Add' : 'Edit' }} Menu Item
             </p>
             <button
                 class="delete"
                 aria-label="close"
-                @click="onClose()"
+                @click="$emit('close')"
             />
         </template>
 
@@ -17,93 +19,96 @@
                     v-model="form.title"
                     label="Title"
                     required
-                    :message="error('title')"
+                    :message="error('title', null, errors)"
                 />
+
                 <sdb-form-select
                     v-model="form.type"
-                    label="Type"
                     class="is-fullwidth"
+                    label="Type"
                     required
-                    :message="error('type')"
+                    :message="error('type', null, errors)"
+                    @change="onChangedType"
                 >
-                    <template
+                    <option
                         v-for="option in typeOptions"
                         :key="option.id"
+                        :value="option.id"
                     >
-                        <option :value="option.id">
-                            {{ option.value }}
-                        </option>
-                    </template>
+                        {{ option.value }}
+                    </option>
                 </sdb-form-select>
+
                 <sdb-form-input
                     v-if="isTypeUrl"
                     v-model="form.url"
                     label="Url"
-                    placeholder="e.g https:://example.com/"
-                    :message="error('url')"
+                    placeholder="e.g https://www.example.com/"
+                    :message="error('url', null, errors)"
                 />
+
                 <sdb-form-select
                     v-if="isTypePage"
                     v-model="form.page_id"
                     label="Link Page"
                     class="is-fullwidth"
-                    :message="error('page_id')"
+                    :message="error('page_id', null, errors)"
                 >
-                    <template
+                    <option
                         v-for="option in pageOptions"
                         :key="option.id"
+                        :value="option.id"
                     >
-                        <option :value="option.id">
-                            {{ option.value }}
-                            <template
-                                v-for="locale, index in option.locales"
-                                :key="index"
-                            >
-                                [{{ locale.toUpperCase() }}]
-                            </template>
-                        </option>
-                    </template>
+                        {{ option.value }}
+                        <span
+                            v-for="locale, index in option.locales"
+                            :key="index"
+                        >
+                            [{{ locale.toUpperCase() }}]
+                        </span>
+                    </option>
                 </sdb-form-select>
+
                 <sdb-form-select
                     v-if="isTypePost"
                     v-model="form.post_id"
                     label="Link Post"
                     class="is-fullwidth"
-                    :message="error('post_id')"
+                    :message="error('post_id', null, errors)"
                 >
-                    <template
+                    <option
                         v-for="option in postOptions"
                         :key="option.id"
+                        :value="option.id"
                     >
-                        <option :value="option.id">
-                            {{ option.value }} [{{ option.locale.toUpperCase() }}]
-                        </option>
-                    </template>
+                        {{ option.value }} [{{ option.locale.toUpperCase() }}]
+                    </option>
                 </sdb-form-select>
+
                 <sdb-form-select
                     v-if="isTypeCategory"
                     v-model="form.category_id"
                     label="Link Category"
                     class="is-fullwidth"
-                    :message="error('category_id')"
+                    :message="error('category_id', null, errors)"
                 >
-                    <template
+                    <option
                         v-for="option in categoryOptions"
                         :key="option.id"
+                        :value="option.id"
                     >
-                        <option :value="option.id">
-                            {{ option.value }}
-                            <template
-                                v-for="locale, index in option.locales"
-                                :key="index"
-                            >
-                                [{{ locale.toUpperCase() }}]
-                            </template>
-                        </option>
-                    </template>
+                        {{ option.value }}
+                        <span
+                            v-for="locale, index in option.locales"
+                            :key="index"
+                        >
+                            [{{ locale.toUpperCase() }}]
+                        </span>
+                    </option>
                 </sdb-form-select>
             </fieldset>
         </form>
+
         <template #footer>
             <div
                 class="columns"
@@ -111,7 +116,7 @@
             >
                 <div class="column">
                     <div class="is-pulled-right">
-                        <sdb-button @click="onClose()">
+                        <sdb-button @click="$emit('close')">
                             Cancel
                         </sdb-button>
                         <sdb-button
@@ -119,7 +124,7 @@
                             type="button"
                             @click="onSubmit()"
                         >
-                            {{ menuItem.id ? 'Update' : 'Create' }}
+                            {{ isCreate ? 'Create' : 'Update' }}
                         </sdb-button>
                     </div>
                 </div>
@@ -134,10 +139,10 @@
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbModalCard from '@/Sdb/ModalCard';
-    import { isBlank } from '@/Libs/utils';
     import { cloneDeep, sortBy } from 'lodash';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { isBlank } from '@/Libs/utils';
     import { reactive } from 'vue';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'NavigationFormMenu',
@@ -158,6 +163,10 @@
                 type: String,
                 required: true,
             },
+            errors: {
+                type: Object,
+                default: () => {},
+            },
             menu: {
                 type: Object,
                 required: true,
@@ -173,16 +182,16 @@
         },
 
         emits: [
-            'addMenuItem',
+            'add-menu-item',
             'close',
-            'updateLastDataMenuItems',
+            'update-menu-item',
         ],
 
         setup(props) {
             let fields = {};
 
             if (!isBlank(props.menuItem)) {
-                fields = props.menuItem;
+                fields = reactive(cloneDeep(props.menuItem));
             } else {
                 fields = reactive({
                     id: null,
@@ -217,6 +226,10 @@
         },
 
         computed: {
+            isCreate() {
+                return isBlank(this.menuItem);
+            },
+
             isTypeUrl() {
                 return this.form.type == '1';
             },
@@ -240,28 +253,18 @@
                 const form = this.form;
 
                 if (isBlank(this.menuItem)) {
-                    this.$emit('close');
-                    this.$emit('addMenuItem', form);
+                    this.$emit('add-menu-item', form);
                 } else {
-                    this.$emit('updateLastDataMenuItems');
-                    this.$emit('close');
+                    this.$emit('update-menu-item', form);
                 }
             },
 
-            onClose() {
-                this.resetForm();
-                this.$emit('close');
-            },
-
-            resetForm() {
-                const fields = this.firstFields;
-                this.form['title'] = fields['title'];
-                this.form['type'] = fields['type'];
-                this.form['url'] = fields['url'];
-                this.form['page_id'] = fields['page_id'];
-                this.form['post_id'] = fields['post_id'];
-                this.form['category_id'] = fields['category_id'];
-            },
+            onChangedType() {
+                this.form.url = null;
+                this.form.page_id = null;
+                this.form.post_id = null;
+                this.form.category_id = null;
+            }
         },
-    }
+    };
 </script>

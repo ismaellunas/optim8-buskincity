@@ -72,7 +72,8 @@ class MediaService
                 'translations' => function ($q) {
                     $q->select(['id', 'media_id', 'alt', 'description', 'locale']);
                 },
-            ]);
+            ])
+            ->default();
 
         if ($scopeNames) {
             $query->where(function ($query) use ($scopeNames) {
@@ -147,6 +148,48 @@ class MediaService
             $media,
             $mediaStorage->upload($file, $fileName, $extension)
         );
+        $media->save();
+
+        return $media;
+    }
+
+    public function uploadSetting(
+        UploadedFile $file,
+        string $fileName,
+        MediaStorage $mediaStorage,
+        string $folderPrefix = null
+    ): Media {
+        $media = new Media();
+
+        $extension = null;
+
+        $clientExtension = $file->getClientOriginalExtension();
+        $mimeType =  $file->getMimeType();
+
+        if ( !(
+            Str::startsWith($mimeType, 'image/')
+            || Str::startsWith($mimeType, 'video/')
+            || $clientExtension == 'pdf'
+        )) {
+            $extension = $clientExtension;
+        }
+
+        $fileName = MediaService::getUniqueFileName(
+            Str::lower($fileName),
+            [],
+            $extension
+        );
+
+        $folder = 'settings';
+        if ($folderPrefix) {
+            $folder = $folderPrefix.'_'.$folder;
+        }
+
+        $this->fillMediaWithMediaAsset(
+            $media,
+            $mediaStorage->upload($file, $fileName, $extension, $folder)
+        );
+        $media->type = Media::TYPE_SETTING;
         $media->save();
 
         return $media;

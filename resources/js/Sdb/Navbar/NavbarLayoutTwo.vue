@@ -5,13 +5,6 @@
                 class="navbar-menu navbarExampleTransparentExample"
             >
                 <div class="navbar-end">
-                    <sdb-link
-                        href="/"
-                        class="navbar-item"
-                    >
-                        Home
-                    </sdb-link>
-
                     <template
                         v-for="(menu, index) in menus"
                         :key="index"

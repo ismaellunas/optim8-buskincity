@@ -32,6 +32,7 @@
             <layout
                 v-if="activeTab == 'layout'"
                 ref="layout"
+                :logo-url="logoUrl"
                 :settings="settings"
             />
 
@@ -55,6 +56,7 @@
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbTab from '@/Sdb/Tab';
     import SdbTabList from '@/Sdb/TabList';
+    import { confirmLeaveProgress } from '@/Libs/alert';
 
     export default {
         components: {
@@ -83,6 +85,10 @@
                 default() {
                     return {};
                 },
+            },
+            logoUrl: {
+                type: String,
+                default: "",
             },
             menuItemLastSaved: {
                 type: String,
@@ -144,29 +150,14 @@
             },
 
             confirmAlert(tab) {
-                const confirmationMessage = (
-                    'It looks like you have been editing something. '
-                    + 'If you leave before saving, your changes will be lost.'
-                );
-
-                this.$swal.fire({
-                    title: 'Are you sure?',
-                    text: confirmationMessage,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Leave this',
-                    cancelButtonText: 'Continue Editing',
-                    scrollbarPadding: false,
-                }).then((result) => {
+                confirmLeaveProgress().then((result) => {
                     if (result.isDismissed) {
                         return false;
                     } else if (result.isConfirmed) {
                         this.activeTab = tab;
                     }
-                })
+                });
             },
         }
-    }
+    };
 </script>

@@ -4,10 +4,16 @@ namespace App\Services;
 
 use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
-use App\Models\Setting;
+use App\Models\{
+    Media,
+    Setting,
+};
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Illuminate\Support\{
+    Collection,
+    Facades\Storage,
+    Str,
+};
 use Symfony\Component\Process\Process;
 use \finfo;
 
@@ -60,30 +66,25 @@ class SettingService
             ->value('value');
     }
 
-    public function getColors(): array
+    private function getSettingsByGroup(string $groupName): Collection
     {
-        return Setting::where('group', 'theme_color')
+        return Setting::group($groupName)
             ->get([
                 'display_name',
                 'key',
                 'value',
                 'order',
-            ])
-            ->keyBy('key')
-            ->all();
+            ]);
+    }
+
+    public function getColors(): array
+    {
+        return $this->getSettingsByGroup('theme_color')->keyBy('key')->all();
     }
 
     public function getFontSizes(): array
     {
-        return Setting::where('group', 'font_size')
-            ->get([
-                'display_name',
-                'key',
-                'value',
-                'order',
-            ])
-            ->keyBy('key')
-            ->all();
+        return $this->getSettingsByGroup('font_size')->keyBy('key')->all();
     }
 
     public function getHeader(): array
@@ -110,17 +111,29 @@ class SettingService
             ->all();
     }
 
+    public function getLogoUrl(): string
+    {
+        $setting = Setting::where('key', config("constants.theme_header.header_logo_media.key"))
+            ->first();
+
+        $media = Media::select([
+                'id',
+                'file_url',
+            ])
+            ->where('id', $setting->value)
+            ->first();
+
+        return $media ? $media->file_url : "";
+    }
+
+    public function getTrackingCodes(): array
+    {
+        return $this->getSettingsByGroup('tracking_code')->keyBy('key')->all();
+    }
+
     public function getAdditionalCodes(): array
     {
-        return Setting::where('group', 'additional_code')
-            ->get([
-                'display_name',
-                'key',
-                'value',
-                'order',
-            ])
-            ->keyBy('key')
-            ->all();
+        return $this->getSettingsByGroup('additional_code')->keyBy('key')->all();
     }
 
     public function getUppercaseTextOptions(): array

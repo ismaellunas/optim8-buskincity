@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ThemeFooterLayoutRequest as LayoutRequest;
+use App\Http\Requests\{
+    SocialMediaRequest,
+    ThemeFooterLayoutRequest
+};
 use App\Models\{
-    Link,
     Menu,
     Setting,
 };
 use App\Services\{
     MenuService,
     SettingService,
-    LinkService,
     TranslationService,
 };
 use Illuminate\Http\Request;
@@ -21,9 +22,7 @@ class ThemeFooterController extends ThemeOptionController
 {
     private $menuService;
     private $settingService;
-    private $linkService;
     private $modelMenu = Menu::class;
-    private $modelLink = Link::class;
 
     protected $baseRouteName = 'admin.theme.footer';
     protected $componentName = 'ThemeFooter/';
@@ -31,12 +30,10 @@ class ThemeFooterController extends ThemeOptionController
 
     public function __construct(
         MenuService $menuService,
-        SettingService $settingService,
-        LinkService $linkService
+        SettingService $settingService
     ) {
         $this->menuService = $menuService;
         $this->settingService = $settingService;
-        $this->linkService = $linkService;
     }
 
     public function edit()
@@ -50,16 +47,16 @@ class ThemeFooterController extends ThemeOptionController
                 'footerMenus' => $this->menuService->getFooterMenus(
                     TranslationService::getLocales()
                 ),
-                'links' => $this->linkService->getRecords(),
                 'pageOptions' => $this->menuService->getPageOptions(),
                 'postOptions' => $this->menuService->getPostOptions(),
                 'settings' => $this->settingService->getFooter(),
+                'socialMediaMenus' => $this->menuService->getSocialMediaMenus(),
                 'typeOptions' => $this->menuService->getMenuItemTypeOptions(),
             ]),
         );
     }
 
-    public function update(LayoutRequest $request)
+    public function update(ThemeFooterLayoutRequest $request)
     {
         $layout = $request->layout;
 
@@ -67,11 +64,24 @@ class ThemeFooterController extends ThemeOptionController
         $setting->value = $layout;
         $setting->save();
 
-        $link = new $this->modelLink;
-        $link->syncLinks($request->links, $this->modelLink::TYPE_SOCIAL_MEDIA);
+        $menu = Menu::firstOrCreate([
+            'type' => Menu::TYPE_SOCIAL_MEDIA,
+        ], [
+            'locale' => TranslationService::getDefaultLocale(),
+            'type' => Menu::TYPE_SOCIAL_MEDIA,
+        ]);
+
+        $menu->syncSocialMedia($request->social_media_menus);
 
         $this->generateFlashMessage('Footer layout updated successfully!');
 
         return redirect()->route($this->baseRouteName.'.edit');
+    }
+
+    public function apiValidateSocialMedia(SocialMediaRequest $request)
+    {
+        return [
+            'passed' => true
+        ];
     }
 }

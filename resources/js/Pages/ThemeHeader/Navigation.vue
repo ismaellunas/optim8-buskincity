@@ -39,12 +39,13 @@
         <navigation-form-menu
             v-if="isModalOpen"
             :base-route-name="baseRouteName"
+            :errors="menuItemErrors"
             :menu="menu"
             :menu-item="selectedMenuItem"
             :selected-locale="selectedLocale"
             @add-menu-item="addMenuItem"
             @close="closeModal()"
-            @update-last-data-menu-items="updateLastDataMenuItems"
+            @update-menu-item="updateMenuItem"
         />
     </section>
 </template>
@@ -55,11 +56,11 @@
     import NavigationMenu from './NavigationMenu';
     import SdbButton from '@/Sdb/Button';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
-    import { oops as oopsAlert, success as successAlert, confirm as confirmAlert } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { forEach, cloneDeep } from 'lodash';
 
     export default {
-        name: 'Navigation',
+        name: 'ThemeHeaderNavigation',
 
         components: {
             NavigationFormMenu,
@@ -110,6 +111,8 @@
                 menuForm: {},
                 selectedLocale: this.defaultLocale,
                 selectedMenuItem: {},
+                menuItemErrors: {},
+                validationRoute: route('admin.api.theme.header.menu-item.validate'),
             };
         },
 
@@ -132,10 +135,10 @@
 
             changeLocale(locale) {
                 if (this.menuForm.isDirty) {
-                    this.confirmFormAlert().then((result) => {
+                    confirmLeaveProgress().then((result) => {
                         if (result.isDismissed) {
                             return false;
-                        } else if(result.isConfirmed) {
+                        } else if (result.isConfirmed) {
                             this.selectedLocale = locale;
                             this.menuForm.reset();
                             this.menuForm = this.getMenuForm(locale);
@@ -153,6 +156,7 @@
 
             openFormModal() {
                 this.selectedMenuItem = {};
+                this.menuItemErrors = {};
                 this.isModalOpen = true;
             },
 
@@ -174,16 +178,47 @@
                 this.lastDataMenuItems = cloneDeep(this.menuForm.menu_items);
             },
 
-            addMenuItem(menuItem) {
-                this.menuForm.menu_items.push(
-                    cloneDeep(menuItem)
-                );
+            updateMenuItem(menuItem) {
+                const self = this;
 
-                this.updateLastDataMenuItems();
+                axios.post(self.validationRoute, menuItem)
+                    .then(() => {
+                        self.updateSelectedMenu(menuItem);
+                        self.updateLastDataMenuItems();
+                        self.closeModal();
+                    })
+                    .catch((error) => {
+                        self.menuItemErrors = error.response.data.errors;
+                    });
+            },
+
+            updateSelectedMenu(menuItem) {
+                this.selectedMenuItem['title'] = menuItem['title'];
+                this.selectedMenuItem['type'] = menuItem['type'];
+                this.selectedMenuItem['url'] = menuItem['url'];
+                this.selectedMenuItem['page_id'] = menuItem['page_id'];
+                this.selectedMenuItem['post_id'] = menuItem['post_id'];
+                this.selectedMenuItem['category_id'] = menuItem['category_id'];
+            },
+
+            addMenuItem(menuItem) {
+                const self = this;
+                axios.post(self.validationRoute, menuItem)
+                    .then(() => {
+                        self.menuForm.menu_items.push(
+                            cloneDeep(menuItem)
+                        );
+                        self.updateLastDataMenuItems();
+                        self.closeModal();
+                    })
+                    .catch((error) => {
+                        self.menuItemErrors = error.response.data.errors;
+                    });
             },
 
             editRow(menuItem) {
                 this.selectedMenuItem = menuItem;
+                this.menuItemErrors = {};
                 this.openModal();
             },
 
@@ -211,7 +246,7 @@
                 cloneMenuItem['children'] = [];
 
                 if (this.menuForm.isDirty) {
-                    this.confirmFormAlert().then((result) => {
+                    confirmLeaveProgress().then((result) => {
                         if (result.isDismissed) {
                             return false;
                         } else if(result.isConfirmed) {
@@ -231,23 +266,6 @@
 
                     this.updateLastDataMenuItems();
                 }
-            },
-
-            confirmFormAlert() {
-                const confirmationMessage = (
-                    'It looks like you have been editing something. '
-                    + 'If you leave before saving, your changes will be lost.'
-                );
-
-                return confirmAlert('Are you sure?', confirmationMessage, 'Leave this', {
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Leave this',
-                    cancelButtonText: 'Continue Editing',
-                    scrollbarPadding: false,
-                });
             },
         }
     };

@@ -27,13 +27,6 @@
             class="navbar-menu"
         >
             <div class="navbar-start">
-                <sdb-link
-                    href="/"
-                    class="navbar-item"
-                >
-                    Home
-                </sdb-link>
-
                 <template
                     v-for="(menu, index) in menus"
                     :key="index"
