@@ -14,6 +14,7 @@
         <!-- Scripts -->
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
+        <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
 
         @env ('production')
             <!-- Styles -->
@@ -26,8 +27,6 @@
             <!-- Scripts -->
             <script src="{{ mix('js/local.js') }}" defer></script>
         @endenv
-
-        <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
     </head>
     <body class="font-sans antialiased">
         @inertia
