@@ -13,7 +13,7 @@
 
         <form @submit.prevent="onSubmit">
             <fieldset>
-                <sdb-form-icon
+                <sdb-form-input-icon
                     v-model="form.icon"
                     label="Icon"
                     placeholder="e.g fas fa-square-full"
@@ -73,10 +73,10 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
-    import SdbFormIcon from '@/Sdb/Form/Icon';
     import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbFormInputIcon from '@/Sdb/Form/InputIcon';
     import SdbModalCard from '@/Sdb/ModalCard';
-    import fontawesomeClasses from '@/Json/fontawesome-classes';
+    import fontawesomeBranchClasses from '@/Json/fontawesome-branch-classes';
     import { isBlank } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
@@ -87,8 +87,8 @@
 
         components: {
             SdbButton,
-            SdbFormIcon,
             SdbFormInput,
+            SdbFormInputIcon,
             SdbModalCard,
         },
 
@@ -130,7 +130,7 @@
                 baseRouteName: usePage().props.value.baseRouteName ?? null,
                 form: reactive(fields),
                 firstFields: cloneDeep(fields),
-                iconClasses: fontawesomeClasses.fontawesome_branch,
+                iconClasses: fontawesomeBranchClasses,
             };
         },
 
