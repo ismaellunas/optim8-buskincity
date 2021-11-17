@@ -15,18 +15,8 @@
             >
                 <div class="field is-grouped is-grouped-right">
                     <div class="control">
-                        <sdb-button
-                            class="is-warning"
-                            type="button"
-                            @click="resetColors"
-                        >
-                            Reset All
-                        </sdb-button>
-                    </div>
-
-                    <div class="control">
                         <sdb-button class="is-link">
-                            Update
+                            Save
                         </sdb-button>
                     </div>
                 </div>
@@ -66,7 +56,7 @@
     import SdbInputError from '@/Sdb/InputError';
     import { forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
     import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'ThemeOptionColorEdit',
@@ -84,12 +74,30 @@
         ],
 
         props: {
-            baseRouteName: String,
-            can: Object,
-            colors: Object,
-            defaultColors: Object,
-            errors: Object,
-            title: String,
+            baseRouteName: {
+                type: String,
+                required: true,
+            },
+            can: {
+                type: Object,
+                default: () => {}
+            },
+            colors: {
+                type: Object,
+                required: true,
+            },
+            defaultColors: {
+                type: Object,
+                default: () => {}
+            },
+            errors: {
+                type: Object,
+                default: () => {}
+            },
+            title: {
+                type: String,
+                required: true,
+            },
         },
 
         setup(props) {
@@ -142,16 +150,6 @@
                     }
                 });
             },
-            resetColors() {
-                const self = this;
-                confirmAlert('Are you sure you want to reset?')
-                    .then((result) => {
-                        self.form.clearErrors();
-                        if (result.isConfirmed) {
-                            self.form.reset();
-                        }
-                    });
-            }
         },
     };
 </script>

@@ -15,18 +15,8 @@
             >
                 <div class="field is-grouped is-grouped-right">
                     <div class="control">
-                        <sdb-button
-                            class="is-warning"
-                            type="button"
-                            @click="resetForm"
-                        >
-                            Reset All
-                        </sdb-button>
-                    </div>
-
-                    <div class="control">
                         <sdb-button class="is-link">
-                            Update
+                            Save
                         </sdb-button>
                     </div>
                 </div>
@@ -69,7 +59,7 @@
     import SdbInputError from '@/Sdb/InputError';
     import { forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
     import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'ThemeOptionFontSizeEdit',
@@ -87,12 +77,30 @@
         ],
 
         props: {
-            baseRouteName: String,
-            can: Object,
-            fontSizes: Object,
-            defaultFontSizes: Object,
-            errors: Object,
-            title: String,
+            baseRouteName: {
+                type: String,
+                required: true,
+            },
+            can: {
+                type: Object,
+                default: () => {}
+            },
+            fontSizes: {
+                type: Object,
+                required: true,
+            },
+            defaultFontSizes: {
+                type: Object,
+                default: () => {}
+            },
+            errors: {
+                type: Object,
+                default: () => {}
+            },
+            title: {
+                type: String,
+                required: true,
+            },
         },
 
         setup(props) {
@@ -144,16 +152,6 @@
                         self.isProcessing = false;
                     }
                 });
-            },
-            resetForm() {
-                const self = this;
-                confirmAlert('Are you sure you want to reset?')
-                    .then((result) => {
-                        self.form.clearErrors();
-                        if (result.isConfirmed) {
-                            self.form.reset();
-                        }
-                    });
             },
             updateFontSizeNumber(fontSizeKey) {
                 if (! Number.isNaN(parseFloat(this.form[fontSizeKey]))) {
