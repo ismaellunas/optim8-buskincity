@@ -4,7 +4,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ menuItem.id ? 'Edit' : 'Add' }} Menu Item
+                {{ isCreate ? 'Add' : 'Edit' }} Menu Item
             </p>
             <button
                 class="delete"
@@ -124,7 +124,7 @@
                             type="button"
                             @click="onSubmit()"
                         >
-                            {{ menuItem.id ? 'Update' : 'Create' }}
+                            {{ isCreate ? 'Create' : 'Update' }}
                         </sdb-button>
                     </div>
                 </div>
@@ -226,6 +226,10 @@
         },
 
         computed: {
+            isCreate() {
+                return isBlank(this.menuItem);
+            },
+
             isTypeUrl() {
                 return this.form.type == '1';
             },
