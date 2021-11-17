@@ -86,7 +86,7 @@
 
                     <div class="columns">
                         <div class="column is-half">
-                            <h3><b>Content Paragraph Widht</b></h3>
+                            <h3><b>Content Paragraph Width</b></h3>
                         </div>
                         <div class="column">
                             <div class="field has-addons">
