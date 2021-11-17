@@ -80,13 +80,14 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         Menu::factory()
-            ->count(2)
+            ->count(3)
             ->has(
                 MenuItem::factory()
             )
             ->state(new Sequence(
                 ['type' => Menu::TYPE_HEADER],
                 ['type' => Menu::TYPE_FOOTER],
+                ['type' => Menu::TYPE_SOCIAL_MEDIA],
             ))
             ->create([
                 'locale' => config('app.fallback_locale')

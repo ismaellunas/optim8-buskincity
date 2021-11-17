@@ -18,6 +18,8 @@ class Media extends CloudinaryMedia implements TranslatableContract
 
     const THUMBNAIL_HEIGHT = 300;
     const THUMBNAIL_WIDTH = 300;
+    const TYPE_DEFAULT = 0;
+    const TYPE_SETTING = 1;
 
     public $translatedAttributes = [
         'alt',
@@ -30,6 +32,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
         'file_url',
         'file_type',
         'version',
+        'type',
     ];
 
     protected $casts = [
@@ -66,6 +69,16 @@ class Media extends CloudinaryMedia implements TranslatableContract
     public function scopePresentation($query)
     {
         return $query->whereIn('extension', config('constants.extensions.presentation'));
+    }
+
+    public function scopeDefault($query)
+    {
+        return $query->where('type', self::TYPE_DEFAULT);
+    }
+
+    public function scopeSetting($query)
+    {
+        return $query->where('type', self::TYPE_SETTING);
     }
 
     // Accessors:

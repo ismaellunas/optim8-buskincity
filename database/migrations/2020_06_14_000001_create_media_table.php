@@ -18,6 +18,7 @@ class CreateMediaTable extends Migration
             $table->unsignedBigInteger('size')->default(0);
             $table->json('assets')->nullable();
             $table->nullableMorphs('medially');
+            $table->tinyInteger('type')->default(0);
             $table->timestamps();
         });
     }

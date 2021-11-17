@@ -22,29 +22,32 @@
                 <div class="is-pulled-right">
                     <div class="columns">
                         <div
-                            v-for="(link, index) in links"
+                            v-for="(socialMedia, index) in socialMediaMenus"
                             :key="index"
                             class="column"
                         >
-                            <sdb-image
-                                class="is-48x48 image-pointer"
-                                rounded="is-rounded"
-                                :src="link.image_url"
-                                @click.prevent="openFormModal(link, index)"
-                            />
+                            <span
+                                class="icon icon-pointer has-background-grey-lighter p-5"
+                                @click.prevent="openFormModal(socialMedia, index)"
+                            >
+                                <i
+                                    class="fa-2x"
+                                    :class="socialMedia.icon"
+                                />
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <footer-link-form
+        <footer-social-media-form
             v-if="isModalOpen"
-            :social-media="selectedLink"
+            :social-media="selectedSocialMedia"
             :selected-index="selectedIndex"
             @add-social-media="addSocialMedia"
             @close="closeModal()"
-            @delete-link="deleteLink"
+            @delete-social-media="deleteSocialMedia"
         />
     </div>
 </template>
@@ -52,19 +55,17 @@
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import SdbButton from '@/Sdb/Button';
-    import SdbImage from '@/Sdb/Image';
-    import FooterLinkForm from './FooterLinkForm';
+    import FooterSocialMediaForm from './FooterSocialMediaForm';
     import { useModelWrapper } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
     import { cloneDeep } from 'lodash';
 
     export default {
-        name: 'FooterLink',
+        name: 'FooterSocialMedia',
 
         components: {
             SdbButton,
-            SdbImage,
-            FooterLinkForm,
+            FooterSocialMediaForm,
         },
 
         mixins: [
@@ -73,41 +74,41 @@
 
         props: {
             modelValue: {
-                type: Object,
+                type: Array,
                 required: true,
             },
         },
 
         setup(props, { emit }) {
             return {
-                links: useModelWrapper(props, emit),
+                socialMediaMenus: useModelWrapper(props, emit),
             };
         },
 
         data() {
             return {
-                selectedLink: {},
+                selectedSocialMedia: {},
                 selectedIndex: null,
             };
         },
 
         methods: {
-            openFormModal(link = null, index = null) {
-                this.selectedLink = link ?? {};
+            openFormModal(socialMedia = null, index = null) {
+                this.selectedSocialMedia = socialMedia ?? {};
                 this.selectedIndex = index ?? null;
                 this.isModalOpen = true;
             },
 
-            addSocialMedia(link) {
-                this.links.push(
-                    cloneDeep(link)
+            addSocialMedia(socialMedia) {
+                this.socialMediaMenus.push(
+                    cloneDeep(socialMedia)
                 );
             },
 
-            deleteLink(index) {
+            deleteSocialMedia(index) {
                 confirmDelete("Are you sure?").then((result) => {
                     if (result.isConfirmed) {
-                        this.links.splice(index, 1);
+                        this.socialMediaMenus.splice(index, 1);
                         this.isModalOpen = false;
                     }
                 });
@@ -117,7 +118,8 @@
 </script>
 
 <style scoped>
-    .image-pointer {
+    .icon-pointer {
         cursor: pointer;
+        border-radius: 100%;
     }
 </style>

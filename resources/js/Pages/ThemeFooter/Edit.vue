@@ -33,7 +33,7 @@
                 v-if="activeTab == 'layout'"
                 ref="layout"
                 :settings="settings"
-                :links="links"
+                :social-media-menus="socialMediaMenus"
             />
 
             <navigation
@@ -86,10 +86,6 @@
                     return {};
                 },
             },
-            links: {
-                type: Array,
-                default:() => [],
-            },
             menuItemLastSaved: {
                 type: String,
                 default: "-",
@@ -97,6 +93,10 @@
             settings: {
                 type: Object,
                 required: true
+            },
+            socialMediaMenus: {
+                type: Array,
+                default:() => [],
             },
             title: {
                 type: String,
