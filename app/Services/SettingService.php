@@ -113,21 +113,19 @@ class SettingService
             ->all();
     }
 
-    public function getLogoUrl(): object
+    public function getLogoUrl(): string
     {
         $setting = Setting::where('key', config("constants.theme_header.header_logo_media.key"))
             ->first();
 
-        if ($setting->value !== null) {
-            return Media::select([
-                    'id',
-                    'file_url',
-                ])
-                ->where('id', $setting->value)
-                ->first();
-        } else {
-            return (object)[];
-        }
+        $media = Media::select([
+                'id',
+                'file_url',
+            ])
+            ->where('id', $setting->value)
+            ->first();
+
+        return $media ? $media->file_url : "";
     }
 
     public function getAdditionalCodes(): array
