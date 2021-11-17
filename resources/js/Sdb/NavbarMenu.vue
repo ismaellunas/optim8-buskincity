@@ -2,7 +2,7 @@
     <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
         <div class="container">
             <div class="navbar-brand">
-                <sdb-link :href="route('dashboard')" class="navbar-item">
+                <sdb-link :href="navLogo.link" class="navbar-item">
                     <jet-application-mark class="" />
                 </sdb-link>
 
@@ -108,9 +108,11 @@
         },
         setup() {
             const navMenus = computed(() => usePage().props.value.menus.nav);
+            const navLogo = computed(() => usePage().props.value.menus.navLogo);
             const navProfile = computed(() => usePage().props.value.menus.navProfile);
             return {
                 navMenus,
+                navLogo,
                 navProfile,
             };
         },
