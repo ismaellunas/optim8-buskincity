@@ -104,7 +104,11 @@
             }
 
             // Set provide and inject of images data
-            provide('dataImages', usePage().props.value.images ?? {});
+            const images = usePage().props.value.images;
+            provide(
+                'dataImages',
+                !isBlank(images) ? images : {}
+            );
 
             return {
                 activeTab,
