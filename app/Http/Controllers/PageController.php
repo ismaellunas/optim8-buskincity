@@ -179,6 +179,7 @@ class PageController extends CrudController
                             $q->where('locale', $locale);
                         },
                     ])
+                    ->default()
                     ->get(['id', 'file_url']);
             }
         }
