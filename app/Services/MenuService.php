@@ -67,6 +67,11 @@ class MenuService
     {
         $user = $request->user();
 
+        $menuLogo = [
+            'title' => 'Dashboard',
+            'link' => route('dashboard'),
+        ];
+
         $menus = [
             'dashboard' => [
                 'title' => 'Dashboard',
@@ -77,6 +82,10 @@ class MenuService
         ];
 
         if ($user->can('system.dashboard') && $request->routeIs('admin.*')) {
+            $menuLogo = [
+                'title' => 'Dashboard',
+                'link' => route('admin.dashboard'),
+            ];
 
             $menus = [
                 [
@@ -179,12 +188,12 @@ class MenuService
                 ],
             ];
 
-            $navProfile = [
+            $menuProfile = [
                 'title' => 'Profile',
                 'link' => route('admin.profile.show'),
             ];
         } else {
-            $navProfile = [
+            $menuProfile = [
                 'title' => 'Profile',
                 'link' => route('user.profile.show'),
             ];
@@ -192,7 +201,8 @@ class MenuService
 
         return [
             'nav' => $menus,
-            'navProfile' => $navProfile,
+            'navLogo' => $menuLogo,
+            'navProfile' => $menuProfile,
         ];
     }
 
