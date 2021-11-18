@@ -13,7 +13,7 @@
                     v-if="hasImage"
                     class="mb-2"
                     style="width: 200px; border: 1px solid #000"
-                    :src="imgUrl !== null ? imgUrl : setting.value"
+                    :src="imgUrl"
                 />
                 <sdb-input-file
                     v-model="formMedia.file"
