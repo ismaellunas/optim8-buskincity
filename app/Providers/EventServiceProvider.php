@@ -2,8 +2,14 @@
 
 namespace App\Providers;
 
-use App\Models\Post;
-use App\Observers\PostObserver;
+use App\Models\{
+    Post,
+    Setting,
+};
+use App\Observers\{
+    PostObserver,
+    SettingObserver,
+};
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -30,5 +36,6 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         Post::observe(PostObserver::class);
+        Setting::observe(SettingObserver::class);
     }
 }
