@@ -36,24 +36,6 @@ class SettingService
         return $urlCss->value ?? mix('css/app.css')->toHtml();
     }
 
-    public static function getTrackingCodeAfterBodyUrl(): ?string
-    {
-        return Setting::where('key', self::getAdditionalCodeFileKey('tracking_code_after_body'))
-            ->value('value');
-    }
-
-    public static function getTrackingCodeBeforeBodyUrl(): ?string
-    {
-        return Setting::where('key', self::getAdditionalCodeFileKey('tracking_code_before_body'))
-            ->value('value');
-    }
-
-    public static function getTrackingCodeInsideHeadUrl(): ?string
-    {
-        return Setting::where('key', self::getAdditionalCodeFileKey('tracking_code_inside_head'))
-            ->value('value');
-    }
-
     public static function getAdditionalCssUrl(): ?string
     {
         return Setting::where('key', self::getAdditionalCodeFileKey('additional_css'))
