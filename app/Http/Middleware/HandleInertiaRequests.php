@@ -89,9 +89,6 @@ class HandleInertiaRequests extends Middleware
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
                 'additional_css' => SettingService::getAdditionalCssUrl(),
-                'tracking_code_after_body' => SettingService::getTrackingCodeAfterBodyUrl(),
-                'tracking_code_before_body' => SettingService::getTrackingCodeBeforeBodyUrl(),
-                'tracking_code_inside_head' => SettingService::getTrackingCodeInsideHeadUrl(),
             ],
             'js.frontend' => [
                 'additional_javascript' => SettingService::getAdditionalJavascriptUrl(),
