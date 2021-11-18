@@ -49,10 +49,6 @@
                 type: Object,
                 required: true,
             },
-            setting: {
-                type: Object,
-                required: true
-            },
         },
 
         setup(props, { emit }) {

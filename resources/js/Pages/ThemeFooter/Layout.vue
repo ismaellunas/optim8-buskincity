@@ -3,7 +3,6 @@
         <form @submit.prevent="onSubmit">
             <footer-layout
                 v-model="form.layout"
-                :setting="settings.footer_layout"
             />
 
             <hr>

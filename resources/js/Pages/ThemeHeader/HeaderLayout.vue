@@ -80,10 +80,6 @@
                 type: Number,
                 required: true,
             },
-            setting: {
-                type: Object,
-                required: true
-            },
         },
 
         emits: [
