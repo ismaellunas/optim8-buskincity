@@ -4,7 +4,6 @@
             <div class="column">
                 <div class="is-pulled-left">
                     <b>Header Layout</b><br>
-                    Last Saved: {{ setting.updated_at }}
                 </div>
             </div>
         </div>

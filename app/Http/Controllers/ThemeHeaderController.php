@@ -50,7 +50,6 @@ class ThemeHeaderController extends ThemeOptionController
             $this->getData([
                 'categoryOptions' => $this->menuService->getCategoryOptions(),
                 'menu' => $this->modelMenu::header()->first(),
-                'menuItemLastSaved' => $this->menuService->getMenuItemLastSaved("header"),
                 'headerMenus' => $this->menuService->getHeaderMenus(
                     TranslationService::getLocales()
                 ),

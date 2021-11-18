@@ -4,7 +4,6 @@
             <div class="column">
                 <div class="is-pulled-left">
                     <b>Upload Logo</b><br>
-                    Last Saved: {{ setting.updated_at }}
                 </div>
             </div>
         </div>
