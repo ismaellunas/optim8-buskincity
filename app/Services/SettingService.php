@@ -11,14 +11,29 @@ use App\Models\{
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\{
     Collection,
+    Facades\Cache,
     Facades\Storage,
     Str,
 };
 use Symfony\Component\Process\Process;
+use \Closure;
 use \finfo;
 
 class SettingService
 {
+    private static function getCachedSetting(string $key, Closure $callback)
+    {
+        return Cache::tags(['settings'])->rememberForever(
+            $key,
+            $callback
+        );
+    }
+
+    public function flushCachedSetting()
+    {
+        Cache::tags('settings')->flush();
+    }
+
     private static function getAdditionalCodeFileKey(string $key): string
     {
         return config("constants.theme_additional_code_files.{$key}.key");
