@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
+use LaravelLocalization;
 
 class TranslationService
 {
@@ -16,24 +17,26 @@ class TranslationService
 
     public static function getLocaleOptions(): array
     {
-        return [
+        $defaultLocale = self::getDefaultLocale();
+        $supportedLocales = LaravelLocalization::getSupportedLocales();
+
+        $locales = collect([
             [
-                'id' => 'en',
-                'name' => 'English',
-            ],
-            [
-                'id' => 'sv',
-                'name' => 'Swedish',
-            ],
-            [
-                'id' => 'es',
-                'name' => 'Spanish',
-            ],
-            [
-                'id' => 'de',
-                'name' => 'German',
-            ],
-        ];
+                'id' => $defaultLocale,
+                'name' => $supportedLocales[$defaultLocale]['name']
+            ]
+        ]);
+
+        foreach ($supportedLocales as $key => $value) {
+            if ($key !== $defaultLocale) {
+                $locales->push([
+                    'id' => $key,
+                    'name' => $value['name'],
+                ]);
+            }
+        }
+
+        return $locales->all();
     }
 
     public static function getLocales(): array
@@ -58,18 +61,7 @@ class TranslationService
 
     public static function currentLanguage(): string
     {
-        return session(self::$localeKey) ?? self::getDefaultLocale();
-    }
-
-    public static function setLanguage(string $locale): void
-    {
-        session()->put(self::$localeKey, $locale);
-    }
-
-    public static function setLanguageAndAppLocale(string $locale): void
-    {
-        self::setLanguage($locale);
-        app()->setLocale($locale);
+        return LaravelLocalization::getCurrentLocale() ?? self::getDefaultLocale();
     }
 
     /**
