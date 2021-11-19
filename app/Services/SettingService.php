@@ -11,14 +11,29 @@ use App\Models\{
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\{
     Collection,
+    Facades\Cache,
     Facades\Storage,
     Str,
 };
 use Symfony\Component\Process\Process;
+use \Closure;
 use \finfo;
 
 class SettingService
 {
+    private static function getCachedSetting(string $key, Closure $callback)
+    {
+        return Cache::tags(['settings'])->rememberForever(
+            $key,
+            $callback
+        );
+    }
+
+    public function flushCachedSetting()
+    {
+        Cache::tags('settings')->flush();
+    }
+
     private static function getAdditionalCodeFileKey(string $key): string
     {
         return config("constants.theme_additional_code_files.{$key}.key");
@@ -31,21 +46,27 @@ class SettingService
 
     public static function getFrontendCssUrl(): string
     {
-        $urlCss = Setting::where('key', 'url_css')->first(['key', 'value']);
+        $urlCss = self::getCachedSetting('additional_css_url', function () {
+            return Setting::key('url_css')->value('value');
+        });
 
-        return $urlCss->value ?? mix('css/app.css')->toHtml();
+        return $urlCss ?? mix('css/app.css')->toHtml();
     }
 
     public static function getAdditionalCssUrl(): ?string
     {
-        return Setting::where('key', self::getAdditionalCodeFileKey('additional_css'))
-            ->value('value');
+        return self::getCachedSetting('additional_css_url', function () {
+            return Setting::key(self::getAdditionalCodeFileKey('additional_css'))
+                ->value('value');
+        });
     }
 
     public static function getAdditionalJavascriptUrl(): ?string
     {
-        return Setting::where('key', self::getAdditionalCodeFileKey('additional_javascript'))
-            ->value('value');
+        return self::getCachedSetting('additional_javascript_url', function () {
+            return Setting::key(self::getAdditionalCodeFileKey('additional_javascript'))
+                ->value('value');
+        });
     }
 
     private function getSettingsByGroup(string $groupName): Collection
@@ -93,19 +114,21 @@ class SettingService
             ->all();
     }
 
-    public function getLogoUrl(): string
+    public function getLogoUrl(): ?string
     {
-        $setting = Setting::where('key', config("constants.theme_header.header_logo_media.key"))
-            ->first();
+        return $this->getCachedSetting('logo_url', function () {
+            $mediaId = Setting::key(config("constants.theme_header.header_logo_media.key"))
+                ->value('value');
 
-        $media = Media::select([
-                'id',
-                'file_url',
-            ])
-            ->where('id', $setting->value)
-            ->first();
+            return Media::where('id', $mediaId)->value('file_url');
+        });
+    }
 
-        return $media ? $media->file_url : "";
+    public function getHeaderLayout(): int
+    {
+        return $this->getCachedSetting('header_layout', function () {
+            return (int) Setting::key('header_layout')->value('value');
+        });
     }
 
     public function getTrackingCodes(): array

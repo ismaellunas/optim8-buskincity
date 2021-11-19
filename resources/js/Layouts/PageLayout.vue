@@ -51,7 +51,7 @@
         setup() {
             return {
                 logoUrl: usePage().props.value.logoUrl,
-                menuSettings: usePage().props.value.menuSettings,
+                headerLayout: usePage().props.value.headerLayout,
             };
         },
 
@@ -67,7 +67,7 @@
             },
 
             navbarLayoutName() {
-                const layout = parseInt(this.menuSettings.header_layout.value);
+                const layout = this.headerLayout;
                 switch (layout) {
                 case 1:
                     return "SdbNavbarLayoutOne";
