@@ -15,6 +15,7 @@ use App\Models\{
 use App\Services\TranslationService as TranslationSv;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Entities\Caches\MenuCache;
 
 class MenuService
 {

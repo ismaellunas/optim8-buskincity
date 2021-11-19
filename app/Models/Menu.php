@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Entities\Caches\MenuCache;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -119,6 +120,8 @@ class Menu extends Model
         foreach ($unusedMenuItems as $menuItem) {
             $menuItem->delete();
         }
+
+        app(MenuCache::class)->flush();
     }
 
     private static function getTypeMenuClass(string $type)
