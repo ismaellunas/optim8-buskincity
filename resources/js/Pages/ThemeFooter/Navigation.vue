@@ -4,7 +4,6 @@
             <div class="column">
                 <div class="is-pulled-left">
                     <b>Menu Items</b><br>
-                    Last Saved: {{ lastSaved }}
                 </div>
             </div>
             <div class="column">
@@ -74,10 +73,6 @@
             menu: {
                 type: Object,
                 required: true,
-            },
-            lastSaved: {
-                type: String,
-                default: "-",
             },
             footerMenus: {
                 type: Object,

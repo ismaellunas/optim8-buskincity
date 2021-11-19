@@ -4,7 +4,6 @@
             <div class="column">
                 <div class="is-pulled-left">
                     <b>Footer Layout</b><br>
-                    Last Saved: {{ setting.updated_at }}
                 </div>
             </div>
         </div>
@@ -42,10 +41,6 @@
             modelValue: {
                 type: Number,
                 required: true,
-            },
-            setting: {
-                type: Object,
-                required: true
             },
         },
 

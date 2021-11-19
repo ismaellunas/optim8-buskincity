@@ -3,14 +3,12 @@
         <form @submit.prevent="onSubmit">
             <header-layout
                 v-model="form.layout"
-                :setting="settings.header_layout"
             />
 
             <hr>
             <header-logo
                 v-model="form.logo"
                 :logo-url="logoUrl"
-                :setting="settings.header_logo_media_id"
             />
         </form>
     </section>
