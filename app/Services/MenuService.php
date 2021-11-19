@@ -32,12 +32,42 @@ class MenuService
         return $menus;
     }
 
-    public function getHeaderMenu(string $locale)
+    public function getHeaderMenu(string $locale): array
     {
         return app(MenuCache::class)->remember(
             'header_menu',
             function () use ($locale) {
-                return Menu::generateMenuItems($locale);
+                $menu = Menu::header()
+                    ->locale($locale)
+                    ->with([
+                        'menuItems' => function ($query) {
+                            $query
+                                ->orderBy('order', 'ASC')
+                                ->orderBy('parent_id', 'ASC')
+                                ->with([
+                                    'post' => function ($query) {
+                                        $query->select([
+                                            'id',
+                                            'slug',
+                                        ]);
+                                    },
+                                    'page' => function ($query) {
+                                        $query->select('id');
+                                        $query->with('translations', function ($query) {
+                                            $query->select([
+                                                'id',
+                                                'page_id',
+                                                'locale',
+                                                'slug',
+                                            ]);
+                                        });
+                                    },
+                                ]);
+                        },
+                    ])
+                    ->first();
+
+                return $menu ? Menu::createArrayMenuItems($menu) : [];
             },
             $locale
         );

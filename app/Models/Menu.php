@@ -61,11 +61,12 @@ class Menu extends Model
         return Str::startsWith($url, config('app.url'));
     }
 
-    private static function createArrayMenuItems(
+    public static function createArrayMenuItems(
         object $menu,
         ?int $parentId = null
     ): array {
         $menus = [];
+
         foreach ($menu->menuItems as $menuItem) {
             if ($menuItem['parent_id'] == $parentId) {
                 $children = self::createArrayMenuItems($menu, $menuItem['id']);
@@ -78,6 +79,8 @@ class Menu extends Model
 
                 $className = self::getTypeMenuClass($menuItem['type']);
                 $typeMenu = new $className(['id' => $menuItem['id']]);
+                $typeMenu->setModel($menuItem);
+                $typeMenu->setParentModel($menu);
 
                 $menuItem['link'] = $typeMenu->getUrl();
                 $menuItem['isInternalLink'] = self::isInternalLink($menuItem['link']);
@@ -103,6 +106,11 @@ class Menu extends Model
     public function scopeSocialMedia($query)
     {
         return $query->where('type', self::TYPE_SOCIAL_MEDIA);
+    }
+
+    public function scopeLocale($query, string $locale)
+    {
+        return $query->where('locale', $locale);
     }
 
     // Relation
