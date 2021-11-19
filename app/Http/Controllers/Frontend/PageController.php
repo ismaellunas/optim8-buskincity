@@ -67,8 +67,9 @@ class PageController extends Controller
         return $images;
     }
 
-    public function show(string $locale, PageTranslation $pageTranslation)
+    public function show(PageTranslation $pageTranslation)
     {
+        $locale = TranslationService::currentLanguage();
         if ($pageTranslation->locale != $locale) {
 
             return $this->redirectToPageLocaleOrDefaultLocale($pageTranslation, $locale);

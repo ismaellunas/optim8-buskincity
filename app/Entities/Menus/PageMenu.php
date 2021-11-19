@@ -37,7 +37,6 @@ class PageMenu extends BaseMenu implements MenuInterface
         $page = $this->getModel()->page->translateOrDefault($locale);
 
         return route('frontend.pages.show', [
-            'locale' => $locale,
             'page_translation' => $page->slug,
         ]);
     }

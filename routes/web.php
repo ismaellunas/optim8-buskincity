@@ -36,9 +36,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     })->name('profile.show');
 });
 
-Route::get('/', function () {
-    return redirect(TranslationSv::currentLanguage());
-});
+// Route::get('/', function () {
+//     return redirect(TranslationSv::currentLanguage());
+// });
 
 Route::get('language/{new_locale}', ChangeLanguageController::class)
     ->where('new_locale', '[a-zA-Z]{2}')
@@ -67,9 +67,8 @@ Route::get('test-theme', function () {
 });
 
 Route::group([
-    'prefix' => '{locale}',
-    'where' => ['locale' => '[a-zA-Z]{2}'],
-    'middleware' => 'setLocale',
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => [ 'localizationRedirect' ]
 ], function () {
     Route::get('/', function () {
         return Inertia::render('Welcome', [
@@ -78,7 +77,7 @@ Route::group([
             'laravelVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
         ]);
-    });
+    })->name('homepage');
 
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');
