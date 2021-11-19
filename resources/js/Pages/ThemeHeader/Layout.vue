@@ -3,14 +3,12 @@
         <form @submit.prevent="onSubmit">
             <header-layout
                 v-model="form.layout"
-                :setting="settings.header_layout"
             />
 
             <hr>
             <header-logo
                 v-model="form.logo"
                 :logo-url="logoUrl"
-                :setting="settings.header_logo_media_id"
             />
         </form>
     </section>
@@ -66,6 +64,17 @@
                 return this.form?.isDirty;
             },
 
+            getLayoutForm() {
+                return useForm({
+                    layout: parseInt(this.settings.header_layout.value),
+                    logo: {
+                        file: null,
+                        file_url: null,
+                        media_id: this.settings.header_logo_media_id.value,
+                    }
+                });
+            },
+
             onSubmit() {
                 const self = this;
                 self.loader = self.$loading.show({});
@@ -74,6 +83,7 @@
                     route(self.baseRouteName+".layout.update"), {
                         onSuccess: (page) => {
                             successAlert(page.props.flash.message);
+                            self.form = self.getLayoutForm();
                         },
                         onFinish: () => {
                             self.loader.hide();

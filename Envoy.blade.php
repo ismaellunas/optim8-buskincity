@@ -28,6 +28,7 @@
         'CLOUDINARY_UPLOAD_PRESET',
         'CLOUDINARY_NOTIFICATION_URL',
         'QUEUE_CONNECTION',
+        'REDIS_URL',
     ];
 @endsetup
 
