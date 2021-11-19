@@ -96,7 +96,6 @@ class SettingService
             ->get([
                 'key',
                 'value',
-                'updated_at',
             ])
             ->keyBy('key')
             ->all();
@@ -108,7 +107,6 @@ class SettingService
             ->get([
                 'key',
                 'value',
-                'updated_at',
             ])
             ->keyBy('key')
             ->all();

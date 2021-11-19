@@ -39,7 +39,6 @@
             <navigation
                 v-if="activeTab == 'navigation'"
                 ref="navigation"
-                :last-saved="menuItemLastSaved"
                 :header-menus="headerMenus"
                 :menu="menu"
             />
@@ -89,10 +88,6 @@
             logoUrl: {
                 type: String,
                 default: "",
-            },
-            menuItemLastSaved: {
-                type: String,
-                default: "-",
             },
             settings: {
                 type: Object,

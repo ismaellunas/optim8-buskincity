@@ -4,7 +4,6 @@
             <div class="column">
                 <div class="is-pulled-left">
                     <b>Upload Logo</b><br>
-                    Last Saved: {{ setting.updated_at }}
                 </div>
             </div>
         </div>
@@ -14,7 +13,7 @@
                     v-if="hasImage"
                     class="mb-2"
                     style="width: 200px; border: 1px solid #000"
-                    :src="imgUrl !== null ? imgUrl : setting.value"
+                    :src="imgUrl"
                 />
                 <sdb-input-file
                     v-model="formMedia.file"
@@ -49,10 +48,6 @@
             modelValue: {
                 type: Object,
                 required: true,
-            },
-            setting: {
-                type: Object,
-                required: true
             },
         },
 

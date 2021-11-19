@@ -20,7 +20,6 @@ class CreateSettingsTable extends Migration
             $table->text('value')->nullable();
             $table->tinyInteger('order')->default(1);
             $table->string('group', 127)->nullable();
-            $table->timestamps();
         });
     }
 
