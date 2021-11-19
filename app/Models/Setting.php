@@ -20,4 +20,9 @@ class Setting extends BaseModel
     {
         return $query->where('group', $groupName);
     }
+
+    public function scopeKey($query, string $key)
+    {
+        return $query->where('key', $key);
+    }
 }
