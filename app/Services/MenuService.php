@@ -32,6 +32,17 @@ class MenuService
         return $menus;
     }
 
+    public function getHeaderMenu(string $locale)
+    {
+        return app(MenuCache::class)->remember(
+            'header_menu',
+            function () use ($locale) {
+                return Menu::generateMenuItems($locale);
+            },
+            $locale
+        );
+    }
+
     public function getFooterMenus(array $locales = []): array
     {
         $menus = [];
