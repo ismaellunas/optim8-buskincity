@@ -2,12 +2,11 @@
 
 namespace App\Observers;
 
-use App\Models\Setting;
 use App\Services\SettingService;
 
 class SettingObserver
 {
-    public function saved(Setting $setting)
+    public function saved()
     {
         app(SettingService::class)->flushCachedSetting();
     }
