@@ -71,14 +71,7 @@ Route::group([
     'where' => ['locale' => '[a-zA-Z]{2}'],
     'middleware' => 'setLocale',
 ], function () {
-    Route::get('/', function () {
-        return Inertia::render('Welcome', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
-    });
+    Route::view('/', 'home', ['title' => 'Test Home Blade']);
 
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');
