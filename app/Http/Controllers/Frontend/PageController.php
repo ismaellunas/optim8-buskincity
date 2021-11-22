@@ -7,11 +7,9 @@ use App\Models\Media;
 use App\Models\PageTranslation;
 use App\Services\TranslationService;
 use Illuminate\Support\Collection;
-use Inertia\Inertia;
 
 class PageController extends Controller
 {
-    private $baseComponentName = 'Page/Frontend';
     private $baseRouteName = 'frontend.pages';
 
     private function redirectToPageLocaleOrDefaultLocale(
@@ -31,7 +29,7 @@ class PageController extends Controller
             $defaultLocale = TranslationService::getDefaultLocale();
             $pageTranslation = $page->translate($defaultLocale);
 
-            return Inertia::render($this->baseComponentName.'/Show', [
+            return view('page', [
                 'currentLanguage' => TranslationService::currentLanguage(),
                 'images' => $this->getPageImages($pageTranslation, $defaultLocale),
                 'page' => $pageTranslation,
@@ -71,11 +69,14 @@ class PageController extends Controller
     {
         if ($pageTranslation->locale != $locale) {
 
-            return $this->redirectToPageLocaleOrDefaultLocale($pageTranslation, $locale);
+            return $this->redirectToPageLocaleOrDefaultLocale(
+                $pageTranslation,
+                $locale
+            );
 
         } else {
 
-            return Inertia::render($this->baseComponentName.'/Show', [
+            return view('page', [
                 'currentLanguage' => TranslationService::currentLanguage(),
                 'images' => $this->getPageImages($pageTranslation, $locale),
                 'page' => $pageTranslation,
