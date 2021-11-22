@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Entities\Facades\Localization;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
-use LaravelLocalization;
 
 class TranslationService
 {
@@ -12,13 +12,13 @@ class TranslationService
 
     public static function getDefaultLocale(): string
     {
-        return config('app.fallback_locale');
+        return Localization::getDefaultLocale();
     }
 
     public static function getLocaleOptions(): array
     {
         $defaultLocale = self::getDefaultLocale();
-        $supportedLocales = LaravelLocalization::getSupportedLocales();
+        $supportedLocales = Localization::getSupportedLocales();
 
         $locales = collect([
             [
@@ -61,7 +61,7 @@ class TranslationService
 
     public static function currentLanguage(): string
     {
-        return LaravelLocalization::getCurrentLocale() ?? self::getDefaultLocale();
+        return Localization::getCurrentLocale() ?? self::getDefaultLocale();
     }
 
     /**

@@ -1,5 +1,6 @@
 <?php
 
+use App\Entities\Facades\Localization;
 use App\Http\Controllers\{
     ChangeLanguageController,
     Frontend\PageController,
@@ -67,7 +68,7 @@ Route::get('test-theme', function () {
 });
 
 Route::group([
-    'prefix' => LaravelLocalization::setLocale(),
+    'prefix' => Localization::setLocale(),
     'middleware' => [ 'localizationRedirect' ]
 ], function () {
     Route::get('/', function () {
