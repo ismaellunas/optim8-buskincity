@@ -61,7 +61,7 @@ class ChangeLanguageController extends Controller
         $uriSegments = explode('/', $uriPath);
         $locales = TranslationSv::getLocales();
 
-        if (Str::startsWith($uriSegments[1], $locales)) {
+        if (in_array($uriSegments[1], $locales)) {
             $segments = explode(config('app.url'), $url);
             $segments[1] = Str::replaceFirst('/'.$uriSegments[1], '', $segments[1]);
 
