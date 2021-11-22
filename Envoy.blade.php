@@ -9,25 +9,28 @@
 
     $heroku_app = "platform752";
     $heroku_vars = [
-        'APP_NAME',
+        'APP_DEBUG',
         'APP_ENV',
         'APP_KEY',
-        'APP_DEBUG',
+        'APP_NAME',
+        'CACHE_DRIVER',
+        'CLOUDINARY_NOTIFICATION_URL',
+        'CLOUDINARY_UPLOAD_PRESET',
+        'CLOUDINARY_URL',
         'DB_CONNECTION',
-        'DB_HOST',
-        'DB_PORT',
         'DB_DATABASE',
-        'DB_USERNAME',
+        'DB_HOST',
         'DB_PASSWORD',
+        'DB_PORT',
+        'DB_USERNAME',
+        'FACEBOOK_CLIENT_ID',
+        'FACEBOOK_CLIENT_SECRET',
         'GOOGLE_API_KEY',
         'GOOGLE_CLIENT_ID',
         'GOOGLE_CLIENT_SECRET',
-        'FACEBOOK_CLIENT_ID',
-        'FACEBOOK_CLIENT_SECRET',
-        'CLOUDINARY_URL',
-        'CLOUDINARY_UPLOAD_PRESET',
-        'CLOUDINARY_NOTIFICATION_URL',
         'QUEUE_CONNECTION',
+        'REDIS_CLIENT',
+        'REDIS_URL',
     ];
 @endsetup
 

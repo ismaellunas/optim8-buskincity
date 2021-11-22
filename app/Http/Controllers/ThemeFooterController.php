@@ -43,7 +43,6 @@ class ThemeFooterController extends ThemeOptionController
             $this->getData([
                 'categoryOptions' => $this->menuService->getCategoryOptions(),
                 'menu' => $this->modelMenu::footer()->first(),
-                'menuItemLastSaved' => $this->menuService->getMenuItemLastSaved("footer"),
                 'footerMenus' => $this->menuService->getFooterMenus(
                     TranslationService::getLocales()
                 ),

@@ -18,25 +18,6 @@ use Illuminate\Http\Request;
 
 class MenuService
 {
-    public function getMenuItemLastSaved(string $type)
-    {
-        $menu = MenuItem::orderBy('updated_at', 'DESC')
-            ->whereHas('menu', function ($query) use ($type) {
-                if ($type == "header") {
-                    $query->header();
-                } else {
-                    $query->footer();
-                }
-            })
-            ->first();
-
-        if ($menu) {
-            return Carbon::parse($menu->updated_at)->format('M d, Y \a\t h:i');
-        }
-
-        return '-';
-    }
-
     public function getHeaderMenus(array $locales = []): array
     {
         $menus = [];

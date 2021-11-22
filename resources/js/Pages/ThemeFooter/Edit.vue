@@ -39,7 +39,6 @@
             <navigation
                 v-if="activeTab == 'navigation'"
                 ref="navigation"
-                :last-saved="menuItemLastSaved"
                 :footer-menus="footerMenus"
                 :menu="menu"
             />
@@ -85,10 +84,6 @@
                 default() {
                     return {};
                 },
-            },
-            menuItemLastSaved: {
-                type: String,
-                default: "-",
             },
             settings: {
                 type: Object,
