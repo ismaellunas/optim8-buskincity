@@ -51,7 +51,7 @@
             <div class="navbar-brand">
                 <sdb-link
                     class="navbar-item"
-                    href="/"
+                    :href="route('homepage')"
                 >
                     <img
                         :src="logoUrl"
