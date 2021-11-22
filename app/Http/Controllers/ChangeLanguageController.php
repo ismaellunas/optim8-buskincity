@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Services\TranslationService as TranslationSv;
 use Illuminate\Support\Str;
-use LaravelLocalization;
 
 class ChangeLanguageController extends Controller
 {
@@ -60,7 +59,7 @@ class ChangeLanguageController extends Controller
     {
         $uriPath = parse_url($url, PHP_URL_PATH);
         $uriSegments = explode('/', $uriPath);
-        $locales = LaravelLocalization::getSupportedLanguagesKeys();
+        $locales = TranslationSv::getLocales();
 
         if (Str::startsWith($uriSegments[1], $locales)) {
             $segments = explode(config('app.url'), $url);
