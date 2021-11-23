@@ -1,34 +1,19 @@
 <template>
     <div>
         <sdb-toolbar-content
-            v-if="isEditMode"
             @delete-content="deleteContent"
         />
-        <template v-if="isEditMode">
-            <component
-                :is="headingTag"
-                :class="headingClass"
-                contenteditable
-                @blur="onEditHeading"
-                v-text="entity.content.heading.html"
-            >
-            </component>
-        </template>
-
-        <template v-else>
-            <component
-                :is="headingTag"
-                :class="headingClass"
-                v-text="entity.content.heading.html"
-            >
-            </component>
-        </template>
+        <component
+            :is="headingTag"
+            :class="headingClass"
+            contenteditable
+            @blur="onEditHeading"
+            v-text="entity.content.heading.html"
+        />
         <faq-question-answer
             :items="entity.content.faqContent.contents"
-            :is-edit-mode="isEditMode"
             :template="entity.content.faqContent.template"
-        ></faq-question-answer>
-
+        />
     </div>
 </template>
 
@@ -36,22 +21,22 @@
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbTinymce from '@/Sdb/EditorTinymce';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import FaqQuestionAnswer from '@/Blocks/Contents/Faq/QuestionAnswer';
+    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
+    import FaqQuestionAnswer from '@/Blocks/Backend/Contents/Faq/QuestionAnswer';
     import { last } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'Faq',
-        mixins: [
-            DeletableContentMixin,
-            EditModeComponentMixin,
-        ],
         components: {
             SdbTinymce,
             SdbToolbarContent,
             FaqQuestionAnswer,
         },
+        mixins: [
+            DeletableContentMixin,
+            EditModeComponentMixin,
+        ],
         props: {
             id: {type: String},
             modelValue: {type: Object},

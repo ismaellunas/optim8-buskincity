@@ -7,20 +7,17 @@
             handle=".handle-content"
             item-key="id"
             :animation="300"
-            :disabled="!isEditMode"
         >
             <template #item="{ element, index }">
                 <article class="media">
                     <div class="media-left">
-                        <i class="fas fa-question-circle"></i>
+                        <i class="fas fa-question-circle" />
                     </div>
                     <div class="media-content">
                         <sdb-toolbar-content
-                            v-if="isEditMode"
                             @delete-content="deleteConfirm(element.id)"
                         />
                         <div
-                            v-if="isEditMode"
                             class="content has-text-weight-bold"
                         >
                             <p
@@ -28,31 +25,17 @@
                                 contenteditable
                                 @blur="onEditQuestion($event, index)"
                                 v-text="element.question"
-                            >
-                            </p>
-                        </div>
-                        <div
-                            v-else
-                            class="content has-text-weight-bold"
-                        >
-                            <p v-html="element.question"></p>
+                            />
                         </div>
 
                         <article class="media">
                             <div
-                                v-if="isEditMode"
                                 class="content border-dash"
                                 style="width: 100%"
                             >
                                 <sdb-form-text-editor-full-inline
                                     v-model="element.answer"
                                 />
-                            </div>
-                            <div
-                                v-else
-                                class="content"
-                                v-html="element.answer"
-                            >
                             </div>
                         </article>
                     </div>
@@ -61,7 +44,6 @@
         </draggable>
 
         <sdb-button
-            v-if="isEditMode"
             type="button"
             class="is-small"
             @click="addQuestion()"
@@ -75,7 +57,7 @@
     import draggable from "vuedraggable";
     import SdbButton from '@/Sdb/Button';
     import SdbFormTextEditorFullInline from '@/Sdb/Form/TextEditorFullInline';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { generateElementId } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
     import { confirmDelete } from '@/Libs/alert';
@@ -95,8 +77,10 @@
                 required: true,
                 type: Array
             },
-            isEditMode: Boolean,
-            template: Object,
+            template: {
+                type: Object,
+                required: true,
+            },
         },
 
         methods: {
