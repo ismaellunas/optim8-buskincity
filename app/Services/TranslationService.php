@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Language;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 
@@ -16,24 +17,15 @@ class TranslationService
 
     public static function getLocaleOptions(): array
     {
-        return [
-            [
-                'id' => 'en',
-                'name' => 'English',
-            ],
-            [
-                'id' => 'sv',
-                'name' => 'Swedish',
-            ],
-            [
-                'id' => 'es',
-                'name' => 'Spanish',
-            ],
-            [
-                'id' => 'de',
-                'name' => 'German',
-            ],
-        ];
+        return Language::active()
+            ->get(['code', 'name'])
+            ->map(function ($language) {
+                return [
+                    'id' => $language->code,
+                    'name' => $language->name,
+                ];
+            })
+            ->all();
     }
 
     public static function getLocales(): array
