@@ -69,16 +69,24 @@ class HandleInertiaRequests extends Middleware
                 return (object)[];
             },
             'logoUrl' => $this->settingService->getLogoUrl(),
-            'menus' => fn () => (
+            'menus' => function () use ($request) {
+                if (
                     auth()->check()
                     && (
                         $request->routeIs('admin.*')
                         || $request->routeIs('dashboard')
                         || $request->routeIs('user.profile.*')
                     )
-                )
-                ? MenuService::generateBackendMenu($request)
-                : $this->menuService->getHeaderMenus([TranslationSv::currentLanguage()]),
+                ) {
+                    return MenuService::generateBackendMenu($request);
+                } elseif (
+                    !auth()->check()
+                    && $request->routeIs('admin.*')
+                ) {
+                    return [];
+                }
+                return $this->menuService->getHeaderMenu(TranslationSv::currentLanguage());
+            },
             'headerLayout' => $this->settingService->getHeaderLayout(),
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),

@@ -2,6 +2,7 @@
 
 namespace App\Entities\Menus;
 
+use App\Models\Menu;
 use App\Models\MenuItem;
 
 abstract class BaseMenu
@@ -18,6 +19,7 @@ abstract class BaseMenu
     public $post_id;
     public $category_id;
 
+    protected $menu = null;
     protected $menuItem = null;
     protected $modelName = MenuItem::class;
 
@@ -56,6 +58,15 @@ abstract class BaseMenu
         return $attributes;
     }
 
+    protected function getParentModel(): ?Menu
+    {
+        if ($this->menu == null) {
+            $this->menu = $this->getModel()->menu;
+        }
+
+        return $this->menu;
+    }
+
     protected function getModel(): ?MenuItem
     {
         if ($this->menuItem == null && $this->id) {
@@ -65,6 +76,11 @@ abstract class BaseMenu
         return $this->menuItem;
     }
 
+    protected function getLocale(): ?string
+    {
+        return $this->getParentModel()->locale ?? null;
+    }
+
     protected function loadModel()
     {
         $this->menuItem = $this->modelName::
@@ -72,5 +88,15 @@ abstract class BaseMenu
                 $query->with($this->getEagerLoads());
             })
             ->find($this->id);
+    }
+
+    public function setModel(MenuItem $menuItem)
+    {
+        $this->menuItem = $menuItem;
+    }
+
+    public function setParentModel(Menu $menu)
+    {
+        $this->menu = $menu;
     }
 }
