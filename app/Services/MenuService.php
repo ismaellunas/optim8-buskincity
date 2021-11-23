@@ -175,6 +175,19 @@ class MenuService
                     ],
                 ],
                 [
+                    'title' => 'Settings',
+                    'isActive' => $request->routeIs('admin.setting.*'),
+                    'isEnabled' => $user->can('system.language'),
+                    'children' => [
+                        [
+                            'title' => 'Languages',
+                            'link' => route('admin.settings.languages.edit'),
+                            'isActive' => $request->routeIs('admin.settings.languages.edit'),
+                            'isEnabled' => $user->can('system.language'),
+                        ],
+                    ],
+                ],
+                [
                     'title' => 'All Users',
                     'link' => route('admin.users.index'),
                     'isActive' => $request->routeIs('admin.users.*'),
