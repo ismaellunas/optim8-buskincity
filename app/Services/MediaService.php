@@ -8,8 +8,8 @@ use App\Models\Media;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpFoundation\File\UploadedFile as File;
 
 class MediaService
 {
@@ -72,7 +72,8 @@ class MediaService
                 'translations' => function ($q) {
                     $q->select(['id', 'media_id', 'alt', 'description', 'locale']);
                 },
-            ]);
+            ])
+            ->default();
 
         if ($scopeNames) {
             $query->where(function ($query) use ($scopeNames) {
@@ -118,7 +119,7 @@ class MediaService
     }
 
     public function upload(
-        File $file,
+        UploadedFile $file,
         string $fileName,
         MediaStorage $mediaStorage
     ): Media {
@@ -152,8 +153,50 @@ class MediaService
         return $media;
     }
 
+    public function uploadSetting(
+        UploadedFile $file,
+        string $fileName,
+        MediaStorage $mediaStorage,
+        string $folderPrefix = null
+    ): Media {
+        $media = new Media();
+
+        $extension = null;
+
+        $clientExtension = $file->getClientOriginalExtension();
+        $mimeType =  $file->getMimeType();
+
+        if ( !(
+            Str::startsWith($mimeType, 'image/')
+            || Str::startsWith($mimeType, 'video/')
+            || $clientExtension == 'pdf'
+        )) {
+            $extension = $clientExtension;
+        }
+
+        $fileName = MediaService::getUniqueFileName(
+            Str::lower($fileName),
+            [],
+            $extension
+        );
+
+        $folder = 'settings';
+        if ($folderPrefix) {
+            $folder = $folderPrefix.'_'.$folder;
+        }
+
+        $this->fillMediaWithMediaAsset(
+            $media,
+            $mediaStorage->upload($file, $fileName, $extension, $folder)
+        );
+        $media->type = Media::TYPE_SETTING;
+        $media->save();
+
+        return $media;
+    }
+
     public function duplicateImage(
-        File $file,
+        UploadedFile $file,
         Media $media,
         MediaStorage $mediaStorage
     ): Media {
@@ -173,7 +216,7 @@ class MediaService
     }
 
     public function replace(
-        File $file,
+        UploadedFile $file,
         Media $media,
         MediaStorage $mediaStorage
     ): Media {

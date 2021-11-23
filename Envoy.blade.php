@@ -9,29 +9,34 @@
 
     $heroku_app = "platform752";
     $heroku_vars = [
-        'APP_NAME',
+        'APP_DEBUG',
         'APP_ENV',
         'APP_KEY',
-        'APP_DEBUG',
+        'APP_NAME',
+        'CACHE_DRIVER',
+        'CLOUDINARY_NOTIFICATION_URL',
+        'CLOUDINARY_UPLOAD_PRESET',
+        'CLOUDINARY_URL',
         'DB_CONNECTION',
-        'DB_HOST',
-        'DB_PORT',
         'DB_DATABASE',
-        'DB_USERNAME',
+        'DB_HOST',
         'DB_PASSWORD',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
+        'DB_PORT',
+        'DB_USERNAME',
         'FACEBOOK_CLIENT_ID',
         'FACEBOOK_CLIENT_SECRET',
-        'CLOUDINARY_URL',
-        'CLOUDINARY_UPLOAD_PRESET',
-        'CLOUDINARY_NOTIFICATION_URL',
+        'GOOGLE_API_KEY',
+        'GOOGLE_CLIENT_ID',
+        'GOOGLE_CLIENT_SECRET',
         'QUEUE_CONNECTION',
+        'REDIS_CLIENT',
+        'REDIS_URL',
     ];
 @endsetup
 
 @story('heroku:deploy-simple')
     install-dependencies
+    git-commit-deployment
     heroku:config-set
     heroku:push
     heroku:migration
@@ -57,11 +62,13 @@
     heroku run php artisan optimize:clear
     heroku run rm Envoy.blade.php
     heroku run rm .env.deploy
+    heroku maintenance:off
 @endtask
 
 @task('install-dependencies')
     composer install
     yarn install
+    rm public/js/*
     npm run prod
 @endtask
 
@@ -70,14 +77,15 @@
     git restore public/js/app.js
     git restore public/mix-manifest.json
     git stash -u
+    git pull
 @endtask
 
 @task('git-commit-deployment')
-    git add .
-    git commit -m "Deploy on {{date("Y-m-d H:i:s")}}"
+    git add . && git diff --staged --quiet || git commit -m "Deploy on {{date("Y-m-d H:i:s")}}"
 @endtask
 
 @task('heroku:config-set')
+    heroku maintenance:on
     @foreach ($_ENV as $key => $value)
         @if (in_array($key, $heroku_vars))
             heroku config:set {{ $key }}={{ $value }} -a {{ $heroku_app }}
@@ -98,5 +106,5 @@
 @endtask
 
 @task('heroku:route-list')
-    heroku run php artisan route:list --path="admin"
+    heroku run php artisan route:list --path="admin" -c
 @endtask

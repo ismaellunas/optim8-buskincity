@@ -18,12 +18,13 @@ mix.js('resources/js/app.js', 'public/js').vue()
     ])
     */
     .sass('resources/sass/app.scss', 'public/css')
+    .copy('node_modules/sweetalert2/dist/sweetalert2.min.css', 'public/css')
     .webpackConfig(require('./webpack.config'));
 
 if (mix.inProduction()) {
     mix.version();
 } else {
-    mix.sass('resources/sass/local.scss', 'public/css');
+    mix.copy('node_modules/vue-loading-overlay/dist/vue-loading.css', 'public/css');
     mix.js('resources/js/local.js', 'public/js');
 
     mix.browserSync({

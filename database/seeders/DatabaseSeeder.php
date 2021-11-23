@@ -2,12 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
-use App\Models\Page;
-use App\Models\Permission;
-use App\Models\Post;
-use App\Models\Role;
-use App\Models\User;
+use App\Models\{
+    Category,
+    Menu,
+    MenuItem,
+    Page,
+    Permission,
+    Post,
+    Role,
+    User,
+    Setting,
+};
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
 
@@ -23,15 +28,24 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             PermissionSeeder::class,
+            SettingSeeder::class,
         ]);
 
+        // Wildcard permissions
         $wildcardPermissions = Permission::where('name', 'LIKE', '%.*')->get();
 
         $administratorRole = Role::whereName('Administrator')->first();
         $administratorRole->syncPermissions($wildcardPermissions);
 
+        // System Permissions
+        $systemPermissions = Permission::where('name', 'LIKE', 'system.%')->get();
+        foreach ($systemPermissions as $permission) {
+            $administratorRole->givePermissionTo($permission);
+        }
+
         $superAdminUser = User::factory()->create([
-            'name' => 'Super Administrator',
+            'first_name' => 'Super',
+            'last_name' => 'Administrator',
             'email' => 'super.administrator@sdbagency.com',
         ]);
 
@@ -39,7 +53,8 @@ class DatabaseSeeder extends Seeder
 
         $adminUser = User::factory()
             ->create([
-                'name' => 'Administrator',
+                'first_name' => 'Admin',
+                'last_name' => 'Administrator',
                 'email' => 'admin@sdbagency.com',
             ]);
 
@@ -63,5 +78,19 @@ class DatabaseSeeder extends Seeder
         Page::factory()
             ->hasTranslations(1)
             ->create();
+
+        Menu::factory()
+            ->count(3)
+            ->has(
+                MenuItem::factory()
+            )
+            ->state(new Sequence(
+                ['type' => Menu::TYPE_HEADER],
+                ['type' => Menu::TYPE_FOOTER],
+                ['type' => Menu::TYPE_SOCIAL_MEDIA],
+            ))
+            ->create([
+                'locale' => config('app.fallback_locale')
+            ]);
     }
 }

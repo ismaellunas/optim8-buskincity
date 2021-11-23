@@ -17,7 +17,7 @@ class Page extends Model implements TranslatableContract
 
     public $translatedAttributes = [
         'data',
-        'except',
+        'excerpt',
         'meta_description',
         'meta_title',
         'slug',
@@ -37,6 +37,16 @@ class Page extends Model implements TranslatableContract
                 'value' => __('Published'),
             ]
         ];
+    }
+
+    // Scopes:
+    public function scopeSearch($query, string $term)
+    {
+        return $query->whereHas('translation', function ($query) use ($term) {
+            $query
+                ->where('title', 'ILIKE', '%'.$term.'%')
+                ->orWhere('slug', 'ILIKE', '%'.$term.'%');
+        });
     }
 
     // Relationships:

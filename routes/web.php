@@ -1,19 +1,16 @@
 <?php
 
+use App\Http\Controllers\{
+    ChangeLanguageController,
+    Frontend\PageController,
+    Frontend\PostController,
+    Frontend\PostCategoryController
+};
+use App\Services\TranslationService as TranslationSv;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\{
-    CategoryController,
-    Frontend\PageController as FrontendPageController,
-    Frontend\PostController as FrontendPostController,
-    PermissionController,
-    PostController,
-    RoleController,
-    UserController,
-    UserRoleController
-};
-use App\Services\TranslationService as TranslationSv;
+use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,49 +23,24 @@ use App\Services\TranslationService as TranslationSv;
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
 
-Route::name('admin.')->prefix('admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::resource('/pages', App\Http\Controllers\PageController::class)
-        ->except(['show']);
-    Route::resource('/media', App\Http\Controllers\MediaController::class)
-        ->except(['edit', 'show']);
-    Route::resource('/categories', CategoryController::class);
-    Route::post(
-        '/media/update-image/{medium}',
-        [App\Http\Controllers\MediaController::class, 'updateImage']
-    )->name('media.update-image');
-    Route::post(
-        '/media/save-as-image/{medium}',
-        [App\Http\Controllers\MediaController::class, 'saveAsImage']
-    )->name('media.save-as-image');
+    Route::get('/profile', [UserProfileController::class, 'show'])
+        ->name('user.profile.show');
 
-    Route::get('/media-list/image', [App\Http\Controllers\MediaController::class, 'listImages'])
-        ->name('media.list.image');
-    Route::resource('/posts', PostController::class)
-        ->except(['show']);
-    Route::resource('/users', UserController::class)
-        ->except(['show']);
-    Route::put('/users/{user}/password', [UserController::class, 'updatePassword'])
-        ->name('users.password');
-    Route::resource('/roles', RoleController::class);
-    Route::resource('/permissions', PermissionController::class);
-    Route::resource('/user-roles', UserRoleController::class);
+    Route::get('/user/profile', function () {
+        return redirect()->route('dashboard');
+    })->name('profile.show');
 });
 
-Route::name('api.admin.')->prefix('api/admin')->middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::post('/media', [App\Http\Controllers\MediaController::class, 'apiStore'])
-        ->name('media.store');
-});
-
-/* ---------- FRONTEND ---------- */
 Route::get('/', function () {
     return redirect(TranslationSv::currentLanguage());
 });
 
-Route::get('language/{new_locale}', App\Http\Controllers\ChangeLanguageController::class)
+Route::get('language/{new_locale}', ChangeLanguageController::class)
     ->where('new_locale', '[a-zA-Z]{2}')
     ->name('language.change');
 
@@ -88,6 +60,12 @@ Route::get('/user/remove-facebook', function() {
     echo "Remove facebook account page";
 });
 
+Route::get('test-theme', function () {
+    return Inertia::render('TestTheme', [
+        'webfontsUrl' => 'https://www.googleapis.com/webfonts/v1/webfonts?sort=popularity&key='.config('constants.google_api_key'),
+    ]);
+});
+
 Route::group([
     'prefix' => '{locale}',
     'where' => ['locale' => '[a-zA-Z]{2}'],
@@ -102,13 +80,16 @@ Route::group([
         ]);
     });
 
-    Route::get('/blog', [FrontendPostController::class, 'index'])
+    Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');
 
-    Route::get('blog/{slug}', [FrontendPostController::class, 'show'])
+    Route::get('/category/{id}', [PostCategoryController::class, 'index'])
+        ->name('blog.category.index');
+
+    Route::get('blog/{slug}', [PostController::class, 'show'])
         ->where('slug', '[\w\d\-\_]+')
         ->name('blog.show');
 
-    Route::get('/{page_translation}', [FrontendPageController::class, 'show'])
+    Route::get('/{page_translation}', [PageController::class, 'show'])
         ->name('frontend.pages.show');
 });

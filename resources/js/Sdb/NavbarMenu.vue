@@ -2,7 +2,7 @@
     <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
         <div class="container">
             <div class="navbar-brand">
-                <sdb-link :href="route('dashboard')" class="navbar-item">
+                <sdb-link :href="navLogo.link" class="navbar-item">
                     <jet-application-mark class="" />
                 </sdb-link>
 
@@ -59,12 +59,12 @@
                     <div class="navbar-item">
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link">
-                                {{ $page.props.user.name }}
+                                {{ $page.props.user.full_name }}
                             </a>
 
                             <div class="navbar-dropdown is-boxed">
-                                <jet-dropdown-link :href="route('profile.show')" class="navbar-item">
-                                    Profile
+                                <jet-dropdown-link :href="navProfile.link" class="navbar-item">
+                                    {{ navProfile.title }}
                                 </jet-dropdown-link>
 
                                 <jet-dropdown-link :href="route('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures" class="navbar-item">
@@ -108,8 +108,12 @@
         },
         setup() {
             const navMenus = computed(() => usePage().props.value.menus.nav);
+            const navLogo = computed(() => usePage().props.value.menus.navLogo);
+            const navProfile = computed(() => usePage().props.value.menus.navProfile);
             return {
                 navMenus,
+                navLogo,
+                navProfile,
             };
         },
         methods: {

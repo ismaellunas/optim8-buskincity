@@ -1,15 +1,15 @@
 <template>
     <label
         class="checkbox"
-        :disabled=disabled
+        :disabled="disabled"
     >
         <input
             v-model="proxyChecked"
             type="checkbox"
-            :disabled=disabled
+            :disabled="disabled"
             :value="value"
-        />
-        <slot></slot>
+        >
+        <slot />
     </label>
 </template>
 

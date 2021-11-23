@@ -5,12 +5,14 @@
     </Head>
 
     <div id="main-container" class="container mt-4">
-        <template v-for="(block, index) in page.data.structures">
+        <template
+            v-for="(block, index) in page.data.structures"
+            :key="block.id"
+        >
             <block-columns
                 :id="block.id"
                 v-model="page.data.structures[index]"
                 v-model:data-entities="page.data.entities"
-                :is-edit-mode="false"
                 :selected-locale="currentLanguage"
                 />
         </template>
@@ -19,7 +21,7 @@
 </template>
 
 <script>
-    import BlockColumns from '@/Blocks/Columns';
+    import BlockColumns from '@/Blocks/Frontend/Columns';
     import PageLayout from '@/Layouts/PageLayout';
     import { Head } from '@inertiajs/inertia-vue3';
 
@@ -32,7 +34,6 @@
         props: {
             currentLanguage: String,
             errors: Object,
-            images: {},
             page: Object,
         },
     }

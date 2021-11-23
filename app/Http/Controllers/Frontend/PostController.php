@@ -24,13 +24,14 @@ class PostController extends Controller
     public function index(Request $request)
     {
         return Inertia::render($this->baseComponentName.'/Index', [
+            'baseRouteName' => $this->baseRouteName,
             'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
             'pageNumber' => $request->page,
             'currentLanguage' => $this->translationService->currentLanguage(),
             'records' => $this->postService->getBlogRecords(
                 $request->term ?? '',
                 10,
-                $this->translationService->currentLanguage()
+                $this->translationService->currentLanguage(),
             ),
         ]);
     }
@@ -38,6 +39,10 @@ class PostController extends Controller
     public function show(string $locale, string $slug)
     {
         $post = $this->postService->getFirstBySlug($slug, $locale);
+
+        if (!$post) {
+            $post = $this->postService->getFirstBySlug($slug);
+        }
 
         if (!$post) {
             return redirect()->route($this->baseRouteName.'.index', ['locale'=>$locale]);

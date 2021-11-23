@@ -248,7 +248,7 @@
                     currentForm._method = 'put';
                 } else {
                     if (this.isAjax) {
-                        url = route('api.admin.media.store');
+                        url = route('admin.api.media.store');
                     } else {
                         url = route('admin.media.store');
                     }
