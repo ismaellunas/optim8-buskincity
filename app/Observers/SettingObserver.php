@@ -2,12 +2,12 @@
 
 namespace App\Observers;
 
-use App\Services\SettingService;
+use App\Entities\Caches\SettingCache;
 
 class SettingObserver
 {
     public function saved()
     {
-        app(SettingService::class)->flushCachedSetting();
+        app(SettingCache::class)->flush();
     }
 }
