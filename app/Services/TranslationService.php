@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Entities\Facades\Localization;
+use App\Facades\Localization;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 

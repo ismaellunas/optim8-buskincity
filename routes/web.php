@@ -1,6 +1,6 @@
 <?php
 
-use App\Entities\Facades\Localization;
+use App\Facades\Localization;
 use App\Http\Controllers\{
     ChangeLanguageController,
     Frontend\PageController,
