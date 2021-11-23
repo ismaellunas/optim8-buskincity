@@ -33,6 +33,10 @@ class PageController extends Controller
             $defaultLocale = TranslationService::getDefaultLocale();
             $pageTranslation = $page->translate($defaultLocale);
 
+            if (!$pageTranslation) {
+                return redirect()->route('status-code.404');
+            }
+
             return Inertia::render($this->baseComponentName.'/Show', [
                 'currentLanguage' => TranslationService::currentLanguage(),
                 'images' => $this->getPageImages($pageTranslation, $defaultLocale),
