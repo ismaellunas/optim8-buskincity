@@ -12,7 +12,7 @@ class TranslationService
 
     public static function getDefaultLocale(): string
     {
-        return Localization::getDefaultLocale();
+        return config('app.fallback_locale');
     }
 
     public static function getLocaleOptions(): array
