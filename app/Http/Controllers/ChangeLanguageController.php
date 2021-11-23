@@ -46,7 +46,7 @@ class ChangeLanguageController extends Controller
     private function appendLocaleToUrl(
         ?string $locale,
         string $url
-    ):string {
+    ): string {
         $uriPath = Url::getPath($url);
 
         if ($locale == "") {
@@ -56,7 +56,7 @@ class ChangeLanguageController extends Controller
         return config('app.url')."/".$locale.$uriPath;
     }
 
-    private function removeLocaleFromUrl(string $url)
+    private function removeLocaleFromUrl(string $url): string
     {
         $uriPath = Url::getPath($url);
         $uriSegments = explode('/', $uriPath);
