@@ -1,9 +1,8 @@
 <template>
     <div>
         <sdb-toolbar-content
-            v-if="isEditMode"
-            @delete-content="deleteContent"
             style="z-index: 3"
+            @delete-content="deleteContent"
         />
 
         <div class="container">
@@ -25,12 +24,10 @@
                         :direction="direction"
                         :entity-media="entityImage"
                         :index="index"
-                        :is-edit-mode="isEditMode"
                         :selected-locale="selectedLocale"
                         :visible-slide="visibleSlide"
                         @openModal="openModalMedia(index)"
-                    >
-                    </carousel-slide>
+                    />
                 </template>
             </carousel-main>
 
@@ -50,46 +47,50 @@
 </template>
 
 <script>
-    import CarouselMain from './Carousel/CarouselMain.vue';
-    import CarouselSlide from './Carousel/CarouselSlide.vue';
-    import MixinContainImageContent from '@/Mixins/ContainImageContent';
+    import CarouselMain from '@/Blocks/Backend/Contents/Carousel/CarouselMain.vue';
+    import CarouselSlide from '@/Blocks/Backend/Contents/Carousel/CarouselSlide.vue';
+    import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
-    import MixinEditModeComponent from '@/Mixins/EditModeComponent';
     import MixinHasModal from '@/Mixins/HasModal';
-    import SdbButton from '@/Sdb/Button';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
-    import SdbSelect from '@/Sdb/Select';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import { cloneDeep } from 'lodash';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { inject } from "vue";
 
     export default {
         components: {
             CarouselMain,
             CarouselSlide,
-            SdbButton,
             SdbModalImageBrowser,
-            SdbSelect,
             SdbToolbarContent,
         },
 
         mixins: [
-            MixinContainImageContent,
+            MixinContentHasMediaLibrary,
             MixinDeletableContent,
-            MixinEditModeComponent,
             MixinHasModal,
         ],
 
         props: {
-            dataMedia: {},
-            modelValue: {},
-            selectedLocale: String,
+            dataMedia: {
+                type: Array,
+                default:() => [],
+            },
+            modelValue: {
+                type: Object,
+                required: true,
+            },
+            selectedLocale: {
+                type: String,
+                required: true,
+            },
         },
 
         setup(props, { emit }) {
             return {
                 config: props.modelValue?.config,
+                dataImages: inject('dataImages'),
                 entity: useModelWrapper(props, emit),
                 pageMedia: useModelWrapper(props, emit, 'dataMedia'),
             };
@@ -100,26 +101,12 @@
                 direction: 'left',
                 entityImages: this.entity.content.carousel.images,
                 entityTemplate: this.entity.content.template,
-                images: usePage().props.value.images ?? {},
+                images: this.dataImages,
                 indexModify: null,
                 modalImages: [],
                 sliderOptions: [1,2,3,4,5,6],
                 visibleSlide: 0,
             };
-        },
-
-        computed: {
-            isAutoPlay() {
-                return this.config.carousel.autoPlay;
-            },
-        },
-
-        mounted() {
-            if (!this.isEditMode && this.isAutoPlay) {
-                setInterval(() => {
-                    this.nextSlide();
-                }, 6000);
-            }
         },
 
         watch: {

@@ -1,6 +1,12 @@
 <template>
-    <transition :name="direction" mode="in-out">
-        <div v-show="visibleSlide === index" class="carousel-slide">
+    <transition
+        :name="direction"
+        mode="in-out"
+    >
+        <div
+            v-show="visibleSlide === index"
+            class="carousel-slide"
+        >
             <sdb-image
                 v-if="hasImage"
                 :alt="altText"
@@ -8,14 +14,23 @@
                 :src="imageSrc"
             >
                 <sdb-button
-                    v-if="isEditMode"
                     class="is-small is-overlay"
                     style="z-index: 1"
                     type="button"
                     @click="toggleEdit"
                 >
-                    <span class="icon" v-if="isFormDisplayed"><i class="fas fa-times-circle"></i></span>
-                    <span class="icon" v-else><i class="fas fa-pen"></i></span>
+                    <span
+                        v-if="isFormDisplayed"
+                        class="icon"
+                    >
+                        <i class="fas fa-times-circle" />
+                    </span>
+                    <span
+                        v-else
+                        class="icon"
+                    >
+                        <i class="fas fa-pen" />
+                    </span>
                 </sdb-button>
             </sdb-image>
             <div
@@ -23,24 +38,33 @@
                 class="card-content has-background-info-light is-flex is-justify-content-center is-align-items-center card-custom"
             >
                 <sdb-button
-                    v-if="isEditMode"
                     class="is-small is-overlay"
                     style="z-index: 1"
                     type="button"
                     @click="toggleEdit"
                 >
-                    <span class="icon" v-if="isFormDisplayed"><i class="fas fa-times-circle"></i></span>
-                    <span class="icon" v-else><i class="fas fa-pen"></i></span>
+                    <span
+                        v-if="isFormDisplayed"
+                        class="icon"
+                    >
+                        <i class="fas fa-times-circle" />
+                    </span>
+                    <span
+                        v-else
+                        class="icon"
+                    >
+                        <i class="fas fa-pen" />
+                    </span>
                 </sdb-button>
                 <div class="block has-text-centered">
                     <sdb-button
-                        @click="$emit('openModal', index)"
                         type="button"
                         style="z-index: 1"
+                        @click="$emit('open-modal', index)"
                     >
                         <span>Open Media</span>
                         <span class="icon is-small">
-                            <i class="far fa-image"></i>
+                            <i class="far fa-image" />
                         </span>
                     </sdb-button>
                 </div>
@@ -50,12 +74,10 @@
 </template>
 
 <script>
-    import MixinContainImageContent from '@/Mixins/ContainImageContent';
+    import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
-    import MixinEditModeComponent from '@/Mixins/EditModeComponent';
     import SdbButton from '@/Sdb/Button';
     import SdbImage from '@/Sdb/Image';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
 
     export default {
@@ -64,28 +86,56 @@
         components: {
             SdbButton,
             SdbImage,
-            SdbToolbarContent,
         },
 
         mixins: [
-            MixinContainImageContent,
+            MixinContentHasMediaLibrary,
             MixinDeletableContent,
-            MixinEditModeComponent,
         ],
 
         props: {
-            config: { type: Object, required: true },
-            dataImages: { type: Object, required: true },
-            dataMedia: { type: Array },
-            direction: { type: String, required: true },
-            entityMedia: { type: Object },
-            index: { type: Number, default: 0 },
-            isEditMode: { type: Boolean },
-            selectedLocale: String,
-            visibleSlide: { type: Number, default: 0 },
+            config: {
+                type: Object,
+                required: true
+            },
+            dataImages: {
+                type: Object,
+                required: true
+            },
+            dataMedia: {
+                type: Array,
+                default:() => [],
+            },
+            direction: {
+                type: String,
+                required: true
+            },
+            entityMedia: {
+                type: Object,
+                required: true,
+            },
+            index: {
+                type: Number,
+                default: 0
+            },
+            selectedLocale: {
+                type: String,
+                required: true,
+            },
+            visibleSlide: {
+                type: Number,
+                default: 0
+            },
         },
 
-        emits: ['openModal'],
+        emits: ['open-modal'],
+
+        setup(props, { emit }) {
+            return {
+                entity: useModelWrapper(props, emit),
+                pageMedia: useModelWrapper(props, emit, 'dataMedia'),
+            };
+        },
 
         data() {
             return {
@@ -95,19 +145,9 @@
             };
         },
 
-        setup(props, { emit }) {
-            return {
-                entity: useModelWrapper(props, emit),
-                pageMedia: useModelWrapper(props, emit, 'dataMedia'),
-            };
-        },
-
         computed: {
             isFormDisplayed() {
-                return this.isEditMode && (
-                    !this.hasImage
-                    || (this.isEditMode && this.isFormOpen)
-                );
+                return !this.hasImage || this.isFormOpen;
             },
         },
 
