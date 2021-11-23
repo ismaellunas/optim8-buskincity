@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Url;
 use App\Services\TranslationService as TranslationSv;
 use Illuminate\Support\Str;
 
@@ -46,28 +47,25 @@ class ChangeLanguageController extends Controller
         ?string $locale,
         string $url
     ):string {
-        $segments = explode(config('app.url'), $url);
+        $uriPath = Url::getPath($url);
 
         if ($locale == "") {
             return $url;
         }
 
-        return config('app.url')."/".$locale.$segments[1];
+        return config('app.url')."/".$locale.$uriPath;
     }
 
     private function removeLocaleFromUrl(string $url)
     {
-        $uriPath = parse_url($url, PHP_URL_PATH);
+        $uriPath = Url::getPath($url);
         $uriSegments = explode('/', $uriPath);
         $locales = TranslationSv::getLocales();
 
         if (in_array($uriSegments[1], $locales)) {
-            $segments = explode(config('app.url'), $url);
-            $segments[1] = Str::replaceFirst('/'.$uriSegments[1], '', $segments[1]);
-
-            $url = config('app.url').$segments[1];
+            $uriPath = Str::replaceFirst('/'.$uriSegments[1], '', $uriPath);
         }
 
-        return $url;
+        return config('app.url').$uriPath;
     }
 }
