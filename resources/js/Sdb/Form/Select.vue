@@ -52,7 +52,7 @@
                 default: () => {}
             },
             modelValue: {
-                type: [Object, Array, String, Number, null],
+                type: [Object, Array, String, Number, Boolean, null],
                 required: true
             },
             placeholder: {
