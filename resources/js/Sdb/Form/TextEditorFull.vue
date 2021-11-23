@@ -139,6 +139,12 @@
                         'Header 2=h2; '+
                         'Header 3=h3'
                     ),
+                    toolbar1: (
+                        'fullscreen | formatselect | ' +
+                        'bold italic underline strikethrough blockquote | ' +
+                        'forecolor backcolor | ' +
+                        'removeformat image'
+                    ),
                     toolbar2: (
                         'alignleft aligncenter alignright alignjustify | ' +
                         'bullist numlist outdent indent hr | ' +
@@ -146,19 +152,12 @@
                     ),
                     contextmenu: 'link image',
                     file_picker_types: 'image', //'file image media'
-                    file_picker_callback: this.filePickerCallback,
+                    file_picker_callback: (
+                        this.isMediaEnabled
+                        ? this.filePickerCallback
+                        : false
+                    ),
                 };
-
-                editorConfig.toolbar1 = (
-                    'fullscreen | formatselect | ' +
-                    'bold italic underline strikethrough blockquote | ' +
-                    'forecolor backcolor | ' +
-                    'removeformat'
-                );
-
-                if (this.isMediaEnabled) {
-                    editorConfig.toolbar1 += ' image';
-                }
 
                 return editorConfig;
             },

@@ -2,10 +2,19 @@
 
 namespace App\Contracts;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile as File;
+use App\Entities\MediaAsset;
+use Illuminate\Http\UploadedFile;
 
-interface MediaStorageInterface {
+interface MediaStorageInterface
+{
     public function destroy(string $fileName);
+
     public function rename(string $fromName, string $toName);
-    public function upload(File $file);
+
+    public function upload(
+        UploadedFile $file,
+        string $fileName = null,
+        string $extension = null,
+        string $folder = null
+    ): MediaAsset;
 }

@@ -6,27 +6,10 @@
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
-                    <sdb-form-field-horizontal>
-                        <template v-slot:label>
-                            Search
-                        </template>
-                        <div class="columns">
-                            <div class="column is-three-quarters">
-                                <sdb-input
-                                    v-model="term"
-                                    maxlength="255"
-                                    @keyup.enter.prevent="search(term)"
-                                />
-                            </div>
-                            <div class="column">
-                                <sdb-button-icon
-                                    icon="fas fa-search"
-                                    type="button"
-                                    @click="search(term)"
-                                />
-                            </div>
-                        </div>
-                    </sdb-form-field-horizontal>
+                    <sdb-filter-search
+                        v-model="term"
+                        @search="search"
+                    ></sdb-filter-search>
                 </div>
             </div>
 
@@ -137,36 +120,36 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import SdbButton from '@/Sdb/Button';
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbCheckbox from '@/Sdb/Checkbox';
     import SdbDropdown from '@/Sdb/Dropdown';
     import SdbDropdownItem from '@/Sdb/DropdownItem';
-    import SdbFormFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
-    import SdbInput from '@/Sdb/Input';
+    import SdbFilterSearch from '@/Sdb/Filter/Search';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbTable from '@/Sdb/Table';
     import UserListItem from '@/Pages/User/ListItem';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { isEmpty, merge } from 'lodash';
+    import { merge } from 'lodash';
     import { ref } from 'vue';
 
     export default {
         components: {
             AppLayout,
             SdbButton,
-            SdbButtonIcon,
             SdbButtonLink,
             SdbCheckbox,
             SdbDropdown,
             SdbDropdownItem,
-            SdbFormFieldHorizontal,
-            SdbInput,
+            SdbFilterSearch,
             SdbPagination,
             SdbTable,
             UserListItem,
         },
+        mixins: [
+            MixinFilterDataHandle,
+        ],
         props: {
             baseRouteName: String,
             can: Object,
@@ -186,11 +169,6 @@
                 queryParams: ref(queryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
                 roles: ref(props.pageQueryParams?.roles ?? []),
-            };
-        },
-        data() {
-            return {
-                loader: null,
             };
         },
         methods: {
@@ -216,38 +194,9 @@
             onSuccess(page) {
                 successAlert(page.props.flash.message);
             },
-            onStartLoadingOverlay() {
-                this.loader = this.$loading.show();
-            },
-            onEndLoadingOverlay() {
-                this.loader.hide();
-            },
-            search(term) {
-                this.queryParams['term'] = term;
-                this.$inertia.get(
-                    route(this.baseRouteName+'.index', this.queryParams),
-                    {},
-                    {
-                        replace: true,
-                        preserveState: true,
-                        onStart: this.onStartLoadingOverlay,
-                        onFinish: this.onEndLoadingOverlay,
-                    }
-                );
-            },
             onRoleChanged(event) {
                 this.queryParams['roles'] = this.roles;
-                this.$inertia.get(
-                    route(this.baseRouteName+'.index'),
-                    this.queryParams,
-                    {
-                        replace: true,
-                        preserveState: true,
-                        preserveScroll: true,
-                        onStart: this.onStartLoadingOverlay,
-                        onFinish: this.onEndLoadingOverlay,
-                    }
-                );
+                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
         },
     };

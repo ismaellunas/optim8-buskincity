@@ -51,7 +51,7 @@
                                             v-if="canRegister"
                                             class="box"
                                             @click.prevent="toggleIsSocialMediaLogin"
-                                            >
+                                        >
                                             <i class="fas fa-envelope"></i> Continue with <b>Email</b>
                                         </a>
                                     </div>
@@ -66,39 +66,32 @@
                                         <span>Lorem ipsum dolor sit amet.</span>
                                     </h2>
                                     <div class="has-text-left">
-                                        <jet-validation-errors class="mb-4" />
+
                                         <form @submit.prevent="submit">
-                                            <div class="field">
-                                                <jet-label for="email" value="Email" />
-                                                <div class="control">
-                                                    <jet-input
-                                                        id="email"
-                                                        type="email"
-                                                        v-model="form.email"
-                                                        required
-                                                        autofocus
-                                                        placeholder="Enter your email"
-                                                        />
-                                                </div>
-                                            </div>
-                                            <div class="field">
-                                                <jet-label for="password" value="Password" />
-                                                <div class="control">
-                                                    <jet-input
-                                                        id="password"
-                                                        type="password"
-                                                        v-model="form.password"
-                                                        required
-                                                        autocomplete="current-password"
-                                                        placeholder="Enter your password"
-                                                        />
-                                                </div>
-                                            </div>
+
+                                            <sdb-form-input
+                                                v-model="form.email"
+                                                label="Email"
+                                                required
+                                                type="email"
+                                                placeholder="Enter your email"
+                                                :message="error('email')"
+                                            ></sdb-form-input>
+
+                                            <sdb-form-password
+                                                v-model="form.password"
+                                                autocomplete="current-password"
+                                                label="Password"
+                                                placeholder="Enter your password"
+                                                :required="true"
+                                            ></sdb-form-password>
+
                                             <div class="field columns">
                                                 <div class="column has-text-left">
                                                     <label class="checkbox">
-                                                        <jet-checkbox name="remember" v-model:checked="form.remember" />
-                                                        <span class="pl-1">Remember me</span>
+                                                        <sdb-checkbox name="remember" v-model:checked="form.remember">
+                                                            <span class="pl-1">Remember me</span>
+                                                        </sdb-checkbox>
                                                     </label>
                                                 </div>
                                                 <div class="column has-text-right">
@@ -108,9 +101,9 @@
                                                 </div>
                                             </div>
 
-                                            <jet-button class="button is-block is-info is-fullwidth">
+                                            <sdb-button class="button is-block is-info is-fullwidth" :disabled="form.processing">
                                                 Log In <i class="fas fa-sign-in-alt"></i>
-                                            </jet-button>
+                                            </sdb-button>
                                         </form>
                                     </div>
                                 </div>
@@ -124,30 +117,38 @@
 </template>
 
 <script>
-    import JetButton from '@/Jetstream/Button'
-    import JetCheckbox from '@/Jetstream/Checkbox'
-    import JetInput from '@/Jetstream/Input'
-    import JetLabel from '@/Jetstream/Label'
-    import JetValidationErrors from '@/Jetstream/ValidationErrors';
+    import LayoutBlank from '@/Layouts/BlankLayout';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import SdbButton from '@/Sdb/Button';
     import SdbButtonLink from '@/Sdb/ButtonLink';
+    import SdbCheckbox from '@/Sdb/Checkbox';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbFormPassword from '@/Sdb/Form/Password';
     import SdbLink from '@/Sdb/Link';
     import SdbSocialMediaList from '@/Sdb/SocialMediaList'
 
     export default {
         components: {
-            JetButton,
-            JetCheckbox,
-            JetInput,
-            JetLabel,
-            JetValidationErrors,
+            SdbButton,
             SdbButtonLink,
+            SdbCheckbox,
+            SdbErrorNotifications,
+            SdbFormInput,
+            SdbFormPassword,
             SdbLink,
             SdbSocialMediaList,
         },
 
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        layout: LayoutBlank,
+
         props: {
             canResetPassword: Boolean,
-            status: String
+            status: {type: String, default: ""},
         },
 
         data() {
@@ -185,5 +186,5 @@
                 }
             },
         }
-    }
+    };
 </script>
