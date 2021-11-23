@@ -7,7 +7,6 @@ use App\Http\Controllers\{
     Frontend\PostController,
     Frontend\PostCategoryController
 };
-use App\Services\TranslationService as TranslationSv;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,10 +35,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return redirect()->route('dashboard');
     })->name('profile.show');
 });
-
-// Route::get('/', function () {
-//     return redirect(TranslationSv::currentLanguage());
-// });
 
 Route::get('language/{new_locale}', ChangeLanguageController::class)
     ->where('new_locale', '[a-zA-Z]{2}')
