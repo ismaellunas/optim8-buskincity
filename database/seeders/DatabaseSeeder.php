@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\{
     Category,
+    Language,
     Menu,
     MenuItem,
     Page,
@@ -11,7 +12,6 @@ use App\Models\{
     Post,
     Role,
     User,
-    Setting,
 };
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             SettingSeeder::class,
+            LanguageSeeder::class,
         ]);
 
         // Wildcard permissions
@@ -92,5 +93,20 @@ class DatabaseSeeder extends Seeder
             ->create([
                 'locale' => config('app.fallback_locale')
             ]);
+
+        $this->setActiveLanguages();
+    }
+
+    private function setActiveLanguages()
+    {
+        $activeLanguages = [
+            'en',
+            'pt',
+            'sv',
+            'de',
+        ];
+
+        Language::whereIn('code', $activeLanguages)
+            ->update(['is_active' => true]);
     }
 }
