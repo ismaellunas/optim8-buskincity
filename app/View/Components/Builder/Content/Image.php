@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 
 class Image extends BaseContent
 {
-
+    public $locale;
     public $images;
     public $imageMedia = null;
     public $hasImage = false;
@@ -20,11 +20,14 @@ class Image extends BaseContent
      */
     public function __construct(
         $entity,
+        string $locale = null,
         Collection $images = null
     ) {
         parent::__construct($entity);
 
         $this->images = $images;
+
+        $this->locale = $locale;
 
         $this->imageMedia = $this->getImageMedia();
     }
