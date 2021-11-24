@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LanguageRequest;
 use App\Services\LanguageService;
 use App\Traits\FlashNotifiable;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class LanguageController extends Controller
@@ -29,7 +29,7 @@ class LanguageController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(LanguageRequest $request)
     {
         $languageIds = $request->languages;
 
