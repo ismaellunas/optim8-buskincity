@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Language;
+use App\Models\Setting;
+use Illuminate\Support\Collection;
 
 class LanguageService
 {
@@ -16,9 +18,9 @@ class LanguageService
 
     public function sync(array $languageIds): void
     {
-        $activatedLanguageIds = Language::active()->pluck('id');
+        $supportedLanguageIds = Language::active()->pluck('id');
 
-        $deactivatedLanguageIds = $activatedLanguageIds->diff($languageIds);
+        $deactivatedLanguageIds = $supportedLanguageIds->diff($languageIds);
 
         Language::whereIn('id', $languageIds)
             ->update([
@@ -30,4 +32,37 @@ class LanguageService
                 'is_active' => false,
             ]);
     }
+
+    public function getDefault(): ?Language
+    {
+        $defaultId = Setting::key('default_language')->value('value');
+        return Language::find($defaultId);
+    }
+
+    public function getDefaultId(): ?int
+    {
+        return $this->getDefault()->id ?? null;
+    }
+
+    public function setDefault(int $defaultLanguageId)
+    {
+        $defaultLanguage = Setting::firstOrCreate([
+            'key' => 'default_language',
+        ]);
+
+        $defaultLanguage->value = $defaultLanguageId;
+
+        $defaultLanguage->save();
+    }
+
+    public function getSupportedLanguages(): Collection
+    {
+        return Language::active()->get();
+    }
+
+    public function getSupportedLanguageIds(): array
+    {
+        return $this->getSupportedLanguages()->pluck('id')->all();
+    }
+
 }
