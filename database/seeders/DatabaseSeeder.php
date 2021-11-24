@@ -15,6 +15,7 @@ use App\Models\{
 };
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
+use App\Services\LanguageService;
 
 class DatabaseSeeder extends Seeder
 {
@@ -95,6 +96,7 @@ class DatabaseSeeder extends Seeder
             ]);
 
         $this->setActiveLanguages();
+        $this->setDefaultLanguage();
     }
 
     private function setActiveLanguages()
@@ -108,5 +110,12 @@ class DatabaseSeeder extends Seeder
 
         Language::whereIn('code', $activeLanguages)
             ->update(['is_active' => true]);
+    }
+
+    private function setDefaultLanguage()
+    {
+        $englishId = Language::where('code', 'en')->value('id');
+
+        app(LanguageService::class)->setDefault($englishId);
     }
 }
