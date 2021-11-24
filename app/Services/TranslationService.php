@@ -14,7 +14,7 @@ class TranslationService
 
     public static function getDefaultLocale(): string
     {
-        return app(LanguageService::class)->getDefault()->code ?? null;
+        return app(LanguageService::class)->getDefault()->code ?? config('app.fallback_locale');
     }
 
     public static function getLocaleOptions(): array
