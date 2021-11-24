@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Language;
 use App\Services\LanguageService;
 use App\Traits\FlashNotifiable;
 use Illuminate\Http\Request;
@@ -24,8 +23,9 @@ class LanguageController extends Controller
         return Inertia::render('Language', [
             'title' => __('Language'),
             'baseRouteName' => $this->baseRouteName,
+            'supportedLanguages' => $this->languageService->getSupportedLanguageIds(),
+            'defaultLanguage' => $this->languageService->getDefaultId(),
             'languageOptions' => $this->languageService->getShownLanguageOptions(),
-            'activatedLanguages' => Language::active()->pluck('id'),
         ]);
     }
 
@@ -34,6 +34,8 @@ class LanguageController extends Controller
         $languageIds = $request->languages;
 
         $this->languageService->sync($languageIds);
+
+        $this->languageService->setDefault($request->default_language);
 
         $this->generateFlashMessage('Language updated successfully!');
 

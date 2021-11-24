@@ -24,6 +24,29 @@
                                 </sdb-button>
                             </div>
                         </div>
+                        <div class="columns">
+                            <div class="column">
+                                <sdb-form-dropdown-search
+                                    label="Default Language"
+                                    :close-on-click="true"
+                                    @search="searchLanguage($event)"
+                                >
+                                    <template #trigger>
+                                        <span :style="{'min-width': '4rem'}">
+                                            {{ selectedDefaultLanguage }}
+                                        </span>
+                                    </template>
+
+                                    <sdb-dropdown-item
+                                        v-for="option in filteredLanguages"
+                                        :key="option.id"
+                                        @click="selectedDefaultLanguage = option.id"
+                                    >
+                                        {{ option.value }}
+                                    </sdb-dropdown-item>
+                                </sdb-form-dropdown-search>
+                            </div>
+                        </div>
 
                         <div class="columns mt-2 is-multiline">
                             <div
@@ -59,10 +82,12 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
     import SdbCheckbox from '@/Sdb/Checkbox';
+    import SdbDropdownItem from '@/Sdb/DropdownItem';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import SdbFormDropdownSearch from '@/Sdb/Form/DropdownSearch';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
-    import { sortBy } from 'lodash';
+    import { debounce, filter, find, isEmpty, sortBy } from 'lodash';
 
     export default {
         name: 'Language',
@@ -71,7 +96,9 @@
             AppLayout,
             SdbButton,
             SdbCheckbox,
+            SdbDropdownItem,
             SdbErrorNotifications,
+            SdbFormDropdownSearch,
         },
 
         mixins: [
@@ -79,16 +106,18 @@
         ],
 
         props: {
-            activatedLanguages: {type: Array, required: true},
+            supportedLanguages: {type: Array, required: true},
             baseRouteName: {type: String, required: true},
             errors: {type: Object, default: () => {}},
             languageOptions: {type: Object, required: true},
+            defaultLanguage: {type: Number, required: true},
             title: {type: String, required: true},
         },
 
         setup(props) {
             const form = {
-                languages: props.activatedLanguages,
+                languages: props.supportedLanguages,
+                default_language: props.defaultLanguage,
             };
 
             return {
@@ -100,12 +129,29 @@
             return {
                 isProcessing: false,
                 loader: null,
+                filteredLanguages: this.languageOptions.slice(0, 10),
             };
         },
 
         computed: {
             sortedLanguageOptions() {
-                return sortBy(this.languageOptions, ['name']);
+                return sortBy(this.languageOptions, ['value']);
+            },
+            selectedDefaultLanguage: {
+                get() {
+                    const self = this;
+                    if (this.form.default_language) {
+                        const language = find(
+                            this.languageOptions,
+                            ['id', parseInt(this.form.default_language)]
+                        );
+                        return language.value;
+                    }
+                    return '';
+                },
+                set(value) {
+                    this.form.default_language = value;
+                }
             },
         },
 
@@ -129,6 +175,15 @@
                     }
                 });
             },
+            searchLanguage: debounce(function(term) {
+                if (!isEmpty(term) && term.length > 1) {
+                    this.filteredLanguages = filter(this.languageOptions, function (language) {
+                        return new RegExp(term, 'i').test(language.value);
+                    }).slice(0, 10);
+                } else {
+                    this.filteredLanguages = this.languageOptions.slice(0, 10);
+                }
+            }, 750),
         },
     };
 </script>
