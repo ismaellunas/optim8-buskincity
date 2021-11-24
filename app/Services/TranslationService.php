@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Language;
+use App\Services\LanguageService;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 
@@ -12,7 +13,7 @@ class TranslationService
 
     public static function getDefaultLocale(): string
     {
-        return config('app.fallback_locale');
+        return app(LanguageService::class)->getDefault()->code ?? null;
     }
 
     public static function getLocaleOptions(): array
