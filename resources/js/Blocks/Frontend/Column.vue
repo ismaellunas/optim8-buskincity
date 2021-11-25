@@ -14,6 +14,8 @@
 <script>
     import Card from '@/Blocks/Frontend/Contents/Card';
     import CardText from '@/Blocks/Frontend/Contents/CardText';
+    import Carousel from '@/Blocks/Frontend/Contents/Carousel';
+    import Faq from '@/Blocks/Frontend/Contents/Faq';
     import Heading from '@/Blocks/Frontend/Contents/Heading';
     import Image from '@/Blocks/Frontend/Contents/Image';
     import Text from '@/Blocks/Frontend/Contents/Text';
@@ -24,6 +26,8 @@
         components: {
             Card,
             CardText,
+            Carousel,
+            Faq,
             Heading,
             Image,
             Text,
