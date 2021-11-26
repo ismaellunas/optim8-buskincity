@@ -94,4 +94,15 @@ return [
         'es',
         'de'
     ],
+
+    'settings' => [
+        'translations' => [
+            'groups' => [
+                'auth',
+                'pagination',
+                'passwords',
+                'validation',
+            ]
+        ]
+    ]
 ];
