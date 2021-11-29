@@ -46,11 +46,14 @@
             tabActive: String,
             statusOptions: {type: Array, default: []},
         },
-        setup(props) {
+        setup() {
+            const defaultLocale = usePage().props.value.defaultLanguage;
+            const translations = {};
+
+            translations[defaultLocale] = getEmptyPageTranslation();
+
             const translationForm = {
-                translations: {
-                    en: getEmptyPageTranslation()
-                }
+                translations
             };
 
             const contentConfigId = ref('');
@@ -70,7 +73,7 @@
 
             return {
                 contentConfigId,
-                defaultLocale: usePage().props.value.defaultLanguage,
+                defaultLocale: defaultLocale,
                 form: useForm(translationForm),
                 localeOptions: usePage().props.value.languageOptions,
             };
@@ -88,16 +91,18 @@
                 const submitRoute = route('admin.pages.store');
                 this.form.post(submitRoute);
             },
-            changeLocale(locale) {
-                const confirmationMessage = (
-                    'It looks like you have been editing something. '
-                    + 'If you leave before saving, your changes will be lost.'
-                );
+            changeLocale() {
+                let locale = {};
+                this.localeOptions.map(localeOption => {
+                    if (localeOption.id == this.defaultLocale) {
+                        locale = localeOption;
+                    }
+                });
 
                 this.$swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Please provide English (EN) translation first!'
+                    text: 'Please provide '+locale.name+' ('+locale.id.toUpperCase()+') translation first!'
                 })
             },
         }

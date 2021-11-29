@@ -215,6 +215,19 @@ class MenuService
                     ],
                 ],
                 [
+                    'title' => 'Settings',
+                    'isActive' => $request->routeIs('admin.setting.*'),
+                    'isEnabled' => $user->can('system.language'),
+                    'children' => [
+                        [
+                            'title' => 'Languages',
+                            'link' => route('admin.settings.languages.edit'),
+                            'isActive' => $request->routeIs('admin.settings.languages.edit'),
+                            'isEnabled' => $user->can('system.language'),
+                        ],
+                    ],
+                ],
+                [
                     'title' => 'All Users',
                     'link' => route('admin.users.index'),
                     'isActive' => $request->routeIs('admin.users.*'),
@@ -269,7 +282,7 @@ class MenuService
 
                 return [
                     'id' => $page->id,
-                    'value' => $page->title,
+                    'value' => $page->title ?? $page->translations[0]->title,
                     'locales' => $locales,
                 ];
             })
@@ -317,7 +330,7 @@ class MenuService
 
                 return [
                     'id' => $category->id,
-                    'value' => $category->name,
+                    'value' => $category->name ?? $category->translations[0]->name,
                     'locales' => $locales,
                 ];
             })
