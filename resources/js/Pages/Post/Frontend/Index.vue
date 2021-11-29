@@ -29,7 +29,7 @@
                 <template #default="{record}">
                     <component
                         :is="'SdbPostListItem'"
-                        :edit-link="route('blog.show', {locale: currentLanguage, slug: record.slug})"
+                        :edit-link="route('blog.show', {slug: record.slug})"
                         :is-delete-enabled="false"
                         :is-edit-enabled="false"
                         :record="record"

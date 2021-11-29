@@ -3,7 +3,7 @@
         <div class="navbar-brand">
             <sdb-link
                 class="navbar-item"
-                href="/"
+                :href="route('homepage')"
             >
                 <img
                     :src="logoUrl"
@@ -68,14 +68,14 @@
                 <div class="navbar-item has-dropdown is-hoverable">
                     <span class="navbar-link">{{ currentLanguage.toUpperCase() }}</span>
                     <div class="navbar-dropdown is-boxed">
-                        <sdb-link
+                        <a
                             v-for="language in availableLanguages"
                             :key="language.id"
                             class="navbar-item"
                             :href="route('language.change', [language.id])"
                         >
                             {{ language.id.toUpperCase() }}
-                        </sdb-link>
+                        </a>
                     </div>
                 </div>
                 <sdb-link

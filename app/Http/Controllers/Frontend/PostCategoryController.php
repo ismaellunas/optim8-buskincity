@@ -23,7 +23,7 @@ class PostCategoryController extends Controller
         $this->translationService = $translationService;
     }
 
-    public function index(Request $request, $locale, $categoryId)
+    public function index(Request $request, $categoryId)
     {
         return Inertia::render($this->baseComponentName.'/Index', [
             'baseRouteName' => $this->baseRouteName,
