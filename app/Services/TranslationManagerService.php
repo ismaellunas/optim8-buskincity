@@ -9,7 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 class TranslationManagerService
 {
-    private $defaultLocale = 'en';
+    public $defaultLocale = 'en';
 
     public function getRecords(
         string $locale = null,
@@ -29,16 +29,15 @@ class TranslationManagerService
         );
     }
 
-    private function getAllKeyWithGroups(): array
+    private function getAllKeyWithGroups(): Collection
     {
         return Translation::select('key', 'group')
             ->whereIn('group', config('constants.translations.groups'))
             ->groupBy('key', 'group')
-            ->pluck('group', 'key')
-            ->toArray();
+            ->pluck('group', 'key');
     }
 
-    private function getAllTranslations(): array
+    private function getAllTranslations(): Collection
     {
         return Translation::select(
                 'id',
@@ -49,15 +48,14 @@ class TranslationManagerService
             )
             ->orderBy('id', 'DESC')
             ->active()
-            ->get()
-            ->toArray();
+            ->get();
     }
 
     private function getTranslationByLocale(string $locale): Collection
     {
         $translations = collect([]);
-        $allKeyWithGroups = collect($this->getAllKeyWithGroups());
-        $allTranslations = collect($this->getAllTranslations());
+        $allKeyWithGroups = $this->getAllKeyWithGroups();
+        $allTranslations = $this->getAllTranslations();
         $allKeyWithGroups->each(function ($group, $key) use (
                 $translations,
                 $allTranslations,
