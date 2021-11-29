@@ -53,4 +53,17 @@ class Localization extends LaravelLocalization
 
         return $locales;
     }
+
+    private function getDefaultSupportedLocales(): array
+    {
+        return [
+            config('app.fallback_locale') => [
+                'code' => config('app.fallback_locale'),
+                'name' => config('app.fallback_locale'),
+                'script' => '',
+                'native' => '',
+                'regional' => config('app.fallback_locale'),
+            ]
+        ];
+    }
 }
