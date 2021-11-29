@@ -1,12 +1,12 @@
 <?php
 
+use App\Facades\Localization;
 use App\Http\Controllers\{
     ChangeLanguageController,
     Frontend\PageController,
     Frontend\PostController,
     Frontend\PostCategoryController
 };
-use App\Services\TranslationService as TranslationSv;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,10 +36,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     })->name('profile.show');
 });
 
-Route::get('/', function () {
-    return redirect(TranslationSv::currentLanguage());
-});
-
 Route::get('language/{new_locale}', ChangeLanguageController::class)
     ->where('new_locale', '[a-zA-Z]{2}')
     ->name('language.change');
@@ -67,9 +63,8 @@ Route::get('test-theme', function () {
 });
 
 Route::group([
-    'prefix' => '{locale}',
-    'where' => ['locale' => '[a-zA-Z]{2}'],
-    'middleware' => 'setLocale',
+    'prefix' => Localization::setLocale(),
+    'middleware' => [ 'localizationRedirect' ]
 ], function () {
     Route::get('/', function () {
         return Inertia::render('Welcome', [
@@ -78,7 +73,7 @@ Route::group([
             'laravelVersion' => Application::VERSION,
             'phpVersion' => PHP_VERSION,
         ]);
-    });
+    })->name('homepage');
 
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');

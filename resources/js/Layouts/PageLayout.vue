@@ -17,7 +17,7 @@
             :available-languages="availableLanguages"
             :current-language="currentLanguage"
             :logo-url="getLogoUrl"
-            :menus="menus[currentLanguage]"
+            :menus="menus"
         />
 
         <slot />

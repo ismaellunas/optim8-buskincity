@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Entities\CloudinaryStorage;
+use App\Entities\Caches\SettingCache;
 use App\Entities\MediaAsset;
 use App\Models\{
     Media,
@@ -11,29 +12,14 @@ use App\Models\{
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\{
     Collection,
-    Facades\Cache,
     Facades\Storage,
     Str,
 };
 use Symfony\Component\Process\Process;
-use \Closure;
 use \finfo;
 
 class SettingService
 {
-    private static function getCachedSetting(string $key, Closure $callback)
-    {
-        return Cache::tags(['settings'])->rememberForever(
-            $key,
-            $callback
-        );
-    }
-
-    public function flushCachedSetting()
-    {
-        Cache::tags('settings')->flush();
-    }
-
     private static function getAdditionalCodeFileKey(string $key): string
     {
         return config("constants.theme_additional_code_files.{$key}.key");
@@ -46,7 +32,7 @@ class SettingService
 
     public static function getFrontendCssUrl(): string
     {
-        $urlCss = self::getCachedSetting('additional_css_url', function () {
+        $urlCss = app(SettingCache::class)->remember('additional_css_url', function () {
             return Setting::key('url_css')->value('value');
         });
 
@@ -55,7 +41,7 @@ class SettingService
 
     public static function getAdditionalCssUrl(): ?string
     {
-        return self::getCachedSetting('additional_css_url', function () {
+        return app(SettingCache::class)->remember('additional_css_url', function () {
             return Setting::key(self::getAdditionalCodeFileKey('additional_css'))
                 ->value('value');
         });
@@ -63,7 +49,7 @@ class SettingService
 
     public static function getAdditionalJavascriptUrl(): ?string
     {
-        return self::getCachedSetting('additional_javascript_url', function () {
+        return app(SettingCache::class)->remember('additional_javascript_url', function () {
             return Setting::key(self::getAdditionalCodeFileKey('additional_javascript'))
                 ->value('value');
         });
@@ -114,7 +100,7 @@ class SettingService
 
     public function getLogoUrl(): ?string
     {
-        return $this->getCachedSetting('logo_url', function () {
+        return app(SettingCache::class)->remember('logo_url', function () {
             $mediaId = Setting::key(config("constants.theme_header.header_logo_media.key"))
                 ->value('value');
 
@@ -124,7 +110,7 @@ class SettingService
 
     public function getHeaderLayout(): int
     {
-        return $this->getCachedSetting('header_layout', function () {
+        return app(SettingCache::class)->remember('header_layout', function () {
             return (int) Setting::key('header_layout')->value('value');
         });
     }

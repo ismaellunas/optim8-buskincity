@@ -12,9 +12,8 @@ use App\Models\{
     Role,
     User,
 };
-use App\Services\TranslationService as TranslationSv;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Entities\Caches\MenuCache;
 
 class MenuService
 {
@@ -29,6 +28,47 @@ class MenuService
         }
 
         return $menus;
+    }
+
+    public function getHeaderMenu(string $locale): array
+    {
+        return app(MenuCache::class)->remember(
+            'header_menu',
+            function () use ($locale) {
+                $menu = Menu::header()
+                    ->locale($locale)
+                    ->with([
+                        'menuItems' => function ($query) {
+                            $query
+                                ->orderBy('order', 'ASC')
+                                ->orderBy('parent_id', 'ASC')
+                                ->with([
+                                    'post' => function ($query) {
+                                        $query->select([
+                                            'id',
+                                            'slug',
+                                        ]);
+                                    },
+                                    'page' => function ($query) {
+                                        $query->select('id');
+                                        $query->with('translations', function ($query) {
+                                            $query->select([
+                                                'id',
+                                                'page_id',
+                                                'locale',
+                                                'slug',
+                                            ]);
+                                        });
+                                    },
+                                ]);
+                        },
+                    ])
+                    ->first();
+
+                return $menu ? Menu::createArrayMenuItems($menu) : [];
+            },
+            $locale
+        );
     }
 
     public function getFooterMenus(array $locales = []): array
@@ -175,6 +215,19 @@ class MenuService
                     ],
                 ],
                 [
+                    'title' => 'Settings',
+                    'isActive' => $request->routeIs('admin.setting.*'),
+                    'isEnabled' => $user->can('system.language'),
+                    'children' => [
+                        [
+                            'title' => 'Languages',
+                            'link' => route('admin.settings.languages.edit'),
+                            'isActive' => $request->routeIs('admin.settings.languages.edit'),
+                            'isEnabled' => $user->can('system.language'),
+                        ],
+                    ],
+                ],
+                [
                     'title' => 'All Users',
                     'link' => route('admin.users.index'),
                     'isActive' => $request->routeIs('admin.users.*'),
@@ -229,7 +282,7 @@ class MenuService
 
                 return [
                     'id' => $page->id,
-                    'value' => $page->title,
+                    'value' => $page->title ?? $page->translations[0]->title,
                     'locales' => $locales,
                 ];
             })
@@ -277,7 +330,7 @@ class MenuService
 
                 return [
                     'id' => $category->id,
-                    'value' => $category->name,
+                    'value' => $category->name ?? $category->translations[0]->name,
                     'locales' => $locales,
                 ];
             })

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Media;
-use App\Models\PageTranslation;
+use App\Models\{
+    Media,
+    PageTranslation
+};
 use App\Services\TranslationService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 
@@ -24,12 +27,15 @@ class PageController extends Controller
             $pageTranslation = $page->translate($locale);
 
             return redirect()->route($this->baseRouteName.'.show', [
-                'locale' => $locale,
                 'page_translation' => $pageTranslation->slug
             ]);
         } else {
             $defaultLocale = TranslationService::getDefaultLocale();
             $pageTranslation = $page->translate($defaultLocale);
+
+            if (!$pageTranslation) {
+                return redirect()->route('status-code.404');
+            }
 
             return Inertia::render($this->baseComponentName.'/Show', [
                 'currentLanguage' => TranslationService::currentLanguage(),
@@ -67,8 +73,11 @@ class PageController extends Controller
         return $images;
     }
 
-    public function show(string $locale, PageTranslation $pageTranslation)
+    public function show(Request $request, PageTranslation $pageTranslation)
     {
+        $locale = !$request->has('locale')
+            ? TranslationService::currentLanguage()
+            : $request->locale;
         if ($pageTranslation->locale != $locale) {
 
             return $this->redirectToPageLocaleOrDefaultLocale($pageTranslation, $locale);
