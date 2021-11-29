@@ -25,10 +25,16 @@ class Localization extends LaravelLocalization
             return $this->supportedLocales;
         }
 
-        $languageService = new LanguageService();
-        $locales = $this->setSupportedLocaleFormat($languageService->getSupportedLanguages());
+        $languageService = app(LanguageService::class);
+        $supportedLanguages = $languageService->getSupportedLanguages();
 
-        if (empty($locales) || ! is_array($locales)) {
+        if (! $supportedLanguages->isEmpty()) {
+            $locales = $this->formatSupportedLocale($languageService->getSupportedLanguages());
+        } else {
+            $locales = $this->getDefaultSupportedLocales();
+        }
+
+        if (empty($locales) || !is_array($locales)) {
             throw new SupportedLocalesNotDefined();
         }
 
