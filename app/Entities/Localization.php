@@ -27,7 +27,7 @@ class Localization extends LaravelLocalization
         $languageService = new LanguageService();
         $locales = $this->setSupportedLocaleFormat($languageService->getSupportedLanguages());
 
-        if (empty($locales) || !\is_array($locales)) {
+        if (empty($locales) || ! is_array($locales)) {
             throw new SupportedLocalesNotDefined();
         }
 
