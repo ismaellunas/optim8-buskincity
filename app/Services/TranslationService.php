@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Facades\Localization;
 use App\Models\Language;
 use App\Services\LanguageService;
 use Illuminate\Support\Facades\Lang;
@@ -13,7 +14,7 @@ class TranslationService
 
     public static function getDefaultLocale(): string
     {
-        return app(LanguageService::class)->getDefault()->code ?? null;
+        return app(LanguageService::class)->getDefault()->code ?? config('app.fallback_locale');
     }
 
     public static function getLocaleOptions(): array
@@ -51,18 +52,7 @@ class TranslationService
 
     public static function currentLanguage(): string
     {
-        return session(self::$localeKey) ?? self::getDefaultLocale();
-    }
-
-    public static function setLanguage(string $locale): void
-    {
-        session()->put(self::$localeKey, $locale);
-    }
-
-    public static function setLanguageAndAppLocale(string $locale): void
-    {
-        self::setLanguage($locale);
-        app()->setLocale($locale);
+        return Localization::getCurrentLocale() ?? self::getDefaultLocale();
     }
 
     /**

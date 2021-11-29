@@ -36,7 +36,7 @@ class LanguageService
     public function getDefault(): ?Language
     {
         $defaultId = Setting::key('default_language')->value('value');
-        return Language::find($defaultId);
+        return $defaultId ? Language::find($defaultId) : null;
     }
 
     public function getDefaultId(): ?int

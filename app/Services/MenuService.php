@@ -282,7 +282,7 @@ class MenuService
 
                 return [
                     'id' => $page->id,
-                    'value' => $page->title,
+                    'value' => $page->title ?? $page->translations[0]->title,
                     'locales' => $locales,
                 ];
             })
@@ -330,7 +330,7 @@ class MenuService
 
                 return [
                     'id' => $category->id,
-                    'value' => $category->name,
+                    'value' => $category->name ?? $category->translations[0]->name,
                     'locales' => $locales,
                 ];
             })

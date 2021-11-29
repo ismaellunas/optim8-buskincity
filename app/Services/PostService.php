@@ -119,7 +119,7 @@ class PostService
         return Category::get()->map(function ($category) {
             return [
                 'id' => $category->id,
-                'value' => $category->name,
+                'value' => $category->name ?? $category->translations[0]->name,
             ];
         })->all();
     }
