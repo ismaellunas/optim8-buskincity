@@ -12,11 +12,11 @@ use App\Services\{
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class TranslationController extends Controller
+class TranslationManagerController extends Controller
 {
     use FlashNotifiable;
 
-    private $baseRouteName ="admin.settings.translations";
+    private $baseRouteName ="admin.settings.translation-manager";
     private $translationManagerService;
 
     public function __construct(TranslationManagerService $translationManagerService)
@@ -26,10 +26,11 @@ class TranslationController extends Controller
 
     public function edit(Request $request)
     {
-        return Inertia::render('Translation', [
-            'title' => 'Translations',
+        return Inertia::render('TranslationManager', [
+            'title' => 'Translation Manager',
             'baseRouteName' => $this->baseRouteName,
-            'groupOptions' => config('constants.settings.translations.groups'),
+            'defaultLocale' => $this->translationManagerService->defaultLocale,
+            'groupOptions' => config('constants.translations.groups'),
             'localeOptions' => TranslationService::getLocaleOptions(),
             'pageQueryParams' => array_filter($request->only('locale', 'group')),
             'records' => $this->translationManagerService->getRecords(
