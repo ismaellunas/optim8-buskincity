@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Translation;
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 
 class TranslationManagerService
 {
@@ -19,12 +20,13 @@ class TranslationManagerService
             $locale = TranslationService::getDefaultLocale();
         }
 
-        return $this->getTranslationByLocale($locale)
-            ->when($group, function ($collection) use ($group) {
-                return $collection->where('group', $group);
-            })
-            ->paginate($perPage)
-            ->withQueryString();
+        return $this->paginateCollection(
+            $this->getTranslationByLocale($locale)
+                ->when($group, function ($collection) use ($group) {
+                    return $collection->where('group', $group);
+                }),
+            $perPage
+        );
     }
 
     private function getAllKeyWithGroups(): array
@@ -88,5 +90,24 @@ class TranslationManagerService
             });
 
         return $translations;
+    }
+
+    private function paginateCollection(
+        Collection $items,
+        int $perPage = 15
+    ): LengthAwarePaginator {
+        $page = Paginator::resolveCurrentPage('page');
+        $total = $items->count();
+
+        return new Paginator(
+            $items->forPage($page, $perPage),
+            $total,
+            $perPage,
+            $page,
+            [
+                'path' => Paginator::resolveCurrentPath(),
+                'pageName' => 'page',
+            ]
+        );
     }
 }

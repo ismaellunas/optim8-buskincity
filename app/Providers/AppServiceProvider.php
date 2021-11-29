@@ -10,9 +10,7 @@ use App\Services\{
     LanguageService,
     SettingService
 };
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -52,23 +50,5 @@ class AppServiceProvider extends ServiceProvider
                 });
             }
         );
-
-        EloquentCollection::macro('paginate', function(
-            int $perPage = 15
-        ) {
-            $page = LengthAwarePaginator::resolveCurrentPage('page');
-            $total = $this->count();
-
-            return new LengthAwarePaginator(
-                $this->forPage($page, $perPage),
-                $total,
-                $perPage,
-                $page,
-                [
-                    'path' => LengthAwarePaginator::resolveCurrentPath(),
-                    'pageName' => 'page',
-                ]
-            );
-        });
     }
 }
