@@ -119,10 +119,17 @@
                 props.category.translations.forEach(translation => {
                     fields[translation.locale] = {name: translation.name};
                 });
-            } else {
-                providedLocales = ['en'];
 
-                fields = { en: { name: null } };
+                if (!providedLocales.includes(props.defaultLocale)) {
+                    fields[props.defaultLocale] = {name: null};
+                    providedLocales.push(props.defaultLocale);
+                }
+            } else {
+                providedLocales = [props.defaultLocale];
+
+                fields[props.defaultLocale] = {
+                    name: null
+                };
             }
 
             return {
@@ -147,6 +154,7 @@
                     Object.keys(this.form),
                     this.defaultLocale
                 );
+
                 sortedExistingLocales.unshift(this.defaultLocale);
                 return sortedExistingLocales;
             }

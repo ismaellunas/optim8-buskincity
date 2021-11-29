@@ -7,7 +7,7 @@ use App\Services\SettingService;
 use App\Services\TranslationService;
 use Illuminate\View\Component;
 
-class Home extends Component
+class Master extends Component
 {
     public $appCssUrl;
     public $currentLanguage;
@@ -52,6 +52,6 @@ class Home extends Component
      */
     public function render()
     {
-        return view('components.layouts.home');
+        return view('components.layouts.master');
     }
 }

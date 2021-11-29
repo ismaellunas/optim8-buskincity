@@ -36,8 +36,9 @@ class PostController extends Controller
         ]);
     }
 
-    public function show(string $locale, string $slug)
+    public function show(string $slug)
     {
+        $locale = TranslationService::currentLanguage();
         $post = $this->postService->getFirstBySlug($slug, $locale);
 
         if (!$post) {

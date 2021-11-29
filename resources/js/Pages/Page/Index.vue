@@ -11,7 +11,7 @@
                         <sdb-filter-search
                             v-model="term"
                             @search="search"
-                        ></sdb-filter-search>
+                        />
                     </div>
                 </div>
                 <div class="column">
@@ -19,9 +19,12 @@
                         v-if="can.add"
                         class="is-pulled-right"
                     >
-                        <sdb-button-link :href="route('admin.pages.create')" class="is-primary">
+                        <sdb-button-link
+                            :href="route('admin.pages.create')"
+                            class="is-primary"
+                        >
                             <span class="icon is-small">
-                                <i class="fas fa-plus"></i>
+                                <i class="fas fa-plus" />
                             </span>
                             <span>Create New</span>
                         </sdb-button-link>
@@ -46,7 +49,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="page in records.data" :key="page.id">
+                        <tr
+                            v-for="page in records.data"
+                            :key="page.id"
+                        >
                             <th>{{ page.id }}</th>
                             <td>{{ page.title }}</td>
                             <td>{{ page.slug }}</td>
@@ -55,8 +61,18 @@
                                     {{ page.statusText }}
                                 </sdb-tag>
                             </td>
-                            <td><i class="far fa-check-circle" v-if="page.hasMetaTitle"></i></td>
-                            <td><i class="far fa-check-circle" v-if="page.hasMetaDescription"></i></td>
+                            <td>
+                                <i
+                                    v-if="page.hasMetaTitle"
+                                    class="far fa-check-circle"
+                                />
+                            </td>
+                            <td>
+                                <i
+                                    v-if="page.hasMetaDescription"
+                                    class="far fa-check-circle"
+                                />
+                            </td>
                             <td>
                                 <sdb-button
                                     v-for="translation in page.translations"
@@ -73,7 +89,7 @@
                                         :href="route('admin.pages.edit', {id: page.id})"
                                     >
                                         <span class="icon is-small">
-                                            <i class="fas fa-pen"></i>
+                                            <i class="fas fa-pen" />
                                         </span>
                                     </sdb-button-link>
                                     <sdb-button
@@ -82,7 +98,7 @@
                                         @click.prevent="deleteRow(page)"
                                     >
                                         <span class="icon is-small">
-                                            <i class="far fa-trash-alt"></i>
+                                            <i class="far fa-trash-alt" />
                                         </span>
                                     </sdb-button>
                                 </div>
@@ -91,7 +107,7 @@
                     </tbody>
                 </table>
             </div>
-            <sdb-pagination :links="records.links"></sdb-pagination>
+            <sdb-pagination :links="records.links" />
         </div>
     </app-layout>
 </template>
