@@ -30,7 +30,7 @@ class TranslationManagerService
     private function getAllKeyWithGroups(): array
     {
         return Translation::select('key', 'group')
-            ->whereIn('group', config('constants.settings.translations.groups'))
+            ->whereIn('group', config('constants.translations.groups'))
             ->groupBy('key', 'group')
             ->pluck('group', 'key')
             ->toArray();

@@ -25,7 +25,7 @@ class TranslationRequest extends FormRequest
     public function rules()
     {
         $locale = config('translatable.locales');
-        $group = config('constants.settings.translations.groups');
+        $group = config('constants.translations.groups');
 
         return [
             'locale' => [
