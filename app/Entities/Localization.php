@@ -7,7 +7,6 @@ use App\Services\{
     TranslationService
 };
 use Mcamara\LaravelLocalization\LaravelLocalization;
-use Mcamara\LaravelLocalization\Exceptions\SupportedLocalesNotDefined;
 
 class Localization extends LaravelLocalization
 {
@@ -26,10 +25,6 @@ class Localization extends LaravelLocalization
 
         $languageService = new LanguageService();
         $locales = $this->setSupportedLocaleFormat($languageService->getSupportedLanguages());
-
-        if (empty($locales) || ! is_array($locales)) {
-            throw new SupportedLocalesNotDefined();
-        }
 
         $this->supportedLocales = $locales;
 
