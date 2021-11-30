@@ -72,7 +72,7 @@
                                 {{ page.en_value ?? "-" }}
                             </td>
                             <td>
-                                <template v-if="!page.isEdit">
+                                <template v-if="selectedIndex !== index">
                                     {{ page.value ?? "-" }}
                                 </template>
 
@@ -103,7 +103,7 @@
                                 <div class="level-right">
                                     <sdb-button
                                         class="is-ghost has-text-black"
-                                        @click="setEditMode(index)"
+                                        @click="setSelectedIndex(index)"
                                     >
                                         <span class="icon is-small">
                                             <i class="fas fa-pen" />
@@ -215,6 +215,12 @@
             };
         },
 
+        data() {
+            return {
+                selectedIndex: null,
+            };
+        },
+
         methods: {
             search: debounce(function() {
                 this.queryParams['group'] = this.group;
@@ -238,23 +244,18 @@
                 );
             },
 
-            setEditMode(index) {
-                this.closeAllEditMode(index);
-                this.records.data[index].isEdit = !this.records.data[index].isEdit;
+            setSelectedIndex(index) {
+                if (this.selectedIndex === null || this.selectedIndex !== index) {
+                    this.selectedIndex = index;
+                } else {
+                    this.selectedIndex = null;
+                }
 
                 this.form.id = this.records.data[index].id;
                 this.form.locale = this.records.data[index].locale;
                 this.form.group = this.records.data[index].group;
                 this.form.key = this.records.data[index].key;
                 this.form.value = this.records.data[index].value;
-            },
-
-            closeAllEditMode(indexNotIn = null) {
-                forEach(this.records.data, function(transaltion, index) {
-                    if (index !== indexNotIn) {
-                        transaltion.isEdit = false;
-                    }
-                });
             },
 
             onSubmit() {
@@ -268,6 +269,7 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                         self.form.reset();
+                        self.selectedIndex = null;
                     },
                     onFinish: () => {
                         self.loader.hide();
@@ -292,6 +294,7 @@
                                 },
                                 onSuccess: (page) => {
                                     successAlert(page.props.flash.message);
+                                    self.selectedIndex = null;
                                 },
                                 onFinish: () => {
                                     self.loader.hide();

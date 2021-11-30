@@ -17,7 +17,6 @@ class Translation extends Model implements TranslationLoader
         'key',
         'value',
     ];
-    protected $appends = ["isEdit"];
 
     // Method from TranslationLoader-Interface
     public function loadTranslations(string $locale, string $group): array
@@ -37,12 +36,6 @@ class Translation extends Model implements TranslationLoader
             ->get()
             ->pluck('value', 'key')
             ->toArray();
-    }
-
-    // Accessor
-    public function getIsEditAttribute()
-    {
-        return false;
     }
 
     // Scope
