@@ -50,9 +50,10 @@
                 <sdb-form-select
                     v-if="isTypePage"
                     v-model="form.page_id"
-                    label="Link Page"
+                    label="Page"
                     class="is-fullwidth"
                     :message="error('page_id', null, errors)"
+                    :required="true"
                 >
                     <option
                         v-for="option in pageOptions"
@@ -72,9 +73,10 @@
                 <sdb-form-select
                     v-if="isTypePost"
                     v-model="form.post_id"
-                    label="Link Post"
+                    label="Post"
                     class="is-fullwidth"
                     :message="error('post_id', null, errors)"
+                    :required="true"
                 >
                     <option
                         v-for="option in postOptions"
@@ -88,9 +90,10 @@
                 <sdb-form-select
                     v-if="isTypeCategory"
                     v-model="form.category_id"
-                    label="Link Category"
+                    label="Category"
                     class="is-fullwidth"
                     :message="error('category_id', null, errors)"
+                    :required="true"
                 >
                     <option
                         v-for="option in categoryOptions"
