@@ -60,6 +60,7 @@
                                             <div class="control">
                                                 <sdb-checkbox
                                                     v-model:checked="form.languages"
+                                                    :disabled="option.id == form.default_language"
                                                     :value="option.id"
                                                 >
                                                     &nbsp; {{ option.value }}
@@ -149,8 +150,10 @@
                     }
                     return '';
                 },
-                set(value) {
-                    this.form.default_language = value;
+                set(languageId) {
+                    this.form.default_language = languageId;
+
+                    this.addSupportedLanguages(languageId);
                 }
             },
         },
@@ -184,6 +187,12 @@
                     this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
             }, 750),
+
+            addSupportedLanguages(languageId) {
+                if (!this.form.languages.includes(languageId)) {
+                    this.form.languages.push(languageId);
+                }
+            },
         },
     };
 </script>
