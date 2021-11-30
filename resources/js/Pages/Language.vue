@@ -49,6 +49,12 @@
                         </div>
 
                         <div class="columns mt-2 is-multiline">
+                            <div class="column is-full">
+                                <sdb-label>
+                                    {{ trans.labels["Supported Languages"] }}
+                                </sdb-label>
+                            </div>
+
                             <div
                                 v-for="option in sortedLanguageOptions"
                                 :key="option.id"
@@ -86,6 +92,7 @@
     import SdbDropdownItem from '@/Sdb/DropdownItem';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbFormDropdownSearch from '@/Sdb/Form/DropdownSearch';
+    import SdbLabel from '@/Sdb/Label';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { debounce, filter, find, isEmpty, sortBy } from 'lodash';
@@ -100,6 +107,7 @@
             SdbDropdownItem,
             SdbErrorNotifications,
             SdbFormDropdownSearch,
+            SdbLabel,
         },
 
         mixins: [
@@ -131,6 +139,11 @@
                 isProcessing: false,
                 loader: null,
                 filteredLanguages: this.languageOptions.slice(0, 10),
+                trans: {
+                    labels: {
+                        "Supported Languages": "Supported Languages",
+                    }
+                },
             };
         },
 
