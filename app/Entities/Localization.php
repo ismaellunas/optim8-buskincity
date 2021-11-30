@@ -8,7 +8,6 @@ use App\Services\{
 };
 use Illuminate\Support\Collection;
 use Mcamara\LaravelLocalization\LaravelLocalization;
-use Mcamara\LaravelLocalization\Exceptions\SupportedLocalesNotDefined;
 
 class Localization extends LaravelLocalization
 {
