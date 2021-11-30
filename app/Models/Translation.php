@@ -15,13 +15,6 @@ class Translation extends Model
         'key',
         'value',
     ];
-    protected $appends = ["isEdit"];
-
-    // Accessor
-    public function getIsEditAttribute()
-    {
-        return false;
-    }
 
     // Scope
     public function scopeActive($query)
