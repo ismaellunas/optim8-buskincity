@@ -17,8 +17,8 @@ class CreateTranslationsTable extends Migration {
 	    $table->collation = 'utf8mb4_bin';
             $table->bigIncrements('id');
             $table->integer('status')->default(1);
-            $table->string('locale', 255);
-            $table->string('group', 255);
+            $table->string('locale', 15);
+            $table->string('group', 127);
             $table->text('key');
             $table->text('value')->nullable();
             $table->timestamps();

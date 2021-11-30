@@ -30,12 +30,12 @@ class TranslationRequest extends FormRequest
         return [
             'locale' => [
                 'required',
-                'max: 255',
+                'max: 15',
                 Rule::in($locale)
             ],
             'group' => [
                 'required',
-                'max: 255',
+                'max: 127',
                 Rule::in($group)
             ],
             'key' => [
