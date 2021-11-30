@@ -12,7 +12,7 @@
                 <div class="column">
                     <sdb-form-select
                         v-model="locale"
-                        label="Locale"
+                        label="Language"
                         @change="search"
                     >
                         <option
@@ -50,7 +50,7 @@
                             <th>Group</th>
                             <th>Key</th>
                             <th v-if="locale !== defaultLocale">
-                                {{ defaultLocale.toUpperCase() + " Value" }}
+                                English Value
                             </th>
                             <th>Value</th>
                             <th>
@@ -124,7 +124,10 @@
                     </tbody>
                 </table>
             </div>
-            <sdb-pagination :links="records.links" />
+            <sdb-pagination
+                :links="records.links"
+                :query-params="queryParams"
+            />
         </div>
     </app-layout>
 </template>
@@ -165,6 +168,10 @@
                 type: String,
                 required: true,
             },
+            defaultLocale: {
+                type: String,
+                required: true,
+            },
             groupOptions: {
                 type: Array,
                 default:() => [],
@@ -192,7 +199,6 @@
                 {},
                 props.pageQueryParams
             );
-            const defaultLocale = usePage().props.value.defaultLanguage;
             const form = {
                 id: null,
                 locale: null,
@@ -203,7 +209,7 @@
 
             return {
                 group: ref(props.pageQueryParams?.group ?? ""),
-                locale: ref(props.pageQueryParams?.locale ?? defaultLocale),
+                locale: ref(props.pageQueryParams?.locale ?? props.defaultLocale),
                 queryParams: ref(queryParams),
                 form: useForm(form),
             };
@@ -211,7 +217,6 @@
 
         data() {
             return {
-                defaultLocale: "en",
                 selectedIndex: null,
             };
         },
