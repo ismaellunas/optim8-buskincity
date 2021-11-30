@@ -107,7 +107,10 @@
                     </tbody>
                 </table>
             </div>
-            <sdb-pagination :links="records.links" />
+            <sdb-pagination
+                :links="records.links"
+                :query-params="queryParams"
+            />
         </div>
     </app-layout>
 </template>
