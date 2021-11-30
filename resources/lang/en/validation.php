@@ -163,6 +163,8 @@ return [
         'alt' => 'Alternative Text',
         'description' => 'Description',
         'scheduled_at' => 'Scheduled At',
+        'default_language' => 'Default Language',
+        'languages' => 'Languages',
     ],
 
 ];
