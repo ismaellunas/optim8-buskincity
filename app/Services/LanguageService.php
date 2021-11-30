@@ -8,12 +8,11 @@ use Illuminate\Support\Collection;
 
 class LanguageService
 {
-    public function getShownLanguageOptions(): array
+    public function getShownLanguageOptions(): Collection
     {
         return Language::shown()
             ->get(['id', 'name'])
-            ->asOptions('id', 'name')
-            ->all();
+            ->asOptions('id', 'name');
     }
 
     public function sync(array $languageIds): void
