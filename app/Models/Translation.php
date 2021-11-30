@@ -9,7 +9,6 @@ class Translation extends Model
 {
     use HasFactory;
 
-    protected $table = 'ltm_translations';
     protected $fillable = [
         'locale',
         'group',
