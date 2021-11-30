@@ -34,6 +34,8 @@
             <script src="{{ mix('js/local.js') }}" defer></script>
         @endenv
 
+        <script src="https://unpkg.com/vue@next"></script>
+
         @stack('scripts')
 
         {!! $trackingCodeInsideHead !!}
@@ -149,6 +151,9 @@
             <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>
         @endenv
 
+        @stack('bottom_scripts')
+
         {!! $trackingCodeBeforeBody !!}
     </body>
+
 </html>
