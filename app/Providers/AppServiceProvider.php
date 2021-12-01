@@ -2,10 +2,14 @@
 
 namespace App\Providers;
 
-use App\Entities\Caches\MenuCache;
-use App\Entities\Caches\SettingCache;
-use App\Services\SettingService;
-use App\Services\LanguageService;
+use App\Entities\Caches\{
+    MenuCache,
+    SettingCache
+};
+use App\Services\{
+    LanguageService,
+    SettingService
+};
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\ServiceProvider;
 
