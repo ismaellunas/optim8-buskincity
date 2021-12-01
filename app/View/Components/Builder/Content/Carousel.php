@@ -26,7 +26,6 @@ class Carousel extends BaseContent
         $this->images = $images;
         $this->carouselImages = $this->getCarouselImages();
         $this->numberOfSliders = $this->numberOfSliders();
-        //dd($this->carouselImages);
     }
 
     public function ratio(): string

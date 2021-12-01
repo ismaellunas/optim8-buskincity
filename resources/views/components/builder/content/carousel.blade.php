@@ -48,10 +48,10 @@
     @endpush
 @endonce
 
-<div class="counter container">
+<div class="carousel-container container">
     <figure class="carousel is-relative is-clipped has-background-grey-lighter image {{ $ratio }}">
-        @foreach($carouselImages as $carousel)
-            <div class="carousel-slide">
+        @foreach($carouselImages as $key => $carousel)
+            <div class="carousel-slide {{ $key !== 0 ? 'is-hidden' : '' }}" data-index="{{ $key }}">
                 <x-image
                     :media="$carousel"
                     :locale="$locale"
@@ -63,19 +63,25 @@
         @endforeach
         <div class="level is-overlay">
             <div class="level-item is-justify-content-start">
-                <span class="icon carousel-button has-text-info is-size-3 ml-5">
+                <span
+                    class="icon carousel-button has-text-info is-size-3 ml-5"
+                    @click="prevSlide"
+                >
                     <i class="fa fa-chevron-left"></i>
                 </span>
             </div>
             <div class="level-item is-align-items-end mb-4" style="height: 100%">
                 <div class="carousel-indicator">
                     @for ($i = 0; $i < $numberOfSliders; $i++)
-                        <div class="carousel-indicator-item has-background-info"> </div>
+                        <div class="carousel-indicator-item has-background-info"></div>
                     @endfor
                 </div>
             </div>
             <div class="level-item is-justify-content-end">
-                <span class="icon carousel-button has-text-info is-size-3 mr-5">
+                <span
+                    class="icon carousel-button has-text-info is-size-3 mr-5"
+                    @click="nextSlide"
+                >
                     <i class="fa fa-chevron-right"></i>
                 </span>
             </div>
@@ -86,16 +92,40 @@
 @once
     @push('bottom_scripts')
     <script>
-        const Counter = {
-        data() {
-            return {
-                    counter: "test",
-                    counter2: "test2",
+        const Carousel = {
+            data() {
+                return {
+                    direction: 'left',
+                    entityImages: {!! json_encode($carouselImages) !!},
+                    visibleSlide: 0,
+                    index: 0,
                 }
+            },
+            props: ['index'],
+            methods: {
+                prevSlide() {
+                    if (this.visibleSlide <= 0) {
+                        this.visibleSlide = this.entityImages.length - 1;
+                    } else {
+                        this.visibleSlide--;
+                    }
+                    this.direction = 'right';
+                },
+                nextSlide() {
+                    if (this.visibleSlide >= this.entityImages.length - 1) {
+                        this.visibleSlide = 0;
+                    } else {
+                        this.visibleSlide++;
+                    }
+                    this.direction = 'left';
+                },
+            },
+            created() {
+                //alert('hello')
+                console.log(this.entityImages);
             }
         }
-        console.log(document.getElementsByClassName('counter').length);
-        Vue.createApp(Counter).mount('.counter')
+        Vue.createApp(Carousel).mount('.carousel-container')
     </script>
     @endpush
 @endonce
