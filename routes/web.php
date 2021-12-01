@@ -1,13 +1,12 @@
 <?php
 
+use App\Facades\Localization;
 use App\Http\Controllers\{
     ChangeLanguageController,
     Frontend\PageController,
     Frontend\PostController,
     Frontend\PostCategoryController
 };
-use App\Services\TranslationService as TranslationSv;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
@@ -34,10 +33,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/user/profile', function () {
         return redirect()->route('dashboard');
     })->name('profile.show');
-});
-
-Route::get('/', function () {
-    return redirect(TranslationSv::currentLanguage());
 });
 
 Route::get('language/{new_locale}', ChangeLanguageController::class)
@@ -67,11 +62,10 @@ Route::get('test-theme', function () {
 });
 
 Route::group([
-    'prefix' => '{locale}',
-    'where' => ['locale' => '[a-zA-Z]{2}'],
-    'middleware' => 'setLocale',
+    'prefix' => Localization::setLocale(),
+    'middleware' => [ 'localizationRedirect' ]
 ], function () {
-    Route::view('/', 'home', ['title' => 'Test Home Blade']);
+    Route::view('/', 'home', ['title' => 'Test Home Blade'])->name('homepage');
 
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');

@@ -1,4 +1,4 @@
-<x-layouts.home>
+<x-layouts.master>
     @push('metas')
         <meta head-key="description" name="description" content="{{ config('app.name') }}" />
     @endpush
@@ -26,5 +26,4 @@
             Hello there
         </div>
     </section>
-
-</x-layouts.home>
+</x-layouts.master>

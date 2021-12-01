@@ -1,7 +1,7 @@
 @aware(['locale' => ''])
 
 <div {{ $attributes->class($wrapperClasses) }} >
-    <div class="{{ implode(' ', $classes) }}">
+    <div @class(array_merge(['content'], $classes)) >
         {!! $entity['content']['html'] !!}
     </div>
 </div>

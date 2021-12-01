@@ -1,4 +1,4 @@
-<x-layouts.home>
+<x-layouts.master>
     @push('metas')
         <meta head-key="description"
             name="description"
@@ -27,4 +27,4 @@
             @endforeach
         </div>
     </section>
-</x-layouts.home>
+</x-layouts.master>

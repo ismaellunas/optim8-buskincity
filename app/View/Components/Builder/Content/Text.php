@@ -15,8 +15,17 @@ class Text extends BaseContent
     {
         parent::__construct($entity);
 
-        if ($entity['config']) {
-            $this->classes = $entity['config']['text'] ?? [];
-        }
+        $this->classes = $this->getClasses();
+    }
+
+    private function getClasses(): array
+    {
+        $textConfig = $this->entity['config']['text'] ?? [];
+        $classes = collect();
+
+        $classes->push($textConfig['size'] ?? null);
+        $classes->push($textConfig['alignment'] ?? null);
+
+        return $classes->filter()->all();
     }
 }
