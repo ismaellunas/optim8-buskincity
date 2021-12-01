@@ -14,7 +14,9 @@ class TranslationSeeder extends Seeder
     private $app;
     private $files;
 
-    public function __construct(Application $app, Filesystem $files)
+    public function __construct(
+        Application $app,
+        Filesystem $files)
     {
         $this->app = $app;
         $this->files = $files;
@@ -24,11 +26,9 @@ class TranslationSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(?bool $replace = true)
     {
-        // Set true if data will be replace existing translations
-        // Set false if data will be append new translations
-        $this->importTranslations(true);
+        $this->importTranslations($replace);
     }
 
     private function importTranslations($replace = false)
@@ -75,7 +75,7 @@ class TranslationSeeder extends Seeder
         ]);
 
         // Only replace when empty, or explicitly told so
-        if ($replace || ! $translation->value) {
+        if ($replace || !$translation->value) {
             $translation->value = $value;
         }
 
