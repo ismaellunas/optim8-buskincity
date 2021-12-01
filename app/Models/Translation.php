@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\TranslationLoader\TranslationLoaders\TranslationLoader;
 
-class Translation extends Model
+class Translation extends Model implements TranslationLoader
 {
     use HasFactory;
 
@@ -15,6 +16,26 @@ class Translation extends Model
         'key',
         'value',
     ];
+
+    // Method from TranslationLoader-Interface
+    public function loadTranslations(string $locale, string $group): array
+    {
+        return self::select([
+                'locale',
+                'group',
+                'key',
+                'value',
+            ])
+            ->where('locale', $locale)
+            ->when($group, function ($query) use ($group) {
+                if ($group !== "*") {
+                    return $query->where('group', $group);
+                }
+            })
+            ->get()
+            ->pluck('value', 'key')
+            ->toArray();
+    }
 
     // Scope
     public function scopeActive($query)
