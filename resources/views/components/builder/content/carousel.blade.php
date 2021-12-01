@@ -48,19 +48,26 @@
     @endpush
 @endonce
 
-<div class="carousel-container container">
+<div id="{{ $uid }}" class="carousel-container container">
     <figure class="carousel is-relative is-clipped has-background-grey-lighter image {{ $ratio }}">
-        @foreach($carouselImages as $key => $carousel)
-            <div class="carousel-slide {{ $key !== 0 ? 'is-hidden' : '' }}" data-index="{{ $key }}">
-                <x-image
-                    :media="$carousel"
-                    :locale="$locale"
-                    :ratio="$ratio"
-                    :rounded="null"
-                    :square="null"
-                />
+        <transition
+            v-for="(entityImage, index) in entityImages"
+            :name="direction"
+            mode="in-out"
+        >
+            <div
+                v-show="visibleSlide === index"
+                class="carousel-slide"
+            >
+                <figure :class="figureClasses">
+                    <img
+                        :alt="entityImage.alt"
+                        :src="entityImage.file_url"
+                    />
+                </figure>
             </div>
-        @endforeach
+        </transition>
+
         <div class="level is-overlay">
             <div class="level-item is-justify-content-start">
                 <span
@@ -70,13 +77,19 @@
                     <i class="fa fa-chevron-left"></i>
                 </span>
             </div>
+
             <div class="level-item is-align-items-end mb-4" style="height: 100%">
                 <div class="carousel-indicator">
-                    @for ($i = 0; $i < $numberOfSliders; $i++)
-                        <div class="carousel-indicator-item has-background-info"></div>
-                    @endfor
+                    <div
+                        v-for="(total, index) in entityImages.length"
+                        :key="index"
+                        :class="{ active: visibleSlide === index }"
+                        class="carousel-indicator-item has-background-info"
+                    >
+                    </div>
                 </div>
             </div>
+
             <div class="level-item is-justify-content-end">
                 <span
                     class="icon carousel-button has-text-info is-size-3 mr-5"
@@ -96,12 +109,12 @@
             data() {
                 return {
                     direction: 'left',
-                    entityImages: {!! json_encode($carouselImages) !!},
+                    entityImages: [],
+                    config: {},
                     visibleSlide: 0,
                     index: 0,
                 }
             },
-            props: ['index'],
             methods: {
                 prevSlide() {
                     if (this.visibleSlide <= 0) {
@@ -120,12 +133,27 @@
                     this.direction = 'left';
                 },
             },
-            created() {
-                //alert('hello')
-                console.log(this.entityImages);
-            }
-        }
-        Vue.createApp(Carousel).mount('.carousel-container')
+            computed: {
+                figureClasses() {
+                    const classes = ['image'];
+                    classes.push(this.config.ratio ?? null);
+                    return classes.filter(Boolean);
+                },
+            },
+            mounted() {
+                setInterval(() => {
+                    if (this.config.autoPlay) this.nextSlide();
+                }, 6000);
+            },
+        };
     </script>
     @endpush
 @endonce
+
+@push('bottom_scripts')
+<script>
+    var Carousel_{{ $uid }} = Vue.createApp(Carousel).mount('#{{ $uid }}');
+    Carousel_{{ $uid }}.$data.entityImages = {{ Illuminate\Support\Js::from($carouselImages) }};
+    Carousel_{{ $uid }}.$data.config = {{ Illuminate\Support\Js::from($config) }};
+</script>
+@endpush

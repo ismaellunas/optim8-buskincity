@@ -2,15 +2,17 @@
 
 namespace App\View\Components\Builder\Content;
 
-use App\Models\Media;
 use Illuminate\Support\Collection;
 
 class Carousel extends BaseContent
 {
+    public $uid;
+    public $config;
     public $locale;
     public $images;
     public $carouselImages = [];
     public $numberOfSliders = 0;
+
     /**
      * Create a new component instance.
      *
@@ -23,9 +25,11 @@ class Carousel extends BaseContent
     ) {
         parent::__construct($entity);
 
+        $this->uid = $this->entity['id'];
         $this->images = $images;
         $this->carouselImages = $this->getCarouselImages();
         $this->numberOfSliders = $this->numberOfSliders();
+        $this->config = $this->entity['config']['carousel'];
     }
 
     public function ratio(): string
