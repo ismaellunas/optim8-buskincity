@@ -95,14 +95,12 @@ return [
         'de'
     ],
 
-    'settings' => [
-        'translations' => [
-            'groups' => [
-                'auth',
-                'pagination',
-                'passwords',
-                'validation',
-            ]
+    'translations' => [
+        'groups' => [
+            'auth',
+            'pagination',
+            'passwords',
+            'validation',
         ]
     ]
 ];

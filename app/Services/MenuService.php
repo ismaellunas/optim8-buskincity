@@ -226,9 +226,9 @@ class MenuService
                             'isEnabled' => $user->can('system.language'),
                         ],
                         [
-                            'title' => 'Translations',
-                            'link' => route('admin.settings.translations.edit'),
-                            'isActive' => $request->routeIs('admin.settings.translations.edit'),
+                            'title' => 'Translation Manager',
+                            'link' => route('admin.settings.translation-manager.edit'),
+                            'isActive' => $request->routeIs('admin.settings.translation-manager.edit'),
                             'isEnabled' => $user->can('system.translation'),
                         ],
                     ],
