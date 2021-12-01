@@ -4,7 +4,7 @@ namespace App\View\Components\Builder\Content;
 
 use App\View\Components\Builder\Content\Heading;
 
-class Faq extends BaseContent
+class Faq extends Heading
 {
     public $headingClasses = [];
     public $headingTag = 'h1';
@@ -19,10 +19,9 @@ class Faq extends BaseContent
     {
         parent::__construct($entity);
 
-        $heading = new Heading($entity);
-        $this->headingClasses = $heading->headingClasses;
-        $this->headingTag = $heading->headingTag;
-        $this->headingContent = $heading->contentHtml();
+        $this->headingClasses = $this->headingClasses;
+        $this->headingTag = $this->headingTag;
+        $this->headingContent = $this->contentHtml();
 
         $this->faqContents = $this->getFaqContents();
     }
