@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\Caches\TranslationCache;
 use App\Http\Requests\TranslationRequest;
 use App\Models\Translation;
 use App\Traits\FlashNotifiable;
@@ -17,10 +18,14 @@ class TranslationManagerController extends Controller
     use FlashNotifiable;
 
     private $baseRouteName ="admin.settings.translation-manager";
+    private $translationManagerCache;
     private $translationManagerService;
 
-    public function __construct(TranslationManagerService $translationManagerService)
-    {
+    public function __construct(
+        TranslationCache $translationCache,
+        TranslationManagerService $translationManagerService
+    ) {
+        $this->translationManagerCache = $translationCache;
         $this->translationManagerService = $translationManagerService;
     }
 
@@ -44,11 +49,16 @@ class TranslationManagerController extends Controller
     {
         $inputs = $request->validated();
 
-        Translation::updateOrCreate(
+        $translation = Translation::updateOrCreate(
             [
                 "id" => $request->id
             ],
             $inputs
+        );
+
+        $this->translationManagerCache->flushGroup(
+            $translation->locale,
+            $translation->group
         );
 
         $this->generateFlashMessage('Translation updated successfully!');
