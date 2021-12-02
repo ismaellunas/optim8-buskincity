@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use App\Entities\Caches\MenuCache;
-use App\Entities\Caches\SettingCache;
+use App\Entities\Caches\{
+    MenuCache,
+    SettingCache
+};
 use App\Services\{
     LanguageService,
     MenuService,

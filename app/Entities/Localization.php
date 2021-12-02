@@ -6,6 +6,7 @@ use App\Services\{
     LanguageService,
     TranslationService
 };
+use Illuminate\Support\Collection;
 use Mcamara\LaravelLocalization\LaravelLocalization;
 use Mcamara\LaravelLocalization\Exceptions\SupportedLocalesNotDefined;
 
@@ -24,10 +25,16 @@ class Localization extends LaravelLocalization
             return $this->supportedLocales;
         }
 
-        $languageService = new LanguageService();
-        $locales = $this->setSupportedLocaleFormat($languageService->getSupportedLanguages());
+        $languageService = app(LanguageService::class);
+        $supportedLanguages = $languageService->getSupportedLanguages();
 
-        if (empty($locales) || ! is_array($locales)) {
+        if (! $supportedLanguages->isEmpty()) {
+            $locales = $this->formatSupportedLocale($languageService->getSupportedLanguages());
+        } else {
+            $locales = $this->getDefaultSupportedLocales();
+        }
+
+        if (empty($locales) || !is_array($locales)) {
             throw new SupportedLocalesNotDefined();
         }
 
@@ -36,9 +43,9 @@ class Localization extends LaravelLocalization
         return $locales;
     }
 
-    private function setSupportedLocaleFormat($locales): array
+    private function formatSupportedLocale(Collection $locales): array
     {
-        $locales = collect($locales)
+        return $locales
             ->map(function ($language) {
                 return [
                     'code' => $language->code,
@@ -50,7 +57,18 @@ class Localization extends LaravelLocalization
             })
             ->keyBy('code')
             ->toArray();
+    }
 
-        return $locales;
+    private function getDefaultSupportedLocales(): array
+    {
+        return [
+            config('app.fallback_locale') => [
+                'code' => config('app.fallback_locale'),
+                'name' => config('app.fallback_locale'),
+                'script' => '',
+                'native' => '',
+                'regional' => config('app.fallback_locale'),
+            ]
+        ];
     }
 }

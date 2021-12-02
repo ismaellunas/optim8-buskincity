@@ -16,6 +16,7 @@ use App\Http\Controllers\{
     ThemeFooterMenuController,
     ThemeHeaderController,
     ThemeHeaderMenuController,
+    TranslationManagerController,
     UserController,
     UserRoleController,
 };
@@ -97,6 +98,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             ->name('languages.edit');
         Route::post('/languages', [LanguageController::class, 'update'])
             ->name('languages.update');
+
+        Route::get('/translation-manager', [TranslationManagerController::class, 'edit'])
+            ->name('translation-manager.edit');
+        Route::post('/translation-manager', [TranslationManagerController::class, 'update'])
+            ->name('translation-manager.update');
+        Route::post('/translation-manager/clear/{translation}', [TranslationManagerController::class, 'clear'])
+            ->name('translation-manager.clear');
     });
 });
 
