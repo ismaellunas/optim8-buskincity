@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Entities\CloudinaryStorage;
 use App\Entities\Caches\SettingCache;
+use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
 use App\Models\{
     Media,
@@ -52,6 +52,27 @@ class SettingService
         return app(SettingCache::class)->remember('additional_javascript_url', function () {
             return Setting::key(self::getAdditionalCodeFileKey('additional_javascript'))
                 ->value('value');
+        });
+    }
+
+    public function getTrackingCodeInsideHead(): ?string
+    {
+        return app(SettingCache::class)->remember('tracking_code_inside_head', function () {
+            return Setting::key('tracking_code_inside_head')->value('value');
+        });
+    }
+
+    public function getTrackingCodeAfterBody(): ?string
+    {
+        return app(SettingCache::class)->remember('tracking_code_after_body', function () {
+            return Setting::key('tracking_code_after_body')->value('value');
+        });
+    }
+
+    public function getTrackingCodeBeforeBody(): ?string
+    {
+        return app(SettingCache::class)->remember('tracking_code_before_body', function () {
+            return Setting::key('tracking_code_before_body')->value('value');
         });
     }
 
