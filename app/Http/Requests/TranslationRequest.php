@@ -28,22 +28,42 @@ class TranslationRequest extends FormRequest
         $group = config('constants.translations.groups');
 
         return [
-            'locale' => [
+            'translations.*.locale' => [
                 'required',
                 'max: 15',
                 Rule::in($locale)
             ],
-            'group' => [
+            'translations.*.group' => [
                 'required',
                 'max: 127',
                 Rule::in($group)
             ],
-            'key' => [
+            'translations.*.key' => [
                 'required'
             ],
-            'value' => [
-                'nullable'
+            'translations.*.value' => [
+                'nullable',
+                'required'
             ],
         ];
+    }
+
+    public function attributes(): array
+    {
+        $attr = [];
+        $columns = [
+            'locale',
+            'group',
+            'key',
+            'value',
+        ];
+
+        foreach ($columns as $column) {
+            foreach ($this['translations'] as $index => $value) {
+                $attr["translations.".$index.".".$column] = ucwords(str_replace('_', ' ', $column));
+            }
+        }
+
+        return $attr;
     }
 }
