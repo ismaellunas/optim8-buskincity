@@ -25,7 +25,7 @@ class LanguageRequest extends FormRequest
      */
     public function rules()
     {
-        $languageIds = collect(app(LanguageService::class)->getShownLanguageOptions())
+        $languageIds = app(LanguageService::class)->getShownLanguageOptions()
             ->pluck('id')
             ->all();
 
@@ -37,8 +37,15 @@ class LanguageRequest extends FormRequest
                 Rule::in($languageIds),
             ],
             'default_language' => [
-                Rule::in($languageIds),
+                'in_array:languages.*',
             ]
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'languages.*' => __('validation.attributes.languages'),
         ];
     }
 }
