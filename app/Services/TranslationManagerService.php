@@ -29,6 +29,18 @@ class TranslationManagerService
         );
     }
 
+    public function sycn(array $translations): void
+    {
+        foreach ($translations as $translation) {
+            Translation::updateOrCreate(
+                [
+                    "id" => $translation['id']
+                ],
+                $translation
+            );
+        }
+    }
+
     private function getAllKeyWithGroups(): Collection
     {
         return Translation::select('key', 'group')

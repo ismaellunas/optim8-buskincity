@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TranslationRequest;
-use App\Models\Translation;
 use App\Traits\FlashNotifiable;
 use App\Services\{
     TranslationManagerService,
@@ -42,14 +41,9 @@ class TranslationManagerController extends Controller
 
     public function update(TranslationRequest $request)
     {
-        $inputs = $request->validated();
+        $translations = $request->translations;
 
-        Translation::updateOrCreate(
-            [
-                "id" => $request->id
-            ],
-            $inputs
-        );
+        $this->translationManagerService->sycn($translations);
 
         $this->generateFlashMessage('Translation updated successfully!');
 
