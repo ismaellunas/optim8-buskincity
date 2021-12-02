@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Entities\Caches\TranslationCache;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\TranslationLoader\TranslationLoaders\TranslationLoader;
@@ -10,7 +11,6 @@ class Translation extends Model implements TranslationLoader
 {
     use HasFactory;
 
-    protected $table = 'ltm_translations';
     protected $fillable = [
         'locale',
         'group',
@@ -21,21 +21,29 @@ class Translation extends Model implements TranslationLoader
     // Method from TranslationLoader-Interface
     public function loadTranslations(string $locale, string $group): array
     {
-        return self::select([
-                'locale',
-                'group',
-                'key',
-                'value',
-            ])
-            ->where('locale', $locale)
-            ->when($group, function ($query) use ($group) {
-                if ($group !== "*") {
-                    return $query->where('group', $group);
-                }
-            })
-            ->get()
-            ->pluck('value', 'key')
-            ->toArray();
+        $translationCache = app(TranslationCache::class);
+
+        return $translationCache->remember(
+            $locale,
+            $group,
+            function () use ($locale, $group) {
+                return self::select([
+                        'locale',
+                        'group',
+                        'key',
+                        'value',
+                    ])
+                    ->where('locale', $locale)
+                    ->when($group, function ($query) use ($group) {
+                        if ($group !== "*") {
+                            return $query->where('group', $group);
+                        }
+                    })
+                    ->get()
+                    ->pluck('value', 'key')
+                    ->toArray();
+            }
+        );
     }
 
     // Scope
