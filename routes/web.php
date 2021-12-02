@@ -7,7 +7,6 @@ use App\Http\Controllers\{
     Frontend\PostController,
     Frontend\PostCategoryController
 };
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
@@ -66,14 +65,7 @@ Route::group([
     'prefix' => Localization::setLocale(),
     'middleware' => [ 'localizationRedirect' ]
 ], function () {
-    Route::get('/', function () {
-        return Inertia::render('Welcome', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
-    })->name('homepage');
+    Route::view('/', 'home', ['title' => 'Test Home Blade'])->name('homepage');
 
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');

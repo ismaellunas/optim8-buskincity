@@ -6,6 +6,7 @@ use App\Services\{
     LanguageService,
     TranslationService
 };
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Mcamara\LaravelLocalization\LaravelLocalization;
 use Mcamara\LaravelLocalization\Exceptions\SupportedLocalesNotDefined;
@@ -15,7 +16,19 @@ class Localization extends LaravelLocalization
     public function __construct()
     {
         parent::__construct();
-        $this->defaultLocale = TranslationService::getDefaultLocale();
+
+        try {
+
+            $this->defaultLocale = TranslationService::getDefaultLocale();
+
+        } catch (QueryException $e) {
+
+            if ($e->getCode() == '42P01') {
+                $this->defaultLocale = config('app.fallback_locale');
+            } else {
+                throw $e;
+            }
+        }
     }
 
     // Override from Mcamara\LaravelLocalization\LaravelLocalization
@@ -26,12 +39,23 @@ class Localization extends LaravelLocalization
         }
 
         $languageService = app(LanguageService::class);
-        $supportedLanguages = $languageService->getSupportedLanguages();
 
-        if (! $supportedLanguages->isEmpty()) {
-            $locales = $this->formatSupportedLocale($languageService->getSupportedLanguages());
-        } else {
-            $locales = $this->getDefaultSupportedLocales();
+        try {
+            $supportedLanguages = $languageService->getSupportedLanguages();
+
+            if (! $supportedLanguages->isEmpty()) {
+                $locales = $this->formatSupportedLocale($supportedLanguages);
+            } else {
+                $locales = $this->getDefaultSupportedLocales();
+            }
+
+        } catch (QueryException $e) {
+
+            if ($e->getCode() == '42P01') {
+                $locales = $this->getDefaultSupportedLocales();
+            } else {
+                throw $e;
+            }
         }
 
         if (empty($locales) || !is_array($locales)) {

@@ -9,7 +9,11 @@ use App\Entities\Caches\{
 };
 use App\Services\{
     LanguageService,
-    SettingService
+    MenuService,
+    PageBuilderService,
+    PageService,
+    SettingService,
+    TranslationService,
 };
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\ServiceProvider;
@@ -20,8 +24,13 @@ class AppServiceProvider extends ServiceProvider
         MenuCache::class => MenuCache::class,
         SettingCache::class => SettingCache::class,
         TranslationCache::class => TranslationCache::class,
+
         LanguageService::class => LanguageService::class,
+        MenuService::class => MenuService::class,
+        PageBuilderService::class => PageBuilderService::class,
+        PageService::class => PageService::class,
         SettingService::class => SettingService::class,
+        TranslationService::class => TranslationService::class,
     ];
 
     /**
