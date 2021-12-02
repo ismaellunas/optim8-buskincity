@@ -11,8 +11,9 @@
             <div class="columns">
                 <div class="column">
                     <sdb-form-select
-                        v-model="setLocale"
+                        v-model="locale"
                         label="Language"
+                        @change="search()"
                     >
                         <option
                             v-for="localeOption in localeOptions"
@@ -24,8 +25,9 @@
                     </sdb-form-select>
 
                     <sdb-form-select
-                        v-model="setGroup"
+                        v-model="group"
                         label="Group"
+                        @change="search()"
                     >
                         <option value="">
                             All
@@ -136,8 +138,10 @@
                 </table>
             </div>
             <sdb-pagination
+                :is-ajax="true"
                 :links="records.links"
                 :query-params="queryParams"
+                @on-clicked-pagination="onClickedPagination"
             />
         </div>
     </app-layout>
@@ -224,63 +228,9 @@
         data() {
             return {
                 selectedIndex: null,
+                eventListener: null,
             };
         },
-
-        computed: {
-            setLocale: {
-                get() {
-                    return this.locale;
-                },
-
-                set(val) {
-                    const oldData = this.locale;
-                    if (this.form.isDirty) {
-                        confirmLeaveProgress().then((result) => {
-                            if (result.isConfirmed) {
-                                this.locale = val;
-                                this.search();
-                            } else {
-                                this.locale = val;
-                                setTimeout(() => {
-                                    this.locale = oldData;
-                                }, 200);
-                            }
-                        });
-                    } else {
-                        this.locale = val;
-                        this.search();
-                    }
-                },
-            },
-
-            setGroup: {
-                get() {
-                    return this.group;
-                },
-
-                set(val) {
-                    const oldData = this.group;
-                    if (this.form.isDirty) {
-                        confirmLeaveProgress().then((result) => {
-                            if (result.isConfirmed) {
-                                this.group = val;
-                                this.search();
-                            } else {
-                                this.group = val;
-                                setTimeout(() => {
-                                    this.group = oldData;
-                                }, 200);
-                            }
-                        });
-                    } else {
-                        this.group = val;
-                        this.search();
-                    }
-                },
-            },
-        },
-
 
         methods: {
             getUseForm() {
@@ -290,9 +240,22 @@
             },
 
             search: debounce(function() {
-                this.queryParams['group'] = this.group;
-                this.queryParams['locale'] = this.locale;
-                this.refreshWithQueryParams();
+                if (this.form.isDirty) {
+                    confirmLeaveProgress().then((result) => {
+                        if (result.isConfirmed) {
+                            this.queryParams['group'] = this.group;
+                            this.queryParams['locale'] = this.locale;
+                            this.refreshWithQueryParams();
+                        } else {
+                            this.group = this.queryParams['group'] ?? "";
+                            this.locale = this.queryParams['locale'] ?? this.defaultLocale;
+                        }
+                    });
+                } else {
+                    this.queryParams['group'] = this.group;
+                    this.queryParams['locale'] = this.locale;
+                    this.refreshWithQueryParams();
+                }
             }, 750),
 
             refreshWithQueryParams() {
@@ -323,14 +286,14 @@
             onSubmit() {
                 const self = this;
 
-                this.form.post(route(this.baseRouteName+'.update'), {
+                self.form.post(route(self.baseRouteName+'.update'), {
                     preserveScroll: false,
                     onStart: () => {
                         self.loader = self.$loading.show();
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
-                        self.form = this.getUseForm();
+                        self.form = self.getUseForm();
                         self.selectedIndex = null;
                     },
                     onFinish: () => {
@@ -349,6 +312,33 @@
                         self.form.translations[index].value = null;
                     }
                 });
+            },
+
+            onClickedPagination(url) {
+                if (this.form.isDirty) {
+                    confirmLeaveProgress().then((result) => {
+                        if (result.isConfirmed) {
+                            this.refreshPagination(url);
+                        }
+                    });
+                } else {
+                    this.refreshPagination(url);
+                }
+            },
+
+            refreshPagination(url) {
+                this.$inertia.get(
+                    url,
+                    {},
+                    {
+                        replace: true,
+                        preserveState: true,
+                        onFinish: () => {
+                            this.form = this.getUseForm();
+                            this.selectedIndex = null;
+                        },
+                    }
+                );
             },
         },
     }
