@@ -55,14 +55,4 @@ class TranslationManagerController extends Controller
 
         return redirect()->back();
     }
-
-    public function clear(Translation $translation)
-    {
-        $translation->value = null;
-        $translation->save();
-
-        $this->generateFlashMessage('Translation cleared successfully!');
-
-        return redirect()->back();
-    }
 }
