@@ -18,8 +18,9 @@ class TranslationManagerController extends Controller
     private $baseRouteName ="admin.settings.translation-manager";
     private $translationManagerService;
 
-    public function __construct(TranslationManagerService $translationManagerService)
-    {
+    public function __construct(
+        TranslationManagerService $translationManagerService
+    ) {
         $this->translationManagerService = $translationManagerService;
     }
 

@@ -43,7 +43,6 @@ class TranslationRequest extends FormRequest
             ],
             'translations.*.value' => [
                 'nullable',
-                'required'
             ],
         ];
     }

@@ -2,14 +2,22 @@
 
 namespace App\Services;
 
+use App\Entities\Caches\TranslationCache;
 use App\Models\Translation;
-use Illuminate\Support\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
+use Illuminate\Support\Collection;
 
 class TranslationManagerService
 {
     public $defaultLocale = 'en';
+    private $translationManagerCache;
+
+    public function __construct(
+        TranslationCache $translationCache,
+    ) {
+        $this->translationManagerCache = $translationCache;
+    }
 
     public function getRecords(
         string $locale = null,
@@ -32,11 +40,16 @@ class TranslationManagerService
     public function sycn(array $translations): void
     {
         foreach ($translations as $translation) {
-            Translation::updateOrCreate(
+            $newTranslation = Translation::updateOrCreate(
                 [
                     "id" => $translation['id']
                 ],
                 $translation
+            );
+
+            $this->translationManagerCache->flushGroup(
+                $newTranslation->locale,
+                $newTranslation->group
             );
         }
     }
