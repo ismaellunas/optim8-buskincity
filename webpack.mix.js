@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const { exec } = require('child_process');
 
 /*
  |--------------------------------------------------------------------------
@@ -26,6 +27,17 @@ if (mix.inProduction()) {
 } else {
     mix.copy('node_modules/vue-loading-overlay/dist/vue-loading.css', 'public/css');
     mix.js('resources/js/local.js', 'public/js');
+
+    mix.after(() => {
+        exec('php artisan optimize:clear', (error, stdout, stderr) => {
+            if (error) {
+                console.error(`exec error: ${error}`);
+                return;
+            }
+            console.log(`stdout: ${stdout}`);
+            console.error(`stderr: ${stderr}`);
+        });
+    });
 
     mix.browserSync({
         proxy: 'http://localhost:8000'
