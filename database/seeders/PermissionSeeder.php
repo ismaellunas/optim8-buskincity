@@ -52,6 +52,7 @@ class PermissionSeeder extends Seeder
 
             'system.dashboard',
             'system.language',
+            'system.translation',
             'system.theme',
 
             /*  BREAD:

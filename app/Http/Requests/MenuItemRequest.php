@@ -55,4 +55,28 @@ class MenuItemRequest extends FormRequest
             ],
         ];
     }
+
+    public function messages()
+    {
+        $typeValue = __(MenuItem::TYPE_VALUES[$this->get('type')] ?? "");
+        $otherAttribute = __('Type');
+
+        return [
+            'page_id.required_if' => __('validation.required_if', [
+                'attribute' => __('Page'),
+                'other' => $otherAttribute,
+                'value' => $typeValue,
+            ]),
+            'post_id.required_if' => __('validation.required_if', [
+                'attribute' => __('Post'),
+                'other' => $otherAttribute,
+                'value' => $typeValue,
+            ]),
+            'category_id.required_if' => __('validation.required_if', [
+                'attribute' => __('Category'),
+                'other' => $otherAttribute,
+                'value' => $typeValue,
+            ])
+        ];
+    }
 }
