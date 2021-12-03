@@ -74,12 +74,14 @@
                                 />
                             </td>
                             <td>
-                                <sdb-button
-                                    v-for="translation in page.translations"
-                                    @click="openShow(translation.locale, page)"
-                                    class="is-info px-2 mr-1 is-small">
-                                    {{ translation.locale?.toUpperCase() }}
-                                </sdb-button>
+                                <div class="buttons">
+                                    <sdb-button
+                                        v-for="translation in page.translations"
+                                        @click="openShow(translation.locale, page)"
+                                        class="is-info px-2 mr-1 is-small">
+                                        {{ translation.locale?.toUpperCase() }}
+                                    </sdb-button>
+                                </div>
                             </td>
                             <td>
                                 <div class="level-right">
@@ -124,7 +126,7 @@
     import SdbFlashNotifications from '@/Sdb/FlashNotifications';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbTag from '@/Sdb/Tag';
-    import { merge } from 'lodash';
+    import { merge, filter } from 'lodash';
     import { ref } from 'vue';
 
     export default {
@@ -166,13 +168,9 @@
             },
             openShow(locale, page) {
                 if (this.can.read) {
-                    window.open(
-                        route('frontend.pages.show', {
-                            locale: locale,
-                            page_translation: page.slug
-                        }),
-                        "_blank"
-                    );
+                    let showUrl = this.getShowUrl(locale, page);
+
+                    window.open(showUrl, "_blank");
                 }
             },
             statusClass(status) {
@@ -183,6 +181,23 @@
                 };
                 return statusClass;
             },
+
+            getShowUrl(locale, page) {
+                let translation = filter(page.translations, { 'locale': locale });
+                let showUrl = null;
+                let defaultUrl = route('frontend.pages.show', {
+                    page_translation: translation.length ? translation[0].slug : page.slug
+                });
+                let url = new URL(defaultUrl);
+
+                if (locale !== this.defaultLocale) {
+                    showUrl = defaultUrl.replace(url.pathname, "/"+locale+url.pathname);
+                } else {
+                    showUrl = defaultUrl;
+                }
+
+                return showUrl;
+            }
         },
     }
 </script>
