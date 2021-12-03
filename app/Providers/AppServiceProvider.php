@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
-use App\Entities\Caches\MenuCache;
-use App\Entities\Caches\SettingCache;
+use App\Entities\Caches\{
+    MenuCache,
+    SettingCache,
+    TranslationCache
+};
 use App\Services\{
     LanguageService,
     MenuService,
@@ -20,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public $singletons = [
         MenuCache::class => MenuCache::class,
         SettingCache::class => SettingCache::class,
+        TranslationCache::class => TranslationCache::class,
 
         LanguageService::class => LanguageService::class,
         MenuService::class => MenuService::class,
