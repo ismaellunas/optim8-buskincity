@@ -13,6 +13,7 @@
         'APP_ENV',
         'APP_KEY',
         'APP_NAME',
+        'APP_URL',
         'CACHE_DRIVER',
         'CLOUDINARY_NOTIFICATION_URL',
         'CLOUDINARY_UPLOAD_PRESET',
