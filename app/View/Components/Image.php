@@ -33,7 +33,7 @@ class Image extends Component
         string $square = null,
         string $src = null,
         string $locale = null,
-        Media $media = null
+        $media = null
     ) {
         $this->_alt = $alt;
         $this->_src = $src;
@@ -62,11 +62,19 @@ class Image extends Component
 
     public function alt(): ?string
     {
-        if ($this->_alt) {
+        if (!empty($this->_alt)) {
+
             return $this->_alt;
-        } elseif ($this->media) {
-            return $this->media->translate($this->locale, true)->alt;
+
+        } elseif (!empty($this->media)) {
+
+            $translation = $this->media->translate($this->locale, true);
+
+            if (!empty($translation)) {
+                return $this->media->translate($this->locale, true)->alt;
+            }
         }
+
         return null;
     }
 
