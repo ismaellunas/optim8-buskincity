@@ -73,12 +73,9 @@ class PageController extends Controller
     }
 
     public function show(
-        Request $request,
         PageTranslation $pageTranslation
     ) {
-        $locale = !$request->has('locale')
-            ? TranslationService::currentLanguage()
-            : $request->locale;
+        $locale = TranslationService::currentLanguage();
 
         if ($pageTranslation->locale != $locale) {
 
