@@ -81,5 +81,9 @@ Route::group([
         ->name('frontend.pages.show');
 
     // Route for Test translation
-    Route::view('/test/translation', 'test.translation');
+    Route::get('/test/translation', function () {
+        return view('test.translation', [
+            'title' => 'Test Translation'
+        ]);
+    })->name('test.translation');
 });
