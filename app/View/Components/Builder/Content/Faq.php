@@ -6,8 +6,6 @@ use App\View\Components\Builder\Content\Heading;
 
 class Faq extends Heading
 {
-    public $headingClasses = [];
-    public $headingTag = 'h1';
     public $headingContent = '';
     public $faqContents = [];
     /**
@@ -19,8 +17,6 @@ class Faq extends Heading
     {
         parent::__construct($entity);
 
-        $this->headingClasses = $this->headingClasses;
-        $this->headingTag = $this->headingTag;
         $this->headingContent = $this->contentHtml();
 
         $this->faqContents = $this->getFaqContents();
