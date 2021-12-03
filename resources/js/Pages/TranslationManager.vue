@@ -228,7 +228,6 @@
         data() {
             return {
                 selectedIndex: null,
-                eventListener: null,
             };
         },
 
