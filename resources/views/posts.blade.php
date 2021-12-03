@@ -25,7 +25,7 @@
                         <div class="field is-horizontal">
                             <div class="field-label is-normal">
                                 <label class="label">
-                                    Search
+                                    {{ __('Search') }}
                                 </label>
                             </div>
                             <div class="field-body">
@@ -36,7 +36,7 @@
                                                 <input
                                                     class="input"
                                                     type="text"
-                                                    placeholder="Search..."
+                                                    placeholder="{{ __('Search') }}..."
                                                     maxlength="255"
                                                     name="term"
                                                     value="{{ request('term') }}"

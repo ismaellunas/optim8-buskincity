@@ -10,14 +10,14 @@
                 href="{{ $paginator->previousPageUrl().$serializedParams }}"
                 @if ($paginator->onFirstPage()) disabled @endif
             >
-                « Previous
+                « {{ __('Previous') }}
             </a>
             <a
                 class="pagination-next"
                 href="{{ $paginator->nextPageUrl().$serializedParams }}"
                 @unless ($paginator->hasMorePages()) disabled @endunless
             >
-                Next »
+                {{ __('Next') }} »
             </a>
 
             <ul class="pagination-list">
