@@ -1,4 +1,4 @@
-<figure @class(array_merge(['image'], $figureClasses)) >
+<figure {{ $attributes->merge(['class' => "image ".implode(' ', $figureClasses)]) }}>
     <img
         @class($imageClasses)
         @if ($alt) alt="{{ $alt }}" @endif
