@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Services\PostService;
 use App\Services\TranslationService;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class PostCategoryController extends Controller
 {
-    protected $baseComponentName = 'Post/Frontend';
-    protected $baseRouteName = 'blog.category';
-    protected $currentLanguage;
-    protected $postService;
+    private $baseRouteName = 'blog.category';
+    private $perPage = 10;
+
+    private $postService;
+    private $translationService;
 
     public function __construct(
         PostService $postService,
@@ -25,19 +25,12 @@ class PostCategoryController extends Controller
 
     public function index(Request $request, $categoryId)
     {
-        return Inertia::render($this->baseComponentName.'/Index', [
-            'baseRouteName' => $this->baseRouteName,
-            'categoryId' => (int)$categoryId,
-            'pageQueryParams' => array_filter($request->only(
-                'term',
-                'view',
-                'status',
-            )),
-            'pageNumber' => $request->page,
-            'currentLanguage' => $this->translationService->currentLanguage(),
+        return view('posts', [
+            'searchRoute' => route($this->baseRouteName.'.index', $categoryId),
+            'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
             'records' => $this->postService->getBlogRecords(
                 $request->term ?? '',
-                10,
+                $this->perPage,
                 $this->translationService->currentLanguage(),
                 $categoryId
             ),
