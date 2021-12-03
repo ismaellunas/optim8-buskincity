@@ -7,7 +7,6 @@
     "require": {
         "php": "^7.3|^8.0",
         "astrotomic/laravel-translatable": "^11.9",
-        "barryvdh/laravel-translation-manager": "^0.5.10",
         "cloudinary-labs/cloudinary-laravel": "^1.0",
         "cviebrock/eloquent-sluggable": "^8.0",
         "doctrine/dbal": "^3.1",

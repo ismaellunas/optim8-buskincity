@@ -10,11 +10,9 @@ use App\Models\{
 use App\Services\TranslationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Inertia\Inertia;
 
 class PageController extends Controller
 {
-    private $baseComponentName = 'Page/Frontend';
     private $baseRouteName = 'frontend.pages';
 
     private function redirectToPageLocaleOrDefaultLocale(
@@ -27,6 +25,7 @@ class PageController extends Controller
             $pageTranslation = $page->translate($locale);
 
             return redirect()->route($this->baseRouteName.'.show', [
+                'locale' => $locale,
                 'page_translation' => $pageTranslation->slug
             ]);
         } else {
@@ -37,7 +36,7 @@ class PageController extends Controller
                 return redirect()->route('status-code.404');
             }
 
-            return Inertia::render($this->baseComponentName.'/Show', [
+            return view('page', [
                 'currentLanguage' => TranslationService::currentLanguage(),
                 'images' => $this->getPageImages($pageTranslation, $defaultLocale),
                 'page' => $pageTranslation,
@@ -73,18 +72,24 @@ class PageController extends Controller
         return $images;
     }
 
-    public function show(Request $request, PageTranslation $pageTranslation)
-    {
+    public function show(
+        Request $request,
+        PageTranslation $pageTranslation
+    ) {
         $locale = !$request->has('locale')
             ? TranslationService::currentLanguage()
             : $request->locale;
+
         if ($pageTranslation->locale != $locale) {
 
-            return $this->redirectToPageLocaleOrDefaultLocale($pageTranslation, $locale);
+            return $this->redirectToPageLocaleOrDefaultLocale(
+                $pageTranslation,
+                $locale
+            );
 
         } else {
 
-            return Inertia::render($this->baseComponentName.'/Show', [
+            return view('page', [
                 'currentLanguage' => TranslationService::currentLanguage(),
                 'images' => $this->getPageImages($pageTranslation, $locale),
                 'page' => $pageTranslation,
