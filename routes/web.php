@@ -1,13 +1,12 @@
 <?php
 
+use App\Facades\Localization;
 use App\Http\Controllers\{
     ChangeLanguageController,
     Frontend\PageController,
     Frontend\PostController,
     Frontend\PostCategoryController
 };
-use App\Services\TranslationService as TranslationSv;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
@@ -34,10 +33,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/user/profile', function () {
         return redirect()->route('dashboard');
     })->name('profile.show');
-});
-
-Route::get('/', function () {
-    return redirect(TranslationSv::currentLanguage());
 });
 
 Route::get('language/{new_locale}', ChangeLanguageController::class)
@@ -67,18 +62,10 @@ Route::get('test-theme', function () {
 });
 
 Route::group([
-    'prefix' => '{locale}',
-    'where' => ['locale' => '[a-zA-Z]{2}'],
-    'middleware' => 'setLocale',
+    'prefix' => Localization::setLocale(),
+    'middleware' => [ 'localizationRedirect' ]
 ], function () {
-    Route::get('/', function () {
-        return Inertia::render('Welcome', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
-    });
+    Route::view('/', 'home', ['title' => 'Test Home Blade'])->name('homepage');
 
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');
@@ -92,4 +79,11 @@ Route::group([
 
     Route::get('/{page_translation}', [PageController::class, 'show'])
         ->name('frontend.pages.show');
+
+    // Route for Test translation
+    Route::get('/test/translation', function () {
+        return view('test.translation', [
+            'title' => 'Test Translation'
+        ]);
+    })->name('test.translation');
 });

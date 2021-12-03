@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Entities\Caches\MenuCache;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -60,11 +61,12 @@ class Menu extends Model
         return Str::startsWith($url, config('app.url'));
     }
 
-    private static function createArrayMenuItems(
+    public static function createArrayMenuItems(
         object $menu,
         ?int $parentId = null
     ): array {
         $menus = [];
+
         foreach ($menu->menuItems as $menuItem) {
             if ($menuItem['parent_id'] == $parentId) {
                 $children = self::createArrayMenuItems($menu, $menuItem['id']);
@@ -77,6 +79,8 @@ class Menu extends Model
 
                 $className = self::getTypeMenuClass($menuItem['type']);
                 $typeMenu = new $className(['id' => $menuItem['id']]);
+                $typeMenu->setModel($menuItem);
+                $typeMenu->setParentModel($menu);
 
                 $menuItem['link'] = $typeMenu->getUrl();
                 $menuItem['isInternalLink'] = self::isInternalLink($menuItem['link']);
@@ -104,6 +108,11 @@ class Menu extends Model
         return $query->where('type', self::TYPE_SOCIAL_MEDIA);
     }
 
+    public function scopeLocale($query, string $locale)
+    {
+        return $query->where('locale', $locale);
+    }
+
     // Relation
     public function menuItems()
     {
@@ -119,6 +128,8 @@ class Menu extends Model
         foreach ($unusedMenuItems as $menuItem) {
             $menuItem->delete();
         }
+
+        app(MenuCache::class)->flush();
     }
 
     private static function getTypeMenuClass(string $type)
