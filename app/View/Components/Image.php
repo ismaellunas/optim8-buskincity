@@ -63,10 +63,18 @@ class Image extends Component
     public function alt(): ?string
     {
         if (!empty($this->_alt)) {
+
             return $this->_alt;
+
         } elseif (!empty($this->media)) {
-            return $this->media->translate($this->locale, true)->alt;
+
+            $translation = $this->media->translate($this->locale, true);
+
+            if (!empty($translation)) {
+                return $this->media->translate($this->locale, true)->alt;
+            }
         }
+
         return null;
     }
 
