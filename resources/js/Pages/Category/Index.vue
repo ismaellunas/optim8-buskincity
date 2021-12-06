@@ -73,7 +73,10 @@
                     </tbody>
                 </sdb-table>
             </div>
-            <sdb-pagination :links="records.links"></sdb-pagination>
+            <sdb-pagination
+                :links="records.links"
+                :query-params="queryParams"
+            />
         </div>
     </app-layout>
 </template>

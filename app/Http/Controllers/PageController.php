@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Media;
 use App\Models\Page;
-use App\Models\PageTranslation;
 use App\Services\{
     PageService,
     TranslationService,
@@ -103,55 +102,6 @@ class PageController extends CrudController
         $request->session()->flash('message', 'Page created successfully!');
 
         return redirect()->route('admin.pages.edit', $page->id);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Page  $page
-     * @return \Illuminate\Http\Response
-     */
-    public function show(string $locale, PageTranslation $pageTranslation)
-    {
-        if ($pageTranslation->locale != $locale) {
-            $page = $pageTranslation->page;
-            if ($page->hasTranslation($locale)) {
-                $pageTranslation = $page->translate($locale);
-                $pageTranslation->locale;
-                return redirect()->route('pages.show', [
-                    'locale' => $locale,
-                    'page_translation' => $pageTranslation->slug
-                ]);
-            } else {
-                return redirect()->route('status-code.404');
-            }
-        } else {
-            $images = [];
-            $locales = array_unique([
-                TranslationService::getDefaultLocale(),
-                $locale,
-            ]);
-
-            if (!empty($pageTranslation->data['media'])) {
-                $mediaIds = collect($pageTranslation->data['media'])->pluck('id');
-
-                $images = Media::whereIn('id', $mediaIds)
-                    ->image()
-                    ->with([
-                        'translations' => function ($q) use ($locales) {
-                            $q->select(['id', 'locale', 'alt', 'media_id']);
-                            $q->whereIn('locale', $locales);
-                        },
-                    ])
-                    ->get(['id', 'file_url']);
-            }
-
-            return Inertia::render('Page/Show', [
-                'currentLanguage' => TranslationService::currentLanguage(),
-                'images' => $images,
-                'page' => $pageTranslation,
-            ]);
-        }
     }
 
     /**

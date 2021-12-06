@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Media;
-use App\Models\PageTranslation;
+use App\Models\{
+    Media,
+    PageTranslation
+};
 use App\Services\TranslationService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class PageController extends Controller
@@ -28,6 +31,10 @@ class PageController extends Controller
         } else {
             $defaultLocale = TranslationService::getDefaultLocale();
             $pageTranslation = $page->translate($defaultLocale);
+
+            if (!$pageTranslation) {
+                return redirect()->route('status-code.404');
+            }
 
             return view('page', [
                 'currentLanguage' => TranslationService::currentLanguage(),
@@ -65,8 +72,11 @@ class PageController extends Controller
         return $images;
     }
 
-    public function show(string $locale, PageTranslation $pageTranslation)
-    {
+    public function show(
+        PageTranslation $pageTranslation
+    ) {
+        $locale = TranslationService::currentLanguage();
+
         if ($pageTranslation->locale != $locale) {
 
             return $this->redirectToPageLocaleOrDefaultLocale(

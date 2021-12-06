@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\{
     CategoryController,
+    LanguageController,
     MediaController,
     PageController,
     PermissionController,
@@ -15,6 +16,7 @@ use App\Http\Controllers\{
     ThemeFooterMenuController,
     ThemeHeaderController,
     ThemeHeaderMenuController,
+    TranslationManagerController,
     UserController,
     UserRoleController,
 };
@@ -89,6 +91,20 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/advance', [ThemeAdvanceController::class, 'update'])->name('advance.update');
         Route::get('/fonts', [ThemeFontController::class, 'edit'])->name('fonts.edit');
         Route::post('/fonts', [ThemeFontController::class, 'update'])->name('fonts.update');
+    });
+
+    Route::name('settings.')->prefix('settings')->middleware('can:system.language')->group(function () {
+        Route::get('/languages', [LanguageController::class, 'edit'])
+            ->name('languages.edit');
+        Route::post('/languages', [LanguageController::class, 'update'])
+            ->name('languages.update');
+
+        Route::get('/translation-manager', [TranslationManagerController::class, 'edit'])
+            ->name('translation-manager.edit');
+        Route::post('/translation-manager', [TranslationManagerController::class, 'update'])
+            ->name('translation-manager.update');
+        Route::post('/translation-manager/clear/{translation}', [TranslationManagerController::class, 'clear'])
+            ->name('translation-manager.clear');
     });
 });
 
