@@ -9,7 +9,6 @@ use App\Models\{
 };
 use App\Services\MenuService;
 use App\Services\TranslationService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class PageController extends Controller
