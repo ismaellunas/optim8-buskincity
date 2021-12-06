@@ -328,7 +328,7 @@
             refreshPagination(url) {
                 this.$inertia.get(
                     url,
-                    {},
+                    this.queryParams,
                     {
                         replace: true,
                         preserveState: true,
