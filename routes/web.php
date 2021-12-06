@@ -39,12 +39,6 @@ Route::get('language/{new_locale}', ChangeLanguageController::class)
     ->where('new_locale', '[a-zA-Z]{2}')
     ->name('language.change');
 
-Route::name('status-code.')->group(function () {
-    Route::get('404', function () {
-        return Inertia::render('PageNotFound');
-    })->name('404');
-});
-
 Route::get('/user/privacy', function() {
     echo "Privacy page";
 });
