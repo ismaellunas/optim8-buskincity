@@ -25,10 +25,11 @@ class PageController extends Controller
             $pageTranslation = $page->translate($locale);
 
             return redirect()->route($this->baseRouteName.'.show', [
-                'locale' => $locale,
-                'page_translation' => $pageTranslation->slug
+                $pageTranslation->slug
             ]);
+
         } else {
+
             $defaultLocale = TranslationService::getDefaultLocale();
             $pageTranslation = $page->translate($defaultLocale);
 
