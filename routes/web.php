@@ -60,7 +60,7 @@ Route::group([
     'middleware' => [ 'localizationRedirect' ]
 ], function () {
     Route::get('/', function () {
-        return view('home', ['title' => 'Test Home Blade']);
+        return view('home', ['title' => config('app.name', 'Home')]);
     })->name('homepage');
 
     Route::get('/blog', [PostController::class, 'index'])
