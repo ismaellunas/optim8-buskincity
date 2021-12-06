@@ -75,7 +75,7 @@ class PageController extends Controller
         $images = collect([]);
 
         $locales = array_unique([
-            TranslationService::getDefaultLocale(),
+            $this->translationService->getDefaultLocale(),
             $locale,
         ]);
 
@@ -99,7 +99,7 @@ class PageController extends Controller
     public function show(
         PageTranslation $pageTranslation
     ) {
-        $locale = TranslationService::currentLanguage();
+        $locale = $this->translationService->currentLanguage();
 
         if ($pageTranslation->locale != $locale) {
 
@@ -111,7 +111,7 @@ class PageController extends Controller
         } else {
 
             return view('page', [
-                'currentLanguage' => TranslationService::currentLanguage(),
+                'currentLanguage' => $locale,
                 'images' => $this->getPageImages($pageTranslation, $locale),
                 'page' => $pageTranslation,
             ]);
