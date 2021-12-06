@@ -49,7 +49,7 @@
                             <th>#</th>
                             <th>Group</th>
                             <th>Key</th>
-                            <th v-if="locale !== defaultLocale">
+                            <th v-if="!isEnglish">
                                 English Value
                             </th>
                             <th>Value</th>
@@ -68,7 +68,7 @@
                             <th>{{ page.id ?? "-" }}</th>
                             <td>{{ page.group }}</td>
                             <td>{{ page.key }}</td>
-                            <td v-if="locale !== defaultLocale">
+                            <td v-if="!isEnglish">
                                 {{ page.en_value ?? "-" }}
                             </td>
                             <td>
@@ -175,6 +175,10 @@
             groupOptions: {
                 type: Array,
                 default:() => [],
+            },
+            isEnglish: {
+                type: Boolean,
+                required: true,
             },
             localeOptions: {
                 type: Array,

@@ -20,23 +20,31 @@ class TranslationManagerController extends Controller
     private $baseRouteName ="admin.settings.translation-manager";
     private $translationManagerCache;
     private $translationManagerService;
+    private $translationService;
 
     public function __construct(
         TranslationCache $translationCache,
-        TranslationManagerService $translationManagerService
+        TranslationManagerService $translationManagerService,
+        TranslationService $translationService
     ) {
         $this->translationManagerCache = $translationCache;
         $this->translationManagerService = $translationManagerService;
+        $this->translationService = $translationService;
     }
 
     public function edit(Request $request)
     {
+        $defaultLocale = $this->translationService->getDefaultLocale();
+
+        $locale = $request->get('locale', $defaultLocale);
+
         return Inertia::render('TranslationManager', [
             'title' => 'Translation Manager',
             'baseRouteName' => $this->baseRouteName,
-            'defaultLocale' => $this->translationManagerService->defaultLocale,
+            'defaultLocale' => $defaultLocale,
+            'isEnglish' => ($locale == 'en'),
             'groupOptions' => config('constants.translations.groups'),
-            'localeOptions' => TranslationService::getLocaleOptions(),
+            'localeOptions' => $this->translationService->getLocaleOptions(),
             'pageQueryParams' => array_filter($request->only('locale', 'group')),
             'records' => $this->translationManagerService->getRecords(
                 $request->locale,
