@@ -84,6 +84,47 @@ class MenuService
         return $menus;
     }
 
+    public function getFooterMenu(string $locale): array
+    {
+        return app(MenuCache::class)->remember(
+            'footer_menu',
+            function () use ($locale) {
+                $menu = Menu::footer()
+                    ->locale($locale)
+                    ->with([
+                        'menuItems' => function ($query) {
+                            $query
+                                ->orderBy('order', 'ASC')
+                                ->orderBy('parent_id', 'ASC')
+                                ->with([
+                                    'post' => function ($query) {
+                                        $query->select([
+                                            'id',
+                                            'slug',
+                                        ]);
+                                    },
+                                    'page' => function ($query) {
+                                        $query->select('id');
+                                        $query->with('translations', function ($query) {
+                                            $query->select([
+                                                'id',
+                                                'page_id',
+                                                'locale',
+                                                'slug',
+                                            ]);
+                                        });
+                                    },
+                                ]);
+                        },
+                    ])
+                    ->first();
+
+                return $menu ? Menu::createArrayMenuItems($menu) : [];
+            },
+            $locale
+        );
+    }
+
     public function getSocialMediaMenus()
     {
         $menu = Menu::with([
