@@ -103,8 +103,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             ->name('translation-manager.edit');
         Route::post('/translation-manager', [TranslationManagerController::class, 'update'])
             ->name('translation-manager.update');
-        Route::post('/translation-manager/clear/{translation}', [TranslationManagerController::class, 'clear'])
-            ->name('translation-manager.clear');
     });
 });
 

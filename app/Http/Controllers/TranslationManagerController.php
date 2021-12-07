@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Entities\Caches\TranslationCache;
 use App\Http\Requests\TranslationRequest;
-use App\Models\Translation;
 use App\Traits\FlashNotifiable;
 use App\Services\{
     TranslationManagerService,
@@ -53,31 +52,19 @@ class TranslationManagerController extends Controller
 
     public function update(TranslationRequest $request)
     {
-        $inputs = $request->validated();
+        $translations = $request->translations;
 
-        $translation = Translation::updateOrCreate(
-            [
-                "id" => $request->id
-            ],
-            $inputs
-        );
+        $this->translationManagerService->batchUpdate($translations);
 
-        $this->translationManagerCache->flushGroup(
-            $translation->locale,
-            $translation->group
-        );
+        $translation = collect($translations)->first();
+        if ($translation) {
+            $this->translationManagerCache->flushGroup(
+                $translation['locale'],
+                $translation['group']
+            );
+        }
 
         $this->generateFlashMessage('Translation updated successfully!');
-
-        return redirect()->back();
-    }
-
-    public function clear(Translation $translation)
-    {
-        $translation->value = null;
-        $translation->save();
-
-        $this->generateFlashMessage('Translation cleared successfully!');
 
         return redirect()->back();
     }

@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Models\Translation;
-use Illuminate\Support\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
+use Illuminate\Support\Collection;
 
 class TranslationManagerService
 {
@@ -27,6 +27,18 @@ class TranslationManagerService
                 }),
             $perPage
         );
+    }
+
+    public function batchUpdate(array $translations): void
+    {
+        foreach ($translations as $translation) {
+            Translation::updateOrCreate(
+                [
+                    "id" => $translation['id']
+                ],
+                $translation
+            );
+        }
     }
 
     private function getAllKeyWithGroups(): Collection
