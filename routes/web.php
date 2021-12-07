@@ -39,12 +39,6 @@ Route::get('language/{new_locale}', ChangeLanguageController::class)
     ->where('new_locale', '[a-zA-Z]{2}')
     ->name('language.change');
 
-Route::name('status-code.')->group(function () {
-    Route::get('404', function () {
-        return Inertia::render('PageNotFound');
-    })->name('404');
-});
-
 Route::get('/user/privacy', function() {
     echo "Privacy page";
 });
@@ -66,7 +60,7 @@ Route::group([
     'middleware' => [ 'localizationRedirect' ]
 ], function () {
     Route::get('/', function () {
-        return view('home', ['title' => 'Test Home Blade']);
+        return view('home', ['title' => config('app.name', 'Home')]);
     })->name('homepage');
 
     Route::get('/blog', [PostController::class, 'index'])
