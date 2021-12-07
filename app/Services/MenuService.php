@@ -13,7 +13,10 @@ use App\Models\{
     User,
 };
 use Illuminate\Http\Request;
-use App\Entities\Caches\MenuCache;
+use App\Entities\Caches\{
+    MenuCache,
+    SettingCache,
+};
 
 class MenuService
 {
@@ -127,21 +130,26 @@ class MenuService
 
     public function getSocialMediaMenus()
     {
-        $menu = Menu::with([
-            'menuItems' => function ($query) {
-                    $query->select([
-                            'id',
-                            'url',
-                            'icon',
-                            'menu_id',
-                        ]);
-                    $query->where('type', MenuItem::TYPE_URL);
-                }
-            ])
-            ->socialMedia()
-            ->first();
+        return app(SettingCache::class)->remember(
+            'social_media',
+            function () {
+                $menu = Menu::with([
+                    'menuItems' => function ($query) {
+                            $query->select([
+                                    'id',
+                                    'url',
+                                    'icon',
+                                    'menu_id',
+                                ]);
+                            $query->where('type', MenuItem::TYPE_URL);
+                        }
+                    ])
+                    ->socialMedia()
+                    ->first();
 
-        return $menu ? $menu->menuItems : [];
+                return $menu ? $menu->menuItems : [];
+            }
+        );
     }
 
     public static function generateBackendMenu(Request $request): array
