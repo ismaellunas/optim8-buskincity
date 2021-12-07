@@ -89,7 +89,6 @@
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormTextarea from '@/Sdb/Form/Textarea';
     import SdbSelect from '@/Sdb/Select';
-    import { getTranslation } from '@/Libs/translation';
     import { buildFormData, regexFileName } from '@/Libs/utils';
     import { isEmpty, keys, last } from 'lodash';
     import { reactive, ref } from "vue";
@@ -134,12 +133,12 @@
             isAjax: {type: Boolean, default: false},
             media: Object,
         },
-        setup(props, { emit }) {
+        setup(props) {
             let translations = {};
-            const defaultLocale = usePage().props.value.currentLanguage;
+            const defaultLocale = usePage().props.value.defaultLanguage;
 
             if (isEmpty(props.media.translations)) {
-                translations.en = generateNewTranslation();
+                translations[defaultLocale] = generateNewTranslation();
             } else {
                 props.media.translations.forEach(translation => {
                     translations[translation.locale] = {

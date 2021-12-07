@@ -7,40 +7,63 @@ use App\Models\{
     Media,
     PageTranslation
 };
+use App\Services\MenuService;
 use App\Services\TranslationService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class PageController extends Controller
 {
     private $baseRouteName = 'frontend.pages';
+    private $menuService;
+    private $translationService;
+
+    public function __construct(
+        MenuService $menuService,
+        TranslationService $translationService
+    ) {
+        $this->menuService = $menuService;
+        $this->translationService = $translationService;
+    }
+
+    private function isPageExistInMenu(array $menus, $page): bool
+    {
+        return collect($menus)->contains(function ($menu) use ($page) {
+
+            if ($menu->page_id && $menu->page_id == $page->id) {
+
+                return true;
+
+            } elseif (!empty($menu->children)) {
+
+                collect($menu->children)->contains(function ($child) use ($page) {
+                    return $child->page_id && $child->page_id == $page->id;
+                });
+            }
+
+            return false;
+        });
+    }
 
     private function redirectToPageLocaleOrDefaultLocale(
         PageTranslation $pageTranslation,
         string $locale
     ) {
         $page = $pageTranslation->page;
+        $menus = $this->menuService->getHeaderMenu($locale);
 
-        if ($page->hasTranslation($locale)) {
+        if (
+            $page->hasTranslation($locale)
+            && $this->isPageExistInMenu($menus, $page)
+        ) {
             $pageTranslation = $page->translate($locale);
 
             return redirect()->route($this->baseRouteName.'.show', [
-                'locale' => $locale,
-                'page_translation' => $pageTranslation->slug
+                $pageTranslation->slug
             ]);
+
         } else {
-            $defaultLocale = TranslationService::getDefaultLocale();
-            $pageTranslation = $page->translate($defaultLocale);
 
-            if (!$pageTranslation) {
-                return redirect()->route('status-code.404');
-            }
-
-            return view('page', [
-                'currentLanguage' => TranslationService::currentLanguage(),
-                'images' => $this->getPageImages($pageTranslation, $defaultLocale),
-                'page' => $pageTranslation,
-            ]);
+            return redirect()->route('homepage');
         }
     }
 
@@ -51,7 +74,7 @@ class PageController extends Controller
         $images = collect([]);
 
         $locales = array_unique([
-            TranslationService::getDefaultLocale(),
+            $this->translationService->getDefaultLocale(),
             $locale,
         ]);
 
@@ -73,12 +96,9 @@ class PageController extends Controller
     }
 
     public function show(
-        Request $request,
         PageTranslation $pageTranslation
     ) {
-        $locale = !$request->has('locale')
-            ? TranslationService::currentLanguage()
-            : $request->locale;
+        $locale = $this->translationService->currentLanguage();
 
         if ($pageTranslation->locale != $locale) {
 
@@ -90,7 +110,7 @@ class PageController extends Controller
         } else {
 
             return view('page', [
-                'currentLanguage' => TranslationService::currentLanguage(),
+                'currentLanguage' => $locale,
                 'images' => $this->getPageImages($pageTranslation, $locale),
                 'page' => $pageTranslation,
             ]);
