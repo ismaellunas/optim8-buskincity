@@ -34,7 +34,7 @@
             <script src="{{ mix('js/local.js') }}" defer></script>
         @endenv
 
-        <script src="https://unpkg.com/vue@next"></script>
+        <script src="{{ mix('js/frontend-app.js') }}"></script>
 
         @stack('scripts')
 
