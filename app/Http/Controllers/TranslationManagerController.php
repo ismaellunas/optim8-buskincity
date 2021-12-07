@@ -36,13 +36,11 @@ class TranslationManagerController extends Controller
     {
         $defaultLocale = $this->translationService->getDefaultLocale();
 
-        $locale = $request->get('locale', $defaultLocale);
-
         return Inertia::render('TranslationManager', [
             'title' => 'Translation Manager',
             'baseRouteName' => $this->baseRouteName,
             'defaultLocale' => $defaultLocale,
-            'isEnglish' => ($locale == 'en'),
+            'referenceLocale' => 'en',
             'groupOptions' => config('constants.translations.groups'),
             'localeOptions' => $this->translationService->getLocaleOptions(),
             'pageQueryParams' => array_filter($request->only('locale', 'group')),

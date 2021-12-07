@@ -49,7 +49,7 @@
                             <th>#</th>
                             <th>Group</th>
                             <th>Key</th>
-                            <th v-if="!isEnglish">
+                            <th v-if="!isReferenceLanguage">
                                 English Value
                             </th>
                             <th>Value</th>
@@ -68,7 +68,7 @@
                             <th>{{ page.id ?? "-" }}</th>
                             <td>{{ page.group }}</td>
                             <td>{{ page.key }}</td>
-                            <td v-if="!isEnglish">
+                            <td v-if="!isReferenceLanguage">
                                 {{ page.en_value ?? "-" }}
                             </td>
                             <td>
@@ -176,8 +176,8 @@
                 type: Array,
                 default:() => [],
             },
-            isEnglish: {
-                type: Boolean,
+            referenceLocale: {
+                type: String,
                 required: true,
             },
             localeOptions: {
@@ -223,6 +223,12 @@
             return {
                 selectedIndex: null,
             };
+        },
+
+        computed: {
+            isReferenceLanguage() {
+                return this.referenceLocale === this.locale;
+            }
         },
 
         methods: {
@@ -308,6 +314,6 @@
                     }
                 });
             },
-        },
-    }
+        }
+    };
 </script>
