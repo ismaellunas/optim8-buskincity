@@ -142,7 +142,7 @@
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbInput from '@/Sdb/Input';
     import SdbPagination from '@/Sdb/Pagination';
-    import { merge, debounce, forEach } from 'lodash';
+    import { merge, debounce } from 'lodash';
     import { ref } from 'vue';
     import { success as successAlert, confirmDelete } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
