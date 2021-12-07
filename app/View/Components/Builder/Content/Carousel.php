@@ -28,6 +28,7 @@ class Carousel extends BaseContent
         $this->uid = $this->entity['id'];
         $this->images = $images;
         $this->carouselImages = $this->getCarouselImages();
+        $this->locale = $locale;
         $this->numberOfSliders = $this->numberOfSliders();
         $this->config = $this->entity['config']['carousel'];
     }
