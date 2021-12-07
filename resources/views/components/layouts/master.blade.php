@@ -34,8 +34,6 @@
             <script src="{{ mix('js/local.js') }}" defer></script>
         @endenv
 
-        <script src="{{ mix('js/frontend-app.js') }}"></script>
-
         @stack('scripts')
 
         {!! $trackingCodeInsideHead !!}
