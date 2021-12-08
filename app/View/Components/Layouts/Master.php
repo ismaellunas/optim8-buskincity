@@ -12,6 +12,7 @@ class Master extends Component
     public $appCssUrl;
     public $currentLanguage;
     public $languageOptions;
+    public $headerLayout;
     public $logoUrl;
     public $menus;
     public $trackingCodeAfterBody;
@@ -31,6 +32,7 @@ class Master extends Component
 
         $this->appCssUrl = SettingService::getFrontendCssUrl();
         $this->currentLanguage = $currentLanguage;
+        $this->headerLayout = $settingService->getHeaderLayout();
         $this->logoUrl = $settingService->getLogoUrl();
         $this->menus = $menuService->getHeaderMenu($currentLanguage) ?? [];
         $this->trackingCodeAfterBody =  $settingService->getTrackingCodeAfterBody();
