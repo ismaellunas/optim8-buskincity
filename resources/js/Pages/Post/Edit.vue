@@ -62,11 +62,15 @@
                     : new Date()
                 ),
             };
+            const localeOptions = usePage().props.value.languageOptions;
+            localeOptions.push({
+                id: props.post.locale
+            });
 
             return {
                 defaultLocale,
                 form: useForm(postForm),
-                localeOptions: usePage().props.value.languageOptions,
+                localeOptions: localeOptions,
             };
         },
         data() {
