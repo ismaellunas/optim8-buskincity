@@ -1,130 +1,140 @@
 <template>
-<app-layout>
-    <template #header>Post</template>
+    <app-layout>
+        <template #header>Post</template>
 
-    <div class="box">
-        <div class="columns">
-            <div class="column">
-                <div class="is-pulled-left">
-                    <sdb-filter-search
-                        v-model="term"
-                        @search="search"
-                    ></sdb-filter-search>
+        <div class="box">
+            <div class="columns">
+                <div class="column">
+                    <div class="is-pulled-left">
+                        <sdb-filter-search
+                            v-model="term"
+                            @search="search"
+                        />
+                    </div>
+                </div>
+
+                <div class="column">
+                    <sdb-dropdown
+                        :close-on-click="false"
+                    >
+                        <template #trigger>
+                            <span>Filter</span>
+                            <span
+                                v-if="filterCounter"
+                                class="ml-1"
+                            >
+                                ({{ filterCounter }})
+                            </span>
+                            <span class="icon is-small">
+                                <i
+                                    class="fas fa-angle-down"
+                                    aria-hidden="true"
+                                />
+                            </span>
+                        </template>
+
+                        <sdb-dropdown-item>
+                            Categories
+                        </sdb-dropdown-item>
+
+                        <sdb-dropdown-scroll>
+                            <sdb-dropdown-item
+                                v-for="category in categoryOptions"
+                                :key="category.id"
+                            >
+                                <sdb-checkbox
+                                    v-model:checked="categories"
+                                    :value="category.id"
+                                    @change="onCategoriesChanged"
+                                >
+                                    &nbsp; {{ category.value }}
+                                </sdb-checkbox>
+                            </sdb-dropdown-item>
+                        </sdb-dropdown-scroll>
+
+                        <hr class="dropdown-divider">
+
+                        <sdb-dropdown-item>
+                            Languages
+                        </sdb-dropdown-item>
+
+                        <sdb-dropdown-item
+                            v-for="language in languageOptions"
+                            :key="language.id"
+                        >
+                            <sdb-checkbox
+                                v-model:checked="languages"
+                                :value="language.id"
+                                @change="onLanguagesChanged"
+                            >
+                                &nbsp; {{ language.name }}
+                            </sdb-checkbox>
+                        </sdb-dropdown-item>
+                    </sdb-dropdown>
+                </div>
+
+                <div class="column">
+                    <div
+                        v-if="can.add"
+                        class="is-pulled-right"
+                    >
+                        <sdb-button-link
+                            class="is-primary"
+                            :href="route(baseRouteName+'.create')"
+                        >
+                            <span class="icon is-small">
+                                <i class="fas fa-plus" />
+                            </span>
+                            <span>Create New</span>
+                        </sdb-button-link>
+                    </div>
                 </div>
             </div>
 
-            <div class="column">
-                <sdb-dropdown
-                    :close-on-click="false"
-                >
-                    <template v-slot:trigger>
-                        <span>Filter</span>
-                        <span
-                            v-if="filterCounter"
-                            class="ml-1"
+            <div class="columns" />
+
+            <div class="table-container">
+                <sdb-tab>
+                    <ul>
+                        <sdb-tab-list
+                            v-for="tab, index in tabs"
+                            :key="index"
+                            :is-active="isTabActive(index)"
                         >
-                            ({{ filterCounter }})
-                        </span>
-                        <span class="icon is-small">
-                            <i class="fas fa-angle-down" aria-hidden="true"></i>
-                        </span>
-                    </template>
+                            <a @click.prevent="setActiveTab(index)">
+                                {{ tab.title }}
+                            </a>
+                        </sdb-tab-list>
+                    </ul>
 
-                    <sdb-dropdown-item>
-                        Categories
-                    </sdb-dropdown-item>
-
-                    <sdb-dropdown-item v-for="category in categoryOptions">
-                        <sdb-checkbox
-                            v-model:checked="categories"
-                            :value="category.id"
-                            @change="onCategoriesChanged"
-                        >
-                            &nbsp; {{ category.value }}
-                        </sdb-checkbox>
-                    </sdb-dropdown-item>
-
-                    <hr class="dropdown-divider">
-
-                    <sdb-dropdown-item>
-                        Languages
-                    </sdb-dropdown-item>
-
-                    <sdb-dropdown-item v-for="language in languageOptions">
-                        <sdb-checkbox
-                            v-model:checked="languages"
-                            :value="language.id"
-                            @change="onLanguagesChanged"
-                        >
-                            &nbsp; {{ language.name }}
-                        </sdb-checkbox>
-                    </sdb-dropdown-item>
-                </sdb-dropdown>
-            </div>
-
-            <div class="column">
-                <div
-                    v-if="can.add"
-                    class="is-pulled-right"
-                >
-                    <sdb-button-link
-                        class="is-primary"
-                        :href="route(baseRouteName+'.create')"
-                    >
-                        <span class="icon is-small">
-                            <i class="fas fa-plus"></i>
-                        </span>
-                        <span>Create New</span>
-                    </sdb-button-link>
-                </div>
-            </div>
-        </div>
-
-        <div class="columns">
-        </div>
-
-        <div class="table-container">
-            <sdb-tab>
-                <ul>
-                    <sdb-tab-list
-                        v-for="tab, index in tabs"
-                        :key="index"
-                        :is-active="isTabActive(index)"
-                    >
-                        <a @click.prevent="setActiveTab(index)">
-                            {{ tab.title }}
-                        </a>
-                    </sdb-tab-list>
-                </ul>
-
-                <sdb-buttons-display-view
-                    v-model="view"
-                    @on-view-changed="onViewChanged"
-                />
-            </sdb-tab>
-
-            <component
-                :is="isGalleryView ? 'SdbPostGallery' : 'SdbPostList'"
-                :records="records.data"
-            >
-                <template v-slot:default="{record}">
-                    <component
-                        :is="isGalleryView ? 'SdbPostGalleryItem' : 'SdbPostListItem'"
-                        :is-delete-enabled="can.delete"
-                        :is-edit-enabled="can.edit"
-                        :record="record"
-                        :edit-link="route(baseRouteName+'.edit', record.id)"
-                        @on-delete-clicked="deleteRecord"
+                    <sdb-buttons-display-view
+                        v-model="view"
+                        @on-view-changed="onViewChanged"
                     />
-                </template>
-            </component>
+                </sdb-tab>
+
+                <component
+                    :is="isGalleryView ? 'SdbPostGallery' : 'SdbPostList'"
+                    :records="records.data"
+                >
+                    <template #default="{record}">
+                        <component
+                            :is="isGalleryView ? 'SdbPostGalleryItem' : 'SdbPostListItem'"
+                            :is-delete-enabled="can.delete"
+                            :is-edit-enabled="can.edit"
+                            :record="record"
+                            :edit-link="route(baseRouteName+'.edit', record.id)"
+                            @on-delete-clicked="deleteRecord"
+                        />
+                    </template>
+                </component>
+            </div>
+            <sdb-pagination
+                :links="records.links"
+                :query-params="queryParams"
+            />
         </div>
-        <sdb-pagination
-            :links="records.links"
-            :query-params="queryParams"
-        />
-    </div>
-</app-layout>
+    </app-layout>
 </template>
 
 <script>
@@ -136,6 +146,7 @@
     import SdbCheckbox from '@/Sdb/Checkbox';
     import SdbDropdown from '@/Sdb/Dropdown';
     import SdbDropdownItem from '@/Sdb/DropdownItem';
+    import SdbDropdownScroll from '@/Sdb/DropdownScroll';
     import SdbFilterSearch from '@/Sdb/Filter/Search';
     import SdbPagination from '@/Sdb/Pagination';
     import SdbPostGallery from '@/Sdb/Post/Gallery';
@@ -157,6 +168,7 @@
             SdbCheckbox,
             SdbDropdown,
             SdbDropdownItem,
+            SdbDropdownScroll,
             SdbFilterSearch,
             SdbPagination,
             SdbPostGallery,
@@ -204,6 +216,14 @@
                 baseRouteName: 'admin.posts',
                 loader: null,
             };
+        },
+        computed: {
+            isGalleryView() {
+                return this.view === 'gallery';
+            },
+            filterCounter() {
+                return this.categories.length + this.languages.length;
+            },
         },
         methods: {
             deleteRecord(record) {
@@ -258,14 +278,6 @@
             onCategoriesChanged() {
                 this.queryParams['categories'] = this.categories;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
-            },
-        },
-        computed: {
-            isGalleryView() {
-                return this.view === 'gallery';
-            },
-            filterCounter() {
-                return this.categories.length + this.languages.length;
             },
         },
     };
