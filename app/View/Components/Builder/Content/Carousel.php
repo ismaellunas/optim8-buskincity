@@ -51,10 +51,9 @@ class Carousel extends BaseContent
     private function getCarouselImages(): array
     {
         $mediaIds = $this->entity['content']['carousel']['images'];
-        $mediaIds = collect($mediaIds);
-        $mediaIds = $mediaIds->pluck('mediaId')->all();
+        $mediaIds = collect($mediaIds)->pluck('mediaId')->all();
         $carouselImages = [];
-        foreach($mediaIds as $mediaId) {
+        foreach ($mediaIds as $mediaId) {
             if ($mediaId && $this->images) {
                 $carouselImages[] = $this->images->firstWhere('id', $mediaId);
             }
