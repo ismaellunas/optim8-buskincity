@@ -172,13 +172,13 @@
                         required
                     >
                         <template
-                            v-if="texts.fileInputNotes"
+                            v-if="i18n.fileInputNotes"
                             #note
                         >
                             <p class="help is-info">
                                 <ul>
                                     <li
-                                        v-for="note in texts.fileInputNotes"
+                                        v-for="note in i18n.fileInputNotes"
                                         :key="note"
                                     >
                                         {{ note }}
@@ -276,7 +276,11 @@
             title: {
                 type: String,
                 required: true,
-            }
+            },
+            i18n: {
+                type: Object,
+                default: () => {},
+            },
         },
 
         setup(props) {

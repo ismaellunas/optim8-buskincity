@@ -39,8 +39,10 @@ class TranslationManagerController extends Controller
     public function edit(Request $request)
     {
         return Inertia::render('TranslationManager', [
-            'title' => 'Translation Manager',
+            'title' => __('Translation Manager'),
             'baseRouteName' => $this->baseRouteName,
+            'importRouteName' => 'admin.settings.translation-manager.import',
+            'exportRouteName' => 'admin.settings.translation-manager.export',
             'defaultLocale' => $this->translationManagerService->defaultLocale,
             'groupOptions' => config('constants.translations.groups'),
             'localeOptions' => TranslationService::getLocaleOptions(),
@@ -49,6 +51,14 @@ class TranslationManagerController extends Controller
                 $request->locale,
                 $request->group
             ),
+            'i18n' => [
+                'fileInputNotes' => [
+                    __('Accepted file extension: :extensions', [
+                        'extensions' => implode(',', config('constants.extensions.import'))
+                    ]),
+                    __('Max file size: :size', ['size' => '5MB']),
+                ]
+            ]
         ]);
     }
 
@@ -60,7 +70,7 @@ class TranslationManagerController extends Controller
 
         $translation = collect($translations)->first();
         if ($translation) {
-            $this->translationManagerCache->flushGroup(
+            $this->translationCache->flushGroup(
                 $translation['locale'],
                 $translation['group']
             );
