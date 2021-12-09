@@ -8,11 +8,14 @@
 
         <sdb-input-file
             v-model="file"
+            v-bind="$attrs"
             :accept="acceptedTypes"
             :disabled="disabled"
             :is-name-displayed="isNameDisplayed"
-            @on-file-picked="$emit('onFilePicked', $event)"
+            @on-file-picked="$emit('on-file-picked', $event)"
         />
+
+        <slot name="note" />
 
         <template #error>
             <sdb-input-error :message="message" />
@@ -41,7 +44,7 @@
             },
             isNameDisplayed: {
                 type: Boolean,
-                default: false,
+                default: true,
             },
             label: {
                 type: String,
@@ -51,7 +54,10 @@
                 type: Object,
                 default: () => {},
             },
-            modelValue: {},
+            modelValue: {
+                type: [File, null],
+                required: true,
+            },
             disabled: {
                 type: Boolean,
                 default: false
@@ -62,7 +68,7 @@
             },
         },
         emits: [
-            'onFilePicked',
+            'on-file-picked',
             'update:modelValue',
         ],
         setup(props, { emit }) {
