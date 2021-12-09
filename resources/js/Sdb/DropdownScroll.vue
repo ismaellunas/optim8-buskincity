@@ -11,7 +11,7 @@
         name: "SdbDropdownScroll",
 
         props: {
-            maxHeight: { type: Number, default: 0 }
+            maxHeight: { type: Number, default: 200 }
         },
     }
 </script>
