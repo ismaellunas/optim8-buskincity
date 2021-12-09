@@ -57,11 +57,17 @@ class TranslationManagerController extends Controller
         $this->translationManagerService->batchUpdate($translations);
 
         $translation = collect($translations)->first();
+        $groups = collect($translations)
+            ->groupBy('group')
+            ->keys();
+
         if ($translation) {
-            $this->translationManagerCache->flushGroup(
-                $translation['locale'],
-                $translation['group']
-            );
+            $groups->each(function ($group) use ($translation) {
+                $this->translationManagerCache->flushGroup(
+                    $translation['locale'],
+                    $group
+                );
+            });
         }
 
         $this->generateFlashMessage('Translation updated successfully!');

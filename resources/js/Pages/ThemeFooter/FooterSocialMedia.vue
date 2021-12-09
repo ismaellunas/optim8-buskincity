@@ -9,35 +9,61 @@
         </div>
         <div class="columns">
             <div class="column">
-                <div class="is-pulled-left">
-                    <sdb-button
-                        class="is-link is-outlined"
-                        @click.prevent="openFormModal()"
+                <nav class="panel">
+                    <div class="panel-block p-4 has-text-weight-bold">
+                        Social Media Items
+                    </div>
+                    <div
+                        v-for="(socialMedia, index) in socialMediaMenus"
+                        :key="index"
+                        class="panel-block p-4"
                     >
-                        Add Social Media
-                    </sdb-button>
-                </div>
-            </div>
-            <div class="column">
-                <div class="is-pulled-right">
-                    <div class="columns">
                         <div
-                            v-for="(socialMedia, index) in socialMediaMenus"
-                            :key="index"
-                            class="column"
+                            class="level"
+                            style="width:100%"
                         >
-                            <span
-                                class="icon icon-pointer has-background-grey-lighter p-5"
-                                @click.prevent="openFormModal(socialMedia, index)"
-                            >
-                                <i
-                                    class="fa-2x"
-                                    :class="socialMedia.icon"
-                                />
-                            </span>
+                            <div class="level-left">
+                                <span class="panel-icon">
+                                    <i
+                                        :class="socialMedia.icon"
+                                        aria-hidden="true"
+                                    />
+                                </span>
+                                {{ socialMedia.url ?? "-" }}
+                            </div>
+                            <div class="level-right">
+                                <sdb-button
+                                    class="is-ghost has-text-black"
+                                    @click.prevent="openFormModal(socialMedia, index)"
+                                >
+                                    <span class="icon is-small">
+                                        <i class="fas fa-pen" />
+                                    </span>
+                                </sdb-button>
+                                <sdb-button
+                                    class="is-ghost has-text-black ml-1"
+                                    @click.prevent="deleteSocialMedia(index)"
+                                >
+                                    <span class="icon is-small">
+                                        <i class="far fa-trash-alt" />
+                                    </span>
+                                </sdb-button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <a
+                        class="panel-block p-4 has-text-link"
+                        @click.prevent="openFormModal()"
+                    >
+                        <span class="panel-icon has-text-link">
+                            <i
+                                class="fas fa-plus"
+                                aria-hidden="true"
+                            />
+                        </span>
+                        Add social media
+                    </a>
+                </nav>
             </div>
         </div>
 
@@ -48,7 +74,6 @@
             :selected-index="selectedIndex"
             @add-social-media="addSocialMedia"
             @close="closeModal()"
-            @delete-social-media="deleteSocialMedia"
             @update-social-media="updateSocialMedia"
         />
     </div>
