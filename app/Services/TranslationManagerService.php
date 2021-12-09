@@ -41,7 +41,7 @@ class TranslationManagerService
         }
     }
 
-    private function getAllKeyWithGroups(): Collection
+    public function getAllKeyWithGroups(): Collection
     {
         return Translation::select('key', 'group')
             ->whereIn('group', config('constants.translations.groups'))
