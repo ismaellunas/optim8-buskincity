@@ -3,28 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Entities\Caches\TranslationCache;
-use App\Http\Requests\TranslationRequest;
+use App\Exports\TranslationsExport;
+use App\Http\Requests\{
+    TranslationImportRequest,
+    TranslationRequest,
+};
+use App\Imports\TranslationsImport;
 use App\Traits\FlashNotifiable;
 use App\Services\{
     TranslationManagerService,
     TranslationService
 };
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Excel;
 
 class TranslationManagerController extends Controller
 {
     use FlashNotifiable;
 
     private $baseRouteName ="admin.settings.translation-manager";
-    private $translationManagerCache;
+
+    private $translationCache;
     private $translationManagerService;
 
     public function __construct(
         TranslationCache $translationCache,
         TranslationManagerService $translationManagerService
     ) {
-        $this->translationManagerCache = $translationCache;
+        $this->translationCache = $translationCache;
         $this->translationManagerService = $translationManagerService;
     }
 
@@ -59,6 +67,52 @@ class TranslationManagerController extends Controller
         }
 
         $this->generateFlashMessage('Translation updated successfully!');
+
+        return redirect()->back();
+    }
+
+    private function getExportFileName(
+        string $locale,
+        string $group = null
+    ): string {
+
+        $template = "translation-??-?.csv";
+
+        return Str::replaceArray(
+            '?',
+            [
+                $locale,
+                ($group ? '-'.$group : ''),
+                date('YmdHis'),
+            ],
+            $template
+        );
+    }
+
+    public function export(string $locale, string $group = null)
+    {
+        $translationExport = new TranslationsExport($locale, $group);
+
+        return $translationExport->download(
+            $this->getExportFileName($locale, $group),
+            Excel::CSV,
+            ['Content-Type' => 'text/csv']
+        );
+    }
+
+    public function import(TranslationImportRequest $request)
+    {
+        $translationImport = new TranslationsImport();
+
+        $translationImport->import(
+            $request->file('file'),
+            null,
+            Excel::CSV
+        );
+
+        $this->translationCache->flush();
+
+        $this->generateFlashMessage('Translation imported successfully!');
 
         return redirect()->back();
     }
