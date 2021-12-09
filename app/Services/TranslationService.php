@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entities\Caches\SettingCache;
 use App\Facades\Localization;
 use App\Models\Language;
 use App\Services\LanguageService;
@@ -14,20 +15,28 @@ class TranslationService
 
     public static function getDefaultLocale(): string
     {
-        return app(LanguageService::class)->getDefault()->code ?? config('app.fallback_locale');
+        $key = config('constants.setting_cache.default_locale');
+
+        return app(SettingCache::class)->remember($key, function () {
+            return app(LanguageService::class)->getDefault()->code ?? config('app.fallback_locale');
+        });
     }
 
     public static function getLocaleOptions(): array
     {
-        return Language::active()
-            ->get(['code', 'name'])
-            ->map(function ($language) {
-                return [
-                    'id' => $language->code,
-                    'name' => $language->name,
-                ];
-            })
-            ->all();
+        $key = config('constants.setting_cache.locale_options');
+
+        return app(SettingCache::class)->remember($key, function () {
+            return Language::active()
+                ->get(['code', 'name'])
+                ->map(function ($language) {
+                    return [
+                        'id' => $language->code,
+                        'name' => $language->name,
+                    ];
+                })
+                ->all();
+        });
     }
 
     public static function getLocales(): array

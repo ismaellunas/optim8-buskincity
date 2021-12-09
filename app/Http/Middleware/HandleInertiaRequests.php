@@ -91,16 +91,9 @@ class HandleInertiaRequests extends Middleware
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
             'languageOptions' => TranslationSv::getLocaleOptions(),
-            'css.backend' => [
-                'app' => mix('css/app.css')->toHtml(),
-            ],
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
-                'additional_css' => SettingService::getAdditionalCssUrl(),
             ],
-            'js.frontend' => [
-                'additional_javascript' => SettingService::getAdditionalJavascriptUrl(),
-            ]
         ]);
     }
 }
