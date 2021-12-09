@@ -18,18 +18,18 @@ class Localization extends LaravelLocalization
 {
     public function __construct()
     {
-        $this->app = app();
+        try {
+            parent::__construct();
+        } catch (\Throwable $e) {
+            $this->app = app();
 
-        $this->configRepository = $this->app['config'];
-        $this->view = $this->app['view'];
-        $this->translator = $this->app['translator'];
-        $this->router = $this->app['router'];
-        $this->request = $this->app['request'];
-        $this->url = $this->app['url'];
-
-        // set default locale
-        $this->defaultLocale = $this->configRepository->get('app.locale');
-        $supportedLocales = $this->getSupportedLocales();
+            $this->configRepository = $this->app['config'];
+            $this->view = $this->app['view'];
+            $this->translator = $this->app['translator'];
+            $this->router = $this->app['router'];
+            $this->request = $this->app['request'];
+            $this->url = $this->app['url'];
+        }
 
         try {
 
@@ -44,6 +44,7 @@ class Localization extends LaravelLocalization
             }
         }
 
+        $supportedLocales = $this->getSupportedLocales();
         if (empty($supportedLocales[$this->defaultLocale])) {
             throw new UnsupportedLocaleException('Laravel default locale is not in the supportedLocales array.');
         }
