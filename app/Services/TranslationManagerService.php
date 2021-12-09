@@ -63,7 +63,7 @@ class TranslationManagerService
             ->get();
     }
 
-    private function getTranslationByLocale(string $locale): Collection
+    public function getTranslationByLocale(string $locale): Collection
     {
         $translations = collect([]);
         $allKeyWithGroups = $this->getAllKeyWithGroups();
