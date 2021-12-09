@@ -32,6 +32,9 @@ return [
             'ppt',
             'pptx',
         ],
+        'import' => [
+            'csv',
+        ],
     ],
 
     'theme_colors' => [
