@@ -283,16 +283,23 @@ class MenuService
                     ],
                 ],
                 [
-                    'title' => 'All Users',
-                    'link' => route('admin.users.index'),
-                    'isActive' => $request->routeIs('admin.users.*'),
-                    'isEnabled' => $user->can('viewAny', User::class),
-                ],
-                [
-                    'title' => 'Roles',
-                    'link' => route('admin.roles.index'),
-                    'isActive' => $request->routeIs('admin.roles.*'),
-                    'isEnabled' => $user->can('viewAny', Role::class),
+                    'title' => 'Users',
+                    'isActive' => $request->routeIs('admin.users.*') || $request->routeIs('admin.roles.*'),
+                    'isEnabled' => $user->can('viewAny', User::class) || $user->can('viewAny', Role::class),
+                    'children' => [
+                        [
+                            'title' => 'All Users',
+                            'link' => route('admin.users.index'),
+                            'isActive' => $request->routeIs('admin.users.*'),
+                            'isEnabled' => $user->can('viewAny', User::class),
+                        ],
+                        [
+                            'title' => 'Roles',
+                            'link' => route('admin.roles.index'),
+                            'isActive' => $request->routeIs('admin.roles.*'),
+                            'isEnabled' => $user->can('viewAny', Role::class),
+                        ],
+                    ],
                 ],
             ];
 

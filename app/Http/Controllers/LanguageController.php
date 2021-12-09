@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\Caches\SettingCache;
 use App\Http\Requests\LanguageRequest;
 use App\Services\LanguageService;
 use App\Traits\FlashNotifiable;
@@ -36,6 +37,8 @@ class LanguageController extends Controller
         $this->languageService->sync($languageIds);
 
         $this->languageService->setDefault($request->default_language);
+
+        app(SettingCache::class)->flush();
 
         $this->generateFlashMessage('Language updated successfully!');
 

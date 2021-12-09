@@ -17,10 +17,18 @@
         <link rel="stylesheet" href="{{ $appCssUrl }}">
         <link rel="stylesheet" href="{{ mix('css/sweetalert2.min.css') }}">
 
+        @if ($additionalCssUrl)
+            <link rel="stylesheet" href="{{ $additionalCssUrl }}">
+        @endif
+
         @stack('styles')
 
         <!-- Scripts -->
         <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
+
+        @if ($additionalJavascriptUrl)
+            <script src="{{ $additionalJavascriptUrl }}" crossorigin="anonymous"></script>
+        @endif
 
         @env ('production')
             <!-- Styles -->
@@ -49,7 +57,7 @@
                     href="{{ route('homepage') }}"
                 >
                     <img
-                        src="{{ $logoUrl ?? 'https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752' }}"
+                        src="@if ($logoUrl) {{ $logoUrl }} @else https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752 @endif"
                         alt=""
                         height="28"
                     >
