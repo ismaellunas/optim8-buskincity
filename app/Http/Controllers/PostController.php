@@ -130,6 +130,7 @@ class PostController extends CrudController
             'coverImage' => $post->coverImage,
             'post' => $post->load('categories'),
             'statusOptions' => Post::getStatusOptions(),
+            'previousLocale' => $this->postService->getPreviousLocale($post->locale),
         ]);
     }
 
