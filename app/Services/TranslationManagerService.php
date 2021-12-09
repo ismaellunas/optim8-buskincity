@@ -120,4 +120,24 @@ class TranslationManagerService
             ]
         );
     }
+
+    public function saveTranslation(
+        string $key,
+        ?string $value,
+        string $locale,
+        string $group,
+        bool $replace = false
+    ): bool {
+        $translation = Translation::firstOrNew([
+            'locale' => $locale,
+            'group'  => $group,
+            'key'    => $key,
+        ]);
+
+        if ($replace || !$translation->value) {
+            $translation->value = $value;
+        }
+
+        return $translation->save();
+    }
 }
