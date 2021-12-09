@@ -37,7 +37,9 @@
                             Categories
                         </sdb-dropdown-item>
 
-                        <sdb-dropdown-scroll>
+                        <sdb-dropdown-scroll
+                            :max-height="300"
+                        >
                             <sdb-dropdown-item
                                 v-for="category in categoryOptions"
                                 :key="category.id"
@@ -58,18 +60,22 @@
                             Languages
                         </sdb-dropdown-item>
 
-                        <sdb-dropdown-item
-                            v-for="language in languageOptions"
-                            :key="language.id"
+                        <sdb-dropdown-scroll
+                            :max-height="300"
                         >
-                            <sdb-checkbox
-                                v-model:checked="languages"
-                                :value="language.id"
-                                @change="onLanguagesChanged"
+                            <sdb-dropdown-item
+                                v-for="language in languageOptions"
+                                :key="language.id"
                             >
-                                &nbsp; {{ language.name }}
-                            </sdb-checkbox>
-                        </sdb-dropdown-item>
+                                <sdb-checkbox
+                                    v-model:checked="languages"
+                                    :value="language.id"
+                                    @change="onLanguagesChanged"
+                                >
+                                    &nbsp; {{ language.name }}
+                                </sdb-checkbox>
+                            </sdb-dropdown-item>
+                        </sdb-dropdown-scroll>
                     </sdb-dropdown>
                 </div>
 
