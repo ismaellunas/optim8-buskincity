@@ -49,8 +49,9 @@
             @case(2)
                 @include('components.navbar.navbar_layout_two')
                 @break
-            @default
-
+            @case(3)
+                @include('components.navbar.navbar_layout_three')
+                @break
         @endswitch
 
         {{ $slot }}
