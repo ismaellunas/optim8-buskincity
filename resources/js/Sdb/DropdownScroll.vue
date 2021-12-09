@@ -1,18 +1,17 @@
 <template>
-    <div id="dropdown-scroll">
+    <div
+        :style="{ maxHeight: maxHeight + 'px', overflowX: 'auto' }"
+    >
         <slot />
     </div>
 </template>
 
 <script>
     export default {
-        name: "SdbDropdownScroll"
+        name: "SdbDropdownScroll",
+
+        props: {
+            maxHeight: { type: Number, default: 0 }
+        },
     }
 </script>
-
-<style scoped>
-    #dropdown-scroll {
-        max-height: 300px;
-        overflow-x: auto;
-    }
-</style>
