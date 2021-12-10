@@ -203,21 +203,28 @@
                         </template>
                     </sdb-form-file>
                 </div>
-
-                <div class="field is-grouped is-pulled-right mt-4">
-                    <sdb-button class="is-link">
-                        Submit
-                    </sdb-button>
-
-                    <sdb-button
-                        class="is-link is-light ml-2"
-                        type="button"
-                        @click="closeModal()"
-                    >
-                        Cancel
-                    </sdb-button>
-                </div>
             </form>
+
+            <template #footer>
+                <div class="column p-0">
+                    <div class="buttons is-right">
+                        <sdb-button
+                            class="is-link"
+                            @click="submitImport"
+                        >
+                            Submit
+                        </sdb-button>
+
+                        <sdb-button
+                            class="is-link is-light ml-2"
+                            type="button"
+                            @click="closeModal()"
+                        >
+                            Cancel
+                        </sdb-button>
+                    </div>
+                </div>
+            </template>
         </sdb-modal-card>
     </app-layout>
 </template>
