@@ -27,25 +27,31 @@ class TranslationManagerController extends Controller
 
     private $translationCache;
     private $translationManagerService;
+    private $translationService;
 
     public function __construct(
         TranslationCache $translationCache,
-        TranslationManagerService $translationManagerService
+        TranslationManagerService $translationManagerService,
+        TranslationService $translationService
     ) {
         $this->translationCache = $translationCache;
         $this->translationManagerService = $translationManagerService;
+        $this->translationService = $translationService;
     }
 
     public function edit(Request $request)
     {
+        $defaultLocale = $this->translationService->getDefaultLocale();
+
         return Inertia::render('TranslationManager', [
             'title' => __('Translation Manager'),
             'baseRouteName' => $this->baseRouteName,
             'importRouteName' => 'admin.settings.translation-manager.import',
             'exportRouteName' => 'admin.settings.translation-manager.export',
-            'defaultLocale' => $this->translationManagerService->defaultLocale,
+            'defaultLocale' => $defaultLocale,
+            'referenceLocale' => 'en',
             'groupOptions' => config('constants.translations.groups'),
-            'localeOptions' => TranslationService::getLocaleOptions(),
+            'localeOptions' => $this->translationService->getLocaleOptions(),
             'pageQueryParams' => array_filter($request->only('locale', 'group')),
             'bags' => [
                 'import' => 'translationImport',
@@ -72,11 +78,17 @@ class TranslationManagerController extends Controller
         $this->translationManagerService->batchUpdate($translations);
 
         $translation = collect($translations)->first();
+        $groups = collect($translations)
+            ->groupBy('group')
+            ->keys();
+
         if ($translation) {
-            $this->translationCache->flushGroup(
-                $translation['locale'],
-                $translation['group']
-            );
+            $groups->each(function ($group) use ($translation) {
+                $this->translationCache->flushGroup(
+                    $translation['locale'],
+                    $group
+                );
+            });
         }
 
         $this->generateFlashMessage('Translation updated successfully!');

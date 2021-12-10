@@ -36,21 +36,6 @@
                 class="columns"
                 style="width: 100%"
             >
-                <div
-                    v-if="!isCreate"
-                    class="column"
-                >
-                    <div class="is-pulled-left">
-                        <sdb-button
-                            class="is-danger"
-                            @click.prevent="deleteSocialMedia(selectedIndex)"
-                        >
-                            <span class="icon is-small">
-                                <i class="far fa-trash-alt" />
-                            </span>
-                        </sdb-button>
-                    </div>
-                </div>
                 <div class="column">
                     <div class="is-pulled-right">
                         <sdb-button @click.prevent="onClose()">
@@ -114,7 +99,6 @@
         emits: [
             'add-social-media',
             'close',
-            'delete-social-media',
             'update-social-media',
         ],
 
@@ -164,10 +148,6 @@
                 this.form['url'] = fields['url'];
                 this.form['icon'] = fields['icon'];
             },
-
-            deleteSocialMedia(index) {
-                this.$emit('delete-social-media', index);
-            }
         },
     }
 </script>
