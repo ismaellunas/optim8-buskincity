@@ -11,14 +11,17 @@ use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\{
     Importable,
+    SkipsFailures,
+    SkipsOnFailure,
     ToCollection,
     WithHeadingRow,
-    WithValidation
+    WithValidation,
 };
 
-class TranslationsImport implements ToCollection, WithValidation, WithHeadingRow
+class TranslationsImport implements ToCollection, WithValidation, WithHeadingRow, SkipsOnFailure
 {
     use Importable;
+    use SkipsFailures;
 
     private $groupKeys;
 

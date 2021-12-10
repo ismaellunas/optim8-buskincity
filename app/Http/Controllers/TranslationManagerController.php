@@ -124,6 +124,14 @@ class TranslationManagerController extends Controller
 
         $this->generateFlashMessage('Translation imported successfully!');
 
-        return redirect()->back();
+        $failures = $translationImport->failures();
+
+        $redirect = redirect()->back();
+
+        if ($failures->isNotEmpty()) {
+            $redirect->withErrors($failures->toArray());
+        }
+
+        return $redirect;
     }
 }
