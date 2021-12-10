@@ -25,10 +25,10 @@
                     <p class="mt-5">
                         @foreach ($socialMediaMenus as $socialMediaMenu)
                             <a
-                                href="{{ $socialMediaMenu->url }}"
+                                href="{{ $socialMediaMenu['url'] }}"
                                 class="pl-3 has-text-black is-size-4"
                             >
-                                <i class="{{ $socialMediaMenu->icon }}"></i>
+                                <i class="{{ $socialMediaMenu['icon'] }}"></i>
                             </a>
                         @endforeach
                     </p>
