@@ -43,6 +43,20 @@
                 </div>
                 <div class="column">
                     <div class="is-pulled-right">
+                        <sdb-button-download
+                            :url="route('admin.settings.translation-manager.export', [locale, group])"
+                            class="mr-2"
+                        >
+                            Export
+                        </sdb-button-download>
+
+                        <sdb-button
+                            class="mr-2"
+                            @click="openModal"
+                        >
+                            Import
+                        </sdb-button>
+
                         <sdb-button
                             class="is-link"
                             @click="onSubmit"
@@ -144,18 +158,69 @@
                 @on-clicked-pagination="onClickedPagination"
             />
         </div>
+
+        <sdb-modal-card
+            v-show="isModalOpen"
+            @close="closeModal()"
+        >
+            <form @submit.prevent="submitImport">
+                <div class="control">
+                    <sdb-form-file
+                        v-model="importForm.file"
+                        :accepted-types="acceptedTypes"
+                        label="Import File"
+                        required
+                    >
+                        <template
+                            v-if="i18n.fileInputNotes"
+                            #note
+                        >
+                            <p class="help is-info">
+                                <ul>
+                                    <li
+                                        v-for="note in i18n.fileInputNotes"
+                                        :key="note"
+                                    >
+                                        {{ note }}
+                                    </li>
+                                </ul>
+                            </p>
+                        </template>
+                    </sdb-form-file>
+                </div>
+
+                <div class="field is-grouped is-pulled-right mt-4">
+                    <sdb-button class="is-link">
+                        Submit
+                    </sdb-button>
+
+                    <sdb-button
+                        class="is-link is-light ml-2"
+                        type="button"
+                        @click="closeModal()"
+                    >
+                        Cancel
+                    </sdb-button>
+                </div>
+            </form>
+        </sdb-modal-card>
     </app-layout>
 </template>
 
 <script>
-    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import AppLayout from '@/Layouts/AppLayout';
+    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
+    import MixinHasModal from '@/Mixins/HasModal';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
+    import SdbButtonDownload from '@/Sdb/ButtonDownload';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbField from '@/Sdb/Field';
     import SdbFlashNotifications from '@/Sdb/FlashNotifications';
+    import SdbFormFile from '@/Sdb/Form/File';
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbInput from '@/Sdb/Input';
+    import SdbModalCard from '@/Sdb/ModalCard';
     import SdbPagination from '@/Sdb/Pagination';
     import { merge, debounce } from 'lodash';
     import { ref } from 'vue';
@@ -166,16 +231,21 @@
         components: {
             AppLayout,
             SdbButton,
+            SdbButtonDownload,
             SdbErrorNotifications,
             SdbField,
             SdbFlashNotifications,
+            SdbFormFile,
             SdbFormSelect,
             SdbInput,
+            SdbModalCard,
             SdbPagination,
         },
 
         mixins: [
             MixinFilterDataHandle,
+            MixinHasModal,
+            MixinHasPageErrors,
         ],
 
         props: {
@@ -210,7 +280,11 @@
             title: {
                 type: String,
                 required: true,
-            }
+            },
+            i18n: {
+                type: Object,
+                default: () => {},
+            },
         },
 
         setup(props) {
@@ -226,12 +300,17 @@
                 form: useForm({
                     translations: props.records.data,
                 }),
+                importForm: useForm({
+                    file: null
+                }),
             };
         },
 
         data() {
             return {
                 selectedIndex: null,
+                isProcessing: false,
+                acceptedTypes: ['.csv'],
             };
         },
 
@@ -349,6 +428,42 @@
                     }
                 );
             },
+
+            getImportForm() {
+                return useForm({
+                    file: null,
+                });
+            },
+
+            onShownModal() {
+                this.importForm = this.getImportForm();
+            },
+
+            submitImport() {
+                const self = this;
+                self.importForm.post(
+                    route("admin.settings.translation-manager.import"),
+                    {
+                        preserveScroll: false,
+                        preserveState: true,
+                        replace: true,
+                        onStart: () => {
+                            self.loader = self.$loading.show();
+                            self.isProcessing = true;
+                        },
+                        onSuccess: (page) => {
+                            successAlert(page.props.flash.message);
+                            self.importForm.isDirty = false;
+                            self.importForm.reset();
+                        },
+                        onFinish: () => {
+                            self.loader.hide();
+                            self.isProcessing = false;
+                            self.closeModal();
+                        },
+                    }
+                );
+            },
         },
-    }
+    };
 </script>
