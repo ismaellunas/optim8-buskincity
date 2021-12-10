@@ -53,6 +53,9 @@ class TranslationManagerController extends Controller
             'groupOptions' => config('constants.translations.groups'),
             'localeOptions' => $this->translationService->getLocaleOptions(),
             'pageQueryParams' => array_filter($request->only('locale', 'group')),
+            'bags' => [
+                'import' => 'translationImport',
+            ],
             'records' => $this->translationManagerService->getRecords(
                 $request->locale,
                 $request->group
@@ -132,10 +135,20 @@ class TranslationManagerController extends Controller
             Excel::CSV
         );
 
-        $this->translationCache->flush();
+        foreach ($translationImport->getAffectedLocales() as $locale) {
+            $this->translationCache->flushLocale($locale);
+        }
 
         $this->generateFlashMessage('Translation imported successfully!');
 
-        return redirect()->back();
+        $failures = $translationImport->failures();
+
+        $redirect = redirect()->back();
+
+        if ($failures->isNotEmpty()) {
+            $redirect->withErrors($failures->toArray());
+        }
+
+        return $redirect;
     }
 }
