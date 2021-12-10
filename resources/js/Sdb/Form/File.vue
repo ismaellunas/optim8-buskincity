@@ -31,12 +31,15 @@
 
     export default {
         name: 'SdbFormFile',
+
         components: {
             SdbFormField,
             SdbInputFile,
             SdbInputError,
         },
+
         inheritAttrs: false,
+
         props: {
             acceptedTypes: {
                 type: Array,
@@ -67,10 +70,12 @@
                 default: false
             },
         },
+
         emits: [
             'on-file-picked',
             'update:modelValue',
         ],
+
         setup(props, { emit }) {
             return {
                 file: useModelWrapper(props, emit),
