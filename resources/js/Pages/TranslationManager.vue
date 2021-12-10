@@ -5,7 +5,10 @@
         </template>
 
         <sdb-flash-notifications :flash="$page.props.flash" />
-        <sdb-error-notifications :errors="$page.props.errors" />
+        <sdb-error-notifications
+            :bags="['default']"
+            :errors="$page.props.errors"
+        />
 
         <div class="box">
             <div class="columns">
@@ -163,12 +166,24 @@
             v-show="isModalOpen"
             @close="closeModal()"
         >
+            <template #header>
+                <p class="modal-card-title">Import</p>
+
+                <sdb-button
+                    aria-label="close"
+                    class="delete is-primary"
+                    type="button"
+                    @click="closeModal"
+                />
+            </template>
+
             <form @submit.prevent="submitImport">
                 <div class="control">
                     <sdb-form-file
                         v-model="importForm.file"
                         :accepted-types="acceptedTypes"
-                        label="Import File"
+                        :message="error('file', bags.import)"
+                        label="File"
                         required
                     >
                         <template
@@ -278,6 +293,10 @@
                 required: true,
             },
             i18n: {
+                type: Object,
+                default: () => {},
+            },
+            bags: {
                 type: Object,
                 default: () => {},
             },
@@ -445,11 +464,20 @@
                             successAlert(page.props.flash.message);
                             self.importForm.isDirty = false;
                             self.importForm.reset();
+                            self.closeModal();
+                        },
+                        onError: (errors) => {
+                            const hasError = Object
+                                .keys(errors)
+                                .includes(self.bags.import);
+
+                            if (! hasError) {
+                                self.closeModal();
+                            }
                         },
                         onFinish: () => {
                             self.loader.hide();
                             self.isProcessing = false;
-                            self.closeModal();
                         },
                     }
                 );

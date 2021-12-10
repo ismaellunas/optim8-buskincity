@@ -47,6 +47,9 @@ class TranslationManagerController extends Controller
             'groupOptions' => config('constants.translations.groups'),
             'localeOptions' => TranslationService::getLocaleOptions(),
             'pageQueryParams' => array_filter($request->only('locale', 'group')),
+            'bags' => [
+                'import' => 'translationImport',
+            ],
             'records' => $this->translationManagerService->getRecords(
                 $request->locale,
                 $request->group
