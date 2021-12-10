@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Entities\Caches\TranslationCache;
 use App\Http\Requests\TranslationRequest;
-use App\Models\Translation;
 use App\Traits\FlashNotifiable;
 use App\Services\{
     TranslationManagerService,
@@ -20,23 +19,29 @@ class TranslationManagerController extends Controller
     private $baseRouteName ="admin.settings.translation-manager";
     private $translationManagerCache;
     private $translationManagerService;
+    private $translationService;
 
     public function __construct(
         TranslationCache $translationCache,
-        TranslationManagerService $translationManagerService
+        TranslationManagerService $translationManagerService,
+        TranslationService $translationService
     ) {
         $this->translationManagerCache = $translationCache;
         $this->translationManagerService = $translationManagerService;
+        $this->translationService = $translationService;
     }
 
     public function edit(Request $request)
     {
+        $defaultLocale = $this->translationService->getDefaultLocale();
+
         return Inertia::render('TranslationManager', [
             'title' => 'Translation Manager',
             'baseRouteName' => $this->baseRouteName,
-            'defaultLocale' => $this->translationManagerService->defaultLocale,
+            'defaultLocale' => $defaultLocale,
+            'referenceLocale' => 'en',
             'groupOptions' => config('constants.translations.groups'),
-            'localeOptions' => TranslationService::getLocaleOptions(),
+            'localeOptions' => $this->translationService->getLocaleOptions(),
             'pageQueryParams' => array_filter($request->only('locale', 'group')),
             'records' => $this->translationManagerService->getRecords(
                 $request->locale,
@@ -47,31 +52,25 @@ class TranslationManagerController extends Controller
 
     public function update(TranslationRequest $request)
     {
-        $inputs = $request->validated();
+        $translations = $request->translations;
 
-        $translation = Translation::updateOrCreate(
-            [
-                "id" => $request->id
-            ],
-            $inputs
-        );
+        $this->translationManagerService->batchUpdate($translations);
 
-        $this->translationManagerCache->flushGroup(
-            $translation->locale,
-            $translation->group
-        );
+        $translation = collect($translations)->first();
+        $groups = collect($translations)
+            ->groupBy('group')
+            ->keys();
+
+        if ($translation) {
+            $groups->each(function ($group) use ($translation) {
+                $this->translationManagerCache->flushGroup(
+                    $translation['locale'],
+                    $group
+                );
+            });
+        }
 
         $this->generateFlashMessage('Translation updated successfully!');
-
-        return redirect()->back();
-    }
-
-    public function clear(Translation $translation)
-    {
-        $translation->value = null;
-        $translation->save();
-
-        $this->generateFlashMessage('Translation cleared successfully!');
 
         return redirect()->back();
     }

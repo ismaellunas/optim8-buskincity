@@ -32,47 +32,47 @@ class SettingService
 
     public static function getFrontendCssUrl(): string
     {
-        $urlCss = app(SettingCache::class)->remember('additional_css_url', function () {
-            return Setting::key('url_css')->value('value');
+        $urlCss = app(SettingCache::class)->remember('url_css', function () {
+            return Setting::key('url_css')->value('value') ?? "";
         });
 
-        return $urlCss ?? mix('css/app.css')->toHtml();
+        return !empty($urlCss) ? $urlCss : mix('css/app.css')->toHtml();
     }
 
-    public static function getAdditionalCssUrl(): ?string
+    public static function getAdditionalCssUrl(): string
     {
         return app(SettingCache::class)->remember('additional_css_url', function () {
             return Setting::key(self::getAdditionalCodeFileKey('additional_css'))
-                ->value('value');
+                ->value('value') ?? "";
         });
     }
 
-    public static function getAdditionalJavascriptUrl(): ?string
+    public static function getAdditionalJavascriptUrl(): string
     {
         return app(SettingCache::class)->remember('additional_javascript_url', function () {
             return Setting::key(self::getAdditionalCodeFileKey('additional_javascript'))
-                ->value('value');
+                ->value('value') ?? "";
         });
     }
 
-    public function getTrackingCodeInsideHead(): ?string
+    public function getTrackingCodeInsideHead(): string
     {
         return app(SettingCache::class)->remember('tracking_code_inside_head', function () {
-            return Setting::key('tracking_code_inside_head')->value('value');
+            return Setting::key('tracking_code_inside_head')->value('value') ?? "";
         });
     }
 
-    public function getTrackingCodeAfterBody(): ?string
+    public function getTrackingCodeAfterBody(): string
     {
         return app(SettingCache::class)->remember('tracking_code_after_body', function () {
-            return Setting::key('tracking_code_after_body')->value('value');
+            return Setting::key('tracking_code_after_body')->value('value') ?? "";
         });
     }
 
-    public function getTrackingCodeBeforeBody(): ?string
+    public function getTrackingCodeBeforeBody(): string
     {
         return app(SettingCache::class)->remember('tracking_code_before_body', function () {
-            return Setting::key('tracking_code_before_body')->value('value');
+            return Setting::key('tracking_code_before_body')->value('value') ?? "";
         });
     }
 
@@ -119,13 +119,13 @@ class SettingService
             ->all();
     }
 
-    public function getLogoUrl(): ?string
+    public function getLogoUrl(): string
     {
         return app(SettingCache::class)->remember('logo_url', function () {
             $mediaId = Setting::key(config("constants.theme_header.header_logo_media.key"))
                 ->value('value');
 
-            return Media::where('id', $mediaId)->value('file_url');
+            return Media::where('id', $mediaId)->value('file_url') ?? "";
         });
     }
 

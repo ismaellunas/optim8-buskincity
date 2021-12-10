@@ -13,7 +13,7 @@
                     <sdb-form-select
                         v-model="locale"
                         label="Language"
-                        @change="search"
+                        @change="search()"
                     >
                         <option
                             v-for="localeOption in localeOptions"
@@ -27,7 +27,7 @@
                     <sdb-form-select
                         v-model="group"
                         label="Group"
-                        @change="search"
+                        @change="search()"
                     >
                         <option value="">
                             All
@@ -41,6 +41,16 @@
                         </option>
                     </sdb-form-select>
                 </div>
+                <div class="column">
+                    <div class="is-pulled-right">
+                        <sdb-button
+                            class="is-link"
+                            @click="onSubmit"
+                        >
+                            Update
+                        </sdb-button>
+                    </div>
+                </div>
             </div>
             <div class="table-container">
                 <table class="table is-striped is-hoverable is-fullwidth">
@@ -49,7 +59,7 @@
                             <th>#</th>
                             <th>Group</th>
                             <th>Key</th>
-                            <th v-if="locale !== defaultLocale">
+                            <th v-if="!isReferenceLanguage">
                                 English Value
                             </th>
                             <th>Value</th>
@@ -68,7 +78,7 @@
                             <th>{{ page.id ?? "-" }}</th>
                             <td>{{ page.group }}</td>
                             <td>{{ page.key }}</td>
-                            <td v-if="locale !== defaultLocale">
+                            <td v-if="!isReferenceLanguage">
                                 {{ page.en_value ?? "-" }}
                             </td>
                             <td>
@@ -81,20 +91,13 @@
                                         action="post"
                                         @submit.prevent="onSubmit"
                                     >
-                                        <sdb-field class="has-addons mb-0">
+                                        <sdb-field class="mb-0">
                                             <div class="control is-expanded">
                                                 <sdb-input
-                                                    v-model="form.value"
+                                                    v-model="form.translations[index].value"
                                                     placeholder="value"
                                                 />
                                             </div>
-
-                                            <sdb-button
-                                                class="is-success"
-                                                @click="onSubmit()"
-                                            >
-                                                Update
-                                            </sdb-button>
                                         </sdb-field>
                                     </form>
                                 </template>
@@ -105,14 +108,24 @@
                                         class="is-ghost has-text-black"
                                         @click="setSelectedIndex(index)"
                                     >
-                                        <span class="icon is-small">
+                                        <span
+                                            v-if="selectedIndex !== index"
+                                            class="icon is-small"
+                                        >
                                             <i class="fas fa-pen" />
+                                        </span>
+
+                                        <span
+                                            v-else
+                                            class="icon is-small"
+                                        >
+                                            <i class="fas fa-times" />
                                         </span>
                                     </sdb-button>
                                     <sdb-button
                                         v-if="page.value"
                                         class="is-ghost has-text-black ml-1"
-                                        @click="onClear(page.id)"
+                                        @click="onClear(index)"
                                     >
                                         <span class="icon is-small">
                                             <i class="fas fa-eraser" />
@@ -125,8 +138,10 @@
                 </table>
             </div>
             <sdb-pagination
+                :is-ajax="true"
                 :links="records.links"
                 :query-params="queryParams"
+                @on-clicked-pagination="onClickedPagination"
             />
         </div>
     </app-layout>
@@ -142,10 +157,10 @@
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbInput from '@/Sdb/Input';
     import SdbPagination from '@/Sdb/Pagination';
-    import { merge, debounce, forEach } from 'lodash';
+    import { merge, debounce } from 'lodash';
     import { ref } from 'vue';
-    import { success as successAlert, confirmDelete } from '@/Libs/alert';
-    import { usePage, useForm } from '@inertiajs/inertia-vue3';
+    import { success as successAlert, confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -176,6 +191,10 @@
                 type: Array,
                 default:() => [],
             },
+            referenceLocale: {
+                type: String,
+                required: true,
+            },
             localeOptions: {
                 type: Array,
                 default:() => [],
@@ -199,19 +218,14 @@
                 {},
                 props.pageQueryParams
             );
-            const form = {
-                id: null,
-                locale: null,
-                group: null,
-                key: null,
-                value: null,
-            };
 
             return {
                 group: ref(props.pageQueryParams?.group ?? ""),
                 locale: ref(props.pageQueryParams?.locale ?? props.defaultLocale),
                 queryParams: ref(queryParams),
-                form: useForm(form),
+                form: useForm({
+                    translations: props.records.data,
+                }),
             };
         },
 
@@ -221,11 +235,36 @@
             };
         },
 
+        computed: {
+            isReferenceLanguage() {
+                return this.referenceLocale === this.locale;
+            }
+        },
+
         methods: {
+            getUseForm() {
+                return useForm({
+                    translations: this.records.data,
+                });
+            },
+
             search: debounce(function() {
-                this.queryParams['group'] = this.group;
-                this.queryParams['locale'] = this.locale;
-                this.refreshWithQueryParams();
+                if (this.form.isDirty) {
+                    confirmLeaveProgress().then((result) => {
+                        if (result.isConfirmed) {
+                            this.queryParams['group'] = this.group;
+                            this.queryParams['locale'] = this.locale;
+                            this.refreshWithQueryParams();
+                        } else {
+                            this.group = this.queryParams['group'] ?? "";
+                            this.locale = this.queryParams['locale'] ?? this.defaultLocale;
+                        }
+                    });
+                } else {
+                    this.queryParams['group'] = this.group;
+                    this.queryParams['locale'] = this.locale;
+                    this.refreshWithQueryParams();
+                }
             }, 750),
 
             refreshWithQueryParams() {
@@ -238,7 +277,8 @@
                         onStart: () => this.onStartLoadingOverlay(),
                         onFinish: () => {
                             this.onEndLoadingOverlay();
-                            this.form.reset();
+                            this.form = this.getUseForm();
+                            this.selectedIndex = null;
                         },
                     }
                 );
@@ -250,25 +290,19 @@
                 } else {
                     this.selectedIndex = null;
                 }
-
-                this.form.id = this.records.data[index].id;
-                this.form.locale = this.records.data[index].locale;
-                this.form.group = this.records.data[index].group;
-                this.form.key = this.records.data[index].key;
-                this.form.value = this.records.data[index].value;
             },
 
             onSubmit() {
                 const self = this;
 
-                this.form.post(route(this.baseRouteName+'.update'), {
+                self.form.post(route(self.baseRouteName+'.update'), {
                     preserveScroll: false,
                     onStart: () => {
                         self.loader = self.$loading.show();
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
-                        self.form.reset();
+                        self.form = self.getUseForm();
                         self.selectedIndex = null;
                     },
                     onFinish: () => {
@@ -277,32 +311,43 @@
                 });
             },
 
-            onClear(translationId) {
+            onClear(index) {
                 const self = this;
                 confirmDelete(
                     "Are you sure?",
                     "The value will be cleared."
                 ).then((result) => {
                     if (result.isConfirmed) {
-                        self.$inertia.post(
-                            route(self.baseRouteName+'.clear', translationId),
-                            {},
-                            {
-                                preserveScroll: false,
-                                onStart: () => {
-                                    self.loader = self.$loading.show();
-                                },
-                                onSuccess: (page) => {
-                                    successAlert(page.props.flash.message);
-                                    self.selectedIndex = null;
-                                },
-                                onFinish: () => {
-                                    self.loader.hide();
-                                }
-                            }
-                        );
+                        self.form.translations[index].value = null;
                     }
                 });
+            },
+
+            onClickedPagination(url) {
+                if (this.form.isDirty) {
+                    confirmLeaveProgress().then((result) => {
+                        if (result.isConfirmed) {
+                            this.refreshPagination(url);
+                        }
+                    });
+                } else {
+                    this.refreshPagination(url);
+                }
+            },
+
+            refreshPagination(url) {
+                this.$inertia.get(
+                    url,
+                    this.queryParams,
+                    {
+                        replace: true,
+                        preserveState: true,
+                        onFinish: () => {
+                            this.form = this.getUseForm();
+                            this.selectedIndex = null;
+                        },
+                    }
+                );
             },
         },
     }
