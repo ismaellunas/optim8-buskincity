@@ -19,10 +19,11 @@ class Footer extends Component
         $menuService = app(MenuService::class);
         $currentLanguage = TranslationService::currentLanguage();
 
-        $this->logoUrl = $logoUrl;
-        $this->menus = $menuService->getFooterMenu($currentLanguage) ?? [];
-        $this->socialMediaMenus = $menuService->getSocialMediaMenus() ?? [];
+        $this->logoUrl = $logoUrl !== "" ? $logoUrl : null;
+        $this->menus = $menuService->getFooterMenu($currentLanguage);
+        $this->socialMediaMenus = $menuService->getSocialMediaMenus();
     }
+
     /**
      * Get the view / contents that represent the component.
      *
