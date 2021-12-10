@@ -128,7 +128,7 @@ class MenuService
         );
     }
 
-    public function getSocialMediaMenus()
+    public function getSocialMediaMenus(): array
     {
         return app(SettingCache::class)->remember(
             'social_media',
