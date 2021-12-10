@@ -163,7 +163,23 @@ class PostService
             ->first();
     }
 
-    public function getPreviousLocale(string $locale): array
+    public function getLanguageOptions(Post $post = null): array
+    {
+        if ($post) {
+            $locale = $this->getLocale($post->locale);
+            $localeOptions = collect(TranslationService::getLocaleOptions())
+                ->push($locale);
+
+            return $localeOptions->unique('id')
+                ->sortBy('id')
+                ->values()
+                ->all();
+        }
+
+        return TranslationService::getLocaleOptions();
+    }
+
+    private function getLocale(string $locale): array
     {
         $language = Language::where('code', $locale)
             ->get([

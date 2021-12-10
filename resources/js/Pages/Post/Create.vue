@@ -39,6 +39,7 @@
             errors: Object,
             post: Object,
             statusOptions: Array,
+            languageOptions: { type: Object, required: true },
         },
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
@@ -61,7 +62,7 @@
                 defaultLocale,
                 form: useForm(postForm),
                 loader: null,
-                localeOptions: usePage().props.value.languageOptions,
+                localeOptions: props.languageOptions,
             };
         },
         data() {

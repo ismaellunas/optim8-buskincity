@@ -41,7 +41,7 @@
             coverImage: { type: [Object, null], required: true },
             errors: { type: Object, default:() => {} },
             post: { type: Object, required: true },
-            previousLocale: { type: Object, required: true },
+            languageOptions: { type: Object, required: true },
             statusOptions: { type: Array, required: true, },
         },
         setup(props) {
@@ -63,13 +63,11 @@
                         : new Date()
                 ),
             };
-            const localeOptions = usePage().props.value.languageOptions;
-            localeOptions.push(props.previousLocale);
 
             return {
                 defaultLocale,
                 form: useForm(postForm),
-                localeOptions: localeOptions,
+                localeOptions: props.languageOptions,
             };
         },
         data() {
