@@ -56,7 +56,10 @@
             },
         },
 
-        emits: ['on-file-picked'],
+        emits: [
+            'on-file-picked',
+            'update:modelValue'
+        ],
 
         setup(props, { emit }) {
             return {
