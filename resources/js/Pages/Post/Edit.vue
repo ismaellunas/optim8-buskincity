@@ -2,7 +2,7 @@
     <app-layout>
         <template #header>Post</template>
 
-        <sdb-error-notifications :errors="$page.props.errors"/>
+        <sdb-error-notifications :errors="$page.props.errors" />
 
         <div class="mb-6">
             <post-form

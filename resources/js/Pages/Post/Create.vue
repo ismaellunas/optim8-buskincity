@@ -1,23 +1,23 @@
 <template>
-<app-layout>
-    <template #header>Post</template>
+    <app-layout>
+        <template #header>Post</template>
 
-    <sdb-error-notifications :errors="$page.props.errors"/>
+        <sdb-error-notifications :errors="$page.props.errors" />
 
-    <div class="mb-6">
-        <post-form
-            v-model="form"
-            :can="can"
-            :errors="errors"
-            :is-new="true"
-            :is-processing="isProcessing"
-            :status-options="statusOptions"
-            :locale-options="localeOptions"
-            :category-options="categoryOptions"
-            @on-submit="onSubmit"
-        />
-    </div>
-</app-layout>
+        <div class="mb-6">
+            <post-form
+                v-model="form"
+                :can="can"
+                :errors="errors"
+                :is-new="true"
+                :is-processing="isProcessing"
+                :status-options="statusOptions"
+                :locale-options="localeOptions"
+                :category-options="categoryOptions"
+                @on-submit="onSubmit"
+            />
+        </div>
+    </app-layout>
 </template>
 
 <script>
@@ -25,7 +25,7 @@
     import PostForm from '@/Pages/Post/Form';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
-    import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
+    import { success as successAlert } from '@/Libs/alert';
 
     export default {
         components: {
@@ -34,12 +34,12 @@
             SdbErrorNotifications,
         },
         props: {
-            can: Object,
-            categoryOptions: Array,
-            errors: Object,
-            post: Object,
-            statusOptions: Array,
+            can: { type: Object, required: true },
+            categoryOptions: { type: Array, default:() => [] },
+            errors: { type: Object, default:() => {} },
             languageOptions: { type: Object, required: true },
+            post: { type: Object, required: true },
+            statusOptions: { type: Array, default:() => [] },
         },
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
