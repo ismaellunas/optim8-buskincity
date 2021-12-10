@@ -73,7 +73,7 @@
                             <th>#</th>
                             <th>Group</th>
                             <th>Key</th>
-                            <th v-if="locale !== defaultLocale">
+                            <th v-if="!isReferenceLanguage">
                                 English Value
                             </th>
                             <th>Value</th>
@@ -92,7 +92,7 @@
                             <th>{{ page.id ?? "-" }}</th>
                             <td>{{ page.group }}</td>
                             <td>{{ page.key }}</td>
-                            <td v-if="locale !== defaultLocale">
+                            <td v-if="!isReferenceLanguage">
                                 {{ page.en_value ?? "-" }}
                             </td>
                             <td>
@@ -261,6 +261,10 @@
                 type: Array,
                 default:() => [],
             },
+            referenceLocale: {
+                type: String,
+                required: true,
+            },
             localeOptions: {
                 type: Array,
                 default:() => [],
@@ -308,6 +312,12 @@
                 isProcessing: false,
                 acceptedTypes: ['.csv'],
             };
+        },
+
+        computed: {
+            isReferenceLanguage() {
+                return this.referenceLocale === this.locale;
+            }
         },
 
         methods: {
