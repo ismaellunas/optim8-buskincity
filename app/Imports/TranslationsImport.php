@@ -23,7 +23,7 @@ class TranslationsImport implements ToCollection, WithValidation, WithHeadingRow
     use Importable;
     use SkipsFailures;
 
-    private $groupKeys;
+    private $affectedLocales;
 
     private $translationManagerService;
     private $translationService;
@@ -32,6 +32,11 @@ class TranslationsImport implements ToCollection, WithValidation, WithHeadingRow
     {
         $this->translationManagerService = app(TranslationManagerService::class);
         $this->translationService = app(TranslationService::class);
+    }
+
+    public function getAffectedLocales(): Collection
+    {
+        return $this->affectedLocales;
     }
 
     /**
@@ -48,6 +53,8 @@ class TranslationsImport implements ToCollection, WithValidation, WithHeadingRow
                 true,
             );
         }
+
+        $this->affectedLocales = $translations->unique('locale')->pluck('locale');
     }
 
     public function rules(): array

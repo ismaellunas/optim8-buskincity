@@ -123,7 +123,9 @@ class TranslationManagerController extends Controller
             Excel::CSV
         );
 
-        $this->translationCache->flush();
+        foreach ($translationImport->getAffectedLocales() as $locale) {
+            $this->translationCache->flushLocale($locale);
+        }
 
         $this->generateFlashMessage('Translation imported successfully!');
 
