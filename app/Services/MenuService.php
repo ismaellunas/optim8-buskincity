@@ -147,7 +147,7 @@ class MenuService
                     ->socialMedia()
                     ->first();
 
-                return $menu ? $menu->menuItems : [];
+                return $menu ? $menu->menuItems->toArray() : [];
             }
         );
     }
