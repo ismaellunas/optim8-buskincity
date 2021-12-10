@@ -18,6 +18,8 @@ class Master extends Component
     public $trackingCodeAfterBody;
     public $trackingCodeBeforeBody;
     public $trackingCodeInsideHead;
+    public $additionalJavascriptUrl;
+    public $additionalCssUrl;
 
     /**
      * Create a new component instance.
@@ -30,7 +32,7 @@ class Master extends Component
         $settingService = app(SettingService::class);
         $currentLanguage = TranslationService::currentLanguage();
 
-        $this->appCssUrl = SettingService::getFrontendCssUrl();
+        $this->appCssUrl = $settingService->getFrontendCssUrl();
         $this->currentLanguage = $currentLanguage;
         $this->headerLayout = $settingService->getHeaderLayout();
         $this->logoUrl = $settingService->getLogoUrl();
@@ -39,12 +41,14 @@ class Master extends Component
         $this->trackingCodeBeforeBody = $settingService->getTrackingCodeBeforeBody();
         $this->trackingCodeInsideHead = $settingService->getTrackingCodeInsideHead();
 
+        $this->additionalJavascriptUrl = $settingService->getAdditionalJavascriptUrl();
+        $this->additionalCssUrl = $settingService->getAdditionalCssUrl();
+
         $this->languageOptions = collect(TranslationService::getLocaleOptions())
             ->filter(function ($locale) use ($currentLanguage) {
                return $locale['id'] != $currentLanguage;
             })
             ->all();
-
     }
 
     /**

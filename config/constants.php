@@ -102,5 +102,9 @@ return [
             'passwords',
             'validation',
         ]
+    ],
+    'setting_cache' => [
+        'locale_options' => 'locale_options',
+        'default_locale' => 'default_locale',
     ]
 ];
