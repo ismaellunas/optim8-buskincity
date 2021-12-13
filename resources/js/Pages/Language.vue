@@ -163,7 +163,7 @@
                 set(language) {
                     this.form.default_language = language.id;
 
-                    this.updateSelectedLanguage(language.id);
+                    this.addSupportedLanguages(language.id);
 
                     const selectedLanguage = find(
                         this.supportedLanguageOptions,
@@ -206,6 +206,12 @@
                     this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
             }, 750),
+
+            addSupportedLanguages(languageId) {
+                if (!this.form.languages.includes(languageId)) {
+                    this.form.languages.push(languageId);
+                }
+            },
 
             updateSelectedLanguage(languageId) {
                 const languageIds = this.form.languages;
