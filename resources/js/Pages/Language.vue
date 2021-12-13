@@ -56,25 +56,19 @@
                             </div>
 
                             <div
-                                v-for="option in sortedLanguageOptions"
+                                v-for="option, index in sortedLanguageOptions"
                                 :key="option.id"
                                 class="column is-3 py-1"
                             >
-                                <div class="field is-horizontal">
-                                    <div class="field-body">
-                                        <div class="field">
-                                            <div class="control">
-                                                <sdb-checkbox
-                                                    v-model:checked="form.languages"
-                                                    :disabled="option.id == form.default_language"
-                                                    :value="option.id"
-                                                >
-                                                    &nbsp; {{ option.value }}
-                                                </sdb-checkbox>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <sdb-button-option
+                                    class="is-fullwidth"
+                                    type="button"
+                                    selected-attribute="selected"
+                                    :option="option"
+                                    @click="toggleLanguage(sortedLanguageOptions[index])"
+                                >
+                                    {{ option.value }}
+                                </sdb-button-option>
                             </div>
                         </div>
                     </fieldset>
@@ -88,7 +82,7 @@
     import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
-    import SdbCheckbox from '@/Sdb/Checkbox';
+    import SdbButtonOption from '@/Sdb/ButtonOption';
     import SdbDropdownItem from '@/Sdb/DropdownItem';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbFormDropdownSearch from '@/Sdb/Form/DropdownSearch';
@@ -103,7 +97,7 @@
         components: {
             AppLayout,
             SdbButton,
-            SdbCheckbox,
+            SdbButtonOption,
             SdbDropdownItem,
             SdbErrorNotifications,
             SdbFormDropdownSearch,
@@ -139,6 +133,7 @@
                 isProcessing: false,
                 loader: null,
                 filteredLanguages: this.languageOptions.slice(0, 10),
+                supportedLanguageOptions: this.initSupportedLanguageOptions(),
                 trans: {
                     labels: {
                         "Supported Languages": "Supported Languages",
@@ -149,8 +144,9 @@
 
         computed: {
             sortedLanguageOptions() {
-                return sortBy(this.languageOptions, ['value']);
+                return sortBy(this.supportedLanguageOptions, ['value']);
             },
+
             selectedDefaultLanguage: {
                 get() {
                     const self = this;
@@ -169,6 +165,10 @@
                     this.addSupportedLanguages(languageId);
                 }
             },
+        },
+
+        update() {
+            this.supportedLanguageOptions = this.initSupportedLanguageOptions();
         },
 
         methods: {
@@ -206,6 +206,33 @@
                     this.form.languages.push(languageId);
                 }
             },
+
+            updateSelectedLanguage(languageId) {
+                const languageIds = this.form.languages;
+                const index = languageIds.indexOf(languageId);
+
+                if (index === -1) {
+                    languageIds.push(languageId);
+                } else {
+                    languageIds.splice(index, 1);
+                }
+            },
+
+            toggleLanguage(language) {
+                language.selected = !language.selected;
+
+                this.updateSelectedLanguage(language.id);
+            },
+
+            initSupportedLanguageOptions() {
+                const self = this;
+
+                return self.languageOptions
+                    .map((language) => {
+                        language['selected'] = self.supportedLanguages.includes(language.id);
+                        return language;
+                    });
+            }
         },
     };
 </script>
