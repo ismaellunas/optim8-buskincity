@@ -167,10 +167,6 @@
             },
         },
 
-        update() {
-            this.supportedLanguageOptions = this.initSupportedLanguageOptions();
-        },
-
         methods: {
             onSubmit() {
                 const self = this;
@@ -182,8 +178,9 @@
                         self.isProcessing = true;
                     },
                     onSuccess: (page) => {
-                        successAlert(page.props.flash.message);
                         self.form.isDirty = false;
+                        self.supportedLanguageOptions = self.initSupportedLanguageOptions();
+                        successAlert(page.props.flash.message);
                     },
                     onFinish: () => {
                         self.loader.hide();
