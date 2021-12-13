@@ -40,7 +40,7 @@
                                     <sdb-dropdown-item
                                         v-for="option in filteredLanguages"
                                         :key="option.id"
-                                        @click="selectedDefaultLanguage = option.id"
+                                        @click="selectedDefaultLanguage = option"
                                     >
                                         {{ option.value }}
                                     </sdb-dropdown-item>
@@ -160,14 +160,15 @@
                     }
                     return '';
                 },
-                set(languageId) {
-                    this.form.default_language = languageId;
+                set(language) {
+                    this.form.default_language = language.id;
 
-                    this.updateSelectedLanguage(languageId);
+                    this.updateSelectedLanguage(language.id);
 
-                    const selectedLanguage = this
-                        .supportedLanguageOptions
-                        .find(language => language.id == languageId)
+                    const selectedLanguage = find(
+                        this.supportedLanguageOptions,
+                        language
+                    );
 
                     selectedLanguage.selected = true;
                 }
