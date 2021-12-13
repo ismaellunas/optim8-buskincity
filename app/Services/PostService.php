@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\Category;
-use App\Models\Post;
+use App\Models\{
+    Category,
+    Language,
+    Post,
+};
 use App\Services\TranslationService;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -158,5 +161,23 @@ class PostService
                 $query->where('locale', $locale);
             })
             ->first();
+    }
+
+    public function getPreviousLocale(string $locale): array
+    {
+        $language = Language::where('code', $locale)
+            ->get([
+                'code',
+                'name',
+            ])
+            ->map(function ($item) {
+                return [
+                    'id' => $item->code,
+                    'name' => $item->name
+                ];
+            })
+            ->first();
+
+        return $language ?? [];
     }
 }

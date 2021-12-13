@@ -1,24 +1,24 @@
 <template>
-<app-layout>
-    <template #header>Post</template>
+    <app-layout>
+        <template #header>Post</template>
 
-    <sdb-error-notifications :errors="$page.props.errors"/>
+        <sdb-error-notifications :errors="$page.props.errors"/>
 
-    <div class="mb-6">
-        <post-form
-            v-model="form"
-            :can="can"
-            :errors="errors"
-            :is-new="false"
-            :is-processing="isProcessing"
-            :category-options="categoryOptions"
-            :locale-options="localeOptions"
-            :status-options="statusOptions"
-            :cover-image="coverImage"
-            @on-submit="onSubmit"
-        />
-    </div>
-</app-layout>
+        <div class="mb-6">
+            <post-form
+                v-model="form"
+                :can="can"
+                :errors="errors"
+                :is-new="false"
+                :is-processing="isProcessing"
+                :category-options="categoryOptions"
+                :locale-options="localeOptions"
+                :status-options="statusOptions"
+                :cover-image="coverImage"
+                @on-submit="onSubmit"
+            />
+        </div>
+    </app-layout>
 </template>
 
 <script>
@@ -36,14 +36,15 @@
             SdbErrorNotifications,
         },
         props: {
-            can: Object,
-            categoryOptions: Array,
-            errors: Object,
-            post: Object,
-            statusOptions: Array,
-            coverImage: Object,
+            can: { type: Object, required: true },
+            categoryOptions: { type: Array, required: true, },
+            coverImage: { type: [Object, null], required: true },
+            errors: { type: Object, default:() => {} },
+            post: { type: Object, required: true },
+            previousLocale: { type: Object, required: true },
+            statusOptions: { type: Array, required: true, },
         },
-        setup(props, { emit }) {
+        setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
             const postForm = {
                 categories: map(props.post.categories, 'id'),
@@ -58,15 +59,17 @@
                 title: props.post.title,
                 scheduled_at: (
                     (props.post.scheduled_at)
-                    ? new Date(props.post.scheduled_at)
-                    : new Date()
+                        ? new Date(props.post.scheduled_at)
+                        : new Date()
                 ),
             };
+            const localeOptions = usePage().props.value.languageOptions;
+            localeOptions.push(props.previousLocale);
 
             return {
                 defaultLocale,
                 form: useForm(postForm),
-                localeOptions: usePage().props.value.languageOptions,
+                localeOptions: localeOptions,
             };
         },
         data() {
