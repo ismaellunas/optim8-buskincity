@@ -165,18 +165,17 @@ class PostService
 
     public function getLanguageOptions(Post $post = null): array
     {
-        if ($post) {
-            $locale = $this->getLocale($post->locale);
-            $localeOptions = collect(TranslationService::getLocaleOptions())
-                ->push($locale);
+        $localeOptions = collect(TranslationService::getLocaleOptions());
 
-            return $localeOptions->unique('id')
-                ->sortBy('id')
-                ->values()
-                ->all();
+        if ($post && !$localeOptions->contains('id', $post->locale)) {
+            $localeOptions->push(
+                $this->getLocale($post->locale)
+            );
         }
 
-        return TranslationService::getLocaleOptions();
+        return $localeOptions->sortBy('id')
+            ->values()
+            ->all();
     }
 
     private function getLocale(string $locale): array
