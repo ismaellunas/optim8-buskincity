@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Translation;
+use App\Services\TranslationManagerService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Seeder;
 use Illuminate\Filesystem\Filesystem;
@@ -16,10 +16,12 @@ class TranslationSeeder extends Seeder
 
     public function __construct(
         Application $app,
-        Filesystem $files)
-    {
+        Filesystem $files,
+        TranslationManagerService $translationManagerService
+    ) {
         $this->app = $app;
         $this->files = $files;
+        $this->translationManagerService = $translationManagerService;
     }
     /**
      * Run the database seeds.
@@ -54,31 +56,12 @@ class TranslationSeeder extends Seeder
 
                 if ($translations && is_array($translations)) {
                     foreach (Arr::dot($translations) as $key => $value) {
-                        $this->saveTranslation($key, $value, $locale, $group, $replace);
+                        $this
+                            ->translationManagerService
+                            ->saveTranslation($key, $value, $locale, $group, $replace);
                     }
                 }
             }
         }
-    }
-
-    private function saveTranslation(
-        string $key,
-        string $value,
-        string $locale,
-        string $group,
-        bool $replace = false
-    ) {
-        $translation = Translation::firstOrNew([
-            'locale' => $locale,
-            'group'  => $group,
-            'key'    => $key,
-        ]);
-
-        // Only replace when empty, or explicitly told so
-        if ($replace || !$translation->value) {
-            $translation->value = $value;
-        }
-
-        $translation->save();
     }
 }
