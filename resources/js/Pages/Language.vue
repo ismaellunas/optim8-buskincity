@@ -65,6 +65,7 @@
                                     type="button"
                                     selected-attribute="selected"
                                     :option="option"
+                                    :disabled="option.id == form.default_language"
                                     @click="toggleLanguage(sortedLanguageOptions[index])"
                                 >
                                     {{ option.value }}
@@ -162,7 +163,13 @@
                 set(languageId) {
                     this.form.default_language = languageId;
 
-                    this.addSupportedLanguages(languageId);
+                    this.updateSelectedLanguage(languageId);
+
+                    const selectedLanguage = this
+                        .supportedLanguageOptions
+                        .find(language => language.id == languageId)
+
+                    selectedLanguage.selected = true;
                 }
             },
         },
@@ -198,12 +205,6 @@
                     this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
             }, 750),
-
-            addSupportedLanguages(languageId) {
-                if (!this.form.languages.includes(languageId)) {
-                    this.form.languages.push(languageId);
-                }
-            },
 
             updateSelectedLanguage(languageId) {
                 const languageIds = this.form.languages;
