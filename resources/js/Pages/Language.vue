@@ -188,6 +188,7 @@
                     }
                 });
             },
+
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
                     this.filteredLanguages = filter(this.languageOptions, function (language) {
@@ -224,11 +225,10 @@
             initSupportedLanguageOptions() {
                 const self = this;
 
-                return self.languageOptions
-                    .map((language) => {
-                        language['selected'] = self.supportedLanguages.includes(language.id);
-                        return language;
-                    });
+                return self.languageOptions.map((language) => {
+                    language['selected'] = self.supportedLanguages.includes(language.id);
+                    return language;
+                });
             }
         },
     };
