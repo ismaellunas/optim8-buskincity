@@ -136,7 +136,8 @@ class SettingService
         });
     }
 
-    public function getHeaderLayoutName(): string {
+    public function getHeaderLayoutName(): string
+    {
         $headerLayout = $this->getHeaderLayout() ?? 1;
         switch ($headerLayout) {
             case 1:
