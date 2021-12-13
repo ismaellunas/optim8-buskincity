@@ -105,8 +105,6 @@
 @once
     @push('bottom_scripts')
 
-    <script src="{{ mix('js/frontend-app.js') }}"></script>
-
     <script>
         const Carousel = {
             data() {

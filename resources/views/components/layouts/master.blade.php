@@ -36,6 +36,8 @@
 
         @stack('scripts')
 
+        <script src="{{ mix('js/frontend.js') }}"></script>
+
         {!! $trackingCodeInsideHead !!}
     </head>
 
