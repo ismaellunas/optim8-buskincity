@@ -50,17 +50,7 @@
     <body class="font-sans antialiased">
         {!! $trackingCodeAfterBody !!}
 
-        @switch($headerLayout)
-            @case(1)
-                @include('components.navbar.navbar_layout_one')
-                @break
-            @case(2)
-                @include('components.navbar.navbar_layout_two')
-                @break
-            @case(3)
-                @include('components.navbar.navbar_layout_three')
-                @break
-        @endswitch
+        <x-dynamic-component :component="$headerLayoutName" />
 
         {{ $slot }}
 
