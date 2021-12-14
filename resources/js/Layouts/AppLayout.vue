@@ -1,12 +1,5 @@
 <template>
     <div id="main-container-wrapper">
-        <Head>
-            <link
-                rel="stylesheet"
-                :href="$page.props.css.backend.app"
-            >
-        </Head>
-
         <sdb-navbar-menu />
 
         <section class="hero is-small is-primary mb-4">
@@ -30,13 +23,11 @@
 
 <script>
     import SdbNavbarMenu from '@/Sdb/NavbarMenu';
-    import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'LayoutApp',
 
         components: {
-            Head,
             SdbNavbarMenu,
         },
     };
