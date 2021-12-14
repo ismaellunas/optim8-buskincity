@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\{
     Media,
-    PageTranslation
+    Page,
+    PageTranslation,
 };
 use App\Services\MenuService;
 use App\Services\TranslationService;
@@ -13,7 +14,6 @@ use Illuminate\Support\Collection;
 
 class PageController extends Controller
 {
-    private $baseRouteName = 'frontend.pages';
     private $menuService;
     private $translationService;
 
@@ -44,26 +44,26 @@ class PageController extends Controller
         });
     }
 
-    private function redirectToPageLocaleOrDefaultLocale(
-        PageTranslation $pageTranslation,
+    private function redirectToPageWithDefaultLocaleOr404(
+        Page $page,
         string $locale
     ) {
-        $page = $pageTranslation->page;
         $menus = $this->menuService->getHeaderMenu($locale);
+        $defaultLocale = $this->translationService->getDefaultLocale();
 
         if (
-            $page->hasTranslation($locale)
+            $page->hasTranslation($defaultLocale)
             && $this->isPageExistInMenu($menus, $page)
         ) {
-            $pageTranslation = $page->translate($locale);
+            $pageTranslation = $page->translate($defaultLocale);
 
-            return redirect()->route($this->baseRouteName.'.show', [
-                $pageTranslation->slug
+            return view('page', [
+                'currentLanguage' => $locale,
+                'images' => $this->getPageImages($pageTranslation, $locale),
+                'page' => $pageTranslation,
             ]);
-
         } else {
-
-            return redirect()->route('homepage');
+            return abort(404);
         }
     }
 
@@ -99,15 +99,15 @@ class PageController extends Controller
         PageTranslation $pageTranslation
     ) {
         $locale = $this->translationService->currentLanguage();
+        $page = $pageTranslation->page;
 
-        if ($pageTranslation->locale != $locale) {
-
-            return $this->redirectToPageLocaleOrDefaultLocale(
-                $pageTranslation,
+        if (!$page->hasTranslation($locale)) {
+            return $this->redirectToPageWithDefaultLocaleOr404(
+                $page,
                 $locale
             );
-
         } else {
+            $pageTranslation = $page->translate($locale);
 
             return view('page', [
                 'currentLanguage' => $locale,
