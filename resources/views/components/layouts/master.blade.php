@@ -50,7 +50,7 @@
     <body class="font-sans antialiased">
         {!! $trackingCodeAfterBody !!}
 
-        <x-dynamic-component :component="$headerLayoutName" />
+        <x-headers.header />
 
         {{ $slot }}
 

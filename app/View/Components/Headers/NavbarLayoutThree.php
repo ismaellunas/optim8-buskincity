@@ -2,9 +2,7 @@
 
 namespace App\View\Components\Headers;
 
-use App\View\Components\Layouts\Master;
-
-class NavbarLayoutThree extends Master
+class NavbarLayoutThree extends Header
 {
 
     /**

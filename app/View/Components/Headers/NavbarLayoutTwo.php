@@ -2,9 +2,7 @@
 
 namespace App\View\Components\Headers;
 
-use App\View\Components\Layouts\Master;
-
-class NavbarLayoutTwo extends Master
+class NavbarLayoutTwo extends Header
 {
     /**
      * Get the view / contents that represent the component.
