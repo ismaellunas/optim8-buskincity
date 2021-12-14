@@ -52,8 +52,11 @@ class TranslationManagerController extends Controller
             'defaultLocale' => $defaultLocale,
             'referenceLocale' => 'en',
             'groupOptions' => config('constants.translations.groups'),
-            'localeOptions' => $this->translationService->getLocaleOptions(),
-            'pageQueryParams' => array_filter($request->only('locale', 'group')),
+            'localeOptions' => collect($this->translationService->getLocaleOptions())
+                ->sortBy('name', SORT_NATURAL)
+                ->values()
+                ->all(),
+            'pageQueryParams' => array_filter($request->only('locale', 'groups')),
             'bags' => [
                 'import' => 'translationImport',
             ],
