@@ -31,7 +31,7 @@
             },
             bags: {
                 type: [Array],
-                default: () => [],
+                default: () => ['default'],
             }
         },
 
