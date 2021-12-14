@@ -58,7 +58,7 @@ class TranslationManagerController extends Controller
             ],
             'records' => $this->translationManagerService->getRecords(
                 $request->locale,
-                $request->group
+                $request->groups
             ),
             'i18n' => [
                 'fileInputNotes' => [
@@ -98,7 +98,7 @@ class TranslationManagerController extends Controller
 
     private function getExportFileName(
         string $locale,
-        string $group = null
+        array $groups = null
     ): string {
 
         $template = "translation-??-?.csv";
@@ -119,7 +119,7 @@ class TranslationManagerController extends Controller
         $translationExport = new TranslationsExport($locale, $group);
 
         return $translationExport->download(
-            $this->getExportFileName($locale, $group),
+            $this->getExportFileName($locale, $request->groups),
             Excel::CSV,
             ['Content-Type' => 'text/csv']
         );

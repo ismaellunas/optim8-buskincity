@@ -22,8 +22,8 @@ class TranslationManagerService
 
         return $this->paginateCollection(
             $this->getTranslationByLocale($locale)
-                ->when($group, function ($collection) use ($group) {
-                    return $collection->where('group', $group);
+                ->when($groups, function ($collection) use ($groups) {
+                    return $collection->whereIn('group', $groups);
                 }),
             $perPage
         );
