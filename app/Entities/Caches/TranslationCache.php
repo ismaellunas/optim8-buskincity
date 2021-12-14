@@ -43,6 +43,11 @@ class TranslationCache
         return Cache::tags($this->tag)->flush();
     }
 
+    public function flushLocale(string $locale): bool
+    {
+        return Cache::tags($this->getLocaleTag($locale))->flush();
+    }
+
     public function flushGroup(string $locale, string $group): bool
     {
         return Cache::tags($this->getGroupTag($locale, $group))->flush();
