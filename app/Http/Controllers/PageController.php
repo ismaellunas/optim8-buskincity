@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Media;
-use App\Models\Page;
+use App\Http\Requests\PageRequest;
+use App\Models\{
+    Media,
+    Page,
+};
 use App\Services\{
     PageService,
     TranslationService,
@@ -82,20 +85,12 @@ class PageController extends CrudController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PageRequest $request)
     {
-        $this->getValidate($request);
-        $inputs = $request->input('translations', []);
-
         $page = new $this->model;
-        $locale = array_key_first($inputs);
-        $pageTranslation = $page->translate($locale);
-        $this->getValidate($request, $pageTranslation->id ?? null);
 
-        $page->fill($inputs);
-        $page->author_id = Auth::id();
-
-        $page->save();
+        $page->saveFromInputs($request->all());
+        $page->saveAuthorId(Auth::id());
 
         $request->session()->flash('message', 'Page created successfully!');
 
@@ -158,15 +153,9 @@ class PageController extends CrudController
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Page $page)
+    public function update(PageRequest $request, Page $page)
     {
-        $locale = array_key_first($request->input('translations', []));
-        $pageTranslation = $page->translate($locale);
-
-        $this->getValidate($request, $pageTranslation->id ?? null);
-
-        $page->fill($request->input('translations'));
-        $page->save();
+        $page->saveFromInputs($request->all());
 
         $this->generateFlashMessage('Page updated successfully!');
 
