@@ -13,41 +13,77 @@
         <div class="box">
             <div class="columns">
                 <div class="column">
-                    <sdb-form-select
-                        v-model="locale"
-                        label="Language"
-                        @change="search()"
+                    <sdb-dropdown
+                        :close-on-click="true"
                     >
-                        <option
-                            v-for="localeOption in localeOptions"
-                            :key="localeOption.id"
-                            :value="localeOption.id"
-                        >
-                            {{ localeOption.name }}
-                        </option>
-                    </sdb-form-select>
+                        <template #trigger>
+                            <span>{{ selectedLocale ?? 'Language' }}</span>
 
-                    <sdb-form-select
-                        v-model="group"
-                        label="Group"
-                        @change="search()"
+                            <span class="icon is-small">
+                                <i
+                                    class="fas fa-angle-down"
+                                    aria-hidden="true"
+                                />
+                            </span>
+                        </template>
+
+                        <sdb-dropdown-item
+                            v-for="(localeOption, index) in localeOptions"
+                            :key="index"
+                            class="pt-0 pb-1"
+                        >
+                            <sdb-button
+                                :class="[
+                                    'is-fullwidth',
+                                    (localeOption.id == locale) ? 'is-link' : 'is-white',
+                                ]"
+                                @click="filterLocale(localeOption)"
+                            >
+                                {{ localeOption.name }}
+                            </sdb-button>
+                        </sdb-dropdown-item>
+                    </sdb-dropdown>
+
+                    <sdb-dropdown
+                        class="ml-3"
+                        :close-on-click="false"
                     >
-                        <option value="">
-                            All
-                        </option>
-                        <option
+                        <template #trigger>
+                            <span>Group</span>
+
+                            <span
+                                v-if="groups.length > 0"
+                                class="ml-1"
+                            >
+                                ({{ groups.length }})
+                            </span>
+                            <span class="icon is-small">
+                                <i
+                                    class="fas fa-angle-down"
+                                    aria-hidden="true"
+                                />
+                            </span>
+                        </template>
+
+                        <sdb-dropdown-item
                             v-for="(groupOption, index) in groupOptions"
                             :key="index"
-                            :value="groupOption"
                         >
-                            {{ groupOption }}
-                        </option>
-                    </sdb-form-select>
+                            <sdb-checkbox
+                                v-model:checked="groups"
+                                :value="groupOption"
+                                @change="filterGroups"
+                            >
+                                &nbsp; {{ groupOption }}
+                            </sdb-checkbox>
+                        </sdb-dropdown-item>
+                    </sdb-dropdown>
                 </div>
+
                 <div class="column">
                     <div class="is-pulled-right">
                         <sdb-button-download
-                            :url="route('admin.settings.translation-manager.export', [locale, group])"
+                            :url="route('admin.settings.translation-manager.export', {locale: locale, groups: groups})"
                             class="mr-2"
                         >
                             Export
@@ -167,7 +203,9 @@
             @close="closeModal()"
         >
             <template #header>
-                <p class="modal-card-title">Import</p>
+                <p class="modal-card-title">
+                    Import
+                </p>
 
                 <sdb-button
                     aria-label="close"
@@ -236,11 +274,13 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
     import SdbButtonDownload from '@/Sdb/ButtonDownload';
+    import SdbCheckbox from '@/Sdb/Checkbox';
+    import SdbDropdown from '@/Sdb/Dropdown';
+    import SdbDropdownItem from '@/Sdb/DropdownItem';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbField from '@/Sdb/Field';
     import SdbFlashNotifications from '@/Sdb/FlashNotifications';
     import SdbFormFile from '@/Sdb/Form/File';
-    import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbInput from '@/Sdb/Input';
     import SdbModalCard from '@/Sdb/ModalCard';
     import SdbPagination from '@/Sdb/Pagination';
@@ -254,11 +294,13 @@
             AppLayout,
             SdbButton,
             SdbButtonDownload,
+            SdbCheckbox,
+            SdbDropdown,
+            SdbDropdownItem,
             SdbErrorNotifications,
             SdbField,
             SdbFlashNotifications,
             SdbFormFile,
-            SdbFormSelect,
             SdbInput,
             SdbModalCard,
             SdbPagination,
@@ -320,7 +362,7 @@
             );
 
             return {
-                group: ref(props.pageQueryParams?.group ?? ""),
+                groups: ref(props.pageQueryParams?.groups ?? []),
                 locale: ref(props.pageQueryParams?.locale ?? props.defaultLocale),
                 queryParams: ref(queryParams),
                 form: useForm({
@@ -343,7 +385,18 @@
         computed: {
             isReferenceLanguage() {
                 return this.referenceLocale === this.locale;
-            }
+            },
+            selectedLocale: {
+                get() {
+                    const selectedLocale = this
+                        .localeOptions
+                        .find((localeOption) => localeOption.id == this.locale);
+                    return selectedLocale?.name ?? '';
+                },
+                set(locale) {
+                    this.locale = locale.id;
+                }
+            },
         },
 
         methods: {
@@ -353,24 +406,33 @@
                 });
             },
 
-            search: debounce(function() {
+            search() {
                 if (this.form.isDirty) {
                     confirmLeaveProgress().then((result) => {
                         if (result.isConfirmed) {
-                            this.queryParams['group'] = this.group;
+                            this.queryParams['groups'] = this.groups;
                             this.queryParams['locale'] = this.locale;
                             this.refreshWithQueryParams();
                         } else {
-                            this.group = this.queryParams['group'] ?? "";
+                            this.groups = this.queryParams['groups'] ?? [];
                             this.locale = this.queryParams['locale'] ?? this.defaultLocale;
                         }
                     });
                 } else {
-                    this.queryParams['group'] = this.group;
+                    this.queryParams['groups'] = this.groups;
                     this.queryParams['locale'] = this.locale;
                     this.refreshWithQueryParams();
                 }
+            },
+
+            filterLocale: debounce(function(locale) {
+                this.selectedLocale = locale;
+                this.search();
             }, 750),
+
+            filterGroups: debounce(function() {
+                this.search();
+            }, 1400),
 
             refreshWithQueryParams() {
                 this.$inertia.get(

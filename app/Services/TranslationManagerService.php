@@ -13,7 +13,7 @@ class TranslationManagerService
 
     public function getRecords(
         string $locale = null,
-        string $group = null,
+        array $groups = null,
         int $perPage = 15
     ): LengthAwarePaginator{
         if (!$locale) {
