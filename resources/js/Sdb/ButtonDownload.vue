@@ -1,10 +1,10 @@
 <template>
     <sdb-button
-        @click="download"
+        @click="download($event)"
     >
         <slot>
             <span class="icon is-small">
-                <i class="fas fa-download"></i>
+                <i class="fas fa-download" />
             </span>
         </slot>
     </sdb-button>
@@ -15,19 +15,30 @@
     import SdbButton from '@/Sdb/Button';
 
     export default {
+        name: 'SdbButtonDownload',
+
         components: {
             SdbButton,
         },
+
         props: {
-            url: {type: String},
+            url: {
+                type: String,
+                required: true,
+            },
         },
+
         emits: [
             'on-success',
             'on-failed',
         ],
+
         methods: {
-            download() {
+            download(event) {
+                event.preventDefault();
+
                 const self = this;
+
                 new JsFileDownloader({
                     url: self.url
                 })
@@ -37,8 +48,7 @@
                     .catch(function (error) {
                         self.$emit('on-failed', error);
                     });
-                return false;
             },
         }
-    }
+    };
 </script>

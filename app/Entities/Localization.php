@@ -9,13 +9,27 @@ use App\Services\{
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Mcamara\LaravelLocalization\LaravelLocalization;
-use Mcamara\LaravelLocalization\Exceptions\SupportedLocalesNotDefined;
+use Mcamara\LaravelLocalization\Exceptions\{
+    SupportedLocalesNotDefined,
+    UnsupportedLocaleException
+};
 
 class Localization extends LaravelLocalization
 {
     public function __construct()
     {
-        parent::__construct();
+        try {
+            parent::__construct();
+        } catch (\Throwable $e) {
+            $this->app = app();
+
+            $this->configRepository = $this->app['config'];
+            $this->view = $this->app['view'];
+            $this->translator = $this->app['translator'];
+            $this->router = $this->app['router'];
+            $this->request = $this->app['request'];
+            $this->url = $this->app['url'];
+        }
 
         try {
 
@@ -28,6 +42,11 @@ class Localization extends LaravelLocalization
             } else {
                 throw $e;
             }
+        }
+
+        $supportedLocales = $this->getSupportedLocales();
+        if (empty($supportedLocales[$this->defaultLocale])) {
+            throw new UnsupportedLocaleException('Laravel default locale is not in the supportedLocales array.');
         }
     }
 

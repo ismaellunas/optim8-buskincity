@@ -69,6 +69,7 @@ class PostController extends CrudController
                 ],
             ],
             'categoryOptions' => $this->postService->getCategoryOptions(),
+            'languageOptions' => $this->postService->getLanguageOptions(),
             'post' => new Post(),
             'statusOptions' => Post::getStatusOptions(),
         ]);
@@ -128,6 +129,7 @@ class PostController extends CrudController
             ],
             'categoryOptions' => $this->postService->getCategoryOptions(),
             'coverImage' => $post->coverImage,
+            'languageOptions' => $this->postService->getLanguageOptions($post),
             'post' => $post->load('categories'),
             'statusOptions' => Post::getStatusOptions(),
         ]);

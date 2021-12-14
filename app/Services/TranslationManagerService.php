@@ -41,7 +41,7 @@ class TranslationManagerService
         }
     }
 
-    private function getAllKeyWithGroups(): Collection
+    public function getAllKeyWithGroups(): Collection
     {
         return Translation::select('key', 'group')
             ->whereIn('group', config('constants.translations.groups'))
@@ -63,7 +63,7 @@ class TranslationManagerService
             ->get();
     }
 
-    private function getTranslationByLocale(string $locale): Collection
+    public function getTranslationByLocale(string $locale): Collection
     {
         $translations = collect([]);
         $allKeyWithGroups = $this->getAllKeyWithGroups();
@@ -119,5 +119,25 @@ class TranslationManagerService
                 'pageName' => 'page',
             ]
         );
+    }
+
+    public function saveTranslation(
+        string $key,
+        ?string $value,
+        string $locale,
+        string $group,
+        bool $replace = false
+    ): bool {
+        $translation = Translation::firstOrNew([
+            'locale' => $locale,
+            'group'  => $group,
+            'key'    => $key,
+        ]);
+
+        if ($replace || !$translation->value) {
+            $translation->value = $value;
+        }
+
+        return $translation->save();
     }
 }
