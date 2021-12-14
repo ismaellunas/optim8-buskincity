@@ -2,15 +2,20 @@
 
 namespace App\View\Components\Headers;
 
-class NavbarLayoutTwo extends Header
+class NavbarLayoutTwo extends BaseNavbarLayout
 {
-    /**
-     * Get the view / contents that represent the component.
-     *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
-     */
-    public function render()
+    public $menuChunks;
+    public $layoutName = 'navbar-layout-two';
+
+    public function __construct($menus, $currentLanguage, $logoUrl, $languageOptions)
     {
-        return view('components.headers.navbar-layout-two');
+        parent::__construct($menus, $currentLanguage, $logoUrl, $languageOptions);
+        $this->menuChunks = $this->splitMenu();
+    }
+
+    public function splitMenu()
+    {
+        $half = ceil(count($this->menus) / 2);
+        return collect($this->menus)->chunk($half);
     }
 }

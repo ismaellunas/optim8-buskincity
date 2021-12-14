@@ -2,16 +2,7 @@
 
 namespace App\View\Components\Headers;
 
-class NavbarLayoutThree extends Header
+class NavbarLayoutThree extends BaseNavbarLayout
 {
-
-    /**
-     * Get the view / contents that represent the component.
-     *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
-     */
-    public function render()
-    {
-        return view('components.headers.navbar-layout-three');
-    }
+    public $layoutName = 'navbar-layout-three';
 }

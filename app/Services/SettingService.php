@@ -136,25 +136,6 @@ class SettingService
         });
     }
 
-    public function getHeaderLayoutName(): string
-    {
-        $headerLayout = $this->getHeaderLayout() ?? 1;
-        switch ($headerLayout) {
-            case 1:
-                return "headers.navbar-layout-one";
-                break;
-            case 2:
-                return "headers.navbar-layout-two";
-                break;
-            case 3:
-                return "headers.navbar-layout-three";
-                break;
-            default:
-                return "headers.navbar-layout-one";
-                break;
-        }
-    }
-
     public function getTrackingCodes(): array
     {
         return $this->getSettingsByGroup('tracking_code')->keyBy('key')->all();

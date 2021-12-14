@@ -5,7 +5,7 @@
             href="{{ route('homepage') }}"
         >
             <img
-                src="@if ($logoUrl) {{ $logoUrl }} @else https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752 @endif"
+                src="{{ $logo }}"
                 alt=""
                 height="28"
             >

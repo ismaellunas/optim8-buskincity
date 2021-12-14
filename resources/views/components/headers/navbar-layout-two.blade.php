@@ -6,10 +6,7 @@
             class="navbar-menu"
         >
             <div class="navbar-end">
-                @foreach ($menus as $key => $menu)
-                    @if ($key >= (count($menus) / 2))
-                        @break
-                    @endif
+                @foreach ($menuChunks[0] as $key => $menu)
                     @if ($menu->children)
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link">
@@ -45,7 +42,7 @@
                 href="{{ route('homepage') }}"
             >
                 <img
-                    src="@if ($logoUrl) {{ $logoUrl }} @else https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752 @endif"
+                    src="{{ $logo }}"
                     alt=""
                     height="28"
                 >
@@ -67,10 +64,7 @@
             class="navbar-menu"
         >
             <div class="navbar-start">
-                @foreach ($menus as $key => $menu)
-                    @if ($key <= (count($menus) / 2))
-                        @continue
-                    @endif
+                @foreach ($menuChunks[1] as $key => $menu)
                     @if ($menu->children)
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a class="navbar-link">

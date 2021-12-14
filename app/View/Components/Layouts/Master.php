@@ -25,11 +25,9 @@ class Master extends Component
         $settingService = app(SettingService::class);
 
         $this->appCssUrl = $settingService->getFrontendCssUrl();
-
         $this->trackingCodeAfterBody =  $settingService->getTrackingCodeAfterBody();
         $this->trackingCodeBeforeBody = $settingService->getTrackingCodeBeforeBody();
         $this->trackingCodeInsideHead = $settingService->getTrackingCodeInsideHead();
-
         $this->additionalJavascriptUrl = $settingService->getAdditionalJavascriptUrl();
         $this->additionalCssUrl = $settingService->getAdditionalCssUrl();
     }
