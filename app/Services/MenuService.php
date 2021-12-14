@@ -13,7 +13,10 @@ use App\Models\{
     User,
 };
 use Illuminate\Http\Request;
-use App\Entities\Caches\MenuCache;
+use App\Entities\Caches\{
+    MenuCache,
+    SettingCache,
+};
 
 class MenuService
 {
@@ -84,23 +87,69 @@ class MenuService
         return $menus;
     }
 
-    public function getSocialMediaMenus()
+    public function getFooterMenu(string $locale): array
     {
-        $menu = Menu::with([
-            'menuItems' => function ($query) {
-                    $query->select([
-                            'id',
-                            'url',
-                            'icon',
-                            'menu_id',
-                        ]);
-                    $query->where('type', MenuItem::TYPE_URL);
-                }
-            ])
-            ->socialMedia()
-            ->first();
+        return app(MenuCache::class)->remember(
+            'footer_menu',
+            function () use ($locale) {
+                $menu = Menu::footer()
+                    ->locale($locale)
+                    ->with([
+                        'menuItems' => function ($query) {
+                            $query
+                                ->orderBy('order', 'ASC')
+                                ->orderBy('parent_id', 'ASC')
+                                ->with([
+                                    'post' => function ($query) {
+                                        $query->select([
+                                            'id',
+                                            'slug',
+                                        ]);
+                                    },
+                                    'page' => function ($query) {
+                                        $query->select('id');
+                                        $query->with('translations', function ($query) {
+                                            $query->select([
+                                                'id',
+                                                'page_id',
+                                                'locale',
+                                                'slug',
+                                            ]);
+                                        });
+                                    },
+                                ]);
+                        },
+                    ])
+                    ->first();
 
-        return $menu ? $menu->menuItems : [];
+                return $menu ? Menu::createArrayMenuItems($menu) : [];
+            },
+            $locale
+        );
+    }
+
+    public function getSocialMediaMenus(): array
+    {
+        return app(SettingCache::class)->remember(
+            'social_media',
+            function () {
+                $menu = Menu::with([
+                    'menuItems' => function ($query) {
+                            $query->select([
+                                    'id',
+                                    'url',
+                                    'icon',
+                                    'menu_id',
+                                ]);
+                            $query->where('type', MenuItem::TYPE_URL);
+                        }
+                    ])
+                    ->socialMedia()
+                    ->first();
+
+                return $menu ? $menu->menuItems->toArray() : [];
+            }
+        );
     }
 
     public static function generateBackendMenu(Request $request): array
