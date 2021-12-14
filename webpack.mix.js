@@ -20,6 +20,7 @@ mix.js('resources/js/app.js', 'public/js').vue()
     */
     .sass('resources/sass/app.scss', 'public/css')
     .copy('node_modules/sweetalert2/dist/sweetalert2.min.css', 'public/css')
+    .js('resources/js/frontend.js', 'public/js')
     .webpackConfig(require('./webpack.config'));
 
 if (mix.inProduction()) {
@@ -27,7 +28,6 @@ if (mix.inProduction()) {
 } else {
     mix.copy('node_modules/vue-loading-overlay/dist/vue-loading.css', 'public/css');
     mix.js('resources/js/local.js', 'public/js');
-    mix.js('resources/js/frontend.js', 'public/js');
 
     mix.after(() => {
         exec('php artisan optimize:clear', (error, stdout, stderr) => {
