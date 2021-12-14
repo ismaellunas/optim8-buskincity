@@ -4,19 +4,22 @@
             Create New Page
         </template>
 
-        <sdb-error-notifications :errors="$page.props.errors"/>
+        <sdb-error-notifications
+            :bags="['default']"
+            :errors="$page.props.errors"
+        />
 
         <div class="box mb-6">
             <page-form
-                v-model="form.translations[selectedLocale]"
+                v-model="form[selectedLocale]"
                 v-model:content-config-id="contentConfigId"
                 :can="can"
                 :errors="errors"
-                :isNew="isNew"
-                :isEditMode="isEditMode"
-                :statusOptions="statusOptions"
-                :localeOptions="localeOptions"
-                :selectedLocale="selectedLocale"
+                :is-new="isNew"
+                :is-edit-mode="isEditMode"
+                :status-options="statusOptions"
+                :locale-options="localeOptions"
+                :selected-locale="selectedLocale"
                 @change-locale="changeLocale"
                 @on-submit="onSubmit"
             />
@@ -40,11 +43,10 @@
             SdbErrorNotifications,
         },
         props: {
-            can: Object,
-            page: Object,
-            errors: Object,
-            tabActive: String,
-            statusOptions: {type: Array, default: []},
+            can: { type: Object, required: true },
+            page: { type: Object, required: true },
+            errors: { type: Object, default:() => {} },
+            statusOptions: { type: Array, default:() => [] },
         },
         setup() {
             const defaultLocale = usePage().props.value.defaultLanguage;
@@ -52,9 +54,7 @@
 
             translations[defaultLocale] = getEmptyPageTranslation();
 
-            const translationForm = {
-                translations
-            };
+            const translationForm = { [defaultLocale]: getEmptyPageTranslation() };;
 
             const contentConfigId = ref('');
 
