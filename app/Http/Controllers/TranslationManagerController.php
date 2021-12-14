@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Entities\Caches\TranslationCache;
 use App\Exports\TranslationsExport;
 use App\Http\Requests\{
+    TranslationExportRequest,
     TranslationImportRequest,
     TranslationRequest,
 };
@@ -107,16 +108,16 @@ class TranslationManagerController extends Controller
             '?',
             [
                 $locale,
-                ($group ? '-'.$group : ''),
+                ($groups ? '-'.implode('-', $groups) : ''),
                 date('YmdHis'),
             ],
             $template
         );
     }
 
-    public function export(string $locale, string $group = null)
+    public function export(TranslationExportRequest $request, string $locale)
     {
-        $translationExport = new TranslationsExport($locale, $group);
+        $translationExport = new TranslationsExport($locale, $request->groups);
 
         return $translationExport->download(
             $this->getExportFileName($locale, $request->groups),
