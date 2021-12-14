@@ -7,6 +7,7 @@ use App\Exports\TranslationsExport;
 use App\Http\Requests\{
     TranslationExportRequest,
     TranslationImportRequest,
+    TranslationManagerRequest,
     TranslationRequest,
 };
 use App\Imports\TranslationsImport;
@@ -15,7 +16,6 @@ use App\Services\{
     TranslationManagerService,
     TranslationService
 };
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Excel;
@@ -40,7 +40,7 @@ class TranslationManagerController extends Controller
         $this->translationService = $translationService;
     }
 
-    public function edit(Request $request)
+    public function edit(TranslationManagerRequest $request)
     {
         $defaultLocale = $this->translationService->getDefaultLocale();
 
