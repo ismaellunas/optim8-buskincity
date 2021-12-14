@@ -5,7 +5,6 @@
         </template>
 
         <sdb-error-notifications
-            :bags="['default']"
             :errors="$page.props.errors"
         />
 
