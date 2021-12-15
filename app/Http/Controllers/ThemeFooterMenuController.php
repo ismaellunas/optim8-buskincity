@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\Caches\SettingCache;
 use App\Http\Requests\MenuRequest;
 use App\Models\Menu;
 
@@ -19,6 +20,8 @@ class ThemeFooterMenuController extends ThemeOptionController
         ]);
 
         $menu->syncMenuItems($inputs['menu_items']);
+
+        app(SettingCache::class)->flush();
 
         $this->generateFlashMessage('Menu navigation successfully Saved!');
 
