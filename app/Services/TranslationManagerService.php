@@ -54,8 +54,16 @@ class TranslationManagerService
             });
     }
 
-    private function getAllTranslations(): Collection
+    private function getReferenceLocale()
     {
+        return 'en';
+    }
+
+    private function getTranslations(
+        array $locales = null,
+        array $groups = null
+    ): Collection {
+
         return Translation::select(
                 'id',
                 'locale',
@@ -63,8 +71,14 @@ class TranslationManagerService
                 'key',
                 'value',
             )
-            ->orderBy('id', 'DESC')
             ->active()
+            ->when($locales, function ($query, $locales) {
+                $query->locales($locales);
+            })
+            ->when($groups, function ($query, $groups) {
+                $query->groups($groups);
+            })
+            ->orderBy('id', 'DESC')
             ->get();
     }
 
