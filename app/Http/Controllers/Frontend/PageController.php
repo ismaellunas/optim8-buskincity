@@ -14,6 +14,7 @@ use Illuminate\Support\Collection;
 
 class PageController extends Controller
 {
+    private $baseRouteName = 'frontend.pages';
     private $menuService;
     private $translationService;
 
@@ -44,7 +45,7 @@ class PageController extends Controller
         });
     }
 
-    private function redirectToPageWithDefaultLocaleOr404(
+    private function goToPageWithDefaultLocaleOr404(
         Page $page,
         string $locale
     ) {
@@ -102,17 +103,23 @@ class PageController extends Controller
         $page = $pageTranslation->page;
 
         if (!$page->hasTranslation($locale)) {
-            return $this->redirectToPageWithDefaultLocaleOr404(
+            return $this->goToPageWithDefaultLocaleOr404(
                 $page,
                 $locale
             );
         } else {
-            $pageTranslation = $page->translate($locale);
+            $newPageTranslation = $page->translate($locale);
+
+            if ($newPageTranslation->slug !== $pageTranslation->slug) {
+                return redirect()->route($this->baseRouteName.'.show', [
+                    $newPageTranslation->slug
+                ]);
+            }
 
             return view('page', [
                 'currentLanguage' => $locale,
-                'images' => $this->getPageImages($pageTranslation, $locale),
-                'page' => $pageTranslation,
+                'images' => $this->getPageImages($newPageTranslation, $locale),
+                'page' => $newPageTranslation,
             ]);
         }
     }
