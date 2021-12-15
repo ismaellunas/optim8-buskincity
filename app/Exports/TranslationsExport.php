@@ -29,7 +29,10 @@ class TranslationsExport implements FromCollection, WithHeadings, WithMapping
     public function collection()
     {
         return app(TranslationManagerService::class)
-            ->getTranslationByLocale($this->locale)
+            ->getExportableTranslations(
+                [$this->locale],
+                $this->groups
+            )
             ->when($this->groups, function ($collection) {
                 return $collection->whereIn('group', $this->groups);
             })
