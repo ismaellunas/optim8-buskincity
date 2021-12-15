@@ -41,12 +41,17 @@ class TranslationManagerService
         }
     }
 
-    public function getAllKeyWithGroups(): Collection
+    public function getGroupedKeys(array $groups = null): Collection
     {
         return Translation::select('key', 'group')
-            ->whereIn('group', config('constants.translations.groups'))
+            ->when($groups, function ($query, $groups) {
+                $query->groups($groups);
+            })
             ->groupBy('key', 'group')
-            ->pluck('group', 'key');
+            ->get()
+            ->mapToGroups(function ($translation) {
+                return [$translation['group'] => $translation['key']];
+            });
     }
 
     private function getAllTranslations(): Collection
