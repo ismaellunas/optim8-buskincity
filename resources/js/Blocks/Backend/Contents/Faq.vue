@@ -19,7 +19,6 @@
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbTinymce from '@/Sdb/EditorTinymce';
     import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
     import FaqQuestionAnswer from '@/Blocks/Backend/Contents/Faq/QuestionAnswer';
@@ -35,11 +34,10 @@
         },
         mixins: [
             DeletableContentMixin,
-            EditModeComponentMixin,
         ],
         props: {
-            id: {type: String},
-            modelValue: {type: Object},
+            id: {type: String, default: null},
+            modelValue: {type: Object, required: true},
         },
         setup(props, { emit }) {
             return {
