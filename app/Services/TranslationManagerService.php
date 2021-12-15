@@ -82,41 +82,67 @@ class TranslationManagerService
             ->get();
     }
 
-    public function getTranslationByLocale(string $locale): Collection
-    {
-        $translations = collect([]);
-        $allKeyWithGroups = $this->getAllKeyWithGroups();
-        $allTranslations = $this->getAllTranslations();
-        $allKeyWithGroups->each(function ($group, $key) use (
-                $translations,
-                $allTranslations,
-                $locale
-            ) {
-                $translation = $allTranslations->where('group', $group)
-                    ->where('key', $key)
-                    ->where('locale', $locale)
-                    ->first();
+    public function getExportableTranslations(
+        array $locales,
+        array $groups = null
+    ): Collection {
 
-                $defaultTranslation = $allTranslations->where('group', $group)
-                    ->where('key', $key)
-                    ->where('locale', $this->defaultLocale)
-                    ->first();
+        $translations = collect();
 
-                if (!$translation) {
-                    $translation = [
-                        'id' => null,
-                        'locale' => $locale,
-                        'group' => $group,
-                        'key' => $key,
-                        'en_value' => $defaultTranslation['value'] ?? null,
-                        'value' => null,
-                    ];
-                } else {
+        $groupedKeys = $this->getGroupedKeys($groups);
+
+        $localeWithReferences = $locales;
+        array_push($localeWithReferences, $this->getReferenceLocale());
+        $localeWithReferences = array_unique($localeWithReferences);
+
+        $allTranslations = $this->getTranslations($localeWithReferences, $groups);
+
+        foreach ($groupedKeys as $group => $keys) {
+
+            foreach ($locales as $locale) {
+
+                foreach ($keys as $key) {
+
+                    $defaultTranslation = $allTranslations
+                        ->where('locale', $this->getReferenceLocale())
+                        ->where('group', $group)
+                        ->firstWhere('key', $key);
+
+                    $translation = [];
+
+                    if ($locale == $this->getReferenceLocale()) {
+
+                        $translation = $defaultTranslation;
+
+                    } else {
+
+                        $translation = $allTranslations
+                            ->where('locale', $locale)
+                            ->where('group', $group)
+                            ->firstWhere('key', $key);
+                    }
+
+                    if (!$translation) {
+
+                        $translation = [
+                            'id' => null,
+                            'locale' => $locale,
+                            'group' => $group,
+                            'key' => $key,
+                            'value' => null,
+                        ];
+
+                    } else {
+
+                        $translation = $translation->toArray();
+                    }
+
                     $translation['en_value'] = $defaultTranslation['value'] ?? null;
-                }
 
-                $translations->push($translation);
-            });
+                    $translations->push($translation);
+                }
+            }
+        }
 
         return $translations;
     }
