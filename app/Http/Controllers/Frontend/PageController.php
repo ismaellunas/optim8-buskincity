@@ -45,7 +45,7 @@ class PageController extends Controller
         });
     }
 
-    private function goToPageWithDefaultLocaleOr404(
+    private function goToPageWithDefaultLocaleOrFallback(
         Page $page,
         string $locale
     ) {
@@ -64,8 +64,13 @@ class PageController extends Controller
                 'page' => $pageTranslation,
             ]);
         } else {
-            return abort(404);
+            return $this->redirectFallback();
         }
+    }
+
+    private function redirectFallback()
+    {
+        return redirect()->route('homepage');
     }
 
     private function getPageImages(
@@ -103,7 +108,7 @@ class PageController extends Controller
         $page = $pageTranslation->page;
 
         if (!$page->hasTranslation($locale)) {
-            return $this->goToPageWithDefaultLocaleOr404(
+            return $this->goToPageWithDefaultLocaleOrFallback(
                 $page,
                 $locale
             );
