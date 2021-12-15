@@ -13,7 +13,7 @@ class NavbarLayoutTwo extends BaseNavbarLayout
         $this->menuChunks = $this->splitMenu();
     }
 
-    public function splitMenu()
+    private function splitMenu()
     {
         $half = ceil(count($this->menus) / 2);
         return collect($this->menus)->chunk($half);
