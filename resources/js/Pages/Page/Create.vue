@@ -53,7 +53,7 @@
 
             translations[defaultLocale] = getEmptyPageTranslation();
 
-            const translationForm = { [defaultLocale]: getEmptyPageTranslation() };;
+            const translationForm = { [defaultLocale]: getEmptyPageTranslation() };
 
             const contentConfigId = ref('');
 
