@@ -59,16 +59,13 @@ class TranslationsImport implements ToCollection, WithValidation, WithHeadingRow
 
     public function rules(): array
     {
-        $keyWithGroups = $this
+        $groupedKeys = $this
             ->translationManagerService
-            ->getAllKeyWithGroups()
-            ->mapToGroups(function ($group, $key) {
-                return [$group => $key];
-            });
+            ->getGroupedKeys();
 
         return [
-            'key' => [new GroupAndKeyTranslation($keyWithGroups)],
             'locale' => Rule::in($this->translationService->getLocales()),
+            'key' => [new GroupAndKeyTranslation($groupedKeys)],
             'value' => ['max:1024'],
         ];
     }
