@@ -78,7 +78,7 @@
                 @foreach ($socialMediaMenus as $socialMediaMenu)
                     <a
                         href="{{ $socialMediaMenu['url'] }}"
-                        class="pl-3 has-text-black is-size-4"
+                        class="navbar-item"
                     >
                         <i class="{{ $socialMediaMenu['icon'] }}"></i>
                     </a>
