@@ -9,22 +9,18 @@ use Illuminate\Support\Collection;
 
 class TranslationManagerService
 {
-    public $defaultLocale = 'en';
-
     public function getRecords(
         string $locale = null,
         array $groups = null,
         int $perPage = 15
-    ): LengthAwarePaginator{
+    ): LengthAwarePaginator {
+
         if (!$locale) {
             $locale = TranslationService::getDefaultLocale();
         }
 
         return $this->paginateCollection(
-            $this->getTranslationByLocale($locale)
-                ->when($groups, function ($collection) use ($groups) {
-                    return $collection->whereIn('group', $groups);
-                }),
+            $this->getExportableTranslations([$locale], $groups),
             $perPage
         );
     }
