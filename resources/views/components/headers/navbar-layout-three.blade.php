@@ -75,18 +75,14 @@
         </div>
         <div class="navbar-menu">
             <div class="navbar-end pr-3">
-                <a href="" class="navbar-item">
-                    <i class="fab fa-facebook-square fa-2x"></i>
-                </a>
-                <a href="" class="navbar-item">
-                    <i class="fab fa-twitter-square fa-2x"></i>
-                </a>
-                <a href="" class="navbar-item">
-                    <i class="fab fa-instagram fa-2x"></i>
-                </a>
-                <a href="" class="navbar-item">
-                    <i class="fab fa-snapchat fa-2x"></i>
-                </a>
+                @foreach ($socialMediaMenus as $socialMediaMenu)
+                    <a
+                        href="{{ $socialMediaMenu['url'] }}"
+                        class="pl-3 has-text-black is-size-4"
+                    >
+                        <i class="{{ $socialMediaMenu['icon'] }}"></i>
+                    </a>
+                @endforeach
             </div>
         </div>
     </div>
