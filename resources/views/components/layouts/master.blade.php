@@ -50,7 +50,7 @@
     <body class="font-sans antialiased">
         {!! $trackingCodeAfterBody !!}
 
-        <x-headers.header />
+        <x-headers.header :logoUrl="$logoUrl" />
 
         {{ $slot }}
 

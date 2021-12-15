@@ -6,9 +6,9 @@ use Illuminate\View\Component;
 
 abstract class BaseNavbarLayout extends Component
 {
-    public $logoUrl;
     public $menus;
     public $currentLanguage;
+    public $logoUrl;
     public $languageOptions;
     public $layoutName;
 
@@ -22,7 +22,7 @@ abstract class BaseNavbarLayout extends Component
 
     public function logo(): string
     {
-        return $logoUrl ?? 'https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752';
+        return $this->logoUrl ?? 'https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752';
     }
 
     /**

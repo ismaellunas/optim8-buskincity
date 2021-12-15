@@ -10,26 +10,25 @@ use Illuminate\View\Component;
 class Header extends Component
 {
     public $headerLayout;
-    public $logoUrl;
     public $menus;
     public $currentLanguage;
     public $languageOptions;
+    public $logoUrl;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($logoUrl)
     {
         $menuService = app(MenuService::class);
         $settingService = app(SettingService::class);
         $currentLanguage = TranslationService::currentLanguage();
 
+        $this->logoUrl = $logoUrl !== "" ? $logoUrl : null;
         $this->currentLanguage = $currentLanguage;
         $this->menus = $menuService->getHeaderMenu($currentLanguage) ?? [];
         $this->headerLayout = $settingService->getHeaderLayout();
-        $this->logoUrl = $settingService->getLogoUrl();
-
         $this->languageOptions = collect(TranslationService::getLocaleOptions())
             ->filter(function ($locale) use ($currentLanguage) {
                return $locale['id'] != $currentLanguage;

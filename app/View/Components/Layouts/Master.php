@@ -3,12 +3,12 @@
 namespace App\View\Components\Layouts;
 
 use App\Services\SettingService;
-use App\Services\TranslationService;
 use Illuminate\View\Component;
 
 class Master extends Component
 {
     public $appCssUrl;
+    public $logoUrl;
     public $trackingCodeAfterBody;
     public $trackingCodeBeforeBody;
     public $trackingCodeInsideHead;
@@ -25,6 +25,7 @@ class Master extends Component
         $settingService = app(SettingService::class);
 
         $this->appCssUrl = $settingService->getFrontendCssUrl();
+        $this->logoUrl = $settingService->getLogoUrl();
         $this->trackingCodeAfterBody =  $settingService->getTrackingCodeAfterBody();
         $this->trackingCodeBeforeBody = $settingService->getTrackingCodeBeforeBody();
         $this->trackingCodeInsideHead = $settingService->getTrackingCodeInsideHead();
