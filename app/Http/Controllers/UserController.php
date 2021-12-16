@@ -145,13 +145,19 @@ class UserController extends CrudController
             'email',
         ]));
 
-        if (!$user->isSuperAdministrator) {
-            if ($request->role && !$user->hasRole($request->role)) {
-                $user->syncRoles([]);
+        if (! $user->isSuperAdministrator) {
+
+            if (! $request->role) {
+
+                $user->roles()->detach();
+
+            } elseif (! $user->hasRole($request->role)) {
+
+                $user->roles()->detach();
                 $user->assignRole($request->role);
-            } else {
-                $user->syncRoles([]);
             }
+
+            $user->forgetCachedPermissions();
         }
 
         $this->generateFlashMessage('User updated successfully!');
