@@ -65,18 +65,20 @@
                             </span>
                         </template>
 
-                        <sdb-dropdown-item
-                            v-for="(groupOption, index) in groupOptions"
-                            :key="index"
-                        >
-                            <sdb-checkbox
-                                v-model:checked="groups"
-                                :value="groupOption"
-                                @change="filterGroups"
+                        <sdb-dropdown-scroll :max-height="350">
+                            <sdb-dropdown-item
+                                v-for="(groupOption, index) in groupOptions"
+                                :key="index"
                             >
-                                &nbsp; {{ groupOption }}
-                            </sdb-checkbox>
-                        </sdb-dropdown-item>
+                                <sdb-checkbox
+                                    v-model:checked="groups"
+                                    :value="groupOption"
+                                    @change="filterGroups"
+                                >
+                                    &nbsp; {{ groupOption }}
+                                </sdb-checkbox>
+                            </sdb-dropdown-item>
+                        </sdb-dropdown-scroll>
                     </sdb-dropdown>
                 </div>
 
@@ -277,6 +279,7 @@
     import SdbCheckbox from '@/Sdb/Checkbox';
     import SdbDropdown from '@/Sdb/Dropdown';
     import SdbDropdownItem from '@/Sdb/DropdownItem';
+    import SdbDropdownScroll from '@/Sdb/DropdownScroll';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbField from '@/Sdb/Field';
     import SdbFlashNotifications from '@/Sdb/FlashNotifications';
@@ -297,6 +300,7 @@
             SdbCheckbox,
             SdbDropdown,
             SdbDropdownItem,
+            SdbDropdownScroll,
             SdbErrorNotifications,
             SdbField,
             SdbFlashNotifications,
