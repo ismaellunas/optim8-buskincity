@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Media;
-use App\Models\Page;
+use App\Http\Requests\PageRequest;
+use App\Models\{
+    Media,
+    Page,
+};
 use App\Services\{
     PageService,
     TranslationService,
 };
-use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class PageController extends CrudController
@@ -84,20 +85,12 @@ class PageController extends CrudController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PageRequest $request)
     {
-        $this->getValidate($request);
-        $inputs = $request->input('translations', []);
-
         $page = new $this->model;
-        $locale = array_key_first($inputs);
-        $pageTranslation = $page->translate($locale);
-        $this->getValidate($request, $pageTranslation->id ?? null);
 
-        $page->fill($inputs);
-        $page->author_id = Auth::id();
-
-        $page->save();
+        $page->saveFromInputs($request->all());
+        $page->saveAuthorId(Auth::id());
 
         $request->session()->flash('message', 'Page created successfully!');
 
@@ -160,15 +153,9 @@ class PageController extends CrudController
      * @param  \App\Models\Page  $page
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Page $page)
+    public function update(PageRequest $request, Page $page)
     {
-        $locale = array_key_first($request->input('translations', []));
-        $pageTranslation = $page->translate($locale);
-
-        $this->getValidate($request, $pageTranslation->id ?? null);
-
-        $page->fill($request->input('translations'));
-        $page->save();
+        $page->saveFromInputs($request->all());
 
         $this->generateFlashMessage('Page updated successfully!');
 
@@ -186,45 +173,5 @@ class PageController extends CrudController
         $page->delete();
         $request->session()->flash('message', 'Page deleted successfully!');
         return redirect()->route('admin.pages.index');
-    }
-
-    protected function getValidate(Request $request, $id = null): array
-    {
-        $rules = RuleFactory::make([
-            '%title%' => 'sometimes|string',
-            '%slug%' => [
-                'sometimes',
-                'required',
-                'alpha_dash',
-                'unique:page_translations,slug'.($id ? ",{$id}" : "")
-            ],
-        ]);
-
-        $inputs = $request->input('translations', []);
-        $messages = [];
-        $locales = array_keys($inputs);
-        $attributes = ['title', 'slug'];
-        $inputs = $request->input('translations');
-
-        $customAttributes = $this->generateCustomAttributes($locales, $attributes);
-
-        $validator = $this->getValidationFactory()
-             ->make($inputs, $rules, $messages, $customAttributes);
-        return $validator->validate();
-    }
-
-    public function generateCustomAttributes($locales, $attributes)
-    {
-        $translatedAttributes = [];
-        foreach ($locales as $locale) {
-            foreach ($attributes as $attribute) {
-                $attributeKey = $locale.'.'.$attribute;
-                $translatedAttributes[$attributeKey] = (
-                    Str::title($attribute).
-                    " (".TranslationService::getLanguageFromLocale($locale).")"
-                );
-            }
-        }
-        return $translatedAttributes;
     }
 }
