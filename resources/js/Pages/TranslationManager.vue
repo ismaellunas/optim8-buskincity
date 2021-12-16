@@ -27,21 +27,23 @@
                             </span>
                         </template>
 
-                        <sdb-dropdown-item
-                            v-for="(localeOption, index) in localeOptions"
-                            :key="index"
-                            class="pt-0 pb-1"
-                        >
-                            <sdb-button
-                                :class="[
-                                    'is-fullwidth',
-                                    (localeOption.id == locale) ? 'is-link' : 'is-white',
-                                ]"
-                                @click="filterLocale(localeOption)"
+                        <sdb-dropdown-scroll :max-height="350">
+                            <sdb-dropdown-item
+                                v-for="(localeOption, index) in localeOptions"
+                                :key="index"
+                                class="pt-0 pb-1"
                             >
-                                {{ localeOption.name }}
-                            </sdb-button>
-                        </sdb-dropdown-item>
+                                <sdb-button
+                                    :class="[
+                                        'is-fullwidth',
+                                        (localeOption.id == locale) ? 'is-link' : 'is-white',
+                                    ]"
+                                    @click="filterLocale(localeOption)"
+                                >
+                                    {{ localeOption.name }}
+                                </sdb-button>
+                            </sdb-dropdown-item>
+                        </sdb-dropdown-scroll>
                     </sdb-dropdown>
 
                     <sdb-dropdown
