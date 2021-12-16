@@ -44,8 +44,6 @@
 
         @stack('scripts')
 
-        <script src="{{ mix('js/frontend.js') }}"></script>
-
         {!! $trackingCodeInsideHead !!}
     </head>
 
@@ -132,7 +130,9 @@
             </div>
         </nav>
 
-        {{ $slot }}
+        <div id="app">
+            {{ $slot }}
+        </div>
 
         <x-footer
             :logoUrl="$logoUrl"
@@ -143,6 +143,8 @@
         @endenv
 
         @stack('bottom_scripts')
+
+        <script src="{{ mix('js/frontend.js') }}"></script>
 
         {!! $trackingCodeBeforeBody !!}
     </body>
