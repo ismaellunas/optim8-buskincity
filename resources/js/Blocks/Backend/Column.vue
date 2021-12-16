@@ -45,6 +45,7 @@
 <script>
     import Card from '@/Blocks/Backend/Contents/Card';
     import CardText from '@/Blocks/Backend/Contents/CardText';
+    import Carousel from '@/Blocks/Backend/Contents/Carousel';
     import Draggable from 'vuedraggable';
     import Faq from '@/Blocks/Backend/Contents/Faq';
     import Heading from '@/Blocks/Backend/Contents/Heading';
@@ -57,6 +58,7 @@
         components: {
             Card,
             CardText,
+            Carousel,
             Faq,
             Draggable,
             Heading,
