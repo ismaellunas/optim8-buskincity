@@ -77,7 +77,7 @@
 
         methods: {
             canDisplayBag(bag) {
-                if (this.bags) {
+                if (this.bags.length > 0) {
                     return this.bags.includes(bag);
                 }
                 return true;
