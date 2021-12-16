@@ -4,22 +4,23 @@
             Update Page
         </template>
 
-        <sdb-error-notifications :errors="$page.props.errors"/>
+        <sdb-error-notifications
+            :errors="$page.props.errors"
+        />
 
-        <sdb-flash-notifications :flash="$page.props.flash"/>
+        <sdb-flash-notifications :flash="$page.props.flash" />
 
         <div class="box mb-6">
             <page-form
-                v-model="form.translations[selectedLocale]"
+                v-model="form[selectedLocale]"
                 v-model:content-config-id="contentConfigId"
                 :can="can"
                 :errors="errors"
-                :isNew="isNew"
-                :isEditMode="isEditMode"
-                :statusOptions="statusOptions"
-                :tabActive="tabActive"
-                :localeOptions="localeOptions"
-                :selectedLocale="selectedLocale"
+                :is-new="isNew"
+                :is-edit-mode="isEditMode"
+                :status-options="statusOptions"
+                :locale-options="localeOptions"
+                :selected-locale="selectedLocale"
                 @change-locale="onChangeLocale"
                 @on-submit="onSubmit"
             />
@@ -47,16 +48,14 @@
             SdbFlashNotifications,
         },
         props: {
-            can: Object,
-            page: Object,
-            errors: Object,
-            tabActive: {default: 0},
-            // options:
-            statusOptions: {type: Array, default: []},
+            can: { type: Object, required: true },
+            page: { type: Object, required: true },
+            errors: { type: Object, default:() => {} },
+            statusOptions: { type: Array, default:() => [] },
         },
         setup(props) {
-            const translationForm = { translations: {} };
             const defaultLocale = usePage().props.value.defaultLanguage;
+            const translationForm = { [defaultLocale]: {} };
 
             let translatedPage = getTranslation(props.page, defaultLocale);
 
@@ -64,7 +63,7 @@
                 translatedPage = getEmptyPageTranslation();
             }
 
-            translationForm.translations[defaultLocale] = JSON.parse(JSON.stringify(translatedPage));
+            translationForm[defaultLocale] = JSON.parse(JSON.stringify(translatedPage));
 
             const contentConfigId = ref('');
 
@@ -135,12 +134,12 @@
             setTranslationForm(locale) {
                 const translatedPage = getTranslation(this.page, locale);
 
-                let translationFrom = { translations: {} };
+                let translationFrom = { [this.defaultLocale]: {} };
 
                 if (isBlank(translatedPage)) {
-                    translationFrom.translations[locale] = getEmptyPageTranslation();
+                    translationFrom[locale] = getEmptyPageTranslation();
                 } else {
-                    translationFrom.translations[locale] = JSON.parse(JSON.stringify(translatedPage));
+                    translationFrom[locale] = JSON.parse(JSON.stringify(translatedPage));
                 }
                 this.form = useForm(translationFrom);
             },
