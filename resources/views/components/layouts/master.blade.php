@@ -44,6 +44,8 @@
 
         @stack('scripts')
 
+        <script src="{{ mix('js/frontend.js') }}"></script>
+
         {!! $trackingCodeInsideHead !!}
     </head>
 
@@ -62,6 +64,9 @@
             <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>
         @endenv
 
+        @stack('bottom_scripts')
+
         {!! $trackingCodeBeforeBody !!}
     </body>
+
 </html>
