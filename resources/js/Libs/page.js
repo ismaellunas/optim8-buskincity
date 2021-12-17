@@ -1,5 +1,6 @@
 export function getEmptyPageTranslation() {
     return {
+        id: null,
         title: null,
         slug: null,
         excerpt: null,
