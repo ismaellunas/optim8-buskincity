@@ -6,32 +6,34 @@
             class="navbar-menu"
         >
             <div class="navbar-end">
-                @foreach ($menuChunks[0] as $key => $menu)
-                    @if ($menu->children)
-                        <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link">
+                @if (count($menuChunks) > 0)
+                    @foreach ($menuChunks[0] as $key => $menu)
+                        @if ($menu->children)
+                            <div class="navbar-item has-dropdown is-hoverable">
+                                <a class="navbar-link">
+                                    {{ $menu->title }}
+                                </a>
+                                <div class="navbar-dropdown">
+                                    @foreach ($menu->children as $childMenu)
+                                        <a
+                                            class="navbar-item"
+                                            href="{{ $childMenu->link }}"
+                                        >
+                                            {{ $childMenu->title }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @else
+                            <a
+                                class="navbar-item"
+                                href="{{ $menu->link }}"
+                            >
                                 {{ $menu->title }}
                             </a>
-                            <div class="navbar-dropdown">
-                                @foreach ($menu->children as $childMenu)
-                                    <a
-                                        class="navbar-item"
-                                        href="{{ $childMenu->link }}"
-                                    >
-                                        {{ $childMenu->title }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a
-                            class="navbar-item"
-                            href="{{ $menu->link }}"
-                        >
-                            {{ $menu->title }}
-                        </a>
-                    @endif
-                @endforeach
+                        @endif
+                    @endforeach
+                @endif
             </div>
         </div>
     </div>
@@ -64,32 +66,34 @@
             class="navbar-menu"
         >
             <div class="navbar-start">
-                @foreach ($menuChunks[1] as $key => $menu)
-                    @if ($menu->children)
-                        <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link">
+                @if (count($menuChunks) > 1)
+                    @foreach ($menuChunks[1] as $key => $menu)
+                        @if ($menu->children)
+                            <div class="navbar-item has-dropdown is-hoverable">
+                                <a class="navbar-link">
+                                    {{ $menu->title }}
+                                </a>
+                                <div class="navbar-dropdown">
+                                    @foreach ($menu->children as $childMenu)
+                                        <a
+                                            class="navbar-item"
+                                            href="{{ $childMenu->link }}"
+                                        >
+                                            {{ $childMenu->title }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @else
+                            <a
+                                class="navbar-item"
+                                href="{{ $menu->link }}"
+                            >
                                 {{ $menu->title }}
                             </a>
-                            <div class="navbar-dropdown">
-                                @foreach ($menu->children as $childMenu)
-                                    <a
-                                        class="navbar-item"
-                                        href="{{ $childMenu->link }}"
-                                    >
-                                        {{ $childMenu->title }}
-                                    </a>
-                                @endforeach
-                            </div>
-                        </div>
-                    @else
-                        <a
-                            class="navbar-item"
-                            href="{{ $menu->link }}"
-                        >
-                            {{ $menu->title }}
-                        </a>
-                    @endif
-                @endforeach
+                        @endif
+                    @endforeach
+                @endif
                 <div class="navbar-item has-dropdown is-hoverable">
                     <span class="navbar-link">{{ strtoupper($currentLanguage) }}</span>
                     <div class="navbar-dropdown is-boxed">
