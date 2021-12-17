@@ -27,7 +27,7 @@
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
                     @change="checkNestedMenuItems"
-                    @duplicate-menu-item-locale="duplicateMenuItemLocale"
+                    @duplicate-menu-item="openDuplicateModal"
                     @edit-row="editRow"
                     @open-form-modal="openFormModal()"
                     @update-last-data-menu-items="updateLastDataMenuItems"
@@ -46,11 +46,21 @@
             @close="closeModal()"
             @update-menu-item="updateMenuItem"
         />
+
+        <navigation-form-duplicate
+            v-if="isModalDuplicateOpen"
+            :errors="menuItemErrors"
+            :locale-options="localeOptions"
+            :menu-item="selectedMenuItem"
+            @close="closeDuplicateModal()"
+            @duplicate-menu-item="duplicateMenuItem"
+        />
     </section>
 </template>
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
+    import NavigationFormDuplicate from './NavigationFormDuplicate';
     import NavigationFormMenu from './NavigationFormMenuItem';
     import NavigationMenu from './NavigationMenu';
     import SdbButton from '@/Sdb/Button';
@@ -62,6 +72,7 @@
         name: 'ThemeHeaderNavigation',
 
         components: {
+            NavigationFormDuplicate,
             NavigationFormMenu,
             NavigationMenu,
             SdbButton,
@@ -101,6 +112,7 @@
         data() {
             return {
                 activeTab: 'navigation',
+                isModalDuplicateOpen: false,
                 lastDataMenuItems: [],
                 loader: null,
                 menuForm: {},
@@ -153,6 +165,24 @@
                 this.selectedMenuItem = {};
                 this.menuItemErrors = {};
                 this.isModalOpen = true;
+            },
+
+            openDuplicateModal(menuItem) {
+                const cloneMenuItem = cloneDeep(menuItem);
+                cloneMenuItem['id'] = null;
+                cloneMenuItem['parent_id'] = null;
+                cloneMenuItem['children'] = [];
+                cloneMenuItem['locale'] = this.selectedLocale;
+
+                this.selectedMenuItem = cloneMenuItem;
+                this.menuItemErrors = {};
+                this.isModalDuplicateOpen = true;
+            },
+
+            closeDuplicateModal() {
+                this.selectedMenuItem = {};
+                this.menuItemErrors = {};
+                this.isModalDuplicateOpen = false;
             },
 
             checkNestedMenuItems() {
@@ -234,33 +264,42 @@
                 });
             },
 
-            duplicateMenuItemLocale(locale, menuItem) {
-                const cloneMenuItem = cloneDeep(menuItem);
-                cloneMenuItem['id'] = null;
-                cloneMenuItem['parent_id'] = null;
-                cloneMenuItem['children'] = [];
+            duplicateMenuItem(menuItem) {
+                const self = this;
+                axios.post(self.validationRoute, menuItem)
+                    .then(() => {
+                        if (
+                            self.menuForm.isDirty
+                            && self.selectedLocale !== menuItem['locale']
+                        ) {
+                            confirmLeaveProgress().then((result) => {
+                                if (result.isDismissed) {
+                                    return false;
+                                } else if(result.isConfirmed) {
+                                    self.selectedLocale = menuItem['locale'];
 
-                if (this.menuForm.isDirty) {
-                    confirmLeaveProgress().then((result) => {
-                        if (result.isDismissed) {
-                            return false;
-                        } else if(result.isConfirmed) {
-                            this.selectedLocale = locale;
+                                    self.menuForm = self.getMenuForm(menuItem['locale']);
+                                    self.menuForm.menu_items.push(menuItem);
 
-                            this.menuForm = this.getMenuForm(locale);
-                            this.menuForm.menu_items.push(cloneMenuItem);
+                                    self.closeDuplicateModal();
+                                    self.updateLastDataMenuItems();
+                                }
+                            });
+                        } else {
+                            if (self.selectedLocale !== menuItem['locale']) {
+                                self.selectedLocale = menuItem['locale'];
+                                self.menuForm = self.getMenuForm(menuItem['locale']);
+                            }
 
-                            this.updateLastDataMenuItems();
+                            self.menuForm.menu_items.push(menuItem);
+
+                            self.closeDuplicateModal();
+                            self.updateLastDataMenuItems();
                         }
+                    })
+                    .catch((error) => {
+                        self.menuItemErrors = error.response.data.errors;
                     });
-                } else {
-                    this.selectedLocale = locale;
-
-                    this.menuForm = this.getMenuForm(locale);
-                    this.menuForm.menu_items.push(cloneMenuItem);
-
-                    this.updateLastDataMenuItems();
-                }
             },
         }
     };
