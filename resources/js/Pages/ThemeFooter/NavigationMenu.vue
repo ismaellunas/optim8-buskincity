@@ -18,9 +18,7 @@
                     :menu-item="element"
                     :selected-locale="selectedLocale"
                     @delete-row="deleteRow"
-                    @duplicate-menu-item-above="duplicateMenuItemAbove"
-                    @duplicate-menu-item-below="duplicateMenuItemBelow"
-                    @duplicate-menu-item-locale="duplicateMenuItemLocale"
+                    @duplicate-menu-item="duplicateMenuItem"
                     @edit-row="$emit('edit-row', $event)"
                 />
             </div>
@@ -79,7 +77,7 @@
         },
 
         emits: [
-            'duplicate-menu-item-locale',
+            'duplicate-menu-item',
             'edit-row',
             'menu-items',
             'open-form-modal',
@@ -124,30 +122,8 @@
                 });
             },
 
-            duplicateMenuItemAbove(menuItem, index) {
-                const menuItems = this.menuItems;
-                const cloneMenuItem = cloneDeep(menuItem);
-
-                cloneMenuItem['id'] = null;
-                cloneMenuItem['children'] = [];
-
-                this.$emit('menu-items', menuItems.splice(index, 0, cloneMenuItem));
-                this.updateLastDataMenuItems();
-            },
-
-            duplicateMenuItemBelow(menuItem, index) {
-                const menuItems = this.menuItems;
-                const cloneMenuItem = cloneDeep(menuItem);
-
-                cloneMenuItem['id'] = null;
-                cloneMenuItem['children'] = [];
-
-                this.$emit('menu-items', menuItems.splice(index + 1, 0, cloneMenuItem));
-                this.updateLastDataMenuItems();
-            },
-
-            duplicateMenuItemLocale(locale, menuItem) {
-                this.$emit('duplicate-menu-item-locale', locale, menuItem);
+            duplicateMenuItem(menuItem) {
+                this.$emit('duplicate-menu-item', menuItem);
             },
 
             updateLastDataMenuItems() {

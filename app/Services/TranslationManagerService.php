@@ -13,7 +13,7 @@ class TranslationManagerService
 
     public function getRecords(
         string $locale = null,
-        string $group = null,
+        array $groups = null,
         int $perPage = 15
     ): LengthAwarePaginator{
         if (!$locale) {
@@ -22,8 +22,8 @@ class TranslationManagerService
 
         return $this->paginateCollection(
             $this->getTranslationByLocale($locale)
-                ->when($group, function ($collection) use ($group) {
-                    return $collection->where('group', $group);
+                ->when($groups, function ($collection) use ($groups) {
+                    return $collection->whereIn('group', $groups);
                 }),
             $perPage
         );
