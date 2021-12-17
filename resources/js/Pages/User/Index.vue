@@ -1,121 +1,127 @@
 <template>
-<app-layout>
-    <template v-slot:header>{{ title }}</template>
+    <app-layout>
+        <template #header>{{ title }}</template>
 
-    <div class="box">
-        <div class="columns">
-            <div class="column">
-                <div class="is-pulled-left">
-                    <sdb-filter-search
-                        v-model="term"
-                        @search="search"
-                    ></sdb-filter-search>
+        <div class="box">
+            <div class="columns">
+                <div class="column">
+                    <div class="is-pulled-left">
+                        <sdb-filter-search
+                            v-model="term"
+                            @search="search"
+                        />
+                    </div>
                 </div>
-            </div>
 
-            <div class="column">
-                <sdb-dropdown
-                    :close-on-click="false"
-                >
-                    <template v-slot:trigger>
-                        <span>Filter</span>
-                        <span
-                            v-if="roles.length > 0"
-                            class="ml-1"
-                        >
-                            ({{roles.length}})
-                        </span>
-                        <span class="icon is-small">
-                            <i class="fas fa-angle-down" aria-hidden="true"></i>
-                        </span>
-                    </template>
-
-                    <sdb-dropdown-item>
-                        Filter by Role
-                    </sdb-dropdown-item>
-
-                    <sdb-dropdown-item v-for="role in roleOptions">
-                        <sdb-checkbox
-                            v-model:checked="roles"
-                            :value="role.id"
-                            @change="onRoleChanged"
-                        >
-                            &nbsp; {{ role.value }}
-                        </sdb-checkbox>
-                    </sdb-dropdown-item>
-                </sdb-dropdown>
-            </div>
-
-            <div class="column">
-                <div
-                    v-if="can.add"
-                    class="is-pulled-right"
-                >
-                    <sdb-button-link
-                        class="is-primary"
-                        :href="route(baseRouteName+'.create')"
+                <div class="column">
+                    <sdb-dropdown
+                        :close-on-click="false"
                     >
-                        <span class="icon is-small">
-                            <i class="fas fa-plus"></i>
-                        </span>
-                        <span>Add New</span>
-                    </sdb-button-link>
-                </div>
-            </div>
-        </div>
-
-        <div class="table-container">
-            <sdb-table class="is-striped is-hoverable is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>
-                            <div class="level-right">Actions</div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <user-list-item
-                        v-for="record in records.data"
-                        :user="record"
-                    >
-                        <template v-slot:actions>
-                            <div class="level-right">
-                                <sdb-button-link
-                                    v-if="can.edit"
-                                    class="is-ghost has-text-black"
-                                    :href="route(baseRouteName + '.edit', record.id)"
-                                >
-                                    <span class="icon is-small">
-                                        <i class="fas fa-pen"></i>
-                                    </span>
-                                </sdb-button-link>
-                                <sdb-button
-                                    v-if="can.delete && record.can.delete_user"
-                                    class="is-ghost has-text-black ml-1"
-                                    @click.prevent="deleteRecord(record)"
-                                >
-                                    <span class="icon is-small">
-                                        <i class="far fa-trash-alt"></i>
-                                    </span>
-                                </sdb-button>
-                            </div>
+                        <template #trigger>
+                            <span>Filter</span>
+                            <span
+                                v-if="roles.length > 0"
+                                class="ml-1"
+                            >
+                                ({{ roles.length }})
+                            </span>
+                            <span class="icon is-small">
+                                <i
+                                    class="fas fa-angle-down"
+                                    aria-hidden="true"
+                                />
+                            </span>
                         </template>
-                    </user-list-item>
-                </tbody>
-            </sdb-table>
+
+                        <sdb-dropdown-item>
+                            Filter by Role
+                        </sdb-dropdown-item>
+
+                        <sdb-dropdown-item
+                            v-for="role in roleOptions"
+                            :key="role.id"
+                        >
+                            <sdb-checkbox
+                                v-model:checked="roles"
+                                :value="role.id"
+                                @change="onRoleChanged"
+                            >
+                                &nbsp; {{ role.value }}
+                            </sdb-checkbox>
+                        </sdb-dropdown-item>
+                    </sdb-dropdown>
+                </div>
+
+                <div class="column">
+                    <div
+                        v-if="can.add"
+                        class="is-pulled-right"
+                    >
+                        <sdb-button-link
+                            class="is-primary"
+                            :href="route(baseRouteName+'.create')"
+                        >
+                            <span class="icon is-small">
+                                <i class="fas fa-plus" />
+                            </span>
+                            <span>Add New</span>
+                        </sdb-button-link>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <sdb-table class="is-striped is-hoverable is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>
+                                <div class="level-right">Actions</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <user-list-item
+                            v-for="record in records.data"
+                            :key="record.id"
+                            :user="record"
+                        >
+                            <template #actions>
+                                <div class="level-right">
+                                    <sdb-button-link
+                                        v-if="can.edit"
+                                        class="is-ghost has-text-black"
+                                        :href="route(baseRouteName + '.edit', record.id)"
+                                    >
+                                        <span class="icon is-small">
+                                            <i class="fas fa-pen" />
+                                        </span>
+                                    </sdb-button-link>
+                                    <sdb-button
+                                        v-if="can.delete && record.can.delete_user"
+                                        class="is-ghost has-text-black ml-1"
+                                        @click.prevent="deleteRecord(record)"
+                                    >
+                                        <span class="icon is-small">
+                                            <i class="far fa-trash-alt" />
+                                        </span>
+                                    </sdb-button>
+                                </div>
+                            </template>
+                        </user-list-item>
+                    </tbody>
+                </sdb-table>
+            </div>
+
+            <sdb-pagination
+                :links="records.links"
+                :query-params="queryParams"
+            />
         </div>
-
-        <sdb-pagination
-            :links="records.links"
-            :query-params="queryParams"
-        />
-
-    </div>
-</app-layout>
+    </app-layout>
 </template>
 
 <script>
@@ -147,18 +153,21 @@
             SdbTable,
             UserListItem,
         },
+
         mixins: [
             MixinFilterDataHandle,
         ],
+
         props: {
-            baseRouteName: String,
-            can: Object,
-            pageNumber: String,
-            pageQueryParams: Object,
-            records: {},
-            roleOptions: Object,
-            title: String,
+            baseRouteName: { type: String, required: true },
+            can: { type: Object, required: true },
+            pageNumber: { type: String, default: null },
+            pageQueryParams: { type: Object, required: true },
+            records: { type: Object, default: () => {} },
+            roleOptions: { type: Object, required: true },
+            title: { type: String, required: true },
         },
+
         setup(props) {
             const queryParams = merge(
                 {},
@@ -171,6 +180,7 @@
                 roles: ref(props.pageQueryParams?.roles ?? []),
             };
         },
+
         methods: {
             deleteRecord(record) {
                 const self = this;
@@ -188,12 +198,15 @@
                     }
                 })
             },
+
             onError(errors) {
                 oopsAlert();
             },
+
             onSuccess(page) {
                 successAlert(page.props.flash.message);
             },
+
             onRoleChanged(event) {
                 this.queryParams['roles'] = this.roles;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
