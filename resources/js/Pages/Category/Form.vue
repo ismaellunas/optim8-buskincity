@@ -19,7 +19,7 @@
                             :label="`Category Name (${translation.toUpperCase()})`"
                             :message="error(translation+'.name')"
                         >
-                            <template v-slot:afterInput>
+                            <template #afterInput>
                                 <div class="control">
                                     <sdb-button-icon
                                         v-if="translation !== defaultLocale"
@@ -78,23 +78,22 @@
     import SdbLabel from '@/Sdb/Label';
     import SdbSelect from '@/Sdb/Select';
     import { confirmDelete } from '@/Libs/alert';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import { isBlank } from '@/Libs/utils';
     import { reactive } from "vue";
-    import { pull, sortBy } from 'lodash';
+    import { pull, sortBy, isEmpty } from 'lodash';
 
     export default {
         name: 'CategoryForm',
-        mixins: [
-            HasPageErrors
-        ],
         components: {
             SdbButton,
             SdbButtonIcon,
             SdbButtonLink,
             SdbFormInputAddons,
-            SdbLabel,
             SdbSelect,
         },
+        mixins: [
+            HasPageErrors
+        ],
         props: {
             baseRoute: String,
             category: Object,
@@ -106,7 +105,7 @@
             localeOptions: Array,
         },
         emits: [
-           'on-submit',
+            'on-submit',
         ],
         setup(props) {
             let providedLocales = [];
@@ -120,10 +119,17 @@
                 props.category.translations.forEach(translation => {
                     fields[translation.locale] = {name: translation.name};
                 });
-            } else {
-                providedLocales = ['en'];
 
-                fields = { en: { name: null } };
+                if (!providedLocales.includes(props.defaultLocale)) {
+                    fields[props.defaultLocale] = {name: null};
+                    providedLocales.push(props.defaultLocale);
+                }
+            } else {
+                providedLocales = [props.defaultLocale];
+
+                fields[props.defaultLocale] = {
+                    name: null
+                };
             }
 
             return {
@@ -132,6 +138,26 @@
                     return !providedLocales.includes(localeOption.id);
                 })?.id,
             };
+        },
+        computed: {
+            availableLocales() {
+                const usedLocales = Object.keys(this.form);
+                return sortBy(this.localeOptions.filter(localeOption => {
+                    return !usedLocales.includes(localeOption.id);
+                }), ['name']);
+            },
+            hasAvailableLocales() {
+                return !isBlank(this.availableLocales);
+            },
+            sortedExistingLocales() {
+                const sortedExistingLocales = pull(
+                    Object.keys(this.form),
+                    this.defaultLocale
+                );
+
+                sortedExistingLocales.unshift(this.defaultLocale);
+                return sortedExistingLocales;
+            }
         },
         methods: {
             updateSelectedLocale() {
@@ -150,7 +176,7 @@
                 }
             },
             addTranslation() {
-                this.form[this.selectedLocale] = {name: null};
+                this.form[this.selectedLocale] = {name: null,};
 
                 this.updateSelectedLocale();
             },
@@ -163,25 +189,6 @@
                     }
                 });
             },
-        },
-        computed: {
-            availableLocales() {
-                const usedLocales = Object.keys(this.form);
-                return sortBy(this.localeOptions.filter(localeOption => {
-                    return !usedLocales.includes(localeOption.id);
-                }), ['name']);
-            },
-            hasAvailableLocales() {
-                return !isBlank(this.availableLocales);
-            },
-            sortedExistingLocales() {
-                const sortedExistingLocales = pull(
-                    Object.keys(this.form),
-                    this.defaultLocale
-                );
-                sortedExistingLocales.unshift(this.defaultLocale);
-                return sortedExistingLocales;
-            }
         },
     };
 </script>

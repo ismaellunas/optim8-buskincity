@@ -12,11 +12,12 @@
         >
             <sdb-button
                 :aria-controls="menuId"
+                :style="styleButton"
                 aria-haspopup="true"
                 class="button"
                 type="button"
             >
-                <slot name="trigger"></slot>
+                <slot name="trigger" />
             </sdb-button>
         </div>
 
@@ -28,7 +29,7 @@
             role="menu"
         >
             <div class="dropdown-content">
-                <slot></slot>
+                <slot />
             </div>
         </div>
     </div>
@@ -36,7 +37,6 @@
 
 <script>
     import SdbButton from '@/Sdb/Button';
-    import { isBlank, isEmpty } from "@/Libs/utils";
     import { ref } from "vue";
 
     export default {
@@ -62,6 +62,10 @@
             menuId: {
                 type: String,
                 default: 'dropdown-menu'
+            },
+            styleButton: {
+                type: String,
+                default: ""
             },
         },
 

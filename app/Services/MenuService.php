@@ -2,70 +2,164 @@
 
 namespace App\Services;
 
-use App\Models\Category;
-use App\Models\Media;
-use App\Models\Page;
-use App\Models\Post;
-use App\Models\Role;
-use App\Models\User;
+use App\Models\{
+    Category,
+    Media,
+    Menu,
+    MenuItem,
+    Page,
+    Post,
+    Role,
+    User,
+};
 use Illuminate\Http\Request;
+use App\Entities\Caches\{
+    MenuCache,
+    SettingCache,
+};
 
 class MenuService
 {
-    public static function generateMenus($locale)
+    public function getHeaderMenus(array $locales = []): array
     {
-        $menus = [
-            'navbar' => [],
-        ];
+        $menus = [];
 
-        $rawMenus = [];
+        $locales = array_merge([config('app.fallback_locale')], $locales);
 
-        $pages = Page::take(2)->get();
-        foreach ($pages as $page) {
-            $rawMenus[] = [
-                'class' => \App\Models\Page::class,
-                'id' => $page->id,
-                'order' => $page->id,
-            ];
+        foreach ($locales as $locale) {
+            $menus[$locale] = Menu::generateMenuItems($locale);
         }
-
-        /* TODO: remove this after menu feature is created
-        $rawMenus = [
-            [
-                'class' => \App\Models\Page::class,
-                'id' => 56,
-                'order' => 0,
-            ], ...
-        ];
-         */
-
-        $sortedRawMenus = collect($rawMenus)->sortBy('order');
-
-        foreach ($sortedRawMenus as $rawMenu) {
-            $objMenu = $rawMenu['class']::find($rawMenu['id']);
-            $translation = $objMenu->translateOrDefault($locale);
-            if (!empty($translation)) {
-                $menus['navbar'][] = [
-                    'title' => $translation->title,
-                    'link' => route('frontend.pages.show', [
-                        'locale' => $locale,
-                        'page_translation' => $translation->slug,
-                    ]),
-                ];
-            }
-        }
-
-        $menus['navbar'][] = [
-            'title' => 'Blog',
-            'link' => route('blog.index', [$locale]),
-        ];
 
         return $menus;
+    }
+
+    public function getHeaderMenu(string $locale): array
+    {
+        return app(MenuCache::class)->remember(
+            'header_menu',
+            function () use ($locale) {
+                $menu = Menu::header()
+                    ->locale($locale)
+                    ->with([
+                        'menuItems' => function ($query) {
+                            $query
+                                ->orderBy('order', 'ASC')
+                                ->orderBy('parent_id', 'ASC')
+                                ->with([
+                                    'post' => function ($query) {
+                                        $query->select([
+                                            'id',
+                                            'slug',
+                                        ]);
+                                    },
+                                    'page' => function ($query) {
+                                        $query->select('id');
+                                        $query->with('translations', function ($query) {
+                                            $query->select([
+                                                'id',
+                                                'page_id',
+                                                'locale',
+                                                'slug',
+                                            ]);
+                                        });
+                                    },
+                                ]);
+                        },
+                    ])
+                    ->first();
+
+                return $menu ? Menu::createArrayMenuItems($menu) : [];
+            },
+            $locale
+        );
+    }
+
+    public function getFooterMenus(array $locales = []): array
+    {
+        $menus = [];
+
+        $locales = array_merge([config('app.fallback_locale')], $locales);
+
+        foreach ($locales as $locale) {
+            $menus[$locale] = Menu::generateMenuItems($locale, 2);
+        }
+
+        return $menus;
+    }
+
+    public function getFooterMenu(string $locale): array
+    {
+        return app(MenuCache::class)->remember(
+            'footer_menu',
+            function () use ($locale) {
+                $menu = Menu::footer()
+                    ->locale($locale)
+                    ->with([
+                        'menuItems' => function ($query) {
+                            $query
+                                ->orderBy('order', 'ASC')
+                                ->orderBy('parent_id', 'ASC')
+                                ->with([
+                                    'post' => function ($query) {
+                                        $query->select([
+                                            'id',
+                                            'slug',
+                                        ]);
+                                    },
+                                    'page' => function ($query) {
+                                        $query->select('id');
+                                        $query->with('translations', function ($query) {
+                                            $query->select([
+                                                'id',
+                                                'page_id',
+                                                'locale',
+                                                'slug',
+                                            ]);
+                                        });
+                                    },
+                                ]);
+                        },
+                    ])
+                    ->first();
+
+                return $menu ? Menu::createArrayMenuItems($menu) : [];
+            },
+            $locale
+        );
+    }
+
+    public function getSocialMediaMenus(): array
+    {
+        return app(SettingCache::class)->remember(
+            'social_media',
+            function () {
+                $menu = Menu::with([
+                    'menuItems' => function ($query) {
+                            $query->select([
+                                    'id',
+                                    'url',
+                                    'icon',
+                                    'menu_id',
+                                ]);
+                            $query->where('type', MenuItem::TYPE_URL);
+                        }
+                    ])
+                    ->socialMedia()
+                    ->first();
+
+                return $menu ? $menu->menuItems->toArray() : [];
+            }
+        );
     }
 
     public static function generateBackendMenu(Request $request): array
     {
         $user = $request->user();
+
+        $menuLogo = [
+            'title' => 'Dashboard',
+            'link' => route('dashboard'),
+        ];
 
         $menus = [
             'dashboard' => [
@@ -77,6 +171,10 @@ class MenuService
         ];
 
         if ($user->can('system.dashboard') && $request->routeIs('admin.*')) {
+            $menuLogo = [
+                'title' => 'Dashboard',
+                'link' => route('admin.dashboard'),
+            ];
 
             $menus = [
                 [
@@ -128,39 +226,89 @@ class MenuService
                     'isEnabled' => $user->can('system.theme'),
                     'children' => [
                         [
+                            'title' => 'Header',
+                            'link' => route('admin.theme.header.edit'),
+                            'isActive' => $request->routeIs('admin.theme.header.*'),
+                            'isEnabled' => true,
+                        ],
+                        [
+                            'title' => 'Footer',
+                            'link' => route('admin.theme.footer.edit'),
+                            'isActive' => $request->routeIs('admin.theme.footer.*'),
+                            'isEnabled' => true,
+                        ],
+                        [
                             'title' => 'Colors',
                             'link' => route('admin.theme.color.edit'),
                             'isActive' => $request->routeIs('admin.theme.color.*'),
                             'isEnabled' => true,
                         ],
                         [
-                            'title' => 'Font Size',
+                            'title' => 'Fonts',
+                            'link' => route('admin.theme.fonts.edit'),
+                            'isActive' => $request->routeIs('admin.theme.fonts.*'),
+                            'isEnabled' => true,
+                        ],
+                        [
+                            'title' => 'Font Sizes',
                             'link' => route('admin.theme.font-size.edit'),
                             'isActive' => $request->routeIs('admin.theme.font-size.*'),
+                            'isEnabled' => true,
+                        ],
+                        [
+                            'title' => 'Advanced',
+                            'link' => route('admin.theme.advance.edit'),
+                            'isActive' => $request->routeIs('admin.theme.advance.*'),
                             'isEnabled' => true,
                         ],
                     ],
                 ],
                 [
-                    'title' => 'All Users',
-                    'link' => route('admin.users.index'),
-                    'isActive' => $request->routeIs('admin.users.*'),
-                    'isEnabled' => $user->can('viewAny', User::class),
+                    'title' => 'Settings',
+                    'isActive' => $request->routeIs('admin.setting.*'),
+                    'isEnabled' => $user->can('system.language'),
+                    'children' => [
+                        [
+                            'title' => 'Languages',
+                            'link' => route('admin.settings.languages.edit'),
+                            'isActive' => $request->routeIs('admin.settings.languages.edit'),
+                            'isEnabled' => $user->can('system.language'),
+                        ],
+                        [
+                            'title' => 'Translation Manager',
+                            'link' => route('admin.settings.translation-manager.edit'),
+                            'isActive' => $request->routeIs('admin.settings.translation-manager.edit'),
+                            'isEnabled' => $user->can('system.translation'),
+                        ],
+                    ],
                 ],
                 [
-                    'title' => 'Roles',
-                    'link' => route('admin.roles.index'),
-                    'isActive' => $request->routeIs('admin.roles.*'),
-                    'isEnabled' => $user->can('viewAny', Role::class),
+                    'title' => 'Users',
+                    'isActive' => $request->routeIs('admin.users.*') || $request->routeIs('admin.roles.*'),
+                    'isEnabled' => $user->can('viewAny', User::class) || $user->can('viewAny', Role::class),
+                    'children' => [
+                        [
+                            'title' => 'All Users',
+                            'link' => route('admin.users.index'),
+                            'isActive' => $request->routeIs('admin.users.*'),
+                            'isEnabled' => $user->can('viewAny', User::class),
+                        ],
+                        [
+                            'title' => 'Roles',
+                            'link' => route('admin.roles.index'),
+                            'isActive' => $request->routeIs('admin.roles.*'),
+                            'isEnabled' => $user->can('viewAny', Role::class),
+                        ],
+                    ],
                 ],
             ];
 
-            $navProfile = [
+            $menuProfile = [
                 'title' => 'Profile',
                 'link' => route('admin.profile.show'),
             ];
         } else {
-            $navProfile = [
+            $menuProfile = [
                 'title' => 'Profile',
                 'link' => route('user.profile.show'),
             ];
@@ -168,7 +316,98 @@ class MenuService
 
         return [
             'nav' => $menus,
-            'navProfile' => $navProfile,
+            'navLogo' => $menuLogo,
+            'navProfile' => $menuProfile,
         ];
+    }
+
+    public function getPageOptions(): array
+    {
+        return Page::with([
+                'translations' => function ($query) {
+                    $query->select([
+                        'id',
+                        'page_id',
+                        'locale',
+                        'title',
+                    ]);
+                },
+            ])
+            ->get(['id'])
+            ->map(function ($page) {
+
+                $locales = $page
+                    ->translations
+                    ->map(function ($translation) {
+                        return $translation->locale;
+                    });
+
+                return [
+                    'id' => $page->id,
+                    'value' => $page->title ?? $page->translations[0]->title,
+                    'locales' => $locales,
+                ];
+            })
+            ->all();
+    }
+
+    public function getPostOptions(): array
+    {
+        return Post::published()
+            ->get([
+                'id',
+                'locale',
+                'title',
+            ])
+            ->map(function ($post) {
+                return [
+                    'id' => $post->id,
+                    'value' => $post->title,
+                    'locale' => $post->locale,
+                ];
+            })
+            ->all();
+    }
+
+    public function getCategoryOptions(): array
+    {
+        return Category::with([
+                'translations' => function ($query) {
+                    $query->select([
+                        'id',
+                        'category_id',
+                        'locale',
+                        'name',
+                    ]);
+                },
+            ])
+            ->get(['id'])
+            ->map(function ($category) {
+
+                $locales = $category
+                    ->translations
+                    ->map(function ($translation) {
+                        return $translation->locale;
+                    });
+
+                return [
+                    'id' => $category->id,
+                    'value' => $category->name ?? $category->translations[0]->name,
+                    'locales' => $locales,
+                ];
+            })
+            ->all();
+    }
+
+    public function getMenuItemTypeOptions(): array
+    {
+        return collect(MenuItem::TYPE_VALUES)
+            ->map(function ($item, $key) {
+                return [
+                    'id' => $key,
+                    'value' => $item,
+                ];
+            })
+            ->all();
     }
 }

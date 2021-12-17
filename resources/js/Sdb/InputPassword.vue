@@ -41,6 +41,8 @@
             SdbField,
         },
 
+        inheritAttrs: false,
+
         props: {
             hasError: {type: Boolean, default: false},
             modelValue: {},

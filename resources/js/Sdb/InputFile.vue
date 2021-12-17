@@ -1,24 +1,33 @@
 <template>
-    <div class="file" :class="wrapperClass">
+    <div
+        class="file"
+        :class="wrapperClass"
+    >
         <label class="file-label">
             <input
-                class="file-input"
                 ref="fileInput"
+                class="file-input"
                 type="file"
                 :accept="accept.join(', ')"
                 @click="resetFile"
                 @input="pickFile"
-            />
+            >
             <span class="file-cta">
                 <span class="file-icon">
-                    <i class="fas fa-upload"></i>
+                    <i class="fas fa-upload" />
                 </span>
-                <span class="file-label" v-if="!hasFile">
+                <span
+                    v-if="!hasFile"
+                    class="file-label"
+                >
                     Choose a file...
                 </span>
             </span>
 
-            <span v-if="isNameDisplayed" class="file-name">
+            <span
+                v-if="isNameDisplayed"
+                class="file-name"
+            >
                 {{ fileName }}
             </span>
         </label>
@@ -26,27 +35,66 @@
 </template>
 
 <script>
-    import { isEmpty, concat } from 'lodash';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { concat } from 'lodash';
+    import { isBlank, useModelWrapper } from '@/Libs/utils';
 
     export default {
+        name: 'SdbInputFile',
+
         props: {
-            accept: {type: Array, default: []},
-            isNameDisplayed: {type: Boolean, default: true},
-            modelValue: {},
+            accept: {
+                type: Array,
+                default: () => []
+            },
+            isNameDisplayed: {
+                type: Boolean,
+                default: true
+            },
+            modelValue: {
+                type: [File, null],
+                required: true,
+            },
         },
+
+        emits: [
+            'on-file-picked',
+            'update:modelValue'
+        ],
+
         setup(props, { emit }) {
             return {
                 file: useModelWrapper(props, emit),
             };
         },
+
+        computed: {
+            hasFile() {
+                return !isBlank(this.file);
+            },
+
+            fileName() {
+                if (this.hasFile) {
+                    return this.file.name
+                }
+                return "...";
+            },
+
+            wrapperClass() {
+                return concat(
+                    this.isNameDisplayed ? 'has-name': null,
+                ).filter(Boolean);
+            },
+        },
+
         methods: {
             resetFile() {
                 this.$refs.fileInput.value = null;
             },
+
             pickFile() {
                 let input = this.$refs.fileInput
                 let file = input.files
+
                 if (file && file[0]) {
                     let reader = new FileReader
                     reader.onload = (event) => {
@@ -57,21 +105,5 @@
                 }
             },
         },
-        computed: {
-            hasFile() {
-                return !isEmpty(this.file);
-            },
-            fileName() {
-                if (this.hasFile) {
-                    return this.file.name
-                }
-                return "...";
-            },
-            wrapperClass() {
-                return concat(
-                    this.isNameDisplayed ? 'has-name': null,
-                ).filter(Boolean);
-            },
-        },
-    }
+    };
 </script>

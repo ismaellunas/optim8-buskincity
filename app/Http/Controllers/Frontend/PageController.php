@@ -3,35 +3,74 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Media;
-use App\Models\PageTranslation;
+use App\Models\{
+    Media,
+    Page,
+    PageTranslation,
+};
+use App\Services\MenuService;
 use App\Services\TranslationService;
 use Illuminate\Support\Collection;
-use Inertia\Inertia;
 
 class PageController extends Controller
 {
-    private $baseComponentName = 'Page/Frontend';
     private $baseRouteName = 'frontend.pages';
+    private $menuService;
+    private $translationService;
 
-    private function redirectToPageLocaleOr404(
-        PageTranslation $pageTranslation,
+    public function __construct(
+        MenuService $menuService,
+        TranslationService $translationService
+    ) {
+        $this->menuService = $menuService;
+        $this->translationService = $translationService;
+    }
+
+    private function isPageExistInMenu(array $menus, $page): bool
+    {
+        return collect($menus)->contains(function ($menu) use ($page) {
+
+            if ($menu->page_id && $menu->page_id == $page->id) {
+
+                return true;
+
+            } elseif (!empty($menu->children)) {
+
+                collect($menu->children)->contains(function ($child) use ($page) {
+                    return $child->page_id && $child->page_id == $page->id;
+                });
+            }
+
+            return false;
+        });
+    }
+
+    private function goToPageWithDefaultLocaleOrFallback(
+        Page $page,
         string $locale
     ) {
-        $page = $pageTranslation->page;
+        $menus = $this->menuService->getHeaderMenu($locale);
+        $defaultLocale = $this->translationService->getDefaultLocale();
 
-        if ($page->hasTranslation($locale)) {
+        if (
+            $page->hasTranslation($defaultLocale)
+            && $this->isPageExistInMenu($menus, $page)
+        ) {
+            $pageTranslation = $page->translate($defaultLocale);
 
-            $pageTranslation = $page->translate($locale);
-
-            return redirect()->route($this->baseRouteName.'.show', [
-                'locale' => $locale,
-                'page_translation' => $pageTranslation->slug
+            return view('page', [
+                'currentLanguage' => $locale,
+                'images' => $this->getPageImages($pageTranslation, $locale),
+                'page' => $pageTranslation,
             ]);
-
         } else {
-            return redirect()->route('status-code.404');
+            return $this->redirectFallback();
         }
+    }
+
+    private function redirectFallback()
+    {
+        return redirect()->route('homepage');
     }
 
     private function getPageImages(
@@ -41,7 +80,7 @@ class PageController extends Controller
         $images = collect([]);
 
         $locales = array_unique([
-            TranslationService::getDefaultLocale(),
+            $this->translationService->getDefaultLocale(),
             $locale,
         ]);
 
@@ -62,18 +101,30 @@ class PageController extends Controller
         return $images;
     }
 
-    public function show(string $locale, PageTranslation $pageTranslation)
-    {
-        if ($pageTranslation->locale != $locale) {
+    public function show(
+        PageTranslation $pageTranslation
+    ) {
+        $locale = $this->translationService->currentLanguage();
+        $page = $pageTranslation->page;
 
-            return $this->redirectToPageLocaleOr404($pageTranslation, $locale);
-
+        if (!$page->hasTranslation($locale)) {
+            return $this->goToPageWithDefaultLocaleOrFallback(
+                $page,
+                $locale
+            );
         } else {
+            $newPageTranslation = $page->translate($locale);
 
-            return Inertia::render($this->baseComponentName.'/Show', [
-                'currentLanguage' => TranslationService::currentLanguage(),
-                'images' => $this->getPageImages($pageTranslation, $locale),
-                'page' => $pageTranslation,
+            if ($newPageTranslation->slug !== $pageTranslation->slug) {
+                return redirect()->route($this->baseRouteName.'.show', [
+                    $newPageTranslation->slug
+                ]);
+            }
+
+            return view('page', [
+                'currentLanguage' => $locale,
+                'images' => $this->getPageImages($newPageTranslation, $locale),
+                'page' => $newPageTranslation,
             ]);
         }
     }

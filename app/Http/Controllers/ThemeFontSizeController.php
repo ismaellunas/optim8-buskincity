@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ThemeFontSizeRequest;
 use App\Models\Setting;
 use App\Services\SettingService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Inertia\Inertia;
 
-class ThemeFontSizeController extends CrudController
+class ThemeFontSizeController extends ThemeOptionController
 {
     protected $baseRouteName = 'admin.theme.font-size';
     protected $title = 'Font Size';
@@ -25,7 +24,7 @@ class ThemeFontSizeController extends CrudController
         $defaultFontSizes = config('constants.theme_font_sizes');
 
         return Inertia::render(
-            'ThemeFontSize/Edit',
+            'ThemeFontSize',
             $this->getData([
                 'defaultFontSizes' => $defaultFontSizes,
                 'fontSizes' => $this->settingService->getFontSizes(),
@@ -33,29 +32,17 @@ class ThemeFontSizeController extends CrudController
         );
     }
 
-    public function update(Request $request)
+    public function update(ThemeFontSizeRequest $request)
     {
-        $colors = $request->all();
+        $fontSizes = $request->all();
 
-        foreach ($colors as $key => $color) {
+        foreach ($fontSizes as $key => $fontSize) {
             $setting = Setting::firstOrNew(['key' => $key]);
-            $setting->value = $color;
+            $setting->value = $fontSize;
             $setting->save();
         }
 
-        $this->settingService->generateVariablesSass();
-
-        $this->settingService->generateThemeCss();
-
-        $asset = $this->settingService->uploadThemeCssToCloudStorage(
-            !App::environment('production')
-            ? config('app.env')
-            : null
-        );
-
-        $this->settingService->saveCssUrl($asset->fileUrl);
-
-        $this->settingService->clearStorageTheme();
+        $this->generateNewStyleProcess($this->settingService);
 
         $this->generateFlashMessage('Font Sizes updated successfully!');
 

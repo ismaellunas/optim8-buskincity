@@ -69,6 +69,7 @@ class PostController extends CrudController
                 ],
             ],
             'categoryOptions' => $this->postService->getCategoryOptions(),
+            'languageOptions' => $this->postService->getLanguageOptions(),
             'post' => new Post(),
             'statusOptions' => Post::getStatusOptions(),
         ]);
@@ -107,16 +108,6 @@ class PostController extends CrudController
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Post $post)
-    {
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Post  $post
@@ -138,6 +129,7 @@ class PostController extends CrudController
             ],
             'categoryOptions' => $this->postService->getCategoryOptions(),
             'coverImage' => $post->coverImage,
+            'languageOptions' => $this->postService->getLanguageOptions($post),
             'post' => $post->load('categories'),
             'statusOptions' => Post::getStatusOptions(),
         ]);

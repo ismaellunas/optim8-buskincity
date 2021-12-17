@@ -4,19 +4,21 @@
             Create New Page
         </template>
 
-        <sdb-error-notifications :errors="$page.props.errors"/>
+        <sdb-error-notifications
+            :errors="$page.props.errors"
+        />
 
         <div class="box mb-6">
             <page-form
-                v-model="form.translations[selectedLocale]"
+                v-model="form[selectedLocale]"
                 v-model:content-config-id="contentConfigId"
                 :can="can"
                 :errors="errors"
-                :isNew="isNew"
-                :isEditMode="isEditMode"
-                :statusOptions="statusOptions"
-                :localeOptions="localeOptions"
-                :selectedLocale="selectedLocale"
+                :is-new="isNew"
+                :is-edit-mode="isEditMode"
+                :status-options="statusOptions"
+                :locale-options="localeOptions"
+                :selected-locale="selectedLocale"
                 @change-locale="changeLocale"
                 @on-submit="onSubmit"
             />
@@ -40,18 +42,18 @@
             SdbErrorNotifications,
         },
         props: {
-            can: Object,
-            page: Object,
-            errors: Object,
-            tabActive: String,
-            statusOptions: {type: Array, default: []},
+            can: { type: Object, required: true },
+            page: { type: Object, required: true },
+            errors: { type: Object, default:() => {} },
+            statusOptions: { type: Array, default:() => [] },
         },
-        setup(props) {
-            const translationForm = {
-                translations: {
-                    en: getEmptyPageTranslation()
-                }
-            };
+        setup() {
+            const defaultLocale = usePage().props.value.defaultLanguage;
+            const translations = {};
+
+            translations[defaultLocale] = getEmptyPageTranslation();
+
+            const translationForm = { [defaultLocale]: getEmptyPageTranslation() };
 
             const contentConfigId = ref('');
 
@@ -70,7 +72,7 @@
 
             return {
                 contentConfigId,
-                defaultLocale: usePage().props.value.defaultLanguage,
+                defaultLocale: defaultLocale,
                 form: useForm(translationForm),
                 localeOptions: usePage().props.value.languageOptions,
             };
@@ -88,16 +90,18 @@
                 const submitRoute = route('admin.pages.store');
                 this.form.post(submitRoute);
             },
-            changeLocale(locale) {
-                const confirmationMessage = (
-                    'It looks like you have been editing something. '
-                    + 'If you leave before saving, your changes will be lost.'
-                );
+            changeLocale() {
+                let locale = {};
+                this.localeOptions.map(localeOption => {
+                    if (localeOption.id == this.defaultLocale) {
+                        locale = localeOption;
+                    }
+                });
 
                 this.$swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Please provide English (EN) translation first!'
+                    text: 'Please provide '+locale.name+' ('+locale.id.toUpperCase()+') translation first!'
                 })
             },
         }

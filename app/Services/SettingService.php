@@ -2,47 +2,200 @@
 
 namespace App\Services;
 
+use App\Entities\Caches\SettingCache;
 use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
-use App\Models\Setting;
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Models\{
+    Media,
+    Setting,
+};
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\{
+    Collection,
+    Facades\Storage,
+    Str,
+};
 use Symfony\Component\Process\Process;
 use \finfo;
 
 class SettingService
 {
+    private static function getAdditionalCodeFileKey(string $key): string
+    {
+        return config("constants.theme_additional_code_files.{$key}.key");
+    }
+
+    public function getAdditionalCodeFileName(string $key): string
+    {
+        return config("constants.theme_additional_code_files.{$key}.filename");
+    }
+
     public static function getFrontendCssUrl(): string
     {
-        $urlCss = Setting::where('key', 'url_css')->first(['key', 'value']);
+        $urlCss = app(SettingCache::class)->remember('url_css', function () {
+            return Setting::key('url_css')->value('value') ?? "";
+        });
 
-        return $urlCss->value ?? mix('css/app.css')->toHtml();
+        return !empty($urlCss) ? $urlCss : mix('css/app.css')->toHtml();
+    }
+
+    public static function getAdditionalCssUrl(): string
+    {
+        return app(SettingCache::class)->remember('additional_css_url', function () {
+            return Setting::key(self::getAdditionalCodeFileKey('additional_css'))
+                ->value('value') ?? "";
+        });
+    }
+
+    public static function getAdditionalJavascriptUrl(): string
+    {
+        return app(SettingCache::class)->remember('additional_javascript_url', function () {
+            return Setting::key(self::getAdditionalCodeFileKey('additional_javascript'))
+                ->value('value') ?? "";
+        });
+    }
+
+    public function getTrackingCodeInsideHead(): string
+    {
+        return app(SettingCache::class)->remember('tracking_code_inside_head', function () {
+            return Setting::key('tracking_code_inside_head')->value('value') ?? "";
+        });
+    }
+
+    public function getTrackingCodeAfterBody(): string
+    {
+        return app(SettingCache::class)->remember('tracking_code_after_body', function () {
+            return Setting::key('tracking_code_after_body')->value('value') ?? "";
+        });
+    }
+
+    public function getTrackingCodeBeforeBody(): string
+    {
+        return app(SettingCache::class)->remember('tracking_code_before_body', function () {
+            return Setting::key('tracking_code_before_body')->value('value') ?? "";
+        });
+    }
+
+    private function getSettingsByGroup(string $groupName): Collection
+    {
+        return Setting::group($groupName)
+            ->get([
+                'display_name',
+                'key',
+                'value',
+                'order',
+            ]);
     }
 
     public function getColors(): array
     {
-        return Setting::where('group', 'theme_color')
+        return $this->getSettingsByGroup('theme_color')->keyBy('key')->all();
+    }
+
+    public function getFontSizes(): array
+    {
+        return $this->getSettingsByGroup('font_size')->keyBy('key')->all();
+    }
+
+    public function getHeader(): array
+    {
+        return Setting::where('group', 'header')
             ->get([
-                'display_name',
                 'key',
                 'value',
-                'order',
             ])
             ->keyBy('key')
             ->all();
     }
 
-    public function getFontSizes(): array
+    public function getFooter(): array
     {
-        return Setting::where('group', 'font_size')
+        return Setting::where('group', 'footer')
             ->get([
-                'display_name',
                 'key',
                 'value',
-                'order',
             ])
             ->keyBy('key')
             ->all();
+    }
+
+    public function getLogoUrl(): string
+    {
+        return app(SettingCache::class)->remember('logo_url', function () {
+            $mediaId = Setting::key(config("constants.theme_header.header_logo_media.key"))
+                ->value('value');
+
+            return Media::where('id', $mediaId)->value('file_url') ?? "";
+        });
+    }
+
+    public function getHeaderLayout(): int
+    {
+        return app(SettingCache::class)->remember('header_layout', function () {
+            return (int) Setting::key('header_layout')->value('value');
+        });
+    }
+
+    public function getTrackingCodes(): array
+    {
+        return $this->getSettingsByGroup('tracking_code')->keyBy('key')->all();
+    }
+
+    public function getAdditionalCodes(): array
+    {
+        return $this->getSettingsByGroup('additional_code')->keyBy('key')->all();
+    }
+
+    public function getUppercaseTextOptions(): array
+    {
+        $uppercaseTexts = [];
+
+        foreach (config('constants.theme_uppercases') as $uppercaseText) {
+            $uppercaseTexts[$uppercaseText] = Str::title(
+                Str::replace('_', ' ', $uppercaseText)
+            );
+        }
+
+        return $uppercaseTexts;
+    }
+
+    public function getUppercaseTexts(): array
+    {
+        $uppercaseText = Setting::where('key', 'uppercase_text')->value('value');
+
+        if (!is_null($uppercaseText)) {
+            return json_decode($uppercaseText);
+        }
+
+        return [];
+    }
+
+    public function getContentParagraphWidth(): int
+    {
+        $contentParagraphWidth = Setting::where('key', 'content_paragraph_width')->value('value');
+
+        return !is_null($contentParagraphWidth)
+            ? (int) $contentParagraphWidth
+            : config('constants.theme_content_paragraph_width');
+    }
+
+    public function getFont($key)
+    {
+        $setting = Setting::where('key', $key)->value('value');
+        $font = [];
+
+        if (!is_null($setting)) {
+            $font = json_decode($setting, true);
+        }
+
+        return (object) array_merge(
+            [
+                'family' => null,
+                'weight' => null,
+                'style' => null,
+            ],
+            $font
+        );
     }
 
     public function generateVariablesSass()
@@ -117,10 +270,58 @@ class SettingService
         );
     }
 
+    public function uploadAdditionalCodeToCloudStorage(
+        string $filename,
+        string $value,
+        string $folderPrefix = null
+    ): MediaAsset {
+
+        $disk = Storage::build([
+            'driver' => 'local',
+            'root' => storage_path('theme/css'),
+        ]);
+
+        $disk->put($filename, $value);
+
+        $uploadedFileName = 'theme/css/'.$filename;
+        $uploadedFilePath = storage_path($uploadedFileName);
+
+        $file = new UploadedFile(
+            $uploadedFilePath,
+            $filename
+        );
+
+        $storage = new CloudinaryStorage();
+
+        $folder = "assets";
+
+        if ($folderPrefix) {
+            $folder = $folderPrefix.'_'.$folder;
+        }
+
+        return $storage->upload(
+            $file,
+            $filename,
+            pathinfo($filename, PATHINFO_EXTENSION),
+            $folder
+        );
+    }
+
     public function saveCssUrl(string $url): bool
     {
         $setting = Setting::firstOrNew(['key' => 'url_css']);
         $setting->value = $url;
+        return $setting->save();
+    }
+
+    public function saveAdditionalCodeUrl(string $key, ?string $url): bool
+    {
+        $setting = Setting::firstOrNew([
+            'key' => self::getAdditionalCodeFileKey($key)
+        ]);
+
+        $setting->value = $url;
+
         return $setting->save();
     }
 
@@ -133,5 +334,37 @@ class SettingService
         ]);
         $process->run();
         return $process->isSuccessful();
+    }
+
+    public function uploadLogoToCloudStorage(
+        array $inputs,
+        string $folderPrefix = null
+    ): MediaAsset {
+        $storage = new CloudinaryStorage();
+
+
+        $folder = "settings";
+
+        if ($folderPrefix) {
+            $folder = $folderPrefix.'_'.$folder;
+        }
+
+        $this->deleteLogoOnCloudStorage($folder.'/'.$inputs['file_name']);
+
+        return $storage->upload(
+            $inputs['file'],
+            $inputs['file_name'],
+            $inputs['file_type'],
+            $folder,
+            true,
+        );
+    }
+
+    public function deleteLogoOnCloudStorage(
+        string $fileName
+    ) {
+        $storage = new CloudinaryStorage();
+
+        $storage->destroy($fileName);
     }
 }

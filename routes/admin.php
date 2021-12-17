@@ -2,25 +2,28 @@
 
 use App\Http\Controllers\{
     CategoryController,
+    LanguageController,
     MediaController,
     PageController,
     PermissionController,
     PostController,
     RoleController,
+    ThemeAdvanceController,
     ThemeColorController,
+    ThemeFontController,
     ThemeFontSizeController,
+    ThemeFooterController,
+    ThemeFooterMenuController,
+    ThemeHeaderController,
+    ThemeHeaderMenuController,
+    TranslationManagerController,
     UserController,
-    UserRoleController
+    UserRoleController,
 };
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
-
-use App\Entities\CloudinaryStorage;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Setting;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,12 +74,51 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/color', [ThemeColorController::class, 'update'])->name('color.update');
         Route::get('/font-size', [ThemeFontSizeController::class, 'edit'])->name('font-size.edit');
         Route::post('/font-size', [ThemeFontSizeController::class, 'update'])->name('font-size.update');
+
+        Route::prefix('header')->name('header.')->group(function () {
+            Route::get('/', [ThemeHeaderController::class, 'edit'])->name('edit');
+            Route::post('/layout', [ThemeHeaderController::class, 'update'])->name('layout.update');
+            Route::post('/menu-item', [ThemeHeaderMenuController::class, 'update'])->name('update-menu-item');
+        });
+
+        Route::prefix('footer')->name('footer.')->group(function () {
+            Route::get('/', [ThemeFooterController::class, 'edit'])->name('edit');
+            Route::post('/', [ThemeFooterController::class, 'update'])->name('layout.update');
+            Route::post('/menu-item', [ThemeFooterMenuController::class, 'update'])->name('update-menu-item');
+        });
+
+        Route::get('/advance', [ThemeAdvanceController::class, 'edit'])->name('advance.edit');
+        Route::post('/advance', [ThemeAdvanceController::class, 'update'])->name('advance.update');
+        Route::get('/fonts', [ThemeFontController::class, 'edit'])->name('fonts.edit');
+        Route::post('/fonts', [ThemeFontController::class, 'update'])->name('fonts.update');
+    });
+
+    Route::name('settings.')->prefix('settings')->middleware('can:system.language')->group(function () {
+        Route::get('/languages', [LanguageController::class, 'edit'])
+            ->name('languages.edit');
+        Route::post('/languages', [LanguageController::class, 'update'])
+            ->name('languages.update');
+
+        Route::get('/translation-manager', [TranslationManagerController::class, 'edit'])
+            ->name('translation-manager.edit');
+        Route::post('/translation-manager', [TranslationManagerController::class, 'update'])
+            ->name('translation-manager.update');
+        Route::get('/translation-export/{locale}/{group?}', [TranslationManagerController::class, 'export'])
+            ->name('translation-manager.export');
+        Route::post('/translation-import', [TranslationManagerController::class, 'import'])
+            ->name('translation-manager.import');
     });
 });
 
 Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/media', [MediaController::class, 'apiStore'])
         ->name('media.store');
+
+    Route::post('/theme/header/menu-item', [ThemeHeaderMenuController::class, 'apiValidateMenuItem'])
+        ->name('theme.header.menu-item.validate');
+
+    Route::post('/theme/footer/social-media', [ThemeFooterController::class, 'apiValidateSocialMedia'])
+        ->name('theme.footer.social-media.validate');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {

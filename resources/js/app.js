@@ -16,7 +16,7 @@ createInertiaApp({
             .mixin({ methods: { route } })
             .use(plugin)
             .use(VueSweetalert2)
-            .use(VueLoading, {color: '#3280bf', loader: 'dots', opacity: 0.3})
+            .use(VueLoading, {color: '#3280bf', loader: 'dots', opacity: 0.3, zIndex: 1050})
             .mount(el)
     },
 })

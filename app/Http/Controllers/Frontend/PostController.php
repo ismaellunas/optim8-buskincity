@@ -6,44 +6,51 @@ use App\Http\Controllers\Controller;
 use App\Services\PostService;
 use App\Services\TranslationService;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class PostController extends Controller
 {
-    protected $baseComponentName = 'Post/Frontend';
-    protected $baseRouteName = 'blog';
-    protected $currentLanguage;
-    protected $postService;
+    private $baseRouteName = 'blog';
+    private $perPage = 10;
 
-    public function __construct(PostService $postService, TranslationService $translationService)
-    {
+    private $postService;
+    private $translationService;
+
+    public function __construct(
+        PostService $postService,
+        TranslationService $translationService
+    ) {
         $this->postService = $postService;
         $this->translationService = $translationService;
     }
 
     public function index(Request $request)
     {
-        return Inertia::render($this->baseComponentName.'/Index', [
+        return view('posts', [
+            'searchRoute' => route($this->baseRouteName.'.index'),
             'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
-            'pageNumber' => $request->page,
-            'currentLanguage' => $this->translationService->currentLanguage(),
             'records' => $this->postService->getBlogRecords(
                 $request->term ?? '',
-                10,
-                $this->translationService->currentLanguage()
+                $this->perPage,
+                $this->translationService->currentLanguage(),
             ),
         ]);
     }
 
-    public function show(string $locale, string $slug)
+    public function show(string $slug)
     {
+        $locale = $this->translationService->currentLanguage();
+
         $post = $this->postService->getFirstBySlug($slug, $locale);
 
         if (!$post) {
-            return redirect()->route($this->baseRouteName.'.index', ['locale'=>$locale]);
+            $post = $this->postService->getFirstBySlug($slug);
         }
 
-        return Inertia::render($this->baseComponentName.'/Show', [
+        if (!$post) {
+            return redirect()->route($this->baseRouteName.'.index');
+        }
+
+        return view('post', [
             'currentLanguage' => $this->translationService->currentLanguage(),
             'post' => $post,
         ]);
