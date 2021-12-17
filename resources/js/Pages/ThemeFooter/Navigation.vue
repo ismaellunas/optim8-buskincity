@@ -26,7 +26,7 @@
                     :menu-items="menuForm.menu_items"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
-                    @duplicate-menu-item-locale="duplicateMenuItemLocale"
+                    @duplicate-menu-item="openDuplicateModal"
                     @edit-row="editRow"
                     @open-form-modal="openFormModal()"
                 />
@@ -44,22 +44,33 @@
             @close="closeModal()"
             @update-menu-item="updateMenuItem"
         />
+
+        <navigation-form-duplicate
+            v-if="isModalDuplicateOpen"
+            :errors="menuItemErrors"
+            :locale-options="localeOptions"
+            :menu-item="selectedMenuItem"
+            @close="closeDuplicateModal()"
+            @duplicate-menu-item="duplicateMenuItem"
+        />
     </section>
 </template>
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
+    import NavigationFormDuplicate from '@/Pages/ThemeHeader/NavigationFormDuplicate';
     import NavigationFormMenu from '@/Pages/ThemeHeader/NavigationFormMenuItem';
     import NavigationMenu from './NavigationMenu';
     import SdbButton from '@/Sdb/Button';
-    import { forEach, cloneDeep, isEmpty } from 'lodash';
-    import { oops as oopsAlert, success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
+    import { cloneDeep, isEmpty } from 'lodash';
+    import { success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'ThemeFooterNavigation',
 
         components: {
+            NavigationFormDuplicate,
             NavigationFormMenu,
             NavigationMenu,
             SdbButton,
@@ -99,6 +110,7 @@
         data() {
             return {
                 activeTab: 'navigation',
+                isModalDuplicateOpen: false,
                 loader: null,
                 menuForm: {},
                 selectedLocale: this.defaultLocale,
@@ -148,6 +160,24 @@
                 this.selectedMenuItem = {};
                 this.menuItemErrors = {};
                 this.isModalOpen = true;
+            },
+
+            openDuplicateModal(menuItem) {
+                const cloneMenuItem = cloneDeep(menuItem);
+                cloneMenuItem['id'] = null;
+                cloneMenuItem['parent_id'] = null;
+                cloneMenuItem['children'] = [];
+                cloneMenuItem['locale'] = this.selectedLocale;
+
+                this.selectedMenuItem = cloneMenuItem;
+                this.menuItemErrors = {};
+                this.isModalDuplicateOpen = true;
+            },
+
+            closeDuplicateModal() {
+                this.selectedMenuItem = {};
+                this.menuItemErrors = {};
+                this.isModalDuplicateOpen = false;
             },
 
             updateSelectedMenu(menuItem) {
@@ -210,29 +240,40 @@
                 });
             },
 
-            duplicateMenuItemLocale(locale, menuItem) {
-                const cloneMenuItem = cloneDeep(menuItem);
-                cloneMenuItem['id'] = null;
-                cloneMenuItem['parent_id'] = null;
-                cloneMenuItem['children'] = [];
+            duplicateMenuItem(menuItem) {
+                const self = this;
+                axios.post(self.validationRoute, menuItem)
+                    .then(() => {
+                        if (
+                            self.menuForm.isDirty
+                            && self.selectedLocale !== menuItem['locale']
+                        ) {
+                            confirmLeaveProgress().then((result) => {
+                                if (result.isDismissed) {
+                                    return false;
+                                } else if(result.isConfirmed) {
+                                    self.selectedLocale = menuItem['locale'];
 
-                if (this.menuForm.isDirty) {
-                    confirmLeaveProgress().then((result) => {
-                        if (result.isDismissed) {
-                            return false;
-                        } else if(result.isConfirmed) {
-                            this.selectedLocale = locale;
+                                    self.menuForm = self.getMenuForm(menuItem['locale']);
+                                    self.menuForm.menu_items.push(menuItem);
 
-                            this.menuForm = this.getMenuForm(locale);
-                            this.menuForm.menu_items.push(cloneMenuItem);
+                                    self.closeDuplicateModal();
+                                }
+                            });
+                        } else {
+                            if (self.selectedLocale !== menuItem['locale']) {
+                                self.selectedLocale = menuItem['locale'];
+                                self.menuForm = self.getMenuForm(menuItem['locale']);
+                            }
+
+                            self.menuForm.menu_items.push(menuItem);
+
+                            self.closeDuplicateModal();
                         }
+                    })
+                    .catch((error) => {
+                        self.menuItemErrors = error.response.data.errors;
                     });
-                } else {
-                    this.selectedLocale = locale;
-
-                    this.menuForm = this.getMenuForm(locale);
-                    this.menuForm.menu_items.push(cloneMenuItem);
-                }
             },
         }
     };

@@ -103,7 +103,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             ->name('translation-manager.edit');
         Route::post('/translation-manager', [TranslationManagerController::class, 'update'])
             ->name('translation-manager.update');
-        Route::get('/translation-export/{locale}/{group?}', [TranslationManagerController::class, 'export'])
+        Route::get('/translation-export/{locale}', [TranslationManagerController::class, 'export'])
             ->name('translation-manager.export');
         Route::post('/translation-import', [TranslationManagerController::class, 'import'])
             ->name('translation-manager.import');
