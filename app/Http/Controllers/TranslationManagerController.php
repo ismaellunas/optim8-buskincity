@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Entities\Caches\TranslationCache;
 use App\Exports\TranslationsExport;
 use App\Http\Requests\{
+    TranslationExportRequest,
     TranslationImportRequest,
+    TranslationManagerRequest,
     TranslationRequest,
 };
 use App\Imports\TranslationsImport;
@@ -14,7 +16,6 @@ use App\Services\{
     TranslationManagerService,
     TranslationService
 };
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Excel;
@@ -39,7 +40,7 @@ class TranslationManagerController extends Controller
         $this->translationService = $translationService;
     }
 
-    public function edit(Request $request)
+    public function edit(TranslationManagerRequest $request)
     {
         $defaultLocale = $this->translationService->getDefaultLocale();
 
@@ -51,14 +52,17 @@ class TranslationManagerController extends Controller
             'defaultLocale' => $defaultLocale,
             'referenceLocale' => 'en',
             'groupOptions' => config('constants.translations.groups'),
-            'localeOptions' => $this->translationService->getLocaleOptions(),
-            'pageQueryParams' => array_filter($request->only('locale', 'group')),
+            'localeOptions' => collect($this->translationService->getLocaleOptions())
+                ->sortBy('name', SORT_NATURAL)
+                ->values()
+                ->all(),
+            'pageQueryParams' => array_filter($request->only('locale', 'groups')),
             'bags' => [
                 'import' => 'translationImport',
             ],
             'records' => $this->translationManagerService->getRecords(
                 $request->locale,
-                $request->group
+                $request->groups
             ),
             'i18n' => [
                 'fileInputNotes' => [
@@ -98,7 +102,7 @@ class TranslationManagerController extends Controller
 
     private function getExportFileName(
         string $locale,
-        string $group = null
+        array $groups = null
     ): string {
 
         $template = "translation-??-?.csv";
@@ -107,19 +111,19 @@ class TranslationManagerController extends Controller
             '?',
             [
                 $locale,
-                ($group ? '-'.$group : ''),
+                ($groups ? '-'.implode('-', $groups) : ''),
                 date('YmdHis'),
             ],
             $template
         );
     }
 
-    public function export(string $locale, string $group = null)
+    public function export(TranslationExportRequest $request, string $locale)
     {
-        $translationExport = new TranslationsExport($locale, $group);
+        $translationExport = new TranslationsExport($locale, $request->groups);
 
         return $translationExport->download(
-            $this->getExportFileName($locale, $group),
+            $this->getExportFileName($locale, $request->groups),
             Excel::CSV,
             ['Content-Type' => 'text/csv']
         );

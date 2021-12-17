@@ -15,12 +15,12 @@ class TranslationsExport implements FromCollection, WithHeadings, WithMapping
     use Exportable;
 
     private $locale;
-    private $group;
+    private $groups;
 
-    public function __construct(string $locale, string $group = null)
+    public function __construct(string $locale, array $groups = null)
     {
         $this->locale = $locale;
-        $this->group = $group;
+        $this->groups = $groups;
     }
 
     /**
@@ -30,8 +30,8 @@ class TranslationsExport implements FromCollection, WithHeadings, WithMapping
     {
         return app(TranslationManagerService::class)
             ->getTranslationByLocale($this->locale)
-            ->when($this->group, function ($collection) {
-                return $collection->where('group', $this->group);
+            ->when($this->groups, function ($collection) {
+                return $collection->whereIn('group', $this->groups);
             })
             ->sortBy([
                 ['locale', 'asc'],
