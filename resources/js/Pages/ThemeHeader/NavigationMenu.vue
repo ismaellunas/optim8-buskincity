@@ -18,9 +18,7 @@
                     :menu-item="element"
                     :selected-locale="selectedLocale"
                     @delete-row="deleteRow"
-                    @duplicate-menu-item-above="duplicateMenuItemAbove"
-                    @duplicate-menu-item-below="duplicateMenuItemBelow"
-                    @duplicate-menu-item-locale="duplicateMenuItemLocale"
+                    @duplicate-menu-item="duplicateMenuItem"
                     @edit-row="$emit('edit-row', $event)"
                 />
 
@@ -29,7 +27,7 @@
                     :menu-items="element.children"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
-                    @duplicate-menu-item-locale="duplicateMenuItemLocale"
+                    @duplicate-menu-item="duplicateMenuItem"
                     @edit-row="editRow"
                     @update-last-data-menu-items="updateLastDataMenuItems"
                 />
@@ -59,7 +57,6 @@
     import ThemeMenuItem from '@/Sdb/ThemeMenuItem';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { confirmDelete } from '@/Libs/alert';
-    import { cloneDeep } from 'lodash';
 
     export default {
         name: 'NavigationMenu',
@@ -89,7 +86,7 @@
         },
 
         emits: [
-            'duplicate-menu-item-locale',
+            'duplicate-menu-item',
             'edit-row',
             'menu-items',
             'open-form-modal',
@@ -134,30 +131,8 @@
                 });
             },
 
-            duplicateMenuItemAbove(menuItem, index) {
-                const menuItems = this.menuItems;
-                const cloneMenuItem = cloneDeep(menuItem);
-
-                cloneMenuItem['id'] = null;
-                cloneMenuItem['children'] = [];
-
-                this.$emit('menu-items', menuItems.splice(index, 0, cloneMenuItem));
-                this.updateLastDataMenuItems();
-            },
-
-            duplicateMenuItemBelow(menuItem, index) {
-                const menuItems = this.menuItems;
-                const cloneMenuItem = cloneDeep(menuItem);
-
-                cloneMenuItem['id'] = null;
-                cloneMenuItem['children'] = [];
-
-                this.$emit('menu-items', menuItems.splice(index + 1, 0, cloneMenuItem));
-                this.updateLastDataMenuItems();
-            },
-
-            duplicateMenuItemLocale(locale, menuItem) {
-                this.$emit('duplicate-menu-item-locale', locale, menuItem);
+            duplicateMenuItem(menuItem) {
+                this.$emit('duplicate-menu-item', menuItem);
             },
 
             updateLastDataMenuItems() {
