@@ -33,38 +33,15 @@
             </div>
 
             <div class="level-right">
-                <sdb-dropdown style-button="border: none">
-                    <template #trigger>
+                <sdb-button
+                    class="is-ghost has-text-black"
+                    type="button"
+                    @click.prevent="$emit('duplicate-menu-item', menuItem)"
+                >
+                    <span class="icon is-small">
                         <i class="far fa-copy" />
-                    </template>
-
-                    <template #default>
-                        <template
-                            v-for="localeOption in localeOptions"
-                            :key="localeOption.id"
-                        >
-                            <a
-                                v-if="localeOption.id != selectedLocale"
-                                class="dropdown-item"
-                                @click.prevent="$emit('duplicate-menu-item-locale', localeOption.id, menuItem)"
-                            >
-                                Duplicate to {{ localeOption.name }}
-                            </a>
-                        </template>
-                        <a
-                            class="dropdown-item"
-                            @click.prevent="$emit('duplicate-menu-item-above', menuItem, menuItemIndex)"
-                        >
-                            Duplicate Menu Above
-                        </a>
-                        <a
-                            class="dropdown-item"
-                            @click.prevent="$emit('duplicate-menu-item-below', menuItem, menuItemIndex)"
-                        >
-                            Duplicate Menu Below
-                        </a>
-                    </template>
-                </sdb-dropdown>
+                    </span>
+                </sdb-button>
 
                 <sdb-button
                     class="is-ghost has-text-black"
@@ -92,7 +69,6 @@
 
 <script>
     import SdbButton from '@/Sdb/Button';
-    import SdbDropdown from '@/Sdb/Dropdown';
     import SdbTag from '@/Sdb/Tag';
 
     export default {
@@ -100,7 +76,6 @@
 
         components: {
             SdbButton,
-            SdbDropdown,
             SdbTag,
         },
 
@@ -129,9 +104,7 @@
 
         emits: [
             'delete-row',
-            'duplicate-menu-item-above',
-            'duplicate-menu-item-below',
-            'duplicate-menu-item-locale',
+            'duplicate-menu-item',
             'edit-row',
         ],
     };

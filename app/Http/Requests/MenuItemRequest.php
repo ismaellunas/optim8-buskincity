@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\MenuItem;
+use App\Services\TranslationService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -16,6 +17,11 @@ class MenuItemRequest extends FormRequest
     public function rules()
     {
         return [
+            'locale' => [
+                'sometimes',
+                'required',
+                Rule::in(TranslationService::getLocales()),
+            ],
             'title' => [
                 'sometimes',
                 'required',
