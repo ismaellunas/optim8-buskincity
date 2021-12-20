@@ -35,6 +35,10 @@ class TranslationService
                         'name' => $language->name,
                     ];
                 })
+                ->sortBy(function ($value) {
+                    return $value['id'] !== self::getDefaultLocale();
+                })
+                ->values()
                 ->all();
         });
     }
