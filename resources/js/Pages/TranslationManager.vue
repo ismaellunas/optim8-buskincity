@@ -101,6 +101,23 @@
                         </sdb-button>
 
                         <sdb-button
+                            v-if="!isEditMode"
+                            class="mr-2 is-primary"
+                            @click="changeEditMode()"
+                        >
+                            Edit
+                        </sdb-button>
+
+                        <sdb-button
+                            v-else
+                            class="mr-2 is-danger"
+                            @click="changeEditMode()"
+                        >
+                            Cancel
+                        </sdb-button>
+
+                        <sdb-button
+                            v-if="isEditMode"
                             class="is-link"
                             @click="onSubmit"
                         >
@@ -120,7 +137,7 @@
                                 English Value
                             </th>
                             <th>Value</th>
-                            <th>
+                            <th v-if="isEditMode">
                                 <div class="level-right">
                                     Actions
                                 </div>
@@ -139,22 +156,27 @@
                                 {{ page.en_value ?? "-" }}
                             </td>
                             <td>
-                                <form
-                                    action="post"
-                                    @submit.prevent="onSubmit"
-                                >
-                                    <sdb-field class="mb-0">
-                                        <div class="control is-expanded">
-                                            <sdb-input
-                                                v-if="form.translations[index]"
-                                                v-model="form.translations[index].value"
-                                                placeholder="value"
-                                            />
-                                        </div>
-                                    </sdb-field>
-                                </form>
+                                <template v-if="isEditMode">
+                                    <form
+                                        action="post"
+                                        @submit.prevent="onSubmit"
+                                    >
+                                        <sdb-field class="mb-0">
+                                            <div class="control is-expanded">
+                                                <sdb-input
+                                                    v-if="form.translations[index]"
+                                                    v-model="form.translations[index].value"
+                                                    placeholder="value"
+                                                />
+                                            </div>
+                                        </sdb-field>
+                                    </form>
+                                </template>
+                                <template v-else>
+                                    {{ page.value ?? "-" }}
+                                </template>
                             </td>
-                            <td>
+                            <td v-if="isEditMode">
                                 <div class="level-right">
                                     <sdb-button
                                         v-if="page.value"
@@ -356,6 +378,7 @@
 
         data() {
             return {
+                isEditMode: false,
                 isProcessing: false,
                 acceptedTypes: ['.csv'],
                 form: useForm({
@@ -386,6 +409,11 @@
                 return useForm({
                     translations: this.records.data,
                 });
+            },
+
+            changeEditMode() {
+                this.isEditMode = !this.isEditMode;
+                this.form.reset();
             },
 
             search() {
@@ -427,6 +455,7 @@
                         onFinish: () => {
                             this.onEndLoadingOverlay();
                             this.form = this.getUseForm();
+                            this.isEditMode = false;
                         },
                     }
                 );
@@ -443,6 +472,7 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                         self.form = self.getUseForm();
+                        this.isEditMode = false;
                     },
                     onFinish: () => {
                         self.loader.hide();
@@ -483,6 +513,7 @@
                         preserveState: true,
                         onFinish: () => {
                             this.form = this.getUseForm();
+                            this.isEditMode = false;
                         },
                     }
                 );
