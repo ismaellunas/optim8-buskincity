@@ -146,6 +146,7 @@
                                     <sdb-field class="mb-0">
                                         <div class="control is-expanded">
                                             <sdb-input
+                                                v-if="form.translations[index]"
                                                 v-model="form.translations[index].value"
                                                 placeholder="value"
                                             />
