@@ -9,19 +9,17 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+        <link rel="stylesheet" href="{{ mix('css/sweetalert2.min.css') }}">
 
         <!-- Scripts -->
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
+        <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
 
         @env ('production')
             <!-- Styles -->
             <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@4/dist/vue-loading.css" rel="stylesheet">
-            <!-- Scripts -->
-            <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/solid.js" integrity="sha384-9xA4r2/2cctd+IZZKLvI1hmeHZ5Yp8xXkS6J8inDtdyZCqhEHVcTGmSUCbNED5Ae" crossorigin="anonymous"></script>
-            <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/regular.js" integrity="sha384-bPKzNk+f6IzEi89cU+jf3bwWzJQqo+U1/QYUijuD7XD9WO3MSrrAVVEglIOCo6VD" crossorigin="anonymous"></script>
-            <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/brands.js" integrity="sha384-oEE/PrsvhwsuT1MjC4sgnz39CQ84HoPt8jwH0RLyJDdDOKulN+UEbm9IgJW0aTu5" crossorigin="anonymous"></script>
-            <script defer src="https://use.fontawesome.com/releases/v5.15.3/js/fontawesome.js" integrity="sha384-hD97VKS04Rv8VYShf782apVZOVP6bVH/ubzrWXIIbKOwnD6gsDIcB29K03FL1A9J" crossorigin="anonymous"></script>
         @endenv
 
         @env ('local')
@@ -30,7 +28,6 @@
             <!-- Scripts -->
             <script src="{{ mix('js/local.js') }}" defer></script>
         @endenv
-
     </head>
     <body class="font-sans antialiased">
         @inertia

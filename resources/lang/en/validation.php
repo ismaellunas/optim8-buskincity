@@ -156,9 +156,15 @@ return [
         'en.name' => 'Name (English)',
         'es.name' => 'Name (Spanish)',
         'de.name' => 'Name (German)',
+        'sv.title' => 'Title (Swedish)',
+        'en.title' => 'Title (English)',
+        'es.title' => 'Title (Spanish)',
+        'de.title' => 'Title (German)',
         'alt' => 'Alternative Text',
         'description' => 'Description',
         'scheduled_at' => 'Scheduled At',
+        'default_language' => 'Default Language',
+        'languages' => 'Languages',
     ],
 
 ];

@@ -12,6 +12,17 @@ class Setting extends BaseModel
 
     protected $fillable = [
         'key',
-        'value'
+        'value',
+        'group',
     ];
+
+    public function scopeGroup($query, string $groupName)
+    {
+        return $query->where('group', $groupName);
+    }
+
+    public function scopeKey($query, string $key)
+    {
+        return $query->where('key', $key);
+    }
 }

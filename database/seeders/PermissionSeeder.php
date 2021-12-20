@@ -51,6 +51,8 @@ class PermissionSeeder extends Seeder
             'user.delete',
 
             'system.dashboard',
+            'system.language',
+            'system.translation',
             'system.theme',
 
             /*  BREAD:

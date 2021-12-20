@@ -4,20 +4,22 @@ namespace App\Entities;
 
 use App\Entities\CloudinaryAsset;
 use App\Contracts\MediaStorageInterface;
-use Symfony\Component\HttpFoundation\File\UploadedFile as File;
+use Illuminate\Http\UploadedFile;
 
 class CloudinaryStorage implements MediaStorageInterface
 {
     public function upload(
-        File $file,
+        UploadedFile $file,
         string $fileName = null,
         string $extension = null,
         string $folder = null,
+        bool $invalidate = false
     ): CloudinaryAsset {
 
         $options = [
             'public_id' => $fileName,
             'resource_type' => 'auto',
+            'invalidate' => $invalidate,
         ];
 
         if ($folder) {

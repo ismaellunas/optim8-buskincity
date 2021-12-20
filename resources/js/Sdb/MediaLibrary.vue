@@ -371,12 +371,14 @@
                     .toLowerCase()
                     .replace(/[^a-z0-9]/gi, '-')
                     .replace(/-+/g, "-")
+                let fileType = "." + this.file.type
+                    .split('/')[1];
 
                 this.formMedia = {
                     file: this.file,
                     file_name: fileName,
                     file_url: event.target.result,
-                    is_image: includes(acceptedImageTypes, this.file.type),
+                    is_image: includes(acceptedImageTypes, fileType),
                 };
                 this.openEditModal();
             },

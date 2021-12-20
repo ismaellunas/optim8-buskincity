@@ -1,12 +1,12 @@
 <?php
 
+use App\Facades\Localization;
 use App\Http\Controllers\{
     ChangeLanguageController,
     Frontend\PageController,
-    Frontend\PostController
+    Frontend\PostController,
+    Frontend\PostCategoryController
 };
-use App\Services\TranslationService as TranslationSv;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
@@ -35,19 +35,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     })->name('profile.show');
 });
 
-Route::get('/', function () {
-    return redirect(TranslationSv::currentLanguage());
-});
-
 Route::get('language/{new_locale}', ChangeLanguageController::class)
     ->where('new_locale', '[a-zA-Z]{2}')
     ->name('language.change');
-
-Route::name('status-code.')->group(function () {
-    Route::get('404', function () {
-        return Inertia::render('PageNotFound');
-    })->name('404');
-});
 
 Route::get('/user/privacy', function() {
     echo "Privacy page";
@@ -60,25 +50,24 @@ Route::get('/user/remove-facebook', function() {
 });
 
 Route::get('test-theme', function () {
-    return Inertia::render('TestTheme');
+    return Inertia::render('TestTheme', [
+        'webfontsUrl' => 'https://www.googleapis.com/webfonts/v1/webfonts?sort=popularity&key='.config('constants.google_api_key'),
+    ]);
 });
 
 Route::group([
-    'prefix' => '{locale}',
-    'where' => ['locale' => '[a-zA-Z]{2}'],
-    'middleware' => 'setLocale',
+    'prefix' => Localization::setLocale(),
+    'middleware' => [ 'localizationRedirect' ]
 ], function () {
     Route::get('/', function () {
-        return Inertia::render('Welcome', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
-    });
+        return view('home', ['title' => config('app.name', 'Home')]);
+    })->name('homepage');
 
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');
+
+    Route::get('/category/{id}', [PostCategoryController::class, 'index'])
+        ->name('blog.category.index');
 
     Route::get('blog/{slug}', [PostController::class, 'show'])
         ->where('slug', '[\w\d\-\_]+')
@@ -86,4 +75,11 @@ Route::group([
 
     Route::get('/{page_translation}', [PageController::class, 'show'])
         ->name('frontend.pages.show');
+
+    // Route for Test translation
+    Route::get('/test/translation', function () {
+        return view('test.translation', [
+            'title' => 'Test Translation'
+        ]);
+    })->name('test.translation');
 });

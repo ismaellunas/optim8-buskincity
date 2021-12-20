@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
+
+class ThemeAdvanceRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'additional_css' => ['nullable', 'string'],
+            'additional_javascript' => ['nullable', 'string'],
+            'tracking_code_inside_head' => ['nullable', 'string'],
+            'tracking_code_after_body' => ['nullable', 'string'],
+            'tracking_code_before_body' => ['nullable', 'string'],
+        ];
+    }
+
+    public function attributes()
+    {
+        $attributes = collect([
+            'additional_css',
+            'additional_javascript',
+            'tracking_code_inside_head',
+            'tracking_code_after_body',
+            'tracking_code_before_body',
+        ]);
+
+        return $attributes->mapWithKeys(function ($attribute, $key) {
+            $title = Str::replace('_', ' ', $attribute);
+
+            return [$attribute => Str::title($title)];
+        })->all();
+    }
+}

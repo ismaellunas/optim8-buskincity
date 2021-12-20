@@ -44,7 +44,7 @@
         props: {
             disabled: {type: Boolean, default: false},
             label: {type: String, default: null},
-            message: {type: String, default: null},
+            message: {type: Object, default:() => {}},
             modelValue: {required: true},
             required: {type: Boolean, default: true},
         },
