@@ -57,8 +57,18 @@ class Translation extends Model implements TranslationLoader
         return $query->where('locale', $locale);
     }
 
+    public function scopeLocales($query, mixed $locales)
+    {
+        return $query->whereIn('locale', $locales);
+    }
+
     public function scopeGroup($query, string $group)
     {
         return $query->where('group', $group);
+    }
+
+    public function scopeGroups($query, mixed $groups)
+    {
+        return $query->whereIn('group', $groups);
     }
 }

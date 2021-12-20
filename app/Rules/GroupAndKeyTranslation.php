@@ -8,16 +8,16 @@ use Illuminate\Contracts\Validation\Rule;
 class GroupAndKeyTranslation implements Rule, DataAwareRule
 {
     protected $data = [];
-    protected $keyWithGroups;
+    protected $groupedKeys;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($keyWithGroups)
+    public function __construct($groupedKeys)
     {
-        $this->keyWithGroups = $keyWithGroups;
+        $this->groupedKeys = $groupedKeys;
     }
 
     /**
@@ -35,8 +35,8 @@ class GroupAndKeyTranslation implements Rule, DataAwareRule
 
         return (
             $group
-            && $this->keyWithGroups->has($group)
-            && $this->keyWithGroups->get($group)->contains($value)
+            && $this->groupedKeys->has($group)
+            && collect($this->groupedKeys->get($group))->contains($value)
         );
     }
 
