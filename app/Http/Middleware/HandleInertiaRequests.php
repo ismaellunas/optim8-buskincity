@@ -2,15 +2,28 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\MenuService;
-use App\Services\SettingService;
-use App\Services\TranslationService as TranslationSv;
+use App\Services\{
+    MenuService,
+    SettingService,
+    TranslationService as TranslationSv,
+};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
+    private $menuService;
+    private $settingService;
+
+    public function __construct(
+        MenuService $menuService,
+        SettingService $settingService
+    ) {
+        $this->menuService = $menuService;
+        $this->settingService = $settingService;
+    }
+
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -55,25 +68,32 @@ class HandleInertiaRequests extends Middleware
                 }
                 return (object)[];
             },
-            'menus' => fn () => (
+            'logoUrl' => $this->settingService->getLogoUrl(),
+            'menus' => function () use ($request) {
+                if (
                     auth()->check()
                     && (
                         $request->routeIs('admin.*')
                         || $request->routeIs('dashboard')
                         || $request->routeIs('user.profile.*')
                     )
-                )
-                ? MenuService::generateBackendMenu($request)
-                : MenuService::generateMenus(TranslationSv::currentLanguage()),
+                ) {
+                    return MenuService::generateBackendMenu($request);
+                } elseif (
+                    !auth()->check()
+                    && $request->routeIs('admin.*')
+                ) {
+                    return [];
+                }
+                return $this->menuService->getHeaderMenu(TranslationSv::currentLanguage());
+            },
+            'headerLayout' => $this->settingService->getHeaderLayout(),
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
             'languageOptions' => TranslationSv::getLocaleOptions(),
-            'css.backend' => [
-                'app' => mix('css/app.css')->toHtml(),
-            ],
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
-            ]
+            ],
         ]);
     }
 }

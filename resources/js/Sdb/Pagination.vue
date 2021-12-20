@@ -1,36 +1,43 @@
 <template>
     <div v-if="links.length > 3">
-        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <nav
+            class="pagination is-centered"
+            role="navigation"
+            aria-label="pagination"
+        >
             <template v-if="isAjax">
                 <sdb-button
                     class="pagination-previous"
                     :disabled="isBlank(previousLink.url) ? 1 : null"
-                    v-html="previousLink.label"
                     @click.prevent="$emit('on-clicked-pagination', previousLink.url)"
+                    v-html="previousLink.label"
                 />
                 <sdb-button
                     class="pagination-next"
                     :disabled="isBlank(nextLink.url) ? 1 : null"
-                    v-html="nextLink.label"
                     @click.prevent="$emit('on-clicked-pagination', nextLink.url)"
+                    v-html="nextLink.label"
                 />
             </template>
             <template v-else>
-                <a
+                <sdb-link
                     class="pagination-previous"
                     :href="previousLinkUrl"
                     :disabled="isBlank(previousLinkUrl) ? 1 : null"
                     v-html="previousLink.label"
-                    />
-                <a
+                />
+                <sdb-link
                     class="pagination-next"
                     :disabled="isBlank(nextLinkUrl) ? 1 : null"
                     :href="nextLinkUrl"
                     v-html="nextLink.label"
-                    />
+                />
             </template>
             <ul class="pagination-list">
-                <li v-for="link in paginationLinks">
+                <li
+                    v-for="(link, index) in paginationLinks"
+                    :key="index"
+                >
                     <span
                         v-if="isBlank(link.url)"
                         class="pagination-ellipsis"
@@ -38,19 +45,21 @@
                         &hellip;
                     </span>
                     <template v-else>
-                        <sdb-button v-if="isAjax"
+                        <sdb-button
+                            v-if="isAjax"
                             class="pagination-link"
                             :class="{'is-current': link.active}"
-                            v-html="link.label"
-                            @click.prevent="$emit('on-clicked-pagination', link.url)"
                             type="button"
-                            />
-                        <sdb-link v-else
+                            @click.prevent="$emit('on-clicked-pagination', link.url)"
+                            v-html="link.label"
+                        />
+                        <sdb-link
+                            v-else
                             :href="link.url+serializedParams"
                             class="pagination-link"
                             :class="{'is-current': link.active}"
                             v-html="link.label"
-                            />
+                        />
                     </template>
                 </li>
             </ul>
@@ -68,15 +77,21 @@
             SdbButton,
             SdbLink,
         },
-        emits: ['on-clicked-pagination'],
         props: {
-            links: Array,
-            isAjax: { type: Boolean, default: false, },
-            queryParams: { type: Object, default: {} },
+            links: {
+                type: Array,
+                required: true,
+            },
+            isAjax: {
+                type: Boolean,
+                default: false,
+            },
+            queryParams: {
+                type: Object,
+                default:() => {}
+            },
         },
-        methods: {
-            isBlank: isBlank,
-        },
+        emits: ['on-clicked-pagination'],
         computed: {
             previousLink() {
                 return this.links[0];
@@ -110,6 +125,9 @@
                 }
                 return '';
             },
-        }
+        },
+        methods: {
+            isBlank: isBlank,
+        },
     }
 </script>

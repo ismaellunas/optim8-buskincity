@@ -19,7 +19,7 @@ class CreatePageTranslationsTable extends Migration
             $table->string('title', 255);
             $table->text('excerpt')->nullable();
             $table->longText('data');
-            $table->string('slug', 255)->unique();
+            $table->string('slug', 255);
             $table->string('meta_title', 255)->nullable();
             $table->string('meta_description', 255)->nullable();
             $table->longText('plain_text_content')->nullable();
@@ -28,6 +28,7 @@ class CreatePageTranslationsTable extends Migration
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->unique(['locale', 'slug']);
             $table->unique(['page_id', 'locale']);
             $table->timestamps();
         });

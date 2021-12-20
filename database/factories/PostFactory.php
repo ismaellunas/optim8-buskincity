@@ -46,4 +46,13 @@ class PostFactory extends Factory
             ];
         });
     }
+
+    public function published()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => Post::STATUS_PUBLISHED,
+            ];
+        });
+    }
 }

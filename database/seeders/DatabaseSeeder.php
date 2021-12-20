@@ -2,14 +2,20 @@
 
 namespace Database\Seeders;
 
-use App\Models\Category;
-use App\Models\Page;
-use App\Models\Permission;
-use App\Models\Post;
-use App\Models\Role;
-use App\Models\User;
+use App\Models\{
+    Category,
+    Language,
+    Menu,
+    MenuItem,
+    Page,
+    Permission,
+    Post,
+    Role,
+    User,
+};
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
+use App\Services\LanguageService;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,6 +30,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             SettingSeeder::class,
+            LanguageSeeder::class,
+            TranslationSeeder::class,
         ]);
 
         // Wildcard permissions
@@ -73,5 +81,42 @@ class DatabaseSeeder extends Seeder
         Page::factory()
             ->hasTranslations(1)
             ->create();
+
+        Menu::factory()
+            ->count(3)
+            ->has(
+                MenuItem::factory()
+            )
+            ->state(new Sequence(
+                ['type' => Menu::TYPE_HEADER],
+                ['type' => Menu::TYPE_FOOTER],
+                ['type' => Menu::TYPE_SOCIAL_MEDIA],
+            ))
+            ->create([
+                'locale' => config('app.fallback_locale')
+            ]);
+
+        $this->setActiveLanguages();
+        $this->setDefaultLanguage();
+    }
+
+    private function setActiveLanguages()
+    {
+        $activeLanguages = [
+            'en',
+            'pt',
+            'sv',
+            'de',
+        ];
+
+        Language::whereIn('code', $activeLanguages)
+            ->update(['is_active' => true]);
+    }
+
+    private function setDefaultLanguage()
+    {
+        $englishId = Language::where('code', 'en')->value('id');
+
+        app(LanguageService::class)->setDefault($englishId);
     }
 }

@@ -2,6 +2,10 @@
 
 namespace App\Services;
 
+use App\Entities\Caches\SettingCache;
+use App\Facades\Localization;
+use App\Models\Language;
+use App\Services\LanguageService;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 
@@ -11,29 +15,32 @@ class TranslationService
 
     public static function getDefaultLocale(): string
     {
-        return config('app.fallback_locale');
+        $key = config('constants.setting_cache.default_locale');
+
+        return app(SettingCache::class)->remember($key, function () {
+            return app(LanguageService::class)->getDefault()->code ?? config('app.fallback_locale');
+        });
     }
 
     public static function getLocaleOptions(): array
     {
-        return [
-            [
-                'id' => 'en',
-                'name' => 'English',
-            ],
-            [
-                'id' => 'sv',
-                'name' => 'Swedish',
-            ],
-            [
-                'id' => 'es',
-                'name' => 'Spanish',
-            ],
-            [
-                'id' => 'de',
-                'name' => 'German',
-            ],
-        ];
+        $key = config('constants.setting_cache.locale_options');
+
+        return app(SettingCache::class)->remember($key, function () {
+            return Language::active()
+                ->get(['code', 'name'])
+                ->map(function ($language) {
+                    return [
+                        'id' => $language->code,
+                        'name' => $language->name,
+                    ];
+                })
+                ->sortBy(function ($value) {
+                    return $value['id'] !== self::getDefaultLocale();
+                })
+                ->values()
+                ->all();
+        });
     }
 
     public static function getLocales(): array
@@ -58,18 +65,7 @@ class TranslationService
 
     public static function currentLanguage(): string
     {
-        return session(self::$localeKey) ?? self::getDefaultLocale();
-    }
-
-    public static function setLanguage(string $locale): void
-    {
-        session()->put(self::$localeKey, $locale);
-    }
-
-    public static function setLanguageAndAppLocale(string $locale): void
-    {
-        self::setLanguage($locale);
-        app()->setLocale($locale);
+        return Localization::getCurrentLocale() ?? self::getDefaultLocale();
     }
 
     /**

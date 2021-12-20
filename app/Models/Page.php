@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\PageTranslation;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
-use App\Models\PageTranslation;
 
 class Page extends Model implements TranslatableContract
 {
@@ -17,7 +17,7 @@ class Page extends Model implements TranslatableContract
 
     public $translatedAttributes = [
         'data',
-        'except',
+        'excerpt',
         'meta_description',
         'meta_title',
         'slug',
@@ -39,6 +39,18 @@ class Page extends Model implements TranslatableContract
                 'value' => __('Published'),
             ]
         ];
+    }
+
+    public function saveFromInputs(array $inputs)
+    {
+        $this->fill($inputs);
+        $this->save();
+    }
+
+    public function saveAuthorId(int $authorId)
+    {
+        $this->author_id = $authorId;
+        $this->save();
     }
 
     // Scopes:

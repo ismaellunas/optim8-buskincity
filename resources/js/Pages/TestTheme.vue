@@ -8,6 +8,64 @@
                 content="Test Theme"
             >
         </Head>
+
+        <div
+            class="dropdown mb-4"
+            :class="{'is-active': isActive}"
+        >
+            <div
+                class="dropdown-trigger"
+                @click="isActive = !isActive"
+            >
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                    <span>{{ fontName }}</span>
+                    <span class="icon is-small">
+                        <i class="fas fa-angle-down" aria-hidden="true"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                    <div class="field">
+                        <p class="control has-icons-left has-icons-right">
+                            <input
+                                class="input"
+                                type="text"
+                                placeholder="Search..."
+                            >
+                            <span class="icon is-small is-right">
+                                <i class="fas fa-search" />
+                            </span>
+                        </p>
+                    </div>
+                    <div v-show="isSearching">...</div>
+                    <hr class="dropdown-divider">
+                    <a
+                        href="#"
+                        class="dropdown-item"
+                        @click="fontName = 'Poppins'"
+                    >
+                        Poppins
+                    </a>
+                    <a
+                        href="#"
+                        class="dropdown-item"
+                        @click="fontName = 'Nunito'"
+                    >
+                        Nunito
+                    </a>
+                    <a
+                        href="#"
+                        class="dropdown-item"
+                        @click="fontName = 'Roboto'"
+                    >
+                        Roboto
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
         <div class="buttons">
             <button class="button is-primary">Primary</button>
             <button class="button is-link">Link</button>
@@ -125,6 +183,32 @@
         layout: PageLayout,
 
         props: {
+            webfontsUrl: { type: String, required: true},
+        },
+
+        data() {
+            return {
+                isActive: false,
+                fonts: [],
+                fontName: 'Roboto',
+            };
+        },
+
+        /*
+        computed: {
+            fontName() {
+                return 'Roboto';
+            },
+        },
+        */
+
+        mounted() {
+
+            axios.get(this.webfontsUrl)
+                .then((response) => {
+                    self.fonts = response.data.items;
+                    self.loader.hide();
+                });
         },
     };
 </script>

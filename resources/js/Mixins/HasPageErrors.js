@@ -7,15 +7,23 @@ export default {
             if (!errors) {
                 errors = usePage().props.value.errors;
             }
-            if (
-                isBlank(errors)
-                || !errors.hasOwnProperty(errorBag)
-            ) {
+
+            if (isBlank(errors)) {
                 return null;
             }
-            if (errors[errorBag].hasOwnProperty(field)) {
-                return errors[errorBag][field];
+
+            let errorContainer = null;
+
+            if (isBlank(errorBag)) {
+                errorContainer = errors;
+            } else if (errors.hasOwnProperty(errorBag)) {
+                errorContainer = errors[errorBag];
             }
+
+            if (errorContainer && errorContainer.hasOwnProperty(field)) {
+                return errorContainer[field];
+            }
+
             return null;
         }
     }

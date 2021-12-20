@@ -58,3 +58,24 @@ export function oops(title = "Oops...", message = "Something went wrong!") {
         }
     ));
 };
+
+export function confirmLeaveProgress(
+    title = 'Are you sure?',
+    message = 'It looks like you have been editing something. If you leave before saving, your changes will be lost.',
+    confirmButtonText = 'Leave this',
+    cancelButtonText = 'Continue Editing'
+) {
+    return Swal.fire(assign(
+        clone(defaultConfig),
+        {
+            title: title,
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: confirmButtonText,
+            cancelButtonText: cancelButtonText,
+        }
+    ));
+}
