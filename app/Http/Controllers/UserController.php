@@ -97,6 +97,8 @@ class UserController extends CrudController
 
         $user->savePassword($request->password);
 
+        $user->verifiyEmail();
+
         if ($request->has('role')) {
             $user->assignRole($request->role);
         }
