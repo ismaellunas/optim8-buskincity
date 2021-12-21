@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Jetstream\DeleteUser;
 use App\Http\Requests\{
+    UserDestroyRequest,
     UserPasswordRequest,
     UserStoreRequest,
     UserUpdateRequest
@@ -172,7 +173,7 @@ class UserController extends CrudController
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, User $user)
+    public function destroy(UserDestroyRequest $request, User $user)
     {
         if ($request->is_reassigned) {
             $this->userService->delegateResources(
