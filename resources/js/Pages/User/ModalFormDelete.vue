@@ -47,9 +47,9 @@
                                 v-model="form.assigned_user"
                                 class="is-fullwidth"
                                 field-class="ml-4"
-                                label="Select a user"
+                                placeholder="Select a user"
                                 :disabled="!form.is_reassigned"
-                                :message="error('assigned_user', null, errors)"
+                                :message="error('assigned_user', 'deleteUser', form.errors)"
                             >
                                 <option
                                     v-for="option in candidates"
