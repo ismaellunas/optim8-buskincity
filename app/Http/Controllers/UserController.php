@@ -8,7 +8,6 @@ use App\Http\Requests\{
     UserStoreRequest,
     UserUpdateRequest
 };
-use App\Models\Role;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
