@@ -35,7 +35,7 @@ class CreatePostsTable extends Migration
                 ->nullable()
                 ->constrained('users')
                 ->onUpdate('cascade')
-                ->onDelete('set null');
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
