@@ -100,15 +100,13 @@
                                             <i class="fas fa-pen" />
                                         </span>
                                     </sdb-button-link>
-                                    <sdb-button
+                                    <sdb-button-icon
                                         v-if="can.delete && record.can.delete_user"
                                         class="is-ghost has-text-black ml-1"
-                                        @click.prevent="deleteRecord(record)"
-                                    >
-                                        <span class="icon is-small">
-                                            <i class="far fa-trash-alt" />
-                                        </span>
-                                    </sdb-button>
+                                        icon-class="is-small"
+                                        icon="far fa-trash-alt"
+                                        @click.prevent="deleteUserModal(record)"
+                                    />
                                 </div>
                             </template>
                         </user-list-item>
@@ -121,13 +119,25 @@
                 :query-params="queryParams"
             />
         </div>
+
+        <modal-form-delete
+            v-if="isModalOpen"
+            :errors="errors"
+            :get-candidates-route="baseRouteName+'.reassignment-candidates'"
+            :user="selectedUser"
+            @close="closeModal"
+            @delete-user="deleteUser"
+        />
     </app-layout>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import SdbButton from '@/Sdb/Button';
+    import MixinHasModal from '@/Mixins/HasModal';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import ModalFormDelete from '@/Pages/User/ModalFormDelete';
+    import SdbButtonIcon from '@/Sdb/ButtonIcon';
     import SdbButtonLink from '@/Sdb/ButtonLink';
     import SdbCheckbox from '@/Sdb/Checkbox';
     import SdbDropdown from '@/Sdb/Dropdown';
@@ -143,7 +153,8 @@
     export default {
         components: {
             AppLayout,
-            SdbButton,
+            ModalFormDelete,
+            SdbButtonIcon,
             SdbButtonLink,
             SdbCheckbox,
             SdbDropdown,
@@ -156,11 +167,14 @@
 
         mixins: [
             MixinFilterDataHandle,
+            MixinHasModal,
+            MixinHasPageErrors,
         ],
 
         props: {
             baseRouteName: { type: String, required: true },
             can: { type: Object, required: true },
+            errors: { type: Object, default: () => {} },
             pageNumber: { type: String, default: null },
             pageQueryParams: { type: Object, required: true },
             records: { type: Object, default: () => {} },
@@ -181,22 +195,17 @@
             };
         },
 
+        data() {
+            return {
+                seletectedUser: null,
+                loader: null,
+            };
+        },
+
         methods: {
-            deleteRecord(record) {
-                const self = this;
-                confirmDelete().then(result => {
-                    if (result.isConfirmed) {
-                        self.$inertia.delete(
-                            route(self.baseRouteName+'.destroy', record.id),
-                            {
-                                onStart: self.onStartLoadingOverlay,
-                                onFinish: self.onEndLoadingOverlay,
-                                onError: self.onError,
-                                onSuccess: self.onSuccess,
-                            }
-                        );
-                    }
-                })
+            deleteUserModal(user) {
+                this.selectedUser = user;
+                this.openModal();
             },
 
             onError(errors) {
@@ -205,12 +214,39 @@
 
             onSuccess(page) {
                 successAlert(page.props.flash.message);
+                this.closeModal();
             },
 
             onRoleChanged(event) {
                 this.queryParams['roles'] = this.roles;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
-        },
+
+            deleteUser(form) {
+                const self = this;
+
+                confirmDelete(
+                    'Are you sure?',
+                    'Once you hit "Confirm Deletion", the user will be permanently removed.',
+                    'Confirm Deletion'
+                ).then(result => {
+                    if (result.isConfirmed) {
+                        const userId = form.user.id
+
+                        form.delete(
+                            route(self.baseRouteName+'.destroy', userId),
+                            {
+                                onStart: self.onStartLoadingOverlay,
+                                onFinish: () => {
+                                    self.onEndLoadingOverlay();
+                                },
+                                onError: self.onError,
+                                onSuccess: self.onSuccess,
+                            }
+                        );
+                    }
+                })
+            }
+        }
     };
 </script>
