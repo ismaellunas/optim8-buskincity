@@ -197,4 +197,18 @@ class UserController extends CrudController
 
         return redirect()->back();
     }
+
+    public function getReassignmentCandidates(Request $request, User $user)
+    {
+        return User::when($request->term, function ($query, $request) {
+                $query->search($request->term);
+            })
+            ->where('id', '<>', $user->id)
+            ->get([
+                'id',
+                'email',
+                'first_name',
+                'last_name',
+            ]);
+    }
 }
