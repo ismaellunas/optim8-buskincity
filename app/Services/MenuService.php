@@ -330,24 +330,28 @@ class MenuService
                         'page_id',
                         'locale',
                         'title',
-                    ]);
+                    ])
+                    ->published();
                 },
             ])
             ->get(['id'])
             ->map(function ($page) {
-
-                $locales = $page
-                    ->translations
-                    ->map(function ($translation) {
-                        return $translation->locale;
-                    });
-
-                return [
-                    'id' => $page->id,
-                    'value' => $page->title ?? $page->translations[0]->title,
-                    'locales' => $locales,
-                ];
+                if (count($page->translations) !== 0) {
+                    $locales = $page
+                        ->translations
+                        ->map(function ($translation) {
+                            return $translation->locale;
+                        });
+                    return [
+                        'id' => $page->id,
+                        'value' => $page->title ?? $page->translations[0]->title,
+                        'locales' => $locales,
+                    ];
+                }
+            })->filter(function ($value) {
+                return $value != null;
             })
+            ->values()
             ->all();
     }
 
