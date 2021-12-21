@@ -173,8 +173,15 @@ class UserController extends CrudController
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Request $request, User $user)
     {
+        if ($request->is_reassigned) {
+            $this->userService->delegateResources(
+                $user->id,
+                $request->assigned_user
+            );
+        }
+
         $this->deleteUser->delete($user);
 
         $this->generateFlashMessage('User deleted successfully!');
