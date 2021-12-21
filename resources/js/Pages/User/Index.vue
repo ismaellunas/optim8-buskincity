@@ -1,6 +1,8 @@
 <template>
     <app-layout>
-        <template #header>{{ title }}</template>
+        <template #header>
+            {{ title }}
+        </template>
 
         <div class="box">
             <div class="columns">
@@ -79,7 +81,9 @@
                             <th>Email</th>
                             <th>Role</th>
                             <th>
-                                <div class="level-right">Actions</div>
+                                <div class="level-right">
+                                    Actions
+                                </div>
                             </th>
                         </tr>
                     </thead>
