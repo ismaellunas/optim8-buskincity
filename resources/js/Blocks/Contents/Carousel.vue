@@ -47,13 +47,13 @@
 </template>
 
 <script>
-    import CarouselMain from '@/Blocks/Backend/Contents/Carousel/CarouselMain.vue';
-    import CarouselSlide from '@/Blocks/Backend/Contents/Carousel/CarouselSlide.vue';
+    import CarouselMain from '@/Blocks/Contents/Carousel/CarouselMain.vue';
+    import CarouselSlide from '@/Blocks/Contents/Carousel/CarouselSlide.vue';
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinHasModal from '@/Mixins/HasModal';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
-    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
+    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { cloneDeep } from 'lodash';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
     import { inject } from "vue";

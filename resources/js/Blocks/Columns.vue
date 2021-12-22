@@ -1,38 +1,60 @@
 <template>
-    <div class="columns" :class="wrapperClass">
-        <div class="column is-3 p-1" v-if="isEditMode">
+    <div
+        class="columns"
+        :class="wrapperClass"
+    >
+        <div
+            v-if="isEditMode"
+            class="column is-3 p-1"
+        >
             <div class="field has-addons">
                 <div class="control is-expanded">
                     <sdb-select
-                        class="is-fullwidth is-small"
                         v-model="numberOfColumns"
+                        class="is-fullwidth is-small"
                         @change="onColumnChange"
                     >
-                        <template v-for="columnNumber in columnOptions">
-                            <option>{{ columnNumber }}</option>
-                        </template>
+                        <option
+                            v-for="(columnNumber, index) in columnOptions"
+                            :key="index"
+                        >
+                            {{ columnNumber }}
+                        </option>
                     </sdb-select>
                 </div>
                 <div class="control">
-                    <sdb-button type="button" class="is-static is-small">
+                    <sdb-button
+                        type="button"
+                        class="is-static is-small"
+                    >
                         Column(s)
                     </sdb-button>
                 </div>
             </div>
         </div>
-        <div class="column is-9 p-1" v-if="isEditMode">
+        <div
+            v-if="isEditMode"
+            class="column is-9 p-1"
+        >
             <div class="field has-addons is-pulled-right">
                 <p class="control">
-                    <sdb-button type="button" class="is-small" @click="deleteBlock">
+                    <sdb-button
+                        type="button"
+                        class="is-small"
+                        @click="deleteBlock"
+                    >
                         <span class="icon">
-                            <i class="fas fa-trash"></i>
+                            <i class="fas fa-trash" />
                         </span>
                     </sdb-button>
                 </p>
                 <p class="control">
-                    <sdb-button type="button" class="is-small handle-columns">
+                    <sdb-button
+                        type="button"
+                        class="is-small handle-columns"
+                    >
                         <span class="icon">
-                            <i class="fas fa-arrows-alt"></i>
+                            <i class="fas fa-arrows-alt" />
                         </span>
                     </sdb-button>
                 </p>
@@ -57,7 +79,7 @@
 </template>
 
 <script>
-    import BlockColumn from '@/Blocks/Backend/Column';
+    import BlockColumn from '@/Blocks/Column';
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import SdbButton from '@/Sdb/Button';
     import SdbSelect from '@/Sdb/Select';
@@ -65,12 +87,12 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        mixins: [EditModeComponentMixin],
         components: {
             BlockColumn,
             SdbButton,
             SdbSelect,
         },
+        mixins: [EditModeComponentMixin],
         props: {
             can: Object,
             dataEntities: {},
@@ -80,6 +102,17 @@
             modelValue: {},
             selectedLocale: String,
         },
+        emits: [
+            'delete-block',
+            'setting-content'
+        ],
+        setup(props, { emit }) {
+            return {
+                block: useModelWrapper(props, emit),
+                entities: useModelWrapper(props, emit, 'dataEntities'),
+                media: useModelWrapper(props, emit, 'dataMedia'),
+            };
+        },
         data() {
             return {
                 editModeWrapperClass: ['edit-mode-columns'],
@@ -87,12 +120,18 @@
                 columnOptions: [1,2,3,4,5,6],
             };
         },
-        setup(props, { emit }) {
-            return {
-                block: useModelWrapper(props, emit),
-                entities: useModelWrapper(props, emit, 'dataEntities'),
-                media: useModelWrapper(props, emit, 'dataMedia'),
-            };
+        computed: {
+            wrapperClass() {
+                let wrapperClass = [];
+
+                if (this.isEditMode) {
+                    wrapperClass = wrapperClass.concat(
+                        'edit-mode-columns', 'is-multiline', 'box', 'p-1', 'my-1'
+                    );
+                }
+
+                return wrapperClass;
+            },
         },
         methods: {
             deleteBlock() {
@@ -125,19 +164,6 @@
                     }
                 }
                 this.numberOfColumns = numberOfColumns;
-            },
-        },
-        computed: {
-            wrapperClass() {
-                let wrapperClass = [];
-
-                if (this.isEditMode) {
-                    wrapperClass = wrapperClass.concat(
-                        'edit-mode-columns', 'is-multiline', 'box', 'p-1', 'my-1'
-                    );
-                }
-
-                return wrapperClass;
             },
         },
     };
