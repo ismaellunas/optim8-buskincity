@@ -15,7 +15,7 @@
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
+    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils';
     import { last, concat } from 'lodash';
 
