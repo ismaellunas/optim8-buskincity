@@ -105,7 +105,7 @@ class UserService
         ];
     }
 
-    public function delegateResources($userIdFrom, $userIdTo)
+    public function reassignResources($userIdFrom, $userIdTo)
     {
         Post::where('author_id', $userIdFrom)->update(['author_id' => $userIdTo]);
         Page::where('author_id', $userIdFrom)->update(['author_id' => $userIdTo]);

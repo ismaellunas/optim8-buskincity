@@ -176,7 +176,7 @@ class UserController extends CrudController
     public function destroy(UserDestroyRequest $request, User $user)
     {
         if ($request->is_reassigned) {
-            $this->userService->delegateResources(
+            $this->userService->reassignResources(
                 $user->id,
                 $request->assigned_user
             );
