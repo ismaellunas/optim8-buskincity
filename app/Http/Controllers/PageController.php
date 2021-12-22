@@ -87,7 +87,7 @@ class PageController extends CrudController
     public function store(PageRequest $request)
     {
         $page = new $this->model;
-        dd($request->all());
+
         $page->saveFromInputs($request->all());
         $page->saveAuthorId(Auth::id());
 
