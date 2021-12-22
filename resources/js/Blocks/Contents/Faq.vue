@@ -20,8 +20,8 @@
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import SdbTinymce from '@/Sdb/EditorTinymce';
-    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
-    import FaqQuestionAnswer from '@/Blocks/Backend/Contents/Faq/QuestionAnswer';
+    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import FaqQuestionAnswer from '@/Blocks/Contents/Faq/QuestionAnswer';
     import { last } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
