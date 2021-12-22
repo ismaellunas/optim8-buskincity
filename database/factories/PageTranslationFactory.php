@@ -31,7 +31,6 @@ class PageTranslationFactory extends Factory
             'status' => PageTranslation::STATUS_DRAFT,
             'page_id' => Page::factory(),
             'data' => json_decode('{"structures": [], "entities": {}, "media": []}'),
-            'plain_text_content' => null,
         ];
     }
 }

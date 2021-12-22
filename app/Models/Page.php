@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\PageTranslation;
+use App\Services\PageService;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
@@ -43,6 +44,10 @@ class Page extends Model implements TranslatableContract
 
     public function saveFromInputs(array $inputs)
     {
+        foreach ($inputs as $locale => $input) {
+            $inputs[$locale]['plain_text_content'] = PageService::transformComponentToText($input['data']);
+        }
+
         $this->fill($inputs);
         $this->save();
     }
