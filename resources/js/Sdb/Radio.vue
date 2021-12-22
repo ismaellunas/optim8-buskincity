@@ -1,14 +1,21 @@
 <template>
-    <label class="radio">
+    <label
+        ref="label"
+        class="radio"
+        :class="[labelClass, { 'is-disabled': disabled }]"
+        :disabled="disabled"
+        @click="focus"
+        @keydown.prevent.enter="$refs.label.click()"
+    >
         <input
             ref="input"
             v-bind="$attrs"
             v-model="computedValue"
             type="radio"
             :checked="isChecked"
-            :class="{'is-danger' : hasError}"
+            :disabled="disabled"
             :value="value"
-            @input="$emit('update:modelValue', $event.target.value)"
+            @click.stop
         >
         <slot />
     </label>
@@ -21,14 +28,30 @@
         inheritAttrs: false,
 
         props: {
-            hasError: {type: Boolean, default: false},
-            modelValue: {type: [String, Number, Boolean, null], default: ""},
-            value: { type: [String, Number, Boolean, null], default: undefined },
+            disabled: {
+                type: Boolean,
+                default: undefined,
+            },
+            hasError: {
+                type: Boolean,
+                default: false
+            },
+            labelClass: {
+                type: [String, Object, Array],
+                default: undefined,
+            },
+            modelValue: {
+                type: [String, Number, Boolean, Function, Object, Array],
+                default: ""
+            },
+            value: {
+                type: [String, Number, Boolean, Function, Object, Array],
+                default: undefined
+            },
         },
 
         emits: [
             'input',
-            'update:modelValue'
         ],
 
         data() {
