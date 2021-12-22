@@ -1,5 +1,8 @@
 <template>
-    <div class="column" :class="columnClass">
+    <div
+        class="column"
+        :class="columnClass"
+    >
         <draggable
             v-if="isEditMode"
             class="dragArea list-group"
@@ -43,14 +46,14 @@
 </template>
 
 <script>
-    import Card from '@/Blocks/Backend/Contents/Card';
-    import CardText from '@/Blocks/Backend/Contents/CardText';
-    import Carousel from '@/Blocks/Backend/Contents/Carousel';
+    import Card from '@/Blocks/Contents/Card';
+    import CardText from '@/Blocks/Contents/CardText';
+    import Carousel from '@/Blocks/Contents/Carousel';
     import Draggable from 'vuedraggable';
-    import Faq from '@/Blocks/Backend/Contents/Faq';
-    import Heading from '@/Blocks/Backend/Contents/Heading';
-    import Image from '@/Blocks/Backend/Contents/Image';
-    import Text from '@/Blocks/Backend/Contents/Text';
+    import Faq from '@/Blocks/Contents/Faq';
+    import Heading from '@/Blocks/Contents/Heading';
+    import Image from '@/Blocks/Contents/Image';
+    import Text from '@/Blocks/Contents/Text';
     import { isBlank } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3'
 
@@ -75,6 +78,9 @@
             dataMedia: {},
             selectedLocale: String,
         },
+        emits: [
+            'setting-content'
+        ],
         setup() {
             return {
                 entityId: usePage().props.value.entityId ?? null,
