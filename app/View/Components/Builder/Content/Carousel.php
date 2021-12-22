@@ -6,12 +6,11 @@ use Illuminate\Support\Collection;
 
 class Carousel extends BaseContent
 {
-    public $uid;
-    public $config;
-    public $locale;
-    public $images;
     public $carouselImages = [];
-    public $numberOfSliders = 0;
+    public $config;
+    public $images;
+    public $locale;
+    public $slideSpeed = 6000;
 
     /**
      * Create a new component instance.
@@ -25,27 +24,10 @@ class Carousel extends BaseContent
     ) {
         parent::__construct($entity);
 
-        $this->uid = $this->entity['id'];
         $this->images = $images;
         $this->carouselImages = $this->getCarouselImages();
         $this->locale = $locale;
-        $this->numberOfSliders = $this->numberOfSliders();
         $this->config = $this->entity['config']['carousel'];
-    }
-
-    public function ratio(): string
-    {
-        return $this->entity['config']['carousel']['ratio'] ?? '';
-    }
-
-    public function autoPlay(): bool
-    {
-        return $this->entity['config']['carousel']['autoPlay'] ?? false;
-    }
-
-    private function numberOfSliders(): string
-    {
-        return $this->entity['config']['carousel']['numberOfSliders'] ?? '';
     }
 
     private function getCarouselImages(): array
