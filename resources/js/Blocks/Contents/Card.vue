@@ -74,7 +74,7 @@
     import SdbEditor from '@/Sdb/EditorTinymce';
     import SdbImage from '@/Sdb/Image';
     import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
-    import SdbToolbarContent from '@/Blocks/Backend/Contents/ToolbarContent';
+    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
     import { isBlank, useModelWrapper } from '@/Libs/utils';

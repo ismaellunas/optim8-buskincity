@@ -10,13 +10,16 @@
                         :group="{ name: 'components', pull: 'clone', put: false }"
                         :clone="cloneComponent"
                         :sort="false"
+                        item-key="id"
                         @end="onEnd"
                         @change="log"
-                        item-key="id"
                     >
                         <template #item="{ element }">
                             <div class="column is-half">
-                                <div class="card" :class="{'has-text-grey-light': !isEditMode}">
+                                <div
+                                    class="card"
+                                    :class="{'has-text-grey-light': !isEditMode}"
+                                >
                                     <div class="card-content is-size-7">
                                         <div class="content is-center">
                                             {{ element.title }}
@@ -34,12 +37,15 @@
                         :group="{ name: 'columns', pull: 'clone', put: false }"
                         :clone="cloneBlock"
                         :sort="false"
-                        @change="log"
                         item-key="name"
+                        @change="log"
                     >
                         <template #item="{ element }">
                             <div class="column is-half">
-                                <div class="card" :class="{'has-text-grey-light': !isEditMode}">
+                                <div
+                                    class="card"
+                                    :class="{'has-text-grey-light': !isEditMode}"
+                                >
                                     <div class="card-content is-size-7">
                                         <div class="content">
                                             {{ element.title }}
@@ -60,7 +66,10 @@
             </div>
         </div>
 
-        <div class="column is-9" :class="{'has-background-grey-lighter has-text-centered': !hasBlok}">
+        <div
+            class="column is-9"
+            :class="{'has-background-grey-lighter has-text-centered': !hasBlok}"
+        >
             <draggable
                 class="list-block-columns"
                 group="columns"
@@ -79,11 +88,11 @@
                         v-model:data-entities="data.entities"
                         v-model:data-media="data.media"
                         :can="can"
-                        :isEditMode="isEditMode"
+                        :is-edit-mode="isEditMode"
                         :selected-locale="selectedLocale"
                         @delete-block="deleteBlock"
                         @setting-content="settingContent"
-                        />
+                    />
                 </template>
             </draggable>
         </div>
@@ -91,7 +100,7 @@
 </template>
 
 <script>
-    import BlockColumns from '@/Blocks/Backend/Columns'
+    import BlockColumns from '@/Blocks/Columns'
     import ComponentStructures from '@/ComponentStructures';
     import Draggable from "vuedraggable";
     import SdbComponentConfig from '@/Sdb/ComponentConfig';
@@ -118,17 +127,51 @@
                 contentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
             };
         },
-        created() {
-            // NOTE fix page.data
-            if (!this.data?.media) {
-                this.data.media = [];
-            }
-        },
         data() {
             return {
                 isDebugMode: false,
                 clonedComponent: null,
             };
+        },
+        computed: {
+            availableComponents() {
+                let components = [];
+                for (const property in ComponentStructures) {
+                    components.push(ComponentStructures[property]);
+                }
+                return components;
+            },
+            availableBlocks() {
+                const maxColumnNumber = 6;
+                let blocks = [];
+
+                for (let i = 1; i <= maxColumnNumber; i++) {
+                    let block = createBlock();
+                    for (let colIndex = 1; colIndex <= i; colIndex++) {
+                        block.columns.push(createColumn());
+                    }
+                    block.id = '';
+                    block.title = i+' Column'+((i>1) ? 's' : '');
+                    blocks.push(block);
+                }
+
+                return blocks;
+            },
+            hasBlok() {
+                return isBlank(this.data.structures) ? false : this.data.structures.length > 0;
+            },
+            isComponentConfigOpen() {
+                return (
+                    !isBlank(this.contentConfigId)
+                    && this.data.entities[this.contentConfigId]
+                );
+            },
+        },
+        created() {
+            // NOTE fix page.data
+            if (!this.data?.media) {
+                this.data.media = [];
+            }
         },
         methods: {
             log: function(evt) {
@@ -172,39 +215,5 @@
                 this.contentConfigId = id;
             }
         },
-        computed: {
-            availableComponents() {
-                let components = [];
-                for (const property in ComponentStructures) {
-                    components.push(ComponentStructures[property]);
-                }
-                return components;
-            },
-            availableBlocks() {
-                const maxColumnNumber = 6;
-                let blocks = [];
-
-                for (let i = 1; i <= maxColumnNumber; i++) {
-                    let block = createBlock();
-                    for (let colIndex = 1; colIndex <= i; colIndex++) {
-                        block.columns.push(createColumn());
-                    }
-                    block.id = '';
-                    block.title = i+' Column'+((i>1) ? 's' : '');
-                    blocks.push(block);
-                }
-
-                return blocks;
-            },
-            hasBlok() {
-                return isBlank(this.data.structures) ? false : this.data.structures.length > 0;
-            },
-            isComponentConfigOpen() {
-                return (
-                    !isBlank(this.contentConfigId)
-                    && this.data.entities[this.contentConfigId]
-                );
-            },
-        }
     }
 </script>
