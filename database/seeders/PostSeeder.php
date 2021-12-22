@@ -20,7 +20,7 @@ class PostSeeder extends Seeder
         $adminUser = User::find(1);
         $category = Category::find(1);
         Post::factory()
-            ->count(6000)
+            ->count(20)
             ->for($adminUser, 'author')
             ->state(new Sequence(
                 ['status' => Post::STATUS_DRAFT],
