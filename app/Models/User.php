@@ -140,4 +140,10 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->password = UserService::hashPassword($password);
         $this->save();
     }
+
+    public function verifiyEmail(mixed $dateTime = null)
+    {
+        $this->email_verified_at = $dateTime ?? now();
+        $this->save();
+    }
 }
