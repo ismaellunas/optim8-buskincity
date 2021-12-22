@@ -1,6 +1,7 @@
 <template>
     <sdb-form-field
         :is-required="required"
+        :class="fieldClass"
     >
         <template #label>
             {{ label }}
@@ -63,6 +64,10 @@
                 type: Boolean,
                 default: false
             },
+            fieldClass: {
+                type: [Object, Array, String],
+                default: undefined,
+            }
         },
         setup(props, { emit }) {
             return {
