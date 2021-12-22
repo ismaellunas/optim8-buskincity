@@ -137,7 +137,6 @@
                 form: useForm({
                     assigned_user: null,
                     is_reassigned: false,
-                    user: props.user,
                 }),
             };
         },

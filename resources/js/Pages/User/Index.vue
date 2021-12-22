@@ -235,7 +235,7 @@
                     'Confirm Deletion'
                 ).then(result => {
                     if (result.isConfirmed) {
-                        const userId = form.user.id
+                        const userId = this.selectedUser.id;
 
                         form.delete(
                             route(self.baseRouteName+'.destroy', userId),
