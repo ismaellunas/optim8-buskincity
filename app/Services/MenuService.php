@@ -414,4 +414,40 @@ class MenuService
             })
             ->all();
     }
+
+    public function removePageFromMenus(array $inputs)
+    {
+        $languages = collect(TranslationService::getLocaleOptions());
+        $headerMenuItems = $this->getHeaderMenus($languages->pluck('id')->all());
+        $footerMenuItems = $this->getFooterMenus($languages->pluck('id')->all());
+        foreach ($inputs as $key => $input) {
+            if (count($input) > 0 && isset($input['page_id'])) {
+                $this->removeMenuItems($headerMenuItems, $key, $input['page_id'], $input['status']);
+                $this->removeMenuItems($footerMenuItems, $key, $input['page_id'], $input['status']);
+            }
+        }
+    }
+
+    private function removeMenuItems(
+        array $menuItems,
+        string $locale,
+        int $pageId,
+        int $pageStatus
+    ) {
+        foreach($menuItems[$locale] as $menuItem) {
+            if ($pageId === $menuItem['page_id']) {
+                if ($pageStatus === \App\Models\PageTranslation::STATUS_DRAFT) {
+                    $menus = Menu::with(['menuItems' => function($query) use($pageId){
+                        $query->where('page_id', $pageId);
+                    }])
+                    ->where('locale', $locale)->get();
+                    foreach ($menus as $menu) {
+                        if (count($menu->menuItems) > 0) {
+                            $menu->menuItems[0]->delete();
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

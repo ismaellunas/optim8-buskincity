@@ -52,6 +52,8 @@
             page: { type: Object, required: true },
             errors: { type: Object, default:() => {} },
             statusOptions: { type: Array, default:() => [] },
+            headerMenuItems: { type: Object, default:() => {} },
+            footerMenuItems: { type: Object, default:() => {} }
         },
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
@@ -84,6 +86,8 @@
                 defaultLocale,
                 form: useForm(translationForm),
                 localeOptions: usePage().props.value.languageOptions,
+                headerMenuItems: props.headerMenuItems,
+                footerMenuItems: props.footerMenuItems,
             };
         },
         data() {
@@ -97,7 +101,33 @@
         methods: {
             onSubmit() {
                 const submitRoute = route('admin.pages.update', {id: this.page.id});
-                this.form.put(submitRoute);
+                if (this.menuContainsPage(this.headerMenuItems[this.selectedLocale], this.page.id)
+                    || this.menuContainsPage(this.footerMenuItems[this.selectedLocale], this.page.id)) {
+
+                    if (this.form[this.selectedLocale].status === 0) {
+                        this.$swal.fire({
+                            title: 'Are you sure?',
+                            text: 'This action will also remove the page on the navigation menu.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#3085d6',
+                            confirmButtonText: 'Process',
+                            cancelButtonText: 'Cancel',
+                            scrollbarPadding: false,
+                        }).then((result) => {
+                            if (result.isDismissed) {
+                                return false;
+                            } else if(result.isConfirmed) {
+                                this.form.put(submitRoute);
+                            }
+                        })
+                    } else {
+                        this.form.put(submitRoute);
+                    }
+                } else {
+                    this.form.put(submitRoute);
+                }
             },
             onChangeLocale(locale) {
                 if (this.form.isDirty) {
@@ -143,6 +173,15 @@
                 }
                 this.form = useForm(translationFrom);
             },
+            menuContainsPage(a, id) {
+                var i = a.length;
+                while (i--) {
+                    if (a[i].page_id === id) {
+                        return true;
+                    }
+                }
+                return false;
+            }
         },
     }
 </script>
