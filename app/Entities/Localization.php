@@ -42,9 +42,21 @@ class Localization extends LaravelLocalization
             } else {
                 throw $e;
             }
+
+        } catch (\Predis\Connection\ConnectionException $e) {
+
+            $this->defaultLocale = $this->configRepository->get('app.fallback_locale');
         }
 
-        $supportedLocales = $this->getSupportedLocales();
+        try {
+
+            $supportedLocales = $this->getSupportedLocales();
+
+        } catch (\Illuminate\Database\QueryException $e) {
+
+            $supportedLocales = parent::getSupportedLocales();
+        }
+
         if (empty($supportedLocales[$this->defaultLocale])) {
             throw new UnsupportedLocaleException('Laravel default locale is not in the supportedLocales array.');
         }
