@@ -4,8 +4,10 @@ use App\Facades\Localization;
 use App\Http\Controllers\{
     ChangeLanguageController,
     Frontend\PageController,
+    Frontend\PostCategoryController,
     Frontend\PostController,
-    Frontend\PostCategoryController
+    NewPasswordController,
+    PasswordResetLinkController,
 };
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -76,4 +78,11 @@ Route::group([
             'title' => 'Test Translation'
         ]);
     })->name('test.translation');
+});
+
+Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
+    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+        ->name('password.email');
+    Route::post('/reset-password', [NewPasswordController::class, 'store'])
+        ->name('password.update');
 });
