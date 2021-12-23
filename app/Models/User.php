@@ -146,4 +146,16 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->email_verified_at = $dateTime ?? now();
         $this->save();
     }
+
+    public function suspend()
+    {
+        $this->is_suspended = true;
+        $this->save();
+    }
+
+    public function unsuspend()
+    {
+        $this->is_suspended = false;
+        $this->save();
+    }
 }
