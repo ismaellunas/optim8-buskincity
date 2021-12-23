@@ -211,4 +211,18 @@ class UserController extends CrudController
                 'last_name',
             ]);
     }
+
+    public function suspend(User $user)
+    {
+        $user->suspend();
+
+        return back();
+    }
+
+    public function unsuspend(User $user)
+    {
+        $user->unsuspend();
+
+        return back();
+    }
 }
