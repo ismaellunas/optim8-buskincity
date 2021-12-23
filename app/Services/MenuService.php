@@ -420,12 +420,13 @@ class MenuService
         $languages = collect(TranslationService::getLocaleOptions());
         $headerMenuItems = $this->getHeaderMenus($languages->pluck('id')->all());
         $footerMenuItems = $this->getFooterMenus($languages->pluck('id')->all());
-        foreach ($inputs as $key => $input) {
+        foreach ($inputs as $locale => $input) {
             if (count($input) > 0 && isset($input['page_id'])) {
-                $this->removeMenuItems($headerMenuItems, $key, $input['page_id'], $input['status']);
-                $this->removeMenuItems($footerMenuItems, $key, $input['page_id'], $input['status']);
+                $this->removeMenuItems($headerMenuItems, $locale, $input['page_id'], $input['status']);
+                $this->removeMenuItems($footerMenuItems, $locale, $input['page_id'], $input['status']);
             }
         }
+        app(MenuCache::class)->flush();
     }
 
     private function removeMenuItems(
