@@ -270,58 +270,10 @@ class SettingService
         );
     }
 
-    public function uploadAdditionalCodeToCloudStorage(
-        string $filename,
-        string $value,
-        string $folderPrefix = null
-    ): MediaAsset {
-
-        $disk = Storage::build([
-            'driver' => 'local',
-            'root' => storage_path('theme/css'),
-        ]);
-
-        $disk->put($filename, $value);
-
-        $uploadedFileName = 'theme/css/'.$filename;
-        $uploadedFilePath = storage_path($uploadedFileName);
-
-        $file = new UploadedFile(
-            $uploadedFilePath,
-            $filename
-        );
-
-        $storage = new CloudinaryStorage();
-
-        $folder = "assets";
-
-        if ($folderPrefix) {
-            $folder = $folderPrefix.'_'.$folder;
-        }
-
-        return $storage->upload(
-            $file,
-            $filename,
-            pathinfo($filename, PATHINFO_EXTENSION),
-            $folder
-        );
-    }
-
     public function saveCssUrl(string $url): bool
     {
         $setting = Setting::firstOrNew(['key' => 'url_css']);
         $setting->value = $url;
-        return $setting->save();
-    }
-
-    public function saveAdditionalCodeUrl(string $key, ?string $url): bool
-    {
-        $setting = Setting::firstOrNew([
-            'key' => self::getAdditionalCodeFileKey($key)
-        ]);
-
-        $setting->value = $url;
-
         return $setting->save();
     }
 

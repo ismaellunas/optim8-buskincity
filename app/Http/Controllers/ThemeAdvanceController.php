@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ThemeAdvanceRequest;
 use App\Models\Setting;
 use App\Services\SettingService;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ThemeAdvanceController extends ThemeOptionController
@@ -40,24 +38,6 @@ class ThemeAdvanceController extends ThemeOptionController
             $setting->value = $code;
 
             $setting->save();
-
-            if (
-                Str::startsWith($key, 'additional_')
-                && !empty($code)
-            ) {
-                $url = null;
-                $filename = $this->settingService->getAdditionalCodeFileName($key);
-
-                $asset = $this->settingService->uploadAdditionalCodeToCloudStorage(
-                    $filename,
-                    $code,
-                    (!App::environment('production') ? config('app.env') : null)
-                );
-
-                $url = $asset->fileUrl;
-
-                $this->settingService->saveAdditionalCodeUrl($key, $url);
-            }
         }
 
         $this->settingService->clearStorageTheme();
