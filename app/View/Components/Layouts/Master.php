@@ -12,8 +12,8 @@ class Master extends Component
     public $trackingCodeAfterBody;
     public $trackingCodeBeforeBody;
     public $trackingCodeInsideHead;
-    public $additionalJavascriptUrl;
-    public $additionalCssUrl;
+    public $additionalJavascript;
+    public $additionalCss;
 
     /**
      * Create a new component instance.
@@ -29,8 +29,8 @@ class Master extends Component
         $this->trackingCodeAfterBody =  $settingService->getTrackingCodeAfterBody();
         $this->trackingCodeBeforeBody = $settingService->getTrackingCodeBeforeBody();
         $this->trackingCodeInsideHead = $settingService->getTrackingCodeInsideHead();
-        $this->additionalJavascriptUrl = $settingService->getAdditionalJavascriptUrl();
-        $this->additionalCssUrl = $settingService->getAdditionalCssUrl();
+        $this->additionalJavascript = $settingService->getAdditionalJavascript();
+        $this->additionalCss = $settingService->getAdditionalCss();
     }
 
     /**

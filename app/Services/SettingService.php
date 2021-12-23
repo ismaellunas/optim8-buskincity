@@ -39,19 +39,17 @@ class SettingService
         return !empty($urlCss) ? $urlCss : mix('css/app.css')->toHtml();
     }
 
-    public static function getAdditionalCssUrl(): string
+    public static function getAdditionalCss(): string
     {
-        return app(SettingCache::class)->remember('additional_css_url', function () {
-            return Setting::key(self::getAdditionalCodeFileKey('additional_css'))
-                ->value('value') ?? "";
+        return app(SettingCache::class)->remember('additional_css', function () {
+            return Setting::key('additional_css')->value('value') ?? "";
         });
     }
 
-    public static function getAdditionalJavascriptUrl(): string
+    public static function getAdditionalJavascript(): string
     {
-        return app(SettingCache::class)->remember('additional_javascript_url', function () {
-            return Setting::key(self::getAdditionalCodeFileKey('additional_javascript'))
-                ->value('value') ?? "";
+        return app(SettingCache::class)->remember('additional_javascript', function () {
+            return Setting::key('additional_javascript')->value('value') ?? "";
         });
     }
 
