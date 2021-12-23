@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Actions\Jetstream\DeleteUser;
 use App\Http\Requests\{
+    UserDestroyRequest,
     UserPasswordRequest,
     UserStoreRequest,
     UserUpdateRequest
 };
-use App\Models\Role;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
@@ -97,6 +97,8 @@ class UserController extends CrudController
 
         $user->savePassword($request->password);
 
+        $user->verifiyEmail();
+
         if ($request->has('role')) {
             $user->assignRole($request->role);
         }
@@ -171,8 +173,15 @@ class UserController extends CrudController
      * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(UserDestroyRequest $request, User $user)
     {
+        if ($request->is_reassigned) {
+            $this->userService->reassignResources(
+                $user->id,
+                $request->assigned_user
+            );
+        }
+
         $this->deleteUser->delete($user);
 
         $this->generateFlashMessage('User deleted successfully!');
@@ -187,5 +196,19 @@ class UserController extends CrudController
         $this->generateFlashMessage('Password updated successfully!');
 
         return redirect()->back();
+    }
+
+    public function getReassignmentCandidates(Request $request, User $user)
+    {
+        return User::when($request->term, function ($query, $request) {
+                $query->search($request->term);
+            })
+            ->where('id', '<>', $user->id)
+            ->get([
+                'id',
+                'email',
+                'first_name',
+                'last_name',
+            ]);
     }
 }

@@ -22,6 +22,8 @@ class PageTranslation extends Model implements PublishableInterface
         'slug',
         'status',
         'title',
+        'locale',
+        'plain_text_content',
     ];
 
     protected $casts = [

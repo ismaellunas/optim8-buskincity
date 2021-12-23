@@ -31,6 +31,13 @@ class CreateConnectedAccountsTable extends Migration
 
             $table->index(['user_id', 'id']);
             $table->index(['provider', 'provider_id']);
+
+            $table
+                ->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
         });
     }
 
