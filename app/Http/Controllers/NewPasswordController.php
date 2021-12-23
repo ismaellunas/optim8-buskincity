@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\SuspendedUserEmail;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Http\Controllers\NewPasswordController as FortifyNewPasswordController;
 
@@ -14,15 +14,8 @@ class NewPasswordController extends FortifyNewPasswordController
     {
         $request->validate(
             [
-                Fortify::email() => [
-                    Rule::exists('users')->where(function ($query) {
-                        return $query->where('is_suspended', false);
-                    }),
-                ],
+                Fortify::email() => new SuspendedUserEmail(),
             ],
-            [
-                Fortify::email().'.exists' => __('Your Account is suspended, please contact the support.'),
-            ]
         );
 
         return parent::store($request);
