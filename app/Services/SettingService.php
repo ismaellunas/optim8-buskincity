@@ -20,16 +20,6 @@ use \finfo;
 
 class SettingService
 {
-    private static function getAdditionalCodeFileKey(string $key): string
-    {
-        return config("constants.theme_additional_code_files.{$key}.key");
-    }
-
-    public function getAdditionalCodeFileName(string $key): string
-    {
-        return config("constants.theme_additional_code_files.{$key}.filename");
-    }
-
     public static function getFrontendCssUrl(): string
     {
         $urlCss = app(SettingCache::class)->remember('url_css', function () {
