@@ -104,8 +104,8 @@ class PageController extends Controller
     public function show(
         PageTranslation $pageTranslation
     ) {
-        if($pageTranslation->status != PageTranslation::STATUS_PUBLISHED){
-            return redirect('/');
+        if ($pageTranslation->status != PageTranslation::STATUS_PUBLISHED) {
+            return $this->redirectFallback();
         }
 
         $locale = $this->translationService->currentLanguage();

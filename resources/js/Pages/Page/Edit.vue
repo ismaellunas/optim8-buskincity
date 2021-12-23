@@ -101,9 +101,10 @@
         methods: {
             onSubmit() {
                 const submitRoute = route('admin.pages.update', {id: this.page.id});
-                if (this.menuContainsPage(this.headerMenuItems[this.selectedLocale], this.page.id)
-                    || this.menuContainsPage(this.footerMenuItems[this.selectedLocale], this.page.id)) {
-
+                if (
+                    this.menuContainsPage(this.headerMenuItems[this.selectedLocale], this.page.id)
+                    || this.menuContainsPage(this.footerMenuItems[this.selectedLocale], this.page.id)
+                ) {
                     if (this.form[this.selectedLocale].status === 0) {
                         this.$swal.fire({
                             title: 'Are you sure?',
@@ -173,10 +174,11 @@
                 }
                 this.form = useForm(translationFrom);
             },
-            menuContainsPage(a, id) {
-                var i = a.length;
+            menuContainsPage(menus, id) {
+                var i = menus.length;
                 while (i--) {
-                    if (a[i].page_id === id) {
+                    if (menus[i].page_id === id) {
+                        console.log(menus[i].page_id, id);
                         return true;
                     }
                 }
