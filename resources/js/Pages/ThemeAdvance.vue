@@ -14,9 +14,8 @@
                 @submit.prevent="onSubmit"
             >
                 <div class="columns">
-                    <div class="column">
-                        <h2><b>Additional Code</b></h2>
-                    </div>
+                    <div class="column"></div>
+
                     <div class="column">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
@@ -25,6 +24,39 @@
                                 </sdb-button>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <h2><b>Home Page</b></h2>
+                    </div>
+                    <div class="column">
+                        <sdb-form-select
+                            v-model="page_id"
+                            class="is-fullwidth"
+                            :message="error('page_id', null, errors)"
+                        >
+                            <option
+                                v-for="option in pageOptions"
+                                :key="option.id"
+                                :value="option.id"
+                            >
+                                {{ option.value }}
+                                <span
+                                    v-for="locale, index in option.locales"
+                                    :key="index"
+                                >
+                                    [{{ locale.toUpperCase() }}]
+                                </span>
+                            </option>
+                        </sdb-form-select>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <h2><b>Additional Code</b></h2>
                     </div>
                 </div>
 
@@ -81,6 +113,7 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbButton from '@/Sdb/Button';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbTextarea from '@/Sdb/Textarea';
@@ -94,6 +127,7 @@
 
         components: {
             AppLayout,
+            SdbFormSelect,
             SdbButton,
             SdbErrorNotifications,
             SdbInputError,
@@ -132,6 +166,7 @@
                     additionalCodeForm,
                     trackingCodeForm
                 )),
+                pageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
             };
         },
 
@@ -139,6 +174,7 @@
             return {
                 isProcessing: false,
                 loader: null,
+                page_id: null,
             };
         },
 
@@ -153,6 +189,7 @@
 
         methods: {
             onSubmit() {
+                console.log(this.pageOptions);
                 const self = this;
                 this.form.post(route(this.baseRouteName+'.update'), {
                     preserveScroll: false,
@@ -170,6 +207,9 @@
                     }
                 });
             },
+            onChangedType() {
+                this.page_id = null;
+            }
         },
     };
 </script>

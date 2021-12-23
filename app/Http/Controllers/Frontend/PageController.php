@@ -9,6 +9,7 @@ use App\Models\{
     PageTranslation,
 };
 use App\Services\MenuService;
+use App\Services\SettingService;
 use App\Services\TranslationService;
 use Illuminate\Support\Collection;
 
@@ -127,5 +128,25 @@ class PageController extends Controller
                 'page' => $newPageTranslation,
             ]);
         }
+    }
+
+    public function homePage()
+    {
+        $settingService = app(SettingService::class);
+
+        $locale = $this->translationService->currentLanguage();
+
+        $homePage = $settingService->getHomePage();
+
+        $page = Page::with([
+            'translations' => function ($query) use($locale) {
+                $query->where('locale', $locale)
+                ->published();
+            },
+        ])
+        ->where('id', $homePage)
+        ->first();
+
+        return  count($page->translations ?? []) != 0 ? $this->show($page->translations[0]) : "hello";
     }
 }
