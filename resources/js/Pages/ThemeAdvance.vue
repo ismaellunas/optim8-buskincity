@@ -33,9 +33,9 @@
                     </div>
                     <div class="column">
                         <sdb-form-select
-                            v-model="page_id"
+                            v-model="form.page_id"
                             class="is-fullwidth"
-                            :message="error('page_id', null, errors)"
+                            :message="error(form.page_id, null, errors)"
                         >
                             <option
                                 v-for="option in pageOptions"
@@ -144,6 +144,8 @@
             trackingCodes: {type: Object, required: true},
             errors: {type: Object, default: () => {}},
             title: {type: String, required: true},
+            pageOptions: {type: Object, default: () => {}},
+            pageId: 0,
         },
 
         setup(props) {
@@ -161,10 +163,13 @@
                 }
             );
 
+            const pageIdForm = { page_id: props.pageId }
+
             return {
                 form: useForm(assign(
                     additionalCodeForm,
-                    trackingCodeForm
+                    trackingCodeForm,
+                    pageIdForm,
                 )),
                 pageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
             };
@@ -174,7 +179,6 @@
             return {
                 isProcessing: false,
                 loader: null,
-                page_id: null,
             };
         },
 
@@ -189,7 +193,6 @@
 
         methods: {
             onSubmit() {
-                console.log(this.pageOptions);
                 const self = this;
                 this.form.post(route(this.baseRouteName+'.update'), {
                     preserveScroll: false,
@@ -207,9 +210,6 @@
                     }
                 });
             },
-            onChangedType() {
-                this.page_id = null;
-            }
         },
     };
 </script>

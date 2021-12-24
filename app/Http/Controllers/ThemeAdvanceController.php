@@ -26,12 +26,20 @@ class ThemeAdvanceController extends ThemeOptionController
 
     public function edit()
     {
+        $pageOptions = $this->menuService->getPageOptions();
+        $pageOptions[] = [
+            'id' => 0,
+            'value' => 'Default',
+            'locales' => null,
+        ];
+
         return Inertia::render(
             'ThemeAdvance',
             $this->getData([
                 'trackingCodes' => $this->settingService->getTrackingCodes(),
                 'additionalCodes' => $this->settingService->getAdditionalCodes(),
-                'pageOptions' => $this->menuService->getPageOptions(),
+                'pageId' => $this->settingService->getHomePage(),
+                'pageOptions' => $pageOptions,
             ])
         );
     }
@@ -63,6 +71,11 @@ class ThemeAdvanceController extends ThemeOptionController
                 $this->settingService->saveAdditionalCodeUrl($key, $url);
             }
         }
+
+        Setting::updateOrCreate(
+            ['key' => 'home_page'],
+            ['value' => $request->page_id]
+        );
 
         $this->settingService->clearStorageTheme();
 

@@ -147,6 +147,6 @@ class PageController extends Controller
         ->where('id', $homePage)
         ->first();
 
-        return  count($page->translations ?? []) != 0 ? $this->show($page->translations[0]) : "hello";
+        return  count($page->translations ?? []) != 0 ? $this->show($page->translations[0]) : view('home', ['title' => env('APP_NAME')]);
     }
 }
