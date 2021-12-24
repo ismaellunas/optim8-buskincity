@@ -13,6 +13,7 @@ abstract class BaseMenu
     public $url;
     public $order;
     public $icon;
+    public $is_blank;
     public $parent_id;
     public $menu_id;
     public $page_id;
@@ -36,6 +37,7 @@ abstract class BaseMenu
         $this->type = $attributes['type'] ?? null;
         $this->order = $attributes['order'] ?? null;
         $this->icon = $attributes['icon'] ?? null;
+        $this->is_blank = $attributes['is_blank'] ?? false;
         $this->parent_id = $attributes['parent_id'] ?? null;
         $this->menu_id = $attributes['menu_id'] ?? null;
     }
