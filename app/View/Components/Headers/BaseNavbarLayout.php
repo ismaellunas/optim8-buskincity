@@ -25,6 +25,11 @@ abstract class BaseNavbarLayout extends Component
         return $this->logoUrl ?? 'https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752';
     }
 
+    public function target($isBlank): string
+    {
+        return $isBlank ? "_blank" : "";
+    }
+
     /**
      * Get the view / contents that represent the component.
      *

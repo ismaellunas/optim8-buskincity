@@ -17,6 +17,7 @@
                             <a
                                 href="{{ $menu->link }}"
                                 class="pl-5 has-text-black"
+                                target="{{ $target($menu->is_blank) }}"
                             >
                                 {{ $menu->title }}
                             </a>
@@ -27,6 +28,7 @@
                             <a
                                 href="{{ $socialMediaMenu['url'] }}"
                                 class="pl-3 has-text-black is-size-4"
+                                target="{{ $target($socialMediaMenu['is_blank']) }}"
                             >
                                 <i class="{{ $socialMediaMenu['icon'] }}"></i>
                             </a>

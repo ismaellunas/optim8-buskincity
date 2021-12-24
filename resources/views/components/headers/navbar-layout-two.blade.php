@@ -18,6 +18,7 @@
                                         <a
                                             class="navbar-item"
                                             href="{{ $childMenu->link }}"
+                                            target="{{ $target($childMenu->is_blank) }}"
                                         >
                                             {{ $childMenu->title }}
                                         </a>
@@ -28,6 +29,7 @@
                             <a
                                 class="navbar-item"
                                 href="{{ $menu->link }}"
+                                target="{{ $target($menu->is_blank) }}"
                             >
                                 {{ $menu->title }}
                             </a>
@@ -78,6 +80,7 @@
                                         <a
                                             class="navbar-item"
                                             href="{{ $childMenu->link }}"
+                                            target="{{ $target($childMenu->is_blank) }}"
                                         >
                                             {{ $childMenu->title }}
                                         </a>
@@ -88,6 +91,7 @@
                             <a
                                 class="navbar-item"
                                 href="{{ $menu->link }}"
+                                target="{{ $target($menu->is_blank) }}"
                             >
                                 {{ $menu->title }}
                             </a>
