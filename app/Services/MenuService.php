@@ -139,6 +139,7 @@ class MenuService
                                     'id',
                                     'url',
                                     'icon',
+                                    'is_blank',
                                     'menu_id',
                                 ]);
                             $query->where('type', MenuItem::TYPE_URL);
