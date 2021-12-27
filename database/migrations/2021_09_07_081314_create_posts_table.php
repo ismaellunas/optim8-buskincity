@@ -19,6 +19,7 @@ class CreatePostsTable extends Migration
             $table->string('title', 255);
             $table->string('slug', 255);
             $table->text('content')->nullable();
+            $table->text('plain_text_content')->nullable();
             $table->text('excerpt')->nullable();
             $table->string('meta_title', 255)->nullable();
             $table->string('meta_description', 255)->nullable();
@@ -35,7 +36,7 @@ class CreatePostsTable extends Migration
                 ->nullable()
                 ->constrained('users')
                 ->onUpdate('cascade')
-                ->onDelete('set null');
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -139,46 +139,23 @@
                                 {{ page.en_value ?? "-" }}
                             </td>
                             <td>
-                                <template v-if="selectedIndex !== index">
-                                    {{ page.value ?? "-" }}
-                                </template>
-
-                                <template v-else>
-                                    <form
-                                        action="post"
-                                        @submit.prevent="onSubmit"
-                                    >
-                                        <sdb-field class="mb-0">
-                                            <div class="control is-expanded">
-                                                <sdb-input
-                                                    v-model="form.translations[index].value"
-                                                    placeholder="value"
-                                                />
-                                            </div>
-                                        </sdb-field>
-                                    </form>
-                                </template>
+                                <form
+                                    action="post"
+                                    @submit.prevent="onSubmit"
+                                >
+                                    <sdb-field class="mb-0">
+                                        <div class="control is-expanded">
+                                            <sdb-input
+                                                v-if="form.translations[index]"
+                                                v-model="form.translations[index].value"
+                                                placeholder="value"
+                                            />
+                                        </div>
+                                    </sdb-field>
+                                </form>
                             </td>
                             <td>
                                 <div class="level-right">
-                                    <sdb-button
-                                        class="is-ghost has-text-black"
-                                        @click="setSelectedIndex(index)"
-                                    >
-                                        <span
-                                            v-if="selectedIndex !== index"
-                                            class="icon is-small"
-                                        >
-                                            <i class="fas fa-pen" />
-                                        </span>
-
-                                        <span
-                                            v-else
-                                            class="icon is-small"
-                                        >
-                                            <i class="fas fa-times" />
-                                        </span>
-                                    </sdb-button>
                                     <sdb-button
                                         v-if="page.value"
                                         class="is-ghost has-text-black ml-1"
@@ -371,9 +348,6 @@
                 groups: ref(props.pageQueryParams?.groups ?? []),
                 locale: ref(props.pageQueryParams?.locale ?? props.defaultLocale),
                 queryParams: ref(queryParams),
-                form: useForm({
-                    translations: props.records.data,
-                }),
                 importForm: useForm({
                     file: null
                 }),
@@ -382,9 +356,11 @@
 
         data() {
             return {
-                selectedIndex: null,
                 isProcessing: false,
                 acceptedTypes: ['.csv'],
+                form: useForm({
+                    translations: this.records.data,
+                }),
             };
         },
 
@@ -451,18 +427,9 @@
                         onFinish: () => {
                             this.onEndLoadingOverlay();
                             this.form = this.getUseForm();
-                            this.selectedIndex = null;
                         },
                     }
                 );
-            },
-
-            setSelectedIndex(index) {
-                if (this.selectedIndex === null || this.selectedIndex !== index) {
-                    this.selectedIndex = index;
-                } else {
-                    this.selectedIndex = null;
-                }
             },
 
             onSubmit() {
@@ -476,7 +443,6 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                         self.form = self.getUseForm();
-                        self.selectedIndex = null;
                     },
                     onFinish: () => {
                         self.loader.hide();
@@ -517,7 +483,6 @@
                         preserveState: true,
                         onFinish: () => {
                             this.form = this.getUseForm();
-                            this.selectedIndex = null;
                         },
                     }
                 );
