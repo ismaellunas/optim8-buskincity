@@ -25,6 +25,7 @@ class ThemeAdvanceRequest extends FormRequest
     public function rules()
     {
         return [
+            'home_page' => ['nullable', 'exists:pages,id'],
             'additional_css' => ['nullable', 'string'],
             'additional_javascript' => ['nullable', 'string'],
             'tracking_code_inside_head' => ['nullable', 'string'],
@@ -36,6 +37,7 @@ class ThemeAdvanceRequest extends FormRequest
     public function attributes()
     {
         $attributes = collect([
+            'home_page',
             'additional_css',
             'additional_javascript',
             'tracking_code_inside_head',

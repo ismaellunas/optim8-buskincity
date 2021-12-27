@@ -28,7 +28,7 @@ class ThemeAdvanceController extends ThemeOptionController
     {
         $pageOptions = $this->menuService->getPageOptions();
         $pageOptions[] = [
-            'id' => 0,
+            'id' => null,
             'value' => 'Default',
             'locales' => null,
         ];
@@ -38,7 +38,7 @@ class ThemeAdvanceController extends ThemeOptionController
             $this->getData([
                 'trackingCodes' => $this->settingService->getTrackingCodes(),
                 'additionalCodes' => $this->settingService->getAdditionalCodes(),
-                'pageId' => $this->settingService->getHomePage(),
+                'homePageId' => $this->settingService->getHomePage(),
                 'pageOptions' => $pageOptions,
             ])
         );
@@ -71,11 +71,6 @@ class ThemeAdvanceController extends ThemeOptionController
                 $this->settingService->saveAdditionalCodeUrl($key, $url);
             }
         }
-
-        Setting::updateOrCreate(
-            ['key' => 'home_page'],
-            ['value' => $request->page_id]
-        );
 
         $this->settingService->clearStorageTheme();
 

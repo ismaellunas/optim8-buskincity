@@ -31,12 +31,12 @@
                     </div>
                     <div class="column">
                         <sdb-form-select
-                            v-model="form.page_id"
+                            v-model="form.home_page"
                             class="is-fullwidth"
-                            :message="error(form.page_id, null, errors)"
+                            :message="error(form.home_page, null, errors)"
                         >
                             <option
-                                v-for="option in pageOptions"
+                                v-for="option in sortPageOptions"
                                 :key="option.id"
                                 :value="option.id"
                             >
@@ -161,15 +161,15 @@
                 }
             );
 
-            const pageIdForm = { page_id: props.pageId }
+            const homePageForm = { home_page: props.homePageId }
 
             return {
                 form: useForm(assign(
                     additionalCodeForm,
                     trackingCodeForm,
-                    pageIdForm,
+                    homePageForm,
                 )),
-                pageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
+                sortPageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
             };
         },
 
