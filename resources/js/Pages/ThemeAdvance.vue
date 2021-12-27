@@ -143,7 +143,7 @@
             errors: {type: Object, default: () => {}},
             title: {type: String, required: true},
             pageOptions: {type: Object, default: () => {}},
-            pageId: 0,
+            homePageId: {type: [Number, String, null], default: null},
         },
 
         setup(props) {
