@@ -104,7 +104,7 @@
                             this.selectedLocale
                         );
 
-                        this.form[this.selectedLocale]['id'] = JSON.parse(JSON.stringify(translatedPage)).id;
+                        this.form[this.selectedLocale]['id'] = translatedPage.id;
                     },
                 });
             },
