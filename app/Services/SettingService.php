@@ -237,7 +237,7 @@ class SettingService
     public function getHomePage()
     {
         return app(SettingCache::class)->remember('home_page', function () {
-            return (int) Setting::key('home_page')->value('value');
+            return Setting::key('home_page')->value('value');
         });
     }
 
