@@ -116,8 +116,8 @@
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbTextarea from '@/Sdb/Textarea';
     import SdbInputError from '@/Sdb/InputError';
-    import { assign, forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
-    import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
+    import { assign, mapValues, sortBy } from 'lodash';
+    import { success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
