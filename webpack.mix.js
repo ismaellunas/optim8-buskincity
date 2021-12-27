@@ -42,6 +42,8 @@ if (mix.inProduction()) {
     });
 
     mix.browserSync({
-        proxy: 'http://localhost:8000'
+        host: '127.0.0.1',
+        proxy: 'localhost',
+        open: false,
     });
 }
