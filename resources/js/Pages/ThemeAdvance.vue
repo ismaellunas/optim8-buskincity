@@ -14,8 +14,6 @@
                 @submit.prevent="onSubmit"
             >
                 <div class="columns">
-                    <div class="column"></div>
-
                     <div class="column">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
