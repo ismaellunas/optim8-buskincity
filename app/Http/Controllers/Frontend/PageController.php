@@ -8,9 +8,11 @@ use App\Models\{
     Page,
     PageTranslation,
 };
-use App\Services\MenuService;
-use App\Services\SettingService;
-use App\Services\TranslationService;
+use App\Services\{
+    MenuService,
+    SettingService,
+    TranslationService,
+};
 use Illuminate\Support\Collection;
 
 class PageController extends Controller
