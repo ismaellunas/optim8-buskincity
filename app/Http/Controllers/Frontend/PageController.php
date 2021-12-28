@@ -9,7 +9,7 @@ use App\Models\{
     PageTranslation,
 };
 use App\Services\{
-    SettingService,
+    PageService,
     TranslationService,
 };
 use Illuminate\Support\Collection;
@@ -17,23 +17,25 @@ use Illuminate\Support\Collection;
 class PageController extends Controller
 {
     private $baseRouteName = 'frontend.pages';
+    private $pageService;
     private $translationService;
 
     public function __construct(
+        PageService $pageService,
         TranslationService $translationService
     ) {
+        $this->pageService = $pageService;
         $this->translationService = $translationService;
     }
 
     private function goToPageWithDefaultLocaleOrFallback(
         Page $page,
-        string $locale
+        string $locale,
+        $fallback
     ) {
         $defaultLocale = $this->translationService->getDefaultLocale();
 
-        if (
-            $page->hasTranslation($defaultLocale)
-        ) {
+        if ($page->hasTranslation($defaultLocale)) {
             $pageTranslation = $page->translate($defaultLocale);
 
             return view('page', [
@@ -42,7 +44,7 @@ class PageController extends Controller
                 'page' => $pageTranslation,
             ]);
         } else {
-            return $this->redirectFallback();
+            return $fallback;
         }
     }
 
@@ -88,7 +90,8 @@ class PageController extends Controller
         if (!$page->hasTranslation($locale)) {
             return $this->goToPageWithDefaultLocaleOrFallback(
                 $page,
-                $locale
+                $locale,
+                $this->redirectFallback()
             );
         } else {
             $newPageTranslation = $page->translate($locale);
@@ -109,21 +112,29 @@ class PageController extends Controller
 
     public function homePage()
     {
-        $settingService = app(SettingService::class);
-
         $locale = $this->translationService->currentLanguage();
 
-        $homePage = $settingService->getHomePage();
+        $page = $this->pageService->getHomePage();
 
-        $page = Page::with([
-            'translations' => function ($query) use($locale) {
-                $query->where('locale', $locale)
-                ->published();
-            },
-        ])
-        ->where('id', $homePage)
-        ->first();
+        if (!$page->hasTranslation($locale)) {
+            return $this->goToPageWithDefaultLocaleOrFallback(
+                $page,
+                $locale,
+                $this->defaultHomePage()
+            );
+        } else {
+            $pageTranslation = $page->translate($locale);
 
-        return  count($page->translations ?? []) != 0 ? $this->show($page->translations[0]) : view('home', ['title' => env('APP_NAME')]);
+            return view('page', [
+                'currentLanguage' => $locale,
+                'images' => $this->getPageImages($pageTranslation, $locale),
+                'page' => $pageTranslation,
+            ]);
+        }
+    }
+
+    private function defaultHomePage()
+    {
+        return view('home', ['title' => env('APP_NAME')]);
     }
 }
