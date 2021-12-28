@@ -116,6 +116,10 @@ class PageController extends Controller
 
         $page = $this->pageService->getHomePage();
 
+        if (!$page) {
+            return $this->defaultHomePage();
+        }
+
         if (!$page->hasTranslation($locale)) {
             return $this->goToPageWithDefaultLocaleOrFallback(
                 $page,

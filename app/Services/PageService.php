@@ -50,7 +50,7 @@ class PageService
         return trim($string);
     }
 
-    public function getHomePage(): Page
+    public function getHomePage(): ?Page
     {
         $settingService = app(SettingService::class);
 
