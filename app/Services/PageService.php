@@ -23,10 +23,7 @@ class PageService
             })
             ->paginate($perPage);
 
-        $records->getCollection()->transform(function ($record) {
-            $record->setAppends(['statusText', 'hasMetaDescription', 'hasMetaTitle']);
-            return $record;
-        });
+        $this->transformRecords($records);
 
         return $records;
     }
@@ -45,5 +42,19 @@ class PageService
         }
 
         return trim($string);
+    }
+
+    public function transformRecords($records)
+    {
+        $records->getCollection()->transform(function ($record) {
+            $record->title = $record->title ?? $record->translations[0]->title;
+            $record->slug = $record->slug ?? $record->translations[0]->slug;
+            $record->status = $record->status ?? $record->translations[0]->status;
+            $record->meta_title = $record->meta_title ?? $record->translations[0]->meta_title;
+            $record->meta_description = $record->meta_description ?? $record->translations[0]->meta_description;
+            $record->setAppends(['statusText', 'hasMetaDescription', 'hasMetaTitle', 'availableTranslations']);
+
+            return $record;
+        });
     }
 }
