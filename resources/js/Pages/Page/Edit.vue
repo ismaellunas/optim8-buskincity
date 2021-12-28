@@ -97,7 +97,16 @@
         methods: {
             onSubmit() {
                 const submitRoute = route('admin.pages.update', {id: this.page.id});
-                this.form.put(submitRoute);
+                this.form.put(submitRoute, {
+                    onSuccess: () => {
+                        const translatedPage = getTranslation(
+                            this.page,
+                            this.selectedLocale
+                        );
+
+                        this.form[this.selectedLocale]['id'] = translatedPage.id;
+                    },
+                });
             },
             onChangeLocale(locale) {
                 if (this.form.isDirty) {
