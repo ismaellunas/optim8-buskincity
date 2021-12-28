@@ -24,11 +24,6 @@ class Footer extends Component
         $this->socialMediaMenus = $menuService->getSocialMediaMenus();
     }
 
-    public function target($isBlank): string
-    {
-        return $isBlank ? "_blank" : "";
-    }
-
     /**
      * Get the view / contents that represent the component.
      *
