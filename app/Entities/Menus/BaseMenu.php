@@ -101,4 +101,9 @@ abstract class BaseMenu
     {
         $this->menu = $menu;
     }
+
+    public function getTarget(): ?string
+    {
+        return $this->getModel()->is_blank ? "_blank" : null;
+    }
 }
