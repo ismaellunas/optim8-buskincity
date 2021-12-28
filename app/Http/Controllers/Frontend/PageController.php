@@ -9,7 +9,6 @@ use App\Models\{
     PageTranslation,
 };
 use App\Services\{
-    MenuService,
     SettingService,
     TranslationService,
 };
@@ -18,46 +17,22 @@ use Illuminate\Support\Collection;
 class PageController extends Controller
 {
     private $baseRouteName = 'frontend.pages';
-    private $menuService;
     private $translationService;
 
     public function __construct(
-        MenuService $menuService,
         TranslationService $translationService
     ) {
-        $this->menuService = $menuService;
         $this->translationService = $translationService;
-    }
-
-    private function isPageExistInMenu(array $menus, $page): bool
-    {
-        return collect($menus)->contains(function ($menu) use ($page) {
-
-            if ($menu->page_id && $menu->page_id == $page->id) {
-
-                return true;
-
-            } elseif (!empty($menu->children)) {
-
-                collect($menu->children)->contains(function ($child) use ($page) {
-                    return $child->page_id && $child->page_id == $page->id;
-                });
-            }
-
-            return false;
-        });
     }
 
     private function goToPageWithDefaultLocaleOrFallback(
         Page $page,
         string $locale
     ) {
-        $menus = $this->menuService->getHeaderMenu($locale);
         $defaultLocale = $this->translationService->getDefaultLocale();
 
         if (
             $page->hasTranslation($defaultLocale)
-            && $this->isPageExistInMenu($menus, $page)
         ) {
             $pageTranslation = $page->translate($defaultLocale);
 
