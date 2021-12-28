@@ -94,4 +94,16 @@ class Page extends Model implements TranslatableContract
             return $this->status == $status['id'];
         })['value'];
     }
+
+    public function getAvailableTranslationsAttribute(): array
+    {
+        $languages = collect([]);
+        foreach ($this->translations as $translation) {
+            if ($translation->id) {
+                $languages->push($translation->locale);
+            }
+        }
+
+        return $languages->all();
+    }
 }
