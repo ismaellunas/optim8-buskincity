@@ -36,7 +36,7 @@
                             :message="error(form.home_page, null, errors)"
                         >
                             <option
-                                v-for="option in shortedPageOptions"
+                                v-for="option in sortedPageOptions"
                                 :key="option.id"
                                 :value="option.id"
                             >
@@ -169,7 +169,7 @@
                     trackingCodeForm,
                     homePageForm,
                 )),
-                shortedPageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
+                sortedPageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
             };
         },
 
