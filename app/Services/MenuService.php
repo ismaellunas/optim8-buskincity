@@ -139,6 +139,7 @@ class MenuService
                                     'id',
                                     'url',
                                     'icon',
+                                    'is_blank',
                                     'menu_id',
                                 ]);
                             $query->where('type', MenuItem::TYPE_URL);
@@ -147,7 +148,13 @@ class MenuService
                     ->socialMedia()
                     ->first();
 
-                return $menu ? $menu->menuItems->toArray() : [];
+                return $menu
+                    ? $menu->menuItems
+                        ->each(function ($menuItem) {
+                            $menuItem->target = $menuItem->is_blank ? 'is_blank' : null;
+                        })
+                        ->toArray()
+                    : [];
             }
         );
     }
