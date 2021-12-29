@@ -36,6 +36,9 @@ class MenuRequest extends FormRequest
                 'nullable',
                 'url',
             ],
+            'menu_items.*.is_blank' => [
+                'boolean',
+            ],
             'menu_items.*.page_id' => [
                 'nullable',
                 'integer',
@@ -66,6 +69,7 @@ class MenuRequest extends FormRequest
             'locale',
             'title',
             'type',
+            'is_blank',
             'page_id',
             'post_id',
             'category_id',

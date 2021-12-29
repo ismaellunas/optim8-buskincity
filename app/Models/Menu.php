@@ -83,6 +83,7 @@ class Menu extends Model
                 $typeMenu->setParentModel($menu);
 
                 $menuItem['link'] = $typeMenu->getUrl();
+                $menuItem['target'] = $typeMenu->getTarget();
                 $menuItem['isInternalLink'] = self::isInternalLink($menuItem['link']);
 
                 $menus[] = $menuItem;

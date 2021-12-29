@@ -36,6 +36,9 @@ class MenuItemRequest extends FormRequest
                 'nullable',
                 'url',
             ],
+            'is_blank' => [
+                'boolean',
+            ],
             'page_id' => [
                 'required_if:type,'.MenuItem::TYPE_PAGE,
                 'nullable',
