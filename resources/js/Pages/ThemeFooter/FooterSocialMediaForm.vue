@@ -29,6 +29,13 @@
                     required
                     :message="error('url', null, errors)"
                 />
+
+                <sdb-checkbox
+                    v-model:checked="form.is_blank"
+                    :value="true"
+                >
+                    Open link in a new tab
+                </sdb-checkbox>
             </fieldset>
         </form>
         <template #footer>
@@ -58,6 +65,7 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
+    import SdbCheckbox from '@/Sdb/Checkbox';
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormInputIcon from '@/Sdb/Form/InputIcon';
     import SdbModalCard from '@/Sdb/ModalCard';
@@ -72,6 +80,7 @@
 
         components: {
             SdbButton,
+            SdbCheckbox,
             SdbFormInput,
             SdbFormInputIcon,
             SdbModalCard,
@@ -112,6 +121,7 @@
                     id: null,
                     url: null,
                     icon: null,
+                    is_blank: false,
                 };
             }
 
@@ -147,6 +157,7 @@
                 const fields = this.firstFields;
                 this.form['url'] = fields['url'];
                 this.form['icon'] = fields['icon'];
+                this.form['is_blank'] = fields['is_blank'];
             },
         },
     }
