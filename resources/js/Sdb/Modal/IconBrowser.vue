@@ -12,44 +12,86 @@
         </template>
 
         <template #default>
-            <div>
-                <div class="field has-addons">
-                    <p class="control has-icons-left">
-                        <sdb-input
-                            v-model="term"
-                            placeholder="Search..."
-                            @keyup.prevent="searchIcon(term)"
-                        />
-                        <span class="icon is-small is-left">
-                            <i class="fas fa-search" />
-                        </span>
-                    </p>
-                    <div class="control">
-                        <a
-                            class="button"
-                            @click="clearTerm"
-                        >
-                            <span class="icon is-small">
-                                <i class="fas fa-times" />
-                            </span>
-                        </a>
+            <div class="container">
+                <div class="columns">
+                    <div class="column">
+                        <div class="field has-addons">
+                            <div
+                                v-if="hasType"
+                                class="control"
+                            >
+                                <sdb-select
+                                    v-model="selectedType"
+                                    @change="searchIcon(term)"
+                                >
+                                    <option
+                                        v-for="(type, index) in typeOptions"
+                                        :key="index"
+                                        :value="type.value"
+                                    >
+                                        {{ type.name }}
+                                    </option>
+                                </sdb-select>
+                            </div>
+                            <p class="control has-icons-left">
+                                <sdb-input
+                                    v-model="term"
+                                    placeholder="Search..."
+                                    @keyup.prevent="searchIcon(term)"
+                                />
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-search" />
+                                </span>
+                            </p>
+                            <div class="control">
+                                <a
+                                    class="button"
+                                    @click="clearTerm"
+                                >
+                                    <span class="icon is-small">
+                                        <i class="fas fa-times" />
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div v-if="filteredIcon.length > 0">
-                    <template
-                        v-for="(icon, index) in filteredIcon"
-                        :key="index"
-                    >
-                        <sdb-button-icon
-                            :icon="icon.class"
-                            class="mr-1 mb-1"
+                <div
+                    v-if="canDelete"
+                    class="columns"
+                >
+                    <div class="column">
+                        <sdb-button
                             type="button"
-                            @click="onSelectedIcon(icon.class)"
-                        />
-                    </template>
+                            @click="removeIcon()"
+                        >
+                            Delete Icon
+                        </sdb-button>
+                    </div>
                 </div>
-                <div v-else>
-                    <p>Icon not found.</p>
+                <div class="columns">
+                    <div
+                        v-if="filteredIcon.length > 0"
+                        class="column"
+                    >
+                        <template
+                            v-for="(icon, index) in filteredIcon"
+                            :key="index"
+                        >
+                            <sdb-button-icon
+                                :icon="hasType ? selectedType + ' ' + icon.class : icon.class"
+                                class="mr-1 mb-1"
+                                type="button"
+                                @click="onSelectedIcon(hasType ? selectedType + ' ' + icon.class : icon.class)"
+                            />
+                        </template>
+                    </div>
+                    <div
+                        v-else
+                        class="column"
+                    >
+                        <p>Icon not found.</p>
+                    </div>
                 </div>
             </div>
         </template>
@@ -57,21 +99,33 @@
 </template>
 
 <script>
+    import SdbButton from '@/Sdb/Button';
     import SdbButtonIcon from '@/Sdb/ButtonIcon';
-    import SdbModalCard from '@/Sdb/ModalCard';
     import SdbInput from '@/Sdb/Input';
+    import SdbModalCard from '@/Sdb/ModalCard';
+    import SdbSelect from '@/Sdb/Select';
     import { debounce, filter, isEmpty } from 'lodash';
 
     export default {
         name: 'IconBrowser',
 
         components: {
+            SdbButton,
             SdbButtonIcon,
             SdbModalCard,
             SdbInput,
+            SdbSelect,
         },
 
         props: {
+            canDelete: {
+                type: Boolean,
+                default: false,
+            },
+            hasType: {
+                type: Boolean,
+                default: false,
+            },
             iconClasses: {
                 type: Array,
                 default:() => [],
@@ -81,17 +135,25 @@
         emits: [
             'close',
             'on-selected-icon',
+            'remove-icon',
         ],
 
         data() {
             return {
                 filteredIcon: [],
+                selectedType: 'fas',
                 term: "",
+                typeOptions: [
+                    { value: 'fas', name: 'Solid' },
+                    { value: 'far', name: 'Regular' },
+                    { value: 'fal', name: 'Light' },
+                    { value: 'fad', name: 'Duotone' },
+                ]
             };
         },
 
         mounted() {
-            this.filteredIcon = this.iconClasses.slice(0, 65);
+            this.filteredIcon = this.iconClasses.slice(0, 52);
         },
 
         methods: {
@@ -104,9 +166,9 @@
                 if (!isEmpty(term) && term.length > 2) {
                     this.filteredIcon = filter(this.iconClasses, function (icon) {
                         return new RegExp(term, 'i').test(icon.name);
-                    }).slice(0, 65);
+                    }).slice(0, 52);
                 } else {
-                    this.filteredIcon = this.iconClasses.slice(0, 65);
+                    this.filteredIcon = this.iconClasses.slice(0, 52);
                 }
             }, 750),
 
@@ -114,6 +176,11 @@
                 this.$emit('close');
                 this.$emit('on-selected-icon', icon);
             },
+
+            removeIcon() {
+                this.$emit('close');
+                this.$emit('remove-icon');
+            }
         },
     }
 </script>
