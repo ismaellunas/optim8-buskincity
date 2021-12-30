@@ -14,6 +14,7 @@ class MenuItem extends BaseModel
         'url',
         'order',
         'icon',
+        'is_blank',
         'parent_id',
         'menu_id',
         'page_id',
