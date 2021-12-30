@@ -28,7 +28,7 @@ if (mix.inProduction()) {
     mix.version();
 } else {
     mix.copy('node_modules/vue-loading-overlay/dist/vue-loading.css', 'public/css');
-    mix.js('resources/js/local.js', 'public/js');
+    // mix.js('resources/js/local.js', 'public/js');
 
     mix.after(() => {
         exec('php artisan optimize:clear', (error, stdout, stderr) => {
