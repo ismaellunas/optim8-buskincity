@@ -109,6 +109,13 @@
                         </span>
                     </option>
                 </sdb-form-select>
+
+                <sdb-checkbox
+                    v-model:checked="form.is_blank"
+                    :value="true"
+                >
+                    Open link in a new tab
+                </sdb-checkbox>
             </fieldset>
         </form>
 
@@ -139,6 +146,7 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbButton from '@/Sdb/Button';
+    import SdbCheckbox from '@/Sdb/Checkbox';
     import SdbFormInput from '@/Sdb/Form/Input';
     import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbModalCard from '@/Sdb/ModalCard';
@@ -152,6 +160,7 @@
 
         components: {
             SdbButton,
+            SdbCheckbox,
             SdbFormInput,
             SdbFormSelect,
             SdbModalCard,
@@ -202,6 +211,7 @@
                     type: 1,
                     url: null,
                     order: null,
+                    is_blank: false,
                     parent_id: null,
                     menu_id: props.menu.id,
                     page_id: null,

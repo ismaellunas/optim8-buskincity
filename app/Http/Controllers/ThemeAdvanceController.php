@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ThemeAdvanceRequest;
 use App\Models\Setting;
+use App\Services\MenuService;
 use App\Services\SettingService;
 use Inertia\Inertia;
 
@@ -13,19 +14,30 @@ class ThemeAdvanceController extends ThemeOptionController
     protected $title = 'Advanced';
 
     private $settingService;
+    private $menuService;
 
-    public function __construct(SettingService $settingService)
+    public function __construct(SettingService $settingService, MenuService $menuService)
     {
         $this->settingService = $settingService;
+        $this->menuService = $menuService;
     }
 
     public function edit()
     {
+        $pageOptions = $this->menuService->getPageOptions();
+        $pageOptions[] = [
+            'id' => null,
+            'value' => 'Default',
+            'locales' => null,
+        ];
+
         return Inertia::render(
             'ThemeAdvance',
             $this->getData([
                 'trackingCodes' => $this->settingService->getTrackingCodes(),
-                'additionalCodes' => $this->settingService->getAdditionalCodes()
+                'additionalCodes' => $this->settingService->getAdditionalCodes(),
+                'homePageId' => $this->settingService->getHomePage(),
+                'pageOptions' => $pageOptions,
             ])
         );
     }

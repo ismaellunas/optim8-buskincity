@@ -39,11 +39,9 @@
                                         </h2>
                                     </div>
 
-                                    <div v-if="status">
-                                        {{ status }}
-                                    </div>
-
-                                    <jet-validation-errors class="mb-4" />
+                                    <sdb-error-notifications
+                                        :errors="$page.props.errors"
+                                    />
 
                                     <form @submit.prevent="submit">
                                         <div>
@@ -99,23 +97,19 @@
 </template>
 
 <script>
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
     import JetButton from '@/Jetstream/Button'
     import JetInput from '@/Jetstream/Input'
     import JetLabel from '@/Jetstream/Label'
-    import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbLink from '@/Sdb/Link'
 
     export default {
         components: {
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
             JetButton,
             JetInput,
             JetLabel,
-            JetValidationErrors,
-            SdbLink
+            SdbErrorNotifications,
+            SdbLink,
         },
 
         props: {

@@ -57,7 +57,10 @@ class Localization extends LaravelLocalization
             $supportedLocales = parent::getSupportedLocales();
         }
 
-        if (empty($supportedLocales[$this->defaultLocale])) {
+        if (
+            !app()->runningInConsole()
+            && empty($supportedLocales[$this->defaultLocale])
+        ) {
             throw new UnsupportedLocaleException('Laravel default locale is not in the supportedLocales array.');
         }
     }

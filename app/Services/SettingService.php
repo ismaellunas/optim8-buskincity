@@ -222,6 +222,13 @@ class SettingService
         $disk->put('sdb_variables_after.sass', $variablesAfterSass);
     }
 
+    public function getHomePage()
+    {
+        return app(SettingCache::class)->remember('home_page', function () {
+            return Setting::key('home_page')->value('value');
+        });
+    }
+
     public function generateThemeCss()
     {
         exec('cd .. && npx webpack --config webpack.config.sdb.js');
