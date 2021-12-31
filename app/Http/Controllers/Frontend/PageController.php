@@ -8,55 +8,34 @@ use App\Models\{
     Page,
     PageTranslation,
 };
-use App\Services\MenuService;
-use App\Services\SettingService;
-use App\Services\TranslationService;
+use App\Services\{
+    PageService,
+    TranslationService,
+};
 use Illuminate\Support\Collection;
 
 class PageController extends Controller
 {
     private $baseRouteName = 'frontend.pages';
-    private $menuService;
+    private $pageService;
     private $translationService;
 
     public function __construct(
-        MenuService $menuService,
+        PageService $pageService,
         TranslationService $translationService
     ) {
-        $this->menuService = $menuService;
+        $this->pageService = $pageService;
         $this->translationService = $translationService;
-    }
-
-    private function isPageExistInMenu(array $menus, $page): bool
-    {
-        return collect($menus)->contains(function ($menu) use ($page) {
-
-            if ($menu->page_id && $menu->page_id == $page->id) {
-
-                return true;
-
-            } elseif (!empty($menu->children)) {
-
-                collect($menu->children)->contains(function ($child) use ($page) {
-                    return $child->page_id && $child->page_id == $page->id;
-                });
-            }
-
-            return false;
-        });
     }
 
     private function goToPageWithDefaultLocaleOrFallback(
         Page $page,
-        string $locale
+        string $locale,
+        $fallback
     ) {
-        $menus = $this->menuService->getHeaderMenu($locale);
         $defaultLocale = $this->translationService->getDefaultLocale();
 
-        if (
-            $page->hasTranslation($defaultLocale)
-            && $this->isPageExistInMenu($menus, $page)
-        ) {
+        if ($page->hasTranslation($defaultLocale)) {
             $pageTranslation = $page->translate($defaultLocale);
 
             return view('page', [
@@ -65,7 +44,7 @@ class PageController extends Controller
                 'page' => $pageTranslation,
             ]);
         } else {
-            return $this->redirectFallback();
+            return $fallback;
         }
     }
 
@@ -111,7 +90,8 @@ class PageController extends Controller
         if (!$page->hasTranslation($locale)) {
             return $this->goToPageWithDefaultLocaleOrFallback(
                 $page,
-                $locale
+                $locale,
+                $this->redirectFallback()
             );
         } else {
             $newPageTranslation = $page->translate($locale);
@@ -132,21 +112,33 @@ class PageController extends Controller
 
     public function homePage()
     {
-        $settingService = app(SettingService::class);
-
         $locale = $this->translationService->currentLanguage();
 
-        $homePage = $settingService->getHomePage();
+        $page = $this->pageService->getHomePage();
 
-        $page = Page::with([
-            'translations' => function ($query) use($locale) {
-                $query->where('locale', $locale)
-                ->published();
-            },
-        ])
-        ->where('id', $homePage)
-        ->first();
+        if (!$page) {
+            return $this->defaultHomePage();
+        }
 
-        return  count($page->translations ?? []) != 0 ? $this->show($page->translations[0]) : view('home', ['title' => env('APP_NAME')]);
+        if (!$page->hasTranslation($locale)) {
+            return $this->goToPageWithDefaultLocaleOrFallback(
+                $page,
+                $locale,
+                $this->defaultHomePage()
+            );
+        } else {
+            $pageTranslation = $page->translate($locale);
+
+            return view('page', [
+                'currentLanguage' => $locale,
+                'images' => $this->getPageImages($pageTranslation, $locale),
+                'page' => $pageTranslation,
+            ]);
+        }
+    }
+
+    private function defaultHomePage()
+    {
+        return view('home', ['title' => env('APP_NAME')]);
     }
 }

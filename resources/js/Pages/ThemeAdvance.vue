@@ -14,8 +14,6 @@
                 @submit.prevent="onSubmit"
             >
                 <div class="columns">
-                    <div class="column"></div>
-
                     <div class="column">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
@@ -33,12 +31,12 @@
                     </div>
                     <div class="column">
                         <sdb-form-select
-                            v-model="form.page_id"
+                            v-model="form.home_page"
                             class="is-fullwidth"
-                            :message="error(form.page_id, null, errors)"
+                            :message="error(form.home_page, null, errors)"
                         >
                             <option
-                                v-for="option in pageOptions"
+                                v-for="option in sortedPageOptions"
                                 :key="option.id"
                                 :value="option.id"
                             >
@@ -118,8 +116,8 @@
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbTextarea from '@/Sdb/Textarea';
     import SdbInputError from '@/Sdb/InputError';
-    import { assign, forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
-    import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
+    import { assign, mapValues, sortBy } from 'lodash';
+    import { success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -145,7 +143,7 @@
             errors: {type: Object, default: () => {}},
             title: {type: String, required: true},
             pageOptions: {type: Object, default: () => {}},
-            pageId: 0,
+            homePageId: {type: [Number, String, null], default: null},
         },
 
         setup(props) {
@@ -163,15 +161,15 @@
                 }
             );
 
-            const pageIdForm = { page_id: props.pageId }
+            const homePageForm = { home_page: props.homePageId }
 
             return {
                 form: useForm(assign(
                     additionalCodeForm,
                     trackingCodeForm,
-                    pageIdForm,
+                    homePageForm,
                 )),
-                pageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
+                sortedPageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
             };
         },
 
