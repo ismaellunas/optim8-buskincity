@@ -104,13 +104,34 @@
                                             <i class="fas fa-pen" />
                                         </span>
                                     </sdb-button-link>
-                                    <sdb-button-icon
+
+                                    <template
                                         v-if="can.delete && record.can.delete_user"
-                                        class="is-ghost has-text-black ml-1"
-                                        icon-class="is-small"
-                                        icon="far fa-trash-alt"
-                                        @click.prevent="deleteUserModal(record)"
-                                    />
+                                    >
+                                        <sdb-button-icon
+                                            class="is-ghost has-text-black ml-1"
+                                            icon-class="is-small"
+                                            icon="far fa-trash-alt"
+                                            title="Delete User"
+                                            @click.prevent="deleteUserModal(record)"
+                                        />
+                                        <sdb-button-icon
+                                            v-if="!record.is_suspended"
+                                            class="is-ghost has-text-black ml-1"
+                                            icon-class="is-small"
+                                            icon="fas fa-ban"
+                                            title="Suspend User"
+                                            @click.prevent="suspendUser(record)"
+                                        />
+                                        <sdb-button-icon
+                                            v-if="record.is_suspended"
+                                            class="is-ghost has-text-black ml-1"
+                                            icon-class="is-small"
+                                            icon="fas fa-hands-helping"
+                                            title="Unsuspend User"
+                                            @click.prevent="unsuspendUser(record)"
+                                        />
+                                    </template>
                                 </div>
                             </template>
                         </user-list-item>
@@ -250,7 +271,53 @@
                         );
                     }
                 })
-            }
+            },
+
+            suspendUser(user) {
+                const self = this;
+
+                confirmDelete(
+                    'Are you sure?',
+                    'The user will be suspended.'
+                ).then(result => {
+                    if (result.isConfirmed) {
+
+                        self.$inertia.post(
+                            route(self.baseRouteName+'.suspend', user.id),
+                            {},
+                            {
+                                onStart: self.onStartLoadingOverlay,
+                                onFinish: self.onEndLoadingOverlay,
+                                onError: self.onError,
+                                onSuccess: self.onSuccess,
+                            }
+                        );
+                    }
+                });
+            },
+
+            unsuspendUser(user) {
+                const self = this;
+
+                confirmDelete(
+                    'Are you sure?',
+                    'The user will be unsuspended.'
+                ).then(result => {
+                    if (result.isConfirmed) {
+
+                        self.$inertia.post(
+                            route(self.baseRouteName+'.unsuspend', user.id),
+                            {},
+                            {
+                                onStart: self.onStartLoadingOverlay,
+                                onFinish: self.onEndLoadingOverlay,
+                                onError: self.onError,
+                                onSuccess: self.onSuccess,
+                            }
+                        );
+                    }
+                });
+            },
         }
     };
 </script>

@@ -112,6 +112,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::name('users.')->prefix('users')->group(function () {
         Route::get('/reassignment-candidates/{user}', [UserController::class, 'getReassignmentCandidates'])
             ->name('reassignment-candidates');
+        Route::post('/suspend/{user}', [UserController::class, 'suspend'])
+            ->name('suspend');
+        Route::post('/unsuspend/{user}', [UserController::class, 'unsuspend'])
+            ->name('unsuspend');
     });;
 });
 
