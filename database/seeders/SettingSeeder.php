@@ -211,5 +211,15 @@ class SettingSeeder extends Seeder
         foreach ($additionalCodes as $additionalCode) {
             Setting::factory()->create($additionalCode);
         }
+
+        $homePage = [
+            "key" => "home_page",
+            "display_name" => null,
+            "value" => null,
+            "group" => "home_page",
+            "order" => "1"
+        ];
+
+        Setting::factory()->create($homePage);
     }
 }
