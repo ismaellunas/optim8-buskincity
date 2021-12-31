@@ -5,8 +5,14 @@
             :disabled="disabled"
             @change="$emit('change', $event)"
         >
-            <option v-if="placeholder" :value=null>{{ placeholder }}</option>
-            <slot></slot>
+            <option
+                v-if="placeholder"
+                :value="null"
+            >
+                {{ placeholder }}
+            </option>
+
+            <slot />
         </select>
     </div>
 </template>
