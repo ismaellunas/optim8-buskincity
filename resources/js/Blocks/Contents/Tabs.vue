@@ -167,7 +167,7 @@
                     tab => tab.id == tabId
                 );
 
-                confirmDelete('Are you sure?').then((result) => {
+                confirmDelete().then((result) => {
                     if (result.isConfirmed) {
                         if (index > -1) {
                             self.entity.content.tabs.splice(index, 1);
