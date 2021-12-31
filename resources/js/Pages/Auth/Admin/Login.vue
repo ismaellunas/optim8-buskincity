@@ -138,7 +138,7 @@
                     })
             },
             back() {
-                this.$inertia.get('/');
+                window.location = "/";
             },
         }
     }
