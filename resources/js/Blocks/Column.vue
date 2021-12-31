@@ -53,6 +53,7 @@
     import Faq from '@/Blocks/Contents/Faq';
     import Heading from '@/Blocks/Contents/Heading';
     import Image from '@/Blocks/Contents/Image';
+    import Tabs from '@/Blocks/Contents/Tabs';
     import Text from '@/Blocks/Contents/Text';
     import { isBlank } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3'
@@ -66,6 +67,7 @@
             Draggable,
             Heading,
             Image,
+            Tabs,
             Text,
         },
         props: {
