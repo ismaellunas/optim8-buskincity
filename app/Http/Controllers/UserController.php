@@ -211,4 +211,26 @@ class UserController extends CrudController
                 'last_name',
             ]);
     }
+
+    public function suspend(User $user)
+    {
+        $this->authorize('suspend', $user);
+
+        $user->suspend();
+
+        $this->generateFlashMessage('User suspend successfully!');
+
+        return back();
+    }
+
+    public function unsuspend(User $user)
+    {
+        $this->authorize('unsuspend', $user);
+
+        $user->unsuspend();
+
+        $this->generateFlashMessage('User unsuspend successfully!');
+
+        return back();
+    }
 }
