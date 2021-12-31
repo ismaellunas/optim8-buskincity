@@ -17,18 +17,10 @@
         <link rel="stylesheet" href="{{ $appCssUrl }}">
         <link rel="stylesheet" href="{{ mix('css/sweetalert2.min.css') }}">
 
-        @if ($additionalCssUrl)
-            <link rel="stylesheet" href="{{ $additionalCssUrl }}">
-        @endif
-
         @stack('styles')
 
         <!-- Scripts -->
         <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
-
-        @if ($additionalJavascriptUrl)
-            <script src="{{ $additionalJavascriptUrl }}" crossorigin="anonymous"></script>
-        @endif
 
         @env ('production')
             <!-- Styles -->
@@ -45,6 +37,12 @@
         @endenv
 
         @stack('scripts')
+
+        @if ($additionalCss)
+            <style type="text/css">
+                {!! $additionalCss !!}
+            </style>
+        @endif
 
         {!! $trackingCodeInsideHead !!}
     </head>
@@ -69,6 +67,12 @@
         @stack('bottom_scripts')
 
         <script src="{{ mix('js/frontend.js') }}"></script>
+
+        @if ($additionalJavascript)
+            <script>
+                {!! $additionalJavascript !!}
+            </script>
+        @endif
 
         {!! $trackingCodeBeforeBody !!}
     </body>
