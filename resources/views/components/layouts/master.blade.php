@@ -39,7 +39,9 @@
             <!-- Styles -->
             <link rel="stylesheet" href="{{ mix('css/vue-loading.css') }}">
             <!-- Scripts -->
-            <!-- <script src="{{ mix('js/local.js') }}" defer></script> -->
+            {{--
+            <script src="{{ mix('js/local.js') }}" defer></script>
+            --}}
         @endenv
 
         @stack('scripts')
