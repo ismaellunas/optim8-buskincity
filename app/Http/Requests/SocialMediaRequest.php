@@ -33,6 +33,9 @@ class SocialMediaRequest extends FormRequest
                 'url',
                 'max:255',
             ],
+            'is_blank' => [
+                'boolean',
+            ],
         ];
     }
 }

@@ -37,6 +37,7 @@
                                 <a
                                     class="navbar-item"
                                     href="{{ $childMenu->link }}"
+                                    target="{{ $childMenu->target }}"
                                 >
                                     {{ $childMenu->title }}
                                 </a>
@@ -47,6 +48,7 @@
                     <a
                         class="navbar-item"
                         href="{{ $menu->link }}"
+                        target="{{ $menu->target }}"
                     >
                         {{ $menu->title }}
                     </a>

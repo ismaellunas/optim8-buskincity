@@ -55,9 +55,7 @@ Route::group([
     'prefix' => Localization::setLocale(),
     'middleware' => [ 'localizationRedirect' ]
 ], function () {
-    Route::get('/', function () {
-        return view('home', ['title' => config('app.name', 'Home')]);
-    })->name('homepage');
+    Route::get('/', [PageController::class, 'homePage'])->name('homepage');
 
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');
