@@ -40,6 +40,7 @@ class UserService
                 'first_name',
                 'last_name',
                 'email',
+                'is_suspended',
             ]);
     }
 
