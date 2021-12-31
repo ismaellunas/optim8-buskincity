@@ -67,6 +67,8 @@
                                     </h2>
                                     <div class="has-text-left">
 
+                                        <sdb-error-notifications :errors="$page.props.errors"/>
+
                                         <form @submit.prevent="submit">
 
                                             <sdb-form-input

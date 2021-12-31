@@ -17,4 +17,20 @@ class UserPolicy extends BasePermissionPolicy
             && $user->id != $selectedUser->id
         );
     }
+
+    public function suspend(User $user, Model $selectedUser)
+    {
+        return (
+            $this->delete($user, $selectedUser)
+            && !$selectedUser->is_suspended
+        );
+    }
+
+    public function unsuspend(User $user, Model $selectedUser)
+    {
+        return (
+            $this->delete($user, $selectedUser)
+            && $selectedUser->is_suspended
+        );
+    }
 }
