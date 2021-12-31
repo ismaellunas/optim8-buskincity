@@ -2,21 +2,25 @@
     <sdb-form-field
         :is-required="required"
     >
-        <template v-slot:label>{{ label }}</template>
+        <template #label>
+            {{ label }}
+        </template>
 
-        <sdb-input
-            v-bind="$attrs"
-            :class="{'is-danger': message}"
-            :disabled="disabled"
-            :required="required ? true : false"
-            :value="modelValue"
-            @input="$emit('update:modelValue', $event.target.value)"
-            @keypress="$emit('on-keypress', $event)"
-            @blur="$emit('on-blur', $event)"
-        />
+        <div class="control">
+            <sdb-input
+                v-bind="$attrs"
+                :class="{'is-danger': message}"
+                :disabled="disabled"
+                :required="required"
+                :value="modelValue"
+                @input="$emit('update:modelValue', $event.target.value)"
+                @keypress="$emit('on-keypress', $event)"
+                @blur="$emit('on-blur', $event)"
+            />
+        </div>
 
-        <template v-slot:error>
-            <sdb-input-error :message="message"/>
+        <template #error>
+            <sdb-input-error :message="message" />
         </template>
     </sdb-form-field>
 </template>
@@ -28,26 +32,27 @@
 
     export default {
         name: 'SdbFormInput',
-        inheritAttrs: false,
+
         components: {
             SdbFormField,
             SdbInput,
             SdbInputError,
         },
-        emits: [
-            'update:modelValue',
-            'on-keypress',
-            'on-blur'
-        ],
+
+        inheritAttrs: false,
+
         props: {
             label: {
-                type: String
+                type: String,
+                default: ''
             },
             message: {
-                type: Object,
+                type: [Array, Object, String],
+                default: undefined
             },
             modelValue: {
-                type: [String, Number]
+                type: [String, Number, null],
+                required: true
             },
             disabled: {
                 type: Boolean,
@@ -58,5 +63,11 @@
                 default: false
             },
         },
+
+        emits: [
+            'update:modelValue',
+            'on-keypress',
+            'on-blur'
+        ],
     };
 </script>

@@ -40,11 +40,9 @@
                                         </h2>
                                     </div>
 
-                                    <div v-if="status">
-                                        {{ status }}
-                                    </div>
-
-                                    <sdb-error-notifications :errors="$page.props.errors" />
+                                    <sdb-error-notifications
+                                        :errors="$page.props.errors"
+                                    />
 
                                     <form @submit.prevent="submit">
                                         <div>

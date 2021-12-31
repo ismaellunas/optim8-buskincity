@@ -42,24 +42,23 @@
                             :value="true"
                         >
                             Attribute all content to:
-
-                            <sdb-form-select
-                                v-model="form.assigned_user"
-                                class="is-fullwidth"
-                                field-class="ml-4"
-                                placeholder="Select a user"
-                                :disabled="!form.is_reassigned"
-                                :message="error('assigned_user', 'deleteUser', form.errors)"
-                            >
-                                <option
-                                    v-for="option in candidates"
-                                    :key="option.id"
-                                    :value="option.id"
-                                >
-                                    {{ option.full_name }}
-                                </option>
-                            </sdb-form-select>
                         </sdb-radio>
+                        <sdb-form-select
+                            v-model="form.assigned_user"
+                            class="is-fullwidth"
+                            field-class="ml-4"
+                            placeholder="Select a user"
+                            :disabled="!form.is_reassigned"
+                            :message="error('assigned_user', 'deleteUser', form.errors)"
+                        >
+                            <option
+                                v-for="option in candidates"
+                                :key="option.id"
+                                :value="option.id"
+                            >
+                                {{ option.full_name }}
+                            </option>
+                        </sdb-form-select>
                     </div>
                 </div>
             </fieldset>

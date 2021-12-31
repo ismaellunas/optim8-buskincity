@@ -42,7 +42,9 @@
                                         {{ status }}
                                     </div>
 
-                                    <sdb-error-notifications :errors="$page.props.errors" />
+                                    <sdb-error-notifications
+                                        :errors="$page.props.errors"
+                                    />
 
                                     <form @submit.prevent="submit">
                                         <div>
@@ -96,7 +98,7 @@
 
         props: {
             status: {
-                type: [String, null],
+                type: String,
                 default: '',
             }
         },
