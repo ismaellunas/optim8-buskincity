@@ -116,6 +116,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             ->name('suspend');
         Route::post('/unsuspend/{user}', [UserController::class, 'unsuspend'])
             ->name('unsuspend');
+        Route::get('profile', function () {
+            return Inertia::render('Profile/Form', [
+                'formName' => 'form_1',
+            ]);
+        })->name('profile');
     });;
 });
 
