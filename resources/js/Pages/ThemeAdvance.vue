@@ -15,9 +15,6 @@
             >
                 <div class="columns">
                     <div class="column">
-                        <h2><b>Additional Code</b></h2>
-                    </div>
-                    <div class="column">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
                                 <sdb-button class="is-link">
@@ -25,6 +22,39 @@
                                 </sdb-button>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <h2><b>Home Page</b></h2>
+                    </div>
+                    <div class="column">
+                        <sdb-form-select
+                            v-model="form.home_page"
+                            class="is-fullwidth"
+                            :message="error(form.home_page, null, errors)"
+                        >
+                            <option
+                                v-for="option in sortedPageOptions"
+                                :key="option.id"
+                                :value="option.id"
+                            >
+                                {{ option.value }}
+                                <span
+                                    v-for="locale, index in option.locales"
+                                    :key="index"
+                                >
+                                    [{{ locale.toUpperCase() }}]
+                                </span>
+                            </option>
+                        </sdb-form-select>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <h2><b>Additional Code</b></h2>
                     </div>
                 </div>
 
@@ -81,12 +111,13 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import SdbFormSelect from '@/Sdb/Form/Select';
     import SdbButton from '@/Sdb/Button';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
     import SdbTextarea from '@/Sdb/Textarea';
     import SdbInputError from '@/Sdb/InputError';
-    import { assign, forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
-    import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
+    import { assign, mapValues, sortBy } from 'lodash';
+    import { success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -94,6 +125,7 @@
 
         components: {
             AppLayout,
+            SdbFormSelect,
             SdbButton,
             SdbErrorNotifications,
             SdbInputError,
@@ -110,6 +142,8 @@
             trackingCodes: {type: Object, required: true},
             errors: {type: Object, default: () => {}},
             title: {type: String, required: true},
+            pageOptions: {type: Object, default: () => {}},
+            homePageId: {type: [Number, String, null], default: null},
         },
 
         setup(props) {
@@ -127,11 +161,15 @@
                 }
             );
 
+            const homePageForm = { home_page: props.homePageId }
+
             return {
                 form: useForm(assign(
                     additionalCodeForm,
-                    trackingCodeForm
+                    trackingCodeForm,
+                    homePageForm,
                 )),
+                sortedPageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
             };
         },
 
