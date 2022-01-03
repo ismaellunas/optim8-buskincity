@@ -20,16 +20,6 @@ use \finfo;
 
 class SettingService
 {
-    private static function getAdditionalCodeFileKey(string $key): string
-    {
-        return config("constants.theme_additional_code_files.{$key}.key");
-    }
-
-    public function getAdditionalCodeFileName(string $key): string
-    {
-        return config("constants.theme_additional_code_files.{$key}.filename");
-    }
-
     public static function getFrontendCssUrl(): string
     {
         $urlCss = app(SettingCache::class)->remember('url_css', function () {
@@ -39,19 +29,17 @@ class SettingService
         return !empty($urlCss) ? $urlCss : mix('css/app.css')->toHtml();
     }
 
-    public static function getAdditionalCssUrl(): string
+    public static function getAdditionalCss(): string
     {
-        return app(SettingCache::class)->remember('additional_css_url', function () {
-            return Setting::key(self::getAdditionalCodeFileKey('additional_css'))
-                ->value('value') ?? "";
+        return app(SettingCache::class)->remember('additional_css', function () {
+            return Setting::key('additional_css')->value('value') ?? "";
         });
     }
 
-    public static function getAdditionalJavascriptUrl(): string
+    public static function getAdditionalJavascript(): string
     {
-        return app(SettingCache::class)->remember('additional_javascript_url', function () {
-            return Setting::key(self::getAdditionalCodeFileKey('additional_javascript'))
-                ->value('value') ?? "";
+        return app(SettingCache::class)->remember('additional_javascript', function () {
+            return Setting::key('additional_javascript')->value('value') ?? "";
         });
     }
 
@@ -234,6 +222,13 @@ class SettingService
         $disk->put('sdb_variables_after.sass', $variablesAfterSass);
     }
 
+    public function getHomePage()
+    {
+        return app(SettingCache::class)->remember('home_page', function () {
+            return Setting::key('home_page')->value('value');
+        });
+    }
+
     public function generateThemeCss()
     {
         exec('cd .. && npx webpack --config webpack.config.sdb.js');
@@ -270,58 +265,10 @@ class SettingService
         );
     }
 
-    public function uploadAdditionalCodeToCloudStorage(
-        string $filename,
-        string $value,
-        string $folderPrefix = null
-    ): MediaAsset {
-
-        $disk = Storage::build([
-            'driver' => 'local',
-            'root' => storage_path('theme/css'),
-        ]);
-
-        $disk->put($filename, $value);
-
-        $uploadedFileName = 'theme/css/'.$filename;
-        $uploadedFilePath = storage_path($uploadedFileName);
-
-        $file = new UploadedFile(
-            $uploadedFilePath,
-            $filename
-        );
-
-        $storage = new CloudinaryStorage();
-
-        $folder = "assets";
-
-        if ($folderPrefix) {
-            $folder = $folderPrefix.'_'.$folder;
-        }
-
-        return $storage->upload(
-            $file,
-            $filename,
-            pathinfo($filename, PATHINFO_EXTENSION),
-            $folder
-        );
-    }
-
     public function saveCssUrl(string $url): bool
     {
         $setting = Setting::firstOrNew(['key' => 'url_css']);
         $setting->value = $url;
-        return $setting->save();
-    }
-
-    public function saveAdditionalCodeUrl(string $key, ?string $url): bool
-    {
-        $setting = Setting::firstOrNew([
-            'key' => self::getAdditionalCodeFileKey($key)
-        ]);
-
-        $setting->value = $url;
-
         return $setting->save();
     }
 

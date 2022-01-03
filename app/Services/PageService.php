@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Models\Page;
+use App\Services\{
+    SettingService,
+};
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class PageService
@@ -29,5 +32,36 @@ class PageService
         });
 
         return $records;
+    }
+
+    public static function transformComponentToText($data): string
+    {
+        $string = "";
+        foreach($data['entities'] as $entity)
+        {
+            $class = '\\App\\Entities\\Components\\' . $entity['componentName'];
+            if(class_exists($class)){
+                $class = new $class($entity);
+                $string .= $class->getText() . ' ';
+            }
+            continue;
+        }
+
+        return trim($string);
+    }
+
+    public function getHomePage(): ?Page
+    {
+        $settingService = app(SettingService::class);
+
+        $homePageId = $settingService->getHomePage();
+
+        return Page::with([
+                'translations' => function ($query) {
+                    $query->published();
+                },
+            ])
+            ->where('id', $homePageId)
+            ->first();
     }
 }

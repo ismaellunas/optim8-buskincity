@@ -23,9 +23,11 @@
                 default: false,
             },
             disabled: {
-                default: null,
+                type: Boolean,
+                default: false,
             },
             value: {
+                type: [String, Number, Boolean, null],
                 default: null,
             },
         },

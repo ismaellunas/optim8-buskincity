@@ -30,8 +30,8 @@
         'GOOGLE_CLIENT_ID',
         'GOOGLE_CLIENT_SECRET',
         'QUEUE_CONNECTION',
-        'REDIS_CLIENT',
-        'REDIS_URL',
+        // 'REDIS_CLIENT',
+        // 'REDIS_URL',
     ];
 @endsetup
 

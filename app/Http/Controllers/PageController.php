@@ -18,17 +18,16 @@ use Inertia\Inertia;
 
 class PageController extends CrudController
 {
-    private $pageService;
 
     protected $model = Page::class;
     protected $baseRouteName = 'admin.pages';
+    protected $pageService;
     protected $title = "Pages";
 
     public function __construct(PageService $pageService)
     {
-        $this->pageService = $pageService;
-
         $this->authorizeResource(Page::class, 'page');
+        $this->pageService = $pageService;
     }
 
     /**

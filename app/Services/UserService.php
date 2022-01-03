@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Role;
-use App\Models\User;
+use App\Models\{
+    Page,
+    Post,
+    Role,
+    User,
+};
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\AbstractPaginator;
@@ -36,6 +40,7 @@ class UserService
                 'first_name',
                 'last_name',
                 'email',
+                'is_suspended',
             ]);
     }
 
@@ -99,5 +104,11 @@ class UserService
             'firstName' => $firstName,
             'lastName' => $lastName,
         ];
+    }
+
+    public function reassignResources($userIdFrom, $userIdTo)
+    {
+        Post::where('author_id', $userIdFrom)->update(['author_id' => $userIdTo]);
+        Page::where('author_id', $userIdFrom)->update(['author_id' => $userIdTo]);
     }
 }

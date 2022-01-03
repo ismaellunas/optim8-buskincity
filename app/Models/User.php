@@ -86,9 +86,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Media::class, 'author_id');
     }
 
-    public function getFullNameAttribute(): string
+    public function scopeEmail($query, string $email)
     {
-        return trim(ucfirst($this->first_name) . ' ' . ucfirst($this->last_name));
+        return $query->where('email', $email);
     }
 
     public function scopeSearch($query, string $term)
@@ -106,6 +106,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $query->whereHas('roles', function ($query) use ($roleIds) {
             $query->whereIn('id', $roleIds);
         });
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return trim(ucfirst($this->first_name) . ' ' . ucfirst($this->last_name));
     }
 
     /**
@@ -138,6 +143,24 @@ class User extends Authenticatable implements MustVerifyEmail
     public function savePassword(string $password)
     {
         $this->password = UserService::hashPassword($password);
+        $this->save();
+    }
+
+    public function verifiyEmail(mixed $dateTime = null)
+    {
+        $this->email_verified_at = $dateTime ?? now();
+        $this->save();
+    }
+
+    public function suspend()
+    {
+        $this->is_suspended = true;
+        $this->save();
+    }
+
+    public function unsuspend()
+    {
+        $this->is_suspended = false;
         $this->save();
     }
 }

@@ -120,14 +120,41 @@
                             if (result.isDismissed) {
                                 return false;
                             } else if(result.isConfirmed) {
-                                this.form.put(submitRoute);
+                                this.form.put(submitRoute, {
+                                onSuccess: () => {
+                                    const translatedPage = getTranslation(
+                                        this.page,
+                                        this.selectedLocale
+                                    );
+
+                                    this.form[this.selectedLocale]['id'] = translatedPage.id;
+                                },
+                            });
                             }
                         })
                     } else {
-                        this.form.put(submitRoute);
+                        this.form.put(submitRoute, {
+                            onSuccess: () => {
+                                const translatedPage = getTranslation(
+                                    this.page,
+                                    this.selectedLocale
+                                );
+
+                                this.form[this.selectedLocale]['id'] = translatedPage.id;
+                            },
+                        });
                     }
                 } else {
-                    this.form.put(submitRoute);
+                    this.form.put(submitRoute, {
+                        onSuccess: () => {
+                            const translatedPage = getTranslation(
+                                this.page,
+                                this.selectedLocale
+                            );
+
+                            this.form[this.selectedLocale]['id'] = translatedPage.id;
+                        },
+                    });
                 }
             },
             onChangeLocale(locale) {

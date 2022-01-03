@@ -108,6 +108,15 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/translation-import', [TranslationManagerController::class, 'import'])
             ->name('translation-manager.import');
     });
+
+    Route::name('users.')->prefix('users')->group(function () {
+        Route::get('/reassignment-candidates/{user}', [UserController::class, 'getReassignmentCandidates'])
+            ->name('reassignment-candidates');
+        Route::post('/suspend/{user}', [UserController::class, 'suspend'])
+            ->name('suspend');
+        Route::post('/unsuspend/{user}', [UserController::class, 'unsuspend'])
+            ->name('unsuspend');
+    });;
 });
 
 Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->group(function () {
