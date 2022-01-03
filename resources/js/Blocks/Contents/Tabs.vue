@@ -76,7 +76,7 @@
 
         <sdb-icon-browser
             v-if="isModalOpen"
-            :can-delete="true"
+            :can-remove="true"
             :has-type="true"
             :icon-classes="iconClasses"
             @close="closeModal()"
