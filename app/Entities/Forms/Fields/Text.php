@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities\Forms;
+namespace App\Entities\Forms\Fields;
 
 use Illuminate\Support\Str;
 
