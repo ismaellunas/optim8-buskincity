@@ -22,4 +22,14 @@ class Form extends Model
     {
         return $this->formValues()->user(auth()->user()->id);
     }
+
+    public function scopeUser($query, int $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    public function scopeName($query, string $name)
+    {
+        return $query->where('name', $name);
+    }
 }
