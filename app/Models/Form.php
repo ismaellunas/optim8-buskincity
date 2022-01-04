@@ -12,4 +12,14 @@ class Form extends Model
     protected $casts = [
         'data' => 'array',
     ];
+
+    public function formValues()
+    {
+        return $this->hasMany(FormValue::class, 'form_id');
+    }
+
+    public function currentUserFormValues()
+    {
+        return $this->formValues()->user(auth()->user()->id);
+    }
 }
