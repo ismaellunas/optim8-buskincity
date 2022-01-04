@@ -49,10 +49,6 @@
             bagName: { type: String, default: 'formBuilder' },
         },
 
-        setup(props) {
-            return {};
-        },
-
         data() {
             return {
                 form: useForm({}),
