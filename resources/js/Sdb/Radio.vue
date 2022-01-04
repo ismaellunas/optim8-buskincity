@@ -3,7 +3,7 @@
         ref="label"
         class="radio"
         :class="[labelClass, { 'is-disabled': disabled }]"
-        :disabled="disabled"
+        :disabled="isLabelDisabled"
         @click="focus"
         @keydown.prevent.enter="$refs.label.click()"
     >
@@ -41,8 +41,8 @@
                 default: undefined,
             },
             modelValue: {
-                type: [String, Number, Boolean, Function, Object, Array],
-                default: ""
+                type: [String, Number, Boolean, null],
+                required: true
             },
             value: {
                 type: [String, Number, Boolean, Function, Object, Array],
@@ -73,7 +73,11 @@
                     this.newValue = value;
                     this.$emit('input', value);
                 }
-            }
+            },
+
+            isLabelDisabled() {
+                return this.disabled ? true : null;
+            },
         },
 
         watch: {
