@@ -50,6 +50,7 @@ abstract class BaseField
             'name' => $this->name,
             'label' => $this->label,
             'is_disabled' => $this->disabled,
+            'is_readonly' => $this->readonly,
             'is_required' => $this->isRequired(),
             'default_value' => $this->defaultValue,
             'value' => $this->value,
