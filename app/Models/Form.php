@@ -32,4 +32,12 @@ class Form extends Model
     {
         return $query->where('name', $name);
     }
+
+    public function getLatestUserValue(int $userId): ?FormValue
+    {
+        return $this->formValues->last(function ($formValue) use ($userId) {
+            return $formValue->user_id == $userId;
+        });
+    }
+
 }
