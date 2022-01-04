@@ -127,10 +127,13 @@ class PageController extends CrudController
             }
         }
 
-        $menuService = new MenuService();
-        $languages = collect(TranslationService::getLocaleOptions());
-        $headerMenuItems = $menuService->getHeaderMenus($languages->pluck('id')->all());
-        $footerMenuItems = $menuService->getFooterMenus($languages->pluck('id')->all());
+        $menuService = app(MenuService::class);
+        $languages = TranslationService::getLocales();
+        $headerMenuItems = $menuService->getHeaderMenus($languages);
+        $footerMenuItems = $menuService->getFooterMenus($languages);
+
+        $isPageUsedInHeaderMenus = $menuService->isPageUsedInMenus($headerMenuItems, $page['id']);
+        $isPageUsedInFooterMenus = $menuService->isPageUsedInMenus($footerMenuItems, $page['id']);
 
         $user = auth()->user();
 
@@ -148,8 +151,8 @@ class PageController extends CrudController
             'entityId' => $page->id,
             'statusOptions' => $this->model::getStatusOptions(),
             'images' => $images,
-            'headerMenuItems' => $headerMenuItems,
-            'footerMenuItems' => $footerMenuItems,
+            'isPageUsedInHeaderMenus' => $isPageUsedInHeaderMenus,
+            'isPageUsedInFooterMenus' => $isPageUsedInFooterMenus,
         ]);
     }
 
@@ -165,7 +168,7 @@ class PageController extends CrudController
         $inputs = $request->all();
         $page->saveFromInputs($inputs);
 
-        $menuService = new MenuService();
+        $menuService = app(MenuService::class);
         $menuService->removePageFromMenus($inputs);
 
         $this->generateFlashMessage('Page updated successfully!');

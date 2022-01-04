@@ -39,6 +39,7 @@
     import { onPageEditorClicked } from '@/Libs/page-builder';
     import { ref, onMounted, onUnmounted } from 'vue';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { confirmDelete } from '@/Libs/alert';
 
     export default {
         components: {
@@ -52,8 +53,8 @@
             page: { type: Object, required: true },
             errors: { type: Object, default:() => {} },
             statusOptions: { type: Array, default:() => [] },
-            headerMenuItems: { type: Object, default:() => {} },
-            footerMenuItems: { type: Object, default:() => {} }
+            isPageUsedInHeaderMenus: { type: Object, default:() => {} },
+            isPageUsedInFooterMenus: { type: Object, default:() => {} }
         },
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
@@ -102,21 +103,15 @@
             onSubmit() {
                 const submitRoute = route('admin.pages.update', {id: this.page.id});
                 if (
-                    this.menuContainsPage(this.headerMenuItems[this.selectedLocale], this.page.id)
-                    || this.menuContainsPage(this.footerMenuItems[this.selectedLocale], this.page.id)
+                    this.isPageUsedInHeaderMenus[this.selectedLocale] === true
+                    || this.isPageUsedInFooterMenus[this.selectedLocale] === true
                 ) {
                     if (this.form[this.selectedLocale].status === 0) {
-                        this.$swal.fire({
-                            title: 'Are you sure?',
-                            text: 'This action will also remove the page on the navigation menu.',
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#d33',
-                            cancelButtonColor: '#3085d6',
-                            confirmButtonText: 'Process',
-                            cancelButtonText: 'Cancel',
-                            scrollbarPadding: false,
-                        }).then((result) => {
+                        confirmDelete(
+                            'Are You Sure?',
+                            'This action will also remove the page on the navigation menu.',
+                            'Yes'
+                        ).then((result) => {
                             if (result.isDismissed) {
                                 return false;
                             } else if(result.isConfirmed) {
@@ -200,16 +195,6 @@
                     translationFrom[locale] = JSON.parse(JSON.stringify(translatedPage));
                 }
                 this.form = useForm(translationFrom);
-            },
-            menuContainsPage(menus, id) {
-                var i = menus.length;
-                while (i--) {
-                    if (menus[i].page_id === id) {
-                        console.log(menus[i].page_id, id);
-                        return true;
-                    }
-                }
-                return false;
             }
         },
     }

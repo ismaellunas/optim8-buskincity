@@ -8,6 +8,7 @@ use App\Models\{
     Menu,
     MenuItem,
     Page,
+    PageTranslation,
     Post,
     Role,
     User,
@@ -422,11 +423,27 @@ class MenuService
             ->all();
     }
 
+    public function isPageUsedInMenus($menus, $page_id)
+    {
+        $isPageUsed = [];
+
+        foreach ($menus as $locale => $menuItems) {
+            $isPageUsed[$locale] = false;
+            foreach ($menuItems as $menuItem) {
+                if ($menuItem->page_id === $page_id) {
+                    $isPageUsed[$locale] = true;
+                }
+            }
+        }
+
+        return $isPageUsed;
+    }
+
     public function removePageFromMenus(array $inputs)
     {
-        $languages = collect(TranslationService::getLocaleOptions());
-        $headerMenuItems = $this->getHeaderMenus($languages->pluck('id')->all());
-        $footerMenuItems = $this->getFooterMenus($languages->pluck('id')->all());
+        $languages = TranslationService::getLocales();
+        $headerMenuItems = $this->getHeaderMenus($languages);
+        $footerMenuItems = $this->getFooterMenus($languages);
         foreach ($inputs as $locale => $input) {
             if (count($input) > 0 && isset($input['page_id'])) {
                 $this->removeMenuItems($headerMenuItems, $locale, $input['page_id'], $input['status']);
@@ -444,7 +461,7 @@ class MenuService
     ) {
         foreach($menuItems[$locale] as $menuItem) {
             if ($pageId === $menuItem['page_id']) {
-                if ($pageStatus === \App\Models\PageTranslation::STATUS_DRAFT) {
+                if ($pageStatus === PageTranslation::STATUS_DRAFT) {
                     $menus = Menu::with(['menuItems' => function($query) use($pageId){
                         $query->where('page_id', $pageId);
                     }])
