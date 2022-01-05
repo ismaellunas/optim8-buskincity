@@ -8,6 +8,7 @@ use App\Entities\Caches\{
     TranslationCache
 };
 use App\Services\{
+    FormService,
     LanguageService,
     MenuService,
     PageBuilderService,
@@ -25,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         SettingCache::class => SettingCache::class,
         TranslationCache::class => TranslationCache::class,
 
+        FormService::class => FormService::class,
         LanguageService::class => LanguageService::class,
         MenuService::class => MenuService::class,
         PageBuilderService::class => PageBuilderService::class,
