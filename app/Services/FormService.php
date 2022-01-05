@@ -11,12 +11,16 @@ class FormService
 
     public function getFormByName($name): ?Form
     {
-        $model = FormModel::where('name', $name)->first();
+        $model = FormModel::name($name)->first();
 
         if ($model) {
             $className = $this->getFormClassName($model->type);
 
-            return new $className($model->id, $model->data);
+            $form = new $className($model->id, $model->data);
+
+            $form->model = $model;
+
+            return $form;
         }
 
         return null;

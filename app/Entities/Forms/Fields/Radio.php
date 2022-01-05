@@ -1,36 +1,19 @@
 <?php
 
-namespace App\Entities\Forms;
+namespace App\Entities\Forms\Fields;
 
 use Illuminate\Support\Str;
 
-class Select
+class Radio extends BaseField
 {
-    protected $data;
-    protected $type = "Select";
+    protected $type = 'Radio';
 
-    public $name;
-    public $value;
-
-    public $defaultValue;
-    public $disabled;
-    public $label;
     public $options;
-    public $placeholder;
-    public $readonly;
-    public $validation;
 
     public function __construct(string $name, array $data = [])
     {
-        $this->data = $data;
-        $this->name = $name;
-        $this->value = $data['value'] ?? '';
-        $this->validation = $data['validation'];
-        $this->label = $data['label'] ?? null;
-        $this->placeholder = $data['placeholder'] ?? '- Select -';
-        $this->defaultValue = $data['default_value'] ?? null;
-        $this->disabled = $data['disabled'] ?? false;
-        $this->readonly = $data['readonly'] ?? false;
+        parent::__construct($name, $data);
+
         $this->options = $data['options'] ?? [];
     }
 
@@ -42,24 +25,11 @@ class Select
             'label' => $this->label,
             'default_value' => $this->defaultValue,
             'is_disabled' => $this->disabled,
-            'is_readonly' => $this->readonly,
             'is_required' => $this->isRequired(),
-            'placeholder' => $this->placeholder,
             'options' => $this->options,
-            'wrapper' => [
-                'class' => [],
-            ],
         ];
 
         return $schema;
-    }
-
-    protected function isRequired(): bool
-    {
-        if (!empty($this->validation['rules'])) {
-            return in_array('required', $this->validation['rules']);
-        }
-        return false;
     }
 
     private function adjustInRule(&$rules)

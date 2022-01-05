@@ -1,20 +1,19 @@
 <template>
     <label
         ref="label"
-        class="radio"
-        :class="[labelClass, { 'is-disabled': disabled }]"
+        class="checkbox"
         :disabled="isLabelDisabled"
-        @click="focus"
-        @keydown.prevent.enter="$refs.label.click()"
     >
         <input
             ref="input"
             v-bind="$attrs"
             v-model="computedValue"
-            type="radio"
-            :checked="isChecked"
+            type="checkbox"
             :disabled="disabled"
             :value="value"
+            :true-value="trueValue"
+            :false-value="falseValue"
+            :required="required"
             @click.stop
         >
         <slot />
@@ -23,7 +22,7 @@
 
 <script>
     export default {
-        name: 'SdbRadio',
+        name: 'SdbChecboxToggle',
 
         inheritAttrs: false,
 
@@ -36,17 +35,25 @@
                 type: Boolean,
                 default: false
             },
-            labelClass: {
-                type: [String, Object, Array],
-                default: undefined,
+            trueValue: {
+                type: [String, Number, Boolean],
+                default: true,
             },
-            modelValue: {
-                type: [String, Number, Boolean, null],
-                required: true
+            falseValue: {
+                type: [String, Number, Boolean],
+                default: false,
             },
             value: {
                 type: [String, Number, Boolean, Function, Object, Array],
                 default: undefined
+            },
+            required: {
+                type: Boolean,
+                default: false
+            },
+            modelValue: {
+                type: [String, Number, Boolean, null],
+                required: true
             },
         },
 
@@ -61,10 +68,6 @@
         },
 
         computed: {
-            isChecked() {
-                return this.modelValue == this.value;
-            },
-
             computedValue: {
                 get() {
                     return this.value;
@@ -83,12 +86,6 @@
         watch: {
             value(value) {
                 this.newValue = value
-            }
-        },
-
-        methods: {
-            focus() {
-                this.$refs.input.focus()
             }
         },
     };

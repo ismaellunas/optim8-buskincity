@@ -1,56 +1,37 @@
 <?php
 
-namespace App\Entities\Forms;
+namespace App\Entities\Forms\Fields;
 
 use Illuminate\Support\Str;
 
-class Text
+abstract class BaseField
 {
     protected $data;
-    protected $type = "Text";
-
-    public $name;
-    public $value;
+    protected $type;
+    protected $emptyValue = null;
 
     public $defaultValue;
     public $disabled;
     public $label;
-    public $maxlength;
-    public $placeholder;
     public $readonly;
     public $validation;
+    public $value;
 
     public function __construct(string $name, array $data = [])
     {
         $this->data = $data;
         $this->name = $name;
-        $this->value = $data['value'] ?? null;
 
-        $this->defaultValue = $data['default_value'] ?? null;
         $this->disabled = $data['disabled'] ?? false;
         $this->label = $data['label'] ?? null;
-        $this->maxlength = $data['maxlength'] ?? null;
-        $this->placeholder = $data['placeholder'] ?? null;
         $this->readonly = $data['readonly'] ?? false;
         $this->validation = $data['validation'];
-    }
 
-    public function schema(): array
-    {
-        return [
-            'type' => $this->type,
-            'name' => $this->name,
-            'label' => $this->label,
-            'default_value' => $this->defaultValue,
-            'is_disabled' => $this->disabled,
-            'is_readonly' => $this->readonly,
-            'is_required' => $this->isRequired(),
-            'maxlength' => $this->maxlength ?? $this->max() ?? null,
-            'placeholder' => $this->placeholder,
-            'wrapper' => [
-                'class' => [],
-            ],
-        ];
+        if (array_key_exists('default_value', $data)) {
+            $this->defaultValue = $data['default_value'];
+        }
+
+        $this->value = $data['value'] ?? $this->defaultValue;
     }
 
     protected function isRequired(): bool
@@ -58,12 +39,29 @@ class Text
         if (!empty($this->validation['rules'])) {
             return in_array('required', $this->validation['rules']);
         }
+
         return false;
+    }
+
+    protected function schema(): array
+    {
+        return [
+            'type' => $this->type,
+            'name' => $this->name,
+            'label' => $this->label,
+            'is_disabled' => $this->disabled,
+            'is_readonly' => $this->readonly,
+            'is_required' => $this->isRequired(),
+            'default_value' => $this->defaultValue,
+            'value' => $this->value,
+        ];
     }
 
     public function validationRules(): array
     {
-        return $this->validation['rules'] ?? [];
+        $rules = $this->validation['rules'] ?? [];
+
+        return $rules;
     }
 
     public function formattedRules(): array
@@ -81,22 +79,12 @@ class Text
                 }
             }
         }
+
         return $rules;
     }
 
     public function validationMessages(): array
     {
         return $this->validation['messages'] ?? [];
-    }
-
-    protected function max(): ?int
-    {
-        $rules = $this->formattedRules();
-
-        if (!empty($rules['max'])) {
-            return (int) $rules['max'][0];
-        }
-
-        return null;
     }
 }
