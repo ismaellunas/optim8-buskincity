@@ -10,22 +10,32 @@ abstract class BaseField
     protected $type;
     protected $emptyValue = null;
 
+    public $name;
     public $defaultValue;
     public $disabled;
     public $label;
     public $readonly;
     public $validation;
     public $value;
+    public $roles;
 
     public function __construct(string $name, array $data = [])
     {
         $this->data = $data;
         $this->name = $name;
 
-        $this->disabled = $data['disabled'] ?? false;
+        $this->setPropertiesBasedOnData();
+    }
+
+    protected function setPropertiesBasedOnData()
+    {
+        $data = $this->data;
+
         $this->label = $data['label'] ?? null;
+        $this->disabled = $data['disabled'] ?? false;
         $this->readonly = $data['readonly'] ?? false;
-        $this->validation = $data['validation'];
+        $this->validation = $data['validation'] ?? [];
+        $this->roles = $data['roles'] ?? [];
 
         if (array_key_exists('default_value', $data)) {
             $this->defaultValue = $data['default_value'];
