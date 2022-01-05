@@ -21,7 +21,14 @@ class FormController extends Controller
 
     public function getSchema($formName)
     {
-        $form = $this->formService->getFormByName($formName);
+        $form = $this->formService->getFormByName(
+            $formName,
+            auth()->user()
+        );
+
+        if (!$form || !$form->canBeAccessed()) {
+            return response()->json(['error' => 'Not authorized.'], 403);
+        }
 
         $values = FormValue::where('form_id', $form->id)
             ->where('user_id', auth()->user()->id)
@@ -36,7 +43,7 @@ class FormController extends Controller
 
     public function submit(FormValueRequest $request, $formName)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
 
         $formId = Form::where('name', $formName)->value('id');
 
