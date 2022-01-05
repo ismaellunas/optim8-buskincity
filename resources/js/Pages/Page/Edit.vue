@@ -53,8 +53,8 @@
             page: { type: Object, required: true },
             errors: { type: Object, default:() => {} },
             statusOptions: { type: Array, default:() => [] },
-            isPageUsedInHeaderMenus: { type: Object, default:() => {} },
-            isPageUsedInFooterMenus: { type: Object, default:() => {} }
+            affectedHeaderMenu: { type: Object, default:() => {} },
+            affectedFooterMenu: { type: Object, default:() => {} }
         },
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
@@ -103,8 +103,8 @@
             onSubmit() {
                 const submitRoute = route('admin.pages.update', {id: this.page.id});
                 if (
-                    this.isPageUsedInHeaderMenus[this.selectedLocale] === true
-                    || this.isPageUsedInFooterMenus[this.selectedLocale] === true
+                    this.affectedHeaderMenu[this.selectedLocale] === true
+                    || this.affectedFooterMenu[this.selectedLocale] === true
                 ) {
                     if (this.form[this.selectedLocale].status === 0) {
                         confirmDelete(

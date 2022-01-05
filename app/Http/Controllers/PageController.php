@@ -132,8 +132,8 @@ class PageController extends CrudController
         $headerMenuItems = $menuService->getHeaderMenus($languages);
         $footerMenuItems = $menuService->getFooterMenus($languages);
 
-        $isPageUsedInHeaderMenus = $menuService->isPageUsedInMenus($headerMenuItems, $page['id']);
-        $isPageUsedInFooterMenus = $menuService->isPageUsedInMenus($footerMenuItems, $page['id']);
+        $affectedHeaderMenu = $menuService->affectedMenuLocales($headerMenuItems, $page['id']);
+        $affectedFooterMenu = $menuService->affectedMenuLocales($footerMenuItems, $page['id']);
 
         $user = auth()->user();
 
@@ -151,8 +151,8 @@ class PageController extends CrudController
             'entityId' => $page->id,
             'statusOptions' => $this->model::getStatusOptions(),
             'images' => $images,
-            'isPageUsedInHeaderMenus' => $isPageUsedInHeaderMenus,
-            'isPageUsedInFooterMenus' => $isPageUsedInFooterMenus,
+            'affectedHeaderMenu' => $affectedHeaderMenu,
+            'affectedFooterMenu' => $affectedFooterMenu,
         ]);
     }
 

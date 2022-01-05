@@ -423,7 +423,7 @@ class MenuService
             ->all();
     }
 
-    public function isPageUsedInMenus($menus, $page_id)
+    public function affectedMenuLocales(array $menus, int $page_id): array
     {
         $isPageUsed = [];
 
