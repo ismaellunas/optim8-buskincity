@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Models\Page;
+use App\Services\{
+    SettingService,
+};
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class PageService
@@ -56,5 +59,20 @@ class PageService
 
             return $record;
         });
+    }
+
+    public function getHomePage(): ?Page
+    {
+        $settingService = app(SettingService::class);
+
+        $homePageId = $settingService->getHomePage();
+
+        return Page::with([
+                'translations' => function ($query) {
+                    $query->published();
+                },
+            ])
+            ->where('id', $homePageId)
+            ->first();
     }
 }

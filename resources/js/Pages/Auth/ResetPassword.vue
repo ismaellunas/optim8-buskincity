@@ -17,14 +17,15 @@
                             <div class="level-left">
                                 <div class="level-item">
                                     <sdb-link :href="route('login')">
-                                        <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-left" />
+                                        </span>
                                         <span>Back</span>
                                     </sdb-link>
                                 </div>
                             </div>
                             <div class="level-right">
-                                <div class="level-item">
-                                </div>
+                                <div class="level-item" />
                             </div>
                         </div>
                         <section class="section">
@@ -39,53 +40,46 @@
                                         </h2>
                                     </div>
 
-                                    <div v-if="status">
-                                        {{ status }}
-                                    </div>
-
-                                    <jet-validation-errors class="mb-4" />
+                                    <sdb-error-notifications
+                                        :errors="$page.props.errors"
+                                    />
 
                                     <form @submit.prevent="submit">
                                         <div>
-                                            <jet-label for="email" value="Email" />
-                                            <jet-input
-                                                id="email"
+                                            <sdb-form-input
                                                 v-model="form.email"
+                                                label="Email"
+                                                required
                                                 type="email"
-                                                class="has-background-light"
-                                                required
                                                 disabled
+                                                :message="error('email')"
                                             />
                                         </div>
 
                                         <div class="mt-4">
-                                            <jet-label for="password" value="Password" />
-                                            <jet-input
-                                                id="password"
+                                            <sdb-form-password
                                                 v-model="form.password"
-                                                type="password"
-                                                class="mt-1 block w-full"
-                                                required
-                                                autocomplete="new-password"
+                                                label="Password"
+                                                :required="true"
                                             />
                                         </div>
 
                                         <div class="mt-4">
-                                            <jet-label for="password_confirmation" value="Confirm Password" />
-                                            <jet-input
-                                                id="password_confirmation"
+                                            <sdb-form-password
                                                 v-model="form.password_confirmation"
-                                                type="password"
-                                                class="mt-1 block w-full"
-                                                required
                                                 autocomplete="new-password"
+                                                label="Confirm Password"
+                                                :required="true"
                                             />
                                         </div>
 
                                         <div class="mt-4">
-                                            <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                            <sdb-button
+                                                class="button is-info"
+                                                :disabled="form.processing"
+                                            >
                                                 Reset Password
-                                            </jet-button>
+                                            </sdb-button>
                                         </div>
                                     </form>
                                 </div>
@@ -99,28 +93,35 @@
 </template>
 
 <script>
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-    import JetButton from '@/Jetstream/Button'
-    import JetInput from '@/Jetstream/Input'
-    import JetLabel from '@/Jetstream/Label'
-    import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import SdbButton from '@/Sdb/Button';
+    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbFormPassword from '@/Sdb/Form/Password';
     import SdbLink from '@/Sdb/Link'
 
     export default {
         components: {
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
-            JetButton,
-            JetInput,
-            JetLabel,
-            JetValidationErrors,
-            SdbLink
+            SdbButton,
+            SdbErrorNotifications,
+            SdbFormInput,
+            SdbFormPassword,
+            SdbLink,
         },
 
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
         props: {
-            email: String,
-            token: String,
+            email: {
+                type: String,
+                required: true,
+            },
+            token: {
+                type: String,
+                required: true,
+            },
         },
 
         data() {

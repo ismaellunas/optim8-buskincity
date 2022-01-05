@@ -27,7 +27,7 @@
                 default: false,
             },
             value: {
-                type: [String, Boolean, null],
+                type: [String, Number, Boolean, null],
                 default: null,
             },
         },
