@@ -184,7 +184,7 @@
                 if (!this.isSocialMediaLogin) {
                     this.toggleIsSocialMediaLogin();
                 } else {
-                    this.$inertia.get('/');
+                    window.location = "/";
                 }
             },
         }

@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             LanguageSeeder::class,
             TranslationSeeder::class,
+            FormSeeder::class,
         ]);
 
         // Wildcard permissions

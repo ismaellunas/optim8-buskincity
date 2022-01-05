@@ -1,10 +1,34 @@
 import Swal from 'sweetalert2';
-import { assign, clone } from 'lodash';
+import { assign, clone, get, has } from 'lodash';
 
 const timer = 1800;
+
 const defaultConfig = {
     scrollbarPadding: false,
 };
+
+const nonSweetAlertOptions = {
+    isScrollToTop: true
+};
+
+function scrollToTop() {
+    window.scrollTo(0,0);
+};
+
+function takeNonSweetAlertOptions(options)
+{
+    const takenOptions = clone(nonSweetAlertOptions);
+
+    Object.keys(nonSweetAlertOptions).forEach((key) => {
+        if (has(options, key)) {
+            takenOptions[key] = get(options, key);
+
+            delete options[key];
+        }
+    })
+
+    return takenOptions;
+}
 
 export function success(title, message) {
     Swal.fire(assign(
@@ -47,15 +71,25 @@ export function confirmDelete(
     });
 };
 
-export function oops(title = "Oops...", message = "Something went wrong!") {
+export function oops(options) {
+    options = assign({
+        title: "Oops...",
+        text: "Something went wrong!",
+    }, options);
+
+    const takenOptions = takeNonSweetAlertOptions(options);
+
     return Swal.fire(assign(
         clone(defaultConfig),
         {
             icon: 'error',
-            title: title,
-            text: message,
-            didClose: () => window.scrollTo(0,0),
-        }
+            didClose: () => {
+                if (takenOptions.isScrollToTop) {
+                    scrollToTop();
+                }
+            },
+        },
+        options
     ));
 };
 

@@ -4,6 +4,7 @@ import carousel from './carousel';
 import faq from './faq';
 import heading from './heading';
 import image from './image';
+import tabs from './tabs';
 import text from './text';
 
 export default {
@@ -13,5 +14,6 @@ export default {
     faq: faq,
     heading: heading,
     image: image,
+    tabs: tabs,
     text: text,
 }
