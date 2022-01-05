@@ -44,13 +44,5 @@
                 computedValue: useModelWrapper(props, emit),
             };
         },
-
-        mounted() {
-            if (this.modelValue == '') {
-                if (! isBlank(this.schema.default_value)) {
-                    this.computedValue = this.schema.default_value;
-                }
-            }
-        },
     };
 </script>
