@@ -26,7 +26,7 @@
                     <sdb-toolbar-content
                         v-if="totalTabs > 1"
                         :can-move="false"
-                        @delete-content="deleteTabs(tab.id)"
+                        @delete-content="deleteTabs(index)"
                     />
                     <a @click="selectedIndex = index">
                         <span
@@ -76,7 +76,7 @@
 
         <sdb-icon-browser
             v-if="isModalOpen"
-            :can-delete="true"
+            :can-remove="true"
             :has-type="true"
             :icon-classes="iconClasses"
             @close="closeModal()"
@@ -95,7 +95,7 @@
     import SdbIconBrowser from '@/Sdb/Modal/IconBrowser';
     import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { cloneDeep, concat } from 'lodash';
-    import { useModelWrapper, generateElementId } from '@/Libs/utils';
+    import { useModelWrapper } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
 
     export default {
@@ -156,22 +156,16 @@
 
             addTabs() {
                 let template = cloneDeep(this.entity.content.template);
-                template.id = generateElementId();
 
                 this.entity.content.tabs.push(template);
             },
 
-            deleteTabs(tabId) {
-                const self = this;
-                const index = self.entity.content.tabs.findIndex(
-                    tab => tab.id == tabId
-                );
+            deleteTabs(index) {
+                let self = this;
 
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
-                        if (index > -1) {
-                            self.entity.content.tabs.splice(index, 1);
-                        }
+                        self.entity.content.tabs.splice(index, 1);
                     }
                 });
             },
