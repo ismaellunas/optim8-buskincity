@@ -2,6 +2,7 @@
 
 namespace App\Entities\Forms\Fields;
 
+use App\Models\User;
 use Illuminate\Support\Str;
 
 abstract class BaseField
@@ -35,7 +36,7 @@ abstract class BaseField
         $this->disabled = $data['disabled'] ?? false;
         $this->readonly = $data['readonly'] ?? false;
         $this->validation = $data['validation'] ?? [];
-        $this->roles = $data['roles'] ?? [];
+        $this->roles = $data['visibility']['roles'] ?? [];
 
         if (array_key_exists('default_value', $data)) {
             $this->defaultValue = $data['default_value'];
@@ -96,5 +97,20 @@ abstract class BaseField
     public function validationMessages(): array
     {
         return $this->validation['messages'] ?? [];
+    }
+
+    public function canBeAccessed(User $author = null): bool
+    {
+        if (!empty($this->roles)) {
+            if (is_null($author)) {
+                return false;
+            }
+
+            if (!$author->hasRole(config('permission.super_admin_role'))) {
+                return $author->hasRole($this->roles);
+            }
+        }
+
+        return true;
     }
 }
