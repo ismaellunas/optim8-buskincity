@@ -16,6 +16,10 @@ class FormSeeder extends Seeder
     {
         $biodata = [
             "name" => "biodata",
+            "title" => "Biodata",
+            "visibility" => [
+                "roles" => [],
+            ],
             "fields" => [
                 "postcode" => [
                     "type" => "Text",
@@ -24,11 +28,11 @@ class FormSeeder extends Seeder
                     "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
-                    "maxlength" => 3,
+                    "maxlength" => 6,
                     "validation" => [
                         "rules" => [
                             "required",
-                            "max:1"
+                            "max:6"
                         ],
                         "messages" => []
                     ],
@@ -53,39 +57,45 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "wrapper" => [
-                        "class" => [],
-                        "style" => ""
-                    ]
                 ],
-                "job" => [
+                "education" => [
                     "type" => "Select",
-                    "label" => "Job",
-                    //"placeholder" => "Current Job/Position",
+                    "label" => "Education",
                     "readonly" => false,
                     "disabled" => false,
-                    "default_value" => "programmer",
                     "options" => [
-                        "programmer" => "Programmer",
-                        "pro-gamer" => "Pro-gamer",
+                        "bachelor" => "Bachelor Degree",
+                        "master" => "Master Degree",
                     ],
+                    "validation" => [
+                        "rules" => [],
+                        "messages" => []
+                    ],
+                ],
+                "next_of_kin" => [
+                    "type" => "Text",
+                    "label" => "Next Of Kin",
+                    "placeholder" => "Next Of Kin",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => 64,
                     "validation" => [
                         "rules" => [
                             "required",
+                            "max:64"
                         ],
                         "messages" => []
                     ],
-                    "wrapper" => [
-                        "class" => [],
-                        "style" => ""
-                    ]
+                    "visibility" => [
+                        "roles" => ['Human Resource'],
+                    ],
                 ],
-
                 "gender" => [
                     "type" => "Radio",
                     "label" => "Gender",
                     "disabled" => false,
-                    //"default_value" => "male",
+                    "default_value" => "male",
                     "options" => [
                         "male" => "Male",
                         "female" => "Female",
@@ -97,24 +107,6 @@ class FormSeeder extends Seeder
                         "messages" => [],
                     ],
                 ],
-
-                "term_and_condition" => [
-                    "type" => "Checkbox",
-                    "label" => "Term and Condition",
-                    "text" => "I agree to the <a href='/'>terms and conditions</a>",
-                    "disabled" => false,
-                    "true_value" => true,
-                    "false_value" => false,
-                    "default_value" => false,
-                    "is_raw" => false,
-                    "validation" => [
-                        "rules" => [
-                            "required",
-                        ],
-                        "messages" => [],
-                    ],
-                ],
-
                 "skills" => [
                     "type" => "CheckboxGroup",
                     "label" => "Skills",
@@ -128,6 +120,20 @@ class FormSeeder extends Seeder
                         "js" => "Javascript",
                         "pgsql" => "PostgreSQL",
                     ],
+                    "validation" => [
+                        "rules" => [],
+                        "messages" => [],
+                    ],
+                ],
+                "term_and_condition" => [
+                    "type" => "Checkbox",
+                    "label" => "Term and Condition",
+                    "text" => "I agree to the <a href='/'>terms and conditions</a>",
+                    "disabled" => false,
+                    "true_value" => true,
+                    "false_value" => false,
+                    "default_value" => false,
+                    "is_raw" => true,
                     "validation" => [
                         "rules" => [
                             "required",
