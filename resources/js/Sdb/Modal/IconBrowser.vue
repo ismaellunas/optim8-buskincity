@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div
-                    v-if="canDelete"
+                    v-if="canRemove"
                     class="columns"
                 >
                     <div class="column">
@@ -65,7 +65,7 @@
                             type="button"
                             @click="removeIcon()"
                         >
-                            Delete Icon
+                            Remove Icon
                         </sdb-button>
                     </div>
                 </div>
@@ -118,7 +118,7 @@
         },
 
         props: {
-            canDelete: {
+            canRemove: {
                 type: Boolean,
                 default: false,
             },
