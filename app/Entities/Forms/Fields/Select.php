@@ -14,9 +14,6 @@ class Select extends BaseField
     {
         parent::__construct($name, $data);
 
-        //$this->value = $data['value'] ?? '';
-        //$this->defaultValue = $data['default_value'] ?? null;
-
         $this->placeholder = $data['placeholder'] ?? '- Select -';
         $this->options = $data['options'] ?? [];
     }
