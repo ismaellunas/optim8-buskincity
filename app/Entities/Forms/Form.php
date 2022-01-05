@@ -12,6 +12,7 @@ class Form
     public $name;
     public $model;
     public $visibility;
+    public $title;
 
     public User $author;
 
@@ -40,6 +41,7 @@ class Form
 
         return [
             'name' => $this->name,
+            'title' => $this->title,
             'fields' => $fields,
             'buttons' => $this->buttons(),
         ];
