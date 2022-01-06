@@ -1,6 +1,7 @@
 <template>
     <label
         class="checkbox"
+        :class="labelClass"
         :disabled="isLabelDisabled"
     >
         <input
@@ -29,6 +30,10 @@
             value: {
                 type: [String, Number, Boolean, null],
                 default: null,
+            },
+            labelClass: {
+                type: [String, Array, Object],
+                default: () => []
             },
         },
 

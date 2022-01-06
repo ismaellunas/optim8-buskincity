@@ -2,10 +2,16 @@
 
 namespace App\Entities\Forms;
 
+use App\Contracts\ArrayValueFieldInterface;
+use App\Models\Form as FormModel;
 use Illuminate\Support\Collection;
 
 class Form
 {
+    public $id;
+    public $name;
+    public $model;
+
     protected $data;
     protected $fields;
 
@@ -30,7 +36,7 @@ class Form
 
     protected function getFieldClassName($type): string
     {
-        return "App\\Entities\\Forms\\".$type;
+        return "\\App\\Entities\\Forms\\Fields\\".$type;
     }
 
     protected function getFields($fields): Collection
@@ -80,6 +86,10 @@ class Form
 
         foreach ($this->fields as $name => $field) {
             $rules[$name] = $field->validationRules();
+
+            if ($field instanceof ArrayValueFieldInterface) {
+                $rules[$name.".*"] = $field->arrayValidationRules();
+            }
         }
 
         return $rules;

@@ -71,7 +71,7 @@ class FormSeeder extends Seeder
                     ],
                     "validation" => [
                         "rules" => [
-                            //"required",
+                            "required",
                         ],
                         "messages" => []
                     ],
@@ -79,6 +79,61 @@ class FormSeeder extends Seeder
                         "class" => [],
                         "style" => ""
                     ]
+                ],
+
+                "gender" => [
+                    "type" => "Radio",
+                    "label" => "Gender",
+                    "disabled" => false,
+                    //"default_value" => "male",
+                    "options" => [
+                        "male" => "Male",
+                        "female" => "Female",
+                    ],
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                        ],
+                        "messages" => [],
+                    ],
+                ],
+
+                "term_and_condition" => [
+                    "type" => "Checkbox",
+                    "label" => "Term and Condition",
+                    "text" => "I agree to the <a href='/'>terms and conditions</a>",
+                    "disabled" => false,
+                    "true_value" => true,
+                    "false_value" => false,
+                    "default_value" => false,
+                    "is_raw" => false,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                        ],
+                        "messages" => [],
+                    ],
+                ],
+
+                "skills" => [
+                    "type" => "CheckboxGroup",
+                    "label" => "Skills",
+                    "disabled" => false,
+                    "readonly" => false,
+                    "default_value" => ['php'],
+                    "is_raw" => false,
+                    "layout" => "vertical",
+                    "options" => [
+                        "php" => "PHP",
+                        "js" => "Javascript",
+                        "pgsql" => "PostgreSQL",
+                    ],
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                        ],
+                        "messages" => [],
+                    ],
                 ],
             ]
         ];

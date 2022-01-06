@@ -8,6 +8,7 @@ use App\Models\{
     Page,
 };
 use App\Services\{
+    MenuService,
     PageService,
     TranslationService,
 };
@@ -126,6 +127,14 @@ class PageController extends CrudController
             }
         }
 
+        $menuService = app(MenuService::class);
+        $languages = TranslationService::getLocales();
+        $headerMenuItems = $menuService->getHeaderMenus($languages);
+        $footerMenuItems = $menuService->getFooterMenus($languages);
+
+        $affectedHeaderMenu = $menuService->affectedMenuLocales($headerMenuItems, $page['id']);
+        $affectedFooterMenu = $menuService->affectedMenuLocales($footerMenuItems, $page['id']);
+
         $user = auth()->user();
 
         return Inertia::render('Page/Edit', [
@@ -142,6 +151,8 @@ class PageController extends CrudController
             'entityId' => $page->id,
             'statusOptions' => $this->model::getStatusOptions(),
             'images' => $images,
+            'affectedHeaderMenu' => $affectedHeaderMenu,
+            'affectedFooterMenu' => $affectedFooterMenu,
         ]);
     }
 
@@ -154,7 +165,11 @@ class PageController extends CrudController
      */
     public function update(PageRequest $request, Page $page)
     {
-        $page->saveFromInputs($request->all());
+        $inputs = $request->all();
+        $page->saveFromInputs($inputs);
+
+        $menuService = app(MenuService::class);
+        $menuService->removePageFromMenus($inputs);
 
         $this->generateFlashMessage('Page updated successfully!');
 

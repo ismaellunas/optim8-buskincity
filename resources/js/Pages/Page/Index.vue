@@ -76,10 +76,12 @@
                             <td>
                                 <div class="buttons">
                                     <sdb-button
-                                        v-for="translation in page.translations"
-                                        @click="openShow(translation.locale, page)"
-                                        class="is-info px-2 mr-1 is-small">
-                                        {{ translation.locale?.toUpperCase() }}
+                                        v-for="(translation, index) in page.availableTranslations"
+                                        :key="index"
+                                        class="is-info px-2 mr-1 is-small"
+                                        @click="openShow(translation, page)"
+                                    >
+                                        {{ translation?.toUpperCase() }}
                                     </sdb-button>
                                 </div>
                             </td>
