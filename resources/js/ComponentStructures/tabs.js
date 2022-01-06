@@ -1,10 +1,28 @@
 import { contentSizes, defaultOption } from './style-options';
 
+const dummyText = "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ad, quidem iure qui, dignissimos necessitatibus commodi laborum nisi atque quo quos libero pariatur deleniti natus laboriosam fuga, nemo non sequi tempore!</p>";
+
 export default {
     title: 'Tabs',
     componentName: 'Tabs',
     content: {
-        tabs: [],
+        tabs: [
+            {
+                name: 'First Tab',
+                icon: null,
+                html: dummyText,
+            },
+            {
+                name: 'Second Tab',
+                icon: null,
+                html: dummyText,
+            },
+            {
+                name: 'Third Tab',
+                icon: null,
+                html: dummyText,
+            },
+        ],
         template: {
             name: null,
             icon: null,

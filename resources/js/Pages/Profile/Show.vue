@@ -26,6 +26,12 @@
                     <jet-section-border />
                 </div>
 
+                <div>
+                    <biodata-form class="mt-10 sm:mt-0" />
+
+                    <jet-section-border />
+                </div>
+
                 <div v-if="$page.props.jetstream.canManageTwoFactorAuthentication && $page.props.socialstream.hasPassword">
                     <two-factor-authentication-form class="mt-10 sm:mt-0" />
 
@@ -65,11 +71,13 @@
     import UpdatePasswordForm from './UpdatePasswordForm'
     import UpdateProfileInformationForm from './UpdateProfileInformationForm'
     import ConnectedAccountsForm from './ConnectedAccountsForm';
+    import BiodataForm from './BiodataForm';
 
     export default {
         props: ['sessions'],
 
         components: {
+            BiodataForm,
             ConnectedAccountsForm,
             AppLayout,
             DeleteUserForm,

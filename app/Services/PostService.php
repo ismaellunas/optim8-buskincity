@@ -34,8 +34,7 @@ class PostService
                     $query->with([
                         'translations' => function ($query) {
                             $query
-                                ->select('id', 'name', 'category_id', 'locale')
-                                ->where('locale', TranslationService::getDefaultLocale());
+                                ->select('id', 'name', 'category_id', 'locale');
                         },
                     ]);
                 },
@@ -109,6 +108,12 @@ class PostService
                 ? $record->coverImage->thumbnailUrl
                 : null
             );
+
+            $record->categories->transform(function ($category) {
+                $category->name = $category->name ?? $category->translations[0]->name;
+
+                return $category;
+            });
 
             return $record;
         });
