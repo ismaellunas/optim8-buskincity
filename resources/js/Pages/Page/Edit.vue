@@ -39,6 +39,7 @@
     import { onPageEditorClicked } from '@/Libs/page-builder';
     import { ref, onMounted, onUnmounted } from 'vue';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { confirmDelete } from '@/Libs/alert';
 
     export default {
         components: {
@@ -52,6 +53,8 @@
             page: { type: Object, required: true },
             errors: { type: Object, default:() => {} },
             statusOptions: { type: Array, default:() => [] },
+            affectedHeaderMenu: { type: Object, default:() => {} },
+            affectedFooterMenu: { type: Object, default:() => {} }
         },
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
@@ -84,6 +87,8 @@
                 defaultLocale,
                 form: useForm(translationForm),
                 localeOptions: usePage().props.value.languageOptions,
+                headerMenuItems: props.headerMenuItems,
+                footerMenuItems: props.footerMenuItems,
             };
         },
         data() {
@@ -97,16 +102,55 @@
         methods: {
             onSubmit() {
                 const submitRoute = route('admin.pages.update', {id: this.page.id});
-                this.form.put(submitRoute, {
-                    onSuccess: () => {
-                        const translatedPage = getTranslation(
-                            this.page,
-                            this.selectedLocale
-                        );
+                if (
+                    this.affectedHeaderMenu[this.selectedLocale] === true
+                    || this.affectedFooterMenu[this.selectedLocale] === true
+                ) {
+                    if (this.form[this.selectedLocale].status === 0) {
+                        confirmDelete(
+                            'Are You Sure?',
+                            'This action will also remove the page on the navigation menu.',
+                            'Yes'
+                        ).then((result) => {
+                            if (result.isDismissed) {
+                                return false;
+                            } else if(result.isConfirmed) {
+                                this.form.put(submitRoute, {
+                                onSuccess: () => {
+                                    const translatedPage = getTranslation(
+                                        this.page,
+                                        this.selectedLocale
+                                    );
 
-                        this.form[this.selectedLocale]['id'] = translatedPage.id;
-                    },
-                });
+                                    this.form[this.selectedLocale]['id'] = translatedPage.id;
+                                },
+                            });
+                            }
+                        })
+                    } else {
+                        this.form.put(submitRoute, {
+                            onSuccess: () => {
+                                const translatedPage = getTranslation(
+                                    this.page,
+                                    this.selectedLocale
+                                );
+
+                                this.form[this.selectedLocale]['id'] = translatedPage.id;
+                            },
+                        });
+                    }
+                } else {
+                    this.form.put(submitRoute, {
+                        onSuccess: () => {
+                            const translatedPage = getTranslation(
+                                this.page,
+                                this.selectedLocale
+                            );
+
+                            this.form[this.selectedLocale]['id'] = translatedPage.id;
+                        },
+                    });
+                }
             },
             onChangeLocale(locale) {
                 if (this.form.isDirty) {
@@ -151,7 +195,7 @@
                     translationFrom[locale] = JSON.parse(JSON.stringify(translatedPage));
                 }
                 this.form = useForm(translationFrom);
-            },
+            }
         },
     }
 </script>

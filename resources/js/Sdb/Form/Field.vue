@@ -1,14 +1,17 @@
 <template>
     <sdb-field>
-        <sdb-label :is-required="isRequired">
-            <slot name="label"></slot>
+        <sdb-label
+            v-if="hasLabelSlot"
+            :is-required="isRequired"
+        >
+            <slot name="label" />
         </sdb-label>
 
         <div class="control">
-            <slot></slot>
+            <slot />
         </div>
 
-        <slot name="error"></slot>
+        <slot name="error" />
     </sdb-field>
 </template>
 
@@ -26,6 +29,11 @@
             isRequired: {
                 type: Boolean,
                 default: false,
+            }
+        },
+        computed: {
+            hasLabelSlot() {
+                return !!this.$slots.label;
             }
         }
     };

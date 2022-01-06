@@ -40,7 +40,7 @@ class PageController extends Controller
 
             return view('page', [
                 'currentLanguage' => $locale,
-                'images' => $this->getPageImages($pageTranslation, $locale),
+                'images' => $this->getPageImages($pageTranslation),
                 'page' => $pageTranslation,
             ]);
         } else {
@@ -55,14 +55,8 @@ class PageController extends Controller
 
     private function getPageImages(
         PageTranslation $pageTranslation,
-        string $locale
     ): Collection {
         $images = collect([]);
-
-        $locales = array_unique([
-            $this->translationService->getDefaultLocale(),
-            $locale,
-        ]);
 
         if (!empty($pageTranslation->data['media'])) {
             $mediaIds = collect($pageTranslation->data['media'])->pluck('id');
@@ -70,12 +64,16 @@ class PageController extends Controller
             $images = Media::whereIn('id', $mediaIds)
                 ->image()
                 ->with([
-                    'translations' => function ($q) use ($locales) {
+                    'translations' => function ($q) {
                         $q->select(['id', 'locale', 'alt', 'media_id']);
-                        $q->whereIn('locale', $locales);
                     },
                 ])
-                ->get(['id', 'file_url']);
+                ->get(['id', 'file_url'])
+                ->transform(function ($media) {
+                    $media->alt = $media->alt ?? $media->translations[0]->alt;
+
+                    return $media;
+                });
         }
 
         return $images;
@@ -96,6 +94,10 @@ class PageController extends Controller
         } else {
             $newPageTranslation = $page->translate($locale);
 
+            if ($newPageTranslation->status != PageTranslation::STATUS_PUBLISHED) {
+                return $this->redirectFallback();
+            }
+
             if ($newPageTranslation->slug !== $pageTranslation->slug) {
                 return redirect()->route($this->baseRouteName.'.show', [
                     $newPageTranslation->slug
@@ -104,7 +106,7 @@ class PageController extends Controller
 
             return view('page', [
                 'currentLanguage' => $locale,
-                'images' => $this->getPageImages($newPageTranslation, $locale),
+                'images' => $this->getPageImages($newPageTranslation),
                 'page' => $newPageTranslation,
             ]);
         }

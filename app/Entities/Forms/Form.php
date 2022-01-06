@@ -1,0 +1,143 @@
+<?php
+
+namespace App\Entities\Forms;
+
+use App\Contracts\ArrayValueFieldInterface;
+use App\Models\User;
+use Illuminate\Support\Collection;
+
+class Form
+{
+    public $id;
+    public $name;
+    public $model;
+    public $visibility;
+    public $title;
+
+    public User $author;
+
+    protected $data;
+    protected $fields;
+
+    public function __construct($id, array $data, User $author = null)
+    {
+        $this->id = $id;
+        $this->data = $data;
+        $this->name = $data['name'];
+        $this->title = $data['title'] ?? null;
+
+        if ($author) {
+            $this->author = $author;
+        }
+
+        $this->fields = $this->getFields($data['fields']);
+
+        $this->visibility = $data['visibility'] ?? [];
+    }
+
+    public function schema(array $values = []): array
+    {
+        $fields = $this->getFieldSchema($values);
+
+        return [
+            'name' => $this->name,
+            'title' => $this->title,
+            'fields' => $fields,
+            'buttons' => $this->buttons(),
+        ];
+    }
+
+    protected function getFieldClassName($type): string
+    {
+        return "\\App\\Entities\\Forms\\Fields\\".$type;
+    }
+
+    protected function getFields($fields): Collection
+    {
+        $fieldCollection = collect();
+
+        foreach ($fields as $name => $field) {
+            $className = $this->getFieldClassName($field['type']);
+
+            if (class_exists($className)) {
+                $fieldObject = new $className($name, $field);
+
+                if ($fieldObject->canBeAccessed($this->author)) {
+                    $fieldCollection->put($name, $fieldObject);
+                }
+            }
+        }
+
+        return $fieldCollection;
+    }
+
+    protected function getFieldSchema(array $values = []): Collection
+    {
+        $schema = collect();
+
+        foreach ($this->fields as $name => $field) {
+            $fieldSchema = $field->schema();
+
+            if (array_key_exists($name, $values)) {
+                $fieldSchema['value'] = $values[$name];
+            }
+
+            $schema->put($name, $fieldSchema);
+        }
+
+        return $schema;
+    }
+
+    protected function buttons(): array
+    {
+        return [
+            [
+                'label' => 'Submit'
+            ]
+        ];
+    }
+
+    public function rules(): array
+    {
+        $rules = [];
+
+        foreach ($this->fields as $name => $field) {
+            $rules[$name] = $field->validationRules();
+
+            if ($field instanceof ArrayValueFieldInterface) {
+                $rules[$name.".*"] = $field->arrayValidationRules();
+            }
+        }
+
+        return $rules;
+    }
+
+    public function attributes(): array
+    {
+        $attributes = [];
+
+        foreach ($this->fields as $name => $field) {
+            $attributes[$name] = $field->label;
+        }
+
+        return $attributes;
+    }
+
+    public function canBeAccessed(): bool
+    {
+        $author = $this->author;
+        $roles = $this->visibility['roles'] ?? [];
+
+        if (!empty($roles)) {
+            if (is_null($author)) {
+                return false;
+            }
+
+            if (!$author->hasRole(config('permission.super_admin_role'))) {
+                return $author->hasRole($roles);
+            }
+        }
+
+        return true;
+    }
+}

@@ -17,14 +17,15 @@
                             <div class="level-left">
                                 <div class="level-item">
                                     <sdb-link :href="route('login')">
-                                        <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-left" />
+                                        </span>
                                         <span>Back</span>
                                     </sdb-link>
                                 </div>
                             </div>
                             <div class="level-right">
-                                <div class="level-item">
-                                </div>
+                                <div class="level-item" />
                             </div>
                         </div>
                         <section class="section">
@@ -34,7 +35,10 @@
                                         Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
                                     </div>
 
-                                    <div v-if="status" class="notification is-info">
+                                    <div
+                                        v-if="status"
+                                        class="notification is-info"
+                                    >
                                         {{ status }}
                                     </div>
 
@@ -44,20 +48,23 @@
 
                                     <form @submit.prevent="submit">
                                         <div>
-                                            <jet-label for="email" value="Email" />
-                                            <jet-input
-                                                id="email"
+                                            <sdb-form-input
                                                 v-model="form.email"
-                                                type="email"
+                                                label="Email"
                                                 required
-                                                autofocus
+                                                type="email"
+                                                placeholder="Enter your email"
+                                                :message="error('email')"
                                             />
                                         </div>
 
                                         <div class="mt-4">
-                                            <jet-button class="button is-info" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                                            <sdb-button
+                                                class="button is-info"
+                                                :disabled="form.processing"
+                                            >
                                                 Email Password Reset Link
-                                            </jet-button>
+                                            </sdb-button>
                                         </div>
                                     </form>
                                 </div>
@@ -71,23 +78,29 @@
 </template>
 
 <script>
-    import JetButton from '@/Jetstream/Button'
-    import JetInput from '@/Jetstream/Input'
-    import JetLabel from '@/Jetstream/Label'
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import SdbButton from '@/Sdb/Button';
     import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import SdbFormInput from '@/Sdb/Form/Input';
     import SdbLink from '@/Sdb/Link';
 
     export default {
         components: {
-            JetButton,
-            JetInput,
-            JetLabel,
+            SdbButton,
             SdbErrorNotifications,
+            SdbFormInput,
             SdbLink,
         },
 
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
         props: {
-            status: String
+            status: {
+                type: String,
+                default: '',
+            }
         },
 
         data() {

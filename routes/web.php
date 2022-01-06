@@ -3,6 +3,7 @@
 use App\Facades\Localization;
 use App\Http\Controllers\{
     ChangeLanguageController,
+    FormController,
     Frontend\PageController,
     Frontend\PostCategoryController,
     Frontend\PostController,
@@ -83,4 +84,11 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
         ->name('password.email');
     Route::post('/reset-password', [NewPasswordController::class, 'store'])
         ->name('password.update');
+});
+
+Route::name('forms.')->prefix('forms')->group(function () {
+    Route::get('schema/{formName}', [FormController::class, 'getSchema'])
+        ->name('schema');
+    Route::post('save/{formName}', [FormController::class, 'submit'])
+        ->name('save');
 });
