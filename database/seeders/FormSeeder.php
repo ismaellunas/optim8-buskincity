@@ -18,28 +18,36 @@ class FormSeeder extends Seeder
             "name" => "biodata",
             "title" => "Biodata",
             "visibility" => [
-                "roles" => [],
             ],
             "fields" => [
-                "postcode" => [
-                    "type" => "Text",
-                    "label" => "Post Code",
-                    "placeholder" => "Post Code",
-                    "default_value" => "",
-                    "readonly" => false,
+                "gender" => [
+                    "type" => "Radio",
+                    "label" => "Gender",
                     "disabled" => false,
-                    "maxlength" => 6,
+                    "default_value" => "male",
+                    "options" => [
+                        "male" => "Male",
+                        "female" => "Female",
+                    ],
                     "validation" => [
                         "rules" => [
                             "required",
-                            "max:6"
+                        ],
+                        "messages" => [],
+                    ],
+                ],
+                "phone" => [
+                    "type" => "Phone",
+                    "label" => "Phone",
+                    "placeholder" => "Phone",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "validation" => [
+                        "rules" => [
                         ],
                         "messages" => []
                     ],
-                    "wrapper" => [
-                        "class" => [],
-                        "style" => ""
-                    ]
                 ],
                 "address" => [
                     "type" => "Textarea",
@@ -54,6 +62,22 @@ class FormSeeder extends Seeder
                         "rules" => [
                             "required",
                             "max:20"
+                        ],
+                        "messages" => []
+                    ],
+                ],
+                "postcode" => [
+                    "type" => "Text",
+                    "label" => "Post Code",
+                    "placeholder" => "Post Code",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                            "max:10",
+                            "digits_between:0,10"
                         ],
                         "messages" => []
                     ],
@@ -88,23 +112,28 @@ class FormSeeder extends Seeder
                         "messages" => []
                     ],
                     "visibility" => [
-                        "roles" => ['Human Resource'],
+                        "roles" => ['Administrator'],
                     ],
                 ],
-                "gender" => [
+                "blood_type" => [
                     "type" => "Radio",
-                    "label" => "Gender",
+                    "label" => "Blood Type",
                     "disabled" => false,
-                    "default_value" => "male",
+                    "layout" => "horizontal",
                     "options" => [
-                        "male" => "Male",
-                        "female" => "Female",
+                        "A" => "A",
+                        "B" => "B",
+                        "AB" => "AB",
+                        "O" => "O",
                     ],
                     "validation" => [
                         "rules" => [
                             "required",
                         ],
                         "messages" => [],
+                    ],
+                    "visibility" => [
+                        "roles" => ['Administrator'],
                     ],
                 ],
                 "skills" => [
