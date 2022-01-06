@@ -94,6 +94,10 @@ class PageController extends Controller
         } else {
             $newPageTranslation = $page->translate($locale);
 
+            if ($newPageTranslation->status != PageTranslation::STATUS_PUBLISHED) {
+                return $this->redirectFallback();
+            }
+
             if ($newPageTranslation->slug !== $pageTranslation->slug) {
                 return redirect()->route($this->baseRouteName.'.show', [
                     $newPageTranslation->slug
