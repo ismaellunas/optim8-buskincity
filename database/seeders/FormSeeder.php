@@ -21,25 +21,21 @@ class FormSeeder extends Seeder
                 "roles" => [],
             ],
             "fields" => [
-                "postcode" => [
-                    "type" => "Text",
-                    "label" => "Post Code",
-                    "placeholder" => "Post Code",
-                    "default_value" => "",
-                    "readonly" => false,
+                "gender" => [
+                    "type" => "Radio",
+                    "label" => "Gender",
                     "disabled" => false,
-                    "maxlength" => 6,
+                    "default_value" => null,
+                    "options" => [
+                        "male" => "Male",
+                        "female" => "Female",
+                    ],
                     "validation" => [
                         "rules" => [
                             "required",
-                            "max:6"
                         ],
-                        "messages" => []
+                        "messages" => [],
                     ],
-                    "wrapper" => [
-                        "class" => [],
-                        "style" => ""
-                    ]
                 ],
                 "address" => [
                     "type" => "Textarea",
@@ -57,6 +53,26 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
+                ],
+                "postcode" => [
+                    "type" => "Text",
+                    "label" => "Post Code",
+                    "placeholder" => "Post Code",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                            "max:10",
+                            "digits_between:0,10",
+                        ],
+                        "messages" => []
+                    ],
+                    "wrapper" => [
+                        "class" => [],
+                        "style" => ""
+                    ]
                 ],
                 "education" => [
                     "type" => "Select",
@@ -88,23 +104,28 @@ class FormSeeder extends Seeder
                         "messages" => []
                     ],
                     "visibility" => [
-                        "roles" => ['Human Resource'],
+                        "roles" => ['Administrator'],
                     ],
                 ],
-                "gender" => [
+                "blood_type" => [
                     "type" => "Radio",
-                    "label" => "Gender",
+                    "label" => "Blood Type",
                     "disabled" => false,
-                    "default_value" => "male",
+                    "layout" => "horizontal",
                     "options" => [
-                        "male" => "Male",
-                        "female" => "Female",
+                        "A" => "A",
+                        "B" => "B",
+                        "AB" => "AB",
+                        "O" => "O",
                     ],
                     "validation" => [
                         "rules" => [
                             "required",
                         ],
                         "messages" => [],
+                    ],
+                    "visibility" => [
+                        "roles" => ['Administrator'],
                     ],
                 ],
                 "skills" => [
@@ -114,11 +135,17 @@ class FormSeeder extends Seeder
                     "readonly" => false,
                     "default_value" => ['php'],
                     "is_raw" => false,
-                    "layout" => "vertical",
+                    "layout" => "horizontal",
                     "options" => [
-                        "php" => "PHP",
-                        "js" => "Javascript",
-                        "pgsql" => "PostgreSQL",
+                        "actor" => "Actor",
+                        "choreographer" => "Choreographer",
+                        "circus_performer" => "Circus Performer",
+                        "comedian" => "Comedian",
+                        "dancer" => "Dancer",
+                        "magician" => "Magician",
+                        "musician" => "Musician",
+                        "singer" => "Singer",
+                        "stuntman" => "Stuntman",
                     ],
                     "validation" => [
                         "rules" => [],
@@ -128,7 +155,7 @@ class FormSeeder extends Seeder
                 "term_and_condition" => [
                     "type" => "Checkbox",
                     "label" => "Term and Condition",
-                    "text" => "I agree to the <a href='/'>terms and conditions</a>",
+                    "text" => "I agree to the <a href='/' target='_blank'>terms and conditions</a>",
                     "disabled" => false,
                     "true_value" => true,
                     "false_value" => false,
