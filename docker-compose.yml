@@ -25,6 +25,14 @@ services:
         depends_on:
             - pgsql
             - redis
+        deploy:
+          resources:
+            limits:
+              cpus: '3'
+              memory: 2000M
+            reservations:
+              cpus: '0.25'
+              memory: 500M
     pgsql:
         image: 'postgres:13'
         ports:
@@ -42,6 +50,12 @@ services:
             test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
             retries: 3
             timeout: 5s
+        deploy:
+          resources:
+            limits:
+              memory: 500M
+            reservations:
+              memory: 10M
     redis:
         image: 'redis:alpine'
         ports:
@@ -50,6 +64,14 @@ services:
             - 'sailredis:/data'
         networks:
             - sail
+        deploy:
+          resources:
+            limits:
+              cpus: '0.05'
+              memory: 10M
+            reservations:
+              cpus: '0.01'
+              memory: 5M
         healthcheck:
           test: ["CMD", "redis-cli", "ping"]
           retries: 3
@@ -61,6 +83,12 @@ services:
             - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
         networks:
             - sail
+        deploy:
+          resources:
+            limits:
+              memory: 200M
+            reservations:
+              memory: 10M
 networks:
     sail:
         driver: bridge
