@@ -1,7 +1,7 @@
 <template>
-    <sdb-form-section>
+    <sdb-form-section v-show="isShown">
         <template #title>
-            Biodata
+            {{ title }}
         </template>
 
         <template #description>
@@ -11,6 +11,8 @@
         <template #form>
             <form-biodata
                 :name="formName"
+                @loaded-forbidden="onLoadedForbidden"
+                @loaded-successfully="onLoadedSuccessfully"
             />
         </template>
     </sdb-form-section>
@@ -31,7 +33,20 @@
         data() {
             return {
                 formName: 'biodata',
+                isShown: false,
+                title: '',
             };
         },
+
+        methods: {
+            onLoadedForbidden() {
+                this.isShown = false;
+            },
+
+            onLoadedSuccessfully(data) {
+                this.isShown = true;
+                this.title = data.title;
+            },
+        }
     }
 </script>
