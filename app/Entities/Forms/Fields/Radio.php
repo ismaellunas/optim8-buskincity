@@ -2,8 +2,6 @@
 
 namespace App\Entities\Forms\Fields;
 
-use Illuminate\Support\Str;
-
 class Radio extends BaseField
 {
     protected $type = 'Radio';
@@ -20,16 +18,13 @@ class Radio extends BaseField
     public function schema(): array
     {
         $schema = [
-            'type' => $this->type,
-            'name' => $this->name,
-            'label' => $this->label,
-            'default_value' => $this->defaultValue,
-            'is_disabled' => $this->disabled,
-            'is_required' => $this->isRequired(),
             'options' => $this->options,
         ];
 
-        return $schema;
+        return array_merge(
+            parent::schema(),
+            $schema
+        );
     }
 
     private function adjustInRule(&$rules)
@@ -53,28 +48,5 @@ class Radio extends BaseField
         $this->adjustNullableRule($rules);
 
         return $rules;
-    }
-
-    public function formattedRules(): array
-    {
-        $rules = [];
-
-        foreach($this->validationRules() as $rule) {
-
-            if (is_string($rule)) {
-                if (Str::contains($rule, ":")) {
-                    list($ruleName, $ruleParams) = explode(":", $rule);
-                    $rules[$ruleName] = explode(',', $ruleParams);
-                } else {
-                    $rules[] = $rule;
-                }
-            }
-        }
-        return $rules;
-    }
-
-    public function validationMessages(): array
-    {
-        return $this->validation['messages'] ?? [];
     }
 }

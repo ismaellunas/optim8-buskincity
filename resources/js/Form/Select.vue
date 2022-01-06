@@ -52,8 +52,8 @@
 
         mounted() {
             if (this.modelValue == '') {
-                if (! isBlank(this.schema.default_value)) {
-                    this.computedValue = this.schema.default_value;
+                if (this.schema.default_value == this.modelValue) {
+                    this.computedValue = null;
                 }
             }
         },
