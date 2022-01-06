@@ -1,5 +1,5 @@
 <template>
-    <jet-form-section>
+    <sdb-form-section>
         <template #title>
             Biodata
         </template>
@@ -13,19 +13,19 @@
                 :name="formName"
             />
         </template>
-    </jet-form-section>
+    </sdb-form-section>
 </template>
 
 <script>
-    import JetFormSection from '@/Jetstream/FormSection'
     import FormBiodata from '@/Form/FormBuilder';
+    import SdbFormSection from '@/Sdb/FormSection';
 
     export default {
         name: 'BiodataForm',
 
         components: {
             FormBiodata,
-            JetFormSection,
+            SdbFormSection,
         },
 
         data() {
