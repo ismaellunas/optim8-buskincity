@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities\Forms;
+namespace App\Entities\Forms\Fields;
 
 class Textarea extends Text
 {

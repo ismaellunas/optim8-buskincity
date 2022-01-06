@@ -21,7 +21,10 @@
 </template>
 
 <script>
+    import Checkbox from './Checkbox';
+    import CheckboxGroup from './CheckboxGroup';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import Radio from './Radio';
     import SdbButton from '@/Sdb/Button';
     import Select from './Select';
     import Text from './Text';
@@ -34,6 +37,9 @@
         name: 'FormBuilder',
 
         components: {
+            Checkbox,
+            CheckboxGroup,
+            Radio,
             SdbButton,
             Select,
             Text,
