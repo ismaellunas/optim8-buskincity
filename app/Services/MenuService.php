@@ -8,6 +8,7 @@ use App\Models\{
     Menu,
     MenuItem,
     Page,
+    PageTranslation,
     Post,
     Role,
     User,
@@ -337,24 +338,28 @@ class MenuService
                         'page_id',
                         'locale',
                         'title',
-                    ]);
+                    ])
+                    ->published();
                 },
             ])
             ->get(['id'])
             ->map(function ($page) {
-
-                $locales = $page
-                    ->translations
-                    ->map(function ($translation) {
-                        return $translation->locale;
-                    });
-
-                return [
-                    'id' => $page->id,
-                    'value' => $page->title ?? $page->translations[0]->title,
-                    'locales' => $locales,
-                ];
+                if (count($page->translations) !== 0) {
+                    $locales = $page
+                        ->translations
+                        ->map(function ($translation) {
+                            return $translation->locale;
+                        });
+                    return [
+                        'id' => $page->id,
+                        'value' => $page->title ?? $page->translations[0]->title,
+                        'locales' => $locales,
+                    ];
+                }
+            })->filter(function ($value) {
+                return $value != null;
             })
+            ->values()
             ->all();
     }
 
@@ -416,5 +421,58 @@ class MenuService
                 ];
             })
             ->all();
+    }
+
+    public function affectedMenuLocales(array $menus, int $page_id): array
+    {
+        $isPageUsed = [];
+
+        foreach ($menus as $locale => $menuItems) {
+            $isPageUsed[$locale] = false;
+            foreach ($menuItems as $menuItem) {
+                if ($menuItem->page_id === $page_id) {
+                    $isPageUsed[$locale] = true;
+                }
+            }
+        }
+
+        return $isPageUsed;
+    }
+
+    public function removePageFromMenus(array $inputs)
+    {
+        $languages = TranslationService::getLocales();
+        $headerMenuItems = $this->getHeaderMenus($languages);
+        $footerMenuItems = $this->getFooterMenus($languages);
+        foreach ($inputs as $locale => $input) {
+            if (count($input) > 0 && isset($input['page_id'])) {
+                $this->removeMenuItems($headerMenuItems, $locale, $input['page_id'], $input['status']);
+                $this->removeMenuItems($footerMenuItems, $locale, $input['page_id'], $input['status']);
+            }
+        }
+        app(MenuCache::class)->flush();
+    }
+
+    private function removeMenuItems(
+        array $menuItems,
+        string $locale,
+        int $pageId,
+        int $pageStatus
+    ) {
+        foreach($menuItems[$locale] as $menuItem) {
+            if ($pageId === $menuItem['page_id']) {
+                if ($pageStatus === PageTranslation::STATUS_DRAFT) {
+                    $menus = Menu::with(['menuItems' => function($query) use($pageId){
+                        $query->where('page_id', $pageId);
+                    }])
+                    ->where('locale', $locale)->get();
+                    foreach ($menus as $menu) {
+                        if (count($menu->menuItems) > 0) {
+                            $menu->menuItems[0]->delete();
+                        }
+                    }
+                }
+            }
+        }
     }
 }
