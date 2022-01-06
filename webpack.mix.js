@@ -30,17 +30,6 @@ if (mix.inProduction()) {
     mix.copy('node_modules/vue-loading-overlay/dist/vue-loading.css', 'public/css');
     // mix.js('resources/js/local.js', 'public/js');
 
-    mix.after(() => {
-        exec('php artisan optimize:clear', (error, stdout, stderr) => {
-            if (error) {
-                console.error(`exec error: ${error}`);
-                return;
-            }
-            console.log(`stdout: ${stdout}`);
-            console.error(`stderr: ${stderr}`);
-        });
-    });
-
     mix.browserSync({
         host: '127.0.0.1',
         proxy: 'localhost',
