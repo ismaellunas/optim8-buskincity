@@ -62,3 +62,20 @@ export const fixedSquares = [
     { value: "is-96x96", name: "96x96 px" },
     { value: "is-128x128", name: "128x128 px" }
 ];
+
+export const colors = [
+    { value: "is-primary", name: "Primary" },
+    { value: "is-link", name: "Link" },
+    { value: "is-info", name: "Info" },
+    { value: "is-success", name: "Success" },
+    { value: "is-warning", name: "Warning" },
+    { value: "is-danger", name: "Danger" },
+];
+
+export const otherColors = [
+    { value: "is-white", name: "White" },
+    { value: "is-light", name: "Grey" },
+    { value: "is-dark", name: "Dark" },
+    { value: "is-black", name: "Black" },
+    { value: "is-text", name: "Text" },
+];
