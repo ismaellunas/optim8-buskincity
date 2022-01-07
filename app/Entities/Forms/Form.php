@@ -4,6 +4,7 @@ namespace App\Entities\Forms;
 
 use App\Contracts\ArrayValueFieldInterface;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class Form
@@ -123,21 +124,38 @@ class Form
         return $attributes;
     }
 
-    public function canBeAccessed(): bool
+    public function canBeAccessed(?Model $entity = null): bool
     {
         $author = $this->author;
         $roles = $this->visibility['roles'] ?? [];
 
-        if (!empty($roles)) {
-            if (is_null($author)) {
-                return false;
-            }
+        if (is_null($author)) {
+            return false;
+        }
 
-            if (!$author->hasRole(config('permission.super_admin_role'))) {
-                return $author->hasRole($roles);
+        if ($author->hasRole([
+            config('permission.super_admin_role'),
+            'Administrator'
+        ])) {
+            return true;
+        }
+
+        if (!empty($roles)) {
+            return $author->hasRole($roles);
+        }
+
+        if (is_null($entity)) {
+
+            $author->hasPermissionTo('user.add');
+
+        } else {
+            if ($entity->id == $author->id) {
+                return true;
+            } else {
+                return $author->hasPermissionTo('user.edit');
             }
         }
 
-        return true;
+        return false;
     }
 }

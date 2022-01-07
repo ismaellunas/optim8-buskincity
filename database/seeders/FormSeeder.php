@@ -111,9 +111,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "visibility" => [
-                        "roles" => ['Administrator'],
-                    ],
+                    "visibility" => [],
                 ],
                 "blood_type" => [
                     "type" => "Radio",
@@ -132,16 +130,14 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => [],
                     ],
-                    "visibility" => [
-                        "roles" => ['Administrator'],
-                    ],
+                    "visibility" => [],
                 ],
                 "skills" => [
                     "type" => "CheckboxGroup",
                     "label" => "Skills",
                     "disabled" => false,
                     "readonly" => false,
-                    "default_value" => ['php'],
+                    "default_value" => [],
                     "is_raw" => false,
                     "layout" => "horizontal",
                     "options" => [
@@ -160,6 +156,25 @@ class FormSeeder extends Seeder
                         "messages" => [],
                     ],
                 ],
+
+                "criminal_record" => [
+                    "type" => "Textarea",
+                    "label" => "Criminal Record",
+                    "placeholder" => "...",
+                    "default_value" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => "",
+                    "rows" => "",
+                    "validation" => [
+                        "rules" => [],
+                        "messages" => []
+                    ],
+                    "visibility" => [
+                        "roles" => ['Administrator']
+                    ]
+                ],
+
                 "term_and_condition" => [
                     "type" => "Checkbox",
                     "label" => "Term and Condition",

@@ -69,6 +69,30 @@
                     </fieldset>
                 </div>
             </form>
+
+            <div class="columns">
+                <div class="column">
+                    <fieldset
+                        class="box"
+                        :disabled="isProcessing"
+                    >
+                        <h3 class="title is-3">
+                            {{ formTitle }}
+                        </h3>
+
+                        <hr>
+
+                        <form-biodata
+                            :name="formName"
+                            :entity-id="record.id"
+                            button-label="Update"
+                            button-group-align="right"
+                            button-class="is-link"
+                            @loaded-successfully="onFormLoadedSuccessfully"
+                        />
+                    </fieldset>
+                </div>
+            </div>
         </div>
     </app-layout>
 </template>
@@ -83,6 +107,7 @@
     import { map } from 'lodash';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import FormBiodata from '@/Form/FormBuilder';
 
     export default {
         components: {
@@ -92,6 +117,7 @@
             SdbButton,
             SdbButtonLink,
             SdbErrorNotifications,
+            FormBiodata,
         },
 
         props: {
@@ -128,6 +154,8 @@
                 baseRouteName: 'admin.users',
                 isProcessing: false,
                 loader: null,
+                formName: 'biodata',
+                formTitle: '',
             };
         },
 
@@ -172,6 +200,10 @@
                     }
                 });
             },
+
+            onFormLoadedSuccessfully(schema) {
+                this.formTitle = schema.title;
+            }
         },
     };
 </script>

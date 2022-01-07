@@ -11,6 +11,7 @@
         <template #form>
             <form-biodata
                 :name="formName"
+                :entity-id="user.id"
                 @loaded-forbidden="onLoadedForbidden"
                 @loaded-successfully="onLoadedSuccessfully"
             />
@@ -28,6 +29,10 @@
         components: {
             FormBiodata,
             JetFormSection,
+        },
+
+        props: {
+            user: {type: Object, required: true}
         },
 
         data() {
