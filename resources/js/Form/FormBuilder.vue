@@ -9,14 +9,28 @@
             :message="error(field.name, bagName, form.errors)"
         />
 
-        <sdb-button
-            v-for="button in schema.buttons"
-            :key="button.label"
-            class="is-primary"
-            @click="submit"
-        >
-            {{ button.label }}
-        </sdb-button>
+        <div :class="buttonGroupClass">
+            <div class="control">
+                <sdb-button
+                    v-if="buttonLabel"
+                    :class="buttonClass"
+                    @click="submit"
+                >
+                    {{ buttonLabel }}
+                </sdb-button>
+
+                <template v-else>
+                    <sdb-button
+                        v-for="button in schema.buttons"
+                        :key="button.label"
+                        :class="buttonClass"
+                        @click="submit"
+                    >
+                        {{ button.label }}
+                    </sdb-button>
+                </template>
+            </div>
+        </div>
     </form>
 </template>
 
