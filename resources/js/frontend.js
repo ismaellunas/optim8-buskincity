@@ -1,5 +1,8 @@
 import { createApp } from 'vue';
+import JsFileDownloader from 'js-file-downloader';
+
 const app = createApp({});
+window.JsFileDownloader = JsFileDownloader;
 
 // Components
 import Carousel from '@/Components/Builder/Content/Carousel';

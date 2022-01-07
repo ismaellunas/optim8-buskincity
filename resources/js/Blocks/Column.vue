@@ -46,6 +46,7 @@
 </template>
 
 <script>
+    import Button from '@/Blocks/Contents/Button';
     import Card from '@/Blocks/Contents/Card';
     import CardText from '@/Blocks/Contents/CardText';
     import Carousel from '@/Blocks/Contents/Carousel';
@@ -60,6 +61,7 @@
 
     export default {
         components: {
+            Button,
             Card,
             CardText,
             Carousel,
