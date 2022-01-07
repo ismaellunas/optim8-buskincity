@@ -27,8 +27,10 @@
                 </div>
 
                 <div>
-                    <biodata-form class="mt-10 sm:mt-0" />
-
+                    <biodata-form
+                        class="mt-10 sm:mt-0"
+                        :user="$page.props.user"
+                    />
                     <jet-section-border />
                 </div>
 

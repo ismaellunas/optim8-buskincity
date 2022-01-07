@@ -53,6 +53,10 @@
         props: {
             name: { type: String, required: true },
             bagName: { type: String, default: 'formBuilder' },
+            entityId: { type: [Number, String], default: null},
+            buttonLabel: { type: String, default: null},
+            buttonGroupAlign: { type: String, default: 'left'},
+            buttonClass: {type: String, default: 'is-primary'}
         },
 
         emits: [
@@ -68,28 +72,45 @@
             };
         },
 
+        computed: {
+            buttonGroupClass() {
+                return [
+                    'field',
+                    'is-grouped',
+                    'is-grouped-' + this.buttonGroupAlign,
+                ];
+            },
+        },
+
         mounted() {
             const self = this;
 
-            axios.get(route("forms.schema", self.name))
-                .then((response) => {
-                    self.schema = response.data;
+            axios.get(
+                route("forms.schema", self.name),
+                {
+                    params: {id: self.entityId}
+                }
 
-                    self.form = self.createForm(self.schema.fields);
-                    self.$emit('loaded-successfully', response.data);
-                })
-                .catch((error) => {
-                    if (error.response) {
-                        if (error.response.status == 403) {
-                            self.$emit('loaded-forbidden', error.response);
-                        }
+            ).then((response) => {
+                self.schema = response.data;
+
+                self.form = self.createForm(self.schema.fields);
+                self.$emit('loaded-successfully', response.data);
+
+            }).catch((error) => {
+                if (error.response) {
+                    if (error.response.status == 403) {
+                        self.$emit('loaded-forbidden', error.response);
                     }
-                });
+                }
+            });
         },
 
         methods: {
             createForm(fields) {
-                const form = {};
+                const form = {
+                    id: this.entityId
+                };
 
                 if (!isEmpty(fields)) {
                     for (const [key, field] of Object.entries(fields)) {

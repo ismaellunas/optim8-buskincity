@@ -36,7 +36,7 @@ class FormController extends Controller
         }
 
         $values = FormValue::where('form_id', $form->id)
-            ->where('user_id', auth()->user()->id)
+            ->where('user_id', request()->get('id'))
             ->value('data') ?? [];
 
         if ($form) {
@@ -54,7 +54,7 @@ class FormController extends Controller
 
         $formValue = FormValue::firstOrNew([
             'form_id' => $formId,
-            'user_id' => auth()->user()->id,
+            'user_id' => $request->get('id'),
         ]);
 
         $formValue->data = $inputs;
