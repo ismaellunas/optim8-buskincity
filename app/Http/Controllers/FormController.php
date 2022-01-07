@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FormValueRequest;
-use App\Models\Form;
-use App\Models\FormValue;
+use App\Models\{
+    Form,
+    FormValue,
+    User,
+};
 use App\Services\FormService;
 use App\Traits\FlashNotifiable;
 
@@ -26,7 +29,9 @@ class FormController extends Controller
             auth()->user()
         );
 
-        if (!$form || !$form->canBeAccessed()) {
+        $entity = User::find(request()->get('id'));
+
+        if (!$form || !$form->canBeAccessed($entity)) {
             return response()->json(['error' => 'Not authorized.'], 403);
         }
 
