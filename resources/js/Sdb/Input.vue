@@ -5,7 +5,7 @@
         :class="{'is-danger' : hasError}"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
-    />
+    >
 </template>
 
 <script>
