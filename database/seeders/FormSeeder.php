@@ -18,7 +18,6 @@ class FormSeeder extends Seeder
             "name" => "biodata",
             "title" => "Biodata",
             "visibility" => [
-                "roles" => [],
             ],
             "fields" => [
                 "gender" => [
@@ -33,6 +32,19 @@ class FormSeeder extends Seeder
                     "validation" => [
                         "rules" => [
                             "required",
+                        ],
+                        "messages" => [],
+                    ],
+                ],
+                "phone" => [
+                    "type" => "Phone",
+                    "label" => "Phone",
+                    "placeholder" => "Phone",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "validation" => [
+                        "rules" => [
                         ],
                         "messages" => [],
                     ],
@@ -65,14 +77,10 @@ class FormSeeder extends Seeder
                         "rules" => [
                             "required",
                             "max:10",
-                            "digits_between:0,10",
+                            "digits_between:0,10"
                         ],
                         "messages" => []
                     ],
-                    "wrapper" => [
-                        "class" => [],
-                        "style" => ""
-                    ]
                 ],
                 "education" => [
                     "type" => "Select",
@@ -103,9 +111,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "visibility" => [
-                        "roles" => ['Administrator'],
-                    ],
+                    "visibility" => [],
                 ],
                 "blood_type" => [
                     "type" => "Radio",
@@ -124,16 +130,14 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => [],
                     ],
-                    "visibility" => [
-                        "roles" => ['Administrator'],
-                    ],
+                    "visibility" => [],
                 ],
                 "skills" => [
                     "type" => "CheckboxGroup",
                     "label" => "Skills",
                     "disabled" => false,
                     "readonly" => false,
-                    "default_value" => ['php'],
+                    "default_value" => [],
                     "is_raw" => false,
                     "layout" => "horizontal",
                     "options" => [
@@ -152,6 +156,25 @@ class FormSeeder extends Seeder
                         "messages" => [],
                     ],
                 ],
+
+                "criminal_record" => [
+                    "type" => "Textarea",
+                    "label" => "Criminal Record",
+                    "placeholder" => "...",
+                    "default_value" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => "",
+                    "rows" => "",
+                    "validation" => [
+                        "rules" => [],
+                        "messages" => []
+                    ],
+                    "visibility" => [
+                        "roles" => ['Administrator']
+                    ]
+                ],
+
                 "term_and_condition" => [
                     "type" => "Checkbox",
                     "label" => "Term and Condition",

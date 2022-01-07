@@ -1,3 +1,4 @@
+import button from './button';
 import card from './card';
 import cardText from './card-text';
 import carousel from './carousel';
@@ -8,6 +9,7 @@ import tabs from './tabs';
 import text from './text';
 
 export default {
+    button: button,
     card: card,
     cardText: cardText,
     carousel: carousel,
