@@ -55,6 +55,11 @@
             bagName: { type: String, default: 'formBuilder' },
         },
 
+        emits: [
+            'loaded-forbidden',
+            'loaded-successfully'
+        ],
+
         data() {
             return {
                 form: useForm({}),
@@ -71,6 +76,14 @@
                     self.schema = response.data;
 
                     self.form = self.createForm(self.schema.fields);
+                    self.$emit('loaded-successfully', response.data);
+                })
+                .catch((error) => {
+                    if (error.response) {
+                        if (error.response.status == 403) {
+                            self.$emit('loaded-forbidden', error.response);
+                        }
+                    }
                 });
         },
 

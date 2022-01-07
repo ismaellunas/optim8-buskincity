@@ -14,7 +14,9 @@ class FormValueRequest extends FormRequest
 
     public function authorize()
     {
-        return true;
+        $form = $this->getForm($this->route('formName'));
+
+        return $form->canBeAccessed();
     }
 
     public function rules()
@@ -46,7 +48,10 @@ class FormValueRequest extends FormRequest
         if ($this->form === null) {
             $formService = app(FormService::class);
 
-            $this->form = $formService->getFormByName($formName);
+            $this->form = $formService->getFormByName(
+                $formName,
+                auth()->user()
+            );
         }
 
         return $this->form;

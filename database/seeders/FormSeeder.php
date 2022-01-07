@@ -16,26 +16,26 @@ class FormSeeder extends Seeder
     {
         $biodata = [
             "name" => "biodata",
+            "title" => "Biodata",
+            "visibility" => [
+                "roles" => [],
+            ],
             "fields" => [
-                "postcode" => [
-                    "type" => "Text",
-                    "label" => "Post Code",
-                    "placeholder" => "Post Code",
-                    "default_value" => "",
-                    "readonly" => false,
+                "gender" => [
+                    "type" => "Radio",
+                    "label" => "Gender",
                     "disabled" => false,
-                    "maxlength" => 3,
+                    "default_value" => null,
+                    "options" => [
+                        "male" => "Male",
+                        "female" => "Female",
+                    ],
                     "validation" => [
                         "rules" => [
                             "required",
-                            "max:1"
                         ],
-                        "messages" => []
+                        "messages" => [],
                     ],
-                    "wrapper" => [
-                        "class" => [],
-                        "style" => ""
-                    ]
                 ],
                 "address" => [
                     "type" => "Textarea",
@@ -53,25 +53,19 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "wrapper" => [
-                        "class" => [],
-                        "style" => ""
-                    ]
                 ],
-                "job" => [
-                    "type" => "Select",
-                    "label" => "Job",
-                    //"placeholder" => "Current Job/Position",
+                "postcode" => [
+                    "type" => "Text",
+                    "label" => "Post Code",
+                    "placeholder" => "Post Code",
+                    "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
-                    "default_value" => "programmer",
-                    "options" => [
-                        "programmer" => "Programmer",
-                        "pro-gamer" => "Pro-gamer",
-                    ],
                     "validation" => [
                         "rules" => [
                             "required",
+                            "max:10",
+                            "digits_between:0,10",
                         ],
                         "messages" => []
                     ],
@@ -80,41 +74,60 @@ class FormSeeder extends Seeder
                         "style" => ""
                     ]
                 ],
-
-                "gender" => [
-                    "type" => "Radio",
-                    "label" => "Gender",
+                "education" => [
+                    "type" => "Select",
+                    "label" => "Education",
+                    "readonly" => false,
                     "disabled" => false,
-                    //"default_value" => "male",
                     "options" => [
-                        "male" => "Male",
-                        "female" => "Female",
+                        "bachelor" => "Bachelor Degree",
+                        "master" => "Master Degree",
                     ],
                     "validation" => [
-                        "rules" => [
-                            "required",
-                        ],
-                        "messages" => [],
+                        "rules" => [],
+                        "messages" => []
                     ],
                 ],
-
-                "term_and_condition" => [
-                    "type" => "Checkbox",
-                    "label" => "Term and Condition",
-                    "text" => "I agree to the <a href='/'>terms and conditions</a>",
+                "next_of_kin" => [
+                    "type" => "Text",
+                    "label" => "Next Of Kin",
+                    "placeholder" => "Next Of Kin",
+                    "default_value" => "",
+                    "readonly" => false,
                     "disabled" => false,
-                    "true_value" => true,
-                    "false_value" => false,
-                    "default_value" => false,
-                    "is_raw" => false,
+                    "maxlength" => 64,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                            "max:64"
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [
+                        "roles" => ['Administrator'],
+                    ],
+                ],
+                "blood_type" => [
+                    "type" => "Radio",
+                    "label" => "Blood Type",
+                    "disabled" => false,
+                    "layout" => "horizontal",
+                    "options" => [
+                        "A" => "A",
+                        "B" => "B",
+                        "AB" => "AB",
+                        "O" => "O",
+                    ],
                     "validation" => [
                         "rules" => [
                             "required",
                         ],
                         "messages" => [],
                     ],
+                    "visibility" => [
+                        "roles" => ['Administrator'],
+                    ],
                 ],
-
                 "skills" => [
                     "type" => "CheckboxGroup",
                     "label" => "Skills",
@@ -122,12 +135,32 @@ class FormSeeder extends Seeder
                     "readonly" => false,
                     "default_value" => ['php'],
                     "is_raw" => false,
-                    "layout" => "vertical",
+                    "layout" => "horizontal",
                     "options" => [
-                        "php" => "PHP",
-                        "js" => "Javascript",
-                        "pgsql" => "PostgreSQL",
+                        "actor" => "Actor",
+                        "choreographer" => "Choreographer",
+                        "circus_performer" => "Circus Performer",
+                        "comedian" => "Comedian",
+                        "dancer" => "Dancer",
+                        "magician" => "Magician",
+                        "musician" => "Musician",
+                        "singer" => "Singer",
+                        "stuntman" => "Stuntman",
                     ],
+                    "validation" => [
+                        "rules" => [],
+                        "messages" => [],
+                    ],
+                ],
+                "term_and_condition" => [
+                    "type" => "Checkbox",
+                    "label" => "Term and Condition",
+                    "text" => "I agree to the <a href='/' target='_blank'>terms and conditions</a>",
+                    "disabled" => false,
+                    "true_value" => true,
+                    "false_value" => false,
+                    "default_value" => false,
+                    "is_raw" => true,
                     "validation" => [
                         "rules" => [
                             "required",

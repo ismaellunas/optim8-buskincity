@@ -3,7 +3,7 @@
 namespace App\Entities\Forms;
 
 use App\Contracts\ArrayValueFieldInterface;
-use App\Models\Form as FormModel;
+use App\Models\User;
 use Illuminate\Support\Collection;
 
 class Form
@@ -11,16 +11,28 @@ class Form
     public $id;
     public $name;
     public $model;
+    public $visibility;
+    public $title;
+
+    public User $author;
 
     protected $data;
     protected $fields;
 
-    public function __construct($id, array $data)
+    public function __construct($id, array $data, User $author = null)
     {
         $this->id = $id;
         $this->data = $data;
         $this->name = $data['name'];
+        $this->title = $data['title'] ?? null;
+
+        if ($author) {
+            $this->author = $author;
+        }
+
         $this->fields = $this->getFields($data['fields']);
+
+        $this->visibility = $data['visibility'] ?? [];
     }
 
     public function schema(array $values = []): array
@@ -29,6 +41,7 @@ class Form
 
         return [
             'name' => $this->name,
+            'title' => $this->title,
             'fields' => $fields,
             'buttons' => $this->buttons(),
         ];
@@ -47,7 +60,11 @@ class Form
             $className = $this->getFieldClassName($field['type']);
 
             if (class_exists($className)) {
-                $fieldCollection->put($name, new $className($name, $field));
+                $fieldObject = new $className($name, $field);
+
+                if ($fieldObject->canBeAccessed($this->author)) {
+                    $fieldCollection->put($name, $fieldObject);
+                }
             }
         }
 
@@ -104,5 +121,23 @@ class Form
         }
 
         return $attributes;
+    }
+
+    public function canBeAccessed(): bool
+    {
+        $author = $this->author;
+        $roles = $this->visibility['roles'] ?? [];
+
+        if (!empty($roles)) {
+            if (is_null($author)) {
+                return false;
+            }
+
+            if (!$author->hasRole(config('permission.super_admin_role'))) {
+                return $author->hasRole($roles);
+            }
+        }
+
+        return true;
     }
 }
