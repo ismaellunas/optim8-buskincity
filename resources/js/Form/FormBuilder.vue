@@ -24,6 +24,8 @@
     import Checkbox from './Checkbox';
     import CheckboxGroup from './CheckboxGroup';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import Number from './Number';
+    import Phone from './Phone';
     import Radio from './Radio';
     import SdbButton from '@/Sdb/Button';
     import Select from './Select';
@@ -39,6 +41,8 @@
         components: {
             Checkbox,
             CheckboxGroup,
+            Number,
+            Phone,
             Radio,
             SdbButton,
             Select,

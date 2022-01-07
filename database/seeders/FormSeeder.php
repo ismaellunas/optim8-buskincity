@@ -18,7 +18,6 @@ class FormSeeder extends Seeder
             "name" => "biodata",
             "title" => "Biodata",
             "visibility" => [
-                "roles" => [],
             ],
             "fields" => [
                 "gender" => [
@@ -33,6 +32,19 @@ class FormSeeder extends Seeder
                     "validation" => [
                         "rules" => [
                             "required",
+                        ],
+                        "messages" => [],
+                    ],
+                ],
+                "phone" => [
+                    "type" => "Phone",
+                    "label" => "Phone",
+                    "placeholder" => "Phone",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "validation" => [
+                        "rules" => [
                         ],
                         "messages" => [],
                     ],
@@ -65,14 +77,10 @@ class FormSeeder extends Seeder
                         "rules" => [
                             "required",
                             "max:10",
-                            "digits_between:0,10",
+                            "digits_between:0,10"
                         ],
                         "messages" => []
                     ],
-                    "wrapper" => [
-                        "class" => [],
-                        "style" => ""
-                    ]
                 ],
                 "education" => [
                     "type" => "Select",
