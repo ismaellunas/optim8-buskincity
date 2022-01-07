@@ -24,7 +24,7 @@ class FormSeeder extends Seeder
                     "type" => "Radio",
                     "label" => "Gender",
                     "disabled" => false,
-                    "default_value" => "male",
+                    "default_value" => null,
                     "options" => [
                         "male" => "Male",
                         "female" => "Female",
@@ -46,7 +46,7 @@ class FormSeeder extends Seeder
                     "validation" => [
                         "rules" => [
                         ],
-                        "messages" => []
+                        "messages" => [],
                     ],
                 ],
                 "address" => [
@@ -143,11 +143,17 @@ class FormSeeder extends Seeder
                     "readonly" => false,
                     "default_value" => ['php'],
                     "is_raw" => false,
-                    "layout" => "vertical",
+                    "layout" => "horizontal",
                     "options" => [
-                        "php" => "PHP",
-                        "js" => "Javascript",
-                        "pgsql" => "PostgreSQL",
+                        "actor" => "Actor",
+                        "choreographer" => "Choreographer",
+                        "circus_performer" => "Circus Performer",
+                        "comedian" => "Comedian",
+                        "dancer" => "Dancer",
+                        "magician" => "Magician",
+                        "musician" => "Musician",
+                        "singer" => "Singer",
+                        "stuntman" => "Stuntman",
                     ],
                     "validation" => [
                         "rules" => [],
@@ -157,7 +163,7 @@ class FormSeeder extends Seeder
                 "term_and_condition" => [
                     "type" => "Checkbox",
                     "label" => "Term and Condition",
-                    "text" => "I agree to the <a href='/'>terms and conditions</a>",
+                    "text" => "I agree to the <a href='/' target='_blank'>terms and conditions</a>",
                     "disabled" => false,
                     "true_value" => true,
                     "false_value" => false,
