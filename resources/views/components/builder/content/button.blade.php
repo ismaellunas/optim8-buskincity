@@ -27,9 +27,7 @@
 @if ($isDownload)
     @push('bottom_scripts')
         <script>
-            window.addEventListener('DOMContentLoaded', init);
-
-            function init(){
+            window.addEventListener('DOMContentLoaded', function () {
                 document.getElementById("{{ 'button-'.$entity['id'] }}").addEventListener("click", function (e) {
                     e.preventDefault();
 
@@ -40,7 +38,7 @@
                         nativeFallbackOnError: true
                     })
                 });
-            }
+            });
         </script>
     @endpush
 @endif
