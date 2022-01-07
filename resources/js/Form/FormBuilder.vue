@@ -69,12 +69,12 @@
         ],
 
         props: {
-            name: { type: String, required: true },
+            entityId: {},
             bagName: { type: String, default: 'formBuilder' },
-            entityId: { type: [Number, String], default: null},
-            buttonLabel: { type: String, default: null},
+            buttonClass: {type: String, default: 'is-primary'},
             buttonGroupAlign: { type: String, default: 'left'},
-            buttonClass: {type: String, default: 'is-primary'}
+            buttonLabel: { type: String, default: null},
+            name: { type: String, required: true },
         },
 
         emits: [
