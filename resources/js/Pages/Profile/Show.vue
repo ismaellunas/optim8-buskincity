@@ -27,7 +27,10 @@
             </div>
 
             <div class="mb-5">
-                <biodata-form class="mt-10 sm:mt-0" />
+                <biodata-form
+                    :user="$page.props.user"
+                    class="mt-10 sm:mt-0"
+                />
             </div>
 
             <div

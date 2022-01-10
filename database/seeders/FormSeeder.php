@@ -18,28 +18,36 @@ class FormSeeder extends Seeder
             "name" => "biodata",
             "title" => "Biodata",
             "visibility" => [
-                "roles" => [],
             ],
             "fields" => [
-                "postcode" => [
-                    "type" => "Text",
-                    "label" => "Post Code",
-                    "placeholder" => "Post Code",
-                    "default_value" => "",
-                    "readonly" => false,
+                "gender" => [
+                    "type" => "Radio",
+                    "label" => "Gender",
                     "disabled" => false,
-                    "maxlength" => 6,
+                    "default_value" => null,
+                    "options" => [
+                        "male" => "Male",
+                        "female" => "Female",
+                    ],
                     "validation" => [
                         "rules" => [
                             "required",
-                            "max:6"
                         ],
-                        "messages" => []
+                        "messages" => [],
                     ],
-                    "wrapper" => [
-                        "class" => [],
-                        "style" => ""
-                    ]
+                ],
+                "phone" => [
+                    "type" => "Phone",
+                    "label" => "Phone",
+                    "placeholder" => "Phone",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "validation" => [
+                        "rules" => [
+                        ],
+                        "messages" => [],
+                    ],
                 ],
                 "address" => [
                     "type" => "Textarea",
@@ -54,6 +62,22 @@ class FormSeeder extends Seeder
                         "rules" => [
                             "required",
                             "max:20"
+                        ],
+                        "messages" => []
+                    ],
+                ],
+                "postcode" => [
+                    "type" => "Text",
+                    "label" => "Post Code",
+                    "placeholder" => "Post Code",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                            "max:10",
+                            "digits_between:0,10"
                         ],
                         "messages" => []
                     ],
@@ -87,18 +111,18 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "visibility" => [
-                        "roles" => ['Human Resource'],
-                    ],
+                    "visibility" => [],
                 ],
-                "gender" => [
+                "blood_type" => [
                     "type" => "Radio",
-                    "label" => "Gender",
+                    "label" => "Blood Type",
                     "disabled" => false,
-                    "default_value" => "male",
+                    "layout" => "horizontal",
                     "options" => [
-                        "male" => "Male",
-                        "female" => "Female",
+                        "A" => "A",
+                        "B" => "B",
+                        "AB" => "AB",
+                        "O" => "O",
                     ],
                     "validation" => [
                         "rules" => [
@@ -106,29 +130,55 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => [],
                     ],
+                    "visibility" => [],
                 ],
                 "skills" => [
                     "type" => "CheckboxGroup",
                     "label" => "Skills",
                     "disabled" => false,
                     "readonly" => false,
-                    "default_value" => ['php'],
+                    "default_value" => [],
                     "is_raw" => false,
-                    "layout" => "vertical",
+                    "layout" => "horizontal",
                     "options" => [
-                        "php" => "PHP",
-                        "js" => "Javascript",
-                        "pgsql" => "PostgreSQL",
+                        "actor" => "Actor",
+                        "choreographer" => "Choreographer",
+                        "circus_performer" => "Circus Performer",
+                        "comedian" => "Comedian",
+                        "dancer" => "Dancer",
+                        "magician" => "Magician",
+                        "musician" => "Musician",
+                        "singer" => "Singer",
+                        "stuntman" => "Stuntman",
                     ],
                     "validation" => [
                         "rules" => [],
                         "messages" => [],
                     ],
                 ],
+
+                "criminal_record" => [
+                    "type" => "Textarea",
+                    "label" => "Criminal Record",
+                    "placeholder" => "...",
+                    "default_value" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => "",
+                    "rows" => "",
+                    "validation" => [
+                        "rules" => [],
+                        "messages" => []
+                    ],
+                    "visibility" => [
+                        "roles" => ['Administrator']
+                    ]
+                ],
+
                 "term_and_condition" => [
                     "type" => "Checkbox",
                     "label" => "Term and Condition",
-                    "text" => "I agree to the <a href='/'>terms and conditions</a>",
+                    "text" => "I agree to the <a href='/' target='_blank'>terms and conditions</a>",
                     "disabled" => false,
                     "true_value" => true,
                     "false_value" => false,

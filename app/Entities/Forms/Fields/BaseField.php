@@ -72,6 +72,10 @@ abstract class BaseField
     {
         $rules = $this->validation['rules'] ?? [];
 
+        if (!$this->isRequired()) {
+            $rules[] = 'nullable';
+        }
+
         return $rules;
     }
 

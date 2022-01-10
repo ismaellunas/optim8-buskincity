@@ -9,14 +9,28 @@
             :message="error(field.name, bagName, form.errors)"
         />
 
-        <sdb-button
-            v-for="button in schema.buttons"
-            :key="button.label"
-            class="is-primary"
-            @click="submit"
-        >
-            {{ button.label }}
-        </sdb-button>
+        <div :class="buttonGroupClass">
+            <div class="control">
+                <sdb-button
+                    v-if="buttonLabel"
+                    :class="buttonClass"
+                    @click="submit"
+                >
+                    {{ buttonLabel }}
+                </sdb-button>
+
+                <template v-else>
+                    <sdb-button
+                        v-for="button in schema.buttons"
+                        :key="button.label"
+                        :class="buttonClass"
+                        @click="submit"
+                    >
+                        {{ button.label }}
+                    </sdb-button>
+                </template>
+            </div>
+        </div>
     </form>
 </template>
 
@@ -24,6 +38,8 @@
     import Checkbox from './Checkbox';
     import CheckboxGroup from './CheckboxGroup';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import Number from './Number';
+    import Phone from './Phone';
     import Radio from './Radio';
     import SdbButton from '@/Sdb/Button';
     import Select from './Select';
@@ -39,6 +55,8 @@
         components: {
             Checkbox,
             CheckboxGroup,
+            Number,
+            Phone,
             Radio,
             SdbButton,
             Select,
@@ -51,8 +69,12 @@
         ],
 
         props: {
-            name: { type: String, required: true },
+            entityId: {},
             bagName: { type: String, default: 'formBuilder' },
+            buttonClass: {type: String, default: 'is-primary'},
+            buttonGroupAlign: { type: String, default: 'left'},
+            buttonLabel: { type: String, default: null},
+            name: { type: String, required: true },
         },
 
         emits: [
@@ -68,28 +90,45 @@
             };
         },
 
+        computed: {
+            buttonGroupClass() {
+                return [
+                    'field',
+                    'is-grouped',
+                    'is-grouped-' + this.buttonGroupAlign,
+                ];
+            },
+        },
+
         mounted() {
             const self = this;
 
-            axios.get(route("forms.schema", self.name))
-                .then((response) => {
-                    self.schema = response.data;
+            axios.get(
+                route("forms.schema", self.name),
+                {
+                    params: {id: self.entityId}
+                }
 
-                    self.form = self.createForm(self.schema.fields);
-                    self.$emit('loaded-successfully', response.data);
-                })
-                .catch((error) => {
-                    if (error.response) {
-                        if (error.response.status == 403) {
-                            self.$emit('loaded-forbidden', error.response);
-                        }
+            ).then((response) => {
+                self.schema = response.data;
+
+                self.form = self.createForm(self.schema.fields);
+                self.$emit('loaded-successfully', response.data);
+
+            }).catch((error) => {
+                if (error.response) {
+                    if (error.response.status == 403) {
+                        self.$emit('loaded-forbidden', error.response);
                     }
-                });
+                }
+            });
         },
 
         methods: {
             createForm(fields) {
-                const form = {};
+                const form = {
+                    id: this.entityId
+                };
 
                 if (!isEmpty(fields)) {
                     for (const [key, field] of Object.entries(fields)) {
