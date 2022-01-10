@@ -1,5 +1,5 @@
 <template>
-    <jet-action-section>
+    <sdb-action-section>
         <template #title>
             Two Factor Authentication
         </template>
@@ -9,11 +9,11 @@
         </template>
 
         <template #content>
-            <h3 class="" v-if="twoFactorEnabled">
+            <h3 v-if="twoFactorEnabled">
                 You have enabled two factor authentication.
             </h3>
 
-            <h3 class="" v-else>
+            <h3 v-else>
                 You have not enabled two factor authentication.
             </h3>
 
@@ -26,24 +26,26 @@
             <div v-if="twoFactorEnabled">
                 <div v-if="qrCode">
                     <div class="mt-4">
-                        <p class="font-semibold">
+                        <p class="has-text-weight-semibold">
                             Two factor authentication is now enabled. Scan the following QR code using your phone's authenticator application.
                         </p>
                     </div>
 
-                    <div class="mt-4" v-html="qrCode">
-                    </div>
+                    <div class="mt-4" v-html="qrCode" />
                 </div>
 
                 <div v-if="recoveryCodes.length > 0">
                     <div class="mt-4">
-                        <p class="font-semibold">
+                        <p class="has-text-weight-semibold">
                             Store these recovery codes in a secure password manager. They can be used to recover access to your account if your two factor authentication device is lost.
                         </p>
                     </div>
 
                     <div class="mt-4 px-4 py-4">
-                        <div v-for="code in recoveryCodes" :key="code">
+                        <div
+                            v-for="code in recoveryCodes"
+                            :key="code"
+                        >
                             {{ code }}
                         </div>
                     </div>
@@ -51,55 +53,60 @@
             </div>
 
             <div class="mt-5">
-                <div v-if="! twoFactorEnabled">
-                    <jet-confirms-password @confirmed="enableTwoFactorAuthentication">
-                        <jet-button type="button" :class="{ 'opacity-25': enabling }" :disabled="enabling">
+                <div v-if="!twoFactorEnabled">
+                    <sdb-confirm-password @confirmed="enableTwoFactorAuthentication">
+                        <sdb-button
+                            :class="{ 'opacity-25': enabling }"
+                            :disabled="enabling"
+                            class="is-primary"
+                        >
                             Enable
-                        </jet-button>
-                    </jet-confirms-password>
+                        </sdb-button>
+                    </sdb-confirm-password>
                 </div>
 
                 <div v-else>
-                    <jet-confirms-password @confirmed="regenerateRecoveryCodes">
-                        <jet-secondary-button class="mr-3"
-                                        v-if="recoveryCodes.length > 0">
+                    <sdb-confirm-password @confirmed="regenerateRecoveryCodes">
+                        <sdb-button
+                            v-if="recoveryCodes.length > 0"
+                        >
                             Regenerate Recovery Codes
-                        </jet-secondary-button>
-                    </jet-confirms-password>
+                        </sdb-button>
+                    </sdb-confirm-password>
 
-                    <jet-confirms-password @confirmed="showRecoveryCodes">
-                        <jet-secondary-button class="mr-3" v-if="recoveryCodes.length === 0">
+                    <sdb-confirm-password @confirmed="showRecoveryCodes">
+                        <sdb-button
+                            v-if="recoveryCodes.length === 0"
+                        >
                             Show Recovery Codes
-                        </jet-secondary-button>
-                    </jet-confirms-password>
+                        </sdb-button>
+                    </sdb-confirm-password>
 
-                    <jet-confirms-password @confirmed="disableTwoFactorAuthentication">
-                        <jet-danger-button
-                                        :class="{ 'opacity-25': disabling }"
-                                        :disabled="disabling">
+                    <sdb-confirm-password @confirmed="disableTwoFactorAuthentication">
+                        <sdb-button
+                            class="is-danger ml-2"
+                            :class="{ 'opacity-25': disabling }"
+                            :disabled="disabling"
+                        >
                             Disable
-                        </jet-danger-button>
-                    </jet-confirms-password>
+                        </sdb-button>
+                    </sdb-confirm-password>
                 </div>
             </div>
         </template>
-    </jet-action-section>
+    </sdb-action-section>
 </template>
 
 <script>
-    import JetActionSection from '@/Jetstream/ActionSection'
-    import JetButton from '@/Jetstream/Button'
-    import JetConfirmsPassword from '@/Jetstream/ConfirmsPassword'
-    import JetDangerButton from '@/Jetstream/DangerButton'
-    import JetSecondaryButton from '@/Jetstream/SecondaryButton'
+    import SdbActionSection from '@/Sdb/ActionSection';
+    import SdbConfirmPassword from '@/Sdb/ConfirmPassword';
+    import SdbButton from '@/Sdb/Button';
 
     export default {
         components: {
-            JetActionSection,
-            JetButton,
-            JetConfirmsPassword,
-            JetDangerButton,
-            JetSecondaryButton,
+            SdbActionSection,
+            SdbConfirmPassword,
+            SdbButton,
         },
 
         data() {
@@ -109,6 +116,12 @@
 
                 qrCode: null,
                 recoveryCodes: [],
+            }
+        },
+
+        computed: {
+            twoFactorEnabled() {
+                return ! this.enabling && this.$page.props.user.two_factor_enabled
             }
         },
 
@@ -128,23 +141,23 @@
 
             showQrCode() {
                 return axios.get('/user/two-factor-qr-code')
-                        .then(response => {
-                            this.qrCode = response.data.svg
-                        })
+                    .then(response => {
+                        this.qrCode = response.data.svg
+                    });
             },
 
             showRecoveryCodes() {
                 return axios.get('/user/two-factor-recovery-codes')
-                        .then(response => {
-                            this.recoveryCodes = response.data
-                        })
+                    .then(response => {
+                        this.recoveryCodes = response.data
+                    });
             },
 
             regenerateRecoveryCodes() {
                 axios.post('/user/two-factor-recovery-codes')
-                        .then(response => {
-                            this.showRecoveryCodes()
-                        })
+                    .then(response => {
+                        this.showRecoveryCodes()
+                    });
             },
 
             disableTwoFactorAuthentication() {
@@ -156,11 +169,5 @@
                 })
             },
         },
-
-        computed: {
-            twoFactorEnabled() {
-                return ! this.enabling && this.$page.props.user.two_factor_enabled
-            }
-        }
     }
 </script>

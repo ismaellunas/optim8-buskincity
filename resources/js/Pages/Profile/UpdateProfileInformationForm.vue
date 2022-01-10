@@ -1,5 +1,5 @@
 <template>
-    <jet-form-section @submitted="updateProfileInformation">
+    <sdb-form-section @submitted="updateProfileInformation">
         <template #title>
             Profile Information
         </template>
@@ -10,24 +10,44 @@
 
         <template #form>
             <!-- Profile Photo -->
-            <div class="col-span-6 sm:col-span-4" v-if="$page.props.jetstream.managesProfilePhotos">
+            <div
+                v-if="$page.props.jetstream.managesProfilePhotos"
+                class="col-span-6 sm:col-span-4"
+            >
                 <!-- Profile Photo File Input -->
-                <input type="file" class="hidden"
-                            ref="photo"
-                            @change="updatePhotoPreview">
+                <input
+                    ref="photo"
+                    type="file"
+                    class="hidden"
+                    @change="updatePhotoPreview"
+                >
 
-                <sdb-label for="photo" value="Photo" />
+                <sdb-label
+                    for="photo"
+                    value="Photo"
+                />
 
                 <!-- Current Profile Photo -->
-                <div class="mt-2" v-show="! photoPreview">
-                    <img :src="user.profile_photo_url" :alt="user.full_name" class="rounded-full h-20 w-20 object-cover">
+                <div
+                    v-show="! photoPreview"
+                    class="mt-2"
+                >
+                    <img
+                        :src="user.profile_photo_url"
+                        :alt="user.full_name"
+                        class="rounded-full h-20 w-20 object-cover"
+                    >
                 </div>
 
                 <!-- New Profile Photo Preview -->
-                <div class="mt-2" v-show="photoPreview">
-                    <span class="block rounded-full w-20 h-20"
-                          :style="'background-size: cover; background-repeat: no-repeat; background-position: center center; background-image: url(\'' + photoPreview + '\');'">
-                    </span>
+                <div
+                    v-show="photoPreview"
+                    class="mt-2"
+                >
+                    <span
+                        class="block rounded-full w-20 h-20"
+                        :style="'background-size: cover; background-repeat: no-repeat; background-position: center center; background-image: url(\'' + photoPreview + '\');'"
+                    />
                 </div>
 
                 <sdb-button
@@ -47,7 +67,7 @@
                     Remove Photo
                 </sdb-button>
 
-                <jet-input-error :message="form.errors.photo" class="mt-2" />
+                <sdb-input-error :message="form.errors.photo" />
             </div>
 
             <sdb-form-input
@@ -55,14 +75,14 @@
                 label="First Name"
                 required
                 :message="form.errors.first_name"
-            ></sdb-form-input>
+            />
 
             <sdb-form-input
                 v-model="form.last_name"
                 label="Last Name"
                 required
                 :message="form.errors.last_name"
-            ></sdb-form-input>
+            />
 
             <sdb-form-input
                 v-model="form.email"
@@ -70,12 +90,14 @@
                 required
                 type="email"
                 :message="form.errors.email"
-            ></sdb-form-input>
-
+            />
         </template>
 
         <template #actions>
-            <sdb-action-message :isActive="form.recentlySuccessful" class="mr-3">
+            <sdb-action-message
+                :is-active="form.recentlySuccessful"
+                class="mr-3"
+            >
                 Saved.
             </sdb-action-message>
 
@@ -87,34 +109,37 @@
                 Save
             </sdb-button>
         </template>
-    </jet-form-section>
+    </sdb-form-section>
 </template>
 
 <script>
-    import JetFormSection from '@/Jetstream/FormSection';
-    import JetInputError from '@/Jetstream/InputError';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SdbActionMessage from '@/Sdb/ActionMessage';
     import SdbButton from '@/Sdb/Button';
+    import SdbFormInput from '@/Sdb/Form/Input';
+    import SdbFormSection from '@/Sdb/FormSection';
+    import SdbInputError from '@/Sdb/InputError';
     import SdbLabel from '@/Sdb/Label';
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
 
     export default {
         components: {
-            JetFormSection,
-            JetInputError,
-            SdbFormInput,
-            SdbErrorNotifications,
             SdbActionMessage,
             SdbButton,
+            SdbFormInput,
+            SdbFormSection,
+            SdbInputError,
             SdbLabel,
         },
         mixins: [
             MixinHasPageErrors,
         ],
 
-        props: ['user'],
+        props: {
+            user: {
+                type: Object,
+                required: true,
+            },
+        },
 
         data() {
             return {
