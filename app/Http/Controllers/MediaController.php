@@ -195,7 +195,7 @@ class MediaController extends Controller
         return redirect()->back();
     }
 
-    public function listImages(Request $request)
+    public function lists(Request $request)
     {
         if ($request->user()->cannot('viewAny', Media::class)) {
             abort(403);

@@ -6,7 +6,7 @@ export default {
         return {
             media: [],
             imageListQueryParams: {},
-            imageListRouteName: 'admin.media.list.image',
+            mediaListRouteName: 'admin.media.lists',
         };
     },
     methods: {
