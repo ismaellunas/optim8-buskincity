@@ -201,12 +201,25 @@ class MediaController extends Controller
             abort(403);
         }
 
+        if ($request->type) {
+            $this->isValidMediaType($request->type) ?? abort(403);
+        }
+
         $records = $this->mediaService->getRecords(
             $request->term,
-            ['image'],
+            $request->type ?? ['image'],
             $this->recordsPerPage
         );
 
         return $request->ajax() ? $records : abort(404);
+    }
+
+    private function isValidMediaType($type): bool
+    {
+        return collect(config('constants.extensions'))
+            ->keys()
+            ->contains(
+                collect($type)->implode(',')
+            );
     }
 }
