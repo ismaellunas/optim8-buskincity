@@ -20,6 +20,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
     const THUMBNAIL_WIDTH = 300;
     const TYPE_DEFAULT = 0;
     const TYPE_SETTING = 1;
+    const TYPE_PROFILE = 2;
 
     public $translatedAttributes = [
         'alt',
@@ -79,6 +80,11 @@ class Media extends CloudinaryMedia implements TranslatableContract
     public function scopeSetting($query)
     {
         return $query->where('type', self::TYPE_SETTING);
+    }
+
+    public function scopeProfile($query)
+    {
+        return $query->where('type', self::TYPE_PROFILE);
     }
 
     // Accessors:
