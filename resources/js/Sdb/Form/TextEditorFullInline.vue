@@ -7,13 +7,13 @@
 
     <sdb-modal-image-browser
         v-if="isModalOpen"
-        title="Image Library"
+        title="Media Library"
         :data="media"
-        :query-params="imageListQueryParams"
+        :query-params="mediaListQueryParams"
         :search="search"
-        :style="{zIndex: 1200}"
+        :style="{zIndex: 1300}"
         @close="closeModal"
-        @on-clicked-pagination="getImagesList"
+        @on-clicked-pagination="getMediaList"
         @on-media-selected="selectFile"
         @on-media-submitted="onMediaSubmitted"
         @on-view-changed="setView"
@@ -68,7 +68,7 @@
                         'fullscreen | formatselect | ' +
                         'bold italic underline strikethrough blockquote | ' +
                         'forecolor backcolor | ' +
-                        'removeformat image'
+                        'removeformat image media'
                     ),
                     toolbar2: (
                         'alignleft aligncenter alignright alignjustify | ' +
@@ -76,8 +76,9 @@
                         'anchor link table charmap code | '
                     ),
                     contextmenu: 'link image',
-                    file_picker_types: 'image', //'file image media'
+                    file_picker_types: 'image media', //'file image media'
                     file_picker_callback: this.filePickerCallback,
+                    media_live_embeds: true,
                 },
                 tinyMceImage: {
                     file: null,
@@ -93,7 +94,7 @@
                 this.tinyMceModal.style.display = 'none';
 
                 this.setTerm('');
-                this.getImagesList(route(this.imageListRouteName));
+                this.getMediaList(route(this.mediaListRouteName));
             },
             onCloseModal() { /* @override Mixins/HasModal */
                 if (this.tinyMceModal) {
@@ -114,6 +115,8 @@
             filePickerCallback(callback, value, meta) {
                 const self = this;
 
+                self.addTypeOnQueryParams(meta.filetype);
+
                 self.openModal();
 
                 self.tinyMceImage.element = document.createElement('input');
@@ -127,6 +130,13 @@
                     self.tinyMceImage.file = null;
                     self.tinyMceImage.element.remove();
                     self.tinyMceImage.element = null;
+                };
+            },
+            addTypeOnQueryParams(fileType) {
+                if (fileType === "media") {
+                    this.setType(['video']);
+                } else {
+                    this.setType([fileType]);
                 };
             },
         },
