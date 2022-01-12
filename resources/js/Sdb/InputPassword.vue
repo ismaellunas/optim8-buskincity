@@ -9,7 +9,7 @@
                 :class="{'is-danger' : hasError}"
                 :value="modelValue"
                 @input="$emit('update:modelValue', $event.target.value)"
-            />
+            >
         </div>
 
         <div class="control">
@@ -45,7 +45,10 @@
 
         props: {
             hasError: {type: Boolean, default: false},
-            modelValue: {},
+            modelValue: {
+                type: [String, Number, null],
+                required: true
+            },
         },
 
         emits: ['update:modelValue'],

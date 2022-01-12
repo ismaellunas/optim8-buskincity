@@ -1,5 +1,5 @@
 <template>
-    <jet-form-section v-show="isShown">
+    <sdb-form-section v-show="isShown">
         <template #title>
             {{ title }}
         </template>
@@ -16,19 +16,19 @@
                 @loaded-successfully="onLoadedSuccessfully"
             />
         </template>
-    </jet-form-section>
+    </sdb-form-section>
 </template>
 
 <script>
-    import JetFormSection from '@/Jetstream/FormSection'
     import FormBiodata from '@/Form/FormBuilder';
+    import SdbFormSection from '@/Sdb/FormSection';
 
     export default {
         name: 'BiodataForm',
 
         components: {
             FormBiodata,
-            JetFormSection,
+            SdbFormSection,
         },
 
         props: {
