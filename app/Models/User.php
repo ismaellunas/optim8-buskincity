@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Services\UserService;
+use App\Traits\HasMetas;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -26,6 +27,9 @@ class User extends Authenticatable implements MustVerifyEmail
     use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
     use HasRoles;
+    use HasMetas;
+
+    protected $metaRelation = 'metas';
 
     /**
      * The attributes that are mass assignable.
@@ -89,6 +93,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function scopeEmail($query, string $email)
     {
         return $query->where('email', $email);
+    }
+
+    public function metas()
+    {
+        return $this->hasMany(UserMeta::class);
     }
 
     public function scopeSearch($query, string $term)
