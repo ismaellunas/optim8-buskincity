@@ -19,6 +19,10 @@ class FormSeeder extends Seeder
             "title" => "Biodata",
             "visibility" => [
             ],
+            "locations" => [
+                'admin.profile.show',
+                'admin.users.edit',
+            ],
             "fields" => [
                 "gender" => [
                     "type" => "Radio",
@@ -111,7 +115,9 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "visibility" => [],
+                    "visibility" => [
+                        "roles" => ["Administrator"]
+                    ],
                 ],
                 "blood_type" => [
                     "type" => "Radio",
@@ -130,7 +136,9 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => [],
                     ],
-                    "visibility" => [],
+                    "visibility" => [
+                        "roles" => ["Administrator"]
+                    ],
                 ],
                 "skills" => [
                     "type" => "CheckboxGroup",
