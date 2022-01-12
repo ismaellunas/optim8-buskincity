@@ -2,7 +2,7 @@
     <app-layout>
         <template #header>{{ title }}</template>
 
-        <sdb-error-notifications :errors="$page.props.errors" />
+        <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="mb-6">
             <form
@@ -26,16 +26,16 @@
 
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <sdb-button-link
+                                <biz-button-link
                                     :href="route(baseRouteName+'.index')"
                                     class="is-link is-light">
                                     Cancel
-                                </sdb-button-link>
+                                </biz-button-link>
                             </div>
                             <div class="control">
-                                <sdb-button class="is-link">
+                                <biz-button class="is-link">
                                     Update
-                                </sdb-button>
+                                </biz-button>
                             </div>
                         </div>
                     </fieldset>
@@ -61,9 +61,9 @@
 
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <sdb-button class="is-link">
+                                <biz-button class="is-link">
                                     Update
-                                </sdb-button>
+                                </biz-button>
                             </div>
                         </div>
                     </fieldset>
@@ -101,9 +101,9 @@
     import AppLayout from '@/Layouts/AppLayout';
     import FormUserPassword from '@/Pages/User/FormPassword';
     import FormUserProfile from '@/Pages/User/FormProfile';
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import BizButton from '@/Biz/Button';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import { map } from 'lodash';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
@@ -114,9 +114,9 @@
             AppLayout,
             FormUserPassword,
             FormUserProfile,
-            SdbButton,
-            SdbButtonLink,
-            SdbErrorNotifications,
+            BizButton,
+            BizButtonLink,
+            BizErrorNotifications,
             FormBiodata,
         },
 

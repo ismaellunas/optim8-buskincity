@@ -27,9 +27,9 @@
                                     <span class=mr-3>
                                         Already have an account?
                                     </span>
-                                    <sdb-button-link :href="route('login')" class="">
+                                    <biz-button-link :href="route('login')" class="">
                                         Login
-                                    </sdb-button-link>
+                                    </biz-button-link>
                                 </div>
                             </div>
                         </div>
@@ -43,7 +43,7 @@
                                     </h2>
                                     <div class="has-text-centered">
 
-                                        <sdb-social-media-list/>
+                                        <biz-social-media-list/>
 
                                         <div class="h-line-wrapper">
                                             <span class="h-line-words">or</span>
@@ -69,42 +69,42 @@
 
                                         <form @submit.prevent="submit">
 
-                                            <sdb-form-input
+                                            <biz-form-input
                                                 v-model="form.first_name"
                                                 label="First Name"
                                                 required
                                                 autofocus
                                                 :message="error('first_name')"
-                                            ></sdb-form-input>
+                                            ></biz-form-input>
 
-                                            <sdb-form-input
+                                            <biz-form-input
                                                 v-model="form.last_name"
                                                 label="Last Name"
                                                 required
                                                 :message="error('last_name')"
-                                            ></sdb-form-input>
+                                            ></biz-form-input>
 
-                                            <sdb-form-input
+                                            <biz-form-input
                                                 v-model="form.email"
                                                 label="Email"
                                                 required
                                                 type="email"
                                                 :message="error('email')"
-                                            ></sdb-form-input>
+                                            ></biz-form-input>
 
-                                            <sdb-form-input
+                                            <biz-form-input
                                                 v-model="form.password"
                                                 label="Password"
                                                 type="password"
                                                 :message="error('password')"
-                                            ></sdb-form-input>
+                                            ></biz-form-input>
 
-                                            <sdb-form-input
+                                            <biz-form-input
                                                 v-model="form.password_confirmation"
                                                 label="Password Confirmation"
                                                 type="password"
                                                 :message="error('password_confirmation')"
-                                            ></sdb-form-input>
+                                            ></biz-form-input>
 
                                             <div class="flex mt-4">
                                                 <div class="columns is-gapless">
@@ -114,9 +114,9 @@
                                                         </span>
                                                     </div>
                                                     <div class="column is-one-third has-text-right">
-                                                        <sdb-button class="button is-info" :disabled="form.processing">
+                                                        <biz-button class="button is-info" :disabled="form.processing">
                                                             Create Account
-                                                        </sdb-button>
+                                                        </biz-button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -135,19 +135,19 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbSocialMediaList from '@/Sdb/SocialMediaList'
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbButton from '@/Sdb/Button';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizSocialMediaList from '@/Biz/SocialMediaList'
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizButton from '@/Biz/Button';
 
     export default {
         components: {
-            SdbButtonLink,
-            SdbSocialMediaList,
-            SdbFormInput,
-            SdbErrorNotifications,
-            SdbButton
+            BizButtonLink,
+            BizSocialMediaList,
+            BizFormInput,
+            BizErrorNotifications,
+            BizButton
         },
         mixins: [
             MixinHasPageErrors,

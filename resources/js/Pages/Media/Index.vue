@@ -1,33 +1,33 @@
 <template>
-<app-layout>
-    <template #header>
-        Media
-    </template>
+    <app-layout>
+        <template #header>
+            Media
+        </template>
 
-    <div class="box">
-        <sdb-media-library
-            :accepted-types="acceptedTypes"
-            :display-view="displayView"
-            :is-delete-enabled="can.delete"
-            :is-download-enabled="can.read"
-            :is-edit-enabled="can.edit"
-            :is-filter-enabled="true"
-            :is-upload-enabled="can.add"
-            :query-params="queryParams"
-            :records="records"
-            :search="search"
-            @on-media-submitted="onMediaUploadSuccess"
-            @on-view-changed="onViewChanged"
-            @on-type-changed="onTypeChanged"
-        />
-    </div>
-</app-layout>
+        <div class="box">
+            <biz-media-library
+                :accepted-types="acceptedTypes"
+                :display-view="displayView"
+                :is-delete-enabled="can.delete"
+                :is-download-enabled="can.read"
+                :is-edit-enabled="can.edit"
+                :is-filter-enabled="true"
+                :is-upload-enabled="can.add"
+                :query-params="queryParams"
+                :records="records"
+                :search="search"
+                @on-media-submitted="onMediaUploadSuccess"
+                @on-view-changed="onViewChanged"
+                @on-type-changed="onTypeChanged"
+            />
+        </div>
+    </app-layout>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import SdbMediaLibrary from '@/Sdb/MediaLibrary';
+    import BizMediaLibrary from '@/Biz/MediaLibrary';
     import { success as successAlert } from '@/Libs/alert';
     import { merge, clone } from 'lodash';
     import { ref } from 'vue';
@@ -35,7 +35,7 @@
     export default {
         components: {
             AppLayout,
-            SdbMediaLibrary,
+            BizMediaLibrary,
         },
         mixins: [
             MixinFilterDataHandle,

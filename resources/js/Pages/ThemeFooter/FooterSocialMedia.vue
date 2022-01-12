@@ -32,22 +32,22 @@
                                 {{ socialMedia.url ?? "-" }}
                             </div>
                             <div class="level-right">
-                                <sdb-button
+                                <biz-button
                                     class="is-ghost has-text-black"
                                     @click.prevent="openFormModal(socialMedia, index)"
                                 >
                                     <span class="icon is-small">
                                         <i class="fas fa-pen" />
                                     </span>
-                                </sdb-button>
-                                <sdb-button
+                                </biz-button>
+                                <biz-button
                                     class="is-ghost has-text-black ml-1"
                                     @click.prevent="deleteSocialMedia(index)"
                                 >
                                     <span class="icon is-small">
                                         <i class="far fa-trash-alt" />
                                     </span>
-                                </sdb-button>
+                                </biz-button>
                             </div>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import SdbButton from '@/Sdb/Button';
+    import BizButton from '@/Biz/Button';
     import FooterSocialMediaForm from './FooterSocialMediaForm';
     import { useModelWrapper } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
@@ -91,7 +91,7 @@
         name: 'FooterSocialMedia',
 
         components: {
-            SdbButton,
+            BizButton,
             FooterSocialMediaForm,
         },
 

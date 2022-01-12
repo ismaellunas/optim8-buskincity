@@ -1,6 +1,6 @@
 <template>
     <div>
-        <sdb-toolbar-content @delete-content="deleteContent"/>
+        <biz-toolbar-content @delete-content="deleteContent"/>
 
         <component
             :is="headingTag"
@@ -8,14 +8,13 @@
             contenteditable
             @blur="onEdit"
             v-text="entity.content.heading.html"
-        >
-        </component>
+        />
     </div>
 </template>
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils';
     import { last, concat } from 'lodash';
 
@@ -27,7 +26,7 @@
         ],
 
         components: {
-            SdbToolbarContent,
+            BizToolbarContent,
         },
 
         props: {

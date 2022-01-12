@@ -7,7 +7,7 @@
         <div class="box">
             <form @submit.prevent="submit">
                 <div class="control">
-                    <sdb-input
+                    <Biz-input
                         :disabled="false"
                         type="file"
                         @input="form.file = $event.target.files[0]"
@@ -19,12 +19,12 @@
 
                 <div class="field is-grouped mt-4">
                     <div class="control">
-                        <sdb-button class="is-link">Submit</sdb-button>
+                        <biz-button class="is-link">Submit</biz-button>
                     </div>
                     <div class="control">
-                        <sdb-button-link :href="route(baseRouteName+'.index')">
+                        <biz-button-link :href="route(baseRouteName+'.index')">
                             Cancel
-                        </sdb-button-link>
+                        </biz-button-link>
                     </div>
                 </div>
             </form>
@@ -34,9 +34,9 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbInput from '@/Sdb/Input';
+    import BizButton from '@/Biz/Button';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizInput from '@/Biz/Input';
     import { Inertia } from "@inertiajs/inertia";
     import { isBlank } from '@/Libs/utils';
     import { reactive } from "vue";
@@ -45,9 +45,9 @@
     export default {
         components: {
             AppLayout,
-            SdbButton,
-            SdbButtonLink,
-            SdbInput,
+            BizButton,
+            BizButtonLink,
+            BizInput,
         },
         props: {
             record: Object,

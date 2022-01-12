@@ -6,7 +6,7 @@
             <div class="columns">
                 <div class="column">
                     <div class="is-pulled-left">
-                        <sdb-filter-search
+                        <biz-filter-search
                             v-model="term"
                             @search="search"
                         />
@@ -14,7 +14,7 @@
                 </div>
 
                 <div class="column">
-                    <sdb-dropdown
+                    <biz-dropdown
                         :close-on-click="false"
                     >
                         <template #trigger>
@@ -33,50 +33,50 @@
                             </span>
                         </template>
 
-                        <sdb-dropdown-item>
+                        <biz-dropdown-item>
                             Categories
-                        </sdb-dropdown-item>
+                        </biz-dropdown-item>
 
-                        <sdb-dropdown-scroll
+                        <biz-dropdown-scroll
                             :max-height="300"
                         >
-                            <sdb-dropdown-item
+                            <biz-dropdown-item
                                 v-for="category in categoryOptions"
                                 :key="category.id"
                             >
-                                <sdb-checkbox
+                                <biz-checkbox
                                     v-model:checked="categories"
                                     :value="category.id"
                                     @change="onCategoriesChanged"
                                 >
                                     &nbsp; {{ category.value }}
-                                </sdb-checkbox>
-                            </sdb-dropdown-item>
-                        </sdb-dropdown-scroll>
+                                </biz-checkbox>
+                            </biz-dropdown-item>
+                        </biz-dropdown-scroll>
 
                         <hr class="dropdown-divider">
 
-                        <sdb-dropdown-item>
+                        <biz-dropdown-item>
                             Languages
-                        </sdb-dropdown-item>
+                        </biz-dropdown-item>
 
-                        <sdb-dropdown-scroll
+                        <biz-dropdown-scroll
                             :max-height="300"
                         >
-                            <sdb-dropdown-item
+                            <biz-dropdown-item
                                 v-for="language in languageOptions"
                                 :key="language.id"
                             >
-                                <sdb-checkbox
+                                <biz-checkbox
                                     v-model:checked="languages"
                                     :value="language.id"
                                     @change="onLanguagesChanged"
                                 >
                                     &nbsp; {{ language.name }}
-                                </sdb-checkbox>
-                            </sdb-dropdown-item>
-                        </sdb-dropdown-scroll>
-                    </sdb-dropdown>
+                                </biz-checkbox>
+                            </biz-dropdown-item>
+                        </biz-dropdown-scroll>
+                    </biz-dropdown>
                 </div>
 
                 <div class="column">
@@ -84,7 +84,7 @@
                         v-if="can.add"
                         class="is-pulled-right"
                     >
-                        <sdb-button-link
+                        <biz-button-link
                             class="is-primary"
                             :href="route(baseRouteName+'.create')"
                         >
@@ -92,7 +92,7 @@
                                 <i class="fas fa-plus" />
                             </span>
                             <span>Create New</span>
-                        </sdb-button-link>
+                        </biz-button-link>
                     </div>
                 </div>
             </div>
@@ -100,9 +100,9 @@
             <div class="columns" />
 
             <div class="table-container">
-                <sdb-tab>
+                <biz-tab>
                     <ul>
-                        <sdb-tab-list
+                        <biz-tab-list
                             v-for="tab, index in tabs"
                             :key="index"
                             :is-active="isTabActive(index)"
@@ -110,22 +110,22 @@
                             <a @click.prevent="setActiveTab(index)">
                                 {{ tab.title }}
                             </a>
-                        </sdb-tab-list>
+                        </biz-tab-list>
                     </ul>
 
-                    <sdb-buttons-display-view
+                    <biz-buttons-display-view
                         v-model="view"
                         @on-view-changed="onViewChanged"
                     />
-                </sdb-tab>
+                </biz-tab>
 
                 <component
-                    :is="isGalleryView ? 'SdbPostGallery' : 'SdbPostList'"
+                    :is="isGalleryView ? 'BizPostGallery' : 'BizPostList'"
                     :records="records.data"
                 >
                     <template #default="{record}">
                         <component
-                            :is="isGalleryView ? 'SdbPostGalleryItem' : 'SdbPostListItem'"
+                            :is="isGalleryView ? 'BizPostGalleryItem' : 'BizPostListItem'"
                             :is-delete-enabled="can.delete"
                             :is-edit-enabled="can.edit"
                             :record="record"
@@ -135,7 +135,7 @@
                     </template>
                 </component>
             </div>
-            <sdb-pagination
+            <biz-pagination
                 :links="records.links"
                 :query-params="queryParams"
             />
@@ -147,20 +147,20 @@
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasTab from '@/Mixins/HasTab';
     import AppLayout from '@/Layouts/AppLayout';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbButtonsDisplayView from '@/Sdb/ButtonsDisplayView';
-    import SdbCheckbox from '@/Sdb/Checkbox';
-    import SdbDropdown from '@/Sdb/Dropdown';
-    import SdbDropdownItem from '@/Sdb/DropdownItem';
-    import SdbDropdownScroll from '@/Sdb/DropdownScroll';
-    import SdbFilterSearch from '@/Sdb/Filter/Search';
-    import SdbPagination from '@/Sdb/Pagination';
-    import SdbPostGallery from '@/Sdb/Post/Gallery';
-    import SdbPostGalleryItem from '@/Sdb/Post/GalleryItem';
-    import SdbPostList from '@/Sdb/Post/List';
-    import SdbPostListItem from '@/Sdb/Post/ListItem';
-    import SdbTab from '@/Sdb/Tab';
-    import SdbTabList from '@/Sdb/TabList';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizButtonsDisplayView from '@/Biz/ButtonsDisplayView';
+    import BizCheckbox from '@/Biz/Checkbox';
+    import BizDropdown from '@/Biz/Dropdown';
+    import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizDropdownScroll from '@/Biz/DropdownScroll';
+    import BizFilterSearch from '@/Biz/Filter/Search';
+    import BizPagination from '@/Biz/Pagination';
+    import BizPostGallery from '@/Biz/Post/Gallery';
+    import BizPostGalleryItem from '@/Biz/Post/GalleryItem';
+    import BizPostList from '@/Biz/Post/List';
+    import BizPostListItem from '@/Biz/Post/ListItem';
+    import BizTab from '@/Biz/Tab';
+    import BizTabList from '@/Biz/TabList';
     import { confirmDelete } from '@/Libs/alert';
     import { clone, keys, head, merge } from 'lodash';
     import { ref } from 'vue';
@@ -169,20 +169,20 @@
     export default {
         components: {
             AppLayout,
-            SdbButtonLink,
-            SdbButtonsDisplayView,
-            SdbCheckbox,
-            SdbDropdown,
-            SdbDropdownItem,
-            SdbDropdownScroll,
-            SdbFilterSearch,
-            SdbPagination,
-            SdbPostGallery,
-            SdbPostGalleryItem,
-            SdbPostList,
-            SdbPostListItem,
-            SdbTab,
-            SdbTabList,
+            BizButtonLink,
+            BizButtonsDisplayView,
+            BizCheckbox,
+            BizDropdown,
+            BizDropdownItem,
+            BizDropdownScroll,
+            BizFilterSearch,
+            BizPagination,
+            BizPostGallery,
+            BizPostGalleryItem,
+            BizPostList,
+            BizPostListItem,
+            BizTab,
+            BizTabList,
         },
         mixins: [
             MixinFilterDataHandle,

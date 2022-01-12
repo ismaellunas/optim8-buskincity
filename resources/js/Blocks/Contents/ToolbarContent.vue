@@ -2,25 +2,25 @@
     <div class="edit-mode-toolbar-content">
         <div class="field has-addons is-pulled-right">
             <p class="control" v-if="canDelete">
-                <sdb-button type="button" class="is-small" @click="$emit('delete-content', $event)">
+                <biz-button type="button" class="is-small" @click="$emit('delete-content', $event)">
                     <span class="icon"><i class="fas fa-trash"></i></span>
-                </sdb-button>
+                </biz-button>
             </p>
             <p class="control" v-if="canMove">
-                <sdb-button type="button" class="is-small handle-content">
+                <biz-button type="button" class="is-small handle-content">
                     <span class="icon"><i class="fas fa-arrows-alt"></i></span>
-                </sdb-button>
+                </biz-button>
             </p>
         </div>
     </div>
 </template>
 
 <script>
-    import SdbButton from '@/Sdb/Button';
+    import BizButton from '@/Biz/Button';
 
     export default {
         components: {
-            SdbButton,
+            BizButton,
         },
         emits: [
             'delete-content',

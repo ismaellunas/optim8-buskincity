@@ -1,5 +1,5 @@
 <template>
-    <sdb-form-checkbox-group
+    <biz-form-checkbox-group
         v-model="computedValue"
         :disabled="schema.is_disabled"
         :is-raw="schema.is_raw"
@@ -13,14 +13,14 @@
 </template>
 
 <script>
-    import SdbFormCheckboxGroup from '@/Sdb/Form/CheckboxGroup';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import BizFormCheckboxGroup from '@/Biz/Form/CheckboxGroup';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormCheckboxGroup',
 
         components: {
-            SdbFormCheckboxGroup,
+            BizFormCheckboxGroup,
         },
 
         props: {

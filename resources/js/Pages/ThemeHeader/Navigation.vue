@@ -8,14 +8,14 @@
             </div>
             <div class="column">
                 <p class="buttons is-pulled-right">
-                    <sdb-button
+                    <biz-button
                         v-for="locale in localeOptions"
                         :key="locale.id"
                         :class="['is-small is-link is-rounded', locale.id == selectedLocale ? '' : 'is-light' ]"
                         @click="changeLocale(locale.id)"
                     >
                         {{ locale.name }}
-                    </sdb-button>
+                    </biz-button>
                 </p>
             </div>
         </div>
@@ -63,7 +63,7 @@
     import NavigationFormDuplicate from './NavigationFormDuplicate';
     import NavigationFormMenu from './NavigationFormMenuItem';
     import NavigationMenu from './NavigationMenu';
-    import SdbButton from '@/Sdb/Button';
+    import BizButton from '@/Biz/Button';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
     import { oops as oopsAlert, success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { forEach, cloneDeep } from 'lodash';
@@ -75,7 +75,7 @@
             NavigationFormDuplicate,
             NavigationFormMenu,
             NavigationMenu,
-            SdbButton,
+            BizButton,
         },
 
         mixins: [

@@ -1,13 +1,13 @@
 <template>
     <div :class="wrapperClass">
-        <sdb-toolbar-content
+        <biz-toolbar-content
             @delete-content="deleteContent"
         />
         <div
             class="content"
             :class="contentClass"
         >
-            <sdb-tinymce
+            <biz-tinymce
                 v-model="entity.content.html"
                 :class="editorClass"
             />
@@ -17,8 +17,8 @@
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import SdbTinymce from '@/Sdb/EditorTinymce';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizTinymce from '@/Biz/EditorTinymce';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
     import { useModelWrapper } from '@/Libs/utils';
@@ -29,8 +29,8 @@
             DeletableContentMixin,
         ],
         components: {
-            SdbTinymce,
-            SdbToolbarContent,
+            BizTinymce,
+            BizToolbarContent,
         },
         props: {
             id: String,

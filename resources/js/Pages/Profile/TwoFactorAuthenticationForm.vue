@@ -1,5 +1,5 @@
 <template>
-    <sdb-action-section>
+    <biz-action-section>
         <template #title>
             Two Factor Authentication
         </template>
@@ -54,59 +54,59 @@
 
             <div class="mt-5">
                 <div v-if="!twoFactorEnabled">
-                    <sdb-confirm-password @confirmed="enableTwoFactorAuthentication">
-                        <sdb-button
+                    <biz-confirm-password @confirmed="enableTwoFactorAuthentication">
+                        <biz-button
                             :class="{ 'opacity-25': enabling }"
                             :disabled="enabling"
                             class="is-primary"
                         >
                             Enable
-                        </sdb-button>
-                    </sdb-confirm-password>
+                        </biz-button>
+                    </biz-confirm-password>
                 </div>
 
                 <div v-else>
-                    <sdb-confirm-password @confirmed="regenerateRecoveryCodes">
-                        <sdb-button
+                    <biz-confirm-password @confirmed="regenerateRecoveryCodes">
+                        <biz-button
                             v-if="recoveryCodes.length > 0"
                         >
                             Regenerate Recovery Codes
-                        </sdb-button>
-                    </sdb-confirm-password>
+                        </biz-button>
+                    </biz-confirm-password>
 
-                    <sdb-confirm-password @confirmed="showRecoveryCodes">
-                        <sdb-button
+                    <biz-confirm-password @confirmed="showRecoveryCodes">
+                        <biz-button
                             v-if="recoveryCodes.length === 0"
                         >
                             Show Recovery Codes
-                        </sdb-button>
-                    </sdb-confirm-password>
+                        </biz-button>
+                    </biz-confirm-password>
 
-                    <sdb-confirm-password @confirmed="disableTwoFactorAuthentication">
-                        <sdb-button
+                    <biz-confirm-password @confirmed="disableTwoFactorAuthentication">
+                        <biz-button
                             class="is-danger ml-2"
                             :class="{ 'opacity-25': disabling }"
                             :disabled="disabling"
                         >
                             Disable
-                        </sdb-button>
-                    </sdb-confirm-password>
+                        </biz-button>
+                    </biz-confirm-password>
                 </div>
             </div>
         </template>
-    </sdb-action-section>
+    </biz-action-section>
 </template>
 
 <script>
-    import SdbActionSection from '@/Sdb/ActionSection';
-    import SdbConfirmPassword from '@/Sdb/ConfirmPassword';
-    import SdbButton from '@/Sdb/Button';
+    import BizActionSection from '@/Biz/ActionSection';
+    import BizConfirmPassword from '@/Biz/ConfirmPassword';
+    import BizButton from '@/Biz/Button';
 
     export default {
         components: {
-            SdbActionSection,
-            SdbConfirmPassword,
-            SdbButton,
+            BizActionSection,
+            BizConfirmPassword,
+            BizButton,
         },
 
         data() {

@@ -1,28 +1,28 @@
 <template>
-    <sdb-form-password
+    <biz-form-password
         v-model="form.password"
         autocomplete="new-password"
         label="Password"
         :message="error('password')"
         :required="true"
-    ></sdb-form-password>
+    ></biz-form-password>
 
-    <sdb-form-password
+    <biz-form-password
         v-model="form.password_confirmation"
         label="Password Confirmation"
         :message="error('password_confirmation')"
-    ></sdb-form-password>
+    ></biz-form-password>
 </template>
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbFormPassword from '@/Sdb/Form/Password';
+    import BizFormPassword from '@/Biz/Form/Password';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'UserPasswordForm',
         components: {
-            SdbFormPassword,
+            BizFormPassword,
         },
         mixins: [
             MixinHasPageErrors,

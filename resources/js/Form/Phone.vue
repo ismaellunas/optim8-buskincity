@@ -1,5 +1,5 @@
 <template>
-    <sdb-form-phone
+    <biz-form-phone
         v-model="computedValue"
         :label="schema.label"
         :maxlength="schema.maxlength"
@@ -12,14 +12,14 @@
 </template>
 
 <script>
-    import SdbFormPhone from '@/Sdb/Form/Phone';
+    import BizFormPhone from '@/Biz/Form/Phone';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormPhone',
 
         components: {
-            SdbFormPhone,
+            BizFormPhone,
         },
 
         props: {

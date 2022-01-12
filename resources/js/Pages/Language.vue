@@ -4,7 +4,7 @@
             {{ title }}
         </template>
 
-        <sdb-error-notifications :errors="$page.props.errors" />
+        <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="mb-6">
             <form
@@ -19,14 +19,14 @@
                     >
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <sdb-button class="is-link">
+                                <biz-button class="is-link">
                                     Update
-                                </sdb-button>
+                                </biz-button>
                             </div>
                         </div>
                         <div class="columns">
                             <div class="column">
-                                <sdb-form-dropdown-search
+                                <biz-form-dropdown-search
                                     label="Default Language"
                                     :close-on-click="true"
                                     @search="searchLanguage($event)"
@@ -37,22 +37,22 @@
                                         </span>
                                     </template>
 
-                                    <sdb-dropdown-item
+                                    <biz-dropdown-item
                                         v-for="option in filteredLanguages"
                                         :key="option.id"
                                         @click="selectedDefaultLanguage = option"
                                     >
                                         {{ option.value }}
-                                    </sdb-dropdown-item>
-                                </sdb-form-dropdown-search>
+                                    </biz-dropdown-item>
+                                </biz-form-dropdown-search>
                             </div>
                         </div>
 
                         <div class="columns mt-2 is-multiline">
                             <div class="column is-full">
-                                <sdb-label>
+                                <biz-label>
                                     {{ trans.labels["Supported Languages"] }}
-                                </sdb-label>
+                                </biz-label>
                             </div>
 
                             <div
@@ -60,7 +60,7 @@
                                 :key="option.id"
                                 class="column is-3 py-1"
                             >
-                                <sdb-button-option
+                                <biz-button-option
                                     class="is-fullwidth"
                                     type="button"
                                     selected-attribute="selected"
@@ -69,7 +69,7 @@
                                     @click="toggleLanguage(sortedLanguageOptions[index])"
                                 >
                                     {{ option.value }}
-                                </sdb-button-option>
+                                </biz-button-option>
                             </div>
                         </div>
                     </fieldset>
@@ -82,12 +82,12 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonOption from '@/Sdb/ButtonOption';
-    import SdbDropdownItem from '@/Sdb/DropdownItem';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbFormDropdownSearch from '@/Sdb/Form/DropdownSearch';
-    import SdbLabel from '@/Sdb/Label';
+    import BizButton from '@/Biz/Button';
+    import BizButtonOption from '@/Biz/ButtonOption';
+    import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
+    import BizLabel from '@/Biz/Label';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { debounce, filter, find, isEmpty, sortBy } from 'lodash';
@@ -97,12 +97,12 @@
 
         components: {
             AppLayout,
-            SdbButton,
-            SdbButtonOption,
-            SdbDropdownItem,
-            SdbErrorNotifications,
-            SdbFormDropdownSearch,
-            SdbLabel,
+            BizButton,
+            BizButtonOption,
+            BizDropdownItem,
+            BizErrorNotifications,
+            BizFormDropdownSearch,
+            BizLabel,
         },
 
         mixins: [

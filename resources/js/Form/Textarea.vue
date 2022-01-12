@@ -1,5 +1,5 @@
 <template>
-    <sdb-form-textarea
+    <biz-form-textarea
         v-model="computedValue"
         :disabled="schema.is_disabled"
         :label="schema.label"
@@ -13,14 +13,14 @@
 </template>
 
 <script>
-    import SdbFormTextarea from '@/Sdb/Form/Textarea';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import BizFormTextarea from '@/Biz/Form/Textarea';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormTextarea',
 
         components: {
-            SdbFormTextarea,
+            BizFormTextarea,
         },
 
         props: {

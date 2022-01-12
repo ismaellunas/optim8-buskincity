@@ -1,5 +1,5 @@
 <template>
-    <sdb-modal-card @close="$emit('close')">
+    <biz-modal-card @close="$emit('close')">
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
                 {{ isCreate ? 'Add' : 'Edit' }} Social Media
@@ -13,7 +13,7 @@
 
         <form @submit.prevent="onSubmit">
             <fieldset>
-                <sdb-form-input-icon
+                <biz-form-input-icon
                     v-model="form.icon"
                     label="Icon"
                     placeholder="e.g fas fa-square-full"
@@ -22,7 +22,7 @@
                     :message="error('icon', null, errors)"
                 />
 
-                <sdb-form-input
+                <biz-form-input
                     v-model="form.url"
                     label="Link"
                     placeholder="e.g https:://example.com/"
@@ -30,12 +30,12 @@
                     :message="error('url', null, errors)"
                 />
 
-                <sdb-checkbox
+                <biz-checkbox
                     v-model:checked="form.is_blank"
                     :value="true"
                 >
                     Open link in a new tab
-                </sdb-checkbox>
+                </biz-checkbox>
             </fieldset>
         </form>
         <template #footer>
@@ -45,30 +45,30 @@
             >
                 <div class="column">
                     <div class="is-pulled-right">
-                        <sdb-button @click.prevent="onClose()">
+                        <biz-button @click.prevent="onClose()">
                             Cancel
-                        </sdb-button>
-                        <sdb-button
+                        </biz-button>
+                        <biz-button
                             class="is-primary ml-1"
                             type="button"
                             @click.prevent="onSubmit()"
                         >
                             {{ isCreate ? 'Create' : 'Update' }}
-                        </sdb-button>
+                        </biz-button>
                     </div>
                 </div>
             </div>
         </template>
-    </sdb-modal-card>
+    </biz-modal-card>
 </template>
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbButton from '@/Sdb/Button';
-    import SdbCheckbox from '@/Sdb/Checkbox';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormInputIcon from '@/Sdb/Form/InputIcon';
-    import SdbModalCard from '@/Sdb/ModalCard';
+    import BizButton from '@/Biz/Button';
+    import BizCheckbox from '@/Biz/Checkbox';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizFormInputIcon from '@/Biz/Form/InputIcon';
+    import BizModalCard from '@/Biz/ModalCard';
     import fontawesomeBrandClasses from '@/Json/fontawesome-brand-classes';
     import { isBlank } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
@@ -79,11 +79,11 @@
         name: 'FooterSocialMediaForm',
 
         components: {
-            SdbButton,
-            SdbCheckbox,
-            SdbFormInput,
-            SdbFormInputIcon,
-            SdbModalCard,
+            BizButton,
+            BizCheckbox,
+            BizFormInput,
+            BizFormInputIcon,
+            BizModalCard,
         },
 
         mixins: [

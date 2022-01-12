@@ -4,8 +4,8 @@
             {{ title }}
         </template>
 
-        <sdb-flash-notifications :flash="$page.props.flash" />
-        <sdb-error-notifications
+        <biz-flash-notifications :flash="$page.props.flash" />
+        <biz-error-notifications
             :bags="['default']"
             :errors="$page.props.errors"
         />
@@ -13,7 +13,7 @@
         <div class="box">
             <div class="columns">
                 <div class="column">
-                    <sdb-dropdown
+                    <biz-dropdown
                         :close-on-click="true"
                     >
                         <template #trigger>
@@ -27,13 +27,13 @@
                             </span>
                         </template>
 
-                        <sdb-dropdown-scroll :max-height="350">
-                            <sdb-dropdown-item
+                        <biz-dropdown-scroll :max-height="350">
+                            <biz-dropdown-item
                                 v-for="(localeOption, index) in localeOptions"
                                 :key="index"
                                 class="pt-0 pb-1"
                             >
-                                <sdb-button
+                                <biz-button
                                     :class="[
                                         'is-fullwidth',
                                         (localeOption.id == locale) ? 'is-link' : 'is-white',
@@ -41,12 +41,12 @@
                                     @click="filterLocale(localeOption)"
                                 >
                                     {{ localeOption.name }}
-                                </sdb-button>
-                            </sdb-dropdown-item>
-                        </sdb-dropdown-scroll>
-                    </sdb-dropdown>
+                                </biz-button>
+                            </biz-dropdown-item>
+                        </biz-dropdown-scroll>
+                    </biz-dropdown>
 
-                    <sdb-dropdown
+                    <biz-dropdown
                         class="ml-3"
                         :close-on-click="false"
                     >
@@ -67,45 +67,45 @@
                             </span>
                         </template>
 
-                        <sdb-dropdown-scroll :max-height="350">
-                            <sdb-dropdown-item
+                        <biz-dropdown-scroll :max-height="350">
+                            <biz-dropdown-item
                                 v-for="(groupOption, index) in groupOptions"
                                 :key="index"
                             >
-                                <sdb-checkbox
+                                <biz-checkbox
                                     v-model:checked="groups"
                                     :value="groupOption"
                                     @change="filterGroups"
                                 >
                                     &nbsp; {{ groupOption }}
-                                </sdb-checkbox>
-                            </sdb-dropdown-item>
-                        </sdb-dropdown-scroll>
-                    </sdb-dropdown>
+                                </biz-checkbox>
+                            </biz-dropdown-item>
+                        </biz-dropdown-scroll>
+                    </biz-dropdown>
                 </div>
 
                 <div class="column">
                     <div class="is-pulled-right">
-                        <sdb-button-download
+                        <biz-button-download
                             :url="route('admin.settings.translation-manager.export', {locale: locale, groups: groups})"
                             class="mr-2"
                         >
                             Export
-                        </sdb-button-download>
+                        </biz-button-download>
 
-                        <sdb-button
+                        <biz-button
                             class="mr-2"
                             @click="openModal"
                         >
                             Import
-                        </sdb-button>
+                        </biz-button>
 
-                        <sdb-button
+                        <biz-button
                             class="is-link"
                             @click="onSubmit"
                         >
                             Update
-                        </sdb-button>
+                        </biz-button>
                     </div>
                 </div>
             </div>
@@ -143,20 +143,20 @@
                                     action="post"
                                     @submit.prevent="onSubmit"
                                 >
-                                    <sdb-field class="mb-0">
+                                    <biz-field class="mb-0">
                                         <div class="control is-expanded">
-                                            <sdb-input
+                                            <biz-input
                                                 v-if="form.translations[index]"
                                                 v-model="form.translations[index].value"
                                                 placeholder="value"
                                             />
                                         </div>
-                                    </sdb-field>
+                                    </biz-field>
                                 </form>
                             </td>
                             <td>
                                 <div class="level-right">
-                                    <sdb-button
+                                    <biz-button
                                         v-if="page.value"
                                         class="is-ghost has-text-black ml-1"
                                         @click="onClear(index)"
@@ -164,14 +164,14 @@
                                         <span class="icon is-small">
                                             <i class="fas fa-eraser" />
                                         </span>
-                                    </sdb-button>
+                                    </biz-button>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <sdb-pagination
+            <biz-pagination
                 :is-ajax="true"
                 :links="records.links"
                 :query-params="queryParams"
@@ -179,7 +179,7 @@
             />
         </div>
 
-        <sdb-modal-card
+        <biz-modal-card
             v-show="isModalOpen"
             @close="closeModal()"
         >
@@ -188,7 +188,7 @@
                     Import
                 </p>
 
-                <sdb-button
+                <biz-button
                     aria-label="close"
                     class="delete is-primary"
                     type="button"
@@ -198,7 +198,7 @@
 
             <form @submit.prevent="submitImport">
                 <div class="control">
-                    <sdb-form-file
+                    <biz-form-file
                         v-model="importForm.file"
                         :accepted-types="acceptedTypes"
                         :message="error('file', bags.import)"
@@ -220,31 +220,31 @@
                                 </ul>
                             </p>
                         </template>
-                    </sdb-form-file>
+                    </biz-form-file>
                 </div>
             </form>
 
             <template #footer>
                 <div class="column p-0">
                     <div class="buttons is-right">
-                        <sdb-button
+                        <biz-button
                             class="is-link"
                             @click="submitImport"
                         >
                             Submit
-                        </sdb-button>
+                        </biz-button>
 
-                        <sdb-button
+                        <biz-button
                             class="is-link is-light ml-2"
                             type="button"
                             @click="closeModal()"
                         >
                             Cancel
-                        </sdb-button>
+                        </biz-button>
                     </div>
                 </div>
             </template>
-        </sdb-modal-card>
+        </biz-modal-card>
     </app-layout>
 </template>
 
@@ -253,19 +253,19 @@
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonDownload from '@/Sdb/ButtonDownload';
-    import SdbCheckbox from '@/Sdb/Checkbox';
-    import SdbDropdown from '@/Sdb/Dropdown';
-    import SdbDropdownItem from '@/Sdb/DropdownItem';
-    import SdbDropdownScroll from '@/Sdb/DropdownScroll';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbField from '@/Sdb/Field';
-    import SdbFlashNotifications from '@/Sdb/FlashNotifications';
-    import SdbFormFile from '@/Sdb/Form/File';
-    import SdbInput from '@/Sdb/Input';
-    import SdbModalCard from '@/Sdb/ModalCard';
-    import SdbPagination from '@/Sdb/Pagination';
+    import BizButton from '@/Biz/Button';
+    import BizButtonDownload from '@/Biz/ButtonDownload';
+    import BizCheckbox from '@/Biz/Checkbox';
+    import BizDropdown from '@/Biz/Dropdown';
+    import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizDropdownScroll from '@/Biz/DropdownScroll';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizField from '@/Biz/Field';
+    import BizFlashNotifications from '@/Biz/FlashNotifications';
+    import BizFormFile from '@/Biz/Form/File';
+    import BizInput from '@/Biz/Input';
+    import BizModalCard from '@/Biz/ModalCard';
+    import BizPagination from '@/Biz/Pagination';
     import { merge, debounce } from 'lodash';
     import { ref } from 'vue';
     import { success as successAlert, confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
@@ -274,19 +274,19 @@
     export default {
         components: {
             AppLayout,
-            SdbButton,
-            SdbButtonDownload,
-            SdbCheckbox,
-            SdbDropdown,
-            SdbDropdownItem,
-            SdbDropdownScroll,
-            SdbErrorNotifications,
-            SdbField,
-            SdbFlashNotifications,
-            SdbFormFile,
-            SdbInput,
-            SdbModalCard,
-            SdbPagination,
+            BizButton,
+            BizButtonDownload,
+            BizCheckbox,
+            BizDropdown,
+            BizDropdownItem,
+            BizDropdownScroll,
+            BizErrorNotifications,
+            BizField,
+            BizFlashNotifications,
+            BizFormFile,
+            BizInput,
+            BizModalCard,
+            BizPagination,
         },
 
         mixins: [

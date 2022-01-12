@@ -1,5 +1,5 @@
 <template>
-    <sdb-form-section @submitted="updatePassword">
+    <biz-form-section @submitted="updatePassword">
         <template #title>
             Update Password
         </template>
@@ -9,7 +9,7 @@
         </template>
 
         <template #form>
-            <sdb-form-password
+            <biz-form-password
                 ref="current_password"
                 v-model="form.current_password"
                 autocomplete="current-password"
@@ -18,7 +18,7 @@
                 :required="true"
             />
 
-            <sdb-form-password
+            <biz-form-password
                 ref="password"
                 v-model="form.password"
                 autocomplete="new-password"
@@ -27,7 +27,7 @@
                 :required="true"
             />
 
-            <sdb-form-password
+            <biz-form-password
                 ref="password"
                 v-model="form.password_confirmation"
                 autocomplete="new-password"
@@ -38,36 +38,36 @@
         </template>
 
         <template #actions>
-            <sdb-action-message
+            <biz-action-message
                 :is-active="form.recentlySuccessful"
                 class="mr-3"
             >
                 Saved.
-            </sdb-action-message>
+            </biz-action-message>
 
-            <sdb-button
+            <biz-button
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
                 class="is-primary"
             >
                 Save
-            </sdb-button>
+            </biz-button>
         </template>
-    </sdb-form-section>
+    </biz-form-section>
 </template>
 
 <script>
-    import SdbActionMessage from '@/Sdb/ActionMessage';
-    import SdbButton from '@/Sdb/Button';
-    import SdbFormPassword from '@/Sdb/Form/Password';
-    import SdbFormSection from '@/Sdb/FormSection';
+    import BizActionMessage from '@/Biz/ActionMessage';
+    import BizButton from '@/Biz/Button';
+    import BizFormPassword from '@/Biz/Form/Password';
+    import BizFormSection from '@/Biz/FormSection';
 
     export default {
         components: {
-            SdbActionMessage,
-            SdbButton,
-            SdbFormPassword,
-            SdbFormSection,
+            BizActionMessage,
+            BizButton,
+            BizFormPassword,
+            BizFormSection,
         },
 
         data() {

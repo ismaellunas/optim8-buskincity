@@ -14,7 +14,7 @@
                         <i class="fas fa-question-circle" />
                     </div>
                     <div class="media-content">
-                        <sdb-toolbar-content
+                        <biz-toolbar-content
                             @delete-content="deleteConfirm(element.id)"
                         />
                         <div
@@ -33,7 +33,7 @@
                                 class="content border-dash"
                                 style="width: 100%"
                             >
-                                <sdb-form-text-editor-full-inline
+                                <biz-form-text-editor-full-inline
                                     v-model="element.answer"
                                 />
                             </div>
@@ -43,21 +43,21 @@
             </template>
         </draggable>
 
-        <sdb-button
+        <biz-button
             type="button"
             class="is-small"
             @click="addQuestion()"
         >
             Add Question
-        </sdb-button>
+        </biz-button>
     </div>
 </template>
 
 <script>
     import draggable from "vuedraggable";
-    import SdbButton from '@/Sdb/Button';
-    import SdbFormTextEditorFullInline from '@/Sdb/Form/TextEditorFullInline';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizButton from '@/Biz/Button';
+    import BizFormTextEditorFullInline from '@/Biz/Form/TextEditorFullInline';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { generateElementId } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
     import { confirmDelete } from '@/Libs/alert';
@@ -67,9 +67,9 @@
 
         components: {
             draggable,
-            SdbButton,
-            SdbFormTextEditorFullInline,
-            SdbToolbarContent,
+            BizButton,
+            BizFormTextEditorFullInline,
+            BizToolbarContent,
         },
 
         props: {

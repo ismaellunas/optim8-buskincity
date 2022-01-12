@@ -16,12 +16,12 @@
                         <div class="level">
                             <div class="level-left">
                                 <div class="level-item">
-                                    <sdb-link :href="route('login')">
+                                    <biz-link :href="route('login')">
                                         <span class="icon">
                                             <i class="fas fa-arrow-left" />
                                         </span>
                                         <span>Back</span>
-                                    </sdb-link>
+                                    </biz-link>
                                 </div>
                             </div>
                             <div class="level-right">
@@ -42,13 +42,13 @@
                                         {{ status }}
                                     </div>
 
-                                    <sdb-error-notifications
+                                    <biz-error-notifications
                                         :errors="$page.props.errors"
                                     />
 
                                     <form @submit.prevent="submit">
                                         <div>
-                                            <sdb-form-input
+                                            <biz-form-input
                                                 v-model="form.email"
                                                 label="Email"
                                                 required
@@ -59,12 +59,12 @@
                                         </div>
 
                                         <div class="mt-4">
-                                            <sdb-button
+                                            <biz-button
                                                 class="button is-info"
                                                 :disabled="form.processing"
                                             >
                                                 Email Password Reset Link
-                                            </sdb-button>
+                                            </biz-button>
                                         </div>
                                     </form>
                                 </div>
@@ -79,17 +79,17 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbButton from '@/Sdb/Button';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbLink from '@/Sdb/Link';
+    import BizButton from '@/Biz/Button';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizLink from '@/Biz/Link';
 
     export default {
         components: {
-            SdbButton,
-            SdbErrorNotifications,
-            SdbFormInput,
-            SdbLink,
+            BizButton,
+            BizErrorNotifications,
+            BizFormInput,
+            BizLink,
         },
 
         mixins: [

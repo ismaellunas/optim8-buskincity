@@ -1,27 +1,27 @@
 <template>
-    <sdb-form-input
+    <biz-form-input
         v-model="form.first_name"
         label="First Name"
         required
         :message="error('first_name')"
-    ></sdb-form-input>
+    ></biz-form-input>
 
-    <sdb-form-input
+    <biz-form-input
         v-model="form.last_name"
         label="Last Name"
         required
         :message="error('last_name')"
-    ></sdb-form-input>
+    ></biz-form-input>
 
-    <sdb-form-input
+    <biz-form-input
         v-model="form.email"
         label="Email"
         required
         type="email"
         :message="error('email')"
-    ></sdb-form-input>
+    ></biz-form-input>
 
-    <sdb-form-select
+    <biz-form-select
         v-if="canSetRole"
         v-model="form.role"
         label="Role"
@@ -35,22 +35,22 @@
         >
             {{ option.value }}
         </option>
-    </sdb-form-select>
+    </biz-form-select>
 
 </template>
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormSelect from '@/Sdb/Form/Select';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizFormSelect from '@/Biz/Form/Select';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'UserProfileForm',
         components: {
-            SdbFormInput,
-            SdbFormSelect,
+            BizFormInput,
+            BizFormSelect,
         },
         mixins: [
             MixinHasPageErrors,

@@ -31,7 +31,7 @@
             {{ title }}
         </template>
 
-        <sdb-error-notifications
+        <biz-error-notifications
             :errors="$page.props.errors"
         />
 
@@ -47,9 +47,9 @@
                     <div class="column">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <sdb-button class="is-link">
+                                <biz-button class="is-link">
                                     Save
-                                </sdb-button>
+                                </biz-button>
                             </div>
                         </div>
                     </div>
@@ -67,17 +67,17 @@
                                     :key="key"
                                     class="control"
                                 >
-                                    <sdb-checkbox
+                                    <biz-checkbox
                                         v-model:checked="form.uppercase_text"
                                         :value="key"
                                     >
                                         &nbsp;{{ uppercase }}
-                                    </sdb-checkbox>
+                                    </biz-checkbox>
                                 </p>
                             </div>
 
                             <p v-if="error('uppercase_text')">
-                                <sdb-input-error
+                                <biz-input-error
                                     :message="error('uppercase_text')"
                                 />
                             </p>
@@ -91,7 +91,7 @@
                         <div class="column">
                             <div class="field has-addons">
                                 <p class="control">
-                                    <sdb-input
+                                    <biz-input
                                         v-model="form.content_paragraph_width"
                                         type="number"
                                     />
@@ -101,7 +101,7 @@
                                 </p>
                             </div>
                             <p v-if="form.errors?.default && form.errors.default['content_paragraph_width']">
-                                <sdb-input-error
+                                <biz-input-error
                                     :message="error('content_paragraph_width')"
                                 />
                             </p>
@@ -113,7 +113,7 @@
                             <h3><b>Headings Font</b></h3>
                         </div>
                         <div class="column">
-                            <sdb-form-dropdown-search
+                            <biz-form-dropdown-search
                                 label="Font Family"
                                 :close-on-click="true"
                                 @search="searchFont($event, 'headings_font_family')"
@@ -124,20 +124,20 @@
                                     </span>
                                 </template>
 
-                                <sdb-dropdown-item @click="form.headings_font_family = null">
+                                <biz-dropdown-item @click="form.headings_font_family = null">
                                     (Default)
-                                </sdb-dropdown-item>
+                                </biz-dropdown-item>
 
-                                <sdb-dropdown-item
+                                <biz-dropdown-item
                                     v-for="(font, index) in filteredFonts.headings_font_family"
                                     :key="index"
                                     @click="form.headings_font_family = font.family"
                                 >
                                     {{ font.family }}
-                                </sdb-dropdown-item>
-                            </sdb-form-dropdown-search>
+                                </biz-dropdown-item>
+                            </biz-form-dropdown-search>
 
-                            <sdb-form-select
+                            <biz-form-select
                                 v-model="form.headings_font_weight"
                                 label="Font Weight"
                                 :message="error('headings_font_weight')"
@@ -149,9 +149,9 @@
                                 >
                                     {{ weight }}
                                 </option>
-                            </sdb-form-select>
+                            </biz-form-select>
 
-                            <sdb-form-select
+                            <biz-form-select
                                 v-model="form.headings_font_style"
                                 label="Font Style"
                                 :message="error('headings_font_style')"
@@ -163,9 +163,9 @@
                                 >
                                     {{ style }}
                                 </option>
-                            </sdb-form-select>
+                            </biz-form-select>
 
-                            <sdb-label>Preview</sdb-label>
+                            <biz-label>Preview</biz-label>
                             <div
                                 id="preview-headings"
                                 class="box"
@@ -182,7 +182,7 @@
                             <h3><b>Main Text Font</b></h3>
                         </div>
                         <div class="column">
-                            <sdb-form-dropdown-search
+                            <biz-form-dropdown-search
                                 label="Font Family"
                                 :close-on-click="true"
                                 @search="searchFont($event, 'main_text_font_family')"
@@ -193,20 +193,20 @@
                                     </span>
                                 </template>
 
-                                <sdb-dropdown-item @click="form.main_text_font_family = null">
+                                <biz-dropdown-item @click="form.main_text_font_family = null">
                                     (Default)
-                                </sdb-dropdown-item>
+                                </biz-dropdown-item>
 
-                                <sdb-dropdown-item
+                                <biz-dropdown-item
                                     v-for="(font, index) in filteredFonts.main_text_font_family"
                                     :key="index"
                                     @click="form.main_text_font_family = font.family"
                                 >
                                     {{ font.family }}
-                                </sdb-dropdown-item>
-                            </sdb-form-dropdown-search>
+                                </biz-dropdown-item>
+                            </biz-form-dropdown-search>
 
-                            <sdb-form-select
+                            <biz-form-select
                                 v-model="form.main_text_font_weight"
                                 label="Font Weight"
                                 :message="error('main_text_font_weight')"
@@ -218,9 +218,9 @@
                                 >
                                     {{ weight }}
                                 </option>
-                            </sdb-form-select>
+                            </biz-form-select>
 
-                            <sdb-form-select
+                            <biz-form-select
                                 v-model="form.main_text_font_style"
                                 label="Font Style"
                                 :message="error('main_text_font_style')"
@@ -232,9 +232,9 @@
                                 >
                                     {{ style }}
                                 </option>
-                            </sdb-form-select>
+                            </biz-form-select>
 
-                            <sdb-label>Preview</sdb-label>
+                            <biz-label>Preview</biz-label>
                             <div
                                 id="preview-main-text"
                                 class="box"
@@ -251,7 +251,7 @@
                             <h3><b>Buttons Font</b></h3>
                         </div>
                         <div class="column">
-                            <sdb-form-dropdown-search
+                            <biz-form-dropdown-search
                                 label="Font Weight"
                                 :close-on-click="true"
                                 @search="searchFont($event, 'buttons_font_family')"
@@ -262,20 +262,20 @@
                                     </span>
                                 </template>
 
-                                <sdb-dropdown-item @click="form.buttons_font_family = null">
+                                <biz-dropdown-item @click="form.buttons_font_family = null">
                                     (Default)
-                                </sdb-dropdown-item>
+                                </biz-dropdown-item>
 
-                                <sdb-dropdown-item
+                                <biz-dropdown-item
                                     v-for="(font, index) in filteredFonts.buttons_font_family"
                                     :key="index"
                                     @click="form.buttons_font_family = font.family"
                                 >
                                     {{ font.family }}
-                                </sdb-dropdown-item>
-                            </sdb-form-dropdown-search>
+                                </biz-dropdown-item>
+                            </biz-form-dropdown-search>
 
-                            <sdb-form-select
+                            <biz-form-select
                                 v-model="form.buttons_font_weight"
                                 label="Font Weight"
                                 :message="error('buttons_font_weight')"
@@ -287,9 +287,9 @@
                                 >
                                     {{ weight }}
                                 </option>
-                            </sdb-form-select>
+                            </biz-form-select>
 
-                            <sdb-form-select
+                            <biz-form-select
                                 v-model="form.buttons_font_style"
                                 label="Font Style"
                                 :message="error('buttons_font_style')"
@@ -301,9 +301,9 @@
                                 >
                                     {{ style }}
                                 </option>
-                            </sdb-form-select>
+                            </biz-form-select>
 
-                            <sdb-label>Preview</sdb-label>
+                            <biz-label>Preview</biz-label>
                             <p
                                 id="preview-buttons"
                                 class="box buttons"
@@ -330,15 +330,15 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbButton from '@/Sdb/Button';
-    import SdbCheckbox from '@/Sdb/Checkbox';
-    import SdbDropdownItem from '@/Sdb/DropdownItem';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbFormDropdownSearch from '@/Sdb/Form/DropdownSearch';
-    import SdbFormSelect from '@/Sdb/Form/Select';
-    import SdbInput from '@/Sdb/Input';
-    import SdbInputError from '@/Sdb/InputError';
-    import SdbLabel from '@/Sdb/Label';
+    import BizButton from '@/Biz/Button';
+    import BizCheckbox from '@/Biz/Checkbox';
+    import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
+    import BizFormSelect from '@/Biz/Form/Select';
+    import BizInput from '@/Biz/Input';
+    import BizInputError from '@/Biz/InputError';
+    import BizLabel from '@/Biz/Label';
     import { Head, useForm } from '@inertiajs/inertia-vue3';
     import { concat, debounce, filter, isEmpty, replace } from 'lodash';
     import { success as successAlert } from '@/Libs/alert';
@@ -349,15 +349,15 @@
         components: {
             AppLayout,
             Head,
-            SdbButton,
-            SdbCheckbox,
-            SdbDropdownItem,
-            SdbErrorNotifications,
-            SdbFormDropdownSearch,
-            SdbFormSelect,
-            SdbInput,
-            SdbInputError,
-            SdbLabel,
+            BizButton,
+            BizCheckbox,
+            BizDropdownItem,
+            BizErrorNotifications,
+            BizFormDropdownSearch,
+            BizFormSelect,
+            BizInput,
+            BizInputError,
+            BizLabel,
         },
 
         mixins: [

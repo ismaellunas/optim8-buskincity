@@ -14,14 +14,14 @@
                         :key="translation"
                         class="column is-half"
                     >
-                        <sdb-form-input-addons
+                        <biz-form-input-addons
                             v-model="form[translation].name"
                             :label="`Category Name (${translation.toUpperCase()})`"
                             :message="error(translation+'.name')"
                         >
                             <template #afterInput>
                                 <div class="control">
-                                    <sdb-button-icon
+                                    <biz-button-icon
                                         v-if="translation !== defaultLocale"
                                         class="is-danger"
                                         icon="fas fa-minus"
@@ -30,20 +30,20 @@
                                     />
                                 </div>
                             </template>
-                        </sdb-form-input-addons>
+                        </biz-form-input-addons>
                     </div>
                 </div>
             </div>
             <div class="mb-5" v-if="availableLocales.length">
                 <div class="control is-expanded">
-                    <sdb-select v-model="selectedLocale">
+                    <biz-select v-model="selectedLocale">
                         <option
                             v-for="locale in availableLocales"
                             :value="locale.id">
                             {{ locale.name }}
                         </option>
-                    </sdb-select>
-                    <sdb-button-icon
+                    </biz-select>
+                    <biz-button-icon
                         icon="fas fa-plus"
                         type="button"
                         class="is-link is-light"
@@ -54,15 +54,15 @@
 
             <div class="field is-grouped is-grouped-right">
                 <div class="control">
-                    <sdb-button-link :href="route(baseRoute+'.index')" class="is-link is-light">
+                    <biz-button-link :href="route(baseRoute+'.index')" class="is-link is-light">
                         Cancel
-                    </sdb-button-link>
+                    </biz-button-link>
                 </div>
                 <div class="control">
-                    <sdb-button class="is-link">
+                    <biz-button class="is-link">
                         <template v-if="isNew">Create</template>
                         <template v-else>Update</template>
-                    </sdb-button>
+                    </biz-button>
                 </div>
             </div>
         </fieldset>
@@ -71,12 +71,12 @@
 
 <script>
     import HasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbFormInputAddons from '@/Sdb/Form/InputAddons';
-    import SdbLabel from '@/Sdb/Label';
-    import SdbSelect from '@/Sdb/Select';
+    import BizButton from '@/Biz/Button';
+    import BizButtonIcon from '@/Biz/ButtonIcon';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizFormInputAddons from '@/Biz/Form/InputAddons';
+    import BizLabel from '@/Biz/Label';
+    import BizSelect from '@/Biz/Select';
     import { confirmDelete } from '@/Libs/alert';
     import { isBlank } from '@/Libs/utils';
     import { reactive } from "vue";
@@ -85,11 +85,11 @@
     export default {
         name: 'CategoryForm',
         components: {
-            SdbButton,
-            SdbButtonIcon,
-            SdbButtonLink,
-            SdbFormInputAddons,
-            SdbSelect,
+            BizButton,
+            BizButtonIcon,
+            BizButtonLink,
+            BizFormInputAddons,
+            BizSelect,
         },
         mixins: [
             HasPageErrors

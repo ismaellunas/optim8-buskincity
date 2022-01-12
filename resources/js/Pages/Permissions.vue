@@ -36,7 +36,7 @@
                         </tbody>
                     </table>
 
-                    <sdb-modal v-show="isOpen" @close="closeModal()">
+                    <biz-modal v-show="isOpen" @close="closeModal()">
                         <div class="box">
                             <form action="">
                                 <div class="field">
@@ -58,7 +58,7 @@
                                 </div>
                             </form>
                         </div>
-                    </sdb-modal>
+                    </biz-modal>
                 </div>
             </div>
         </div>
@@ -67,12 +67,12 @@
 
 <script>
     import AppLayout from './../Layouts/AppLayout'
-    import SdbModal from '@/Sdb/Modal'
+    import BizModal from '@/Biz/Modal'
 
     export default {
         components: {
             AppLayout,
-            SdbModal,
+            BizModal,
         },
         props: ['data', 'errors'],
         data() {

@@ -9,27 +9,27 @@
                         v-if="can.add"
                         class="is-pulled-right"
                     >
-                        <sdb-button-link :href="route(baseRouteName+'.create')" class="is-primary">
+                        <biz-button-link :href="route(baseRouteName+'.create')" class="is-primary">
                             <span class="icon is-small">
                                 <i class="fas fa-plus"></i>
                             </span>
                             <span>Add New</span>
-                        </sdb-button-link>
+                        </biz-button-link>
                     </div>
                 </div>
             </div>
 
             <div class="columns">
                 <div class="column">
-                    <sdb-filter-search
+                    <biz-filter-search
                         v-model="term"
                         @search="search"
-                    ></sdb-filter-search>
+                    ></biz-filter-search>
                 </div>
             </div>
 
             <div class="table-container">
-                <sdb-table class="is-striped is-hoverable is-fullwidth">
+                <biz-table class="is-striped is-hoverable is-fullwidth">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -49,7 +49,7 @@
                             </td>
                             <td>
                                 <div class="level-right">
-                                    <sdb-button-link
+                                    <biz-button-link
                                         v-if="can.edit"
                                         class="is-ghost has-text-black"
                                         :href="route(baseRouteName + '.edit', record.id)"
@@ -57,8 +57,8 @@
                                         <span class="icon is-small">
                                             <i class="fas fa-pen"></i>
                                         </span>
-                                    </sdb-button-link>
-                                    <sdb-button
+                                    </biz-button-link>
+                                    <biz-button
                                         v-if="can.delete"
                                         class="is-ghost has-text-black ml-1"
                                         @click.prevent="deleteRow(record)"
@@ -66,14 +66,14 @@
                                         <span class="icon is-small">
                                             <i class="far fa-trash-alt"></i>
                                         </span>
-                                    </sdb-button>
+                                    </biz-button>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
-                </sdb-table>
+                </biz-table>
             </div>
-            <sdb-pagination
+            <biz-pagination
                 :links="records.links"
                 :query-params="queryParams"
             />
@@ -84,11 +84,11 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbFilterSearch from '@/Sdb/Filter/Search';
-    import SdbPagination from '@/Sdb/Pagination';
-    import SdbTable from '@/Sdb/Table';
+    import BizButton from '@/Biz/Button';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizFilterSearch from '@/Biz/Filter/Search';
+    import BizPagination from '@/Biz/Pagination';
+    import BizTable from '@/Biz/Table';
     import { confirmDelete } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from 'vue';
@@ -97,11 +97,11 @@
     export default {
         components: {
             AppLayout,
-            SdbButton,
-            SdbButtonLink,
-            SdbFilterSearch,
-            SdbPagination,
-            SdbTable,
+            BizButton,
+            BizButtonLink,
+            BizFilterSearch,
+            BizPagination,
+            BizTable,
         },
         mixins: [
             MixinFilterDataHandle,

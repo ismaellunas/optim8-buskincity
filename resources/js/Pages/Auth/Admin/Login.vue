@@ -25,7 +25,7 @@
                                     </h2>
                                     <div class="has-text-left">
 
-                                        <sdb-error-notifications :errors="$page.props.errors"/>
+                                        <biz-error-notifications :errors="$page.props.errors"/>
 
                                         <form @submit.prevent="submit">
                                             <div class="field">
@@ -41,13 +41,13 @@
                                                         />
                                                 </div>
                                             </div>
-                                            <sdb-form-password
+                                            <biz-form-password
                                                 v-model="form.password"
                                                 autocomplete="current-password"
                                                 label="Password"
                                                 placeholder="Enter your password"
                                                 :required="true"
-                                            ></sdb-form-password>
+                                            ></biz-form-password>
                                             <div class="field columns">
                                                 <div class="column has-text-left">
                                                     <label class="checkbox">
@@ -56,9 +56,9 @@
                                                     </label>
                                                 </div>
                                                 <div class="column has-text-right">
-                                                    <sdb-link v-if="canResetPassword" :href="route('password.request')">
+                                                    <biz-link v-if="canResetPassword" :href="route('password.request')">
                                                         Forgot your password?
-                                                    </sdb-link>
+                                                    </biz-link>
                                                 </div>
                                             </div>
 
@@ -92,9 +92,9 @@
     import JetInput from '@/Jetstream/Input'
     import JetLabel from '@/Jetstream/Label'
     import LayoutBackendBlank from '@/Layouts/BackendBlank';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbFormPassword from '@/Sdb/Form/Password';
-    import SdbLink from '@/Sdb/Link';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFormPassword from '@/Biz/Form/Password';
+    import BizLink from '@/Biz/Link';
 
     export default {
         components: {
@@ -102,9 +102,9 @@
             JetCheckbox,
             JetInput,
             JetLabel,
-            SdbErrorNotifications,
-            SdbFormPassword,
-            SdbLink,
+            BizErrorNotifications,
+            BizFormPassword,
+            BizLink,
         },
 
         layout: LayoutBackendBlank,

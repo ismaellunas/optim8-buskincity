@@ -1,5 +1,5 @@
 <template>
-    <sdb-modal-card
+    <biz-modal-card
         @close="$emit('close')"
     >
         <template #header>
@@ -24,26 +24,26 @@
             <fieldset>
                 <div class="field">
                     <div class="control">
-                        <sdb-radio
+                        <biz-radio
                             v-model="form.is_reassigned"
                             name="delete"
                             :value="false"
                         >
                             Delete all content.
-                        </sdb-radio>
+                        </biz-radio>
                     </div>
                 </div>
 
                 <div class="field">
                     <div class="control">
-                        <sdb-radio
+                        <biz-radio
                             v-model="form.is_reassigned"
                             name="delete"
                             :value="true"
                         >
                             Attribute all content to:
-                        </sdb-radio>
-                        <sdb-form-select
+                        </biz-radio>
+                        <biz-form-select
                             v-model="form.assigned_user"
                             class="is-fullwidth"
                             field-class="ml-4"
@@ -58,7 +58,7 @@
                             >
                                 {{ option.full_name }}
                             </option>
-                        </sdb-form-select>
+                        </biz-form-select>
                     </div>
                 </div>
             </fieldset>
@@ -71,40 +71,40 @@
             >
                 <div class="column">
                     <div class="is-pulled-right">
-                        <sdb-button @click="$emit('close')">
+                        <biz-button @click="$emit('close')">
                             Cancel
-                        </sdb-button>
+                        </biz-button>
 
-                        <sdb-button
+                        <biz-button
                             class="is-primary ml-1"
                             type="button"
                             @click="submit"
                         >
                             Delete
-                        </sdb-button>
+                        </biz-button>
                     </div>
                 </div>
             </div>
         </template>
-    </sdb-modal-card>
+    </biz-modal-card>
 </template>
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbButton from '@/Sdb/Button';
-    import SdbFormSelect from '@/Sdb/Form/Select';
-    import SdbModalCard from '@/Sdb/ModalCard';
-    import SdbRadio from '@/Sdb/Radio';
+    import BizButton from '@/Biz/Button';
+    import BizFormSelect from '@/Biz/Form/Select';
+    import BizModalCard from '@/Biz/ModalCard';
+    import BizRadio from '@/Biz/Radio';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'ModalFormDeleteUser',
 
         components: {
-            SdbButton,
-            SdbFormSelect,
-            SdbModalCard,
-            SdbRadio,
+            BizButton,
+            BizFormSelect,
+            BizModalCard,
+            BizRadio,
         },
 
         mixins: [

@@ -1,6 +1,6 @@
 <template>
     <div id="main-container-wrapper">
-        <sdb-navbar-menu />
+        <biz-navbar-menu />
 
         <section class="hero is-small is-primary mb-4">
             <div class="hero-body">
@@ -22,13 +22,13 @@
 </template>
 
 <script>
-    import SdbNavbarMenu from '@/Sdb/NavbarMenu';
+    import BizNavbarMenu from '@/Biz/NavbarMenu';
 
     export default {
         name: 'LayoutApp',
 
         components: {
-            SdbNavbarMenu,
+            BizNavbarMenu,
         },
     };
 </script>

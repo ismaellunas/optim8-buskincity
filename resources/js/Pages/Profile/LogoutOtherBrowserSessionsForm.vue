@@ -1,5 +1,5 @@
 <template>
-    <sdb-action-section>
+    <biz-action-section>
         <template #title>
             Browser Sessions
         </template>
@@ -60,23 +60,23 @@
             </div>
 
             <div class="flex mt-5">
-                <sdb-button
+                <biz-button
                     class="is-primary"
                     @click="confirmLogout"
                 >
                     Log Out Other Browser Sessions
-                </sdb-button>
+                </biz-button>
 
-                <sdb-action-message
+                <biz-action-message
                     :is-active="form.recentlySuccessful"
                     class="ml-3"
                 >
                     Done.
-                </sdb-action-message>
+                </biz-action-message>
             </div>
 
             <!-- Log Out Other Devices Confirmation Modal -->
-            <sdb-modal-card
+            <biz-modal-card
                 v-if="isModalOpen"
                 @close="closeModal()"
             >
@@ -97,7 +97,7 @@
                     </p>
 
                     <div class="mt-4">
-                        <sdb-form-password
+                        <biz-form-password
                             ref="password"
                             v-model="form.password"
                             placeholder="Password"
@@ -109,42 +109,42 @@
                 </template>
 
                 <template #footer>
-                    <sdb-button
+                    <biz-button
                         @click="closeModal()"
                     >
                         Cancel
-                    </sdb-button>
+                    </biz-button>
 
-                    <sdb-button
+                    <biz-button
                         class="is-primary ml-2"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
                         @click="logoutOtherBrowserSessions"
                     >
                         Log Out Other Browser Sessions
-                    </sdb-button>
+                    </biz-button>
                 </template>
-            </sdb-modal-card>
+            </biz-modal-card>
         </template>
-    </sdb-action-section>
+    </biz-action-section>
 </template>
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbActionMessage from '@/Sdb/ActionMessage';
-    import SdbActionSection from '@/Sdb/ActionSection';
-    import SdbButton from '@/Sdb/Button';
-    import SdbFormPassword from '@/Sdb/Form/Password';
-    import SdbModalCard from '@/Sdb/ModalCard';
+    import BizActionMessage from '@/Biz/ActionMessage';
+    import BizActionSection from '@/Biz/ActionSection';
+    import BizButton from '@/Biz/Button';
+    import BizFormPassword from '@/Biz/Form/Password';
+    import BizModalCard from '@/Biz/ModalCard';
 
     export default {
         components: {
-            SdbActionMessage,
-            SdbActionSection,
-            SdbButton,
-            SdbFormPassword,
-            SdbModalCard,
+            BizActionMessage,
+            BizActionSection,
+            BizButton,
+            BizFormPassword,
+            BizModalCard,
         },
 
         mixins: [

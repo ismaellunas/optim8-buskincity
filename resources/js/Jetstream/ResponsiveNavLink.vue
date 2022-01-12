@@ -4,18 +4,18 @@
             <slot></slot>
         </button>
 
-        <sdb-link :href="href" :class="classes" v-else>
+        <biz-link :href="href" :class="classes" v-else>
             <slot></slot>
-        </sdb-link>
+        </biz-link>
     </div>
 </template>
 
 <script>
-    import SdbLink from '@/Sdb/Link';
+    import BizLink from '@/Biz/Link';
 
     export default {
         components: {
-            SdbLink,
+            BizLink,
         },
 
         props: ['active', 'href', 'as'],

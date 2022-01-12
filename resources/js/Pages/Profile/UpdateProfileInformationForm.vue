@@ -1,6 +1,6 @@
 <template>
     <div>
-        <sdb-form-section @submitted="updateProfileInformation">
+        <biz-form-section @submitted="updateProfileInformation">
             <template #title>
                 Profile Information
             </template>
@@ -15,7 +15,7 @@
                     class="col-span-6 sm:col-span-4 mb-3"
                 >
                     <!-- Profile Photo File Input -->
-                    <sdb-label
+                    <biz-label
                         for="photo"
                         value="Photo"
                     />
@@ -24,14 +24,14 @@
                     <div
                         class="mt-2 mb-2"
                     >
-                        <sdb-image
+                        <biz-image
                             rounded="is-rounded"
                             style="width: 64px;"
                             :src="photoUrl"
                         />
                     </div>
 
-                    <sdb-input-file
+                    <biz-input-file
                         v-model="file"
                         :accept="acceptedTypes"
                         :is-name-displayed="true"
@@ -39,7 +39,7 @@
                         @on-file-picked="onFilePicked"
                     />
 
-                    <sdb-button
+                    <biz-button
                         v-if="user.profile_photo_url"
                         class="is-warning mt-2"
                         type="button"
@@ -47,26 +47,26 @@
                         @click.prevent="deletePhoto"
                     >
                         Remove Photo
-                    </sdb-button>
+                    </biz-button>
 
-                    <sdb-input-error :message="form.errors.photo" />
+                    <biz-input-error :message="form.errors.photo" />
                 </div>
 
-                <sdb-form-input
+                <biz-form-input
                     v-model="form.first_name"
                     label="First Name"
                     required
                     :message="form.errors.first_name"
                 />
 
-                <sdb-form-input
+                <biz-form-input
                     v-model="form.last_name"
                     label="Last Name"
                     required
                     :message="form.errors.last_name"
                 />
 
-                <sdb-form-input
+                <biz-form-input
                     v-model="form.email"
                     label="Email"
                     required
@@ -76,25 +76,25 @@
             </template>
 
             <template #actions>
-                <sdb-action-message
+                <biz-action-message
                     :is-active="form.recentlySuccessful"
                     class="mr-3"
                 >
                     Saved.
-                </sdb-action-message>
+                </biz-action-message>
 
-                <sdb-button
+                <biz-button
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                     class="is-primary"
                 >
                     Save
-                </sdb-button>
+                </biz-button>
             </template>
-        </sdb-form-section>
+        </biz-form-section>
 
         <!-- Image modal -->
-        <sdb-modal-card
+        <biz-modal-card
             v-if="isModalOpen"
             :is-close-hidden="true"
             @close="closeModal()"
@@ -103,7 +103,7 @@
                 <p class="modal-card-title">
                     Profile Photo
                 </p>
-                <sdb-button
+                <biz-button
                     aria-label="close"
                     class="delete is-primary"
                     type="button"
@@ -117,19 +117,19 @@
                         class="card"
                     >
                         <div class="card-image">
-                            <sdb-image
+                            <biz-image
                                 :src="form.photo_url"
                                 :img-style="{maxHeight: 500+'px'}"
                             />
                         </div>
                         <footer class="card-footer">
-                            <sdb-button
+                            <biz-button
                                 class="card-footer-item is-borderless is-shadowless"
                                 type="button"
                                 @click="isImageEditing = true"
                             >
                                 Edit Image
-                            </sdb-button>
+                            </biz-button>
                         </footer>
                     </div>
                 </div>
@@ -143,28 +143,28 @@
                     <div class="column">
                         <div class="is-pulled-right">
                             <div class="buttons">
-                                <sdb-button
+                                <biz-button
                                     class="is-danger"
                                     type="button"
                                     @click="clearPhotoInput()"
                                 >
                                     Cancel
-                                </sdb-button>
-                                <sdb-button
+                                </biz-button>
+                                <biz-button
                                     class="is-primary"
                                     type="button"
                                     @click="closeModal()"
                                 >
                                     Save
-                                </sdb-button>
+                                </biz-button>
                             </div>
                         </div>
                     </div>
                 </div>
             </template>
-        </sdb-modal-card>
+        </biz-modal-card>
 
-        <sdb-modal-image-editor
+        <biz-modal-image-editor
             v-if="isImageEditing"
             v-model="form.photo_url"
             v-model:cropper="cropper"
@@ -172,16 +172,16 @@
             @close="closeImageEditorModal"
         >
             <template #actions>
-                <sdb-button
+                <biz-button
                     type="button"
                     class="is-link"
                     :disabled="form.processing"
                     @click="updateImageFile"
                 >
                     Done
-                </sdb-button>
+                </biz-button>
             </template>
-        </sdb-modal-image-editor>
+        </biz-modal-image-editor>
         <!-- Image modal -->
     </div>
 </template>
@@ -189,16 +189,16 @@
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbModalCard from '@/Sdb/ModalCard';
-    import SdbModalImageEditor from '@/Sdb/Modal/ImageEditor';
-    import SdbActionMessage from '@/Sdb/ActionMessage';
-    import SdbButton from '@/Sdb/Button';
-    import SdbImage from '@/Sdb/Image';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormSection from '@/Sdb/FormSection';
-    import SdbInputError from '@/Sdb/InputError';
-    import SdbInputFile from '@/Sdb/InputFile';
-    import SdbLabel from '@/Sdb/Label';
+    import BizModalCard from '@/Biz/ModalCard';
+    import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
+    import BizActionMessage from '@/Biz/ActionMessage';
+    import BizButton from '@/Biz/Button';
+    import BizImage from '@/Biz/Image';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizFormSection from '@/Biz/FormSection';
+    import BizInputError from '@/Biz/InputError';
+    import BizInputFile from '@/Biz/InputFile';
+    import BizLabel from '@/Biz/Label';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { includes } from 'lodash';
     import { getCanvasBlob } from '@/Libs/utils';
@@ -206,16 +206,16 @@
 
     export default {
         components: {
-            SdbActionMessage,
-            SdbButton,
-            SdbImage,
-            SdbModalCard,
-            SdbModalImageEditor,
-            SdbFormInput,
-            SdbFormSection,
-            SdbInputError,
-            SdbInputFile,
-            SdbLabel,
+            BizActionMessage,
+            BizButton,
+            BizImage,
+            BizModalCard,
+            BizModalImageEditor,
+            BizFormInput,
+            BizFormSection,
+            BizInputError,
+            BizInputFile,
+            BizLabel,
         },
         mixins: [
             MixinHasModal,

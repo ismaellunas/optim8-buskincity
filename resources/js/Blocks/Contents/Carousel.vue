@@ -1,6 +1,6 @@
 <template>
     <div>
-        <sdb-toolbar-content
+        <biz-toolbar-content
             style="z-index: 3"
             @delete-content="deleteContent"
         />
@@ -31,7 +31,7 @@
                 </template>
             </carousel-main>
 
-            <sdb-modal-image-browser
+            <biz-modal-image-browser
                 v-if="isModalOpen"
                 :data="modalImages"
                 :query-params="imageListQueryParams"
@@ -52,8 +52,8 @@
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinHasModal from '@/Mixins/HasModal';
-    import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizModalImageBrowser from '@/Biz/Modal/ImageBrowser';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { cloneDeep } from 'lodash';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
     import { inject } from "vue";
@@ -62,8 +62,8 @@
         components: {
             CarouselMain,
             CarouselSlide,
-            SdbModalImageBrowser,
-            SdbToolbarContent,
+            BizModalImageBrowser,
+            BizToolbarContent,
         },
 
         mixins: [

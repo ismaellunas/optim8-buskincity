@@ -4,11 +4,11 @@
             Update Page
         </template>
 
-        <sdb-error-notifications
+        <biz-error-notifications
             :errors="$page.props.errors"
         />
 
-        <sdb-flash-notifications :flash="$page.props.flash" />
+        <biz-flash-notifications :flash="$page.props.flash" />
 
         <div class="box mb-6">
             <page-form
@@ -31,8 +31,8 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import PageForm from '@/Pages/Page/Form';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbFlashNotifications from '@/Sdb/FlashNotifications';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFlashNotifications from '@/Biz/FlashNotifications';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { getTranslation } from '@/Libs/translation';
     import { isBlank } from '@/Libs/utils';
@@ -45,8 +45,8 @@
         components: {
             AppLayout,
             PageForm,
-            SdbErrorNotifications,
-            SdbFlashNotifications,
+            BizErrorNotifications,
+            BizFlashNotifications,
         },
         props: {
             can: { type: Object, required: true },
