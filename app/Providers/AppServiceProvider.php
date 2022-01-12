@@ -10,6 +10,7 @@ use App\Entities\Caches\{
 use App\Services\{
     FormService,
     LanguageService,
+    MediaService,
     MenuService,
     PageBuilderService,
     PageService,
@@ -28,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
 
         FormService::class => FormService::class,
         LanguageService::class => LanguageService::class,
+        MediaService::class => MediaService::class,
         MenuService::class => MenuService::class,
         PageBuilderService::class => PageBuilderService::class,
         PageService::class => PageService::class,

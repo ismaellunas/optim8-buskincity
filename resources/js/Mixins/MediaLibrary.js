@@ -5,37 +5,42 @@ export default {
     data() {
         return {
             media: [],
-            imageListQueryParams: {},
-            imageListRouteName: 'admin.media.list.image',
+            mediaListQueryParams: {
+                type: ['image'],
+            },
+            mediaListRouteName: 'admin.media.lists',
         };
     },
     methods: {
-        getImagesList(url) {
+        getMediaList(url) {
             const self = this;
-            axios.get(url, {params: this.imageListQueryParams})
+            axios.get(url, {params: this.mediaListQueryParams})
                 .then(function (response) {
                     self.setMedia(response.data);
-                    self.onImageListLoadedSuccess(response);
+                    self.onMediaListLoadedSuccess(response);
                 })
                 .catch(function (error) {
                     oopsAlert();
-                    self.onImageListLoadedFail(error);
+                    self.onMediaListLoadedFail(error);
                 });
         },
         setTerm(term) {
-            this.imageListQueryParams['term'] = term;
+            this.mediaListQueryParams['term'] = term;
         },
         setView(view) {
-            this.imageListQueryParams['view'] = view;
+            this.mediaListQueryParams['view'] = view;
+        },
+        setType(type) {
+            this.mediaListQueryParams['type'] = type;
         },
         search(term) {
             this.setTerm(term);
-            this.getImagesList(route(this.imageListRouteName));
+            this.getMediaList(route(this.mediaListRouteName));
         },
         setMedia(media) {
             this.media = media;
         },
-        onImageListLoadedFail() {},
-        onImageListLoadedSuccess() {},
+        onMediaListLoadedFail() {},
+        onMediaListLoadedSuccess() {},
     },
 }

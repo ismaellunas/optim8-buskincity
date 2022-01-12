@@ -2,14 +2,13 @@
 
     <div class="level-item">
         <div
-            id="navbarExampleTransparentExample"
-            class="navbar-menu"
+            class="navbar-menu navbarExampleTransparentExample"
         >
             <div class="navbar-end">
                 @if (count($menuChunks) > 0)
                     @foreach ($menuChunks[0] as $key => $menu)
                         @if ($menu->children)
-                            <div class="navbar-item has-dropdown is-hoverable">
+                            <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
                                 <a class="navbar-link">
                                     {{ $menu->title }}
                                 </a>
@@ -56,22 +55,21 @@
                 class="navbar-burger burger"
                 data-target="navbarExampleTransparentExample"
             >
-                <span />
-                <span />
-                <span />
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
             </div>
         </div>
     </div>
     <div class="level-item">
         <div
-            id="navbarExampleTransparentExample"
-            class="navbar-menu"
+            class="navbar-menu navbarExampleTransparentExample"
         >
             <div class="navbar-start">
                 @if (count($menuChunks) > 1)
                     @foreach ($menuChunks[1] as $key => $menu)
                         @if ($menu->children)
-                            <div class="navbar-item has-dropdown is-hoverable">
+                            <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
                                 <a class="navbar-link">
                                     {{ $menu->title }}
                                 </a>
@@ -98,7 +96,7 @@
                         @endif
                     @endforeach
                 @endif
-                <div class="navbar-item has-dropdown is-hoverable">
+                <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
                     <span class="navbar-link">{{ strtoupper($currentLanguage) }}</span>
                     <div class="navbar-dropdown is-boxed">
                         @foreach ($languageOptions as $language)
