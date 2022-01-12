@@ -10,7 +10,7 @@
 
         <template #form>
             <form-biodata
-                :name="formName"
+                route-name="admin.profile.show"
                 :entity-id="user.id"
                 @loaded-forbidden="onLoadedForbidden"
                 @loaded-successfully="onLoadedSuccessfully"

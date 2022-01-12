@@ -74,7 +74,9 @@
             buttonClass: {type: String, default: 'is-primary'},
             buttonGroupAlign: { type: String, default: 'left'},
             buttonLabel: { type: String, default: null},
-            name: { type: String, required: true },
+            routeName: { type: String, required: true },
+            routeGetSchemas: { type: String, default: 'forms.schemas' },
+            routeSave: { type: String, default: 'forms.save' },
         },
 
         emits: [
@@ -104,9 +106,12 @@
             const self = this;
 
             axios.get(
-                route("forms.schema", self.name),
+                route(self.routeGetSchemas),
                 {
-                    params: {id: self.entityId}
+                    params: {
+                        id: self.entityId,
+                        route_name: self.routeName
+                    }
                 }
 
             ).then((response) => {
@@ -146,24 +151,30 @@
             submit() {
                 const self = this;
 
-                this.form.post(
-                    route('forms.save', self.name),
-                    {
-                        preserveScroll: true,
-                        onStart: () => {
-                            self.loader = self.$loading.show();
-                        },
-                        onSuccess: (page) => {
-                            successAlert(page.props.flash.message);
-                        },
-                        onError: errors => {
-                            oopsAlert({isScrollToTop: false});
-                        },
-                        onFinish: (visit) => {
-                            self.loader.hide();
-                        },
-                    }
-                )
+                this
+                    .form
+                    .transform((data) => ({
+                        ...data,
+                        route_name: self.routeName,
+                    }))
+                    .post(
+                        route(self.routeSave),
+                        {
+                            preserveScroll: true,
+                            onStart: () => {
+                                self.loader = self.$loading.show();
+                            },
+                            onSuccess: (page) => {
+                                successAlert(page.props.flash.message);
+                            },
+                            onError: errors => {
+                                oopsAlert({isScrollToTop: false});
+                            },
+                            onFinish: (visit) => {
+                                self.loader.hide();
+                            },
+                        }
+                    );
             }
         },
     };
