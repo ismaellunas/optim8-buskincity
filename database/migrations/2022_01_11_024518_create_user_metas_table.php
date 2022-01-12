@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormValuesTable extends Migration
+class CreateUserMetasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,13 @@ class CreateFormValuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('form_values', function (Blueprint $table) {
+        Schema::create('user_metas', function (Blueprint $table) {
             $table->id();
-            $table->json('data')->nullable();
-            $table
-                ->foreignId('form_id')
-                ->constrained()
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+            $table->string('type', 95)->nullable();
+            $table->string('key', 255)->index();
+            $table->text('value')->nullable();
             $table
                 ->foreignId('user_id')
-                ->nullable()
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
@@ -38,6 +34,6 @@ class CreateFormValuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('form_values');
+        Schema::dropIfExists('user_metas');
     }
 }
