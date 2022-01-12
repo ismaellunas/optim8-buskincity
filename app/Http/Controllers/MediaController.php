@@ -195,18 +195,31 @@ class MediaController extends Controller
         return redirect()->back();
     }
 
-    public function listImages(Request $request)
+    public function lists(Request $request)
     {
         if ($request->user()->cannot('viewAny', Media::class)) {
             abort(403);
         }
 
+        if ($request->type) {
+            $this->isValidMediaType($request->type) ?? abort(403);
+        }
+
         $records = $this->mediaService->getRecords(
             $request->term,
-            ['image'],
+            $request->type ?? ['image'],
             $this->recordsPerPage
         );
 
         return $request->ajax() ? $records : abort(404);
+    }
+
+    private function isValidMediaType($type): bool
+    {
+        return collect(config('constants.extensions'))
+            ->keys()
+            ->contains(
+                collect($type)->implode(',')
+            );
     }
 }

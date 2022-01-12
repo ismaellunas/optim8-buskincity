@@ -6,7 +6,6 @@
     >
         <div class="column is-two-thirds">
             <fieldset :disabled="isInputDisabled" class="box">
-
                 <sdb-tab class="is-boxed">
                     <ul>
                         <sdb-tab-list
@@ -211,10 +210,10 @@
         :data="media"
         :is-download-enabled="can.media.read"
         :is-upload-enabled="can.media.add"
-        :query-params="imageListQueryParams"
+        :query-params="mediaListQueryParams"
         :search="search"
         @close="closeModal"
-        @on-clicked-pagination="getImagesList"
+        @on-clicked-pagination="getMediaList"
         @on-media-selected="selectFile"
         @on-media-submitted="updateImage"
         @on-view-changed="setView"
@@ -310,7 +309,7 @@
             },
             onShownModal() { /* @override */
                 this.setTerm('');
-                this.getImagesList(route(this.imageListRouteName));
+                this.getMediaList(route(this.mediaListRouteName));
             },
             selectFile(file) {
                 this.form.cover_image_id = file.id;

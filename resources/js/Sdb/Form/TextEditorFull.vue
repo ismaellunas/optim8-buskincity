@@ -1,34 +1,36 @@
 <template>
-    <div class="field">
-        <sdb-label>{{ label }}</sdb-label>
+    <div>
+        <div class="field">
+            <sdb-label>{{ label }}</sdb-label>
 
-        <div class="control">
-            <sdb-text-editor
-                v-model="editorValue"
-                :disabled="disabled"
-                :placeholder="placeholder"
-                :config="config ?? editorConfig"
-            />
+            <div class="control">
+                <sdb-text-editor
+                    v-model="editorValue"
+                    :disabled="disabled"
+                    :placeholder="placeholder"
+                    :config="config ?? editorConfig"
+                />
+            </div>
+
+            <sdb-input-error :message="message" />
         </div>
 
-        <sdb-input-error :message="message"/>
+        <sdb-modal-image-browser
+            v-if="isModalOpen"
+            title="Media Library"
+            :data="media"
+            :is-download-enabled="isDownloadEnabled"
+            :is-upload-enabled="isUploadEnabled"
+            :query-params="mediaListQueryParams"
+            :search="search"
+            :style="{zIndex: 1300}"
+            @close="closeModal"
+            @on-clicked-pagination="getMediaList"
+            @on-media-selected="selectFile"
+            @on-media-submitted="onMediaSubmitted"
+            @on-view-changed="setView"
+        />
     </div>
-
-    <sdb-modal-image-browser
-        v-if="isModalOpen"
-        title="Image Library"
-        :data="media"
-        :is-download-enabled="isDownloadEnabled"
-        :is-upload-enabled="isUploadEnabled"
-        :query-params="imageListQueryParams"
-        :search="search"
-        :style="{zIndex: 1200}"
-        @close="closeModal"
-        @on-clicked-pagination="getImagesList"
-        @on-media-selected="selectFile"
-        @on-media-submitted="onMediaSubmitted"
-        @on-view-changed="setView"
-    />
 </template>
 
 <script>
@@ -42,16 +44,19 @@
 
     export default {
         name: 'SdbFormTextEditorFull',
+
         components: {
             SdbInputError,
             SdbLabel,
             SdbModalImageBrowser,
             SdbTextEditor,
         },
+
         mixins: [
             MixinHasModal,
             MixinImageLibrary,
         ],
+
         props: {
             config: Object,
             disabled: {type: Boolean, default: false},
@@ -64,12 +69,15 @@
             placeholder: String,
             height: {type: Number, default: 500},
         },
+
         emits: ['update:modelValue'],
+
         setup(props, { emit }) {
             return {
                 editorValue: useModelWrapper(props, emit),
             };
         },
+
         data() {
             return {
                 tinyMceImage: {
@@ -80,49 +88,7 @@
                 tinyMceModalSelector: 'div.tox.tox-silver-sink.tox-tinymce-aux > div',
             };
         },
-        methods: {
-            onShownModal() {/* @override Mixins/HasModal */
-                this.tinyMceModal = document.querySelector(this.tinyMceModalSelector);
-                this.tinyMceModal.style.display = 'none';
 
-                this.setTerm('');
-                this.getImagesList(route(this.imageListRouteName));
-            },
-            onCloseModal() { /* @override Mixins/HasModal */
-                if (this.tinyMceModal) {
-                    this.tinyMceModal.style.display = '';
-                }
-            },
-            selectFile(file) {
-                this.tinyMceImage.file = file;
-
-                if (this.tinyMceImage.element) {
-                    this.tinyMceImage.element.click();
-                }
-                this.closeModal();
-            },
-            onMediaSubmitted(response) {
-                this.selectFile(response.data);
-            },
-            filePickerCallback(callback, value, meta) {
-                const self = this;
-
-                self.openModal();
-
-                self.tinyMceImage.element = document.createElement('input');
-
-                self.tinyMceImage.element.onclick = function () {
-                    callback(
-                        self.tinyMceImage.file.file_url,
-                        { alt: self.tinyMceImage.file?.alt ?? '' }
-                    );
-
-                    self.tinyMceImage.file = null;
-                    self.tinyMceImage.element.remove();
-                    self.tinyMceImage.element = null;
-                };
-            },
-        },
         computed: {
             editorConfig() {
                 const editorConfig = {
@@ -143,7 +109,7 @@
                         'fullscreen | formatselect | ' +
                         'bold italic underline strikethrough blockquote | ' +
                         'forecolor backcolor | ' +
-                        'removeformat image'
+                        'removeformat image media'
                     ),
                     toolbar2: (
                         'alignleft aligncenter alignright alignjustify | ' +
@@ -151,16 +117,70 @@
                         'anchor link table charmap code | '
                     ),
                     contextmenu: 'link image',
-                    file_picker_types: 'image', //'file image media'
+                    file_picker_types: 'image media', //'file image media'
                     file_picker_callback: (
                         this.isMediaEnabled
-                        ? this.filePickerCallback
-                        : false
+                            ? this.filePickerCallback
+                            : false
                     ),
+                    media_live_embeds: true,
                 };
 
                 return editorConfig;
             },
-        }
+        },
+
+        methods: {
+            onShownModal() {/* @override Mixins/HasModal */
+                this.tinyMceModal = document.querySelector(this.tinyMceModalSelector);
+                this.tinyMceModal.style.display = 'none';
+
+                this.setTerm('');
+                this.getMediaList(route(this.mediaListRouteName));
+            },
+            onCloseModal() { /* @override Mixins/HasModal */
+                if (this.tinyMceModal) {
+                    this.tinyMceModal.style.display = '';
+                }
+            },
+            selectFile(file) {
+                this.tinyMceImage.file = file;
+
+                if (this.tinyMceImage.element) {
+                    this.tinyMceImage.element.click();
+                }
+                this.closeModal();
+            },
+            onMediaSubmitted(response) {
+                this.selectFile(response.data);
+            },
+            filePickerCallback(callback, value, meta) {
+                const self = this;
+
+                self.addTypeOnQueryParams(meta.filetype);
+
+                self.openModal();
+
+                self.tinyMceImage.element = document.createElement('input');
+
+                self.tinyMceImage.element.onclick = function () {
+                    callback(
+                        self.tinyMceImage.file.file_url,
+                        { alt: self.tinyMceImage.file?.alt ?? '' }
+                    );
+
+                    self.tinyMceImage.file = null;
+                    self.tinyMceImage.element.remove();
+                    self.tinyMceImage.element = null;
+                };
+            },
+            addTypeOnQueryParams(fileType) {
+                if (fileType === "media") {
+                    this.setType(['video']);
+                } else {
+                    this.setType([fileType]);
+                };
+            },
+        },
     };
 </script>
