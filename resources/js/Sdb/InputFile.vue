@@ -9,6 +9,7 @@
                 class="file-input"
                 type="file"
                 :accept="accept.join(', ')"
+                :disabled="disabled"
                 @click="resetFile"
                 @input="pickFile"
             >
@@ -53,6 +54,10 @@
             modelValue: {
                 type: [File, null],
                 required: true,
+            },
+            disabled: {
+                type: Boolean,
+                default: false,
             },
         },
 
