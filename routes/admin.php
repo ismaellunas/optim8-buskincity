@@ -42,8 +42,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         ->name('media.update-image');
     Route::post('/media/save-as-image/{medium}', [MediaController::class, 'saveAsImage'])
         ->name('media.save-as-image');
-    Route::get('/media-list/image', [MediaController::class, 'listImages'])
-        ->name('media.list.image');
+    Route::get('/media-lists', [MediaController::class, 'lists'])
+        ->name('media.lists');
 
     Route::resource('/categories', CategoryController::class)
         ->except(['show']);

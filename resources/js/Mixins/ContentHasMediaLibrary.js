@@ -15,7 +15,7 @@ export default {
     data() {
         return {
             imageListQueryParams: {},
-            imageListRouteName: 'admin.media.list.image',
+            imageListRouteName: 'admin.media.lists',
         }
     },
     methods: {
