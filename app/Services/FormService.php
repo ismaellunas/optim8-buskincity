@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Entities\Forms\Form;
 use App\Models\{
-    Form as FormModel,
+    FieldGroup,
     User,
 };
 use Illuminate\Support\Collection;
@@ -21,7 +21,7 @@ class FormService
 
     public function getFormByName($name, User $author = null): ?Form
     {
-        $model = FormModel::name($name)->first();
+        $model = FieldGroup::name($name)->first();
 
         if ($model) {
             $className = $this->getFormClassName($model->type);
@@ -48,7 +48,7 @@ class FormService
 
         $forms = collect();
 
-        $models = FormModel::whereJsonContains('data->locations', $locationRoute)
+        $models = FieldGroup::whereJsonContains('data->locations', $locationRoute)
             ->get();
 
         foreach ($models as $model) {

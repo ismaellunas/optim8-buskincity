@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Form;
+use App\Models\FieldGroup;
 use Illuminate\Database\Seeder;
 
 class FormSeeder extends Seeder
@@ -217,13 +217,13 @@ class FormSeeder extends Seeder
             ]
         ];
 
-        Form::updateOrCreate(
-            ['name' => $biodata['name']],
+        FieldGroup::updateOrCreate(
+            ['title' => $biodata['name']],
             ['data' => $biodata]
         );
 
-        Form::updateOrCreate(
-            ['name' => $address['name']],
+        FieldGroup::updateOrCreate(
+            ['title' => $address['name']],
             ['data' => $address]
         );
     }
