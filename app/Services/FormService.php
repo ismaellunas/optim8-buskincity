@@ -127,10 +127,10 @@ class FormService
 
         $schemas = collect();
 
-        foreach ($forms as $name => $form) {
+        foreach ($forms as $form) {
             $values = $formLocation->getValues($form->fields->keys());
 
-            $schemas->put($name, $form->schema($values->all()));
+            $schemas->push($form->schema($values->all()));
         }
 
         return $schemas;

@@ -27,7 +27,7 @@ class FormController extends Controller
             $request->get('id')
         );
 
-        return $schemas->first();
+        return $schemas->sortBy('order')->all();
     }
 
     public function submit(FormValueRequest $request)
