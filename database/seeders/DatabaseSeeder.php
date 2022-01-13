@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
         $superAdminUser = User::factory()->create([
             'first_name' => 'Super',
             'last_name' => 'Administrator',
-            'email' => 'super.administrator@sdbagency.com',
+            'email' => 'super.administrator@biz.com',
         ]);
 
         $superAdminUser->assignRole(config('permission.super_admin_role'));
@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
             ->create([
                 'first_name' => 'Admin',
                 'last_name' => 'Administrator',
-                'email' => 'admin@sdbagency.com',
+                'email' => 'admin@biz.com',
             ]);
 
         $adminUser->assignRole('Administrator');
