@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entities\Caches\SettingCache;
 use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
+use App\Helpers\MinifyCss;
 use App\Models\{
     Media,
     Setting,
@@ -32,7 +33,7 @@ class SettingService
     public static function getAdditionalCss(): string
     {
         return app(SettingCache::class)->remember('additional_css', function () {
-            return Setting::key('additional_css')->value('value') ?? "";
+            return MinifyCss::minify(Setting::key('additional_css')->value('value') ?? "");
         });
     }
 
