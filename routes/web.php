@@ -87,8 +87,8 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
 });
 
 Route::name('forms.')->prefix('forms')->group(function () {
-    Route::get('schema/{formName}', [FormController::class, 'getSchema'])
-        ->name('schema');
-    Route::post('save/{formName}', [FormController::class, 'submit'])
+    Route::get('schemas', [FormController::class, 'getSchemas'])
+        ->name('schemas');
+    Route::post('save', [FormController::class, 'submit'])
         ->name('save');
 });

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\CloudinaryStorage;
+use App\Traits\HasMetas;
 use App\Services\{
     MediaService,
     UserService
@@ -29,6 +30,9 @@ class User extends Authenticatable implements MustVerifyEmail
     use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
     use HasRoles;
+    use HasMetas;
+
+    protected $metaRelation = 'metas';
 
     /**
      * The attributes that are mass assignable.
@@ -93,6 +97,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function scopeEmail($query, string $email)
     {
         return $query->where('email', $email);
+    }
+
+    public function metas()
+    {
+        return $this->hasMany(UserMeta::class);
     }
 
     public function scopeSearch($query, string $term)

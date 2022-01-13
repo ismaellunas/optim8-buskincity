@@ -7,10 +7,17 @@ use App\Models\{
     Form as FormModel,
     User,
 };
+use Illuminate\Support\Collection;
 
 class FormService
 {
+    private $routeToLocationMaps = [
+        'admin.profile.show' => 'UserProfileLocation',
+        'admin.users.edit' => 'UserEditLocation',
+    ];
+
     private $formBasePath = 'App\\Entities\\Forms';
+    private $formLocationBasePath = "App\\Entities\\Forms\\Locations";
 
     public function getFormByName($name, User $author = null): ?Form
     {
@@ -32,5 +39,100 @@ class FormService
     private function getFormClassName(?string $type): string
     {
         return $this->formBasePath."\\".$type.'Form';
+    }
+
+    public function getFormsOnRoute(
+        string $locationRoute,
+        User $author = null,
+    ): Collection {
+
+        $forms = collect();
+
+        $models = FormModel::whereJsonContains('data->locations', $locationRoute)
+            ->get();
+
+        foreach ($models as $model) {
+
+            $className = $this->getFormClassName($model->type);
+
+            $form = new $className($model->id, $model->data, $author);
+
+            $form->model = $model;
+
+            $forms->put($form->name, $form);
+        }
+
+        return $forms;
+    }
+
+    public function getFormLocation(string $routeName, int $entityId = null)
+    {
+        $locationClass = $this->routeToLocationMaps[ $routeName ];
+        $locationClass = $this->formLocationBasePath.'\\'.$locationClass;
+
+        if (class_exists($locationClass)) {
+            return new $locationClass($entityId);
+        }
+
+        return null;
+    }
+
+    public function getRules(Collection $forms): array
+    {
+        $rules = [];
+
+        foreach ($forms as $form) {
+            $rules = array_merge($rules, $form->rules());
+        }
+
+        return $rules;
+    }
+
+    public function getAttributes(Collection $forms): array
+    {
+        $attributes = [];
+
+        foreach ($forms as $form) {
+            $attributes = array_merge($attributes, $form->attributes());
+        }
+
+        return $attributes;
+    }
+
+    public function saveValues(
+        array $inputs,
+        string $routeName,
+        User $actor,
+        int $entityId = null
+    ) {
+
+        $formLocation = $this->getFormLocation($routeName, $entityId);
+
+        $forms = $this->getFormsOnRoute($routeName, $actor);
+
+        foreach ($forms as $form) {
+            $formLocation->save($form->fields->keys(), $inputs);
+        }
+    }
+
+    public function getSchemas(
+        string $routeName,
+        User $actor,
+        int $entityId = null
+    ): Collection {
+
+        $formLocation = $this->getFormLocation($routeName, $entityId);
+
+        $forms = $this->getFormsOnRoute($routeName, $actor);
+
+        $schemas = collect();
+
+        foreach ($forms as $name => $form) {
+            $values = $formLocation->getValues($form->fields->keys());
+
+            $schemas->put($name, $form->schema($values->all()));
+        }
+
+        return $schemas;
     }
 }
