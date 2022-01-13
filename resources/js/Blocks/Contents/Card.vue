@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <biz-modal-image-browser
+        <biz-modal-media-browser
             v-if="isModalOpen"
             :data="modalImages"
             :is-download-enabled="can.media.read"
@@ -73,7 +73,7 @@
     import BizButton from '@/Biz/Button';
     import BizEditor from '@/Biz/EditorTinymce';
     import BizImage from '@/Biz/Image';
-    import BizModalImageBrowser from '@/Biz/Modal/ImageBrowser';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
@@ -86,7 +86,7 @@
             BizButton,
             BizEditor,
             BizImage,
-            BizModalImageBrowser,
+            BizModalMediaBrowser,
             BizToolbarContent,
         },
         mixins: [

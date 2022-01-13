@@ -6,7 +6,7 @@
             class="p-1"
         />
 
-        <biz-modal-image-browser
+        <biz-modal-media-browser
             v-if="isModalOpen"
             title="Media Library"
             :data="media"
@@ -25,14 +25,14 @@
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinImageLibrary from '@/Mixins/MediaLibrary';
-    import BizModalImageBrowser from '@/Biz/Modal/ImageBrowser';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizTextEditor from '@/Biz/EditorTinymce';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'BizFormTextEditorFullInline',
         components: {
-            BizModalImageBrowser,
+            BizModalMediaBrowser,
             BizTextEditor,
         },
         mixins: [

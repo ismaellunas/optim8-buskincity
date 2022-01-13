@@ -15,7 +15,7 @@
             <biz-input-error :message="message" />
         </div>
 
-        <biz-modal-image-browser
+        <biz-modal-media-browser
             v-if="isModalOpen"
             title="Media Library"
             :data="media"
@@ -38,7 +38,7 @@
     import MixinImageLibrary from '@/Mixins/MediaLibrary';
     import BizInputError from '@/Biz/InputError';
     import BizLabel from '@/Biz/Label';
-    import BizModalImageBrowser from '@/Biz/Modal/ImageBrowser';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizTextEditor from '@/Biz/EditorTinymce';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -48,7 +48,7 @@
         components: {
             BizInputError,
             BizLabel,
-            BizModalImageBrowser,
+            BizModalMediaBrowser,
             BizTextEditor,
         },
 
