@@ -10,6 +10,11 @@ use Laravel\Fortify\Http\Controllers\PasswordResetLinkController as FortifyPassw
 
 class PasswordResetLinkController extends FortifyPasswordResetLinkController
 {
+    public function __construct()
+    {
+        $this->middleware('recaptcha')->only('store');
+    }
+
     public function store(Request $request): Responsable
     {
         $request->validate(

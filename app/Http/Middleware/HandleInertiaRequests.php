@@ -94,6 +94,7 @@ class HandleInertiaRequests extends Middleware
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
             ],
+            'recaptchaSiteKey' => env('RECAPTCHA_SITE_KEY')
         ]);
     }
 }
