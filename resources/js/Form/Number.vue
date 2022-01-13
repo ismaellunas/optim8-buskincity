@@ -1,5 +1,5 @@
 <template>
-    <sdb-form-number
+    <biz-form-number
         v-model="computedValue"
         :label="schema.label"
         :maxlength="schema.maxlength"
@@ -12,14 +12,14 @@
 </template>
 
 <script>
-    import SdbFormNumber from '@/Sdb/Form/Number';
+    import BizFormNumber from '@/Biz/Form/Number';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormNumber',
 
         components: {
-            SdbFormNumber,
+            BizFormNumber,
         },
 
         props: {

@@ -1,16 +1,16 @@
 <template>
     <div>
-        <sdb-toolbar-content
+        <biz-toolbar-content
             @delete-content="deleteContent"
         />
 
-        <sdb-button
+        <biz-button
             type="button"
             class="is-small mb-2"
             @click="addTabs()"
         >
             Add Tabs
-        </sdb-button>
+        </biz-button>
 
         <div
             class="tabs"
@@ -23,7 +23,7 @@
                     class="border-dash pt-3 pr-3"
                     :class="{ 'is-active': selectedIndex === index }"
                 >
-                    <sdb-toolbar-content
+                    <biz-toolbar-content
                         v-if="totalTabs > 1"
                         :can-move="false"
                         @delete-content="deleteTabs(index)"
@@ -68,13 +68,13 @@
                 v-if="selectedIndex === index"
                 class="content border-dash"
             >
-                <sdb-form-text-editor-full-inline
+                <biz-form-text-editor-full-inline
                     v-model="tab.html"
                 />
             </div>
         </template>
 
-        <sdb-icon-browser
+        <biz-icon-browser
             v-if="isModalOpen"
             :can-remove="true"
             :has-type="true"
@@ -90,10 +90,10 @@
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import MixinHasModal from '@/Mixins/HasModal';
     import fontawesomeAllClasses from '@/Json/fontawesome-all-classes';
-    import SdbButton from '@/Sdb/Button';
-    import SdbFormTextEditorFullInline from '@/Sdb/Form/TextEditorFullInline';
-    import SdbIconBrowser from '@/Sdb/Modal/IconBrowser';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizButton from '@/Biz/Button';
+    import BizFormTextEditorFullInline from '@/Biz/Form/TextEditorFullInline';
+    import BizIconBrowser from '@/Biz/Modal/IconBrowser';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { cloneDeep, concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
@@ -102,10 +102,10 @@
         name: 'Tabs',
 
         components: {
-            SdbButton,
-            SdbFormTextEditorFullInline,
-            SdbIconBrowser,
-            SdbToolbarContent,
+            BizButton,
+            BizFormTextEditorFullInline,
+            BizIconBrowser,
+            BizToolbarContent,
         },
 
         mixins: [

@@ -11,23 +11,23 @@
 
         <div :class="buttonGroupClass">
             <div class="control">
-                <sdb-button
+                <biz-button
                     v-if="buttonLabel"
                     :class="buttonClass"
                     @click="submit"
                 >
                     {{ buttonLabel }}
-                </sdb-button>
+                </biz-button>
 
                 <template v-else>
-                    <sdb-button
+                    <biz-button
                         v-for="button in schema.buttons"
                         :key="button.label"
                         :class="buttonClass"
                         @click="submit"
                     >
                         {{ button.label }}
-                    </sdb-button>
+                    </biz-button>
                 </template>
             </div>
         </div>
@@ -41,13 +41,13 @@
     import Number from './Number';
     import Phone from './Phone';
     import Radio from './Radio';
-    import SdbButton from '@/Sdb/Button';
+    import BizButton from '@/Biz/Button';
     import Select from './Select';
     import Text from './Text';
     import Textarea from './Textarea';
     import { isEmpty } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'FormBuilder',
@@ -58,7 +58,7 @@
             Number,
             Phone,
             Radio,
-            SdbButton,
+            BizButton,
             Select,
             Text,
             Textarea,

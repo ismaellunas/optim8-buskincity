@@ -1,6 +1,6 @@
 <template>
     <div>
-        <sdb-toolbar-content
+        <biz-toolbar-content
             @delete-content="deleteContent"
         />
 
@@ -42,7 +42,7 @@
             </span>
         </a>
 
-        <sdb-icon-browser
+        <biz-icon-browser
             v-if="isModalOpen"
             :can-remove="true"
             :has-type="true"
@@ -58,8 +58,8 @@
     import DeletableContentMixin from '@/Mixins/DeletableContent';
     import MixinHasModal from '@/Mixins/HasModal';
     import fontawesomeAllClasses from '@/Json/fontawesome-all-classes';
-    import SdbIconBrowser from '@/Sdb/Modal/IconBrowser';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizIconBrowser from '@/Biz/Modal/IconBrowser';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -67,8 +67,8 @@
         name: "Button",
 
         components: {
-            SdbIconBrowser,
-            SdbToolbarContent,
+            BizIconBrowser,
+            BizToolbarContent,
         },
 
         mixins: [

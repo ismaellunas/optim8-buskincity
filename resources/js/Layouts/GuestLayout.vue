@@ -1,7 +1,7 @@
 <template>
     <div>
         <div id="main-container-wrapper">
-            <sdb-navbar-menu />
+            <biz-navbar-menu />
         </div>
 
         <slot />
@@ -9,13 +9,13 @@
 </template>
 
 <script>
-    import SdbNavbarMenu from '@/Sdb/NavbarMenu';
+    import BizNavbarMenu from '@/Biz/NavbarMenu';
 
     export default {
         name: 'LayoutGuest',
 
         components: {
-            SdbNavbarMenu,
+            BizNavbarMenu,
         },
     };
 </script>

@@ -1,13 +1,13 @@
 <template>
     <div>
-        <sdb-toolbar-content
+        <biz-toolbar-content
             @delete-content="deleteContent"
         />
 
-        <div class="card sdb-card-text">
+        <div class="card biz-card-text">
             <div class="card-content">
                 <div class="content" :class="cardContentClass">
-                    <sdb-editor v-model="entity.content.cardContent.content.html"/>
+                    <biz-editor v-model="entity.content.cardContent.content.html"/>
                 </div>
             </div>
         </div>
@@ -16,8 +16,8 @@
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import SdbEditor from '@/Sdb/EditorTinymce';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizEditor from '@/Biz/EditorTinymce';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils'
 
     export default {
@@ -26,8 +26,8 @@
             DeletableContentMixin
         ],
         components: {
-            SdbEditor,
-            SdbToolbarContent,
+            BizEditor,
+            BizToolbarContent,
         },
         props: {
             id: String,

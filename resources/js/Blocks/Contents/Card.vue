@@ -1,12 +1,12 @@
 <template>
     <div :class="wrapperClass">
-        <sdb-toolbar-content
+        <biz-toolbar-content
             @delete-content="deleteContent"
         />
 
         <div class="card">
             <div class="card-image" :class="cardImageClass">
-                <sdb-image
+                <biz-image
                     v-if="hasImage"
                     :src="imageSrc"
                     :alt="altText"
@@ -15,7 +15,7 @@
                     :square="this.config?.image?.fixedSquare"
                 />
 
-                <sdb-button
+                <biz-button
                     v-if="hasImage"
                     type="button"
                     class="is-overlay is-small"
@@ -23,11 +23,11 @@
                 >
                     <span class="icon" v-if="isFormDisplayed"><i class="fas fa-times-circle"></i></span>
                     <span class="icon" v-else><i class="fas fa-pen"></i></span>
-                </sdb-button>
+                </biz-button>
 
                 <div class="card-content has-background-info-light" v-if="isFormDisplayed">
                     <div class="block has-text-centered">
-                        <sdb-button
+                        <biz-button
                             type="button"
                             :disabled="!can.media.browse"
                             @click="openModal()"
@@ -36,7 +36,7 @@
                             <span class="icon is-small">
                                 <i class="far fa-image"></i>
                             </span>
-                        </sdb-button>
+                        </biz-button>
                     </div>
                 </div>
             </div>
@@ -45,12 +45,12 @@
                     class="content"
                     :class="cardContentClass"
                 >
-                    <sdb-editor v-model="entity.content.cardContent.content.html"/>
+                    <biz-editor v-model="entity.content.cardContent.content.html"/>
                 </div>
             </div>
         </div>
 
-        <sdb-modal-image-browser
+        <biz-modal-image-browser
             v-if="isModalOpen"
             :data="modalImages"
             :is-download-enabled="can.media.read"
@@ -70,11 +70,11 @@
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinHasModal from '@/Mixins/HasModal';
-    import SdbButton from '@/Sdb/Button';
-    import SdbEditor from '@/Sdb/EditorTinymce';
-    import SdbImage from '@/Sdb/Image';
-    import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizButton from '@/Biz/Button';
+    import BizEditor from '@/Biz/EditorTinymce';
+    import BizImage from '@/Biz/Image';
+    import BizModalImageBrowser from '@/Biz/Modal/ImageBrowser';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
@@ -83,11 +83,11 @@
     export default {
         name: 'Card',
         components: {
-            SdbButton,
-            SdbEditor,
-            SdbImage,
-            SdbModalImageBrowser,
-            SdbToolbarContent,
+            BizButton,
+            BizEditor,
+            BizImage,
+            BizModalImageBrowser,
+            BizToolbarContent,
         },
         mixins: [
             MixinContentHasMediaLibrary,

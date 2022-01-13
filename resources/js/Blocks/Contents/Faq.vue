@@ -1,6 +1,6 @@
 <template>
     <div>
-        <sdb-toolbar-content
+        <biz-toolbar-content
             @delete-content="deleteContent"
         />
         <component
@@ -19,8 +19,8 @@
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
-    import SdbTinymce from '@/Sdb/EditorTinymce';
-    import SdbToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizTinymce from '@/Biz/EditorTinymce';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import FaqQuestionAnswer from '@/Blocks/Contents/Faq/QuestionAnswer';
     import { last } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
@@ -28,8 +28,8 @@
     export default {
         name: 'Faq',
         components: {
-            SdbTinymce,
-            SdbToolbarContent,
+            BizTinymce,
+            BizToolbarContent,
             FaqQuestionAnswer,
         },
         mixins: [

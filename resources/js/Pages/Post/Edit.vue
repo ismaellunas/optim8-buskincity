@@ -2,7 +2,7 @@
     <app-layout>
         <template #header>Post</template>
 
-        <sdb-error-notifications :errors="$page.props.errors" />
+        <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="mb-6">
             <post-form
@@ -24,7 +24,7 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import PostForm from '@/Pages/Post/Form';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import { map } from 'lodash';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
     import { success as successAlert } from '@/Libs/alert';
@@ -33,7 +33,7 @@
         components: {
             AppLayout,
             PostForm,
-            SdbErrorNotifications,
+            BizErrorNotifications,
         },
         props: {
             can: { type: Object, required: true },

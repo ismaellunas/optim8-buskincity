@@ -1,5 +1,5 @@
 <template>
-    <sdb-form-section v-show="isShown">
+    <biz-form-section v-show="isShown">
         <template #title>
             {{ title }}
         </template>
@@ -16,19 +16,19 @@
                 @loaded-successfully="onLoadedSuccessfully"
             />
         </template>
-    </sdb-form-section>
+    </biz-form-section>
 </template>
 
 <script>
     import FormBiodata from '@/Form/FormBuilder';
-    import SdbFormSection from '@/Sdb/FormSection';
+    import BizFormSection from '@/Biz/FormSection';
 
     export default {
         name: 'BiodataForm',
 
         components: {
             FormBiodata,
-            SdbFormSection,
+            BizFormSection,
         },
 
         props: {

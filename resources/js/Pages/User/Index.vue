@@ -8,7 +8,7 @@
             <div class="columns">
                 <div class="column">
                     <div class="is-pulled-left">
-                        <sdb-filter-search
+                        <biz-filter-search
                             v-model="term"
                             @search="search"
                         />
@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="column">
-                    <sdb-dropdown
+                    <biz-dropdown
                         :close-on-click="false"
                     >
                         <template #trigger>
@@ -35,23 +35,23 @@
                             </span>
                         </template>
 
-                        <sdb-dropdown-item>
+                        <biz-dropdown-item>
                             Filter by Role
-                        </sdb-dropdown-item>
+                        </biz-dropdown-item>
 
-                        <sdb-dropdown-item
+                        <biz-dropdown-item
                             v-for="role in roleOptions"
                             :key="role.id"
                         >
-                            <sdb-checkbox
+                            <biz-checkbox
                                 v-model:checked="roles"
                                 :value="role.id"
                                 @change="onRoleChanged"
                             >
                                 &nbsp; {{ role.value }}
-                            </sdb-checkbox>
-                        </sdb-dropdown-item>
-                    </sdb-dropdown>
+                            </biz-checkbox>
+                        </biz-dropdown-item>
+                    </biz-dropdown>
                 </div>
 
                 <div class="column">
@@ -59,7 +59,7 @@
                         v-if="can.add"
                         class="is-pulled-right"
                     >
-                        <sdb-button-link
+                        <biz-button-link
                             class="is-primary"
                             :href="route(baseRouteName+'.create')"
                         >
@@ -67,13 +67,13 @@
                                 <i class="fas fa-plus" />
                             </span>
                             <span>Add New</span>
-                        </sdb-button-link>
+                        </biz-button-link>
                     </div>
                 </div>
             </div>
 
             <div class="table-container">
-                <sdb-table class="is-striped is-hoverable is-fullwidth">
+                <biz-table class="is-striped is-hoverable is-fullwidth">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -95,7 +95,7 @@
                         >
                             <template #actions>
                                 <div class="level-right">
-                                    <sdb-button-link
+                                    <biz-button-link
                                         v-if="can.edit"
                                         class="is-ghost has-text-black"
                                         :href="route(baseRouteName + '.edit', record.id)"
@@ -103,19 +103,19 @@
                                         <span class="icon is-small">
                                             <i class="fas fa-pen" />
                                         </span>
-                                    </sdb-button-link>
+                                    </biz-button-link>
 
                                     <template
                                         v-if="can.delete && record.can.delete_user"
                                     >
-                                        <sdb-button-icon
+                                        <biz-button-icon
                                             class="is-ghost has-text-black ml-1"
                                             icon-class="is-small"
                                             icon="far fa-trash-alt"
                                             title="Delete User"
                                             @click.prevent="deleteUserModal(record)"
                                         />
-                                        <sdb-button-icon
+                                        <biz-button-icon
                                             v-if="!record.is_suspended"
                                             class="is-ghost has-text-black ml-1"
                                             icon-class="is-small"
@@ -123,7 +123,7 @@
                                             title="Suspend User"
                                             @click.prevent="suspendUser(record)"
                                         />
-                                        <sdb-button-icon
+                                        <biz-button-icon
                                             v-if="record.is_suspended"
                                             class="is-ghost has-text-black ml-1"
                                             icon-class="is-small"
@@ -136,10 +136,10 @@
                             </template>
                         </user-list-item>
                     </tbody>
-                </sdb-table>
+                </biz-table>
             </div>
 
-            <sdb-pagination
+            <biz-pagination
                 :links="records.links"
                 :query-params="queryParams"
             />
@@ -162,14 +162,14 @@
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import ModalFormDelete from '@/Pages/User/ModalFormDelete';
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbCheckbox from '@/Sdb/Checkbox';
-    import SdbDropdown from '@/Sdb/Dropdown';
-    import SdbDropdownItem from '@/Sdb/DropdownItem';
-    import SdbFilterSearch from '@/Sdb/Filter/Search';
-    import SdbPagination from '@/Sdb/Pagination';
-    import SdbTable from '@/Sdb/Table';
+    import BizButtonIcon from '@/Biz/ButtonIcon';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizCheckbox from '@/Biz/Checkbox';
+    import BizDropdown from '@/Biz/Dropdown';
+    import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizFilterSearch from '@/Biz/Filter/Search';
+    import BizPagination from '@/Biz/Pagination';
+    import BizTable from '@/Biz/Table';
     import UserListItem from '@/Pages/User/ListItem';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
@@ -179,14 +179,14 @@
         components: {
             AppLayout,
             ModalFormDelete,
-            SdbButtonIcon,
-            SdbButtonLink,
-            SdbCheckbox,
-            SdbDropdown,
-            SdbDropdownItem,
-            SdbFilterSearch,
-            SdbPagination,
-            SdbTable,
+            BizButtonIcon,
+            BizButtonLink,
+            BizCheckbox,
+            BizDropdown,
+            BizDropdownItem,
+            BizFilterSearch,
+            BizPagination,
+            BizTable,
             UserListItem,
         },
 

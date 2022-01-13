@@ -1,5 +1,5 @@
 <template>
-    <sdb-action-section>
+    <biz-action-section>
         <template #title>
             Delete Account
         </template>
@@ -14,16 +14,16 @@
             </p>
 
             <div class="mt-5">
-                <sdb-button
+                <biz-button
                     class="is-danger"
                     @click="confirmUserDeletion()"
                 >
                     Delete Account
-                </sdb-button>
+                </biz-button>
             </div>
 
             <!-- Delete Account Confirmation Modal -->
-            <sdb-modal-card
+            <biz-modal-card
                 v-if="isModalOpen"
                 @close="closeModal()"
             >
@@ -44,7 +44,7 @@
                     </p>
 
                     <div class="mt-4">
-                        <sdb-form-password
+                        <biz-form-password
                             ref="password"
                             v-model="form.password"
                             placeholder="Password"
@@ -56,38 +56,38 @@
                 </template>
 
                 <template #footer>
-                    <sdb-button @click="closeModal()">
+                    <biz-button @click="closeModal()">
                         Cancel
-                    </sdb-button>
+                    </biz-button>
 
-                    <sdb-button
+                    <biz-button
                         class="is-danger ml-2"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
                         @click="deleteUser"
                     >
                         Delete Account
-                    </sdb-button>
+                    </biz-button>
                 </template>
-            </sdb-modal-card>
+            </biz-modal-card>
         </template>
-    </sdb-action-section>
+    </biz-action-section>
 </template>
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbActionSection from '@/Sdb/ActionSection';
-    import SdbButton from '@/Sdb/Button';
-    import SdbFormPassword from '@/Sdb/Form/Password';
-    import SdbModalCard from '@/Sdb/ModalCard';
+    import BizActionSection from '@/Biz/ActionSection';
+    import BizButton from '@/Biz/Button';
+    import BizFormPassword from '@/Biz/Form/Password';
+    import BizModalCard from '@/Biz/ModalCard';
 
     export default {
         components: {
-            SdbActionSection,
-            SdbButton,
-            SdbFormPassword,
-            SdbModalCard,
+            BizActionSection,
+            BizButton,
+            BizFormPassword,
+            BizModalCard,
         },
 
         mixins: [

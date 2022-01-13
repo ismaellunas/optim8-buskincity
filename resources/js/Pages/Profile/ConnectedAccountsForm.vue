@@ -1,5 +1,5 @@
 <template>
-    <sdb-action-section>
+    <biz-action-section>
         <template #title>
             Connected Accounts
         </template>
@@ -32,21 +32,21 @@
                         <template #action>
                             <template v-if="hasAccountForProvider(provider)">
                                 <div class="flex is-justify-content-center my-2">
-                                    <sdb-button
+                                    <biz-button
                                         v-if="$page.props.jetstream.managesProfilePhotos && getAccountForProvider(provider).avatar_path"
                                         class="cursor-pointer focus:outline-none"
                                         @click="setProfilePhoto(getAccountForProvider(provider).id)"
                                     >
                                         Use Avatar as Profile Photo
-                                    </sdb-button>
+                                    </biz-button>
 
-                                    <sdb-button
+                                    <biz-button
                                         v-if="$page.props.socialstream.connectedAccounts.length > 1 || $page.props.socialstream.hasPassword"
                                         class="is-danger"
                                         @click="confirmRemove(getAccountForProvider(provider).id)"
                                     >
                                         Remove
-                                    </sdb-button>
+                                    </biz-button>
                                 </div>
                             </template>
 
@@ -61,7 +61,7 @@
             </div>
 
             <!-- Confirmation Modal -->
-            <sdb-modal-card
+            <biz-modal-card
                 v-if="isModalOpen"
                 @close="closeModal()"
             >
@@ -81,42 +81,42 @@
                 </template>
 
                 <template #footer>
-                    <sdb-button
+                    <biz-button
                         class="is-dark"
                         @click="closeModal()"
                     >
                         Nevermind
-                    </sdb-button>
+                    </biz-button>
 
-                    <sdb-button
+                    <biz-button
                         class="is-primary ml-2"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
                         @click="removeConnectedAccount(accountId)"
                     >
                         Remove Connected Account
-                    </sdb-button>
+                    </biz-button>
                 </template>
-            </sdb-modal-card>
+            </biz-modal-card>
         </template>
-    </sdb-action-section>
+    </biz-action-section>
 </template>
 
 <script>
     import ActionLink from '@/Socialstream/ActionLink';
     import ConnectedAccount from '@/Socialstream/ConnectedAccount';
     import MixinHasModal from '@/Mixins/HasModal';
-    import SdbActionSection from '@/Sdb/ActionSection';
-    import SdbButton from '@/Sdb/Button';
-    import SdbModalCard from '@/Sdb/ModalCard';
+    import BizActionSection from '@/Biz/ActionSection';
+    import BizButton from '@/Biz/Button';
+    import BizModalCard from '@/Biz/ModalCard';
 
     export default {
         components: {
             ActionLink,
             ConnectedAccount,
-            SdbActionSection,
-            SdbButton,
-            SdbModalCard,
+            BizActionSection,
+            BizButton,
+            BizModalCard,
         },
 
         mixins: [

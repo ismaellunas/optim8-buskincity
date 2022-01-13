@@ -1,38 +1,39 @@
 <template>
+    <div>
+        <biz-form-input
+            v-model="form.name"
+            label="Role Name"
+            required
+            maxlength="255"
+            :message="error('name')"
+        ></biz-form-input>
 
-    <sdb-form-input
-        v-model="form.name"
-        label="Role Name"
-        required
-        maxlength="255"
-        :message="error('name')"
-    ></sdb-form-input>
-
-    <div class="columns is-multiline">
-        <div
-            v-for="(permissions, groupName) in permissionOptions"
-            :key="groupName"
-            class="column is-4"
-        >
-            <label class="label" for="">
-                {{ groupName }}
-            </label>
-            <div class="ml-4">
-                <div v-for="permission in permissions"
-                    :key="permission.id"
-                    class="field is-horizontal"
-                >
-                    <div class="field-body">
-                        <div class="field">
-                            <div class="control">
-                                <sdb-checkbox
-                                    v-model:checked="form.permissions"
-                                    :disabled="permissionDisabled(permission, permissions)"
-                                    :value=permission.value
-                                    @change="onPermissionClicked(permission, permissions)"
-                                >
-                                    &nbsp; {{ permission.title }}
-                                </sdb-checkbox>
+        <div class="columns is-multiline">
+            <div
+                v-for="(permissions, groupName) in permissionOptions"
+                :key="groupName"
+                class="column is-4"
+            >
+                <label class="label" for="">
+                    {{ groupName }}
+                </label>
+                <div class="ml-4">
+                    <div v-for="permission in permissions"
+                        :key="permission.id"
+                        class="field is-horizontal"
+                    >
+                        <div class="field-body">
+                            <div class="field">
+                                <div class="control">
+                                    <biz-checkbox
+                                        v-model:checked="form.permissions"
+                                        :disabled="permissionDisabled(permission, permissions)"
+                                        :value=permission.value
+                                        @change="onPermissionClicked(permission, permissions)"
+                                    >
+                                        &nbsp; {{ permission.title }}
+                                    </biz-checkbox>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -44,9 +45,9 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbCheckbox from '@/Sdb/Checkbox';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormSelect from '@/Sdb/Form/Select';
+    import BizCheckbox from '@/Biz/Checkbox';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizFormSelect from '@/Biz/Form/Select';
     import { pull } from 'lodash';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
@@ -54,9 +55,9 @@
     export default {
         name: 'RoleForm',
         components: {
-            SdbCheckbox,
-            SdbFormInput,
-            SdbFormSelect,
+            BizCheckbox,
+            BizFormInput,
+            BizFormSelect,
         },
         mixins: [
             MixinHasPageErrors,

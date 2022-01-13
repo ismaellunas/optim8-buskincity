@@ -27,9 +27,9 @@
                                     <span class=mr-3>
                                         Don't have an account?
                                     </span>
-                                    <sdb-button-link :href="route('register')">
+                                    <biz-button-link :href="route('register')">
                                         Sign Up
-                                    </sdb-button-link>
+                                    </biz-button-link>
                                 </div>
                             </div>
                         </div>
@@ -42,7 +42,7 @@
                                     </h2>
                                     <div class="has-text-centered">
 
-                                        <sdb-social-media-list/>
+                                        <biz-social-media-list/>
 
                                         <div class="h-line-wrapper">
                                             <span class="h-line-words">or</span>
@@ -67,45 +67,45 @@
                                     </h2>
                                     <div class="has-text-left">
 
-                                        <sdb-error-notifications :errors="$page.props.errors"/>
+                                        <biz-error-notifications :errors="$page.props.errors"/>
 
                                         <form @submit.prevent="submit">
 
-                                            <sdb-form-input
+                                            <biz-form-input
                                                 v-model="form.email"
                                                 label="Email"
                                                 required
                                                 type="email"
                                                 placeholder="Enter your email"
                                                 :message="error('email')"
-                                            ></sdb-form-input>
+                                            ></biz-form-input>
 
-                                            <sdb-form-password
+                                            <biz-form-password
                                                 v-model="form.password"
                                                 autocomplete="current-password"
                                                 label="Password"
                                                 placeholder="Enter your password"
                                                 :required="true"
-                                            ></sdb-form-password>
+                                            ></biz-form-password>
 
                                             <div class="field columns">
                                                 <div class="column has-text-left">
                                                     <label class="checkbox">
-                                                        <sdb-checkbox name="remember" v-model:checked="form.remember">
+                                                        <biz-checkbox name="remember" v-model:checked="form.remember">
                                                             <span class="pl-1">Remember me</span>
-                                                        </sdb-checkbox>
+                                                        </biz-checkbox>
                                                     </label>
                                                 </div>
                                                 <div class="column has-text-right">
-                                                    <sdb-link v-if="canResetPassword" :href="route('password.request')">
+                                                    <biz-link v-if="canResetPassword" :href="route('password.request')">
                                                         Forgot your password?
-                                                    </sdb-link>
+                                                    </biz-link>
                                                 </div>
                                             </div>
 
-                                            <sdb-button class="button is-block is-info is-fullwidth" :disabled="form.processing">
+                                            <biz-button class="button is-block is-info is-fullwidth" :disabled="form.processing">
                                                 Log In <i class="fas fa-sign-in-alt"></i>
-                                            </sdb-button>
+                                            </biz-button>
                                         </form>
                                     </div>
                                 </div>
@@ -121,25 +121,25 @@
 <script>
     import LayoutBlank from '@/Layouts/BlankLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbCheckbox from '@/Sdb/Checkbox';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormPassword from '@/Sdb/Form/Password';
-    import SdbLink from '@/Sdb/Link';
-    import SdbSocialMediaList from '@/Sdb/SocialMediaList'
+    import BizButton from '@/Biz/Button';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizCheckbox from '@/Biz/Checkbox';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizFormPassword from '@/Biz/Form/Password';
+    import BizLink from '@/Biz/Link';
+    import BizSocialMediaList from '@/Biz/SocialMediaList'
 
     export default {
         components: {
-            SdbButton,
-            SdbButtonLink,
-            SdbCheckbox,
-            SdbErrorNotifications,
-            SdbFormInput,
-            SdbFormPassword,
-            SdbLink,
-            SdbSocialMediaList,
+            BizButton,
+            BizButtonLink,
+            BizCheckbox,
+            BizErrorNotifications,
+            BizFormInput,
+            BizFormPassword,
+            BizLink,
+            BizSocialMediaList,
         },
 
         mixins: [

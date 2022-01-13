@@ -210,7 +210,7 @@ class SettingService
             'root' => storage_path('theme/sass'),
         ]);
 
-        $disk->put('sdb_variables.sass', $variablesSass);
+        $disk->put('biz_variables.sass', $variablesSass);
 
         $variablesAfterSass = view('theme_options.font_size_sass', array_merge(
             config('constants.theme_font_sizes'),
@@ -220,7 +220,7 @@ class SettingService
                 ->all()
         ));
 
-        $disk->put('sdb_variables_after.sass', $variablesAfterSass);
+        $disk->put('biz_variables_after.sass', $variablesAfterSass);
     }
 
     public function getHomePage()
@@ -232,7 +232,7 @@ class SettingService
 
     public function generateThemeCss()
     {
-        exec('cd .. && npx webpack --config webpack.config.sdb.js');
+        exec('cd .. && npx webpack --config webpack.config.biz.js');
     }
 
     public function uploadThemeCssToCloudStorage(string $folderPrefix = null): MediaAsset

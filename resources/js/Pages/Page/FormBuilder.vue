@@ -58,7 +58,7 @@
                 </template>
 
                 <template v-else>
-                    <sdb-component-config
+                    <biz-component-config
                         v-model="data.entities[contentConfigId]"
                         class="page-builder-content-config"
                     />
@@ -103,7 +103,7 @@
     import BlockColumns from '@/Blocks/Columns'
     import ComponentStructures from '@/ComponentStructures';
     import Draggable from "vuedraggable";
-    import SdbComponentConfig from '@/Sdb/ComponentConfig';
+    import BizComponentConfig from '@/Biz/ComponentConfig';
     import { isBlank, generateElementId, useModelWrapper } from '@/Libs/utils'
     import { createBlock, createColumn } from '@/Libs/page-builder.js';
 
@@ -111,7 +111,7 @@
         components: {
             BlockColumns,
             Draggable,
-            SdbComponentConfig,
+            BizComponentConfig,
         },
         props: {
             can: Object,

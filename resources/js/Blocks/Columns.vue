@@ -9,7 +9,7 @@
         >
             <div class="field has-addons">
                 <div class="control is-expanded">
-                    <sdb-select
+                    <biz-select
                         v-model="numberOfColumns"
                         class="is-fullwidth is-small"
                         @change="onColumnChange"
@@ -20,15 +20,15 @@
                         >
                             {{ columnNumber }}
                         </option>
-                    </sdb-select>
+                    </biz-select>
                 </div>
                 <div class="control">
-                    <sdb-button
+                    <biz-button
                         type="button"
                         class="is-static is-small"
                     >
                         Column(s)
-                    </sdb-button>
+                    </biz-button>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
         >
             <div class="field has-addons is-pulled-right">
                 <p class="control">
-                    <sdb-button
+                    <biz-button
                         type="button"
                         class="is-small"
                         @click="deleteBlock"
@@ -46,17 +46,17 @@
                         <span class="icon">
                             <i class="fas fa-trash" />
                         </span>
-                    </sdb-button>
+                    </biz-button>
                 </p>
                 <p class="control">
-                    <sdb-button
+                    <biz-button
                         type="button"
                         class="is-small handle-columns"
                     >
                         <span class="icon">
                             <i class="fas fa-arrows-alt" />
                         </span>
-                    </sdb-button>
+                    </biz-button>
                 </p>
             </div>
         </div>
@@ -81,16 +81,16 @@
 <script>
     import BlockColumn from '@/Blocks/Column';
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
-    import SdbButton from '@/Sdb/Button';
-    import SdbSelect from '@/Sdb/Select';
+    import BizButton from '@/Biz/Button';
+    import BizSelect from '@/Biz/Select';
     import { createColumn } from '@/Libs/page-builder.js';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         components: {
             BlockColumn,
-            SdbButton,
-            SdbSelect,
+            BizButton,
+            BizSelect,
         },
         mixins: [EditModeComponentMixin],
         props: {

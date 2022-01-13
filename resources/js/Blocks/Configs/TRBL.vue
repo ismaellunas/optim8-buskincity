@@ -1,31 +1,31 @@
 <template>
     <div>
-        <sdb-label>{{ label }}</sdb-label>
+        <biz-label>{{ label }}</biz-label>
 
-        <sdb-field-horizontal v-for="(value, key) in trbl">
+        <biz-field-horizontal v-for="(value, key) in trbl">
             <template #label>{{ capitalize(key)}}</template>
-            <sdb-select v-model="trbl[key]">
+            <biz-select v-model="trbl[key]">
                 <option v-for="option in options" :value="option.value">
                     {{ option.name }}
                 </option>
-            </sdb-select>
-        </sdb-field-horizontal>
+            </biz-select>
+        </biz-field-horizontal>
     </div>
 </template>
 
 <script>
-    import SdbFieldHorizontal from '@/Sdb/Form/FieldHorizontal';
-    import SdbLabel from '@/Sdb/Label';
-    import SdbSelect from '@/Sdb/Select';
+    import BizFieldHorizontal from '@/Biz/Form/FieldHorizontal';
+    import BizLabel from '@/Biz/Label';
+    import BizSelect from '@/Biz/Select';
     import { capitalize } from 'lodash';
     import { defaultOption, suffixNumbers } from '@/ComponentStructures/style-options';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         components: {
-            SdbFieldHorizontal,
-            SdbLabel,
-            SdbSelect,
+            BizFieldHorizontal,
+            BizLabel,
+            BizSelect,
         },
         props: {
             modelValue: {},

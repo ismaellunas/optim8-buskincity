@@ -9,13 +9,13 @@
         </div>
         <div class="columns">
             <div class="column">
-                <sdb-image
+                <biz-image
                     v-if="hasImage"
                     class="mb-2"
                     style="width: 200px; border: 1px solid #000"
                     :src="imgUrl"
                 />
-                <sdb-input-file
+                <biz-input-file
                     v-model="formMedia.file"
                     :accept="acceptedTypes"
                     :is-name-displayed="false"
@@ -27,8 +27,8 @@
 </template>
 
 <script>
-    import SdbImage from '@/Sdb/Image';
-    import SdbInputFile from '@/Sdb/InputFile';
+    import BizImage from '@/Biz/Image';
+    import BizInputFile from '@/Biz/InputFile';
     import { useModelWrapper } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
 
@@ -36,8 +36,8 @@
         name: 'HeaderLogo',
 
         components: {
-            SdbImage,
-            SdbInputFile,
+            BizImage,
+            BizInputFile,
         },
 
         props: {

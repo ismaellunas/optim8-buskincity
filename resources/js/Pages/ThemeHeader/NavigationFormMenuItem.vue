@@ -1,5 +1,5 @@
 <template>
-    <sdb-modal-card
+    <biz-modal-card
         @close="$emit('close')"
     >
         <template #header>
@@ -15,14 +15,14 @@
 
         <form @submit.prevent="onSubmit">
             <fieldset>
-                <sdb-form-input
+                <biz-form-input
                     v-model="form.title"
                     label="Title"
                     required
                     :message="error('title', null, errors)"
                 />
 
-                <sdb-form-select
+                <biz-form-select
                     v-model="form.type"
                     class="is-fullwidth"
                     label="Type"
@@ -37,9 +37,9 @@
                     >
                         {{ option.value }}
                     </option>
-                </sdb-form-select>
+                </biz-form-select>
 
-                <sdb-form-input
+                <biz-form-input
                     v-if="isTypeUrl"
                     v-model="form.url"
                     label="Url"
@@ -47,7 +47,7 @@
                     :message="error('url', null, errors)"
                 />
 
-                <sdb-form-select
+                <biz-form-select
                     v-if="isTypePage"
                     v-model="form.page_id"
                     label="Page"
@@ -68,9 +68,9 @@
                             [{{ locale.toUpperCase() }}]
                         </span>
                     </option>
-                </sdb-form-select>
+                </biz-form-select>
 
-                <sdb-form-select
+                <biz-form-select
                     v-if="isTypePost"
                     v-model="form.post_id"
                     label="Post"
@@ -85,9 +85,9 @@
                     >
                         {{ option.value }} [{{ option.locale.toUpperCase() }}]
                     </option>
-                </sdb-form-select>
+                </biz-form-select>
 
-                <sdb-form-select
+                <biz-form-select
                     v-if="isTypeCategory"
                     v-model="form.category_id"
                     label="Category"
@@ -108,14 +108,14 @@
                             [{{ locale.toUpperCase() }}]
                         </span>
                     </option>
-                </sdb-form-select>
+                </biz-form-select>
 
-                <sdb-checkbox
+                <biz-checkbox
                     v-model:checked="form.is_blank"
                     :value="true"
                 >
                     Open link in a new tab
-                </sdb-checkbox>
+                </biz-checkbox>
             </fieldset>
         </form>
 
@@ -126,30 +126,30 @@
             >
                 <div class="column">
                     <div class="is-pulled-right">
-                        <sdb-button @click="$emit('close')">
+                        <biz-button @click="$emit('close')">
                             Cancel
-                        </sdb-button>
-                        <sdb-button
+                        </biz-button>
+                        <biz-button
                             class="is-primary ml-1"
                             type="button"
                             @click="onSubmit()"
                         >
                             {{ isCreate ? 'Create' : 'Update' }}
-                        </sdb-button>
+                        </biz-button>
                     </div>
                 </div>
             </div>
         </template>
-    </sdb-modal-card>
+    </biz-modal-card>
 </template>
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbButton from '@/Sdb/Button';
-    import SdbCheckbox from '@/Sdb/Checkbox';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormSelect from '@/Sdb/Form/Select';
-    import SdbModalCard from '@/Sdb/ModalCard';
+    import BizButton from '@/Biz/Button';
+    import BizCheckbox from '@/Biz/Checkbox';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizFormSelect from '@/Biz/Form/Select';
+    import BizModalCard from '@/Biz/ModalCard';
     import { cloneDeep, sortBy } from 'lodash';
     import { isBlank } from '@/Libs/utils';
     import { reactive } from 'vue';
@@ -159,11 +159,11 @@
         name: 'NavigationFormMenu',
 
         components: {
-            SdbButton,
-            SdbCheckbox,
-            SdbFormInput,
-            SdbFormSelect,
-            SdbModalCard,
+            BizButton,
+            BizCheckbox,
+            BizFormInput,
+            BizFormSelect,
+            BizModalCard,
         },
 
         mixins: [

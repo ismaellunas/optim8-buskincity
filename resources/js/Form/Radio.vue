@@ -1,5 +1,5 @@
 <template>
-    <sdb-form-radio
+    <biz-form-radio
         v-model="computedValue"
         :disabled="schema.is_disabled"
         :label="schema.label"
@@ -10,14 +10,14 @@
 </template>
 
 <script>
-    import SdbFormRadio from '@/Sdb/Form/Radio';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import BizFormRadio from '@/Biz/Form/Radio';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormRadio',
 
         components: {
-            SdbFormRadio,
+            BizFormRadio,
         },
 
         props: {

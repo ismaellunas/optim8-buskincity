@@ -1,5 +1,5 @@
 <template>
-    <sdb-form-checbox-toggle
+    <biz-form-checbox-toggle
         v-model="computedValue"
         :false-value="schema.false_value"
         :true-value="schema.true_value"
@@ -14,14 +14,14 @@
 </template>
 
 <script>
-    import SdbFormChecboxToggle from '@/Sdb/Form/CheckboxToggle';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import BizFormChecboxToggle from '@/Biz/Form/CheckboxToggle';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormCheckbox',
 
         components: {
-            SdbFormChecboxToggle,
+            BizFormChecboxToggle,
         },
 
         props: {

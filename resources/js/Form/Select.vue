@@ -1,5 +1,5 @@
 <template>
-    <sdb-form-select
+    <biz-form-select
         v-model="computedValue"
         :disabled="schema.is_disabled"
         :label="schema.label"
@@ -15,18 +15,18 @@
         >
             {{ option }}
         </option>
-    </sdb-form-select>
+    </biz-form-select>
 </template>
 
 <script>
-    import SdbFormSelect from '@/Sdb/Form/Select';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import BizFormSelect from '@/Biz/Form/Select';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormSelect',
 
         components: {
-            SdbFormSelect,
+            BizFormSelect,
         },
 
         props: {
