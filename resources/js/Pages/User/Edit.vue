@@ -83,7 +83,7 @@
                         <hr>
 
                         <form-biodata
-                            :name="formName"
+                            route-name="admin.users.edit"
                             :entity-id="record.id"
                             button-label="Update"
                             button-group-align="right"

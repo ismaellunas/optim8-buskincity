@@ -1,0 +1,16 @@
+$medium: 1023px;
+
+@media screen and (max-width: $medium) {
+    .navbar-item {
+        &.has-dropdown {
+          .navbar-dropdown {
+            display: none;
+          }
+          &.is-active {
+            .navbar-dropdown {
+              display: block;
+            }
+          }
+       }
+    }
+}

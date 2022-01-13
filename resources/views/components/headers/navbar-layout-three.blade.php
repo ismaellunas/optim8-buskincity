@@ -15,9 +15,9 @@
             class="navbar-burger burger"
             data-target="navbarExampleTransparentExample"
         >
-            <span />
-            <span />
-            <span />
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
         </div>
     </div>
     <div>
@@ -28,7 +28,7 @@
             <div class="navbar-end">
                 @foreach ($menus as $menu)
                     @if ($menu->children)
-                        <div class="navbar-item has-dropdown is-hoverable">
+                        <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
                             <a class="navbar-link">
                                 {{ $menu->title }}
                             </a>
@@ -54,7 +54,7 @@
                         </a>
                     @endif
                 @endforeach
-                <div class="navbar-item has-dropdown is-hoverable">
+                <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
                     <span class="navbar-link">{{ strtoupper($currentLanguage) }}</span>
                     <div class="navbar-dropdown is-boxed">
                         @foreach ($languageOptions as $language)
