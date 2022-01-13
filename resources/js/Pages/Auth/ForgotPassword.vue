@@ -58,6 +58,18 @@
                                             />
                                         </div>
 
+                                        <vue-recaptcha
+                                            :sitekey="$page.props.recaptchaSiteKey"
+                                            @verify="onCaptchaVerify"
+                                        />
+
+                                        <span
+                                            v-if="isRecaptchaError"
+                                            class="has-text-danger"
+                                        >
+                                            Please check the captcha!
+                                        </span>
+
                                         <div class="mt-4">
                                             <biz-button
                                                 class="button is-info"
@@ -83,6 +95,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormInput from '@/Biz/Form/Input';
     import BizLink from '@/Biz/Link';
+    import { VueRecaptcha } from 'vue-recaptcha'
 
     export default {
         components: {
@@ -90,6 +103,7 @@
             BizErrorNotifications,
             BizFormInput,
             BizLink,
+            VueRecaptcha,
         },
 
         mixins: [
@@ -105,16 +119,25 @@
 
         data() {
             return {
+                isRecaptchaError: false,
                 form: this.$inertia.form({
-                    email: ''
+                    email: '',
+                    'g-recaptcha-response': '',
                 })
             }
         },
 
         methods: {
             submit() {
-                this.form.post(this.route('password.email'))
-            }
+                if (!this.form['g-recaptcha-response']) {
+                    this.isRecaptchaError = true;
+                } else {
+                    this.form.post(this.route('password.email'))
+                }
+            },
+            onCaptchaVerify(token) {
+                this.form['g-recaptcha-response'] = token;
+            },
         }
     }
 </script>
