@@ -2,7 +2,7 @@
     <div>
         <biz-form-section @submitted="updateProfileInformation">
             <template #title>
-                Profile Information
+                Account
             </template>
 
             <template #description>
