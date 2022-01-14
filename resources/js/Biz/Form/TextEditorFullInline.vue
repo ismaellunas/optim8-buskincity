@@ -25,7 +25,7 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import MixinImageLibrary from '@/Mixins/MediaLibrary';
+    import MixinMediaLibrary from '@/Mixins/MediaLibrary';
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizTextEditor from '@/Biz/EditorTinymce';
     import { acceptedImageTypes, acceptedVideoTypes } from '@/Libs/defaults';
@@ -39,7 +39,7 @@
         },
         mixins: [
             MixinHasModal,
-            MixinImageLibrary,
+            MixinMediaLibrary,
         ],
         props: {
             config: Object,
