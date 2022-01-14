@@ -26,9 +26,9 @@
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinMediaLibrary from '@/Mixins/MediaLibrary';
+    import MixinMediaTextEditor from '@/Mixins/MediaTextEditor';
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizTextEditor from '@/Biz/EditorTinymce';
-    import { acceptedImageTypes, acceptedVideoTypes } from '@/Libs/defaults';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -40,6 +40,7 @@
         mixins: [
             MixinHasModal,
             MixinMediaLibrary,
+            MixinMediaTextEditor,
         ],
         props: {
             config: Object,
@@ -90,21 +91,7 @@
                 },
                 tinyMceModal: null,
                 tinyMceModalSelector: 'div.tox.tox-silver-sink.tox-tinymce-aux > div',
-                fileType: null,
             };
-        },
-        computed: {
-            acceptedTypes() {
-                switch (this.fileType) {
-                case "media":
-                    return acceptedVideoTypes;
-                    break;
-
-                default:
-                    return acceptedImageTypes;
-                    break;
-                }
-            },
         },
         methods: {
             onShownModal() {/* @override Mixins/HasModal */
@@ -133,7 +120,7 @@
             filePickerCallback(callback, value, meta) {
                 const self = this;
 
-                self.addTypeOnQueryParams(meta.filetype);
+                self.setTypeToMedia(meta.filetype);
 
                 self.openModal();
 
@@ -149,19 +136,6 @@
                     self.tinyMceImage.element.remove();
                     self.tinyMceImage.element = null;
                 };
-            },
-            addTypeOnQueryParams(fileType) {
-                this.fileType = fileType;
-
-                switch (this.fileType) {
-                case "media":
-                    this.setType(['video']);
-                    break;
-
-                default:
-                    this.setType([fileType]);
-                    break;
-                }
             },
         },
     };
