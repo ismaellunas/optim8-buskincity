@@ -32,6 +32,7 @@
     import Select from './Select';
     import Text from './Text';
     import Textarea from './Textarea';
+    import Video from './Video';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -46,6 +47,7 @@
             Select,
             Text,
             Textarea,
+            Video,
         },
 
         mixins: [
