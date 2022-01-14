@@ -37,7 +37,7 @@
 
                                     <div
                                         v-if="status"
-                                        class="notification is-info"
+                                        class="notification is-danger"
                                     >
                                         {{ status }}
                                     </div>
@@ -46,15 +46,17 @@
                                         :errors="$page.props.errors"
                                     />
 
-                                    <form @submit.prevent="submit">
+                                    <form method="post">
                                         <div>
+                                            <input type="hidden" name="_token" :value="csrfToken">
+
                                             <biz-form-input
+                                                name="email"
                                                 v-model="form.email"
                                                 label="Email"
                                                 required
                                                 type="email"
                                                 placeholder="Enter your email"
-                                                :message="error('email')"
                                             />
                                         </div>
 
@@ -73,6 +75,7 @@
                                         <div class="mt-4">
                                             <biz-button
                                                 class="button is-info"
+                                                type="submit"
                                                 :disabled="form.processing"
                                             >
                                                 Email Password Reset Link
@@ -90,7 +93,6 @@
 </template>
 
 <script>
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormInput from '@/Biz/Form/Input';
@@ -106,10 +108,6 @@
             VueRecaptcha,
         },
 
-        mixins: [
-            MixinHasPageErrors,
-        ],
-
         props: {
             status: {
                 type: String,
@@ -122,22 +120,10 @@
                 isRecaptchaError: false,
                 form: this.$inertia.form({
                     email: '',
-                    'g-recaptcha-response': '',
-                })
+                    'g-recaptcha-response': null,
+                }),
+                csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
-        },
-
-        methods: {
-            submit() {
-                if (!this.form['g-recaptcha-response']) {
-                    this.isRecaptchaError = true;
-                } else {
-                    this.form.post(this.route('password.email'))
-                }
-            },
-            onCaptchaVerify(token) {
-                this.form['g-recaptcha-response'] = token;
-            },
         }
     }
 </script>
