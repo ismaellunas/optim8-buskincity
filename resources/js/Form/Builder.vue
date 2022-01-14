@@ -1,51 +1,34 @@
 <template>
     <form @submit.prevent="submit">
-        <component
-            :is="field.type"
-            v-for="field in schema.fields"
-            :key="field.name"
-            v-model="form[ field.name ]"
-            :schema="field"
-            :message="error(field.name, bagName, form.errors)"
+        <field-group
+            v-for="(group, index) in fieldGroups"
+            :key="index"
+            v-model="form"
+            :group="group"
         />
 
-        <div :class="buttonGroupClass">
-            <div class="control">
-                <biz-button
-                    v-if="buttonLabel"
-                    :class="buttonClass"
-                    @click="submit"
-                >
-                    {{ buttonLabel }}
-                </biz-button>
-
-                <template v-else>
+        <slot
+            name="buttons"
+            :submit="submit"
+        >
+            <div class="field is-grouped is-grouped-left">
+                <div class="control">
                     <biz-button
-                        v-for="button in schema.buttons"
-                        :key="button.label"
-                        :class="buttonClass"
+                        class="is-primary"
                         @click="submit"
                     >
-                        {{ button.label }}
+                        Submit
                     </biz-button>
-                </template>
+                </div>
             </div>
-        </div>
+        </slot>
     </form>
 </template>
 
 <script>
-    import Checkbox from './Checkbox';
-    import CheckboxGroup from './CheckboxGroup';
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import Number from './Number';
-    import Phone from './Phone';
-    import Radio from './Radio';
     import BizButton from '@/Biz/Button';
-    import Select from './Select';
-    import Text from './Text';
-    import Textarea from './Textarea';
-    import { isEmpty } from 'lodash';
+    import FieldGroup from './FieldGroup';
+    import { isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -53,27 +36,19 @@
         name: 'FormBuilder',
 
         components: {
-            Checkbox,
-            CheckboxGroup,
-            Number,
-            Phone,
-            Radio,
             BizButton,
-            Select,
-            Text,
-            Textarea,
+            FieldGroup,
         },
 
-        mixins: [
-            MixinHasPageErrors,
-        ],
+        provide() {
+            return {
+                bagName: this.bagName,
+            };
+        },
 
         props: {
-            entityId: {},
+            entityId: {type: Number, default: null},
             bagName: { type: String, default: 'formBuilder' },
-            buttonClass: {type: String, default: 'is-primary'},
-            buttonGroupAlign: { type: String, default: 'left'},
-            buttonLabel: { type: String, default: null},
             routeName: { type: String, required: true },
             routeGetSchemas: { type: String, default: 'forms.schemas' },
             routeSave: { type: String, default: 'forms.save' },
@@ -86,20 +61,10 @@
 
         data() {
             return {
+                fieldGroups: {},
                 form: useForm({}),
                 loader: null,
-                schema: { fields: [] },
             };
-        },
-
-        computed: {
-            buttonGroupClass() {
-                return [
-                    'field',
-                    'is-grouped',
-                    'is-grouped-' + this.buttonGroupAlign,
-                ];
-            },
         },
 
         mounted() {
@@ -115,9 +80,10 @@
                 }
 
             ).then((response) => {
-                self.schema = response.data;
+                self.fieldGroups = response.data;
 
-                self.form = self.createForm(self.schema.fields);
+                self.form = self.createForm(self.fieldGroups);
+
                 self.$emit('loaded-successfully', response.data);
 
             }).catch((error) => {
@@ -130,6 +96,29 @@
         },
 
         methods: {
+            createForm(groupFields) {
+                const form = {
+                    id: this.entityId
+                };
+
+                forOwn(groupFields, (groupField, key) => {
+
+                    if (!isEmpty(groupField.fields)) {
+
+                        forOwn(groupField.fields, (field, key) => {
+                            if (typeof field.value === 'undefined') {
+                                form[ key ] = undefined;
+                            } else {
+                                form[ key ] = field.value;
+                            }
+                        });
+                    }
+                });
+
+                return useForm(form);
+            },
+
+            /*
             createForm(fields) {
                 const form = {
                     id: this.entityId
@@ -147,6 +136,7 @@
 
                 return useForm(form);
             },
+            */
 
             submit() {
                 const self = this;
