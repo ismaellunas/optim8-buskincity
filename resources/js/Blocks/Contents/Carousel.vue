@@ -31,7 +31,7 @@
                 </template>
             </carousel-main>
 
-            <biz-modal-image-browser
+            <biz-modal-media-browser
                 v-if="isModalOpen"
                 :data="modalImages"
                 :query-params="imageListQueryParams"
@@ -52,7 +52,7 @@
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizModalImageBrowser from '@/Biz/Modal/ImageBrowser';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { cloneDeep } from 'lodash';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
@@ -62,7 +62,7 @@
         components: {
             CarouselMain,
             CarouselSlide,
-            BizModalImageBrowser,
+            BizModalMediaBrowser,
             BizToolbarContent,
         },
 

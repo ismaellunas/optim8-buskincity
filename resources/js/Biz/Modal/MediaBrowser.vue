@@ -4,8 +4,10 @@
         :is-close-hidden="true"
         @close="$emit('close')"
     >
-        <template v-slot:header>
-            <p class="modal-card-title">{{ title }}</p>
+        <template #header>
+            <p class="modal-card-title">
+                {{ title }}
+            </p>
             <biz-button
                 aria-label="close"
                 class="delete is-primary"
@@ -14,7 +16,7 @@
             />
         </template>
 
-        <template v-slot:footer>
+        <template #footer>
             <biz-pagination
                 :is-ajax="true"
                 :links="data?.links ?? []"
@@ -36,7 +38,7 @@
             @on-media-submitted="$emit('on-media-submitted', $event)"
             @on-view-changed="$emit('on-view-changed', $event)"
         >
-            <template v-slot:actions="slotProps">
+            <template #actions="slotProps">
                 <biz-button-icon
                     icon="fas fa-check"
                     title="Select"
@@ -67,14 +69,11 @@
             BizModalCard,
             BizPagination,
         },
-        emits: [
-            'close',
-            'on-clicked-pagination',
-            'on-media-selected',
-            'on-media-submitted',
-            'on-view-changed',
-        ],
         props: {
+            acceptedFileType: {
+                type: Array,
+                default: null,
+            },
             data: {},
             isDownloadEnabled: {type: Boolean, default: true},
             isUploadEnabled: {type: Boolean, default: true},
@@ -82,9 +81,16 @@
             search: Function,
             title: {type: String, default: 'Images'},
         },
-        data() {
+        emits: [
+            'close',
+            'on-clicked-pagination',
+            'on-media-selected',
+            'on-media-submitted',
+            'on-view-changed',
+        ],
+        setup(props) {
             return {
-                acceptedTypes: acceptedImageTypes,
+                acceptedTypes: props.acceptedFileType ?? acceptedImageTypes,
             };
         },
     }
