@@ -62,7 +62,6 @@
 
                                         <vue-recaptcha
                                             :sitekey="$page.props.recaptchaSiteKey"
-                                            @verify="onCaptchaVerify"
                                         />
 
                                         <span
