@@ -15,9 +15,10 @@
             <biz-input-error :message="message" />
         </div>
 
-        <biz-modal-image-browser
+        <biz-modal-media-browser
             v-if="isModalOpen"
             title="Media Library"
+            :accepted-file-type="acceptedTypes"
             :data="media"
             :is-download-enabled="isDownloadEnabled"
             :is-upload-enabled="isUploadEnabled"
@@ -35,10 +36,11 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import MixinImageLibrary from '@/Mixins/MediaLibrary';
+    import MixinMediaLibrary from '@/Mixins/MediaLibrary';
+    import MixinMediaTextEditor from '@/Mixins/MediaTextEditor';
     import BizInputError from '@/Biz/InputError';
     import BizLabel from '@/Biz/Label';
-    import BizModalImageBrowser from '@/Biz/Modal/ImageBrowser';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizTextEditor from '@/Biz/EditorTinymce';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -48,13 +50,14 @@
         components: {
             BizInputError,
             BizLabel,
-            BizModalImageBrowser,
+            BizModalMediaBrowser,
             BizTextEditor,
         },
 
         mixins: [
             MixinHasModal,
-            MixinImageLibrary,
+            MixinMediaLibrary,
+            MixinMediaTextEditor,
         ],
 
         props: {
@@ -157,7 +160,7 @@
             filePickerCallback(callback, value, meta) {
                 const self = this;
 
-                self.addTypeOnQueryParams(meta.filetype);
+                self.setTypeToMedia(meta.filetype);
 
                 self.openModal();
 
@@ -172,13 +175,6 @@
                     self.tinyMceImage.file = null;
                     self.tinyMceImage.element.remove();
                     self.tinyMceImage.element = null;
-                };
-            },
-            addTypeOnQueryParams(fileType) {
-                if (fileType === "media") {
-                    this.setType(['video']);
-                } else {
-                    this.setType([fileType]);
                 };
             },
         },
