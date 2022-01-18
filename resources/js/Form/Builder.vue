@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent="submit">
         <field-group
-            v-for="(group, index) in fieldGroups"
+            v-for="(group, index) in sortedFieldGroups"
             :key="index"
             v-model="form"
             :group="group"
@@ -28,7 +28,7 @@
 <script>
     import BizButton from '@/Biz/Button';
     import FieldGroup from './FieldGroup';
-    import { isEmpty, forOwn } from 'lodash';
+    import { isEmpty, forOwn, sortBy } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -65,6 +65,12 @@
                 form: useForm({}),
                 loader: null,
             };
+        },
+
+        computed: {
+            sortedFieldGroups() {
+                return sortBy(this.fieldGroups, ['order']);
+            }
         },
 
         mounted() {
