@@ -49,8 +49,10 @@ class PostWidget implements WidgetInterface
                         'coverImage' => function ($query) {
                             $query->select([
                                 'id',
+                                'extension',
                                 'file_name',
                                 'file_url',
+                                'version',
                             ]);
                         },
                         'categories' => function ($query) {
