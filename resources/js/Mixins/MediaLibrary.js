@@ -20,11 +20,7 @@ export default {
                     self.onMediaListLoadedSuccess(response);
                 })
                 .catch(function (error) {
-                    oopsAlert({
-                        customClass: {
-                            container: 'swal2-container-index',
-                        }
-                    });
+                    oopsAlert();
                     self.onMediaListLoadedFail(error);
                 });
         },
