@@ -111,7 +111,7 @@ class FormService
         $forms = $this->getFormsOnRoute($routeName, $actor);
 
         foreach ($forms as $form) {
-            $formLocation->save($form->fields->keys(), $inputs);
+            $formLocation->save($form->fields, $inputs);
         }
     }
 

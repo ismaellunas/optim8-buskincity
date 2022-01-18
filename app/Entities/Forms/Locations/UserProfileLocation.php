@@ -52,13 +52,17 @@ class UserProfileLocation
         return ($user->id == $author->id);
     }
 
-    public function save(Collection $keys, array $inputs)
+    public function save(Collection $fields, array $inputs)
     {
         $user = $this->getEntity();
 
-        foreach ($keys as $key) {
-            if (array_key_exists($key, $inputs)) {
-                $user->setMeta($key, $inputs[ $key ]);
+        foreach ($fields as $field) {
+            $data = $field->getDataToBeSaved($inputs);
+
+            if (!empty($data)) {
+                foreach ($data as $key => $value) {
+                    $user->setMeta($key, $value);
+                }
             }
         }
 
