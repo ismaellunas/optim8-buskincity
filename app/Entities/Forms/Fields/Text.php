@@ -31,7 +31,7 @@ class Text extends BaseField
 
     protected function max(): ?int
     {
-        $rules = collect($this->validationRules());
+        $rules = collect($this->validationRules()[$this->name]);
 
         $maxRule = $rules->first(function ($rule) {
             return Str::startsWith($rule, 'max:');

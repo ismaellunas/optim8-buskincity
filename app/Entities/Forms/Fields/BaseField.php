@@ -3,7 +3,6 @@
 namespace App\Entities\Forms\Fields;
 
 use App\Models\User;
-use Illuminate\Support\Str;
 
 abstract class BaseField
 {
@@ -54,6 +53,13 @@ abstract class BaseField
         return false;
     }
 
+    protected function adjustNullableRule(&$rules)
+    {
+        if (!$this->isRequired()) {
+            $rules[$this->name][] = 'nullable';
+        }
+    }
+
     protected function schema(): array
     {
         return [
@@ -70,11 +76,11 @@ abstract class BaseField
 
     public function validationRules(): array
     {
-        $rules = $this->validation['rules'] ?? [];
+        $rules = [];
 
-        if (!$this->isRequired()) {
-            $rules[] = 'nullable';
-        }
+        $rules[$this->name] = $this->validation['rules'] ?? [];
+
+        $this->adjustNullableRule($rules);
 
         return $rules;
     }
@@ -97,5 +103,16 @@ abstract class BaseField
         }
 
         return true;
+    }
+
+    public function getDataToBeSaved(array $inputs): array
+    {
+        $data = [];
+
+        if (array_key_exists($this->name, $inputs)) {
+            $data[$this->name] = $inputs[$this->name];
+        }
+
+        return $data;
     }
 }
