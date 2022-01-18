@@ -11,8 +11,8 @@
             </span>
         </template>
 
-        <div class="field has-addons">
-            <p class="control has-icons-left">
+        <div class="field has-addons mb-0">
+            <p class="control has-icons-left is-expanded">
                 <biz-input
                     v-model="term"
                     :placeholder="placeholder"
