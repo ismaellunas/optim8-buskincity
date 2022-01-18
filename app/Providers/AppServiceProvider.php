@@ -5,7 +5,8 @@ namespace App\Providers;
 use App\Entities\Caches\{
     MenuCache,
     SettingCache,
-    TranslationCache
+    TranslationCache,
+    WidgetCache
 };
 use App\Services\{
     FormService,
@@ -26,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
         MenuCache::class => MenuCache::class,
         SettingCache::class => SettingCache::class,
         TranslationCache::class => TranslationCache::class,
+        WidgetCache::class => WidgetCache::class,
 
         FormService::class => FormService::class,
         LanguageService::class => LanguageService::class,
