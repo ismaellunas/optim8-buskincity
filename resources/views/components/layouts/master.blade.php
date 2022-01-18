@@ -16,7 +16,18 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
         <link rel="stylesheet" href="{{ $appCssUrl }}">
         <link rel="stylesheet" href="{{ mix('css/sweetalert2.min.css') }}">
-        <link rel="stylesheet" href="{{ $baseGoogleUrlFont . '?family=' . $mainTextFont->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' }}">
+
+        @if ($mainTextFont->family !== null)
+            <link rel="stylesheet" href="{{ $baseGoogleUrlFont . '?family=' . $mainTextFont->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' }}">
+        @endif
+
+        @if ($headingsFont->family !== null)
+            <link rel="stylesheet" href="{{ $baseGoogleUrlFont . '?family=' . $headingsFont->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' }}">
+        @endif
+
+        @if ($buttonsFont->family !== null)
+            <link rel="stylesheet" href="{{ $baseGoogleUrlFont . '?family=' . $buttonsFont->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' }}">
+        @endif
 
         @stack('styles')
 
