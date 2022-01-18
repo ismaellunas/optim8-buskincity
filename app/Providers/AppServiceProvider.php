@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Entities\Caches\{
+    CountryCache,
     MenuCache,
     SettingCache,
     TranslationCache
 };
 use App\Services\{
+    CountryService,
     FormService,
     LanguageService,
     MediaService,
@@ -23,10 +25,12 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
     public $singletons = [
+        CountryCache::class => CountryCache::class,
         MenuCache::class => MenuCache::class,
         SettingCache::class => SettingCache::class,
         TranslationCache::class => TranslationCache::class,
 
+        CountryService::class => CountryService::class,
         FormService::class => FormService::class,
         LanguageService::class => LanguageService::class,
         MediaService::class => MediaService::class,
