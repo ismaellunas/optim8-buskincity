@@ -76,6 +76,8 @@ class ThemeFontController extends ThemeOptionController
             $font->save();
         }
 
+        $this->generateNewStyleProcess($this->settingService);
+
         $this->generateFlashMessage($this->title.' updated successfully!');
 
         return redirect()->route($this->baseRouteName.'.edit');

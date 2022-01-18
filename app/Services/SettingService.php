@@ -205,6 +205,16 @@ class SettingService
                 ->all()
         ));
 
+        $variablesSass .= view('theme_options.font_sass',
+            Setting::where('group', 'font')
+                ->get(['key', 'value'])
+                ->pluck('value', 'key')
+                ->map(function($value) {
+                    return json_decode($value);
+                })
+                ->all()
+        );
+
         $disk = Storage::build([
             'driver' => 'local',
             'root' => storage_path('theme/sass'),

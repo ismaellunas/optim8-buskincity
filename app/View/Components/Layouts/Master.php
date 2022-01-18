@@ -14,6 +14,8 @@ class Master extends Component
     public $trackingCodeInsideHead;
     public $additionalJavascript;
     public $additionalCss;
+    public $mainTextFont;
+    public $baseGoogleUrlFont;
 
     /**
      * Create a new component instance.
@@ -31,6 +33,8 @@ class Master extends Component
         $this->trackingCodeInsideHead = $settingService->getTrackingCodeInsideHead();
         $this->additionalJavascript = $settingService->getAdditionalJavascript();
         $this->additionalCss = $settingService->getAdditionalCss();
+        $this->mainTextFont = $settingService->getFont('main_text_font');
+        $this->baseGoogleUrlFont = 'https://fonts.googleapis.com/css2';
     }
 
     /**

@@ -45,6 +45,22 @@ return [
         'color_warning' => '#ffe08a',
         'color_danger' => '#f14668',
     ],
+    'theme_fonts' => [
+        'font_weight' => [
+            'has-text-weight-light' => 300,
+            'has-text-weight-normal' => 400,
+            'has-text-weight-medium' => 500,
+            'has-text-weight-semibold' => 600,
+            'has-text-weight-bold' => 700,
+        ],
+        'font_style' => [
+            'is-capitalized' => 'capitalize',
+            'is-uppercase' => 'uppercase',
+            'is-lowercase' => 'lowercase',
+            'is-italic' => 'italic',
+            'is-underlined' => 'underline',
+        ],
+    ],
     'theme_font_sizes' => [
         'font_size_heading_1' => 2,
         'font_size_heading_2' => 1.75,
