@@ -7,7 +7,7 @@ use \Closure;
 
 class SettingCache
 {
-    private string $tag = 'settings';
+    protected string $tag = 'settings';
 
     public function remember(string $key, Closure $callback): mixed
     {
