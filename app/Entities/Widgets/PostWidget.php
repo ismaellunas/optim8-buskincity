@@ -89,9 +89,7 @@ class PostWidget implements WidgetInterface
             );
 
             $record->categories->transform(function ($category) {
-                $category->name = $category->name ?? $category->translations[0]->name;
-
-                return $category;
+                return $category->append('first_translation_name');
             });
 
             return $record;
