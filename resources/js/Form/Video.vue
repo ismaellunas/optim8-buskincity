@@ -1,5 +1,5 @@
 <template>
-    <biz-form-phone
+    <form-input
         v-model="computedValue"
         :label="schema.label"
         :maxlength="schema.maxlength"
@@ -8,20 +8,18 @@
         :readonly="schema.is_readonly"
         :required="schema.is_required"
         :message="message"
-        :country-options="schema.countryOptions"
-        :default-country="schema.defaultCountry"
     />
 </template>
 
 <script>
-    import BizFormPhone from '@/Biz/Form/Phone';
+    import FormInput from '@/Biz/Form/Input';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'FormPhone',
+        name: 'FormVideo',
 
         components: {
-            BizFormPhone,
+            FormInput,
         },
 
         props: {
@@ -30,8 +28,8 @@
                 required: true
             },
             modelValue: {
-                type: Object,
-                required: true
+                type: [String, Number, null],
+                default: null
             },
             message: {
                 type: [Object, String, Array],

@@ -8,6 +8,7 @@
 
         <div class="control">
             <biz-input
+                ref="input"
                 v-bind="$attrs"
                 :class="{'is-danger': message}"
                 :disabled="disabled"

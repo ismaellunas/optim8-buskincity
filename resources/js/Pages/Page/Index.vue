@@ -128,6 +128,7 @@
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import BizPagination from '@/Biz/Pagination';
     import BizTag from '@/Biz/Tag';
+    import { confirmDelete } from '@/Libs/alert';
     import { merge, filter } from 'lodash';
     import { ref } from 'vue';
 
@@ -165,8 +166,13 @@
         },
         methods: {
             deleteRow(page) {
-                if (!confirm('Are you sure?')) return;
-                this.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
+                const self = this;
+
+                confirmDelete().then(result => {
+                    if (result.isConfirmed) {
+                        self.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
+                    }
+                });
             },
             openShow(locale, page) {
                 if (this.can.read) {
