@@ -5,6 +5,9 @@ const timer = 1800;
 
 const defaultConfig = {
     scrollbarPadding: false,
+    customClass: {
+        container: 'swal2-container-custom',
+    },
 };
 
 const nonSweetAlertOptions = {
