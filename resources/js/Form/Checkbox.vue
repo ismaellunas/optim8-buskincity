@@ -34,18 +34,18 @@
         ],
 
         props: {
-            schema: {
+            errors: {
                 type: Object,
-                required: true
+                default: () => {}
             },
             modelValue: {
                 type: [String, Number, Boolean, null],
                 required: true
             },
-            errors: {
+            schema: {
                 type: Object,
-                default: () => {}
-            }
+                required: true
+            },
         },
 
         setup(props, { emit }) {

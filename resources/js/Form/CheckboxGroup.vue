@@ -33,18 +33,18 @@
         ],
 
         props: {
-            schema: {
+            errors: {
                 type: Object,
-                required: true
+                default: () => {}
             },
             modelValue: {
                 type: Array,
                 required: true
             },
-            errors: {
+            schema: {
                 type: Object,
-                default: () => {}
-            }
+                required: true
+            },
         },
 
         setup(props, { emit }) {

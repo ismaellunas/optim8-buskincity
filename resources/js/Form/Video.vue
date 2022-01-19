@@ -32,17 +32,17 @@
         ],
 
         props: {
-            schema: {
+            errors: {
                 type: Object,
-                required: true
+                default: () => {}
             },
             modelValue: {
                 type: [String, Number, null],
                 default: null
             },
-            errors: {
+            schema: {
                 type: Object,
-                default: () => {}
+                required: true
             },
         },
 
