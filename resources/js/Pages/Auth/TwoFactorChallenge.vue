@@ -1,68 +1,126 @@
 <template>
-    <jet-authentication-card>
-        <template #logo>
-            <jet-authentication-card-logo />
-        </template>
+    <section class="hero is-fullheight">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="columns">
+                    <div class="column is-two-fifths has-text-left">
+                        <div class="card">
+                            <div class="card-image">
+                                <figure class="image is-3by4">
+                                    <img src="https://dummyimage.com/550x715/e5e5e5/ffffff.jpg">
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-three-fifths has-text-left">
+                        <div class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <biz-link @click.prevent="redirectBack()">
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-left" />
+                                        </span>
+                                        <span>Back</span>
+                                    </biz-link>
+                                </div>
+                            </div>
+                            <div class="level-right">
+                                <div class="level-item" />
+                            </div>
+                        </div>
+                        <section class="section">
+                            <div class="columns">
+                                <div class="column is-9 is-offset-1">
+                                    <div class="mb-4">
+                                        <template v-if="! recovery">
+                                            Please confirm access to your account by entering the authentication code provided by your authenticator application.
+                                        </template>
 
-        <div class="mb-4 text-sm text-gray-600">
-            <template v-if="! recovery">
-                Please confirm access to your account by entering the authentication code provided by your authenticator application.
-            </template>
+                                        <template v-else>
+                                            Please confirm access to your account by entering one of your emergency recovery codes.
+                                        </template>
+                                    </div>
 
-            <template v-else>
-                Please confirm access to your account by entering one of your emergency recovery codes.
-            </template>
+                                    <biz-error-notifications
+                                        :errors="$page.props.errors"
+                                    />
+
+                                    <form @submit.prevent="submit">
+                                        <div v-if="! recovery">
+                                            <biz-form-input
+                                                ref="code"
+                                                v-model="form.code"
+                                                label="Code"
+                                                required
+                                                type="text"
+                                                inputmode="numeric"
+                                                autofocus
+                                                autocomplete="one-time-code"
+                                                :message="error('code')"
+                                            />
+                                        </div>
+
+                                        <div v-else>
+                                            <biz-form-input
+                                                ref="recovery_code"
+                                                v-model="form.recovery_code"
+                                                label="Recovery Code"
+                                                required
+                                                type="text"
+                                                autocomplete="one-time-code"
+                                                :message="error('recovery_code')"
+                                            />
+                                        </div>
+                                        <div class="mt-4">
+                                            <biz-button
+                                                class="button"
+                                                :disabled="form.processing"
+                                                @click.prevent="toggleRecovery"
+                                            >
+                                                <template v-if="! recovery">
+                                                    Use a recovery code
+                                                </template>
+
+                                                <template v-else>
+                                                    Use an authentication code
+                                                </template>
+                                            </biz-button>
+                                            <biz-button
+                                                class="button is-info ml-4"
+                                                :disabled="form.processing"
+                                            >
+                                                Log In
+                                            </biz-button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <jet-validation-errors class="mb-4" />
-
-        <form @submit.prevent="submit">
-            <div v-if="! recovery">
-                <jet-label for="code" value="Code" />
-                <jet-input ref="code" id="code" type="text" inputmode="numeric" class="mt-1 block w-full" v-model="form.code" autofocus autocomplete="one-time-code" />
-            </div>
-
-            <div v-else>
-                <jet-label for="recovery_code" value="Recovery Code" />
-                <jet-input ref="recovery_code" id="recovery_code" type="text" class="mt-1 block w-full" v-model="form.recovery_code" autocomplete="one-time-code" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <button type="button" class="text-sm text-gray-600 hover:text-gray-900 underline cursor-pointer" @click.prevent="toggleRecovery">
-                    <template v-if="! recovery">
-                        Use a recovery code
-                    </template>
-
-                    <template v-else>
-                        Use an authentication code
-                    </template>
-                </button>
-
-                <jet-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
-                </jet-button>
-            </div>
-        </form>
-    </jet-authentication-card>
+    </section>
 </template>
 
 <script>
-    import JetAuthenticationCard from '@/Jetstream/AuthenticationCard'
-    import JetAuthenticationCardLogo from '@/Jetstream/AuthenticationCardLogo'
-    import JetButton from '@/Jetstream/Button'
-    import JetInput from '@/Jetstream/Input'
-    import JetLabel from '@/Jetstream/Label'
-    import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import BizButton from '@/Biz/Button';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizLink from '@/Biz/Link'
 
     export default {
         components: {
-            JetAuthenticationCard,
-            JetAuthenticationCardLogo,
-            JetButton,
-            JetInput,
-            JetLabel,
-            JetValidationErrors,
+            BizButton,
+            BizErrorNotifications,
+            BizFormInput,
+            BizLink,
         },
+
+        mixins: [
+            MixinHasPageErrors,
+        ],
 
         data() {
             return {
@@ -80,10 +138,10 @@
 
                 this.$nextTick(() => {
                     if (this.recovery) {
-                        this.$refs.recovery_code.focus()
+                        this.$refs.recovery_code.$refs.input.focus()
                         this.form.code = '';
                     } else {
-                        this.$refs.code.focus()
+                        this.$refs.code.$refs.input.focus()
                         this.form.recovery_code = ''
                     }
                 })
@@ -91,6 +149,10 @@
 
             submit() {
                 this.form.post(this.route('two-factor.login'))
+            },
+
+            redirectBack() {
+                window.history.back();
             }
         }
     }

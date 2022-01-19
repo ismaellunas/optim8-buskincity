@@ -109,12 +109,8 @@ class Form
     {
         $rules = [];
 
-        foreach ($this->fields as $name => $field) {
-            $rules[$name] = $field->validationRules();
-
-            if ($field instanceof ArrayValueFieldInterface) {
-                $rules[$name.".*"] = $field->arrayValidationRules();
-            }
+        foreach ($this->fields as $field) {
+            $rules = array_merge($rules, $field->validationRules());
         }
 
         return $rules;

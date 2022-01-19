@@ -20,19 +20,8 @@ class Number extends Text
     {
         $rules = parent::validationRules();
 
-        $rules[] = "numeric";
+        $rules[$this->name] = "numeric";
 
         return $rules;
-    }
-
-    protected function max(): ?int
-    {
-        $rules = $this->formattedRules();
-
-        if (!empty($rules['max'])) {
-            return (int) $rules['max'][0];
-        }
-
-        return null;
     }
 }

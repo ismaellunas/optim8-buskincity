@@ -150,6 +150,19 @@ class FormSeeder extends Seeder
                         "roles" => ['Administrator']
                     ]
                 ],
+                "video" => [
+                    "type" => "Video",
+                    "label" => "Performance Video",
+                    "default_value" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "validation" => [
+                        "rules" => [],
+                        "messages" => []
+                    ],
+                    "visibility" => [
+                    ],
+                ],
 
                 "term_and_condition" => [
                     "type" => "Checkbox",
