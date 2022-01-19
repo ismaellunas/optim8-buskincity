@@ -281,7 +281,7 @@
                     currentForm.file = this.media.file;
                 }
 
-                self.loader = self.$loading.show({});
+                self.loader = self.$loading.show();
                 self.isInputDisabled = true;
 
                 if (this.isAjax) {
