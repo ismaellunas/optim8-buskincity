@@ -24,15 +24,4 @@ class Number extends Text
 
         return $rules;
     }
-
-    protected function max(): ?int
-    {
-        $rules = $this->formattedRules();
-
-        if (!empty($rules['max'])) {
-            return (int) $rules['max'][0];
-        }
-
-        return null;
-    }
 }
