@@ -6,7 +6,7 @@ const timer = 1800;
 const defaultConfig = {
     scrollbarPadding: false,
     customClass: {
-        container: 'swal2-container-index',
+        container: 'swal2-container-custom',
     },
 };
 
