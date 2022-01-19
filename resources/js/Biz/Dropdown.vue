@@ -69,7 +69,7 @@
                 default: ""
             },
             classButton: {
-                type: String,
+                type: [Array, Object, String],
                 default: ""
             },
         },
