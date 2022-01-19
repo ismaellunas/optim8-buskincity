@@ -79,25 +79,6 @@ abstract class BaseField
         return $rules;
     }
 
-    public function formattedRules(): array
-    {
-        $rules = [];
-
-        foreach($this->validationRules() as $rule) {
-
-            if (is_string($rule)) {
-                if (Str::contains($rule, ":")) {
-                    list($ruleName, $ruleParams) = explode(":", $rule);
-                    $rules[$ruleName] = explode(',', $ruleParams);
-                } else {
-                    $rules[] = $rule;
-                }
-            }
-        }
-
-        return $rules;
-    }
-
     public function validationMessages(): array
     {
         return $this->validation['messages'] ?? [];

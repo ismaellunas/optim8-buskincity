@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Form;
+use App\Models\FieldGroup;
 use Illuminate\Database\Seeder;
 
 class FormSeeder extends Seeder
@@ -16,7 +16,8 @@ class FormSeeder extends Seeder
     {
         $biodata = [
             "name" => "biodata",
-            "title" => "Biodata",
+            "title" => "",
+            "order" => 1,
             "visibility" => [
             ],
             "locations" => [
@@ -51,39 +52,6 @@ class FormSeeder extends Seeder
                         "rules" => [
                         ],
                         "messages" => [],
-                    ],
-                ],
-                "address" => [
-                    "type" => "Textarea",
-                    "label" => "Address",
-                    "placeholder" => "Your Address",
-                    "default_value" => null,
-                    "readonly" => false,
-                    "disabled" => false,
-                    "maxlength" => "",
-                    "rows" => "",
-                    "validation" => [
-                        "rules" => [
-                            "required",
-                            "max:20"
-                        ],
-                        "messages" => []
-                    ],
-                ],
-                "postcode" => [
-                    "type" => "Text",
-                    "label" => "Post Code",
-                    "placeholder" => "Post Code",
-                    "default_value" => "",
-                    "readonly" => false,
-                    "disabled" => false,
-                    "validation" => [
-                        "rules" => [
-                            "required",
-                            "max:10",
-                            "digits_between:0,10"
-                        ],
-                        "messages" => []
                     ],
                 ],
                 "education" => [
@@ -182,6 +150,19 @@ class FormSeeder extends Seeder
                         "roles" => ['Administrator']
                     ]
                 ],
+                "video" => [
+                    "type" => "Video",
+                    "label" => "Performance Video",
+                    "default_value" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "validation" => [
+                        "rules" => [],
+                        "messages" => []
+                    ],
+                    "visibility" => [
+                    ],
+                ],
 
                 "term_and_condition" => [
                     "type" => "Checkbox",
@@ -202,9 +183,61 @@ class FormSeeder extends Seeder
             ]
         ];
 
-        Form::updateOrCreate(
-            ['name' => $biodata['name']],
+        $address = [
+            "name" => "address",
+            "title" => "Address",
+            "order" => 2,
+            "visibility" => [
+            ],
+            "locations" => [
+                'admin.profile.show',
+                'admin.users.edit',
+            ],
+            "fields" => [
+                "address" => [
+                    "type" => "Textarea",
+                    "label" => "Address",
+                    "placeholder" => "Your Address",
+                    "default_value" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => "",
+                    "rows" => "",
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                            "max:20"
+                        ],
+                        "messages" => []
+                    ],
+                ],
+                "postcode" => [
+                    "type" => "Text",
+                    "label" => "Post Code",
+                    "placeholder" => "Post Code",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                            "max:10",
+                            "digits_between:0,10"
+                        ],
+                        "messages" => []
+                    ],
+                ],
+            ]
+        ];
+
+        FieldGroup::updateOrCreate(
+            ['title' => $biodata['name']],
             ['data' => $biodata]
+        );
+
+        FieldGroup::updateOrCreate(
+            ['title' => $address['name']],
+            ['data' => $address]
         );
     }
 }

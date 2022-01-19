@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFormsTable extends Migration
+class CreateFieldGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateFormsTable extends Migration
      */
     public function up()
     {
-        Schema::create('forms', function (Blueprint $table) {
+        Schema::create('field_groups', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 127)->unique();
-            $table->string('type', 31)->nullable();
-            $table->string('model')->nullable();
+            $table->string('title', 127)->unique();
             $table->json('data')->nullable();
             $table->timestamps();
         });
@@ -30,6 +28,6 @@ class CreateFormsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('forms');
+        Schema::dropIfExists('field_groups');
     }
 }
