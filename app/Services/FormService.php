@@ -111,7 +111,7 @@ class FormService
         $forms = $this->getFormsOnRoute($routeName, $actor);
 
         foreach ($forms as $form) {
-            $formLocation->save($form->fields->keys(), $inputs);
+            $formLocation->save($form->fields, $inputs);
         }
     }
 
@@ -130,7 +130,9 @@ class FormService
         foreach ($forms as $form) {
             $values = $formLocation->getValues($form->fields->keys());
 
-            $schemas->push($form->schema($values->all()));
+            $schema = $form->schema($values->all());
+
+            $schemas->push($schema);
         }
 
         return $schemas;

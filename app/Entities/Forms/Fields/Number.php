@@ -20,7 +20,7 @@ class Number extends Text
     {
         $rules = parent::validationRules();
 
-        $rules[] = "numeric";
+        $rules[$this->name] = "numeric";
 
         return $rules;
     }

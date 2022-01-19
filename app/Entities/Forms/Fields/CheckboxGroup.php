@@ -2,9 +2,7 @@
 
 namespace App\Entities\Forms\Fields;
 
-use App\Contracts\ArrayValueFieldInterface;
-
-class CheckboxGroup extends BaseField implements ArrayValueFieldInterface
+class CheckboxGroup extends BaseField
 {
     protected $type = "CheckboxGroup";
 
@@ -36,35 +34,13 @@ class CheckboxGroup extends BaseField implements ArrayValueFieldInterface
         );
     }
 
-    private function adjustInRule(&$rules)
-    {
-        $rules[] = 'in:'.implode(',', array_keys($this->options));
-    }
-
-    private function adjustNullableRule(&$rules)
-    {
-        if (!$this->isRequired()) {
-            $rules[] = 'nullable';
-        }
-    }
-
     public function validationRules(): array
     {
-        $rules = array_merge(
-            parent::validationRules(),
-            ['array']
-        );
+        $rules = parent::validationRules();
 
-        $this->adjustNullableRule($rules);
+        $rules[$this->name][] = 'array';
 
-        return $rules;
-    }
-
-    public function arrayValidationRules(): array
-    {
-        $rules = [];
-
-        $this->adjustInRule($rules);
+        $rules[$this->name.".*"][] = 'in:'.implode(',', array_keys($this->options));
 
         return $rules;
     }

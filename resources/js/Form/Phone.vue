@@ -8,6 +8,8 @@
         :readonly="schema.is_readonly"
         :required="schema.is_required"
         :message="message"
+        :country-options="schema.countryOptions"
+        :default-country="schema.defaultCountry"
     />
 </template>
 
@@ -28,7 +30,7 @@
                 required: true
             },
             modelValue: {
-                type: [String, Number, null],
+                type: Object,
                 required: true
             },
             message: {
