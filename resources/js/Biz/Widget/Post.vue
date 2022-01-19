@@ -78,7 +78,7 @@
 
                                 <biz-dropdown-item>
                                     <biz-link
-                                        v-if="data.actionAccessed.edit"
+                                        v-if="data.permissions.edit"
                                         :href="route(data.baseRouteName+'.edit', {id: record.id})"
                                     >
                                         <span class="icon is-small mr-2">
@@ -89,7 +89,7 @@
                                 </biz-dropdown-item>
                                 <biz-dropdown-item>
                                     <biz-link
-                                        v-if="data.actionAccessed.delete"
+                                        v-if="data.permissions.delete"
                                         @click.prevent="deleteRow(record)"
                                     >
                                         <span class="icon is-small mr-2">

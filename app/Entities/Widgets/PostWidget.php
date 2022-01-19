@@ -35,7 +35,7 @@ class PostWidget implements WidgetInterface
         return [
             'baseRouteName' => $this->baseRouteName,
             'records' => $this->getRecords(),
-            'actionAccessed' => $this->actionAccessed(),
+            'permissions' => $this->getPermissions(),
         ];
     }
 
@@ -103,7 +103,7 @@ class PostWidget implements WidgetInterface
         return $this->user->can('post.browse');
     }
 
-    private function actionAccessed(): array
+    private function getPermissions(): array
     {
         return [
             'add' => $this->user->can('post.add'),
