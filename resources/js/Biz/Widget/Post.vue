@@ -170,7 +170,8 @@
 
         methods: {
             getFirstCategories(categories) {
-                return head(categories).name;
+                return head(categories).name
+                    ?? head(categories).first_translation_name;
             },
 
             deleteRow(post) {
