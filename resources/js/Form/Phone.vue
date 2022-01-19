@@ -15,6 +15,8 @@
 
 <script>
     import BizFormPhone from '@/Biz/Form/Phone';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -24,18 +26,26 @@
             BizFormPhone,
         },
 
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        inject: [
+            'bagName',
+        ],
+
         props: {
-            schema: {
+            errors: {
                 type: Object,
-                required: true
+                default: () => {}
             },
             modelValue: {
                 type: Object,
                 required: true
             },
-            message: {
-                type: [Object, String, Array],
-                default: undefined
+            schema: {
+                type: Object,
+                required: true
             },
         },
 
@@ -43,6 +53,23 @@
             return {
                 computedValue: useModelWrapper(props, emit),
             };
+        },
+
+        computed: {
+            message() {
+                return concat(
+                    this.error(
+                        this.schema.name+'.number',
+                        this.bagName,
+                        this.errors
+                    ),
+                    this.error(
+                        this.schema.name+'.country',
+                        this.bagName,
+                        this.errors
+                    )
+                );
+            },
         },
     };
 </script>

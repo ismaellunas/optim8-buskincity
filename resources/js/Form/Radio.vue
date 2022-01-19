@@ -3,7 +3,7 @@
         v-model="computedValue"
         :disabled="schema.is_disabled"
         :label="schema.label"
-        :message="message"
+        :message="error(schema.name, bagName, errors)"
         :required="schema.is_required"
         :options="schema.options"
     />
@@ -11,6 +11,7 @@
 
 <script>
     import BizFormRadio from '@/Biz/Form/Radio';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -19,6 +20,14 @@
         components: {
             BizFormRadio,
         },
+
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        inject: [
+            'bagName',
+        ],
 
         props: {
             schema: {
@@ -29,10 +38,10 @@
                 type: [String, Number, null],
                 default: ''
             },
-            message: {
-                type: [Object, String, Array],
-                default: undefined
-            },
+            errors: {
+                type: Object,
+                default: () => {}
+            }
         },
 
         setup(props, { emit }) {

@@ -5,7 +5,7 @@
         :is-raw="schema.is_raw"
         :label="schema.label"
         :layout="schema.layout"
-        :message="message"
+        :message="error(schema.name, bagName, errors)"
         :options="schema.options"
         :readonly="schema.is_readonly"
         :required="schema.is_required"
@@ -14,6 +14,7 @@
 
 <script>
     import BizFormCheckboxGroup from '@/Biz/Form/CheckboxGroup';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -22,6 +23,14 @@
         components: {
             BizFormCheckboxGroup,
         },
+
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        inject: [
+            'bagName',
+        ],
 
         props: {
             schema: {
@@ -32,10 +41,10 @@
                 type: Array,
                 required: true
             },
-            message: {
-                type: [Object, String, Array],
-                default: undefined
-            },
+            errors: {
+                type: Object,
+                default: () => {}
+            }
         },
 
         setup(props, { emit }) {

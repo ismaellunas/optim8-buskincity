@@ -3,7 +3,7 @@
         v-model="computedValue"
         :disabled="schema.is_disabled"
         :label="schema.label"
-        :message="message"
+        :message="error(schema.name, bagName, errors)"
         :placeholder="schema.placeholder"
         :readonly="schema.is_readonly"
         :required="schema.is_required"
@@ -20,6 +20,7 @@
 
 <script>
     import BizFormSelect from '@/Biz/Form/Select';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -28,6 +29,14 @@
         components: {
             BizFormSelect,
         },
+
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        inject: [
+            'bagName',
+        ],
 
         props: {
             schema: {
@@ -38,10 +47,10 @@
                 type: [String, Number, null],
                 default: ''
             },
-            message: {
-                type: [Object, String, Array],
-                default: undefined
-            },
+            errors: {
+                type: Object,
+                default: () => {}
+            }
         },
 
         setup(props, { emit }) {

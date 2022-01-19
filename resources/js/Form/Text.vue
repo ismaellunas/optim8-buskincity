@@ -7,12 +7,13 @@
         :disabled="schema.is_disabled"
         :readonly="schema.is_readonly"
         :required="schema.is_required"
-        :message="message"
+        :message="error(schema.name, bagName, errors)"
     />
 </template>
 
 <script>
     import FormInput from '@/Biz/Form/Input';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -21,6 +22,14 @@
         components: {
             FormInput,
         },
+
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        inject: [
+            'bagName',
+        ],
 
         props: {
             schema: {
@@ -31,10 +40,10 @@
                 type: [String, Number, null],
                 default: null
             },
-            message: {
-                type: [Object, String, Array],
-                default: undefined
-            },
+            errors: {
+                type: Object,
+                default: () => {}
+            }
         },
 
         setup(props, { emit }) {
