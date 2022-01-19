@@ -17,6 +17,7 @@ use App\Services\{
     PageService,
     SettingService,
     TranslationService,
+    WidgetService,
 };
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\ServiceProvider;
@@ -37,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
         PageService::class => PageService::class,
         SettingService::class => SettingService::class,
         TranslationService::class => TranslationService::class,
+        WidgetService::class => WidgetService::class,
     ];
 
     /**

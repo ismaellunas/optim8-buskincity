@@ -2,17 +2,12 @@
 
 namespace App\Observers;
 
-use App\Entities\Caches\WidgetCache;
 use App\Jobs\ProcessPublishScheduledPost;
 use App\Models\Post;
+use App\Services\WidgetService;
 
 class PostObserver
 {
-    public function __construct()
-    {
-        app(WidgetCache::class)->flushWidget(config('constants.widget_cache.post'));
-    }
-
     public function creating(Post $post)
     {
         if (auth()->check()) {
@@ -26,5 +21,12 @@ class PostObserver
             ProcessPublishScheduledPost::dispatch($post)
                 ->delay($post->scheduled_at);
         }
+
+        app(WidgetService::class)->flushWidget("post");
+    }
+
+    public function deleted()
+    {
+        app(WidgetService::class)->flushWidget("post");
     }
 }
