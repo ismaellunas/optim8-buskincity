@@ -93,8 +93,7 @@ class HandleInertiaRequests extends Middleware
             'languageOptions' => TranslationSv::getLocaleOptions(),
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
-            ],
-            'recaptchaSiteKey' => env('RECAPTCHA_SITE_KEY')
+            ]
         ]);
     }
 }

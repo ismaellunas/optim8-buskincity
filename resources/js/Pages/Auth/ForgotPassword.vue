@@ -36,8 +36,15 @@
                                     </div>
 
                                     <div
-                                        v-if="status"
+                                        v-if="failed"
                                         class="notification is-danger"
+                                    >
+                                        {{ failed }}
+                                    </div>
+
+                                    <div
+                                        v-if="status"
+                                        class="notification is-success"
                                     >
                                         {{ status }}
                                     </div>
@@ -108,6 +115,10 @@
         },
 
         props: {
+            failed: {
+                type: String,
+                default: '',
+            },
             status: {
                 type: String,
                 default: '',

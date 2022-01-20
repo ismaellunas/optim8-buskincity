@@ -20,7 +20,7 @@ class Recaptcha
             ->verify($request->input('g-recaptcha-response'), $request->ip());
 
         if (!$response->isSuccess()) {
-            return redirect()->back()->with('status', 'Recaptcha failed. Please try again.');
+            return redirect()->back()->with('failed', 'Recaptcha failed. Please try again.');
         }
 
         return $next($request);
