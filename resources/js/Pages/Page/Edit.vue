@@ -39,7 +39,7 @@
     import { onPageEditorClicked } from '@/Libs/page-builder';
     import { ref, onMounted, onUnmounted } from 'vue';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
-    import { confirmDelete } from '@/Libs/alert';
+    import { confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
 
     export default {
         components: {
@@ -154,22 +154,8 @@
             },
             onChangeLocale(locale) {
                 if (this.form.isDirty) {
-                    const confirmationMessage = (
-                        'It looks like you have been editing something. '
-                        + 'If you leave before saving, your changes will be lost.'
-                    );
 
-                    this.$swal.fire({
-                        title: 'Are you sure?',
-                        text: confirmationMessage,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Leave this',
-                        cancelButtonText: 'Continue Editing',
-                        scrollbarPadding: false,
-                    }).then((result) => {
+                    confirmLeaveProgress().then((result) => {
                         if (result.isDismissed) {
                             return false;
                         } else if(result.isConfirmed) {

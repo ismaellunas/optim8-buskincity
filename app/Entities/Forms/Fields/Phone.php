@@ -2,41 +2,82 @@
 
 namespace App\Entities\Forms\Fields;
 
-class Phone extends Text
+use App\Services\CountryService;
+use Propaganistas\LaravelPhone\PhoneNumber;
+
+class Phone extends BaseField
 {
     protected $type = "Phone";
+
+    public $defaultCountry;
+
+    public function __construct(string $name, array $data = [])
+    {
+        parent::__construct($name, $data);
+
+        $this->maxlength = $data['maxlength'] ?? null;
+        $this->placeholder = $data['placeholder'] ?? null;
+        $this->defaultCountry = $this->getDefaultCountryIsoAlpha2();
+    }
 
     public function schema(): array
     {
         $schema = [
-            'maxlength' => $this->maxlength ?? $this->max() ?? null,
-            'placeholder' => $this->placeholder,
+            'value' => [
+                'country' => '',
+                'number' => '',
+            ],
+            'defaultCountry' => $this->defaultCountry,
+            'countryOptions' => app(CountryService::class)
+                ->getPhoneCountryOptions()
+                ->all(),
         ];
 
         return array_merge(parent::schema(), $schema);
     }
 
+    protected function adjustNullableRule(&$rules)
+    {
+        if (!$this->isRequired()) {
+            $rules[$this->name.".number"][] = 'nullable';
+        }
+    }
+
     public function validationRules(): array
     {
-        $rules = parent::validationRules();
+        $rules[$this->name.".number"] = $this->validation['rules'] ?? [];
 
-        if (!$this->isRequired()) {
-            $rules[] = 'nullable';
-        }
-        $rules[] = "regex:/^(?:\+?(\d{1,3}))?([\d]+)$/";
-        $rules[] = "min:10";
+        $this->adjustNullableRule($rules);
+
+        $rules[$this->name.".number"][] = 'phone:'.$this->name.'.country';
+        $rules[$this->name.".number"][] = 'nullable';
+
+        $rules[$this->name.".country"][] = 'required_with:'.$this->name.'.number';
 
         return $rules;
     }
 
-    protected function max(): ?int
+    public function getDataToBeSaved(array $inputs): array
     {
-        $rules = $this->formattedRules();
+        $data = parent::getDataToBeSaved($inputs);
 
-        if (!empty($rules['max'])) {
-            return (int) $rules['max'][0];
+        $data[$this->name.'_e164'] = null;
+
+        if (
+            !empty($data)
+            && !empty($data[$this->name]['number'])
+        ) {
+            $data[$this->name.'_e164'] = PhoneNumber::make(
+                $data[$this->name]['number'],
+                $data[$this->name]['country']
+            )->formatE164();
         }
 
-        return null;
+        return $data;
+    }
+
+    public function getDefaultCountryIsoAlpha2(): ?string
+    {
+        return "US";
     }
 }

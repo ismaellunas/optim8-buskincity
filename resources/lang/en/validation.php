@@ -122,6 +122,7 @@ return [
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
     'alpha_numeric_dash' => 'The :attribute must only contain letters, numbers, and dashes.',
+    'phone' => 'The :attribute field contains an invalid number.',
 
     /*
     |--------------------------------------------------------------------------
