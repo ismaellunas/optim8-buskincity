@@ -3,6 +3,7 @@
 use App\Facades\Localization;
 use App\Http\Controllers\{
     ChangeLanguageController,
+    DashboardController,
     FormController,
     Frontend\PageController,
     Frontend\PostCategoryController,
@@ -11,7 +12,6 @@ use App\Http\Controllers\{
     PasswordResetLinkController,
 };
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 /*
@@ -26,9 +26,8 @@ use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 */
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
     Route::get('/profile', [UserProfileController::class, 'show'])
         ->name('user.profile.show');
