@@ -5,6 +5,7 @@ namespace App\Entities\Widgets;
 use App\Contracts\WidgetInterface;
 use App\Entities\Caches\WidgetCache;
 use App\Models\Post;
+use App\Services\WidgetService;
 
 class PostWidget implements WidgetInterface
 {
@@ -42,7 +43,7 @@ class PostWidget implements WidgetInterface
     private function getRecords(): array
     {
         return app(WidgetCache::class)->remember(
-            config('constants.widget_cache.post'),
+            app(WidgetService::class)->getWidgetName('post'),
             function () {
                 $records = Post::latest()
                     ->with([
