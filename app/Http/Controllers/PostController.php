@@ -176,6 +176,6 @@ class PostController extends CrudController
     {
         $post->delete();
         $this->generateFlashMessage('Post deleted successfully!');
-        return redirect()->route($this->baseRouteName.'.index');
+        return redirect()->back();
     }
 }

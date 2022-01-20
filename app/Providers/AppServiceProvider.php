@@ -6,7 +6,8 @@ use App\Entities\Caches\{
     CountryCache,
     MenuCache,
     SettingCache,
-    TranslationCache
+    TranslationCache,
+    WidgetCache
 };
 use App\Services\{
     CountryService,
@@ -18,6 +19,7 @@ use App\Services\{
     PageService,
     SettingService,
     TranslationService,
+    WidgetService,
 };
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\ServiceProvider;
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         MenuCache::class => MenuCache::class,
         SettingCache::class => SettingCache::class,
         TranslationCache::class => TranslationCache::class,
+        WidgetCache::class => WidgetCache::class,
 
         CountryService::class => CountryService::class,
         FormService::class => FormService::class,
@@ -39,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
         PageService::class => PageService::class,
         SettingService::class => SettingService::class,
         TranslationService::class => TranslationService::class,
+        WidgetService::class => WidgetService::class,
     ];
 
     /**

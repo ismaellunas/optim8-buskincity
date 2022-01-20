@@ -87,5 +87,9 @@ return [
     'setting_cache' => [
         'locale_options' => 'locale_options',
         'default_locale' => 'default_locale',
+    ],
+    'widget_cache' => [
+        'post' => 'widget_post',
+        'user' => 'widget_user',
     ]
 ];

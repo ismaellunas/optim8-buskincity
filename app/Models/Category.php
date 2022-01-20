@@ -29,4 +29,10 @@ class Category extends BaseModel implements TranslatableContract
             $this->deleteTranslations($unusedLocales);
         }
     }
+
+    /* Accessors: */
+    public function getFirstTranslationNameAttribute(): string
+    {
+        return $this->name ?? $this->translations[0]->name;
+    }
 }
