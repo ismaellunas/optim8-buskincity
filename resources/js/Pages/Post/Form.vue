@@ -205,7 +205,7 @@
         </div>
     </form>
 
-    <biz-modal-image-browser
+    <biz-modal-media-browser
         v-if="isModalOpen"
         :data="media"
         :is-download-enabled="can.media.read"
@@ -236,7 +236,7 @@
     import BizFormTextarea from '@/Biz/Form/Textarea';
     import BizImage from '@/Biz/Image';
     import BizLabel from '@/Biz/Label';
-    import BizModalImageBrowser from '@/Biz/Modal/ImageBrowser';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizTab from '@/Biz/Tab';
     import BizTabList from '@/Biz/TabList';
     import { acceptedImageTypes } from '@/Libs/defaults';
@@ -259,7 +259,7 @@
             BizFormTextarea,
             BizImage,
             BizLabel,
-            BizModalImageBrowser,
+            BizModalMediaBrowser,
             BizTab,
             BizTabList,
         },

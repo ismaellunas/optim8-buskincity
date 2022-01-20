@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <biz-modal-image-browser
+        <biz-modal-media-browser
             v-if="isModalOpen"
             :data="modalImages"
             :is-download-enabled="can.media.read"
@@ -63,7 +63,7 @@
     import MixinHasModal from '@/Mixins/HasModal';
     import BizButton from '@/Biz/Button';
     import BizImage from '@/Biz/Image';
-    import BizModalImageBrowser from '@/Biz/Modal/ImageBrowser';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
     import { inject } from "vue";
@@ -73,7 +73,7 @@
         components: {
             BizButton,
             BizImage,
-            BizModalImageBrowser,
+            BizModalMediaBrowser,
             BizToolbarContent,
         },
         mixins: [

@@ -16,6 +16,7 @@ class Form
     public $title;
     public $visibility;
     public $fields;
+    public $order;
 
     public User $author;
     public $formLocation;
@@ -29,6 +30,7 @@ class Form
 
         $this->name = $data['name'];
         $this->title = $data['title'] ?? null;
+        $this->order = $data['order'] ?? 0;
         $this->locations = $data['locations'] ?? [];
 
         if ($author) {
@@ -47,6 +49,7 @@ class Form
         return [
             'name' => $this->name,
             'title' => $this->title,
+            'order' => $this->order,
             'fields' => $fields,
             'buttons' => $this->buttons(),
         ];
