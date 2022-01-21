@@ -8,17 +8,17 @@
             <slot></slot>
         </a>
 
-        <sdb-link :href="href" class="block px-4 py-2" v-else>
+        <biz-link :href="href" class="block px-4 py-2" v-else>
             <slot></slot>
-        </sdb-link>
+        </biz-link>
     </div>
 </template>
 
 <script>
-    import SdbLink from '@/Sdb/Link';
+    import BizLink from '@/Biz/Link';
 
     export default {
-        components: { SdbLink },
+        components: { BizLink },
         props: ['href', 'as']
     }
 </script>

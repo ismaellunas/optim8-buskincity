@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Entities\MediaAsset;
 use App\Contracts\MediaStorageInterface as MediaStorage;
+use App\Entities\MediaAsset;
 use App\Models\Media;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Carbon\Carbon;
@@ -190,6 +190,48 @@ class MediaService
             $mediaStorage->upload($file, $fileName, $extension, $folder)
         );
         $media->type = Media::TYPE_SETTING;
+        $media->save();
+
+        return $media;
+    }
+
+    public function uploadProfile(
+        UploadedFile $file,
+        string $fileName,
+        MediaStorage $mediaStorage,
+        string $folderPrefix = null
+    ): Media {
+        $media = new Media();
+
+        $extension = null;
+
+        $clientExtension = $file->getClientOriginalExtension();
+        $mimeType =  $file->getMimeType();
+
+        if ( !(
+            Str::startsWith($mimeType, 'image/')
+            || Str::startsWith($mimeType, 'video/')
+            || $clientExtension == 'pdf'
+        )) {
+            $extension = $clientExtension;
+        }
+
+        $fileName = MediaService::getUniqueFileName(
+            Str::lower($fileName),
+            [],
+            $extension
+        );
+
+        $folder = 'profiles';
+        if ($folderPrefix) {
+            $folder = $folderPrefix.'_'.$folder;
+        }
+
+        $this->fillMediaWithMediaAsset(
+            $media,
+            $mediaStorage->upload($file, $fileName, $extension, $folder)
+        );
+        $media->type = Media::TYPE_PROFILE;
         $media->save();
 
         return $media;

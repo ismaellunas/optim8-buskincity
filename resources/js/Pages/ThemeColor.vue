@@ -4,7 +4,7 @@
             {{ title }}
         </template>
 
-        <sdb-error-notifications
+        <biz-error-notifications
             :errors="$page.props.errors"
         />
 
@@ -15,9 +15,9 @@
             >
                 <div class="field is-grouped is-grouped-right">
                     <div class="control">
-                        <sdb-button class="is-link">
+                        <biz-button class="is-link">
                             Save
-                        </sdb-button>
+                        </biz-button>
                     </div>
                 </div>
 
@@ -31,11 +31,11 @@
                             <h3>{{ color.display_name }}</h3>
                         </div>
                         <div class="column">
-                            <sdb-input-color
+                            <biz-input-color
                                 v-model="form[color.key]"
                             />
                             <p v-if="form.errors?.default && form.errors.default[color.key]">
-                                <sdb-input-error
+                                <biz-input-error
                                     :message="error(color.key)"
                                 />
                             </p>
@@ -50,10 +50,10 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbButton from '@/Sdb/Button';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbInputColor from '@/Sdb/InputColor';
-    import SdbInputError from '@/Sdb/InputError';
+    import BizButton from '@/Biz/Button';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizInputColor from '@/Biz/InputColor';
+    import BizInputError from '@/Biz/InputError';
     import { forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
     import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
@@ -63,10 +63,10 @@
 
         components: {
             AppLayout,
-            SdbButton,
-            SdbErrorNotifications,
-            SdbInputColor,
-            SdbInputError,
+            BizButton,
+            BizErrorNotifications,
+            BizInputColor,
+            BizInputError,
         },
 
         mixins: [

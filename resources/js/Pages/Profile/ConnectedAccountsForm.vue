@@ -1,5 +1,5 @@
 <template>
-    <jet-action-section>
+    <biz-action-section>
         <template #title>
             Connected Accounts
         </template>
@@ -9,33 +9,44 @@
         </template>
 
         <template #content>
-            <h3 class="" v-if="$page.props.socialstream.connectedAccounts.length === 0">
+            <h3 v-if="$page.props.socialstream.connectedAccounts.length === 0">
                 You have no connected accounts.
             </h3>
-            <h3 class="" v-else>
+            <h3 v-else>
                 Your connected accounts.
             </h3>
 
-            <div class="">
+            <p>
                 You are free to connect any social accounts to your profile and may remove any connected accounts at any time. If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.
-            </div>
+            </p>
 
             <div class="mt-5">
-                <div v-for="(provider) in $page.props.socialstream.providers" :key="provider">
-                    <connected-account :provider="provider" :created-at="hasAccountForProvider(provider) ? getAccountForProvider(provider).created_at : null">
+                <div
+                    v-for="(provider) in $page.props.socialstream.providers"
+                    :key="provider"
+                >
+                    <connected-account
+                        :provider="provider"
+                        :created-at="hasAccountForProvider(provider) ? getAccountForProvider(provider).created_at : null"
+                    >
                         <template #action>
                             <template v-if="hasAccountForProvider(provider)">
                                 <div class="flex is-justify-content-center my-2">
-                                    <button
+                                    <biz-button
                                         v-if="$page.props.jetstream.managesProfilePhotos && getAccountForProvider(provider).avatar_path"
+                                        class="cursor-pointer focus:outline-none"
                                         @click="setProfilePhoto(getAccountForProvider(provider).id)"
-                                        class="cursor-pointer focus:outline-none">
+                                    >
                                         Use Avatar as Profile Photo
-                                    </button>
+                                    </biz-button>
 
-                                    <jet-danger-button @click="confirmRemove(getAccountForProvider(provider).id)" v-if="$page.props.socialstream.connectedAccounts.length > 1 || $page.props.socialstream.hasPassword">
+                                    <biz-button
+                                        v-if="$page.props.socialstream.connectedAccounts.length > 1 || $page.props.socialstream.hasPassword"
+                                        class="is-danger"
+                                        @click="confirmRemove(getAccountForProvider(provider).id)"
+                                    >
                                         Remove
-                                    </jet-danger-button>
+                                    </biz-button>
                                 </div>
                             </template>
 
@@ -50,60 +61,70 @@
             </div>
 
             <!-- Confirmation Modal -->
-            <jet-dialog-modal :show="confirmingRemove" @close="confirmingRemove = false">
-                <template #title>
-                    Remove Connected Account
+            <biz-modal-card
+                v-if="isModalOpen"
+                @close="closeModal()"
+            >
+                <template #header>
+                    <p class="modal-card-title has-text-weight-bold">
+                        Remove Connected Account
+                    </p>
+                    <button
+                        class="delete"
+                        aria-label="close"
+                        @click="closeModal()"
+                    />
                 </template>
 
-                <template #content>
+                <template #default>
                     Please confirm your removal of this account - this action cannot be undone.
                 </template>
 
                 <template #footer>
-                    <jet-secondary-button @click="confirmingRemove = false">
+                    <biz-button
+                        class="is-dark"
+                        @click="closeModal()"
+                    >
                         Nevermind
-                    </jet-secondary-button>
+                    </biz-button>
 
-                    <jet-button class="ml-2"
-                                @click="removeConnectedAccount(accountId)"
-                                :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    <biz-button
+                        class="is-primary ml-2"
+                        :class="{ 'opacity-25': form.processing }"
+                        :disabled="form.processing"
+                        @click="removeConnectedAccount(accountId)"
+                    >
                         Remove Connected Account
-                    </jet-button>
+                    </biz-button>
                 </template>
-            </jet-dialog-modal>
+            </biz-modal-card>
         </template>
-    </jet-action-section>
+    </biz-action-section>
 </template>
 
 <script>
-    import JetActionMessage from '@/Jetstream/ActionMessage';
-    import JetActionSection from '@/Jetstream/ActionSection';
-    import JetButton from '@/Jetstream/Button';
-    import JetDangerButton from '@/Jetstream/DangerButton';
-    import JetDialogModal from '@/Jetstream/DialogModal';
-    import JetInput from '@/Jetstream/Input';
-    import JetInputError from '@/Jetstream/InputError';
-    import JetSecondaryButton from '@/Jetstream/SecondaryButton';
-    import ConnectedAccount from '@/Socialstream/ConnectedAccount';
     import ActionLink from '@/Socialstream/ActionLink';
+    import ConnectedAccount from '@/Socialstream/ConnectedAccount';
+    import MixinHasModal from '@/Mixins/HasModal';
+    import BizActionSection from '@/Biz/ActionSection';
+    import BizButton from '@/Biz/Button';
+    import BizModalCard from '@/Biz/ModalCard';
 
     export default {
         components: {
-            JetActionMessage,
-            JetActionSection,
-            JetButton,
-            JetDangerButton,
-            JetDialogModal,
-            JetInput,
-            JetInputError,
-            JetSecondaryButton,
-            ConnectedAccount,
             ActionLink,
+            ConnectedAccount,
+            BizActionSection,
+            BizButton,
+            BizModalCard,
         },
+
+        mixins: [
+            MixinHasModal,
+        ],
 
         data() {
             return {
-                confirmingRemove: false,
                 accountId: null,
 
                 form: this.$inertia.form({
@@ -120,7 +141,7 @@
 
                 this.accountId = id;
 
-                this.confirmingRemove = true;
+                this.openModal();
             },
 
             hasAccountForProvider(provider) {
@@ -144,7 +165,7 @@
             removeConnectedAccount(id) {
                 this.form.post(route('connected-accounts.destroy', {id}), {
                     preserveScroll: true,
-                    onSuccess: () => (this.confirmingRemove = false),
+                    onSuccess: () => (this.closeModal()),
                 });
             },
         }

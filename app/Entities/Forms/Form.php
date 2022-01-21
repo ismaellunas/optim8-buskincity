@@ -4,34 +4,40 @@ namespace App\Entities\Forms;
 
 use App\Contracts\ArrayValueFieldInterface;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class Form
 {
     public $id;
     public $name;
+    public $locations;
     public $model;
-    public $visibility;
+    public $routeName;
     public $title;
+    public $visibility;
+    public $fields;
+    public $order;
 
     public User $author;
+    public $formLocation;
 
     protected $data;
-    protected $fields;
 
     public function __construct($id, array $data, User $author = null)
     {
         $this->id = $id;
         $this->data = $data;
+
         $this->name = $data['name'];
         $this->title = $data['title'] ?? null;
+        $this->order = $data['order'] ?? 0;
+        $this->locations = $data['locations'] ?? [];
 
         if ($author) {
             $this->author = $author;
         }
 
-        $this->fields = $this->getFields($data['fields']);
+        $this->setFields($data['fields']);
 
         $this->visibility = $data['visibility'] ?? [];
     }
@@ -43,6 +49,7 @@ class Form
         return [
             'name' => $this->name,
             'title' => $this->title,
+            'order' => $this->order,
             'fields' => $fields,
             'buttons' => $this->buttons(),
         ];
@@ -53,7 +60,7 @@ class Form
         return "\\App\\Entities\\Forms\\Fields\\".$type;
     }
 
-    protected function getFields($fields): Collection
+    protected function setFields(array $fields = [])
     {
         $fieldCollection = collect();
 
@@ -69,7 +76,7 @@ class Form
             }
         }
 
-        return $fieldCollection;
+        $this->fields = $fieldCollection;
     }
 
     protected function getFieldSchema(array $values = []): Collection
@@ -102,12 +109,8 @@ class Form
     {
         $rules = [];
 
-        foreach ($this->fields as $name => $field) {
-            $rules[$name] = $field->validationRules();
-
-            if ($field instanceof ArrayValueFieldInterface) {
-                $rules[$name.".*"] = $field->arrayValidationRules();
-            }
+        foreach ($this->fields as $field) {
+            $rules = array_merge($rules, $field->validationRules());
         }
 
         return $rules;
@@ -117,14 +120,14 @@ class Form
     {
         $attributes = [];
 
-        foreach ($this->fields as $name => $field) {
-            $attributes[$name] = $field->label;
+        foreach ($this->fields as $field) {
+            $attributes = array_merge($attributes, $field->getLabels());
         }
 
         return $attributes;
     }
 
-    public function canBeAccessed(?Model $entity = null): bool
+    public function canBeAccessed(): bool
     {
         $author = $this->author;
         $roles = $this->visibility['roles'] ?? [];
@@ -144,18 +147,6 @@ class Form
             return $author->hasRole($roles);
         }
 
-        if (is_null($entity)) {
-
-            $author->hasPermissionTo('user.add');
-
-        } else {
-            if ($entity->id == $author->id) {
-                return true;
-            } else {
-                return $author->hasPermissionTo('user.edit');
-            }
-        }
-
-        return false;
+        return true;
     }
 }

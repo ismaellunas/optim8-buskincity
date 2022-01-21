@@ -7,13 +7,13 @@
             v-show="visibleSlide === index"
             class="carousel-slide"
         >
-            <sdb-image
+            <biz-image
                 v-if="hasImage"
                 :alt="altText"
                 :ratio="config?.carousel?.ratio"
                 :src="imageSrc"
             >
-                <sdb-button
+                <biz-button
                     class="is-small is-overlay"
                     style="z-index: 1"
                     type="button"
@@ -31,13 +31,13 @@
                     >
                         <i class="fas fa-pen" />
                     </span>
-                </sdb-button>
-            </sdb-image>
+                </biz-button>
+            </biz-image>
             <div
                 v-if="isFormDisplayed"
                 class="card-content has-background-info-light is-flex is-justify-content-center is-align-items-center card-custom"
             >
-                <sdb-button
+                <biz-button
                     class="is-small is-overlay"
                     style="z-index: 1"
                     type="button"
@@ -55,9 +55,9 @@
                     >
                         <i class="fas fa-pen" />
                     </span>
-                </sdb-button>
+                </biz-button>
                 <div class="block has-text-centered">
-                    <sdb-button
+                    <biz-button
                         type="button"
                         style="z-index: 1"
                         @click="$emit('open-modal', index)"
@@ -66,7 +66,7 @@
                         <span class="icon is-small">
                             <i class="far fa-image" />
                         </span>
-                    </sdb-button>
+                    </biz-button>
                 </div>
             </div>
         </div>
@@ -76,16 +76,16 @@
 <script>
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
-    import SdbButton from '@/Sdb/Button';
-    import SdbImage from '@/Sdb/Image';
+    import BizButton from '@/Biz/Button';
+    import BizImage from '@/Biz/Image';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
 
     export default {
         name: 'CarouselSlide',
 
         components: {
-            SdbButton,
-            SdbImage,
+            BizButton,
+            BizImage,
         },
 
         mixins: [

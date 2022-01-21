@@ -2,79 +2,68 @@
 
 namespace App\Http\Requests;
 
-use App\Entities\Forms\Form;
-use App\Models\User;
 use App\Services\FormService;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class FormValueRequest extends FormRequest
 {
-    private $form;
-    private $entity;
+    private $forms;
 
     protected $errorBag = 'formBuilder';
 
     public function authorize()
     {
-        if (!$this->route('formName')) {
+        $routeName = $this->get('route_name');
+
+        $entityId = $this->get('id');
+
+        if (empty($routeName)) {
             return false;
         }
 
-        $form = $this->getForm($this->route('formName'));
+        $formService = app(FormService::class);
 
-        $entity = null;
+        $formLocation = $formService->getFormLocation(
+            $routeName,
+            $entityId
+        );
 
-        if ($this->get('id')) {
-            $entity = $this->getEntity($this->get('id'));
-        }
-
-        return $form->canBeAccessed($entity);
+        return $formLocation->canBeAccessedBy(Auth::user());
     }
 
     public function rules()
     {
-        $rules = [];
+        $formService = app(FormService::class);
 
-        $form = $this->getForm($this->route('formName'));
+        $forms = $this->getForms();
 
-        if (!empty($form)) {
-            $rules = $form->rules();
-        }
+        $rules = $formService->getRules($forms);
 
         return $rules;
     }
 
     public function attributes()
     {
-        $form = $this->getForm($this->route('formName'));
+        $formService = app(FormService::class);
 
-        if (!empty($form)) {
-            return $form->attributes();
-        }
+        $attributes = $formService->getAttributes($this->getForms());
 
-        return [];
+        return $attributes;
     }
 
-    private function getEntity($id): User
+    private function getForms(): Collection
     {
-        if ($this->entity === null) {
-            $this->entity = User::find($id);
-        }
+        $formService = app(FormService::class);
 
-        return $this->entity;
-    }
-
-    private function getForm(string $formName): ?Form
-    {
-        if ($this->form === null) {
-            $formService = app(FormService::class);
-
-            $this->form = $formService->getFormByName(
-                $formName,
-                auth()->user()
+        if (is_null($this->forms)) {
+            $this->forms = $formService->getFormsOnRoute(
+                $this->get('route_name'),
+                Auth::user()
             );
         }
 
-        return $this->form;
+        return $this->forms;
     }
 }

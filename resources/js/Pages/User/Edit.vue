@@ -2,7 +2,7 @@
     <app-layout>
         <template #header>{{ title }}</template>
 
-        <sdb-error-notifications :errors="$page.props.errors" />
+        <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="mb-6">
             <form
@@ -26,16 +26,16 @@
 
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <sdb-button-link
+                                <biz-button-link
                                     :href="route(baseRouteName+'.index')"
                                     class="is-link is-light">
                                     Cancel
-                                </sdb-button-link>
+                                </biz-button-link>
                             </div>
                             <div class="control">
-                                <sdb-button class="is-link">
+                                <biz-button class="is-link">
                                     Update
-                                </sdb-button>
+                                </biz-button>
                             </div>
                         </div>
                     </fieldset>
@@ -61,35 +61,47 @@
 
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <sdb-button class="is-link">
+                                <biz-button class="is-link">
                                     Update
-                                </sdb-button>
+                                </biz-button>
                             </div>
                         </div>
                     </fieldset>
                 </div>
             </form>
 
-            <div class="columns">
+            <div
+                v-show="isFormBuilderShown"
+                class="columns"
+            >
                 <div class="column">
                     <fieldset
                         class="box"
                         :disabled="isProcessing"
                     >
                         <h3 class="title is-3">
-                            {{ formTitle }}
+                            Profile
                         </h3>
-
                         <hr>
 
-                        <form-biodata
-                            :name="formName"
+                        <form-builder
+                            route-name="admin.users.edit"
                             :entity-id="record.id"
-                            button-label="Update"
-                            button-group-align="right"
-                            button-class="is-link"
-                            @loaded-successfully="onFormLoadedSuccessfully"
-                        />
+                            @loaded-successfully="isFormBuilderShown = true"
+                        >
+                            <template #buttons="{submit}">
+                                <div class="field is-grouped is-grouped-right">
+                                    <div class="control">
+                                        <biz-button
+                                            class="is-link"
+                                            @click="submit"
+                                        >
+                                            Update
+                                        </biz-button>
+                                    </div>
+                                </div>
+                            </template>
+                        </form-builder>
                     </fieldset>
                 </div>
             </div>
@@ -99,25 +111,24 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import BizButton from '@/Biz/Button';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import FormBuilder from '@/Form/Builder';
     import FormUserPassword from '@/Pages/User/FormPassword';
     import FormUserProfile from '@/Pages/User/FormProfile';
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import { map } from 'lodash';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
-    import FormBiodata from '@/Form/FormBuilder';
 
     export default {
         components: {
             AppLayout,
+            BizButton,
+            BizButtonLink,
+            BizErrorNotifications,
+            FormBuilder,
             FormUserPassword,
             FormUserProfile,
-            SdbButton,
-            SdbButtonLink,
-            SdbErrorNotifications,
-            FormBiodata,
         },
 
         props: {
@@ -152,10 +163,9 @@
         data() {
             return {
                 baseRouteName: 'admin.users',
+                isFormBuilderShown: false,
                 isProcessing: false,
                 loader: null,
-                formName: 'biodata',
-                formTitle: '',
             };
         },
 
@@ -200,10 +210,6 @@
                     }
                 });
             },
-
-            onFormLoadedSuccessfully(schema) {
-                this.formTitle = schema.title;
-            }
         },
     };
 </script>

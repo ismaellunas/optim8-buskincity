@@ -4,7 +4,7 @@
             Create New Page
         </template>
 
-        <sdb-error-notifications
+        <biz-error-notifications
             :errors="$page.props.errors"
         />
 
@@ -29,7 +29,8 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import PageForm from '@/Pages/Page/Form';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import { oops as oopsAlert } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { onPageEditorClicked } from '@/Libs/page-builder';
     import { ref, onMounted, onUnmounted } from 'vue';
@@ -39,7 +40,7 @@
         components: {
             AppLayout,
             PageForm,
-            SdbErrorNotifications,
+            BizErrorNotifications,
         },
         props: {
             can: { type: Object, required: true },
@@ -98,11 +99,9 @@
                     }
                 });
 
-                this.$swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Please provide '+locale.name+' ('+locale.id.toUpperCase()+') translation first!'
-                })
+                oopsAlert({
+                    text: 'Please provide '+locale.name+' ('+locale.id.toUpperCase()+') translation first!',
+                });
             },
         }
     }

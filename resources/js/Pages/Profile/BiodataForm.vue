@@ -1,7 +1,7 @@
 <template>
-    <jet-form-section v-show="isShown">
+    <biz-form-section v-show="isShown">
         <template #title>
-            {{ title }}
+            Profile
         </template>
 
         <template #description>
@@ -9,26 +9,26 @@
         </template>
 
         <template #form>
-            <form-biodata
-                :name="formName"
+            <form-builder
+                route-name="admin.profile.show"
                 :entity-id="user.id"
-                @loaded-forbidden="onLoadedForbidden"
-                @loaded-successfully="onLoadedSuccessfully"
+                @loaded-forbidden="isShown = false"
+                @loaded-successfully="isShown = true"
             />
         </template>
-    </jet-form-section>
+    </biz-form-section>
 </template>
 
 <script>
-    import JetFormSection from '@/Jetstream/FormSection'
-    import FormBiodata from '@/Form/FormBuilder';
+    import FormBuilder from '@/Form/Builder';
+    import BizFormSection from '@/Biz/FormSection';
 
     export default {
         name: 'BiodataForm',
 
         components: {
-            FormBiodata,
-            JetFormSection,
+            FormBuilder,
+            BizFormSection,
         },
 
         props: {
@@ -37,21 +37,8 @@
 
         data() {
             return {
-                formName: 'biodata',
                 isShown: false,
-                title: '',
             };
         },
-
-        methods: {
-            onLoadedForbidden() {
-                this.isShown = false;
-            },
-
-            onLoadedSuccessfully(data) {
-                this.isShown = true;
-                this.title = data.title;
-            },
-        }
-    }
+    };
 </script>

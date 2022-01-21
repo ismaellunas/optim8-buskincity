@@ -1,5 +1,5 @@
 <template>
-    <sdb-form-number
+    <biz-form-number
         v-model="computedValue"
         :label="schema.label"
         :maxlength="schema.maxlength"
@@ -7,33 +7,42 @@
         :disabled="schema.is_disabled"
         :readonly="schema.is_readonly"
         :required="schema.is_required"
-        :message="message"
+        :message="error(schema.name, bagName, errors)"
     />
 </template>
 
 <script>
-    import SdbFormNumber from '@/Sdb/Form/Number';
+    import BizFormNumber from '@/Biz/Form/Number';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormNumber',
 
         components: {
-            SdbFormNumber,
+            BizFormNumber,
         },
 
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        inject: [
+            'bagName',
+        ],
+
         props: {
-            schema: {
+            errors: {
                 type: Object,
-                required: true
+                default: () => {}
             },
             modelValue: {
                 type: [String, Number, null],
                 required: true
             },
-            message: {
-                type: [Object, String, Array],
-                default: undefined
+            schema: {
+                type: Object,
+                required: true
             },
         },
 

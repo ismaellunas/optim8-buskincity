@@ -1,37 +1,46 @@
 <template>
-    <sdb-form-radio
+    <biz-form-radio
         v-model="computedValue"
         :disabled="schema.is_disabled"
         :label="schema.label"
-        :message="message"
+        :message="error(schema.name, bagName, errors)"
         :required="schema.is_required"
         :options="schema.options"
     />
 </template>
 
 <script>
-    import SdbFormRadio from '@/Sdb/Form/Radio';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import BizFormRadio from '@/Biz/Form/Radio';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormRadio',
 
         components: {
-            SdbFormRadio,
+            BizFormRadio,
         },
 
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        inject: [
+            'bagName',
+        ],
+
         props: {
-            schema: {
+            errors: {
                 type: Object,
-                required: true
+                default: () => {}
             },
             modelValue: {
                 type: [String, Number, null],
                 default: ''
             },
-            message: {
-                type: [Object, String, Array],
-                default: undefined
+            schema: {
+                type: Object,
+                required: true
             },
         },
 

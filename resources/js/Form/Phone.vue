@@ -1,5 +1,5 @@
 <template>
-    <sdb-form-phone
+    <biz-form-phone
         v-model="computedValue"
         :label="schema.label"
         :maxlength="schema.maxlength"
@@ -8,32 +8,44 @@
         :readonly="schema.is_readonly"
         :required="schema.is_required"
         :message="message"
+        :country-options="schema.countryOptions"
+        :default-country="schema.defaultCountry"
     />
 </template>
 
 <script>
-    import SdbFormPhone from '@/Sdb/Form/Phone';
+    import BizFormPhone from '@/Biz/Form/Phone';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormPhone',
 
         components: {
-            SdbFormPhone,
+            BizFormPhone,
         },
 
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        inject: [
+            'bagName',
+        ],
+
         props: {
-            schema: {
+            errors: {
+                type: Object,
+                default: () => {}
+            },
+            modelValue: {
                 type: Object,
                 required: true
             },
-            modelValue: {
-                type: [String, Number, null],
+            schema: {
+                type: Object,
                 required: true
-            },
-            message: {
-                type: [Object, String, Array],
-                default: undefined
             },
         },
 
@@ -41,6 +53,23 @@
             return {
                 computedValue: useModelWrapper(props, emit),
             };
+        },
+
+        computed: {
+            message() {
+                return concat(
+                    this.error(
+                        this.schema.name+'.number',
+                        this.bagName,
+                        this.errors
+                    ),
+                    this.error(
+                        this.schema.name+'.country',
+                        this.bagName,
+                        this.errors
+                    )
+                );
+            },
         },
     };
 </script>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\{
     CategoryController,
+    DashboardController,
     LanguageController,
     MediaController,
     PageController,
@@ -21,7 +22,6 @@ use App\Http\Controllers\{
     UserRoleController,
 };
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
@@ -42,8 +42,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         ->name('media.update-image');
     Route::post('/media/save-as-image/{medium}', [MediaController::class, 'saveAsImage'])
         ->name('media.save-as-image');
-    Route::get('/media-list/image', [MediaController::class, 'listImages'])
-        ->name('media.list.image');
+    Route::get('/media-lists', [MediaController::class, 'lists'])
+        ->name('media.lists');
 
     Route::resource('/categories', CategoryController::class)
         ->except(['show']);
@@ -62,9 +62,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::resource('/user-roles', UserRoleController::class);
 
-    Route::get('dashboard', function () {
-        return Inertia::render('AdminDashboard');
-    })->middleware(['can:system.dashboard'])->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])
+        ->middleware(['can:system.dashboard'])
+        ->name('dashboard');
 
     Route::get('/profile', [UserProfileController::class, 'show'])
         ->name('profile.show');

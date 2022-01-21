@@ -4,7 +4,7 @@
             {{ title }}
         </template>
 
-        <sdb-error-notifications
+        <biz-error-notifications
             :errors="$page.props.errors"
         />
 
@@ -17,9 +17,9 @@
                     <div class="column">
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <sdb-button class="is-link">
+                                <biz-button class="is-link">
                                     Save
-                                </sdb-button>
+                                </biz-button>
                             </div>
                         </div>
                     </div>
@@ -30,7 +30,7 @@
                         <h2><b>Home Page</b></h2>
                     </div>
                     <div class="column">
-                        <sdb-form-select
+                        <biz-form-select
                             v-model="form.home_page"
                             class="is-fullwidth"
                             :message="error(form.home_page, null, errors)"
@@ -48,7 +48,7 @@
                                     [{{ locale.toUpperCase() }}]
                                 </span>
                             </option>
-                        </sdb-form-select>
+                        </biz-form-select>
                     </div>
                 </div>
 
@@ -68,13 +68,13 @@
                             <h3><b>{{ trackingCode.display_name }}</b></h3>
                         </div>
                         <div class="column">
-                            <sdb-textarea
+                            <biz-textarea
                                 v-model="form[ trackingCode.key ]"
                                 class="code-editor"
                                 rows="10"
                             />
                             <p v-if="false">
-                                <sdb-input-error
+                                <biz-input-error
                                     :message="error(trackingCode.key)"
                                 />
                             </p>
@@ -90,13 +90,13 @@
                             <h3><b>{{ additionalCode.display_name }}</b></h3>
                         </div>
                         <div class="column">
-                            <sdb-textarea
+                            <biz-textarea
                                 v-model="form[ additionalCode.key ]"
                                 class="code-editor"
                                 rows="10"
                             />
                             <p v-if="false">
-                                <sdb-input-error
+                                <biz-input-error
                                     :message="error(additionalCode.key)"
                                 />
                             </p>
@@ -111,11 +111,11 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbFormSelect from '@/Sdb/Form/Select';
-    import SdbButton from '@/Sdb/Button';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbTextarea from '@/Sdb/Textarea';
-    import SdbInputError from '@/Sdb/InputError';
+    import BizFormSelect from '@/Biz/Form/Select';
+    import BizButton from '@/Biz/Button';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizTextarea from '@/Biz/Textarea';
+    import BizInputError from '@/Biz/InputError';
     import { assign, mapValues, sortBy } from 'lodash';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
@@ -125,11 +125,11 @@
 
         components: {
             AppLayout,
-            SdbFormSelect,
-            SdbButton,
-            SdbErrorNotifications,
-            SdbInputError,
-            SdbTextarea,
+            BizFormSelect,
+            BizButton,
+            BizErrorNotifications,
+            BizInputError,
+            BizTextarea,
         },
 
         mixins: [

@@ -2,13 +2,13 @@
     <app-layout>
         <template #header>{{ title }}</template>
 
-        <sdb-flash-notifications :flash="$page.props.flash"/>
+        <biz-flash-notifications :flash="$page.props.flash"/>
 
         <div class="box">
             <div class="columns">
                 <div class="column">
                     <div class="is-pulled-left">
-                        <sdb-filter-search
+                        <biz-filter-search
                             v-model="term"
                             @search="search"
                         />
@@ -19,7 +19,7 @@
                         v-if="can.add"
                         class="is-pulled-right"
                     >
-                        <sdb-button-link
+                        <biz-button-link
                             :href="route('admin.pages.create')"
                             class="is-primary"
                         >
@@ -27,7 +27,7 @@
                                 <i class="fas fa-plus" />
                             </span>
                             <span>Create New</span>
-                        </sdb-button-link>
+                        </biz-button-link>
                     </div>
                 </div>
             </div>
@@ -57,9 +57,9 @@
                             <td>{{ page.title }}</td>
                             <td>{{ page.slug }}</td>
                             <td>
-                                <sdb-tag :class="statusClass(page.status)">
+                                <biz-tag :class="statusClass(page.status)">
                                     {{ page.statusText }}
-                                </sdb-tag>
+                                </biz-tag>
                             </td>
                             <td>
                                 <i
@@ -75,19 +75,19 @@
                             </td>
                             <td>
                                 <div class="buttons">
-                                    <sdb-button
+                                    <biz-button
                                         v-for="(translation, index) in page.availableTranslations"
                                         :key="index"
                                         class="is-info px-2 mr-1 is-small"
                                         @click="openShow(translation, page)"
                                     >
                                         {{ translation?.toUpperCase() }}
-                                    </sdb-button>
+                                    </biz-button>
                                 </div>
                             </td>
                             <td>
                                 <div class="level-right">
-                                    <sdb-button-link
+                                    <biz-button-link
                                         v-if="can.edit"
                                         class="is-ghost has-text-black"
                                         :href="route('admin.pages.edit', {id: page.id})"
@@ -95,8 +95,8 @@
                                         <span class="icon is-small">
                                             <i class="fas fa-pen" />
                                         </span>
-                                    </sdb-button-link>
-                                    <sdb-button
+                                    </biz-button-link>
+                                    <biz-button
                                         v-if="can.delete"
                                         class="is-ghost has-text-black ml-1"
                                         @click.prevent="deleteRow(page)"
@@ -104,14 +104,14 @@
                                         <span class="icon is-small">
                                             <i class="far fa-trash-alt" />
                                         </span>
-                                    </sdb-button>
+                                    </biz-button>
                                 </div>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <sdb-pagination
+            <biz-pagination
                 :links="records.links"
                 :query-params="queryParams"
             />
@@ -122,24 +122,25 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbFilterSearch from '@/Sdb/Filter/Search';
-    import SdbFlashNotifications from '@/Sdb/FlashNotifications';
-    import SdbPagination from '@/Sdb/Pagination';
-    import SdbTag from '@/Sdb/Tag';
+    import BizButton from '@/Biz/Button';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizFilterSearch from '@/Biz/Filter/Search';
+    import BizFlashNotifications from '@/Biz/FlashNotifications';
+    import BizPagination from '@/Biz/Pagination';
+    import BizTag from '@/Biz/Tag';
+    import { confirmDelete } from '@/Libs/alert';
     import { merge, filter } from 'lodash';
     import { ref } from 'vue';
 
     export default {
         components: {
             AppLayout,
-            SdbButton,
-            SdbButtonLink,
-            SdbFilterSearch,
-            SdbFlashNotifications,
-            SdbPagination,
-            SdbTag,
+            BizButton,
+            BizButtonLink,
+            BizFilterSearch,
+            BizFlashNotifications,
+            BizPagination,
+            BizTag,
         },
         mixins: [
             MixinFilterDataHandle,
@@ -165,8 +166,13 @@
         },
         methods: {
             deleteRow(page) {
-                if (!confirm('Are you sure?')) return;
-                this.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
+                const self = this;
+
+                confirmDelete().then(result => {
+                    if (result.isConfirmed) {
+                        self.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
+                    }
+                });
             },
             openShow(locale, page) {
                 if (this.can.read) {

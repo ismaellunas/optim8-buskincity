@@ -16,7 +16,7 @@
                       </div>
                     </div>
 
-                    <sdb-button @click="openModal()" type="button">Create New Role</sdb-button>
+                    <biz-button @click="openModal()" type="button">Create New Role</biz-button>
 
                     <table class="table is-fullwidth is-striped">
                         <thead>
@@ -29,15 +29,15 @@
                             <tr v-for="row in roles">
                                 <td class="border px-4 py-2">{{ row.name }}</td>
                                 <td class="border px-4 py-2">
-                                    <sdb-button @click="edit(row)">Edit</sdb-button>
-                                    <sdb-button-link :href="`/roles/${row.id}/edit`"> Edit</sdb-button-link>
-                                    <sdb-button @click="deleteRow(row)" class="is-danger">Delete</sdb-button>
+                                    <biz-button @click="edit(row)">Edit</biz-button>
+                                    <biz-button-link :href="`/roles/${row.id}/edit`"> Edit</biz-button-link>
+                                    <biz-button @click="deleteRow(row)" class="is-danger">Delete</biz-button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
 
-                    <sdb-modal v-show="isOpen" @close="closeModal()">
+                    <biz-modal v-show="isOpen" @close="closeModal()">
                         <div class="box">
                             <form action="">
                                 <div class="field">
@@ -70,7 +70,7 @@
                                 </div>
                             </form>
                         </div>
-                    </sdb-modal>
+                    </biz-modal>
                 </div>
             </div>
         </div>
@@ -79,16 +79,16 @@
 
 <script>
     import AppLayout from './../Layouts/AppLayout'
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbModal from '@/Sdb/Modal'
+    import BizButton from '@/Biz/Button';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizModal from '@/Biz/Modal'
 
     export default {
         components: {
             AppLayout,
-            SdbButton,
-            SdbButtonLink,
-            SdbModal,
+            BizButton,
+            BizButtonLink,
+            BizModal,
         },
         props: ['roles', 'permissions', 'errors'],
         data() {

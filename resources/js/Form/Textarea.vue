@@ -1,10 +1,10 @@
 <template>
-    <sdb-form-textarea
+    <biz-form-textarea
         v-model="computedValue"
         :disabled="schema.is_disabled"
         :label="schema.label"
         :maxlength="schema.maxlength"
-        :message="message"
+        :message="error(schema.name, bagName, errors)"
         :placeholder="schema.placeholder"
         :readonly="schema.is_readonly"
         :required="schema.is_required"
@@ -13,20 +13,29 @@
 </template>
 
 <script>
-    import SdbFormTextarea from '@/Sdb/Form/Textarea';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import BizFormTextarea from '@/Biz/Form/Textarea';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormTextarea',
 
         components: {
-            SdbFormTextarea,
+            BizFormTextarea,
         },
 
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        inject: [
+            'bagName',
+        ],
+
         props: {
-            message: {
-                type: [Object, String, Array],
-                default: undefined,
+            errors: {
+                type: Object,
+                default: () => {}
             },
             modelValue: {
                 type: [String, Number, null],

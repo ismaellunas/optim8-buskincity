@@ -4,12 +4,12 @@
             {{ title }}
         </template>
 
-        <sdb-error-notifications :errors="$page.props.errors" />
+        <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="box mb-6">
-            <sdb-tab>
+            <biz-tab>
                 <ul>
-                    <sdb-tab-list
+                    <biz-tab-list
                         v-for="(tab, index) in tabs"
                         :key="index"
                         :is-active="isTabActive(index)"
@@ -17,17 +17,17 @@
                         <a @click.prevent="setActiveTab(index)">
                             {{ tab.title }}
                         </a>
-                    </sdb-tab-list>
+                    </biz-tab-list>
                 </ul>
 
-                <sdb-button
+                <biz-button
                     type="button"
                     class="is-primary ml-2"
                     @click="onSave(activeTab)"
                 >
                     <span>Save</span>
-                </sdb-button>
-            </sdb-tab>
+                </biz-button>
+            </biz-tab>
 
             <layout
                 v-if="activeTab == 'layout'"
@@ -51,10 +51,10 @@
     import Layout from './Layout';
     import Navigation from './Navigation';
     import MixinHasTab from '@/Mixins/HasTab';
-    import SdbButton from '@/Sdb/Button';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbTab from '@/Sdb/Tab';
-    import SdbTabList from '@/Sdb/TabList';
+    import BizButton from '@/Biz/Button';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizTab from '@/Biz/Tab';
+    import BizTabList from '@/Biz/TabList';
     import { confirmLeaveProgress } from '@/Libs/alert';
 
     export default {
@@ -62,10 +62,10 @@
             AppLayout,
             Layout,
             Navigation,
-            SdbButton,
-            SdbErrorNotifications,
-            SdbTab,
-            SdbTabList,
+            BizButton,
+            BizErrorNotifications,
+            BizTab,
+            BizTabList,
         },
         mixins: [
             MixinHasTab,

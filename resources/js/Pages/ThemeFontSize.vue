@@ -4,7 +4,7 @@
             {{ title }}
         </template>
 
-        <sdb-error-notifications
+        <biz-error-notifications
             :errors="$page.props.errors"
         />
 
@@ -15,9 +15,9 @@
             >
                 <div class="field is-grouped is-grouped-right">
                     <div class="control">
-                        <sdb-button class="is-link">
+                        <biz-button class="is-link">
                             Save
-                        </sdb-button>
+                        </biz-button>
                     </div>
                 </div>
 
@@ -31,14 +31,14 @@
                             <h3>{{ fontSize.display_name }}</h3>
                         </div>
                         <div class="column">
-                            <sdb-input
+                            <biz-input
                                 v-model="form[fontSize.key]"
                                 maxlength="7"
                                 @blur="updateFontSizeNumber(fontSize.key)"
                                 @keypress="isNumber"
                             />
                             <p v-if="form.errors?.default && form.errors.default[fontSize.key]">
-                                <sdb-input-error
+                                <biz-input-error
                                     :message="error(fontSize.key)"
                                 />
                             </p>
@@ -53,10 +53,10 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbButton from '@/Sdb/Button';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbInput from '@/Sdb/Input';
-    import SdbInputError from '@/Sdb/InputError';
+    import BizButton from '@/Biz/Button';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizInput from '@/Biz/Input';
+    import BizInputError from '@/Biz/InputError';
     import { forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
     import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
@@ -66,10 +66,10 @@
 
         components: {
             AppLayout,
-            SdbButton,
-            SdbErrorNotifications,
-            SdbInput,
-            SdbInputError,
+            BizButton,
+            BizErrorNotifications,
+            BizInput,
+            BizInputError,
         },
 
         mixins: [

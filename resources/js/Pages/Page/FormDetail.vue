@@ -1,7 +1,7 @@
 <template>
     <div class="columns">
         <div class="column is-4">
-            <sdb-form-input
+            <biz-form-input
                 v-model="title"
                 label="Title"
                 :message="error(selectedLocale+'.title')"
@@ -13,7 +13,7 @@
             />
         </div>
         <div class="column is-4">
-            <sdb-form-slug
+            <biz-form-slug
                 v-model="slug"
                 label="Slug"
                 :message="error(selectedLocale+'.slug')"
@@ -21,7 +21,7 @@
             />
         </div>
         <div class="column is-4">
-            <sdb-form-select
+            <biz-form-select
                 v-model="status"
                 label="Status"
                 :message="error(selectedLocale+'.status')"
@@ -31,10 +31,10 @@
                 <option v-for="option in statusOptions" :value="option.id">
                     {{ option.value }}
                 </option>
-            </sdb-form-select>
+            </biz-form-select>
         </div>
     </div>
-    <sdb-form-textarea
+    <biz-form-textarea
         v-model="excerpt"
         label="Excerpt"
         :message="error(selectedLocale+'.excerpt')"
@@ -42,14 +42,14 @@
         :disabled="disableInput"
         rows="2"
     />
-    <sdb-form-input
+    <biz-form-input
         v-model="meta_title"
         label="Meta Title"
         :message="error(selectedLocale+'.meta_title')"
         placeholder="meta title"
         :disabled="disableInput"
     />
-    <sdb-form-input
+    <biz-form-input
         v-model="meta_description"
         label="Meta Description"
         :message="error(selectedLocale+'.meta_description')"
@@ -60,20 +60,20 @@
 
 <script>
     import HasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormSelect from '@/Sdb/Form/Select';
-    import SdbFormSlug from '@/Sdb/Form/Slug';
-    import SdbFormTextarea from '@/Sdb/Form/Textarea';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizFormSelect from '@/Biz/Form/Select';
+    import BizFormSlug from '@/Biz/Form/Slug';
+    import BizFormTextarea from '@/Biz/Form/Textarea';
     import { useModelWrapper, convertToSlug } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
 
     export default {
         mixins: [HasPageErrors],
         components: {
-            SdbFormInput,
-            SdbFormSelect,
-            SdbFormSlug,
-            SdbFormTextarea,
+            BizFormInput,
+            BizFormSelect,
+            BizFormSlug,
+            BizFormTextarea,
         },
         props: [
             'title',

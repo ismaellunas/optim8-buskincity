@@ -1,89 +1,88 @@
 <template>
-<app-layout>
-    <template v-slot:header>{{ title }}</template>
+    <app-layout>
+        <template v-slot:header>{{ title }}</template>
 
-    <div class="box">
-        <div class="columns">
-            <div class="column">
-                <div class="is-pulled-left">
-                    <sdb-filter-search
-                        v-model="term"
-                        @search="search"
-                    ></sdb-filter-search>
+        <div class="box">
+            <div class="columns">
+                <div class="column">
+                    <div class="is-pulled-left">
+                        <biz-filter-search
+                            v-model="term"
+                            @search="search"
+                        ></biz-filter-search>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="is-pulled-right">
+                        <biz-button-link
+                            class="is-primary"
+                            :href="route(baseRouteName+'.create')"
+                        >
+                            <span class="icon is-small">
+                                <i class="fas fa-plus"></i>
+                            </span>
+                            <span>Add New</span>
+                        </biz-button-link>
+                    </div>
                 </div>
             </div>
-            <div class="column">
-                <div class="is-pulled-right">
-                    <sdb-button-link
-                        class="is-primary"
-                        :href="route(baseRouteName+'.create')"
-                    >
-                        <span class="icon is-small">
-                            <i class="fas fa-plus"></i>
-                        </span>
-                        <span>Add New</span>
-                    </sdb-button-link>
-                </div>
+
+            <div class="table-container">
+                <biz-table class="is-striped is-hoverable is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>
+                                <div class="level-right">Actions</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="record in records.data" :key="record.id">
+                            <th>{{ record.id }}</th>
+                            <td>{{ record.name }}</td>
+                            <td>
+                                <div class="level-right">
+                                    <biz-button-link
+                                        class="is-ghost has-text-black"
+                                        :href="route(baseRouteName + '.edit', record.id)"
+                                    >
+                                        <span class="icon is-small">
+                                            <i class="fas fa-pen"></i>
+                                        </span>
+                                    </biz-button-link>
+                                    <biz-button
+                                        class="is-ghost has-text-black ml-1"
+                                        @click.prevent="deleteRecord(record)"
+                                    >
+                                        <span class="icon is-small">
+                                            <i class="far fa-trash-alt"></i>
+                                        </span>
+                                    </biz-button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </biz-table>
             </div>
+
+            <biz-pagination
+                :links="records.links"
+                :query-params="queryParams"
+            />
         </div>
-
-        <div class="table-container">
-            <sdb-table class="is-striped is-hoverable is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>
-                            <div class="level-right">Actions</div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="record in records.data" :key="record.id">
-                        <th>{{ record.id }}</th>
-                        <td>{{ record.name }}</td>
-                        <td>
-                            <div class="level-right">
-                                <sdb-button-link
-                                    class="is-ghost has-text-black"
-                                    :href="route(baseRouteName + '.edit', record.id)"
-                                >
-                                    <span class="icon is-small">
-                                        <i class="fas fa-pen"></i>
-                                    </span>
-                                </sdb-button-link>
-                                <sdb-button
-                                    class="is-ghost has-text-black ml-1"
-                                    @click.prevent="deleteRecord(record)"
-                                >
-                                    <span class="icon is-small">
-                                        <i class="far fa-trash-alt"></i>
-                                    </span>
-                                </sdb-button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </sdb-table>
-        </div>
-
-        <sdb-pagination
-            :links="records.links"
-            :query-params="queryParams"
-        />
-
-    </div>
-</app-layout>
+    </app-layout>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbFilterSearch from '@/Sdb/Filter/Search';
-    import SdbPagination from '@/Sdb/Pagination';
-    import SdbTable from '@/Sdb/Table';
+    import BizButton from '@/Biz/Button';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizFilterSearch from '@/Biz/Filter/Search';
+    import BizPagination from '@/Biz/Pagination';
+    import BizTable from '@/Biz/Table';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from 'vue';
@@ -91,11 +90,11 @@
     export default {
         components: {
             AppLayout,
-            SdbButton,
-            SdbButtonLink,
-            SdbFilterSearch,
-            SdbPagination,
-            SdbTable,
+            BizButton,
+            BizButtonLink,
+            BizFilterSearch,
+            BizPagination,
+            BizTable,
         },
         mixins: [
             MixinFilterDataHandle,

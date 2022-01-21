@@ -4,11 +4,11 @@
             Update Page
         </template>
 
-        <sdb-error-notifications
+        <biz-error-notifications
             :errors="$page.props.errors"
         />
 
-        <sdb-flash-notifications :flash="$page.props.flash" />
+        <biz-flash-notifications :flash="$page.props.flash" />
 
         <div class="box mb-6">
             <page-form
@@ -31,22 +31,22 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import PageForm from '@/Pages/Page/Form';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbFlashNotifications from '@/Sdb/FlashNotifications';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFlashNotifications from '@/Biz/FlashNotifications';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { getTranslation } from '@/Libs/translation';
     import { isBlank } from '@/Libs/utils';
     import { onPageEditorClicked } from '@/Libs/page-builder';
     import { ref, onMounted, onUnmounted } from 'vue';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
-    import { confirmDelete } from '@/Libs/alert';
+    import { confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
 
     export default {
         components: {
             AppLayout,
             PageForm,
-            SdbErrorNotifications,
-            SdbFlashNotifications,
+            BizErrorNotifications,
+            BizFlashNotifications,
         },
         props: {
             can: { type: Object, required: true },
@@ -154,22 +154,8 @@
             },
             onChangeLocale(locale) {
                 if (this.form.isDirty) {
-                    const confirmationMessage = (
-                        'It looks like you have been editing something. '
-                        + 'If you leave before saving, your changes will be lost.'
-                    );
 
-                    this.$swal.fire({
-                        title: 'Are you sure?',
-                        text: confirmationMessage,
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Leave this',
-                        cancelButtonText: 'Continue Editing',
-                        scrollbarPadding: false,
-                    }).then((result) => {
+                    confirmLeaveProgress().then((result) => {
                         if (result.isDismissed) {
                             return false;
                         } else if(result.isConfirmed) {

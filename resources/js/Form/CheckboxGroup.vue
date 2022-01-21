@@ -1,11 +1,11 @@
 <template>
-    <sdb-form-checkbox-group
+    <biz-form-checkbox-group
         v-model="computedValue"
         :disabled="schema.is_disabled"
         :is-raw="schema.is_raw"
         :label="schema.label"
         :layout="schema.layout"
-        :message="message"
+        :message="error(schema.name, bagName, errors)"
         :options="schema.options"
         :readonly="schema.is_readonly"
         :required="schema.is_required"
@@ -13,28 +13,37 @@
 </template>
 
 <script>
-    import SdbFormCheckboxGroup from '@/Sdb/Form/CheckboxGroup';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import BizFormCheckboxGroup from '@/Biz/Form/CheckboxGroup';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormCheckboxGroup',
 
         components: {
-            SdbFormCheckboxGroup,
+            BizFormCheckboxGroup,
         },
 
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        inject: [
+            'bagName',
+        ],
+
         props: {
-            schema: {
+            errors: {
                 type: Object,
-                required: true
+                default: () => {}
             },
             modelValue: {
                 type: Array,
                 required: true
             },
-            message: {
-                type: [Object, String, Array],
-                default: undefined
+            schema: {
+                type: Object,
+                required: true
             },
         },
 

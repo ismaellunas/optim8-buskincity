@@ -1,180 +1,334 @@
 <template>
-    <jet-form-section @submitted="updateProfileInformation">
-        <template #title>
-            Profile Information
-        </template>
+    <div>
+        <biz-form-section @submitted="updateProfileInformation">
+            <template #title>
+                Account
+            </template>
 
-        <template #description>
-            Update your account's profile information and email address.
-        </template>
+            <template #description>
+                Update your account's profile information and email address.
+            </template>
 
-        <template #form>
-            <!-- Profile Photo -->
-            <div class="col-span-6 sm:col-span-4" v-if="$page.props.jetstream.managesProfilePhotos">
-                <!-- Profile Photo File Input -->
-                <input type="file" class="hidden"
-                            ref="photo"
-                            @change="updatePhotoPreview">
+            <template #form>
+                <!-- Profile Photo -->
+                <div
+                    class="col-span-6 sm:col-span-4 mb-3"
+                >
+                    <!-- Profile Photo File Input -->
+                    <biz-label
+                        for="photo"
+                        value="Photo"
+                    />
 
-                <sdb-label for="photo" value="Photo" />
+                    <!-- Current Profile Photo -->
+                    <div
+                        class="mt-2 mb-2"
+                    >
+                        <biz-image
+                            rounded="is-rounded"
+                            style="width: 64px;"
+                            :src="photoUrl"
+                        />
+                    </div>
 
-                <!-- Current Profile Photo -->
-                <div class="mt-2" v-show="! photoPreview">
-                    <img :src="user.profile_photo_url" :alt="user.full_name" class="rounded-full h-20 w-20 object-cover">
+                    <biz-input-file
+                        v-model="file"
+                        :accept="acceptedTypes"
+                        :is-name-displayed="true"
+                        :disabled="form.processing"
+                        @on-file-picked="onFilePicked"
+                    />
+
+                    <biz-button
+                        v-if="user.profile_photo_url"
+                        class="is-warning mt-2"
+                        type="button"
+                        :disabled="form.processing"
+                        @click.prevent="deletePhoto"
+                    >
+                        Remove Photo
+                    </biz-button>
+
+                    <biz-input-error :message="form.errors.photo" />
                 </div>
 
-                <!-- New Profile Photo Preview -->
-                <div class="mt-2" v-show="photoPreview">
-                    <span class="block rounded-full w-20 h-20"
-                          :style="'background-size: cover; background-repeat: no-repeat; background-position: center center; background-image: url(\'' + photoPreview + '\');'">
-                    </span>
+                <biz-form-input
+                    v-model="form.first_name"
+                    label="First Name"
+                    required
+                    :message="form.errors.first_name"
+                />
+
+                <biz-form-input
+                    v-model="form.last_name"
+                    label="Last Name"
+                    required
+                    :message="form.errors.last_name"
+                />
+
+                <biz-form-input
+                    v-model="form.email"
+                    label="Email"
+                    required
+                    type="email"
+                    :message="form.errors.email"
+                />
+            </template>
+
+            <template #actions>
+                <biz-action-message
+                    :is-active="form.recentlySuccessful"
+                    class="mr-3"
+                >
+                    Saved.
+                </biz-action-message>
+
+                <biz-button
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
+                    class="is-primary"
+                >
+                    Save
+                </biz-button>
+            </template>
+        </biz-form-section>
+
+        <!-- Image modal -->
+        <biz-modal-card
+            v-if="isModalOpen"
+            :is-close-hidden="true"
+            @close="closeModal()"
+        >
+            <template #header>
+                <p class="modal-card-title">
+                    Profile Photo
+                </p>
+                <biz-button
+                    aria-label="close"
+                    class="delete is-primary"
+                    type="button"
+                    @click="clearPhotoInput()"
+                />
+            </template>
+
+            <div class="columns">
+                <div class="column">
+                    <div
+                        class="card"
+                    >
+                        <div class="card-image">
+                            <biz-image
+                                :src="form.photo_url"
+                                :img-style="{maxHeight: 500+'px'}"
+                            />
+                        </div>
+                        <footer class="card-footer">
+                            <biz-button
+                                class="card-footer-item is-borderless is-shadowless"
+                                type="button"
+                                @click="isImageEditing = true"
+                            >
+                                Edit Image
+                            </biz-button>
+                        </footer>
+                    </div>
                 </div>
-
-                <sdb-button
-                    class="is-warning mt-2 mr-2"
-                    type="button"
-                    @click.prevent="selectNewPhoto"
-                >
-                    Select A New Photo
-                </sdb-button>
-
-                <sdb-button
-                    v-if="user.profile_photo_path"
-                    class="is-warning mt-2"
-                    type="button"
-                    @click.prevent="deletePhoto"
-                >
-                    Remove Photo
-                </sdb-button>
-
-                <jet-input-error :message="form.errors.photo" class="mt-2" />
             </div>
 
-            <sdb-form-input
-                v-model="form.first_name"
-                label="First Name"
-                required
-                :message="form.errors.first_name"
-            ></sdb-form-input>
+            <template #footer>
+                <div
+                    class="columns"
+                    style="width: 100%"
+                >
+                    <div class="column">
+                        <div class="is-pulled-right">
+                            <div class="buttons">
+                                <biz-button
+                                    class="is-danger"
+                                    type="button"
+                                    @click="clearPhotoInput()"
+                                >
+                                    Cancel
+                                </biz-button>
+                                <biz-button
+                                    class="is-primary"
+                                    type="button"
+                                    @click="closeModal()"
+                                >
+                                    Save
+                                </biz-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </biz-modal-card>
 
-            <sdb-form-input
-                v-model="form.last_name"
-                label="Last Name"
-                required
-                :message="form.errors.last_name"
-            ></sdb-form-input>
-
-            <sdb-form-input
-                v-model="form.email"
-                label="Email"
-                required
-                type="email"
-                :message="form.errors.email"
-            ></sdb-form-input>
-
-        </template>
-
-        <template #actions>
-            <sdb-action-message :isActive="form.recentlySuccessful" class="mr-3">
-                Saved.
-            </sdb-action-message>
-
-            <sdb-button
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-                class="is-primary"
-            >
-                Save
-            </sdb-button>
-        </template>
-    </jet-form-section>
+        <biz-modal-image-editor
+            v-if="isImageEditing"
+            v-model="form.photo_url"
+            v-model:cropper="cropper"
+            :is-processing="form.processing"
+            @close="closeImageEditorModal"
+        >
+            <template #actions>
+                <biz-button
+                    type="button"
+                    class="is-link"
+                    :disabled="form.processing"
+                    @click="updateImageFile"
+                >
+                    Done
+                </biz-button>
+            </template>
+        </biz-modal-image-editor>
+        <!-- Image modal -->
+    </div>
 </template>
 
 <script>
-    import JetFormSection from '@/Jetstream/FormSection';
-    import JetInputError from '@/Jetstream/InputError';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbActionMessage from '@/Sdb/ActionMessage';
-    import SdbButton from '@/Sdb/Button';
-    import SdbLabel from '@/Sdb/Label';
+    import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import BizModalCard from '@/Biz/ModalCard';
+    import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
+    import BizActionMessage from '@/Biz/ActionMessage';
+    import BizButton from '@/Biz/Button';
+    import BizImage from '@/Biz/Image';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizFormSection from '@/Biz/FormSection';
+    import BizInputError from '@/Biz/InputError';
+    import BizInputFile from '@/Biz/InputFile';
+    import BizLabel from '@/Biz/Label';
+    import { acceptedImageTypes } from '@/Libs/defaults';
+    import { includes } from 'lodash';
+    import { getCanvasBlob } from '@/Libs/utils';
+    import { oops as oopsAlert, confirmDelete } from '@/Libs/alert';
 
     export default {
         components: {
-            JetFormSection,
-            JetInputError,
-            SdbFormInput,
-            SdbErrorNotifications,
-            SdbActionMessage,
-            SdbButton,
-            SdbLabel,
+            BizActionMessage,
+            BizButton,
+            BizImage,
+            BizModalCard,
+            BizModalImageEditor,
+            BizFormInput,
+            BizFormSection,
+            BizInputError,
+            BizInputFile,
+            BizLabel,
         },
         mixins: [
+            MixinHasModal,
             MixinHasPageErrors,
         ],
 
-        props: ['user'],
+        props: {
+            user: {
+                type: Object,
+                required: true,
+            },
+        },
 
         data() {
             return {
+                cropper: null,
+                acceptedTypes: acceptedImageTypes,
+                file: null,
                 form: this.$inertia.form({
                     _method: 'PUT',
                     first_name: this.user.first_name,
                     last_name: this.user.last_name,
                     email: this.user.email,
                     photo: null,
+                    photo_url: null,
                 }),
-
-                photoPreview: null,
+                isImageEditing: false,
             }
         },
 
-        methods: {
-            updateProfileInformation() {
-                if (this.$refs.photo) {
-                    this.form.photo = this.$refs.photo.files[0]
-                }
+        computed: {
+            photoUrl() {
+                let url = null;
 
+                if (this.form.photo_url) {
+                    url = this.form.photo_url;
+                } else if (this.user.profile_photo_url) {
+                    url = this.user.profile_photo_url;
+                } else {
+                    url = "https://dummyimage.com/64x64/e5e5e5/000.png&text=TO";
+                }
+                return url;
+            },
+        },
+
+        methods: {
+            onFilePicked(event) {
+                let fileType = "." + this.file.type.split('/')[1];
+
+                if (includes(this.acceptedTypes, fileType)) {
+                    this.form.photo = this.file;
+                    this.form.photo_url = event.target.result;
+                    this.openModal();
+                } else {
+                    this.file = null;
+
+                    oopsAlert({
+                        text: "File must be a image format!"
+                    });
+                }
+            },
+
+            getCropperBlob() {
+                return getCanvasBlob(this.cropper.getCroppedCanvas());
+            },
+
+            closeImageEditorModal() {
+                this.isImageEditing = false;
+            },
+
+            updateImageFile() {
+                const self = this;
+                self.getCropperBlob()
+                    .then((blob) => {
+                        self.form.photo = blob;
+                        self.form.photo_url = URL.createObjectURL(blob);
+                        self.closeImageEditorModal();
+                    });
+            },
+
+            clearPhotoInput() {
+                this.file = null;
+                this.form.reset('photo', 'photo_url');
+
+                this.closeModal();
+            },
+
+            updateProfileInformation() {
                 this.form.post(route('user-profile-information.update'), {
                     errorBag: 'updateProfileInformation',
                     preserveScroll: true,
-                    onSuccess: () => (this.clearPhotoFileInput()),
-                });
-            },
-
-            selectNewPhoto() {
-                this.$refs.photo.click();
-            },
-
-            updatePhotoPreview() {
-                const photo = this.$refs.photo.files[0];
-
-                if (! photo) return;
-
-                const reader = new FileReader();
-
-                reader.onload = (e) => {
-                    this.photoPreview = e.target.result;
-                };
-
-                reader.readAsDataURL(photo);
-            },
-
-            deletePhoto() {
-                this.$inertia.delete(route('current-user-photo.destroy'), {
-                    preserveScroll: true,
                     onSuccess: () => {
-                        this.photoPreview = null;
-                        this.clearPhotoFileInput();
+                        this.clearPhotoInput();
                     },
                 });
             },
 
-            clearPhotoFileInput() {
-                if (this.$refs.photo?.value) {
-                    this.$refs.photo.value = null;
-                }
+            deletePhoto() {
+                const self = this;
+                confirmDelete().then((result) => {
+                    if (result.isConfirmed) {
+                        self.form.processing = true;
+                        self.$inertia.delete(route('current-user-photo.destroy'), {
+                            preserveScroll: true,
+                            onSuccess: () => {
+                                self.clearPhotoInput();
+                            },
+                            onFinish: () => {
+                                self.form.processing = false;
+                            },
+                        });
+                    }
+                })
             },
         },
     }

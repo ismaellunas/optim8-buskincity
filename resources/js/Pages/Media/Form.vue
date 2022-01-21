@@ -1,9 +1,9 @@
 <template>
     <div>
-        <sdb-error-notifications :errors="formErrors"/>
+        <biz-error-notifications :errors="formErrors"/>
 
         <form @submit.prevent="submit(form, media.id)">
-            <sdb-form-input
+            <biz-form-input
                 v-model="form.file_name"
                 label="File Name"
                 maxlength="250"
@@ -22,7 +22,7 @@
                     >
                         <a @click.prevent="setActiveTab(option.id)" >
                             <span>{{ option.id.toUpperCase() }}</span>
-                            <sdb-button-delete
+                            <biz-button-delete
                                 v-if="option.id !== defaultLocale"
                                 class="ml-1"
                                 type="button"
@@ -31,12 +31,12 @@
                         </a>
                     </li>
                     <li v-if="availableLocales.length">
-                        <sdb-select v-model="selectedLocale">
+                        <biz-select v-model="selectedLocale">
                             <template v-for="locale in availableLocales">
                                 <option :value="locale.id">{{ locale.name }}</option>
                             </template>
-                        </sdb-select>
-                        <sdb-button-icon
+                        </biz-select>
+                        <biz-button-icon
                             icon="fas fa-plus"
                             type="button"
                             @click="addTranslation"
@@ -45,7 +45,7 @@
                 </ul>
             </div>
             <div v-if="form.translations[activeTab]" class="content">
-                <sdb-form-input
+                <biz-form-input
                     v-if="isImage"
                     v-model="form.translations[activeTab].alt"
                     maxlength="255"
@@ -53,7 +53,7 @@
                     :label="label.alternative_text"
                     :message="error('translations.'+ activeTab +'.alt')"
                 />
-                <sdb-form-textarea
+                <biz-form-textarea
                     :label="label.description"
                     v-model="form.translations[ activeTab ].description"
                     placeholder="..."
@@ -64,19 +64,19 @@
             </div>
 
             <div class="field is-grouped is-pulled-right">
-                <sdb-button
+                <biz-button
                     class="is-link"
                     :disabled="!canSubmit"
                 >
                     Submit
-                </sdb-button>
-                <sdb-button
+                </biz-button>
+                <biz-button
                     class="is-link is-light ml-2"
                     type="button"
                     @click="$emit('cancel')"
                 >
                     Cancel
-                </sdb-button>
+                </biz-button>
             </div>
         </form>
     </div>
@@ -84,13 +84,13 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonDelete from '@/Sdb/ButtonDelete';
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
-    import SdbErrorNotifications from '@/Sdb/ErrorNotifications';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormTextarea from '@/Sdb/Form/Textarea';
-    import SdbSelect from '@/Sdb/Select';
+    import BizButton from '@/Biz/Button';
+    import BizButtonDelete from '@/Biz/ButtonDelete';
+    import BizButtonIcon from '@/Biz/ButtonIcon';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizFormTextarea from '@/Biz/Form/Textarea';
+    import BizSelect from '@/Biz/Select';
     import { buildFormData, regexFileName } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
     import { isEmpty, keys, last } from 'lodash';
@@ -119,13 +119,13 @@
             MixinHasPageErrors,
         ],
         components: {
-            SdbButton,
-            SdbButtonDelete,
-            SdbButtonIcon,
-            SdbErrorNotifications,
-            SdbFormInput,
-            SdbFormTextarea,
-            SdbSelect,
+            BizButton,
+            BizButtonDelete,
+            BizButtonIcon,
+            BizErrorNotifications,
+            BizFormInput,
+            BizFormTextarea,
+            BizSelect,
         },
         emits: [
             'cancel',
@@ -281,7 +281,7 @@
                     currentForm.file = this.media.file;
                 }
 
-                self.loader = self.$loading.show({});
+                self.loader = self.$loading.show();
                 self.isInputDisabled = true;
 
                 if (this.isAjax) {

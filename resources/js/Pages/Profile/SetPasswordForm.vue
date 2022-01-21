@@ -1,5 +1,5 @@
 <template>
-    <jet-form-section @submitted="setPassword">
+    <biz-form-section @submitted="setPassword">
         <template #title>
             Set Password
         </template>
@@ -9,47 +9,56 @@
         </template>
 
         <template #form>
-            <div class="col-span-6 sm:col-span-4">
-                <jet-label for="password" value="New Password" />
-                <jet-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" ref="password" autocomplete="new-password" />
-                <jet-input-error :message="form.errors.password" class="mt-2" />
-            </div>
+            <biz-form-password
+                ref="password"
+                v-model="form.password"
+                autocomplete="new-password"
+                label="New Password"
+                :message="form.errors.password"
+                :required="true"
+            />
 
-            <div class="col-span-6 sm:col-span-4">
-                <jet-label for="password_confirmation" value="Confirm Password" />
-                <jet-input id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" autocomplete="new-password" />
-                <jet-input-error :message="form.errors.password_confirmation" class="mt-2" />
-            </div>
+            <biz-form-password
+                ref="password"
+                v-model="form.password_confirmation"
+                autocomplete="new-password"
+                label="Confirm Password"
+                :message="form.errors.password_confirmation"
+                :required="true"
+            />
         </template>
 
         <template #actions>
-            <jet-action-message :on="form.recentlySuccessful" class="mr-3">
+            <biz-action-message
+                :is-active="form.recentlySuccessful"
+                class="mr-3"
+            >
                 Saved.
-            </jet-action-message>
+            </biz-action-message>
 
-            <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+            <biz-button
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                class="is-primary"
+            >
                 Save
-            </jet-button>
+            </biz-button>
         </template>
-    </jet-form-section>
+    </biz-form-section>
 </template>
 
 <script>
-    import JetActionMessage from '@/Jetstream/ActionMessage'
-    import JetButton from '@/Jetstream/Button'
-    import JetFormSection from '@/Jetstream/FormSection'
-    import JetInput from '@/Jetstream/Input'
-    import JetInputError from '@/Jetstream/InputError'
-    import JetLabel from '@/Jetstream/Label'
+    import BizActionMessage from '@/Biz/ActionMessage';
+    import BizButton from '@/Biz/Button';
+    import BizFormPassword from '@/Biz/Form/Password';
+    import BizFormSection from '@/Biz/FormSection';
 
     export default {
         components: {
-            JetActionMessage,
-            JetButton,
-            JetFormSection,
-            JetInput,
-            JetInputError,
-            JetLabel,
+            BizActionMessage,
+            BizButton,
+            BizFormPassword,
+            BizFormSection,
         },
 
         data() {

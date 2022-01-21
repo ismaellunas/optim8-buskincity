@@ -7,7 +7,7 @@
             v-show="visibleSlide === index"
             class="carousel-slide"
         >
-            <sdb-image
+            <biz-image
                 :alt="entityImage.alt"
                 :ratio="config?.ratio"
                 :src="entityImage.file_url"
@@ -17,13 +17,13 @@
 </template>
 
 <script>
-    import SdbImage from '@/Sdb/Image';
+    import BizImage from '@/Biz/Image';
 
     export default {
         name: 'CarouselSlide',
 
         components: {
-            SdbImage,
+            BizImage,
         },
 
         props: {

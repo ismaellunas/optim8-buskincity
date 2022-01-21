@@ -6,10 +6,9 @@
     >
         <div class="column is-two-thirds">
             <fieldset :disabled="isInputDisabled" class="box">
-
-                <sdb-tab class="is-boxed">
+                <biz-tab class="is-boxed">
                     <ul>
-                        <sdb-tab-list
+                        <biz-tab-list
                             v-for="(tab, index) in tabs"
                             :key="index"
                             :is-active="isTabActive(index)"
@@ -17,12 +16,12 @@
                             <a @click.prevent="setActiveTab(index)">
                                 {{ tab.title }}
                             </a>
-                        </sdb-tab-list>
+                        </biz-tab-list>
                     </ul>
-                </sdb-tab>
+                </biz-tab>
 
                 <div v-show="isTabActive('content')">
-                    <sdb-form-input
+                    <biz-form-input
                         v-model="form.title"
                         label="Title"
                         :message="error('title')"
@@ -32,14 +31,14 @@
                         @on-keypress="keyPressTitle"
                     />
 
-                    <sdb-form-slug
+                    <biz-form-slug
                         v-model="form.slug"
                         label="Slug"
                         :message="error('slug')"
                         :disabled="isInputDisabled"
                     />
 
-                    <sdb-form-select
+                    <biz-form-select
                         v-model="form.locale"
                         class="is-fullwidth"
                         label="Language"
@@ -53,13 +52,13 @@
                         >
                             {{ option.id.toUpperCase() }}
                         </option>
-                    </sdb-form-select>
+                    </biz-form-select>
 
                     <div class="field">
-                        <sdb-label>Category</sdb-label>
+                        <biz-label>Category</biz-label>
 
                         <div class="buttons">
-                            <sdb-button
+                            <biz-button
                                 v-for="category in sortedCategoryOptions"
                                 :key="category.id"
                                 type="button"
@@ -67,14 +66,14 @@
                                 @click="selectCategory(category)"
                             >
                                 {{ category.value }}
-                            </sdb-button>
+                            </biz-button>
                         </div>
                     </div>
 
                     <div class="field">
-                        <sdb-label>Thumbnail</sdb-label>
+                        <biz-label>Thumbnail</biz-label>
 
-                        <sdb-button-icon
+                        <biz-button-icon
                             v-if="!hasCover"
                             class="is-borderless is-shadowless is-inverted"
                             icon="far fa-image"
@@ -83,7 +82,7 @@
                             @click="openModal()"
                         >
                             <span>Open Media</span>
-                        </sdb-button-icon>
+                        </biz-button-icon>
                         <div
                             v-else
                             class="columns is-mobile"
@@ -91,31 +90,31 @@
                             <div class="column is-half is-offset-one-quarter">
                                 <div class="card" >
                                     <div class="card-image">
-                                        <sdb-image :src="coverSrc"></sdb-image>
+                                        <biz-image :src="coverSrc"></biz-image>
                                     </div>
                                     <footer class="card-footer">
-                                        <sdb-button-icon
+                                        <biz-button-icon
                                             class="card-footer-item is-borderless is-shadowless is-inverted"
                                             icon="far fa-image"
                                             type="button"
                                             @click="openModal"
                                         >
                                             <span>Open Media</span>
-                                        </sdb-button-icon>
-                                        <sdb-button
+                                        </biz-button-icon>
+                                        <biz-button
                                             class="card-footer-item is-borderless is-shadowless is-inverted"
                                             type="button"
                                             @click="removeCover"
                                         >
                                             <span>Remove</span>
-                                        </sdb-button>
+                                        </biz-button>
                                     </footer>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <sdb-form-textarea
+                    <biz-form-textarea
                         label="Excerpt"
                         v-model="form.excerpt"
                         :message="error('excerpt')"
@@ -123,7 +122,7 @@
                         rows="2"
                     />
 
-                    <sdb-form-text-editor-full
+                    <biz-form-text-editor-full
                         v-model="form.content"
                         label="Content"
                         :disabled="isInputDisabled"
@@ -135,14 +134,14 @@
                 </div>
 
                 <div v-show="isTabActive('seo')">
-                    <sdb-form-input
+                    <biz-form-input
                         label="Meta Title"
                         v-model="form.meta_title"
                         :message="error('meta_title')"
                         placeholder="meta title"
                     />
 
-                    <sdb-form-input
+                    <biz-form-input
                         label="Meta Description"
                         v-model="form.meta_description"
                         :message="error('meta_description')"
@@ -157,12 +156,12 @@
                 class="box"
                 :disabled="isInputDisabled"
             >
-                <sdb-tab>
-                    <sdb-tab-list>
+                <biz-tab>
+                    <biz-tab-list>
                         Publish Options
-                    </sdb-tab-list>
-                </sdb-tab>
-                <sdb-form-select
+                    </biz-tab-list>
+                </biz-tab>
+                <biz-form-select
                     v-model="form.status"
                     class="is-fullwidth"
                     label="Status"
@@ -177,9 +176,9 @@
                     >
                         {{ option.value }}
                     </option>
-                </sdb-form-select>
+                </biz-form-select>
 
-                <sdb-form-date-time
+                <biz-form-date-time
                     v-if="form.status === 2"
                     v-model="form.scheduled_at"
                     label="Scheduled At"
@@ -190,31 +189,31 @@
 
             <div class="field is-grouped is-grouped-right">
                 <div class="control">
-                    <sdb-button-link
+                    <biz-button-link
                         :href="route(baseRouteName+'.index')"
                         class="is-link is-light">
                         Cancel
-                    </sdb-button-link>
+                    </biz-button-link>
                 </div>
                 <div class="control">
-                    <sdb-button class="is-link">
+                    <biz-button class="is-link">
                         <template v-if="isNew">Create</template>
                         <template v-else>Update</template>
-                    </sdb-button>
+                    </biz-button>
                 </div>
             </div>
         </div>
     </form>
 
-    <sdb-modal-image-browser
+    <biz-modal-media-browser
         v-if="isModalOpen"
         :data="media"
         :is-download-enabled="can.media.read"
         :is-upload-enabled="can.media.add"
-        :query-params="imageListQueryParams"
+        :query-params="mediaListQueryParams"
         :search="search"
         @close="closeModal"
-        @on-clicked-pagination="getImagesList"
+        @on-clicked-pagination="getMediaList"
         @on-media-selected="selectFile"
         @on-media-submitted="updateImage"
         @on-view-changed="setView"
@@ -226,20 +225,20 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import MixinHasTab from '@/Mixins/HasTab';
     import MixinImageLibrary from '@/Mixins/MediaLibrary';
-    import SdbButton from '@/Sdb/Button';
-    import SdbButtonIcon from '@/Sdb/ButtonIcon';
-    import SdbButtonLink from '@/Sdb/ButtonLink';
-    import SdbFormDateTime from '@/Sdb/Form/DateTime';
-    import SdbFormInput from '@/Sdb/Form/Input';
-    import SdbFormSlug from '@/Sdb/Form/Slug';
-    import SdbFormSelect from '@/Sdb/Form/Select';
-    import SdbFormTextEditorFull from '@/Sdb/Form/TextEditorFull';
-    import SdbFormTextarea from '@/Sdb/Form/Textarea';
-    import SdbImage from '@/Sdb/Image';
-    import SdbLabel from '@/Sdb/Label';
-    import SdbModalImageBrowser from '@/Sdb/Modal/ImageBrowser';
-    import SdbTab from '@/Sdb/Tab';
-    import SdbTabList from '@/Sdb/TabList';
+    import BizButton from '@/Biz/Button';
+    import BizButtonIcon from '@/Biz/ButtonIcon';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizFormDateTime from '@/Biz/Form/DateTime';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizFormSlug from '@/Biz/Form/Slug';
+    import BizFormSelect from '@/Biz/Form/Select';
+    import BizFormTextEditorFull from '@/Biz/Form/TextEditorFull';
+    import BizFormTextarea from '@/Biz/Form/Textarea';
+    import BizImage from '@/Biz/Image';
+    import BizLabel from '@/Biz/Label';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
+    import BizTab from '@/Biz/Tab';
+    import BizTabList from '@/Biz/TabList';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { convertToSlug } from '@/Libs/utils';
     import { head, isEmpty, keys, pull, sortBy } from 'lodash';
@@ -249,20 +248,20 @@
     export default {
         name: 'PostForm',
         components: {
-            SdbButton,
-            SdbButtonIcon,
-            SdbButtonLink,
-            SdbFormDateTime,
-            SdbFormInput,
-            SdbFormSlug,
-            SdbFormSelect,
-            SdbFormTextEditorFull,
-            SdbFormTextarea,
-            SdbImage,
-            SdbLabel,
-            SdbModalImageBrowser,
-            SdbTab,
-            SdbTabList,
+            BizButton,
+            BizButtonIcon,
+            BizButtonLink,
+            BizFormDateTime,
+            BizFormInput,
+            BizFormSlug,
+            BizFormSelect,
+            BizFormTextEditorFull,
+            BizFormTextarea,
+            BizImage,
+            BizLabel,
+            BizModalMediaBrowser,
+            BizTab,
+            BizTabList,
         },
         mixins: [
             MixinHasModal,
@@ -310,7 +309,7 @@
             },
             onShownModal() { /* @override */
                 this.setTerm('');
-                this.getImagesList(route(this.imageListRouteName));
+                this.getMediaList(route(this.mediaListRouteName));
             },
             selectFile(file) {
                 this.form.cover_image_id = file.id;

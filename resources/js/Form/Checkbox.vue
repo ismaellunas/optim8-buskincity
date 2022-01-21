@@ -1,12 +1,12 @@
 <template>
-    <sdb-form-checbox-toggle
+    <biz-form-checbox-toggle
         v-model="computedValue"
         :false-value="schema.false_value"
         :true-value="schema.true_value"
         :text="schema.text"
         :disabled="schema.is_disabled"
         :is-raw="schema.is_raw"
-        :message="message"
+        :message="error(schema.name, bagName, errors)"
         :readonly="schema.is_readonly"
         :required="schema.is_required"
         :value="schema.value"
@@ -14,28 +14,37 @@
 </template>
 
 <script>
-    import SdbFormChecboxToggle from '@/Sdb/Form/CheckboxToggle';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import BizFormChecboxToggle from '@/Biz/Form/CheckboxToggle';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormCheckbox',
 
         components: {
-            SdbFormChecboxToggle,
+            BizFormChecboxToggle,
         },
 
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        inject: [
+            'bagName',
+        ],
+
         props: {
-            schema: {
+            errors: {
                 type: Object,
-                required: true
+                default: () => {}
             },
             modelValue: {
                 type: [String, Number, Boolean, null],
                 required: true
             },
-            message: {
-                type: [Object, String, Array],
-                default: undefined
+            schema: {
+                type: Object,
+                required: true
             },
         },
 

@@ -24,3 +24,12 @@ export const acceptedImageTypes = [
     '.png',
     '.gif',
 ];
+
+export const acceptedVideoTypes = [
+    '.mp4',
+    '.mov',
+    '.avi',
+    '.mpg',
+    '.ogv',
+    '.3gp',
+];

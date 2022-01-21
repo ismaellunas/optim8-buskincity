@@ -2,6 +2,8 @@
 
 namespace App\Entities\Forms\Fields;
 
+use Illuminate\Support\Str;
+
 class Text extends BaseField
 {
     protected $type = "Text";
@@ -29,10 +31,14 @@ class Text extends BaseField
 
     protected function max(): ?int
     {
-        $rules = $this->formattedRules();
+        $rules = collect($this->validationRules()[$this->name]);
 
-        if (!empty($rules['max'])) {
-            return (int) $rules['max'][0];
+        $maxRule = $rules->first(function ($rule) {
+            return Str::startsWith($rule, 'max:');
+        });
+
+        if ($maxRule) {
+            return (int) Str::replaceFirst('max:', '', $maxRule);
         }
 
         return null;

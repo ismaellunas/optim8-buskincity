@@ -2,15 +2,22 @@
 
 namespace App\Models;
 
+use App\Entities\CloudinaryStorage;
+use App\Traits\HasMetas;
+use App\Services\{
+    MediaService,
+    UserService
+};
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Services\UserService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
-use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -18,14 +25,14 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens;
     use HasFactory;
-    use HasProfilePhoto {
-        getProfilePhotoUrlAttribute as getPhotoUrl;
-    }
     use HasConnectedAccounts;
     use Notifiable;
     use SetsProfilePhotoFromUrl;
     use TwoFactorAuthenticatable;
     use HasRoles;
+    use HasMetas;
+
+    protected $metaRelation = 'metas';
 
     /**
      * The attributes that are mass assignable.
@@ -37,6 +44,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'last_name',
         'email',
         'password',
+        'profile_photo_media_id',
     ];
 
     /**
@@ -81,14 +89,19 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Post::class, 'author_id');
     }
 
-    public function media()
+    public function profilePhoto()
     {
-        return $this->hasMany(Media::class, 'author_id');
+        return $this->belongsTo(Media::class, 'profile_photo_media_id');
     }
 
     public function scopeEmail($query, string $email)
     {
         return $query->where('email', $email);
+    }
+
+    public function metas()
+    {
+        return $this->hasMany(UserMeta::class);
     }
 
     public function scopeSearch($query, string $term)
@@ -120,11 +133,12 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getProfilePhotoUrlAttribute()
     {
-        if (filter_var($this->profile_photo_path, FILTER_VALIDATE_URL)) {
-            return $this->profile_photo_path;
+        $url = null;
+        if ($this->profilePhoto) {
+            $url = $this->profilePhoto->file_url;
         }
 
-        return $this->getPhotoUrl();
+        return $url;
     }
 
     public function getIsSuperAdministratorAttribute(): bool
@@ -162,5 +176,32 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->is_suspended = false;
         $this->save();
+    }
+
+    public function updateProfilePhoto(UploadedFile $photo)
+    {
+        $fileName = $this->first_name.'-'.$this->last_name.'-'.Str::random(10);
+        $media = app(MediaService::class)->uploadProfile(
+            $photo,
+            $fileName,
+            new CloudinaryStorage(),
+            (!App::environment('production') ? config('app.env') : null)
+        );
+
+        if ($this->profile_photo_media_id) {
+            $this->deleteProfilePhoto();
+        }
+
+        $this->profile_photo_media_id = $media->id;
+        $this->save();
+    }
+
+    public function deleteProfilePhoto()
+    {
+        $media = Media::find($this->profile_photo_media_id);
+
+        if ($media) {
+            app(MediaService::class)->destroy($media, new CloudinaryStorage());
+        }
     }
 }

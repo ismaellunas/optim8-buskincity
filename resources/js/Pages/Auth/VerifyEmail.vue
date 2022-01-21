@@ -14,11 +14,11 @@
 
                     <form @submit.prevent="submit">
                         <div class="mt-4 flex items-center justify-between">
-                            <sdb-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing" class="is-primary">
+                            <biz-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing" class="is-primary">
                                 Resend Verification Email
-                            </sdb-button>
+                            </biz-button>
 
-                            <sdb-link :href="route('logout')" method="post" as="button" class="button ml-3">Log Out</sdb-link>
+                            <biz-link :href="route('logout')" method="post" as="button" class="button ml-3">Log Out</biz-link>
                         </div>
                     </form>
                 </div>
@@ -29,14 +29,14 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout'
-    import SdbButton from '@/Sdb/Button'
-    import SdbLink from '@/Sdb/Link'
+    import BizButton from '@/Biz/Button'
+    import BizLink from '@/Biz/Link'
 
     export default {
         components: {
             AppLayout,
-            SdbButton,
-            SdbLink,
+            BizButton,
+            BizLink,
         },
 
         props: {

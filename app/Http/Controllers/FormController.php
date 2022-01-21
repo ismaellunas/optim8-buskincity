@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\FormValueRequest;
-use App\Models\{
-    Form,
-    FormValue,
-    User,
-};
 use App\Services\FormService;
 use App\Traits\FlashNotifiable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FormController extends Controller
 {
@@ -22,44 +19,25 @@ class FormController extends Controller
         $this->formService = $formService;
     }
 
-    public function getSchema($formName)
+    public function getSchemas(Request $request)
     {
-        $form = $this->formService->getFormByName(
-            $formName,
-            auth()->user()
+        $schemas = $this->formService->getSchemas(
+            $request->get('route_name'),
+            Auth::user(),
+            $request->get('id')
         );
 
-        $entity = User::find(request()->get('id'));
-
-        if (!$form || !$form->canBeAccessed($entity)) {
-            return response()->json(['error' => 'Not authorized.'], 403);
-        }
-
-        $values = FormValue::where('form_id', $form->id)
-            ->where('user_id', request()->get('id'))
-            ->value('data') ?? [];
-
-        if ($form) {
-            return $form->schema($values);
-        }
-
-        return [];
+        return $schemas->sortBy('order')->all();
     }
 
-    public function submit(FormValueRequest $request, $formName)
+    public function submit(FormValueRequest $request)
     {
-        $inputs = $request->validated();
-
-        $formId = Form::where('name', $formName)->value('id');
-
-        $formValue = FormValue::firstOrNew([
-            'form_id' => $formId,
-            'user_id' => $request->get('id'),
-        ]);
-
-        $formValue->data = $inputs;
-
-        $formValue->save();
+        $this->formService->saveValues(
+            $request->validated(),
+            $request->get('route_name'),
+            Auth::user(),
+            $request->get('id')
+        );
 
         $this->generateFlashMessage('Saved');
 
