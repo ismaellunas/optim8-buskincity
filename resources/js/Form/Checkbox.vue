@@ -6,7 +6,7 @@
         :text="schema.text"
         :disabled="schema.is_disabled"
         :is-raw="schema.is_raw"
-        :message="message"
+        :message="error(schema.name, bagName, errors)"
         :readonly="schema.is_readonly"
         :required="schema.is_required"
         :value="schema.value"
@@ -15,6 +15,7 @@
 
 <script>
     import BizFormChecboxToggle from '@/Biz/Form/CheckboxToggle';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -24,18 +25,26 @@
             BizFormChecboxToggle,
         },
 
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        inject: [
+            'bagName',
+        ],
+
         props: {
-            schema: {
+            errors: {
                 type: Object,
-                required: true
+                default: () => {}
             },
             modelValue: {
                 type: [String, Number, Boolean, null],
                 required: true
             },
-            message: {
-                type: [Object, String, Array],
-                default: undefined
+            schema: {
+                type: Object,
+                required: true
             },
         },
 

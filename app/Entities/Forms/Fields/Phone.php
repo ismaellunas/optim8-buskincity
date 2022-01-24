@@ -80,4 +80,12 @@ class Phone extends BaseField
     {
         return "US";
     }
+
+    public function getLabels(): array
+    {
+        return [
+            $this->name.'.number' =>  $this->label,
+            $this->name.'.country' =>  $this->label,
+        ];
+    }
 }

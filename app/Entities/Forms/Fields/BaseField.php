@@ -115,4 +115,11 @@ abstract class BaseField
 
         return $data;
     }
+
+    public function getLabels(): array
+    {
+        return [
+            $this->name =>  $this->label,
+        ];
+    }
 }
