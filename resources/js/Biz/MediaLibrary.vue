@@ -8,12 +8,14 @@
                 <div class="content box">
                     <div class="field">
                         <div class="control">
+                            {{ disabled }}
                             <biz-input-file
                                 v-model="file"
                                 :accept="acceptedTypes"
                                 :is-name-displayed="false"
-                                :disabled="isProcessing"
+                                :disabled="disabled"
                                 @on-file-picked="onFilePicked"
+                                @click="disabledFewSeconds"
                             />
                         </div>
                     </div>
@@ -337,6 +339,7 @@
                 isDeleting: false,
                 loader: null,
                 previewImageSrc: null,
+                disabled: false,
                 messageText: {
                     successSaveAsMedia: "A new media has been created",
                     successSubmitForm: "Media has been updated",
@@ -356,6 +359,9 @@
             },
         },
         methods: {
+            disabledFewSeconds() {
+                this.disabled = true;
+            },
             isImage(media) {
                 return (
                     (media?.is_image)
