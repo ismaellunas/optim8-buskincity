@@ -81,7 +81,7 @@ Route::group([
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
     Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->name('password.email');
+        ->name('password.email')->middleware('recaptcha');
     Route::post('/reset-password', [NewPasswordController::class, 'store'])
         ->name('password.update');
 });

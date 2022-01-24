@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Actions\AuthenticateLoginAttempt;
 use App\Actions\AuthenticateLoginView;
 use App\Actions\Jetstream\DeleteUser;
+use App\Actions\TwoFactorChallengeView;
+use App\Actions\Fortify\PasswordResetLinkView;
 use App\Http\Responses\LoginResponse;
 use App\Http\Responses\LogoutResponse;
 use Illuminate\Support\ServiceProvider;
@@ -35,6 +37,8 @@ class JetstreamServiceProvider extends ServiceProvider
         $this->configurePermissions();
 
         Jetstream::deleteUsersUsing(DeleteUser::class);
+        Fortify::twoFactorChallengeView([new TwoFactorChallengeView(), '__invoke']);
+        Fortify::requestPasswordResetLinkView([new PasswordResetLinkView(), '__invoke']);
 
         if (config('jetstream.stack') === 'inertia') {
 
