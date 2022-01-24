@@ -20,9 +20,7 @@ class RedirectIfTwoFactorAuthenticatable extends FortifyRedirect
                 'login.remember' => $request->filled('remember'),
             ]);
 
-            return $request->wantsJson()
-                        ? response()->json(['two_factor' => true])
-                        : $this->setRedirect();
+            return $this->setRedirect();
         }
     }
 
