@@ -120,8 +120,8 @@ class Form
     {
         $attributes = [];
 
-        foreach ($this->fields as $name => $field) {
-            $attributes[$name] = $field->label;
+        foreach ($this->fields as $field) {
+            $attributes = array_merge($attributes, $field->getLabels());
         }
 
         return $attributes;

@@ -16,7 +16,7 @@
             v-for="(field, name) in group.fields"
             :key="name"
             v-model="form[ name ]"
-            :message="error(name, bagName, form.errors)"
+            :errors="form.errors"
             :schema="field"
         />
     </div>
@@ -25,7 +25,6 @@
 <script>
     import Checkbox from './Checkbox';
     import CheckboxGroup from './CheckboxGroup';
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import Number from './Number';
     import Phone from './Phone';
     import Radio from './Radio';
@@ -49,14 +48,6 @@
             Textarea,
             Video,
         },
-
-        mixins: [
-            MixinHasPageErrors,
-        ],
-
-        inject: [
-            'bagName',
-        ],
 
         props: {
             group: {
