@@ -5,9 +5,9 @@ namespace App\Entities\Caches;
 use Illuminate\Support\Facades\Cache;
 use \Closure;
 
-class WidgetCache
+class WidgetCache extends BaseCache
 {
-    private string $tag = 'widgets';
+    protected string $tag = 'widgets';
 
     private function getWidgetTag(string $widget): string
     {
@@ -23,11 +23,6 @@ class WidgetCache
                 $key,
                 $callback
             );
-    }
-
-    public function flush(): bool
-    {
-        return Cache::tags($this->tag)->flush();
     }
 
     public function flushWidget(string $widget): bool
