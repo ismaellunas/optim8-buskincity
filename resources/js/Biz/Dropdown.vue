@@ -16,6 +16,7 @@
                 aria-haspopup="true"
                 class="button"
                 type="button"
+                :class="classButton"
             >
                 <slot name="trigger" />
             </biz-button>
@@ -65,6 +66,10 @@
             },
             styleButton: {
                 type: String,
+                default: ""
+            },
+            classButton: {
+                type: [Array, Object, String],
                 default: ""
             },
         },

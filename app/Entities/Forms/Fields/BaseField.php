@@ -3,7 +3,6 @@
 namespace App\Entities\Forms\Fields;
 
 use App\Models\User;
-use Illuminate\Support\Str;
 
 abstract class BaseField
 {
@@ -54,6 +53,13 @@ abstract class BaseField
         return false;
     }
 
+    protected function adjustNullableRule(&$rules)
+    {
+        if (!$this->isRequired()) {
+            $rules[$this->name][] = 'nullable';
+        }
+    }
+
     protected function schema(): array
     {
         return [
@@ -70,30 +76,11 @@ abstract class BaseField
 
     public function validationRules(): array
     {
-        $rules = $this->validation['rules'] ?? [];
-
-        if (!$this->isRequired()) {
-            $rules[] = 'nullable';
-        }
-
-        return $rules;
-    }
-
-    public function formattedRules(): array
-    {
         $rules = [];
 
-        foreach($this->validationRules() as $rule) {
+        $rules[$this->name] = $this->validation['rules'] ?? [];
 
-            if (is_string($rule)) {
-                if (Str::contains($rule, ":")) {
-                    list($ruleName, $ruleParams) = explode(":", $rule);
-                    $rules[$ruleName] = explode(',', $ruleParams);
-                } else {
-                    $rules[] = $rule;
-                }
-            }
-        }
+        $this->adjustNullableRule($rules);
 
         return $rules;
     }
@@ -116,5 +103,23 @@ abstract class BaseField
         }
 
         return true;
+    }
+
+    public function getDataToBeSaved(array $inputs): array
+    {
+        $data = [];
+
+        if (array_key_exists($this->name, $inputs)) {
+            $data[$this->name] = $inputs[$this->name];
+        }
+
+        return $data;
+    }
+
+    public function getLabels(): array
+    {
+        return [
+            $this->name =>  $this->label,
+        ];
     }
 }

@@ -30,6 +30,7 @@
     import AppLayout from '@/Layouts/AppLayout';
     import PageForm from '@/Pages/Page/Form';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import { oops as oopsAlert } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { onPageEditorClicked } from '@/Libs/page-builder';
     import { ref, onMounted, onUnmounted } from 'vue';
@@ -98,11 +99,9 @@
                     }
                 });
 
-                this.$swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Please provide '+locale.name+' ('+locale.id.toUpperCase()+') translation first!'
-                })
+                oopsAlert({
+                    text: 'Please provide '+locale.name+' ('+locale.id.toUpperCase()+') translation first!',
+                });
             },
         }
     }

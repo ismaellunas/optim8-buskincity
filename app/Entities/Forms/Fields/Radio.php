@@ -29,23 +29,14 @@ class Radio extends BaseField
 
     private function adjustInRule(&$rules)
     {
-        $rules[] = 'in:'.implode(',', array_keys($this->options));
-    }
-
-    private function adjustNullableRule(&$rules)
-    {
-        if (!$this->isRequired()) {
-            $rules[] = 'nullable';
-        }
+        $rules[$this->name][] = 'in:'.implode(',', array_keys($this->options));
     }
 
     public function validationRules(): array
     {
-        $rules = $this->validation['rules'] ?? [];
+        $rules = parent::validationRules();
 
         $this->adjustInRule($rules);
-
-        $this->adjustNullableRule($rules);
 
         return $rules;
     }
