@@ -26,8 +26,11 @@ mix.js('resources/js/frontend.js', 'public/js').vue()
 if (mix.inProduction()) {
     mix.version();
 } else {
-    mix.copy('node_modules/vue-loading-overlay/dist/vue-loading.css', 'public/css');
-    // mix.js('resources/js/local.js', 'public/js');
+    mix.copy('node_modules/vue-loading-overlay/dist/vue-loading.css', 'public/css')
+        .copy('node_modules/tinymce/skins', 'public/js/skins');
+
+    mix.js('resources/js/local.js', 'public/js')
+        .js('resources/js/fontawesome.js', 'public/js');
 
     mix.browserSync({
         host: '127.0.0.1',

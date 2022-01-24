@@ -14,7 +14,6 @@
         <!-- Scripts -->
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
-        <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
 
         @env ('production')
             <!-- Styles -->
@@ -25,10 +24,14 @@
             <!-- Styles -->
             <link rel="stylesheet" href="{{ mix('css/vue-loading.css') }}">
             <!-- Scripts -->
-            {{--
             <script src="{{ mix('js/local.js') }}" defer></script>
-            --}}
         @endenv
+
+        @if (config('constants.fontawesome_local'))
+            <script src="{{ mix('js/fontawesome.js') }}" defer></script>
+        @else
+            <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
+        @endif
     </head>
     <body class="font-sans antialiased">
         @inertia
