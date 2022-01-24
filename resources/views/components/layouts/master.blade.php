@@ -21,6 +21,8 @@
         @env ('production')
             <!-- Styles -->
             <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@4/dist/vue-loading.css" rel="stylesheet">
+            <!-- Scripts -->
+            <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
         @endenv
 
         @env ('local')
@@ -28,13 +30,13 @@
             <link rel="stylesheet" href="{{ mix('css/vue-loading.css') }}">
             <!-- Scripts -->
             <script src="{{ mix('js/local.js') }}" defer></script>
-        @endenv
 
-        @if (config('constants.fontawesome_local'))
-            <script src="{{ mix('js/fontawesome.js') }}" defer></script>
-        @else
-            <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
-        @endif
+            @if (config('constants.fontawesome_local'))
+                <script src="{{ mix('js/fontawesome.js') }}" defer></script>
+            @else
+                <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
+            @endif
+        @endenv
 
         @stack('scripts')
 
