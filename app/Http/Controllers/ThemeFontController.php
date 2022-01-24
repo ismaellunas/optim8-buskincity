@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\Caches\SettingCache;
 use App\Http\Requests\ThemeFontRequest;
 use App\Models\Setting;
 use App\Services\SettingService;

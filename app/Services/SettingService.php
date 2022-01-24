@@ -187,6 +187,16 @@ class SettingService
         );
     }
 
+    public function getFontUrls(): array
+    {
+        $baseGoogleUrlFont = 'https://fonts.googleapis.com/css2';
+        return [
+            'mainTextFont' => $this->getFont('main_text_font')->family ? $baseGoogleUrlFont . '?family=' . $this->getFont('main_text_font')->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
+            'headingsFont' => $this->getFont('headings_font')->family ? $baseGoogleUrlFont . '?family=' . $this->getFont('headings_font')->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
+            'buttonsFont' => $this->getFont('buttons_font')->family ? $baseGoogleUrlFont . '?family=' . $this->getFont('buttons_font')->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
+        ];
+    }
+
     public function generateVariablesSass()
     {
         $variablesSass = view('theme_options.colors_sass', array_merge(

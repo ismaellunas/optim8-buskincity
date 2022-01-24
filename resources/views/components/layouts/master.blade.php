@@ -16,16 +16,16 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
         <link rel="stylesheet" href="{{ $appCssUrl }}">
 
-        @if ($mainTextFont->family !== null)
-            <link rel="stylesheet" href="{{ $baseGoogleUrlFont . '?family=' . $mainTextFont->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' }}">
+        @if (!empty($fontUrls['mainTextFont']))
+            <link rel="stylesheet" href="{{ $fontUrls['mainTextFont'] }}">
         @endif
 
-        @if ($headingsFont->family !== null)
-            <link rel="stylesheet" href="{{ $baseGoogleUrlFont . '?family=' . $headingsFont->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' }}">
+        @if (!empty($fontUrls['headingsFont']))
+            <link rel="stylesheet" href="{{ $fontUrls['headingsFont'] }}">
         @endif
 
-        @if ($buttonsFont->family !== null)
-            <link rel="stylesheet" href="{{ $baseGoogleUrlFont . '?family=' . $buttonsFont->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' }}">
+        @if (!empty($fontUrls['buttonsFont']))
+            <link rel="stylesheet" href="{{ $fontUrls['buttonsFont'] }}">
         @endif
 
         @stack('styles')
