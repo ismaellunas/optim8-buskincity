@@ -134,4 +134,13 @@ abstract class BaseField
     {
         return [];
     }
+
+    public function findStoredValue(array $storedValues = []): mixed
+    {
+        if (array_key_exists($this->name, $storedValues)) {
+            return $storedValues[$this->name];
+        }
+
+        return null;
+    }
 }
