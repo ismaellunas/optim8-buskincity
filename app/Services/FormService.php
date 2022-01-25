@@ -77,12 +77,12 @@ class FormService
         return null;
     }
 
-    public function getRules(Collection $forms): array
+    public function getRules(Collection $forms, $location): array
     {
         $rules = [];
 
         foreach ($forms as $form) {
-            $rules = array_merge($rules, $form->rules());
+            $rules = array_merge($rules, $form->rules($location));
         }
 
         return $rules;
