@@ -189,12 +189,17 @@ class SettingService
 
     public function getFontUrls(): array
     {
-        $baseGoogleUrlFont = 'https://fonts.googleapis.com/css2';
-        return [
-            'mainTextFont' => $this->getFont('main_text_font')->family ? $baseGoogleUrlFont . '?family=' . $this->getFont('main_text_font')->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
-            'headingsFont' => $this->getFont('headings_font')->family ? $baseGoogleUrlFont . '?family=' . $this->getFont('headings_font')->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
-            'buttonsFont' => $this->getFont('buttons_font')->family ? $baseGoogleUrlFont . '?family=' . $this->getFont('buttons_font')->family . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
-        ];
+        return app(SettingCache::class)->remember('fonts', function () {
+            $baseGoogleUrlFont = 'https://fonts.googleapis.com/css2';
+            $mainTextFontFamily = $this->getFont('main_text_font')->family ?? null;
+            $headingTextFontFamily = $this->getFont('headings_font')->family ?? null;
+            $buttonsFontFamily = $this->getFont('buttons_font')->family  ?? null;
+            return [
+                'mainTextFont' => $mainTextFontFamily !== null  ? $baseGoogleUrlFont . '?family=' . $mainTextFontFamily . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
+                'headingsFont' =>  $headingTextFontFamily !== null ? $baseGoogleUrlFont . '?family=' . $headingTextFontFamily . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
+                'buttonsFont' => $buttonsFontFamily ? $baseGoogleUrlFont . '?family=' . $buttonsFontFamily . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
+            ];
+        });
     }
 
     public function generateVariablesSass()

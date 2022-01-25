@@ -79,6 +79,8 @@ class ThemeFontController extends ThemeOptionController
 
         $this->generateNewStyleProcess($this->settingService);
 
+        app(SettingCache::class)->flush();
+
         $this->generateFlashMessage($this->title.' updated successfully!');
 
         return redirect()->route($this->baseRouteName.'.edit');
