@@ -16,7 +16,6 @@
                 <div class="control">
                     <biz-button
                         class="is-primary"
-                        @click="submit"
                     >
                         Submit
                     </biz-button>
