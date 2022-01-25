@@ -18,6 +18,8 @@ class File extends BaseField
     public $maxFileNumber;
     public $minFileNumber;
 
+    public $defaultValue = [];
+
     public function __construct(string $name, array $data = [])
     {
         parent::__construct($name, $data);
@@ -41,7 +43,7 @@ class File extends BaseField
 
     public function getLabels(array $inputs = []): array
     {
-        $fileKeys = [];
+        $fileKeys[$this->filesKey()] = $this->label;
 
         if (
             !empty($inputs[$this->name])
