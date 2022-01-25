@@ -26,6 +26,7 @@
 <script>
     import Checkbox from './Checkbox';
     import CheckboxGroup from './CheckboxGroup';
+    import File from './File';
     import Number from './Number';
     import Phone from './Phone';
     import Radio from './Radio';
@@ -41,6 +42,7 @@
         components: {
             Checkbox,
             CheckboxGroup,
+            File,
             Number,
             Phone,
             Radio,
