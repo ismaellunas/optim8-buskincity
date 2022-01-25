@@ -94,15 +94,18 @@ class MediaService
 
     public function transformRecords($records)
     {
-        $records->getCollection()->transform(function ($record) {
-            $record->thumbnail_url = $record->thumbnailUrl;
-            $record->file_name_without_extension = $record->fileNameWithoutExtension;
-            $record->is_image = $record->isImage;
-            $record->readable_size = $record->readableSize;
-            $record->date_modified = $record->updated_at->format('d/m/Y H:m');
+        $records->transform([$this, 'transformRecord']);
+    }
 
-            return $record;
-        });
+    public function transformRecord($record)
+    {
+        $record->thumbnail_url = $record->thumbnailUrl;
+        $record->file_name_without_extension = $record->fileNameWithoutExtension;
+        $record->is_image = $record->isImage;
+        $record->readable_size = $record->readableSize;
+        $record->date_modified = $record->updated_at->format('d/m/Y H:m');
+
+        return $record;
     }
 
     protected function fillMediaWithMediaAsset(
