@@ -2,7 +2,6 @@
 
 namespace App\Entities\Forms\Fields;
 
-use App\Contracts\MutatedValueFieldInterface;
 use App\Entities\CloudinaryStorage;
 use App\Helpers\HumanReadable;
 use App\Models\Media;
@@ -11,7 +10,7 @@ use App\Services\MediaService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-class File extends BaseField implements MutatedValueFieldInterface
+class File extends BaseField
 {
     protected $type = "File";
 
@@ -156,14 +155,6 @@ class File extends BaseField implements MutatedValueFieldInterface
         $media->transform([app(MediaService::class), 'transformRecord']);
 
         return $media;
-    }
-
-    public function mutateValue(mixed $value): mixed
-    {
-        return [
-            'delete_media' => [],
-            'files' => [],
-        ];
     }
 
     public function schemaBasedOnValue($value): array
