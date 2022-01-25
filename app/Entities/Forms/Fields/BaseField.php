@@ -76,6 +76,7 @@ abstract class BaseField
             'is_readonly' => $this->readonly,
             'is_required' => $this->isRequired(),
             'default_value' => $this->defaultValue,
+            'instructions' => $this->getInstructions(),
             'value' => $this->getSchemaValue(),
         ];
     }
@@ -127,5 +128,10 @@ abstract class BaseField
         return [
             $this->name =>  $this->label,
         ];
+    }
+
+    public function getInstructions(): array
+    {
+        return [];
     }
 }
