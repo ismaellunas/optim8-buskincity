@@ -1,5 +1,6 @@
 <template>
     <form-field-files
+        ref="field_files"
         v-model="computedValue"
         :accepted-types="schema.accepted_files"
         :disabled="schema.is_disabled"
@@ -92,7 +93,13 @@
                 });
 
                 return fileMessages;
-            }
+            },
+        },
+
+        methods: {
+            reset() {
+                this.$refs.field_files.reset();
+            },
         },
     };
 </script>

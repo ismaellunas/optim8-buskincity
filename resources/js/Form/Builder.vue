@@ -3,6 +3,7 @@
         <field-group
             v-for="(group, index) in sortedFieldGroups"
             :key="index"
+            :ref="'field_group__'+index"
             v-model="form"
             :group="group"
         />
@@ -28,7 +29,7 @@
 <script>
     import BizButton from '@/Biz/Button';
     import FieldGroup from './FieldGroup';
-    import { isEmpty, forOwn, sortBy } from 'lodash';
+    import { isEmpty, forOwn, sortBy, forEach } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -162,6 +163,9 @@
                             },
                             onSuccess: (page) => {
                                 successAlert(page.props.flash.message);
+
+                                self.resetFields();
+
                             },
                             onError: errors => {
                                 oopsAlert({isScrollToTop: false});
@@ -171,6 +175,16 @@
                             },
                         }
                     );
+            },
+
+            resetFields() {
+                forEach(this.$refs, (fieldGroup, fieldGroupKey) => {
+                    forEach(fieldGroup.$refs, (field, fieldKey) => {
+                        if (field.reset) {
+                            field.reset();
+                        }
+                    });
+                });
             }
         },
     };

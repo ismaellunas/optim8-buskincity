@@ -218,7 +218,15 @@
                         self.computedValue.delete_media.push(medium.id);
                     }
                 });
-            }
+            },
+
+            reset() {
+                this.files.splice(0);
+
+                if (this.canAddFileInput) {
+                    this.addFileInput();
+                }
+            },
         }
     };
 </script>

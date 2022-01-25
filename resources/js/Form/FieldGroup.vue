@@ -15,6 +15,7 @@
             :is="field.type"
             v-for="(field, name) in group.fields"
             :key="name"
+            :ref="'field__' + name"
             v-model="form[ name ]"
             :errors="form.errors"
             :schema="field"
