@@ -24,6 +24,7 @@ use App\Http\Controllers\{
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
+use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,6 +133,7 @@ Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->gr
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
     $limiter = config('fortify.limiters.login');
+    $twoFactorLimiter = config('fortify.limiters.two-factor');
 
     Route::get('/login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
@@ -141,6 +143,16 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
             $limiter ? 'throttle:'.$limiter : null,
         ]))
         ->name('login.attempt');
+
+    Route::get('/two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'create'])
+        ->name('two-factor.login');
+
+    Route::post('/two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'store'])
+        ->middleware(array_filter([
+            'guest:'.config('fortify.guard'),
+            $twoFactorLimiter ? 'throttle:'.$twoFactorLimiter : null,
+        ]))
+        ->name('two-factor.login.attempt');
 });
 
 Route::redirect('/', '/admin/login');
