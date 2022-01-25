@@ -157,13 +157,6 @@ class File extends BaseField
         return $media;
     }
 
-    public function schemaBasedOnValue($value): array
-    {
-        return [
-            'media' => $this->getMedias($value)->all(),
-        ];
-    }
-
     private function filesKey(): string
     {
         return $this->name.'.files';
