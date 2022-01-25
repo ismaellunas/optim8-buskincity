@@ -86,7 +86,7 @@ class File extends BaseField
         }
     }
 
-    public function getDataToBeSaved(array $inputs, $oldValues = null): array
+    public function getDataToBeSaved(array $inputs): array
     {
         $data = [];
         $value = [];
@@ -95,12 +95,7 @@ class File extends BaseField
             return $data;
         }
 
-        $oldValue = [];
-
-        if ($oldValues && $oldValues->has($this->name)) {
-            $oldValue = $oldValues->get($this->name, []);
-            $value = $oldValue;
-        }
+        $storedValue = $this->storedValue ?? [];
 
         $files = $inputs[$this->name]['files'] ?? [];
 
@@ -109,20 +104,21 @@ class File extends BaseField
         if (! empty($deleteMediaIds)) {
             $deleteMediaIds = array_intersect(
                 $deleteMediaIds,
-                $oldValue
+                $storedValue
             );
 
             $this->deleteFiles($deleteMediaIds);
 
             $value = array_diff(
-                $value,
+                $storedValue,
                 $deleteMediaIds,
             );
+
+        } else {
+            $value = $storedValue;
         }
 
         if (! empty($files)) {
-
-            $files = $inputs[$this->name]['files'];
 
             $media = $this->uploadFiles($files);
 
