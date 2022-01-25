@@ -37,6 +37,11 @@ class File extends BaseField
             'placeholder' => $this->placeholder,
             'max_file_number' => $this->maxFileNumber,
             'min_file_number' => $this->minFileNumber,
+            'media' => (
+                !empty($this->storedValue)
+                ? $this->getMedias($this->storedValue)
+                : $this->defaultValue
+            ),
         ];
 
         return array_merge(parent::schema(), $schema);
