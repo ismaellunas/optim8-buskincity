@@ -2,31 +2,52 @@
     <div>
         <div class="px-3">
             <div class="is-flex is-align-items-center">
-
-                <facebook-icon class="mr-2" v-if="provider === 'facebook'"/>
-                <google-icon class="mr-2" v-if="provider === 'google'"/>
-                <twitter-icon class="mr-2" v-if="provider === 'twitter'"/>
-                <linked-in-icon class="mr-2" v-if="provider === 'linkedin'"/>
-                <github-icon class="mr-2" v-if="provider === 'github'"/>
-                <git-lab-icon class="mr-2" v-if="provider === 'gitlab'"/>
-                <bitbucket-icon class="mr-2" v-if="provider === 'bitbucket'"/>
+                <facebook-icon
+                    v-if="provider === 'facebook'"
+                    class="mr-2"
+                />
+                <google-icon
+                    v-if="provider === 'google'"
+                    class="mr-2"
+                />
+                <twitter-icon
+                    v-if="provider === 'twitter'"
+                    class="mr-2"
+                />
+                <linked-in-icon
+                    v-if="provider === 'linkedin'"
+                    class="mr-2"
+                />
+                <github-icon
+                    v-if="provider === 'github'"
+                    class="mr-2"
+                />
+                <git-lab-icon
+                    v-if="provider === 'gitlab'"
+                    class="mr-2"
+                />
+                <bitbucket-icon
+                    v-if="provider === 'bitbucket'"
+                    class="mr-2"
+                />
 
                 <div>
-                    <div class="">
-                        {{ provider.charAt(0).toUpperCase() + provider.slice(1)  }}
-                    </div>
+                    <span>
+                        {{ provider.charAt(0).toUpperCase() + provider.slice(1) }}
+                    </span>
+                    <br>
 
-                    <div v-if="createdAt !== null" class="">
+                    <span v-if="createdAt !== null">
                         Connected {{ createdAt }}
-                    </div>
+                    </span>
 
-                    <div v-else class="">
+                    <span v-else>
                         Not connected.
-                    </div>
+                    </span>
                 </div>
             </div>
 
-            <slot name="action"></slot>
+            <slot name="action" />
         </div>
     </div>
 </template>
@@ -41,14 +62,6 @@
     import BitbucketIcon from './ProviderIcons/BitbucketIcon';
 
     export default {
-        props: {
-            provider: String,
-            createdAt: {
-                type: String,
-                default: null,
-            }
-        },
-
         components: {
             FacebookIcon,
             GoogleIcon,
@@ -57,6 +70,14 @@
             GithubIcon,
             GitLabIcon,
             BitbucketIcon
-        }
+        },
+
+        props: {
+            provider: String,
+            createdAt: {
+                type: String,
+                default: null,
+            }
+        },
     }
 </script>

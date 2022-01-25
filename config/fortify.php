@@ -160,5 +160,7 @@ return [
     'routes' => [
         'admin_login_attempt' => 'admin.login.attempt',
         'admin_login' => 'admin.login',
+        'admin_two_factor_login_attempt' => 'admin.two-factor.login.attempt',
+        'admin_two_factor_login' => 'admin.two-factor.login',
     ],
 ];
