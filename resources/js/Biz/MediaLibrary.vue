@@ -8,7 +8,6 @@
                 <div class="content box">
                     <div class="field">
                         <div class="control">
-                            {{ disabled }}
                             <biz-input-file
                                 v-model="file"
                                 :accept="acceptedTypes"
@@ -360,7 +359,12 @@
         },
         methods: {
             disabledFewSeconds() {
-                this.disabled = true;
+                setTimeout(() => {
+                    this.disabled = true;
+                }, 1);
+                setTimeout(() => {
+                    this.disabled = false;
+                }, 3000)
             },
             isImage(media) {
                 return (
