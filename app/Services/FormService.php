@@ -88,12 +88,12 @@ class FormService
         return $rules;
     }
 
-    public function getAttributes(Collection $forms): array
+    public function getAttributes(Collection $forms, $inputs = null): array
     {
         $attributes = [];
 
         foreach ($forms as $form) {
-            $attributes = array_merge($attributes, $form->attributes());
+            $attributes = array_merge($attributes, $form->attributes($inputs));
         }
 
         return $attributes;

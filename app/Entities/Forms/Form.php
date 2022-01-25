@@ -127,12 +127,12 @@ class Form
         return $rules;
     }
 
-    public function attributes(): array
+    public function attributes($inputs = null): array
     {
         $attributes = [];
 
         foreach ($this->fields as $field) {
-            $attributes = array_merge($attributes, $field->getLabels());
+            $attributes = array_merge($attributes, $field->getLabels($inputs));
         }
 
         return $attributes;

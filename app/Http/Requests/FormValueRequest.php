@@ -48,7 +48,7 @@ class FormValueRequest extends FormRequest
     {
         $formService = app(FormService::class);
 
-        $attributes = $formService->getAttributes($this->getForms());
+        $attributes = $formService->getAttributes($this->getForms(), $this->all());
 
         return $attributes;
     }
