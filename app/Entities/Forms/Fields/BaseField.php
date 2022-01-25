@@ -123,7 +123,7 @@ abstract class BaseField
         return $data;
     }
 
-    public function getLabels(): array
+    public function getLabels(array $inputs = []): array
     {
         return [
             $this->name =>  $this->label,
