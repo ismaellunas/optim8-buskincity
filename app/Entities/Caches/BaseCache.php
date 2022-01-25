@@ -9,9 +9,18 @@ abstract class BaseCache
 {
     protected string $tag = "";
 
-    public function remember(string $key, Closure $callback): mixed
+    protected function getTags(): array
     {
-        return Cache::tags($this->tag)->rememberForever(
+        return [
+            $this->tag
+        ];
+    }
+
+    public function remember(
+        string $key,
+        Closure $callback
+    ): mixed {
+        return Cache::tags($this->getTags())->rememberForever(
             $key,
             $callback
         );
