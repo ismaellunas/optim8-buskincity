@@ -70,7 +70,8 @@ class MenuService
                     ->first();
 
                 return $menu ? Menu::createArrayMenuItems($menu) : [];
-            }
+            },
+            $locale
         );
     }
 
@@ -123,7 +124,8 @@ class MenuService
                     ->first();
 
                 return $menu ? Menu::createArrayMenuItems($menu) : [];
-            }
+            },
+            $locale
         );
     }
 

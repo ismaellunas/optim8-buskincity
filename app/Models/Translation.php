@@ -25,7 +25,6 @@ class Translation extends Model implements TranslationLoader
 
         return $translationCache->remember(
             $locale,
-            $group,
             function () use ($locale, $group) {
                 return self::select([
                         'locale',
@@ -42,7 +41,8 @@ class Translation extends Model implements TranslationLoader
                     ->get()
                     ->pluck('value', 'key')
                     ->toArray();
-            }
+            },
+            $group,
         );
     }
 
