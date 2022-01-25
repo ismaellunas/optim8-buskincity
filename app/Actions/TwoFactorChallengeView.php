@@ -2,6 +2,8 @@
 
 namespace App\Actions;
 
+use App\Helpers\Url;
+use App\Services\LoginService;
 use Inertia\Inertia;
 
 class TwoFactorChallengeView
@@ -10,11 +12,10 @@ class TwoFactorChallengeView
     {
         $componentName = 'Auth/TwoFactorChallenge';
 
-        $url = url()->previous();
-        $route = app('router')->getRoutes($url)->match(app('request')->create($url));
-        $prevRouteName = $route->getName();
+        $url = url()->current();
+        $route = Url::getRoute($url);
 
-        if ($prevRouteName === config('fortify.routes.admin_login')) {
+        if (LoginService::isAdminTwoFactorLoginRoute($route)) {
             $componentName = 'Auth/Admin/TwoFactorChallenge';
         }
 
