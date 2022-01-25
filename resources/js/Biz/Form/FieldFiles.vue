@@ -135,23 +135,23 @@
             maxFileNumber: {
                 type: Number,
                 default: 1,
-            }
+            },
+            selectedFiles: {
+                type: Array,
+                default: () => [null],
+            },
         },
 
         emits: [
             'on-file-picked',
             'update:modelValue',
+            'update:selectedFiles',
         ],
 
         setup(props, { emit }) {
             return {
                 computedValue: useModelWrapper(props, emit),
-            };
-        },
-
-        data() {
-            return {
-                files: [null],
+                files: useModelWrapper(props, emit, 'selectedFiles'),
             };
         },
 
@@ -182,8 +182,11 @@
             },
 
             canAddFileInput() {
-
                 return (this.files.length + this.listMedia.length) < this.maxFileNumber;
+            },
+
+            hasEmptyFileInput() {
+                return this.files.includes(null);
             }
         },
 

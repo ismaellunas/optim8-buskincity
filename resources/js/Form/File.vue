@@ -11,6 +11,7 @@
         :placeholder="schema.placeholder"
         :readonly="schema.is_readonly"
         :required="schema.is_required"
+        :selected-files="selectedFiles"
     >
         <template #note>
             <p class="help is-info">
@@ -65,6 +66,12 @@
         setup(props, { emit }) {
             return {
                 computedValue: useModelWrapper(props, emit),
+            };
+        },
+
+        data() {
+            return {
+                selectedFiles: [],
             };
         },
 
