@@ -142,7 +142,7 @@
             },
 
             submit() {
-                this.form.post(this.route('two-factor.login'))
+                this.form.post(this.route('admin.two-factor.login.attempt'));
             },
 
             redirectBack() {

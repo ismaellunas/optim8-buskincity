@@ -2,16 +2,23 @@
 
 namespace App\Providers;
 
-use App\Actions\AuthenticateLoginAttempt;
-use App\Actions\AuthenticateLoginView;
-use App\Actions\Jetstream\DeleteUser;
-use App\Actions\TwoFactorChallengeView;
-use App\Actions\Fortify\PasswordResetLinkView;
-use App\Http\Responses\LoginResponse;
-use App\Http\Responses\LogoutResponse;
+use App\Actions\{
+    AuthenticateLoginAttempt,
+    AuthenticateLoginView,
+    AuthenticationPipeline,
+    Fortify\PasswordResetLinkView,
+    Jetstream\DeleteUser,
+    TwoFactorChallengeView
+};
+use App\Http\Responses\{
+    LoginResponse,
+    LogoutResponse,
+    TwoFactorLoginResponse,
+};
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use Laravel\Fortify\Contracts\LogoutResponse as LogoutResponseContract;
+use Laravel\Fortify\Contracts\TwoFactorLoginResponse as TwoFactorLoginResponseContract;
 use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
 
@@ -51,6 +58,10 @@ class JetstreamServiceProvider extends ServiceProvider
             $this->app->instance(LoginResponseContract::class, new LoginResponse());
 
             $this->app->instance(LogoutResponseContract::class, new LogoutResponse());
+
+            $this->app->instance(TwoFactorLoginResponseContract::class, new TwoFactorLoginResponse());
+
+            Fortify::authenticateThrough([new AuthenticationPipeline(), '__invoke']);
         }
     }
 
