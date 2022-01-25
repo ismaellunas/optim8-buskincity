@@ -199,6 +199,16 @@
             },
         },
 
+        created() {
+            if (
+                this.canAddFileInput
+                && this.files.length < 1
+                && !this.hasEmptyFileInput
+            ) {
+                this.addFileInput();
+            }
+        },
+
         methods: {
             addFileInput() {
                 if (this.canAddFileInput) {
@@ -216,6 +226,10 @@
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
                         self.computedValue.delete_media.push(medium.id);
+
+                        if (! self.hasEmptyFileInput) {
+                            self.addFileInput();
+                        }
                     }
                 });
             },
