@@ -6,6 +6,7 @@ use App\Entities\CloudinaryStorage;
 use App\Helpers\HumanReadable;
 use App\Models\Media;
 use App\Rules\FieldMaxFile;
+use App\Rules\FieldMinFile;
 use App\Services\MediaService;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -165,7 +166,7 @@ class File extends BaseField
         return $this->name.'.delete_media';
     }
 
-    public function validationRules($oldValues = null): array
+    public function validationRules(): array
     {
         $rules[$this->name] = [];
         $rules[$this->filesKey()] = [];
@@ -173,33 +174,18 @@ class File extends BaseField
 
         $definedRules = $this->validation['rules'] ?? [];
 
-        $oldValue = $oldValues->get($this->name, []);
-
-        $existingFileNumber = count($oldValue);
-
-        if ($this->isRequired()) {
-
-            if ($existingFileNumber < 1 && $this->minFileNumber < 1) {
-
-                $rules[$this->name][] = 'required';
-
-                $rules[$this->name.'.files'][] = 'min:1';
-            }
+        if ($this->isRequired() && $this->minFileNumber < 1) {
+            $this->minFileNumber = 1;
         }
 
-        /*
-        if ($this->minFileNumber > 0) {
-            $minFileNumber = $this->minFileNumber - $existingFileNumber;
-
-            if ($minFileNumber > 0) {
-                $rules[$this->name.'.files'][] = 'min:'.$minFileNumber;
-            }
-        }
-        */
+        $rules[$this->filesKey()][] = new FieldMinFile(
+            $this->minFileNumber,
+            $this->storedValue
+        );
 
         $rules[$this->name.'.files'][] = new FieldMaxFile(
             $this->maxFileNumber,
-            $oldValue
+            $this->storedValue
         );
 
         $rules[$this->name.'.files.*'] = $definedRules;
