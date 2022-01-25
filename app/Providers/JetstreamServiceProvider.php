@@ -37,10 +37,12 @@ class JetstreamServiceProvider extends ServiceProvider
         $this->configurePermissions();
 
         Jetstream::deleteUsersUsing(DeleteUser::class);
-        Fortify::twoFactorChallengeView([new TwoFactorChallengeView(), '__invoke']);
-        Fortify::requestPasswordResetLinkView([new PasswordResetLinkView(), '__invoke']);
 
         if (config('jetstream.stack') === 'inertia') {
+
+            Fortify::twoFactorChallengeView([new TwoFactorChallengeView(), '__invoke']);
+
+            Fortify::requestPasswordResetLinkView([new PasswordResetLinkView(), '__invoke']);
 
             Fortify::loginView([new AuthenticateLoginView(), '__invoke']);
 
