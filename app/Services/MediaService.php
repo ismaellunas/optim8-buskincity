@@ -121,6 +121,17 @@ class MediaService
         $media->version = $asset->version;
     }
 
+    private function isOriginalExtensionNeeded(UploadedFile $file): bool
+    {
+        $mimeType = $file->getMimeType();
+
+        return !(
+            Str::startsWith($mimeType, 'image/')
+            || Str::startsWith($mimeType, 'video/')
+            || $file->getClientOriginalExtension() == 'pdf'
+        );
+    }
+
     public function upload(
         UploadedFile $file,
         string $fileName,
@@ -131,13 +142,8 @@ class MediaService
         $extension = null;
 
         $clientExtension = $file->getClientOriginalExtension();
-        $mimeType =  $file->getMimeType();
 
-        if ( !(
-            Str::startsWith($mimeType, 'image/')
-            || Str::startsWith($mimeType, 'video/')
-            || $clientExtension == 'pdf'
-        )) {
+        if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
         }
 
@@ -167,13 +173,8 @@ class MediaService
         $extension = null;
 
         $clientExtension = $file->getClientOriginalExtension();
-        $mimeType =  $file->getMimeType();
 
-        if ( !(
-            Str::startsWith($mimeType, 'image/')
-            || Str::startsWith($mimeType, 'video/')
-            || $clientExtension == 'pdf'
-        )) {
+        if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
         }
 
@@ -209,13 +210,8 @@ class MediaService
         $extension = null;
 
         $clientExtension = $file->getClientOriginalExtension();
-        $mimeType =  $file->getMimeType();
 
-        if ( !(
-            Str::startsWith($mimeType, 'image/')
-            || Str::startsWith($mimeType, 'video/')
-            || $clientExtension == 'pdf'
-        )) {
+        if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
         }
 
@@ -334,7 +330,6 @@ class MediaService
         $extension = null;
 
         $clientExtension = $file->getClientOriginalExtension();
-        $mimeType = $file->getMimeType();
 
         $fileName = preg_replace(
             '/[^a-z0-9]+/',
@@ -342,11 +337,7 @@ class MediaService
             $file->getClientOriginalName()
         );
 
-        if ( !(
-            Str::startsWith($mimeType, 'image/')
-            || Str::startsWith($mimeType, 'video/')
-            || $clientExtension == 'pdf'
-        )) {
+        if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
         }
 
