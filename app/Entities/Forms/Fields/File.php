@@ -239,9 +239,16 @@ class File extends BaseField
             }
 
             return null;
-
         });
 
         return $instructions->filter()->values()->all();
+    }
+
+    protected function getSchemaValue(): mixed
+    {
+        return [
+            'delete_media' => [],
+            'files' => [],
+        ];
     }
 }
