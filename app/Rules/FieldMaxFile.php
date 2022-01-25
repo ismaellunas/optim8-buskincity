@@ -53,7 +53,7 @@ class FieldMaxFile implements Rule, DataAwareRule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'The :attribute must not have more than '.$this->max.' file(s).';
     }
 
     public function setData($data)
