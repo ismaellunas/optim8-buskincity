@@ -8,7 +8,7 @@
         :label="schema.label"
         :max-file-number="schema.max_file_number"
         :media="schema.media"
-        :message="error(schema.name, bagName, errors)"
+        :message="error(schema.name + '.files', bagName, errors)"
         :placeholder="schema.placeholder"
         :readonly="schema.is_readonly"
         :required="schema.is_required"
