@@ -192,8 +192,8 @@
 
         watch: {
             files: {
-                handler(val, oldVal) {
-                    this.computedValue.files = this.files.filter(Boolean);
+                handler(files) {
+                    this.computedValue.files = files.filter(Boolean);
                 },
                 deep: true
             },
