@@ -5,29 +5,31 @@ namespace App\Entities\Caches;
 use Illuminate\Support\Facades\Cache;
 use \Closure;
 
-class WidgetCache
+class WidgetCache extends BaseCache
 {
-    private string $tag = 'widgets';
+    protected string $tag = 'widgets';
+    private string $key;
 
     private function getWidgetTag(string $widget): string
     {
         return $this->tag . ":" . $widget;
     }
 
-    public function remember(string $key, Closure $callback): mixed
+    protected function getTags(): array
     {
-        return Cache::tags(
-                $this->tag,
-                $this->getWidgetTag($key),
-            )->rememberForever(
-                $key,
-                $callback
-            );
+        return array_merge(
+            parent::getTags(),
+            [
+                $this->getWidgetTag($this->key),
+            ]
+        );
     }
 
-    public function flush(): bool
+    public function remember(string $key, Closure $callback): mixed
     {
-        return Cache::tags($this->tag)->flush();
+        $this->key = $key;
+
+        return parent::remember($key, $callback);
     }
 
     public function flushWidget(string $widget): bool

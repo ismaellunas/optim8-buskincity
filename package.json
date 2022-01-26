@@ -44,6 +44,7 @@
         "sass-loader": "^12.2.0",
         "vue-cropperjs": "^5.0.0",
         "vue-loading-overlay": "^4.0",
+        "vue-recaptcha": "^2.0.1",
         "vue-sweetalert2": "^5.0.2",
         "vuedraggable": "^4.1.0",
         "webpack": "^5.59.1",
