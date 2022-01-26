@@ -6,7 +6,9 @@ use App\Actions\{
     AuthenticateLoginAttempt,
     AuthenticateLoginView,
     AuthenticationPipeline,
+    Fortify\PasswordResetLinkView,
     Jetstream\DeleteUser,
+    TwoFactorChallengeView
 };
 use App\Http\Responses\{
     LoginResponse,
@@ -44,6 +46,10 @@ class JetstreamServiceProvider extends ServiceProvider
         Jetstream::deleteUsersUsing(DeleteUser::class);
 
         if (config('jetstream.stack') === 'inertia') {
+
+            Fortify::twoFactorChallengeView([new TwoFactorChallengeView(), '__invoke']);
+
+            Fortify::requestPasswordResetLinkView([new PasswordResetLinkView(), '__invoke']);
 
             Fortify::loginView([new AuthenticateLoginView(), '__invoke']);
 
