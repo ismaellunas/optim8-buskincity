@@ -35,7 +35,11 @@ class FieldMinFile implements Rule, DataAwareRule
 
         $deleteMediaIds = $this->data[$index]['delete_media'] ?? [];
 
-        $existingMediaIds = array_diff($this->storedValue, $deleteMediaIds);
+        $existingMediaIds = [];
+
+        if (! is_null($this->storedValue)) {
+            $existingMediaIds = array_diff($this->storedValue, $deleteMediaIds);
+        }
 
         $countedFileNumber = count($value) + count($existingMediaIds);
 
