@@ -12,7 +12,7 @@
                                 v-model="file"
                                 :accept="acceptedTypes"
                                 :is-name-displayed="false"
-                                :disabled="disabled"
+                                :disabled="disabled || isProcessing"
                                 @on-file-picked="onFilePicked"
                                 @click="disabledFewSeconds"
                             />
