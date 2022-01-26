@@ -37,11 +37,13 @@ class FieldMaxFile implements Rule, DataAwareRule
             return true;
         }
 
+        $storedValue = $this->storedValue ?? [];
+
         $deleteMediaIds = $this->data[$index]['delete_media'] ?? [];
 
-        $deleteMediaIds = array_intersect($this->storedValue, $deleteMediaIds);
+        $deleteMediaIds = array_intersect($storedValue, $deleteMediaIds);
 
-        $countedFileNumber = count($value) + count($this->storedValue) - count($deleteMediaIds);
+        $countedFileNumber = count($value) + count($storedValue) - count($deleteMediaIds);
 
         return $countedFileNumber <= $this->max;
     }

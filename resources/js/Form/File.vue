@@ -2,7 +2,7 @@
     <form-field-files
         ref="field_files"
         v-model="computedValue"
-        :accepted-types="schema.accepted_files"
+        :accepted-types="schema.accept"
         :disabled="schema.is_disabled"
         :file-messages="fileMessages"
         :label="schema.label"

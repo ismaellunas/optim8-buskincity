@@ -42,6 +42,7 @@ class File extends BaseField
                 ? $this->getMedias($this->storedValue)
                 : $this->defaultValue
             ),
+            'accept' => $this->getDottedFileExtensions(),
         ];
 
         return array_merge(parent::schema(), $schema);
@@ -171,6 +172,32 @@ class File extends BaseField
         return $this->name.'.delete_media';
     }
 
+    private function getFileExtensions(): array
+    {
+        $rules = collect($this->validation['rules'] ?? []);
+
+        $extensions = [];
+
+        $mimes = $rules->first(function($rule) {
+            return is_string($rule) && Str::startsWith($rule, 'mimes:');
+        });
+
+        if ($mimes) {
+            $mimes = preg_replace('/\s+/', '', Str::after($mimes, 'mimes:'));
+            $extensions = explode(',', $mimes);
+        }
+
+        return $extensions;
+    }
+
+    private function getDottedFileExtensions(): array
+    {
+        return array_map(
+            function ($value) { return '.'.$value;},
+            $this->getFileExtensions()
+        );
+    }
+
     public function validationRules(): array
     {
         $rules[$this->name] = [];
@@ -200,19 +227,18 @@ class File extends BaseField
 
     public function getInstructions(): array
     {
+        $instructions = collect();
+
         $rules = collect($this->validation['rules'] ?? []);
 
-        $instructions = $rules->map(function($rule) {
+        $mimes = $this->getFileExtensions();
+
+        if (! empty($mimes)) {
+            $instructions->push('Accepted file extensions: '.implode(', ', $mimes));
+        }
+
+        $additionalInstructions = $rules->map(function($rule) {
             if (is_string($rule)) {
-                if (Str::startsWith($rule, 'mimes:')) {
-                    $mimes = preg_replace('/\s+/', '', Str::after($rule, 'mimes:'));
-                    $mimes = explode(',', $mimes);
-
-                    if (!empty($mimes)) {
-                        return 'Accepted file extensions: '.implode(', ', $mimes);
-                    }
-                }
-
                 if (Str::startsWith($rule, 'max:')) {
                     $bytes = preg_replace('/\s+/', '', Str::after($rule, 'max:'));
 
@@ -223,7 +249,11 @@ class File extends BaseField
             return null;
         });
 
-        return $instructions->filter()->values()->all();
+        return $instructions
+            ->merge($additionalInstructions)
+            ->filter()
+            ->values()
+            ->all();
     }
 
     protected function getSchemaValue(): mixed
