@@ -197,7 +197,7 @@ class SettingService
             return [
                 'mainTextFont' => $mainTextFontFamily !== null  ? $baseGoogleUrlFont . '?family=' . $mainTextFontFamily . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
                 'headingsFont' =>  $headingTextFontFamily !== null ? $baseGoogleUrlFont . '?family=' . $headingTextFontFamily . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
-                'buttonsFont' => $buttonsFontFamily ? $baseGoogleUrlFont . '?family=' . $buttonsFontFamily . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
+                'buttonsFont' => $buttonsFontFamily !== null ? $baseGoogleUrlFont . '?family=' . $buttonsFontFamily . ':ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap' : '',
             ];
         });
     }
