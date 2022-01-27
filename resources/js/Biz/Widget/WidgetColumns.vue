@@ -16,12 +16,14 @@
 
 <script>
     import Post from '@/Biz/Widget/Post';
+    import User from '@/Biz/Widget/User';
 
     export default {
         name: 'BizWidgetColumns',
 
         components: {
             Post,
+            User,
         },
 
         props: {
