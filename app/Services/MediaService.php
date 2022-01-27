@@ -4,12 +4,16 @@ namespace App\Services;
 
 use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Entities\MediaAsset;
-use App\Models\Media;
+use App\Models\{
+    Media,
+    User
+};
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\App;
 
 class MediaService
 {
@@ -199,7 +203,7 @@ class MediaService
         UploadedFile $file,
         string $fileName,
         MediaStorage $mediaStorage,
-        string $folderPrefix = null
+        User $user
     ): Media {
         $media = new Media();
 
@@ -223,6 +227,7 @@ class MediaService
         );
 
         $folder = 'profiles';
+        $folderPrefix = $this->getFolderPrefix();
         if ($folderPrefix) {
             $folder = $folderPrefix.'_'.$folder;
         }
@@ -232,9 +237,8 @@ class MediaService
             $mediaStorage->upload($file, $fileName, $extension, $folder)
         );
         $media->type = Media::TYPE_PROFILE;
-        $media->save();
 
-        return $media;
+        return $user->media()->create($media->toArray());
     }
 
     public function duplicateImage(
@@ -320,5 +324,10 @@ class MediaService
             },
             self::getExtensions()
         );
+    }
+
+    private function getFolderPrefix()
+    {
+        return (!App::environment('production') ? config('app.env') : null);
     }
 }

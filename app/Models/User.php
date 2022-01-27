@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
@@ -190,7 +190,7 @@ class User extends Authenticatable implements MustVerifyEmail
             $photo,
             $fileName,
             new CloudinaryStorage(),
-            (!App::environment('production') ? config('app.env') : null)
+            Auth::user()
         );
 
         if ($this->profile_photo_media_id) {
