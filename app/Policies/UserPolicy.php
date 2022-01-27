@@ -33,4 +33,12 @@ class UserPolicy extends BasePermissionPolicy
             && $selectedUser->is_suspended
         );
     }
+
+    public function updateProfilePhoto(User $user, Model $selectedUser)
+    {
+        return (
+            parent::update($user, $selectedUser)
+            && $user->id == $selectedUser->id
+        );
+    }
 }
