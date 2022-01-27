@@ -38,7 +38,7 @@ class WidgetService
         return $widgets->all();
     }
 
-    private function getWidgetName(string $widgetName): string
+    public function getWidgetName(string $widgetName): string
     {
         return config("constants.widget_cache.{$widgetName}");
     }
@@ -46,5 +46,12 @@ class WidgetService
     public function flushWidget(string $widgetName): void
     {
         app(WidgetCache::class)->flushWidget($this->getWidgetName($widgetName));
+    }
+
+    public function flushAllWidgets(): void
+    {
+        foreach ($this->getWidgetLists() as $widgetName) {
+            app(WidgetCache::class)->flushWidget($this->getWidgetName($widgetName));
+        }
     }
 }

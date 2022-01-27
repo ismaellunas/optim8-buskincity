@@ -98,15 +98,18 @@ class MediaService
 
     public function transformRecords($records)
     {
-        $records->getCollection()->transform(function ($record) {
-            $record->thumbnail_url = $record->thumbnailUrl;
-            $record->file_name_without_extension = $record->fileNameWithoutExtension;
-            $record->is_image = $record->isImage;
-            $record->readable_size = $record->readableSize;
-            $record->date_modified = $record->updated_at->format('d/m/Y H:m');
+        $records->transform([$this, 'transformRecord']);
+    }
 
-            return $record;
-        });
+    public function transformRecord($record)
+    {
+        $record->thumbnail_url = $record->thumbnailUrl;
+        $record->file_name_without_extension = $record->fileNameWithoutExtension;
+        $record->is_image = $record->isImage;
+        $record->readable_size = $record->readableSize;
+        $record->date_modified = $record->updated_at->format('d/m/Y H:m');
+
+        return $record;
     }
 
     protected function fillMediaWithMediaAsset(
@@ -122,6 +125,17 @@ class MediaService
         $media->version = $asset->version;
     }
 
+    private function isOriginalExtensionNeeded(UploadedFile $file): bool
+    {
+        $mimeType = $file->getMimeType();
+
+        return !(
+            Str::startsWith($mimeType, 'image/')
+            || Str::startsWith($mimeType, 'video/')
+            || $file->getClientOriginalExtension() == 'pdf'
+        );
+    }
+
     public function upload(
         UploadedFile $file,
         string $fileName,
@@ -132,13 +146,8 @@ class MediaService
         $extension = null;
 
         $clientExtension = $file->getClientOriginalExtension();
-        $mimeType =  $file->getMimeType();
 
-        if ( !(
-            Str::startsWith($mimeType, 'image/')
-            || Str::startsWith($mimeType, 'video/')
-            || $clientExtension == 'pdf'
-        )) {
+        if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
         }
 
@@ -168,13 +177,8 @@ class MediaService
         $extension = null;
 
         $clientExtension = $file->getClientOriginalExtension();
-        $mimeType =  $file->getMimeType();
 
-        if ( !(
-            Str::startsWith($mimeType, 'image/')
-            || Str::startsWith($mimeType, 'video/')
-            || $clientExtension == 'pdf'
-        )) {
+        if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
         }
 
@@ -210,13 +214,8 @@ class MediaService
         $extension = null;
 
         $clientExtension = $file->getClientOriginalExtension();
-        $mimeType =  $file->getMimeType();
 
-        if ( !(
-            Str::startsWith($mimeType, 'image/')
-            || Str::startsWith($mimeType, 'video/')
-            || $clientExtension == 'pdf'
-        )) {
+        if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
         }
 
@@ -326,7 +325,44 @@ class MediaService
         );
     }
 
-    private function getFolderPrefix()
+    public function uploadUserMeta(
+        UploadedFile $file,
+        MediaStorage $mediaStorage
+    ): Media {
+        $media = new Media();
+
+        $extension = null;
+
+        $clientExtension = $file->getClientOriginalExtension();
+
+        $fileName = preg_replace(
+            '/[^a-z0-9]+/',
+            '-',
+            $file->getClientOriginalName()
+        );
+
+        if ($this->isOriginalExtensionNeeded($file)) {
+            $extension = $clientExtension;
+        }
+
+        $fileName = $this->getUniqueFileName(
+            Str::lower($fileName),
+            [],
+            $extension
+        );
+
+        $this->fillMediaWithMediaAsset(
+            $media,
+            $mediaStorage->upload($file, $fileName, $extension)
+        );
+
+        $media->type = Media::TYPE_USER_META;
+        $media->save();
+
+        return $media;
+    }
+
+    private function getFolderPrefix(): ?string
     {
         return (!App::environment('production') ? config('app.env') : null);
     }

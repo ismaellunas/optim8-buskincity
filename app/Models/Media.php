@@ -9,6 +9,7 @@ use CloudinaryLabs\CloudinaryLaravel\Model\Media as CloudinaryMedia;
 use Cloudinary\Transformation\Resize;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Str;
 
 class Media extends CloudinaryMedia implements TranslatableContract
@@ -21,6 +22,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
     const TYPE_DEFAULT = 0;
     const TYPE_SETTING = 1;
     const TYPE_PROFILE = 2;
+    const TYPE_USER_META = 3;
 
     public $translatedAttributes = [
         'alt',
@@ -47,7 +49,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    public function medially()
+    public function medially(): MorphTo
     {
         return $this->morphTo();
     }

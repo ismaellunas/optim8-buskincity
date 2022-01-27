@@ -8,6 +8,7 @@ use App\Services\{
     MediaService,
     UserService
 };
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -144,6 +145,11 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $url;
+    }
+
+    public function getRegisteredAtAttribute()
+    {
+        return Carbon::parse($this->created_at)->format("Y-m-d H:i:s");
     }
 
     public function getIsSuperAdministratorAttribute(): bool
