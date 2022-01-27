@@ -14,6 +14,7 @@ class Master extends Component
     public $trackingCodeInsideHead;
     public $additionalJavascript;
     public $additionalCss;
+    public $fontUrls;
 
     /**
      * Create a new component instance.
@@ -31,6 +32,7 @@ class Master extends Component
         $this->trackingCodeInsideHead = $settingService->getTrackingCodeInsideHead();
         $this->additionalJavascript = $settingService->getAdditionalJavascript();
         $this->additionalCss = $settingService->getAdditionalCss();
+        $this->fontUrls = $settingService->getFontUrls();
     }
 
     /**
