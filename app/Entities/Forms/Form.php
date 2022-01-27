@@ -2,7 +2,6 @@
 
 namespace App\Entities\Forms;
 
-use App\Contracts\ArrayValueFieldInterface;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
@@ -79,16 +78,19 @@ class Form
         $this->fields = $fieldCollection;
     }
 
-    protected function getFieldSchema(array $values = []): Collection
+    protected function getFieldSchema(array $storedValues = []): Collection
     {
         $schema = collect();
 
         foreach ($this->fields as $name => $field) {
-            $fieldSchema = $field->schema();
 
-            if (array_key_exists($name, $values)) {
-                $fieldSchema['value'] = $values[$name];
+            $storedValue = $field->findStoredValue($storedValues);
+
+            if ($storedValue) {
+                $field->storedValue = $storedValue;
             }
+
+            $fieldSchema = $field->schema();
 
             $schema->put($name, $fieldSchema);
         }
@@ -105,23 +107,32 @@ class Form
         ];
     }
 
-    public function rules(): array
+    public function rules($location): array
     {
         $rules = [];
 
+        $storedValues = $location->getValues($this->fields->keys())->all();
+
         foreach ($this->fields as $field) {
+
+            $storedValue = $field->findStoredValue($storedValues);
+
+            if (! is_null($storedValue)) {
+                $field->storedValue = $storedValue;
+            }
+
             $rules = array_merge($rules, $field->validationRules());
         }
 
         return $rules;
     }
 
-    public function attributes(): array
+    public function attributes($inputs = null): array
     {
         $attributes = [];
 
         foreach ($this->fields as $field) {
-            $attributes = array_merge($attributes, $field->getLabels());
+            $attributes = array_merge($attributes, $field->getLabels($inputs));
         }
 
         return $attributes;

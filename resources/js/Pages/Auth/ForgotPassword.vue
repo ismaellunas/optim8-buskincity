@@ -36,8 +36,15 @@
                                     </div>
 
                                     <div
+                                        v-if="failed"
+                                        class="notification is-danger"
+                                    >
+                                        {{ failed }}
+                                    </div>
+
+                                    <div
                                         v-if="status"
-                                        class="notification is-info"
+                                        class="notification is-success"
                                     >
                                         {{ status }}
                                     </div>
@@ -46,21 +53,35 @@
                                         :errors="$page.props.errors"
                                     />
 
-                                    <form @submit.prevent="submit">
+                                    <form method="post">
                                         <div>
+                                            <input type="hidden" name="_token" :value="csrfToken">
+
                                             <biz-form-input
+                                                name="email"
                                                 v-model="form.email"
                                                 label="Email"
                                                 required
                                                 type="email"
                                                 placeholder="Enter your email"
-                                                :message="error('email')"
                                             />
                                         </div>
+
+                                        <vue-recaptcha
+                                            :sitekey="$page.props.recaptchaSiteKey"
+                                        />
+
+                                        <span
+                                            v-if="isRecaptchaError"
+                                            class="has-text-danger"
+                                        >
+                                            Please check the captcha!
+                                        </span>
 
                                         <div class="mt-4">
                                             <biz-button
                                                 class="button is-info"
+                                                type="submit"
                                                 :disabled="form.processing"
                                             >
                                                 Email Password Reset Link
@@ -78,11 +99,11 @@
 </template>
 
 <script>
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormInput from '@/Biz/Form/Input';
     import BizLink from '@/Biz/Link';
+    import { VueRecaptcha } from 'vue-recaptcha'
 
     export default {
         components: {
@@ -90,13 +111,14 @@
             BizErrorNotifications,
             BizFormInput,
             BizLink,
+            VueRecaptcha,
         },
 
-        mixins: [
-            MixinHasPageErrors,
-        ],
-
         props: {
+            failed: {
+                type: String,
+                default: '',
+            },
             status: {
                 type: String,
                 default: '',
@@ -105,15 +127,12 @@
 
         data() {
             return {
+                isRecaptchaError: false,
                 form: this.$inertia.form({
-                    email: ''
-                })
-            }
-        },
-
-        methods: {
-            submit() {
-                this.form.post(this.route('password.email'))
+                    email: '',
+                    'g-recaptcha-response': null,
+                }),
+                csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         }
     }

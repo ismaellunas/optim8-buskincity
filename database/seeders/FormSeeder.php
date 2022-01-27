@@ -45,7 +45,6 @@ class FormSeeder extends Seeder
                     "type" => "Phone",
                     "label" => "Phone",
                     "placeholder" => "Phone",
-                    "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
                     "validation" => [
@@ -230,6 +229,37 @@ class FormSeeder extends Seeder
             ]
         ];
 
+        $document = [
+            "name" => "documents",
+            "title" => "Documents",
+            "order" => 3,
+            "visibility" => [
+            ],
+            "locations" => [
+                'admin.profile.show',
+                'admin.users.edit',
+            ],
+            "fields" => [
+                "licence" => [
+                    "type" => "File",
+                    "label" => "Licence",
+                    "placeholder" => "Your Licence",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "max_file_number" => 3,
+                    "min_file_number" => 2,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                            "mimes:pdf,doc,docx",
+                            "max:15",
+                        ],
+                        "messages" => []
+                    ],
+                ],
+            ]
+        ];
+
         FieldGroup::updateOrCreate(
             ['title' => $biodata['name']],
             ['data' => $biodata]
@@ -238,6 +268,11 @@ class FormSeeder extends Seeder
         FieldGroup::updateOrCreate(
             ['title' => $address['name']],
             ['data' => $address]
+        );
+
+        FieldGroup::updateOrCreate(
+            ['title' => $document['name']],
+            ['data' => $document]
         );
     }
 }

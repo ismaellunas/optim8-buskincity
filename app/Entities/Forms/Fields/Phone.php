@@ -11,6 +11,11 @@ class Phone extends BaseField
 
     public $defaultCountry;
 
+    public $defaultValue = [
+        'country' => null,
+        'number' => null,
+    ];
+
     public function __construct(string $name, array $data = [])
     {
         parent::__construct($name, $data);
@@ -23,10 +28,6 @@ class Phone extends BaseField
     public function schema(): array
     {
         $schema = [
-            'value' => [
-                'country' => '',
-                'number' => '',
-            ],
             'defaultCountry' => $this->defaultCountry,
             'countryOptions' => app(CountryService::class)
                 ->getPhoneCountryOptions()
@@ -81,7 +82,7 @@ class Phone extends BaseField
         return "US";
     }
 
-    public function getLabels(): array
+    public function getLabels(array $inputs = []): array
     {
         return [
             $this->name.'.number' =>  $this->label,

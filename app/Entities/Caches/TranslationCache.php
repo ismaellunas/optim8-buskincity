@@ -5,9 +5,11 @@ namespace App\Entities\Caches;
 use Illuminate\Support\Facades\Cache;
 use \Closure;
 
-class TranslationCache
+class TranslationCache extends BaseCache
 {
-    private string $tag = 'translation';
+    protected string $tag = 'translation';
+    private string $locale;
+    private string $group;
 
     private function getKey(string $locale, string $group): string
     {
@@ -24,23 +26,28 @@ class TranslationCache
         return $this->tag . ":" . $this->getKey($locale, $group);
     }
 
-    public function remember(string $locale, string $group, Closure $callback): mixed
+    protected function getTags(): array
     {
-        $key = $this->getKey($locale, $group);
-
-        return Cache::tags([
-            $this->tag,
-            $this->getLocaleTag($locale),
-            $this->getGroupTag($locale, $group)
-        ])->rememberForever(
-            $key,
-            $callback
+        return array_merge(
+            parent::getTags(),
+            [
+                $this->getLocaleTag($this->locale),
+                $this->getGroupTag($this->locale, $this->group)
+            ]
         );
     }
 
-    public function flush(): bool
-    {
-        return Cache::tags($this->tag)->flush();
+    public function remember(
+        string $locale,
+        Closure $callback,
+        string $group = null
+    ): mixed {
+        $key = $this->getKey($locale, $group);
+
+        $this->locale = $locale;
+        $this->group = $group;
+
+        return parent::remember($key, $callback);
     }
 
     public function flushLocale(string $locale): bool

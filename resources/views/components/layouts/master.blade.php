@@ -16,6 +16,18 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
         <link rel="stylesheet" href="{{ $appCssUrl }}">
 
+        @if (!empty($fontUrls['mainTextFont']))
+            <link rel="stylesheet" href="{{ $fontUrls['mainTextFont'] }}">
+        @endif
+
+        @if (!empty($fontUrls['headingsFont']))
+            <link rel="stylesheet" href="{{ $fontUrls['headingsFont'] }}">
+        @endif
+
+        @if (!empty($fontUrls['buttonsFont']))
+            <link rel="stylesheet" href="{{ $fontUrls['buttonsFont'] }}">
+        @endif
+
         @stack('styles')
 
         @env ('production')
