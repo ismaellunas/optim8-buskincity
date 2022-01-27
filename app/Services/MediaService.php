@@ -298,6 +298,24 @@ class MediaService
         return $media;
     }
 
+    public function sanitizeFileName($fileName)
+    {
+        // line by line explained: https://stackoverflow.com/a/19018736/8368172
+
+        $sanitized = strip_tags($fileName);
+        $sanitized = preg_replace('/[\r\n\t ]+/', ' ', $sanitized);
+        $sanitized = preg_replace('/[\"\*\/\:\<\>\?\'\|]+/', ' ', $sanitized);
+        $sanitized = strtolower($sanitized);
+        $sanitized = html_entity_decode( $sanitized, ENT_QUOTES, "utf-8" );
+        $sanitized = htmlentities($sanitized, ENT_QUOTES, "utf-8");
+        $sanitized = preg_replace("/(&)([a-z])([a-z]+;)/i", '$2', $sanitized);
+        $sanitized = str_replace(' ', '-', $sanitized);
+        $sanitized = rawurlencode($sanitized);
+        $sanitized = str_replace('%', '-', $sanitized);
+        $sanitized = (substr($sanitized, -1) === '-') ? rtrim($sanitized, '-') : $sanitized;
+        return $sanitized;
+    }
+
     public function destroy(Media $media, MediaStorage $mediaStorage)
     {
         $mediaStorage->destroy($media->file_name, $media->file_type);

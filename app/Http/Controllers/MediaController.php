@@ -75,7 +75,7 @@ class MediaController extends Controller
     {
         $media = $this->mediaService->upload(
             $request->file,
-            $request->input('file_name'),
+            $this->mediaService->sanitizeFileName($request->input('file_name')),
             new CloudinaryStorage()
         );
 
@@ -124,7 +124,7 @@ class MediaController extends Controller
     {
         $data = [];
         $fileName = $request->input('file_name');
-
+        $fileName = $this->mediaService->sanitizeFileName($fileName);
         if ($media->file_name != $fileName) {
             $media = $this->mediaService->rename(
                 $media,
