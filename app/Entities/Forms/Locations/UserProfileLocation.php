@@ -56,7 +56,16 @@ class UserProfileLocation
     {
         $user = $this->getEntity();
 
+        $storedValues = $this->getValues($fields->keys())->all();
+
         foreach ($fields as $field) {
+
+            $storedValue = $field->findStoredValue($storedValues);
+
+            if (! is_null($storedValue)) {
+                $field->storedValue = $storedValue;
+            }
+
             $data = $field->getDataToBeSaved($inputs);
 
             if (!empty($data)) {

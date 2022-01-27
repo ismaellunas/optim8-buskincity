@@ -15,6 +15,7 @@
             :is="field.type"
             v-for="(field, name) in group.fields"
             :key="name"
+            :ref="'field__' + name"
             v-model="form[ name ]"
             :errors="form.errors"
             :schema="field"
@@ -25,6 +26,7 @@
 <script>
     import Checkbox from './Checkbox';
     import CheckboxGroup from './CheckboxGroup';
+    import File from './File';
     import Number from './Number';
     import Phone from './Phone';
     import Radio from './Radio';
@@ -40,6 +42,7 @@
         components: {
             Checkbox,
             CheckboxGroup,
+            File,
             Number,
             Phone,
             Radio,

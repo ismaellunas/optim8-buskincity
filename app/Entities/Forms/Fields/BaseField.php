@@ -18,6 +18,7 @@ abstract class BaseField
     public $validation;
     public $value;
     public $roles;
+    public $storedValue;
 
     public function __construct(string $name, array $data = [])
     {
@@ -60,6 +61,11 @@ abstract class BaseField
         }
     }
 
+    protected function getSchemaValue(): mixed
+    {
+        return $this->storedValue ?? $this->value;
+    }
+
     protected function schema(): array
     {
         return [
@@ -70,7 +76,8 @@ abstract class BaseField
             'is_readonly' => $this->readonly,
             'is_required' => $this->isRequired(),
             'default_value' => $this->defaultValue,
-            'value' => $this->value,
+            'instructions' => $this->getInstructions(),
+            'value' => $this->getSchemaValue(),
         ];
     }
 
@@ -116,10 +123,24 @@ abstract class BaseField
         return $data;
     }
 
-    public function getLabels(): array
+    public function getLabels(array $inputs = []): array
     {
         return [
             $this->name =>  $this->label,
         ];
+    }
+
+    public function getInstructions(): array
+    {
+        return [];
+    }
+
+    public function findStoredValue(array $storedValues = []): mixed
+    {
+        if (array_key_exists($this->name, $storedValues)) {
+            return $storedValues[$this->name];
+        }
+
+        return null;
     }
 }
