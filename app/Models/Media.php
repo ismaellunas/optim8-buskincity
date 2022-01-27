@@ -46,6 +46,11 @@ class Media extends CloudinaryMedia implements TranslatableContract
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    public function medially()
+    {
+        return $this->morphTo();
+    }
+
     // Scopes:
     public function scopeImage($query)
     {

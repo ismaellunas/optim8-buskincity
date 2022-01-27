@@ -104,6 +104,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(UserMeta::class);
     }
 
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'medially');
+    }
+
     public function scopeSearch($query, string $term)
     {
         return $query->where(function ($query) use ($term) {
