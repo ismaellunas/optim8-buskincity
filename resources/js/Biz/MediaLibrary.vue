@@ -337,7 +337,6 @@
                 isDeleting: false,
                 loader: null,
                 previewImageSrc: null,
-                disabled: false,
                 messageText: {
                     successSaveAsMedia: "A new media has been created",
                     successSubmitForm: "Media has been updated",
