@@ -9,6 +9,7 @@ use App\Rules\FieldMaxFile;
 use App\Rules\FieldMinFile;
 use App\Services\MediaService;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 class File extends BaseField
