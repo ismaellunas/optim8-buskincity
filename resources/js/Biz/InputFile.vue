@@ -9,8 +9,8 @@
                 class="file-input"
                 type="file"
                 :accept="accept.join(', ')"
-                :disabled="disabled"
-                @click="resetFile"
+                :disabled="disabled || isDelayed"
+                @click="clicked"
                 @input="pickFile"
             >
             <span class="file-cta">
@@ -61,6 +61,12 @@
             },
         },
 
+        data() {
+            return {
+                isDelayed: false
+            }
+        },
+
         emits: [
             'on-file-picked',
             'update:modelValue'
@@ -94,6 +100,20 @@
         methods: {
             resetFile() {
                 this.$refs.fileInput.value = null;
+            },
+
+            disabledFewSeconds(){
+                setTimeout(() => {
+                    this.isDelayed = true;
+                }, 1);
+                setTimeout(() => {
+                    this.isDelayed = false;
+                }, 3000)
+            },
+
+            clicked() {
+                this.resetFile();
+                this.disabledFewSeconds();
             },
 
             pickFile() {

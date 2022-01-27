@@ -12,9 +12,8 @@
                                 v-model="file"
                                 :accept="acceptedTypes"
                                 :is-name-displayed="false"
-                                :disabled="disabled || isProcessing"
+                                :disabled="isProcessing"
                                 @on-file-picked="onFilePicked"
-                                @click="disabledFewSeconds"
                             />
                         </div>
                     </div>
@@ -358,14 +357,6 @@
             },
         },
         methods: {
-            disabledFewSeconds() {
-                setTimeout(() => {
-                    this.disabled = true;
-                }, 1);
-                setTimeout(() => {
-                    this.disabled = false;
-                }, 3000)
-            },
             isImage(media) {
                 return (
                     (media?.is_image)
