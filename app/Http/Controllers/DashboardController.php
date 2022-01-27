@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\WidgetService;
+use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -19,8 +20,15 @@ class DashboardController extends Controller
 
     private function getComponentName(): string
     {
-        return auth()->user()->can('system.dashboard')
-            ? "AdminDashboard"
-            : "Dashboard";
+        $componentName = 'Dashboard';
+
+        if (
+            Route::currentRouteName() == 'admin.dashboard'
+            && auth()->user()->can('system.dashboard')
+        ) {
+            $componentName = 'AdminDashboard';
+        }
+
+        return $componentName;
     }
 }
