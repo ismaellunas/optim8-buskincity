@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Models\Media;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
