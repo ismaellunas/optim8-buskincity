@@ -6,7 +6,7 @@
                 disabled
                 readonly
                 type="text"
-                :value="medium.file_name"
+                :value="medium.display_file_name"
             >
         </div>
         <div class="control">

@@ -89,13 +89,10 @@
                             :entity-id="record.id"
                             @loaded-successfully="isFormBuilderShown = true"
                         >
-                            <template #buttons="{submit}">
+                            <template #buttons>
                                 <div class="field is-grouped is-grouped-right">
                                     <div class="control">
-                                        <biz-button
-                                            class="is-link"
-                                            @click="submit"
-                                        >
+                                        <biz-button class="is-link">
                                             Update
                                         </biz-button>
                                     </div>

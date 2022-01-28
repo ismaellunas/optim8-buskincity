@@ -221,5 +221,19 @@ class SettingSeeder extends Seeder
         ];
 
         Setting::factory()->create($homePage);
+
+        $others = [
+            [
+                "key" => "default_language",
+                "display_name" => null,
+                "value" => 30,
+                "group" => null,
+                "order" => "1"
+            ],
+        ];
+
+        foreach ($others as $other) {
+            Setting::factory()->create($other);
+        }
     }
 }

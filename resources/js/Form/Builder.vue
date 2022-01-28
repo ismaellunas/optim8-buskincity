@@ -8,10 +8,7 @@
             :group="group"
         />
 
-        <slot
-            name="buttons"
-            :submit="submit"
-        >
+        <slot name="buttons">
             <div class="field is-grouped is-grouped-left">
                 <div class="control">
                     <biz-button

@@ -8,7 +8,9 @@ use App\Models\Media;
 use App\Rules\FieldMaxFile;
 use App\Rules\FieldMinFile;
 use App\Services\MediaService;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 class File extends BaseField
@@ -74,7 +76,9 @@ class File extends BaseField
         foreach ($files as $file) {
             $media->push(app(MediaService::class)->uploadUserMeta(
                 $file,
-                new CloudinaryStorage()
+                new CloudinaryStorage(),
+                $this->entity,
+                (!App::environment('production') ? 'local_' : null)
             ));
         }
 
@@ -262,5 +266,17 @@ class File extends BaseField
             'delete_media' => [],
             'files' => [],
         ];
+    }
+
+    public function setMedially(Model $relatedEntity, array $mediaIds = [])
+    {
+        $media = Media::whereIn('id', $mediaIds)
+            ->whereNull('medially_id')
+            ->get();
+
+        foreach ($media as $medium) {
+            $medium->medially()->associate($relatedEntity);
+            $medium->save();
+        }
     }
 }
