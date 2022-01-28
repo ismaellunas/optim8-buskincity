@@ -30,6 +30,8 @@
         'GOOGLE_CLIENT_ID',
         'GOOGLE_CLIENT_SECRET',
         'QUEUE_CONNECTION',
+        'RECAPTCHA_SITE_KEY',
+        'RECAPTCHA_SECRET_KEY'
         // 'REDIS_CLIENT',
         // 'REDIS_URL',
     ];
