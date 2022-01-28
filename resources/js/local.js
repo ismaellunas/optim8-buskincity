@@ -1,7 +1,7 @@
 // Tiny MCE
-import 'tinymce/tinymce';
-import 'tinymce/themes/silver/theme';
-import 'tinymce/icons/default';
+import 'tinymce/tinymce.min';
+import 'tinymce/themes/silver/theme.min';
+import 'tinymce/icons/default/icons.min';
 // Plugins
 import 'tinymce/plugins/advlist';
 import 'tinymce/plugins/anchor';
