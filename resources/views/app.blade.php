@@ -24,7 +24,7 @@
 
         @env ('local')
             <!-- Styles -->
-            <link rel="stylesheet" href="{{ mix('css/vue-loading.css') }}">
+            <link rel="stylesheet" href="{{ mix('css/local.css') }}">
             <!-- Scripts -->
             <script src="{{ mix('js/local.js') }}" defer></script>
 
