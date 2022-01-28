@@ -30,6 +30,8 @@ if (mix.inProduction()) {
         .js('resources/js/fontawesome.js', 'public/js')
         .sass('resources/sass/local.scss', 'public/css');
 
+    mix.copy('node_modules/tinymce/skins', 'public/js/skins');
+
     mix.browserSync({
         host: '127.0.0.1',
         proxy: 'localhost',
