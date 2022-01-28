@@ -4,11 +4,15 @@ namespace App\Providers;
 
 use App\Models\{
     Post,
+    Role,
     Setting,
+    User,
 };
 use App\Observers\{
     PostObserver,
+    RoleObserver,
     SettingObserver,
+    UserObserver,
 };
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -36,6 +40,8 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         Post::observe(PostObserver::class);
+        Role::observe(RoleObserver::class);
         Setting::observe(SettingObserver::class);
+        User::observe(UserObserver::class);
     }
 }

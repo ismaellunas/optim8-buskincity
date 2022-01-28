@@ -13,6 +13,7 @@ use App\Services\{
     TranslationService,
 };
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
@@ -26,6 +27,25 @@ class PageController extends Controller
     ) {
         $this->pageService = $pageService;
         $this->translationService = $translationService;
+    }
+
+    private function redirectFallback()
+    {
+        return redirect()->route('homepage');
+    }
+
+    private function defaultHomePage()
+    {
+        return view('home', ['title' => env('APP_NAME')]);
+    }
+
+    private function userCanAccessPage(): bool
+    {
+        if (Auth::check()) {
+            return Auth::user()->can('page.read');
+        } else {
+            return false;
+        }
     }
 
     private function goToPageWithDefaultLocaleOrFallback(
@@ -46,11 +66,6 @@ class PageController extends Controller
         } else {
             return $fallback;
         }
-    }
-
-    private function redirectFallback()
-    {
-        return redirect()->route('homepage');
     }
 
     private function getPageImages(
@@ -94,7 +109,10 @@ class PageController extends Controller
         } else {
             $newPageTranslation = $page->translate($locale);
 
-            if ($newPageTranslation->status != PageTranslation::STATUS_PUBLISHED) {
+            if (
+                $newPageTranslation->status != PageTranslation::STATUS_PUBLISHED
+                && !$this->userCanAccessPage()
+            ) {
                 return $this->redirectFallback();
             }
 
@@ -137,10 +155,5 @@ class PageController extends Controller
                 'page' => $pageTranslation,
             ]);
         }
-    }
-
-    private function defaultHomePage()
-    {
-        return view('home', ['title' => env('APP_NAME')]);
     }
 }
