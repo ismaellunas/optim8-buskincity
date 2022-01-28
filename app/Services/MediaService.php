@@ -376,6 +376,18 @@ class MediaService
         return $media;
     }
 
+    public function setMedially(Model $relatedModel, array $mediaIds = [])
+    {
+        $media = Media::whereIn('id', $mediaIds)
+            ->whereNull('medially_id')
+            ->get();
+
+        foreach ($media as $medium) {
+            $medium->medially()->associate($relatedModel);
+            $medium->save();
+        }
+    }
+
     private function getFolderPrefix(): ?string
     {
         return (!App::environment('production') ? config('app.env') : null);
