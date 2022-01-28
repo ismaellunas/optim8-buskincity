@@ -15,7 +15,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -191,13 +190,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function updateProfilePhoto(UploadedFile $photo)
     {
-        $fileName = $this->first_name.'-'.$this->last_name.'-'.Str::random(10);
+        $user = Auth::user();
         $media = app(MediaService::class)->uploadProfile(
             $photo,
-            $fileName,
             new CloudinaryStorage(),
-            Auth::user()
+            $user,
+            "profiles",
         );
+
+        app(MediaService::class)->setMedially($user, [
+            $media->id
+        ]);
 
         if ($this->profile_photo_media_id) {
             $this->deleteProfilePhoto();

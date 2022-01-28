@@ -11,6 +11,7 @@ use App\Models\{
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\App;
@@ -211,9 +212,9 @@ class MediaService
 
     public function uploadProfile(
         UploadedFile $file,
-        string $fileName,
         MediaStorage $mediaStorage,
-        User $user
+        User $user,
+        string $folder = null,
     ): Media {
         $media = new Media();
 
@@ -226,15 +227,14 @@ class MediaService
         }
 
         $fileName = MediaService::getUniqueFileName(
-            Str::lower($fileName),
+            Str::lower($user->first_name.'-'.$user->last_name.'-'.Str::random(10)),
             [],
-            $extension
+            $extension,
+            $folder
         );
 
-        $folder = 'profiles';
-        $folderPrefix = $this->getFolderPrefix();
-        if ($folderPrefix) {
-            $folder = $folderPrefix.'_'.$folder;
+        if ($folder) {
+            $folder = $this->getFolderPrefix().'_'.$folder;
         }
 
         $this->fillMediaWithMediaAsset(
@@ -242,8 +242,9 @@ class MediaService
             $mediaStorage->upload($file, $fileName, $extension, $folder)
         );
         $media->type = Media::TYPE_PROFILE;
+        $media->save();
 
-        return $user->media()->create($media->toArray());
+        return $media;
     }
 
     public function duplicateImage(
