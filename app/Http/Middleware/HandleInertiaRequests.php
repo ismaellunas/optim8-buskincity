@@ -93,7 +93,7 @@ class HandleInertiaRequests extends Middleware
             'languageOptions' => TranslationSv::getLocaleOptions(),
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
-            ],
+            ]
         ]);
     }
 }

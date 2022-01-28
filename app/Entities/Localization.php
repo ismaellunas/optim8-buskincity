@@ -8,6 +8,7 @@ use App\Services\{
 };
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Mcamara\LaravelLocalization\LaravelLocalization;
 use Mcamara\LaravelLocalization\Exceptions\{
     SupportedLocalesNotDefined,
@@ -31,30 +32,39 @@ class Localization extends LaravelLocalization
             $this->url = $this->app['url'];
         }
 
-        try {
+        if (App::environment('testing')) {
 
-            $this->defaultLocale = TranslationService::getDefaultLocale();
-
-        } catch (QueryException $e) {
-
-            if ($e->getCode() == '42P01') {
-                $this->defaultLocale = config('app.fallback_locale');
-            } else {
-                throw $e;
-            }
-
-        } catch (\Predis\Connection\ConnectionException $e) {
-
-            $this->defaultLocale = $this->configRepository->get('app.fallback_locale');
-        }
-
-        try {
-
-            $supportedLocales = $this->getSupportedLocales();
-
-        } catch (\Illuminate\Database\QueryException $e) {
+            $this->defaultLocale = config('app.fallback_locale');
 
             $supportedLocales = parent::getSupportedLocales();
+
+        } else {
+
+            try {
+
+                $this->defaultLocale = TranslationService::getDefaultLocale();
+
+            } catch (QueryException $e) {
+
+                if ($e->getCode() == '42P01') {
+                    $this->defaultLocale = config('app.fallback_locale');
+                } else {
+                    throw $e;
+                }
+
+            } catch (\Predis\Connection\ConnectionException $e) {
+
+                $this->defaultLocale = $this->configRepository->get('app.fallback_locale');
+            }
+
+            try {
+
+                $supportedLocales = $this->getSupportedLocales();
+
+            } catch (\Illuminate\Database\QueryException $e) {
+
+                $supportedLocales = parent::getSupportedLocales();
+            }
         }
 
         if (

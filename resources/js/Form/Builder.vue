@@ -3,19 +3,16 @@
         <field-group
             v-for="(group, index) in sortedFieldGroups"
             :key="index"
+            :ref="'field_group__'+index"
             v-model="form"
             :group="group"
         />
 
-        <slot
-            name="buttons"
-            :submit="submit"
-        >
+        <slot name="buttons">
             <div class="field is-grouped is-grouped-left">
                 <div class="control">
                     <biz-button
                         class="is-primary"
-                        @click="submit"
                     >
                         Submit
                     </biz-button>
@@ -28,7 +25,7 @@
 <script>
     import BizButton from '@/Biz/Button';
     import FieldGroup from './FieldGroup';
-    import { isEmpty, forOwn, sortBy } from 'lodash';
+    import { isEmpty, forOwn, sortBy, forEach } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -74,34 +71,38 @@
         },
 
         mounted() {
-            const self = this;
-
-            axios.get(
-                route(self.routeGetSchemas),
-                {
-                    params: {
-                        id: self.entityId,
-                        route_name: self.routeName
-                    }
-                }
-
-            ).then((response) => {
-                self.fieldGroups = response.data;
-
-                self.form = self.createForm(self.fieldGroups);
-
-                self.$emit('loaded-successfully', response.data);
-
-            }).catch((error) => {
-                if (error.response) {
-                    if (error.response.status == 403) {
-                        self.$emit('loaded-forbidden', error.response);
-                    }
-                }
-            });
+            this.getSchemas();
         },
 
         methods: {
+            getSchemas() {
+                const self = this;
+
+                return axios.get(
+                    route(self.routeGetSchemas),
+                    {
+                        params: {
+                            id: self.entityId,
+                            route_name: self.routeName
+                        }
+                    }
+
+                ).then((response) => {
+                    self.fieldGroups = response.data;
+
+                    self.form = self.createForm(self.fieldGroups);
+
+                    self.$emit('loaded-successfully', response.data);
+
+                }).catch((error) => {
+                    if (error.response) {
+                        if (error.response.status == 403) {
+                            self.$emit('loaded-forbidden', error.response);
+                        }
+                    }
+                });
+            },
+
             createForm(groupFields) {
                 const form = {
                     id: this.entityId
@@ -124,26 +125,6 @@
                 return useForm(form);
             },
 
-            /*
-            createForm(fields) {
-                const form = {
-                    id: this.entityId
-                };
-
-                if (!isEmpty(fields)) {
-                    for (const [key, field] of Object.entries(fields)) {
-                        if (typeof field.value === 'undefined') {
-                            form[ key ] = undefined;
-                        } else {
-                            form[ key ] = field.value;
-                        }
-                    }
-                }
-
-                return useForm(form);
-            },
-            */
-
             submit() {
                 const self = this;
 
@@ -160,8 +141,13 @@
                             onStart: () => {
                                 self.loader = self.$loading.show();
                             },
-                            onSuccess: (page) => {
+                            onSuccess: async (page) => {
                                 successAlert(page.props.flash.message);
+
+                                await self.getSchemas();
+
+                                self.resetFields();
+
                             },
                             onError: errors => {
                                 oopsAlert({isScrollToTop: false});
@@ -171,6 +157,16 @@
                             },
                         }
                     );
+            },
+
+            resetFields() {
+                forEach(this.$refs, (fieldGroup, fieldGroupKey) => {
+                    forEach(fieldGroup.$refs, (field, fieldKey) => {
+                        if (field.reset) {
+                            field.reset();
+                        }
+                    });
+                });
             }
         },
     };

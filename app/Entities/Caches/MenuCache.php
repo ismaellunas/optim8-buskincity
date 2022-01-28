@@ -2,28 +2,24 @@
 
 namespace App\Entities\Caches;
 
-use Illuminate\Support\Facades\Cache;
 use \Closure;
 
-class MenuCache
+class MenuCache extends BaseCache
 {
-    private string $tag = 'menus';
+    protected string $tag = 'menus';
 
-    private function getCacheKey($key, $locale)
+    private function getKey($key, $locale)
     {
         return $key.':'.$locale;
     }
 
-    public function remember(string $key, Closure $callback, string $locale): mixed
-    {
-        return Cache::tags($this->tag)->rememberForever(
-            $this->getCacheKey($key, $locale),
-            $callback
-        );
-    }
+    public function remember(
+        string $key,
+        Closure $callback,
+        string $locale = null
+    ): mixed {
+        $key = $this->getKey($key, $locale);
 
-    public function flush(): bool
-    {
-        return Cache::tags($this->tag)->flush();
+        return parent::remember($key, $callback);
     }
 }
