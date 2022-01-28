@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Entities\MediaAsset;
 use App\Models\Media;
+use App\Models\User;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,9 +30,14 @@ class MediaService
     public static function getUniqueFileName(
         string $fileName,
         array $excludedIds = [],
-        string $extension = null
+        string $extension = null,
+        string $folder = null
     ): string {
         $searchFileName = $fileName;
+
+        if (!empty($folder)) {
+            $searchFileName = $folder.'/'.$searchFileName;
+        }
 
         if (!empty($extension)) {
             $searchFileName .= '.'.$extension;
@@ -104,6 +110,7 @@ class MediaService
         $record->is_image = $record->isImage;
         $record->readable_size = $record->readableSize;
         $record->date_modified = $record->updated_at->format('d/m/Y H:m');
+        $record->display_file_name = $record->displayFileName;
 
         return $record;
     }
@@ -323,7 +330,9 @@ class MediaService
 
     public function uploadUserMeta(
         UploadedFile $file,
-        MediaStorage $mediaStorage
+        MediaStorage $mediaStorage,
+        User $user,
+        string $folderPrefix = null
     ): Media {
         $media = new Media();
 
@@ -334,22 +343,28 @@ class MediaService
         $fileName = preg_replace(
             '/[^a-z0-9]+/',
             '-',
-            $file->getClientOriginalName()
+            Str::lower(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
         );
 
         if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
         }
 
+        $folder = 'user_assets/'.$user->id;
+        if ($folderPrefix) {
+            $folder = $folderPrefix.$folder;
+        }
+
         $fileName = $this->getUniqueFileName(
-            Str::lower($fileName),
+            $fileName,
             [],
-            $extension
+            $extension,
+            $folder
         );
 
         $this->fillMediaWithMediaAsset(
             $media,
-            $mediaStorage->upload($file, $fileName, $extension)
+            $mediaStorage->upload($file, $fileName, $extension, $folder)
         );
 
         $media->type = Media::TYPE_USER_META;

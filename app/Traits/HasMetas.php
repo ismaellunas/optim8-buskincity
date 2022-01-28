@@ -30,8 +30,9 @@ trait HasMetas
         $this->metaBuffers[$key] = $value;
     }
 
-    public function saveMetas()
+    public function saveMetas(): Collection
     {
+        $metas = collect();
         $metaModelClass = get_class($this->{$this->metaRelation}()->getRelated());
 
         foreach ($this->metaBuffers as $key => $value) {
@@ -47,6 +48,10 @@ trait HasMetas
 
             $meta->value = $value;
             $meta->save();
+
+            $metas->push($meta);
         }
+
+        return $metas;
     }
 }
