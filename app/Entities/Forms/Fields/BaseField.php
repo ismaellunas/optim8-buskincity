@@ -19,6 +19,7 @@ abstract class BaseField
     public $value;
     public $roles;
     public $storedValue;
+    public $entity;
 
     public function __construct(string $name, array $data = [])
     {
