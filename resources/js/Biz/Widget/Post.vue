@@ -7,6 +7,7 @@
                 </div>
                 <div class="column">
                     <biz-button-link
+                        v-if="data.permissions.add"
                         class="is-primary is-small is-pulled-right"
                         :href="route(data.baseRouteName+'.create')"
                     >
@@ -68,7 +69,10 @@
                             </div>
                         </div>
 
-                        <div class="media-right">
+                        <div
+                            v-if="showAction"
+                            class="media-right"
+                        >
                             <biz-dropdown class-button="is-ghost">
                                 <template #trigger>
                                     <span class="icon">
@@ -166,6 +170,13 @@
                 type: String,
                 default: "",
             },
+        },
+
+        computed: {
+            showAction() {
+                return this.data.permissions.edit
+                    || this.data.permissions.delete;
+            }
         },
 
         methods: {

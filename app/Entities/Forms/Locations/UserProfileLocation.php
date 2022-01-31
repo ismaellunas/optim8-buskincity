@@ -2,6 +2,7 @@
 
 namespace App\Entities\Forms\Locations;
 
+use App\Models\Media;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
@@ -10,6 +11,7 @@ class UserProfileLocation
     public $entityId;
 
     private $entity;
+    private $savedResults;
 
     public function __construct($userId = null)
     {
@@ -56,7 +58,18 @@ class UserProfileLocation
     {
         $user = $this->getEntity();
 
+        $storedValues = $this->getValues($fields->keys())->all();
+
         foreach ($fields as $field) {
+
+            $storedValue = $field->findStoredValue($storedValues);
+
+            if (! is_null($storedValue)) {
+                $field->storedValue = $storedValue;
+            }
+
+            $field->entity = $user;
+
             $data = $field->getDataToBeSaved($inputs);
 
             if (!empty($data)) {
@@ -66,7 +79,25 @@ class UserProfileLocation
             }
         }
 
-        $user->saveMetas();
+        $this->savedResults = $user->saveMetas();
+
+        $this->saved($fields);
+    }
+
+    protected function saved(Collection $fields)
+    {
+        foreach ($fields as $field) {
+            if (get_class($field) == 'App\Entities\Forms\Fields\File') {
+
+                $meta = $this->savedResults->first(function ($meta) use ($field) {
+                    return $meta->key == $field->name;
+                });
+
+                if ($meta) {
+                    $field->setMedially($meta, $meta->value);
+                }
+            }
+        }
     }
 
     public function getValues(Collection $keys): Collection

@@ -1,16 +1,10 @@
+import MixinHasLoader from './HasLoader';
+
 export default {
-    data() {
-        return {
-            loader: null,
-        };
-    },
+    mixins: [
+        MixinHasLoader,
+    ],
     methods: {
-        onStartLoadingOverlay() {
-            this.loader = this.$loading.show();
-        },
-        onEndLoadingOverlay() {
-            this.loader.hide();
-        },
         search(term) {
             this.queryParams['term'] = term;
             this.refreshWithQueryParams();

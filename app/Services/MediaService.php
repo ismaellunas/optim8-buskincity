@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Entities\MediaAsset;
 use App\Models\Media;
+use App\Models\User;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -29,9 +30,14 @@ class MediaService
     public static function getUniqueFileName(
         string $fileName,
         array $excludedIds = [],
-        string $extension = null
+        string $extension = null,
+        string $folder = null
     ): string {
         $searchFileName = $fileName;
+
+        if (!empty($folder)) {
+            $searchFileName = $folder.'/'.$searchFileName;
+        }
 
         if (!empty($extension)) {
             $searchFileName .= '.'.$extension;
@@ -94,15 +100,19 @@ class MediaService
 
     public function transformRecords($records)
     {
-        $records->getCollection()->transform(function ($record) {
-            $record->thumbnail_url = $record->thumbnailUrl;
-            $record->file_name_without_extension = $record->fileNameWithoutExtension;
-            $record->is_image = $record->isImage;
-            $record->readable_size = $record->readableSize;
-            $record->date_modified = $record->updated_at->format('d/m/Y H:m');
+        $records->transform([$this, 'transformRecord']);
+    }
 
-            return $record;
-        });
+    public function transformRecord($record)
+    {
+        $record->thumbnail_url = $record->thumbnailUrl;
+        $record->file_name_without_extension = $record->fileNameWithoutExtension;
+        $record->is_image = $record->isImage;
+        $record->readable_size = $record->readableSize;
+        $record->date_modified = $record->updated_at->format('d/m/Y H:m');
+        $record->display_file_name = $record->displayFileName;
+
+        return $record;
     }
 
     protected function fillMediaWithMediaAsset(
@@ -118,6 +128,17 @@ class MediaService
         $media->version = $asset->version;
     }
 
+    private function isOriginalExtensionNeeded(UploadedFile $file): bool
+    {
+        $mimeType = $file->getMimeType();
+
+        return !(
+            Str::startsWith($mimeType, 'image/')
+            || Str::startsWith($mimeType, 'video/')
+            || $file->getClientOriginalExtension() == 'pdf'
+        );
+    }
+
     public function upload(
         UploadedFile $file,
         string $fileName,
@@ -128,13 +149,8 @@ class MediaService
         $extension = null;
 
         $clientExtension = $file->getClientOriginalExtension();
-        $mimeType =  $file->getMimeType();
 
-        if ( !(
-            Str::startsWith($mimeType, 'image/')
-            || Str::startsWith($mimeType, 'video/')
-            || $clientExtension == 'pdf'
-        )) {
+        if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
         }
 
@@ -164,13 +180,8 @@ class MediaService
         $extension = null;
 
         $clientExtension = $file->getClientOriginalExtension();
-        $mimeType =  $file->getMimeType();
 
-        if ( !(
-            Str::startsWith($mimeType, 'image/')
-            || Str::startsWith($mimeType, 'video/')
-            || $clientExtension == 'pdf'
-        )) {
+        if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
         }
 
@@ -206,13 +217,8 @@ class MediaService
         $extension = null;
 
         $clientExtension = $file->getClientOriginalExtension();
-        $mimeType =  $file->getMimeType();
 
-        if ( !(
-            Str::startsWith($mimeType, 'image/')
-            || Str::startsWith($mimeType, 'video/')
-            || $clientExtension == 'pdf'
-        )) {
+        if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
         }
 
@@ -320,5 +326,50 @@ class MediaService
             },
             self::getExtensions()
         );
+    }
+
+    public function uploadUserMeta(
+        UploadedFile $file,
+        MediaStorage $mediaStorage,
+        User $user,
+        string $folderPrefix = null
+    ): Media {
+        $media = new Media();
+
+        $extension = null;
+
+        $clientExtension = $file->getClientOriginalExtension();
+
+        $fileName = preg_replace(
+            '/[^a-z0-9]+/',
+            '-',
+            Str::lower(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
+        );
+
+        if ($this->isOriginalExtensionNeeded($file)) {
+            $extension = $clientExtension;
+        }
+
+        $folder = 'user_assets/'.$user->id;
+        if ($folderPrefix) {
+            $folder = $folderPrefix.$folder;
+        }
+
+        $fileName = $this->getUniqueFileName(
+            $fileName,
+            [],
+            $extension,
+            $folder
+        );
+
+        $this->fillMediaWithMediaAsset(
+            $media,
+            $mediaStorage->upload($file, $fileName, $extension, $folder)
+        );
+
+        $media->type = Media::TYPE_USER_META;
+        $media->save();
+
+        return $media;
     }
 }

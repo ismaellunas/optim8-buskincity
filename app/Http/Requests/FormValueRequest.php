@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class FormValueRequest extends FormRequest
 {
     private $forms;
+    private $formLocation;
 
     protected $errorBag = 'formBuilder';
 
@@ -39,7 +40,9 @@ class FormValueRequest extends FormRequest
 
         $forms = $this->getForms();
 
-        $rules = $formService->getRules($forms);
+        $location = $this->getFormLocation();
+
+        $rules = $formService->getRules($forms, $location);
 
         return $rules;
     }
@@ -48,7 +51,7 @@ class FormValueRequest extends FormRequest
     {
         $formService = app(FormService::class);
 
-        $attributes = $formService->getAttributes($this->getForms());
+        $attributes = $formService->getAttributes($this->getForms(), $this->all());
 
         return $attributes;
     }
@@ -65,5 +68,19 @@ class FormValueRequest extends FormRequest
         }
 
         return $this->forms;
+    }
+
+    private function getFormLocation()
+    {
+        $formService = app(FormService::class);
+
+        if (is_null($this->formLocation)) {
+            $this->formLocation = $formService->getFormLocation(
+                $this->get('route_name'),
+                $this->get('id')
+            );
+        }
+
+        return $this->formLocation;
     }
 }

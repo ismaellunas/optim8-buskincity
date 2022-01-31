@@ -9,6 +9,7 @@ use CloudinaryLabs\CloudinaryLaravel\Model\Media as CloudinaryMedia;
 use Cloudinary\Transformation\Resize;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Str;
 
 class Media extends CloudinaryMedia implements TranslatableContract
@@ -21,6 +22,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
     const TYPE_DEFAULT = 0;
     const TYPE_SETTING = 1;
     const TYPE_PROFILE = 2;
+    const TYPE_USER_META = 3;
 
     public $translatedAttributes = [
         'alt',
@@ -44,6 +46,11 @@ class Media extends CloudinaryMedia implements TranslatableContract
     public function author()
     {
         return $this->belongsTo(User::class, 'author_id');
+    }
+
+    public function medially(): MorphTo
+    {
+        return $this->morphTo();
     }
 
     // Scopes:
@@ -125,5 +132,21 @@ class Media extends CloudinaryMedia implements TranslatableContract
     public function getReadableSizeAttribute(): string
     {
         return HumanReadable::bytesToHuman($this->size);
+    }
+
+    public function getIsDefaultTypeAttribute(): bool
+    {
+        return $this->type == self::TYPE_DEFAULT;
+    }
+
+    public function getDisplayFileNameAttribute(): string
+    {
+        $slice = Str::afterLast($this->file_name, '/');
+
+        if (in_array($this->file_type, ['image', 'video'])) {
+            return $slice.'.'.$this->extension;
+        }
+
+        return $slice;
     }
 }
