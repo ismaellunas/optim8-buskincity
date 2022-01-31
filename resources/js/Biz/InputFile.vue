@@ -10,7 +10,7 @@
                 type="file"
                 :accept="accept.join(', ')"
                 :disabled="disabled || isDelayed"
-                @click="clicked"
+                @click="clickDelay"
                 @input="pickFile"
             >
             <span class="file-cta">
@@ -108,10 +108,10 @@
                 }, 1);
                 setTimeout(() => {
                     this.isDelayed = false;
-                }, 3000)
+                }, 2000)
             },
 
-            clicked() {
+            clickDelay() {
                 this.resetFile();
                 this.disabledFewSeconds();
             },
