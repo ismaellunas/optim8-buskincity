@@ -4,7 +4,6 @@ namespace App\Actions\Fortify;
 
 use App\Helpers\Url;
 use App\Services\LoginService;
-use Illuminate\Http\Request;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable as FortifyRedirect;
 
 class RedirectIfTwoFactorAuthenticatable extends FortifyRedirect
