@@ -3,7 +3,7 @@
 namespace App\Http\Responses;
 
 use App\Services\LoginService;
-use Laravel\Fortify\Fortify;
+use Illuminate\Http\Request;
 use Laravel\Fortify\Http\Responses\FailedTwoFactorLoginResponse as FortifyFailedTFLoginResponse;
 
 class FailedTwoFactorLoginResponse extends FortifyFailedTFLoginResponse
@@ -13,17 +13,17 @@ class FailedTwoFactorLoginResponse extends FortifyFailedTFLoginResponse
         if ($request->wantsJson()) {
             return parent::toResponse($request);
         } else {
-            $loginPage = 'login';
+            $routeName = 'two-factor.login';
             $message = __('The provided two factor authentication code was invalid.');
 
             if (
                 LoginService::isAdminTwoFactorLoginAttemptRoute($request->route())
             ) {
-                $loginPage = 'admin_login';
+                $routeName = 'admin.two-factor.login';
             }
 
             return redirect()
-                ->intended(Fortify::redirects($loginPage))
+                ->route($routeName)
                 ->withErrors(['email' => $message]);
         }
     }
