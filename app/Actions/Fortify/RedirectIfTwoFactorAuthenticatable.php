@@ -17,6 +17,8 @@ class RedirectIfTwoFactorAuthenticatable extends FortifyRedirect
             $request->session()->put([
                 'login.id' => $user->getKey(),
                 'login.remember' => $request->filled('remember'),
+                'login.recovery.id' => $user->getKey(),
+                'login.recovery.remember' => $request->filled('remember'),
             ]);
 
             return $this->setRedirect();

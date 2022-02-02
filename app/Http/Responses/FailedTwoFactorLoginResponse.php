@@ -13,6 +13,8 @@ class FailedTwoFactorLoginResponse extends FortifyFailedTFLoginResponse
         if ($request->wantsJson()) {
             return parent::toResponse($request);
         } else {
+            $this->setSessionUser($request);
+
             $routeName = 'two-factor.login';
             $message = __('The provided two factor authentication code was invalid.');
 
@@ -26,5 +28,16 @@ class FailedTwoFactorLoginResponse extends FortifyFailedTFLoginResponse
                 ->route($routeName)
                 ->withErrors(['email' => $message]);
         }
+    }
+
+    private function setSessionUser(Request $request): void
+    {
+        $userId = $request->session()->get('login.recovery.id');
+        $remember = $request->session()->get('login.recovery.remember');
+
+        $request->session()->put([
+            'login.id' => $userId,
+            'login.remember' => $remember,
+        ]);
     }
 }
