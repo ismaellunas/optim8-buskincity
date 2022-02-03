@@ -67,6 +67,10 @@ class PageService
 
         $homePageId = $settingService->getHomePage();
 
+        if ($homePageId === "") {
+            return null;
+        }
+
         return Page::with([
                 'translations' => function ($query) {
                     $query->published();

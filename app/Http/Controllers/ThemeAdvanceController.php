@@ -26,7 +26,7 @@ class ThemeAdvanceController extends ThemeOptionController
     {
         $pageOptions = $this->menuService->getPageOptions();
         $pageOptions[] = [
-            'id' => null,
+            'id' => "",
             'value' => 'Default',
             'locales' => null,
         ];
