@@ -41,6 +41,7 @@
                                         <span>Please login to continue</span>
                                     </h2>
                                     <div class="has-text-centered">
+                                        <biz-error-notifications :errors="$page.props.errors" />
 
                                         <biz-social-media-list/>
 
