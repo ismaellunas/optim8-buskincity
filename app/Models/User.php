@@ -14,8 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -105,6 +104,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(UserMeta::class);
     }
 
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'medially');
+    }
+
     public function scopeSearch($query, string $term)
     {
         return $query->where(function ($query) use ($term) {
@@ -186,13 +190,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function updateProfilePhoto(UploadedFile $photo)
     {
-        $fileName = $this->first_name.'-'.$this->last_name.'-'.Str::random(10);
+        $user = Auth::user();
         $media = app(MediaService::class)->uploadProfile(
             $photo,
-            $fileName,
             new CloudinaryStorage(),
-            (!App::environment('production') ? config('app.env') : null)
+            $user,
+            "profiles",
         );
+
+        app(MediaService::class)->setMedially($user, [
+            $media->id
+        ]);
 
         if ($this->profile_photo_media_id) {
             $this->deleteProfilePhoto();
