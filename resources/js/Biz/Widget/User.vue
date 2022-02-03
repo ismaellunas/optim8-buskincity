@@ -38,12 +38,10 @@
                             :src="record.profile_photo_url"
                         />
 
-                        <biz-image
+                        <user-icon
                             v-else
-                            class="media-left"
-                            ratio="is-64x64"
-                            rounded="is-rounded"
-                            src="https://dummyimage.com/64x64/e5e5e5/000000.png&text=TO"
+                            class="mr-2"
+                            style="width: 64px;"
                         />
 
                         <div class="media-content">
@@ -174,6 +172,7 @@
     import BizPanel from '@/Biz/Panel';
     import BizPanelBlock from '@/Biz/PanelBlock';
     import ModalFormDelete from '@/Pages/User/ModalFormDelete';
+    import UserIcon from '@/Biz/Icon/User';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
 
     export default {
@@ -188,6 +187,7 @@
             BizPanel,
             BizPanelBlock,
             ModalFormDelete,
+            UserIcon,
         },
 
         mixins: [

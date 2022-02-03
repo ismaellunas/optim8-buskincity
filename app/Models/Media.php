@@ -34,6 +34,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
         'file_name',
         'file_url',
         'file_type',
+        'extension',
         'version',
         'type',
     ];
