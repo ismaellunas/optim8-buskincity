@@ -14,11 +14,15 @@ use App\Http\Responses\{
     LoginResponse,
     LogoutResponse,
     TwoFactorLoginResponse,
+    FailedTwoFactorLoginResponse,
 };
 use Illuminate\Support\ServiceProvider;
-use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
-use Laravel\Fortify\Contracts\LogoutResponse as LogoutResponseContract;
-use Laravel\Fortify\Contracts\TwoFactorLoginResponse as TwoFactorLoginResponseContract;
+use Laravel\Fortify\Contracts\{
+    LoginResponse as LoginResponseContract,
+    LogoutResponse as LogoutResponseContract,
+    TwoFactorLoginResponse as TwoFactorLoginResponseContract,
+    FailedTwoFactorLoginResponse as FailedTwoFactorLoginResponseContract
+};
 use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
 
@@ -60,6 +64,8 @@ class JetstreamServiceProvider extends ServiceProvider
             $this->app->instance(LogoutResponseContract::class, new LogoutResponse());
 
             $this->app->instance(TwoFactorLoginResponseContract::class, new TwoFactorLoginResponse());
+
+            $this->app->instance(FailedTwoFactorLoginResponseContract::class, new FailedTwoFactorLoginResponse());
 
             Fortify::authenticateThrough([new AuthenticationPipeline(), '__invoke']);
         }
