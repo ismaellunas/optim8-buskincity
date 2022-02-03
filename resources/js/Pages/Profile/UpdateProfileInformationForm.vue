@@ -25,9 +25,15 @@
                         class="mt-2 mb-2"
                     >
                         <biz-image
+                            v-if="photoUrl"
                             rounded="is-rounded"
                             style="width: 64px;"
                             :src="photoUrl"
+                        />
+
+                        <user-icon
+                            v-else
+                            style="width: 64px;"
                         />
                     </div>
 
@@ -199,6 +205,7 @@
     import BizInputError from '@/Biz/InputError';
     import BizInputFile from '@/Biz/InputFile';
     import BizLabel from '@/Biz/Label';
+    import UserIcon from '@/Biz/Icon/User';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { includes } from 'lodash';
     import { getCanvasBlob } from '@/Libs/utils';
@@ -216,6 +223,7 @@
             BizInputError,
             BizInputFile,
             BizLabel,
+            UserIcon,
         },
         mixins: [
             MixinHasModal,
@@ -254,9 +262,8 @@
                     url = this.form.photo_url;
                 } else if (this.user.profile_photo_url) {
                     url = this.user.profile_photo_url;
-                } else {
-                    url = "https://dummyimage.com/64x64/e5e5e5/000.png&text=TO";
                 }
+
                 return url;
             },
         },

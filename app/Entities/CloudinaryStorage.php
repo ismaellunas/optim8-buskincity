@@ -22,6 +22,10 @@ class CloudinaryStorage implements MediaStorageInterface
             'invalidate' => $invalidate,
         ];
 
+        if ($fileName) {
+            $options['filename'] = $fileName;
+        }
+
         if ($folder) {
             $options['folder'] = $folder;
         }
