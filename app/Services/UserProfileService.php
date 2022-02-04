@@ -2,16 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\User;
-
 class UserProfileService
 {
     private $user;
 
     public function __construct()
     {
-        $userId = request()->route()->parameter('id');
-        $this->user = User::find($userId);
+        $user = request()->route()->parameter('user');
+        $this->user = $user;
     }
 
     public function getMeta(string $key): mixed
