@@ -38,7 +38,7 @@ class UserPolicy extends BasePermissionPolicy
     {
         return (
             parent::update($user, $selectedUser)
-            && $user->id == $selectedUser->id
+            || $user->id == $selectedUser->id
         );
     }
 }
