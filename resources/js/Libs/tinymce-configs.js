@@ -12,6 +12,4 @@ export const textComponent = {
     ],
     block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3',
     toolbar: 'formatselect | bold italic link | bullist numlist | table',
-    skin: false,
-    content_css: false
 };
