@@ -234,7 +234,7 @@ class MediaService
         );
 
         if ($folder) {
-            $folder = $this->getFolderPrefix().'_'.$folder;
+            $folder = $this->getFolderPrefix().$folder;
         }
 
         $this->fillMediaWithMediaAsset(
@@ -391,6 +391,6 @@ class MediaService
 
     private function getFolderPrefix(): ?string
     {
-        return (!App::environment('production') ? config('app.env') : null);
+        return (!App::environment('production') ? config('app.env').'_' : null);
     }
 }
