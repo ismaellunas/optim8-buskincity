@@ -77,7 +77,7 @@
 
         @stack('bottom_scripts')
 
-        <script src="{{ mix('js/frontend.js') }}"></script>
+        <script src="{{ mix('js/app.js', 'themes/biz') }}" defer></script>
 
         @if ($additionalJavascript)
             <script>

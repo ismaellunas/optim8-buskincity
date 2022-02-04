@@ -1,4 +1,4 @@
-<nav class="navbar level is-primary mb-0">
+<nav class="navbar level is-info mb-0">
 
     <div class="level-item">
         <div

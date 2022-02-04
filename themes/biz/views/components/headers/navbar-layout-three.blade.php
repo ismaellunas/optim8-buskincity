@@ -1,4 +1,4 @@
-<nav class="navbar is-primary is-justify-content-space-between">
+<nav class="navbar is-info is-justify-content-space-between">
     <div class="navbar-brand">
         <a
             class="navbar-item"
