@@ -44,15 +44,16 @@ class PostController extends Controller
         $post = $this->postService->getFirstBySlug($slug, $locale);
 
         if ($post['status'] !== Post::STATUS_PUBLISHED) {
+
             $user = auth()->user() ?? null;
-            if ($user == null) {
+            if ($user === null) {
                 return redirect()->route($this->baseRouteName.'.index');
             }
-            if (!$user->can('post.add')
-                && !$user->can('post.edit')
-                && !$user->can('post.delete')) {
+
+            if (!$user->can('post.read')) {
                 return redirect()->route($this->baseRouteName.'.index');
             }
+
         }
 
         if (!$post) {
