@@ -1,6 +1,6 @@
 <template>
     <div
-        class="column"
+        class="column break-long-text"
         :class="columnClass"
     >
         <draggable

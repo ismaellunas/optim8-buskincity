@@ -16,7 +16,6 @@ if (theme) {
     require(`${__dirname}/themes/${theme}/webpack.mix.js`);
     
 } else {
-
     const mix = require('laravel-mix');
     const path = require('path');
 
@@ -39,8 +38,11 @@ if (theme) {
 
     } else {
 
-        mix.copy('node_modules/vue-loading-overlay/dist/vue-loading.css', 'public/css');
-        // mix.js('resources/js/local.js', 'public/js');
+        mix.js('resources/js/local.js', 'public/js')
+            .js('resources/js/fontawesome.js', 'public/js')
+            .sass('resources/sass/local.scss', 'public/css');
+
+        mix.copy('node_modules/tinymce/skins', 'public/js/skins');
 
         mix.browserSync({
             host: '127.0.0.1',

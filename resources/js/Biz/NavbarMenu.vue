@@ -7,7 +7,7 @@
         <div class="container">
             <div class="navbar-brand">
                 <biz-link
-                    :href="navLogo.link"
+                    :href="navLogo ? navLogo.link : null"
                     class="navbar-item"
                 >
                     <img
@@ -90,6 +90,7 @@
 
                             <div class="navbar-dropdown is-boxed">
                                 <biz-link
+                                    v-if="navProfile"
                                     :href="navProfile.link"
                                     class="navbar-item"
                                 >

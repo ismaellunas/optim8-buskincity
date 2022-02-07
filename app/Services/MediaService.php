@@ -4,13 +4,17 @@ namespace App\Services;
 
 use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Entities\MediaAsset;
-use App\Models\Media;
-use App\Models\User;
+use App\Models\{
+    Media,
+    User
+};
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\App;
 
 class MediaService
 {
@@ -208,9 +212,9 @@ class MediaService
 
     public function uploadProfile(
         UploadedFile $file,
-        string $fileName,
         MediaStorage $mediaStorage,
-        string $folderPrefix = null
+        User $user,
+        string $folder = null,
     ): Media {
         $media = new Media();
 
@@ -223,14 +227,14 @@ class MediaService
         }
 
         $fileName = MediaService::getUniqueFileName(
-            Str::lower($fileName),
+            Str::lower($user->first_name.'-'.$user->last_name.'-'.Str::random(10)),
             [],
-            $extension
+            $extension,
+            $folder
         );
 
-        $folder = 'profiles';
-        if ($folderPrefix) {
-            $folder = $folderPrefix.'_'.$folder;
+        if ($folder) {
+            $folder = $this->getFolderPrefix().$folder;
         }
 
         $this->fillMediaWithMediaAsset(
@@ -371,5 +375,22 @@ class MediaService
         $media->save();
 
         return $media;
+    }
+
+    public function setMedially(Model $relatedModel, array $mediaIds = [])
+    {
+        $media = Media::whereIn('id', $mediaIds)
+            ->whereNull('medially_id')
+            ->get();
+
+        foreach ($media as $medium) {
+            $medium->medially()->associate($relatedModel);
+            $medium->save();
+        }
+    }
+
+    private function getFolderPrefix(): ?string
+    {
+        return (!App::environment('production') ? config('app.env').'_' : null);
     }
 }
