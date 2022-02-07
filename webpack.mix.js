@@ -25,7 +25,7 @@ if (theme) {
             require('postcss-import'),
         ])
         */
-        .sass('resources/sass/app.scss', 'public/css')
+        .sass('resources/sass/app.sass', 'public/css')
         .alias({
             '@': path.join(__dirname, 'resources/js')
         });
@@ -38,11 +38,13 @@ if (theme) {
 
     } else {
 
-        mix.js('resources/js/local.js', 'public/js')
+        mix
+            .js('resources/js/local.js', 'public/js')
             .js('resources/js/fontawesome.js', 'public/js')
-            .sass('resources/sass/local.scss', 'public/css');
-
-        mix.copy('node_modules/tinymce/skins', 'public/js/skins');
+            .sass('resources/sass/local.sass', 'public/css')
+            .copy('node_modules/tinymce/skins/ui/oxide/skin.min.css', 'public/js/skins/ui/oxide')
+            .copy('node_modules/tinymce/skins/ui/oxide/content.min.css', 'public/js/skins/ui/oxide')
+            .copy('node_modules/tinymce/skins/content/default/content.css', 'public/js/skins/content/default');
 
         mix.browserSync({
             host: '127.0.0.1',

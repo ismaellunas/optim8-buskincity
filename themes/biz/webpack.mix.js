@@ -16,9 +16,10 @@ const path = require('path');
 mix.setPublicPath("public/themes/biz")
     .js(`${__dirname}/js/app.js`, "js")
     .vue()
-    .sass(`${__dirname}/sass/app.scss`, "css")
+    .sass(`${__dirname}/sass/app.sass`, "css")
     .alias({
-        '@': path.join(__dirname, '../../resources/js')
+        '@': path.join(__dirname, '../../resources/js'),
+        '@sass': path.join(__dirname, '../../resources/sass')
     });
 
 if (mix.inProduction()) {
