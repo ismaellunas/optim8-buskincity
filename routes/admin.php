@@ -22,9 +22,12 @@ use App\Http\Controllers\{
     UserRoleController,
 };
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
-use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
+use Laravel\Fortify\Http\Controllers\NewPasswordController;
+use Laravel\Fortify\Http\Controllers\PasswordResetLinkController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
+use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -143,6 +146,25 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
             $limiter ? 'throttle:'.$limiter : null,
         ]))
         ->name('login.attempt');
+
+    // Password Reset...
+    if (Features::enabled(Features::resetPasswords())) {
+        Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
+            ->middleware(['guest:'.config('fortify.guard')])
+            ->name('password.request');
+
+        Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
+            ->middleware(['guest:'.config('fortify.guard')])
+            ->name('password.reset');
+
+        Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+            ->middleware(['guest:'.config('fortify.guard')])
+            ->name('password.email');
+
+        Route::post('/reset-password', [NewPasswordController::class, 'store'])
+            ->middleware(['guest:'.config('fortify.guard')])
+            ->name('password.update');
+    }
 
     Route::get('/two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'create'])
         ->name('two-factor.login');
