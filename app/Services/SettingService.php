@@ -13,9 +13,11 @@ use App\Models\{
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\{
     Collection,
+    Facades\Artisan,
     Facades\Storage,
     Str,
 };
+use Qirolab\Theme\Theme;
 use Symfony\Component\Process\Process;
 use \finfo;
 
@@ -287,7 +289,12 @@ class SettingService
 
     public function generateThemeCss()
     {
-        exec('cd .. && npx webpack --config webpack.config.biz.js');
+        $activeTheme = Theme::active();
+
+        Artisan::call('webpack:theme-sass', [
+            'theme' => $activeTheme,
+            '--change_dir' => '..'
+        ]);
     }
 
     public function uploadThemeCssToCloudStorage(string $folderPrefix = null): MediaAsset
