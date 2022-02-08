@@ -4,11 +4,11 @@ namespace App\Providers;
 
 use App\Actions\{
     AuthenticateLoginAttempt,
-    AuthenticateLoginView,
     AuthenticationPipeline,
-    Fortify\PasswordResetLinkView,
+    Fortify\View\AuthenticateLoginView,
+    Fortify\View\PasswordResetLinkView,
+    Fortify\View\TwoFactorChallengeView,
     Jetstream\DeleteUser,
-    TwoFactorChallengeView
 };
 use App\Http\Responses\{
     LoginResponse,
@@ -21,7 +21,7 @@ use Laravel\Fortify\Contracts\{
     LoginResponse as LoginResponseContract,
     LogoutResponse as LogoutResponseContract,
     TwoFactorLoginResponse as TwoFactorLoginResponseContract,
-    FailedTwoFactorLoginResponse as FailedTwoFactorLoginResponseContract
+    FailedTwoFactorLoginResponse as FailedTwoFactorLoginResponseContract,
 };
 use Laravel\Fortify\Fortify;
 use Laravel\Jetstream\Jetstream;
@@ -50,23 +50,21 @@ class JetstreamServiceProvider extends ServiceProvider
         Jetstream::deleteUsersUsing(DeleteUser::class);
 
         if (config('jetstream.stack') === 'inertia') {
-
+            // View
             Fortify::twoFactorChallengeView([new TwoFactorChallengeView(), '__invoke']);
-
             Fortify::requestPasswordResetLinkView([new PasswordResetLinkView(), '__invoke']);
-
             Fortify::loginView([new AuthenticateLoginView(), '__invoke']);
 
+            // Authentication
             Fortify::authenticateUsing([new AuthenticateLoginAttempt(), '__invoke']);
 
+            // View Response
             $this->app->instance(LoginResponseContract::class, new LoginResponse());
-
             $this->app->instance(LogoutResponseContract::class, new LogoutResponse());
-
             $this->app->instance(TwoFactorLoginResponseContract::class, new TwoFactorLoginResponse());
-
             $this->app->instance(FailedTwoFactorLoginResponseContract::class, new FailedTwoFactorLoginResponse());
 
+            // Pipeline Authentication
             Fortify::authenticateThrough([new AuthenticationPipeline(), '__invoke']);
         }
     }
