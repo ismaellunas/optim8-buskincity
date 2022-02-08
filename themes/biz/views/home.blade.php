@@ -22,13 +22,13 @@
     </section>
 
     <section class="section">
-        <div class="container">
+        <div class="container main-content">
             Hello there
         </div>
     </section>
 
     <section class="section">
-        <div class="container">
+        <div class="container main-content">
             <div class="notification is-info">
                 <button class="delete"></button>
                 Theme Default

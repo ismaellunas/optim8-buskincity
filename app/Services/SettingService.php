@@ -29,7 +29,13 @@ class SettingService
             return Setting::key('url_css')->value('value') ?? "";
         });
 
-        return !empty($urlCss) ? $urlCss : mix('css/app.css')->toHtml();
+        if (!empty($urlCss)) {
+            return $urlCss;
+        } else {
+            $activeTheme = Theme::active();
+
+            return mix('css/app.css', 'themes/'.$activeTheme)->toHtml();
+        }
     }
 
     public static function getAdditionalCss(): string

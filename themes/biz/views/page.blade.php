@@ -15,7 +15,7 @@
     </x-slot>
 
     <section class="section">
-        <div class="container">
+        <div class="container main-content">
             @foreach ($page->data->get('structures') as $key => $structure)
                 <x-builder.columns
                     :uid="$structure['id']"

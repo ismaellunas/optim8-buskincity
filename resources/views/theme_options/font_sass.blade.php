@@ -1,5 +1,5 @@
 @isset ($main_text_font)
-*
+.main-content
     font-family: {{ $main_text_font->family }}
     font-weight: {{ config('constants.theme_fonts')['font_weight'][$main_text_font->weight ?? 'has-text-weight-normal'] }}
 @if ($main_text_font->style === 'is-uppercase'
@@ -29,12 +29,12 @@
 @endisset
 
 @isset ($headings_font)
-h1,
-h2,
-h3,
-h4,
-h5,
-h6
+.main-content h1,
+.main-content h2,
+.main-content h3,
+.main-content h4,
+.main-content h5,
+.main-content h6
     font-family: {{ $headings_font->family }}
     font-weight: {{ config('constants.theme_fonts')['font_weight'][$headings_font->weight ?? 'has-text-weight-normal'] }}
 @if ($headings_font->style === 'is-uppercase'
