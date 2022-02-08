@@ -45,12 +45,8 @@ class PostController extends Controller
 
         if ($post['status'] !== Post::STATUS_PUBLISHED) {
 
-            $user = auth()->user() ?? null;
-            if ($user === null) {
-                return redirect()->route($this->baseRouteName.'.index');
-            }
-
-            if (!$user->can('post.read')) {
+            $user = auth()->user();
+            if ($user === null || $user->can('post.read') === false) {
                 return redirect()->route($this->baseRouteName.'.index');
             }
 
