@@ -12,7 +12,8 @@ class UserPermissionTest extends BaseRolePermissionTestCase
     private function generateUpdateInputs(): array
     {
         return [
-            'name' => $this->faker->name(),
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
             'email' => $this->faker->email(),
         ];
     }
