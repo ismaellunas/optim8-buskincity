@@ -1,6 +1,6 @@
-@aware(['images' => [], 'locale' => null])
+@aware(['locale' => null])
 
-<div {{ $attributes->class($wrapperClasses)}}>
+<div @class($wrapperClasses) >
     <div class="card">
         @if ($hasImage)
             <div @class(array_merge(['card-image'], $cardImageClasses))>
