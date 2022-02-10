@@ -14,10 +14,10 @@
         {{ $post->meta_description }}
     </x-slot>
 
-    <section class="section">
+    <section class="section theme-font">
         <div
             id="main-container"
-            class="container mt-4 main-content"
+            class="container mt-4"
         >
             <h1 class="title is-1 has-text-centered">{{ $post->title }}</h1>
             <div class="content">

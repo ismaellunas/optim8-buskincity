@@ -14,8 +14,8 @@
         {{ $page->meta_description }}
     </x-slot>
 
-    <section class="section">
-        <div class="container main-content">
+    <section class="section theme-font">
+        <div class="container">
             @foreach ($page->data->get('structures') as $key => $structure)
                 <x-builder.columns
                     :uid="$structure['id']"

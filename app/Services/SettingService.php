@@ -250,15 +250,14 @@ class SettingService
                 ->all()
         ));
 
-        $variablesSass .= view('theme_options.font_size_sass', array_merge(
-            config('constants.theme_colors'),
-            Setting::where('group', 'font_size')
-                ->get(['key', 'value'])
-                ->pluck('value', 'key')
-                ->all()
-        ));
+        $disk = Storage::build([
+            'driver' => 'local',
+            'root' => storage_path('theme/sass'),
+        ]);
 
-        $variablesSass .= view('theme_options.font_sass',
+        $disk->put('variables.sass', $variablesSass);
+
+        $stylesAfterApp = view('theme_options.font_sass',
             Setting::where('group', 'font')
                 ->get(['key', 'value'])
                 ->pluck('value', 'key')
@@ -268,14 +267,7 @@ class SettingService
                 ->all()
         );
 
-        $disk = Storage::build([
-            'driver' => 'local',
-            'root' => storage_path('theme/sass'),
-        ]);
-
-        $disk->put('biz_variables.sass', $variablesSass);
-
-        $variablesAfterSass = view('theme_options.font_size_sass', array_merge(
+        $stylesAfterApp .= view('theme_options.font_size_sass', array_merge(
             config('constants.theme_font_sizes'),
             Setting::where('group', 'font_size')
                 ->get(['key', 'value'])
@@ -283,7 +275,7 @@ class SettingService
                 ->all()
         ));
 
-        $disk->put('biz_variables_after.sass', $variablesAfterSass);
+        $disk->put('styles_after.sass', $stylesAfterApp);
     }
 
     public function getHomePage()

@@ -21,14 +21,14 @@
         </figure>
     </section>
 
-    <section class="section">
-        <div class="container main-content">
+    <section class="section theme-font">
+        <div class="container">
             Hello there
         </div>
     </section>
 
-    <section class="section">
-        <div class="container main-content">
+    <section class="section theme-font">
+        <div class="container">
             <div class="notification is-info">
                 <button class="delete"></button>
                 Theme Default

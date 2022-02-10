@@ -7,7 +7,7 @@
 
     <section
         id="about"
-        class="section main-content"
+        class="section theme-font"
     >
         <!-- Title -->
         <div class="section-heading has-text-centered">
