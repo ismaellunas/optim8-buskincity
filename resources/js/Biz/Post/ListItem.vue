@@ -26,9 +26,9 @@
                                 {{ record.locale.toUpperCase() }}
                             </biz-tag>
                             <br>
-                            <biz-link :href="editLink">
+                            <a :href="previewLink" target="_blank">
                                 <strong>{{ record.title }}</strong>
-                            </biz-link>
+                            </a>
                             <br>
                             <span>{{ record.excerpt }}</span>
                         </p>
@@ -86,6 +86,7 @@
         ],
         props: {
             editLink: String,
+            previewLink: String,
             isDeleteEnabled: {type: Boolean, default: true},
             isEditEnabled: {type: Boolean, default: true},
             record: Object,
