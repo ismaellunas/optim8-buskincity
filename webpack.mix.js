@@ -1,6 +1,3 @@
-const mix = require('laravel-mix');
-const { exec } = require('child_process');
-
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -12,29 +9,53 @@ const { exec } = require('child_process');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js').vue()
-    /*
-    .postCss('resources/css/app.css', 'public/css', [
-        require('postcss-import'),
-    ])
-    */
-    .sass('resources/sass/app.scss', 'public/css')
-    .webpackConfig(require('./webpack.config'));
+let theme = process.env.npm_config_theme;
 
-mix.js('resources/js/frontend.js', 'public/js').vue()
+if (theme) {
 
-if (mix.inProduction()) {
-    mix.version();
+    require(`${__dirname}/themes/${theme}/webpack.mix.js`);
+    
 } else {
-    mix.js('resources/js/local.js', 'public/js')
-        .js('resources/js/fontawesome.js', 'public/js')
-        .sass('resources/sass/local.scss', 'public/css');
+    const mix = require('laravel-mix');
+    const path = require('path');
 
-    mix.copy('node_modules/tinymce/skins', 'public/js/skins');
+    mix.js('resources/js/app.js', 'public/js').vue()
+        /*
+        .postCss('resources/css/app.css', 'public/css', [
+            require('postcss-import'),
+        ])
+        */
+        .sass('resources/sass/app.sass', 'public/css')
+        .alias({
+            '@': path.join(__dirname, 'resources/js')
+        });
 
-    mix.browserSync({
-        host: '127.0.0.1',
-        proxy: 'localhost',
-        open: false,
-    });
+    mix.js('resources/js/frontend.js', 'public/js').vue()
+
+    if (mix.inProduction()) {
+
+        mix.version();
+
+    } else {
+
+        mix
+            .js('resources/js/local.js', 'public/js')
+            .js('resources/js/fontawesome.js', 'public/js')
+            .sass('resources/sass/local.sass', 'public/css')
+            .copy('node_modules/tinymce/skins/ui/oxide/skin.min.css', 'public/js/skins/ui/oxide')
+            .copy('node_modules/tinymce/skins/ui/oxide/content.min.css', 'public/js/skins/ui/oxide')
+            .copy('node_modules/tinymce/skins/content/default/content.css', 'public/js/skins/content/default');
+
+        mix.browserSync({
+            host: '127.0.0.1',
+            proxy: 'localhost',
+            open: false,
+            files: [
+                'app/**/*.php',
+                'resources/views/**/*.php',
+                `${Config.publicPath || 'public'}/**/*.(js|css)`,
+                'themes/**/*.php',
+            ],
+        });
+    }
 }

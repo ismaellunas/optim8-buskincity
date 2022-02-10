@@ -1,4 +1,4 @@
-<footer class="footer">
+<footer class="footer has-background-info-light">
     <div class="container">
         <div class="columns">
             <div class="column">
