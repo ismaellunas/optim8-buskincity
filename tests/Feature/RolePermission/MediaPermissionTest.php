@@ -291,12 +291,14 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
     /**
      * @test
      */
-    public function listImagesCanBeAccessedByUserWithMediaBrowsePermission()
+    public function listMediaCanBeAccessedByUserWithMediaBrowsePermission()
     {
         // Act
         $this->givePermissionToRole('browse');
 
-        $response = $this->get(route($this->baseRouteName.'.index'));
+        $response = $this
+            ->withHeaders(['HTTP_X-Requested-With' => 'XMLHttpRequest'])
+            ->get(route($this->baseRouteName.'.lists'));
 
         // Assert
         $response->assertSuccessful();
@@ -305,12 +307,14 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
     /**
      * @test
      */
-    public function listImagesCannotBeAccessedByUserWhoHasNoMediaBrowsePermission()
+    public function listMediaCannotBeAccessedByUserWhoHasNoMediaBrowsePermission()
     {
         // Act
         $this->revokePermissionToRole('browse');
 
-        $response = $this->get(route($this->baseRouteName.'.list.image'));
+        $response = $this
+            ->withHeaders(['HTTP_X-Requested-With' => 'XMLHttpRequest'])
+            ->get(route($this->baseRouteName.'.lists'));
 
         // Assert
         $response->assertForbidden();
