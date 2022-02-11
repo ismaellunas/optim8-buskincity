@@ -1,113 +1,95 @@
 <template>
-    <section class="hero is-fullheight">
-        <div class="hero-body">
-            <div class="container has-text-centered">
-                <div class="columns">
-                    <div class="column is-three-fifths has-text-left">
-                        <div class="level">
-                            <div class="level-left">
-                                <div class="level-item">
-                                    <a @click.prevent="back">
-                                        <span class="icon"><i class="fas fa-arrow-left"></i></span>
-                                        <span>Back</span>
-                                    </a>
-                                </div>
-                            </div>
+    <layout-admin>
+        <template #back>
+            <a @click.prevent="back">
+                <span class="icon">
+                    <i class="fas fa-arrow-left" />
+                </span>
+                <span>Back</span>
+            </a>
+        </template>
+
+        <template #default>
+            <h1 class="title has-text-centered">
+                Welcome Back
+            </h1>
+            <h2 class="subtitle has-text-centered">
+                <span>Lorem ipsum dolor sit amet.</span>
+            </h2>
+            <div class="has-text-left">
+                <biz-error-notifications :errors="$page.props.errors" />
+
+                <biz-flash-notifications :flash="$page.props.flash" />
+
+                <form @submit.prevent="submit">
+                    <biz-form-input
+                        v-model="form.email"
+                        label="Email"
+                        type="email"
+                        placeholder="Enter your email"
+                        required
+                        autofocus
+                    />
+
+                    <biz-form-password
+                        v-model="form.password"
+                        autocomplete="current-password"
+                        label="Password"
+                        placeholder="Enter your password"
+                        :required="true"
+                    />
+
+                    <div class="field columns">
+                        <div class="column has-text-left">
+                            <biz-checkbox
+                                name="remember"
+                                v-model:checked="form.remember"
+                            >
+                                <span class="pl-1">Remember me</span>
+                            </biz-checkbox>
                         </div>
-                        <section class="section">
-                            <div class="columns">
-                                <div class="column is-9 is-offset-1">
-                                    <h1 class="title has-text-centered">
-                                        Welcome Back
-                                    </h1>
-                                    <h2 class="subtitle has-text-centered">
-                                        <span>Lorem ipsum dolor sit amet.</span>
-                                    </h2>
-                                    <div class="has-text-left">
-
-                                        <biz-error-notifications :errors="$page.props.errors"/>
-
-                                        <form @submit.prevent="submit">
-                                            <div class="field">
-                                                <jet-label for="email" value="Email" />
-                                                <div class="control">
-                                                    <jet-input
-                                                        id="email"
-                                                        type="email"
-                                                        v-model="form.email"
-                                                        required
-                                                        autofocus
-                                                        placeholder="Enter your email"
-                                                        />
-                                                </div>
-                                            </div>
-                                            <biz-form-password
-                                                v-model="form.password"
-                                                autocomplete="current-password"
-                                                label="Password"
-                                                placeholder="Enter your password"
-                                                :required="true"
-                                            ></biz-form-password>
-                                            <div class="field columns">
-                                                <div class="column has-text-left">
-                                                    <label class="checkbox">
-                                                        <jet-checkbox name="remember" v-model:checked="form.remember" />
-                                                        <span class="pl-1">Remember me</span>
-                                                    </label>
-                                                </div>
-                                                <div class="column has-text-right">
-                                                    <biz-link v-if="canResetPassword" :href="route('password.request')">
-                                                        Forgot your password?
-                                                    </biz-link>
-                                                </div>
-                                            </div>
-
-                                            <jet-button class="button is-block is-info is-fullwidth">
-                                                Log In <i class="fas fa-sign-in-alt"></i>
-                                            </jet-button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                    <div class="column is-two-fifths has-text-left">
-                        <div class="card">
-                            <div class="card-image">
-                                <figure class="image is-3by4">
-                                    <img src="https://dummyimage.com/550x715/e5e5e5/ffffff.jpg">
-                                </figure>
-                            </div>
+                        <div class="column has-text-right">
+                            <biz-link
+                                v-if="canResetPassword"
+                                :href="route('admin.password.request')"
+                            >
+                                Forgot your password?
+                            </biz-link>
                         </div>
                     </div>
-                </div>
+
+                    <biz-button
+                        class="is-block is-info is-fullwidth"
+                    >
+                        Log In <i class="fas fa-sign-in-alt" />
+                    </biz-button>
+                </form>
             </div>
-        </div>
-    </section>
+        </template>
+    </layout-admin>
 </template>
 
 <script>
-    import JetButton from '@/Jetstream/Button'
-    import JetCheckbox from '@/Jetstream/Checkbox'
-    import JetInput from '@/Jetstream/Input'
-    import JetLabel from '@/Jetstream/Label'
-    import LayoutBackendBlank from '@/Layouts/BackendBlank';
+    import BizButton from '@/Biz/Button';
+    import BizCheckbox from '@/Biz/Checkbox';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFlashNotifications from '@/Biz/FlashNotifications';
+    import BizFormInput from '@/Biz/Form/Input';
     import BizFormPassword from '@/Biz/Form/Password';
     import BizLink from '@/Biz/Link';
+    import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
 
     export default {
         components: {
-            JetButton,
-            JetCheckbox,
-            JetInput,
-            JetLabel,
+            BizButton,
+            BizCheckbox,
             BizErrorNotifications,
+            BizFlashNotifications,
+            BizFormInput,
             BizFormPassword,
             BizLink,
+            LayoutAdmin,
         },
-
-        layout: LayoutBackendBlank,
 
         props: {
             canResetPassword: Boolean,
