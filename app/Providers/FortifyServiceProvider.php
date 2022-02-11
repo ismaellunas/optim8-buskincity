@@ -10,8 +10,9 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
-use Inertia\Inertia;
 use Laravel\Fortify\Fortify;
+use App\Http\Responses\PasswordResetResponse;
+use Laravel\Fortify\Contracts\PasswordResetResponse as PasswordResetResponseContract;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -22,7 +23,12 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Reset password response
+        // See: https://stackoverflow.com/questions/64147160/laravel-8-jetstream-stack-inertia-redirect-to-home-after-login-instead-of-user
+        $this->app->bind(
+            PasswordResetResponseContract::class,
+            PasswordResetResponse::class,
+        );
     }
 
     /**

@@ -20,6 +20,8 @@ use App\Policies\{
     RolePolicy,
     UserPolicy
 };
+use App\Services\ResetPasswordService;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -53,6 +55,11 @@ class AuthServiceProvider extends ServiceProvider
         // This works in the app by using gate-related functions like auth()->user->can() and @can()
         Gate::after(function ($user, $ability) {
             return $user->hasRole('Super Administrator') ? true : null;
+        });
+
+        // Customize reset password link based admin and user
+        ResetPassword::createUrlUsing(function ($user, string $token) {
+            return ResetPasswordService::getResetUrl($user, $token);
         });
     }
 }
