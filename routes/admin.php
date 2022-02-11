@@ -147,7 +147,6 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
         ]))
         ->name('login.attempt');
 
-    // Password Reset...
     if (Features::enabled(Features::resetPasswords())) {
         Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
             ->middleware(['guest:'.config('fortify.guard')])
