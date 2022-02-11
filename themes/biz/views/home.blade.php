@@ -26,4 +26,12 @@
             Hello there
         </div>
     </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="notification is-info">
+                <button class="delete"></button>
+                Theme Default
+        </div>
+    </section>
 </x-layouts.master>
