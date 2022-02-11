@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     Frontend\PageController,
     Frontend\PostCategoryController,
     Frontend\PostController,
+    Frontend\ProfileController as FrontendProfileController,
     NewPasswordController,
     PasswordResetLinkController,
 };
@@ -91,3 +92,5 @@ Route::name('forms.')->prefix('forms')->group(function () {
     Route::post('save', [FormController::class, 'submit'])
         ->name('save');
 });
+
+Route::get('frontend/profiles/{user}', [FrontendProfileController::class, 'show']);

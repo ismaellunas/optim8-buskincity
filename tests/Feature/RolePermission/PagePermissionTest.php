@@ -3,6 +3,7 @@
 namespace Tests\Feature\RolePermission;
 
 use App\Models\Page;
+use App\Models\PageTranslation;
 use Illuminate\Support\Str;
 
 class PagePermissionTest extends BaseRolePermissionTestCase
@@ -10,21 +11,27 @@ class PagePermissionTest extends BaseRolePermissionTestCase
     protected $basePermissionName = 'page';
     protected $baseRouteName = 'admin.pages';
 
-    private function generateInputs(): array
+    private function generateInputs($pageTranslation = null): array
     {
         $title = $this->faker->sentence();
 
-        return [
-            'translations' => [
-                'en' => [
-                    'title' => $title,
-                    'slug' => Str::slug($title),
-                    'data' => [
-                        'structures' => [],
-                    ],
-                ],
-            ]
+        $inputs['en'] = [
+            'id' => null,
+            'title' => $title,
+            'slug' => Str::slug($title),
+            'locale' => 'en',
+            'data' => [
+                'structures' => [],
+                'entities' => [],
+                'media' => [],
+            ],
         ];
+
+        if ($pageTranslation) {
+            $inputs['en']['id'] = $pageTranslation->id;
+        }
+
+        return $inputs;
     }
 
     /**
@@ -95,14 +102,14 @@ class PagePermissionTest extends BaseRolePermissionTestCase
     public function updateCanBeAccessedByUserWithPageEditPermission()
     {
         // Arrange
-        $page = Page::factory()->create();
+        $pageTranslation = PageTranslation::factory()->create();
 
         // Act
         $this->givePermissionToRole('edit');
 
         $response = $this->put(
-            route($this->baseRouteName.'.update', $page->id),
-            $this->generateInputs()
+            route($this->baseRouteName.'.update', $pageTranslation->page_id),
+            $this->generateInputs($pageTranslation)
         );
 
         // Assert
