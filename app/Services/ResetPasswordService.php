@@ -17,6 +17,9 @@ class ResetPasswordService
             $routeName = "admin.password.reset";
         }
 
-        return route($routeName, $token).'?email='.$user->email;
+        return route($routeName, [
+            'token' => $token,
+            'email' => $user->email
+        ]);
     }
 }
