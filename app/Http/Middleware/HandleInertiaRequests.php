@@ -58,6 +58,12 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'message' => fn () => $request->session()->get('message')
             ],
+            'success' => [
+                'message' => fn () => $request->session()->get('success')
+            ],
+            'failed' => [
+                'message' => fn () => $request->session()->get('failed')
+            ],
             'errors' => function () {
                 if (Session::get('errors')) {
                     $bags = [];
