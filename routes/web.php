@@ -3,6 +3,7 @@
 use App\Facades\Localization;
 use App\Http\Controllers\{
     ChangeLanguageController,
+    CustomOAuthController,
     DashboardController,
     FormController,
     Frontend\PageController,
@@ -37,6 +38,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         return redirect()->route('dashboard');
     })->name('profile.show');
 });
+
+Route::get('/oauth/{provider}/callback', [CustomOAuthController::class, 'handleProviderCallback'])->name('oauth.callback');
 
 Route::get('language/{new_locale}', ChangeLanguageController::class)
     ->where('new_locale', '[a-zA-Z]{2}')
