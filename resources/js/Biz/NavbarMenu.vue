@@ -108,9 +108,10 @@
                                 <hr class="navbar-divider">
 
                                 <form
+                                    :action="route('logout')"
                                     method="POST"
-                                    @submit.prevent="logout"
                                 >
+                                    <input type="hidden" name="_token" :value="csrfToken">
                                     <biz-button
                                         as="button"
                                         class="navbar-item ml-2 is-ghost"
@@ -185,6 +186,7 @@
         data() {
             return {
                 isMenuDisplay: false,
+                csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             };
         },
         methods: {
@@ -194,9 +196,6 @@
                 }, {
                     preserveState: false
                 });
-            },
-            logout() {
-                this.$inertia.post(route('logout'));
             },
             showMenu() {
                 this.isMenuDisplay = !this.isMenuDisplay;
