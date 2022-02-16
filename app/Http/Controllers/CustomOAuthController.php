@@ -31,11 +31,13 @@ class CustomOAuthController extends OAuthController
 
     private function getUserRouteName() {
         $routeName = 'user.profile.show';
-        $userRoles = auth()->user()->roles;
-        if ($userRoles->count() > 0
-            && ($userRoles[0]->name == 'Super Administrator' || $userRoles[0]->name == 'Administrator')
-        ) {
-            $routeName = 'admin.profile.show';
+        $user = auth()->user();
+        if ($user !== null) {
+            if ($user->isSuperAdministrator()
+                || $user->isAdministrator()
+            ) {
+                $routeName = 'admin.profile.show';
+            }
         }
         return $routeName;
     }
