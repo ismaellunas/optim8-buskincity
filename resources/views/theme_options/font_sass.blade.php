@@ -4,7 +4,7 @@
     font-weight: {{ config('constants.theme_fonts')['font_weight'][$main_text_font->weight ?? 'has-text-weight-normal'] }}
 @if ($main_text_font->style === 'is-uppercase'
     || $main_text_font->style === 'is-lowercase'
-    || $main_text_font->style === 'is-capitalize')
+    || $main_text_font->style === 'is-capitalized')
     text-transform: {{ config('constants.theme_fonts')['font_style'][$main_text_font->style] }}
 @elseif ($main_text_font->style === 'is-italic')
     font-style: {{ config('constants.theme_fonts')['font_style'][$main_text_font->style] }}
@@ -19,7 +19,7 @@
     font-weight: {{ config('constants.theme_fonts')['font_weight'][$buttons_font->weight ?? 'has-text-weight-normal'] }}
 @if ($buttons_font->style === 'is-uppercase'
     || $buttons_font->style === 'is-lowercase'
-    || $buttons_font->style === 'is-capitalize')
+    || $buttons_font->style === 'is-capitalized')
     text-transform: {{ config('constants.theme_fonts')['font_style'][$buttons_font->style] }}
 @elseif ($buttons_font->style === 'is-italic')
     font-style: {{ config('constants.theme_fonts')['font_style'][$buttons_font->style] }}
@@ -39,7 +39,7 @@ h6
     font-weight: {{ config('constants.theme_fonts')['font_weight'][$headings_font->weight ?? 'has-text-weight-normal'] }}
 @if ($headings_font->style === 'is-uppercase'
     || $headings_font->style === 'is-lowercase'
-    || $headings_font->style === 'is-capitalize')
+    || $headings_font->style === 'is-capitalized')
     text-transform: {{ config('constants.theme_fonts')['font_style'][$headings_font->style] }}
 @elseif ($headings_font->style === 'is-italic')
     font-style: {{ config('constants.theme_fonts')['font_style'][$headings_font->style] }}
