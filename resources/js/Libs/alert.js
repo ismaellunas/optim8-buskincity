@@ -47,20 +47,6 @@ export function success(title, message) {
     ));
 };
 
-export function failed(title, message) {
-    Swal.fire(assign(
-        clone(defaultConfig),
-        {
-            icon: 'error',
-            title: title,
-            text: message,
-            showConfirmButton: false,
-            timer: 3000,
-            didClose: () => window.scrollTo(0,0),
-        }
-    ));
-};
-
 export function confirm(title, message, confirmButtonText = "Yes", additionalConfig = {}) {
     return Swal.fire(assign(
         clone(defaultConfig),

@@ -10,8 +10,7 @@ class CustomOAuthController extends OAuthController
     protected function alreadyAuthenticated($user, $account, $provider, $providerAccount)
     {
         if ($account && $account->user_id !== $user->id) {
-            return redirect()->route($this->getUserRouteName())->with(
-                'failed',
+            return redirect()->route($this->getUserRouteName())->withErrors(
                 __('This :Provider sign in account is already associated with another user. Please try a different account.', ['provider' => $provider]),
             );
         }
@@ -20,13 +19,12 @@ class CustomOAuthController extends OAuthController
             $this->createsConnectedAccounts->create($user, $provider, $providerAccount);
 
             return redirect()->route($this->getUserRouteName())->with(
-                'success',
+                'message',
                 __('You have successfully connected :Provider to your account.', ['provider' => $provider])
             );
         }
 
-        return redirect()->route($this->getUserRouteName())->with(
-            'failed',
+        return redirect()->route($this->getUserRouteName())->withErrors(
             __('This :Provider sign in account is already associated with your user.', ['provider' => $provider]),
         );
     }
