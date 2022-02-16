@@ -6,6 +6,7 @@
     $dotenv->safeLoad();
 
     $branch = "master";
+    $theme = $_ENV['THEME_ACTIVE'] ?? 'biz';
 
     $heroku_app = "platform752";
     $heroku_vars = [
@@ -73,6 +74,7 @@
     yarn install
     rm public/js/*
     npm run prod
+    npm run prod --theme={{ $theme }}
 @endtask
 
 @task('git-restore-and-stash')

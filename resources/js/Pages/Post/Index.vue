@@ -130,6 +130,7 @@
                             :is-edit-enabled="can.edit"
                             :record="record"
                             :edit-link="route(baseRouteName+'.edit', record.id)"
+                            :preview-link="route('blog.show', record.slug)"
                             @on-delete-clicked="deleteRecord"
                         />
                     </template>

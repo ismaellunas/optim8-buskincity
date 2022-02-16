@@ -162,5 +162,7 @@ return [
         'admin_login' => 'admin.login',
         'admin_two_factor_login_attempt' => 'admin.two-factor.login.attempt',
         'admin_two_factor_login' => 'admin.two-factor.login',
+        'admin_forgot_password' => 'admin.password.request',
+        'admin_reset_password' => 'admin.password.reset',
     ],
 ];

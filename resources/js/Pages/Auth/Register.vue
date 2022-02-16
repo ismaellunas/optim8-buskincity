@@ -17,7 +17,7 @@
                             <div class="level-left">
                                 <div class="level-item">
                                     <a @click.prevent="backOrOpenSocialList">
-                                        <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                                        <span class="icon"><i class="fas fa-arrow-left" /></span>
                                         <span>Back</span>
                                     </a>
                                 </div>
@@ -27,23 +27,27 @@
                                     <span class=mr-3>
                                         Already have an account?
                                     </span>
-                                    <biz-button-link :href="route('login')" class="">
+                                    <biz-button-link :href="route('login')">
                                         Login
                                     </biz-button-link>
                                 </div>
                             </div>
                         </div>
                         <section class="section">
-                            <div class="columns" v-bind:class="{'is-hidden': !isSocialMediaLogin}">
+                            <div
+                                class="columns"
+                                :class="{'is-hidden': !isSocialMediaLogin}"
+                            >
                                 <div class="column is-9 is-offset-1">
-                                    <h1 class="title">Sign Up</h1>
+                                    <h1 class="title">
+                                        Sign Up
+                                    </h1>
                                     <h2 class="subtitle">
                                         <span>Are you performer? </span>
                                         <span>Sign Up Here</span>
                                     </h2>
                                     <div class="has-text-centered">
-
-                                        <biz-social-media-list/>
+                                        <biz-social-media-list />
 
                                         <div class="h-line-wrapper">
                                             <span class="h-line-words">or</span>
@@ -51,13 +55,16 @@
                                         <a
                                             class="box"
                                             @click.prevent="toggleIsSocialMediaLogin"
-                                            >
-                                            <i class="fas fa-envelope"></i> Continue with <b>Email</b>
+                                        >
+                                            <i class="fas fa-envelope" /> Continue with <b>Email</b>
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="columns" v-bind:class="{'is-hidden': isSocialMediaLogin}">
+                            <div
+                                class="columns"
+                                :class="{'is-hidden': isSocialMediaLogin}"
+                            >
                                 <div class="column is-9 is-offset-1">
                                     <h1 class="title">
                                         Create Account
@@ -66,23 +73,21 @@
                                         Lorem ipsum dolor sit amet.
                                     </h2>
                                     <div class="has-text-left">
-
                                         <form @submit.prevent="submit">
-
                                             <biz-form-input
                                                 v-model="form.first_name"
                                                 label="First Name"
                                                 required
                                                 autofocus
                                                 :message="error('first_name')"
-                                            ></biz-form-input>
+                                            />
 
                                             <biz-form-input
                                                 v-model="form.last_name"
                                                 label="Last Name"
                                                 required
                                                 :message="error('last_name')"
-                                            ></biz-form-input>
+                                            />
 
                                             <biz-form-input
                                                 v-model="form.email"
@@ -90,21 +95,22 @@
                                                 required
                                                 type="email"
                                                 :message="error('email')"
-                                            ></biz-form-input>
+                                            />
 
-                                            <biz-form-input
+                                            <biz-form-password
                                                 v-model="form.password"
                                                 label="Password"
-                                                type="password"
+                                                required
                                                 :message="error('password')"
-                                            ></biz-form-input>
+                                            />
 
-                                            <biz-form-input
+                                            <biz-form-password
                                                 v-model="form.password_confirmation"
-                                                label="Password Confirmation"
-                                                type="password"
+                                                autocomplete="new-password"
+                                                label="Confirm Password"
+                                                required
                                                 :message="error('password_confirmation')"
-                                            ></biz-form-input>
+                                            />
 
                                             <div class="flex mt-4">
                                                 <div class="columns is-gapless">
@@ -114,7 +120,10 @@
                                                         </span>
                                                     </div>
                                                     <div class="column is-one-third has-text-right">
-                                                        <biz-button class="button is-info" :disabled="form.processing">
+                                                        <biz-button
+                                                            class="button is-info"
+                                                            :disabled="form.processing"
+                                                        >
                                                             Create Account
                                                         </biz-button>
                                                     </div>
@@ -139,6 +148,7 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizSocialMediaList from '@/Biz/SocialMediaList'
     import BizFormInput from '@/Biz/Form/Input';
+    import BizFormPassword from '@/Biz/Form/Password';
     import BizButton from '@/Biz/Button';
 
     export default {
@@ -146,6 +156,7 @@
             BizButtonLink,
             BizSocialMediaList,
             BizFormInput,
+            BizFormPassword,
             BizErrorNotifications,
             BizButton
         },

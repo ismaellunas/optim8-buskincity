@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Fortify\View;
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;

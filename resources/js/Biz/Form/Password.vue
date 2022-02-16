@@ -1,39 +1,46 @@
 <template>
-    <biz-field>
-        <biz-label v-if="hasLabel">
+    <biz-form-field
+        :is-required="required"
+    >
+        <template
+            v-if="hasLabel"
+            #label
+        >
             {{ label }}
-        </biz-label>
+        </template>
 
-        <biz-input-password
-            ref="input"
-            v-bind="$attrs"
-            v-model="computedValue"
-            :disabled="disabled"
-            :has-error="hasError"
-            :placeholder="placeholder"
-            :required="required"
-            @keypress="$emit('on-keypress', $event)"
-        />
+        <div class="control">
+            <biz-input-password
+                ref="input"
+                v-bind="$attrs"
+                v-model="computedValue"
+                :disabled="disabled"
+                :has-error="hasError"
+                :placeholder="placeholder"
+                :required="required"
+                @keypress="$emit('on-keypress', $event)"
+            />
+        </div>
 
-        <biz-input-error :message="message" />
-    </biz-field>
+        <template #error>
+            <biz-input-error :message="message" />
+        </template>
+    </biz-form-field>
 </template>
 
 <script>
-    import BizField from '@/Biz/Field';
+    import BizFormField from '@/Biz/Form/Field';
     import BizInputPassword from '@/Biz/InputPassword';
     import BizInputError from '@/Biz/InputError';
-    import BizLabel from '@/Biz/Label';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'BizFormPassword',
 
         components: {
-            BizField,
+            BizFormField,
             BizInputPassword,
             BizInputError,
-            BizLabel,
         },
 
         inheritAttrs: false,
