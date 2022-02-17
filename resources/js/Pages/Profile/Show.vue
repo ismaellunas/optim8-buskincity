@@ -9,7 +9,10 @@
                 v-if="$page.props.jetstream.canUpdateProfileInformation"
                 class="mb-5"
             >
-                <update-profile-information-form :user="$page.props.user" />
+                <update-profile-information-form
+                    :user="$page.props.user"
+                    @after-update-profile="reSchema()"
+                />
             </div>
 
             <div
@@ -28,6 +31,7 @@
 
             <div class="mb-5">
                 <biodata-form
+                    :key="biodataFormKey"
                     :user="$page.props.user"
                     class="mt-10 sm:mt-0"
                 />
@@ -97,5 +101,17 @@
                 default:() => [],
             },
         },
+
+        data() {
+            return {
+                biodataFormKey: 0,
+            };
+        },
+
+        methods: {
+            reSchema() {
+                this.biodataFormKey += 1;
+            }
+        }
     }
 </script>

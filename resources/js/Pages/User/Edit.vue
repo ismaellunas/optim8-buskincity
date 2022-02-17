@@ -85,6 +85,7 @@
                         <hr>
 
                         <form-builder
+                            :key="biodataFormKey"
                             route-name="admin.users.edit"
                             :entity-id="record.id"
                             :locale="record.origin_language_code"
@@ -162,6 +163,7 @@
         data() {
             return {
                 baseRouteName: 'admin.users',
+                biodataFormKey: 0,
                 isFormBuilderShown: false,
                 isProcessing: false,
                 loader: null,
@@ -184,6 +186,7 @@
                     onFinish: () => {
                         self.loader.hide();
                         self.isProcessing = false;
+                        self.biodataFormKey += 1;
                     }
                 });
             },
