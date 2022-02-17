@@ -8,7 +8,9 @@
                             <div class="level-left">
                                 <div class="level-item">
                                     <a @click.prevent="redirectBack()">
-                                        <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-left" />
+                                        </span>
                                         <span>Back</span>
                                     </a>
                                 </div>
@@ -59,6 +61,7 @@
                                             </div>
                                             <div class="mt-4">
                                                 <biz-button
+                                                    type="button"
                                                     class="button"
                                                     :disabled="form.processing"
                                                     @click.prevent="toggleRecovery"

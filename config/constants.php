@@ -3,6 +3,8 @@
 return [
     'google_api_key' => env('GOOGLE_API_KEY'),
 
+    'fontawesome_local' => env('FONTAWESOME_LOCAL', false),
+
     'one_megabyte' => 1024,
     'extensions' => [
         'image' => [
@@ -107,5 +109,5 @@ return [
     'widget_cache' => [
         'post' => 'widget_post',
         'user' => 'widget_user',
-    ]
+    ],
 ];

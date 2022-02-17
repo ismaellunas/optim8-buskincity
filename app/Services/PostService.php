@@ -158,7 +158,6 @@ class PostService
         string $locale = null
     ): ?Post {
         return Post::where('slug', $slug)
-            ->published()
             ->when($locale, function ($query) use ($locale) {
                 $query->where('locale', $locale);
             })

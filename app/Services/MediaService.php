@@ -4,12 +4,17 @@ namespace App\Services;
 
 use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Entities\MediaAsset;
-use App\Models\Media;
+use App\Models\{
+    Media,
+    User
+};
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\App;
 
 class MediaService
 {
@@ -29,9 +34,14 @@ class MediaService
     public static function getUniqueFileName(
         string $fileName,
         array $excludedIds = [],
-        string $extension = null
+        string $extension = null,
+        string $folder = null
     ): string {
         $searchFileName = $fileName;
+
+        if (!empty($folder)) {
+            $searchFileName = $folder.'/'.$searchFileName;
+        }
 
         if (!empty($extension)) {
             $searchFileName .= '.'.$extension;
@@ -104,6 +114,7 @@ class MediaService
         $record->is_image = $record->isImage;
         $record->readable_size = $record->readableSize;
         $record->date_modified = $record->updated_at->format('d/m/Y H:m');
+        $record->display_file_name = $record->displayFileName;
 
         return $record;
     }
@@ -201,9 +212,9 @@ class MediaService
 
     public function uploadProfile(
         UploadedFile $file,
-        string $fileName,
         MediaStorage $mediaStorage,
-        string $folderPrefix = null
+        User $user,
+        string $folder = null,
     ): Media {
         $media = new Media();
 
@@ -216,14 +227,14 @@ class MediaService
         }
 
         $fileName = MediaService::getUniqueFileName(
-            Str::lower($fileName),
+            Str::lower($user->first_name.'-'.$user->last_name.'-'.Str::random(10)),
             [],
-            $extension
+            $extension,
+            $folder
         );
 
-        $folder = 'profiles';
-        if ($folderPrefix) {
-            $folder = $folderPrefix.'_'.$folder;
+        if ($folder) {
+            $folder = $this->getFolderPrefix().$folder;
         }
 
         $this->fillMediaWithMediaAsset(
@@ -341,7 +352,9 @@ class MediaService
 
     public function uploadUserMeta(
         UploadedFile $file,
-        MediaStorage $mediaStorage
+        MediaStorage $mediaStorage,
+        User $user,
+        string $folderPrefix = null
     ): Media {
         $media = new Media();
 
@@ -352,27 +365,50 @@ class MediaService
         $fileName = preg_replace(
             '/[^a-z0-9]+/',
             '-',
-            $file->getClientOriginalName()
+            Str::lower(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME))
         );
 
         if ($this->isOriginalExtensionNeeded($file)) {
             $extension = $clientExtension;
         }
 
+        $folder = 'user_assets/'.$user->id;
+        if ($folderPrefix) {
+            $folder = $folderPrefix.$folder;
+        }
+
         $fileName = $this->getUniqueFileName(
-            Str::lower($fileName),
+            $fileName,
             [],
-            $extension
+            $extension,
+            $folder
         );
 
         $this->fillMediaWithMediaAsset(
             $media,
-            $mediaStorage->upload($file, $fileName, $extension)
+            $mediaStorage->upload($file, $fileName, $extension, $folder)
         );
 
         $media->type = Media::TYPE_USER_META;
         $media->save();
 
         return $media;
+    }
+
+    public function setMedially(Model $relatedModel, array $mediaIds = [])
+    {
+        $media = Media::whereIn('id', $mediaIds)
+            ->whereNull('medially_id')
+            ->get();
+
+        foreach ($media as $medium) {
+            $medium->medially()->associate($relatedModel);
+            $medium->save();
+        }
+    }
+
+    private function getFolderPrefix(): ?string
+    {
+        return (!App::environment('production') ? config('app.env').'_' : null);
     }
 }

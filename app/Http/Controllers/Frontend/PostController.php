@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Post;
 use App\Services\PostService;
 use App\Services\TranslationService;
 use Illuminate\Http\Request;
@@ -41,6 +42,15 @@ class PostController extends Controller
         $locale = $this->translationService->currentLanguage();
 
         $post = $this->postService->getFirstBySlug($slug, $locale);
+
+        if ($post['status'] !== Post::STATUS_PUBLISHED) {
+
+            $user = auth()->user();
+            if ($user === null || $user->can('post.read') === false) {
+                return redirect()->route($this->baseRouteName.'.index');
+            }
+
+        }
 
         if (!$post) {
             $post = $this->postService->getFirstBySlug($slug);

@@ -1,15 +1,8 @@
 import { createApp } from 'vue';
-import JsFileDownloader from 'js-file-downloader';
+import { components as defaultComponents } from './frontend-bootstrap';
 
-const app = createApp({});
-window.JsFileDownloader = JsFileDownloader;
+const app = createApp({
+    components: defaultComponents
+});
 
-// Components
-import Carousel from '@/Components/Builder/Content/Carousel';
-import Tabs from '@/Components/Builder/Content/Tabs';
-
-app.component('Carousel', Carousel);
-app.component('Tabs', Tabs);
-
-// Mount
 app.mount('#app');

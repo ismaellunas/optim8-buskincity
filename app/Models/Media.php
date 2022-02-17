@@ -34,6 +34,7 @@ class Media extends CloudinaryMedia implements TranslatableContract
         'file_name',
         'file_url',
         'file_type',
+        'extension',
         'version',
         'type',
     ];
@@ -132,5 +133,21 @@ class Media extends CloudinaryMedia implements TranslatableContract
     public function getReadableSizeAttribute(): string
     {
         return HumanReadable::bytesToHuman($this->size);
+    }
+
+    public function getIsDefaultTypeAttribute(): bool
+    {
+        return $this->type == self::TYPE_DEFAULT;
+    }
+
+    public function getDisplayFileNameAttribute(): string
+    {
+        $slice = Str::afterLast($this->file_name, '/');
+
+        if (in_array($this->file_type, ['image', 'video'])) {
+            return $slice.'.'.$this->extension;
+        }
+
+        return $slice;
     }
 }

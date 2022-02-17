@@ -73,6 +73,7 @@
                                         </div>
                                         <div class="mt-4">
                                             <biz-button
+                                                type="button"
                                                 class="button"
                                                 :disabled="form.processing"
                                                 @click.prevent="toggleRecovery"

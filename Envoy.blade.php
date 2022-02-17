@@ -6,6 +6,7 @@
     $dotenv->safeLoad();
 
     $branch = "master";
+    $theme = $_ENV['THEME_ACTIVE'] ?? 'biz';
 
     $heroku_app = "platform752";
     $heroku_vars = [
@@ -30,6 +31,8 @@
         'GOOGLE_CLIENT_ID',
         'GOOGLE_CLIENT_SECRET',
         'QUEUE_CONNECTION',
+        'RECAPTCHA_SITE_KEY',
+        'RECAPTCHA_SECRET_KEY'
         // 'REDIS_CLIENT',
         // 'REDIS_URL',
     ];
@@ -71,6 +74,7 @@
     yarn install
     rm public/js/*
     npm run prod
+    npm run prod --theme={{ $theme }}
 @endtask
 
 @task('git-restore-and-stash')

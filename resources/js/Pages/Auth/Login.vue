@@ -17,14 +17,16 @@
                             <div class="level-left">
                                 <div class="level-item">
                                     <a @click.prevent="backOrOpenSocialList">
-                                        <span class="icon"><i class="fas fa-arrow-left"></i></span>
+                                        <span class="icon">
+                                            <i class="fas fa-arrow-left" />
+                                        </span>
                                         <span>Back</span>
                                     </a>
                                 </div>
                             </div>
                             <div class="level-right">
                                 <div class="level-item">
-                                    <span class=mr-3>
+                                    <span class="mr-3">
                                         Don't have an account?
                                     </span>
                                     <biz-button-link :href="route('register')">
@@ -34,30 +36,42 @@
                             </div>
                         </div>
                         <section class="section">
-                            <div class="columns" v-bind:class="{'is-hidden': !isSocialMediaLogin}">
+                            <div
+                                class="columns"
+                                :class="{'is-hidden': !isSocialMediaLogin}"
+                            >
                                 <div class="column is-9 is-offset-1">
-                                    <h1 class="title">Log In</h1>
+                                    <h1 class="title">
+                                        Log In
+                                    </h1>
                                     <h2 class="subtitle">
                                         <span>Please login to continue</span>
                                     </h2>
                                     <div class="has-text-centered">
+                                        <biz-error-notifications :errors="$page.props.errors" />
 
-                                        <biz-social-media-list/>
+                                        <biz-flash-notifications :flash="$page.props.flash" />
+
+                                        <biz-social-media-list />
 
                                         <div class="h-line-wrapper">
                                             <span class="h-line-words">or</span>
                                         </div>
+
                                         <a
                                             v-if="canRegister"
                                             class="box"
                                             @click.prevent="toggleIsSocialMediaLogin"
                                         >
-                                            <i class="fas fa-envelope"></i> Continue with <b>Email</b>
+                                            <i class="fas fa-envelope" /> Continue with <b>Email</b>
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="columns" v-bind:class="{'is-hidden': isSocialMediaLogin}">
+                            <div
+                                class="columns"
+                                :class="{'is-hidden': isSocialMediaLogin}"
+                            >
                                 <div class="column is-9 is-offset-1">
                                     <h1 class="title">
                                         Welcome Back
@@ -66,11 +80,9 @@
                                         <span>Lorem ipsum dolor sit amet.</span>
                                     </h2>
                                     <div class="has-text-left">
-
-                                        <biz-error-notifications :errors="$page.props.errors"/>
+                                        <biz-error-notifications :errors="$page.props.errors" />
 
                                         <form @submit.prevent="submit">
-
                                             <biz-form-input
                                                 v-model="form.email"
                                                 label="Email"
@@ -78,7 +90,7 @@
                                                 type="email"
                                                 placeholder="Enter your email"
                                                 :message="error('email')"
-                                            ></biz-form-input>
+                                            />
 
                                             <biz-form-password
                                                 v-model="form.password"
@@ -86,25 +98,34 @@
                                                 label="Password"
                                                 placeholder="Enter your password"
                                                 :required="true"
-                                            ></biz-form-password>
+                                            />
 
                                             <div class="field columns">
                                                 <div class="column has-text-left">
                                                     <label class="checkbox">
-                                                        <biz-checkbox name="remember" v-model:checked="form.remember">
+                                                        <biz-checkbox
+                                                            name="remember"
+                                                            v-model:checked="form.remember"
+                                                        >
                                                             <span class="pl-1">Remember me</span>
                                                         </biz-checkbox>
                                                     </label>
                                                 </div>
                                                 <div class="column has-text-right">
-                                                    <biz-link v-if="canResetPassword" :href="route('password.request')">
+                                                    <biz-link
+                                                        v-if="canResetPassword"
+                                                        :href="route('password.request')"
+                                                    >
                                                         Forgot your password?
                                                     </biz-link>
                                                 </div>
                                             </div>
 
-                                            <biz-button class="button is-block is-info is-fullwidth" :disabled="form.processing">
-                                                Log In <i class="fas fa-sign-in-alt"></i>
+                                            <biz-button
+                                                class="button is-block is-info is-fullwidth"
+                                                :disabled="form.processing"
+                                            >
+                                                Log In <i class="fas fa-sign-in-alt" />
                                             </biz-button>
                                         </form>
                                     </div>
@@ -125,6 +146,7 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFlashNotifications from '@/Biz/FlashNotifications';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormPassword from '@/Biz/Form/Password';
     import BizLink from '@/Biz/Link';
@@ -136,6 +158,7 @@
             BizButtonLink,
             BizCheckbox,
             BizErrorNotifications,
+            BizFlashNotifications,
             BizFormInput,
             BizFormPassword,
             BizLink,

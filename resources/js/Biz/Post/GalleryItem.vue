@@ -27,9 +27,9 @@
                         </biz-tag>
                     </p>
                     <p class="title is-4">
-                        <biz-link :href="editLink">
+                        <a :href="previewLink" target="_blank">
                             <strong>{{ record.title }}</strong>
-                        </biz-link>
+                        </a>
                     </p>
                 </div>
             </div>
@@ -91,6 +91,7 @@
         ],
         props: {
             editLink: String,
+            previewLink: String,
             isDeleteEnabled: {type: Boolean, default: true},
             isEditEnabled: {type: Boolean, default: true},
             record: Object,
