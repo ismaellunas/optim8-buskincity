@@ -140,6 +140,7 @@
                 first_name: props.record.first_name,
                 last_name: props.record.last_name,
                 email: props.record.email,
+                language_id: props.record.language_id,
             };
 
             if (!props.record.isSuperAdministrator) {
