@@ -39,7 +39,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     })->name('profile.show');
 });
 
-Route::get('/oauth/{provider}/callback', [CustomOAuthController::class, 'handleProviderCallback'])->name('oauth.callback');
+Route::get('/oauth/{provider}/callback', [CustomOAuthController::class, 'handleProviderCallback'])
+    ->middleware(config('socialstream.middleware', ['web']))
+    ->name('oauth.callback');
 
 Route::get('language/{new_locale}', ChangeLanguageController::class)
     ->where('new_locale', '[a-zA-Z]{2}')
