@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Fortify\View;
 
 use App\Helpers\Url;
 use App\Services\LoginService;
