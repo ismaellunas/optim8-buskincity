@@ -12,6 +12,7 @@
             <form-builder
                 route-name="admin.profile.show"
                 :entity-id="user.id"
+                :locale="user.origin_language_code"
                 @loaded-forbidden="isShown = false"
                 @loaded-successfully="isShown = true"
             />

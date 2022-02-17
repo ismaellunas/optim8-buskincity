@@ -87,6 +87,7 @@
                         <form-builder
                             route-name="admin.users.edit"
                             :entity-id="record.id"
+                            :locale="record.origin_language_code"
                             @loaded-successfully="isFormBuilderShown = true"
                         >
                             <template #buttons>

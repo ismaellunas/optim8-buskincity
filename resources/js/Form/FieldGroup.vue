@@ -11,15 +11,28 @@
             </slot>
         </template>
 
-        <component
-            :is="field.type"
+        <template
             v-for="(field, name) in group.fields"
             :key="name"
-            :ref="'field__' + name"
-            v-model="form[ name ]"
-            :errors="form.errors"
-            :schema="field"
-        />
+        >
+            <component
+                :is="field.type"
+                v-if="!field.can_translate"
+                :ref="'field__' + name"
+                v-model="form[ name ]"
+                :errors="form.errors"
+                :schema="field"
+            />
+
+            <component
+                :is="field.type"
+                v-else
+                :ref="'field__' + name"
+                v-model="form[ name ][ selectedLocale ]"
+                :errors="form.errors"
+                :schema="field"
+            />
+        </template>
     </div>
 </template>
 
@@ -64,7 +77,11 @@
             wrapperClass: {
                 type: [Array, Object, String],
                 default: "block"
-            }
+            },
+            selectedLocale: {
+                type: String,
+                required: true,
+            },
         },
 
         setup(props, { emit }) {
