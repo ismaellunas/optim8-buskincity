@@ -126,16 +126,6 @@ class User extends Authenticatable implements MustVerifyEmail
         });
     }
 
-    public function isSuperAdministrator()
-    {
-        return $this->hasRole('Super Administrator');
-    }
-
-    public function isAdministrator()
-    {
-        return $this->hasRole('Administrator');
-    }
-
     public function getFullNameAttribute(): string
     {
         return trim(ucfirst($this->first_name) . ' ' . ucfirst($this->last_name));
@@ -164,6 +154,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsSuperAdministratorAttribute(): bool
     {
         return $this->hasRole(config('permission.super_admin_role'));
+    }
+
+    public function getIsAdministratorAttribute(): bool
+    {
+        return $this->hasRole('Administrator');
     }
 
     public function saveFromInputs(array $inputs)

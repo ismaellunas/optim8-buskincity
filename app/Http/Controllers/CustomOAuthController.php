@@ -33,8 +33,8 @@ class CustomOAuthController extends OAuthController
         $routeName = 'user.profile.show';
         $user = auth()->user();
         if ($user !== null) {
-            if ($user->isSuperAdministrator()
-                || $user->isAdministrator()
+            if ($user->isSuperAdministrator
+                || $user->isAdministrator
             ) {
                 $routeName = 'admin.profile.show';
             }
