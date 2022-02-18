@@ -5,7 +5,10 @@
         Profile Super Administrator
     </x-slot>
 
-    <section class="section" id="about">
+    <section
+        id="about"
+        class="section theme-font"
+    >
         <!-- Title -->
         <div class="section-heading has-text-centered">
           <h3 class="title is-2">About Me</h3>
