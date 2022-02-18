@@ -156,6 +156,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasRole(config('permission.super_admin_role'));
     }
 
+    public function getIsAdministratorAttribute(): bool
+    {
+        return $this->hasRole('Administrator');
+    }
+
     public function saveFromInputs(array $inputs)
     {
         $this->first_name = $inputs['first_name'];
