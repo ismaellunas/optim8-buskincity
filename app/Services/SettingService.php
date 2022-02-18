@@ -13,9 +13,11 @@ use App\Models\{
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\{
     Collection,
+    Facades\Artisan,
     Facades\Storage,
     Str,
 };
+use Qirolab\Theme\Theme;
 use Symfony\Component\Process\Process;
 use \finfo;
 
@@ -27,7 +29,13 @@ class SettingService
             return Setting::key('url_css')->value('value') ?? "";
         });
 
-        return !empty($urlCss) ? $urlCss : mix('css/app.css')->toHtml();
+        if (!empty($urlCss)) {
+            return $urlCss;
+        } else {
+            $activeTheme = Theme::active();
+
+            return mix('css/app.css', 'themes/'.$activeTheme)->toHtml();
+        }
     }
 
     public static function getAdditionalCss(): string
@@ -242,15 +250,14 @@ class SettingService
                 ->all()
         ));
 
-        $variablesSass .= view('theme_options.font_size_sass', array_merge(
-            config('constants.theme_colors'),
-            Setting::where('group', 'font_size')
-                ->get(['key', 'value'])
-                ->pluck('value', 'key')
-                ->all()
-        ));
+        $disk = Storage::build([
+            'driver' => 'local',
+            'root' => storage_path('theme/sass'),
+        ]);
 
-        $variablesSass .= view('theme_options.font_sass',
+        $disk->put('variables.sass', $variablesSass);
+
+        $stylesAfterApp = view('theme_options.font_sass',
             Setting::where('group', 'font')
                 ->get(['key', 'value'])
                 ->pluck('value', 'key')
@@ -260,14 +267,7 @@ class SettingService
                 ->all()
         );
 
-        $disk = Storage::build([
-            'driver' => 'local',
-            'root' => storage_path('theme/sass'),
-        ]);
-
-        $disk->put('biz_variables.sass', $variablesSass);
-
-        $variablesAfterSass = view('theme_options.font_size_sass', array_merge(
+        $stylesAfterApp .= view('theme_options.font_size_sass', array_merge(
             config('constants.theme_font_sizes'),
             Setting::where('group', 'font_size')
                 ->get(['key', 'value'])
@@ -275,7 +275,7 @@ class SettingService
                 ->all()
         ));
 
-        $disk->put('biz_variables_after.sass', $variablesAfterSass);
+        $disk->put('styles_after.sass', $stylesAfterApp);
     }
 
     public function getHomePage()
@@ -287,7 +287,12 @@ class SettingService
 
     public function generateThemeCss()
     {
-        exec('cd .. && npx webpack --config webpack.config.biz.js');
+        $activeTheme = Theme::active();
+
+        Artisan::call('webpack:theme-sass', [
+            'theme' => $activeTheme,
+            '--change_dir' => '..'
+        ]);
     }
 
     public function uploadThemeCssToCloudStorage(string $folderPrefix = null): MediaAsset
