@@ -12,3 +12,5 @@
     font-size: {{ $font_size_heading_5 }}em
   h6
     font-size: {{ $font_size_heading_6 }}em
+
+{!! nl2br('') !!}
