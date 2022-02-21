@@ -77,6 +77,7 @@
     import UpdateProfileInformationForm from './UpdateProfileInformationForm'
     import ConnectedAccountsForm from './ConnectedAccountsForm';
     import BiodataForm from './BiodataForm';
+    import { success, oops } from '@/Libs/alert';
 
     export default {
         components: {
@@ -96,6 +97,19 @@
                 type: Array,
                 default:() => [],
             },
+            errors: {type: Object, default: () => {}},
         },
+
+        created() {
+            if (this.$page.props.flash.message !== null) {
+                success('Success', this.$page.props.flash.message);
+            }
+
+            if (this.$page.props.errors.default) {
+                oops({
+                    text: this.$page.props.errors.default[0]
+                });
+            }
+        }
     }
 </script>
