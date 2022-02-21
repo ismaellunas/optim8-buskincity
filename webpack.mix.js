@@ -44,6 +44,7 @@ if (theme) {
             .sass('resources/sass/local.sass', 'public/css')
             .copy('node_modules/tinymce/skins/ui/oxide/skin.min.css', 'public/js/skins/ui/oxide')
             .copy('node_modules/tinymce/skins/ui/oxide/content.min.css', 'public/js/skins/ui/oxide')
+            .copy('node_modules/tinymce/skins/ui/oxide/content.inline.min.css', 'public/js/skins/ui/oxide')
             .copy('node_modules/tinymce/skins/content/default/content.css', 'public/js/skins/content/default');
 
         mix.browserSync({
