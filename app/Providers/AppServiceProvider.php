@@ -12,6 +12,7 @@ use App\Entities\Caches\{
 use App\Services\{
     CountryService,
     FormService,
+    IPService,
     LanguageService,
     MediaService,
     MenuService,
@@ -35,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
 
         CountryService::class => CountryService::class,
         FormService::class => FormService::class,
+        IPService::class => IPService::class,
         LanguageService::class => LanguageService::class,
         MediaService::class => MediaService::class,
         MenuService::class => MenuService::class,
