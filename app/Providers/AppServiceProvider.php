@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Entities\Cookie;
 use App\Entities\Caches\{
     CountryCache,
     MenuCache,
@@ -28,6 +29,8 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
     public $singletons = [
+        Cookie::class => Cookie::class,
+
         CountryCache::class => CountryCache::class,
         MenuCache::class => MenuCache::class,
         SettingCache::class => SettingCache::class,
