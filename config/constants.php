@@ -105,6 +105,7 @@ return [
     'setting_cache' => [
         'locale_options' => 'locale_options',
         'default_locale' => 'default_locale',
+        'shown_language_option' => 'shown_language_option',
     ],
     'widget_cache' => [
         'post' => 'widget_post',

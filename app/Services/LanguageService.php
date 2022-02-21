@@ -2,17 +2,28 @@
 
 namespace App\Services;
 
-use App\Models\Language;
-use App\Models\Setting;
+use App\Models\{
+    Language,
+    Setting
+};
+use App\Entities\{
+    Cookie,
+    Caches\SettingCache
+};
+use App\Services\IPService;
 use Illuminate\Support\Collection;
 
 class LanguageService
 {
     public function getShownLanguageOptions(): Collection
     {
-        return Language::shown()
-            ->get(['id', 'name'])
-            ->asOptions('id', 'name');
+        $key = config('constants.setting_cache.shown_language_option');
+
+        return app(SettingCache::class)->remember($key, function () {
+            return Language::shown()
+                ->get(['id', 'name'])
+                ->asOptions('id', 'name');
+        });
     }
 
     public function sync(array $languageIds): void
