@@ -5,6 +5,9 @@ return [
 
     'fontawesome_local' => env('FONTAWESOME_LOCAL', false),
 
+    'stripe_pk' => env('STRIPE_PK'),
+    'stripe_sk' => env('STRIPE_SK'),
+
     'one_megabyte' => 1024,
     'extensions' => [
         'image' => [
@@ -110,4 +113,6 @@ return [
         'post' => 'widget_post',
         'user' => 'widget_user',
     ],
+
+    'stripe_account_id_meta_key' => 'stripe_account_id',
 ];
