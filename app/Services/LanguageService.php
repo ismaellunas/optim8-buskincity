@@ -75,4 +75,27 @@ class LanguageService
         return $this->getSupportedLanguages()->pluck('id')->all();
     }
 
+    public function getOriginFromIP(): Language
+    {
+        $userData = app(IPService::class)->getUserData();
+        $locale = $userData['location']['language']['code'];
+
+        $language = Language::where('code', $locale)->first();
+
+        return $language ?? $this->getDefault();
+    }
+
+    public function getOriginLanguageFromCookie(): string
+    {
+        $originLanguage = app(Cookie::class)->get('origin_language');
+
+        if (!$originLanguage) {
+            $originLanguage = $this->getOriginFromIP()->code;
+
+            app(Cookie::class)->set('origin_language', $originLanguage);
+        }
+
+        return $originLanguage;
+    }
+
 }

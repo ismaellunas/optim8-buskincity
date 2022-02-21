@@ -57,7 +57,8 @@ Route::group([
     'middleware' => [ 'localizationRedirect' ]
 ], function () {
     Route::get('/', [PageController::class, 'homePage'])
-        ->name('homepage');
+        ->name('homepage')
+        ->middleware('redirectLanguage');
 
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');
