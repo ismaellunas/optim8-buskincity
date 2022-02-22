@@ -76,7 +76,8 @@ Route::group([
         ->name('blog.show');
 
     Route::get('/{page_translation}', [PageController::class, 'show'])
-        ->name('frontend.pages.show');
+        ->name('frontend.pages.show')
+        ->middleware('redirectLanguage');
 
     // Route for Test translation
     Route::get('/test/translation', function () {

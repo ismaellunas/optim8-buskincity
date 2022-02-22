@@ -8,6 +8,7 @@ use App\Services\{
     TranslationService
 };
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class RedirectLanguage
 {
@@ -20,9 +21,8 @@ class RedirectLanguage
      */
     public function handle(Request $request, Closure $next)
     {
-        $redirect = $this->setRedirect();
-
         $path = $this->setPath($request->path());
+        $redirect = $this->setRedirect($path);
 
         if ($path != $redirect) {
             return redirect($redirect);
@@ -31,17 +31,42 @@ class RedirectLanguage
         }
     }
 
-    private function setRedirect(): string {
-        $redirect = "/";
+    private function setRedirect(string $path): string {
+        $originLanguage = $this->setOriginLanguage();
+        $locales = TranslationService::getLocales();
+
+        $uriSegments = explode('/', $path);
+
+        if (count($uriSegments) > 1 && in_array($uriSegments[1], $locales)) {
+            $path = Str::replaceFirst(
+                '/'.$uriSegments[1],
+                $originLanguage ? '/'.$originLanguage : $originLanguage,
+                $path
+            );
+        } else {
+            if ($originLanguage != "") {
+                $path = '/'.$originLanguage.$path;
+            }
+        }
+
+        return $path;
+    }
+
+    private function setOriginLanguage(): string
+    {
         $originLanguage = app(LanguageService::class)->getOriginLanguageFromCookie();
         $defaultLanguage = TranslationService::getDefaultLocale();
         $locales = TranslationService::getLocales();
 
-        if ($defaultLanguage != $originLanguage && in_array($originLanguage, $locales)) {
-            $redirect = "/".$originLanguage;
+        if (!in_array($originLanguage, $locales)) {
+            $originLanguage = $defaultLanguage;
         }
 
-        return $redirect;
+        if ($originLanguage == $defaultLanguage) {
+            $originLanguage = "";
+        }
+
+        return $originLanguage;
     }
 
     private function setPath(string $path): string
