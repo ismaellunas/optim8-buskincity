@@ -3,7 +3,11 @@
 namespace App\Actions\Socialstream;
 
 use App\Models\User;
-use App\Services\UserService;
+use App\Services\{
+    IPService,
+    LanguageService,
+    UserService,
+};
 use Illuminate\Support\Facades\DB;
 use JoelButcher\Socialstream\Contracts\CreatesConnectedAccounts;
 use JoelButcher\Socialstream\Contracts\CreatesUserFromProvider;
@@ -41,10 +45,15 @@ class CreateUserFromProvider implements CreatesUserFromProvider
     {
         return DB::transaction(function () use ($provider, $providerUser) {
             $name = UserService::splitName($providerUser->getName() ?? $providerUser->getNickname());
+            $userData = app(IPService::class)->getUserData();
+            $languageId = app(LanguageService::class)->getOriginFromIP()->id;
+
             return tap(User::create([
                 'first_name' => $name['firstName'],
                 'last_name' => $name['lastName'],
                 'email' => $providerUser->getEmail(),
+                'country_code' => $userData['location']['country']['code'],
+                'language_id' => $languageId,
             ]), function (User $user) use ($provider, $providerUser) {
                 $user->markEmailAsVerified();
 
