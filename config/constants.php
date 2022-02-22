@@ -115,4 +115,26 @@ return [
     ],
 
     'stripe_account_id_meta_key' => 'stripe_account_id',
+
+    'payment_method_types' => [
+        'card',
+        'acss_debit',
+        'afterpay_clearpay',
+        'alipay',
+        'au_becs_debit',
+        'bacs_debit',
+        'bancontact',
+        'boleto',
+        'eps',
+        'fpx',
+        'giropay',
+        'grabpay',
+        'ideal',
+        'klarna',
+        'oxxo',
+        'p24',
+        'sepa_debit',
+        'sofort',
+        'wechat_pay',
+    ],
 ];
