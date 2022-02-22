@@ -2,7 +2,7 @@
 
 namespace App\Entities;
 
-class Cookie
+class LifetimeCookie
 {
     private $expires = 0;
 
