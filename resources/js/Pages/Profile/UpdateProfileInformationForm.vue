@@ -81,6 +81,27 @@
                 />
 
                 <biz-form-dropdown-search
+                    label="Country"
+                    :close-on-click="true"
+                    :message="form.errors.country_code"
+                    @search="searchCountry($event)"
+                >
+                    <template #trigger>
+                        <span :style="{'min-width': '4rem'}">
+                            {{ selectedCountry }}
+                        </span>
+                    </template>
+
+                    <biz-dropdown-item
+                        v-for="option in filteredCountries"
+                        :key="option.id"
+                        @click="selectedCountry = option"
+                    >
+                        {{ option.value }}
+                    </biz-dropdown-item>
+                </biz-form-dropdown-search>
+
+                <biz-form-dropdown-search
                     label="Language"
                     :close-on-click="true"
                     :message="form.errors.language_id"
@@ -88,14 +109,14 @@
                 >
                     <template #trigger>
                         <span :style="{'min-width': '4rem'}">
-                            {{ selectedDefaultLanguage }}
+                            {{ selectedLanguage }}
                         </span>
                     </template>
 
                     <biz-dropdown-item
                         v-for="option in filteredLanguages"
                         :key="option.id"
-                        @click="selectedDefaultLanguage = option"
+                        @click="selectedLanguage = option"
                     >
                         {{ option.value }}
                     </biz-dropdown-item>
@@ -270,6 +291,7 @@
 
         setup() {
             return {
+                countryOptions: usePage().props.value.countryOptions,
                 languageOptions: usePage().props.value.shownLanguageOptions,
             };
         },
@@ -286,9 +308,11 @@
                     email: this.user.email,
                     photo: null,
                     photo_url: null,
+                    country_code: this.user.country_code,
                     language_id: this.user.language_id
                 }),
                 isImageEditing: false,
+                filteredCountries: this.countryOptions.slice(0, 10),
                 filteredLanguages: this.languageOptions.slice(0, 10),
             }
         },
@@ -306,7 +330,23 @@
                 return url;
             },
 
-            selectedDefaultLanguage: {
+            selectedCountry: {
+                get() {
+                    if (this.form.country_code) {
+                        let country = find(
+                            this.countryOptions,
+                            ['id', this.form.country_code]
+                        );
+                        return country.value;
+                    }
+                    return '';
+                },
+                set(country) {
+                    this.form.country_code = country.id;
+                }
+            },
+
+            selectedLanguage: {
                 get() {
                     if (this.form.language_id) {
                         let language = find(
@@ -395,6 +435,16 @@
                     }
                 })
             },
+
+            searchCountry: debounce(function(term) {
+                if (!isEmpty(term) && term.length > 1) {
+                    this.filteredCountries = filter(this.countryOptions, function (country) {
+                        return new RegExp(term, 'i').test(country.value);
+                    }).slice(0, 10);
+                } else {
+                    this.filteredCountries = this.countryOptions.slice(0, 10);
+                }
+            }, 750),
 
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
