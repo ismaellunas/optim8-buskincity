@@ -347,6 +347,19 @@ class MenuService
                 'isActive' => $request->routeIs('dashboard'),
                 'isEnabled' => true,
             ],
+            'paymentManagement' => [
+                'title' => 'Payment Management',
+                'isActive' => $request->routeIs('payment-management.*'),
+                'isEnabled' => $user->can('payment.management'),
+                'children' => [
+                    [
+                        'title' => 'Stripe',
+                        'link' => route('payment-management.stripe.show'),
+                        'isActive' => $request->routeIs('payment-management.stripe.show'),
+                        'isEnabled' => true,
+                    ]
+                ],
+            ],
         ];
 
         $menuProfile = [
