@@ -84,7 +84,7 @@ Route::group([
         ]);
     })->name('test.translation');
 
-    Route::get('/profiles/{user}', [FrontendProfileController::class, 'show'])
+    Route::get('/profile/{user}', [FrontendProfileController::class, 'show'])
         ->name('profiles.show');
 });
 
