@@ -52,7 +52,7 @@
                         :key="index"
                     >
                         <td>{{ available.currency.toUpperCase() }}</td>
-                        <td>{{ available.amount }}</td>
+                        <td>{{ available.amount / 100 }}</td>
                     </tr>
                 </biz-table>
             </div>
@@ -75,7 +75,7 @@
                         :key="index"
                     >
                         <td>{{ pending.currency.toUpperCase() }}</td>
-                        <td>{{ pending.amount }}</td>
+                        <td>{{ pending.amount / 100 }}</td>
                     </tr>
                 </biz-table>
             </div>
