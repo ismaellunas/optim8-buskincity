@@ -71,6 +71,98 @@
                                     </h2>
                                     <div class="has-text-left">
 
+                                        <form action="{{ route('register') }}" method="post">
+                                            @csrf
+
+                                            <div class="field">
+                                                <label class="label">First Name*</label>
+                                                <div class="control">
+                                                    <input type="text" name="first_name" value="{{ old('first_name') }}" class="input" placeholder="Enter your first name" required>
+                                                </div>
+                                                @error('first_name')
+                                                    <p class="help is-danger">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div class="field">
+                                                <label class="label">Last Name*</label>
+                                                <div class="control">
+                                                    <input type="text" name="last_name" value="{{ old('last_name') }}" class="input" placeholder="Enter your last name" required>
+                                                </div>
+                                                @error('last_name')
+                                                    <p class="help is-danger">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div class="field">
+                                                <label class="label">Email*</label>
+                                                <div class="control">
+                                                    <input type="email" name="email" value="{{ old('email') }}" class="input" placeholder="Enter your email" required>
+                                                </div>
+                                                @error('email')
+                                                    <p class="help is-danger">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div class="field">
+                                                <label class="label">Password*</label>
+                                                <div class="control">
+                                                    <div class="field has-addons mb-0">
+                                                        <div class="control is-expanded">
+                                                            <input type="password" name="password" class="input" placeholder="Enter your password" required>
+                                                        </div>
+                                                        <div class="control">
+                                                            <button class="button">
+                                                                <span class="icon">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @error('password')
+                                                    <p class="help is-danger">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+                                            <div class="field">
+                                                <label class="label">Password Confirmation*</label>
+                                                <div class="control">
+                                                    <div class="field has-addons mb-0">
+                                                        <div class="control is-expanded">
+                                                            <input type="password" name="password_confirmation" class="input" placeholder="Confirm Password" required>
+                                                        </div>
+                                                        <div class="control">
+                                                            <button class="button">
+                                                                <span class="icon">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @error('password_confirmation')
+                                                    <p class="help is-danger">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+
+
+                                            <div class="flex mt-4">
+                                                <div class="columns is-gapless">
+                                                    <div class="column is-two-thirds">
+                                                        <span>
+                                                            By clicking on <b>Create Account</b> you agree with our Terms and Conditions
+                                                        </span>
+                                                    </div>
+                                                    <div class="column is-one-third has-text-right">
+                                                        <button type="submit" class="button is-info">
+                                                            Create Account
+                                                        </button type="submit">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </form>
                                     </div>
                                 </div>
                             </div>
