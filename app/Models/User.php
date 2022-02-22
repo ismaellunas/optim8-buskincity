@@ -45,6 +45,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'profile_photo_media_id',
+        'country_code',
         'language_id',
     ];
 
@@ -114,6 +115,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function originLanguage()
     {
         return $this->belongsTo(Language::class, 'language_id');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class, 'country_code', 'alpha2');
     }
 
     public function scopeSearch($query, string $term)
