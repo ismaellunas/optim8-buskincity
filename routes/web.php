@@ -59,7 +59,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         )->middleware('signed')->name('refresh');
 
         Route::get('return/{user}', function() {
-            echo "Stripe Return";
+            return redirect()->route('payment-management.stripe.show');
         })->middleware('signed')->name('return');
     });
 });
