@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities\GeoIP\Support;
+namespace App\Entities\GeoIP;
 
 use Illuminate\Support\Arr;
 use Torann\GeoIP\Support\HttpClient as GeoIPHttpClient;
