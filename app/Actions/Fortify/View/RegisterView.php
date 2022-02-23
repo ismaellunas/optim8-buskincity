@@ -9,10 +9,10 @@ class RegisterView
 {
     public function __invoke()
     {
-        $userData = app(IPService::class)->getUserData();
+        $clientData = app(IPService::class)->getClientData();
 
         return Inertia::render('Auth/Register', [
-            'userLocation' => $userData->location,
+            'userLocation' => $clientData->location,
         ]);
     }
 }
