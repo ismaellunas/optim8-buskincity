@@ -85,7 +85,7 @@ Route::group([
     })->name('test.translation');
 
     Route::get('/profile/{user}', [FrontendProfileController::class, 'show'])
-        ->name('profiles.show');
+        ->name('profile.show');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
