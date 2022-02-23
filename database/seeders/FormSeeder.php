@@ -172,9 +172,11 @@ class FormSeeder extends Seeder
                     "false_value" => false,
                     "default_value" => false,
                     "is_raw" => true,
+                    "is_boolean" => true,
                     "validation" => [
                         "rules" => [
                             "required",
+                            "accepted"
                         ],
                         "messages" => [],
                     ],
