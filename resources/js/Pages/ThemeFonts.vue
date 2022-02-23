@@ -411,7 +411,7 @@
                     'has-text-weight-bold': "Bold",
                 },
                 styleOptions: {
-                    'is-capitalize': "Capitalize",
+                    'is-capitalized': "Capitalize",
                     'is-lowercase': "Lowercase",
                     'is-uppercase': "Uppercase",
                     'is-italic': "Italic",
