@@ -30,7 +30,7 @@ class IPService
         return $ipaddress;
     }
 
-    public function getUserData()
+    public function getClientData()
     {
         return geoip($this->getClientIp());
     }
