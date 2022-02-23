@@ -23,7 +23,10 @@ class ChangeLanguageController extends Controller
             $newLocale = "";
         }
 
-        app(LifetimeCookie::class)->set('origin_language', $newLocale ?? $defaultLocale);
+        app(LifetimeCookie::class)->set(
+            'origin_language',
+            $newLocale != '' ? $newLocale : $defaultLocale
+        );
 
         if (!empty($url)) {
             $url = $this->removeLocaleFromUrl($url);
