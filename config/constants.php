@@ -59,7 +59,7 @@ return [
             'has-text-weight-bold' => 700,
         ],
         'font_style' => [
-            'is-capitalize' => 'capitalize',
+            'is-capitalized' => 'capitalize',
             'is-uppercase' => 'uppercase',
             'is-lowercase' => 'lowercase',
             'is-italic' => 'italic',
