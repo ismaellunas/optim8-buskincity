@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Entities\GeoIP;
+namespace App\Services;
 
 use Exception;
-use App\Entities\GeoIP\Support\HttpClient;
+use App\Entities\GeoIP\HttpClient;
 use Torann\GeoIP\Services\AbstractService;
 
-class IPRegistry extends AbstractService
+class IPRegistryService extends AbstractService
 {
     protected $client;
 

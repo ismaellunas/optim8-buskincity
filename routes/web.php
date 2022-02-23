@@ -76,7 +76,8 @@ Route::group([
         ->name('blog.show');
 
     Route::get('/{page_translation}', [PageController::class, 'show'])
-        ->name('frontend.pages.show');
+        ->name('frontend.pages.show')
+        ->middleware('redirectLanguage');
 
     // Route for Test translation
     Route::get('/test/translation', function () {
@@ -85,8 +86,8 @@ Route::group([
         ]);
     })->name('test.translation');
 
-    Route::get('/profiles/{user}', [FrontendProfileController::class, 'show'])
-        ->name('profiles.show');
+    Route::get('/profile/{user}', [FrontendProfileController::class, 'show'])
+        ->name('profile.show');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {

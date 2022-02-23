@@ -7,7 +7,7 @@ use App\Models\{
     Setting
 };
 use App\Entities\{
-    Cookie,
+    LifetimeCookie,
     Caches\SettingCache
 };
 use App\Services\IPService;
@@ -93,12 +93,12 @@ class LanguageService
 
     public function getOriginLanguageFromCookie(): string
     {
-        $originLanguage = app(Cookie::class)->get('origin_language');
+        $originLanguage = app(LifetimeCookie::class)->get('origin_language');
 
         if (!$originLanguage) {
             $originLanguage = $this->getOriginFromIP()->code;
 
-            app(Cookie::class)->set('origin_language', $originLanguage);
+            app(LifetimeCookie::class)->set('origin_language', $originLanguage);
         }
 
         return $originLanguage;
