@@ -95,7 +95,7 @@ return [
         ],
 
         'ipregistry' => [
-            'class'  => \App\Entities\GeoIP\IPRegistry::class,
+            'class'  => \App\Services\IPRegistryService::class,
             'key'    => env('IPREGISTRY_API_KEY'),
         ],
 
