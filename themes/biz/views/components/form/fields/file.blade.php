@@ -1,6 +1,6 @@
 <tr>
     <td>
-        {{ $label }}:
+        {{ __($label) }}:
     </td>
     <td>
         @if (!empty($media))
