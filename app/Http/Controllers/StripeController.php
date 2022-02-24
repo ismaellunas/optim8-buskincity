@@ -21,12 +21,21 @@ class StripeController extends Controller
         $hasConnectedAccount = $this->stripeService->hasStripeAccount($user);
 
         $balance = null;
+        $hasPassedOnboarding = false;
+
         if ($hasConnectedAccount) {
             $balance = $this->stripeService->accountBalance($user);
+
+            $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+
+            $stripeAccount = $this->stripeService->retrieveAccount($stripeAccountId);
+
+            $hasPassedOnboarding = $stripeAccount->charges_enabled;
         }
 
         return Inertia::render('PaymentManagementStripe', compact(
             'hasConnectedAccount',
+            'hasPassedOnboarding',
             'balance'
         ));
     }
@@ -35,13 +44,24 @@ class StripeController extends Controller
     {
         $user = $request->user();
 
-        $connectedAccount = $this->stripeService->createConnectedAccount($user);
+        $hasConnectedAccount = $this->stripeService->hasStripeAccount($user);
 
-        $user->setMeta('stripe_account_id', $connectedAccount->id);
-        $user->saveMetas();
+        if ($hasConnectedAccount) {
+
+            $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+
+        } else {
+
+            $stripeAccount = $this->stripeService->createConnectedAccount($user);
+            $stripeAccountId = $stripeAccount->id;
+
+            $user->setMeta('stripe_account', $stripeAccount);
+            $user->setMeta('stripe_account_id', $stripeAccount->id);
+            $user->saveMetas();
+        }
 
         $accountLink = $this->stripeService->createAccountLink(
-            $connectedAccount->id,
+            $stripeAccountId,
             $user
         );
 
@@ -57,5 +77,54 @@ class StripeController extends Controller
         $loginLink = $this->stripeService->createLoginLink($stripeAccountId);
 
         return ['url' => $loginLink->url];
+    }
+
+    public function refresh()
+    {
+        $user = auth()->user();
+
+        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+
+        $stripeAccount = $this->stripeService->retrieveAccount($stripeAccountId);
+
+        $this->stripeService->setUserStripeAccount($user, $stripeAccount);
+
+        $accountLink = $this->stripeService->createAccountLink(
+            $stripeAccount->id,
+            $user
+        );
+
+        return redirect()->away($accountLink->url);
+    }
+
+    public function return()
+    {
+        $user = auth()->user();
+
+        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+
+        $stripeAccount = $this
+            ->stripeService
+            ->updateAccountBrandingBasedOnPlatform($stripeAccountId);
+
+        $this->stripeService->setUserStripeAccount($user, $stripeAccount);
+
+        return redirect()
+            ->route('payment-management.stripe.show')
+            ->with('message', 'Stripe Account created successfully.');
+    }
+
+    public function accountLink()
+    {
+        $user = auth()->user();
+
+        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+
+        $accountLink = $this->stripeService->createAccountLink(
+            $stripeAccountId,
+            $user
+        );
+
+        return ['url' => $accountLink->url];
     }
 }

@@ -50,18 +50,18 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
             Route::get('redirect-to-stripe', [StripeController::class, 'redirectToStripeAccount'])
                 ->name('redirect-to-stripe');
+
+            Route::get('account-link', [StripeController::class, 'accountLink'])
+                ->name('account-link');
+
+            Route::get('reauth', [StripeController::class, 'refresh'])
+                ->middleware('signed')
+                ->name('refresh');
+
+            Route::get('return', [StripeController::class, 'return'])
+                ->middleware('signed')
+                ->name('return');
         });
-
-    Route::name('payments.stripe.')->prefix('payments/stripe')->group(function() {
-        Route::get(
-            'payments/stripe/reauth/{user}',
-            [StripeController::class, 'refresh']
-        )->middleware('signed')->name('refresh');
-
-        Route::get('return/{user}', function() {
-            return redirect()->route('payment-management.stripe.show');
-        })->middleware('signed')->name('return');
-    });
 });
 
 Route::get('/oauth/{provider}/callback', [CustomOAuthController::class, 'handleProviderCallback'])

@@ -30,12 +30,12 @@ class StripeService
 
     private function refreshUrl(User $user): string
     {
-        return URL::signedRoute('payments.stripe.refresh', ['user' => $user->id]);
+        return URL::signedRoute('payment-management.stripe.refresh', ['user' => $user->id]);
     }
 
-    private function returnUrl(User $user): string
+    private function returnUrl(): string
     {
-        return URL::signedRoute('payments.stripe.return', ['user' => $user->id]);
+        return URL::signedRoute('payment-management.stripe.return');
     }
 
     private function getStripeClient(): StripeClient
@@ -52,11 +52,15 @@ class StripeService
         $stripe = $this->getStripeClient();
 
         return $stripe->accounts->create([
-            //'type' => 'standard',
             'type' => 'express',
             'business_profile' => [
                 'name' => $user->fullName,
             ],
+            'capabilities' => [
+                'card_payments' => ['requested' => true],
+                'transfers' => ['requested' => true],
+            ],
+            'business_type' => 'individual',
             'country' => 'SE',
         ]);
     }
@@ -161,5 +165,96 @@ class StripeService
             'XOF',
             'XPF',
         ]);
+    }
+
+    public function retrieveAccount(string $stripeAccountId): Account
+    {
+        $stripe = $this->getStripeClient();
+
+        return $stripe->accounts->retrieve($stripeAccountId);
+    }
+
+    public function setUserStripeAccount(User $user, Account $stripeAccount)
+    {
+        $user->setMeta('stripe_account', $stripeAccount);
+        $user->saveMetas();
+    }
+
+    public function setUserStripeAccountId(User $user, string $stripeAccountId)
+    {
+        $user->setMeta('stripe_account_id', $stripeAccountId);
+        $user->saveMetas();
+    }
+
+    private function getLogoFileFromCloud()
+    {
+        $url = 'https://res.cloudinary.com/bayusdb/image/upload/v1645698885/local_stripe_logo.png';
+
+        $path = sys_get_temp_dir().DIRECTORY_SEPARATOR."stripe-account-logo.png";
+
+        file_put_contents($path, file_get_contents($url));
+
+        return fopen($path, 'r');
+    }
+
+    private function getLogoFile()
+    {
+        $path = resource_path('images/logo-128x47.png');
+
+        return fopen($path, 'r');
+    }
+
+    private function uploadLogoFile()
+    {
+        $fp = $this->getLogoFile();
+
+        $stripe = $this->getStripeClient();
+
+        return $stripe->files->create([
+            'purpose' => 'business_logo',
+            'file' => $fp
+        ]);
+    }
+
+    private function getPrimaryColor(): string
+    {
+        return '#2587BF';
+    }
+
+    private function getSecondaryColor(): string
+    {
+        return '#FCD42F';
+    }
+
+    public function updateAccountBrandingBasedOnPlatform(
+        string $stripeAccountId
+    ): Account {
+
+        $branding = [];
+
+        $file = $this->uploadLogoFile();
+
+        if ($file) {
+            $branding['logo'] = $file->id;
+        }
+
+        $branding['primary_color'] = $this->getPrimaryColor();
+        $branding['secondary_color'] = $this->getSecondaryColor();
+
+        return $this->updateAccount($stripeAccountId, [
+            'settings' => [
+                'branding' => $branding
+            ],
+        ]);
+    }
+
+    public function updateAccount(string $stripeAccountId, array $data): Account
+    {
+        $stripe = $this->getStripeClient();
+
+        return $stripe->accounts->update(
+            $stripeAccountId,
+            $data
+        );
     }
 }

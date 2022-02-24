@@ -6,22 +6,39 @@
 
         <biz-error-notifications :errors="$page.props.errors" />
 
-        <div class="box">
+        <div
+            v-if="!hasConnectedAccount"
+            class="box"
+        >
             <div class="control">
                 <biz-button
-                    v-if="!hasConnectedAccount"
                     class="is-link"
                     @click="createConnectedAccount"
                 >
                     Create Connected Account
                 </biz-button>
+            </div>
+        </div>
 
+        <div
+            v-else
+            class="box"
+        >
+            <div class="control">
                 <biz-button
-                    v-else
+                    v-if="hasPassedOnboarding"
                     class="is-link"
                     @click="redirectToStripe"
                 >
                     Login To Stripe
+                </biz-button>
+
+                <biz-button
+                    v-else
+                    class="is-link"
+                    @click="redirectToOnboardingAccount"
+                >
+                    Continue Onboarding Process
                 </biz-button>
             </div>
         </div>
@@ -106,7 +123,11 @@
         props: {
             hasConnectedAccount: {
                 type: Boolean,
-                default: false,
+                required: true,
+            },
+            hasPassedOnboarding: {
+                type: Boolean,
+                required: true,
             },
             errors: {
                 type: Object,
@@ -148,6 +169,26 @@
                     window.open(response.data.url);
 
                 } catch (error) {
+                    oopsAlert();
+                }
+
+                this.onEndLoadingOverlay();
+            },
+
+
+            async redirectToOnboardingAccount() {
+                this.onStartLoadingOverlay();
+
+                try {
+                    const response = await axios.get(
+                        route('payment-management.stripe.account-link')
+                    );
+
+                    window.open(response.data.url);
+
+                } catch (error) {
+                    console.error(error);
+
                     oopsAlert();
                 }
 
