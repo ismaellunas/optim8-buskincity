@@ -82,13 +82,6 @@
             </template>
 
             <template #actions>
-                <biz-action-message
-                    :is-active="form.recentlySuccessful"
-                    class="mr-3"
-                >
-                    Saved.
-                </biz-action-message>
-
                 <biz-button
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
@@ -193,11 +186,11 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizModalCard from '@/Biz/ModalCard';
     import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
-    import BizActionMessage from '@/Biz/ActionMessage';
     import BizButton from '@/Biz/Button';
     import BizImage from '@/Biz/Image';
     import BizFormInput from '@/Biz/Form/Input';
@@ -209,11 +202,10 @@
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { includes } from 'lodash';
     import { getCanvasBlob } from '@/Libs/utils';
-    import { oops as oopsAlert, confirmDelete } from '@/Libs/alert';
+    import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
 
     export default {
         components: {
-            BizActionMessage,
             BizButton,
             BizImage,
             BizModalCard,
@@ -226,6 +218,7 @@
             UserIcon,
         },
         mixins: [
+            MixinHasLoader,
             MixinHasModal,
             MixinHasPageErrors,
         ],
@@ -311,11 +304,20 @@
             },
 
             updateProfileInformation() {
+                this.onStartLoadingOverlay();
+
                 this.form.post(route('user-profile-information.update'), {
                     errorBag: 'updateProfileInformation',
                     preserveScroll: true,
                     onSuccess: () => {
                         this.clearPhotoInput();
+                        successAlert("Saved");
+                    },
+                    onError: () => {
+                        oopsAlert();
+                    },
+                    onFinish: () => {
+                        this.onEndLoadingOverlay();
                     },
                 });
             },
@@ -329,6 +331,9 @@
                             preserveScroll: true,
                             onSuccess: () => {
                                 self.clearPhotoInput();
+                            },
+                            onError: () => {
+                                oopsAlert();
                             },
                             onFinish: () => {
                                 self.form.processing = false;

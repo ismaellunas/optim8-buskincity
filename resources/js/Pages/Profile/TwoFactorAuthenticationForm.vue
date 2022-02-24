@@ -98,9 +98,11 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizActionSection from '@/Biz/ActionSection';
     import BizConfirmPassword from '@/Biz/ConfirmPassword';
     import BizButton from '@/Biz/Button';
+    import { oops as oopsAlert } from '@/Libs/alert';
 
     export default {
         components: {
@@ -108,6 +110,10 @@
             BizConfirmPassword,
             BizButton,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         data() {
             return {
@@ -127,45 +133,74 @@
 
         methods: {
             enableTwoFactorAuthentication() {
-                this.enabling = true
+                this.enabling = true;
+                this.onStartLoadingOverlay();
 
                 this.$inertia.post('/user/two-factor-authentication', {}, {
                     preserveScroll: true,
-                    onSuccess: () => Promise.all([
-                        this.showQrCode(),
-                        this.showRecoveryCodes(),
-                    ]),
-                    onFinish: () => (this.enabling = false),
+                    onSuccess: () => {
+                        this.showQrCode();
+                        this.showRecoveryCodes();
+                    },
+                    onError: () => {
+                        oopsAlert();
+                    },
+                    onFinish: () => {
+                        this.enabling = false;
+                        this.onEndLoadingOverlay();
+                    },
                 })
             },
 
             showQrCode() {
+                let self = this;
+
                 return axios.get('/user/two-factor-qr-code')
                     .then(response => {
-                        this.qrCode = response.data.svg
+                        self.qrCode = response.data.svg
+                    })
+                    .catch(() => {
+                        oopsAlert();
                     });
             },
 
             showRecoveryCodes() {
+                let self = this;
+
                 return axios.get('/user/two-factor-recovery-codes')
                     .then(response => {
-                        this.recoveryCodes = response.data
+                        self.recoveryCodes = response.data
+                    })
+                    .catch(() => {
+                        oopsAlert();
                     });
             },
 
             regenerateRecoveryCodes() {
+                let self = this;
+
                 axios.post('/user/two-factor-recovery-codes')
                     .then(response => {
-                        this.showRecoveryCodes()
+                        self.showRecoveryCodes()
+                    })
+                    .catch(() => {
+                        oopsAlert();
                     });
             },
 
             disableTwoFactorAuthentication() {
-                this.disabling = true
+                this.disabling = true;
+                this.onStartLoadingOverlay();
 
                 this.$inertia.delete('/user/two-factor-authentication', {
                     preserveScroll: true,
-                    onSuccess: () => (this.disabling = false),
+                    onError: () => {
+                        oopsAlert();
+                    },
+                    onFinish: () => {
+                        this.disabling = false;
+                        this.onEndLoadingOverlay();
+                    },
                 })
             },
         },
