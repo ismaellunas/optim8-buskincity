@@ -21,11 +21,9 @@
 
                 <biz-flash-notifications :flash="$page.props.flash" />
 
-                <form :action="route('admin.login')" method="post">
-                    <input type="hidden" name="_token" :value="csrfToken">
+                <form @submit.prevent="submit">
                     <biz-form-input
                         v-model="form.email"
-                        name="email"
                         label="Email"
                         type="email"
                         placeholder="Enter your email"
@@ -35,7 +33,6 @@
 
                     <biz-form-password
                         v-model="form.password"
-                        name="password"
                         autocomplete="current-password"
                         label="Password"
                         placeholder="Enter your password"
@@ -63,7 +60,6 @@
 
                     <biz-button
                         class="is-block is-info is-fullwidth"
-                        type="submit"
                     >
                         Log In <i class="fas fa-sign-in-alt" />
                     </biz-button>
@@ -104,7 +100,6 @@
             return {
                 canLogin: true,
                 canRegister: true,
-                csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                 form: this.$inertia.form({
                     email: '',
                     password: '',
