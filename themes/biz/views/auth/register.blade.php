@@ -109,12 +109,17 @@
                                                 <div class="control">
                                                     <div class="field has-addons mb-0">
                                                         <div class="control is-expanded">
-                                                            <input type="password" name="password" class="input" placeholder="Enter your password" required>
+                                                            <input type="password" name="password" class="input input-password" placeholder="Enter your password" required>
                                                         </div>
-                                                        <div class="control">
-                                                            <button class="button">
+                                                        <div class="control icon-password" onclick="showHidePassword()">
+                                                            <button type="button" class="button">
                                                                 <span class="icon">
                                                                     <i class="fas fa-eye"></i>
+                                                                </span>
+                                                            </button>
+                                                            <button type="button" class="button is-hidden">
+                                                                <span class="icon">
+                                                                    <i class="fas fa-eye-slash"></i>
                                                                 </span>
                                                             </button>
                                                         </div>
@@ -130,12 +135,17 @@
                                                 <div class="control">
                                                     <div class="field has-addons mb-0">
                                                         <div class="control is-expanded">
-                                                            <input type="password" name="password_confirmation" class="input" placeholder="Confirm Password" required>
+                                                            <input type="password" name="password_confirmation" class="input input-password" placeholder="Confirm Password" required>
                                                         </div>
-                                                        <div class="control">
-                                                            <button class="button">
+                                                        <div class="control icon-password" onclick="showHidePassword()">
+                                                            <button type="button" class="button">
                                                                 <span class="icon">
                                                                     <i class="fas fa-eye"></i>
+                                                                </span>
+                                                            </button>
+                                                            <button type="button" class="button is-hidden">
+                                                                <span class="icon">
+                                                                    <i class="fas fa-eye-slash"></i>
                                                                 </span>
                                                             </button>
                                                         </div>
@@ -194,6 +204,24 @@
                 }
                 document.getElementById('registerForm').classList.add('is-hidden');
                 document.getElementById('socialMediaForm').classList.remove('is-hidden');
+            }
+
+            function showHidePassword() {
+                document.querySelectorAll('.input-password').forEach(function(el) {
+                    if (el.getAttribute('type') === 'password') {
+                        el.setAttribute('type', 'text');
+                    } else {
+                        el.setAttribute('type', 'password');
+                    }
+                });
+                document.querySelectorAll('.icon-password .button').forEach(function(e) {
+                    if (e.classList.contains('is-hidden')) {
+                        e.classList.remove('is-hidden');
+                    } else {
+                        e.classList.add('is-hidden');
+                    }
+
+                });
             }
         </script>
     @endpush
