@@ -106,10 +106,11 @@
                                 </biz-link>
 
                                 <hr class="navbar-divider">
-
                                 <form
-                                    :action="route('logout')"
                                     method="POST"
+                                    @submit.prevent="logout"
+                                    :action="route('logout')"
+                                    ref="logout"
                                 >
                                     <input type="hidden" name="_token" :value="csrfToken">
                                     <biz-button
@@ -196,6 +197,13 @@
                 }, {
                     preserveState: false
                 });
+            },
+            logout() {
+                if (route().current('admin*')) {
+                    this.$inertia.post(route('logout'));
+                } else {
+                    this.$refs.logout.submit();
+                }
             },
             showMenu() {
                 this.isMenuDisplay = !this.isMenuDisplay;
