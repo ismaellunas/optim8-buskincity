@@ -1,4 +1,4 @@
-<x-layouts.blank>
+<x-layouts.auth>
     <section class="hero is-fullheight">
         <div class="hero-body">
             <div class="container has-text-centered">
@@ -54,13 +54,13 @@
                                         <div class="h-line-wrapper">
                                             <span class="h-line-words">or</span>
                                         </div>
-                                        <a class="box" onclick="showLoginForm()">
+                                        <a class="box" onclick="showForm()">
                                             <i class="fas fa-envelope"></i> Continue with <b>Email</b>
                                         </a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="columns is-hidden" id="loginForm">
+                            <div class="columns is-hidden" id="formFields">
                                 <div class="column is-9 is-offset-1">
                                     <h1 class="title">
                                         Welcome Back
@@ -120,30 +120,4 @@
             </div>
         </div>
     </section>
-
-    @push('bottom_scripts')
-        @if ($errors->any())
-            <script>
-                document.getElementById('loginForm').classList.remove('is-hidden');
-                document.getElementById('socialMediaForm').classList.add('is-hidden');
-            </script>
-        @endif
-
-        <script>
-            function showLoginForm() {
-                document.getElementById('loginForm').classList.remove('is-hidden');
-                document.getElementById('socialMediaForm').classList.add('is-hidden');
-            }
-
-            function backOrOpenSocialMediaForm() {
-                let loginForm = document.getElementById('loginForm');
-                if (loginForm.classList.contains('is-hidden')) {
-                    window.location.href = "{{ url('/') }}"
-                }
-                document.getElementById('loginForm').classList.add('is-hidden');
-                document.getElementById('socialMediaForm').classList.remove('is-hidden');
-            }
-        </script>
-    @endpush
-
-</x-layouts.blank>
+</x-layouts.auth>
