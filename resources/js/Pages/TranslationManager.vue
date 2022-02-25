@@ -145,10 +145,11 @@
                                 >
                                     <biz-field class="mb-0">
                                         <div class="control is-expanded">
-                                            <biz-input
+                                            <biz-textarea
                                                 v-if="form.translations[index]"
                                                 v-model="form.translations[index].value"
                                                 placeholder="value"
+                                                rows="3"
                                             />
                                         </div>
                                     </biz-field>
@@ -263,9 +264,9 @@
     import BizField from '@/Biz/Field';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import BizFormFile from '@/Biz/Form/File';
-    import BizInput from '@/Biz/Input';
     import BizModalCard from '@/Biz/ModalCard';
     import BizPagination from '@/Biz/Pagination';
+    import BizTextarea from '@/Biz/Textarea';
     import { merge, debounce } from 'lodash';
     import { ref } from 'vue';
     import { success as successAlert, confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
@@ -284,9 +285,9 @@
             BizField,
             BizFlashNotifications,
             BizFormFile,
-            BizInput,
             BizModalCard,
             BizPagination,
+            BizTextarea,
         },
 
         mixins: [
