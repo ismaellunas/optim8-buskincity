@@ -2,10 +2,10 @@
     <loading
         v-model:active="isLoading"
         :is-full-page="true"
+        :opacity="0.3"
+        :z-index="8000"
         color="#3280bf"
         loader="dots"
-        opacity="0.3"
-        z-index="8000"
     />
 </template>
 

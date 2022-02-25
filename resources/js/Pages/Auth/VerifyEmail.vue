@@ -17,7 +17,14 @@
                         A new verification link has been sent to the email address you provided during registration.
                     </div>
 
-                    <form @submit.prevent="submit">
+                    <form
+                        method="POST"
+                        @submit.prevent="logout"
+                        :action="route('logout')"
+                        ref="logout"
+                    >
+                        <input type="hidden" name="_token" :value="csrfToken">
+
                         <div class="mt-4 flex items-center justify-between">
                             <biz-button
                                 :class="{ 'opacity-25': form.processing }"
@@ -27,14 +34,12 @@
                                 Resend Verification Email
                             </biz-button>
 
-                            <biz-link
-                                :href="route('logout')"
-                                method="post"
+                            <biz-button
                                 as="button"
                                 class="button ml-3"
                             >
                                 Log Out
-                            </biz-link>
+                            </biz-button>
                         </div>
                     </form>
                 </div>
@@ -61,7 +66,8 @@
 
         data() {
             return {
-                form: this.$inertia.form()
+                form: this.$inertia.form(),
+                csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         },
 
@@ -72,8 +78,8 @@
         },
 
         methods: {
-            submit() {
-                this.form.post(this.route('verification.send'))
+            logout() {
+                this.$refs.logout.submit();
             },
         },
     }
