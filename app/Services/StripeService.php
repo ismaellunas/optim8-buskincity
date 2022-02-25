@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Country;
+use App\Models\Setting;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
 use Stripe\{
     Account,
@@ -47,7 +50,7 @@ class StripeService
         return $this->stripeClient;
     }
 
-    public function createConnectedAccount(User $user): Account
+    public function createConnectedAccount(User $user, string $country): Account
     {
         $stripe = $this->getStripeClient();
 
@@ -61,7 +64,8 @@ class StripeService
                 'transfers' => ['requested' => true],
             ],
             'business_type' => 'individual',
-            'country' => 'SE',
+            'country' => $country,
+            'email' => $user->email,
         ]);
     }
 
@@ -256,5 +260,36 @@ class StripeService
             $stripeAccountId,
             $data
         );
+    }
+
+    public function getCountryOptions(): Collection
+    {
+        $countrySpecs = [];
+
+        $countrySpecsSetting = Setting::firstOrNew([
+            'key' => 'stripe_country_specs',
+        ]);
+
+        if (!$countrySpecsSetting->id) {
+
+            $stripe = $this->getStripeClient();
+            $response = $stripe->countrySpecs->all(['limit' => 100]);
+
+            $countrySpecsSetting->value = json_encode($response->data);
+            $countrySpecsSetting->save();
+        }
+
+        $countrySpecs = json_decode($countrySpecsSetting->value);
+        $countrySpecs = collect($countrySpecs);
+        $countryIsoIds = $countrySpecs->pluck('id');
+
+        return Country::whereIn('alpha2', $countryIsoIds)
+            ->get(['alpha2', 'display_name'])
+            ->map(function ($country) {
+                return [
+                    'id' => $country->alpha2,
+                    'value' => $country->display_name,
+                ];
+            });
     }
 }

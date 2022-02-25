@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\StripeService;
-use Illuminate\Http\Request;
+use App\Http\Requests\StripeAccountCreateRequest;
 use Inertia\Inertia;
 
 class StripeController extends Controller
@@ -22,6 +22,7 @@ class StripeController extends Controller
 
         $balance = null;
         $hasPassedOnboarding = false;
+        $countryOptions = [];
 
         if ($hasConnectedAccount) {
             $balance = $this->stripeService->accountBalance($user);
@@ -31,16 +32,23 @@ class StripeController extends Controller
             $stripeAccount = $this->stripeService->retrieveAccount($stripeAccountId);
 
             $hasPassedOnboarding = $stripeAccount->charges_enabled;
+
+        } else {
+            $countryOptions = $this->stripeService->getCountryOptions();
         }
 
+        $defaultCountry = 'SE';
+
         return Inertia::render('PaymentManagementStripe', compact(
+            'balance',
+            'countryOptions',
+            'defaultCountry',
             'hasConnectedAccount',
-            'hasPassedOnboarding',
-            'balance'
+            'hasPassedOnboarding'
         ));
     }
 
-    public function createThenRedirect(Request $request)
+    public function createThenRedirect(StripeAccountCreateRequest $request)
     {
         $user = $request->user();
 
@@ -52,7 +60,10 @@ class StripeController extends Controller
 
         } else {
 
-            $stripeAccount = $this->stripeService->createConnectedAccount($user);
+            $stripeAccount = $this->stripeService->createConnectedAccount(
+                $user,
+                $request->get('country')
+            );
             $stripeAccountId = $stripeAccount->id;
 
             $user->setMeta('stripe_account', $stripeAccount);

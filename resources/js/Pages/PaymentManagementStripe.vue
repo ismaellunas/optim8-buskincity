@@ -4,12 +4,24 @@
             {{ title }}
         </template>
 
-        <biz-error-notifications :errors="$page.props.errors" />
-
         <div
             v-if="!hasConnectedAccount"
             class="box"
         >
+            <biz-form-select
+                v-model="form.country"
+                label="Country"
+                :message="error('country')"
+            >
+                <option
+                    v-for="option in countryOptions"
+                    :key="option.id"
+                    :value="option.id"
+                >
+                    {{ option.value }}
+                </option>
+            </biz-form-select>
+
             <div class="control">
                 <biz-button
                     class="is-link"
@@ -105,19 +117,22 @@
     import BizButton from '@/Biz/Button';
     import BizTable from '@/Biz/Table';
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import { oops as oopsAlert } from '@/Libs/alert';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import BizFormSelect from '@/Biz/Form/Select';
+    import { confirm as confirmAlert, oops as oopsAlert } from '@/Libs/alert';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
             AppLayout,
             BizButton,
+            BizFormSelect,
             BizTable,
-            BizErrorNotifications,
         },
 
         mixins: [
             MixinHasLoader,
+            MixinHasPageErrors,
         ],
 
         props: {
@@ -141,21 +156,49 @@
                 type: Object,
                 default: () => {},
             },
+            countryOptions: {
+                type: Object,
+                default: () => {},
+            },
+            defaultCountry: {
+                type: String,
+                default: null,
+            },
+        },
+
+        setup(props) {
+            const form = {
+                country: props.defaultCountry,
+            };
+
+            return {
+                form: useForm(form),
+            }
         },
 
         methods: {
             createConnectedAccount() {
                 const self = this;
+                const url = route('payment-management.stripe.create-connected-account');
 
-                this.$inertia.post(
-                    route('payment-management.stripe.create-connected-account'),
-                    {},
-                    {
-                        replace: true,
-                        preserveState: true,
-                        onStart: () => self.onStartLoadingOverlay(),
-                    }
-                );
+                confirmAlert(
+                    "Please double-check your country!",
+                    "You will not be able to change your country in the future.",
+                    "Continue"
+                )
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            self.form.post(url, {
+                                replace: true,
+                                preserveState: true,
+                                onStart: () => self.onStartLoadingOverlay(),
+                                onFinish: () => self.onEndLoadingOverlay(),
+                                onError: errors => {
+                                    oopsAlert();
+                                },
+                            });
+                        }
+                    });
             },
 
             async redirectToStripe() {
