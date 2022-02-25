@@ -109,7 +109,7 @@
 
                                             <button type="submit" class="button is-block is-info is-fullwidth">
                                                 Log In <i class="fas fa-sign-in-alt"></i>
-                                            </button type="submit">
+                                            </button>
                                         </form>
                                     </div>
                                 </div>
