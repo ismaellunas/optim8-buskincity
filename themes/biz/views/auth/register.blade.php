@@ -1,4 +1,6 @@
 <x-layouts.blank>
+    <loading-overlay id="loader" class="is-hidden"></loading-overlay>
+
     <section class="hero is-fullheight">
         <div class="hero-body">
             <div class="container has-text-centered">
@@ -71,7 +73,7 @@
                                     </h2>
                                     <div class="has-text-left">
 
-                                        <form action="{{ route('register') }}" method="post">
+                                        <form action="{{ route('register') }}" method="post" onsubmit="setLoader()">
                                             @csrf
 
                                             <div class="field">
@@ -222,6 +224,10 @@
                     }
 
                 });
+            }
+
+            function setLoader() {
+                document.getElementById('loader').classList.remove('is-hidden');
             }
         </script>
     @endpush
