@@ -154,7 +154,7 @@
                                     <div class="column is-one-third has-text-right">
                                         <button type="submit" class="button is-info">
                                             Create Account
-                                        </button type="submit">
+                                        </button>
                                     </div>
                                 </div>
                             </div>
