@@ -92,7 +92,6 @@
                                                 @enderror
                                             </div>
 
-
                                             <div class="field columns">
                                                 <div class="column has-text-left">
                                                     <label class="checkbox">
