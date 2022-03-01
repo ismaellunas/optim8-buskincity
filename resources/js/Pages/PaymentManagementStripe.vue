@@ -84,7 +84,7 @@
 </template>
 
 <script>
-    import AppLayout from './../Layouts/AppLayout';
+    import AppLayout from '@/Layouts/AppLayout';
     import BizButton from '@/Biz/Button';
     import BizTable from '@/Biz/Table';
     import MixinHasLoader from '@/Mixins/HasLoader';
