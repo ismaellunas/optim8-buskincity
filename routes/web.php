@@ -41,6 +41,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::prefix('/payment-management/stripe')
         ->name('payment-management.stripe.')
+        ->middleware(['can:payment.management'])
         ->group(function() {
             Route::get('/', [StripeController::class, 'show'])
                 ->name('show');
