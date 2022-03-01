@@ -99,6 +99,10 @@ class UserController extends CrudController
 
         $user->verifiyEmail();
 
+        if ($request->hasFile('photo')) {
+            $user->updateProfilePhoto($request->file('photo'));
+        }
+
         if ($request->has('role')) {
             $user->assignRole($request->role);
         }
