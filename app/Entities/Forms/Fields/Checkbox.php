@@ -10,6 +10,7 @@ class Checkbox extends BaseField
     public $falseValue = false;
     public $text;
     public $isRaw;
+    public $isBoolean;
 
     public function __construct(string $name, array $data = [])
     {
@@ -25,6 +26,7 @@ class Checkbox extends BaseField
 
         $this->text = $data['text'] ?? '';
         $this->isRaw = $data['is_raw'] ?? false;
+        $this->isBoolean = $data['is_boolean'] ?? false;
     }
 
     public function schema(): array
@@ -40,5 +42,22 @@ class Checkbox extends BaseField
             parent::schema(),
             $schema
         );
+    }
+
+    public function getDataToBeSaved(array $inputs): array
+    {
+        $data = [];
+
+        if (array_key_exists($this->name, $inputs)) {
+            $value = $inputs[$this->name];
+
+            if ($this->isBoolean) {
+                $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+            }
+
+            $data[$this->name] = $value;
+        }
+
+        return $data;
     }
 }
