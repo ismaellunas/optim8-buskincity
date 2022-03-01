@@ -137,9 +137,13 @@
 
         setup(props, { emit }) {
             const userProfileForm = {
+                _method: 'put',
                 first_name: props.record.first_name,
                 last_name: props.record.last_name,
                 email: props.record.email,
+                photo: null,
+                photo_url: props.record.profile_photo_url,
+                profile_photo_media_id: props.record.profile_photo_media_id,
             };
 
             if (!props.record.isSuperAdministrator) {
@@ -169,7 +173,7 @@
         methods: {
             onSubmit() {
                 const self = this;
-                self.profileForm.put(route(self.baseRouteName+'.update', self.record.id), {
+                self.profileForm.post(route(self.baseRouteName+'.update', self.record.id), {
                     preserveScroll: false,
                     onStart: () => {
                         self.loader = self.$loading.show();
@@ -178,10 +182,13 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                         self.profileForm.isDirty = false;
+                        self.profileForm.photo = null;
                     },
                     onFinish: () => {
                         self.loader.hide();
                         self.isProcessing = false;
+                        self.profileForm.photo = null;
+                        self.profileForm.profile_photo_media_id = self.record.profile_photo_media_id;
                     }
                 });
             },
