@@ -13,7 +13,7 @@
     $main_text_font->style === 'is-uppercase'
     || $main_text_font->style === 'is-lowercase'
     || $main_text_font->style === 'is-capitalized')
-    text-transform: {{ config('constants.theme_fonts')['font_style'][$main_text_font->style] }}
+        text-transform: {{ config('constants.theme_fonts')['font_style'][$main_text_font->style] }}
 @elseif ($main_text_font->style === 'is-italic')
         font-style: {{ config('constants.theme_fonts')['font_style'][$main_text_font->style] }}
 @elseif ($main_text_font->style === 'is-underlined')
@@ -31,7 +31,7 @@
 @if ($buttons_font->style === 'is-uppercase'
     || $buttons_font->style === 'is-lowercase'
     || $buttons_font->style === 'is-capitalized')
-    text-transform: {{ config('constants.theme_fonts')['font_style'][$buttons_font->style] }}
+        text-transform: {{ config('constants.theme_fonts')['font_style'][$buttons_font->style] }}
 @elseif ($buttons_font->style === 'is-italic')
         font-style: {{ config('constants.theme_fonts')['font_style'][$buttons_font->style] }}
 @elseif ($buttons_font->style === 'is-underlined')
@@ -55,7 +55,7 @@
 @if ($headings_font->style === 'is-uppercase'
     || $headings_font->style === 'is-lowercase'
     || $headings_font->style === 'is-capitalized')
-    text-transform: {{ config('constants.theme_fonts')['font_style'][$headings_font->style] }}
+            text-transform: {{ config('constants.theme_fonts')['font_style'][$headings_font->style] }}
 @elseif ($headings_font->style === 'is-italic')
             font-style: {{ config('constants.theme_fonts')['font_style'][$headings_font->style] }}
 @elseif ($headings_font->style === 'is-underlined')
