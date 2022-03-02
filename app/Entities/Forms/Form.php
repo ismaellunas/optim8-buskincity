@@ -21,11 +21,17 @@ class Form
     public $formLocation;
 
     protected $data;
+    protected $originLanguage;
 
-    public function __construct($id, array $data, User $author = null)
-    {
+    public function __construct(
+        $id,
+        array $data,
+        User $author = null,
+        ?string $originLanguage = null
+    ) {
         $this->id = $id;
         $this->data = $data;
+        $this->originLanguage = $originLanguage;
 
         $this->name = $data['name'];
         $this->title = $data['title'] ?? null;
@@ -70,7 +76,7 @@ class Form
                 $fieldObject = new $className($name, $field);
 
                 if ($fieldObject->translated) {
-                    $fieldObject->setOriginLanguage($this->author->origin_language_code);
+                    $fieldObject->setOriginLanguage($this->originLanguage);
                 }
 
                 if ($fieldObject->canBeAccessed($this->author)) {

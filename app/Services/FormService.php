@@ -3,13 +3,11 @@
 namespace App\Services;
 
 use App\Entities\Forms\Form;
-use App\Services\TranslationService;
 use App\Models\{
     FieldGroup,
     User,
 };
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 
 class FormService
 {
@@ -46,6 +44,7 @@ class FormService
     public function getFormsOnRoute(
         string $locationRoute,
         User $author = null,
+        ?string $originLanguage = null
     ): Collection {
 
         $forms = collect();
@@ -57,7 +56,7 @@ class FormService
 
             $className = $this->getFormClassName($model->type);
 
-            $form = new $className($model->id, $model->data, $author);
+            $form = new $className($model->id, $model->data, $author,$originLanguage);
 
             $form->model = $model;
 
