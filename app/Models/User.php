@@ -131,12 +131,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return trim(ucfirst($this->first_name) . ' ' . ucfirst($this->last_name));
     }
 
-    /**
-     * Get the URL to the user's profile photo.
-     *
-     * @return string
-     */
-    public function getProfilePhotoUrlAttribute()
+    public function getProfilePhotoUrlAttribute(): ?string
     {
         $url = null;
         if ($this->profilePhoto) {
