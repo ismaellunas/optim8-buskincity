@@ -149,7 +149,7 @@ class File extends BaseField
         return $data;
     }
 
-    private function getMedias($mediaIds)
+    private function getMedias($mediaIds): Collection
     {
         $media = Media::select([
             'id',
