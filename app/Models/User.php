@@ -168,7 +168,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasRole('Administrator');
     }
 
-    public function getOriginLanguageCodeAttribute()
+    public function getOriginLanguageCodeAttribute(): ?string
     {
         return $this->originLanguage
             ? $this->originLanguage->code
