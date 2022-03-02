@@ -109,17 +109,32 @@ class StripeService
         return $user->getMetas([$this->metaKey()])->isNotEmpty();
     }
 
+    private function getStripeAmount(float $amount, string $currency)
+    {
+        $formattedAmount = str_replace('.', '', $this->convertInto2Decimal($amount));
+
+        if ($this->isZeroDecimal($currency)) {
+            $formattedAmount = substr($formattedAmount, 0, -2);
+        }
+
+        return $formattedAmount;
+    }
+
     public function checkout(User $user, $amount, string $currency): Session
     {
         Stripe::setApiKey($this->secretKey());
 
         $stripeAccount = $this->getStripeAccountId($user);
 
-        $formattedAmount = str_replace('.', '', $this->convertInto2Decimal($amount));
+        $formattedAmount = $this->getStripeAmount(
+            $this->convertInto2Decimal($amount),
+            $currency
+        );
 
-        if ($this->isZeroDecimal($currency)) {
-            $formattedAmount = substr($formattedAmount, 0, -2);
-        }
+        $applicationFeeAmount = $this->getStripeAmount(
+            $this->getApplicationFeeAmount($amount),
+            $currency
+        );
 
         return Session::create([
             'line_items' => [[
@@ -129,7 +144,7 @@ class StripeService
                 'quantity' => 1,
             ]],
             'payment_intent_data' => [
-                'application_fee_amount' => $this->getApplicationFeeAmount($amount),
+                'application_fee_amount' => $applicationFeeAmount,
             ],
             'mode' => 'payment',
             'submit_type' => 'donate',
@@ -314,7 +329,7 @@ class StripeService
 
     public function getApplicationFeeAmount($amount): float
     {
-        return $amount * config('constants.stripe_fee_percent');
+        return round($amount * config('constants.stripe_fee_percent'), 2);
     }
 
     public function getCurrencyMinimalPayment(string $currency): float
