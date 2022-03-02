@@ -9,9 +9,9 @@ class Phone extends BaseField
     public $label;
     public $phoneNumber = null;
 
-    public function __construct($label, $value, $translate, $userLocale)
+    public function __construct($label, $value)
     {
-        parent::__construct($label, $value, $translate, $userLocale);
+        parent::__construct($label, $value);
 
         if ($value) {
             if ($value['number']) {

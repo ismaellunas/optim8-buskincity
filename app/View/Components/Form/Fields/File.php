@@ -10,9 +10,9 @@ class File extends BaseField
 {
     public $media;
 
-    public function __construct($label, $value, $translate, $userLocale)
+    public function __construct($label, $value)
     {
-        parent::__construct($label, $value, $translate, $userLocale);
+        parent::__construct($label, $value);
 
         $this->media = (
             !empty($this->value)
