@@ -4,6 +4,7 @@ namespace App\View\Components\Form\Fields;
 
 use App\Models\Media;
 use App\Services\MediaService;
+use Illuminate\Support\Collection;
 
 class File extends BaseField
 {
@@ -20,7 +21,7 @@ class File extends BaseField
         );
     }
 
-    private function getMedias($mediaIds)
+    private function getMedias($mediaIds): Collection
     {
         $media = Media::select([
             'id',
