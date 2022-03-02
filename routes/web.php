@@ -124,7 +124,8 @@ Route::name('forms.')->prefix('forms')->group(function () {
         ->name('save');
 });
 
-Route::get('frontend/profiles/{user}', [FrontendProfileController::class, 'show']);
+Route::get('frontend/profiles/{user}', [FrontendProfileController::class, 'show'])
+    ->name('frontend.profiles');
 
 Route::get('donations/{user}/success', [DonationController::class, 'success'])
     ->name('donations.success');
