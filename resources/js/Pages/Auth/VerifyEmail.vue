@@ -29,7 +29,6 @@
                         </form>
 
                         <form
-                            ref="logout"
                             method="POST"
                             :action="route('logout')"
                         >
