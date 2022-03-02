@@ -114,9 +114,15 @@ return [
         'user' => 'widget_user',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Stripe Payment Gateway
+    |--------------------------------------------------------------------------
+    */
+
     'stripe_account_id_meta_key' => 'stripe_account_id',
 
-    'payment_method_types' => [
+    'stripe_payment_method_types' => [
         'card',
         'acss_debit',
         'afterpay_clearpay',
@@ -136,5 +142,19 @@ return [
         'sepa_debit',
         'sofort',
         'wechat_pay',
+    ],
+
+    'stripe_fee_percent' => 0.02,
+
+    'stripe_minimal_payments' => [
+        'SEK' => 3,
+        'USD' => 0.50,
+        'EUR' => 0.50,
+    ],
+
+    'stripe_amount_options' => [
+        'SEK' => [5, 10, 50, 100],
+        'EUR' => [1, 5, 10, 50],
+        'USD' => [1, 5, 10, 50],
     ],
 ];
