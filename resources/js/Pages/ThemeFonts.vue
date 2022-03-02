@@ -252,7 +252,7 @@
                         </div>
                         <div class="column">
                             <biz-form-dropdown-search
-                                label="Font Weight"
+                                label="Font Family"
                                 :close-on-click="true"
                                 @search="searchFont($event, 'buttons_font_family')"
                             >
