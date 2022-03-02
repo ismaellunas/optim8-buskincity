@@ -260,7 +260,7 @@ class FormSeeder extends Seeder
                     "validation" => [
                         "rules" => [
                             "required",
-                            "max:20"
+                            "max:255"
                         ],
                         "messages" => []
                     ],
