@@ -125,7 +125,7 @@ class Form
                 $field->storedValue = $storedValue;
             }
 
-            $rules = array_merge($rules, $field->validationRules($location->entity));
+            $rules = array_merge($rules, $field->validationRules());
         }
 
         return $rules;

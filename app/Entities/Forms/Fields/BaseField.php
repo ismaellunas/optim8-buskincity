@@ -86,7 +86,7 @@ abstract class BaseField
         ];
     }
 
-    public function validationRules(User $entity = null): array
+    public function validationRules(): array
     {
         $rules = [];
 
