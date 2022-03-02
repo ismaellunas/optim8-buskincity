@@ -15,16 +15,17 @@ class Phone extends BaseField
 
         if ($value) {
             if ($value['number']) {
-                $this->phoneNumber = $this->setPhoneNumber($value);
+                $this->phoneNumber = $this->setPhoneNumberFormat($value);
             }
         }
     }
 
-    private function setPhoneNumber(array $value): string
+    private function setPhoneNumberFormat(array $phoneNumber): string
     {
         return PhoneNumber::make(
-            $value['number'],
-            $value['country']
-        );
+                $phoneNumber['number'],
+                $phoneNumber['country']
+            )
+            ->formatInternational();
     }
 }
