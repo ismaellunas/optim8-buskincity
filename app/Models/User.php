@@ -161,6 +161,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasRole('Administrator');
     }
 
+    public function getRoleNameAttribute(): string
+    {
+        return $this->getRoleNames()->first();
+    }
+
     public function saveFromInputs(array $inputs)
     {
         $this->first_name = $inputs['first_name'];
