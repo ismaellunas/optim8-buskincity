@@ -17,15 +17,8 @@
                         A new verification link has been sent to the email address you provided during registration.
                     </div>
 
-                    <form
-                        method="POST"
-                        @submit.prevent="logout"
-                        :action="route('logout')"
-                        ref="logout"
-                    >
-                        <input type="hidden" name="_token" :value="csrfToken">
-
-                        <div class="mt-4 flex items-center justify-between">
+                    <div class="mt-4 is-flex items-center justify-between">
+                        <form @submit.prevent="submit">
                             <biz-button
                                 :class="{ 'opacity-25': form.processing }"
                                 :disabled="form.processing"
@@ -33,15 +26,27 @@
                             >
                                 Resend Verification Email
                             </biz-button>
+                        </form>
+
+                        <form
+                            ref="logout"
+                            method="POST"
+                            :action="route('logout')"
+                        >
+                            <input
+                                type="hidden"
+                                name="_token"
+                                :value="csrfToken"
+                            >
 
                             <biz-button
-                                as="button"
                                 class="button ml-3"
+                                type="submit"
                             >
                                 Log Out
                             </biz-button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,17 +56,18 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import BizButton from '@/Biz/Button';
-    import BizLink from '@/Biz/Link';
 
     export default {
         components: {
             AppLayout,
             BizButton,
-            BizLink,
         },
 
         props: {
-            status: String
+            status: {
+                default: null,
+                type: String
+            }
         },
 
         data() {
@@ -78,8 +84,8 @@
         },
 
         methods: {
-            logout() {
-                this.$refs.logout.submit();
+            submit() {
+                this.form.post(this.route('verification.send'))
             },
         },
     }
