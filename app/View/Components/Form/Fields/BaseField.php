@@ -10,7 +10,7 @@ abstract class BaseField extends Component
     public $label;
     public $value;
 
-    protected $translate = false;
+    protected $isTranslated = false;
     protected $userLocale;
     protected $componentPrefix = "components.form.fields.";
 
@@ -19,10 +19,14 @@ abstract class BaseField extends Component
      *
      * @return void
      */
-    public function __construct($label, $value, $translate, $userLocale)
-    {
+    public function __construct(
+        $label,
+        $value,
+        $isTranslated = null,
+        $userLocale = null
+    ) {
         $this->label = $label;
-        $this->translate = $translate;
+        $this->isTranslated = $isTranslated;
         $this->userLocale = $userLocale;
         $this->value = $value;
     }
@@ -47,7 +51,7 @@ abstract class BaseField extends Component
 
     protected function setValueTranslation($value): ?string
     {
-        if (!$this->translate || !$value) {
+        if (!$this->isTranslated || !$value) {
             return $value;
         }
 
