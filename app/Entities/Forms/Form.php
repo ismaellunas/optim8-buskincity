@@ -3,11 +3,7 @@
 namespace App\Entities\Forms;
 
 use App\Models\User;
-use App\Services\TranslationService;
-use Illuminate\Support\{
-    Collection,
-    Str
-};
+use Illuminate\Support\Collection;
 
 class Form
 {
@@ -73,6 +69,10 @@ class Form
             if (class_exists($className)) {
                 $fieldObject = new $className($name, $field);
 
+                if ($fieldObject->translated) {
+                    $fieldObject->setOriginLanguage($this->author->origin_language_code);
+                }
+
                 if ($fieldObject->canBeAccessed($this->author)) {
                     $fieldCollection->put($name, $fieldObject);
                 }
@@ -136,37 +136,10 @@ class Form
         $attributes = [];
 
         foreach ($this->fields as $field) {
-            if ($field->translate) {
-                $attributes = array_merge(
-                    $attributes,
-                    $this->translatedAttributes(
-                        array_keys($field->getLabels($inputs))
-                    )
-                );
-            } else {
-                $attributes = array_merge($attributes, $field->getLabels($inputs));
-            }
+            $attributes = array_merge($attributes, $field->validationAttributes($inputs));
         }
 
         return $attributes;
-    }
-
-    private function translatedAttributes(array $attributes): array
-    {
-        $translatedAttributes = [];
-        foreach (TranslationService::getLocales() as $locale) {
-            foreach ($attributes as $attribute) {
-                $attributeKey = $attribute.'.'.$locale;
-
-                $attributeName = Str::replace("_", " ", $attribute);
-
-                $translatedAttributes[$attributeKey] = (
-                    Str::title($attributeName).
-                    " (".TranslationService::getLanguageFromLocale($locale).")"
-                );
-            }
-        }
-        return $translatedAttributes;
     }
 
     public function canBeAccessed(): bool
@@ -204,7 +177,7 @@ class Form
                     "value" => array_key_exists($key, $metas)
                         ? $metas[$key]
                         : null,
-                    "can_translate" => $field['can_translate'],
+                    "is_translated" => $field['translated'],
                 ]
             );
         }
