@@ -19,7 +19,7 @@
                 :component="$componentName($field['type'])"
                 :label="$field['label']"
                 :value="$field['value']"
-                :translate="$field['can_translate']"
+                :is-translated="$field['is_translated']"
                 :user-locale="$userLocale"
             />
         @endforeach
