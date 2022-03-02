@@ -411,7 +411,7 @@
                     'has-text-weight-bold': "Bold",
                 },
                 styleOptions: {
-                    '': 'Normal',
+                    '': 'Default',
                     'is-capitalized': "Capitalize",
                     'is-lowercase': "Lowercase",
                     'is-uppercase': "Uppercase",
