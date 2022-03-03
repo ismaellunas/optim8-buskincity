@@ -101,17 +101,20 @@ abstract class BaseField
                 $originLanguage = $defaultLocale;
             }
 
+            $providedRules = collect($this->validation['rules'] ?? []);
+
             foreach ($locales as $locale) {
-                $rule = collect($this->validation['rules'] ?? []);
-
                 if ($originLanguage != $locale) {
-                    $rule = $rule->filter(function ($value) {
-                            return $value != 'required';
-                        })
-                        ->values();
+                    $rules[$this->name.".".$locale] = $providedRules->filter(
+                            function ($value) {
+                                return $value != 'required';
+                            }
+                        )
+                        ->values()
+                        ->all();
+                } else {
+                    $rules[$this->name.".".$locale] = $providedRules->all();
                 }
-
-                $rules[$this->name.".".$locale] = $rule->all();
             }
         } else {
             $rules[$this->name] = $this->validation['rules'] ?? [];

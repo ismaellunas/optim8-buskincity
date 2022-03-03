@@ -100,7 +100,7 @@
             );
             let selectedLocale = props.locale;
 
-            if (typeof _.find(localeOptions, { 'id': selectedLocale }) === 'undefined') {
+            if (typeof find(localeOptions, { 'id': selectedLocale }) === 'undefined') {
                 selectedLocale = defaultLocale;
             }
 

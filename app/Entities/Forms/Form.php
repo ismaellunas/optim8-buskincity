@@ -139,7 +139,7 @@ class Form
             if ($field->translate) {
                 $attributes = array_merge(
                     $attributes,
-                    $this->translateAttributes(
+                    $this->translatedAttributes(
                         array_keys($field->getLabels($inputs))
                     )
                 );
@@ -151,22 +151,22 @@ class Form
         return $attributes;
     }
 
-    private function translateAttributes(array $attributes): array
+    private function translatedAttributes(array $attributes): array
     {
-        $translateAttributes = [];
+        $translatedAttributes = [];
         foreach (TranslationService::getLocales() as $locale) {
             foreach ($attributes as $attribute) {
                 $attributeKey = $attribute.'.'.$locale;
 
                 $attributeName = Str::replace("_", " ", $attribute);
 
-                $translateAttributes[$attributeKey] = (
+                $translatedAttributes[$attributeKey] = (
                     Str::title($attributeName).
                     " (".TranslationService::getLanguageFromLocale($locale).")"
                 );
             }
         }
-        return $translateAttributes;
+        return $translatedAttributes;
     }
 
     public function canBeAccessed(): bool
