@@ -12,6 +12,7 @@ use App\Http\Controllers\{
     Frontend\ProfileController as FrontendProfileController,
     NewPasswordController,
     PasswordResetLinkController,
+    StripeController,
 };
 use Illuminate\Support\Facades\Route;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
@@ -37,6 +38,31 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/user/profile', function () {
         return redirect()->route('dashboard');
     })->name('profile.show');
+
+    Route::prefix('/payment-management/stripe')
+        ->name('payment-management.stripe.')
+        ->middleware(['can:payment.management'])
+        ->group(function() {
+            Route::get('/', [StripeController::class, 'show'])
+                ->name('show');
+
+            Route::post('create-connected-account', [StripeController::class, 'createThenRedirect'])
+                ->name('create-connected-account');
+
+            Route::get('redirect-to-stripe', [StripeController::class, 'redirectToStripeAccount'])
+                ->name('redirect-to-stripe');
+        });
+
+    Route::name('payments.stripe.')->prefix('payments/stripe')->middleware(['can:payment.management'])->group(function() {
+        Route::get(
+            'payments/stripe/reauth/{user}',
+            [StripeController::class, 'refresh']
+        )->middleware('signed')->name('refresh');
+
+        Route::get('return/{user}', function() {
+            return redirect()->route('payment-management.stripe.show');
+        })->middleware('signed')->name('return');
+    });
 });
 
 Route::get('/oauth/{provider}/callback', [CustomOAuthController::class, 'handleProviderCallback'])
