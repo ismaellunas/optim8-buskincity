@@ -137,10 +137,6 @@
             function setLoader() {
                 document.getElementById('loader').classList.remove('is-hidden');
             }
-
-            function unsetLoader() {
-                document.getElementById('loader').classList.add('is-hidden');
-            }
         </script>
 
         @stack('bottom_scripts')
