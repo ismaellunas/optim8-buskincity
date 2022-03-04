@@ -15,12 +15,12 @@ class Phone extends BaseField
 
         if ($value) {
             if ($value['number']) {
-                $this->phoneNumber = $this->setPhoneNumberFormat($value);
+                $this->phoneNumber = $this->getPhoneNumberFormat($value);
             }
         }
     }
 
-    private function setPhoneNumberFormat(array $phoneNumber): string
+    private function getPhoneNumberFormat(array $phoneNumber): string
     {
         return PhoneNumber::make(
                 $phoneNumber['number'],
