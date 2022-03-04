@@ -160,7 +160,7 @@ class MenuService
         );
     }
 
-    public static function generateBackendMenu(Request $request): array
+    public function getBackendNavMenus(Request $request): array
     {
         $user = $request->user();
 
@@ -169,16 +169,7 @@ class MenuService
             'link' => route('dashboard'),
         ];
 
-        $menus = [
-            'dashboard' => [
-                'title' => 'Dashboard',
-                'link' => route('dashboard'),
-                'isActive' => $request->routeIs('dashboard'),
-                'isEnabled' => true,
-            ]
-        ];
-
-        if ($user->can('system.dashboard') && $request->routeIs('admin.*')) {
+        if ($request->routeIs('admin.*')) {
             $menuLogo = [
                 'title' => 'Dashboard',
                 'link' => route('admin.dashboard'),
@@ -315,12 +306,66 @@ class MenuService
                 'title' => 'Profile',
                 'link' => route('admin.profile.show'),
             ];
+
         } else {
+
+            $menus = [
+                [
+                    'title' => 'Dashboard',
+                    'link' => route('dashboard'),
+                    'isActive' => $request->routeIs('dashboard'),
+                    'isEnabled' => true,
+                ],
+            ];
+
             $menuProfile = [
                 'title' => 'Profile',
                 'link' => route('user.profile.show'),
             ];
         }
+
+        return [
+            'nav' => $menus,
+            'navLogo' => $menuLogo,
+            'navProfile' => $menuProfile,
+        ];
+    }
+
+    public function getFrontendUserMenus(Request $request): array
+    {
+        $user = $request->user();
+
+        $menuLogo = [
+            'title' => 'Dashboard',
+            'link' => route('dashboard'),
+        ];
+
+        $menus = [
+            'dashboard' => [
+                'title' => 'Dashboard',
+                'link' => route('dashboard'),
+                'isActive' => $request->routeIs('dashboard'),
+                'isEnabled' => true,
+            ],
+            'paymentManagement' => [
+                'title' => 'Payment Management',
+                'isActive' => $request->routeIs('payment-management.*'),
+                'isEnabled' => $user->can('payment.management'),
+                'children' => [
+                    [
+                        'title' => 'Stripe',
+                        'link' => route('payment-management.stripe.show'),
+                        'isActive' => $request->routeIs('payment-management.stripe.show'),
+                        'isEnabled' => true,
+                    ]
+                ],
+            ],
+        ];
+
+        $menuProfile = [
+            'title' => 'Profile',
+            'link' => route('user.profile.show'),
+        ];
 
         return [
             'nav' => $menus,
