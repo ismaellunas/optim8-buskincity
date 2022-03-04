@@ -56,7 +56,8 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'debug' => config('app.debug'),
             'flash' => [
-                'message' => fn () => $request->session()->get('message')
+                'message' => fn () => $request->session()->get('message'),
+                'message_expired' => fn () => $request->session()->get('message_expired')
             ],
             'errors' => function () {
                 if (Session::get('errors')) {
