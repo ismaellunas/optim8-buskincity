@@ -68,6 +68,17 @@ class DatabaseSeeder extends Seeder
 
         $adminUser->assignRole('Administrator');
 
+        $performer = User::factory()->create([
+            'first_name' => 'Dan',
+            'last_name' => 'Rice',
+            'email' => 'dan.rice@biz.com',
+        ]);
+
+        $performerRole = Role::whereName('Performer')->first();
+        $performerRole->syncPermissions(['payment.management']);
+
+        $performer->assignRole('Performer');
+
         $category = Category::factory()
             ->hasTranslations(1, ['name' => 'News'])
             ->create();
