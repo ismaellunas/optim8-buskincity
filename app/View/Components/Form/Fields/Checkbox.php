@@ -2,10 +2,7 @@
 
 namespace App\View\Components\Form\Fields;
 
-class Checkbox extends BaseField
+class Checkbox extends ViewBaseField
 {
-    protected function getViewName(): string
-    {
-        return "base-field";
-    }
+    //
 }

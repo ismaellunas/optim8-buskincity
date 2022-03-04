@@ -2,10 +2,7 @@
 
 namespace App\View\Components\Form\Fields;
 
-class Select extends BaseField
+class Select extends ViewBaseField
 {
-    protected function getViewName(): string
-    {
-        return "base-field";
-    }
+    //
 }

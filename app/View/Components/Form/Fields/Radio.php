@@ -2,10 +2,7 @@
 
 namespace App\View\Components\Form\Fields;
 
-class Radio extends BaseField
+class Radio extends ViewBaseField
 {
-    protected function getViewName(): string
-    {
-        return "base-field";
-    }
+    //
 }
