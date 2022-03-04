@@ -138,10 +138,10 @@
 
                 this.$inertia.post('/user/two-factor-authentication', {}, {
                     preserveScroll: true,
-                    onSuccess: () => {
-                        this.showQrCode();
-                        this.showRecoveryCodes();
-                    },
+                    onSuccess: () => Promise.all([
+                        this.showQrCode(),
+                        this.showRecoveryCodes(),
+                    ]),
                     onError: () => {
                         oopsAlert();
                     },
