@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use App\Services\StripeService;
 use App\Traits\FlashNotifiable;
-use Illuminate\Http\Request;
+use App\Http\Requests\StripeSettingRequest;
 use Inertia\Inertia;
 
 class StripeController extends Controller
@@ -47,7 +47,7 @@ class StripeController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(StripeSettingRequest $request)
     {
         Setting::updateOrCreate(
             ['key' => 'stripe_payment_currencies'],
