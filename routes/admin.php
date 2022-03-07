@@ -21,6 +21,7 @@ use App\Http\Controllers\{
     UserController,
     UserRoleController,
 };
+use App\Http\Controllers\Auth\AdminLogoutController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
@@ -177,3 +178,6 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
 });
 
 Route::redirect('/', '/admin/login');
+
+Route::post('/logout', [AdminLogoutController::class, 'logout'])
+        ->name('logout');
