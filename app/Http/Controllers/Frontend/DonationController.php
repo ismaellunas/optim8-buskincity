@@ -20,7 +20,7 @@ class DonationController extends Controller
     {
         $session = $this->stripeService->checkout(
             $user,
-            $request->amount,
+            (float) $request->amount,
             $request->currency
         );
 

@@ -120,7 +120,7 @@ class StripeService
         return $formattedAmount;
     }
 
-    public function checkout(User $user, $amount, string $currency): Session
+    public function checkout(User $user, float $amount, string $currency): Session
     {
         Stripe::setApiKey($this->secretKey());
 
