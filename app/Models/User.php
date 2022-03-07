@@ -76,6 +76,8 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $appends = [
         'profile_photo_url',
         'full_name',
+        'is_super_administrator',
+        'is_administrator'
     ];
 
     /* Relationship: */
