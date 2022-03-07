@@ -84,7 +84,10 @@ class HandleInertiaRequests extends Middleware
         $user = $request->user();
 
         if ($user) {
-            if ($user->can('system.dashboard')) {
+            if (
+                $request->routeIs('admin.*')
+                && $user->can('system.dashboard')
+            ) {
                 return app(MenuService::class)->getBackendNavMenus($request);
             } else {
                 return app(MenuService::class)->getFrontendUserMenus($request);
