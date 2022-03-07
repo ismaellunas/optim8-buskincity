@@ -47,9 +47,9 @@ class CreateNewUser implements CreatesNewUsers
 
     private function setLocation(&$input): void
     {
-        $defaultLanguage = Language::where('code', 'en')->value('id') ?? null;
+        $languageId = Language::where('code', 'en')->value('id') ?? null;
 
-        $input['language_id'] = $defaultLanguage;
+        $input['language_id'] = $languageId;
     }
 
     private function setCountry(&$input): void

@@ -2,10 +2,12 @@
 
 namespace App\Actions\Socialstream;
 
-use App\Models\User;
+use App\Models\{
+    Language,
+    User
+};
 use App\Services\{
     IPService,
-    LanguageService,
     UserService,
 };
 use Illuminate\Support\Facades\DB;
@@ -46,7 +48,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
         return DB::transaction(function () use ($provider, $providerUser) {
             $name = UserService::splitName($providerUser->getName() ?? $providerUser->getNickname());
             $clientData = app(IPService::class)->getClientData();
-            $languageId = app(LanguageService::class)->getOriginFromIP()->id;
+            $languageId = Language::where('code', 'en')->value('id') ?? null;
 
             return tap(User::create([
                 'first_name' => $name['firstName'],
