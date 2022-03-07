@@ -349,4 +349,9 @@ class StripeService
             config('constants.stripe_minimal_payments')
         );
     }
+
+    public function getDefaultCountry(): ?string
+    {
+        return Setting::key('stripe_default_country')->value('value');
+    }
 }
