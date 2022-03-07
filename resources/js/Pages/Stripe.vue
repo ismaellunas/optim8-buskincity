@@ -59,7 +59,6 @@
                     </div>
 
                     <div class="column">
-                        <!-- fee percentage: stripe_application_fee_percentage -->
                         <biz-form-input-addons
                             v-model="form.application_fee_percentage"
                             min="0"
@@ -82,7 +81,6 @@
                     </div>
 
                     <div class="column">
-                        <!-- currencies: stripe_payment_currencies -->
                         <biz-form-field>
                             <div class="control">
                                 <biz-checkbox
@@ -103,9 +101,9 @@
                             </template>
                         </biz-form-field>
 
-                        <table
+                        <biz-table
                             v-if="form.payment_currencies.length"
-                            class="table is-fullwidth"
+                            class="is-fullwidth"
                         >
                             <thead>
                                 <tr>
@@ -123,7 +121,6 @@
                                 >
                                     <td>{{ currency }}</td>
                                     <td>
-                                        <!-- minimal payment: stripe_payment_minimals -->
                                         <biz-form-input
                                             v-model="form.minimal_amounts[ currency ]"
                                             type="number"
@@ -134,7 +131,6 @@
                                     <td>
                                         <div class="columns is-multiline">
                                             <div class="column is-6">
-                                                <!-- amount options per currency -->
                                                 <biz-form-input-addons
                                                     v-model="tempAmountOptions[ currency ]"
                                                     type="number"
@@ -172,27 +168,9 @@
                                     </td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </biz-table>
                     </div>
                 </div>
-                <!--
-                <div class="field has-addons">
-                    <p class="control">
-                        <biz-input
-                            v-model="form.content_paragraph_width"
-                            type="number"
-                        />
-                    </p>
-                    <p class="control">
-                        <span class="button is-static">px</span>
-                    </p>
-                </div>
-                <p v-if="form.errors?.default && form.errors.default['content_paragraph_width']">
-                    <biz-input-error
-                        :message="error('content_paragraph_width')"
-                    />
-                </p>
-                -->
             </form>
         </div>
     </app-layout>
@@ -200,6 +178,7 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import BizButton from '@/Biz/Button';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
@@ -208,15 +187,11 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormInputAddons from '@/Biz/Form/InputAddons';
     import BizInputError from '@/Biz/InputError';
+    import BizTable from '@/Biz/Table';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
     import { debounce, difference, isEmpty, filter, find, forEach } from 'lodash';
-    import { ref } from "vue";
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
-    //import BizFormCheckboxGroup from '@/Biz/Form/CheckboxGroup';
-    //import BizButtonLink from '@/Biz/ButtonLink';
-    //import BizModal from '@/Biz/Modal'
 
     export default {
         name: 'StripeSettings',
@@ -232,9 +207,7 @@
             BizFormInput,
             BizFormInputAddons,
             BizInputError,
-            //BizFormCheckboxGroup,
-            //BizButtonLink,
-            //BizModal,
+            BizTable,
         },
 
         mixins: [
@@ -320,10 +293,6 @@
                     this.form.default_country = country.id;
                 }
             },
-
-            hasAmountOption() {
-                return !isEmpty(this.form.amount_options);
-            },
         },
 
         watch: {
@@ -388,10 +357,6 @@
                     }
                 });
             },
-
-            isCurrencySelected(currency) {
-                return this.form.payment_currencies.includes(currency);
-            }
         },
     };
 </script>
