@@ -202,7 +202,11 @@
                 if (route().current('admin*')) {
                     this.$inertia.post(route('logout'));
                 } else {
-                    this.$refs.logout.submit();
+                    if (this.$page.props.user.is_super_administrator || this.$page.props.user.is_administrator) {
+                        this.$inertia.post(route('admin.logout'));
+                    } else {
+                        this.$refs.logout.submit();
+                    }
                 }
             },
             showMenu() {
