@@ -1,26 +1,4 @@
 @inject('userProfile', 'App\Services\UserProfileService')
-@php
-    $currencies = [
-        [
-            'id' => 'SEK',
-            'value' => 'SEK',
-        ],
-        [
-            'id' => 'EUR',
-            'value' => 'EUR',
-        ],
-        [
-            'id' => 'USD',
-            'value' => 'USD',
-        ],
-    ];
-
-    $amountOptions = [
-        'SEK' => [5, 10, 50, 100],
-        'EUR' => [1, 5, 10, 50],
-        'USD' => [1, 5, 10, 50],
-    ];
-@endphp
 
 <x-layouts.master>
     <x-slot name="title">
