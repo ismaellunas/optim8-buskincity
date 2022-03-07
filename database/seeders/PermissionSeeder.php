@@ -55,6 +55,8 @@ class PermissionSeeder extends Seeder
             'system.translation',
             'system.theme',
 
+            'payment.management',
+
             /*  BREAD:
             'browse',
             'read',
