@@ -279,6 +279,12 @@ class MenuService
                             'isActive' => $request->routeIs('admin.settings.translation-manager.edit'),
                             'isEnabled' => $user->can('system.translation'),
                         ],
+                        [
+                            'title' => 'Stripe',
+                            'link' => route('admin.settings.stripe.edit'),
+                            'isActive' => $request->routeIs('admin.settings.stripe.edit'),
+                            'isEnabled' => $user->can('system.payment'),
+                        ],
                     ],
                 ],
                 [

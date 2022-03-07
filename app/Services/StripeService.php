@@ -304,6 +304,27 @@ class StripeService
             });
     }
 
+    public function getAvailableCurrencyOptions(): array
+    {
+        $paymentCurrencies = Setting::key('stripe_payment_currencies')
+            ->value('value');
+
+        if ($paymentCurrencies) {
+            $paymentCurrencies = (array) json_decode($paymentCurrencies);
+
+            return array_map(
+                function ($currency) {
+                    return [
+                        'id' => $currency,
+                        'value' => $currency,
+                    ];
+                },
+                $paymentCurrencies
+            );
+        }
+        return [];
+    }
+
     public function getCurrencyOptions(): array
     {
         return [
@@ -316,6 +337,10 @@ class StripeService
                 'value' => 'EUR',
             ],
             [
+                'id' => 'GBP',
+                'value' => 'GBP',
+            ],
+            [
                 'id' => 'USD',
                 'value' => 'USD',
             ],
@@ -324,7 +349,14 @@ class StripeService
 
     public function getAmountOptions(): array
     {
-        return config('constants.stripe_amount_options');
+        $currencyAmountOptions = Setting::key('stripe_amount_options')
+            ->value('value');
+
+        return (
+            $currencyAmountOptions
+            ? (array) json_decode($currencyAmountOptions)
+            : []
+        );
     }
 
     public function getApplicationFeeAmount($amount): float
