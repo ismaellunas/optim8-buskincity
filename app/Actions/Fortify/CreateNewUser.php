@@ -2,7 +2,11 @@
 
 namespace App\Actions\Fortify;
 
-use App\Models\User;
+use App\Models\{
+    Language,
+    User
+};
+use App\Services\IPService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
@@ -25,10 +29,11 @@ class CreateNewUser implements CreatesNewUsers
             'last_name' => ['required', 'string', 'max:128'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => $this->passwordRules(),
-            'country_code' => ['required', 'max:2', 'exists:App\Models\Country,alpha2'],
-            'language_id' => ['required', 'exists:App\Models\Language,id'],
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['required', 'accepted'] : '',
         ])->validate();
+
+        $this->setLocation($input);
+        $this->setCountry($input);
 
         return User::create([
             'first_name' => $input['first_name'],
@@ -38,5 +43,19 @@ class CreateNewUser implements CreatesNewUsers
             'country_code' => $input['country_code'],
             'language_id' => $input['language_id'],
         ]);
+    }
+
+    private function setLocation(&$input): void
+    {
+        $defaultLanguage = Language::where('code', 'en')->value('id') ?? null;
+
+        $input['language_id'] = $defaultLanguage;
+    }
+
+    private function setCountry(&$input): void
+    {
+        $clientData = app(IPService::class)->getClientData();
+
+        $input['country_code'] = $clientData['location']['country']['code'];
     }
 }
