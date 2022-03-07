@@ -11,9 +11,9 @@ use App\Http\Controllers\{
     Frontend\PostCategoryController,
     Frontend\PostController,
     Frontend\ProfileController as FrontendProfileController,
+    Frontend\StripeController,
     NewPasswordController,
     PasswordResetLinkController,
-    StripeController,
 };
 use Illuminate\Support\Facades\Route;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
