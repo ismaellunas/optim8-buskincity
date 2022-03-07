@@ -31,9 +31,4 @@ class DonationController extends Controller
     {
         return view('donation-success', ['user' => $user]);
     }
-
-    public function cancel(User $user)
-    {
-        return view('donation-cancel', ['user' => $user]);
-    }
 }

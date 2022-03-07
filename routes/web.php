@@ -130,7 +130,5 @@ Route::get('frontend/profiles/{user}', [FrontendProfileController::class, 'show'
 
 Route::get('donations/{user}/success', [DonationController::class, 'success'])
     ->name('donations.success');
-Route::get('donations/{user}/cancel', [DonationController::class, 'cancel'])
-    ->name('donations.cancel');
 Route::post('donations/checkout/{user}', [DonationController::class, 'checkout'])
     ->name('donations.checkout');
