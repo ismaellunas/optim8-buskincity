@@ -28,23 +28,35 @@
                             </biz-button>
                         </form>
 
-                        <form
-                            method="POST"
-                            :action="route('logout')"
-                        >
-                            <input
-                                type="hidden"
-                                name="_token"
-                                :value="csrfToken"
-                            >
-
-                            <biz-button
+                        <div v-if="$page.props.user.is_super_administrator || $page.props.user.is_administrator">
+                            <biz-link
+                                :href="route('admin.logout')"
+                                method="post"
+                                as="button"
                                 class="button ml-3"
-                                type="submit"
                             >
                                 Log Out
-                            </biz-button>
-                        </form>
+                            </biz-link>
+                        </div>
+                        <div v-else>
+                            <form
+                                method="POST"
+                                :action="route('logout')"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="_token"
+                                    :value="csrfToken"
+                                >
+
+                                <biz-button
+                                    class="button ml-3"
+                                    type="submit"
+                                >
+                                    Log Out
+                                </biz-button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -55,11 +67,13 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import BizButton from '@/Biz/Button';
+    import BizLink from '@/Biz/Link';
 
     export default {
         components: {
             AppLayout,
             BizButton,
+            BizLink
         },
 
         props: {
