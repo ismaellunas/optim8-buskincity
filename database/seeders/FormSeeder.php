@@ -107,6 +107,59 @@ class FormSeeder extends Seeder
                         "roles" => ["Administrator"]
                     ],
                 ],
+
+                "about_me" => [
+                    "type" => "Textarea",
+                    "label" => "About Me",
+                    "placeholder" => "How to make the world see you.",
+                    "default_value" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => "",
+                    "rows" => "",
+                    "validation" => [
+                        "rules" => [],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                ],
+
+                "facebook" => [
+                    "type" => "Text",
+                    "label" => "Facebook",
+                    "placeholder" => "facebook url",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => 128,
+                    "validation" => [
+                        "rules" => [
+                            "max:128",
+                            "url"
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                ],
+
+                "instagram" => [
+                    "type" => "Text",
+                    "label" => "Instagram",
+                    "placeholder" => "instagram URL",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => 128,
+                    "validation" => [
+                        "rules" => [
+                            "max:128",
+                            "url"
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                ],
+
                 "skills" => [
                     "type" => "CheckboxGroup",
                     "label" => "Skills",
@@ -207,7 +260,7 @@ class FormSeeder extends Seeder
                     "validation" => [
                         "rules" => [
                             "required",
-                            "max:20"
+                            "max:255"
                         ],
                         "messages" => []
                     ],

@@ -10,14 +10,14 @@ class ProfileController extends Controller
 {
     public function show(User $user)
     {
-        $role = $user->getRoleNames()->first();
+        $role = $user->roleName;
 
         $viewName = 'profile-'.Str::kebab($role);
 
         if (view()->exists($viewName)) {
-            return view($viewName, []);
+            return view($viewName, compact('user'));
         }
 
-        return view('profile');
+        return view('profile', compact('user'));
     }
 }
