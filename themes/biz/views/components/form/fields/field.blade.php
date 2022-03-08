@@ -17,9 +17,7 @@
         @foreach ($fields as $field)
             <x-dynamic-component
                 :component="$componentName($field['type'])"
-                :label="$field['label']"
-                :value="$field['value']"
-                :is-translated="$field['is_translated']"
+                :field="$field"
                 :user-locale="$userLocale"
             />
         @endforeach
