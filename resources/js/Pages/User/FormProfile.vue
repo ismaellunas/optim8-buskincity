@@ -1,6 +1,6 @@
 <template>
     <div class="mb-3">
-        <biz-form-input-image
+        <biz-form-image-editable
             v-model="form.photo"
             v-model:photo-url="form.photo_url"
             delete-label="Remove Photo"
@@ -55,7 +55,7 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizFormInput from '@/Biz/Form/Input';
-    import BizFormInputImage from '@/Biz/Form/InputImage';
+    import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSelect from '@/Biz/Form/Select';
     import { useModelWrapper } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
@@ -65,7 +65,7 @@
 
         components: {
             BizFormInput,
-            BizFormInputImage,
+            BizFormImageEditable,
             BizFormSelect,
         },
 

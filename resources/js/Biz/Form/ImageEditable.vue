@@ -44,7 +44,7 @@
                     :disabled="disabled"
                     @click.prevent="$emit('on-delete-image', $event)"
                 >
-                    {{ deleteLabel ?? 'Remove Image' }}
+                    {{ deleteLabel }}
                 </biz-button>
             </div>
 
@@ -60,7 +60,7 @@
         >
             <template #header>
                 <p class="modal-card-title">
-                    {{ modalLabel ?? Image }}
+                    {{ modalLabel }}
                 </p>
                 <biz-button
                     aria-label="close"
@@ -159,7 +159,7 @@
     import { useModelWrapper, getCanvasBlob } from '@/Libs/utils';
 
     export default {
-        name: 'BizFormInputImage',
+        name: 'BizFormImageEditable',
 
         components: {
             BizButton,
@@ -205,7 +205,7 @@
             },
             deleteLabel: {
                 type: String,
-                default: null,
+                default: 'Remove Image',
             },
             showDeleteButton: {
                 type: Boolean,
@@ -217,7 +217,7 @@
             },
             modalLabel: {
                 type: String,
-                default: null,
+                default: 'Image',
             },
         },
 

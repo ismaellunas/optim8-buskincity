@@ -10,7 +10,7 @@
             </template>
 
             <template #form>
-                <biz-form-input-image
+                <biz-form-image-editable
                     v-model="form.photo"
                     v-model:photo-url="form.photo_url"
                     delete-label="Remove Photo"
@@ -71,7 +71,7 @@
     import BizActionMessage from '@/Biz/ActionMessage';
     import BizButton from '@/Biz/Button';
     import BizFormInput from '@/Biz/Form/Input';
-    import BizFormInputImage from '@/Biz/Form/InputImage';
+    import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSection from '@/Biz/FormSection';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { confirmDelete } from '@/Libs/alert';
@@ -81,7 +81,7 @@
             BizActionMessage,
             BizButton,
             BizFormInput,
-            BizFormInputImage,
+            BizFormImageEditable,
             BizFormSection,
         },
         mixins: [
