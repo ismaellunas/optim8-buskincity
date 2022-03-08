@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 abstract class TranslatableField extends BaseField
 {
     public $originLanguage;
+    public $translated;
 
     private $defaultLocale;
     private $locales;
@@ -18,6 +19,22 @@ abstract class TranslatableField extends BaseField
 
         $this->defaultLocale = TranslationService::getDefaultLocale();
         $this->locales = TranslationService::getLocales();
+    }
+
+    protected function setPropertiesBasedOnData()
+    {
+        parent::setPropertiesBasedOnData();
+
+        $this->translated = $this->data['translated'] ?? false;
+    }
+
+    protected function schema(): array
+    {
+        $schema = parent::schema();
+
+        return array_merge($schema, [
+            'is_translated' => $this->translated,
+        ]);
     }
 
     public function setOriginLanguage(?string $languageCode = null): void
