@@ -2,6 +2,7 @@
 
 namespace App\Entities\Forms;
 
+use App\Entities\Forms\Fields\TranslatableField;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
@@ -75,7 +76,7 @@ class Form
             if (class_exists($className)) {
                 $fieldObject = new $className($name, $field);
 
-                if ($fieldObject->translated) {
+                if ($field instanceof TranslatableField) {
                     $fieldObject->setOriginLanguage($this->originLanguage);
                 }
 
@@ -176,16 +177,19 @@ class Form
         $values = collect();
 
         foreach ($this->data['fields'] as $key => $field) {
-            $values->push(
-                [
-                    "type" => $field['type'],
-                    "label" => $field['label'],
-                    "value" => array_key_exists($key, $metas)
-                        ? $metas[$key]
-                        : null,
-                    "is_translated" => $field['translated'],
-                ]
-            );
+            $fieldValues = [
+                "type" => $field['type'],
+                "label" => $field['label'],
+                "value" => array_key_exists($key, $metas)
+                    ? $metas[$key]
+                    : null,
+            ];
+
+            if ($field instanceof TranslatableField) {
+                $fieldValues['is_translated'] = $field['translated'];
+            }
+
+            $values->push($fieldValues);
         }
 
         return $values->all();

@@ -20,7 +20,6 @@ abstract class BaseField
     public $roles;
     public $storedValue;
     public $entity;
-    public $translated;
 
     public function __construct(string $name, array $data = [])
     {
@@ -39,7 +38,6 @@ abstract class BaseField
         $this->readonly = $data['readonly'] ?? false;
         $this->validation = $data['validation'] ?? [];
         $this->roles = $data['visibility']['roles'] ?? [];
-        $this->translated = $data['translated'] ?? false;
 
         if (array_key_exists('default_value', $data)) {
             $this->defaultValue = $data['default_value'];
@@ -81,7 +79,6 @@ abstract class BaseField
             'default_value' => $this->defaultValue,
             'instructions' => $this->getInstructions(),
             'value' => $this->getSchemaValue(),
-            'is_translated' => $this->translated,
         ];
     }
 

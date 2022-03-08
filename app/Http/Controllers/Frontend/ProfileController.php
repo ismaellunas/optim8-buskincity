@@ -19,7 +19,7 @@ class ProfileController extends Controller
 
     public function show(User $user)
     {
-        $role = $user->getRoleNames()->first();
+        $role = $user->roleName;
 
         $viewName = 'profile-'.Str::kebab($role);
 
