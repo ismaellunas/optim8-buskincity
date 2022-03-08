@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     CustomOAuthController,
     DashboardController,
     FormController,
+    Frontend\DonationController,
     Frontend\PageController,
     Frontend\PostCategoryController,
     Frontend\PostController,
@@ -124,4 +125,10 @@ Route::name('forms.')->prefix('forms')->group(function () {
         ->name('save');
 });
 
-Route::get('frontend/profiles/{user}', [FrontendProfileController::class, 'show']);
+Route::get('frontend/profiles/{user}', [FrontendProfileController::class, 'show'])
+    ->name('frontend.profiles');
+
+Route::get('donations/{user}/success', [DonationController::class, 'success'])
+    ->name('donations.success');
+Route::post('donations/checkout/{user}', [DonationController::class, 'checkout'])
+    ->name('donations.checkout');
