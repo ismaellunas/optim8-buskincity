@@ -109,34 +109,45 @@ class StripeService
         return $user->getMetas([$this->metaKey()])->isNotEmpty();
     }
 
-    public function checkout(User $user, $amount): Session
+    private function getStripeAmount(float $amount, string $currency)
     {
-        Stripe::setApiKey($this->secretKey());
-
-        $currency = 'eur';
-
-        $stripeAccount = $this->getStripeAccountId($user);
-
         $formattedAmount = str_replace('.', '', $this->convertInto2Decimal($amount));
 
         if ($this->isZeroDecimal($currency)) {
             $formattedAmount = substr($formattedAmount, 0, -2);
         }
 
+        return $formattedAmount;
+    }
+
+    public function checkout(User $user, float $amount, string $currency): Session
+    {
+        Stripe::setApiKey($this->secretKey());
+
+        $stripeAccount = $this->getStripeAccountId($user);
+
+        $formattedAmount = $this->getStripeAmount(
+            $this->convertInto2Decimal($amount),
+            $currency
+        );
+
+        $applicationFeeAmount = $this->getStripeAmount(
+            $this->getApplicationFeeAmount($amount),
+            $currency
+        );
+
         return Session::create([
             'line_items' => [[
-                'name' => 'Donation',
+                'name' => 'Donate to '.$user->fullName,
                 'amount' => $formattedAmount,
                 'currency' => $currency,
                 'quantity' => 1,
             ]],
-            /*
             'payment_intent_data' => [
-                'application_fee_amount' => 123,
+                'application_fee_amount' => $applicationFeeAmount,
             ],
-             */
             'mode' => 'payment',
-            'payment_method_types' => ['card', 'giropay', 'ideal'],
+            'submit_type' => 'donate',
             'success_url' => route('donations.success', ['user' => $user]),
             'cancel_url' => route('frontend.profiles', ['user' => $user]),
         ], [
@@ -291,5 +302,51 @@ class StripeService
                     'value' => $country->display_name,
                 ];
             });
+    }
+
+    public function getCurrencyOptions(): array
+    {
+        return [
+            [
+                'id' => 'SEK',
+                'value' => 'SEK',
+            ],
+            [
+                'id' => 'EUR',
+                'value' => 'EUR',
+            ],
+            [
+                'id' => 'USD',
+                'value' => 'USD',
+            ],
+        ];
+    }
+
+    public function getAmountOptions(): array
+    {
+        return config('constants.stripe_amount_options');
+    }
+
+    public function getApplicationFeeAmount($amount): float
+    {
+        return round($amount * config('constants.stripe_fee_percent'), 2);
+    }
+
+    public function getCurrencyMinimalPayment(string $currency): float
+    {
+        return (float) config('constants.stripe_minimal_payments.'.$currency) ?? 0;
+    }
+
+    public function getMinimalPaymentWithFee($amount): float
+    {
+        return ceil($amount + $amount * $this->getApplicationFeeAmount($amount));
+    }
+
+    public function getListMinimalPayments(): array
+    {
+        return array_map(
+            fn ($amount): float => $this->getMinimalPaymentWithFee($amount),
+            config('constants.stripe_minimal_payments')
+        );
     }
 }
