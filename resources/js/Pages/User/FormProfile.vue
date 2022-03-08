@@ -49,21 +49,48 @@
                 {{ option.value }}
             </option>
         </biz-form-select>
+
+        <biz-form-dropdown-search
+            label="Language"
+            :close-on-click="true"
+            :message="form.errors.language_id"
+            @search="searchLanguage($event)"
+        >
+            <template #trigger>
+                <span :style="{'min-width': '4rem'}">
+                    {{ selectedDefaultLanguage }}
+                </span>
+            </template>
+
+            <biz-dropdown-item
+                v-for="option in filteredLanguages"
+                :key="option.id"
+                @click="selectedDefaultLanguage = option"
+            >
+                {{ option.value }}
+            </biz-dropdown-item>
+        </biz-form-dropdown-search>
     </div>
 </template>
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSelect from '@/Biz/Form/Select';
     import { useModelWrapper } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
+    import { find, debounce, isEmpty, filter } from 'lodash';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'UserProfileForm',
 
         components: {
+            BizDropdownItem,
+            BizFormDropdownSearch,
             BizFormInput,
             BizFormImageEditable,
             BizFormSelect,
@@ -83,7 +110,32 @@
         setup(props, { emit }) {
             return {
                 form: useModelWrapper(props, emit),
+                languageOptions: usePage().props.value.shownLanguageOptions,
             };
+        },
+
+        data() {
+            return {
+                filteredLanguages: this.languageOptions.slice(0, 10),
+            };
+        },
+
+        computed: {
+            selectedDefaultLanguage: {
+                get() {
+                    if (this.form.language_id) {
+                        let language = find(
+                            this.languageOptions,
+                            ['id', parseInt(this.form.language_id)]
+                        );
+                        return language.value;
+                    }
+                    return '';
+                },
+                set(language) {
+                    this.form.language_id = language.id;
+                }
+            },
         },
 
         methods: {
@@ -102,6 +154,16 @@
                     }
                 })
             },
+
+            searchLanguage: debounce(function(term) {
+                if (!isEmpty(term) && term.length > 1) {
+                    this.filteredLanguages = filter(this.languageOptions, function (language) {
+                        return new RegExp(term, 'i').test(language.value);
+                    }).slice(0, 10);
+                } else {
+                    this.filteredLanguages = this.languageOptions.slice(0, 10);
+                }
+            }, 750),
         },
     };
 </script>

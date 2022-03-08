@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Services\{
     MenuService,
     SettingService,
+    LanguageService,
     TranslationService as TranslationSv,
 };
 use Illuminate\Http\Request;
@@ -73,6 +74,7 @@ class HandleInertiaRequests extends Middleware
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
             'languageOptions' => TranslationSv::getLocaleOptions(),
+            'shownLanguageOptions' => app(LanguageService::class)->getShownLanguageOptions(),
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
             ]

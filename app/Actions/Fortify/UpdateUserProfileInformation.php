@@ -28,6 +28,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'mimes:jpg,jpeg,png',
                 'max:'.config('constants.one_megabyte') * 1,
             ],
+            'language_id' => ['required', 'exists:App\Models\Language,id'],
         ])->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
@@ -49,6 +50,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'first_name' => $input['first_name'],
                 'last_name' => $input['last_name'],
                 'email' => $input['email'],
+                'language_id' => $input['language_id'],
             ])->save();
         }
     }
@@ -67,6 +69,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'last_name' => $input['last_name'],
             'email' => $input['email'],
             'email_verified_at' => null,
+            'language_id' => $input['language_id'],
         ])->save();
 
         $user->sendEmailVerificationNotification();

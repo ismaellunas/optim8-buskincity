@@ -85,8 +85,10 @@
                         <hr>
 
                         <form-builder
+                            :key="biodataFormKey"
                             route-name="admin.users.edit"
                             :entity-id="record.id"
+                            :locale="record.origin_language_code"
                             @loaded-successfully="isFormBuilderShown = true"
                         >
                             <template #buttons>
@@ -115,7 +117,7 @@
     import FormUserPassword from '@/Pages/User/FormPassword';
     import FormUserProfile from '@/Pages/User/FormProfile';
     import { success as successAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -135,7 +137,7 @@
             title: { type: String, required: true },
         },
 
-        setup(props, { emit }) {
+        setup(props) {
             const userProfileForm = {
                 _method: 'put',
                 first_name: props.record.first_name,
@@ -144,6 +146,7 @@
                 photo: null,
                 photo_url: props.record.profile_photo_url,
                 profile_photo_media_id: props.record.profile_photo_media_id,
+                language_id: props.record.language_id,
             };
 
             if (!props.record.isSuperAdministrator) {
@@ -164,6 +167,7 @@
         data() {
             return {
                 baseRouteName: 'admin.users',
+                biodataFormKey: 0,
                 isFormBuilderShown: false,
                 isProcessing: false,
                 loader: null,
@@ -189,6 +193,8 @@
                         self.isProcessing = false;
                         self.profileForm.photo = null;
                         self.profileForm.profile_photo_media_id = self.record.profile_photo_media_id;
+
+                        self.biodataFormKey += 1;
                     }
                 });
             },

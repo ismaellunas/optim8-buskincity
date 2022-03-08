@@ -3,7 +3,11 @@
 namespace App\Entities\Forms;
 
 use App\Models\User;
-use Illuminate\Support\Collection;
+use App\Services\TranslationService;
+use Illuminate\Support\{
+    Collection,
+    Str
+};
 
 class Form
 {
@@ -121,7 +125,7 @@ class Form
                 $field->storedValue = $storedValue;
             }
 
-            $rules = array_merge($rules, $field->validationRules());
+            $rules = array_merge($rules, $field->validationRules($location->entity));
         }
 
         return $rules;
@@ -132,10 +136,37 @@ class Form
         $attributes = [];
 
         foreach ($this->fields as $field) {
-            $attributes = array_merge($attributes, $field->getLabels($inputs));
+            if ($field->translate) {
+                $attributes = array_merge(
+                    $attributes,
+                    $this->translatedAttributes(
+                        array_keys($field->getLabels($inputs))
+                    )
+                );
+            } else {
+                $attributes = array_merge($attributes, $field->getLabels($inputs));
+            }
         }
 
         return $attributes;
+    }
+
+    private function translatedAttributes(array $attributes): array
+    {
+        $translatedAttributes = [];
+        foreach (TranslationService::getLocales() as $locale) {
+            foreach ($attributes as $attribute) {
+                $attributeKey = $attribute.'.'.$locale;
+
+                $attributeName = Str::replace("_", " ", $attribute);
+
+                $translatedAttributes[$attributeKey] = (
+                    Str::title($attributeName).
+                    " (".TranslationService::getLanguageFromLocale($locale).")"
+                );
+            }
+        }
+        return $translatedAttributes;
     }
 
     public function canBeAccessed(): bool
@@ -159,5 +190,25 @@ class Form
         }
 
         return true;
+    }
+
+    public function setFieldWithValues($metas): array
+    {
+        $values = collect();
+
+        foreach ($this->data['fields'] as $key => $field) {
+            $values->push(
+                [
+                    "type" => $field['type'],
+                    "label" => $field['label'],
+                    "value" => array_key_exists($key, $metas)
+                        ? $metas[$key]
+                        : null,
+                    "can_translate" => $field['can_translate'],
+                ]
+            );
+        }
+
+        return $values->all();
     }
 }
