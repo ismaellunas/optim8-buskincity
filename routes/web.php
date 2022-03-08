@@ -6,12 +6,14 @@ use App\Http\Controllers\{
     CustomOAuthController,
     DashboardController,
     FormController,
+    Frontend\DonationController,
     Frontend\PageController,
     Frontend\PostCategoryController,
     Frontend\PostController,
     Frontend\ProfileController as FrontendProfileController,
     NewPasswordController,
     PasswordResetLinkController,
+    StripeController,
 };
 use Illuminate\Support\Facades\Route;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
@@ -37,6 +39,31 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/user/profile', function () {
         return redirect()->route('dashboard');
     })->name('profile.show');
+
+    Route::prefix('/payment-management/stripe')
+        ->name('payment-management.stripe.')
+        ->middleware(['can:payment.management'])
+        ->group(function() {
+            Route::get('/', [StripeController::class, 'show'])
+                ->name('show');
+
+            Route::post('create-connected-account', [StripeController::class, 'createThenRedirect'])
+                ->name('create-connected-account');
+
+            Route::get('redirect-to-stripe', [StripeController::class, 'redirectToStripeAccount'])
+                ->name('redirect-to-stripe');
+
+            Route::get('account-link', [StripeController::class, 'accountLink'])
+                ->name('account-link');
+
+            Route::get('reauth', [StripeController::class, 'refresh'])
+                ->middleware('signed')
+                ->name('refresh');
+
+            Route::get('return', [StripeController::class, 'return'])
+                ->middleware('signed')
+                ->name('return');
+        });
 });
 
 Route::get('/oauth/{provider}/callback', [CustomOAuthController::class, 'handleProviderCallback'])
@@ -98,4 +125,10 @@ Route::name('forms.')->prefix('forms')->group(function () {
         ->name('save');
 });
 
-Route::get('frontend/profiles/{user}', [FrontendProfileController::class, 'show']);
+Route::get('frontend/profiles/{user}', [FrontendProfileController::class, 'show'])
+    ->name('frontend.profiles');
+
+Route::get('donations/{user}/success', [DonationController::class, 'success'])
+    ->name('donations.success');
+Route::post('donations/checkout/{user}', [DonationController::class, 'checkout'])
+    ->name('donations.checkout');

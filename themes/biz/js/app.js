@@ -10,11 +10,13 @@ require("./bootstrap");
  * We will create a fresh Vue application instance.
  */
 import ExampleComponent from './components/ExampleComponent';
+import FormDonation from './components/FormDonation';
 import { components as defaultComponents } from '@/frontend-bootstrap';
 import { createApp } from "vue";
 
 const components = {
     ExampleComponent,
+    FormDonation,
 };
 
 const app = createApp({
