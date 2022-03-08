@@ -76,7 +76,7 @@ class Form
             if (class_exists($className)) {
                 $fieldObject = new $className($name, $field);
 
-                if ($field instanceof TranslatableField) {
+                if ($fieldObject instanceof TranslatableField) {
                     $fieldObject->setOriginLanguage($this->originLanguage);
                 }
 
@@ -176,20 +176,26 @@ class Form
     {
         $values = collect();
 
-        foreach ($this->data['fields'] as $key => $field) {
-            $fieldValues = [
-                "type" => $field['type'],
-                "label" => $field['label'],
-                "value" => array_key_exists($key, $metas)
-                    ? $metas[$key]
-                    : null,
-            ];
+        foreach ($this->data['fields'] as $name => $field) {
+            $className = $this->getFieldClassName($field['type']);
 
-            if ($field instanceof TranslatableField) {
-                $fieldValues['is_translated'] = $field['translated'];
+            if (class_exists($className)) {
+                $fieldObject = new $className($name, $field);
+
+                $fieldValues = [
+                    "type" => $field['type'],
+                    "label" => $field['label'],
+                    "value" => array_key_exists($name, $metas)
+                        ? $metas[$name]
+                        : null,
+                ];
+
+                if ($fieldObject instanceof TranslatableField) {
+                    $fieldValues['is_translated'] = $field['translated'];
+                }
+
+                $values->push($fieldValues);
             }
-
-            $values->push($fieldValues);
         }
 
         return $values->all();
