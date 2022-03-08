@@ -2,7 +2,10 @@
 
 namespace App\View\Components\Form\Fields;
 
-class Radio extends ViewBaseField
+use App\Contracts\ViewFieldInterface;
+use App\Traits\ViewBaseField;
+
+class Radio extends BaseField implements ViewFieldInterface
 {
-    //
+    use ViewBaseField;
 }

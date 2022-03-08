@@ -2,7 +2,10 @@
 
 namespace App\View\Components\Form\Fields;
 
-class Checkbox extends ViewBaseField
+use App\Contracts\ViewFieldInterface;
+use App\Traits\ViewBaseField;
+
+class Checkbox extends BaseField implements ViewFieldInterface
 {
-    //
+    use ViewBaseField;
 }

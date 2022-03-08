@@ -2,7 +2,10 @@
 
 namespace App\View\Components\Form\Fields;
 
-class Select extends ViewBaseField
+use App\Contracts\ViewFieldInterface;
+use App\Traits\ViewBaseField;
+
+class Select extends BaseField implements ViewFieldInterface
 {
-    //
+    use ViewBaseField;
 }
