@@ -2,7 +2,6 @@
 
 namespace App\Entities\Forms\Locations;
 
-use App\Models\Media;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
@@ -10,7 +9,7 @@ class UserProfileLocation
 {
     public $entityId;
 
-    private $entity;
+    public $entity;
     private $savedResults;
 
     public function __construct($userId = null)

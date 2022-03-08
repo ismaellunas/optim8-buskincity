@@ -40,6 +40,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => [],
                     ],
+                    "can_translate" => false,
                 ],
                 "phone" => [
                     "type" => "Phone",
@@ -52,6 +53,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => [],
                     ],
+                    "can_translate" => false,
                 ],
                 "education" => [
                     "type" => "Select",
@@ -66,12 +68,13 @@ class FormSeeder extends Seeder
                         "rules" => [],
                         "messages" => []
                     ],
+                    "can_translate" => false,
                 ],
                 "next_of_kin" => [
                     "type" => "Text",
                     "label" => "Next Of Kin",
                     "placeholder" => "Next Of Kin",
-                    "default_value" => "",
+                    "default_value" => [],
                     "readonly" => false,
                     "disabled" => false,
                     "maxlength" => 64,
@@ -85,6 +88,7 @@ class FormSeeder extends Seeder
                     "visibility" => [
                         "roles" => ["Administrator"]
                     ],
+                    "can_translate" => true,
                 ],
                 "blood_type" => [
                     "type" => "Radio",
@@ -106,6 +110,7 @@ class FormSeeder extends Seeder
                     "visibility" => [
                         "roles" => ["Administrator"]
                     ],
+                    "can_translate" => false,
                 ],
 
                 "about_me" => [
@@ -183,13 +188,14 @@ class FormSeeder extends Seeder
                         "rules" => [],
                         "messages" => [],
                     ],
+                    "can_translate" => false,
                 ],
 
                 "criminal_record" => [
                     "type" => "Textarea",
                     "label" => "Criminal Record",
                     "placeholder" => "...",
-                    "default_value" => null,
+                    "default_value" => [],
                     "readonly" => false,
                     "disabled" => false,
                     "maxlength" => "",
@@ -200,7 +206,8 @@ class FormSeeder extends Seeder
                     ],
                     "visibility" => [
                         "roles" => ['Administrator']
-                    ]
+                    ],
+                    "can_translate" => true,
                 ],
                 "video" => [
                     "type" => "Video",
@@ -214,6 +221,7 @@ class FormSeeder extends Seeder
                     ],
                     "visibility" => [
                     ],
+                    "can_translate" => false,
                 ],
 
                 "term_and_condition" => [
@@ -233,6 +241,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => [],
                     ],
+                    "can_translate" => false,
                 ],
             ]
         ];
@@ -252,7 +261,7 @@ class FormSeeder extends Seeder
                     "type" => "Textarea",
                     "label" => "Address",
                     "placeholder" => "Your Address",
-                    "default_value" => null,
+                    "default_value" => [],
                     "readonly" => false,
                     "disabled" => false,
                     "maxlength" => "",
@@ -264,6 +273,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
+                    "can_translate" => true,
                 ],
                 "postcode" => [
                     "type" => "Text",
@@ -280,6 +290,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
+                    "can_translate" => false,
                 ],
             ]
         ];
@@ -311,6 +322,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
+                    "can_translate" => false,
                 ],
             ]
         ];

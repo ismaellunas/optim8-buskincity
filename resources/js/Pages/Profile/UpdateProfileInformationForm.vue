@@ -79,6 +79,27 @@
                     type="email"
                     :message="form.errors.email"
                 />
+
+                <biz-form-dropdown-search
+                    label="Language"
+                    :close-on-click="true"
+                    :message="form.errors.language_id"
+                    @search="searchLanguage($event)"
+                >
+                    <template #trigger>
+                        <span :style="{'min-width': '4rem'}">
+                            {{ selectedDefaultLanguage }}
+                        </span>
+                    </template>
+
+                    <biz-dropdown-item
+                        v-for="option in filteredLanguages"
+                        :key="option.id"
+                        @click="selectedDefaultLanguage = option"
+                    >
+                        {{ option.value }}
+                    </biz-dropdown-item>
+                </biz-form-dropdown-search>
             </template>
 
             <template #actions>
@@ -195,36 +216,42 @@
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
     import BizActionMessage from '@/Biz/ActionMessage';
     import BizButton from '@/Biz/Button';
-    import BizImage from '@/Biz/Image';
+    import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormSection from '@/Biz/FormSection';
+    import BizImage from '@/Biz/Image';
     import BizInputError from '@/Biz/InputError';
     import BizInputFile from '@/Biz/InputFile';
     import BizLabel from '@/Biz/Label';
+    import BizModalCard from '@/Biz/ModalCard';
+    import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
     import UserIcon from '@/Biz/Icon/User';
     import { acceptedImageTypes } from '@/Libs/defaults';
-    import { includes } from 'lodash';
+    import { includes, find, debounce, isEmpty, filter } from 'lodash';
     import { getCanvasBlob } from '@/Libs/utils';
     import { oops as oopsAlert, confirmDelete } from '@/Libs/alert';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
             BizActionMessage,
             BizButton,
-            BizImage,
-            BizModalCard,
-            BizModalImageEditor,
+            BizDropdownItem,
+            BizFormDropdownSearch,
             BizFormInput,
             BizFormSection,
+            BizImage,
             BizInputError,
             BizInputFile,
             BizLabel,
+            BizModalCard,
+            BizModalImageEditor,
             UserIcon,
         },
+
         mixins: [
             MixinHasModal,
             MixinHasPageErrors,
@@ -235,6 +262,16 @@
                 type: Object,
                 required: true,
             },
+        },
+
+        emits: [
+            'after-update-profile'
+        ],
+
+        setup() {
+            return {
+                languageOptions: usePage().props.value.shownLanguageOptions,
+            };
         },
 
         data() {
@@ -249,8 +286,10 @@
                     email: this.user.email,
                     photo: null,
                     photo_url: null,
+                    language_id: this.user.language_id
                 }),
                 isImageEditing: false,
+                filteredLanguages: this.languageOptions.slice(0, 10),
             }
         },
 
@@ -265,6 +304,22 @@
                 }
 
                 return url;
+            },
+
+            selectedDefaultLanguage: {
+                get() {
+                    if (this.form.language_id) {
+                        let language = find(
+                            this.languageOptions,
+                            ['id', parseInt(this.form.language_id)]
+                        );
+                        return language.value;
+                    }
+                    return '';
+                },
+                set(language) {
+                    this.form.language_id = language.id;
+                }
             },
         },
 
@@ -317,6 +372,9 @@
                     onSuccess: () => {
                         this.clearPhotoInput();
                     },
+                    onFinish: () => {
+                        this.$emit('after-update-profile');
+                    },
                 });
             },
 
@@ -337,6 +395,16 @@
                     }
                 })
             },
+
+            searchLanguage: debounce(function(term) {
+                if (!isEmpty(term) && term.length > 1) {
+                    this.filteredLanguages = filter(this.languageOptions, function (language) {
+                        return new RegExp(term, 'i').test(language.value);
+                    }).slice(0, 10);
+                } else {
+                    this.filteredLanguages = this.languageOptions.slice(0, 10);
+                }
+            }, 750),
         },
     }
 </script>
