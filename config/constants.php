@@ -103,6 +103,7 @@ return [
             'pagination',
             'passwords',
             'validation',
+            'form_builder'
         ]
     ],
     'setting_cache' => [
