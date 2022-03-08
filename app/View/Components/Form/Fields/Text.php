@@ -2,12 +2,10 @@
 
 namespace App\View\Components\Form\Fields;
 
-class Text extends ViewBaseField
-{
-    public function __construct($label, $value, $isTranslated, $userLocale)
-    {
-        parent::__construct($label, $value, $isTranslated, $userLocale);
+use App\Contracts\ViewFieldInterface;
+use App\Traits\ViewBaseField;
 
-        $this->value = $this->setValueTranslation($value);
-    }
+class Text extends TranslatableField implements ViewFieldInterface
+{
+    use ViewBaseField;
 }
