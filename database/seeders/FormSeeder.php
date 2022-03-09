@@ -40,7 +40,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => [],
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
                 "phone" => [
                     "type" => "Phone",
@@ -53,7 +53,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => [],
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
                 "education" => [
                     "type" => "Select",
@@ -68,7 +68,7 @@ class FormSeeder extends Seeder
                         "rules" => [],
                         "messages" => []
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
                 "next_of_kin" => [
                     "type" => "Text",
@@ -88,7 +88,7 @@ class FormSeeder extends Seeder
                     "visibility" => [
                         "roles" => ["Administrator"]
                     ],
-                    "can_translate" => true,
+                    "translated" => true,
                 ],
                 "blood_type" => [
                     "type" => "Radio",
@@ -110,8 +110,61 @@ class FormSeeder extends Seeder
                     "visibility" => [
                         "roles" => ["Administrator"]
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
+
+                "about_me" => [
+                    "type" => "Textarea",
+                    "label" => "About Me",
+                    "placeholder" => "How to make the world see you.",
+                    "default_value" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => "",
+                    "rows" => "",
+                    "validation" => [
+                        "rules" => [],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                ],
+
+                "facebook" => [
+                    "type" => "Text",
+                    "label" => "Facebook",
+                    "placeholder" => "facebook url",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => 128,
+                    "validation" => [
+                        "rules" => [
+                            "max:128",
+                            "url"
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                ],
+
+                "instagram" => [
+                    "type" => "Text",
+                    "label" => "Instagram",
+                    "placeholder" => "instagram URL",
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => 128,
+                    "validation" => [
+                        "rules" => [
+                            "max:128",
+                            "url"
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                ],
+
                 "skills" => [
                     "type" => "CheckboxGroup",
                     "label" => "Skills",
@@ -135,7 +188,7 @@ class FormSeeder extends Seeder
                         "rules" => [],
                         "messages" => [],
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
 
                 "criminal_record" => [
@@ -154,7 +207,7 @@ class FormSeeder extends Seeder
                     "visibility" => [
                         "roles" => ['Administrator']
                     ],
-                    "can_translate" => true,
+                    "translated" => true,
                 ],
                 "video" => [
                     "type" => "Video",
@@ -168,7 +221,7 @@ class FormSeeder extends Seeder
                     ],
                     "visibility" => [
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
 
                 "term_and_condition" => [
@@ -180,13 +233,15 @@ class FormSeeder extends Seeder
                     "false_value" => false,
                     "default_value" => false,
                     "is_raw" => true,
+                    "is_boolean" => true,
                     "validation" => [
                         "rules" => [
                             "required",
+                            "accepted"
                         ],
                         "messages" => [],
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
             ]
         ];
@@ -218,7 +273,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "can_translate" => true,
+                    "translated" => true,
                 ],
                 "postcode" => [
                     "type" => "Text",
@@ -235,7 +290,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
             ]
         ];
@@ -267,7 +322,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
             ]
         ];

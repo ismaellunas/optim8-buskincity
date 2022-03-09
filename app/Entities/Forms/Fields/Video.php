@@ -2,8 +2,6 @@
 
 namespace App\Entities\Forms\Fields;
 
-use App\Models\User;
-
 class Video extends Text
 {
     protected $type = "Video";
@@ -15,9 +13,9 @@ class Video extends Text
         $this->placeholder = $data['placeholder'] ?? "Youtube or Vimeo Video URL";
     }
 
-    public function validationRules(User $entity = null): array
+    public function validationRules(): array
     {
-        $rules = parent::validationRules($entity);
+        $rules = parent::validationRules();
 
         $rules[$this->name][] = "url";
 

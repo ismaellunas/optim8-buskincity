@@ -17,8 +17,8 @@
                         A new verification link has been sent to the email address you provided during registration.
                     </div>
 
-                    <form @submit.prevent="submit">
-                        <div class="mt-4 flex items-center justify-between">
+                    <div class="mt-4 is-flex items-center justify-between">
+                        <form @submit.prevent="submit">
                             <biz-button
                                 :class="{ 'opacity-25': form.processing }"
                                 :disabled="form.processing"
@@ -26,17 +26,26 @@
                             >
                                 Resend Verification Email
                             </biz-button>
+                        </form>
 
-                            <biz-link
-                                :href="route('logout')"
-                                method="post"
-                                as="button"
+                        <form
+                            method="POST"
+                            :action="route('logout')"
+                        >
+                            <input
+                                type="hidden"
+                                name="_token"
+                                :value="csrfToken"
+                            >
+
+                            <biz-button
                                 class="button ml-3"
+                                type="submit"
                             >
                                 Log Out
-                            </biz-link>
-                        </div>
-                    </form>
+                            </biz-button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,22 +55,24 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import BizButton from '@/Biz/Button';
-    import BizLink from '@/Biz/Link';
 
     export default {
         components: {
             AppLayout,
             BizButton,
-            BizLink,
         },
 
         props: {
-            status: String
+            status: {
+                default: null,
+                type: String
+            }
         },
 
         data() {
             return {
-                form: this.$inertia.form()
+                form: this.$inertia.form(),
+                csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
         },
 
