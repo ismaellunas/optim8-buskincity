@@ -3,7 +3,6 @@
 namespace App\Entities\Forms\Fields;
 
 use App\Models\User;
-use App\Services\TranslationService;
 
 abstract class BaseField
 {
@@ -21,7 +20,6 @@ abstract class BaseField
     public $roles;
     public $storedValue;
     public $entity;
-    public $translate;
 
     public function __construct(string $name, array $data = [])
     {
@@ -40,7 +38,6 @@ abstract class BaseField
         $this->readonly = $data['readonly'] ?? false;
         $this->validation = $data['validation'] ?? [];
         $this->roles = $data['visibility']['roles'] ?? [];
-        $this->translate = $data['can_translate'] ?? false;
 
         if (array_key_exists('default_value', $data)) {
             $this->defaultValue = $data['default_value'];
@@ -82,43 +79,14 @@ abstract class BaseField
             'default_value' => $this->defaultValue,
             'instructions' => $this->getInstructions(),
             'value' => $this->getSchemaValue(),
-            'can_translate' => $this->translate,
         ];
     }
 
-    public function validationRules(User $entity = null): array
+    public function validationRules(): array
     {
         $rules = [];
 
-        if ($this->translate) {
-            $locales = TranslationService::getLocales();
-            $defaultLocale = TranslationService::getDefaultLocale();
-            $originLanguage = $entity
-                ? $entity->origin_language_code
-                : $defaultLocale;
-
-            if (!in_array($originLanguage, $locales)){
-                $originLanguage = $defaultLocale;
-            }
-
-            $providedRules = collect($this->validation['rules'] ?? []);
-
-            foreach ($locales as $locale) {
-                if ($originLanguage != $locale) {
-                    $rules[$this->name.".".$locale] = $providedRules->filter(
-                            function ($value) {
-                                return $value != 'required';
-                            }
-                        )
-                        ->values()
-                        ->all();
-                } else {
-                    $rules[$this->name.".".$locale] = $providedRules->all();
-                }
-            }
-        } else {
-            $rules[$this->name] = $this->validation['rules'] ?? [];
-        }
+        $rules[$this->name] = $this->validation['rules'] ?? [];
 
         $this->adjustNullableRule($rules);
 
@@ -128,6 +96,11 @@ abstract class BaseField
     public function validationMessages(): array
     {
         return $this->validation['messages'] ?? [];
+    }
+
+    public function validationAttributes(array $inputs = []): array
+    {
+        return $this->getLabels($inputs);
     }
 
     public function canBeAccessed(User $author = null): bool

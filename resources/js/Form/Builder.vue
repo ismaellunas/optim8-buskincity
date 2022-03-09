@@ -173,7 +173,7 @@
                             } else {
                                 form[ key ] = field.value;
 
-                                if (field.can_translate && field.value.length == 0) {
+                                if (field.is_translated && field.value.length == 0) {
                                     fieldValue = {};
 
                                     this.localeOptions.forEach(function(locale) {

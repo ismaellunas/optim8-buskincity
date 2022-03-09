@@ -2,8 +2,6 @@
 
 namespace App\Entities\Forms\Fields;
 
-use App\Models\User;
-
 class Number extends Text
 {
     protected $type = "Number";
@@ -18,9 +16,9 @@ class Number extends Text
         return array_merge(parent::schema(), $schema);
     }
 
-    public function validationRules(User $entity = null): array
+    public function validationRules(): array
     {
-        $rules = parent::validationRules($entity);
+        $rules = parent::validationRules();
 
         $rules[$this->name] = "numeric";
 
