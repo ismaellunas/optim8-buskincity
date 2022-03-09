@@ -4,7 +4,7 @@ namespace App\View\Components\Form\Fields;
 
 use App\Services\TranslationService;
 
-class TranslatableField extends BaseField
+abstract class TranslatableField extends BaseField
 {
     protected $isTranslated = false;
     protected $userLocale;
