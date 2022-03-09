@@ -2,6 +2,7 @@
 
 namespace App\Entities\Forms\Fields;
 
+use App\Models\User;
 use App\Services\CountryService;
 use Propaganistas\LaravelPhone\PhoneNumber;
 
@@ -44,7 +45,7 @@ class Phone extends BaseField
         }
     }
 
-    public function validationRules(): array
+    public function validationRules(User $entity = null): array
     {
         $rules[$this->name.".number"] = $this->validation['rules'] ?? [];
 

@@ -2,6 +2,8 @@
 
 namespace App\Entities\Forms\Fields;
 
+use App\Models\User;
+
 class Select extends BaseField
 {
     protected $type = "Select";
@@ -36,9 +38,9 @@ class Select extends BaseField
         $rules[$this->name][] = 'in:'.implode(',', array_keys($this->options));
     }
 
-    public function validationRules(): array
+    public function validationRules(User $entity = null): array
     {
-        $rules = parent::validationRules();
+        $rules = parent::validationRules($entity);
 
         $this->adjustInRule($rules);
 
