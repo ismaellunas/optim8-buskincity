@@ -4,10 +4,7 @@ namespace App\Entities\Forms\Fields;
 
 use App\Entities\CloudinaryStorage;
 use App\Helpers\HumanReadable;
-use App\Models\{
-    Media,
-    User,
-};
+use App\Models\Media;
 use App\Rules\FieldMaxFile;
 use App\Rules\FieldMinFile;
 use App\Services\MediaService;
@@ -149,7 +146,7 @@ class File extends BaseField
         return $data;
     }
 
-    private function getMedias($mediaIds)
+    private function getMedias($mediaIds): Collection
     {
         $media = Media::select([
             'id',
@@ -205,7 +202,7 @@ class File extends BaseField
         );
     }
 
-    public function validationRules(User $entity = null): array
+    public function validationRules(): array
     {
         $rules[$this->name] = [];
         $rules[$this->filesKey()] = [];

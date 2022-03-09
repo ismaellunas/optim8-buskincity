@@ -2,8 +2,6 @@
 
 namespace App\Entities\Forms\Fields;
 
-use App\Models\User;
-
 class Radio extends BaseField
 {
     protected $type = 'Radio';
@@ -34,9 +32,9 @@ class Radio extends BaseField
         $rules[$this->name][] = 'in:'.implode(',', array_keys($this->options));
     }
 
-    public function validationRules(User $entity = null): array
+    public function validationRules(): array
     {
-        $rules = parent::validationRules($entity);
+        $rules = parent::validationRules();
 
         $this->adjustInRule($rules);
 
