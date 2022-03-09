@@ -42,13 +42,16 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::prefix('/payment-management/stripe')
         ->name('payment-management.stripe.')
-        ->middleware(['can:payment.management'])
+        ->middleware('can:updateStripeConnect,App\Models\User')
         ->group(function() {
             Route::get('/', [StripeController::class, 'show'])
                 ->name('show');
 
             Route::post('create-connected-account', [StripeController::class, 'createThenRedirect'])
                 ->name('create-connected-account');
+
+            Route::post('update-setting', [StripeController::class, 'updateSetting'])
+                ->name('update-setting');
 
             Route::get('redirect-to-stripe', [StripeController::class, 'redirectToStripeAccount'])
                 ->name('redirect-to-stripe');
