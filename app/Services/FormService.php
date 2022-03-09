@@ -44,6 +44,7 @@ class FormService
     public function getFormsOnRoute(
         string $locationRoute,
         User $author = null,
+        ?string $originLanguage = null
     ): Collection {
 
         $forms = collect();
@@ -55,7 +56,7 @@ class FormService
 
             $className = $this->getFormClassName($model->type);
 
-            $form = new $className($model->id, $model->data, $author);
+            $form = new $className($model->id, $model->data, $author,$originLanguage);
 
             $form->model = $model;
 
@@ -136,5 +137,27 @@ class FormService
         }
 
         return $schemas;
+    }
+
+    public function getFieldGroupValues(User $user): array
+    {
+        $values = collect();
+
+        $models = FieldGroup::all();
+
+        foreach ($models as $model) {
+            $className = $this->getFormClassName($model->type);
+
+            $form = new $className($model->id, $model->data, $user);
+
+            $metas = $user->getMetas($form->fields->keys()->all());
+
+            $values->put(
+                $form->title,
+                $form->setFieldWithValues($metas->all())
+            );
+        }
+
+        return $values->all();
     }
 }
