@@ -9,7 +9,7 @@
             class="box"
         >
             <biz-form-select
-                v-model="form.country"
+                v-model="createStripeForm.country"
                 label="Country"
                 :message="error('country')"
             >
@@ -40,6 +40,7 @@
                 <biz-button
                     v-if="hasPassedOnboarding"
                     class="is-link"
+                    type="button"
                     @click="redirectToStripe"
                 >
                     Login To Stripe
@@ -48,12 +49,45 @@
                 <biz-button
                     v-else
                     class="is-link"
+                    type="button"
                     @click="redirectToOnboardingAccount"
                 >
                     Continue Onboarding Process
                 </biz-button>
             </div>
         </div>
+
+        <section
+            v-if="hasConnectedAccount"
+            class="box"
+        >
+            <h1 class="title">
+                Setting
+            </h1>
+
+            <form @submit.prevent="submit">
+                <biz-form-select
+                    v-model="settingForm.is_enabled"
+                    label="Is Enabled ?"
+                    :message="error('is_enabled')"
+                >
+                    <option :value="true">
+                        Enabled
+                    </option>
+                    <option :value="false">
+                        Disabled
+                    </option>
+                </biz-form-select>
+
+                <div class="field is-grouped is-grouped-left">
+                    <div class="control">
+                        <biz-button class="is-link">
+                            Update
+                        </biz-button>
+                    </div>
+                </div>
+            </form>
+        </section>
 
         <section
             v-if="hasConnectedAccount"
@@ -115,11 +149,12 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import BizButton from '@/Biz/Button';
+    import BizFormSelect from '@/Biz/Form/Select';
     import BizTable from '@/Biz/Table';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import { confirm as confirmAlert, oops as oopsAlert } from '@/Libs/alert';
+    import { confirm as confirmAlert, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { ref } from 'vue';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -164,15 +199,25 @@
                 type: String,
                 default: null,
             },
+            isEnabled: {
+                type: Boolean,
+                default: false,
+            },
         },
 
         setup(props) {
-            const form = {
+            const createStripeForm = {
                 country: props.defaultCountry,
             };
 
+            const settingForm = {
+                is_enabled: props.isEnabled,
+            };
+
             return {
-                form: useForm(form),
+                createStripeForm: useForm(createStripeForm),
+                loader: ref(null),
+                settingForm: useForm(settingForm),
             }
         },
 
@@ -188,7 +233,7 @@
                 )
                     .then((result) => {
                         if (result.isConfirmed) {
-                            self.form.post(url, {
+                            self.createStripeForm.post(url, {
                                 replace: true,
                                 preserveState: true,
                                 onStart: () => self.onStartLoadingOverlay(),
@@ -237,6 +282,23 @@
 
                 this.onEndLoadingOverlay();
             },
+
+            submit() {
+                this.settingForm.post(route('payment-management.stripe.update-setting'), {
+                    onStart: () => {
+                        this.loader = this.$loading.show();
+                    },
+                    onSuccess: (page) => {
+                        successAlert(page.props.flash.message);
+                    },
+                    onError(errors) {
+                        oopsAlert();
+                    },
+                    onFinish: () => {
+                        this.loader.hide();
+                    }
+                });
+            }
         },
     };
 </script>

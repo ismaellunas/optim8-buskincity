@@ -25,6 +25,7 @@ class StripeController extends Controller
             'stripe_amount_options',
             'stripe_application_fee_percentage',
             'stripe_default_country',
+            'stripe_is_enabled',
             'stripe_minimal_amounts',
             'stripe_payment_currencies',
         ])
@@ -42,6 +43,7 @@ class StripeController extends Controller
             'countryOptions' => $this->stripeService->getCountryOptions(),
             'currencyOptions' => $currencyOptions,
             'defaultCountry' => $settings->get('stripe_default_country'),
+            'isEnabled' => (bool) $settings->get('stripe_is_enabled'),
             'minimalAmounts' => json_decode($settings->get('stripe_minimal_amounts')),
             'paymentCurrencies' => json_decode($settings->get('stripe_payment_currencies')),
         ]);
@@ -68,6 +70,10 @@ class StripeController extends Controller
         Setting::updateOrCreate(
             ['key' => 'stripe_minimal_amounts'],
             ['value' => json_encode($request->minimal_amounts)]
+        );
+        Setting::updateOrCreate(
+            ['key' => 'stripe_is_enabled'],
+            ['value' => (bool) $request->is_enabled]
         );
 
         $this->generateFlashMessage('Stripe updated successfully!');

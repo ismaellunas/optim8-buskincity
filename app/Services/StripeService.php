@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Country;
-use App\Models\Setting;
-use App\Models\User;
+use App\Models\{
+    Country,
+    Setting,
+    User,
+};
+use App\Entities\Caches\SettingCache;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
 use Stripe\{
@@ -385,5 +388,19 @@ class StripeService
     public function getDefaultCountry(): ?string
     {
         return Setting::key('stripe_default_country')->value('value');
+    }
+
+    public function isEnabled(): bool
+    {
+        return app(SettingCache::class)->remember('stripe_is_enabled', function () {
+            return (bool) Setting::key('stripe_is_enabled')->value('value');
+        });
+    }
+
+    public function isStripeConnectEnabled(User $user): bool
+    {
+        $key = 'stripe_is_enabled';
+
+        return (bool) $user->getMetas([$key])->get($key, false);
     }
 }

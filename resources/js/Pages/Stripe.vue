@@ -27,6 +27,25 @@
 
                 <div class="columns">
                     <div class="column">
+                        <b>Is Enabled ?</b>
+                    </div>
+
+                    <div class="column">
+                        <biz-select
+                            v-model="form.is_enabled"
+                        >
+                            <option :value="true">
+                                Enabled
+                            </option>
+                            <option :value="false">
+                                Disabled
+                            </option>
+                        </biz-select>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
                         <b>Default Country</b>
                     </div>
 
@@ -187,6 +206,7 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormInputAddons from '@/Biz/Form/InputAddons';
     import BizInputError from '@/Biz/InputError';
+    import BizSelect from '@/Biz/Select';
     import BizTable from '@/Biz/Table';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { debounce, difference, isEmpty, filter, find, forEach } from 'lodash';
@@ -207,6 +227,7 @@
             BizFormInput,
             BizFormInputAddons,
             BizInputError,
+            BizSelect,
             BizTable,
         },
 
@@ -239,6 +260,10 @@
                 type: Object,
                 default: () => {}
             },
+            isEnabled: {
+                type: Boolean,
+                default: false,
+            },
             minimalAmounts: {
                 type: Object,
                 default: () => {},
@@ -258,6 +283,7 @@
                 amount_options: props.amountOptions ?? {},
                 application_fee_percentage: props.applicationFeePercentage ?? null,
                 default_country: props.defaultCountry ?? '',
+                is_enabled: props.isEnabled ?? false,
                 minimal_amounts: props.minimalAmounts ?? {},
                 payment_currencies: props.paymentCurrencies ?? [],
             };
@@ -351,6 +377,9 @@
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
+                    },
+                    onError(errors) {
+                        oopsAlert();
                     },
                     onFinish: () => {
                         self.loader.hide();

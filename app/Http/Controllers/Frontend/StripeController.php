@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StripeAccountCreateRequest;
 use App\Services\StripeService;
+use App\Traits\FlashNotifiable;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class StripeController extends Controller
 {
+    use FlashNotifiable;
+
     private $stripeService;
 
     public function __construct(StripeService $stripeService)
@@ -40,13 +44,30 @@ class StripeController extends Controller
 
         $defaultCountry = $this->stripeService->getDefaultCountry();
 
+        $isEnabled = $user
+            ->getMetas(['stripe_is_enabled'])
+            ->get('stripe_is_enabled');
+
         return Inertia::render('PaymentManagementStripe', compact(
             'balance',
             'countryOptions',
             'defaultCountry',
             'hasConnectedAccount',
-            'hasPassedOnboarding'
+            'hasPassedOnboarding',
+            'isEnabled'
         ));
+    }
+
+    public function updateSetting(Request $request)
+    {
+        $user = auth()->user();
+
+        $user->setMeta('stripe_is_enabled', $request->get('is_enabled'));
+        $user->saveMetas();
+
+        $this->generateFlashMessage('Saved');
+
+        return back();
     }
 
     public function createThenRedirect(StripeAccountCreateRequest $request)
