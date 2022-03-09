@@ -3,7 +3,7 @@
         :is-required="required"
     >
         <template
-            v-if="$slots.label"
+            v-if="label"
             #label
         >
             {{ label }}
