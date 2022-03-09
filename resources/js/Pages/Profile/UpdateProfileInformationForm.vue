@@ -13,14 +13,20 @@
                 <biz-form-image-editable
                     v-model="form.photo"
                     v-model:photo-url="form.photo_url"
-                    delete-label="Remove Photo"
                     modal-label="Profile Photo"
-                    :message="error('photo')"
+                    delete-label="Remove Photo"
                     :photo-url="form.photo_url"
                     :show-delete-button="form.photo_url != null"
+                    :message="error('photo')"
                     @on-reset-value="resetImageForm()"
                     @on-delete-image="onDeleteImage()"
-                />
+                >
+                    <template #default-image-view>
+                        <user-icon
+                            style="width: 64px;"
+                        />
+                    </template>
+                </biz-form-image-editable>
 
                 <biz-form-input
                     v-model="form.first_name"
@@ -96,6 +102,7 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSection from '@/Biz/FormSection';
+    import UserIcon from '@/Biz/Icon/User';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { confirmDelete } from '@/Libs/alert';
@@ -110,6 +117,7 @@
             BizFormInput,
             BizFormImageEditable,
             BizFormSection,
+            UserIcon,
         },
 
         mixins: [
