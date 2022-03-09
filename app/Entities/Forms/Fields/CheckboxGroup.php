@@ -2,8 +2,6 @@
 
 namespace App\Entities\Forms\Fields;
 
-use App\Models\User;
-
 class CheckboxGroup extends BaseField
 {
     protected $type = "CheckboxGroup";
@@ -36,9 +34,9 @@ class CheckboxGroup extends BaseField
         );
     }
 
-    public function validationRules(User $entity = null): array
+    public function validationRules(): array
     {
-        $rules = parent::validationRules($entity);
+        $rules = parent::validationRules();
 
         $rules[$this->name][] = 'array';
 

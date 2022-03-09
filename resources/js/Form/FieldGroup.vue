@@ -17,7 +17,7 @@
         >
             <component
                 :is="field.type"
-                v-if="!field.can_translate"
+                v-if="!field.is_translated"
                 :ref="'field__' + name"
                 v-model="form[ name ]"
                 :errors="form.errors"
