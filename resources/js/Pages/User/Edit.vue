@@ -85,8 +85,10 @@
                         <hr>
 
                         <form-builder
+                            :key="biodataFormKey"
                             route-name="admin.users.edit"
                             :entity-id="record.id"
+                            :locale="record.origin_language_code"
                             @loaded-successfully="isFormBuilderShown = true"
                         >
                             <template #buttons>
@@ -140,6 +142,7 @@
                 first_name: props.record.first_name,
                 last_name: props.record.last_name,
                 email: props.record.email,
+                language_id: props.record.language_id,
             };
 
             if (!props.record.isSuperAdministrator) {
@@ -160,6 +163,7 @@
         data() {
             return {
                 baseRouteName: 'admin.users',
+                biodataFormKey: 0,
                 isFormBuilderShown: false,
                 isProcessing: false,
                 loader: null,
@@ -182,6 +186,7 @@
                     onFinish: () => {
                         self.loader.hide();
                         self.isProcessing = false;
+                        self.biodataFormKey += 1;
                     }
                 });
             },

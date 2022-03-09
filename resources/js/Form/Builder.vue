@@ -1,39 +1,70 @@
 <template>
-    <form @submit.prevent="submit">
-        <field-group
-            v-for="(group, index) in sortedFieldGroups"
-            :key="index"
-            :ref="'field_group__'+index"
-            v-model="form"
-            :group="group"
+    <div>
+        <div class="tabs">
+            <ul>
+                <li
+                    v-for="(option, index) in localeOptions"
+                    :key="option.id"
+                    :class="{ 'is-active': option.id == selectedLocale }"
+                    @click="selectedLocale = option.id"
+                >
+                    <a>
+                        {{ option.name }}
+                        <span
+                            v-if="index == 0"
+                            class="tag is-primary ml-2"
+                        >
+                            Default
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <biz-error-notifications
+            :errors="$page.props.errors"
         />
 
-        <slot name="buttons">
-            <div class="field is-grouped is-grouped-left">
-                <div class="control">
-                    <biz-button
-                        class="is-primary"
-                    >
-                        Submit
-                    </biz-button>
+        <form @submit.prevent="submit">
+            <field-group
+                v-for="(group, index) in sortedFieldGroups"
+                :key="index"
+                :ref="'field_group__'+index"
+                v-model="form"
+                :group="group"
+                :selected-locale="selectedLocale"
+            />
+
+            <slot name="buttons">
+                <div class="field is-grouped is-grouped-left">
+                    <div class="control">
+                        <biz-button
+                            class="is-primary"
+                        >
+                            Submit
+                        </biz-button>
+                    </div>
                 </div>
-            </div>
-        </slot>
-    </form>
+            </slot>
+        </form>
+    </div>
 </template>
 
 <script>
     import BizButton from '@/Biz/Button';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import FieldGroup from './FieldGroup';
-    import { isEmpty, forOwn, sortBy, forEach } from 'lodash';
+    import { isEmpty, forOwn, sortBy, forEach, find } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { ref } from 'vue';
 
     export default {
         name: 'FormBuilder',
 
         components: {
             BizButton,
+            BizErrorNotifications,
             FieldGroup,
         },
 
@@ -44,10 +75,11 @@
         },
 
         props: {
-            entityId: {type: Number, default: null},
             bagName: { type: String, default: 'formBuilder' },
-            routeName: { type: String, required: true },
+            entityId: {type: Number, default: null},
+            locale: { type: String, required: true },
             routeGetSchemas: { type: String, default: 'forms.schemas' },
+            routeName: { type: String, required: true },
             routeSave: { type: String, default: 'forms.save' },
         },
 
@@ -55,6 +87,28 @@
             'loaded-forbidden',
             'loaded-successfully'
         ],
+
+        setup(props) {
+            const defaultLocale = usePage().props.value.defaultLanguage;
+            const localeOptions = sortBy(
+                usePage().props.value.languageOptions,
+                [
+                    function(locale) {
+                        return locale.id != props.locale ?? defaultLocale;
+                    }
+                ]
+            );
+            let selectedLocale = props.locale;
+
+            if (typeof find(localeOptions, { 'id': selectedLocale }) === 'undefined') {
+                selectedLocale = defaultLocale;
+            }
+
+            return {
+                localeOptions: localeOptions,
+                selectedLocale: ref(selectedLocale),
+            };
+        },
 
         data() {
             return {
@@ -104,6 +158,7 @@
             },
 
             createForm(groupFields) {
+                let fieldValue = null;
                 const form = {
                     id: this.entityId
                 };
@@ -117,6 +172,16 @@
                                 form[ key ] = undefined;
                             } else {
                                 form[ key ] = field.value;
+
+                                if (field.is_translated && field.value.length == 0) {
+                                    fieldValue = {};
+
+                                    this.localeOptions.forEach(function(locale) {
+                                        fieldValue[ locale.id ] = null
+                                    })
+
+                                    form[ key ] = fieldValue;
+                                }
                             }
                         });
                     }
