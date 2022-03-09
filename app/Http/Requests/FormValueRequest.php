@@ -60,13 +60,11 @@ class FormValueRequest extends FormRequest
     private function getForms(): Collection
     {
         $formService = app(FormService::class);
-        $originLanguage = $this->getOriginLanguage($this->get('id'));
 
         if (is_null($this->forms)) {
             $this->forms = $formService->getFormsOnRoute(
                 $this->get('route_name'),
-                Auth::user(),
-                $originLanguage
+                Auth::user()
             );
         }
 
@@ -85,10 +83,5 @@ class FormValueRequest extends FormRequest
         }
 
         return $this->formLocation;
-    }
-
-    private function getOriginLanguage(int $id = null): ?string
-    {
-        return $id ? User::find($id)->origin_language_code : null;
     }
 }
