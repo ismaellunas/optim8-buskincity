@@ -117,7 +117,7 @@
     import FormUserPassword from '@/Pages/User/FormPassword';
     import FormUserProfile from '@/Pages/User/FormProfile';
     import { success as successAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -137,11 +137,15 @@
             title: { type: String, required: true },
         },
 
-        setup(props, { emit }) {
+        setup(props) {
             const userProfileForm = {
+                _method: 'put',
                 first_name: props.record.first_name,
                 last_name: props.record.last_name,
                 email: props.record.email,
+                photo: null,
+                photo_url: props.record.profile_photo_url,
+                profile_photo_media_id: props.record.profile_photo_media_id,
                 language_id: props.record.language_id,
             };
 
@@ -173,7 +177,7 @@
         methods: {
             onSubmit() {
                 const self = this;
-                self.profileForm.put(route(self.baseRouteName+'.update', self.record.id), {
+                self.profileForm.post(route(self.baseRouteName+'.update', self.record.id), {
                     preserveScroll: false,
                     onStart: () => {
                         self.loader = self.$loading.show();
@@ -182,10 +186,14 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                         self.profileForm.isDirty = false;
+                        self.profileForm.photo = null;
                     },
                     onFinish: () => {
                         self.loader.hide();
                         self.isProcessing = false;
+                        self.profileForm.photo = null;
+                        self.profileForm.profile_photo_media_id = self.record.profile_photo_media_id;
+
                         self.biodataFormKey += 1;
                     }
                 });
