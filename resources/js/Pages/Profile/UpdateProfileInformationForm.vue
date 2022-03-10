@@ -52,6 +52,7 @@
 
                 <biz-form-dropdown-search
                     label="Language"
+                    required
                     :close-on-click="true"
                     :message="form.errors.language_id"
                     @search="searchLanguage($event)"
