@@ -69,6 +69,7 @@
     import BizFormSelect from '@/Biz/Form/Select';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
+    import { debounceTime } from '@/Libs/defaults';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -131,7 +132,7 @@
                 } else {
                     this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
-            }, 750),
+            }, debounceTime),
         },
     };
 </script>

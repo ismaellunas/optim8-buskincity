@@ -229,7 +229,7 @@
     import BizModalCard from '@/Biz/ModalCard';
     import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
     import UserIcon from '@/Biz/Icon/User';
-    import { acceptedImageTypes } from '@/Libs/defaults';
+    import { acceptedImageTypes, debounceTime } from '@/Libs/defaults';
     import { includes, find, debounce, isEmpty, filter } from 'lodash';
     import { getCanvasBlob } from '@/Libs/utils';
     import { oops as oopsAlert, confirmDelete } from '@/Libs/alert';
@@ -404,7 +404,7 @@
                 } else {
                     this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
-            }, 750),
+            }, debounceTime),
         },
     }
 </script>
