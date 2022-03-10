@@ -73,13 +73,6 @@
             </template>
 
             <template #actions>
-                <biz-action-message
-                    :is-active="form.recentlySuccessful"
-                    class="mr-3"
-                >
-                    Saved.
-                </biz-action-message>
-
                 <biz-button
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
@@ -93,9 +86,9 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizActionMessage from '@/Biz/ActionMessage';
     import BizButton from '@/Biz/Button';
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
@@ -104,13 +97,12 @@
     import BizFormSection from '@/Biz/FormSection';
     import UserIcon from '@/Biz/Icon/User';
     import { acceptedImageTypes } from '@/Libs/defaults';
+    import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
-    import { confirmDelete } from '@/Libs/alert';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
-            BizActionMessage,
             BizButton,
             BizDropdownItem,
             BizFormDropdownSearch,
@@ -121,6 +113,7 @@
         },
 
         mixins: [
+            MixinHasLoader,
             MixinHasModal,
             MixinHasPageErrors,
         ],
@@ -182,14 +175,22 @@
 
         methods: {
             updateProfileInformation() {
+                this.onStartLoadingOverlay();
+
                 this.form.post(route('user-profile-information.update'), {
                     errorBag: 'updateProfileInformation',
                     preserveScroll: true,
                     onSuccess: () => {
                         this.form.photo = null;
                         this.form.profile_photo_media_id = this.user.profile_photo_media_id;
+
+                        successAlert("Saved");
+                    },
+                    onError: () => {
+                        oopsAlert();
                     },
                     onFinish: () => {
+                        this.onEndLoadingOverlay();
                         this.$emit('after-update-profile');
                     },
                 });
