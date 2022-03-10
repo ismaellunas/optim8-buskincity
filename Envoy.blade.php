@@ -34,6 +34,8 @@
         'QUEUE_CONNECTION',
         'RECAPTCHA_SITE_KEY',
         'RECAPTCHA_SECRET_KEY',
+        'STRIPE_PK',
+        'STRIPE_SK',
         // 'REDIS_CLIENT',
         // 'REDIS_URL',
     ];
