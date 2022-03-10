@@ -35,6 +35,7 @@ class StripeSettingRequest extends FormRequest
             ],
             'amount_options.*.*' => [
                 'numeric',
+                'gt:0',
             ],
             'application_fee_percentage' => [
                 'numeric',
@@ -49,7 +50,8 @@ class StripeSettingRequest extends FormRequest
             ],
             'minimal_amounts.*' => [
                 'nullable',
-                'numeric'
+                'numeric',
+                'gt:0',
             ],
             'payment_currencies' => [
                 'array'

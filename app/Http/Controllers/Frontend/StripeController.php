@@ -44,9 +44,7 @@ class StripeController extends Controller
 
         $defaultCountry = $this->stripeService->getDefaultCountry();
 
-        $isEnabled = $user
-            ->getMetas(['stripe_is_enabled'])
-            ->get('stripe_is_enabled');
+        $isEnabled = $this->stripeService->isStripeConnectEnabled($user);
 
         return Inertia::render('PaymentManagementStripe', compact(
             'balance',

@@ -51,7 +51,7 @@ class UserPolicy extends BasePermissionPolicy
         );
     }
 
-    public function receiveDonation(User $user, Model $selectedUser)
+    public function receiveDonation(?User $user, Model $selectedUser)
     {
         $stripeService = app(StripeService::class);
 
