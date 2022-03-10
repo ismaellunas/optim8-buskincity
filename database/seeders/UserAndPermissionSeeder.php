@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\{
+    Language,
     Permission,
     Role,
     User,
@@ -21,10 +22,13 @@ class UserAndPermissionSeeder extends Seeder
     {
         $this->setPermissionToRoles();
 
+        $englishId = Language::where('code', 'en')->value('id');
+
         $superAdminUser = User::factory()->create([
             'first_name' => 'Super',
             'last_name' => 'Administrator',
             'email' => 'super.administrator@biz.com',
+            'language_id' => $englishId,
         ]);
 
         $superAdminUser->assignRole(config('permission.super_admin_role'));
@@ -34,6 +38,7 @@ class UserAndPermissionSeeder extends Seeder
                 'first_name' => 'Admin',
                 'last_name' => 'Administrator',
                 'email' => 'admin@biz.com',
+                'language_id' => $englishId,
             ]);
 
         $adminUser->assignRole('Administrator');
@@ -45,11 +50,13 @@ class UserAndPermissionSeeder extends Seeder
                     'first_name' => 'Dan',
                     'last_name' => 'Rice',
                     'email' => 'dan.rice@biz.com',
+                    'language_id' => $englishId,
                 ],
                 [
                     'first_name' => 'John',
                     'last_name' => 'Doe',
                     'email' => 'john.doe@biz.com',
+                    'language_id' => $englishId,
                 ],
             ))
             ->create();

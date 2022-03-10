@@ -2,6 +2,7 @@
 
 namespace App\Entities\Forms;
 
+use App\Entities\Forms\Fields\TranslatableField;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
@@ -21,9 +22,13 @@ class Form
     public $formLocation;
 
     protected $data;
+    protected $originLanguage = null;
 
-    public function __construct($id, array $data, User $author = null)
-    {
+    public function __construct(
+        $id,
+        array $data,
+        User $author = null
+    ) {
         $this->id = $id;
         $this->data = $data;
 
@@ -34,6 +39,7 @@ class Form
 
         if ($author) {
             $this->author = $author;
+            $this->originLanguage = $author->origin_language_code;
         }
 
         $this->setFields($data['fields']);
@@ -68,6 +74,10 @@ class Form
 
             if (class_exists($className)) {
                 $fieldObject = new $className($name, $field);
+
+                if ($fieldObject instanceof TranslatableField) {
+                    $fieldObject->setOriginLanguage($this->originLanguage);
+                }
 
                 if ($fieldObject->canBeAccessed($this->author)) {
                     $fieldCollection->put($name, $fieldObject);
@@ -132,7 +142,7 @@ class Form
         $attributes = [];
 
         foreach ($this->fields as $field) {
-            $attributes = array_merge($attributes, $field->getLabels($inputs));
+            $attributes = array_merge($attributes, $field->validationAttributes($inputs));
         }
 
         return $attributes;
@@ -159,5 +169,37 @@ class Form
         }
 
         return true;
+    }
+
+    public function setFieldWithValues($metas): array
+    {
+        $values = collect();
+
+        foreach ($this->data['fields'] as $name => $field) {
+            $className = $this->getFieldClassName($field['type']);
+
+            if (class_exists($className)) {
+                $fieldObject = new $className($name, $field);
+
+                $fieldValues = [
+                    "type" => $field['type'],
+                    "label" => $field['label'],
+                    "value" => array_key_exists($name, $metas)
+                        ? $metas[$name]
+                        : null,
+                ];
+
+                if (
+                    $fieldObject instanceof TranslatableField
+                    && isset($field['translated'])
+                ) {
+                    $fieldValues['is_translated'] = $field['translated'];
+                }
+
+                $values->push($fieldValues);
+            }
+        }
+
+        return $values->all();
     }
 }

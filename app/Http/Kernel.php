@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'localeViewPath'          => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class,
 
         'recaptcha' => \App\Http\Middleware\Recaptcha::class,
+        'redirectLanguage' => \App\Http\Middleware\RedirectLanguage::class,
     ];
 }

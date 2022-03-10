@@ -2,7 +2,6 @@
 
 namespace App\Entities\Forms\Locations;
 
-use App\Models\Media;
 use App\Models\User;
 use Illuminate\Support\Collection;
 

@@ -38,13 +38,6 @@
         </template>
 
         <template #actions>
-            <biz-action-message
-                :is-active="form.recentlySuccessful"
-                class="mr-3"
-            >
-                Saved.
-            </biz-action-message>
-
             <biz-button
                 :class="{ 'opacity-25': form.processing }"
                 :disabled="form.processing"
@@ -57,18 +50,22 @@
 </template>
 
 <script>
-    import BizActionMessage from '@/Biz/ActionMessage';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButton from '@/Biz/Button';
     import BizFormPassword from '@/Biz/Form/Password';
     import BizFormSection from '@/Biz/FormSection';
+    import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
 
     export default {
         components: {
-            BizActionMessage,
             BizButton,
             BizFormPassword,
             BizFormSection,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         data() {
             return {
@@ -82,10 +79,16 @@
 
         methods: {
             updatePassword() {
+                this.onStartLoadingOverlay();
+
                 this.form.put(route('user-password.update'), {
                     errorBag: 'updatePassword',
                     preserveScroll: true,
-                    onSuccess: () => this.form.reset(),
+                    onSuccess: () => {
+                        this.form.reset();
+
+                        successAlert('Saved');
+                    },
                     onError: () => {
                         if (this.form.errors.password) {
                             this.form.reset('password', 'password_confirmation')
@@ -96,7 +99,12 @@
                             this.form.reset('current_password')
                             this.$refs.current_password.$refs.input.focus()
                         }
-                    }
+
+                        oopsAlert();
+                    },
+                    onFinish: () => {
+                        this.onEndLoadingOverlay();
+                    },
                 })
             },
         },
