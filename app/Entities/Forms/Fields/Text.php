@@ -43,28 +43,4 @@ class Text extends TranslatableField
 
         return null;
     }
-
-    public function validationRules(): array
-    {
-        if ($this->translated) {
-            $rules = parent::translatedValidationRules();
-        } else {
-            $rules = parent::validationRules();
-        }
-
-        return $rules;
-    }
-
-    public function validationAttributes(array $inputs = []): array
-    {
-        $attributes = parent::validationAttributes($inputs);
-
-        if ($this->translated) {
-            $attributes = parent::translatedValidationAttributes(
-                array_keys($attributes)
-            );
-        }
-
-        return $attributes;
-    }
 }
