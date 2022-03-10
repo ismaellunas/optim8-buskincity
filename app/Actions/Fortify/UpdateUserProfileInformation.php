@@ -23,7 +23,11 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'first_name' => ['required', 'string', 'max:128'],
             'last_name' => ['required', 'string', 'max:128'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
+            'photo' => [
+                'nullable',
+                'mimes:jpg,jpeg,png',
+                'max:'.config('constants.one_megabyte') * 1,
+            ],
             'language_id' => ['required', 'exists:App\Models\Language,id'],
         ])->validateWithBag('updateProfileInformation');
 
@@ -31,6 +35,11 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             Gate::authorize('update-profile-photo', $user);
 
             $user->updateProfilePhoto($input['photo']);
+        } else if (
+            $input['profile_photo_media_id'] == null
+            && $user->profile_photo_media_id != null
+        ) {
+            $user->deleteProfilePhoto();
         }
 
         if ($input['email'] !== $user->email &&

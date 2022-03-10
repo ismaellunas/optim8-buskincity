@@ -9,13 +9,13 @@ class Phone extends BaseField
     public $label;
     public $phoneNumber = null;
 
-    public function __construct($label, $value, $translate, $userLocale)
+    public function __construct(array $field)
     {
-        parent::__construct($label, $value, $translate, $userLocale);
+        parent::__construct($field);
 
-        if ($value) {
-            if ($value['number']) {
-                $this->phoneNumber = $this->getPhoneNumberFormat($value);
+        if ($this->value) {
+            if (isset($this->value['number'])) {
+                $this->phoneNumber = $this->getPhoneNumberFormat($this->value);
             }
         }
     }

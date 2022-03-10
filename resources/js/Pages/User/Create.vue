@@ -2,10 +2,9 @@
     <app-layout>
         <template #header>{{ title }}</template>
 
-        <biz-error-notifications :errors="$page.props.errors"/>
+        <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="mb-6">
-
             <form
                 class="columns"
                 method="post"
@@ -19,17 +18,18 @@
                         <form-user-profile
                             v-model="form"
                             :role-options="roleOptions"
-                        ></form-user-profile>
+                        />
 
                         <form-user-password
                             v-model="form"
-                        ></form-user-password>
+                        />
 
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
                                 <biz-button-link
                                     :href="route(baseRouteName+'.index')"
-                                    class="is-link is-light">
+                                    class="is-link is-light"
+                                >
                                     Cancel
                                 </biz-button-link>
                             </div>
@@ -43,7 +43,6 @@
                 </div>
             </form>
         </div>
-
     </app-layout>
 </template>
 
@@ -80,6 +79,9 @@
                 role: null,
                 password: null,
                 password_confirmation: null,
+                photo: null,
+                photo_url: null,
+                profile_photo_media_id: null,
             };
 
             return {

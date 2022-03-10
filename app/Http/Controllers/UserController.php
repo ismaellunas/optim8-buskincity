@@ -99,6 +99,10 @@ class UserController extends CrudController
 
         $user->verifiyEmail();
 
+        if ($request->hasFile('photo')) {
+            $user->updateProfilePhoto($request->file('photo'));
+        }
+
         if ($request->has('role')) {
             $user->assignRole($request->role);
         }
@@ -141,6 +145,15 @@ class UserController extends CrudController
      */
     public function update(UserUpdateRequest $request, User $user)
     {
+        if ($request->hasFile('photo')) {
+            $user->updateProfilePhoto($request->file('photo'));
+        } else if (
+            $request->profile_photo_media_id == null
+            && $user->profile_photo_media_id != null
+        ) {
+            $user->deleteProfilePhoto();
+        }
+
         $user->saveFromInputs($request->only([
             'first_name',
             'last_name',
