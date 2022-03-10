@@ -2,17 +2,28 @@
 
 namespace App\Services;
 
-use App\Models\Language;
-use App\Models\Setting;
+use App\Models\{
+    Language,
+    Setting
+};
+use App\Entities\{
+    LifetimeCookie,
+    Caches\SettingCache
+};
+use App\Services\IPService;
 use Illuminate\Support\Collection;
 
 class LanguageService
 {
     public function getShownLanguageOptions(): Collection
     {
-        return Language::shown()
-            ->get(['id', 'name'])
-            ->asOptions('id', 'name');
+        $key = config('constants.setting_cache.shown_language_option');
+
+        return app(SettingCache::class)->remember($key, function () {
+            return Language::shown()
+                ->get(['id', 'name'])
+                ->asOptions('id', 'name');
+        });
     }
 
     public function sync(array $languageIds): void
@@ -62,6 +73,29 @@ class LanguageService
     public function getSupportedLanguageIds(): array
     {
         return $this->getSupportedLanguages()->pluck('id')->all();
+    }
+
+    public function getOriginFromIP(): Language
+    {
+        $clientData = app(IPService::class)->getClientData();
+        $locale = $clientData['location']['language']['code'];
+
+        $language = Language::where('code', $locale)->first();
+
+        return $language ?? $this->getDefault();
+    }
+
+    public function getOriginLanguageFromCookie(): string
+    {
+        $originLanguage = app(LifetimeCookie::class)->get('origin_language');
+
+        if (!$originLanguage) {
+            $originLanguage = $this->getOriginFromIP()->code;
+
+            app(LifetimeCookie::class)->set('origin_language', $originLanguage);
+        }
+
+        return $originLanguage;
     }
 
 }

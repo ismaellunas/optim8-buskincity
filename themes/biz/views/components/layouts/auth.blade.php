@@ -63,7 +63,10 @@
 
     <body class="font-sans antialiased">
         {!! $trackingCodeAfterBody !!}
+
         <div id="app">
+            <loading-overlay id="loader" class="is-hidden"></loading-overlay>
+
             <section class="hero is-fullheight">
                 <div class="hero-body">
                     <div class="container has-text-centered">
@@ -129,6 +132,10 @@
                     }
 
                 });
+            }
+
+            function setLoader() {
+                document.getElementById('loader').classList.remove('is-hidden');
             }
         </script>
 

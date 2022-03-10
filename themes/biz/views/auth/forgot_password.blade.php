@@ -29,7 +29,7 @@
                         </div>
                     @endif
 
-                    <form method="post" action="{{ route('password.email') }}">
+                    <form method="post" action="{{ route('password.email') }}" onsubmit="setLoader()">
                         <div>
                             @csrf
 
