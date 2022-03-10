@@ -48,10 +48,12 @@ class DatabaseSeeder extends Seeder
             $administratorRole->givePermissionTo($permission);
         }
 
+        $englishId = Language::where('code', 'en')->value('id');
         $superAdminUser = User::factory()->create([
             'first_name' => 'Super',
             'last_name' => 'Administrator',
             'email' => 'super.administrator@biz.com',
+            'language_id' => $englishId,
         ]);
 
         $superAdminUser->assignRole(config('permission.super_admin_role'));
@@ -61,9 +63,21 @@ class DatabaseSeeder extends Seeder
                 'first_name' => 'Admin',
                 'last_name' => 'Administrator',
                 'email' => 'admin@biz.com',
+                'language_id' => $englishId,
             ]);
 
         $adminUser->assignRole('Administrator');
+
+        $performer = User::factory()->create([
+            'first_name' => 'Dan',
+            'last_name' => 'Rice',
+            'email' => 'dan.rice@biz.com',
+        ]);
+
+        $performerRole = Role::whereName('Performer')->first();
+        $performerRole->syncPermissions(['payment.management']);
+
+        $performer->assignRole('Performer');
 
         $category = Category::factory()
             ->hasTranslations(1, ['name' => 'News'])

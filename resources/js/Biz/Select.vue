@@ -3,6 +3,7 @@
         <select
             v-model="selected"
             :disabled="disabled"
+            :name="name"
             @change="$emit('change', $event)"
         >
             <option
@@ -22,7 +23,7 @@
 
     export default {
         name: 'BizSelect',
-        props: ['modelValue', 'class', 'disabled', 'placeholder'],
+        props: ['modelValue', 'class', 'disabled', 'placeholder', 'name'],
         emits: ['change', 'update:modelValue'],
 
         setup(props, { emit }) {

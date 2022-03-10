@@ -14,7 +14,7 @@
         {{ $post->meta_description }}
     </x-slot>
 
-    <section class="section">
+    <section class="section theme-font">
         <div
             id="main-container"
             class="container mt-4"

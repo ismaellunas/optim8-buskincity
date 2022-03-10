@@ -252,7 +252,7 @@
                         </div>
                         <div class="column">
                             <biz-form-dropdown-search
-                                label="Font Weight"
+                                label="Font Family"
                                 :close-on-click="true"
                                 @search="searchFont($event, 'buttons_font_family')"
                             >
@@ -411,7 +411,8 @@
                     'has-text-weight-bold': "Bold",
                 },
                 styleOptions: {
-                    'is-capitalize': "Capitalize",
+                    '': 'Default',
+                    'is-capitalized': "Capitalize",
                     'is-lowercase': "Lowercase",
                     'is-uppercase': "Uppercase",
                     'is-italic': "Italic",

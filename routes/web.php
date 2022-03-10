@@ -3,14 +3,17 @@
 use App\Facades\Localization;
 use App\Http\Controllers\{
     ChangeLanguageController,
+    CustomOAuthController,
     DashboardController,
     FormController,
+    Frontend\DonationController,
     Frontend\PageController,
     Frontend\PostCategoryController,
     Frontend\PostController,
     Frontend\ProfileController as FrontendProfileController,
     NewPasswordController,
     PasswordResetLinkController,
+    StripeController,
 };
 use Illuminate\Support\Facades\Route;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
@@ -36,7 +39,36 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/user/profile', function () {
         return redirect()->route('dashboard');
     })->name('profile.show');
+
+    Route::prefix('/payment-management/stripe')
+        ->name('payment-management.stripe.')
+        ->middleware(['can:payment.management'])
+        ->group(function() {
+            Route::get('/', [StripeController::class, 'show'])
+                ->name('show');
+
+            Route::post('create-connected-account', [StripeController::class, 'createThenRedirect'])
+                ->name('create-connected-account');
+
+            Route::get('redirect-to-stripe', [StripeController::class, 'redirectToStripeAccount'])
+                ->name('redirect-to-stripe');
+
+            Route::get('account-link', [StripeController::class, 'accountLink'])
+                ->name('account-link');
+
+            Route::get('reauth', [StripeController::class, 'refresh'])
+                ->middleware('signed')
+                ->name('refresh');
+
+            Route::get('return', [StripeController::class, 'return'])
+                ->middleware('signed')
+                ->name('return');
+        });
 });
+
+Route::get('/oauth/{provider}/callback', [CustomOAuthController::class, 'handleProviderCallback'])
+    ->middleware(config('socialstream.middleware', ['web']))
+    ->name('oauth.callback');
 
 Route::get('language/{new_locale}', ChangeLanguageController::class)
     ->where('new_locale', '[a-zA-Z]{2}')
@@ -56,7 +88,9 @@ Route::group([
     'prefix' => Localization::setLocale(),
     'middleware' => [ 'localizationRedirect' ]
 ], function () {
-    Route::get('/', [PageController::class, 'homePage'])->name('homepage');
+    Route::get('/', [PageController::class, 'homePage'])
+        ->name('homepage')
+        ->middleware('redirectLanguage');
 
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');
@@ -69,14 +103,15 @@ Route::group([
         ->name('blog.show');
 
     Route::get('/{page_translation}', [PageController::class, 'show'])
-        ->name('frontend.pages.show');
+        ->name('frontend.pages.show')
+        ->middleware('redirectLanguage');
 
-    // Route for Test translation
-    Route::get('/test/translation', function () {
-        return view('test.translation', [
-            'title' => 'Test Translation'
-        ]);
-    })->name('test.translation');
+    Route::get('/profiles/{user}', [FrontendProfileController::class, 'show'])
+    ->name('frontend.profiles');
+    Route::get('donations/{user}/success', [DonationController::class, 'success'])
+        ->name('donations.success');
+    Route::post('donations/checkout/{user}', [DonationController::class, 'checkout'])
+        ->name('donations.checkout');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
@@ -92,5 +127,3 @@ Route::name('forms.')->prefix('forms')->group(function () {
     Route::post('save', [FormController::class, 'submit'])
         ->name('save');
 });
-
-Route::get('frontend/profiles/{user}', [FrontendProfileController::class, 'show']);

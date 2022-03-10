@@ -17,12 +17,14 @@
                 v-show="isShowPassword"
                 icon="fas fa-eye-slash"
                 type="button"
+                tabindex="-1"
                 @click="changeTypeInput()"
             />
             <biz-button-icon
                 v-show="!isShowPassword"
                 icon="fas fa-eye"
                 type="button"
+                tabindex="-1"
                 @click="changeTypeInput()"
             />
         </div>
