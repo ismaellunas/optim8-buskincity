@@ -30,9 +30,10 @@
         'GOOGLE_API_KEY',
         'GOOGLE_CLIENT_ID',
         'GOOGLE_CLIENT_SECRET',
+        'IPREGISTRY_API_KEY',
         'QUEUE_CONNECTION',
         'RECAPTCHA_SITE_KEY',
-        'RECAPTCHA_SECRET_KEY'
+        'RECAPTCHA_SECRET_KEY',
         // 'REDIS_CLIENT',
         // 'REDIS_URL',
     ];
