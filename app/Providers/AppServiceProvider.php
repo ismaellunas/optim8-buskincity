@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Entities\LifetimeCookie;
 use App\Entities\Caches\{
     CountryCache,
     MenuCache,
@@ -12,6 +13,7 @@ use App\Entities\Caches\{
 use App\Services\{
     CountryService,
     FormService,
+    IPService,
     LanguageService,
     MediaService,
     MenuService,
@@ -28,6 +30,8 @@ use Illuminate\Support\ServiceProvider;
 class AppServiceProvider extends ServiceProvider
 {
     public $singletons = [
+        LifetimeCookie::class => LifetimeCookie::class,
+
         CountryCache::class => CountryCache::class,
         MenuCache::class => MenuCache::class,
         SettingCache::class => SettingCache::class,
@@ -36,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
 
         CountryService::class => CountryService::class,
         FormService::class => FormService::class,
+        IPService::class => IPService::class,
         LanguageService::class => LanguageService::class,
         MediaService::class => MediaService::class,
         MenuService::class => MenuService::class,

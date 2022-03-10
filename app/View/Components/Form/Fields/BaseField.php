@@ -2,7 +2,6 @@
 
 namespace App\View\Components\Form\Fields;
 
-use App\Services\TranslationService;
 use Illuminate\View\Component;
 
 abstract class BaseField extends Component
@@ -10,8 +9,6 @@ abstract class BaseField extends Component
     public $label;
     public $value;
 
-    protected $translate = false;
-    protected $userLocale;
     protected $componentPrefix = "components.form.fields.";
 
     /**
@@ -19,12 +16,11 @@ abstract class BaseField extends Component
      *
      * @return void
      */
-    public function __construct($label, $value, $translate, $userLocale)
-    {
-        $this->label = $label;
-        $this->translate = $translate;
-        $this->userLocale = $userLocale;
-        $this->value = $value;
+    public function __construct(
+        array $field,
+    ) {
+        $this->label = isset($field['label']) ? $field['label'] : null;
+        $this->value = isset($field['value']) ? $field['value'] : null;
     }
 
     /**
@@ -37,23 +33,11 @@ abstract class BaseField extends Component
         return view($this->componentPrefix . $this->getViewName());
     }
 
-    protected function getViewName(): string
+    public function getViewName(): string
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/',
             '-$0',
             (new \ReflectionClass($this))->getShortName()
         ));
-    }
-
-    protected function setValueTranslation($value): ?string
-    {
-        if (!$this->translate || !$value) {
-            return $value;
-        }
-
-        $currentLocale = TranslationService::currentLanguage();
-        $userLocale = $this->userLocale ?? TranslationService::getDefaultLocale();
-
-        return $value[$currentLocale] ?? $value[$userLocale];
     }
 }
