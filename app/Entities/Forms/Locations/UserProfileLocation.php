@@ -9,7 +9,7 @@ class UserProfileLocation
 {
     public $entityId;
 
-    public $entity;
+    private $entity;
     private $savedResults;
 
     public function __construct($userId = null)

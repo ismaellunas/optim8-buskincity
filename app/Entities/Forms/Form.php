@@ -2,12 +2,9 @@
 
 namespace App\Entities\Forms;
 
+use App\Entities\Forms\Fields\TranslatableField;
 use App\Models\User;
-use App\Services\TranslationService;
-use Illuminate\Support\{
-    Collection,
-    Str
-};
+use Illuminate\Support\Collection;
 
 class Form
 {
@@ -25,9 +22,13 @@ class Form
     public $formLocation;
 
     protected $data;
+    protected $originLanguage = null;
 
-    public function __construct($id, array $data, User $author = null)
-    {
+    public function __construct(
+        $id,
+        array $data,
+        User $author = null
+    ) {
         $this->id = $id;
         $this->data = $data;
 
@@ -38,6 +39,7 @@ class Form
 
         if ($author) {
             $this->author = $author;
+            $this->originLanguage = $author->origin_language_code;
         }
 
         $this->setFields($data['fields']);
@@ -72,6 +74,10 @@ class Form
 
             if (class_exists($className)) {
                 $fieldObject = new $className($name, $field);
+
+                if ($fieldObject instanceof TranslatableField) {
+                    $fieldObject->setOriginLanguage($this->originLanguage);
+                }
 
                 if ($fieldObject->canBeAccessed($this->author)) {
                     $fieldCollection->put($name, $fieldObject);
@@ -125,7 +131,7 @@ class Form
                 $field->storedValue = $storedValue;
             }
 
-            $rules = array_merge($rules, $field->validationRules($location->entity));
+            $rules = array_merge($rules, $field->validationRules());
         }
 
         return $rules;
@@ -136,37 +142,10 @@ class Form
         $attributes = [];
 
         foreach ($this->fields as $field) {
-            if ($field->translate) {
-                $attributes = array_merge(
-                    $attributes,
-                    $this->translatedAttributes(
-                        array_keys($field->getLabels($inputs))
-                    )
-                );
-            } else {
-                $attributes = array_merge($attributes, $field->getLabels($inputs));
-            }
+            $attributes = array_merge($attributes, $field->validationAttributes($inputs));
         }
 
         return $attributes;
-    }
-
-    private function translatedAttributes(array $attributes): array
-    {
-        $translatedAttributes = [];
-        foreach (TranslationService::getLocales() as $locale) {
-            foreach ($attributes as $attribute) {
-                $attributeKey = $attribute.'.'.$locale;
-
-                $attributeName = Str::replace("_", " ", $attribute);
-
-                $translatedAttributes[$attributeKey] = (
-                    Str::title($attributeName).
-                    " (".TranslationService::getLanguageFromLocale($locale).")"
-                );
-            }
-        }
-        return $translatedAttributes;
     }
 
     public function canBeAccessed(): bool
@@ -196,17 +175,29 @@ class Form
     {
         $values = collect();
 
-        foreach ($this->data['fields'] as $key => $field) {
-            $values->push(
-                [
+        foreach ($this->data['fields'] as $name => $field) {
+            $className = $this->getFieldClassName($field['type']);
+
+            if (class_exists($className)) {
+                $fieldObject = new $className($name, $field);
+
+                $fieldValues = [
                     "type" => $field['type'],
                     "label" => $field['label'],
-                    "value" => array_key_exists($key, $metas)
-                        ? $metas[$key]
+                    "value" => array_key_exists($name, $metas)
+                        ? $metas[$name]
                         : null,
-                    "can_translate" => $field['can_translate'],
-                ]
-            );
+                ];
+
+                if (
+                    $fieldObject instanceof TranslatableField
+                    && isset($field['translated'])
+                ) {
+                    $fieldValues['is_translated'] = $field['translated'];
+                }
+
+                $values->push($fieldValues);
+            }
         }
 
         return $values->all();

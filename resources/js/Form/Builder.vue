@@ -77,7 +77,7 @@
         props: {
             bagName: { type: String, default: 'formBuilder' },
             entityId: {type: Number, default: null},
-            locale: { type: String, required: true },
+            locale: { type: String, default: null },
             routeGetSchemas: { type: String, default: 'forms.schemas' },
             routeName: { type: String, required: true },
             routeSave: { type: String, default: 'forms.save' },
@@ -90,15 +90,16 @@
 
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
+            let selectedLocale = props.locale ?? defaultLocale;
+
             const localeOptions = sortBy(
                 usePage().props.value.languageOptions,
                 [
                     function(locale) {
-                        return locale.id != props.locale ?? defaultLocale;
+                        return locale.id != selectedLocale;
                     }
                 ]
             );
-            let selectedLocale = props.locale;
 
             if (typeof find(localeOptions, { 'id': selectedLocale }) === 'undefined') {
                 selectedLocale = defaultLocale;
@@ -173,7 +174,7 @@
                             } else {
                                 form[ key ] = field.value;
 
-                                if (field.can_translate && field.value.length == 0) {
+                                if (field.is_translated && field.value.length == 0) {
                                     fieldValue = {};
 
                                     this.localeOptions.forEach(function(locale) {

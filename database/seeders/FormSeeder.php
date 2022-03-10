@@ -40,7 +40,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => [],
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
                 "phone" => [
                     "type" => "Phone",
@@ -53,7 +53,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => [],
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
                 "education" => [
                     "type" => "Select",
@@ -68,7 +68,7 @@ class FormSeeder extends Seeder
                         "rules" => [],
                         "messages" => []
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
                 "next_of_kin" => [
                     "type" => "Text",
@@ -88,7 +88,7 @@ class FormSeeder extends Seeder
                     "visibility" => [
                         "roles" => ["Administrator"]
                     ],
-                    "can_translate" => true,
+                    "translated" => true,
                 ],
                 "blood_type" => [
                     "type" => "Radio",
@@ -110,14 +110,14 @@ class FormSeeder extends Seeder
                     "visibility" => [
                         "roles" => ["Administrator"]
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
 
                 "about_me" => [
                     "type" => "Textarea",
                     "label" => "About Me",
                     "placeholder" => "How to make the world see you.",
-                    "default_value" => null,
+                    "default_value" => [],
                     "readonly" => false,
                     "disabled" => false,
                     "maxlength" => "",
@@ -127,6 +127,7 @@ class FormSeeder extends Seeder
                         "messages" => []
                     ],
                     "visibility" => [],
+                    "translated" => true,
                 ],
 
                 "facebook" => [
@@ -188,7 +189,7 @@ class FormSeeder extends Seeder
                         "rules" => [],
                         "messages" => [],
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
 
                 "criminal_record" => [
@@ -207,7 +208,7 @@ class FormSeeder extends Seeder
                     "visibility" => [
                         "roles" => ['Administrator']
                     ],
-                    "can_translate" => true,
+                    "translated" => true,
                 ],
                 "video" => [
                     "type" => "Video",
@@ -221,7 +222,7 @@ class FormSeeder extends Seeder
                     ],
                     "visibility" => [
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
 
                 "term_and_condition" => [
@@ -241,7 +242,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => [],
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
             ]
         ];
@@ -273,7 +274,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "can_translate" => true,
+                    "translated" => true,
                 ],
                 "postcode" => [
                     "type" => "Text",
@@ -290,7 +291,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
             ]
         ];
@@ -322,7 +323,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "can_translate" => false,
+                    "translated" => false,
                 ],
             ]
         ];

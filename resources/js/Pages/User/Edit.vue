@@ -88,7 +88,7 @@
                             :key="biodataFormKey"
                             route-name="admin.users.edit"
                             :entity-id="record.id"
-                            :locale="record.origin_language_code"
+                            :locale="$page.props.user.origin_language_code"
                             @loaded-successfully="isFormBuilderShown = true"
                         >
                             <template #buttons>

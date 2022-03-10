@@ -17,9 +17,9 @@
                     :src="computedPhotoUrl"
                 />
 
-                <user-icon
+                <slot
                     v-else
-                    style="width: 64px;"
+                    name="default-image-view"
                 />
             </div>
 
@@ -152,7 +152,6 @@
     import BizInputFile from '@/Biz/InputFile';
     import BizModalCard from '@/Biz/ModalCard';
     import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
-    import UserIcon from '@/Biz/Icon/User';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { includes } from 'lodash';
     import { oops as oopsAlert } from '@/Libs/alert';
@@ -169,7 +168,6 @@
             BizInputFile,
             BizModalCard,
             BizModalImageEditor,
-            UserIcon,
         },
 
         mixins: [
