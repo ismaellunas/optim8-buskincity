@@ -9,8 +9,10 @@ use App\Actions\{
     Fortify\View\PasswordResetLinkView,
     Fortify\View\ResetPasswordView,
     Fortify\View\TwoFactorChallengeView,
+    Fortify\View\RegisterView,
     Jetstream\DeleteUser,
 };
+
 use App\Http\Responses\{
     LoginResponse,
     LogoutResponse,
@@ -56,6 +58,7 @@ class JetstreamServiceProvider extends ServiceProvider
             Fortify::requestPasswordResetLinkView([new PasswordResetLinkView(), '__invoke']);
             Fortify::loginView([new AuthenticateLoginView(), '__invoke']);
             Fortify::resetPasswordView([new ResetPasswordView(), '__invoke']);
+            Fortify::registerView([new RegisterView(), '__invoke']);
 
             // Authentication
             Fortify::authenticateUsing([new AuthenticateLoginAttempt(), '__invoke']);

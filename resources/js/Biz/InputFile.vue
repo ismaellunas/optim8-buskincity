@@ -52,19 +52,13 @@
                 default: true
             },
             modelValue: {
-                type: [File, null],
+                type: [File, Blob, null],
                 required: true,
             },
             disabled: {
                 type: Boolean,
                 default: false,
             },
-        },
-
-        data() {
-            return {
-                isDelayed: false
-            }
         },
 
         emits: [
@@ -76,6 +70,12 @@
             return {
                 file: useModelWrapper(props, emit),
             };
+        },
+
+        data() {
+            return {
+                isDelayed: false
+            }
         },
 
         computed: {

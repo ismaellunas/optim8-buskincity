@@ -45,6 +45,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'profile_photo_media_id',
+        'language_id',
     ];
 
     /**
@@ -76,6 +77,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $appends = [
         'profile_photo_url',
         'full_name',
+        'origin_language_code'
     ];
 
     /* Relationship: */
@@ -109,6 +111,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphMany(Media::class, 'medially');
     }
 
+    public function originLanguage()
+    {
+        return $this->belongsTo(Language::class, 'language_id');
+    }
+
     public function scopeSearch($query, string $term)
     {
         return $query->where(function ($query) use ($term) {
@@ -131,12 +138,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return trim(ucfirst($this->first_name) . ' ' . ucfirst($this->last_name));
     }
 
-    /**
-     * Get the URL to the user's profile photo.
-     *
-     * @return string
-     */
-    public function getProfilePhotoUrlAttribute()
+    public function getProfilePhotoUrlAttribute(): ?string
     {
         $url = null;
         if ($this->profilePhoto) {
@@ -161,11 +163,24 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasRole('Administrator');
     }
 
+    public function getOriginLanguageCodeAttribute(): ?string
+    {
+        return $this->originLanguage
+            ? $this->originLanguage->code
+            : null;
+    }
+
+    public function getRoleNameAttribute(): string
+    {
+        return $this->getRoleNames()->first();
+    }
+
     public function saveFromInputs(array $inputs)
     {
         $this->first_name = $inputs['first_name'];
         $this->last_name = $inputs['last_name'];
         $this->email = $inputs['email'];
+        $this->language_id = $inputs['language_id'];
         $this->save();
     }
 

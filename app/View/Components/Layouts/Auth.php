@@ -2,10 +2,10 @@
 
 namespace App\View\Components\Layouts;
 
-class Blank extends Master
+class Auth extends Master
 {
     public function render()
     {
-        return view('components.layouts.blank');
+        return view('components.layouts.auth');
     }
 }
