@@ -42,6 +42,28 @@ abstract class TranslatableField extends BaseField
         $this->originLanguage = $languageCode ?? $this->defaultLocale;
     }
 
+    public function validationRules(): array
+    {
+        if ($this->translated) {
+            return $this->translatedValidationRules();
+        }
+
+        return parent::validationRules();
+    }
+
+    public function validationAttributes(array $inputs = []): array
+    {
+        $attributes = parent::validationAttributes($inputs);
+
+        if ($this->translated) {
+            $attributes = $this->translatedValidationAttributes(
+                array_keys($attributes)
+            );
+        }
+
+        return $attributes;
+    }
+
     public function translatedValidationRules(): array
     {
         $rules = [];

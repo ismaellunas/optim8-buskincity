@@ -92,7 +92,8 @@ Route::group([
     'middleware' => [ 'localizationRedirect' ]
 ], function () {
     Route::get('/', [PageController::class, 'homePage'])
-        ->name('homepage');
+        ->name('homepage')
+        ->middleware('redirectLanguage');
 
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');
@@ -105,7 +106,8 @@ Route::group([
         ->name('blog.show');
 
     Route::get('/{page_translation}', [PageController::class, 'show'])
-        ->name('frontend.pages.show');
+        ->name('frontend.pages.show')
+        ->middleware('redirectLanguage');
 
     Route::get('/profiles/{user}', [FrontendProfileController::class, 'show'])
     ->name('frontend.profiles');

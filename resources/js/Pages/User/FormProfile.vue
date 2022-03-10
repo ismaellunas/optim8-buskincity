@@ -1,5 +1,23 @@
 <template>
-    <div>
+    <div class="mb-3">
+        <biz-form-image-editable
+            v-model="form.photo"
+            v-model:photo-url="form.photo_url"
+            modal-label="Profile Photo"
+            delete-label="Remove Photo"
+            :photo-url="form.photo_url"
+            :show-delete-button="form.photo_url != null"
+            :message="error('photo')"
+            @on-reset-value="resetImageForm()"
+            @on-delete-image="onDeleteImage()"
+        >
+            <template #default-image-view>
+                <user-icon
+                    style="width: 64px;"
+                />
+            </template>
+        </biz-form-image-editable>
+
         <biz-form-input
             v-model="form.first_name"
             label="First Name"
@@ -66,9 +84,12 @@
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
     import BizFormInput from '@/Biz/Form/Input';
+    import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSelect from '@/Biz/Form/Select';
-    import { find, debounce, isEmpty, filter } from 'lodash';
+    import UserIcon from '@/Biz/Icon/User';
     import { useModelWrapper } from '@/Libs/utils';
+    import { confirmDelete } from '@/Libs/alert';
+    import { find, debounce, isEmpty, filter } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -78,7 +99,9 @@
             BizDropdownItem,
             BizFormDropdownSearch,
             BizFormInput,
+            BizFormImageEditable,
             BizFormSelect,
+            UserIcon,
         },
 
         mixins: [
@@ -88,7 +111,8 @@
         props: {
             canSetRole: {type: Boolean, default: true},
             modelValue: {},
-            roleOptions: Array,
+            photoUrl: {type: [String, null], default: null},
+            roleOptions: {type: Array, default: () => []},
         },
 
         setup(props, { emit }) {
@@ -123,6 +147,22 @@
         },
 
         methods: {
+            resetImageForm() {
+                this.form.reset('photo', 'photo_url', 'profile_photo_media_id');
+            },
+
+            onDeleteImage() {
+                const self = this;
+
+                confirmDelete().then((result) => {
+                    if (result.isConfirmed) {
+                        self.form.photo = null;
+                        self.form.photo_url = null;
+                        self.form.profile_photo_media_id = null;
+                    }
+                })
+            },
+
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
                     this.filteredLanguages = filter(this.languageOptions, function (language) {

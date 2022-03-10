@@ -57,7 +57,7 @@
                     </h2>
                     <div class="has-text-left">
 
-                        <form action="{{ route('login') }}" method="post">
+                        <form action="{{ route('login') }}" method="post" onsubmit="setLoader()">
                             @csrf
                             <div class="field">
                                 <label class="label">Email</label>
