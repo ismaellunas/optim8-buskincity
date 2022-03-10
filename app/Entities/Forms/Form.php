@@ -22,17 +22,15 @@ class Form
     public $formLocation;
 
     protected $data;
-    protected $originLanguage;
+    protected $originLanguage = null;
 
     public function __construct(
         $id,
         array $data,
-        User $author = null,
-        ?string $originLanguage = null
+        User $author = null
     ) {
         $this->id = $id;
         $this->data = $data;
-        $this->originLanguage = $originLanguage;
 
         $this->name = $data['name'];
         $this->title = $data['title'] ?? null;
@@ -41,6 +39,7 @@ class Form
 
         if ($author) {
             $this->author = $author;
+            $this->originLanguage = $author->origin_language_code;
         }
 
         $this->setFields($data['fields']);
