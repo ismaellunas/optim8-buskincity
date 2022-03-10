@@ -11,12 +11,14 @@ require("./bootstrap");
  */
 import ExampleComponent from './components/ExampleComponent';
 import FormDonation from './components/FormDonation';
+import LoadingOverlay from './components/LoadingOverlay';
 import { components as defaultComponents } from '@/frontend-bootstrap';
 import { createApp } from "vue";
 
 const components = {
     ExampleComponent,
     FormDonation,
+    LoadingOverlay,
 };
 
 const app = createApp({
