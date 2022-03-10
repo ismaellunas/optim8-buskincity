@@ -154,12 +154,14 @@
                                                     v-model="tempAmountOptions[ currency ]"
                                                     type="number"
                                                     min="1"
+                                                    @keydown.enter.prevent="addAmount(currency)"
                                                 >
                                                     <template #afterInput>
                                                         <p class="control">
                                                             <button
                                                                 class="button is-primary"
                                                                 type="button"
+                                                                :disabled="!canAddAmountOption(tempAmountOptions[ currency ])"
                                                                 @click.prevent="addAmount(currency)"
                                                             >
                                                                 <i class="fas fa-plus-circle" />
@@ -356,12 +358,20 @@
             }, 750),
 
             addAmount(currency) {
-                if (this.tempAmountOptions[ currency ]) {
+                if (this.canAddAmountOption(this.tempAmountOptions[ currency ])) {
                     this.form.amount_options[ currency ].push(
-                        this.tempAmountOptions[ currency ]
+                        parseInt(this.tempAmountOptions[ currency ])
                     );
                     this.tempAmountOptions[ currency ] = '';
                 }
+            },
+
+            canAddAmountOption(amount) {
+                return (
+                    amount
+                    && /^\+?\d+$/.test(amount.replace(/\s/g,''))
+                    && parseInt(amount) > 0
+                );
             },
 
             deleteAmount(currency, index) {
