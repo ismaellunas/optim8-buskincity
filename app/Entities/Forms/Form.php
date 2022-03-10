@@ -189,7 +189,10 @@ class Form
                         : null,
                 ];
 
-                if ($fieldObject instanceof TranslatableField) {
+                if (
+                    $fieldObject instanceof TranslatableField
+                    && isset($field['translated'])
+                ) {
                     $fieldValues['is_translated'] = $field['translated'];
                 }
 
