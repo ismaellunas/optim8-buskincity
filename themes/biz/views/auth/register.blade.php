@@ -58,7 +58,7 @@
                     </h2>
                     <div class="has-text-left">
 
-                        <form action="{{ route('register') }}" method="post">
+                        <form action="{{ route('register') }}" method="post" onsubmit="setLoader()">
                             @csrf
 
                             <div class="field">

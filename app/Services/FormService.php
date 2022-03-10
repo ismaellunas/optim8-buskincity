@@ -43,8 +43,7 @@ class FormService
 
     public function getFormsOnRoute(
         string $locationRoute,
-        User $author = null,
-        ?string $originLanguage = null
+        User $author = null
     ): Collection {
 
         $forms = collect();
@@ -56,7 +55,7 @@ class FormService
 
             $className = $this->getFormClassName($model->type);
 
-            $form = new $className($model->id, $model->data, $author,$originLanguage);
+            $form = new $className($model->id, $model->data, $author);
 
             $form->model = $model;
 

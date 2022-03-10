@@ -117,7 +117,7 @@ class FormSeeder extends Seeder
                     "type" => "Textarea",
                     "label" => "About Me",
                     "placeholder" => "How to make the world see you.",
-                    "default_value" => null,
+                    "default_value" => [],
                     "readonly" => false,
                     "disabled" => false,
                     "maxlength" => "",
@@ -127,6 +127,7 @@ class FormSeeder extends Seeder
                         "messages" => []
                     ],
                     "visibility" => [],
+                    "translated" => true,
                 ],
 
                 "facebook" => [
