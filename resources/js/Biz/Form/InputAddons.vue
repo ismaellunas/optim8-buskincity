@@ -1,12 +1,17 @@
 <template>
-    <biz-field>
-        <biz-label :is-required="required">
+    <biz-field :class="wrapperClass">
+        <biz-label
+            v-if="label"
+            :is-required="required"
+        >
             {{ label }}
         </biz-label>
 
         <biz-field class="has-addons mb-0">
             <div class="control is-expanded">
                 <biz-input
+                    ref="input"
+                    v-bind="$attrs"
                     :disabled="disabled"
                     :placeholder="placeholder"
                     :required="required"
@@ -38,6 +43,7 @@
             BizInputError,
             BizLabel,
         },
+        inheritAttrs: false,
         emits: [
             'on-blur',
             'on-keypress',
@@ -56,6 +62,10 @@
                 type: Boolean,
                 default: false
             },
+            wrapperClass: {
+                type: [String, Array, Object],
+                default: () => [],
+            }
         },
     };
 </script>

@@ -16,10 +16,10 @@ class StripeFormDonation extends Component
     {
         $stripeService = app(StripeService::class);
 
-        $this->currencyOptions = $stripeService->getCurrencyOptions();
         $this->amountOptions = $stripeService->getAmountOptions();
-        $this->submitUrl = route('donations.checkout', [$userId]);
+        $this->currencyOptions = $stripeService->getAvailableCurrencyOptions();
         $this->listMinimalPayments = $stripeService->getListMinimalPayments();
+        $this->submitUrl = route('donations.checkout', [$userId]);
     }
 
     public function render()

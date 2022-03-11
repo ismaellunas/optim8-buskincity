@@ -1,6 +1,6 @@
 <template>
     <table class="table">
-        <slot></slot>
+        <slot />
     </table>
 </template>
 
