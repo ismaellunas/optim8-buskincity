@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
             $table->boolean('is_suspended')->default('false');
+            $table->string("country_code", 2)->nullable();
             $table->timestamps();
         });
     }

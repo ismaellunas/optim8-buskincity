@@ -24,7 +24,7 @@
                             </div>
                             <div class="level-right">
                                 <div class="level-item">
-                                    <span class=mr-3>
+                                    <span class="mr-3">
                                         Already have an account?
                                     </span>
                                     <biz-button-link :href="route('login')">
@@ -72,6 +72,9 @@
                                     <h2 class="subtitle">
                                         Lorem ipsum dolor sit amet.
                                     </h2>
+
+                                    <biz-error-notifications :errors="$page.props.errors" />
+
                                     <div class="has-text-left">
                                         <form @submit.prevent="submit">
                                             <biz-form-input
@@ -144,12 +147,13 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
-    import BizSocialMediaList from '@/Biz/SocialMediaList'
+    import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormPassword from '@/Biz/Form/Password';
-    import BizButton from '@/Biz/Button';
+    import BizSocialMediaList from '@/Biz/SocialMediaList';
+    import { find } from 'lodash';
 
     export default {
         components: {
@@ -160,6 +164,7 @@
             BizErrorNotifications,
             BizButton
         },
+
         mixins: [
             MixinHasPageErrors,
         ],
@@ -174,8 +179,42 @@
                     password: '',
                     password_confirmation: '',
                     terms: true,
-                })
+                }),
             }
+        },
+
+        computed: {
+            selectedCountry: {
+                get() {
+                    if (this.form.country_code) {
+                        let country = find(
+                            this.countryOptions,
+                            ['id', this.form.country_code]
+                        );
+                        return country.value;
+                    }
+                    return '';
+                },
+                set(country) {
+                    this.form.country_code = country.id;
+                }
+            },
+
+            selectedLanguage: {
+                get() {
+                    if (this.form.language_id) {
+                        let language = find(
+                            this.languageOptions,
+                            ['id', parseInt(this.form.language_id)]
+                        );
+                        return language.value;
+                    }
+                    return '';
+                },
+                set(language) {
+                    this.form.language_id = language.id;
+                }
+            },
         },
 
         methods: {
@@ -184,9 +223,11 @@
                     onFinish: () => this.form.reset('password', 'password_confirmation'),
                 })
             },
+
             toggleIsSocialMediaLogin() {
                 this.isSocialMediaLogin = !this.isSocialMediaLogin;
             },
+
             backOrOpenSocialList() {
                 if (!this.isSocialMediaLogin) {
                     this.toggleIsSocialMediaLogin();
