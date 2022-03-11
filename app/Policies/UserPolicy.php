@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\StripeService;
 
 class UserPolicy extends BasePermissionPolicy
 {
@@ -39,6 +40,24 @@ class UserPolicy extends BasePermissionPolicy
         return (
             parent::update($user, $selectedUser)
             || $user->id == $selectedUser->id
+        );
+    }
+
+    public function updateStripeConnect(User $user)
+    {
+        return (
+            app(StripeService::class)->isEnabled()
+            && $user->can('payment.management')
+        );
+    }
+
+    public function receiveDonation(?User $user, Model $selectedUser)
+    {
+        $stripeService = app(StripeService::class);
+
+        return (
+            $stripeService->isEnabled()
+            && $stripeService->isStripeConnectEnabled($selectedUser)
         );
     }
 }

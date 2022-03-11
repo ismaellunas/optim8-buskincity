@@ -279,6 +279,12 @@ class MenuService
                             'isActive' => $request->routeIs('admin.settings.translation-manager.edit'),
                             'isEnabled' => $user->can('system.translation'),
                         ],
+                        [
+                            'title' => 'Stripe',
+                            'link' => route('admin.settings.stripe.edit'),
+                            'isActive' => $request->routeIs('admin.settings.stripe.edit'),
+                            'isEnabled' => $user->can('system.payment'),
+                        ],
                     ],
                 ],
                 [
@@ -347,10 +353,13 @@ class MenuService
                 'isActive' => $request->routeIs('dashboard'),
                 'isEnabled' => true,
             ],
-            'paymentManagement' => [
+        ];
+
+        if ($user->can('updateStripeConnect', $user)) {
+            $menus['paymentManagement'] = [
                 'title' => 'Payment Management',
                 'isActive' => $request->routeIs('payment-management.*'),
-                'isEnabled' => $user->can('payment.management'),
+                'isEnabled' => true,
                 'children' => [
                     [
                         'title' => 'Stripe',
@@ -358,9 +367,9 @@ class MenuService
                         'isActive' => $request->routeIs('payment-management.stripe.show'),
                         'isEnabled' => true,
                     ]
-                ],
-            ],
-        ];
+                ]
+            ];
+        }
 
         $menuProfile = [
             'title' => 'Profile',

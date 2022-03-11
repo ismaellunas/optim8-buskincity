@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\User;
+
 class UserProfileService
 {
-    private $user;
+    private User $user;
 
     public function __construct()
     {

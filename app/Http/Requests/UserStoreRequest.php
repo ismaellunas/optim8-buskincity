@@ -34,6 +34,7 @@ class UserStoreRequest extends FormRequest
                 'mimes:jpg,jpeg,png',
                 'max:'.config('constants.one_megabyte') * 1
             ],
+            'language_id' => ['required', 'exists:App\Models\Language,id'],
         ];
     }
 

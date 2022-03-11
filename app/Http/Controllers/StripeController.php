@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
 use App\Services\StripeService;
-use App\Http\Requests\StripeAccountCreateRequest;
+use App\Traits\FlashNotifiable;
+use App\Http\Requests\StripeSettingRequest;
 use Inertia\Inertia;
 
 class StripeController extends Controller
 {
+    use FlashNotifiable;
+
     private $stripeService;
 
     public function __construct(StripeService $stripeService)
@@ -15,127 +19,65 @@ class StripeController extends Controller
         $this->stripeService = $stripeService;
     }
 
-    public function show()
+    public function edit()
     {
-        $user = auth()->user();
-        $hasConnectedAccount = $this->stripeService->hasStripeAccount($user);
+        $settings = Setting::whereIn('key', [
+            'stripe_amount_options',
+            'stripe_application_fee_percentage',
+            'stripe_default_country',
+            'stripe_is_enabled',
+            'stripe_minimal_amounts',
+            'stripe_payment_currencies',
+        ])
+            ->select(['key', 'value'])
+            ->pluck('value', 'key');
 
-        $balance = null;
-        $hasPassedOnboarding = false;
-        $countryOptions = [];
+        $currencyOptions = collect($this->stripeService->getCurrencyOptions())
+            ->map(function ($option) {
+                return $option['id'];
+            });
 
-        if ($hasConnectedAccount) {
-            $balance = $this->stripeService->accountBalance($user);
-
-            $stripeAccountId = $this->stripeService->getStripeAccountId($user);
-
-            $stripeAccount = $this->stripeService->retrieveAccount($stripeAccountId);
-
-            $hasPassedOnboarding = $stripeAccount->charges_enabled;
-
-        } else {
-            $countryOptions = $this->stripeService->getCountryOptions();
-        }
-
-        $defaultCountry = 'SE';
-
-        return Inertia::render('PaymentManagementStripe', compact(
-            'balance',
-            'countryOptions',
-            'defaultCountry',
-            'hasConnectedAccount',
-            'hasPassedOnboarding'
-        ));
+        return Inertia::render('Stripe', [
+            'amountOptions' => (object)json_decode($settings->get('stripe_amount_options')),
+            'applicationFeePercentage' => (float) $settings->get('stripe_application_fee_percentage'),
+            'countryOptions' => $this->stripeService->getCountryOptions(),
+            'currencyOptions' => $currencyOptions,
+            'defaultCountry' => $settings->get('stripe_default_country'),
+            'isEnabled' => (bool) $settings->get('stripe_is_enabled'),
+            'minimalAmounts' => json_decode($settings->get('stripe_minimal_amounts')),
+            'paymentCurrencies' => json_decode($settings->get('stripe_payment_currencies')),
+        ]);
     }
 
-    public function createThenRedirect(StripeAccountCreateRequest $request)
+    public function update(StripeSettingRequest $request)
     {
-        $user = $request->user();
-
-        $hasConnectedAccount = $this->stripeService->hasStripeAccount($user);
-
-        if ($hasConnectedAccount) {
-
-            $stripeAccountId = $this->stripeService->getStripeAccountId($user);
-
-        } else {
-
-            $stripeAccount = $this->stripeService->createConnectedAccount(
-                $user,
-                $request->get('country')
-            );
-            $stripeAccountId = $stripeAccount->id;
-
-            $user->setMeta('stripe_account', $stripeAccount);
-            $user->setMeta('stripe_account_id', $stripeAccount->id);
-            $user->saveMetas();
-        }
-
-        $accountLink = $this->stripeService->createAccountLink(
-            $stripeAccountId,
-            $user
+        Setting::updateOrCreate(
+            ['key' => 'stripe_payment_currencies'],
+            ['value' => json_encode($request->payment_currencies)]
+        );
+        Setting::updateOrCreate(
+            ['key' => 'stripe_default_country'],
+            ['value' => $request->default_country]
+        );
+        Setting::updateOrCreate(
+            ['key' => 'stripe_application_fee_percentage'],
+            ['value' => $request->application_fee_percentage]
+        );
+        Setting::updateOrCreate(
+            ['key' => 'stripe_amount_options'],
+            ['value' => json_encode($request->amount_options)]
+        );
+        Setting::updateOrCreate(
+            ['key' => 'stripe_minimal_amounts'],
+            ['value' => json_encode($request->minimal_amounts)]
+        );
+        Setting::updateOrCreate(
+            ['key' => 'stripe_is_enabled'],
+            ['value' => (bool) $request->is_enabled]
         );
 
-        return Inertia::location($accountLink->url);
-    }
+        $this->generateFlashMessage('Stripe updated successfully!');
 
-    public function redirectToStripeAccount()
-    {
-        $user = auth()->user();
-
-        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
-
-        $loginLink = $this->stripeService->createLoginLink($stripeAccountId);
-
-        return ['url' => $loginLink->url];
-    }
-
-    public function refresh()
-    {
-        $user = auth()->user();
-
-        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
-
-        $stripeAccount = $this->stripeService->retrieveAccount($stripeAccountId);
-
-        $this->stripeService->setUserStripeAccount($user, $stripeAccount);
-
-        $accountLink = $this->stripeService->createAccountLink(
-            $stripeAccount->id,
-            $user
-        );
-
-        return redirect()->away($accountLink->url);
-    }
-
-    public function return()
-    {
-        $user = auth()->user();
-
-        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
-
-        $stripeAccount = $this
-            ->stripeService
-            ->updateAccountBrandingBasedOnPlatform($stripeAccountId);
-
-        $this->stripeService->setUserStripeAccount($user, $stripeAccount);
-
-        return redirect()
-            ->route('payment-management.stripe.show')
-            ->with('message', 'Stripe Account created successfully.');
-    }
-
-    public function accountLink()
-    {
-        $user = auth()->user();
-
-        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
-
-        $accountLink = $this->stripeService->createAccountLink(
-            $stripeAccountId,
-            $user
-        );
-
-        return ['url' => $accountLink->url];
+        return redirect()->back();
     }
 }

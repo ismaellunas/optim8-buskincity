@@ -21,6 +21,13 @@ class DonationRequest extends FormRequest
             $stripeService->getCurrencyMinimalPayment($this->currency)
         );
 
+        $currencies = array_map(
+            function ($option) {
+                return $option['id'];
+            },
+            $stripeService->getCurrencyOptions()
+        );
+
         return [
             'amount' => [
                 'required',
@@ -29,7 +36,7 @@ class DonationRequest extends FormRequest
             ],
             'currency' => [
                 'required',
-                Rule::in(['SEK', 'EUR', 'USD']),
+                Rule::in($currencies),
             ],
         ];
     }

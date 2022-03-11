@@ -23,6 +23,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'first_name' => ['required', 'string', 'max:128'],
             'last_name' => ['required', 'string', 'max:128'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'country_code' => ['required', 'max:2', 'exists:App\Models\Country,alpha2'],
             'photo' => [
                 'nullable',
                 'mimes:jpg,jpeg,png',
@@ -50,6 +51,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'first_name' => $input['first_name'],
                 'last_name' => $input['last_name'],
                 'email' => $input['email'],
+                'country_code' => $input['country_code'],
                 'language_id' => $input['language_id'],
             ])->save();
         }
@@ -69,6 +71,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'last_name' => $input['last_name'],
             'email' => $input['email'],
             'email_verified_at' => null,
+            'country_code' => $input['country_code'],
             'language_id' => $input['language_id'],
         ])->save();
 
