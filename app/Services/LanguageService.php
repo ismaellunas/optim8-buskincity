@@ -21,8 +21,14 @@ class LanguageService
 
         return app(SettingCache::class)->remember($key, function () {
             return Language::shown()
-                ->get(['id', 'name'])
-                ->asOptions('id', 'name');
+                ->get(['id', 'name', 'code'])
+                ->map(function ($language) {
+                    return [
+                        'id' => $language->id,
+                        'value' => $language->name,
+                        'code' => $language->code,
+                    ];
+                });
         });
     }
 

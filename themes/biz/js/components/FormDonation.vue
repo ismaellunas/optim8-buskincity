@@ -2,6 +2,7 @@
     <div>
         <form
             ref="form"
+            v-if="hasRequirements"
             :action="submitRoute"
             method="POST"
             @submit.prevent="submit"
@@ -121,17 +122,19 @@
                 default: () => [],
             },
             listMinimalPayments: {
-                type: Array,
-                default: () => [],
+                type: Object,
+                default: () => {},
             },
         },
 
-        data: () => ({
-            csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            selectedCurrency: 'SEK',
-            amount: null,
-            buttonDisabled: null,
-        }),
+        data() {
+            return {
+                csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                selectedCurrency: this.currencies[0] ? this.currencies[0].id : '',
+                amount: null,
+                buttonDisabled: null,
+            };
+        },
 
         computed: {
             selectedAmountOptions() {
@@ -150,6 +153,10 @@
             minimalPayment() {
                 return this.listMinimalPayments[this.selectedCurrency] ?? 0;
             },
+
+            hasRequirements() {
+                return this.currencies.length > 0;
+            }
         },
 
         methods: {
