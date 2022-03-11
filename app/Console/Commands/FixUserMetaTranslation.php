@@ -19,7 +19,7 @@ class FixUserMetaTranslation extends Command
      *
      * @var string
      */
-    protected $signature = 'database:user-meta-translation';
+    protected $signature = 'fix:user-meta-translation';
 
     /**
      * The console command description.
