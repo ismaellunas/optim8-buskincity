@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Country;
-use App\Models\Setting;
-use App\Models\User;
+use App\Models\{
+    Country,
+    Setting,
+    User,
+};
+use App\Entities\Caches\SettingCache;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
 use Stripe\{
@@ -304,6 +307,27 @@ class StripeService
             });
     }
 
+    public function getAvailableCurrencyOptions(): array
+    {
+        $paymentCurrencies = Setting::key('stripe_payment_currencies')
+            ->value('value');
+
+        if ($paymentCurrencies) {
+            $paymentCurrencies = (array) json_decode($paymentCurrencies);
+
+            return array_map(
+                function ($currency) {
+                    return [
+                        'id' => $currency,
+                        'value' => $currency,
+                    ];
+                },
+                $paymentCurrencies
+            );
+        }
+        return [];
+    }
+
     public function getCurrencyOptions(): array
     {
         return [
@@ -316,6 +340,10 @@ class StripeService
                 'value' => 'EUR',
             ],
             [
+                'id' => 'GBP',
+                'value' => 'GBP',
+            ],
+            [
                 'id' => 'USD',
                 'value' => 'USD',
             ],
@@ -324,7 +352,14 @@ class StripeService
 
     public function getAmountOptions(): array
     {
-        return config('constants.stripe_amount_options');
+        $currencyAmountOptions = Setting::key('stripe_amount_options')
+            ->value('value');
+
+        return (
+            $currencyAmountOptions
+            ? (array) json_decode($currencyAmountOptions)
+            : []
+        );
     }
 
     public function getApplicationFeeAmount($amount): float
@@ -348,5 +383,24 @@ class StripeService
             fn ($amount): float => $this->getMinimalPaymentWithFee($amount),
             config('constants.stripe_minimal_payments')
         );
+    }
+
+    public function getDefaultCountry(): ?string
+    {
+        return Setting::key('stripe_default_country')->value('value');
+    }
+
+    public function isEnabled(): bool
+    {
+        return app(SettingCache::class)->remember('stripe_is_enabled', function () {
+            return (bool) Setting::key('stripe_is_enabled')->value('value');
+        });
+    }
+
+    public function isStripeConnectEnabled(User $user): bool
+    {
+        $key = 'stripe_is_enabled';
+
+        return (bool) $user->getMetas([$key])->get($key, false);
     }
 }

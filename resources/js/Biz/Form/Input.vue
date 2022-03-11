@@ -2,7 +2,10 @@
     <biz-form-field
         :is-required="required"
     >
-        <template #label>
+        <template
+            v-if="label"
+            #label
+        >
             {{ label }}
         </template>
 
