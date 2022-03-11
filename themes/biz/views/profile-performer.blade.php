@@ -18,7 +18,7 @@
 
             <div class="container">
                 <p>
-                    {{ $userProfile->getMeta('about_me') }}
+                    {{ $userProfile->getMeta('about_me', $locale) }}
                 </p>
             </div>
         </div>
@@ -51,7 +51,7 @@
                                     </tr>
                                     <tr>
                                         <td>Address:</td>
-                                        <td>{{ $userProfile->getMeta('address') }}</td>
+                                        <td>{{ $userProfile->getMeta('address', $locale) }}</td>
                                     </tr>
 
                                     @if ($userProfile->getMeta('phone'))
