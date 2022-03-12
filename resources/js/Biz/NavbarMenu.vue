@@ -107,12 +107,16 @@
 
                                 <hr class="navbar-divider">
                                 <form
-                                    method="POST"
-                                    @submit.prevent="logout"
-                                    :action="route('logout')"
                                     ref="logout"
+                                    method="POST"
+                                    :action="route('logout')"
+                                    @submit.prevent="logout"
                                 >
-                                    <input type="hidden" name="_token" :value="csrfToken">
+                                    <input
+                                        type="hidden"
+                                        name="_token"
+                                        :value="csrfToken"
+                                    >
                                     <biz-button
                                         as="button"
                                         class="navbar-item ml-2 is-ghost"
@@ -200,13 +204,9 @@
             },
             logout() {
                 if (route().current('admin*')) {
-                    this.$inertia.post(route('logout'));
+                    this.$inertia.post(route('admin.logout'));
                 } else {
-                    if (this.$page.props.user.is_super_administrator || this.$page.props.user.is_administrator) {
-                        this.$inertia.post(route('admin.logout'));
-                    } else {
-                        this.$refs.logout.submit();
-                    }
+                    this.$refs.logout.submit();
                 }
             },
             showMenu() {
