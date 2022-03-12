@@ -48,10 +48,12 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizActionMessage from '@/Biz/ActionMessage';
     import BizButton from '@/Biz/Button';
     import BizFormPassword from '@/Biz/Form/Password';
     import BizFormSection from '@/Biz/FormSection';
+    import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
 
     export default {
         components: {
@@ -60,6 +62,10 @@
             BizFormPassword,
             BizFormSection,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         data() {
             return {
@@ -72,16 +78,27 @@
 
         methods: {
             setPassword() {
+                this.onStartLoadingOverlay();
+
                 this.form.put(route('user-password.set'), {
                     errorBag: 'setPassword',
                     preserveScroll: true,
-                    onSuccess: () => this.form.reset(),
+                    onSuccess: () => {
+                        this.form.reset();
+
+                        successAlert('Saved');
+                    },
                     onError: () => {
                         if (this.form.errors.password) {
                             this.form.reset('password', 'password_confirmation')
                             this.$refs.password.focus()
                         }
-                    }
+
+                        oopsAlert();
+                    },
+                    onFinish: () => {
+                        this.onEndLoadingOverlay();
+                    },
                 })
             },
         },

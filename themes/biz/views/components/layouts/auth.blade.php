@@ -63,24 +63,29 @@
 
     <body class="font-sans antialiased">
         {!! $trackingCodeAfterBody !!}
-        <section class="hero is-fullheight">
-            <div class="hero-body">
-                <div class="container has-text-centered">
-                    <div class="columns">
-                        <div class="column is-two-fifths has-text-left">
-                            <div class="card">
-                                <div class="card-image">
-                                    <figure class="image is-3by4">
-                                        <img src="https://dummyimage.com/550x715/e5e5e5/ffffff.jpg">
-                                    </figure>
+
+        <div id="app">
+            <loading-overlay id="loader" class="is-hidden"></loading-overlay>
+
+            <section class="hero is-fullheight">
+                <div class="hero-body">
+                    <div class="container has-text-centered">
+                        <div class="columns">
+                            <div class="column is-two-fifths has-text-left">
+                                <div class="card">
+                                    <div class="card-image">
+                                        <figure class="image is-3by4">
+                                            <img src="https://dummyimage.com/550x715/e5e5e5/ffffff.jpg">
+                                        </figure>
+                                    </div>
                                 </div>
                             </div>
+                            {{ $slot }}
                         </div>
-                        {{ $slot }}
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
 
         @env ('local')
             <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>
@@ -127,6 +132,10 @@
                     }
 
                 });
+            }
+
+            function setLoader() {
+                document.getElementById('loader').classList.remove('is-hidden');
             }
         </script>
 

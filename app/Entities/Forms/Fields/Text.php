@@ -4,7 +4,7 @@ namespace App\Entities\Forms\Fields;
 
 use Illuminate\Support\Str;
 
-class Text extends BaseField
+class Text extends TranslatableField
 {
     protected $type = "Text";
 

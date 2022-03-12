@@ -29,6 +29,12 @@ class UserStoreRequest extends FormRequest
                 'nullable',
                 Rule::in($this->getRoleIds()),
             ],
+            'photo' => [
+                'nullable',
+                'mimes:jpg,jpeg,png',
+                'max:'.config('constants.one_megabyte') * 1
+            ],
+            'language_id' => ['required', 'exists:App\Models\Language,id'],
         ];
     }
 

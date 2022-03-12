@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\User;
+
 class UserProfileService
 {
-    private $user;
+    private User $user;
 
     public function __construct()
     {
@@ -12,10 +14,18 @@ class UserProfileService
         $this->user = $user;
     }
 
-    public function getMeta(string $key): mixed
+    public function getMeta(string $key, string $locale = null): mixed
     {
         $meta = $this->user->metas->firstWhere('key', $key);
 
-        return $meta ? $meta->value : null;
+        if (is_null($meta)) {
+            return null;
+        }
+
+        if (!is_null($locale)) {
+            return $meta->value[$locale] ?? null;
+        }
+
+        return $meta->value;
     }
 }

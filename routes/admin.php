@@ -9,6 +9,7 @@ use App\Http\Controllers\{
     PermissionController,
     PostController,
     RoleController,
+    StripeController,
     ThemeAdvanceController,
     ThemeColorController,
     ThemeFontController,
@@ -115,6 +116,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             ->name('translation-manager.export');
         Route::post('/translation-import', [TranslationManagerController::class, 'import'])
             ->name('translation-manager.import');
+    });
+
+    Route::name('settings.')->prefix('settings')->middleware('can:system.payment')->group(function () {
+        Route::get('/stripe', [StripeController::class, 'edit'])
+            ->name('stripe.edit');
+        Route::post('/stripe', [StripeController::class, 'update'])
+            ->name('stripe.update');
     });
 
     Route::name('users.')->prefix('users')->group(function () {
