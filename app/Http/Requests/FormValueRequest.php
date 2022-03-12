@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use App\Services\FormService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;

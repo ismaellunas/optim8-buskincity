@@ -66,13 +66,6 @@
                 >
                     Log Out Other Browser Sessions
                 </biz-button>
-
-                <biz-action-message
-                    :is-active="form.recentlySuccessful"
-                    class="ml-3"
-                >
-                    Done.
-                </biz-action-message>
             </div>
 
             <!-- Log Out Other Devices Confirmation Modal -->
@@ -130,17 +123,17 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizActionMessage from '@/Biz/ActionMessage';
     import BizActionSection from '@/Biz/ActionSection';
     import BizButton from '@/Biz/Button';
     import BizFormPassword from '@/Biz/Form/Password';
     import BizModalCard from '@/Biz/ModalCard';
+    import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
 
     export default {
         components: {
-            BizActionMessage,
             BizActionSection,
             BizButton,
             BizFormPassword,
@@ -148,6 +141,7 @@
         },
 
         mixins: [
+            MixinHasLoader,
             MixinHasModal,
             MixinHasPageErrors,
         ],
@@ -175,11 +169,25 @@
             },
 
             logoutOtherBrowserSessions() {
+                this.onStartLoadingOverlay();
+
                 this.form.delete(route('other-browser-sessions.destroy'), {
                     preserveScroll: true,
-                    onSuccess: () => this.closeModal(),
-                    onError: () => this.$refs.password.$refs.input.focus(),
-                    onFinish: () => this.form.reset(),
+                    onSuccess: () => {
+                        this.closeModal();
+
+                        successAlert('Done');
+                    },
+                    onError: () => {
+                        this.$refs.password.$refs.input.focus();
+
+                        oopsAlert();
+                    },
+                    onFinish: () => {
+                        this.form.reset();
+
+                        this.onEndLoadingOverlay();
+                    },
                 })
             },
 

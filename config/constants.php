@@ -108,15 +108,22 @@ return [
     'setting_cache' => [
         'locale_options' => 'locale_options',
         'default_locale' => 'default_locale',
+        'shown_language_option' => 'shown_language_option',
     ],
     'widget_cache' => [
         'post' => 'widget_post',
         'user' => 'widget_user',
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Stripe Payment Gateway
+    |--------------------------------------------------------------------------
+    */
+
     'stripe_account_id_meta_key' => 'stripe_account_id',
 
-    'payment_method_types' => [
+    'stripe_payment_method_types' => [
         'card',
         'acss_debit',
         'afterpay_clearpay',
@@ -136,5 +143,20 @@ return [
         'sepa_debit',
         'sofort',
         'wechat_pay',
+    ],
+
+    'stripe_fee_percent' => 0.02,
+
+    'stripe_payment_currencies' => [
+        'SEK',
+        'EUR',
+        'GBP',
+        'USD',
+    ],
+
+    'stripe_minimal_payments' => [
+        'SEK' => 3,
+        'USD' => 0.50,
+        'EUR' => 0.50,
     ],
 ];

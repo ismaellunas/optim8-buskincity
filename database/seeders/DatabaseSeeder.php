@@ -48,10 +48,12 @@ class DatabaseSeeder extends Seeder
             $administratorRole->givePermissionTo($permission);
         }
 
+        $englishId = Language::where('code', 'en')->value('id');
         $superAdminUser = User::factory()->create([
             'first_name' => 'Super',
             'last_name' => 'Administrator',
             'email' => 'super.administrator@biz.com',
+            'language_id' => $englishId,
         ]);
 
         $superAdminUser->assignRole(config('permission.super_admin_role'));
@@ -61,6 +63,7 @@ class DatabaseSeeder extends Seeder
                 'first_name' => 'Admin',
                 'last_name' => 'Administrator',
                 'email' => 'admin@biz.com',
+                'language_id' => $englishId,
             ]);
 
         $adminUser->assignRole('Administrator');

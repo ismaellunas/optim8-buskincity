@@ -18,6 +18,11 @@ class UserUpdateRequest extends UserStoreRequest
                 'max:255',
                 Rule::unique('users')->ignore($this->route('user')->id)
             ],
+            'photo' => [
+                'nullable',
+                'mimes:jpg,jpeg,png',
+                'max:'.config('constants.one_megabyte') * 1
+            ],
         ];
 
         if ($this->user->isSuperAdministrator) {

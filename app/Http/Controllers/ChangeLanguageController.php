@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\LifetimeCookie;
 use App\Helpers\Url;
 use App\Services\TranslationService as TranslationSv;
 use Illuminate\Support\Str;
@@ -21,6 +22,11 @@ class ChangeLanguageController extends Controller
         if ($newLocale === $defaultLocale) {
             $newLocale = "";
         }
+
+        app(LifetimeCookie::class)->set(
+            'origin_language',
+            $newLocale != '' ? $newLocale : $defaultLocale
+        );
 
         if (!empty($url)) {
             $url = $this->removeLocaleFromUrl($url);

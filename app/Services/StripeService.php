@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Country;
-use App\Models\Setting;
-use App\Models\User;
+use App\Models\{
+    Country,
+    Setting,
+    User,
+};
+use App\Entities\Caches\SettingCache;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
 use Stripe\{
@@ -109,34 +112,45 @@ class StripeService
         return $user->getMetas([$this->metaKey()])->isNotEmpty();
     }
 
-    public function checkout(User $user, $amount): Session
+    private function getStripeAmount(float $amount, string $currency)
     {
-        Stripe::setApiKey($this->secretKey());
-
-        $currency = 'eur';
-
-        $stripeAccount = $this->getStripeAccountId($user);
-
         $formattedAmount = str_replace('.', '', $this->convertInto2Decimal($amount));
 
         if ($this->isZeroDecimal($currency)) {
             $formattedAmount = substr($formattedAmount, 0, -2);
         }
 
+        return $formattedAmount;
+    }
+
+    public function checkout(User $user, float $amount, string $currency): Session
+    {
+        Stripe::setApiKey($this->secretKey());
+
+        $stripeAccount = $this->getStripeAccountId($user);
+
+        $formattedAmount = $this->getStripeAmount(
+            $this->convertInto2Decimal($amount),
+            $currency
+        );
+
+        $applicationFeeAmount = $this->getStripeAmount(
+            $this->getApplicationFeeAmount($amount),
+            $currency
+        );
+
         return Session::create([
             'line_items' => [[
-                'name' => 'Donation',
+                'name' => 'Donate to '.$user->fullName,
                 'amount' => $formattedAmount,
                 'currency' => $currency,
                 'quantity' => 1,
             ]],
-            /*
             'payment_intent_data' => [
-                'application_fee_amount' => 123,
+                'application_fee_amount' => $applicationFeeAmount,
             ],
-             */
             'mode' => 'payment',
-            'payment_method_types' => ['card', 'giropay', 'ideal'],
+            'submit_type' => 'donate',
             'success_url' => route('donations.success', ['user' => $user]),
             'cancel_url' => route('frontend.profiles', ['user' => $user]),
         ], [
@@ -291,5 +305,102 @@ class StripeService
                     'value' => $country->display_name,
                 ];
             });
+    }
+
+    public function getAvailableCurrencyOptions(): array
+    {
+        $paymentCurrencies = Setting::key('stripe_payment_currencies')
+            ->value('value');
+
+        if ($paymentCurrencies) {
+            $paymentCurrencies = (array) json_decode($paymentCurrencies);
+
+            return array_map(
+                function ($currency) {
+                    return [
+                        'id' => $currency,
+                        'value' => $currency,
+                    ];
+                },
+                $paymentCurrencies
+            );
+        }
+        return [];
+    }
+
+    public function getCurrencyOptions(): array
+    {
+        return [
+            [
+                'id' => 'SEK',
+                'value' => 'SEK',
+            ],
+            [
+                'id' => 'EUR',
+                'value' => 'EUR',
+            ],
+            [
+                'id' => 'GBP',
+                'value' => 'GBP',
+            ],
+            [
+                'id' => 'USD',
+                'value' => 'USD',
+            ],
+        ];
+    }
+
+    public function getAmountOptions(): array
+    {
+        $currencyAmountOptions = Setting::key('stripe_amount_options')
+            ->value('value');
+
+        return (
+            $currencyAmountOptions
+            ? (array) json_decode($currencyAmountOptions)
+            : []
+        );
+    }
+
+    public function getApplicationFeeAmount($amount): float
+    {
+        return round($amount * config('constants.stripe_fee_percent'), 2);
+    }
+
+    public function getCurrencyMinimalPayment(string $currency): float
+    {
+        return (float) config('constants.stripe_minimal_payments.'.$currency) ?? 0;
+    }
+
+    public function getMinimalPaymentWithFee($amount): float
+    {
+        return ceil($amount + $amount * $this->getApplicationFeeAmount($amount));
+    }
+
+    public function getListMinimalPayments(): array
+    {
+        return array_map(
+            fn ($amount): float => $this->getMinimalPaymentWithFee($amount),
+            config('constants.stripe_minimal_payments')
+        );
+    }
+
+    public function getDefaultCountry(): ?string
+    {
+        return Setting::key('stripe_default_country')->value('value');
+    }
+
+    public function isEnabled(): bool
+    {
+        return app(SettingCache::class)->remember('stripe_is_enabled', function () {
+            return (bool) Setting::key('stripe_is_enabled')->value('value');
+        });
+    }
+
+    public function isStripeConnectEnabled(User $user): bool
+    {
+        $key = 'stripe_is_enabled';
+
+        return (bool) $user->getMetas([$key])->get($key, false);
     }
 }

@@ -98,6 +98,11 @@ abstract class BaseField
         return $this->validation['messages'] ?? [];
     }
 
+    public function validationAttributes(array $inputs = []): array
+    {
+        return $this->getLabels($inputs);
+    }
+
     public function canBeAccessed(User $author = null): bool
     {
         if (!empty($this->roles)) {
