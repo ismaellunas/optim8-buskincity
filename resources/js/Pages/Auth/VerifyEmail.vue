@@ -28,7 +28,7 @@
                             </biz-button>
                         </form>
 
-                        <div v-if="$page.props.user.is_super_administrator || $page.props.user.is_administrator">
+                        <div v-if="route().current('admin*')">
                             <biz-link
                                 :href="route('admin.logout')"
                                 method="post"
@@ -73,14 +73,11 @@
         components: {
             AppLayout,
             BizButton,
-            BizLink
+            BizLink,
         },
 
         props: {
-            status: {
-                default: null,
-                type: String
-            }
+            status: String
         },
 
         data() {
