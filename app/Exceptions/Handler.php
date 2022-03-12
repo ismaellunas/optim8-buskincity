@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -44,9 +45,21 @@ class Handler extends ExceptionHandler
         $response = parent::render($request, $e);
 
         if ($response->status() === 419) {
-            return back()->with([
-                'message_expired' => 'The page expired, please try again.',
-            ]);
+            if ($request->inertia()) {
+                if ($e instanceof AuthenticationException) {
+                    return response('', 409)->header('X-Inertia-Location', $e->redirectTo());
+                } else {
+                    if ($request->routeIs('admin.*')) {
+                        return response('', 409)->header('X-Inertia-Location', route('admin.login'));
+                    } else {
+                        return route('login');
+                    }
+                }
+            } else {
+                return back()->with([
+                    'message_expired' => 'The page expired, please try again.',
+                ]);
+            }
         }
 
         return $response;
