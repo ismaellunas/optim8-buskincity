@@ -204,7 +204,7 @@
             },
             logout() {
                 if (route().current('admin*')) {
-                    this.$inertia.post(route('admin.logout'));
+                    this.$inertia.post(route('logout'));
                 } else {
                     this.$refs.logout.submit();
                 }

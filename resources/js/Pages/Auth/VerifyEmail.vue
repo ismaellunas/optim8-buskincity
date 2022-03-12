@@ -30,7 +30,7 @@
 
                         <div v-if="route().current('admin*')">
                             <biz-link
-                                :href="route('admin.logout')"
+                                :href="route('logout')"
                                 method="post"
                                 as="button"
                                 class="button ml-3"

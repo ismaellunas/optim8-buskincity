@@ -22,16 +22,14 @@ use App\Http\Controllers\{
     UserController,
     UserRoleController,
 };
-use App\Http\Controllers\Auth\AdminLogoutController;
+
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
-use Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\NewPasswordController;
 use Laravel\Fortify\Http\Controllers\PasswordResetLinkController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
-use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 /*
@@ -197,6 +195,3 @@ if (Features::enabled(Features::emailVerification())) {
             ->name('verification.notice');
     }
 }
-
-Route::post('/logout', [AdminLogoutController::class, 'logout'])
-        ->name('logout');
