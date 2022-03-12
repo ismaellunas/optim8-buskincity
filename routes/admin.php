@@ -25,9 +25,12 @@ use App\Http\Controllers\Auth\AdminLogoutController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
+use Laravel\Fortify\Http\Controllers\EmailVerificationNotificationController;
+use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\NewPasswordController;
 use Laravel\Fortify\Http\Controllers\PasswordResetLinkController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
+use Laravel\Fortify\Http\Controllers\VerifyEmailController;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 /*
@@ -178,6 +181,14 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
 });
 
 Route::redirect('/', '/admin/login');
+
+if (Features::enabled(Features::emailVerification())) {
+    if (config('fortify.views', true)) {
+        Route::get('/email/verify', [EmailVerificationPromptController::class, '__invoke'])
+            ->middleware([config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')])
+            ->name('verification.notice');
+    }
+}
 
 Route::post('/logout', [AdminLogoutController::class, 'logout'])
         ->name('logout');
