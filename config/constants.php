@@ -7,6 +7,7 @@ return [
 
     'stripe_pk' => env('STRIPE_PK'),
     'stripe_sk' => env('STRIPE_SK'),
+    'stripe_endpoint_secret' => env('STRIPE_ENDPOINT_SECRET'),
 
     'one_megabyte' => 1024,
     'extensions' => [

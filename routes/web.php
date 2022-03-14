@@ -130,3 +130,5 @@ Route::name('forms.')->prefix('forms')->group(function () {
     Route::post('save', [FormController::class, 'submit'])
         ->name('save');
 });
+
+Route::post('webhooks/stripe', [StripeController::class, 'webhook']);
