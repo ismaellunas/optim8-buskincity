@@ -28,4 +28,22 @@ class CountryService
                     });
             });
     }
+
+    public function getCountryOptions(): Collection
+    {
+        return app(CountryCache::class)
+            ->remember('country_options', function () {
+                return Country::orderBy('display_name')
+                    ->get([
+                        'alpha2',
+                        'display_name',
+                    ])
+                    ->map(function ($country) {
+                        return [
+                            'id' => $country->alpha2,
+                            'value' => $country->display_name,
+                        ];
+                    });
+            });
+    }
 }

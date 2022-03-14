@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Services\{
+    CountryService,
     MenuService,
     SettingService,
     LanguageService,
@@ -75,6 +76,7 @@ class HandleInertiaRequests extends Middleware
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
             'languageOptions' => TranslationSv::getLocaleOptions(),
             'shownLanguageOptions' => app(LanguageService::class)->getShownLanguageOptions(),
+            'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
             ]
