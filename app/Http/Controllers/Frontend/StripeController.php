@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Entities\UserMetaStripe;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StripeAccountCreateRequest;
 use App\Services\StripeService;
@@ -60,8 +61,8 @@ class StripeController extends Controller
     {
         $user = auth()->user();
 
-        $user->setMeta('stripe_is_enabled', $request->get('is_enabled'));
-        $user->saveMetas();
+        $userMetaStripe = new UserMetaStripe($user);
+        $userMetaStripe->setEnabledStatus($request->get('is_enabled'));
 
         $this->generateFlashMessage('Saved');
 
@@ -84,11 +85,11 @@ class StripeController extends Controller
                 $user,
                 $request->get('country')
             );
-            $stripeAccountId = $stripeAccount->id;
 
-            $user->setMeta('stripe_account', $stripeAccount);
-            $user->setMeta('stripe_account_id', $stripeAccount->id);
-            $user->saveMetas();
+            $userMetaStripe = new UserMetaStripe($user);
+            $userMetaStripe->initConnectedAccount($stripeAccount);
+
+            $stripeAccountId = $stripeAccount->id;
         }
 
         $accountLink = $this->stripeService->createAccountLink(
