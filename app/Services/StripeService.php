@@ -25,11 +25,6 @@ class StripeService
 {
     private $stripeClient = null;
 
-    private function metaKey(): string
-    {
-        return config('constants.stripe_account_id_meta_key');
-    }
-
     private function secretKey(): string
     {
         return config('constants.stripe_sk');
