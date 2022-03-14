@@ -23,7 +23,7 @@ class StripeController extends Controller
     public function show()
     {
         $user = auth()->user();
-        $hasConnectedAccount = $this->stripeService->hasStripeAccount($user);
+        $hasConnectedAccount = $this->stripeService->hasConnectedAccount($user);
 
         $balance = null;
         $hasPassedOnboarding = false;
@@ -32,7 +32,7 @@ class StripeController extends Controller
         if ($hasConnectedAccount) {
             $balance = $this->stripeService->accountBalance($user);
 
-            $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+            $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
             $stripeAccount = $this->stripeService->retrieveAccount($stripeAccountId);
 
@@ -72,11 +72,11 @@ class StripeController extends Controller
     {
         $user = $request->user();
 
-        $hasConnectedAccount = $this->stripeService->hasStripeAccount($user);
+        $hasConnectedAccount = $this->stripeService->hasConnectedAccount($user);
 
         if ($hasConnectedAccount) {
 
-            $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+            $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
         } else {
 
@@ -103,7 +103,7 @@ class StripeController extends Controller
     {
         $user = auth()->user();
 
-        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+        $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
         $loginLink = $this->stripeService->createLoginLink($stripeAccountId);
 
@@ -114,7 +114,7 @@ class StripeController extends Controller
     {
         $user = auth()->user();
 
-        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+        $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
         $stripeAccount = $this->stripeService->retrieveAccount($stripeAccountId);
 
@@ -132,7 +132,7 @@ class StripeController extends Controller
     {
         $user = auth()->user();
 
-        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+        $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
         $stripeAccount = $this
             ->stripeService
@@ -149,7 +149,7 @@ class StripeController extends Controller
     {
         $user = auth()->user();
 
-        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+        $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
         $accountLink = $this->stripeService->createAccountLink(
             $stripeAccountId,

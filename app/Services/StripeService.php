@@ -8,6 +8,7 @@ use App\Models\{
     User,
 };
 use App\Entities\Caches\SettingCache;
+use App\Entities\UserMetaStripe;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
 use Stripe\{
@@ -95,21 +96,21 @@ class StripeService
     {
         Stripe::setApiKey($this->secretKey());
 
-        $stripeAccountId = $this->getStripeAccountId($user);
+        $stripeAccountId = $this->getConnectedAccountId($user);
 
         return Balance::retrieve(
             ['stripe_account' => $stripeAccountId]
         );
     }
 
-    public function getStripeAccountId(User $user): string
+    public function getConnectedAccountId(User $user): ?string
     {
-        return $user->getMetas([$this->metaKey()])->get($this->metaKey());
+        return (new UserMetaStripe($user))->getAccountId();
     }
 
-    public function hasStripeAccount(User $user): bool
+    public function hasConnectedAccount(User $user): bool
     {
-        return $user->getMetas([$this->metaKey()])->isNotEmpty();
+        return (new UserMetaStripe($user))->hasAccount();
     }
 
     private function getStripeAmount(float $amount, string $currency)
@@ -127,7 +128,7 @@ class StripeService
     {
         Stripe::setApiKey($this->secretKey());
 
-        $stripeAccount = $this->getStripeAccountId($user);
+        $stripeAccount = $this->getConnectedAccountId($user);
 
         $formattedAmount = $this->getStripeAmount(
             $this->convertInto2Decimal($amount),
