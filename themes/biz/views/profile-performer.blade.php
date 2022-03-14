@@ -18,7 +18,7 @@
 
             <div class="container">
                 <p>
-                    {{ $userProfile->getMeta('about_me') }}
+                    {{ $userProfile->getMeta('about_me', $locale) }}
                 </p>
             </div>
         </div>
@@ -51,7 +51,7 @@
                                     </tr>
                                     <tr>
                                         <td>Address:</td>
-                                        <td>{{ $userProfile->getMeta('address') }}</td>
+                                        <td>{{ $userProfile->getMeta('address', $locale) }}</td>
                                     </tr>
 
                                     @if ($userProfile->getMeta('phone'))
@@ -89,15 +89,17 @@
                 <!-- END Profile -->
 
                 <!-- Donate -->
-                <div class="card mt-2">
-                    <div class="card-content">
-                        <h3 class="title is-4">Donation</h3>
+                @can ('receiveDonation', $user)
+                    <div class="card mt-2">
+                        <div class="card-content">
+                            <h3 class="title is-4">Donation</h3>
 
-                        <x-stripe-form-donation :user-id="$user->id"/>
+                            <x-stripe-form-donation :user-id="$user->id"/>
 
+                        </div>
                     </div>
-                </div>
-                <!-- END Donate -->
+                    <!-- END Donate -->
+                @endcan
             </div>
         </div>
     </section>

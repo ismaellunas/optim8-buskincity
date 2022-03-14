@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Services\{
+    CountryService,
     MenuService,
     SettingService,
     LanguageService,
@@ -75,6 +76,7 @@ class HandleInertiaRequests extends Middleware
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
             'languageOptions' => TranslationSv::getLocaleOptions(),
             'shownLanguageOptions' => app(LanguageService::class)->getShownLanguageOptions(),
+            'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
             ]
@@ -86,7 +88,10 @@ class HandleInertiaRequests extends Middleware
         $user = $request->user();
 
         if ($user) {
-            if ($user->can('system.dashboard')) {
+            if (
+                $request->routeIs('admin.*')
+                && $user->can('system.dashboard')
+            ) {
                 return app(MenuService::class)->getBackendNavMenus($request);
             } else {
                 return app(MenuService::class)->getFrontendUserMenus($request);

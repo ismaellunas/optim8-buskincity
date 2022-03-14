@@ -2,7 +2,10 @@
     <biz-form-field
         :is-required="required"
     >
-        <template #label>
+        <template
+            v-if="label"
+            #label
+        >
             {{ label }}
         </template>
 
@@ -47,7 +50,7 @@
             },
             label: {
                 type: String,
-                required: true,
+                default: "",
             },
             message: {
                 type: Object,
