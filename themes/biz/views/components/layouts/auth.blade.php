@@ -116,19 +116,21 @@
             }
 
 
-            function showHidePassword() {
-                document.querySelectorAll('.input-password').forEach(function(el) {
-                    if (el.getAttribute('type') === 'password') {
-                        el.setAttribute('type', 'text');
+            function showHidePassword(identifier) {
+                let target = identifier.getAttribute('data-target');
+                let inputPassword = document.getElementById(target);
+
+                if (inputPassword.getAttribute('type') === 'password') {
+                    inputPassword.setAttribute('type', 'text');
+                } else {
+                    inputPassword.setAttribute('type', 'password');
+                }
+
+                identifier.querySelectorAll('.button').forEach(function(el) {
+                    if (el.classList.contains('is-hidden')) {
+                        el.classList.remove('is-hidden');
                     } else {
-                        el.setAttribute('type', 'password');
-                    }
-                });
-                document.querySelectorAll('.icon-password .button').forEach(function(e) {
-                    if (e.classList.contains('is-hidden')) {
-                        e.classList.remove('is-hidden');
-                    } else {
-                        e.classList.add('is-hidden');
+                        el.classList.add('is-hidden');
                     }
 
                 });
