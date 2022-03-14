@@ -21,6 +21,11 @@ class UserMeta extends Model
         'NULL'
     ];
 
+    public function scopeKeyAndValue($query, string $key, string $value)
+    {
+        return $query->where('key', $key)->where('value', $value);
+    }
+
     public function setValueAttribute($value)
     {
         $type = gettype($value);
