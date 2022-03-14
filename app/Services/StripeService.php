@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Models\{
     Country,
+    PaymentWebhook,
     Setting,
     User,
+    UserMeta,
 };
 use App\Entities\Caches\SettingCache;
 use Illuminate\Support\Collection;
@@ -18,7 +20,10 @@ use Stripe\{
     LoginLink,
     Stripe,
     StripeClient,
+    Webhook,
 };
+use Stripe\Exception\SignatureVerificationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class StripeService
 {
@@ -402,5 +407,59 @@ class StripeService
         $key = 'stripe_is_enabled';
 
         return (bool) $user->getMetas([$key])->get($key, false);
+    }
+
+    private function getUserIdFromStripeAccount(string $stripeAccount): ?int
+    {
+        return UserMeta::keyAndValue('stripe_account_id', $stripeAccount)
+            ->value('user_id');
+    }
+
+    public function webhook($payload, $stripeSignature): Response
+    {
+        $event = null;
+
+        $endpointSecret = config('constants.stripe_endpoint_secret');
+
+        Stripe::setApiKey($this->secretKey());
+
+        // @see https://stripe.com/docs/webhooks/signatures for more information.
+        try {
+            $event = Webhook::constructEvent(
+                $payload,
+                $stripeSignature,
+                $endpointSecret
+            );
+        } catch (\UnexpectedValueException $e) {
+            return response(
+                '⚠️  Webhook error while validating payload.',
+                400
+            );
+        } catch (SignatureVerificationException $e) {
+            return response(
+                '⚠️  Webhook error while validating signature.',
+                400
+            );
+        }
+
+        $webhookData = [
+            'data' => $payload,
+            'payment_method' => PaymentWebhook::PAYMENT_METHOD_STRIPE,
+            'event_type' => $event->type,
+        ];
+
+        if (!empty($event->account)) {
+            $webhookData['receiver_id'] = $this->getUserIdFromStripeAccount(
+                $event->account
+            );
+        }
+
+        if ($event->type == 'checkout.session.completed') {
+            // TODO trigger email
+        }
+
+        PaymentWebhook::create($webhookData);
+
+        return response('Success', 200);
     }
 }
