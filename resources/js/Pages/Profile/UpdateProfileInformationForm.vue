@@ -118,7 +118,7 @@
     import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSection from '@/Biz/FormSection';
     import UserIcon from '@/Biz/Icon/User';
-    import { acceptedImageTypes } from '@/Libs/defaults';
+    import { acceptedImageTypes, debounceTime } from '@/Libs/defaults';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
@@ -270,7 +270,7 @@
                 } else {
                     this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
-            }, 750),
+            }, debounceTime),
         },
     }
 </script>
