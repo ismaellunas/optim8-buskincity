@@ -212,7 +212,7 @@
                 } else {
                     this.filteredCountries = this.countryOptions.slice(0, 10);
                 }
-            }, 750),
+            }, debounceTime),
 
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
