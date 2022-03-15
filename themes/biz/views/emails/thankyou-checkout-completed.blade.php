@@ -5,9 +5,9 @@
 
 
 @component('mail::table')
-| Amount        | Currency        |
-| -------------:|:---------------:|
-| {{ $amount }} | {{ $currency }} |
+| Currency        | Amount        |
+|:---------------:| -------------:|
+| {{ $currency }} | {{ $amount }} |
 @endcomponent
 
 Thanks,<br>
