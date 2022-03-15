@@ -2,9 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\Country;
-use App\Models\Setting;
-use App\Models\User;
+use App\Models\{
+    Country,
+    PaymentWebhook,
+    Setting,
+    User,
+    UserMeta,
+};
+use App\Entities\Caches\SettingCache;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
 use Stripe\{
@@ -15,7 +20,10 @@ use Stripe\{
     LoginLink,
     Stripe,
     StripeClient,
+    Webhook,
 };
+use Stripe\Exception\SignatureVerificationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class StripeService
 {
@@ -304,6 +312,27 @@ class StripeService
             });
     }
 
+    public function getAvailableCurrencyOptions(): array
+    {
+        $paymentCurrencies = Setting::key('stripe_payment_currencies')
+            ->value('value');
+
+        if ($paymentCurrencies) {
+            $paymentCurrencies = (array) json_decode($paymentCurrencies);
+
+            return array_map(
+                function ($currency) {
+                    return [
+                        'id' => $currency,
+                        'value' => $currency,
+                    ];
+                },
+                $paymentCurrencies
+            );
+        }
+        return [];
+    }
+
     public function getCurrencyOptions(): array
     {
         return [
@@ -316,6 +345,10 @@ class StripeService
                 'value' => 'EUR',
             ],
             [
+                'id' => 'GBP',
+                'value' => 'GBP',
+            ],
+            [
                 'id' => 'USD',
                 'value' => 'USD',
             ],
@@ -324,7 +357,14 @@ class StripeService
 
     public function getAmountOptions(): array
     {
-        return config('constants.stripe_amount_options');
+        $currencyAmountOptions = Setting::key('stripe_amount_options')
+            ->value('value');
+
+        return (
+            $currencyAmountOptions
+            ? (array) json_decode($currencyAmountOptions)
+            : []
+        );
     }
 
     public function getApplicationFeeAmount($amount): float
@@ -348,5 +388,78 @@ class StripeService
             fn ($amount): float => $this->getMinimalPaymentWithFee($amount),
             config('constants.stripe_minimal_payments')
         );
+    }
+
+    public function getDefaultCountry(): ?string
+    {
+        return Setting::key('stripe_default_country')->value('value');
+    }
+
+    public function isEnabled(): bool
+    {
+        return app(SettingCache::class)->remember('stripe_is_enabled', function () {
+            return (bool) Setting::key('stripe_is_enabled')->value('value');
+        });
+    }
+
+    public function isStripeConnectEnabled(User $user): bool
+    {
+        $key = 'stripe_is_enabled';
+
+        return (bool) $user->getMetas([$key])->get($key, false);
+    }
+
+    private function getUserIdFromStripeAccount(string $stripeAccount): ?int
+    {
+        return UserMeta::keyAndValue('stripe_account_id', $stripeAccount)
+            ->value('user_id');
+    }
+
+    public function webhook($payload, $stripeSignature): Response
+    {
+        $event = null;
+
+        $endpointSecret = config('constants.stripe_endpoint_secret');
+
+        Stripe::setApiKey($this->secretKey());
+
+        // @see https://stripe.com/docs/webhooks/signatures for more information.
+        try {
+            $event = Webhook::constructEvent(
+                $payload,
+                $stripeSignature,
+                $endpointSecret
+            );
+        } catch (\UnexpectedValueException $e) {
+            return response(
+                '⚠️  Webhook error while validating payload.',
+                400
+            );
+        } catch (SignatureVerificationException $e) {
+            return response(
+                '⚠️  Webhook error while validating signature.',
+                400
+            );
+        }
+
+        $webhookData = [
+            'data' => $payload,
+            'payment_method' => PaymentWebhook::PAYMENT_METHOD_STRIPE,
+            'event_type' => $event->type,
+        ];
+
+        if (!empty($event->account)) {
+            $webhookData['receiver_id'] = $this->getUserIdFromStripeAccount(
+                $event->account
+            );
+        }
+
+        if ($event->type == 'checkout.session.completed') {
+            // TODO trigger email
+        }
+
+        PaymentWebhook::create($webhookData);
+
+        return response('Success', 200);
     }
 }

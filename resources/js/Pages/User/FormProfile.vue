@@ -58,8 +58,9 @@
 
         <biz-form-dropdown-search
             label="Language"
+            required
             :close-on-click="true"
-            :message="form.errors.language_id"
+            :message="error('language_id')"
             @search="searchLanguage($event)"
         >
             <template #trigger>
@@ -88,6 +89,7 @@
     import BizFormSelect from '@/Biz/Form/Select';
     import UserIcon from '@/Biz/Icon/User';
     import { useModelWrapper } from '@/Libs/utils';
+    import { debounceTime } from '@/Libs/defaults';
     import { confirmDelete } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
@@ -171,7 +173,7 @@
                 } else {
                     this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
-            }, 750),
+            }, debounceTime),
         },
     };
 </script>

@@ -51,21 +51,43 @@
                 />
 
                 <biz-form-dropdown-search
+                    label="Country"
+                    :close-on-click="true"
+                    :message="form.errors.country_code"
+                    @search="searchCountry($event)"
+                >
+                    <template #trigger>
+                        <span :style="{'min-width': '4rem'}">
+                            {{ selectedCountry }}
+                        </span>
+                    </template>
+
+                    <biz-dropdown-item
+                        v-for="option in filteredCountries"
+                        :key="option.id"
+                        @click="selectedCountry = option"
+                    >
+                        {{ option.value }}
+                    </biz-dropdown-item>
+                </biz-form-dropdown-search>
+
+                <biz-form-dropdown-search
                     label="Language"
+                    required
                     :close-on-click="true"
                     :message="form.errors.language_id"
                     @search="searchLanguage($event)"
                 >
                     <template #trigger>
                         <span :style="{'min-width': '4rem'}">
-                            {{ selectedDefaultLanguage }}
+                            {{ selectedLanguage }}
                         </span>
                     </template>
 
                     <biz-dropdown-item
                         v-for="option in filteredLanguages"
                         :key="option.id"
-                        @click="selectedDefaultLanguage = option"
+                        @click="selectedLanguage = option"
                     >
                         {{ option.value }}
                     </biz-dropdown-item>
@@ -96,7 +118,7 @@
     import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSection from '@/Biz/FormSection';
     import UserIcon from '@/Biz/Icon/User';
-    import { acceptedImageTypes } from '@/Libs/defaults';
+    import { acceptedImageTypes, debounceTime } from '@/Libs/defaults';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
@@ -131,6 +153,7 @@
 
         setup() {
             return {
+                countryOptions: usePage().props.value.countryOptions,
                 languageOptions: usePage().props.value.shownLanguageOptions,
             };
         },
@@ -145,18 +168,36 @@
                     first_name: this.user.first_name,
                     last_name: this.user.last_name,
                     email: this.user.email,
+                    country_code: this.user.country_code,
                     photo: null,
                     photo_url: this.user.profile_photo_url,
                     profile_photo_media_id: this.user.profile_photo_media_id,
                     language_id: this.user.language_id
                 }),
                 isImageEditing: false,
+                filteredCountries: this.countryOptions.slice(0, 10),
                 filteredLanguages: this.languageOptions.slice(0, 10),
             }
         },
 
         computed: {
-            selectedDefaultLanguage: {
+            selectedCountry: {
+                get() {
+                    if (this.form.country_code) {
+                        let country = find(
+                            this.countryOptions,
+                            ['id', this.form.country_code]
+                        );
+                        return country.value;
+                    }
+                    return '';
+                },
+                set(country) {
+                    this.form.country_code = country.id;
+                }
+            },
+
+            selectedLanguage: {
                 get() {
                     if (this.form.language_id) {
                         let language = find(
@@ -211,6 +252,16 @@
                 })
             },
 
+            searchCountry: debounce(function(term) {
+                if (!isEmpty(term) && term.length > 1) {
+                    this.filteredCountries = filter(this.countryOptions, function (country) {
+                        return new RegExp(term, 'i').test(country.value);
+                    }).slice(0, 10);
+                } else {
+                    this.filteredCountries = this.countryOptions.slice(0, 10);
+                }
+            }, 750),
+
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
                     this.filteredLanguages = filter(this.languageOptions, function (language) {
@@ -219,7 +270,7 @@
                 } else {
                     this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
-            }, 750),
+            }, debounceTime),
         },
     }
 </script>

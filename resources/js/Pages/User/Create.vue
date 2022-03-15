@@ -53,8 +53,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import FormUserPassword from '@/Pages/User/FormPassword';
     import FormUserProfile from '@/Pages/User/FormProfile';
-    import { map } from 'lodash';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/inertia-vue3';
     import { success as successAlert } from '@/Libs/alert';
 
     export default {
@@ -79,6 +78,7 @@
                 role: null,
                 password: null,
                 password_confirmation: null,
+                language_id: null,
                 photo: null,
                 photo_url: null,
                 profile_photo_media_id: null,
