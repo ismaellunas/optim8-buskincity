@@ -467,7 +467,7 @@ class StripeService
 
     private function donationThankYouEmail(string $email, int $amount, string $currency)
     {
-        if ($this->isZeroDecimal($currency)) {
+        if (! $this->isZeroDecimal($currency)) {
             $amount = $amount / 100;
         }
 
