@@ -77,7 +77,7 @@
                                     :value="groupOption"
                                     @change="filterGroups"
                                 >
-                                    &nbsp; {{ groupOption }}
+                                    &nbsp; {{ groupOption.replace('_', ' ') }}
                                 </biz-checkbox>
                             </biz-dropdown-item>
                         </biz-dropdown-scroll>

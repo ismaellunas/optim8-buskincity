@@ -87,6 +87,22 @@ Route::get('/user/remove-facebook', function() {
     echo "Remove facebook account page";
 });
 
+Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
+    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+        ->name('password.email')->middleware('recaptcha');
+    Route::post('/reset-password', [NewPasswordController::class, 'store'])
+        ->name('password.update');
+});
+
+Route::name('forms.')->prefix('forms')->group(function () {
+    Route::get('schemas', [FormController::class, 'getSchemas'])
+        ->name('schemas');
+    Route::post('save', [FormController::class, 'submit'])
+        ->name('save');
+});
+
+Route::post('webhooks/stripe', [StripeController::class, 'webhook']);
+
 Route::group([
     'prefix' => Localization::setLocale(),
     'middleware' => [ 'localizationRedirect' ]
@@ -116,19 +132,3 @@ Route::group([
     Route::post('donations/checkout/{user}', [DonationController::class, 'checkout'])
         ->name('donations.checkout')->middleware('throttle:donations');
 });
-
-Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
-    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->name('password.email')->middleware('recaptcha');
-    Route::post('/reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.update');
-});
-
-Route::name('forms.')->prefix('forms')->group(function () {
-    Route::get('schemas', [FormController::class, 'getSchemas'])
-        ->name('schemas');
-    Route::post('save', [FormController::class, 'submit'])
-        ->name('save');
-});
-
-Route::post('webhooks/stripe', [StripeController::class, 'webhook']);
