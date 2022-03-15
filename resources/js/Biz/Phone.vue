@@ -46,6 +46,7 @@
     import BizDropdownScroll from '@/Biz/DropdownScroll';
     import BizDropdownSearch from '@/Biz/DropdownSearch';
     import { useModelWrapper } from '@/Libs/utils';
+    import { debounceTime } from '@/Libs/defaults';
     import { debounce, filter, find, isEmpty } from 'lodash';
 
     export default {
@@ -121,7 +122,7 @@
                 } else {
                     this.filteredCountries = this.countryOptions;
                 }
-            }, 750),
+            }, debounceTime),
         },
     }
 </script>

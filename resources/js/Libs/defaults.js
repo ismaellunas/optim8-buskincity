@@ -33,3 +33,5 @@ export const acceptedVideoTypes = [
     '.ogv',
     '.3gp',
 ];
+
+export const debounceTime = 750;
