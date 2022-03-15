@@ -36,8 +36,8 @@ class PostFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $content = "";
-            foreach ($this->faker->paragraphs(25) as $paragraph) {
-                $content .= "<p>$paragraph</p>";
+            for ($i = 0; $i < 5; $i++) {
+                $content .= "<p>".$this->faker->paragraph(10)."</p>";
             }
 
             return [
