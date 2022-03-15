@@ -123,8 +123,6 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'stripe_account_id_meta_key' => 'stripe_account_id',
-
     'stripe_payment_method_types' => [
         'card',
         'acss_debit',
