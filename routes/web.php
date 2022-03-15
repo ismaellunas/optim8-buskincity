@@ -87,6 +87,12 @@ Route::get('/user/remove-facebook', function() {
     echo "Remove facebook account page";
 });
 
+Route::get('test-stripe', function () {
+    echo "<pre>";
+    echo app(App\Services\StripeService::class)->testTransactionList();
+    echo "</pre>";
+});
+
 Route::group([
     'prefix' => Localization::setLocale(),
     'middleware' => [ 'localizationRedirect' ]

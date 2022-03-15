@@ -462,4 +462,17 @@ class StripeService
 
         return response('Success', 200);
     }
+
+    public function testTransactionList(/* User $user */)
+    {
+        Stripe::setApiKey($this->secretKey());
+
+        //$stripeAccountId = $this->getStripeAccountId($user);
+        $stripeAccountId = 'acct_1KZRrDR8AGiJWqnO';
+
+        return \Stripe\BalanceTransaction::all(
+            ['limit' => 3],
+            ['stripe_account' => $stripeAccountId]
+        );
+    }
 }
