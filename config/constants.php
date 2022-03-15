@@ -116,6 +116,10 @@ return [
         'user' => 'widget_user',
     ],
 
+    'throttle' => [
+        'donations' => 6,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway
