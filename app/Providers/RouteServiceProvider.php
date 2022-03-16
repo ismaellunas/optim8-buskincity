@@ -71,7 +71,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('donations', function (Request $request) {
-            $max = config('constants.throttle.donations');
+            $max = config('constants.throttle.checkout');
 
             return $request->user()
                 ? Limit::perMinute($max)->by($request->user()->id)

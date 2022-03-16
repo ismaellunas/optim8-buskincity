@@ -65,7 +65,7 @@ class DonationTest extends TestCase
 
         // Assert
         $this->assertEquals(
-            config('constants.throttle.donations'),
+            config('constants.throttle.checkout'),
             $headerRateLimit
         );
     }

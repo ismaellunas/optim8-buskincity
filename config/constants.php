@@ -118,7 +118,7 @@ return [
     ],
 
     'throttle' => [
-        'donations' => 6,
+        'checkout' => 6,
     ],
 
     /*
