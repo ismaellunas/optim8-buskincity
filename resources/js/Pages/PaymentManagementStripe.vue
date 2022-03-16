@@ -143,6 +143,64 @@
                 </biz-table>
             </div>
         </section>
+
+        <section
+            v-if="hasConnectedAccount"
+            class="section box"
+        >
+            <h1 class="title">
+                Transactions
+            </h1>
+
+            <div
+                v-if="balanceTransactions.data.length > 0"
+                class="mb-4"
+            >
+                <biz-table class="is-bordered is-hoverable is-fullwidth">
+                    <tr>
+                        <th>Currency</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                    <tr
+                        v-for="transaction, index in balanceTransactions.data"
+                        :key="index"
+                    >
+                        <td>{{ transaction.currency.toUpperCase() }}</td>
+                        <td>{{ transaction.net / 100 }}</td>
+                        <td>{{ convertTimestamps(transaction.created) }}</td>
+                    </tr>
+                </biz-table>
+
+                <nav
+                    class="pagination"
+                    role="navigation"
+                    aria-label="pagination"
+                >
+                    <button
+                        class="pagination-previous button"
+                        :disabled="isPreviousDisabled"
+                        @click="paginationVisit(previousUrl)"
+                    >
+                        Previous
+                    </button>
+                    <button
+                        class="pagination-next button"
+                        :disabled="isNextDisabled"
+                        @click="paginationVisit(nextUrl)"
+                    >
+                        Next page
+                    </button>
+                </nav>
+            </div>
+
+            <div
+                v-else
+                class="mb-4"
+            >
+                <p>No transactions</p>
+            </div>
+        </section>
     </app-layout>
 </template>
 
@@ -155,7 +213,9 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { confirm as confirmAlert, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { ref } from 'vue';
+    import { merge } from 'lodash';
     import { useForm } from '@inertiajs/inertia-vue3';
+    import { convertToDate, isBlank } from '@/Libs/utils';
 
     export default {
         components: {
@@ -191,6 +251,10 @@
                 type: Object,
                 default: () => {},
             },
+            balanceTransactions: {
+                type: Object,
+                default: () => {},
+            },
             countryOptions: {
                 type: Object,
                 default: () => {},
@@ -202,6 +266,10 @@
             isEnabled: {
                 type: Boolean,
                 default: false,
+            },
+            pageQueryParams: {
+                type: Object,
+                default: null,
             },
         },
 
@@ -218,7 +286,83 @@
                 createStripeForm: useForm(createStripeForm),
                 loader: ref(null),
                 settingForm: useForm(settingForm),
+                queryParams: ref(merge({}, props.pageQueryParams)),
             }
+        },
+
+        data() {
+            return {
+                baseUrl: route('payment-management.stripe.show'),
+            };
+        },
+
+        computed: {
+            isPreviousDisabled() {
+                if (this.queryParams['startingAfter']) {
+                    return false;
+                }
+
+                if (
+                    this.queryParams['endingBefore']
+                    && this.balanceTransactions.has_more == true
+                ) {
+                    return false;
+                }
+
+                return true;
+            },
+
+            isNextDisabled() {
+                if (this.queryParams['endingBefore']) {
+                    return false;
+                }
+
+                if (
+                    this.queryParams['startingAfter']
+                    && this.balanceTransactions.has_more == true
+                ) {
+                    return false;
+                }
+
+                if (
+                    isBlank(this.queryParams)
+                    && this.balanceTransactions.has_more == true
+                ) {
+                    return false;
+                }
+
+                return true;
+            },
+
+            nextUrl() {
+                let transactions = this.balanceTransactions.data;
+
+                if (transactions.length > 0) {
+                    return route(
+                        'payment-management.stripe.show',
+                        {
+                            startingAfter: transactions[transactions.length - 1].id,
+                        }
+                    );
+                }
+
+                return null;
+            },
+
+            previousUrl() {
+                let transactions = this.balanceTransactions.data;
+
+                if (transactions.length > 0) {
+                    return route(
+                        'payment-management.stripe.show',
+                        {
+                            endingBefore: transactions[0].id,
+                        }
+                    );
+                }
+
+                return null;
+            },
         },
 
         methods: {
@@ -293,6 +437,27 @@
                     },
                     onError(errors) {
                         oopsAlert();
+                    },
+                    onFinish: () => {
+                        this.loader.hide();
+                    }
+                });
+            },
+
+            convertTimestamps(unixTimestamp) {
+                return convertToDate(unixTimestamp, {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                    hour: "numeric"
+                });
+            },
+
+            paginationVisit(url) {
+                this.$inertia.get(url, {}, {
+                    preserveScroll: true,
+                    onStart: () => {
+                        this.loader = this.$loading.show();
                     },
                     onFinish: () => {
                         this.loader.hide();
