@@ -78,6 +78,7 @@
                 role: null,
                 password: null,
                 password_confirmation: null,
+                country_code: null,
                 language_id: null,
                 photo: null,
                 photo_url: null,
