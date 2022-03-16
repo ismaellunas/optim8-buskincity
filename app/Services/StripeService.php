@@ -17,6 +17,7 @@ use Stripe\{
     Account,
     AccountLink,
     Balance,
+    BalanceTransaction,
     Checkout\Session,
     LoginLink,
     Stripe,
@@ -29,6 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 class StripeService
 {
     private $stripeClient = null;
+    private $perPage = 10;
 
     private function secretKey(): string
     {
@@ -100,6 +102,27 @@ class StripeService
 
         return Balance::retrieve(
             ['stripe_account' => $stripeAccountId]
+        );
+    }
+
+    public function accountBalanceTransactions(
+        User $user,
+        array $options = [],
+    ) {
+        Stripe::setApiKey($this->secretKey());
+
+        $connectedAccountId = $this->getConnectedAccountId($user);
+
+        $startingAfter = isset($options['startingAfter']) ? $options['startingAfter'] : null;
+        $endingBefore = isset($options['endingBefore']) ? $options['endingBefore'] : null;
+
+        return BalanceTransaction::all(
+            [
+                'limit' => $this->perPage,
+                'starting_after' => $startingAfter,
+                'ending_before' => $endingBefore,
+            ],
+            ['stripe_account' => $connectedAccountId]
         );
     }
 
@@ -457,18 +480,5 @@ class StripeService
         PaymentWebhook::create($webhookData);
 
         return response('Success', 200);
-    }
-
-    public function testTransactionList(/* User $user */)
-    {
-        Stripe::setApiKey($this->secretKey());
-
-        //$stripeAccountId = $this->getStripeAccountId($user);
-        $stripeAccountId = 'acct_1KZRrDR8AGiJWqnO';
-
-        return \Stripe\BalanceTransaction::all(
-            ['limit' => 3],
-            ['stripe_account' => $stripeAccountId]
-        );
     }
 }
