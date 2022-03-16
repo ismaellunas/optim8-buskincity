@@ -72,7 +72,23 @@
                             <div class="field">
                                 <label class="label">Password</label>
                                 <div class="control">
-                                    <input type="password" name="password" class="input" placeholder="Enter your password" required>
+                                    <div class="field has-addons mb-0">
+                                        <div class="control is-expanded">
+                                            <input type="password" name="password" id="input-password" class="input" placeholder="Enter your password" required>
+                                        </div>
+                                        <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password">
+                                            <button type="button" class="button" tabindex="-1">
+                                                <span class="icon">
+                                                    <i class="fas fa-eye"></i>
+                                                </span>
+                                            </button>
+                                            <button type="button" class="button is-hidden" tabindex="-1">
+                                                <span class="icon">
+                                                    <i class="fas fa-eye-slash"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                                 @error('password')
                                     <p class="help is-danger">{{ $message }}</p>
