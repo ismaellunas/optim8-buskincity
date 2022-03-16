@@ -34,13 +34,15 @@ class DonationTest extends TestCase
             Mockery::mock(
                 StripeService::class,
                 function (MockInterface $mock) {
-                    $mock->shouldReceive('getMinimalPaymentWithFee')->once();
-                    $mock->shouldReceive('getCurrencyMinimalPayment')->once();
-                    $mock->shouldReceive('getCurrencyOptions')->once();
+                    $mock->shouldReceive('getMinimalPaymentWithFee');
+                    $mock->shouldReceive('getCurrencyMinimalPayment');
+                    $mock->shouldReceive('getCurrencyOptions');
                 }
             )
         );
     }
+
+    // References: https://medium.com/@ashleywnj/learning-laravel-small-steps-rate-limiting-testing-9c22165fd65
 
     /**
      * @test
@@ -51,7 +53,6 @@ class DonationTest extends TestCase
         $this->mockStripeService();
 
         // Act
-        // References: https://laracasts.com/discuss/channels/testing/test-rate-limit-throttling-catch-22
         $response = $this->post(
             route('donations.checkout', $this->user->id),
             [
@@ -66,5 +67,29 @@ class DonationTest extends TestCase
             config('constants.throttle.checkout'),
             $headerRateLimit
         );
+    }
+
+    /**
+     * @test
+     */
+    public function donationThrottle()
+    {
+        // Arrange
+        $this->mockStripeService();
+
+        // Act
+        $max = config('constants.throttle.checkout');
+        for ($i = 0; $i < $max + 1; $i++) {
+            $response = $this->post(
+                route('donations.checkout', $this->user->id),
+                [
+                    'currency' => 'SEK',
+                    'amount' => '100'
+                ]
+            );
+        }
+
+        // Assert
+        $response->assertStatus(429);
     }
 }
