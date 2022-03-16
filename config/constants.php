@@ -104,6 +104,7 @@ return [
             'pagination',
             'passwords',
             'validation',
+            'form_builder'
         ]
     ],
     'setting_cache' => [
@@ -121,8 +122,6 @@ return [
     | Stripe Payment Gateway
     |--------------------------------------------------------------------------
     */
-
-    'stripe_account_id_meta_key' => 'stripe_account_id',
 
     'stripe_payment_method_types' => [
         'card',
