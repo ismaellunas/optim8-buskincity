@@ -45,7 +45,8 @@ class StripeController extends Controller
             $balanceTransactions = $this->stripeService
                 ->accountBalanceTransactions(
                     $user,
-                    $pageQueryParams
+                    $request->startingAfter,
+                    $request->endingBefore,
                 );
 
             $stripeAccountId = $this->stripeService->getConnectedAccountId($user);

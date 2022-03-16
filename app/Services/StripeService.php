@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\HumanReadable;
 use App\Models\{
     Country,
     PaymentWebhook,
@@ -11,8 +12,11 @@ use App\Models\{
 };
 use App\Entities\Caches\SettingCache;
 use App\Entities\UserMetaStripe;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Support\{
+    Collection,
+    Facades\URL,
+    Str,
+};
 use Stripe\{
     Account,
     AccountLink,
@@ -107,14 +111,12 @@ class StripeService
 
     public function accountBalanceTransactions(
         User $user,
-        array $options = [],
+        string $startingAfter = null,
+        string $endingBefore = null,
     ) {
         Stripe::setApiKey($this->secretKey());
 
         $connectedAccountId = $this->getConnectedAccountId($user);
-
-        $startingAfter = isset($options['startingAfter']) ? $options['startingAfter'] : null;
-        $endingBefore = isset($options['endingBefore']) ? $options['endingBefore'] : null;
 
         return BalanceTransaction::all(
             [
