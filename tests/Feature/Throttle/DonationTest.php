@@ -43,9 +43,7 @@ class DonationTest extends TestCase
     }
 
     /**
-     * A basic feature test example.
      * @test
-     * @return void
      */
     public function donationThrottleLimit()
     {
