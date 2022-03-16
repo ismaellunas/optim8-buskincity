@@ -166,9 +166,9 @@
                         v-for="transaction, index in balanceTransactions.data"
                         :key="index"
                     >
-                        <td>{{ transaction.currency.toUpperCase() }}</td>
-                        <td>{{ transaction.net / 100 }}</td>
-                        <td>{{ convertTimestamps(transaction.created) }}</td>
+                        <td>{{ transaction.currency }}</td>
+                        <td>{{ transaction.amount }}</td>
+                        <td>{{ transaction.created }}</td>
                     </tr>
                 </biz-table>
 

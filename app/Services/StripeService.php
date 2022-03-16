@@ -118,7 +118,7 @@ class StripeService
 
         $connectedAccountId = $this->getConnectedAccountId($user);
 
-        return BalanceTransaction::all(
+        $transactions = BalanceTransaction::all(
             [
                 'limit' => $this->perPage,
                 'starting_after' => $startingAfter,
@@ -126,6 +126,18 @@ class StripeService
             ],
             ['stripe_account' => $connectedAccountId]
         );
+
+        $transactions['data'] = collect($transactions['data'])
+            ->map(function ($transaction) {
+                return [
+                    'id' => $transaction->id,
+                    'currency' => Str::upper($transaction->currency),
+                    'amount' => $transaction->net / 100,
+                    'created' => HumanReadable::timestampToDateTime($transaction->created),
+                ];
+            });
+
+        return $transactions;
     }
 
     public function getConnectedAccountId(User $user): ?string
