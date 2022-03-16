@@ -21,17 +21,29 @@ class StripeController extends Controller
         $this->stripeService = $stripeService;
     }
 
-    public function show()
+    public function show(Request $request)
     {
         $user = auth()->user();
         $hasConnectedAccount = $this->stripeService->hasConnectedAccount($user);
 
+        $pageQueryParams = null;
         $balance = null;
+        $balanceTransactions = null;
         $hasPassedOnboarding = false;
         $countryOptions = [];
 
         if ($hasConnectedAccount) {
+            $pageQueryParams = array_filter(
+                $request->only('startingAfter', 'endingBefore')
+            );
+
             $balance = $this->stripeService->accountBalance($user);
+
+            $balanceTransactions = $this->stripeService
+                ->accountBalanceTransactions(
+                    $user,
+                    $pageQueryParams
+                );
 
             $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
@@ -49,11 +61,13 @@ class StripeController extends Controller
 
         return Inertia::render('PaymentManagementStripe', compact(
             'balance',
+            'balanceTransactions',
             'countryOptions',
             'defaultCountry',
             'hasConnectedAccount',
             'hasPassedOnboarding',
-            'isEnabled'
+            'isEnabled',
+            'pageQueryParams',
         ));
     }
 
