@@ -186,6 +186,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->first_name = $inputs['first_name'];
         $this->last_name = $inputs['last_name'];
         $this->email = $inputs['email'];
+        $this->country_code = $inputs['country_code'];
         $this->language_id = $inputs['language_id'];
         $this->save();
     }
