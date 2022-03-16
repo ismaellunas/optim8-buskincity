@@ -19,12 +19,16 @@ class UserEmailIsVerified
      */
     public function handle($request, Closure $next, $redirectToRoute = null)
     {
-        if (! $request->user() ||
-            ($request->user() instanceof MustVerifyEmail &&
-            ! $request->user()->hasVerifiedEmail())) {
-
+        if (
+            !$request->user()
+            || (
+                $request->user() instanceof MustVerifyEmail
+                && !$request->user()->hasVerifiedEmail()
+            )
+        ) {
             $verificationNoticeRoute = 'verification.notice';
-            if ($request->user()->is_super_administrator || $request->user()->is_administrator) {
+
+            if ($request->routeIs('admin.*')) {
                 $verificationNoticeRoute = 'admin.verification.notice';
             }
 
