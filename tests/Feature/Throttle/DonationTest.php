@@ -2,14 +2,14 @@
 
 namespace Tests\Feature\Throttle;
 
+use App\Models\User;
+use App\Services\StripeService;
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Database\Seeders\DatabaseSeeder;
-use App\Models\User;
-use Tests\TestCase;
 use Mockery;
 use Mockery\MockInterface;
-use App\Services\StripeService;
+use Tests\TestCase;
 
 class DonationTest extends TestCase
 {
