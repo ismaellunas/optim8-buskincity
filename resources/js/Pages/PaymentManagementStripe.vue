@@ -215,7 +215,7 @@
     import { ref } from 'vue';
     import { merge } from 'lodash';
     import { useForm } from '@inertiajs/inertia-vue3';
-    import { convertToDate, isBlank } from '@/Libs/utils';
+    import { isBlank } from '@/Libs/utils';
 
     export default {
         components: {
@@ -441,15 +441,6 @@
                     onFinish: () => {
                         this.loader.hide();
                     }
-                });
-            },
-
-            convertTimestamps(unixTimestamp) {
-                return convertToDate(unixTimestamp, {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric",
-                    hour: "numeric"
                 });
             },
 

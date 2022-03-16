@@ -1,5 +1,4 @@
 import { computed } from 'vue';
-import { dateFormat } from '@/Libs/defaults';
 
 export const regexFileName = "a-z0-9\-";
 export const regexSlug = regexFileName;
@@ -115,15 +114,4 @@ export function convertToSlug(text) {
     }
 
     return result;
-}
-
-export function convertToDate(unixTimestamp, format = null) {
-    let milliseconds = unixTimestamp * 1000;
-    let dateObject = new Date(milliseconds);
-
-    if (!format) {
-        format = dateFormat;
-    }
-
-    return dateObject.toLocaleString("en-US", format);
 }

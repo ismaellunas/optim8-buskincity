@@ -35,9 +35,3 @@ export const acceptedVideoTypes = [
 ];
 
 export const debounceTime = 750;
-
-export const dateFormat = {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-}
