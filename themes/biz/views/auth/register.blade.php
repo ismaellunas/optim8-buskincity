@@ -96,15 +96,15 @@
                                 <div class="control">
                                     <div class="field has-addons mb-0">
                                         <div class="control is-expanded">
-                                            <input type="password" name="password" class="input input-password" placeholder="Enter your password" required>
+                                            <input type="password" name="password" id="input-password" class="input" placeholder="Enter your password" required>
                                         </div>
-                                        <div class="control icon-password" onclick="showHidePassword()">
-                                            <button type="button" class="button">
+                                        <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password">
+                                            <button type="button" class="button" tabindex="-1">
                                                 <span class="icon">
                                                     <i class="fas fa-eye"></i>
                                                 </span>
                                             </button>
-                                            <button type="button" class="button is-hidden">
+                                            <button type="button" class="button is-hidden" tabindex="-1">
                                                 <span class="icon">
                                                     <i class="fas fa-eye-slash"></i>
                                                 </span>
@@ -122,9 +122,9 @@
                                 <div class="control">
                                     <div class="field has-addons mb-0">
                                         <div class="control is-expanded">
-                                            <input type="password" name="password_confirmation" class="input input-password" placeholder="Confirm Password" required>
+                                            <input type="password" name="password_confirmation" id="input-password-confirmation" class="input" placeholder="Confirm Password" required>
                                         </div>
-                                        <div class="control icon-password" onclick="showHidePassword()">
+                                        <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password-confirmation">
                                             <button type="button" class="button">
                                                 <span class="icon">
                                                     <i class="fas fa-eye"></i>

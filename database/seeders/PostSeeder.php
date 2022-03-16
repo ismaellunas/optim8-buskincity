@@ -3,10 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
-use App\Models\Post;
-use App\Models\User;
+use App\Models\{
+    Post,
+    User
+};
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Sequence;
+use Illuminate\Support\Str;
 
 class PostSeeder extends Seeder
 {
@@ -19,12 +22,25 @@ class PostSeeder extends Seeder
     {
         $adminUser = User::find(1);
         $category = Category::find(1);
+        $posts = [
+            [
+                'title' => 'Draft News',
+                'slug' => Str::slug('Draft News'),
+                'status' => Post::STATUS_DRAFT
+            ],
+            [
+                'title' => 'Good News',
+                'slug' => Str::slug('Good News'),
+                'status' => Post::STATUS_PUBLISHED
+            ],
+        ];
+
         Post::factory()
-            ->count(20)
+            ->count(2)
             ->for($adminUser, 'author')
             ->state(new Sequence(
-                ['status' => Post::STATUS_DRAFT],
-                ['status' => Post::STATUS_PUBLISHED],
+                $posts[0],
+                $posts[1],
             ))
             ->hasAttached($category)
             ->fakeContent()

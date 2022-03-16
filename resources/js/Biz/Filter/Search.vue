@@ -27,6 +27,7 @@
     import BizFormFieldHorizontal from '@/Biz/Form/FieldHorizontal';
     import BizInput from '@/Biz/Input';
     import { useModelWrapper } from '@/Libs/utils';
+    import { debounceTime } from '@/Libs/defaults';
     import { debounce } from 'lodash';
 
     export default {
@@ -58,7 +59,7 @@
                 if (term.length > 2 || term.length == 0) {
                     this.$emit('search', term);
                 }
-            }, 750),
+            }, debounceTime),
 
             reset() {
                 this.term = '';

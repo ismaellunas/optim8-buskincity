@@ -104,6 +104,7 @@
     import BizInput from '@/Biz/Input';
     import BizModalCard from '@/Biz/ModalCard';
     import BizSelect from '@/Biz/Select';
+    import { debounceTime } from '@/Libs/defaults';
     import { debounce, filter, isEmpty } from 'lodash';
 
     export default {
@@ -170,7 +171,7 @@
                 } else {
                     this.filteredIcon = this.iconClasses.slice(0, 52);
                 }
-            }, 750),
+            }, debounceTime),
 
             onSelectedIcon(icon) {
                 this.$emit('close');

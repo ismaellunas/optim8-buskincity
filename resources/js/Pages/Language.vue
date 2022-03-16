@@ -89,6 +89,7 @@
     import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
     import BizLabel from '@/Biz/Label';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
+    import { debounceTime } from '@/Libs/defaults';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { debounce, filter, find, isEmpty, sortBy } from 'lodash';
 
@@ -205,7 +206,7 @@
                 } else {
                     this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
-            }, 750),
+            }, debounceTime),
 
             addSupportedLanguages(languageId) {
                 if (!this.form.languages.includes(languageId)) {
