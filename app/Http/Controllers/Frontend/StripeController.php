@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Entities\UserMetaStripe;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StripeAccountCreateRequest;
+use App\Http\Requests\{
+    StripeAccountCreateRequest,
+    TransactionPaginationRequest,
+};
 use App\Services\StripeService;
 use App\Traits\FlashNotifiable;
 use Illuminate\Http\Request;
@@ -21,7 +24,7 @@ class StripeController extends Controller
         $this->stripeService = $stripeService;
     }
 
-    public function show(Request $request)
+    public function show(TransactionPaginationRequest $request)
     {
         $user = auth()->user();
         $hasConnectedAccount = $this->stripeService->hasConnectedAccount($user);
