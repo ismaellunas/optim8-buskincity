@@ -77,4 +77,19 @@ class StripeSettingService
     {
         return Setting::key('stripe_default_country')->value('value');
     }
+
+    public function getCountrySpecs(): ?Setting
+    {
+        return Setting::firstWhere([
+            'key' => 'stripe_country_specs',
+        ]);
+    }
+
+    public function saveCountrySpecs(array $countrySpecs)
+    {
+        return Setting::updateOrCreate(
+            ['key' => 'stripe_country_specs'],
+            ['value' => json_encode($countrySpecs)]
+        );
+    }
 }

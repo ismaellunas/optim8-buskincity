@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\{
     Country,
     PaymentWebhook,
-    Setting,
     User,
     UserMeta,
 };
@@ -273,26 +272,25 @@ class StripeService
 
     public function getCountryOptions(): Collection
     {
+        $stripeSettingService = app(StripeSettingService::class);
         $countrySpecs = [];
 
-        $countrySpecsSetting = Setting::firstOrNew([
-            'key' => 'stripe_country_specs',
-        ]);
+        $countrySpecsSetting = $stripeSettingService->getCountrySpecs();
 
-        if (!$countrySpecsSetting->id) {
+        if (is_null($countrySpecsSetting)) {
 
-            $stripe = $this->getStripeClient();
-            $response = $stripe->countrySpecs->all(['limit' => 100]);
+            $response = $this->getStripeClient()->countrySpecs->all(['limit' => 100]);
 
-            $countrySpecsSetting->value = json_encode($response->data);
-            $countrySpecsSetting->save();
+            $stripeSettingService->saveCountrySpecs($response->data);
+
+            $countrySpecs = $response->data;
+        } else {
+            $countrySpecs = json_decode($countrySpecsSetting->value);
         }
 
-        $countrySpecs = json_decode($countrySpecsSetting->value);
         $countrySpecs = collect($countrySpecs);
-        $countryIsoIds = $countrySpecs->pluck('id');
 
-        return Country::whereIn('alpha2', $countryIsoIds)
+        return Country::whereIn('alpha2', $countrySpecs->pluck('id'))
             ->get(['alpha2', 'display_name'])
             ->map(function ($country) {
                 return [
