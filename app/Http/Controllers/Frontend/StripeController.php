@@ -159,12 +159,4 @@ class StripeController extends Controller
 
         return ['url' => $accountLink->url];
     }
-
-    public function webhook(Request $request)
-    {
-        return $this->stripeService->webhook(
-            $request->getContent(),
-            $request->server('HTTP_STRIPE_SIGNATURE')
-        );
-    }
 }

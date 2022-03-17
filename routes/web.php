@@ -14,6 +14,7 @@ use App\Http\Controllers\{
     Frontend\StripeController,
     NewPasswordController,
     PasswordResetLinkController,
+    WebhookStripeController,
 };
 use Illuminate\Support\Facades\Route;
 use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
@@ -101,7 +102,7 @@ Route::name('forms.')->prefix('forms')->group(function () {
         ->name('save');
 });
 
-Route::post('webhooks/stripe', [StripeController::class, 'webhook']);
+Route::post('webhooks/stripe', WebhookStripeController::class);
 
 Route::group([
     'prefix' => Localization::setLocale(),
