@@ -9,8 +9,10 @@ use App\Models\{
     UserMeta,
 };
 use App\Entities\UserMetaStripe;
+use App\Mail\ThankYouCheckoutCompleted;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Mail;
 use Stripe\{
     Account,
     AccountLink,
@@ -396,11 +398,27 @@ class StripeService
         }
 
         if ($event->type == 'checkout.session.completed') {
-            // TODO trigger email
+            $this->donationThankYouEmail(
+                $event->data->object->customer_details->email,
+                $event->data->object->amount_total,
+                $event->data->object->currency
+            );
         }
 
         PaymentWebhook::create($webhookData);
 
         return response('Success', 200);
+    }
+
+    private function donationThankYouEmail(string $email, int $amount, string $currency)
+    {
+        if (! $this->isZeroDecimal($currency)) {
+            $amount = $amount / 100;
+        }
+
+        Mail::to($email)->queue(new ThankYouCheckoutCompleted(
+            $amount,
+            strtoupper($currency)
+        ));
     }
 }
