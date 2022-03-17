@@ -17,7 +17,8 @@ class HumanReadable
         return round($bytes, 2) . ' ' . $units[$i];
     }
 
-    public static function timestampToDateTime($timestamp) {
+    public static function timestampToDateTime(int $timestamp): string
+    {
         return Carbon::parse($timestamp)
             ->format(config('constants.format.date_time'));
     }
