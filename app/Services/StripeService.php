@@ -128,17 +128,53 @@ class StripeService
             ['stripe_account' => $connectedAccountId]
         );
 
+        $this->reFormatTransactionData($transactions);
+        $this->setPaginateUrlTransaction($transactions);
+
+        return $transactions;
+    }
+
+    private function reFormatTransactionData(&$transactions): void
+    {
         $transactions['data'] = collect($transactions['data'])
             ->map(function ($transaction) {
+                $amount = $transaction->net;
+
+                if (!$this->isZeroDecimal($transaction->currency)) {
+                    $amount = $amount / 100;
+                }
+
                 return [
                     'id' => $transaction->id,
                     'currency' => Str::upper($transaction->currency),
-                    'amount' => $transaction->net / 100,
+                    'amount' => $amount,
                     'created' => HumanReadable::timestampToDateTime($transaction->created),
                 ];
             });
+    }
 
-        return $transactions;
+    private function setPaginateUrlTransaction(&$transactions): void
+    {
+        $transactions['next_url'] = null;
+        $transactions['previous_url'] = null;
+
+        $totalData = $transactions['data']->count();
+
+        if ($totalData > 0) {
+            $transactions['next_url'] = route(
+                    'payment-management.stripe.show',
+                    [
+                        'startingAfter' => $transactions['data'][$totalData - 1]['id'],
+                    ]
+                );
+
+            $transactions['previous_url'] = route(
+                    'payment-management.stripe.show',
+                    [
+                        'endingBefore' => $transactions['data'][0]['id'],
+                    ]
+                );
+        }
     }
 
     public function getConnectedAccountId(User $user): ?string

@@ -180,14 +180,14 @@
                     <button
                         class="pagination-previous button"
                         :disabled="isPreviousDisabled"
-                        @click="paginationVisit(previousUrl)"
+                        @click="paginationVisit(balanceTransactions.previous_url)"
                     >
                         Previous
                     </button>
                     <button
                         class="pagination-next button"
                         :disabled="isNextDisabled"
-                        @click="paginationVisit(nextUrl)"
+                        @click="paginationVisit(balanceTransactions.next_url)"
                     >
                         Next page
                     </button>
@@ -332,36 +332,6 @@
                 }
 
                 return true;
-            },
-
-            nextUrl() {
-                let transactions = this.balanceTransactions.data;
-
-                if (transactions.length > 0) {
-                    return route(
-                        'payment-management.stripe.show',
-                        {
-                            startingAfter: transactions[transactions.length - 1].id,
-                        }
-                    );
-                }
-
-                return null;
-            },
-
-            previousUrl() {
-                let transactions = this.balanceTransactions.data;
-
-                if (transactions.length > 0) {
-                    return route(
-                        'payment-management.stripe.show',
-                        {
-                            endingBefore: transactions[0].id,
-                        }
-                    );
-                }
-
-                return null;
             },
         },
 
