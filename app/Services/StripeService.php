@@ -9,7 +9,6 @@ use App\Models\{
     User,
     UserMeta,
 };
-use App\Entities\Caches\SettingCache;
 use App\Entities\UserMetaStripe;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
@@ -379,18 +378,6 @@ class StripeService
             fn ($amount): float => $this->getMinimalPaymentWithFee($amount),
             config('constants.stripe_minimal_payments')
         );
-    }
-
-    public function getDefaultCountry(): ?string
-    {
-        return Setting::key('stripe_default_country')->value('value');
-    }
-
-    public function isEnabled(): bool
-    {
-        return app(SettingCache::class)->remember('stripe_is_enabled', function () {
-            return (bool) Setting::key('stripe_is_enabled')->value('value');
-        });
     }
 
     public function isStripeConnectEnabled(User $user): bool

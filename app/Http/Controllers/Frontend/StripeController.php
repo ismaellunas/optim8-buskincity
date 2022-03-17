@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StripeAccountCreateRequest;
 use App\Http\Requests\StripeFrontendSettingRequest;
 use App\Services\StripeService;
+use App\Services\StripeSettingService;
 use App\Traits\FlashNotifiable;
 use Inertia\Inertia;
 
@@ -37,8 +38,9 @@ class StripeController extends Controller
         $hasConnectedAccount = $this->getUserMetaStripe()->hasAccount();
 
         $balance = null;
-        $hasPassedOnboarding = false;
         $countryOptions = [];
+        $defaultCountry = null;
+        $hasPassedOnboarding = false;
 
         if ($hasConnectedAccount) {
             $balance = $this->stripeService->accountBalance($user);
@@ -51,12 +53,14 @@ class StripeController extends Controller
 
         } else {
             $countryOptions = $this->stripeService->getCountryOptions();
+
+            $defaultCountry = app(StripeSettingService::class)->getDefaultCountry();
         }
 
         return Inertia::render('PaymentManagementStripe', [
             'balance' => $balance,
             'countryOptions' => $countryOptions,
-            'defaultCountry' => $this->stripeService->getDefaultCountry(),
+            'defaultCountry' => $defaultCountry,
             'hasConnectedAccount' => $hasConnectedAccount,
             'hasPassedOnboarding' => $hasPassedOnboarding,
             'isEnabled' => $this->getUserMetaStripe()->isEnabled(),
