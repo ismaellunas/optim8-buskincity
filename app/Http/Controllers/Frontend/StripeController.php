@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Frontend;
 use App\Entities\UserMetaStripe;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StripeAccountCreateRequest;
+use App\Http\Requests\StripeFrontendSettingRequest;
 use App\Services\StripeService;
 use App\Traits\FlashNotifiable;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class StripeController extends Controller
@@ -63,7 +63,7 @@ class StripeController extends Controller
         ]);
     }
 
-    public function updateSetting(Request $request)
+    public function updateSetting(StripeFrontendSettingRequest $request)
     {
         $this->getUserMetaStripe()->setEnabledStatus($request->get('is_enabled'));
 
