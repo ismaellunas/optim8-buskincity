@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Entities\UserMetaStripe;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StripeAccountCreateRequest;
 use App\Services\StripeService;
@@ -23,7 +24,7 @@ class StripeController extends Controller
     public function show()
     {
         $user = auth()->user();
-        $hasConnectedAccount = $this->stripeService->hasStripeAccount($user);
+        $hasConnectedAccount = $this->stripeService->hasConnectedAccount($user);
 
         $balance = null;
         $hasPassedOnboarding = false;
@@ -32,7 +33,7 @@ class StripeController extends Controller
         if ($hasConnectedAccount) {
             $balance = $this->stripeService->accountBalance($user);
 
-            $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+            $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
             $stripeAccount = $this->stripeService->retrieveAccount($stripeAccountId);
 
@@ -60,8 +61,8 @@ class StripeController extends Controller
     {
         $user = auth()->user();
 
-        $user->setMeta('stripe_is_enabled', $request->get('is_enabled'));
-        $user->saveMetas();
+        $userMetaStripe = new UserMetaStripe($user);
+        $userMetaStripe->setEnabledStatus($request->get('is_enabled'));
 
         $this->generateFlashMessage('Saved');
 
@@ -72,11 +73,11 @@ class StripeController extends Controller
     {
         $user = $request->user();
 
-        $hasConnectedAccount = $this->stripeService->hasStripeAccount($user);
+        $hasConnectedAccount = $this->stripeService->hasConnectedAccount($user);
 
         if ($hasConnectedAccount) {
 
-            $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+            $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
         } else {
 
@@ -84,11 +85,11 @@ class StripeController extends Controller
                 $user,
                 $request->get('country')
             );
-            $stripeAccountId = $stripeAccount->id;
 
-            $user->setMeta('stripe_account', $stripeAccount);
-            $user->setMeta('stripe_account_id', $stripeAccount->id);
-            $user->saveMetas();
+            $userMetaStripe = new UserMetaStripe($user);
+            $userMetaStripe->initConnectedAccount($stripeAccount);
+
+            $stripeAccountId = $stripeAccount->id;
         }
 
         $accountLink = $this->stripeService->createAccountLink(
@@ -103,7 +104,7 @@ class StripeController extends Controller
     {
         $user = auth()->user();
 
-        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+        $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
         $loginLink = $this->stripeService->createLoginLink($stripeAccountId);
 
@@ -114,7 +115,7 @@ class StripeController extends Controller
     {
         $user = auth()->user();
 
-        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+        $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
         $stripeAccount = $this->stripeService->retrieveAccount($stripeAccountId);
 
@@ -132,7 +133,7 @@ class StripeController extends Controller
     {
         $user = auth()->user();
 
-        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+        $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
         $stripeAccount = $this
             ->stripeService
@@ -149,7 +150,7 @@ class StripeController extends Controller
     {
         $user = auth()->user();
 
-        $stripeAccountId = $this->stripeService->getStripeAccountId($user);
+        $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
         $accountLink = $this->stripeService->createAccountLink(
             $stripeAccountId,
@@ -157,5 +158,13 @@ class StripeController extends Controller
         );
 
         return ['url' => $accountLink->url];
+    }
+
+    public function webhook(Request $request)
+    {
+        return $this->stripeService->webhook(
+            $request->getContent(),
+            $request->server('HTTP_STRIPE_SIGNATURE')
+        );
     }
 }

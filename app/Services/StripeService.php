@@ -4,12 +4,17 @@ namespace App\Services;
 
 use App\Models\{
     Country,
+    PaymentWebhook,
     Setting,
     User,
+    UserMeta,
 };
 use App\Entities\Caches\SettingCache;
+use App\Entities\UserMetaStripe;
+use App\Mail\ThankYouCheckoutCompleted;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Mail;
 use Stripe\{
     Account,
     AccountLink,
@@ -18,16 +23,14 @@ use Stripe\{
     LoginLink,
     Stripe,
     StripeClient,
+    Webhook,
 };
+use Stripe\Exception\SignatureVerificationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class StripeService
 {
     private $stripeClient = null;
-
-    private function metaKey(): string
-    {
-        return config('constants.stripe_account_id_meta_key');
-    }
 
     private function secretKey(): string
     {
@@ -95,21 +98,21 @@ class StripeService
     {
         Stripe::setApiKey($this->secretKey());
 
-        $stripeAccountId = $this->getStripeAccountId($user);
+        $stripeAccountId = $this->getConnectedAccountId($user);
 
         return Balance::retrieve(
             ['stripe_account' => $stripeAccountId]
         );
     }
 
-    public function getStripeAccountId(User $user): string
+    public function getConnectedAccountId(User $user): ?string
     {
-        return $user->getMetas([$this->metaKey()])->get($this->metaKey());
+        return (new UserMetaStripe($user))->getAccountId();
     }
 
-    public function hasStripeAccount(User $user): bool
+    public function hasConnectedAccount(User $user): bool
     {
-        return $user->getMetas([$this->metaKey()])->isNotEmpty();
+        return (new UserMetaStripe($user))->hasAccount();
     }
 
     private function getStripeAmount(float $amount, string $currency)
@@ -127,7 +130,7 @@ class StripeService
     {
         Stripe::setApiKey($this->secretKey());
 
-        $stripeAccount = $this->getStripeAccountId($user);
+        $stripeAccount = $this->getConnectedAccountId($user);
 
         $formattedAmount = $this->getStripeAmount(
             $this->convertInto2Decimal($amount),
@@ -402,5 +405,75 @@ class StripeService
         $key = 'stripe_is_enabled';
 
         return (bool) $user->getMetas([$key])->get($key, false);
+    }
+
+    private function getUserIdFromStripeAccount(string $stripeAccount): ?int
+    {
+        return UserMeta::keyAndValue('stripe_account_id', $stripeAccount)
+            ->value('user_id');
+    }
+
+    public function webhook($payload, $stripeSignature): Response
+    {
+        $event = null;
+
+        $endpointSecret = config('constants.stripe_endpoint_secret');
+
+        Stripe::setApiKey($this->secretKey());
+
+        // @see https://stripe.com/docs/webhooks/signatures for more information.
+        try {
+            $event = Webhook::constructEvent(
+                $payload,
+                $stripeSignature,
+                $endpointSecret
+            );
+        } catch (\UnexpectedValueException $e) {
+            return response(
+                '⚠️  Webhook error while validating payload.',
+                400
+            );
+        } catch (SignatureVerificationException $e) {
+            return response(
+                '⚠️  Webhook error while validating signature.',
+                400
+            );
+        }
+
+        $webhookData = [
+            'data' => $payload,
+            'payment_method' => PaymentWebhook::PAYMENT_METHOD_STRIPE,
+            'event_type' => $event->type,
+        ];
+
+        if (!empty($event->account)) {
+            $webhookData['receiver_id'] = $this->getUserIdFromStripeAccount(
+                $event->account
+            );
+        }
+
+        if ($event->type == 'checkout.session.completed') {
+            $this->donationThankYouEmail(
+                $event->data->object->customer_details->email,
+                $event->data->object->amount_total,
+                $event->data->object->currency
+            );
+        }
+
+        PaymentWebhook::create($webhookData);
+
+        return response('Success', 200);
+    }
+
+    private function donationThankYouEmail(string $email, int $amount, string $currency)
+    {
+        if (! $this->isZeroDecimal($currency)) {
+            $amount = $amount / 100;
+        }
+
+        Mail::to($email)->queue(new ThankYouCheckoutCompleted(
+            $amount,
+            strtoupper($currency)
+        ));
     }
 }

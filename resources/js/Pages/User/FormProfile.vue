@@ -57,6 +57,27 @@
         </biz-form-select>
 
         <biz-form-dropdown-search
+            label="Country"
+            :close-on-click="true"
+            :message="error('country_code')"
+            @search="searchCountry($event)"
+        >
+            <template #trigger>
+                <span :style="{'min-width': '4rem'}">
+                    {{ selectedCountry }}
+                </span>
+            </template>
+
+            <biz-dropdown-item
+                v-for="option in filteredCountries"
+                :key="option.id"
+                @click="selectedCountry = option"
+            >
+                {{ option.value }}
+            </biz-dropdown-item>
+        </biz-form-dropdown-search>
+
+        <biz-form-dropdown-search
             label="Language"
             required
             :close-on-click="true"
@@ -65,14 +86,14 @@
         >
             <template #trigger>
                 <span :style="{'min-width': '4rem'}">
-                    {{ selectedDefaultLanguage }}
+                    {{ selectedLanguage }}
                 </span>
             </template>
 
             <biz-dropdown-item
                 v-for="option in filteredLanguages"
                 :key="option.id"
-                @click="selectedDefaultLanguage = option"
+                @click="selectedLanguage = option"
             >
                 {{ option.value }}
             </biz-dropdown-item>
@@ -89,6 +110,7 @@
     import BizFormSelect from '@/Biz/Form/Select';
     import UserIcon from '@/Biz/Icon/User';
     import { useModelWrapper } from '@/Libs/utils';
+    import { debounceTime } from '@/Libs/defaults';
     import { confirmDelete } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
@@ -119,18 +141,36 @@
         setup(props, { emit }) {
             return {
                 form: useModelWrapper(props, emit),
+                countryOptions: usePage().props.value.countryOptions,
                 languageOptions: usePage().props.value.shownLanguageOptions,
             };
         },
 
         data() {
             return {
+                filteredCountries: this.countryOptions.slice(0, 10),
                 filteredLanguages: this.languageOptions.slice(0, 10),
             };
         },
 
         computed: {
-            selectedDefaultLanguage: {
+            selectedCountry: {
+                get() {
+                    if (this.form.country_code) {
+                        let country = find(
+                            this.countryOptions,
+                            ['id', this.form.country_code]
+                        );
+                        return country.value;
+                    }
+                    return '';
+                },
+                set(country) {
+                    this.form.country_code = country.id;
+                }
+            },
+
+            selectedLanguage: {
                 get() {
                     if (this.form.language_id) {
                         let language = find(
@@ -164,6 +204,16 @@
                 })
             },
 
+            searchCountry: debounce(function(term) {
+                if (!isEmpty(term) && term.length > 1) {
+                    this.filteredCountries = filter(this.countryOptions, function (country) {
+                        return new RegExp(term, 'i').test(country.value);
+                    }).slice(0, 10);
+                } else {
+                    this.filteredCountries = this.countryOptions.slice(0, 10);
+                }
+            }, debounceTime),
+
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
                     this.filteredLanguages = filter(this.languageOptions, function (language) {
@@ -172,7 +222,7 @@
                 } else {
                     this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
-            }, 750),
+            }, debounceTime),
         },
     };
 </script>

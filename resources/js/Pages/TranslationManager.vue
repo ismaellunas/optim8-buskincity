@@ -77,7 +77,7 @@
                                     :value="groupOption"
                                     @change="filterGroups"
                                 >
-                                    &nbsp; {{ groupOption }}
+                                    &nbsp; {{ groupOption.replace('_', ' ') }}
                                 </biz-checkbox>
                             </biz-dropdown-item>
                         </biz-dropdown-scroll>
@@ -270,6 +270,7 @@
     import { merge, debounce } from 'lodash';
     import { ref } from 'vue';
     import { success as successAlert, confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
+    import { debounceTime } from '@/Libs/defaults';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -411,7 +412,7 @@
             filterLocale: debounce(function(locale) {
                 this.selectedLocale = locale;
                 this.search();
-            }, 750),
+            }, debounceTime),
 
             filterGroups: debounce(function() {
                 this.search();

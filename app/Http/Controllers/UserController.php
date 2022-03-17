@@ -158,6 +158,7 @@ class UserController extends CrudController
             'first_name',
             'last_name',
             'email',
+            'country_code',
             'language_id',
         ]));
 

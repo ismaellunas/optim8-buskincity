@@ -7,6 +7,7 @@ return [
 
     'stripe_pk' => env('STRIPE_PK'),
     'stripe_sk' => env('STRIPE_SK'),
+    'stripe_endpoint_secret' => env('STRIPE_ENDPOINT_SECRET'),
 
     'one_megabyte' => 1024,
     'extensions' => [
@@ -103,6 +104,7 @@ return [
             'pagination',
             'passwords',
             'validation',
+            'form_builder'
         ]
     ],
     'setting_cache' => [
@@ -120,8 +122,6 @@ return [
     | Stripe Payment Gateway
     |--------------------------------------------------------------------------
     */
-
-    'stripe_account_id_meta_key' => 'stripe_account_id',
 
     'stripe_payment_method_types' => [
         'card',
