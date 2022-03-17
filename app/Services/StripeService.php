@@ -17,6 +17,7 @@ use Illuminate\Support\{
     Facades\URL,
     Str,
 };
+use App\Mail\ThankYouCheckoutCompleted;
 use Stripe\{
     Account,
     AccountLink,
@@ -488,11 +489,27 @@ class StripeService
         }
 
         if ($event->type == 'checkout.session.completed') {
-            // TODO trigger email
+            $this->donationThankYouEmail(
+                $event->data->object->customer_details->email,
+                $event->data->object->amount_total,
+                $event->data->object->currency
+            );
         }
 
         PaymentWebhook::create($webhookData);
 
         return response('Success', 200);
+    }
+
+    private function donationThankYouEmail(string $email, int $amount, string $currency)
+    {
+        if (! $this->isZeroDecimal($currency)) {
+            $amount = $amount / 100;
+        }
+
+        Mail::to($email)->queue(new ThankYouCheckoutCompleted(
+            $amount,
+            strtoupper($currency)
+        ));
     }
 }
