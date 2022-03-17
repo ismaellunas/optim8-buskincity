@@ -44,7 +44,7 @@ class UserPolicy extends BasePermissionPolicy
         );
     }
 
-    public function updateStripeConnect(User $user)
+    public function manageStripeConnectedAccount(User $user)
     {
         return (
             app(StripeSettingService::class)->isEnabled()
