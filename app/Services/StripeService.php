@@ -103,14 +103,9 @@ class StripeService
         );
     }
 
-    public function getConnectedAccountId(User $user): ?string
+    private function getConnectedAccountId(User $user): ?string
     {
         return (new UserMetaStripe($user))->getAccountId();
-    }
-
-    public function hasConnectedAccount(User $user): bool
-    {
-        return (new UserMetaStripe($user))->hasAccount();
     }
 
     private function getStripeAmount(float $amount, string $currency)
@@ -400,9 +395,7 @@ class StripeService
 
     public function isStripeConnectEnabled(User $user): bool
     {
-        $key = 'stripe_is_enabled';
-
-        return (bool) $user->getMetas([$key])->get($key, false);
+        return (new UserMetaStripe($user))->isEnabled();
     }
 
     private function getUserIdFromStripeAccount(string $stripeAccount): ?int
