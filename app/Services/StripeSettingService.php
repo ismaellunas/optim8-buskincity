@@ -78,6 +78,40 @@ class StripeSettingService
         return Setting::key('stripe_default_country')->value('value');
     }
 
+    public function getAmountOptions(): array
+    {
+        $currencyAmountOptions = Setting::key('stripe_amount_options')
+            ->value('value');
+
+        return (
+            $currencyAmountOptions
+            ? (array) json_decode($currencyAmountOptions)
+            : []
+        );
+    }
+
+    public function getAvailableCurrencyOptions(): array
+    {
+        $paymentCurrencies = Setting::key('stripe_payment_currencies')
+            ->value('value');
+
+        if ($paymentCurrencies) {
+            $paymentCurrencies = (array) json_decode($paymentCurrencies);
+
+            return array_map(
+                function ($currency) {
+                    return [
+                        'id' => $currency,
+                        'value' => $currency,
+                    ];
+                },
+                $paymentCurrencies
+            );
+        }
+
+        return [];
+    }
+
     public function getCountrySpecs(): ?Setting
     {
         return Setting::firstWhere([
