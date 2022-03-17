@@ -63,7 +63,10 @@
         },
 
         props: {
-            status: String
+            status: {
+                default: null,
+                type: String
+            }
         },
 
         data() {
