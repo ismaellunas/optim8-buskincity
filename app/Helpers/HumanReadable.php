@@ -19,6 +19,6 @@ class HumanReadable
 
     public static function timestampToDateTime($timestamp) {
         return Carbon::parse($timestamp)
-            ->format('Y/m/d H:i:s');
+            ->format(config('constants.format.date_time'));
     }
 }

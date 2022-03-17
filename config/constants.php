@@ -117,6 +117,10 @@ return [
         'user' => 'widget_user',
     ],
 
+    'format' => [
+        'date_time' => 'Y/m/d H:i:s',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway
