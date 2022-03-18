@@ -146,6 +146,7 @@
                 photo: null,
                 photo_url: props.record.profile_photo_url,
                 profile_photo_media_id: props.record.profile_photo_media_id,
+                country_code: props.record.country_code,
                 language_id: props.record.language_id,
             };
 

@@ -103,6 +103,7 @@ return [
         'theme' => 'default',
 
         'paths' => [
+            base_path('themes/'.env('THEME_ACTIVE', 'biz').'/views/vendor/mail'),
             resource_path('views/vendor/mail'),
         ],
     ],
