@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Entities\Caches\SettingCache;
+use App\Entities\UserMetaStripe;
 use App\Helpers\HumanReadable;
+use App\Mail\ThankYouCheckoutCompleted;
 use App\Models\{
     Country,
     PaymentWebhook,
@@ -10,14 +13,12 @@ use App\Models\{
     User,
     UserMeta,
 };
-use App\Entities\Caches\SettingCache;
-use App\Entities\UserMetaStripe;
 use Illuminate\Support\{
     Collection,
+    Facades\Mail,
     Facades\URL,
     Str,
 };
-use App\Mail\ThankYouCheckoutCompleted;
 use Stripe\{
     Account,
     AccountLink,
