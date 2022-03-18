@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Entities\UserMetaStripe;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StripeAccountCreateRequest;
-use App\Http\Requests\StripeFrontendSettingRequest;
+use App\Http\Requests\{
+    StripeAccountCreateRequest,
+    StripeFrontendSettingRequest,
+    StripeTransactionPaginationRequest,
+};
 use App\Services\StripeService;
 use App\Services\StripeSettingService;
 use App\Traits\FlashNotifiable;
@@ -32,18 +35,32 @@ class StripeController extends Controller
         return $this->userMetaStripe;
     }
 
-    public function show()
+    public function show(StripeTransactionPaginationRequest $request)
     {
         $user = auth()->user();
         $hasConnectedAccount = $this->getUserMetaStripe()->hasAccount();
 
+        $pageQueryParams = null;
         $balance = null;
+        $balanceTransactions = null;
+        $hasPassedOnboarding = false;
         $countryOptions = [];
         $defaultCountry = null;
         $hasPassedOnboarding = false;
 
         if ($hasConnectedAccount) {
+            $pageQueryParams = array_filter(
+                $request->only('startingAfter', 'endingBefore')
+            );
+
             $balance = $this->stripeService->accountBalance($user);
+
+            $balanceTransactions = $this->stripeService
+                ->accountBalanceTransactions(
+                    $user,
+                    $request->startingAfter,
+                    $request->endingBefore,
+                );
 
             $stripeAccountId = $this->getUserMetaStripe()->getAccountId();
 
@@ -59,11 +76,13 @@ class StripeController extends Controller
 
         return Inertia::render('PaymentManagementStripe', [
             'balance' => $balance,
+            'balanceTransactions',
             'countryOptions' => $countryOptions,
             'defaultCountry' => $defaultCountry,
             'hasConnectedAccount' => $hasConnectedAccount,
             'hasPassedOnboarding' => $hasPassedOnboarding,
             'isEnabled' => $this->getUserMetaStripe()->isEnabled(),
+            'pageQueryParams' => $pageQueryParams,
         ]);
     }
 
