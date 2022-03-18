@@ -3,9 +3,11 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Services\{
+    StripeService,
+    StripeSettingService,
+};
 use Illuminate\Database\Eloquent\Model;
-use App\Services\StripeService;
-use App\Services\StripeSettingService;
 
 class UserPolicy extends BasePermissionPolicy
 {

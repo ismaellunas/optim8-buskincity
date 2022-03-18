@@ -9,8 +9,10 @@ use App\Http\Requests\{
     StripeFrontendSettingRequest,
     StripeTransactionPaginationRequest,
 };
-use App\Services\StripeService;
-use App\Services\StripeSettingService;
+use App\Services\{
+    StripeService,
+    StripeSettingService,
+};
 use App\Traits\FlashNotifiable;
 use Inertia\Inertia;
 
