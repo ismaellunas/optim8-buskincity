@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Entities\UserMetaStripe;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StripeAccountCreateRequest;
+use App\Http\Requests\{
+    StripeAccountCreateRequest,
+    StripeTransactionPaginationRequest,
+};
 use App\Services\StripeService;
 use App\Traits\FlashNotifiable;
 use Illuminate\Http\Request;
@@ -21,17 +24,30 @@ class StripeController extends Controller
         $this->stripeService = $stripeService;
     }
 
-    public function show()
+    public function show(StripeTransactionPaginationRequest $request)
     {
         $user = auth()->user();
         $hasConnectedAccount = $this->stripeService->hasConnectedAccount($user);
 
+        $pageQueryParams = null;
         $balance = null;
+        $balanceTransactions = null;
         $hasPassedOnboarding = false;
         $countryOptions = [];
 
         if ($hasConnectedAccount) {
+            $pageQueryParams = array_filter(
+                $request->only('startingAfter', 'endingBefore')
+            );
+
             $balance = $this->stripeService->accountBalance($user);
+
+            $balanceTransactions = $this->stripeService
+                ->accountBalanceTransactions(
+                    $user,
+                    $request->startingAfter,
+                    $request->endingBefore,
+                );
 
             $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
@@ -49,11 +65,13 @@ class StripeController extends Controller
 
         return Inertia::render('PaymentManagementStripe', compact(
             'balance',
+            'balanceTransactions',
             'countryOptions',
             'defaultCountry',
             'hasConnectedAccount',
             'hasPassedOnboarding',
-            'isEnabled'
+            'isEnabled',
+            'pageQueryParams',
         ));
     }
 
