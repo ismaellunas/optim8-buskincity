@@ -2,6 +2,10 @@
 
 namespace App\Services;
 
+use App\Entities\Caches\SettingCache;
+use App\Entities\UserMetaStripe;
+use App\Helpers\HumanReadable;
+use App\Mail\ThankYouCheckoutCompleted;
 use App\Models\{
     Country,
     PaymentWebhook,
@@ -9,16 +13,17 @@ use App\Models\{
     User,
     UserMeta,
 };
-use App\Entities\Caches\SettingCache;
-use App\Entities\UserMetaStripe;
-use App\Mail\ThankYouCheckoutCompleted;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\{
+    Collection,
+    Facades\Mail,
+    Facades\URL,
+    Str,
+};
 use Stripe\{
     Account,
     AccountLink,
     Balance,
+    BalanceTransaction,
     Checkout\Session,
     LoginLink,
     Stripe,
@@ -31,6 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
 class StripeService
 {
     private $stripeClient = null;
+    private $perPage = 10;
 
     private function secretKey(): string
     {
@@ -103,6 +109,73 @@ class StripeService
         return Balance::retrieve(
             ['stripe_account' => $stripeAccountId]
         );
+    }
+
+    public function accountBalanceTransactions(
+        User $user,
+        string $startingAfter = null,
+        string $endingBefore = null,
+    ) {
+        Stripe::setApiKey($this->secretKey());
+
+        $connectedAccountId = $this->getConnectedAccountId($user);
+
+        $transactions = BalanceTransaction::all(
+            [
+                'limit' => $this->perPage,
+                'starting_after' => $startingAfter,
+                'ending_before' => $endingBefore,
+            ],
+            ['stripe_account' => $connectedAccountId]
+        );
+
+        $this->reFormatTransactionData($transactions);
+        $this->setPaginateUrlTransaction($transactions);
+
+        return $transactions;
+    }
+
+    private function reFormatTransactionData(&$transactions): void
+    {
+        $transactions['data'] = collect($transactions['data'])
+            ->map(function ($transaction) {
+                $amount = $transaction->net;
+
+                if (!$this->isZeroDecimal($transaction->currency)) {
+                    $amount = $amount / 100;
+                }
+
+                return [
+                    'id' => $transaction->id,
+                    'currency' => Str::upper($transaction->currency),
+                    'amount' => $amount,
+                    'created' => HumanReadable::timestampToDateTime($transaction->created),
+                ];
+            });
+    }
+
+    private function setPaginateUrlTransaction(&$transactions): void
+    {
+        $transactions['next_url'] = null;
+        $transactions['previous_url'] = null;
+
+        $totalData = $transactions['data']->count();
+
+        if ($totalData > 0) {
+            $transactions['next_url'] = route(
+                    'payment-management.stripe.show',
+                    [
+                        'startingAfter' => $transactions['data'][$totalData - 1]['id'],
+                    ]
+                );
+
+            $transactions['previous_url'] = route(
+                    'payment-management.stripe.show',
+                    [
+                        'endingBefore' => $transactions['data'][0]['id'],
+                    ]
+                );
+        }
     }
 
     public function getConnectedAccountId(User $user): ?string
