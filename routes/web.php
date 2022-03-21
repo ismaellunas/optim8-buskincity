@@ -14,9 +14,9 @@ use App\Http\Controllers\{
     Frontend\StripeController,
     NewPasswordController,
     PasswordResetLinkController,
+    UserProfileController,
 };
 use Illuminate\Support\Facades\Route;
-use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
