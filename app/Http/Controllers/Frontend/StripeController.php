@@ -10,8 +10,10 @@ use App\Http\Requests\{
 };
 use App\Services\StripeService;
 use App\Traits\FlashNotifiable;
+use Exception;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Stripe\Exception\ApiErrorException;
 
 class StripeController extends Controller
 {
@@ -151,17 +153,24 @@ class StripeController extends Controller
     {
         $user = auth()->user();
 
+        $redirect = redirect()->route('payment-management.stripe.show');
+
         $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
 
-        $stripeAccount = $this
-            ->stripeService
-            ->updateAccountBrandingBasedOnPlatform($stripeAccountId);
+        try {
+            $stripeAccount = $this
+                ->stripeService
+                ->updateAccountBrandingBasedOnPlatform($stripeAccountId);
 
-        $this->stripeService->setUserStripeAccount($user, $stripeAccount);
+            $this->stripeService->setUserStripeAccount($user, $stripeAccount);
 
-        return redirect()
-            ->route('payment-management.stripe.show')
-            ->with('message', 'Stripe Account created successfully.');
+            return $redirect
+                ->with('message', 'Stripe Account created successfully.');
+
+        } catch (ApiErrorException | Exception $e) {
+
+            return $redirect->withError($e->getMessage());
+        }
     }
 
     public function accountLink()
