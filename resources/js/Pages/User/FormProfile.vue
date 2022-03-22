@@ -58,6 +58,7 @@
 
         <biz-form-dropdown-search
             label="Country"
+            required
             :close-on-click="true"
             :message="error('country_code')"
             @search="searchCountry($event)"
