@@ -15,7 +15,6 @@ use App\Services\{
 };
 use App\Traits\FlashNotifiable;
 use Exception;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Stripe\Exception\ApiErrorException;
 
@@ -81,7 +80,7 @@ class StripeController extends Controller
 
         return Inertia::render('PaymentManagementStripe', [
             'balance' => $balance,
-            'balanceTransactions',
+            'balanceTransactions' => $balanceTransactions,
             'countryOptions' => $countryOptions,
             'defaultCountry' => $defaultCountry,
             'hasConnectedAccount' => $hasConnectedAccount,
@@ -155,8 +154,6 @@ class StripeController extends Controller
 
     public function return()
     {
-        $user = auth()->user();
-
         $redirect = redirect()->route('payment-management.stripe.show');
 
         $stripeAccountId = $this->getUserMetaStripe()->getAccountId();
