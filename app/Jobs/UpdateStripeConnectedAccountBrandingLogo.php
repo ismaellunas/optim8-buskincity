@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Entities\UserMetaStripe;
 use App\Models\{
     Media,
     UserMeta,
@@ -84,9 +85,7 @@ class UpdateStripeConnectedAccountBrandingLogo implements ShouldQueue
             ]
         );
 
-        $this->stripeService->setUserStripeAccount(
-            $stripeAccountIdUserMeta->user,
-            $stripeAccount
-        );
+        $userMetaStripe = new UserMetaStripe($stripeAccountIdUserMeta->user);
+        $userMetaStripe->setAccount($stripeAccount);
     }
 }
