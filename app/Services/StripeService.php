@@ -285,7 +285,7 @@ class StripeService
         $user->saveMetas();
     }
 
-    private function getLogoFileFromCloud(Media $logoMedia): mixed
+    public function getLogoFileFromCloud(Media $logoMedia): mixed
     {
         $result = cloudinary()
             ->getImageTag($logoMedia->file_name)
@@ -325,7 +325,7 @@ class StripeService
         return $resource;
     }
 
-    private function uploadBusinesLogo(mixed $resource)
+    public function uploadBusinesLogo(mixed $resource)
     {
         $stripe = $this->getStripeClient();
 
