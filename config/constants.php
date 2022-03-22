@@ -118,7 +118,7 @@ return [
     ],
 
     'throttle' => [
-        'checkout' => 6,
+        'checkout' => 100,
     ],
 
     'format' => [
