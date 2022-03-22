@@ -6,11 +6,14 @@ use App\Entities\UserMetaStripe;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\{
     StripeAccountCreateRequest,
+    StripeFrontendSettingRequest,
     StripeTransactionPaginationRequest,
 };
-use App\Services\StripeService;
+use App\Services\{
+    StripeService,
+    StripeSettingService,
+};
 use App\Traits\FlashNotifiable;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class StripeController extends Controller
@@ -18,22 +21,34 @@ class StripeController extends Controller
     use FlashNotifiable;
 
     private $stripeService;
+    private $userMetaStripe;
 
     public function __construct(StripeService $stripeService)
     {
         $this->stripeService = $stripeService;
     }
 
+    private function getUserMetaStripe()
+    {
+        if (is_null($this->userMetaStripe)) {
+            $this->userMetaStripe = new UserMetaStripe(auth()->user());
+        }
+
+        return $this->userMetaStripe;
+    }
+
     public function show(StripeTransactionPaginationRequest $request)
     {
         $user = auth()->user();
-        $hasConnectedAccount = $this->stripeService->hasConnectedAccount($user);
+        $hasConnectedAccount = $this->getUserMetaStripe()->hasAccount();
 
         $pageQueryParams = null;
         $balance = null;
         $balanceTransactions = null;
         $hasPassedOnboarding = false;
         $countryOptions = [];
+        $defaultCountry = null;
+        $hasPassedOnboarding = false;
 
         if ($hasConnectedAccount) {
             $pageQueryParams = array_filter(
@@ -49,7 +64,7 @@ class StripeController extends Controller
                     $request->endingBefore,
                 );
 
-            $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
+            $stripeAccountId = $this->getUserMetaStripe()->getAccountId();
 
             $stripeAccount = $this->stripeService->retrieveAccount($stripeAccountId);
 
@@ -57,72 +72,67 @@ class StripeController extends Controller
 
         } else {
             $countryOptions = $this->stripeService->getCountryOptions();
+
+            $defaultCountry = app(StripeSettingService::class)->getDefaultCountry();
         }
 
-        $defaultCountry = $this->stripeService->getDefaultCountry();
-
-        $isEnabled = $this->stripeService->isStripeConnectEnabled($user);
-
-        return Inertia::render('PaymentManagementStripe', compact(
-            'balance',
+        return Inertia::render('PaymentManagementStripe', [
+            'balance' => $balance,
             'balanceTransactions',
-            'countryOptions',
-            'defaultCountry',
-            'hasConnectedAccount',
-            'hasPassedOnboarding',
-            'isEnabled',
-            'pageQueryParams',
-        ));
+            'countryOptions' => $countryOptions,
+            'defaultCountry' => $defaultCountry,
+            'hasConnectedAccount' => $hasConnectedAccount,
+            'hasPassedOnboarding' => $hasPassedOnboarding,
+            'isEnabled' => $this->getUserMetaStripe()->isEnabled(),
+            'pageQueryParams' => $pageQueryParams,
+        ]);
     }
 
-    public function updateSetting(Request $request)
+    public function updateSetting(StripeFrontendSettingRequest $request)
     {
-        $user = auth()->user();
-
-        $userMetaStripe = new UserMetaStripe($user);
-        $userMetaStripe->setEnabledStatus($request->get('is_enabled'));
+        $this->getUserMetaStripe()->setEnabledStatus($request->get('is_enabled'));
 
         $this->generateFlashMessage('Saved');
 
         return back();
     }
 
-    public function createThenRedirect(StripeAccountCreateRequest $request)
+    private function redirectToAccountLink(string $stripeAccountId)
     {
-        $user = $request->user();
-
-        $hasConnectedAccount = $this->stripeService->hasConnectedAccount($user);
-
-        if ($hasConnectedAccount) {
-
-            $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
-
-        } else {
-
-            $stripeAccount = $this->stripeService->createConnectedAccount(
-                $user,
-                $request->get('country')
-            );
-
-            $userMetaStripe = new UserMetaStripe($user);
-            $userMetaStripe->initConnectedAccount($stripeAccount);
-
-            $stripeAccountId = $stripeAccount->id;
-        }
-
         $accountLink = $this->stripeService->createAccountLink(
             $stripeAccountId,
-            $user
+            auth()->user()
         );
 
         return Inertia::location($accountLink->url);
     }
 
+    public function createThenRedirect(StripeAccountCreateRequest $request)
+    {
+        $hasConnectedAccount = $this->getUserMetaStripe()->hasAccount();
+
+        if ($hasConnectedAccount) {
+
+            $stripeAccountId = $this->getUserMetaStripe()->getAccountId();
+
+        } else {
+
+            $stripeAccount = $this->stripeService->createConnectedAccount(
+                auth()->user(),
+                $request->get('country')
+            );
+
+            $this->getUserMetaStripe()->initConnectedAccount($stripeAccount);
+
+            $stripeAccountId = $stripeAccount->id;
+        }
+
+        return $this->redirectToAccountLink($stripeAccountId);
+    }
+
     public function redirectToStripeAccount()
     {
-        $user = auth()->user();
-
-        $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
+        $stripeAccountId = $this->getUserMetaStripe()->getAccountId();
 
         $loginLink = $this->stripeService->createLoginLink($stripeAccountId);
 
@@ -131,33 +141,24 @@ class StripeController extends Controller
 
     public function refresh()
     {
-        $user = auth()->user();
-
-        $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
+        $stripeAccountId = $this->getUserMetaStripe()->getAccountId();
 
         $stripeAccount = $this->stripeService->retrieveAccount($stripeAccountId);
 
-        $this->stripeService->setUserStripeAccount($user, $stripeAccount);
+        $this->getUserMetaStripe()->setAccount($stripeAccount);
 
-        $accountLink = $this->stripeService->createAccountLink(
-            $stripeAccount->id,
-            $user
-        );
-
-        return redirect()->away($accountLink->url);
+        $this->redirectToAccountLink($stripeAccount->id);
     }
 
     public function return()
     {
-        $user = auth()->user();
-
-        $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
+        $stripeAccountId = $this->getUserMetaStripe()->getAccountId();
 
         $stripeAccount = $this
             ->stripeService
             ->updateAccountBrandingBasedOnPlatform($stripeAccountId);
 
-        $this->stripeService->setUserStripeAccount($user, $stripeAccount);
+        $this->getUserMetaStripe()->setAccount($stripeAccount);
 
         return redirect()
             ->route('payment-management.stripe.show')
@@ -166,23 +167,13 @@ class StripeController extends Controller
 
     public function accountLink()
     {
-        $user = auth()->user();
-
-        $stripeAccountId = $this->stripeService->getConnectedAccountId($user);
+        $stripeAccountId = $this->getUserMetaStripe()->getAccountId();
 
         $accountLink = $this->stripeService->createAccountLink(
             $stripeAccountId,
-            $user
+            auth()->user()
         );
 
         return ['url' => $accountLink->url];
-    }
-
-    public function webhook(Request $request)
-    {
-        return $this->stripeService->webhook(
-            $request->getContent(),
-            $request->server('HTTP_STRIPE_SIGNATURE')
-        );
     }
 }

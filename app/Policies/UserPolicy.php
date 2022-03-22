@@ -3,8 +3,11 @@
 namespace App\Policies;
 
 use App\Models\User;
+use App\Services\{
+    StripeService,
+    StripeSettingService,
+};
 use Illuminate\Database\Eloquent\Model;
-use App\Services\StripeService;
 
 class UserPolicy extends BasePermissionPolicy
 {
@@ -43,21 +46,19 @@ class UserPolicy extends BasePermissionPolicy
         );
     }
 
-    public function updateStripeConnect(User $user)
+    public function manageStripeConnectedAccount(User $user)
     {
         return (
-            app(StripeService::class)->isEnabled()
+            app(StripeSettingService::class)->isEnabled()
             && $user->can('payment.management')
         );
     }
 
     public function receiveDonation(?User $user, Model $selectedUser)
     {
-        $stripeService = app(StripeService::class);
-
         return (
-            $stripeService->isEnabled()
-            && $stripeService->isStripeConnectEnabled($selectedUser)
+            app(StripeSettingService::class)->isEnabled()
+            && app(StripeService::class)->isStripeConnectEnabled($selectedUser)
         );
     }
 }
