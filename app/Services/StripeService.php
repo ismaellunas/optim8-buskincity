@@ -274,18 +274,6 @@ class StripeService
         return $stripe->accounts->retrieve($stripeAccountId);
     }
 
-    public function setUserStripeAccount(User $user, Account $stripeAccount)
-    {
-        $user->setMeta('stripe_account', $stripeAccount);
-        $user->saveMetas();
-    }
-
-    public function setUserStripeAccountId(User $user, string $stripeAccountId)
-    {
-        $user->setMeta('stripe_account_id', $stripeAccountId);
-        $user->saveMetas();
-    }
-
     public function getLogoFileFromCloud(Media $logoMedia): mixed
     {
         $result = cloudinary()
