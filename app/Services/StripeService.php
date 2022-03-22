@@ -65,7 +65,7 @@ class StripeService
     {
         $stripe = $this->getStripeClient();
 
-        return $stripe->accounts->create([
+        $accountData = [
             'type' => 'express',
             'business_profile' => [
                 'name' => $user->fullName,
@@ -74,10 +74,17 @@ class StripeService
                 'card_payments' => ['requested' => true],
                 'transfers' => ['requested' => true],
             ],
+            'settings' => [
+                'payouts' => [
+                    'debit_negative_balances' => false,
+                ],
+            ],
             'business_type' => 'individual',
             'country' => $country,
             'email' => $user->email,
-        ]);
+        ];
+
+        return $stripe->accounts->create($accountData);
     }
 
     public function createAccountLink(string $connectedAccountId, User $user): AccountLink
