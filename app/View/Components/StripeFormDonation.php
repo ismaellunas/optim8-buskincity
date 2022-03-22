@@ -3,6 +3,7 @@
 namespace App\View\Components;
 
 use App\Services\StripeService;
+use App\Services\StripeSettingService;
 use Illuminate\View\Component;
 
 class StripeFormDonation extends Component
@@ -15,9 +16,10 @@ class StripeFormDonation extends Component
     public function __construct($userId)
     {
         $stripeService = app(StripeService::class);
+        $stripeSettingService = app(StripeSettingService::class);
 
-        $this->amountOptions = $stripeService->getAmountOptions();
-        $this->currencyOptions = $stripeService->getAvailableCurrencyOptions();
+        $this->amountOptions = $stripeSettingService->getAmountOptions();
+        $this->currencyOptions = $stripeSettingService->getAvailableCurrencyOptions();
         $this->listMinimalPayments = $stripeService->getListMinimalPayments();
         $this->submitUrl = route('donations.checkout', [$userId]);
     }
