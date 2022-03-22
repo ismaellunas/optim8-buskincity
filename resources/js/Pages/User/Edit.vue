@@ -2,7 +2,10 @@
     <app-layout>
         <template #header>{{ title }}</template>
 
-        <biz-error-notifications :errors="$page.props.errors" />
+        <biz-error-notifications
+            :bags="['userUpdate']"
+            :errors="$page.props.errors"
+        />
 
         <div class="mb-6">
             <form
