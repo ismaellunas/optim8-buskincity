@@ -73,9 +73,7 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('checkout', function (Request $request) {
             $max = config('constants.throttle.checkout');
 
-            return $request->user()
-                ? Limit::perMinute($max)->by($request->user()->id)
-                : Limit::perMinute($max)->by($request->ip());
+            return Limit::perMinute($max)->by($request->session()->getId());
         });
     }
 }
