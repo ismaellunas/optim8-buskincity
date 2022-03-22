@@ -10,7 +10,7 @@ class UserMeta extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['key', 'value'];
+    protected $fillable = ['key', 'value', 'user_id'];
 
     protected $dataTypes = [
         'boolean',

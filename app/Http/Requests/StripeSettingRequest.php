@@ -45,6 +45,9 @@ class StripeSettingRequest extends FormRequest
                 'required',
                 Rule::in($countries),
             ],
+            'is_enabled' => [
+                'boolean'
+            ],
             'minimal_amounts' => [
                 'array'
             ],
