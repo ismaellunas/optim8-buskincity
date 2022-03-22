@@ -16,6 +16,9 @@
             id="main-container"
             class="container mb-2"
         >
+
+            <biz-flash-expired :flash="$page.props.flash" />
+
             <slot />
         </div>
     </div>
@@ -23,12 +26,14 @@
 
 <script>
     import BizNavbarMenu from '@/Biz/NavbarMenu';
+    import BizFlashExpired from '@/Biz/FlashExpired';
 
     export default {
         name: 'LayoutApp',
 
         components: {
             BizNavbarMenu,
+            BizFlashExpired
         },
     };
 </script>
