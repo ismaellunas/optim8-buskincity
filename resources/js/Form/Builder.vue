@@ -22,6 +22,7 @@
         </div>
 
         <biz-error-notifications
+            :bags="[bagName]"
             :errors="$page.props.errors"
         />
 
