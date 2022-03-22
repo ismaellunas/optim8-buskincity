@@ -306,25 +306,6 @@ class StripeService
         return fopen($path, 'r');
     }
 
-    private function getLogoFile(): mixed
-    {
-        $logoMedia = app(SettingService::class)->getLogoMedia();
-        $resource = null;
-
-        if ($logoMedia) {
-            $resource = $this->getLogoFileFromCloud($logoMedia);
-        }
-
-        if (empty($resource)) {
-
-            $path = resource_path('images/logo-128x47.png');
-
-            $resource = fopen($path, 'r');
-        }
-
-        return $resource;
-    }
-
     public function uploadBusinesLogo(mixed $resource)
     {
         $stripe = $this->getStripeClient();
@@ -354,15 +335,20 @@ class StripeService
         $branding = [];
 
         if ($isReplacingLogo) {
-            $file = null;
 
-            $resource = $this->getLogoFile();
+            $logoMedia = app(SettingService::class)->getLogoMedia();
 
-            if ($resource) {
-                $file = $this->uploadBusinesLogo($resource);
+            if ($logoMedia) {
+
+                $resource = $this->getLogoFileFromCloud($logoMedia);
+
+                if ($resource) {
+
+                    $file = $this->uploadBusinesLogo($resource);
+
+                    $branding['logo'] = $file ? $file->id : null;
+                }
             }
-
-            $branding['logo'] = $file ? $file->id : null;
         }
 
         if ($isReplacingColors) {
