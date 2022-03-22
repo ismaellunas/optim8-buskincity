@@ -42,6 +42,13 @@ class UserMetaStripe
         $this->user->saveMetas();
     }
 
+    public function isEnabled(): bool
+    {
+        $key = 'stripe_is_enabled';
+
+        return (bool) $this->user->getMetas([$key])->get($key, false);
+    }
+
     public function initConnectedAccount(Account $stripeAccount)
     {
         $this->setAccount($stripeAccount);

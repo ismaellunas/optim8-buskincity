@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed } from 'vue';
 
 export const regexFileName = "a-z0-9\-";
 export const regexSlug = regexFileName;

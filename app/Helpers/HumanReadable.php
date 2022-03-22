@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use Carbon\Carbon;
+
 class HumanReadable
 {
     public static function bytesToHuman($bytes)
@@ -13,5 +15,11 @@ class HumanReadable
         }
 
         return round($bytes, 2) . ' ' . $units[$i];
+    }
+
+    public static function timestampToDateTime(int $timestamp): string
+    {
+        return Carbon::parse($timestamp)
+            ->format(config('constants.format.date_time'));
     }
 }
