@@ -42,7 +42,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::prefix('/payment-management/stripe')
         ->name('payment-management.stripe.')
-        ->middleware('can:updateStripeConnect,App\Models\User')
+        ->middleware('can:manageStripeConnectedAccount,App\Models\User')
         ->group(function() {
             Route::get('/', [StripeController::class, 'show'])
                 ->name('show');
@@ -126,7 +126,7 @@ Route::group([
         ->middleware('redirectLanguage');
 
     Route::get('/profiles/{user}', [FrontendProfileController::class, 'show'])
-    ->name('frontend.profiles');
+        ->name('frontend.profiles');
     Route::get('donations/{user}/success', [DonationController::class, 'success'])
         ->name('donations.success');
     Route::post('donations/checkout/{user}', [DonationController::class, 'checkout'])

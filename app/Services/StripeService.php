@@ -9,7 +9,6 @@ use App\Mail\ThankYouCheckoutCompleted;
 use App\Models\{
     Country,
     PaymentWebhook,
-    Setting,
     User,
     UserMeta,
 };
@@ -178,14 +177,9 @@ class StripeService
         }
     }
 
-    public function getConnectedAccountId(User $user): ?string
+    private function getConnectedAccountId(User $user): ?string
     {
         return (new UserMetaStripe($user))->getAccountId();
-    }
-
-    public function hasConnectedAccount(User $user): bool
-    {
-        return (new UserMetaStripe($user))->hasAccount();
     }
 
     private function getStripeAmount(float $amount, string $currency)
@@ -354,26 +348,25 @@ class StripeService
 
     public function getCountryOptions(): Collection
     {
+        $stripeSettingService = app(StripeSettingService::class);
         $countrySpecs = [];
 
-        $countrySpecsSetting = Setting::firstOrNew([
-            'key' => 'stripe_country_specs',
-        ]);
+        $countrySpecsSetting = $stripeSettingService->getCountrySpecs();
 
-        if (!$countrySpecsSetting->id) {
+        if (is_null($countrySpecsSetting)) {
 
-            $stripe = $this->getStripeClient();
-            $response = $stripe->countrySpecs->all(['limit' => 100]);
+            $response = $this->getStripeClient()->countrySpecs->all(['limit' => 100]);
 
-            $countrySpecsSetting->value = json_encode($response->data);
-            $countrySpecsSetting->save();
+            $stripeSettingService->saveCountrySpecs($response->data);
+
+            $countrySpecs = $response->data;
+        } else {
+            $countrySpecs = json_decode($countrySpecsSetting->value);
         }
 
-        $countrySpecs = json_decode($countrySpecsSetting->value);
         $countrySpecs = collect($countrySpecs);
-        $countryIsoIds = $countrySpecs->pluck('id');
 
-        return Country::whereIn('alpha2', $countryIsoIds)
+        return Country::whereIn('alpha2', $countrySpecs->pluck('id'))
             ->get(['alpha2', 'display_name'])
             ->map(function ($country) {
                 return [
@@ -381,27 +374,6 @@ class StripeService
                     'value' => $country->display_name,
                 ];
             });
-    }
-
-    public function getAvailableCurrencyOptions(): array
-    {
-        $paymentCurrencies = Setting::key('stripe_payment_currencies')
-            ->value('value');
-
-        if ($paymentCurrencies) {
-            $paymentCurrencies = (array) json_decode($paymentCurrencies);
-
-            return array_map(
-                function ($currency) {
-                    return [
-                        'id' => $currency,
-                        'value' => $currency,
-                    ];
-                },
-                $paymentCurrencies
-            );
-        }
-        return [];
     }
 
     public function getCurrencyOptions(): array
@@ -424,18 +396,6 @@ class StripeService
                 'value' => 'USD',
             ],
         ];
-    }
-
-    public function getAmountOptions(): array
-    {
-        $currencyAmountOptions = Setting::key('stripe_amount_options')
-            ->value('value');
-
-        return (
-            $currencyAmountOptions
-            ? (array) json_decode($currencyAmountOptions)
-            : []
-        );
     }
 
     public function getApplicationFeeAmount($amount): float
@@ -461,23 +421,9 @@ class StripeService
         );
     }
 
-    public function getDefaultCountry(): ?string
-    {
-        return Setting::key('stripe_default_country')->value('value');
-    }
-
-    public function isEnabled(): bool
-    {
-        return app(SettingCache::class)->remember('stripe_is_enabled', function () {
-            return (bool) Setting::key('stripe_is_enabled')->value('value');
-        });
-    }
-
     public function isStripeConnectEnabled(User $user): bool
     {
-        $key = 'stripe_is_enabled';
-
-        return (bool) $user->getMetas([$key])->get($key, false);
+        return (new UserMetaStripe($user))->isEnabled();
     }
 
     private function getUserIdFromStripeAccount(string $stripeAccount): ?int

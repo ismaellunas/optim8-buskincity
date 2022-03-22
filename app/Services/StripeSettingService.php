@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entities\Caches\SettingCache;
 use App\Models\Setting;
 use Illuminate\Support\Collection;
 
@@ -63,5 +64,66 @@ class StripeSettingService
 
             return [$setting->key => $value];
         });
+    }
+
+    public function isEnabled(): bool
+    {
+        return app(SettingCache::class)->remember('stripe_is_enabled', function () {
+            return (bool) Setting::key('stripe_is_enabled')->value('value');
+        });
+    }
+
+    public function getDefaultCountry(): ?string
+    {
+        return Setting::key('stripe_default_country')->value('value');
+    }
+
+    public function getAmountOptions(): array
+    {
+        $currencyAmountOptions = Setting::key('stripe_amount_options')
+            ->value('value');
+
+        return (
+            $currencyAmountOptions
+            ? (array) json_decode($currencyAmountOptions)
+            : []
+        );
+    }
+
+    public function getAvailableCurrencyOptions(): array
+    {
+        $paymentCurrencies = Setting::key('stripe_payment_currencies')
+            ->value('value');
+
+        if ($paymentCurrencies) {
+            $paymentCurrencies = (array) json_decode($paymentCurrencies);
+
+            return array_map(
+                function ($currency) {
+                    return [
+                        'id' => $currency,
+                        'value' => $currency,
+                    ];
+                },
+                $paymentCurrencies
+            );
+        }
+
+        return [];
+    }
+
+    public function getCountrySpecs(): ?Setting
+    {
+        return Setting::firstWhere([
+            'key' => 'stripe_country_specs',
+        ]);
+    }
+
+    public function saveCountrySpecs(array $countrySpecs)
+    {
+        return Setting::updateOrCreate(
+            ['key' => 'stripe_country_specs'],
+            ['value' => json_encode($countrySpecs)]
+        );
     }
 }

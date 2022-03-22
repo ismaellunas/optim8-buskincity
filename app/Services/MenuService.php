@@ -355,7 +355,7 @@ class MenuService
             ],
         ];
 
-        if ($user->can('updateStripeConnect', $user)) {
+        if ($user->can('manageStripeConnectedAccount', $user)) {
             $menus['paymentManagement'] = [
                 'title' => 'Payment Management',
                 'isActive' => $request->routeIs('payment-management.*'),
