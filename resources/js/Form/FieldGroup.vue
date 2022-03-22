@@ -31,6 +31,7 @@
                 v-model="form[ name ][ selectedLocale ]"
                 :errors="form.errors"
                 :schema="field"
+                :selected-locale="selectedLocale"
             />
         </template>
     </div>
