@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Entities\Caches\SettingCache;
 use App\Entities\UserMetaStripe;
 use App\Helpers\HumanReadable;
 use App\Mail\ThankYouCheckoutCompleted;
