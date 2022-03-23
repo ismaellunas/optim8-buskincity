@@ -10,7 +10,11 @@ use App\Http\Requests\{
     UserUpdateRequest
 };
 use App\Models\User;
-use App\Services\UserService;
+use App\Services\{
+    CountryService,
+    LanguageService,
+    UserService,
+};
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -79,6 +83,8 @@ class UserController extends CrudController
         return Inertia::render('User/Create', $this->getData([
             'record' => new User(),
             'roleOptions' => $this->userService->getRoleOptions(),
+            'shownLanguageOptions' => app(LanguageService::class)->getShownLanguageOptions(),
+            'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'title' => $this->getCreateTitle(),
         ]));
     }
@@ -132,6 +138,8 @@ class UserController extends CrudController
         return Inertia::render('User/Edit', $this->getData([
             'record' => $user,
             'roleOptions' => $this->userService->getRoleOptions(),
+            'shownLanguageOptions' => app(LanguageService::class)->getShownLanguageOptions(),
+            'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'title' => $this->getEditTitle(),
         ]));
     }

@@ -25,6 +25,8 @@
                             v-model="profileForm"
                             :can-set-role="!record.isSuperAdministrator"
                             :role-options="roleOptions"
+                            :shown-language-options="shownLanguageOptions"
+                            :country-options="countryOptions"
                         />
 
                         <div class="field is-grouped is-grouped-right">
@@ -137,6 +139,8 @@
             errors: { type: Object, default: () => {} },
             record: {type: Object, default: () => {} },
             roleOptions: { type: Array, default: () => [] },
+            shownLanguageOptions: { type: Array, default: () => [] },
+            countryOptions: { type: Array, default: () => [] },
             title: { type: String, required: true },
         },
 
