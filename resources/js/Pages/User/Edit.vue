@@ -27,6 +27,7 @@
                             :role-options="roleOptions"
                             :shown-language-options="shownLanguageOptions"
                             :country-options="countryOptions"
+                            :error-bag="errorBag"
                         />
 
                         <div class="field is-grouped is-grouped-right">
@@ -62,6 +63,7 @@
 
                         <form-user-password
                             v-model="passwordForm"
+                            :error-bag="errorBag"
                         />
 
                         <div class="field is-grouped is-grouped-right">
@@ -176,6 +178,7 @@
             return {
                 baseRouteName: 'admin.users',
                 biodataFormKey: 0,
+                errorBag: 'userUpdate',
                 isFormBuilderShown: false,
                 isProcessing: false,
                 loader: null,

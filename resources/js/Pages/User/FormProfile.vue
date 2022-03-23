@@ -7,7 +7,7 @@
             delete-label="Remove Photo"
             :photo-url="form.photo_url"
             :show-delete-button="form.photo_url != null"
-            :message="error('photo')"
+            :message="error('photo', errorBag)"
             @on-reset-value="resetImageForm()"
             @on-delete-image="onDeleteImage()"
         >
@@ -22,14 +22,14 @@
             v-model="form.first_name"
             label="First Name"
             required
-            :message="error('first_name')"
+            :message="error('first_name', errorBag)"
         />
 
         <biz-form-input
             v-model="form.last_name"
             label="Last Name"
             required
-            :message="error('last_name')"
+            :message="error('last_name', errorBag)"
         />
 
         <biz-form-input
@@ -37,7 +37,7 @@
             label="Email"
             required
             type="email"
-            :message="error('email')"
+            :message="error('email', errorBag)"
         />
 
         <biz-form-select
@@ -45,7 +45,7 @@
             v-model="form.role"
             label="Role"
             placeholder="- Select a Role -"
-            :message="error('role')"
+            :message="error('role', errorBag)"
         >
             <option
                 v-for="option in roleOptions"
@@ -59,7 +59,7 @@
         <biz-form-dropdown-search
             label="Country"
             :close-on-click="true"
-            :message="error('country_code')"
+            :message="error('country_code', errorBag)"
             @search="searchCountry($event)"
         >
             <template #trigger>
@@ -81,7 +81,7 @@
             label="Language"
             required
             :close-on-click="true"
-            :message="error('language_id')"
+            :message="error('language_id', errorBag)"
             @search="searchLanguage($event)"
         >
             <template #trigger>
@@ -132,6 +132,7 @@
 
         props: {
             canSetRole: {type: Boolean, default: true},
+            errorBag: {type: String, default: 'default'},
             modelValue: {},
             photoUrl: {type: [String, null], default: null},
             roleOptions: {type: Array, default: () => []},
