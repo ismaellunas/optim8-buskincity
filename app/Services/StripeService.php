@@ -295,7 +295,7 @@ class StripeService
         return fopen($path, 'r');
     }
 
-    public function uploadBusinesLogo(mixed $resource)
+    public function uploadBusinessLogo(mixed $resource)
     {
         $stripe = $this->getStripeClient();
 
@@ -333,7 +333,7 @@ class StripeService
 
                 if ($resource) {
 
-                    $file = $this->uploadBusinesLogo($resource);
+                    $file = $this->uploadBusinessLogo($resource);
 
                     $branding['logo'] = $file ? $file->id : null;
                 }

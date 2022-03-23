@@ -71,7 +71,7 @@ class UpdateStripeConnectedAccountBrandingLogo implements ShouldQueue
         if ($this->fileResource) {
             $file = $this
                 ->stripeService
-                ->uploadBusinesLogo($this->fileResource);
+                ->uploadBusinessLogo($this->fileResource);
         }
 
         $stripeAccount = $this->stripeService->updateAccount(
