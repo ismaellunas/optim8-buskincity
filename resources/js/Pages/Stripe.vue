@@ -192,6 +192,32 @@
                         </biz-table>
                     </div>
                 </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <b>Primary Color</b>
+                    </div>
+
+                    <div class="column">
+                        <biz-form-input-color
+                            v-model="form.color_primary"
+                            :message="error('color_primary')"
+                        />
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <b>Secondary Color</b>
+                    </div>
+
+                    <div class="column">
+                        <biz-form-input-color
+                            v-model="form.color_secondary"
+                            :message="error('color_secondary')"
+                        />
+                    </div>
+                </div>
             </form>
         </div>
     </app-layout>
@@ -207,6 +233,7 @@
     import BizFormField from '@/Biz/Form/Field';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormInputAddons from '@/Biz/Form/InputAddons';
+    import BizFormInputColor from '@/Biz/Form/InputColor';
     import BizInputError from '@/Biz/InputError';
     import BizSelect from '@/Biz/Select';
     import BizTable from '@/Biz/Table';
@@ -228,6 +255,7 @@
             BizFormField,
             BizFormInput,
             BizFormInputAddons,
+            BizFormInputColor,
             BizInputError,
             BizSelect,
             BizTable,
@@ -245,6 +273,14 @@
             applicationFeePercentage: {
                 type: Number,
                 default: null,
+            },
+            colorPrimary: {
+                type: String,
+                required: true,
+            },
+            colorSecondary: {
+                type: [String, null],
+                required: true,
             },
             countryOptions: {
                 type: Array,
@@ -288,6 +324,8 @@
                 is_enabled: props.isEnabled ?? false,
                 minimal_amounts: props.minimalAmounts ?? {},
                 payment_currencies: props.paymentCurrencies ?? [],
+                color_primary: props.colorPrimary ?? '',
+                color_secondary: props.colorSecondary ?? '',
             };
 
             return {

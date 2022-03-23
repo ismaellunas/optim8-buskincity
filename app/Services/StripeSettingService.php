@@ -15,6 +15,8 @@ class StripeSettingService
         'stripe_is_enabled' => 'bool',
         'stripe_minimal_amounts' => 'array',
         'stripe_payment_currencies' => 'array',
+        'stripe_color_primary' => 'string',
+        'stripe_color_secondary' => 'string',
     ];
 
     public function getKeys(): array
@@ -28,7 +30,7 @@ class StripeSettingService
 
         switch ($dataType) {
             case 'array': $convertedValue = json_encode($value); break;
-            case 'bool': $convertedValue = (bool)$value; break;
+            case 'bool': $convertedValue = (int) $value; break;
             case 'float': $convertedValue = (float)$value; break;
             case 'int': $convertedValue = (int)$value; break;
             case 'object': $convertedValue = json_encode($value); break;
@@ -125,5 +127,34 @@ class StripeSettingService
             ['key' => 'stripe_country_specs'],
             ['value' => json_encode($countrySpecs)]
         );
+    }
+
+    public function displayNames(): Collection
+    {
+        return Setting::group('stripe')->pluck('display_name', 'key');
+    }
+
+    public function defaultPrimaryColor(): string
+    {
+        return '#395dbf';
+    }
+
+    public function defaultSecondaryColor(): string
+    {
+        return '#fcd42f';
+    }
+
+    public function primaryColor(): string
+    {
+        return Setting::key('stripe_color_primary')
+            ->group('stripe')
+            ->value('value');
+    }
+
+    public function secondaryColor(): string
+    {
+        return Setting::key('stripe_color_secondary')
+            ->group('stripe')
+            ->value('value');
     }
 }

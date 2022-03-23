@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StripeSettingRequest;
+use App\Jobs\UpdateStripeConnectedAccountColor;
 use App\Services\StripeService;
 use App\Services\StripeSettingService;
 use App\Traits\FlashNotifiable;
-use App\Http\Requests\StripeSettingRequest;
 use Inertia\Inertia;
 
 class StripeController extends Controller
@@ -41,11 +42,19 @@ class StripeController extends Controller
             'isEnabled' => $settings->get('stripe_is_enabled'),
             'minimalAmounts' => $settings->get('stripe_minimal_amounts'),
             'paymentCurrencies' => $settings->get('stripe_payment_currencies'),
+            'colorPrimary' => $settings->get('stripe_color_primary'),
+            'colorSecondary' => $settings->get('stripe_color_secondary'),
         ]);
     }
 
     public function update(StripeSettingRequest $request)
     {
+        $changedKeys = collect();
+        $colorKeys = [
+            'color_primary',
+            'color_secondary',
+        ];
+
         foreach ($request->validated() as $key => $setting) {
             $this->stripeSettingService->save('stripe_'.$key, $setting);
         }
