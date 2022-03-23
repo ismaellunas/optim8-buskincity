@@ -305,16 +305,6 @@ class StripeService
         ]);
     }
 
-    private function getPrimaryColor(): string
-    {
-        return '#2587BF';
-    }
-
-    private function getSecondaryColor(): string
-    {
-        return '#FCD42F';
-    }
-
     public function updateAccountBrandingBasedOnPlatform(
         string $stripeAccountId,
         bool $isReplacingLogo = true,
@@ -341,8 +331,13 @@ class StripeService
         }
 
         if ($isReplacingColors) {
-            $branding['primary_color'] = $this->getPrimaryColor();
-            $branding['secondary_color'] = $this->getSecondaryColor();
+            $stripeSettingService = app(StripeSettingService::class);
+
+            $branding['primary_color'] = $stripeSettingService->primaryColor()
+                ?? $stripeSettingService->defaultPrimaryColor();
+
+            $branding['secondary_color'] = $stripeSettingService->secondaryColor()
+                ?? $stripeSettingService->defaultSecondaryColor();
         }
 
         if (!empty($branding)) {
