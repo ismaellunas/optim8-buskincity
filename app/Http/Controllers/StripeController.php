@@ -56,7 +56,22 @@ class StripeController extends Controller
         ];
 
         foreach ($request->validated() as $key => $setting) {
-            $this->stripeSettingService->save('stripe_'.$key, $setting);
+            $setting = $this->stripeSettingService->save('stripe_'.$key, $setting);
+
+            if ($setting->wasChanged()) {
+                $changedKeys->push($key);
+            }
+        }
+
+        if ($changedKeys->intersect($colorKeys)->isNotEmpty()) {
+            $job = new UpdateStripeConnectedAccountColor(
+                $request->get('color_primary'),
+                $request->get('color_secondary')
+            );
+
+            $job->delay(now()->addSeconds(30));
+
+            dispatch($job);
         }
 
         $this->generateFlashMessage('Stripe updated successfully!');
