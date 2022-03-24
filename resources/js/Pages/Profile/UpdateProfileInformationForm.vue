@@ -142,6 +142,8 @@
         ],
 
         props: {
+            countryOptions: { type: Array, default: () => [] },
+            shownLanguageOptions: { type: Array, default: () => [] },
             user: {
                 type: Object,
                 required: true,
@@ -151,13 +153,6 @@
         emits: [
             'after-update-profile'
         ],
-
-        setup() {
-            return {
-                countryOptions: usePage().props.value.countryOptions,
-                languageOptions: usePage().props.value.shownLanguageOptions,
-            };
-        },
 
         data() {
             return {
@@ -177,7 +172,7 @@
                 }),
                 isImageEditing: false,
                 filteredCountries: this.countryOptions.slice(0, 10),
-                filteredLanguages: this.languageOptions.slice(0, 10),
+                filteredLanguages: this.shownLanguageOptions.slice(0, 10),
             }
         },
 
@@ -202,7 +197,7 @@
                 get() {
                     if (this.form.language_id) {
                         let language = find(
-                            this.languageOptions,
+                            this.shownLanguageOptions,
                             ['id', parseInt(this.form.language_id)]
                         );
                         return language.value;
@@ -265,11 +260,11 @@
 
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
-                    this.filteredLanguages = filter(this.languageOptions, function (language) {
+                    this.filteredLanguages = filter(this.shownLanguageOptions, function (language) {
                         return new RegExp(term, 'i').test(language.value);
                     }).slice(0, 10);
                 } else {
-                    this.filteredLanguages = this.languageOptions.slice(0, 10);
+                    this.filteredLanguages = this.shownLanguageOptions.slice(0, 10);
                 }
             }, debounceTime),
         },

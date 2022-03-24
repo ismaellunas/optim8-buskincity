@@ -20,6 +20,7 @@ use App\Http\Controllers\{
     ThemeHeaderMenuController,
     TranslationManagerController,
     UserController,
+    UserProfileController,
     UserRoleController,
 };
 
@@ -30,7 +31,6 @@ use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\NewPasswordController;
 use Laravel\Fortify\Http\Controllers\PasswordResetLinkController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
-use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------

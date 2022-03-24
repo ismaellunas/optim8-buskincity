@@ -114,7 +114,6 @@
     import { debounceTime } from '@/Libs/defaults';
     import { confirmDelete } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
-    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'UserProfileForm',
@@ -137,20 +136,20 @@
             modelValue: {},
             photoUrl: {type: [String, null], default: null},
             roleOptions: {type: Array, default: () => []},
+            countryOptions: {type: Array, default: () => []},
+            shownLanguageOptions: {type: Array, default: () => []},
         },
 
         setup(props, { emit }) {
             return {
                 form: useModelWrapper(props, emit),
-                countryOptions: usePage().props.value.countryOptions,
-                languageOptions: usePage().props.value.shownLanguageOptions,
             };
         },
 
         data() {
             return {
                 filteredCountries: this.countryOptions.slice(0, 10),
-                filteredLanguages: this.languageOptions.slice(0, 10),
+                filteredLanguages: this.shownLanguageOptions.slice(0, 10),
             };
         },
 
@@ -175,7 +174,7 @@
                 get() {
                     if (this.form.language_id) {
                         let language = find(
-                            this.languageOptions,
+                            this.shownLanguageOptions,
                             ['id', parseInt(this.form.language_id)]
                         );
                         return language.value;
@@ -217,11 +216,11 @@
 
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
-                    this.filteredLanguages = filter(this.languageOptions, function (language) {
+                    this.filteredLanguages = filter(this.shownLanguageOptions, function (language) {
                         return new RegExp(term, 'i').test(language.value);
                     }).slice(0, 10);
                 } else {
-                    this.filteredLanguages = this.languageOptions.slice(0, 10);
+                    this.filteredLanguages = this.shownLanguageOptions.slice(0, 10);
                 }
             }, debounceTime),
         },
