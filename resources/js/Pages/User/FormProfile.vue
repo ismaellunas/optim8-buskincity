@@ -7,7 +7,7 @@
             delete-label="Remove Photo"
             :photo-url="form.photo_url"
             :show-delete-button="form.photo_url != null"
-            :message="error('photo')"
+            :message="error('photo', errorBag)"
             @on-reset-value="resetImageForm()"
             @on-delete-image="onDeleteImage()"
         >
@@ -22,14 +22,14 @@
             v-model="form.first_name"
             label="First Name"
             required
-            :message="error('first_name')"
+            :message="error('first_name', errorBag)"
         />
 
         <biz-form-input
             v-model="form.last_name"
             label="Last Name"
             required
-            :message="error('last_name')"
+            :message="error('last_name', errorBag)"
         />
 
         <biz-form-input
@@ -37,7 +37,7 @@
             label="Email"
             required
             type="email"
-            :message="error('email')"
+            :message="error('email', errorBag)"
         />
 
         <biz-form-select
@@ -45,7 +45,7 @@
             v-model="form.role"
             label="Role"
             placeholder="- Select a Role -"
-            :message="error('role')"
+            :message="error('role', errorBag)"
         >
             <option
                 v-for="option in roleOptions"
@@ -58,8 +58,9 @@
 
         <biz-form-dropdown-search
             label="Country"
+            required
             :close-on-click="true"
-            :message="error('country_code')"
+            :message="error('country_code', errorBag)"
             @search="searchCountry($event)"
         >
             <template #trigger>
@@ -81,7 +82,7 @@
             label="Language"
             required
             :close-on-click="true"
-            :message="error('language_id')"
+            :message="error('language_id', errorBag)"
             @search="searchLanguage($event)"
         >
             <template #trigger>
@@ -113,7 +114,6 @@
     import { debounceTime } from '@/Libs/defaults';
     import { confirmDelete } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
-    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'UserProfileForm',
@@ -133,23 +133,24 @@
 
         props: {
             canSetRole: {type: Boolean, default: true},
+            errorBag: {type: String, default: 'default'},
             modelValue: {},
             photoUrl: {type: [String, null], default: null},
             roleOptions: {type: Array, default: () => []},
+            countryOptions: {type: Array, default: () => []},
+            shownLanguageOptions: {type: Array, default: () => []},
         },
 
         setup(props, { emit }) {
             return {
                 form: useModelWrapper(props, emit),
-                countryOptions: usePage().props.value.countryOptions,
-                languageOptions: usePage().props.value.shownLanguageOptions,
             };
         },
 
         data() {
             return {
                 filteredCountries: this.countryOptions.slice(0, 10),
-                filteredLanguages: this.languageOptions.slice(0, 10),
+                filteredLanguages: this.shownLanguageOptions.slice(0, 10),
             };
         },
 
@@ -174,7 +175,7 @@
                 get() {
                     if (this.form.language_id) {
                         let language = find(
-                            this.languageOptions,
+                            this.shownLanguageOptions,
                             ['id', parseInt(this.form.language_id)]
                         );
                         return language.value;
@@ -216,11 +217,11 @@
 
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
-                    this.filteredLanguages = filter(this.languageOptions, function (language) {
+                    this.filteredLanguages = filter(this.shownLanguageOptions, function (language) {
                         return new RegExp(term, 'i').test(language.value);
                     }).slice(0, 10);
                 } else {
-                    this.filteredLanguages = this.languageOptions.slice(0, 10);
+                    this.filteredLanguages = this.shownLanguageOptions.slice(0, 10);
                 }
             }, debounceTime),
         },

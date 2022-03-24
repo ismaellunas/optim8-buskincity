@@ -2,7 +2,10 @@
     <app-layout>
         <template #header>{{ title }}</template>
 
-        <biz-error-notifications :errors="$page.props.errors" />
+        <biz-error-notifications
+            :bags="['userUpdate']"
+            :errors="$page.props.errors"
+        />
 
         <div class="mb-6">
             <form
@@ -22,6 +25,9 @@
                             v-model="profileForm"
                             :can-set-role="!record.isSuperAdministrator"
                             :role-options="roleOptions"
+                            :shown-language-options="shownLanguageOptions"
+                            :country-options="countryOptions"
+                            :error-bag="errorBag"
                         />
 
                         <div class="field is-grouped is-grouped-right">
@@ -57,6 +63,7 @@
 
                         <form-user-password
                             v-model="passwordForm"
+                            :error-bag="errorBag"
                         />
 
                         <div class="field is-grouped is-grouped-right">
@@ -134,6 +141,8 @@
             errors: { type: Object, default: () => {} },
             record: {type: Object, default: () => {} },
             roleOptions: { type: Array, default: () => [] },
+            shownLanguageOptions: { type: Array, default: () => [] },
+            countryOptions: { type: Array, default: () => [] },
             title: { type: String, required: true },
         },
 
@@ -169,6 +178,7 @@
             return {
                 baseRouteName: 'admin.users',
                 biodataFormKey: 0,
+                errorBag: 'userUpdate',
                 isFormBuilderShown: false,
                 isProcessing: false,
                 loader: null,

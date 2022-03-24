@@ -3,10 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Services\{
-    CountryService,
     MenuService,
     SettingService,
-    LanguageService,
     TranslationService as TranslationSv,
 };
 use Illuminate\Http\Request;
@@ -15,14 +13,11 @@ use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
-    private $menuService;
     private $settingService;
 
     public function __construct(
-        MenuService $menuService,
         SettingService $settingService
     ) {
-        $this->menuService = $menuService;
         $this->settingService = $settingService;
     }
 
@@ -76,8 +71,6 @@ class HandleInertiaRequests extends Middleware
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
             'languageOptions' => TranslationSv::getLocaleOptions(),
-            'shownLanguageOptions' => app(LanguageService::class)->getShownLanguageOptions(),
-            'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
             ]

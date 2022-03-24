@@ -6,6 +6,8 @@ use Illuminate\Validation\Rule;
 
 class UserUpdateRequest extends UserStoreRequest
 {
+    protected $errorBag = 'userUpdate';
+
     public function rules(): array
     {
         $rules = [
