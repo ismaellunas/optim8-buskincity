@@ -78,28 +78,6 @@ class StripeDonationCheckoutTest extends TestCase
     /**
      * @test
      */
-    // public function accessMoreThanRateLimiterWillTriggerError429()
-    // {
-    //     // Arrange
-    //     $this->mockStripeService();
-
-    //     // Act
-    //     $max = config('constants.throttle.checkout');
-    //     for ($i = 0; $i < $max + 1; $i++) {
-    //         $response = $this->post(
-    //             route($this->baseRouteName, $this->user->id),
-    //             $this->getDonationData()
-    //         );
-    //         // dd($response-);
-    //     }
-
-    //     // Assert
-    //     $response->assertStatus(429);
-    // }
-
-    /**
-     * @test
-     */
     public function rateLimiterDoesNotAffectOtherSessionId() {
         // Arrange
         $this->mockStripeService();
