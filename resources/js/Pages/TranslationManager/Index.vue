@@ -69,15 +69,15 @@
 
                         <biz-dropdown-scroll :max-height="350">
                             <biz-dropdown-item
-                                v-for="(groupOption, index) in groupOptions"
+                                v-for="(groupOption, key, index) in groupOptions"
                                 :key="index"
                             >
                                 <biz-checkbox
                                     v-model:checked="groups"
-                                    :value="groupOption"
+                                    :value="key"
                                     @change="filterGroups"
                                 >
-                                    &nbsp; {{ groupOption.replace('_', ' ') }}
+                                    &nbsp; {{ groupOption }}
                                 </biz-checkbox>
                             </biz-dropdown-item>
                         </biz-dropdown-scroll>
@@ -87,7 +87,7 @@
                 <div class="column">
                     <div class="is-pulled-right">
                         <biz-button-download
-                            :url="route('admin.settings.translation-manager.export', {locale: locale, groups: groups})"
+                            :url="route(baseRouteName + '.export', {locale: locale, groups: groups})"
                             class="mr-2"
                         >
                             Export
@@ -99,6 +99,16 @@
                         >
                             Import
                         </biz-button>
+
+                        <biz-button-link
+                            :href="route(baseRouteName + '.create')"
+                            class="is-primary mr-2"
+                        >
+                            <span class="icon is-small">
+                                <i class="fas fa-plus" />
+                            </span>
+                            <span>Add New</span>
+                        </biz-button-link>
 
                         <biz-button
                             class="is-link"
@@ -160,10 +170,20 @@
                                     <biz-button
                                         v-if="page.value"
                                         class="is-ghost has-text-black ml-1"
-                                        @click="onClear(index)"
+                                        @click.prevent="onClear(index)"
                                     >
                                         <span class="icon is-small">
                                             <i class="fas fa-eraser" />
+                                        </span>
+                                    </biz-button>
+
+                                    <biz-button
+                                        v-if="!page.group && referenceLocale == page.locale"
+                                        class="is-ghost has-text-black ml-1"
+                                        @click.prevent="onDelete(page)"
+                                    >
+                                        <span class="icon is-small">
+                                            <i class="far fa-trash-alt" />
                                         </span>
                                     </biz-button>
                                 </div>
@@ -255,6 +275,7 @@
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button';
+    import BizButtonLink from '@/Biz/ButtonLink';
     import BizButtonDownload from '@/Biz/ButtonDownload';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDropdown from '@/Biz/Dropdown';
@@ -277,6 +298,7 @@
         components: {
             AppLayout,
             BizButton,
+            BizButtonLink,
             BizButtonDownload,
             BizCheckbox,
             BizDropdown,
@@ -307,8 +329,8 @@
                 required: true,
             },
             groupOptions: {
-                type: Array,
-                default:() => [],
+                type: Object,
+                default:() => {},
             },
             referenceLocale: {
                 type: String,
@@ -360,6 +382,7 @@
             return {
                 isProcessing: false,
                 acceptedTypes: ['.csv'],
+                editIndex: null,
                 form: useForm({
                     translations: this.records.data,
                 }),
@@ -464,6 +487,27 @@
                 });
             },
 
+            onDelete(translation) {
+                const self = this;
+                let message = 'It will delete all translation on another language.';
+
+                confirmDelete(
+                    'Are you sure?',
+                    message
+                ).then((result) => {
+                    if (result.isConfirmed) {
+                        self.$inertia.delete(
+                            route(self.baseRouteName+'.destroy', translation.id),
+                            {
+                                onSuccess: () => {
+                                    self.form = self.getUseForm();
+                                },
+                            },
+                        );
+                    }
+                });
+            },
+
             onClickedPagination(url) {
                 if (this.form.isDirty) {
                     confirmLeaveProgress().then((result) => {
@@ -503,7 +547,7 @@
             submitImport() {
                 const self = this;
                 self.importForm.post(
-                    route("admin.settings.translation-manager.import"),
+                    route(self.baseRouteName + '.import'),
                     {
                         preserveScroll: false,
                         preserveState: true,
