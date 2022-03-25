@@ -235,7 +235,6 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Cloudinary' => CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::class,
         'GeoIP' => \Torann\GeoIP\Facades\GeoIP::class,
-        'ThemeHelper' => App\Helpers\Theme::class,
     ],
 
 ];
