@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class TranslationRequest extends FormRequest
+class TranslationUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,9 @@ class TranslationRequest extends FormRequest
     public function rules()
     {
         $locale = config('translatable.locales');
-        $group = config('constants.translations.groups');
+        $groups = collect(config('constants.translations.groups'))
+            ->keys()
+            ->all();
 
         return [
             'translations.*.locale' => [
@@ -34,9 +36,9 @@ class TranslationRequest extends FormRequest
                 Rule::in($locale)
             ],
             'translations.*.group' => [
-                'required',
+                'nullable',
                 'max: 127',
-                Rule::in($group)
+                Rule::in($groups)
             ],
             'translations.*.key' => [
                 'required'
