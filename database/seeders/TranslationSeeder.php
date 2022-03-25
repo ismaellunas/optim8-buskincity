@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Entities\Caches\TranslationCache;
+use App\Models\Translation;
 use App\Services\TranslationManagerService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Seeder;
@@ -28,9 +30,20 @@ class TranslationSeeder extends Seeder
      *
      * @return void
      */
-    public function run(?bool $replace = true)
+    public function run(?bool $replace = true, ?bool $onCommand = false)
     {
         $this->importTranslations($replace);
+
+        if (!$onCommand) {
+            $translation = new Translation;
+            $translation->saveFromInputs([
+                'locale' => $this->translationManagerService->getReferenceLocale(),
+                'key' => 'I love programming.',
+                'value' => 'I love programming.'
+            ]);
+        }
+
+        app(TranslationCache::class)->flush();
     }
 
     private function importTranslations($replace = false)

@@ -23,7 +23,11 @@
 
     <section class="section theme-font">
         <div class="container">
-            Hello there
+            <div class="content">
+                <p>
+                    Hello there, {{ __('I love programming.') }}
+                </p>
+            </div>
         </div>
     </section>
 

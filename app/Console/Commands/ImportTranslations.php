@@ -13,7 +13,7 @@ class ImportTranslations extends Command
     public function handle()
     {
         $translation = app(TranslationSeeder::class);
-        $translation->run($this->option('replace'));
+        $translation->run($this->option('replace'), true);
 
         $this->info('The import translation is successful!');
         return Command::SUCCESS;
