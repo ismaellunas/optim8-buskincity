@@ -50,7 +50,7 @@ class TranslationManagerService
             });
     }
 
-    private function getReferenceLocale()
+    public function getReferenceLocale()
     {
         return 'en';
     }
@@ -166,7 +166,7 @@ class TranslationManagerService
         string $key,
         ?string $value,
         string $locale,
-        string $group,
+        string $group = null,
         bool $replace = false
     ): bool {
         $translation = Translation::firstOrNew([

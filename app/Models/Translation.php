@@ -18,6 +18,12 @@ class Translation extends Model implements TranslationLoader
         'value',
     ];
 
+    public function saveFromInputs(array $inputs)
+    {
+        $this->fill($inputs);
+        $this->save();
+    }
+
     // Method from TranslationLoader-Interface
     public function loadTranslations(string $locale, string $group): array
     {
@@ -69,6 +75,14 @@ class Translation extends Model implements TranslationLoader
 
     public function scopeGroups($query, mixed $groups)
     {
-        return $query->whereIn('group', $groups);
+        foreach ($groups as $group) {
+            if ($group == 'no_group') {
+                $query = $query->whereNull('group');
+            }
+        }
+
+        return $query->orWhere(function ($q) use ($groups) {
+            $q->whereIn('group', $groups);
+        });
     }
 }

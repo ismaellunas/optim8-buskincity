@@ -44,6 +44,46 @@ class TranslationManagerController extends CrudController
         $this->translationCache = $translationCache;
         $this->translationManagerService = $translationManagerService;
         $this->translationService = $translationService;
+
+        $this->referenceLocale = $this->translationManagerService->getReferenceLocale();
+    }
+
+    public function create()
+    {
+        return Inertia::render(
+            $this->componentName . 'Create',
+            $this->getData([
+                'referenceLocale' => $this->referenceLocale,
+                'groupOptions' => config('constants.translations.groups'),
+                'title' => $this->getCreateTitle()
+            ])
+        );
+    }
+
+    public function store(TranslationStoreRequest $request)
+    {
+        $inputs = $request->validated();
+
+        foreach ($inputs['value'] as $locale => $value) {
+            if ($value) {
+                $translation = new Translation();
+                $data = [
+                    'locale' => $locale,
+                    'key' => $inputs['key'],
+                    'value' => $value,
+                ];
+
+                $translation->saveFromInputs($data);
+
+                $this->translationCache->flushGroup(
+                    $locale,
+                );
+            }
+        }
+
+        $this->generateFlashMessage('Translation created successfully!');
+
+        return redirect()->route($this->baseRouteName . '.edit');
     }
 
     public function edit(TranslationManagerRequest $request)
@@ -102,6 +142,28 @@ class TranslationManagerController extends CrudController
         }
 
         $this->generateFlashMessage('Translation updated successfully!');
+
+        return redirect()->back();
+    }
+
+    public function destroy(Translation $translation)
+    {
+        $translations = Translation::where('key', $translation->key)->get();
+
+        foreach ($translations as $translation) {
+            $locale = $translation->locale;
+            $group = $translation->group;
+
+            $translation->delete();
+
+            $this->translationCache->flushGroup(
+                $locale,
+                $group
+            );
+        }
+
+
+        $this->generateFlashMessage('Translation deleted successfully!');
 
         return redirect()->back();
     }
