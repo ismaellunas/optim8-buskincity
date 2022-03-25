@@ -9,6 +9,8 @@ class UserPasswordRequest extends FormRequest
 {
     use PasswordValidationRules;
 
+    protected $errorBag = 'userUpdate';
+
     public function authorize(): bool
     {
         return true;
