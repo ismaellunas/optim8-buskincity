@@ -24,7 +24,9 @@ class TranslationManagerRequest extends FormRequest
      */
     public function rules()
     {
-        $groups = config('constants.translations.groups');
+        $groups = collect(config('constants.translations.groups'))
+            ->keys()
+            ->all();
 
         return [
             'groups' => [
