@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Helpers\Url;
 use App\Models\{
     Language,
     User
@@ -42,6 +43,7 @@ class CreateNewUser implements CreatesNewUsers
             'password' => Hash::make($input['password']),
             'country_code' => $input['country_code'],
             'language_id' => $input['language_id'],
+            'unique_key' => Url::generateUniqueSegment(),
         ]);
     }
 
