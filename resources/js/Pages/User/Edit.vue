@@ -2,7 +2,10 @@
     <app-layout>
         <template #header>{{ title }}</template>
 
-        <biz-error-notifications :errors="$page.props.errors" />
+        <biz-error-notifications
+            :bags="['userUpdate']"
+            :errors="$page.props.errors"
+        />
 
         <div class="mb-6">
             <form
@@ -24,6 +27,7 @@
                             :role-options="roleOptions"
                             :shown-language-options="shownLanguageOptions"
                             :country-options="countryOptions"
+                            :error-bag="errorBag"
                         />
 
                         <div class="field is-grouped is-grouped-right">
@@ -59,6 +63,7 @@
 
                         <form-user-password
                             v-model="passwordForm"
+                            :error-bag="errorBag"
                         />
 
                         <div class="field is-grouped is-grouped-right">
@@ -173,6 +178,7 @@
             return {
                 baseRouteName: 'admin.users',
                 biodataFormKey: 0,
+                errorBag: 'userUpdate',
                 isFormBuilderShown: false,
                 isProcessing: false,
                 loader: null,
