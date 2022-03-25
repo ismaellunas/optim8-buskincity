@@ -8,9 +8,11 @@ use App\Http\Requests\{
     TranslationExportRequest,
     TranslationImportRequest,
     TranslationManagerRequest,
-    TranslationRequest,
+    TranslationUpdateRequest,
+    TranslationStoreRequest,
 };
 use App\Imports\TranslationsImport;
+use App\Models\Translation;
 use App\Traits\FlashNotifiable;
 use App\Services\{
     TranslationManagerService,
@@ -20,15 +22,19 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Excel;
 
-class TranslationManagerController extends Controller
+class TranslationManagerController extends CrudController
 {
     use FlashNotifiable;
 
-    private $baseRouteName ="admin.settings.translation-manager";
+    protected $title = 'Translation Manager';
+    protected $baseRouteName ="admin.settings.translation-manager";
+
+    private $componentName = "TranslationManager/";
 
     private $translationCache;
     private $translationManagerService;
     private $translationService;
+    private $referenceLocale;
 
     public function __construct(
         TranslationCache $translationCache,
@@ -44,38 +50,38 @@ class TranslationManagerController extends Controller
     {
         $defaultLocale = $this->translationService->getDefaultLocale();
 
-        return Inertia::render('TranslationManager', [
-            'title' => __('Translation Manager'),
-            'baseRouteName' => $this->baseRouteName,
-            'importRouteName' => 'admin.settings.translation-manager.import',
-            'exportRouteName' => 'admin.settings.translation-manager.export',
-            'defaultLocale' => $defaultLocale,
-            'referenceLocale' => 'en',
-            'groupOptions' => config('constants.translations.groups'),
-            'localeOptions' => collect($this->translationService->getLocaleOptions())
-                ->sortBy('name', SORT_NATURAL)
-                ->values()
-                ->all(),
-            'pageQueryParams' => array_filter($request->only('locale', 'groups')),
-            'bags' => [
-                'import' => 'translationImport',
-            ],
-            'records' => $this->translationManagerService->getRecords(
-                $request->locale,
-                $request->groups
-            ),
-            'i18n' => [
-                'fileInputNotes' => [
-                    __('Accepted file extension: :extensions', [
-                        'extensions' => implode(',', config('constants.extensions.import'))
-                    ]),
-                    __('Max file size: :size', ['size' => '5MB']),
+        return Inertia::render(
+            $this->componentName . 'Index',
+            $this->getData([
+                'defaultLocale' => $defaultLocale,
+                'referenceLocale' => $this->referenceLocale,
+                'groupOptions' => config('constants.translations.groups'),
+                'localeOptions' => collect($this->translationService->getLocaleOptions())
+                    ->sortBy('name', SORT_NATURAL)
+                    ->values()
+                    ->all(),
+                'pageQueryParams' => array_filter($request->only('locale', 'groups')),
+                'bags' => [
+                    'import' => 'translationImport',
+                ],
+                'records' => $this->translationManagerService->getRecords(
+                    $request->locale,
+                    $request->groups,
+                    $this->recordsPerPage,
+                ),
+                'i18n' => [
+                    'fileInputNotes' => [
+                        __('Accepted file extension: :extensions', [
+                            'extensions' => implode(',', config('constants.extensions.import'))
+                        ]),
+                        __('Max file size: :size', ['size' => '5MB']),
+                    ]
                 ]
-            ]
-        ]);
+            ])
+        );
     }
 
-    public function update(TranslationRequest $request)
+    public function update(TranslationUpdateRequest $request)
     {
         $translations = $request->translations;
 
