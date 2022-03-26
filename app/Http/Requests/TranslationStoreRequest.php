@@ -7,6 +7,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class TranslationStoreRequest extends FormRequest
 {
+    private $translationManagerService;
+    private $referenceLocale;
+
+    public function __construct(
+        TranslationManagerService $translationManagerService
+    ) {
+        $this->translationManagerService = $translationManagerService;
+
+        $this->referenceLocale = $this->translationManagerService->getReferenceLocale();
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -24,9 +35,6 @@ class TranslationStoreRequest extends FormRequest
      */
     public function rules()
     {
-        $translationManagerService = new TranslationManagerService();
-        $referenceLocale = $translationManagerService->getReferenceLocale();
-
         return [
             'key' => [
                 'required',
@@ -34,7 +42,14 @@ class TranslationStoreRequest extends FormRequest
                 'unique:translations,key'
             ],
             'value' => ['array'],
-            'value.' . $referenceLocale => ['required']
+            'value.' . $this->referenceLocale => ['required']
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'value.' . $this->referenceLocale => 'English Value',
         ];
     }
 }
