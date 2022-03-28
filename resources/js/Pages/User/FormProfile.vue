@@ -25,16 +25,15 @@
                 v-if="profilePageUrl"
                 class="column has-text-right"
             >
-                <button
-                    class="button"
-                    type="button"
-                    @click="copyProfileUrlToClipboard(profilePageUrl)"
+                <a
+                    class="button as-text-black ml-1"
+                    target="_blank"
+                    title="Profile Page Url"
+                    :href="profilePageUrl"
                 >
-                    Copy Profile URL &nbsp;
-                    <span class="icon is-small">
-                        <i class="fas fa-clipboard" />
-                    </span>
-                </button>
+                    Open Public Profile &nbsp;
+                    <i class="fas fa-id-card" />
+                </a>
             </div>
         </div>
 
@@ -130,7 +129,6 @@
     import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSelect from '@/Biz/Form/Select';
     import UserIcon from '@/Biz/Icon/User';
-    import toast from '@/Libs/toast';
     import { confirmDelete } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
@@ -246,12 +244,6 @@
                     this.filteredLanguages = this.shownLanguageOptions.slice(0, 10);
                 }
             }, debounceTime),
-
-            copyProfileUrlToClipboard(url) {
-                navigator.clipboard.writeText(url).then(function () {
-                    toast.info('copied to clipboard');
-                });
-            },
         },
     };
 </script>
