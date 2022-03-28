@@ -1,17 +1,19 @@
 <template>
-    <biz-form-password
-        v-model="form.password"
-        autocomplete="new-password"
-        label="Password"
-        :message="error('password')"
-        :required="true"
-    ></biz-form-password>
+    <div class="mb-4">
+        <biz-form-password
+            v-model="form.password"
+            autocomplete="new-password"
+            label="Password"
+            :message="error('password', errorBag)"
+            :required="true"
+        />
 
-    <biz-form-password
-        v-model="form.password_confirmation"
-        label="Password Confirmation"
-        :message="error('password_confirmation')"
-    ></biz-form-password>
+        <biz-form-password
+            v-model="form.password_confirmation"
+            label="Password Confirmation"
+            :message="error('password_confirmation', errorBag)"
+        />
+    </div>
 </template>
 
 <script>
@@ -28,6 +30,7 @@
             MixinHasPageErrors,
         ],
         props: {
+            errorBag: {type: String, default: 'default'},
             modelValue: {},
         },
         setup(props, { emit }) {
