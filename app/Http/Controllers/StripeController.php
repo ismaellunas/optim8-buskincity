@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StripeSettingRequest;
 use App\Jobs\UpdateStripeConnectedAccountColor;
-use App\Services\StripeService;
-use App\Services\StripeSettingService;
+use App\Services\{
+    StripeService,
+    StripeSettingService,
+};
 use App\Traits\FlashNotifiable;
 use Inertia\Inertia;
 

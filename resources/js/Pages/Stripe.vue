@@ -276,11 +276,11 @@
             },
             colorPrimary: {
                 type: String,
-                required: true,
+                default: null,
             },
             colorSecondary: {
-                type: [String, null],
-                required: true,
+                type: String,
+                default: null,
             },
             countryOptions: {
                 type: Array,
