@@ -123,10 +123,12 @@ class StripeSettingService
 
     public function saveCountrySpecs(array $countrySpecs)
     {
-        return Setting::updateOrCreate(
-            ['key' => 'stripe_country_specs'],
-            ['value' => json_encode($countrySpecs)]
-        );
+        $setting = Setting::firstOrNew(['key' => 'stripe_country_specs']);
+
+        $setting->value = json_encode($countrySpecs);
+        $setting->updated_at = now();
+
+        $setting->save();
     }
 
     public function displayNames(): Collection
