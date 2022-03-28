@@ -49,4 +49,12 @@ class UserStoreRequest extends FormRequest
 
         return $query->get()->pluck('id')->all();
     }
+
+    public function attributes(): array
+    {
+        return [
+            'country_code' => __('country'),
+            'language_id' => __('language'),
+        ];
+    }
 }

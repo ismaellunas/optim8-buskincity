@@ -44,12 +44,4 @@ class UserUpdateRequest extends UserStoreRequest
 
         return $rules;
     }
-
-    public function attributes(): array
-    {
-        return [
-            'country_code' => __('country'),
-            'language_id' => __('language'),
-        ];
-    }
 }
