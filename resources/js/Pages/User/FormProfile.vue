@@ -1,22 +1,42 @@
 <template>
     <div class="mb-3">
-        <biz-form-image-editable
-            v-model="form.photo"
-            v-model:photo-url="form.photo_url"
-            modal-label="Profile Photo"
-            delete-label="Remove Photo"
-            :photo-url="form.photo_url"
-            :show-delete-button="form.photo_url != null"
-            :message="error('photo', errorBag)"
-            @on-reset-value="resetImageForm()"
-            @on-delete-image="onDeleteImage()"
-        >
-            <template #default-image-view>
-                <user-icon
-                    style="width: 64px;"
-                />
-            </template>
-        </biz-form-image-editable>
+        <div class="columns">
+            <div class="column">
+                <biz-form-image-editable
+                    v-model="form.photo"
+                    v-model:photo-url="form.photo_url"
+                    modal-label="Profile Photo"
+                    delete-label="Remove Photo"
+                    :photo-url="form.photo_url"
+                    :show-delete-button="form.photo_url != null"
+                    :message="error('photo', errorBag)"
+                    @on-reset-value="resetImageForm()"
+                    @on-delete-image="onDeleteImage()"
+                >
+                    <template #default-image-view>
+                        <user-icon
+                            style="width: 64px;"
+                        />
+                    </template>
+                </biz-form-image-editable>
+            </div>
+
+            <div
+                v-if="profilePageUrl"
+                class="column has-text-right"
+            >
+                <button
+                    class="button"
+                    type="button"
+                    @click="copyProfileUrlToClipboard(profilePageUrl)"
+                >
+                    Copy Profile URL &nbsp;
+                    <span class="icon is-small">
+                        <i class="fas fa-clipboard" />
+                    </span>
+                </button>
+            </div>
+        </div>
 
         <biz-form-input
             v-model="form.first_name"
@@ -110,10 +130,11 @@
     import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSelect from '@/Biz/Form/Select';
     import UserIcon from '@/Biz/Icon/User';
-    import { useModelWrapper } from '@/Libs/utils';
-    import { debounceTime } from '@/Libs/defaults';
+    import toast from '@/Libs/toast';
     import { confirmDelete } from '@/Libs/alert';
+    import { debounceTime } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'UserProfileForm',
@@ -134,10 +155,11 @@
         props: {
             canSetRole: {type: Boolean, default: true},
             errorBag: {type: String, default: 'default'},
+            countryOptions: {type: Array, default: () => []},
             modelValue: {},
             photoUrl: {type: [String, null], default: null},
+            profilePageUrl: {type: String, default: ''},
             roleOptions: {type: Array, default: () => []},
-            countryOptions: {type: Array, default: () => []},
             shownLanguageOptions: {type: Array, default: () => []},
         },
 
@@ -224,6 +246,12 @@
                     this.filteredLanguages = this.shownLanguageOptions.slice(0, 10);
                 }
             }, debounceTime),
+
+            copyProfileUrlToClipboard(url) {
+                navigator.clipboard.writeText(url).then(function () {
+                    toast.info('copied to clipboard');
+                });
+            },
         },
     };
 </script>

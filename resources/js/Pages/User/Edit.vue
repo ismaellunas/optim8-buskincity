@@ -28,6 +28,7 @@
                             :shown-language-options="shownLanguageOptions"
                             :country-options="countryOptions"
                             :error-bag="errorBag"
+                            :profile-page-url="can.public_profile ? record.profilePageUrl : null"
                         />
 
                         <div class="field is-grouped is-grouped-right">
@@ -138,11 +139,12 @@
         },
 
         props: {
+            can: { type: Object, required: true },
+            countryOptions: { type: Array, default: () => [] },
             errors: { type: Object, default: () => {} },
             record: {type: Object, default: () => {} },
             roleOptions: { type: Array, default: () => [] },
             shownLanguageOptions: { type: Array, default: () => [] },
-            countryOptions: { type: Array, default: () => [] },
             title: { type: String, required: true },
         },
 
