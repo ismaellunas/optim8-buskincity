@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Entities\Caches\SettingCache;
 use App\Entities\UserMetaStripe;
 use App\Helpers\HumanReadable;
 use App\Mail\ThankYouCheckoutCompleted;
@@ -305,16 +304,6 @@ class StripeService
         ]);
     }
 
-    private function getPrimaryColor(): string
-    {
-        return '#2587BF';
-    }
-
-    private function getSecondaryColor(): string
-    {
-        return '#FCD42F';
-    }
-
     public function updateAccountBrandingBasedOnPlatform(
         string $stripeAccountId,
         bool $isReplacingLogo = true,
@@ -341,8 +330,13 @@ class StripeService
         }
 
         if ($isReplacingColors) {
-            $branding['primary_color'] = $this->getPrimaryColor();
-            $branding['secondary_color'] = $this->getSecondaryColor();
+            $stripeSettingService = app(StripeSettingService::class);
+
+            $branding['primary_color'] = $stripeSettingService->primaryColor()
+                ?? $stripeSettingService->defaultPrimaryColor();
+
+            $branding['secondary_color'] = $stripeSettingService->secondaryColor()
+                ?? $stripeSettingService->defaultSecondaryColor();
         }
 
         if (!empty($branding)) {
@@ -373,8 +367,11 @@ class StripeService
 
         $countrySpecsSetting = $stripeSettingService->getCountrySpecs();
 
-        if (is_null($countrySpecsSetting)) {
-
+        if (
+            is_null($countrySpecsSetting)
+            || empty($countrySpecsSetting->value)
+            || $countrySpecsSetting->updated_at->lt(now()->subYear())
+        ) {
             $response = $this->getStripeClient()->countrySpecs->all(['limit' => 100]);
 
             $stripeSettingService->saveCountrySpecs($response->data);

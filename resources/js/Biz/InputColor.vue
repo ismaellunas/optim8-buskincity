@@ -35,7 +35,7 @@
 
         props: {
             hasError: {type: Boolean, default: false},
-            modelValue: {},
+            modelValue: {type: String, default: null},
         },
 
         emits: ['update:modelValue'],
@@ -44,6 +44,7 @@
             onInput(event) {
                 this.$emit('update:modelValue', event.target.value);
             },
+
             focus() {
                 this.$refs.hex.focus();
             }
