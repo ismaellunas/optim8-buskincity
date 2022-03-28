@@ -95,6 +95,15 @@
                         >
                             <template #actions>
                                 <div class="level-right">
+                                    <biz-button-icon
+                                        v-if="record.can.public_profile"
+                                        class="is-ghost has-text-black ml-1"
+                                        icon-class="is-small"
+                                        icon="fas fa-clipboard"
+                                        title="Profile Page Url"
+                                        @click.prevent="copyProfileUrlToClipboard(record.profile_page_url)"
+                                    />
+
                                     <biz-button-link
                                         v-if="can.edit"
                                         class="is-ghost has-text-black"
@@ -171,6 +180,7 @@
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
     import UserListItem from '@/Pages/User/ListItem';
+    import toast from '@/Libs/toast';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from 'vue';
@@ -316,6 +326,12 @@
                             }
                         );
                     }
+                });
+            },
+
+            copyProfileUrlToClipboard(url) {
+                navigator.clipboard.writeText(url).then(function () {
+                    toast.info('copied to clipboard');
                 });
             },
         }
