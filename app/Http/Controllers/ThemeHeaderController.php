@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Entities\CloudinaryStorage;
 use App\Http\Requests\ThemeHeaderLayoutRequest;
+use App\Jobs\UpdateStripeConnectedAccountBrandingLogo;
 use App\Models\{
     Media,
     Menu,
@@ -87,6 +88,11 @@ class ThemeHeaderController extends ThemeOptionController
             ]);
             $setting->value = $media->id;
             $setting->save();
+
+            $job = new UpdateStripeConnectedAccountbrandingLogo($media);
+            $job->delay(now()->addMinutes(1));
+
+            dispatch($job);
         }
 
         $this->generateFlashMessage('Header layout updated successfully!');

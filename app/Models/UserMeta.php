@@ -86,4 +86,9 @@ class UserMeta extends Model
     {
         return $this->morphMany(Media::class, 'medially');
     }
+
+    public function scopeKey($query, string $key)
+    {
+        return $query->where('key', $key);
+    }
 }
