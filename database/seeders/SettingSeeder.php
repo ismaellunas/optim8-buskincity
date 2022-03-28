@@ -60,7 +60,7 @@ class SettingSeeder extends Seeder
         ];
 
         foreach ($settings as $setting) {
-            Setting::factory()->create($setting);
+            $this->createSetting($setting);
         }
 
         $defaultFontSizes = config('constants.theme_font_sizes');
@@ -125,7 +125,7 @@ class SettingSeeder extends Seeder
         ];
 
         foreach ($fontSizes as $fontSize) {
-            Setting::factory()->create($fontSize);
+            $this->createSetting($fontSize);
         }
 
         $headers = [
@@ -146,7 +146,7 @@ class SettingSeeder extends Seeder
         ];
 
         foreach ($headers as $header) {
-            Setting::factory()->create($header);
+            $this->createSetting($header);
         }
 
         $footers = [
@@ -160,7 +160,7 @@ class SettingSeeder extends Seeder
         ];
 
         foreach ($footers as $footer) {
-            Setting::factory()->create($footer);
+            $this->createSetting($footer);
         };
 
         $trackingCodes = [
@@ -188,7 +188,7 @@ class SettingSeeder extends Seeder
         ];
 
         foreach ($trackingCodes as $trackingCode) {
-            Setting::factory()->create($trackingCode);
+            $this->createSetting($trackingCode);
         }
 
         $additionalCodes = [
@@ -209,7 +209,7 @@ class SettingSeeder extends Seeder
         ];
 
         foreach ($additionalCodes as $additionalCode) {
-            Setting::factory()->create($additionalCode);
+            $this->createSetting($additionalCode);
         }
 
         $homePage = [
@@ -220,7 +220,7 @@ class SettingSeeder extends Seeder
             "order" => "1"
         ];
 
-        Setting::factory()->create($homePage);
+        $this->createSetting($homePage);
 
         $others = [
             [
@@ -228,12 +228,20 @@ class SettingSeeder extends Seeder
                 "display_name" => null,
                 "value" => 30,
                 "group" => null,
-                "order" => "1"
+                "order" => "1",
             ],
         ];
 
         foreach ($others as $other) {
-            Setting::factory()->create($other);
+            $this->createSetting($other);
         }
+    }
+
+    private function createSetting($data)
+    {
+        Setting::factory()->create(array_merge($data, [
+            "created_at" => now(),
+            "updated_at" => now(),
+        ]));
     }
 }

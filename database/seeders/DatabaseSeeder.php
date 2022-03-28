@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             PageSeeder::class,
             PostSeeder::class,
             MenuSeeder::class,
+            StripeSeeder::class,
         ]);
     }
 }
