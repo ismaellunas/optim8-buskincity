@@ -367,8 +367,11 @@ class StripeService
 
         $countrySpecsSetting = $stripeSettingService->getCountrySpecs();
 
-        if (is_null($countrySpecsSetting)) {
-
+        if (
+            is_null($countrySpecsSetting)
+            || empty($countrySpecsSetting->value)
+            || $countrySpecsSetting->updated_at->lt(now()->subYear())
+        ) {
             $response = $this->getStripeClient()->countrySpecs->all(['limit' => 100]);
 
             $stripeSettingService->saveCountrySpecs($response->data);
