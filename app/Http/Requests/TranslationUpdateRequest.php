@@ -27,9 +27,7 @@ class TranslationUpdateRequest extends FormRequest
     public function rules()
     {
         $locale = config('translatable.locales');
-        $groups = collect(config('constants.translations.groups'))
-            ->keys()
-            ->all();
+        $groups = (new TranslationManagerService())->getGroups();
 
         $uniqueRule = $this->getUniqueRule();
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Services\TranslationManagerService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,9 +25,7 @@ class TranslationManagerRequest extends FormRequest
      */
     public function rules()
     {
-        $groups = collect(config('constants.translations.groups'))
-            ->keys()
-            ->all();
+        $groups = (new TranslationManagerService())->getGroups();
 
         return [
             'groups' => [

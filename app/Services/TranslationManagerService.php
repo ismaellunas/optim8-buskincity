@@ -64,6 +64,13 @@ class TranslationManagerService
         );
     }
 
+    public function getGroups(): array
+    {
+        return collect(config('constants.translations.groups'))
+            ->keys()
+            ->all();
+    }
+
     public function getGroupedKeys(array $groups = null): Collection
     {
         return Translation::select('key', 'group')
