@@ -75,8 +75,8 @@ class TranslationManagerController extends CrudController
 
                 $translation->saveFromInputs($data);
 
-                $this->translationCache->flushGroup(
-                    $locale,
+                $this->translationCache->flushStringGroup(
+                    $locale
                 );
             }
         }
@@ -152,16 +152,13 @@ class TranslationManagerController extends CrudController
 
         foreach ($translations as $translation) {
             $locale = $translation->locale;
-            $group = $translation->group;
 
             $translation->delete();
 
-            $this->translationCache->flushGroup(
-                $locale,
-                $group
+            $this->translationCache->flushStringGroup(
+                $locale
             );
         }
-
 
         $this->generateFlashMessage('Translation deleted successfully!');
 

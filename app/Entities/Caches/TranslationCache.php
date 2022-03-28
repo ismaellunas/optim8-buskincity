@@ -13,8 +13,8 @@ class TranslationCache extends BaseCache
 
     private function getKey(string $locale, string $group = null): string
     {
-        if (!$group) {
-            $group = "*";
+        if (!$group || $group == '') {
+            $group = '*';
         }
 
         return $locale . ":" . $group;
@@ -59,8 +59,13 @@ class TranslationCache extends BaseCache
         return Cache::tags($this->getLocaleTag($locale))->flush();
     }
 
-    public function flushGroup(string $locale, string $group = null): bool
+    public function flushGroup(string $locale, string $group): bool
     {
         return Cache::tags($this->getGroupTag($locale, $group))->flush();
+    }
+
+    public function flushStringGroup(string $locale): bool
+    {
+        return Cache::tags($this->getGroupTag($locale))->flush();
     }
 }
