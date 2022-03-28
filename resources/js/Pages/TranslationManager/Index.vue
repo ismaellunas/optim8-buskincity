@@ -120,39 +120,55 @@
                 </div>
             </div>
             <div class="table-container">
-                <table class="table is-striped is-hoverable is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Group</th>
-                            <th>Key</th>
-                            <th v-if="!isReferenceLanguage">
-                                English Value
-                            </th>
-                            <th>Value</th>
-                            <th>
-                                <div class="level-right">
-                                    Actions
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="(page, index) in records.data"
-                            :key="page.id"
-                        >
-                            <th>{{ page.id ?? "-" }}</th>
-                            <td>{{ page.group }}</td>
-                            <td>{{ page.key }}</td>
-                            <td v-if="!isReferenceLanguage">
-                                {{ page.en_value ?? "-" }}
-                            </td>
-                            <td>
-                                <form
-                                    action="post"
-                                    @submit.prevent="onSubmit"
-                                >
+                <form
+                    action="post"
+                    @submit.prevent="onSubmit"
+                >
+                    <table class="table is-striped is-hoverable is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Group</th>
+                                <th>Key</th>
+                                <th v-if="!isReferenceLanguage">
+                                    English Value
+                                </th>
+                                <th>Value</th>
+                                <th>
+                                    <div class="level-right">
+                                        Actions
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="(page, index) in records.data"
+                                :key="page.id"
+                            >
+                                <th>{{ page.id ?? "-" }}</th>
+                                <td>{{ page.group }}</td>
+                                <td>
+                                    <template v-if="!page.group && isReferenceLanguage">
+                                        <biz-field class="mb-0">
+                                            <div class="control is-expanded">
+                                                <biz-input
+                                                    v-if="form.translations[index]"
+                                                    v-model="form.translations[index].key"
+                                                    placeholder="key"
+                                                />
+                                            </div>
+                                        </biz-field>
+                                    </template>
+
+                                    <template v-else>
+                                        {{ page.key }}
+                                    </template>
+                                </td>
+                                <td v-if="!isReferenceLanguage">
+                                    {{ page.en_value ?? "-" }}
+                                </td>
+                                <td>
                                     <biz-field class="mb-0">
                                         <div class="control is-expanded">
                                             <biz-textarea
@@ -163,34 +179,36 @@
                                             />
                                         </div>
                                     </biz-field>
-                                </form>
-                            </td>
-                            <td>
-                                <div class="level-right">
-                                    <biz-button
-                                        v-if="page.value"
-                                        class="is-ghost has-text-black ml-1"
-                                        @click.prevent="onClear(index)"
-                                    >
-                                        <span class="icon is-small">
-                                            <i class="fas fa-eraser" />
-                                        </span>
-                                    </biz-button>
+                                </td>
+                                <td>
+                                    <div class="level-right">
+                                        <biz-button
+                                            v-if="page.value"
+                                            type="button"
+                                            class="is-ghost has-text-black ml-1"
+                                            @click.prevent="onClear(index)"
+                                        >
+                                            <span class="icon is-small">
+                                                <i class="fas fa-eraser" />
+                                            </span>
+                                        </biz-button>
 
-                                    <biz-button
-                                        v-if="!page.group && referenceLocale == page.locale"
-                                        class="is-ghost has-text-black ml-1"
-                                        @click.prevent="onDelete(page)"
-                                    >
-                                        <span class="icon is-small">
-                                            <i class="far fa-trash-alt" />
-                                        </span>
-                                    </biz-button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                        <biz-button
+                                            v-if="!page.group && referenceLocale == page.locale"
+                                            type="button"
+                                            class="is-ghost has-text-black ml-1"
+                                            @click.prevent="onDelete(page)"
+                                        >
+                                            <span class="icon is-small">
+                                                <i class="far fa-trash-alt" />
+                                            </span>
+                                        </biz-button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </form>
             </div>
             <biz-pagination
                 :is-ajax="true"
@@ -275,8 +293,8 @@
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
     import BizButtonDownload from '@/Biz/ButtonDownload';
+    import BizButtonLink from '@/Biz/ButtonLink';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
@@ -285,6 +303,7 @@
     import BizField from '@/Biz/Field';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import BizFormFile from '@/Biz/Form/File';
+    import BizInput from '@/Biz/Input';
     import BizModalCard from '@/Biz/ModalCard';
     import BizPagination from '@/Biz/Pagination';
     import BizTextarea from '@/Biz/Textarea';
@@ -308,6 +327,7 @@
             BizField,
             BizFlashNotifications,
             BizFormFile,
+            BizInput,
             BizModalCard,
             BizPagination,
             BizTextarea,

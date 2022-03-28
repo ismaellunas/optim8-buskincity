@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Translation;
+use App\Services\TranslationManagerService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -29,6 +31,8 @@ class TranslationUpdateRequest extends FormRequest
             ->keys()
             ->all();
 
+        $uniqueRule = $this->getUniqueRule();
+
         return [
             'translations.*.locale' => [
                 'required',
@@ -41,7 +45,9 @@ class TranslationUpdateRequest extends FormRequest
                 Rule::in($groups)
             ],
             'translations.*.key' => [
-                'required'
+                'required',
+                'distinct',
+                $uniqueRule
             ],
             'translations.*.value' => [
                 'nullable',
@@ -66,5 +72,54 @@ class TranslationUpdateRequest extends FormRequest
         }
 
         return $attr;
+    }
+
+    private function getUniqueRule()
+    {
+        if (!$this->hasEmptyGroup()) {
+            return null;
+        }
+
+        $ignoreIds = $this->input('translations.*.id');
+        $groups = $this->input('translations.*.group');
+        $keys = $this->input('translations.*.key');
+
+        $ignoreIds = $this->getIgnoreIds($ignoreIds);
+
+        return Rule::unique('translations')
+            ->where(function ($query) use ($ignoreIds, $groups, $keys) {
+                return $query->whereNotIn('id', $ignoreIds)
+                    ->where('group', $groups)
+                    ->where('key', $keys);
+            });
+    }
+
+    private function hasEmptyGroup(): bool
+    {
+        foreach ($this->translations as $translation) {
+            if ($translation['group'] == null) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function getIgnoreIds($ids)
+    {
+        $ignoreIds = [];
+        $translations = Translation::whereIn('id', $ids)->get();
+
+        foreach ($translations as $translation) {
+            $resultIds = Translation::where('group', $translation->group)
+                ->where('key', $translation->key)
+                ->get('id')
+                ->pluck('id')
+                ->toArray();
+
+            $ignoreIds = array_merge($ignoreIds, $resultIds);
+        }
+
+        return $ignoreIds;
     }
 }
