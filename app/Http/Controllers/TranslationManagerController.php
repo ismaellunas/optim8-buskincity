@@ -13,7 +13,6 @@ use App\Http\Requests\{
 };
 use App\Imports\TranslationsImport;
 use App\Models\Translation;
-use App\Traits\FlashNotifiable;
 use App\Services\{
     TranslationManagerService,
     TranslationService
@@ -24,8 +23,6 @@ use Maatwebsite\Excel\Excel;
 
 class TranslationManagerController extends CrudController
 {
-    use FlashNotifiable;
-
     protected $title = 'Translation Manager';
     protected $baseRouteName ="admin.settings.translation-manager";
 
