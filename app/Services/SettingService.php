@@ -119,11 +119,22 @@ class SettingService
     public function getLogoUrl(): string
     {
         return app(SettingCache::class)->remember('logo_url', function () {
-            $mediaId = Setting::key(config("constants.theme_header.header_logo_media.key"))
-                ->value('value');
+            $media = $this->getLogoMedia();
 
-            return Media::where('id', $mediaId)->value('file_url') ?? "";
+            return !empty($media) ? $media->file_url : "";
         });
+    }
+
+    public function getLogoMedia(): ?Media
+    {
+        $mediaId = Setting::key(config("constants.theme_header.header_logo_media.key"))
+            ->value('value');
+
+        if (!empty($mediaId)) {
+            return Media::find($mediaId);
+        }
+
+        return null;
     }
 
     public function getHeaderLayout(): int

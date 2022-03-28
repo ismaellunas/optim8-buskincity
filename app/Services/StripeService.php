@@ -8,10 +8,12 @@ use App\Helpers\HumanReadable;
 use App\Mail\ThankYouCheckoutCompleted;
 use App\Models\{
     Country,
+    Media,
     PaymentWebhook,
     User,
     UserMeta,
 };
+use Cloudinary\Transformation\Resize;
 use Illuminate\Support\{
     Collection,
     Facades\Mail,
@@ -36,6 +38,9 @@ class StripeService
 {
     private $stripeClient = null;
     private $perPage = 10;
+
+    const BRAND_HEIGHT = 128;
+    const BRAND_WIDTH = 128;
 
     private function secretKey(): string
     {
@@ -269,45 +274,34 @@ class StripeService
         return $stripe->accounts->retrieve($stripeAccountId);
     }
 
-    public function setUserStripeAccount(User $user, Account $stripeAccount)
+    public function getLogoFileFromCloud(Media $logoMedia): mixed
     {
-        $user->setMeta('stripe_account', $stripeAccount);
-        $user->saveMetas();
-    }
+        $result = cloudinary()
+            ->getImageTag($logoMedia->file_name)
+            ->version($logoMedia->version)
+            ->resize(
+                Resize::fit()
+                    ->height(self::BRAND_HEIGHT)
+                    ->width(self::BRAND_WIDTH)
+            )
+            ->serializeAttributes();
 
-    public function setUserStripeAccountId(User $user, string $stripeAccountId)
-    {
-        $user->setMeta('stripe_account_id', $stripeAccountId);
-        $user->saveMetas();
-    }
+        $url = strval(str_replace(['src=', '"'], ['', ''], $result));
 
-    private function getLogoFileFromCloud()
-    {
-        $url = 'https://res.cloudinary.com/bayusdb/image/upload/v1645698885/local_stripe_logo.png';
-
-        $path = sys_get_temp_dir().DIRECTORY_SEPARATOR."stripe-account-logo.png";
+        $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.basename($url);
 
         file_put_contents($path, file_get_contents($url));
 
         return fopen($path, 'r');
     }
 
-    private function getLogoFile()
+    public function uploadBusinessLogo(mixed $resource)
     {
-        $path = resource_path('images/logo-128x47.png');
-
-        return fopen($path, 'r');
-    }
-
-    private function uploadLogoFile()
-    {
-        $fp = $this->getLogoFile();
-
         $stripe = $this->getStripeClient();
 
         return $stripe->files->create([
             'purpose' => 'business_logo',
-            'file' => $fp
+            'file' => $resource,
         ]);
     }
 
@@ -322,25 +316,44 @@ class StripeService
     }
 
     public function updateAccountBrandingBasedOnPlatform(
-        string $stripeAccountId
-    ): Account {
+        string $stripeAccountId,
+        bool $isReplacingLogo = true,
+        bool $isReplacingColors = true
+    ): ?Account {
 
         $branding = [];
 
-        $file = $this->uploadLogoFile();
+        if ($isReplacingLogo) {
 
-        if ($file) {
-            $branding['logo'] = $file->id;
+            $logoMedia = app(SettingService::class)->getLogoMedia();
+
+            if ($logoMedia) {
+
+                $resource = $this->getLogoFileFromCloud($logoMedia);
+
+                if ($resource) {
+
+                    $file = $this->uploadBusinessLogo($resource);
+
+                    $branding['logo'] = $file ? $file->id : null;
+                }
+            }
         }
 
-        $branding['primary_color'] = $this->getPrimaryColor();
-        $branding['secondary_color'] = $this->getSecondaryColor();
+        if ($isReplacingColors) {
+            $branding['primary_color'] = $this->getPrimaryColor();
+            $branding['secondary_color'] = $this->getSecondaryColor();
+        }
 
-        return $this->updateAccount($stripeAccountId, [
-            'settings' => [
-                'branding' => $branding
-            ],
-        ]);
+        if (!empty($branding)) {
+            return $this->updateAccount($stripeAccountId, [
+                'settings' => [
+                    'branding' => $branding
+                ],
+            ]);
+        }
+
+        return null;
     }
 
     public function updateAccount(string $stripeAccountId, array $data): Account
