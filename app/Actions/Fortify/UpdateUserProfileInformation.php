@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Validator;
@@ -19,18 +20,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      */
     public function update($user, array $input)
     {
-        Validator::make($input, [
-            'first_name' => ['required', 'string', 'max:128'],
-            'last_name' => ['required', 'string', 'max:128'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'country_code' => ['required', 'max:2', 'exists:App\Models\Country,alpha2'],
-            'photo' => [
-                'nullable',
-                'mimes:jpg,jpeg,png',
-                'max:'.config('constants.one_megabyte') * 1,
-            ],
-            'language_id' => ['required', 'exists:App\Models\Language,id'],
-        ])->validateWithBag('updateProfileInformation');
+        $this->validator($user, $input);
 
         if (isset($input['photo'])) {
             Gate::authorize('update-profile-photo', $user);
@@ -76,5 +66,35 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
         ])->save();
 
         $user->sendEmailVerificationNotification();
+    }
+
+    private function validator(User $user, array $input): void
+    {
+        Validator::make($input, [
+            'first_name' => ['required', 'string', 'max:128'],
+            'last_name' => ['required', 'string', 'max:128'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id)
+            ],
+            'country_code' => [
+                'required',
+                'max:2',
+                'exists:App\Models\Country,alpha2'
+            ],
+            'photo' => [
+                'nullable',
+                'mimes:jpg,jpeg,png',
+                'max:'.config('constants.one_megabyte') * 1,
+            ],
+            'language_id' => ['required', 'exists:App\Models\Language,id'],
+        ],
+        [],
+        [
+            'country_code' => __('country'),
+            'language_id' => __('language'),
+        ])->validateWithBag('updateProfileInformation');
     }
 }
