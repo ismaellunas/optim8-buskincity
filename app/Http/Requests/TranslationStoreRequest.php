@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Services\TranslationManagerService;
+use App\Services\{
+    TranslationService,
+    TranslationManagerService
+};
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -60,8 +63,12 @@ class TranslationStoreRequest extends FormRequest
 
     public function attributes(): array
     {
-        return [
-            'value.' . $this->referenceLocale => 'English Value',
-        ];
+        $attributes = [];
+
+        foreach (TranslationService::getLocaleOptions() as $locale) {
+            $attributes['value.' . $locale['id']] = $locale['name'] . ' value';
+        }
+
+        return $attributes;
     }
 }
