@@ -58,9 +58,5 @@
                 form: useModelWrapper(props, emit),
             };
         },
-
-        data() {
-            return {};
-        },
     }
 </script>

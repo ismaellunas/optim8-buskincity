@@ -8,8 +8,6 @@ class Setting extends BaseModel
 {
     use HasFactory;
 
-    public $timestamps = false;
-
     protected $fillable = [
         'key',
         'value',

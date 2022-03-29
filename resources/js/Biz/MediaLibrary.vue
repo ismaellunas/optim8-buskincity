@@ -295,7 +295,8 @@
         ],
         emits: [
             'on-media-submitted',
-            'on-view-changed'
+            'on-type-changed',
+            'on-view-changed',
         ],
         props: {
             acceptedTypes: {type: Array, default: acceptedFileTypes},

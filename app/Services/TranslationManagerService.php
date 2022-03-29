@@ -28,13 +28,47 @@ class TranslationManagerService
     public function batchUpdate(array $translations): void
     {
         foreach ($translations as $translation) {
-            Translation::updateOrCreate(
-                [
-                    "id" => $translation['id']
-                ],
-                $translation
-            );
+            if ($translation['group'] == null) {
+                $this->updateRelatedKey($translation);
+            } else {
+                $this->updateOrCreateTranslation($translation);
+            }
         }
+    }
+
+    private function updateRelatedKey(array $translation): void
+    {
+        $oldTranslation = Translation::find($translation['id']);
+
+        if (isset($oldTranslation) && ($oldTranslation['key'] != $translation['key'])) {
+            $relatedTranslations = Translation::whereNull('group')
+                ->where('key', $oldTranslation['key'])
+                ->get();
+
+            foreach ($relatedTranslations as $relatedTranslation) {
+                $relatedTranslation->key = $translation['key'];
+                $relatedTranslation->save();
+            }
+        } else {
+            $this->updateOrCreateTranslation($translation);
+        }
+    }
+
+    private function updateOrCreateTranslation(array $translation): void
+    {
+        Translation::updateOrCreate(
+            [
+                "id" => $translation['id']
+            ],
+            $translation
+        );
+    }
+
+    public function getGroups(): array
+    {
+        return collect(config('constants.translations.groups'))
+            ->keys()
+            ->all();
     }
 
     public function getGroupedKeys(array $groups = null): Collection

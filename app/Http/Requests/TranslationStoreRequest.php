@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Services\TranslationManagerService;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class TranslationStoreRequest extends FormRequest
 {
@@ -35,11 +36,18 @@ class TranslationStoreRequest extends FormRequest
      */
     public function rules()
     {
+        $group = $this->group;
+        $key = $this->key;
+
         return [
             'key' => [
                 'required',
                 'string',
-                'unique:translations,key'
+                Rule::unique('translations')
+                    ->where(function ($query) use ($group, $key) {
+                        return $query->where('group', $group)
+                            ->where('key', $key);
+                    })
             ],
             'value' => ['array'],
             'value.' . $this->referenceLocale => ['required']
