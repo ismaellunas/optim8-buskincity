@@ -4,10 +4,9 @@ namespace App\Http\Requests;
 
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Models\Role;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UserStoreRequest extends FormRequest
+class UserStoreRequest extends BaseFormRequest
 {
     use PasswordValidationRules;
 
@@ -50,7 +49,7 @@ class UserStoreRequest extends FormRequest
         return $query->get()->pluck('id')->all();
     }
 
-    public function attributes(): array
+    protected function customAttributes(): array
     {
         return [
             'country_code' => __('country'),

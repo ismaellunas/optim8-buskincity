@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Entities\UserMetaStripe;
-use Illuminate\Foundation\Http\FormRequest;
 
-class StripeFrontendSettingRequest extends FormRequest
+class StripeFrontendSettingRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

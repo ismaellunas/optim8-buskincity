@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class ThemeFooterLayoutRequest extends FormRequest
+class ThemeFooterLayoutRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -38,7 +36,7 @@ class ThemeFooterLayoutRequest extends FormRequest
         ];
     }
 
-    public function attributes()
+    protected function customAttributes(): array
     {
         $attr = [];
         $columns = [

@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Services\TranslationManagerService;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class TranslationStoreRequest extends FormRequest
+class TranslationStoreRequest extends BaseFormRequest
 {
     private $translationManagerService;
     private $referenceLocale;
@@ -54,7 +53,7 @@ class TranslationStoreRequest extends FormRequest
         ];
     }
 
-    public function attributes(): array
+    protected function customAttributes(): array
     {
         return [
             'value.' . $this->referenceLocale => 'English Value',

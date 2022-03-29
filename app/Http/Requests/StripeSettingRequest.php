@@ -5,10 +5,9 @@ namespace App\Http\Requests;
 use App\Rules\HexadecimalColor;
 use App\Services\StripeService;
 use App\Services\StripeSettingService;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StripeSettingRequest extends FormRequest
+class StripeSettingRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {
@@ -73,7 +72,7 @@ class StripeSettingRequest extends FormRequest
         ];
     }
 
-    public function attributes(): array
+    protected function customAttributes(): array
     {
         $attributes = [];
 
