@@ -20,7 +20,7 @@
             v-model="form.value[selectedLocale]"
             label="Value"
             required
-            :message="error('value')"
+            :message="error('value.' + selectedLocale)"
             :disabled="isInputDisabled"
         />
     </div>

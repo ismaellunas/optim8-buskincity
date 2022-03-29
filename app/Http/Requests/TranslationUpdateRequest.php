@@ -44,10 +44,12 @@ class TranslationUpdateRequest extends BaseFormRequest
             'translations.*.key' => [
                 'required',
                 'distinct',
+                'max: 1024',
                 $uniqueRule
             ],
             'translations.*.value' => [
                 'nullable',
+                'max: 1024',
             ],
         ];
     }

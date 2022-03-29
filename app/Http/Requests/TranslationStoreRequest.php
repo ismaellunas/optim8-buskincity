@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Services\TranslationManagerService;
+use App\Services\{
+    TranslationService,
+    TranslationManagerService
+};
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class TranslationStoreRequest extends BaseFormRequest
@@ -42,6 +46,7 @@ class TranslationStoreRequest extends BaseFormRequest
             'key' => [
                 'required',
                 'string',
+                'max: 1024',
                 Rule::unique('translations')
                     ->where(function ($query) use ($group, $key) {
                         return $query->where('group', $group)
@@ -49,14 +54,21 @@ class TranslationStoreRequest extends BaseFormRequest
                     })
             ],
             'value' => ['array'],
-            'value.' . $this->referenceLocale => ['required']
+            'value.' . $this->referenceLocale => ['required'],
+            'value.*' => [
+                'max: 1024',
+            ]
         ];
     }
 
     protected function customAttributes(): array
     {
-        return [
-            'value.' . $this->referenceLocale => 'English Value',
-        ];
+        $attributes = [];
+
+        foreach (TranslationService::getLocaleOptions() as $locale) {
+            $attributes['value.' . $locale['id']] = $locale['name'] . ' value';
+        }
+
+        return $attributes;
     }
 }
