@@ -45,10 +45,12 @@ class TranslationUpdateRequest extends FormRequest
             'translations.*.key' => [
                 'required',
                 'distinct',
+                'max: 1024',
                 $uniqueRule
             ],
             'translations.*.value' => [
                 'nullable',
+                'max: 1024',
             ],
         ];
     }
