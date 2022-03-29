@@ -43,6 +43,7 @@ class TranslationStoreRequest extends FormRequest
             'key' => [
                 'required',
                 'string',
+                'max: 1024',
                 Rule::unique('translations')
                     ->where(function ($query) use ($group, $key) {
                         return $query->where('group', $group)
@@ -50,7 +51,10 @@ class TranslationStoreRequest extends FormRequest
                     })
             ],
             'value' => ['array'],
-            'value.' . $this->referenceLocale => ['required']
+            'value.' . $this->referenceLocale => ['required'],
+            'value.*' => [
+                'max: 1024',
+            ]
         ];
     }
 
