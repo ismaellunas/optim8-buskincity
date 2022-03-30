@@ -13,6 +13,50 @@
         <div class="box">
             <div class="columns">
                 <div class="column">
+                    <div class="is-pulled-right">
+                        <biz-button-download
+                            :url="route(baseRouteName + '.export', {locale: locale, groups: groups})"
+                            class="mr-2"
+                        >
+                            Export
+                        </biz-button-download>
+
+                        <biz-button
+                            class="mr-2"
+                            @click="openModal"
+                        >
+                            Import
+                        </biz-button>
+
+                        <biz-button-link
+                            :href="route(baseRouteName + '.create')"
+                            class="is-primary mr-2"
+                        >
+                            <span class="icon is-small">
+                                <i class="fas fa-plus" />
+                            </span>
+                            <span>Add New</span>
+                        </biz-button-link>
+
+                        <biz-button
+                            class="is-link"
+                            @click="onSubmit"
+                        >
+                            Update
+                        </biz-button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="columns">
+                <div class="column">
+                    <biz-filter-search
+                        v-model="term"
+                        @search="filterTerm"
+                    />
+                </div>
+
+                <div class="column">
                     <biz-dropdown
                         :close-on-click="true"
                     >
@@ -83,42 +127,8 @@
                         </biz-dropdown-scroll>
                     </biz-dropdown>
                 </div>
-
-                <div class="column">
-                    <div class="is-pulled-right">
-                        <biz-button-download
-                            :url="route(baseRouteName + '.export', {locale: locale, groups: groups})"
-                            class="mr-2"
-                        >
-                            Export
-                        </biz-button-download>
-
-                        <biz-button
-                            class="mr-2"
-                            @click="openModal"
-                        >
-                            Import
-                        </biz-button>
-
-                        <biz-button-link
-                            :href="route(baseRouteName + '.create')"
-                            class="is-primary mr-2"
-                        >
-                            <span class="icon is-small">
-                                <i class="fas fa-plus" />
-                            </span>
-                            <span>Add New</span>
-                        </biz-button-link>
-
-                        <biz-button
-                            class="is-link"
-                            @click="onSubmit"
-                        >
-                            Update
-                        </biz-button>
-                    </div>
-                </div>
             </div>
+
             <div class="table-container">
                 <form
                     action="post"
@@ -175,6 +185,7 @@
                                                 v-if="form.translations[index]"
                                                 v-model="form.translations[index].value"
                                                 placeholder="value"
+                                                style="width: 250px"
                                                 rows="3"
                                             />
                                         </div>
@@ -301,6 +312,7 @@
     import BizDropdownScroll from '@/Biz/DropdownScroll';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizField from '@/Biz/Field';
+    import BizFilterSearch from '@/Biz/Filter/Search';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import BizFormFile from '@/Biz/Form/File';
     import BizInput from '@/Biz/Input';
@@ -325,6 +337,7 @@
             BizDropdownScroll,
             BizErrorNotifications,
             BizField,
+            BizFilterSearch,
             BizFlashNotifications,
             BizFormFile,
             BizInput,
@@ -391,6 +404,7 @@
             return {
                 groups: ref(props.pageQueryParams?.groups ?? []),
                 locale: ref(props.pageQueryParams?.locale ?? props.defaultLocale),
+                term: ref(props.pageQueryParams?.term ?? ''),
                 queryParams: ref(queryParams),
                 importForm: useForm({
                     file: null
@@ -439,18 +453,25 @@
                         if (result.isConfirmed) {
                             this.queryParams['groups'] = this.groups;
                             this.queryParams['locale'] = this.locale;
+                            this.queryParams['term'] = this.term;
                             this.refreshWithQueryParams();
                         } else {
                             this.groups = this.queryParams['groups'] ?? [];
                             this.locale = this.queryParams['locale'] ?? this.defaultLocale;
+                            this.term = this.queryParams['term'] ?? '';
                         }
                     });
                 } else {
                     this.queryParams['groups'] = this.groups;
                     this.queryParams['locale'] = this.locale;
+                    this.queryParams['term'] = this.term;
                     this.refreshWithQueryParams();
                 }
             },
+
+            filterTerm: debounce(function() {
+                this.search();
+            }, debounceTime),
 
             filterLocale: debounce(function(locale) {
                 this.selectedLocale = locale;
