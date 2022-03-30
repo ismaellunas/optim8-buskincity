@@ -105,7 +105,6 @@ return [
             'pagination' => 'Pagination',
             'passwords' => 'Password',
             'validation' => 'Validation',
-            'form_builder' => 'Form Builder',
         ]
     ],
     'setting_cache' => [
