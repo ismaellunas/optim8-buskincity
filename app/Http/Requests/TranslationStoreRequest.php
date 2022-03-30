@@ -56,7 +56,7 @@ class TranslationStoreRequest extends FormRequest
             'value' => ['array'],
             'value.' . $this->referenceLocale => ['required'],
             'value.*' => [
-                'max: 1024',
+                'max: 65535',
             ]
         ];
     }
