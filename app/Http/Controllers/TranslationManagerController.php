@@ -97,13 +97,16 @@ class TranslationManagerController extends CrudController
                     ->sortBy('name', SORT_NATURAL)
                     ->values()
                     ->all(),
-                'pageQueryParams' => array_filter($request->only('locale', 'groups')),
+                'pageQueryParams' => array_filter(
+                    $request->only('locale', 'groups', 'term')
+                ),
                 'bags' => [
                     'import' => 'translationImport',
                 ],
                 'records' => $this->translationManagerService->getRecords(
                     $request->locale,
                     $request->groups,
+                    $request->term,
                     $this->recordsPerPage,
                 ),
                 'i18n' => [
