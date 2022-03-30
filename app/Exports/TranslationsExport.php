@@ -33,9 +33,6 @@ class TranslationsExport implements FromCollection, WithHeadings, WithMapping
                 [$this->locale],
                 $this->groups
             )
-            ->when($this->groups, function ($collection) {
-                return $collection->whereIn('group', $this->groups);
-            })
             ->sortBy([
                 ['locale', 'asc'],
                 ['group', 'asc'],

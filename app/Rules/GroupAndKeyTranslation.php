@@ -33,9 +33,12 @@ class GroupAndKeyTranslation implements Rule, DataAwareRule
 
         $group = $this->data[$index]['group'] ?? null;
 
+        if (!$group) {
+            return true;
+        }
+
         return (
-            $group
-            && $this->groupedKeys->has($group)
+            $this->groupedKeys->has($group)
             && collect($this->groupedKeys->get($group))->contains($value)
         );
     }
