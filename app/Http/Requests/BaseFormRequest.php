@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Translation;
-use App\Services\TranslationService;
 use Illuminate\Foundation\Http\FormRequest;
 
 abstract class BaseFormRequest extends FormRequest
@@ -19,15 +17,14 @@ abstract class BaseFormRequest extends FormRequest
     final protected function translatedAttributes(): array
     {
         $keys = array_keys($this->rules());
-        $defaultLocale = TranslationService::getDefaultLocale();
 
         $attributes = [];
-        $translations = (new Translation())
-            ->loadTranslations($defaultLocale, 'validation');
 
         foreach ($keys as $key) {
-            if (isset($translations['attributes.' . $key])) {
-                $attributes[$key] = $translations['attributes.' . $key];
+            $keyTranslation = 'validation.attributes.' . $key;
+
+            if (__($keyTranslation) != $keyTranslation) {
+                $attributes[$key] = __('validation.attributes.' . $key);
             }
         }
 
