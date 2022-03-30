@@ -7,6 +7,7 @@ use App\Services\{
     TranslationManagerService
 };
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class TranslationStoreRequest extends FormRequest
@@ -66,7 +67,7 @@ class TranslationStoreRequest extends FormRequest
         $attributes = [];
 
         foreach (TranslationService::getLocaleOptions() as $locale) {
-            $attributes['value.' . $locale['id']] = $locale['name'] . ' value';
+            $attributes['value.' . $locale['id']] = Str::title($locale['name'] . ' value');
         }
 
         return $attributes;
