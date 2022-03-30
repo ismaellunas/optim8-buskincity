@@ -2,7 +2,6 @@
 
 namespace App\Actions\Fortify;
 
-use App\Helpers\Url;
 use App\Models\{
     Language,
     User
@@ -36,15 +35,16 @@ class CreateNewUser implements CreatesNewUsers
         $this->setLocation($input);
         $this->setCountry($input);
 
-        return User::create([
-            'first_name' => $input['first_name'],
-            'last_name' => $input['last_name'],
-            'email' => $input['email'],
-            'password' => Hash::make($input['password']),
-            'country_code' => $input['country_code'],
-            'language_id' => $input['language_id'],
-            'unique_key' => Url::generateUniqueSegment(),
-        ]);
+        return User::factory()
+            ->unverified()
+            ->create([
+                'first_name' => $input['first_name'],
+                'last_name' => $input['last_name'],
+                'email' => $input['email'],
+                'password' => Hash::make($input['password']),
+                'country_code' => $input['country_code'],
+                'language_id' => $input['language_id'],
+            ]);
     }
 
     private function setLocation(&$input): void

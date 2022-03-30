@@ -97,9 +97,15 @@ class UserController extends CrudController
      */
     public function store(UserStoreRequest $request)
     {
-        $user = new User();
+        $inputs = $request->validated();
 
-        $user->saveFromInputs($request->validated());
+        $user = User::factory()->create([
+            'first_name' => $inputs['first_name'],
+            'last_name' => $inputs['last_name'],
+            'email' => $inputs['email'],
+            'country_code' => $inputs['country_code'],
+            'language_id' => $inputs['language_id'],
+        ]);
 
         $user->savePassword($request->password);
 
