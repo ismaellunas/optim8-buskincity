@@ -19,7 +19,7 @@ class CreateTranslationsTable extends Migration {
             $table->bigIncrements('id');
             $table->integer('status')->default(1);
             $table->string('locale', 15);
-            $table->string('group', 127);
+            $table->string('group', 127)->nullable();
             $table->text('key');
             $table->text('value')->nullable();
             $table->timestamps();

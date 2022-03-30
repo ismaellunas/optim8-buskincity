@@ -100,11 +100,12 @@ return [
 
     'translations' => [
         'groups' => [
-            'auth',
-            'pagination',
-            'passwords',
-            'validation',
-            'form_builder'
+            'no_group' => 'No Group',
+            'auth' => 'Auth',
+            'pagination' => 'Pagination',
+            'passwords' => 'Password',
+            'validation' => 'Validation',
+            'form_builder' => 'Form Builder',
         ]
     ],
     'setting_cache' => [
