@@ -12,6 +12,7 @@ class TranslationManagerService
     public function getRecords(
         string $locale = null,
         array $groups = null,
+        string $term = null,
         int $perPage = 15
     ): LengthAwarePaginator {
 
@@ -20,7 +21,7 @@ class TranslationManagerService
         }
 
         return $this->paginateCollection(
-            $this->getExportableTranslations([$locale], $groups),
+            $this->getExportableTranslations([$locale], $groups, $term),
             $perPage
         );
     }
@@ -71,11 +72,16 @@ class TranslationManagerService
             ->all();
     }
 
-    public function getGroupedKeys(array $groups = null): Collection
-    {
+    public function getGroupedKeys(
+        array $groups = null,
+        string $term = null
+    ): Collection {
         return Translation::select('key', 'group')
             ->when($groups, function ($query, $groups) {
                 $query->groups($groups);
+            })
+            ->when($term, function ($query, $term) {
+                $query->search($term);
             })
             ->groupBy('key', 'group')
             ->get()
@@ -91,7 +97,8 @@ class TranslationManagerService
 
     private function getTranslations(
         array $locales = null,
-        array $groups = null
+        array $groups = null,
+        string $term = null
     ): Collection {
 
         return Translation::select(
@@ -108,24 +115,28 @@ class TranslationManagerService
             ->when($groups, function ($query, $groups) {
                 $query->groups($groups);
             })
+            ->when($term, function ($query, $term) {
+                $query->search($term);
+            })
             ->orderBy('id', 'DESC')
             ->get();
     }
 
     public function getExportableTranslations(
         array $locales,
-        array $groups = null
+        array $groups = null,
+        string $term = null
     ): Collection {
 
         $translations = collect();
 
-        $groupedKeys = $this->getGroupedKeys($groups);
+        $groupedKeys = $this->getGroupedKeys($groups, $term);
 
         $localeWithReferences = $locales;
         array_push($localeWithReferences, $this->getReferenceLocale());
         $localeWithReferences = array_unique($localeWithReferences);
 
-        $allTranslations = $this->getTranslations($localeWithReferences, $groups);
+        $allTranslations = $this->getTranslations($localeWithReferences, $groups, $term);
 
         foreach ($groupedKeys as $group => $keys) {
 
