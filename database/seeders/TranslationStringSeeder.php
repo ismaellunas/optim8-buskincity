@@ -11,9 +11,19 @@ class TranslationStringSeeder extends TranslationGroupSeeder
      */
     public function run()
     {
+        // --- Homepage ---
+        $translations = [
+            [
+                'locale' => $this->referenceLocale,
+                'group' => null,
+                'key' => 'I love programming.',
+                'value' => 'I love programming.'
+            ],
+        ];
+
         // --- Form builder ---
         // Biodata
-        $translations = [
+        $translations = array_merge($translations, [
             [
                 'locale' => $this->referenceLocale,
                 'group' => null,
@@ -86,7 +96,7 @@ class TranslationStringSeeder extends TranslationGroupSeeder
                 'key' => 'Term and Condition',
                 'value' => 'Term and Condition'
             ],
-        ];
+        ]);
 
         // Address
         $translations = array_merge($translations, [
