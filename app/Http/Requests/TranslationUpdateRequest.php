@@ -49,7 +49,7 @@ class TranslationUpdateRequest extends BaseFormRequest
             ],
             'translations.*.value' => [
                 'nullable',
-                'max: 1024',
+                'max: 65535',
             ],
         ];
     }
