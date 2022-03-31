@@ -134,5 +134,5 @@ Route::group([
     Route::get('donations/{user}/success', [DonationController::class, 'success'])
         ->name('donations.success');
     Route::post('donations/checkout/{user}', [DonationController::class, 'checkout'])
-        ->name('donations.checkout');
+        ->name('donations.checkout')->middleware('throttle:checkout');
 });
