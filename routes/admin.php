@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     LanguageController,
     MediaController,
     PageController,
+    PasswordResetLinkController,
     PermissionController,
     PostController,
     RoleController,
@@ -29,7 +30,6 @@ use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\NewPasswordController;
-use Laravel\Fortify\Http\Controllers\PasswordResetLinkController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 
 /*

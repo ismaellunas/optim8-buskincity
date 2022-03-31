@@ -124,6 +124,7 @@ return [
     'alpha_numeric_dash' => 'The :attribute must only contain letters, numbers, and dashes.',
     'phone' => 'The :attribute field contains an invalid number.',
     'hexadecimal_color' => 'The :attribute field contains an invalid hexadecimal color.',
+    'email_belongs_to_backend_user' => 'The :attribute is invalid',
 
     /*
     |--------------------------------------------------------------------------
