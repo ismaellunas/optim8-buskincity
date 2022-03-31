@@ -722,8 +722,9 @@
     "Zip / Postal Code": "Zip / Postal Code",
     "Åland Islands": "Åland Islands",
 
-    "//comment: Custom translations": "------------------------",
+    "//Custom translations": "------------------------",
 
+    "I love programming.": "I love programming.",
     "Gender": "Gender",
     "Phone": "Phone",
     "Education": "Education",
