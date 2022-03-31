@@ -582,6 +582,8 @@
                             self.importForm.isDirty = false;
                             self.importForm.reset();
                             self.closeModal();
+
+                            self.form = this.getUseForm();
                         },
                         onError: (errors) => {
                             const hasError = Object

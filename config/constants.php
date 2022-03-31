@@ -117,6 +117,10 @@ return [
         'user' => 'widget_user',
     ],
 
+    'throttle' => [
+        'checkout' => 100,
+    ],
+
     'format' => [
         'date_time' => 'Y/m/d H:i:s',
     ],
