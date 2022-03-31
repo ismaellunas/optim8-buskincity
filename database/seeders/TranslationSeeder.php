@@ -7,7 +7,10 @@ use App\Services\TranslationManagerService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Seeder;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Arr;
+use Illuminate\Support\{
+    Arr,
+    Str
+};
 
 class TranslationSeeder extends Seeder
 {
@@ -78,9 +81,11 @@ class TranslationSeeder extends Seeder
 
             if ($translations && is_array($translations)) {
                 foreach ($translations as $key => $value) {
-                    $this
-                        ->translationManagerService
-                        ->saveTranslation($key, $value, $locale, null, $replace);
+                    if (!Str::startsWith($key, '//')) {
+                        $this
+                            ->translationManagerService
+                            ->saveTranslation($key, $value, $locale, null, $replace);
+                    }
                 }
             }
         }
