@@ -6,7 +6,6 @@ use App\Http\Controllers\{
     LanguageController,
     MediaController,
     PageController,
-    PermissionController,
     PostController,
     RoleController,
     StripeController,
@@ -64,8 +63,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         ->name('users.password');
 
     Route::resource('/roles', RoleController::class);
-
-    Route::resource('/permissions', PermissionController::class);
 
     Route::resource('/user-roles', UserRoleController::class);
 
