@@ -19,10 +19,72 @@ class TranslationManagerService
             $locale = TranslationService::getDefaultLocale();
         }
 
-        return $this->paginateCollection(
-            $this->getExportableTranslations([$locale], $groups),
+        $groupAndKeys = $this->getGroupAndKeys($groups);
+
+        $records = $this->paginateCollection(
+            $groupAndKeys,
             $perPage
         );
+
+        $this->transformRecords($locale, $groups, $records);
+
+        return $records;
+    }
+
+    private function transformRecords(
+        string $locale = null,
+        array $groups = null,
+        $records
+    ): void {
+        $localeWithReferences = $this->getLocaleWithReferences([$locale]);
+        $allTranslations = $this->getTranslations($localeWithReferences, $groups);
+
+        $records->getCollection()->transform(
+            function ($record) use (
+                $allTranslations,
+                $locale,
+            ) {
+                $referenceLocale = $this->getReferenceLocale();
+
+                $translation = null;
+                $defaultTranslation = $allTranslations
+                    ->where('locale', $this->getReferenceLocale())
+                    ->where('group', $record->group)
+                    ->firstWhere('key', $record->key);
+
+                if ($locale == $referenceLocale) {
+
+                    $translation = $defaultTranslation;
+
+                } else {
+                    $translation = $allTranslations
+                        ->where('locale', $locale)
+                        ->where('group', $record->group)
+                        ->firstWhere('key', $record->key);
+                }
+
+                if (!$translation) {
+                    $record->id = null;
+                    $record->locale = $locale;
+                    $record->value = null;
+                } else {
+                    $record->id = $translation['id'];
+                    $record->locale = $locale;
+                    $record->value = $translation['value'];
+                }
+
+                $record->en_value = $defaultTranslation['value'] ?? null;
+
+                return $record;
+            }
+        );
+    }
+
+    private function getLocaleWithReferences(array $locales): array
+    {
+        $locales[] = $this->getReferenceLocale();
+
+        return array_unique($locales);
     }
 
     public function batchUpdate(array $translations): void
@@ -71,14 +133,20 @@ class TranslationManagerService
             ->all();
     }
 
-    public function getGroupedKeys(array $groups = null): Collection
+    private function getGroupAndKeys(array $groups = null): Collection
     {
         return Translation::select('key', 'group')
             ->when($groups, function ($query, $groups) {
                 $query->groups($groups);
             })
             ->groupBy('key', 'group')
-            ->get()
+            ->orderBy('group', 'asc')
+            ->get();
+    }
+
+    public function getGroupedKeys(array $groups = null): Collection
+    {
+        return $this->getGroupAndKeys($groups)
             ->mapToGroups(function ($translation) {
                 return [$translation['group'] => $translation['key']];
             });
@@ -92,24 +160,27 @@ class TranslationManagerService
     private function getTranslations(
         array $locales = null,
         array $groups = null
-    ): Collection {
+    ): collection {
 
-        return Translation::select(
-                'id',
-                'locale',
-                'group',
-                'key',
-                'value',
-            )
-            ->active()
-            ->when($locales, function ($query, $locales) {
-                $query->locales($locales);
-            })
-            ->when($groups, function ($query, $groups) {
-                $query->groups($groups);
-            })
-            ->orderBy('id', 'DESC')
-            ->get();
+        return collect(
+            Translation::select(
+                    'id',
+                    'locale',
+                    'group',
+                    'key',
+                    'value',
+                )
+                ->active()
+                ->when($locales, function ($query, $locales) {
+                    $query->locales($locales);
+                })
+                ->when($groups, function ($query, $groups) {
+                    $query->groups($groups);
+                })
+                ->orderBy('id', 'DESC')
+                ->get()
+                ->toArray()
+        );
     }
 
     public function getExportableTranslations(
@@ -120,11 +191,7 @@ class TranslationManagerService
         $translations = collect();
 
         $groupedKeys = $this->getGroupedKeys($groups);
-
-        $localeWithReferences = $locales;
-        array_push($localeWithReferences, $this->getReferenceLocale());
-        $localeWithReferences = array_unique($localeWithReferences);
-
+        $localeWithReferences = $this->getLocaleWithReferences($locales);
         $allTranslations = $this->getTranslations($localeWithReferences, $groups);
 
         foreach ($groupedKeys as $group => $keys) {
@@ -164,7 +231,7 @@ class TranslationManagerService
 
                     } else {
 
-                        $translation = $translation->toArray();
+                        $translation = $translation;
                     }
 
                     $translation['en_value'] = $defaultTranslation['value'] ?? null;
