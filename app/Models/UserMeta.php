@@ -10,7 +10,7 @@ class UserMeta extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['key', 'value'];
+    protected $fillable = ['key', 'value', 'user_id'];
 
     protected $dataTypes = [
         'boolean',
@@ -85,5 +85,10 @@ class UserMeta extends Model
     public function media()
     {
         return $this->morphMany(Media::class, 'medially');
+    }
+
+    public function scopeKey($query, string $key)
+    {
+        return $query->where('key', $key);
     }
 }

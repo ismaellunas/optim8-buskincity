@@ -18,6 +18,8 @@
                         <form-user-profile
                             v-model="form"
                             :role-options="roleOptions"
+                            :shown-language-options="shownLanguageOptions"
+                            :country-options="countryOptions"
                         />
 
                         <form-user-password
@@ -67,7 +69,9 @@
         },
         props: {
             errors: Object,
-            roleOptions: {},
+            roleOptions: { type: Array, default: () => [] },
+            shownLanguageOptions: { type: Array, default: () => [] },
+            countryOptions: { type: Array, default: () => [] },
             title: String,
         },
         setup(props) {

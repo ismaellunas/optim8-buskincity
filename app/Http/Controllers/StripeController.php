@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Setting;
-use App\Services\StripeService;
-use App\Traits\FlashNotifiable;
 use App\Http\Requests\StripeSettingRequest;
+use App\Jobs\UpdateStripeConnectedAccountColor;
+use App\Services\{
+    StripeService,
+    StripeSettingService,
+};
+use App\Traits\FlashNotifiable;
 use Inertia\Inertia;
 
 class StripeController extends Controller
@@ -13,24 +16,19 @@ class StripeController extends Controller
     use FlashNotifiable;
 
     private $stripeService;
+    private $stripeSettingService;
 
-    public function __construct(StripeService $stripeService)
-    {
+    public function __construct(
+        StripeService $stripeService,
+        StripeSettingService $stripeSettingService
+    ) {
         $this->stripeService = $stripeService;
+        $this->stripeSettingService = $stripeSettingService;
     }
 
     public function edit()
     {
-        $settings = Setting::whereIn('key', [
-            'stripe_amount_options',
-            'stripe_application_fee_percentage',
-            'stripe_default_country',
-            'stripe_is_enabled',
-            'stripe_minimal_amounts',
-            'stripe_payment_currencies',
-        ])
-            ->select(['key', 'value'])
-            ->pluck('value', 'key');
+        $settings = $this->stripeSettingService->getAll();
 
         $currencyOptions = collect($this->stripeService->getCurrencyOptions())
             ->map(function ($option) {
@@ -38,43 +36,45 @@ class StripeController extends Controller
             });
 
         return Inertia::render('Stripe', [
-            'amountOptions' => (object)json_decode($settings->get('stripe_amount_options')),
-            'applicationFeePercentage' => (float) $settings->get('stripe_application_fee_percentage'),
+            'amountOptions' => $settings->get('stripe_amount_options'),
+            'applicationFeePercentage' => $settings->get('stripe_application_fee_percentage'),
             'countryOptions' => $this->stripeService->getCountryOptions(),
             'currencyOptions' => $currencyOptions,
             'defaultCountry' => $settings->get('stripe_default_country'),
-            'isEnabled' => (bool) $settings->get('stripe_is_enabled'),
-            'minimalAmounts' => json_decode($settings->get('stripe_minimal_amounts')),
-            'paymentCurrencies' => json_decode($settings->get('stripe_payment_currencies')),
+            'isEnabled' => $settings->get('stripe_is_enabled'),
+            'minimalAmounts' => $settings->get('stripe_minimal_amounts'),
+            'paymentCurrencies' => $settings->get('stripe_payment_currencies'),
+            'colorPrimary' => $settings->get('stripe_color_primary'),
+            'colorSecondary' => $settings->get('stripe_color_secondary'),
         ]);
     }
 
     public function update(StripeSettingRequest $request)
     {
-        Setting::updateOrCreate(
-            ['key' => 'stripe_payment_currencies'],
-            ['value' => json_encode($request->payment_currencies)]
-        );
-        Setting::updateOrCreate(
-            ['key' => 'stripe_default_country'],
-            ['value' => $request->default_country]
-        );
-        Setting::updateOrCreate(
-            ['key' => 'stripe_application_fee_percentage'],
-            ['value' => $request->application_fee_percentage]
-        );
-        Setting::updateOrCreate(
-            ['key' => 'stripe_amount_options'],
-            ['value' => json_encode($request->amount_options)]
-        );
-        Setting::updateOrCreate(
-            ['key' => 'stripe_minimal_amounts'],
-            ['value' => json_encode($request->minimal_amounts)]
-        );
-        Setting::updateOrCreate(
-            ['key' => 'stripe_is_enabled'],
-            ['value' => (bool) $request->is_enabled]
-        );
+        $changedKeys = collect();
+        $colorKeys = [
+            'color_primary',
+            'color_secondary',
+        ];
+
+        foreach ($request->validated() as $key => $setting) {
+            $setting = $this->stripeSettingService->save('stripe_'.$key, $setting);
+
+            if ($setting->wasChanged()) {
+                $changedKeys->push($key);
+            }
+        }
+
+        if ($changedKeys->intersect($colorKeys)->isNotEmpty()) {
+            $job = new UpdateStripeConnectedAccountColor(
+                $request->get('color_primary'),
+                $request->get('color_secondary')
+            );
+
+            $job->delay(now()->addSeconds(30));
+
+            dispatch($job);
+        }
 
         $this->generateFlashMessage('Stripe updated successfully!');
 

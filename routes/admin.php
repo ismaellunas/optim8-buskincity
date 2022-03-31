@@ -20,6 +20,7 @@ use App\Http\Controllers\{
     ThemeHeaderMenuController,
     TranslationManagerController,
     UserController,
+    UserProfileController,
     UserRoleController,
 };
 
@@ -30,7 +31,6 @@ use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\NewPasswordController;
 use Laravel\Fortify\Http\Controllers\PasswordResetLinkController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
-use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,10 +106,17 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::post('/languages', [LanguageController::class, 'update'])
             ->name('languages.update');
 
+        Route::get('/translation-manager/create', [TranslationManagerController::class, 'create'])
+            ->name('translation-manager.create');
+        Route::post('/translation-manager/create', [TranslationManagerController::class, 'store'])
+            ->name('translation-manager.store');
         Route::get('/translation-manager', [TranslationManagerController::class, 'edit'])
             ->name('translation-manager.edit');
         Route::post('/translation-manager', [TranslationManagerController::class, 'update'])
             ->name('translation-manager.update');
+        Route::delete('/translation-manager/{translation}', [TranslationManagerController::class, 'destroy'])
+            ->name('translation-manager.destroy');
+
         Route::get('/translation-export/{locale}', [TranslationManagerController::class, 'export'])
             ->name('translation-manager.export');
         Route::post('/translation-import', [TranslationManagerController::class, 'import'])

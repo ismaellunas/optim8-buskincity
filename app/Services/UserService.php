@@ -22,7 +22,12 @@ class UserService
         return User::orderBy('id', 'DESC')
             ->with([
                 'roles' => function ($query) {
-                    $query->select('id', 'name');
+                    $query->select('id', 'name', 'guard_name');
+                    $query->with([
+                        'permissions' => function ($query) {
+                            $query->select('id', 'name', 'guard_name');
+                        },
+                    ]);
                 }
             ])
             ->when($term, function ($query) use ($term) {
@@ -41,6 +46,7 @@ class UserService
                 'last_name',
                 'email',
                 'is_suspended',
+                'unique_key',
             ]);
     }
 
@@ -72,7 +78,13 @@ class UserService
         $records->getCollection()->transform(function ($user) use ($actor) {
             $user->can = [
                 'delete_user' => $actor->can('delete', $user),
+                'public_profile' => $user->roles->contains(function ($role) {
+                    return $role->hasPermissionTo('public_page.profile');
+                }),
             ];
+
+            $user->append('profile_page_url');
+
             return $user;
         });
     }

@@ -123,6 +123,7 @@ return [
     'uuid' => 'The :attribute must be a valid UUID.',
     'alpha_numeric_dash' => 'The :attribute must only contain letters, numbers, and dashes.',
     'phone' => 'The :attribute field contains an invalid number.',
+    'hexadecimal_color' => 'The :attribute field contains an invalid hexadecimal color.',
 
     /*
     |--------------------------------------------------------------------------
@@ -162,10 +163,14 @@ return [
         'es.title' => 'Title (Spanish)',
         'de.title' => 'Title (German)',
         'alt' => 'Alternative Text',
-        'description' => 'Description',
-        'scheduled_at' => 'Scheduled At',
+        'default_country' => 'Default Country',
         'default_language' => 'Default Language',
+        'description' => 'Description',
         'languages' => 'Languages',
+        'scheduled_at' => 'Scheduled At',
+        'is_enabled' => 'Is Enabled',
+        'application_fee_percentage' => 'Application Fee Percentage',
+        'payment_currencies' => 'Payment Currencies',
     ],
 
 ];

@@ -11,6 +11,8 @@
             >
                 <update-profile-information-form
                     :user="$page.props.user"
+                    :country-options="countryOptions"
+                    :shown-language-options="shownLanguageOptions"
                     @after-update-profile="reSchema()"
                 />
             </div>
@@ -101,6 +103,8 @@
                 type: Array,
                 default:() => [],
             },
+            countryOptions: { type: Array, default: () => [] },
+            shownLanguageOptions: { type: Array, default: () => [] },
             errors: {type: Object, default: () => {}},
         },
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\HexadecimalColor;
 use App\Services\StripeService;
+use App\Services\StripeSettingService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -45,6 +47,9 @@ class StripeSettingRequest extends FormRequest
                 'required',
                 Rule::in($countries),
             ],
+            'is_enabled' => [
+                'boolean'
+            ],
             'minimal_amounts' => [
                 'array'
             ],
@@ -59,6 +64,27 @@ class StripeSettingRequest extends FormRequest
             'payment_currencies.*' => [
                 Rule::in($currencies)
             ],
+            'color_primary' => [
+                new HexadecimalColor(),
+            ],
+            'color_secondary' => [
+                new HexadecimalColor(),
+            ],
         ];
+    }
+
+    public function attributes(): array
+    {
+        $attributes = [];
+
+        $displayNames = (new StripeSettingService())->displayNames();
+
+        foreach ($displayNames as $key => $displayName) {
+            $key = str_replace("stripe_", "", $key);
+
+            $attributes[$key] = $displayName;
+        }
+
+        return $attributes;
     }
 }

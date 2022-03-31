@@ -1,35 +1,54 @@
 <template>
     <div class="mb-3">
-        <biz-form-image-editable
-            v-model="form.photo"
-            v-model:photo-url="form.photo_url"
-            modal-label="Profile Photo"
-            delete-label="Remove Photo"
-            :photo-url="form.photo_url"
-            :show-delete-button="form.photo_url != null"
-            :message="error('photo')"
-            @on-reset-value="resetImageForm()"
-            @on-delete-image="onDeleteImage()"
-        >
-            <template #default-image-view>
-                <user-icon
-                    style="width: 64px;"
-                />
-            </template>
-        </biz-form-image-editable>
+        <div class="columns">
+            <div class="column">
+                <biz-form-image-editable
+                    v-model="form.photo"
+                    v-model:photo-url="form.photo_url"
+                    modal-label="Profile Photo"
+                    delete-label="Remove Photo"
+                    :photo-url="form.photo_url"
+                    :show-delete-button="form.photo_url != null"
+                    :message="error('photo', errorBag)"
+                    @on-reset-value="resetImageForm()"
+                    @on-delete-image="onDeleteImage()"
+                >
+                    <template #default-image-view>
+                        <user-icon
+                            style="width: 64px;"
+                        />
+                    </template>
+                </biz-form-image-editable>
+            </div>
+
+            <div
+                v-if="profilePageUrl"
+                class="column has-text-right"
+            >
+                <a
+                    class="button as-text-black ml-1"
+                    target="_blank"
+                    title="Profile Page Url"
+                    :href="profilePageUrl"
+                >
+                    Open Public Profile &nbsp;
+                    <i class="fas fa-id-card" />
+                </a>
+            </div>
+        </div>
 
         <biz-form-input
             v-model="form.first_name"
             label="First Name"
             required
-            :message="error('first_name')"
+            :message="error('first_name', errorBag)"
         />
 
         <biz-form-input
             v-model="form.last_name"
             label="Last Name"
             required
-            :message="error('last_name')"
+            :message="error('last_name', errorBag)"
         />
 
         <biz-form-input
@@ -37,7 +56,7 @@
             label="Email"
             required
             type="email"
-            :message="error('email')"
+            :message="error('email', errorBag)"
         />
 
         <biz-form-select
@@ -45,7 +64,7 @@
             v-model="form.role"
             label="Role"
             placeholder="- Select a Role -"
-            :message="error('role')"
+            :message="error('role', errorBag)"
         >
             <option
                 v-for="option in roleOptions"
@@ -58,8 +77,9 @@
 
         <biz-form-dropdown-search
             label="Country"
+            required
             :close-on-click="true"
-            :message="error('country_code')"
+            :message="error('country_code', errorBag)"
             @search="searchCountry($event)"
         >
             <template #trigger>
@@ -81,7 +101,7 @@
             label="Language"
             required
             :close-on-click="true"
-            :message="error('language_id')"
+            :message="error('language_id', errorBag)"
             @search="searchLanguage($event)"
         >
             <template #trigger>
@@ -109,11 +129,10 @@
     import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSelect from '@/Biz/Form/Select';
     import UserIcon from '@/Biz/Icon/User';
-    import { useModelWrapper } from '@/Libs/utils';
-    import { debounceTime } from '@/Libs/defaults';
     import { confirmDelete } from '@/Libs/alert';
+    import { debounceTime } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'UserProfileForm',
@@ -133,23 +152,25 @@
 
         props: {
             canSetRole: {type: Boolean, default: true},
+            errorBag: {type: String, default: 'default'},
+            countryOptions: {type: Array, default: () => []},
             modelValue: {},
             photoUrl: {type: [String, null], default: null},
+            profilePageUrl: {type: String, default: ''},
             roleOptions: {type: Array, default: () => []},
+            shownLanguageOptions: {type: Array, default: () => []},
         },
 
         setup(props, { emit }) {
             return {
                 form: useModelWrapper(props, emit),
-                countryOptions: usePage().props.value.countryOptions,
-                languageOptions: usePage().props.value.shownLanguageOptions,
             };
         },
 
         data() {
             return {
                 filteredCountries: this.countryOptions.slice(0, 10),
-                filteredLanguages: this.languageOptions.slice(0, 10),
+                filteredLanguages: this.shownLanguageOptions.slice(0, 10),
             };
         },
 
@@ -174,7 +195,7 @@
                 get() {
                     if (this.form.language_id) {
                         let language = find(
-                            this.languageOptions,
+                            this.shownLanguageOptions,
                             ['id', parseInt(this.form.language_id)]
                         );
                         return language.value;
@@ -216,11 +237,11 @@
 
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
-                    this.filteredLanguages = filter(this.languageOptions, function (language) {
+                    this.filteredLanguages = filter(this.shownLanguageOptions, function (language) {
                         return new RegExp(term, 'i').test(language.value);
                     }).slice(0, 10);
                 } else {
-                    this.filteredLanguages = this.languageOptions.slice(0, 10);
+                    this.filteredLanguages = this.shownLanguageOptions.slice(0, 10);
                 }
             }, debounceTime),
         },

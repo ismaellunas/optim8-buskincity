@@ -2,17 +2,17 @@
 
 namespace App\Services;
 
-use App\Entities\Caches\SettingCache;
 use App\Entities\UserMetaStripe;
 use App\Helpers\HumanReadable;
 use App\Mail\ThankYouCheckoutCompleted;
 use App\Models\{
     Country,
+    Media,
     PaymentWebhook,
-    Setting,
     User,
     UserMeta,
 };
+use Cloudinary\Transformation\Resize;
 use Illuminate\Support\{
     Collection,
     Facades\Mail,
@@ -37,6 +37,9 @@ class StripeService
 {
     private $stripeClient = null;
     private $perPage = 10;
+
+    const BRAND_HEIGHT = 128;
+    const BRAND_WIDTH = 128;
 
     private function secretKey(): string
     {
@@ -66,7 +69,7 @@ class StripeService
     {
         $stripe = $this->getStripeClient();
 
-        return $stripe->accounts->create([
+        $accountData = [
             'type' => 'express',
             'business_profile' => [
                 'name' => $user->fullName,
@@ -75,10 +78,17 @@ class StripeService
                 'card_payments' => ['requested' => true],
                 'transfers' => ['requested' => true],
             ],
+            'settings' => [
+                'payouts' => [
+                    'debit_negative_balances' => false,
+                ],
+            ],
             'business_type' => 'individual',
             'country' => $country,
             'email' => $user->email,
-        ]);
+        ];
+
+        return $stripe->accounts->create($accountData);
     }
 
     public function createAccountLink(string $connectedAccountId, User $user): AccountLink
@@ -178,14 +188,9 @@ class StripeService
         }
     }
 
-    public function getConnectedAccountId(User $user): ?string
+    private function getConnectedAccountId(User $user): ?string
     {
         return (new UserMetaStripe($user))->getAccountId();
-    }
-
-    public function hasConnectedAccount(User $user): bool
-    {
-        return (new UserMetaStripe($user))->hasAccount();
     }
 
     private function getStripeAmount(float $amount, string $currency)
@@ -268,78 +273,81 @@ class StripeService
         return $stripe->accounts->retrieve($stripeAccountId);
     }
 
-    public function setUserStripeAccount(User $user, Account $stripeAccount)
+    public function getLogoFileFromCloud(Media $logoMedia): mixed
     {
-        $user->setMeta('stripe_account', $stripeAccount);
-        $user->saveMetas();
-    }
+        $result = cloudinary()
+            ->getImageTag($logoMedia->file_name)
+            ->version($logoMedia->version)
+            ->resize(
+                Resize::fit()
+                    ->height(self::BRAND_HEIGHT)
+                    ->width(self::BRAND_WIDTH)
+            )
+            ->serializeAttributes();
 
-    public function setUserStripeAccountId(User $user, string $stripeAccountId)
-    {
-        $user->setMeta('stripe_account_id', $stripeAccountId);
-        $user->saveMetas();
-    }
+        $url = strval(str_replace(['src=', '"'], ['', ''], $result));
 
-    private function getLogoFileFromCloud()
-    {
-        $url = 'https://res.cloudinary.com/bayusdb/image/upload/v1645698885/local_stripe_logo.png';
-
-        $path = sys_get_temp_dir().DIRECTORY_SEPARATOR."stripe-account-logo.png";
+        $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.basename($url);
 
         file_put_contents($path, file_get_contents($url));
 
         return fopen($path, 'r');
     }
 
-    private function getLogoFile()
+    public function uploadBusinessLogo(mixed $resource)
     {
-        $path = resource_path('images/logo-128x47.png');
-
-        return fopen($path, 'r');
-    }
-
-    private function uploadLogoFile()
-    {
-        $fp = $this->getLogoFile();
-
         $stripe = $this->getStripeClient();
 
         return $stripe->files->create([
             'purpose' => 'business_logo',
-            'file' => $fp
+            'file' => $resource,
         ]);
-    }
-
-    private function getPrimaryColor(): string
-    {
-        return '#2587BF';
-    }
-
-    private function getSecondaryColor(): string
-    {
-        return '#FCD42F';
     }
 
     public function updateAccountBrandingBasedOnPlatform(
-        string $stripeAccountId
-    ): Account {
+        string $stripeAccountId,
+        bool $isReplacingLogo = true,
+        bool $isReplacingColors = true
+    ): ?Account {
 
         $branding = [];
 
-        $file = $this->uploadLogoFile();
+        if ($isReplacingLogo) {
 
-        if ($file) {
-            $branding['logo'] = $file->id;
+            $logoMedia = app(SettingService::class)->getLogoMedia();
+
+            if ($logoMedia) {
+
+                $resource = $this->getLogoFileFromCloud($logoMedia);
+
+                if ($resource) {
+
+                    $file = $this->uploadBusinessLogo($resource);
+
+                    $branding['logo'] = $file ? $file->id : null;
+                }
+            }
         }
 
-        $branding['primary_color'] = $this->getPrimaryColor();
-        $branding['secondary_color'] = $this->getSecondaryColor();
+        if ($isReplacingColors) {
+            $stripeSettingService = app(StripeSettingService::class);
 
-        return $this->updateAccount($stripeAccountId, [
-            'settings' => [
-                'branding' => $branding
-            ],
-        ]);
+            $branding['primary_color'] = $stripeSettingService->primaryColor()
+                ?? $stripeSettingService->defaultPrimaryColor();
+
+            $branding['secondary_color'] = $stripeSettingService->secondaryColor()
+                ?? $stripeSettingService->defaultSecondaryColor();
+        }
+
+        if (!empty($branding)) {
+            return $this->updateAccount($stripeAccountId, [
+                'settings' => [
+                    'branding' => $branding
+                ],
+            ]);
+        }
+
+        return null;
     }
 
     public function updateAccount(string $stripeAccountId, array $data): Account
@@ -354,26 +362,28 @@ class StripeService
 
     public function getCountryOptions(): Collection
     {
+        $stripeSettingService = app(StripeSettingService::class);
         $countrySpecs = [];
 
-        $countrySpecsSetting = Setting::firstOrNew([
-            'key' => 'stripe_country_specs',
-        ]);
+        $countrySpecsSetting = $stripeSettingService->getCountrySpecs();
 
-        if (!$countrySpecsSetting->id) {
+        if (
+            is_null($countrySpecsSetting)
+            || empty($countrySpecsSetting->value)
+            || $countrySpecsSetting->updated_at->lt(now()->subYear())
+        ) {
+            $response = $this->getStripeClient()->countrySpecs->all(['limit' => 100]);
 
-            $stripe = $this->getStripeClient();
-            $response = $stripe->countrySpecs->all(['limit' => 100]);
+            $stripeSettingService->saveCountrySpecs($response->data);
 
-            $countrySpecsSetting->value = json_encode($response->data);
-            $countrySpecsSetting->save();
+            $countrySpecs = $response->data;
+        } else {
+            $countrySpecs = json_decode($countrySpecsSetting->value);
         }
 
-        $countrySpecs = json_decode($countrySpecsSetting->value);
         $countrySpecs = collect($countrySpecs);
-        $countryIsoIds = $countrySpecs->pluck('id');
 
-        return Country::whereIn('alpha2', $countryIsoIds)
+        return Country::whereIn('alpha2', $countrySpecs->pluck('id'))
             ->get(['alpha2', 'display_name'])
             ->map(function ($country) {
                 return [
@@ -381,27 +391,6 @@ class StripeService
                     'value' => $country->display_name,
                 ];
             });
-    }
-
-    public function getAvailableCurrencyOptions(): array
-    {
-        $paymentCurrencies = Setting::key('stripe_payment_currencies')
-            ->value('value');
-
-        if ($paymentCurrencies) {
-            $paymentCurrencies = (array) json_decode($paymentCurrencies);
-
-            return array_map(
-                function ($currency) {
-                    return [
-                        'id' => $currency,
-                        'value' => $currency,
-                    ];
-                },
-                $paymentCurrencies
-            );
-        }
-        return [];
     }
 
     public function getCurrencyOptions(): array
@@ -424,18 +413,6 @@ class StripeService
                 'value' => 'USD',
             ],
         ];
-    }
-
-    public function getAmountOptions(): array
-    {
-        $currencyAmountOptions = Setting::key('stripe_amount_options')
-            ->value('value');
-
-        return (
-            $currencyAmountOptions
-            ? (array) json_decode($currencyAmountOptions)
-            : []
-        );
     }
 
     public function getApplicationFeeAmount($amount): float
@@ -461,23 +438,9 @@ class StripeService
         );
     }
 
-    public function getDefaultCountry(): ?string
-    {
-        return Setting::key('stripe_default_country')->value('value');
-    }
-
-    public function isEnabled(): bool
-    {
-        return app(SettingCache::class)->remember('stripe_is_enabled', function () {
-            return (bool) Setting::key('stripe_is_enabled')->value('value');
-        });
-    }
-
     public function isStripeConnectEnabled(User $user): bool
     {
-        $key = 'stripe_is_enabled';
-
-        return (bool) $user->getMetas([$key])->get($key, false);
+        return (new UserMetaStripe($user))->isEnabled();
     }
 
     private function getUserIdFromStripeAccount(string $stripeAccount): ?int

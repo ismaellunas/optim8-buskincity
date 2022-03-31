@@ -100,11 +100,12 @@ return [
 
     'translations' => [
         'groups' => [
-            'auth',
-            'pagination',
-            'passwords',
-            'validation',
-            'form_builder'
+            'no_group' => 'No Group',
+            'auth' => 'Auth',
+            'pagination' => 'Pagination',
+            'passwords' => 'Password',
+            'validation' => 'Validation',
+            'form_builder' => 'Form Builder',
         ]
     ],
     'setting_cache' => [
@@ -115,6 +116,10 @@ return [
     'widget_cache' => [
         'post' => 'widget_post',
         'user' => 'widget_user',
+    ],
+
+    'throttle' => [
+        'checkout' => 100,
     ],
 
     'format' => [
@@ -159,8 +164,28 @@ return [
     ],
 
     'stripe_minimal_payments' => [
-        'SEK' => 3,
         'USD' => 0.50,
+        'AED' => 2.00,
+        'AUD' => 0.50,
+        'BGN' => 1.00,
+        'BRL' => 0.50,
+        'CAD' => 0.50,
+        'CHF' => 0.50,
+        'CZK' => 15.00,
+        'DKK' => 2.50,
         'EUR' => 0.50,
+        'GBP' => 0.30,
+        'HKD' => 4.00,
+        'HUF' => 175.00,
+        'INR' => 0.50,
+        'JPY' => 50,
+        'MXN' => 10,
+        'MYR' => 2,
+        'NOK' => 3.00,
+        'NZD' => 0.50,
+        'PLN' => 2.00,
+        'RON' => 2.00,
+        'SEK' => 3.00,
+        'SGD' => 0.50,
     ],
 ];

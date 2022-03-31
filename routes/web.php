@@ -14,9 +14,10 @@ use App\Http\Controllers\{
     Frontend\StripeController,
     NewPasswordController,
     PasswordResetLinkController,
+    UserProfileController,
+    WebhookStripeController,
 };
 use Illuminate\Support\Facades\Route;
-use Laravel\Jetstream\Http\Controllers\Inertia\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +43,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::prefix('/payment-management/stripe')
         ->name('payment-management.stripe.')
-        ->middleware('can:updateStripeConnect,App\Models\User')
+        ->middleware('can:manageStripeConnectedAccount,App\Models\User')
         ->group(function() {
             Route::get('/', [StripeController::class, 'show'])
                 ->name('show');
@@ -101,7 +102,7 @@ Route::name('forms.')->prefix('forms')->group(function () {
         ->name('save');
 });
 
-Route::post('webhooks/stripe', [StripeController::class, 'webhook']);
+Route::post('webhooks/stripe', WebhookStripeController::class);
 
 Route::group([
     'prefix' => Localization::setLocale(),
@@ -125,10 +126,13 @@ Route::group([
         ->name('frontend.pages.show')
         ->middleware('redirectLanguage');
 
-    Route::get('/profiles/{user}', [FrontendProfileController::class, 'show'])
-    ->name('frontend.profiles');
+    Route::get('/profiles/{user:unique_key}/{firstname_lastname}', [FrontendProfileController::class, 'show'])
+        ->name('frontend.profiles')
+        ->middleware('publicPage:profile')
+        ->scopeBindings();
+
     Route::get('donations/{user}/success', [DonationController::class, 'success'])
         ->name('donations.success');
     Route::post('donations/checkout/{user}', [DonationController::class, 'checkout'])
-        ->name('donations.checkout');
+        ->name('donations.checkout')->middleware('throttle:checkout');
 });
