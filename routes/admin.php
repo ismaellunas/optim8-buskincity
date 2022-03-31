@@ -20,7 +20,6 @@ use App\Http\Controllers\{
     TranslationManagerController,
     UserController,
     UserProfileController,
-    UserRoleController,
 };
 
 use Illuminate\Support\Facades\Route;
@@ -63,8 +62,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         ->name('users.password');
 
     Route::resource('/roles', RoleController::class);
-
-    Route::resource('/user-roles', UserRoleController::class);
 
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->middleware(['can:system.dashboard'])
