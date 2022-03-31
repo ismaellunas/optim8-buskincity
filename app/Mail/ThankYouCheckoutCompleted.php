@@ -33,7 +33,7 @@ class ThankYouCheckoutCompleted extends Mailable
     {
         return $this
             ->subject(__('Thanks For Your Donation'))
-            ->markdown('emails.thankyou-checkout-completed', [
+            ->markdown('emails.html.thankyou-checkout-completed', [
                 'amount' => $this->amount,
                 'currency' => $this->currency,
             ]);

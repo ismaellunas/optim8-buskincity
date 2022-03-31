@@ -3,6 +3,10 @@
 namespace App\Models;
 
 use App\Entities\CloudinaryStorage;
+use App\Notifications\{
+    ResetPassword,
+    VerifyEmail,
+};
 use App\Traits\HasMetas;
 use App\Services\{
     MediaService,
@@ -181,6 +185,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->getRoleNames()->first();
     }
 
+    public function getLanguageCodeAttribute(): string
+    {
+        return $this->originLanguageCode ?? config('app.locale');
+    }
+
     public function saveFromInputs(array $inputs)
     {
         $this->first_name = $inputs['first_name'];
@@ -244,5 +253,19 @@ class User extends Authenticatable implements MustVerifyEmail
         if ($media) {
             app(MediaService::class)->destroy($media, new CloudinaryStorage());
         }
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        app()->setLocale($this->languageCode);
+
+        $this->notify(new ResetPassword($token));
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        app()->setLocale($this->languageCode);
+
+        $this->notify(new VerifyEmail());
     }
 }
