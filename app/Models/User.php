@@ -19,6 +19,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -253,6 +254,14 @@ class User extends Authenticatable implements MustVerifyEmail
         if ($media) {
             app(MediaService::class)->destroy($media, new CloudinaryStorage());
         }
+    }
+
+    public function getProfilePageUrlAttribute(): string
+    {
+        return route('frontend.profiles', [
+            'user' => $this->unique_key,
+            'firstname_lastname' => Str::of($this->fullName)->ascii()->replace(' ', '-')
+        ]);
     }
 
     public function sendPasswordResetNotification($token)

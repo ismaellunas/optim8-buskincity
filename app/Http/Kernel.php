@@ -73,5 +73,6 @@ class Kernel extends HttpKernel
 
         'recaptcha' => \App\Http\Middleware\Recaptcha::class,
         'redirectLanguage' => \App\Http\Middleware\RedirectLanguage::class,
+        'publicPage' => \App\Http\Middleware\PublicPageIsAvailable::class,
     ];
 }

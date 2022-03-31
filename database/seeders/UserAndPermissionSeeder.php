@@ -84,6 +84,9 @@ class UserAndPermissionSeeder extends Seeder
         // Payment management Permissions
         $performerRole = Role::whereName('Performer')->first();
 
-        $performerRole->syncPermissions(['payment.management']);
+        $performerRole->syncPermissions([
+            'payment.management',
+            'public_page.profile',
+        ]);
     }
 }
