@@ -70,6 +70,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButton from '@/Biz/Button';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
@@ -90,6 +91,10 @@
             BizLink,
             LayoutAdmin,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         props: {
             canResetPassword: Boolean,
@@ -116,7 +121,11 @@
                         remember: this.form.remember ? 'on' : ''
                     }))
                     .post(this.route('admin.login'), {
-                        onFinish: () => this.form.reset('password'),
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onFinish: () => {
+                            this.form.reset('password');
+                            this.onEndLoadingOverlay()
+                        },
                     })
             },
             back() {
