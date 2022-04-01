@@ -233,7 +233,7 @@ class StripeService
             'mode' => 'payment',
             'submit_type' => 'donate',
             'success_url' => route('donations.success', ['user' => $user]),
-            'cancel_url' => route('frontend.profiles', ['user' => $user]),
+            'cancel_url' => $user->profilePageUrl
         ], [
             'stripe_account' => $stripeAccount,
         ]);
