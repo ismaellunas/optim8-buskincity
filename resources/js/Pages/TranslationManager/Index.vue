@@ -49,14 +49,7 @@
             </div>
 
             <div class="columns">
-                <div class="column">
-                    <biz-filter-search
-                        v-model="term"
-                        @search="filterTerm"
-                    />
-                </div>
-
-                <div class="column">
+                <div class="column is-one-quarter">
                     <biz-dropdown
                         :close-on-click="true"
                     >
@@ -126,6 +119,15 @@
                             </biz-dropdown-item>
                         </biz-dropdown-scroll>
                     </biz-dropdown>
+                </div>
+
+                <div class="column">
+                    <div class="is-pulled-left">
+                        <biz-filter-search
+                            v-model="term"
+                            @search="filterTerm"
+                        />
+                    </div>
                 </div>
             </div>
 
