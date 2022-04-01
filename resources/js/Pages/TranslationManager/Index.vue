@@ -185,7 +185,7 @@
                                                 v-if="form.translations[index]"
                                                 v-model="form.translations[index].value"
                                                 placeholder="value"
-                                                style="width: 250px"
+                                                style="min-width: 250px"
                                                 rows="3"
                                             />
                                         </div>
