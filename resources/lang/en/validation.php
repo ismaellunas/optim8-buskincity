@@ -171,6 +171,8 @@ return [
         'is_enabled' => 'Is Enabled',
         'application_fee_percentage' => 'Application Fee Percentage',
         'payment_currencies' => 'Payment Currencies',
+        'country_code' => 'Country',
+        'language_id' => 'Language',
     ],
 
 ];
