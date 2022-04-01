@@ -1,8 +1,5 @@
 <template>
-    <label
-        class="label"
-        :class="class"
-    >
+    <label class="label">
         <slot />
         <span v-if="isRequired">*</span>
     </label>
@@ -10,9 +7,10 @@
 
 <script>
     export default {
+        name: 'BizLabel',
+
         props: {
-            class: {default: []},
             isRequired: Boolean,
         }
-    }
+    };
 </script>

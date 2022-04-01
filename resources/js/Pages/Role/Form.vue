@@ -6,7 +6,7 @@
             required
             maxlength="255"
             :message="error('name')"
-        ></biz-form-input>
+        />
 
         <div class="columns is-multiline">
             <div
@@ -14,11 +14,12 @@
                 :key="groupName"
                 class="column is-4"
             >
-                <label class="label" for="">
+                <label class="label">
                     {{ groupName }}
                 </label>
                 <div class="ml-4">
-                    <div v-for="permission in permissions"
+                    <div
+                        v-for="permission in permissions"
                         :key="permission.id"
                         class="field is-horizontal"
                     >
@@ -28,7 +29,7 @@
                                     <biz-checkbox
                                         v-model:checked="form.permissions"
                                         :disabled="permissionDisabled(permission, permissions)"
-                                        :value=permission.value
+                                        :value="permission.value"
                                         @change="onPermissionClicked(permission, permissions)"
                                     >
                                         &nbsp; {{ permission.title }}
@@ -47,31 +48,33 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizFormInput from '@/Biz/Form/Input';
-    import BizFormSelect from '@/Biz/Form/Select';
     import { pull } from 'lodash';
-    import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'RoleForm',
+
         components: {
             BizCheckbox,
             BizFormInput,
-            BizFormSelect,
         },
+
         mixins: [
             MixinHasPageErrors,
         ],
+
         props: {
-            errors: Object,
-            modelValue: Object,
-            permissionOptions: Object,
+            errors: { type: Object, default: () => {} },
+            modelValue: { type: Object, required: true },
+            permissionOptions: { type: Object, default: () => {} },
         },
+
         setup(props, { emit }) {
             return {
                 form: useModelWrapper(props, emit),
             };
         },
+
         methods: {
             hasPermission(permission) {
                 return this.form.permissions.includes(permission.id);
