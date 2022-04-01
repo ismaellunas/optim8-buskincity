@@ -95,6 +95,16 @@
                         >
                             <template #actions>
                                 <div class="level-right">
+                                    <a
+                                        v-if="record.can.public_profile"
+                                        class="button is-ghost has-text-black ml-1"
+                                        target="_blank"
+                                        title="Profile Page Url"
+                                        :href="record.profile_page_url"
+                                    >
+                                        <i class="fas fa-id-card" />
+                                    </a>
+
                                     <biz-button-link
                                         v-if="can.edit"
                                         class="is-ghost has-text-black"
