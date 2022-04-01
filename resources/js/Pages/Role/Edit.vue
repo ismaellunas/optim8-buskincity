@@ -1,8 +1,10 @@
 <template>
     <app-layout>
-        <template #header>{{ title }}</template>
+        <template #header>
+            {{ title }}
+        </template>
 
-        <biz-error-notifications :errors="$page.props.errors"/>
+        <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="mb-6">
             <form
@@ -19,13 +21,14 @@
                             v-model="form"
                             :errors="errors"
                             :permission-options="permissions"
-                        ></form-role>
+                        />
 
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
                                 <biz-button-link
+                                    class="is-link is-light"
                                     :href="route(baseRouteName+'.index')"
-                                    class="is-link is-light">
+                                >
                                     Cancel
                                 </biz-button-link>
                             </div>
@@ -44,11 +47,10 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
-    import FormRole from '@/Pages/Role/Form';
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import { map } from 'lodash';
+    import FormRole from '@/Pages/Role/Form';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -60,35 +62,42 @@
             BizErrorNotifications,
             FormRole,
         },
+
         props: {
-            baseRouteName: String,
-            errors: Object,
-            permissions: {},
-            record: Object,
-            title: String,
+            baseRouteName: { type: String, required: true },
+            errors: { type: Object, default: () => {} },
+            permissions: { type: Object, default: () => {} },
+            record: { type: Object, required: true },
+            title: { type: String, required: true },
         },
+
         setup(props) {
-            const role = props.record;
             const form = {
-                name: role.name,
-                permissions: role.permissions ? role.permissions.map(permission => permission.name) : [],
+                name: props.record.name,
+                permissions: (props.record.permissions
+                    ? props.record.permissions.map(permission => permission.name)
+                    : []
+                ),
             };
 
             return {
                 form: useForm(form),
             };
         },
+
         data() {
             return {
                 isProcessing: false,
                 loader: null,
             };
         },
+
         methods: {
             onSubmit() {
                 const self = this;
                 const form = self.form;
-                form.put(route(this.baseRouteName+'.update', this.record.id), {
+
+                form.put(route(self.baseRouteName+'.update', self.record.id), {
                     preserveScroll: false,
                     onStart: () => {
                         self.loader = self.$loading.show();

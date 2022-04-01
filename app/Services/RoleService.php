@@ -26,10 +26,16 @@ class RoleService
         return Permission::get(['id', 'name'])
             ->map(function ($permission) {
                 $isAll = Str::endsWith($permission->name, '*');
+
+                $groupTitle = Str::of(Str::beforeLast($permission->name, '.'))
+                    ->title()
+                    ->replace('_', ' ')
+                    ->__toString();
+
                 return [
                     'id' => $permission->id,
                     'value' => $permission->name,
-                    'groupTitle' => Str::of(Str::beforeLast($permission->name, '.'))->title()->__toString(),
+                    'groupTitle' => $groupTitle,
                     'isAll' => $isAll,
                     'title' => $isAll ? 'All' : Str::of(Str::afterLast($permission->name, '.'))->title(),
                 ];

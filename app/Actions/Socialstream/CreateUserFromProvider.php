@@ -50,7 +50,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
             $clientData = app(IPService::class)->getClientData();
             $languageId = Language::where('code', 'en')->value('id') ?? null;
 
-            return tap(User::create([
+            return tap(User::factory()->create([
                 'first_name' => $name['firstName'],
                 'last_name' => $name['lastName'],
                 'email' => $providerUser->getEmail(),

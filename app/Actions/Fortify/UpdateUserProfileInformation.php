@@ -93,8 +93,8 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
         ],
         [],
         [
-            'country_code' => __('country'),
-            'language_id' => __('language'),
+            'country_code' => __('validation.attributes.country_code'),
+            'language_id' => __('validation.attributes.language_id'),
         ])->validateWithBag('updateProfileInformation');
     }
 }

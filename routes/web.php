@@ -126,8 +126,11 @@ Route::group([
         ->name('frontend.pages.show')
         ->middleware('redirectLanguage');
 
-    Route::get('/profiles/{user}', [FrontendProfileController::class, 'show'])
-        ->name('frontend.profiles');
+    Route::get('/profiles/{user:unique_key}/{firstname_lastname}', [FrontendProfileController::class, 'show'])
+        ->name('frontend.profiles')
+        ->middleware('publicPage:profile')
+        ->scopeBindings();
+
     Route::get('donations/{user}/success', [DonationController::class, 'success'])
         ->name('donations.success');
     Route::post('donations/checkout/{user}', [DonationController::class, 'checkout'])

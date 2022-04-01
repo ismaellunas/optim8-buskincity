@@ -15,7 +15,6 @@ class UserStoreRequest extends BaseFormRequest
         return [
             'first_name' => ['required', 'string', 'max:128'],
             'last_name' => ['required', 'string', 'max:128'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'email' => [
                 'required',
                 'string',
@@ -47,13 +46,5 @@ class UserStoreRequest extends BaseFormRequest
         }
 
         return $query->get()->pluck('id')->all();
-    }
-
-    protected function customAttributes(): array
-    {
-        return [
-            'country_code' => __('country'),
-            'language_id' => __('language'),
-        ];
     }
 }
