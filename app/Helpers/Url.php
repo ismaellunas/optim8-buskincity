@@ -22,13 +22,9 @@ class Url
 
     public static function generateUniqueSegment(): string
     {
-        $uniqParts = explode('.', uniqid('', true));
+        $uniqPart = abs(crc32(uniqid('', true)));
+        $uniqPart = substr($uniqPart, 0, random_int(6, 9));
 
-        $prefix = Str::substr(base_convert($uniqParts[1], 10, 16), -4, 4);
-
-        return (
-            Str::padLeft($prefix, 4, 0).
-            Str::padLeft($uniqParts[0], 16, 0)
-        );
+        return Str::padLeft($uniqPart, 6, 0);
     }
 }
