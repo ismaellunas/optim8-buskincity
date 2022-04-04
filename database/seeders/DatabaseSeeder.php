@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             LanguageSeeder::class,
             TranslationSeeder::class,
-            TranslationStringSeeder::class,
             FormSeeder::class,
             CategorySeeder::class,
             UserAndPermissionSeeder::class,
