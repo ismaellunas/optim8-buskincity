@@ -4,9 +4,8 @@ namespace App\Http\Requests;
 
 use App\Rules\AlphaNumericDash;
 use App\Services\MediaService;
-use Illuminate\Foundation\Http\FormRequest;
 
-class MediaUpdateRequest extends FormRequest
+class MediaUpdateRequest extends BaseFormRequest
 {
     public function authorize()
     {

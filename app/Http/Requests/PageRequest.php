@@ -5,10 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Support\Str;
 use App\Services\TranslationService;
 use Astrotomic\Translatable\Validation\RuleFactory;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class PageRequest extends FormRequest
+class PageRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -45,7 +44,7 @@ class PageRequest extends FormRequest
         ]);
     }
 
-    public function attributes()
+    protected function customAttributes(): array
     {
         $translatedAttributes = [];
         $locales = array_keys($this->all());

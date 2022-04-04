@@ -2,11 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class ThemeFontRequest extends FormRequest
+class ThemeFontRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -52,7 +51,7 @@ class ThemeFontRequest extends FormRequest
         ];
     }
 
-    public function attributes()
+    protected function customAttributes(): array
     {
         $attributes = [];
 
