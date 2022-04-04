@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Services\TranslationManagerService;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class TranslationManagerRequest extends FormRequest
+class TranslationManagerRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

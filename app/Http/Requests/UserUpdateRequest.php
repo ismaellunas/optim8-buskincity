@@ -25,7 +25,11 @@ class UserUpdateRequest extends UserStoreRequest
                 'mimes:jpg,jpeg,png',
                 'max:'.config('constants.one_megabyte') * 1
             ],
-            'country_code' => ['required', 'max:2', 'exists:App\Models\Country,alpha2'],
+            'country_code' => [
+                'required',
+                'max:2',
+                'exists:App\Models\Country,alpha2'
+            ],
             'language_id' => ['required', 'exists:App\Models\Language,id'],
         ];
 

@@ -6,9 +6,8 @@ use App\Models\Media;
 use App\Rules\AlphaNumericDash;
 use App\Services\MediaService;
 use App\Services\TranslationService;
-use Illuminate\Foundation\Http\FormRequest;
 
-class MediaStoreRequest extends FormRequest
+class MediaStoreRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -47,7 +46,7 @@ class MediaStoreRequest extends FormRequest
         );
     }
 
-    public function attributes(): array
+    protected function customAttributes(): array
     {
         $attrs = TranslationService::getCustomAttributes(
             array_keys($this->input('translations', [])),

@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class TranslationImportRequest extends FormRequest
+class TranslationImportRequest extends BaseFormRequest
 {
     protected $errorBag = 'translationImport';
 
@@ -25,7 +23,7 @@ class TranslationImportRequest extends FormRequest
         ];
     }
 
-    public function attributes(): array
+    protected function customAttributes(): array
     {
         return [
             'file' => __('File'),

@@ -10,7 +10,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
-class TranslationStoreRequest extends FormRequest
+class TranslationStoreRequest extends BaseFormRequest
 {
     private $translationManagerService;
     private $referenceLocale;
@@ -62,7 +62,7 @@ class TranslationStoreRequest extends FormRequest
         ];
     }
 
-    public function attributes(): array
+    protected function customAttributes(): array
     {
         $attributes = [];
 
