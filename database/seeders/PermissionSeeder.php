@@ -58,6 +58,8 @@ class PermissionSeeder extends Seeder
 
             'payment.management',
 
+            'public_page.profile',
+
             /*  BREAD:
             'browse',
             'read',

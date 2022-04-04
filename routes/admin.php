@@ -7,7 +7,6 @@ use App\Http\Controllers\{
     MediaController,
     PageController,
     PasswordResetLinkController,
-    PermissionController,
     PostController,
     RoleController,
     StripeController,
@@ -22,7 +21,6 @@ use App\Http\Controllers\{
     TranslationManagerController,
     UserController,
     UserProfileController,
-    UserRoleController,
 };
 
 use Illuminate\Support\Facades\Route;
@@ -64,10 +62,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         ->name('users.password');
 
     Route::resource('/roles', RoleController::class);
-
-    Route::resource('/permissions', PermissionController::class);
-
-    Route::resource('/user-roles', UserRoleController::class);
 
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->middleware(['can:system.dashboard'])
