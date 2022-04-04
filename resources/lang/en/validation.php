@@ -124,6 +124,8 @@ return [
     'alpha_numeric_dash' => 'The :attribute must only contain letters, numbers, and dashes.',
     'phone' => 'The :attribute field contains an invalid number.',
     'hexadecimal_color' => 'The :attribute field contains an invalid hexadecimal color.',
+    'group_and_key_combination' => 'The combination between group and key is invalid.',
+    'current_password' => 'The provided password does not match your current password.',
 
     /*
     |--------------------------------------------------------------------------
