@@ -7,8 +7,10 @@ use App\Services\TranslationManagerService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Database\Seeder;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\{
+    Arr,
+    Str
+};
 
 class TranslationSeeder extends Seeder
 {
@@ -55,13 +57,34 @@ class TranslationSeeder extends Seeder
                     $group = $subLangPath.'/'.$group;
                 }
 
-                $translations = Lang::getLoader()->load($locale, $group);
+                $translations = require $file;
 
                 if ($translations && is_array($translations)) {
                     foreach (Arr::dot($translations) as $key => $value) {
                         $this
                             ->translationManagerService
                             ->saveTranslation($key, $value, $locale, $group, $replace);
+                    }
+                }
+            }
+        }
+
+        foreach ($this->files->files($base) as $jsonTranslationFile) {
+            if (strpos($jsonTranslationFile, '.json') === false) {
+                continue;
+            }
+
+            $locale = basename($jsonTranslationFile, '.json');
+
+            $translations = file_get_contents($jsonTranslationFile);
+            $translations = json_decode($translations, true);
+
+            if ($translations && is_array($translations)) {
+                foreach ($translations as $key => $value) {
+                    if (!Str::startsWith($key, '//')) {
+                        $this
+                            ->translationManagerService
+                            ->saveTranslation($key, $value, $locale, null, $replace);
                     }
                 }
             }

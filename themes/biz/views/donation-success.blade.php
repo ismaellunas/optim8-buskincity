@@ -17,7 +17,7 @@
 
             <a
                 class="button is-link is-large"
-                href="{{ route('frontend.profiles', [$user->id]) }}"
+                href="{{ $user->profilePageUrl }}"
             >
                 <span>
                     {{ $user->fullName }}
