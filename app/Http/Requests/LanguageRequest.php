@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Services\LanguageService;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class LanguageRequest extends FormRequest
+class LanguageRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -42,7 +41,7 @@ class LanguageRequest extends FormRequest
         ];
     }
 
-    public function attributes(): array
+    protected function customAttributes(): array
     {
         return [
             'languages.*' => __('validation.attributes.languages'),

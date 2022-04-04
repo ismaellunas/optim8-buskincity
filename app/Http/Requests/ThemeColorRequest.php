@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Services\SettingService;
-use Illuminate\Foundation\Http\FormRequest;
 
-class ThemeColorRequest extends FormRequest
+class ThemeColorRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,7 +28,7 @@ class ThemeColorRequest extends FormRequest
         ];
     }
 
-    public function attributes()
+    protected function customAttributes(): array
     {
         $attributes = [];
 

@@ -4,10 +4,9 @@ namespace App\Http\Requests;
 
 use App\Models\Translation;
 use App\Services\TranslationManagerService;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class TranslationUpdateRequest extends FormRequest
+class TranslationUpdateRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -55,7 +54,7 @@ class TranslationUpdateRequest extends FormRequest
         ];
     }
 
-    public function attributes(): array
+    protected function customAttributes(): array
     {
         $attr = [];
         $columns = [

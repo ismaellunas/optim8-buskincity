@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
-class ThemeAdvanceRequest extends FormRequest
+class ThemeAdvanceRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -34,7 +33,7 @@ class ThemeAdvanceRequest extends FormRequest
         ];
     }
 
-    public function attributes()
+    protected function customAttributes(): array
     {
         $attributes = collect([
             'home_page',

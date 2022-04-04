@@ -125,6 +125,8 @@ return [
     'phone' => 'The :attribute field contains an invalid number.',
     'hexadecimal_color' => 'The :attribute field contains an invalid hexadecimal color.',
     'email_belongs_to_backend_user' => 'The :attribute is invalid',
+    'group_and_key_combination' => 'The combination between group and key is invalid.',
+    'current_password' => 'The provided password does not match your current password.',
 
     /*
     |--------------------------------------------------------------------------
@@ -172,6 +174,8 @@ return [
         'is_enabled' => 'Is Enabled',
         'application_fee_percentage' => 'Application Fee Percentage',
         'payment_currencies' => 'Payment Currencies',
+        'country_code' => 'Country',
+        'language_id' => 'Language',
     ],
 
 ];

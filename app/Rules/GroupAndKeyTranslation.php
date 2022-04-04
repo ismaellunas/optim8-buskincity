@@ -50,7 +50,7 @@ class GroupAndKeyTranslation implements Rule, DataAwareRule
      */
     public function message()
     {
-        return __('The combination between group and key is invalid.');
+        return __('validation.group_and_key_combination');
     }
 
     public function setData($data)

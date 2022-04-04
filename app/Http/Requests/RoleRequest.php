@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Models\Permission;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class RoleRequest extends FormRequest
+class RoleRequest extends BaseFormRequest
 {
     public function rules()
     {
@@ -23,7 +22,7 @@ class RoleRequest extends FormRequest
         ];
     }
 
-    public function attributes()
+    protected function customAttributes(): array
     {
         return [
             'name' => __('Role Name'),

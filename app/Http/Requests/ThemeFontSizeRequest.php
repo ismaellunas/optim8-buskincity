@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Services\SettingService;
-use Illuminate\Foundation\Http\FormRequest;
 
-class ThemeFontSizeRequest extends FormRequest
+class ThemeFontSizeRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -33,7 +32,7 @@ class ThemeFontSizeRequest extends FormRequest
         ];
     }
 
-    public function attributes()
+    protected function customAttributes(): array
     {
         $attributes = [];
 

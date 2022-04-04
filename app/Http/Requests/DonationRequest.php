@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Services\StripeService;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class DonationRequest extends FormRequest
+class DonationRequest extends BaseFormRequest
 {
     public function authorize()
     {
