@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class ThemeHeaderLayoutRequest extends FormRequest
+class ThemeHeaderLayoutRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -34,7 +32,7 @@ class ThemeHeaderLayoutRequest extends FormRequest
         ];
     }
 
-    public function attributes()
+    protected function customAttributes(): array
     {
         return [
             'logo.file' => 'Logo',

@@ -2,13 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Models\User;
 use App\Services\FormService;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
-class FormValueRequest extends FormRequest
+class FormValueRequest extends BaseFormRequest
 {
     private $forms;
     private $formLocation;
@@ -48,7 +46,7 @@ class FormValueRequest extends FormRequest
         return $rules;
     }
 
-    public function attributes()
+    protected function customAttributes(): array
     {
         $formService = app(FormService::class);
 

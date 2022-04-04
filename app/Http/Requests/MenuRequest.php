@@ -4,10 +4,9 @@ namespace App\Http\Requests;
 
 use App\Models\MenuItem;
 use App\Services\TranslationService;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class MenuRequest extends FormRequest
+class MenuRequest extends BaseFormRequest
 {
     public function authorize()
     {
@@ -62,7 +61,7 @@ class MenuRequest extends FormRequest
         ];
     }
 
-    public function attributes()
+    protected function customAttributes(): array
     {
         $attr = [];
         $columns = [
