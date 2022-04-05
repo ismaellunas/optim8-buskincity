@@ -76,11 +76,15 @@ class StripeController extends Controller
             'color_secondary',
         ];
 
-        foreach ($request->validated() as $key => $setting) {
-            $setting = $this->stripeSettingService->save('stripe_'.$key, $setting);
+        $inputs = $request->validated();
 
-            if ($setting->wasChanged()) {
-                $changedKeys->push($key);
+        foreach ($inputs as $key => $setting) {
+            if (! in_array($key, ['logo'])) {
+                $setting = $this->stripeSettingService->save('stripe_'.$key, $setting);
+
+                if ($setting->wasChanged()) {
+                    $changedKeys->push($key);
+                }
             }
         }
 
@@ -91,6 +95,27 @@ class StripeController extends Controller
             );
 
             $job->delay(now()->addSeconds(30));
+
+            dispatch($job);
+        }
+
+        if ($request->hasFile('logo.file')) {
+            $logoFile = $request->file('logo.file');
+
+            $existingMedia = $this->stripeSettingService->logoMedia();
+
+            $media = $this
+                ->stripeSettingService
+                ->uploadLogo($logoFile);
+
+            $this->stripeSettingService->saveLogoMedia($media);
+
+            if ($existingMedia) {
+                $this->stripeSettingService->deleteLogoFromStorage($existingMedia);
+            }
+
+            $job = new UpdateStripeConnectedAccountbrandingLogo();
+            $job->delay(now()->addMinutes(1));
 
             dispatch($job);
         }
