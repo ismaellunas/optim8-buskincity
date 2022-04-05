@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Entities\Caches\SettingCache;
+use App\Models\Media;
 use App\Models\Setting;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class StripeSettingService
 {
@@ -158,5 +160,40 @@ class StripeSettingService
         return Setting::key('stripe_color_secondary')
             ->group('stripe')
             ->value('value');
+    }
+
+    public function logoMedia(): ?Media
+    {
+        $mediaId = Setting::key('stripe_logo_media_id')
+            ->group('stripe')
+            ->value('value');
+
+        if (!empty($mediaId)) {
+            return Media::find($mediaId);
+        }
+
+        return null;
+    }
+
+    public function logoUrl(): string
+    {
+        $media = $this->logoMedia();
+
+        return !empty($media) ? $media->file_url : "";
+    }
+
+    public function logoMimeTypes(): array
+    {
+        return [
+            'jpeg',
+            'jpg',
+            'png',
+            'gif',
+        ];
+    }
+
+    public function maxLogoSize(): int
+    {
+        return config('constants.one_megabyte') / 2;
     }
 }

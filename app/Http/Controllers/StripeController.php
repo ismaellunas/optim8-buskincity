@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\HumanReadable;
 use App\Http\Requests\StripeSettingRequest;
 use App\Jobs\UpdateStripeConnectedAccountColor;
+use App\Jobs\UpdateStripeConnectedAccountBrandingLogo;
 use App\Services\{
     StripeService,
     StripeSettingService,
@@ -35,17 +37,34 @@ class StripeController extends Controller
                 return $option['id'];
             });
 
+        $logoMimeTypes = array_map(
+            fn ($mime): string => '.'.$mime,
+            $this->stripeSettingService->logoMimeTypes()
+        );
+
         return Inertia::render('Stripe', [
             'amountOptions' => $settings->get('stripe_amount_options'),
             'applicationFeePercentage' => $settings->get('stripe_application_fee_percentage'),
+            'colorPrimary' => $settings->get('stripe_color_primary'),
+            'colorSecondary' => $settings->get('stripe_color_secondary'),
             'countryOptions' => $this->stripeService->getCountryOptions(),
             'currencyOptions' => $currencyOptions,
             'defaultCountry' => $settings->get('stripe_default_country'),
             'isEnabled' => $settings->get('stripe_is_enabled'),
+            'logoInstructions' => [
+                __('Accepted file extensions: :extensions.', [
+                    'extensions' => implode(', ', $logoMimeTypes)
+                ]),
+                __('Max file size: :filesize.', [
+                    'filesize' => HumanReadable::bytesToHuman(
+                        $this->stripeSettingService->maxLogoSize() * config('constants.one_megabyte')
+                    )
+                ]),
+            ],
+            'logoMimeTypes' => $logoMimeTypes,
+            'logoUrl' => $this->stripeSettingService->logoUrl(),
             'minimalAmounts' => $settings->get('stripe_minimal_amounts'),
             'paymentCurrencies' => $settings->get('stripe_payment_currencies'),
-            'colorPrimary' => $settings->get('stripe_color_primary'),
-            'colorSecondary' => $settings->get('stripe_color_secondary'),
         ]);
     }
 
