@@ -175,6 +175,7 @@ return [
         'payment_currencies' => 'Payment Currencies',
         'country_code' => 'Country',
         'language_id' => 'Language',
+        'logo.file' => 'Logo',
     ],
 
 ];
