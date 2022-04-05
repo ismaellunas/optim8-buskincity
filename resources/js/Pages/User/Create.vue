@@ -84,7 +84,7 @@
                 password: null,
                 password_confirmation: null,
                 country_code: null,
-                language_id: null,
+                language_id: props.record.language_id,
                 photo: null,
                 photo_url: null,
                 profile_photo_media_id: null,

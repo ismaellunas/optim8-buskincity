@@ -3,12 +3,15 @@
 namespace App\Services;
 
 use App\Models\Translation;
+use App\Traits\ReferenceLocale;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Support\Collection;
 
 class TranslationManagerService
 {
+    use ReferenceLocale;
+
     public function getRecords(
         string $locale = null,
         array $groups = null,
@@ -163,11 +166,6 @@ class TranslationManagerService
             ->mapToGroups(function ($translation) {
                 return [$translation['group'] => $translation['key']];
             });
-    }
-
-    public function getReferenceLocale()
-    {
-        return 'en';
     }
 
     private function getTranslations(
