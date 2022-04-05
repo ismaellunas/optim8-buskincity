@@ -81,6 +81,17 @@ class LanguageService
         return $this->getSupportedLanguages()->pluck('id')->all();
     }
 
+    public function getSupportedLanguageOptions(): Collection
+    {
+        return $this->getSupportedLanguages()->map(function ($language) {
+                return [
+                    'id' => $language->id,
+                    'value' => $language->name,
+                    'code' => $language->code,
+                ];
+            });
+    }
+
     public function getOriginFromIP(): Language
     {
         $clientData = app(IPService::class)->getClientData();
