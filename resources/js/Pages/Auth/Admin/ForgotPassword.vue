@@ -32,7 +32,10 @@
                 :errors="$page.props.errors"
             />
 
-            <form method="post">
+            <form
+                method="post"
+                @submit="setLoader()"
+            >
                 <div class="mb-4">
                     <input
                         type="hidden"
@@ -41,8 +44,8 @@
                     >
 
                     <biz-form-input
-                        name="email"
                         v-model="form.email"
+                        name="email"
                         label="Email"
                         required
                         type="email"
@@ -76,6 +79,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormInput from '@/Biz/Form/Input';
@@ -92,6 +96,10 @@
             LayoutAdmin,
             VueRecaptcha,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         props: {
             failed: {
@@ -113,6 +121,12 @@
                 }),
                 csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
+        },
+
+        methods: {
+            setLoader() {
+                this.onStartLoadingOverlay();
+            },
         }
     }
 </script>

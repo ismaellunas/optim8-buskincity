@@ -54,6 +54,7 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButton from '@/Biz/Button';
 
     export default {
@@ -61,6 +62,10 @@
             AppLayout,
             BizButton,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         props: {
             status: {
@@ -84,7 +89,10 @@
 
         methods: {
             submit() {
-                this.form.post(this.route('verification.send'))
+                this.form.post(this.route('verification.send'), {
+                    onStart: () => this.onStartLoadingOverlay(),
+                    onFinish: () => this.onEndLoadingOverlay(),
+                })
             },
         },
     }
