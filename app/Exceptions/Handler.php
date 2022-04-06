@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Inertia\Inertia;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -60,6 +61,14 @@ class Handler extends ExceptionHandler
                     'message_expired' => 'The page expired, please try again.',
                 ]);
             }
+        }
+
+        if (
+            $request->inertia()
+            && $response->status() === 302
+            && $e->redirectTo() === route('login')
+        ) {
+            return Inertia::location($e->redirectTo());
         }
 
         return $response;
