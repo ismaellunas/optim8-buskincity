@@ -757,5 +757,7 @@
     "Role Name": "Role Name",
     "Translation Manager": "Translation Manager",
     "Draft": "Draft",
-    "Published": "Published"
+    "Published": "Published",
+    "Accepted file extensions: :extensions.": "Accepted file extensions: :extensions.",
+    "Max file size: :filesize.": "Max file size: :filesize."
 }
