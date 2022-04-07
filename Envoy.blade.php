@@ -36,7 +36,7 @@
         'RECAPTCHA_SECRET_KEY',
         'STRIPE_PK',
         'STRIPE_SK',
-        // 'REDIS_CLIENT',
+        'REDIS_CLIENT',
         // 'REDIS_URL',
     ];
 @endsetup
