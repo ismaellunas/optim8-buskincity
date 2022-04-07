@@ -62,6 +62,51 @@ class Handler extends ExceptionHandler
             }
         }
 
+        // Provided custom error page
+        if (in_array($response->status(), config('constants.theme_error_page'))) {
+            if (
+                $response->status() == 500
+                && env('APP_DEBUG')
+            ) {
+                return $response;
+            }
+
+            return $this->responseErrorPage($response, $e);
+        }
+
         return $response;
+    }
+
+    private function responseErrorPage($response, Throwable $e = null)
+    {
+        $message = 'error ' . $response->status();
+
+        if (
+            $response->status() == 403
+            && $e->getMessage() != ''
+        ) {
+            $message = $e->getMessage();
+        }
+
+        $data = [
+            'statusCode' => $response->status(),
+            'message' => __($message),
+        ];
+
+        if (view()->exists('errors.' . $response->status())) {
+            return response()
+                ->view(
+                    'errors.' . $response->status(),
+                    $data,
+                    $response->status()
+                );
+        }
+
+        return response()
+                ->view(
+                    'errors.error',
+                    $data,
+                    $response->status()
+                );
     }
 }
