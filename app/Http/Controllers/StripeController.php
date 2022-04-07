@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Helpers\HumanReadable;
 use App\Http\Requests\StripeSettingRequest;
-use App\Jobs\UpdateStripeConnectedAccountColor;
-use App\Jobs\UpdateStripeConnectedAccountBrandingLogo;
+use App\Jobs\{
+    UpdateStripeConnectedAccountColor,
+    UpdateStripeConnectedAccountBrandingLogo,
+};
 use App\Services\{
     StripeService,
     StripeSettingService,
