@@ -287,7 +287,9 @@ class StripeService
 
         $url = strval(str_replace(['src=', '"'], ['', ''], $result));
 
-        $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.basename($url);
+        $fileName = app(MediaService::class)->sanitizeFileName(basename($url));
+
+        $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.$fileName;
 
         file_put_contents($path, file_get_contents($url));
 
