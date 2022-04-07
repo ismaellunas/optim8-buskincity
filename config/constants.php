@@ -91,6 +91,16 @@ return [
             'key' => 'header_logo_media_id',
         ],
     ],
+
+    'theme_error_page' => [
+        401,
+        403,
+        404,
+        429,
+        500,
+        503
+    ],
+
     'locale' => [
         'en',
         'sv',
