@@ -34,7 +34,7 @@ class ThemeColorController extends ThemeOptionController
 
     public function update(ThemeColorRequest $request)
     {
-        $colors = $request->all();
+        $colors = $request->validated();
 
         foreach ($colors as $key => $color) {
             $setting = Setting::firstOrNew(['key' => $key]);
