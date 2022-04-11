@@ -32,8 +32,7 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['required', 'accepted'] : '',
         ])->validate();
 
-        $this->setLanguage($input);
-        $this->setCountry($input);
+        $this->transform($input);
 
         return User::factory()
             ->unverified()
@@ -47,17 +46,11 @@ class CreateNewUser implements CreatesNewUsers
             ]);
     }
 
-    private function setLanguage(&$input): void
-    {
-        $referenceLanguage = app(LanguageService::class)->getReferenceLanguage();
-
-        $input['language_id'] = $referenceLanguage ? $referenceLanguage->id : null;
-    }
-
-    private function setCountry(&$input): void
+    private function transform(&$input): void
     {
         $clientData = app(IPService::class)->getClientData();
 
+        $input['language_id'] = app(LanguageService::class)->getDefaultId();
         $input['country_code'] = $clientData['location']['country']['code'];
     }
 }

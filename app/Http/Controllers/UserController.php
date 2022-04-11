@@ -80,10 +80,8 @@ class UserController extends CrudController
      */
     public function create()
     {
-        $referenceLanguage = app(LanguageService::class)->getReferenceLanguage();
-
         $record = new User();
-        $record->language_id = $referenceLanguage ? $referenceLanguage->id : null;
+        $record->language_id = app(LanguageService::class)->getDefaultId();
 
         return Inertia::render('User/Create', $this->getData([
             'record' => $record,
