@@ -125,12 +125,12 @@
                                             <input type="password" name="password_confirmation" id="input-password-confirmation" class="input" placeholder="Confirm Password" required>
                                         </div>
                                         <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password-confirmation">
-                                            <button type="button" class="button">
+                                            <button type="button" class="button" tabindex="-1">
                                                 <span class="icon">
                                                     <i class="fas fa-eye"></i>
                                                 </span>
                                             </button>
-                                            <button type="button" class="button is-hidden">
+                                            <button type="button" class="button is-hidden" tabindex="-1">
                                                 <span class="icon">
                                                     <i class="fas fa-eye-slash"></i>
                                                 </span>

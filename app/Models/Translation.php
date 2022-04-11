@@ -85,4 +85,10 @@ class Translation extends Model implements TranslationLoader
             $q->whereIn('group', $groups);
         });
     }
+
+    public function scopeSearch($query, string $term)
+    {
+        return $query->where('key', 'ILIKE', '%'.$term.'%')
+            ->orWhere('value', 'ILIKE', '%'.$term.'%');
+    }
 }

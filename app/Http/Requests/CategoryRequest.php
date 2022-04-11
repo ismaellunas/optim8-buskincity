@@ -2,11 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\AlphaNumericDash;
 use Astrotomic\Translatable\Validation\RuleFactory;
-use Illuminate\Foundation\Http\FormRequest;
 
-class CategoryRequest extends FormRequest
+class CategoryRequest extends BaseFormRequest
 {
     public function authorize()
     {

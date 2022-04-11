@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Services\StripeService;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StripeAccountCreateRequest extends FormRequest
+class StripeAccountCreateRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

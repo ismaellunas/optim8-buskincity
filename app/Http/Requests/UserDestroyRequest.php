@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UserDestroyRequest extends FormRequest
+class UserDestroyRequest extends BaseFormRequest
 {
     protected $errorBag = 'deleteUser';
 
@@ -30,7 +29,7 @@ class UserDestroyRequest extends FormRequest
         ];
     }
 
-    public function attributes()
+    protected function customAttributes(): array
     {
         return [
             'assigned_user' => __('User'),

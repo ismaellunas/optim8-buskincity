@@ -66,6 +66,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
@@ -85,6 +86,7 @@
         },
 
         mixins: [
+            MixinHasLoader,
             MixinHasPageErrors,
         ],
 
@@ -114,7 +116,11 @@
         methods: {
             submit() {
                 this.form.post(this.route('admin.password.update'), {
-                    onFinish: () => this.form.reset('password', 'password_confirmation'),
+                    onStart: () => this.onStartLoadingOverlay(),
+                    onFinish: () => {
+                        this.form.reset('password', 'password_confirmation');
+                        this.onEndLoadingOverlay();
+                    },
                 })
             }
         }

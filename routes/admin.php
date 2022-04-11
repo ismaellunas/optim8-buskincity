@@ -6,7 +6,7 @@ use App\Http\Controllers\{
     LanguageController,
     MediaController,
     PageController,
-    PermissionController,
+    PasswordResetLinkController,
     PostController,
     RoleController,
     StripeController,
@@ -21,7 +21,6 @@ use App\Http\Controllers\{
     TranslationManagerController,
     UserController,
     UserProfileController,
-    UserRoleController,
 };
 
 use Illuminate\Support\Facades\Route;
@@ -29,7 +28,6 @@ use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\NewPasswordController;
-use Laravel\Fortify\Http\Controllers\PasswordResetLinkController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 
 /*
@@ -64,10 +62,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         ->name('users.password');
 
     Route::resource('/roles', RoleController::class);
-
-    Route::resource('/permissions', PermissionController::class);
-
-    Route::resource('/user-roles', UserRoleController::class);
 
     Route::get('dashboard', [DashboardController::class, 'index'])
         ->middleware(['can:system.dashboard'])
