@@ -95,12 +95,6 @@ class LanguageService
             });
     }
 
-    public function getReferenceLanguage(): ?Language
-    {
-        return Language::where('code', $this->getReferenceLocale())->first()
-            ?? null;
-    }
-
     public function getOriginFromIP(): Language
     {
         $clientData = app(IPService::class)->getClientData();
