@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     LanguageController,
     MediaController,
     PageController,
+    PasswordResetLinkController,
     PostController,
     RoleController,
     StripeController,
@@ -27,7 +28,6 @@ use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\NewPasswordController;
-use Laravel\Fortify\Http\Controllers\PasswordResetLinkController;
 use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 
 /*
@@ -169,7 +169,7 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
 
         Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
             ->middleware(['guest:'.config('fortify.guard')])
-            ->name('password.email');
+            ->name('password.email')->middleware('recaptcha');
 
         Route::post('/reset-password', [NewPasswordController::class, 'store'])
             ->middleware(['guest:'.config('fortify.guard')])
