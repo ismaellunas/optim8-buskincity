@@ -27,11 +27,11 @@ class TranslationService
 
         return app(SettingCache::class)->remember($key, function () {
             return app(LanguageService::class)
-                ->getSupportedLanguageOptions()
+                ->getSupportedLanguages()
                 ->map(function ($language) {
                     return [
-                        'id' => $language['code'],
-                        'value' => $language['value'],
+                        'id' => $language->code,
+                        'name' => $language->name,
                     ];
                 })
                 ->sortBy(function ($value) {
