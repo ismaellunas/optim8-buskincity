@@ -477,6 +477,7 @@
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
+                        self.resetFormLogo();
                     },
                     onError(errors) {
                         oopsAlert();
@@ -489,6 +490,11 @@
 
             onFilePicked(event) {
                 this.form.logo.file_url = event.target.result;
+            },
+
+            resetFormLogo() {
+                this.form.logo.file = null;
+                this.form.logo.file_url = null;
             },
         },
     };
