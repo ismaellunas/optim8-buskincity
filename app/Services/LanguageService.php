@@ -11,13 +11,10 @@ use App\Entities\{
     Caches\SettingCache
 };
 use App\Services\IPService;
-use App\Traits\ReferenceLocale;
 use Illuminate\Support\Collection;
 
 class LanguageService
 {
-    use ReferenceLocale;
-
     public function getShownLanguageOptions(): Collection
     {
         $key = config('constants.setting_cache.shown_language_option');
