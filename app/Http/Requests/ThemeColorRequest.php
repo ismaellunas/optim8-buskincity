@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\HexadecimalColor;
 use App\Services\SettingService;
 
 class ThemeColorRequest extends BaseFormRequest
@@ -24,7 +25,7 @@ class ThemeColorRequest extends BaseFormRequest
     public function rules()
     {
         return [
-            '*' => 'regex:/^\#[\da-f]{6}$/i',
+            '*' => new HexadecimalColor(),
         ];
     }
 
