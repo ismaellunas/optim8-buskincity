@@ -93,13 +93,6 @@
 
         <script src="{{ mix('js/app.js', 'themes/biz') }}" defer></script>
 
-        @if ($errors->any())
-            <script>
-                document.getElementById('formFields').classList.remove('is-hidden');
-                document.getElementById('socialMediaForm').classList.add('is-hidden');
-            </script>
-        @endif
-
         <script>
             function showForm() {
                 document.getElementById('formFields').classList.remove('is-hidden');
