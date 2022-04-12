@@ -11,5 +11,5 @@ export const textComponent = {
         'paste code help wordcount table'
     ],
     block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3',
-    toolbar: 'formatselect | bold italic link | bullist numlist | table',
+    toolbar: 'formatselect | bold italic link | alignleft aligncenter alignright alignjustify | bullist numlist | table',
 };
