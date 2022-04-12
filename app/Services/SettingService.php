@@ -354,36 +354,4 @@ class SettingService
         $process->run();
         return $process->isSuccessful();
     }
-
-    public function uploadLogoToCloudStorage(
-        array $inputs,
-        string $folderPrefix = null
-    ): MediaAsset {
-        $storage = new CloudinaryStorage();
-
-
-        $folder = "settings";
-
-        if ($folderPrefix) {
-            $folder = $folderPrefix.'_'.$folder;
-        }
-
-        $this->deleteLogoOnCloudStorage($folder.'/'.$inputs['file_name']);
-
-        return $storage->upload(
-            $inputs['file'],
-            $inputs['file_name'],
-            $inputs['file_type'],
-            $folder,
-            true,
-        );
-    }
-
-    public function deleteLogoOnCloudStorage(
-        string $fileName
-    ) {
-        $storage = new CloudinaryStorage();
-
-        $storage->destroy($fileName);
-    }
 }
