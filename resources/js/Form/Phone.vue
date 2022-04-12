@@ -10,7 +10,16 @@
         :message="message"
         :country-options="schema.countryOptions"
         :default-country="schema.defaultCountry"
-    />
+    >
+        <template #note>
+            <p
+                v-if="schema.note"
+                class="help"
+            >
+                {{ schema.note }}
+            </p>
+        </template>
+    </biz-form-phone>
 </template>
 
 <script>

@@ -15,6 +15,15 @@
         >
             {{ option }}
         </option>
+
+        <template #note>
+            <p
+                v-if="schema.note"
+                class="help"
+            >
+                {{ schema.note }}
+            </p>
+        </template>
     </biz-form-select>
 </template>
 
