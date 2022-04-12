@@ -69,7 +69,9 @@ class FormSeeder extends Seeder
             "name" => "biodata",
             "title" => "Biodata",
             "order" => 2,
-            "visibility" => [],
+            "visibility" => [
+                "roles" => ["Performer"]
+            ],
             "locations" => [
                 'admin.profile.show',
                 'admin.users.edit',
@@ -195,6 +197,7 @@ class FormSeeder extends Seeder
             "title" => "Address",
             "order" => 3,
             "visibility" => [
+                "roles" => ["Performer"]
             ],
             "locations" => [
                 'admin.profile.show',
@@ -281,7 +284,9 @@ class FormSeeder extends Seeder
             "name" => "promotional",
             "title" => "",
             "order" => 4,
-            "visibility" => [],
+            "visibility" => [
+                "roles" => ["Performer"]
+            ],
             "locations" => [
                 'admin.profile.show',
                 'admin.users.edit',
