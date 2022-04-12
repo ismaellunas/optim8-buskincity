@@ -200,14 +200,14 @@
                         successAlert(page.props.flash.message);
                         self.profileForm.isDirty = false;
                         self.profileForm.photo = null;
+
+                        self.biodataFormKey += 1;
                     },
                     onFinish: () => {
                         self.loader.hide();
                         self.isProcessing = false;
                         self.profileForm.photo = null;
                         self.profileForm.profile_photo_media_id = self.record.profile_photo_media_id;
-
-                        self.biodataFormKey += 1;
                     }
                 });
             },
