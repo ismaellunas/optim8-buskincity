@@ -223,6 +223,8 @@
                         this.form.photo = null;
                         this.form.profile_photo_media_id = this.user.profile_photo_media_id;
 
+                        this.$emit('after-update-profile');
+
                         successAlert("Saved");
                     },
                     onError: () => {
@@ -230,7 +232,6 @@
                     },
                     onFinish: () => {
                         this.onEndLoadingOverlay();
-                        this.$emit('after-update-profile');
                     },
                 });
             },
