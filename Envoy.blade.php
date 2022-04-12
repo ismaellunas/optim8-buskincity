@@ -8,7 +8,7 @@
     $branch = "master";
     $theme = $_ENV['THEME_ACTIVE'] ?? 'biz';
 
-    $heroku_app = "platform752";
+    $heroku_app = $_ENV['HEROKU_APP'];
     $heroku_vars = [
         'APP_DEBUG',
         'APP_ENV',
@@ -36,7 +36,7 @@
         'RECAPTCHA_SECRET_KEY',
         'STRIPE_PK',
         'STRIPE_SK',
-        // 'REDIS_CLIENT',
+        'REDIS_CLIENT',
         // 'REDIS_URL',
     ];
 @endsetup
