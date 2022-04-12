@@ -6,7 +6,16 @@
         :message="error(schema.name, bagName, errors)"
         :required="schema.is_required"
         :options="schema.options"
-    />
+    >
+        <template #note>
+            <p
+                v-if="schema.note"
+                class="help"
+            >
+                {{ schema.note }}
+            </p>
+        </template>
+    </biz-form-radio>
 </template>
 
 <script>
