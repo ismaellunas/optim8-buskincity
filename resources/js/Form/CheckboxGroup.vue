@@ -9,7 +9,16 @@
         :options="schema.options"
         :readonly="schema.is_readonly"
         :required="schema.is_required"
-    />
+    >
+        <template #note>
+            <p
+                v-if="schema.note"
+                class="help"
+            >
+                {{ schema.note }}
+            </p>
+        </template>
+    </biz-form-checkbox-group>
 </template>
 
 <script>
