@@ -18,7 +18,7 @@
                         <form-user-profile
                             v-model="form"
                             :role-options="roleOptions"
-                            :language-options="languageOptions"
+                            :language-options="supportedLanguageOptions"
                             :country-options="countryOptions"
                         />
 
@@ -70,7 +70,7 @@
         props: {
             countryOptions: { type: Array, default: () => [] },
             errors: { type: Object, default: () => {} },
-            languageOptions: { type: Array, default: () => [] },
+            supportedLanguageOptions: { type: Array, default: () => [] },
             record: {type: Object, default: () => {} },
             roleOptions: { type: Array, default: () => [] },
             title: { type: String, required: true },

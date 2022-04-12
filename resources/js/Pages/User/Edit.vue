@@ -25,7 +25,7 @@
                             v-model="profileForm"
                             :can-set-role="!record.isSuperAdministrator"
                             :role-options="roleOptions"
-                            :language-options="languageOptions"
+                            :language-options="supportedLanguageOptions"
                             :country-options="countryOptions"
                             :error-bag="errorBag"
                             :profile-page-url="can.public_profile ? record.profilePageUrl : null"
@@ -144,7 +144,7 @@
             errors: { type: Object, default: () => {} },
             record: {type: Object, default: () => {} },
             roleOptions: { type: Array, default: () => [] },
-            languageOptions: { type: Array, default: () => [] },
+            supportedLanguageOptions: { type: Array, default: () => [] },
             title: { type: String, required: true },
         },
 
