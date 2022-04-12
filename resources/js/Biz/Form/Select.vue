@@ -16,6 +16,8 @@
             <slot />
         </biz-select>
 
+        <slot name="note" />
+
         <template #error>
             <biz-input-error :message="message" />
         </template>
