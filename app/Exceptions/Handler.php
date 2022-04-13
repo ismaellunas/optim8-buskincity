@@ -63,12 +63,15 @@ class Handler extends ExceptionHandler
             }
         }
 
-        if (
-            $request->inertia()
-            && $response->status() === Response::HTTP_FOUND
-            && $e->redirectTo() === route('login')
-        ) {
-            return Inertia::location($e->redirectTo());
+        if ($response->status() === Response::HTTP_FOUND) {
+            if ($e instanceof AuthenticationException) {
+                if (
+                    $request->inertia()
+                    && $e->redirectTo() === route('login')
+                ) {
+                    return Inertia::location($e->redirectTo());
+                }
+            }
         }
 
         // Provided custom error page
