@@ -12,7 +12,7 @@ class GuestBlogCategoryTest extends LocalizationRouteTestCase
     public function guestCanAccessBlogCategory()
     {
         // Arrange
-        $category = $this->getCategory();
+        $category = $this->createCategory();
 
         // Act
         $response = $this->get(
@@ -30,7 +30,7 @@ class GuestBlogCategoryTest extends LocalizationRouteTestCase
     public function guestCanRenderTheBlogCategoryView()
     {
         // Arrange
-        $category = $this->getCategory();
+        $category = $this->createCategory();
 
         // Act
         $response = $this->get(
@@ -47,7 +47,7 @@ class GuestBlogCategoryTest extends LocalizationRouteTestCase
     public function guestCanSeeTheBlogLists()
     {
         // Arrange
-        $post = $this->getPublishedPost();
+        $post = $this->createPublishedPost();
 
         // Act
         $response = $this->get(

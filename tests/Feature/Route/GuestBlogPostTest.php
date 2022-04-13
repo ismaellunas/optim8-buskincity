@@ -12,7 +12,7 @@ class GuestBlogPostTest extends LocalizationRouteTestCase
     public function guestCanAccessBlogPostWithPublishedStatus()
     {
         // Arrange
-        $post = $this->getPublishedPost();
+        $post = $this->createPublishedPost();
 
         // Act
         $response = $this->get(
@@ -32,7 +32,7 @@ class GuestBlogPostTest extends LocalizationRouteTestCase
     public function guestCannotAccessBlogPostWithScheduledStatus()
     {
         // Arrange
-        $post = $this->getScheduledPost();
+        $post = $this->createScheduledPost();
 
         // Act
         $response = $this->get(
@@ -54,7 +54,7 @@ class GuestBlogPostTest extends LocalizationRouteTestCase
     public function guestCannotAccessBlogPostWithDraftStatus()
     {
         // Arrange
-        $post = $this->getDraftPost();
+        $post = $this->createDraftPost();
 
         // Act
         $response = $this->get(
@@ -76,7 +76,7 @@ class GuestBlogPostTest extends LocalizationRouteTestCase
     public function guestCanRenderTheBlogPostView()
     {
         // Arrange
-        $post = $this->getPublishedPost();
+        $post = $this->createPublishedPost();
 
         // Act
         $response = $this->get(

@@ -12,7 +12,7 @@ class GuestPageTest extends LocalizationRouteTestCase
     public function guestCanAccessPageWithPublishedStatus()
     {
         // Arrange
-        $page = $this->getPublishedPage();
+        $page = $this->createPublishedPage();
 
         // Act
         $response = $this->get(
@@ -30,7 +30,7 @@ class GuestPageTest extends LocalizationRouteTestCase
     public function guestCannotAccessPageWithDraftStatus()
     {
         // Arrange
-        $page = $this->getDraftPage();
+        $page = $this->createDraftPage();
 
         // Act
         $response = $this->get(
@@ -52,7 +52,7 @@ class GuestPageTest extends LocalizationRouteTestCase
     public function guestCanRenderThePage()
     {
         // Arrange
-        $page = $this->getPublishedPage();
+        $page = $this->createPublishedPage();
 
         // Act
         $response = $this->get(
