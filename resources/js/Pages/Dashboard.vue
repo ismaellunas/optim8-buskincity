@@ -1,28 +1,29 @@
 <template>
-    <biz-hero class="is-primary" size="small">
-        <div class="container">
-            <p class="title">Frontend Dashboard</p>
-        </div>
-    </biz-hero>
+    <layout-guest>
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Frontend Dashboard
+            </h2>
+        </template>
 
-    <div class="container py-12 mt-4">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <welcome />
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
+
+                    <welcome />
+                </div>
             </div>
         </div>
-    </div>
+    </layout-guest>
 </template>
 
 <script>
-    import Layout from '@/Layouts/GuestLayout';
-    import BizHero from '@/Biz/Hero';
+    import LayoutGuest from '@/Layouts/GuestLayout';
     import Welcome from '@/Jetstream/Welcome';
 
     export default {
-        layout: Layout,
         components: {
-            BizHero,
+            LayoutGuest,
             Welcome,
         },
     }

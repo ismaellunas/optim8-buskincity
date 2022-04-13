@@ -1,10 +1,23 @@
 <template>
-    <div>
-        <div id="main-container-wrapper">
-            <biz-navbar-menu />
-        </div>
+    <div id="main-container-wrapper">
+        <biz-navbar-menu />
 
-        <slot />
+        <section class="hero is-small is-primary mb-4">
+            <div class="hero-body">
+                <div class="container">
+                    <p class="title">
+                        <slot name="header" />
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div
+            id="main-container"
+            class="container mb-2"
+        >
+            <slot />
+        </div>
     </div>
 </template>
 
