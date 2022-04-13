@@ -18,7 +18,7 @@
                         <form-user-profile
                             v-model="form"
                             :role-options="roleOptions"
-                            :shown-language-options="shownLanguageOptions"
+                            :language-options="supportedLanguageOptions"
                             :country-options="countryOptions"
                         />
 
@@ -68,11 +68,12 @@
             FormUserProfile,
         },
         props: {
-            errors: Object,
-            roleOptions: { type: Array, default: () => [] },
-            shownLanguageOptions: { type: Array, default: () => [] },
             countryOptions: { type: Array, default: () => [] },
-            title: String,
+            errors: { type: Object, default: () => {} },
+            supportedLanguageOptions: { type: Array, default: () => [] },
+            record: {type: Object, default: () => {} },
+            roleOptions: { type: Array, default: () => [] },
+            title: { type: String, required: true },
         },
         setup(props) {
             const form = {
@@ -83,7 +84,7 @@
                 password: null,
                 password_confirmation: null,
                 country_code: null,
-                language_id: null,
+                language_id: props.record.language_id,
                 photo: null,
                 photo_url: null,
                 profile_photo_media_id: null,
