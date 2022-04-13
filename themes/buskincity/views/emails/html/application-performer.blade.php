@@ -46,7 +46,7 @@
 | {{ __('Twitter') }}                       | :     | {{ $twitter }}                        |
 | {{ __('Instagram') }}                     | :     | {{ $instagram }}                      |
 | {{ __('Youtube') }}                       | :     | {{ $youtube }}                        |
-| {{ __('Other(s)') }}                      | :     | {{ $other_links }}                    |
+| {{ __('Other(s)') }}                      | :     | {{ implode(', ', $other_links) }}     |
 | {{ __('Promotional Video') }}             | :     | {{ $promotional_video }}              |
 @endcomponent
 
