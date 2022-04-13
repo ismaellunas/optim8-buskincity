@@ -12,11 +12,10 @@ use App\Services\TranslationService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Str;
 use Mcamara\LaravelLocalization\LaravelLocalization;
 use Tests\TestCase;
 
-abstract class BaseRouteTestCase extends TestCase
+abstract class LocalizationRouteTestCase extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
@@ -44,84 +43,64 @@ abstract class BaseRouteTestCase extends TestCase
         parent::tearDown();
     }
 
-    protected function getCategory(): Category
+    protected function createCategory(): Category
     {
         return Category::factory()
-            ->hasTranslations(1, ['name' => 'News'])
+            ->hasTranslations(1)
             ->create();
     }
 
-    protected function getPublishedPost(): Post
+    protected function createPublishedPost(): Post
     {
         return Post::factory()
-            ->hasAttached($this->getCategory())
+            ->hasAttached($this->createCategory())
             ->fakeContent()
             ->create(
                 [
-                    'title' => 'Published Post',
-                    'slug' => Str::slug('Published Post'),
                     'status' => Post::STATUS_PUBLISHED
                 ]
             );
     }
 
-    protected function getScheduledPost(): Post
+    protected function createScheduledPost(): Post
     {
         return Post::factory()
-            ->hasAttached($this->getCategory())
+            ->hasAttached($this->createCategory())
             ->fakeContent()
             ->create(
                 [
-                    'title' => 'Scheduled Post',
-                    'slug' => Str::slug('Scheduled Post'),
                     'status' => Post::STATUS_SCHEDULED,
                     'scheduled_at' => Carbon::now()->addDays(2)
                 ]
             );
     }
 
-    protected function getDraftPost(): Post
+    protected function createDraftPost(): Post
     {
         return Post::factory()
-            ->hasAttached($this->getCategory())
+            ->hasAttached($this->createCategory())
             ->fakeContent()
             ->create(
                 [
-                    'title' => 'Draft Post',
-                    'slug' => Str::slug('Draft Post'),
                     'status' => Post::STATUS_DRAFT
                 ]
             );
     }
 
-    protected function getPublishedPage(): Page
+    protected function createPublishedPage(): Page
     {
         return Page::factory()
             ->hasTranslations(1, [
-                'title' => 'Published Page',
-                'slug' => Str::slug('Published Page'),
                 'status' => PageTranslation::STATUS_PUBLISHED,
-                'data' => [
-                    "structures" => [],
-                    "entities" => [],
-                    "media" => []
-                ],
             ])
             ->create();
     }
 
-    protected function getDraftPage(): Page
+    protected function createDraftPage(): Page
     {
         return Page::factory()
             ->hasTranslations(1, [
-                'title' => 'Draft Page',
-                'slug' => Str::slug('Draft Page'),
                 'status' => PageTranslation::STATUS_DRAFT,
-                'data' => [
-                    "structures" => [],
-                    "entities" => [],
-                    "media" => []
-                ]
             ])
             ->create();
     }
