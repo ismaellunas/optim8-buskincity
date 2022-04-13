@@ -8,6 +8,7 @@ use App\Http\Controllers\{
     FormController,
     Frontend\DonationController,
     Frontend\PageController,
+    Frontend\PerformerApplicationController,
     Frontend\PostCategoryController,
     Frontend\PostController,
     Frontend\ProfileController as FrontendProfileController,
@@ -68,6 +69,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
                 ->middleware('signed')
                 ->name('return');
         });
+
+    Route::resource('/performer-application-form', PerformerApplicationController::class)
+        ->only(['create', 'store']);
 });
 
 Route::get('/oauth/{provider}/callback', [CustomOAuthController::class, 'handleProviderCallback'])
