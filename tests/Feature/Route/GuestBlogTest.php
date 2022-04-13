@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Route;
 
-class GuestBlogTest extends BaseRouteTestCase
+class GuestBlogTest extends LocalizationRouteTestCase
 {
     private $routeName = 'blog.index';
 

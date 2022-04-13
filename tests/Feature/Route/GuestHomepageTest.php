@@ -5,7 +5,7 @@ namespace Tests\Feature\Route;
 use App\Models\Language;
 use App\Services\TranslationService;
 
-class GuestHomepageTest extends BaseRouteTestCase
+class GuestHomepageTest extends LocalizationRouteTestCase
 {
     private $routeName = 'homepage';
 

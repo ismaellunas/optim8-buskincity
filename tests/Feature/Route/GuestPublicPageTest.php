@@ -7,7 +7,7 @@ use App\Models\{
     User,
 };
 
-class GuestPublicPageTest extends BaseRouteTestCase
+class GuestPublicPageTest extends LocalizationRouteTestCase
 {
     private $basePermissionName = 'public_page';
     private $role;

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Route;
 
-class GuestBlogPostTest extends BaseRouteTestCase
+class GuestBlogPostTest extends LocalizationRouteTestCase
 {
     private $routeName = 'blog.show';
 

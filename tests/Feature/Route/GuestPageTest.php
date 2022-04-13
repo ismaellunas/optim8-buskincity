@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Route;
 
-class GuestPageTest extends BaseRouteTestCase
+class GuestPageTest extends LocalizationRouteTestCase
 {
     private $routeName = 'frontend.pages.show';
 
