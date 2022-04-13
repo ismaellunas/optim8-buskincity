@@ -34,4 +34,22 @@ class GuestBlogTest extends LocalizationRouteTestCase
         // Assert
         $response->assertViewIs('posts');
     }
+
+    /**
+     * @test
+     */
+    public function guestCanSeeTheBlogLists()
+    {
+        // Arrange
+        $post = $this->createPublishedPost();
+
+        // Act
+        $response = $this->get(
+            route($this->routeName)
+        );
+
+        // Assert
+        $response->assertOk()
+            ->assertSee($post->title);
+    }
 }
