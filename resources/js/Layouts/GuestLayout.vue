@@ -2,15 +2,16 @@
     <div id="main-container-wrapper">
         <biz-navbar-menu />
 
-        <section class="hero is-small is-primary mb-4">
-            <div class="hero-body">
-                <div class="container">
-                    <p class="title">
-                        <slot name="header" />
-                    </p>
-                </div>
+        <biz-hero
+            class="is-primary mb-4"
+            size="small"
+        >
+            <div class="container">
+                <p class="title">
+                    <slot name="header" />
+                </p>
             </div>
-        </section>
+        </biz-hero>
 
         <div
             id="main-container"
@@ -22,12 +23,14 @@
 </template>
 
 <script>
+    import BizHero from '@/Biz/Hero';
     import BizNavbarMenu from '@/Biz/NavbarMenu';
 
     export default {
         name: 'LayoutGuest',
 
         components: {
+            BizHero,
             BizNavbarMenu,
         },
     };
