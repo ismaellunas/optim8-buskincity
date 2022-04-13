@@ -122,7 +122,6 @@
     import { acceptedImageTypes, debounceTime } from '@/Libs/defaults';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
-    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -221,6 +220,8 @@
                         this.form.photo = null;
                         this.form.profile_photo_media_id = this.user.profile_photo_media_id;
 
+                        this.$emit('after-update-profile');
+
                         successAlert("Saved");
                     },
                     onError: () => {
@@ -228,7 +229,6 @@
                     },
                     onFinish: () => {
                         this.onEndLoadingOverlay();
-                        this.$emit('after-update-profile');
                     },
                 });
             },
