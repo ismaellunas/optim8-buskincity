@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ApplicationPerformer;
 use App\Services\CountryService;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 class PerformerApplicationController extends Controller
@@ -42,8 +44,10 @@ class PerformerApplicationController extends Controller
             ->all();
     }
 
-    private function sendEmail(array $data)
+    private function sendEmail(array $data): void
     {
+        $adminEmail = 'admin@biz.com';
 
+        Mail::to($adminEmail)->queue(new ApplicationPerformer($data));
     }
 }
