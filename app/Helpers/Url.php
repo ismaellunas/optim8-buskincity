@@ -3,7 +3,6 @@
 namespace App\Helpers;
 
 use Illuminate\Routing\Route;
-use Illuminate\Support\Str;
 
 class Url
 {
@@ -20,11 +19,19 @@ class Url
             ->create($url));
     }
 
-    public static function generateUniqueSegment(): string
+    public static function randomDigitSegment(callable $isExisting = null): ?string
     {
-        $uniqPart = abs(crc32(uniqid('', true)));
-        $uniqPart = substr($uniqPart, 0, random_int(6, 9));
+        $canContinueLoop = function ($code) use ($isExisting) {
+            if (is_callable($isExisting)) {
+                return $isExisting($code);
+            }
+            return false;
+        };
 
-        return Str::padLeft($uniqPart, 6, 0);
+        do {
+            $code = random_int(100000, 999999);
+        } while ($canContinueLoop($code));
+
+        return $code;
     }
 }
