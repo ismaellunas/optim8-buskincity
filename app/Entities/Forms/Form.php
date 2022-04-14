@@ -51,10 +51,6 @@ class Form
     {
         $fields = $this->getFieldSchema($values);
 
-        if (!$this->canBeAccessed()) {
-            return [];
-        }
-
         return [
             'name' => $this->name,
             'title' => $this->title,
