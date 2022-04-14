@@ -4,11 +4,11 @@
             <div class="column">
                 <biz-form-image-editable
                     v-model="form.photo"
-                    v-model:photo-url="form.photo_url"
+                    v-model:photo-url="imageUrl"
                     modal-label="Profile Photo"
                     delete-label="Remove Photo"
-                    :photo-url="form.photo_url"
-                    :show-delete-button="form.photo_url != null"
+                    :photo-url="imageUrl"
+                    :show-delete-button="hasPhoto"
                     :message="error('photo', errorBag)"
                     @on-reset-value="resetImageForm()"
                     @on-delete-image="onDeleteImage()"
@@ -171,10 +171,15 @@
             return {
                 filteredCountries: this.countryOptions.slice(0, 10),
                 filteredLanguages: this.languageOptions.slice(0, 10),
+                imageUrl: this.photoUrl,
             };
         },
 
         computed: {
+            hasPhoto() {
+                return this.imageUrl != null && this.imageUrl != '';
+            },
+
             selectedCountry: {
                 get() {
                     if (this.form.country_code) {
@@ -213,7 +218,7 @@
 
         methods: {
             resetImageForm() {
-                this.form.reset('photo', 'photo_url', 'profile_photo_media_id');
+                this.form.reset('photo', 'is_photo_deleted');
             },
 
             onDeleteImage() {
@@ -223,7 +228,9 @@
                     if (result.isConfirmed) {
                         self.form.photo = null;
                         self.form.photo_url = null;
-                        self.form.profile_photo_media_id = null;
+                        self.form.is_photo_deleted = true;
+
+                        self.imageUrl = null;
                     }
                 })
             },
