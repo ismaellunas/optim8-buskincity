@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Exceptions;
-
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -48,10 +48,10 @@ class Handler extends ExceptionHandler
         if ($response->status() === 419) {
             if ($request->inertia()) {
                 if ($e instanceof AuthenticationException) {
-                    return response('', 409)->header('X-Inertia-Location', $e->redirectTo());
+                    return response('', Response::HTTP_CONFLICT)->header('X-Inertia-Location', $e->redirectTo());
                 } else {
                     if ($request->routeIs('admin.*')) {
-                        return response('', 409)->header('X-Inertia-Location', route('admin.login'));
+                        return response('', Response::HTTP_CONFLICT)->header('X-Inertia-Location', route('admin.login'));
                     } else {
                         return route('login');
                     }
@@ -63,7 +63,7 @@ class Handler extends ExceptionHandler
             }
         }
 
-        if ($response->status() === 302) {
+        if ($response->status() === Response::HTTP_FOUND) {
             if ($e instanceof AuthenticationException) {
                 if (
                     $request->inertia()
@@ -74,6 +74,51 @@ class Handler extends ExceptionHandler
             }
         }
 
+        // Provided custom error page
+        if (in_array($response->status(), config('constants.theme_error_page'))) {
+            if (
+                $response->status() == Response::HTTP_INTERNAL_SERVER_ERROR
+                && env('APP_DEBUG')
+            ) {
+                return $response;
+            }
+
+            return $this->responseErrorPage($response, $e);
+        }
+
         return $response;
+    }
+
+    private function responseErrorPage($response, Throwable $e = null)
+    {
+        $message = 'error ' . $response->status();
+
+        if (
+            $response->status() == 403
+            && $e->getMessage() != ''
+        ) {
+            $message = $e->getMessage();
+        }
+
+        $data = [
+            'statusCode' => $response->status(),
+            'message' => __($message),
+        ];
+
+        if (view()->exists('errors.' . $response->status())) {
+            return response()
+                ->view(
+                    'errors.' . $response->status(),
+                    $data,
+                    $response->status()
+                );
+        }
+
+        return response()
+                ->view(
+                    'errors.error',
+                    $data,
+                    $response->status()
+                );
     }
 }
