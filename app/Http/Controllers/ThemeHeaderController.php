@@ -6,9 +6,7 @@ use App\Entities\CloudinaryStorage;
 use App\Http\Requests\ThemeHeaderLayoutRequest;
 use App\Jobs\UpdateStripeConnectedAccountBrandingLogo;
 use App\Models\{
-    Media,
     Menu,
-    MenuItem,
     Setting,
 };
 use App\Services\{
@@ -17,7 +15,6 @@ use App\Services\{
     SettingService,
     TranslationService,
 };
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -28,7 +25,6 @@ class ThemeHeaderController extends ThemeOptionController
     private $menuService;
     private $settingService;
     private $modelMenu = Menu::class;
-    private $modelMenuItem = MenuItem::class;
 
     protected $baseRouteName = 'admin.theme.header';
     protected $componentName = 'ThemeHeader/';
