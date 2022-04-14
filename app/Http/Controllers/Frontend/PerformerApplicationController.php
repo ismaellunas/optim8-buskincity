@@ -9,6 +9,7 @@ use App\Services\CountryService;
 use App\Traits\FlashNotifiable;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Propaganistas\LaravelPhone\PhoneNumber;
 
 class PerformerApplicationController extends Controller
 {
@@ -19,12 +20,13 @@ class PerformerApplicationController extends Controller
         $user = auth()->user();
 
         return Inertia::render('ApplicationPerformer', [
-            'disciplineOptions' => $this->getDisciplineOptions(),
             'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'defaultCountry' => $user->country_code,
+            'disciplineOptions' => $this->getDisciplineOptions(),
+            'email' => $user->email,
             'firstName' => $user->first_name,
             'lastName' => $user->last_name,
-            'email' => $user->email,
+            'phoneCountryOptions' => app(CountryService::class)->getPhoneCountryOptions(),
         ]);
     }
 

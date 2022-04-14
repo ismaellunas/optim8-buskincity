@@ -44,6 +44,7 @@
                     </div>
                     <div class="column is-half">
                         <biz-form-input
+                            id="email"
                             v-model="form.email"
                             label="Email"
                             maxlength="255"
@@ -53,13 +54,16 @@
                         />
                     </div>
                     <div class="column is-half">
-                        <biz-form-input
+                        <biz-form-phone
+                            id="phone"
                             v-model="form.phone"
                             label="Phone"
                             maxlength="20"
                             placeholder="Your Phone Number"
                             required
-                            :message="error('phone')"
+                            :message="error('phone.number')"
+                            :country-options="phoneCountryOptions"
+                            :default-country="defaultCountry"
                         />
                     </div>
 
@@ -296,6 +300,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormField from '@/Biz/Form/Field';
     import BizFormInput from '@/Biz/Form/Input';
+    import BizFormPhone from '@/Biz/Form/Phone';
     import BizFormSelect from '@/Biz/Form/Select';
     import BizFormTextarea from '@/Biz/Form/Textarea';
     import BizInputError from '@/Biz/InputError';
@@ -313,6 +318,7 @@
             BizButton,
             BizErrorNotifications,
             BizFormInput,
+            BizFormPhone,
             BizFormSelect,
             BizFormTextarea,
             BizLabel,
@@ -330,10 +336,7 @@
             email: { type: String, default: null },
             firstName: { type: String, default: null },
             lastName: { type: String, default: null },
-            //errors: {
-            //    type: Object,
-            //    default: () => {}
-            //},
+            phoneCountryOptions: { type: Array, required: true},
         },
 
         setup(props) {
@@ -342,7 +345,10 @@
                 last_name: props.lastName,
                 company: null,
                 email: props.email,
-                phone: null,
+                phone: {
+                    country: props.defaultCountry,
+                    number: null,
+                },
                 stage_name: null,
                 discipline: null,
                 address: null,

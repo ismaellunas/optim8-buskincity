@@ -30,9 +30,13 @@ class ApplicationPerformerRequest extends BaseFormRequest
                 'email',
                 'max:255',
             ],
-            'phone' => [
+            'phone.number' => [
                 'required',
-                'max:20'
+                'max:20',
+                'phone:phone.country',
+            ],
+            'phone.country' => [
+                'required_with:phone.number',
             ],
             'stage_name' => [
                 'required',
@@ -127,6 +131,8 @@ class ApplicationPerformerRequest extends BaseFormRequest
                 ->title()
                 ->__toString();
         }
+
+        $attributes['phone.number'] = 'Phone';
 
         return $attributes;
     }
