@@ -22,7 +22,7 @@ class PermissionFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
+            'name' => $this->faker->name(),
             'guard_name' => config('auth.defaults.guard'),
         ];
     }

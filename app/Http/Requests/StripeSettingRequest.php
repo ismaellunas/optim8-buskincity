@@ -17,6 +17,7 @@ class StripeSettingRequest extends BaseFormRequest
     public function rules(): array
     {
         $stripeService = app(StripeService::class);
+        $stripeSettingService = app(StripeSettingService::class);
 
         $countries = $stripeService
             ->getCountryOptions()
@@ -48,6 +49,12 @@ class StripeSettingRequest extends BaseFormRequest
             ],
             'is_enabled' => [
                 'boolean'
+            ],
+            'logo.file' => [
+                'nullable',
+                'file',
+                'max:'.$stripeSettingService->maxLogoSize(),
+                'mimes:'.implode(',', $stripeSettingService->logoMimeTypes()),
             ],
             'minimal_amounts' => [
                 'array'
