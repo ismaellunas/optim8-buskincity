@@ -3,7 +3,7 @@
 namespace App\Entities\Widgets;
 
 use App\Contracts\WidgetInterface;
-use App\Models\Role;
+use App\Models\PerformerApplication;
 
 class PerformerApplicationLinkWidget implements WidgetInterface
 {
@@ -21,11 +21,16 @@ class PerformerApplicationLinkWidget implements WidgetInterface
 
     public function data(): array
     {
-        return [
+        $data = [
             'title' => $this->title,
             'componentName' => $this->componentName,
-            'data' => $this->data,
         ];
+
+        if (!$this->hasSubmittedApplication()) {
+            $data['data'] = $this->data;
+        }
+
+        return $data;
     }
 
     private function getWidgetData(): array
@@ -35,10 +40,14 @@ class PerformerApplicationLinkWidget implements WidgetInterface
         ];
     }
 
+    private function hasSubmittedApplication(): bool
+    {
+        return PerformerApplication::where('applicant_id', $this->user->id)
+            ->exists();
+    }
+
     public function canBeAccessed(): bool
     {
-        $roles = Role::all()->pluck('name')->toArray();
-
-        return !$this->user->hasAnyRole($roles);
+        return $this->user->roles->isEmpty();
     }
 }

@@ -11,6 +11,7 @@
         <template #default>
             <biz-panel-block>
                 <biz-button-link
+                    v-if="data"
                     class="is-primary is-outlined is-fullwidth"
                     :href="route(data.baseRouteName+'.create')"
                 >
@@ -23,6 +24,12 @@
                         </span>
                     </span>
                 </biz-button-link>
+                <span
+                    v-else
+                    class="tag is-info is-medium"
+                >
+                    Your Application Under Review.
+                </span>
             </biz-panel-block>
         </template>
     </biz-panel>
@@ -45,7 +52,7 @@
         props: {
             data: {
                 type: Object,
-                required: true,
+                default: null,
             },
 
             title: {
