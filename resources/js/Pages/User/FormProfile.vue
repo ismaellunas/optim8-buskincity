@@ -177,7 +177,7 @@
 
         computed: {
             hasPhoto() {
-                return this.imageUrl != null && this.imageUrl != '';
+                return !isEmpty(this.imageUrl);
             },
 
             selectedCountry: {

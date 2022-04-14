@@ -13,7 +13,7 @@
                     v-if="hasImage"
                     class="mb-2"
                     style="width: 200px; border: 1px solid #000"
-                    :src="imgUrl"
+                    :src="logoImgUrl"
                 />
                 <biz-input-file
                     v-model="formMedia"
@@ -31,7 +31,6 @@
     import BizInputFile from '@/Biz/InputFile';
     import { useModelWrapper } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
-    import { ref } from 'vue';
 
     export default {
         name: 'HeaderLogo',
@@ -55,7 +54,6 @@
         setup(props, { emit }) {
             return {
                 formMedia: useModelWrapper(props, emit),
-                imgUrl: ref(props.logoUrl),
             };
         },
 
@@ -66,18 +64,19 @@
                     '.jpg',
                     '.png',
                 ],
+                logoImgUrl: this.logoUrl,
             };
         },
 
         computed: {
             hasImage() {
-                return !isEmpty(this.imgUrl);
+                return !isEmpty(this.logoImgUrl);
             },
         },
 
         methods: {
             onFilePicked(event) {
-                this.imgUrl = event.target.result;
+                this.logoImgUrl = event.target.result;
             },
         },
     }
