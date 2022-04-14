@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApplicationPerformerRequest;
 use App\Mail\ApplicationPerformer;
+use App\Models\PerformerApplication;
 use App\Services\CountryService;
 use App\Traits\FlashNotifiable;
 use Illuminate\Support\Facades\Mail;
@@ -41,6 +42,11 @@ class PerformerApplicationController extends Controller
             ->formatE164();
 
         $this->sendEmail($data);
+
+        $performerApplication = new PerformerApplication();
+        $performerApplication->applicant_id = $user->id;
+        $performerApplication->data = $data;
+        $performerApplication->save();
 
         $this->generateFlashMessage('Your Application successfully submitted.');
 
