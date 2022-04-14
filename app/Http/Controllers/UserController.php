@@ -168,7 +168,7 @@ class UserController extends CrudController
         if ($request->hasFile('photo')) {
             $user->updateProfilePhoto($request->file('photo'));
         } else if (
-            $request->profile_photo_media_id == null
+            $request->is_photo_deleted
             && $user->profile_photo_media_id != null
         ) {
             $user->deleteProfilePhoto();

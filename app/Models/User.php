@@ -225,7 +225,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->save();
     }
 
-    public function updateProfilePhoto(UploadedFile $photo)
+    public function updateProfilePhoto(UploadedFile $photo): void
     {
         $user = Auth::user();
         $media = app(MediaService::class)->uploadProfile(
@@ -247,7 +247,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->save();
     }
 
-    public function deleteProfilePhoto()
+    public function deleteProfilePhoto(): void
     {
         $media = Media::find($this->profile_photo_media_id);
 

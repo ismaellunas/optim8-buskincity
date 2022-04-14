@@ -67,9 +67,9 @@ class ThemeHeaderController extends ThemeOptionController
         $setting->value = $inputs['layout'];
         $setting->save();
 
-        if ($request->hasFile('logo.file')) {
+        if ($request->hasFile('logo')) {
             $media = $this->mediaService->uploadSetting(
-                $inputs['logo']['file'],
+                $inputs['logo'],
                 Str::random(10),
                 new CloudinaryStorage(),
                 (!App::environment('production') ? config('app.env') : null)

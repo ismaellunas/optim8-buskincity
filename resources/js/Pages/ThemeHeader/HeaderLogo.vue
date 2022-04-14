@@ -16,7 +16,7 @@
                     :src="imgUrl"
                 />
                 <biz-input-file
-                    v-model="formMedia.file"
+                    v-model="formMedia"
                     :accept="acceptedTypes"
                     :is-name-displayed="false"
                     @on-file-picked="onFilePicked"
@@ -31,6 +31,7 @@
     import BizInputFile from '@/Biz/InputFile';
     import { useModelWrapper } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
+    import { ref } from 'vue';
 
     export default {
         name: 'HeaderLogo',
@@ -46,7 +47,7 @@
                 default: "",
             },
             modelValue: {
-                type: Object,
+                type: [File, Blob, null],
                 required: true,
             },
         },
@@ -54,6 +55,7 @@
         setup(props, { emit }) {
             return {
                 formMedia: useModelWrapper(props, emit),
+                imgUrl: ref(props.logoUrl),
             };
         },
 
@@ -69,17 +71,13 @@
 
         computed: {
             hasImage() {
-                return !isEmpty(this.logoUrl) || this.formMedia.file_url !== null;
-            },
-
-            imgUrl() {
-                return this.formMedia.file_url ?? this.logoUrl;
+                return !isEmpty(this.imgUrl);
             },
         },
 
         methods: {
             onFilePicked(event) {
-                this.formMedia.file_url = event.target.result;
+                this.imgUrl = event.target.result;
             },
         },
     }

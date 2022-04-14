@@ -50,10 +50,7 @@
                 loader: null,
                 form: useForm({
                     layout: parseInt(this.settings.header_layout.value),
-                    logo: {
-                        file: null,
-                        file_url: null,
-                    }
+                    logo: null
                 })
             };
         },
@@ -66,10 +63,7 @@
             getLayoutForm() {
                 return useForm({
                     layout: parseInt(this.settings.header_layout.value),
-                    logo: {
-                        file: null,
-                        file_url: null,
-                    }
+                    logo: null
                 });
             },
 
@@ -77,23 +71,17 @@
                 const self = this;
                 self.loader = self.$loading.show({});
 
-                self.form
-                    .transform((data) => {
-                        delete data.logo.file_url;
-
-                        return data;
-                    })
-                    .post(
-                        route(self.baseRouteName+".layout.update"), {
-                            onSuccess: (page) => {
-                                successAlert(page.props.flash.message);
-                                self.form = self.getLayoutForm();
-                            },
-                            onFinish: () => {
-                                self.loader.hide();
-                            },
-                        }
-                    );
+                self.form.post(
+                    route(self.baseRouteName+".layout.update"), {
+                        onSuccess: (page) => {
+                            successAlert(page.props.flash.message);
+                            self.form = self.getLayoutForm();
+                        },
+                        onFinish: () => {
+                            self.loader.hide();
+                        },
+                    }
+                );
             },
         },
     }
