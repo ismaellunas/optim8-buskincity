@@ -260,7 +260,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return route('frontend.profiles', [
             'user' => $this->unique_key,
-            'firstname_lastname' => Str::of($this->fullName)->ascii()->replace(' ', '-')
+            'firstname_lastname' => Str::of($this->fullName)->ascii()->lower()->replace(' ', '-')
         ]);
     }
 

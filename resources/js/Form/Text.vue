@@ -8,7 +8,16 @@
         :readonly="schema.is_readonly"
         :required="schema.is_required"
         :message="error(schemaName, bagName, errors)"
-    />
+    >
+        <template #note>
+            <p
+                v-if="schema.note"
+                class="help"
+            >
+                {{ schema.note }}
+            </p>
+        </template>
+    </form-input>
 </template>
 
 <script>

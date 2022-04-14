@@ -22,6 +22,8 @@
             </biz-checkbox-toggle>
         </div>
 
+        <slot name="note" />
+
         <template #error>
             <biz-input-error :message="message" />
         </template>

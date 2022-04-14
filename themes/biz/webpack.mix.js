@@ -12,8 +12,9 @@ const path = require('path');
  |
  */
  
- 
-mix.setPublicPath("public/themes/biz")
+let theme = process.env.npm_config_theme;
+
+mix.setPublicPath("public/themes/"+theme)
     .js(`${__dirname}/js/app.js`, "js")
     .vue()
     .sass(`${__dirname}/sass/app.sass`, "css")
