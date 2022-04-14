@@ -25,7 +25,7 @@
                             v-model="profileForm"
                             :can-set-role="!record.isSuperAdministrator"
                             :role-options="roleOptions"
-                            :shown-language-options="shownLanguageOptions"
+                            :language-options="supportedLanguageOptions"
                             :country-options="countryOptions"
                             :error-bag="errorBag"
                             :profile-page-url="can.public_profile ? record.profilePageUrl : null"
@@ -144,7 +144,7 @@
             errors: { type: Object, default: () => {} },
             record: {type: Object, default: () => {} },
             roleOptions: { type: Array, default: () => [] },
-            shownLanguageOptions: { type: Array, default: () => [] },
+            supportedLanguageOptions: { type: Array, default: () => [] },
             title: { type: String, required: true },
         },
 
@@ -200,14 +200,14 @@
                         successAlert(page.props.flash.message);
                         self.profileForm.isDirty = false;
                         self.profileForm.photo = null;
+
+                        self.biodataFormKey += 1;
                     },
                     onFinish: () => {
                         self.loader.hide();
                         self.isProcessing = false;
                         self.profileForm.photo = null;
                         self.profileForm.profile_photo_media_id = self.record.profile_photo_media_id;
-
-                        self.biodataFormKey += 1;
                     }
                 });
             },

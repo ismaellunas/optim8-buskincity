@@ -80,10 +80,13 @@ class UserController extends CrudController
      */
     public function create()
     {
+        $record = new User();
+        $record->language_id = app(LanguageService::class)->getDefaultId();
+
         return Inertia::render('User/Create', $this->getData([
-            'record' => new User(),
+            'record' => $record,
             'roleOptions' => $this->userService->getRoleOptions(),
-            'shownLanguageOptions' => app(LanguageService::class)->getShownLanguageOptions(),
+            'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
             'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'title' => $this->getCreateTitle(),
         ]));
@@ -147,7 +150,7 @@ class UserController extends CrudController
             ],
             'record' => $user,
             'roleOptions' => $this->userService->getRoleOptions(),
-            'shownLanguageOptions' => app(LanguageService::class)->getShownLanguageOptions(),
+            'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
             'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'title' => $this->getEditTitle(),
         ]));

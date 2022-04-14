@@ -46,4 +46,17 @@ class CountryService
                     });
             });
     }
+
+    public function getCountryName(string $alpha2): string
+    {
+        $country = $this->getCountryOptions()
+            ->where('id', $alpha2)
+            ->first();
+
+        if ($country) {
+            return $country['value'];
+        }
+
+        return "";
+    }
 }

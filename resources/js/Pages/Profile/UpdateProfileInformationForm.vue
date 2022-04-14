@@ -122,7 +122,6 @@
     import { acceptedImageTypes, debounceTime } from '@/Libs/defaults';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
-    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -143,7 +142,7 @@
 
         props: {
             countryOptions: { type: Array, default: () => [] },
-            shownLanguageOptions: { type: Array, default: () => [] },
+            languageOptions: { type: Array, default: () => [] },
             user: {
                 type: Object,
                 required: true,
@@ -172,7 +171,7 @@
                 }),
                 isImageEditing: false,
                 filteredCountries: this.countryOptions.slice(0, 10),
-                filteredLanguages: this.shownLanguageOptions.slice(0, 10),
+                filteredLanguages: this.languageOptions.slice(0, 10),
             }
         },
 
@@ -197,10 +196,13 @@
                 get() {
                     if (this.form.language_id) {
                         let language = find(
-                            this.shownLanguageOptions,
+                            this.languageOptions,
                             ['id', parseInt(this.form.language_id)]
                         );
-                        return language.value;
+
+                        if (language) {
+                            return language.value;
+                        }
                     }
                     return '';
                 },
@@ -221,6 +223,8 @@
                         this.form.photo = null;
                         this.form.profile_photo_media_id = this.user.profile_photo_media_id;
 
+                        this.$emit('after-update-profile');
+
                         successAlert("Saved");
                     },
                     onError: () => {
@@ -228,7 +232,6 @@
                     },
                     onFinish: () => {
                         this.onEndLoadingOverlay();
-                        this.$emit('after-update-profile');
                     },
                 });
             },
@@ -260,11 +263,11 @@
 
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
-                    this.filteredLanguages = filter(this.shownLanguageOptions, function (language) {
+                    this.filteredLanguages = filter(this.languageOptions, function (language) {
                         return new RegExp(term, 'i').test(language.value);
                     }).slice(0, 10);
                 } else {
-                    this.filteredLanguages = this.shownLanguageOptions.slice(0, 10);
+                    this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
             }, debounceTime),
         },

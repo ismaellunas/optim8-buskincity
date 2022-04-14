@@ -9,7 +9,16 @@
         :readonly="schema.is_readonly"
         :required="schema.is_required"
         :rows="schema.rows"
-    />
+    >
+        <template #note>
+            <p
+                v-if="schema.note"
+                class="help"
+            >
+                {{ schema.note }}
+            </p>
+        </template>
+    </biz-form-textarea>
 </template>
 
 <script>

@@ -759,5 +759,13 @@
     "Draft": "Draft",
     "Published": "Published",
     "Accepted file extensions: :extensions.": "Accepted file extensions: :extensions.",
-    "Max file size: :filesize.": "Max file size: :filesize."
+    "Max file size: :filesize.": "Max file size: :filesize.",
+    "error 401": "Unauthorized",
+    "error 403": "Forbidden",
+    "error 404": "Not Found",
+    "error 419": "Page Expired",
+    "error 429": "Too Many Requests",
+    "error 500": "Server Error",
+    "error 503": "Service Unavailable",
+    "Opss! Something Missing": "Opss! Something Missing"
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Entities\CloudinaryStorage;
 use App\Http\Requests\ThemeHeaderLayoutRequest;
 use App\Models\{
-    Media,
     Menu,
     Setting,
 };
@@ -61,7 +60,7 @@ class ThemeHeaderController extends ThemeOptionController
 
     public function update(ThemeHeaderLayoutRequest $request)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
 
         $setting = Setting::firstOrNew(['key' => 'header_layout']);
         $setting->value = $inputs['layout'];
@@ -75,28 +74,24 @@ class ThemeHeaderController extends ThemeOptionController
                 (!App::environment('production') ? config('app.env') : null)
             );
 
-            if ($inputs['logo']['media_id'] !== null) {
-                $this->deleteMedia($inputs['logo']['media_id']);
-            }
+            $existingMedia = $this->settingService->getLogoMedia();
 
             $setting = Setting::firstOrNew([
                 'key' => config("constants.theme_header.header_logo_media.key")
             ]);
             $setting->value = $media->id;
             $setting->save();
+
+            if ($existingMedia) {
+                $this->mediaService->destroy(
+                    $existingMedia,
+                    new CloudinaryStorage()
+                );
+            }
         }
 
         $this->generateFlashMessage('Header layout updated successfully!');
 
         return redirect()->route($this->baseRouteName.'.edit');
-    }
-
-    private function deleteMedia($mediaId)
-    {
-        $media = Media::find($mediaId);
-
-        if ($media) {
-            $this->mediaService->destroy($media, new CloudinaryStorage());
-        }
     }
 }
