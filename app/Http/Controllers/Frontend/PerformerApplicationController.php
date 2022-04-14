@@ -32,7 +32,15 @@ class PerformerApplicationController extends Controller
 
     public function store(ApplicationPerformerRequest $request)
     {
-        $this->sendEmail($request->validated());
+        $data = $request->validated();
+
+        $user = auth()->user();
+
+        $phone = $data['phone'];
+        $data['phone'] = PhoneNumber::make($phone['number'], $phone['country'])
+            ->formatE164();
+
+        $this->sendEmail($data);
 
         $this->generateFlashMessage('Your Application successfully submitted.');
 
