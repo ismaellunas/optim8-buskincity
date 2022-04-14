@@ -10,7 +10,16 @@
         :readonly="schema.is_readonly"
         :required="schema.is_required"
         :value="schema.value"
-    />
+    >
+        <template #note>
+            <p
+                v-if="schema.note"
+                class="help"
+            >
+                {{ schema.note }}
+            </p>
+        </template>
+    </biz-form-checbox-toggle>
 </template>
 
 <script>
