@@ -24,12 +24,15 @@
                         </span>
                     </span>
                 </biz-button-link>
-                <span
+                <div
                     v-else
-                    class="tag is-info is-medium"
+                    class="content"
                 >
-                    Your Application Under Review.
-                </span>
+                    <p class="m-2">
+                        Thank you.<br>
+                        Your application is currently being reviewed by BuskinCity, usually takes 2-5 days to get approved, you will receive an email with our decision.
+                    </p>
+                </div>
             </biz-panel-block>
         </template>
     </biz-panel>
