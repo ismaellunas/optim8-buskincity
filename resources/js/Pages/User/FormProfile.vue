@@ -158,7 +158,7 @@
             photoUrl: {type: [String, null], default: null},
             profilePageUrl: {type: String, default: ''},
             roleOptions: {type: Array, default: () => []},
-            shownLanguageOptions: {type: Array, default: () => []},
+            languageOptions: {type: Array, default: () => []},
         },
 
         setup(props, { emit }) {
@@ -170,7 +170,7 @@
         data() {
             return {
                 filteredCountries: this.countryOptions.slice(0, 10),
-                filteredLanguages: this.shownLanguageOptions.slice(0, 10),
+                filteredLanguages: this.languageOptions.slice(0, 10),
             };
         },
 
@@ -195,10 +195,13 @@
                 get() {
                     if (this.form.language_id) {
                         let language = find(
-                            this.shownLanguageOptions,
+                            this.languageOptions,
                             ['id', parseInt(this.form.language_id)]
                         );
-                        return language.value;
+
+                        if (language) {
+                            return language.value;
+                        }
                     }
                     return '';
                 },
@@ -237,11 +240,11 @@
 
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
-                    this.filteredLanguages = filter(this.shownLanguageOptions, function (language) {
+                    this.filteredLanguages = filter(this.languageOptions, function (language) {
                         return new RegExp(term, 'i').test(language.value);
                     }).slice(0, 10);
                 } else {
-                    this.filteredLanguages = this.shownLanguageOptions.slice(0, 10);
+                    this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
             }, debounceTime),
         },
