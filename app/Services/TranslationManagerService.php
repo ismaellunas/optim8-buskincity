@@ -165,7 +165,7 @@ class TranslationManagerService
             });
     }
 
-    public function getReferenceLocale()
+    public function getReferenceLocale(): string
     {
         return 'en';
     }

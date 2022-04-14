@@ -23,11 +23,13 @@ class UserAndPermissionSeeder extends Seeder
         $this->setPermissionToRoles();
 
         $englishId = Language::where('code', 'en')->value('id');
+        $countryCode = config('geoip.default_location.location.country.code');
 
         $superAdminUser = User::factory()->create([
             'first_name' => 'Super',
             'last_name' => 'Administrator',
             'email' => 'super.administrator@biz.com',
+            'country_code' => $countryCode,
             'language_id' => $englishId,
         ]);
 
@@ -38,6 +40,7 @@ class UserAndPermissionSeeder extends Seeder
                 'first_name' => 'Admin',
                 'last_name' => 'Administrator',
                 'email' => 'admin@biz.com',
+                'country_code' => $countryCode,
                 'language_id' => $englishId,
             ]);
 
@@ -50,12 +53,14 @@ class UserAndPermissionSeeder extends Seeder
                     'first_name' => 'Dan',
                     'last_name' => 'Rice',
                     'email' => 'dan.rice@biz.com',
+                    'country_code' => $countryCode,
                     'language_id' => $englishId,
                 ],
                 [
                     'first_name' => 'John',
                     'last_name' => 'Doe',
                     'email' => 'john.doe@biz.com',
+                    'country_code' => $countryCode,
                     'language_id' => $englishId,
                 ],
             ))

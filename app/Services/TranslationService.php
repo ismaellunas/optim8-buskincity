@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Entities\Caches\SettingCache;
 use App\Facades\Localization;
-use App\Models\Language;
 use App\Services\LanguageService;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
@@ -27,8 +26,8 @@ class TranslationService
         $key = config('constants.setting_cache.locale_options');
 
         return app(SettingCache::class)->remember($key, function () {
-            return Language::active()
-                ->get(['code', 'name'])
+            return app(LanguageService::class)
+                ->getSupportedLanguages()
                 ->map(function ($language) {
                     return [
                         'id' => $language->code,
