@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\PerformerApplication;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +20,10 @@ class AuthenticatePerformerApplication
     {
         $user = $request->user();
 
-        if ($user->roles->isNotEmpty()) {
+        if (
+            $user->roles->isNotEmpty()
+            || PerformerApplication::where('applicant_id', $user->id)->exists()
+        ) {
             abort(Response::HTTP_FORBIDDEN);
         }
 
