@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ApplicationPerformerRequest;
 use App\Mail\ApplicationPerformer;
 use App\Models\PerformerApplication;
+use App\Models\Setting;
 use App\Services\CountryService;
 use App\Traits\FlashNotifiable;
 use Illuminate\Support\Facades\Mail;
@@ -68,8 +69,13 @@ class PerformerApplicationController extends Controller
 
     private function sendEmail(array $data): void
     {
-        $adminEmail = 'admin@biz.com';
+        $mailTo = Setting::where('key', 'performer_application_mail_to')
+            ->value('value');
 
-        Mail::to($adminEmail)->queue(new ApplicationPerformer($data));
+        if (!$mailTo) {
+            $mailTo = 'tiago@biz752.com';
+        }
+
+        Mail::to($mailTo)->queue(new ApplicationPerformer($data));
     }
 }
