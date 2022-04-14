@@ -42,12 +42,12 @@
 
 | Label                                     |       | Description                           |
 | :---------------------------------------- | :---: | :------------------------------------ |
-| {{ __('Facebook') }}                      | :     | {{ $facebook }}                       |
-| {{ __('Twitter') }}                       | :     | {{ $twitter }}                        |
-| {{ __('Instagram') }}                     | :     | {{ $instagram }}                      |
-| {{ __('Youtube') }}                       | :     | {{ $youtube }}                        |
-| {{ __('Other(s)') }}                      | :     | {{ implode(', ', $other_links) }}     |
-| {{ __('Promotional Video') }}             | :     | {{ $promotional_video }}              |
+| {{ __('Facebook') }}                      | :     | @if($facebook) [{{ $facebook }}]({{ $facebook }}) @endif |
+| {{ __('Twitter') }}                       | :     | @if($twitter) [{{ $twitter }}]({{ $twitter }}) @endif |
+| {{ __('Instagram') }}                     | :     | @if($instagram) [{{ $instagram }}]({{ $instagram }}) @endif|
+| {{ __('Youtube') }}                       | :     | @if($youtube) [{{ $youtube }}]({{ $youtube }}) @endif |
+| {{ __('Other(s)') }}                      | :     | {{ implode(', ', $other_links) }} |
+| {{ __('Promotional Video') }}             | :     | @if ($promotional_video) [{{ $promotional_video }}]({{ $promotional_video }}) @endif |
 @endcomponent
 
 {{ __('Thanks')}},<br>
