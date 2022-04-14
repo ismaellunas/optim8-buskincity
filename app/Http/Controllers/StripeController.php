@@ -101,8 +101,8 @@ class StripeController extends Controller
             dispatch($job);
         }
 
-        if ($request->hasFile('logo.file')) {
-            $logoFile = $request->file('logo.file');
+        if ($request->hasFile('logo')) {
+            $logoFile = $request->file('logo');
 
             $existingMedia = $this->stripeSettingService->logoMedia();
 
