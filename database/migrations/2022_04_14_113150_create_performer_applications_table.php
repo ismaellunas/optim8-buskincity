@@ -15,6 +15,7 @@ class CreatePerformerApplicationsTable extends Migration
     {
         Schema::create('performer_applications', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger('status')->default(1);
             $table
                 ->foreignId('applicant_id')
                 ->nullable()

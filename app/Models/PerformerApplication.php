@@ -10,6 +10,8 @@ class PerformerApplication extends Model
 {
     use HasFactory;
 
+    const STATUS_EMAILED = 1;
+
     protected $casts = [
         'data' => AsCollection::class,
     ];
