@@ -50,11 +50,7 @@
                 loader: null,
                 form: useForm({
                     layout: parseInt(this.settings.header_layout.value),
-                    logo: {
-                        file: null,
-                        file_url: null,
-                        media_id: this.settings.header_logo_media_id.value,
-                    }
+                    logo: null
                 })
             };
         },
@@ -67,11 +63,7 @@
             getLayoutForm() {
                 return useForm({
                     layout: parseInt(this.settings.header_layout.value),
-                    logo: {
-                        file: null,
-                        file_url: null,
-                        media_id: this.settings.header_logo_media_id.value,
-                    }
+                    logo: null
                 });
             },
 
