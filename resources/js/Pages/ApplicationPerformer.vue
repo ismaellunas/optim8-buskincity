@@ -298,17 +298,14 @@
     import AppLayout from '@/Layouts/AppLayout';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFormField from '@/Biz/Form/Field';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormPhone from '@/Biz/Form/Phone';
     import BizFormSelect from '@/Biz/Form/Select';
     import BizFormTextarea from '@/Biz/Form/Textarea';
-    import BizInputError from '@/Biz/InputError';
     import BizLabel from '@/Biz/Label';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import { debounce, difference, isEmpty, filter, find, forEach } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'PerformerApplication',
@@ -375,31 +372,8 @@
 
         data() {
             return {
-                //filteredCountries: this.countryOptions.slice(0, 10),
                 loader: null,
             }
-        },
-
-        computed: {
-            /*
-            selectedCountry: {
-                get() {
-                    if (this.form.default_country) {
-                        const country = find(
-                            this.countryOptions,
-                            ['id', this.form.default_country]
-                        );
-                        return country.value;
-                    }
-
-                    return '';
-                },
-
-                set(country) {
-                    this.form.default_country = country.id;
-                }
-            },
-            */
         },
 
         methods: {
