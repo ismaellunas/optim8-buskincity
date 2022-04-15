@@ -309,7 +309,7 @@ class MediaService
         return $media;
     }
 
-    public function sanitizeFileName($fileName)
+    public function sanitizeFileName(string $fileName): string
     {
         // line by line explained: https://stackoverflow.com/a/19018736/8368172
 

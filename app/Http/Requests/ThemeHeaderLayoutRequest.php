@@ -23,19 +23,12 @@ class ThemeHeaderLayoutRequest extends BaseFormRequest
     {
         return [
             'layout' => ['required', 'integer'],
-            'logo.file' => [
+            'logo' => [
                 'nullable',
                 'file',
                 'max:'.config('constants.one_megabyte') * 50,
                 'mimes:'.implode(',', config('constants.extensions.image')),
             ],
-        ];
-    }
-
-    protected function customAttributes(): array
-    {
-        return [
-            'logo.file' => 'Logo',
         ];
     }
 }

@@ -218,6 +218,29 @@
                         />
                     </div>
                 </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <b>Logo</b>
+                    </div>
+
+                    <div class="column">
+                        <biz-image
+                            v-if="hasImageLogo"
+                            class="mb-2"
+                            style="width: 200px; border: 1px solid #000"
+                            :src="logoImgUrl"
+                        />
+                        <biz-form-file
+                            v-model="form.logo"
+                            :accepted-types="logoMimeTypes"
+                            :is-name-displayed="false"
+                            :message="error('logo')"
+                            :notes="logoInstructions"
+                            @on-file-picked="onFilePicked"
+                        />
+                    </div>
+                </div>
             </form>
         </div>
     </app-layout>
@@ -234,13 +257,16 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormInputAddons from '@/Biz/Form/InputAddons';
     import BizFormInputColor from '@/Biz/Form/InputColor';
+    import BizFormFile from '@/Biz/Form/File';
+    import BizImage from '@/Biz/Image';
     import BizInputError from '@/Biz/InputError';
     import BizSelect from '@/Biz/Select';
     import BizTable from '@/Biz/Table';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { debounce, difference, isEmpty, filter, find, forEach } from 'lodash';
+    import { debounceTime } from '@/Libs/defaults';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'StripeSettings',
@@ -256,6 +282,8 @@
             BizFormInput,
             BizFormInputAddons,
             BizFormInputColor,
+            BizFormFile,
+            BizImage,
             BizInputError,
             BizSelect,
             BizTable,
@@ -302,6 +330,18 @@
                 type: Boolean,
                 default: false,
             },
+            logoUrl: {
+                type: String,
+                default: "",
+            },
+            logoMimeTypes: {
+                type: Array,
+                default: () => [],
+            },
+            logoInstructions: {
+                type: Array,
+                default: () => [],
+            },
             minimalAmounts: {
                 type: Object,
                 default: () => {},
@@ -326,6 +366,7 @@
                 payment_currencies: props.paymentCurrencies ?? [],
                 color_primary: props.colorPrimary ?? '',
                 color_secondary: props.colorSecondary ?? '',
+                logo: null,
             };
 
             return {
@@ -337,6 +378,7 @@
             return {
                 filteredCountries: this.countryOptions.slice(0, 10),
                 loader: null,
+                logoImgUrl: this.logoUrl,
                 tempAmountOptions: {},
             }
         },
@@ -358,6 +400,10 @@
                 set(country) {
                     this.form.default_country = country.id;
                 }
+            },
+
+            hasImageLogo() {
+                return !isEmpty(this.logoImgUrl);
             },
         },
 
@@ -393,7 +439,7 @@
                 } else {
                     this.filteredCountries = this.countryOptions.slice(0, 10);
                 }
-            }, 750),
+            }, debounceTime),
 
             addAmount(currency) {
                 if (this.canAddAmountOption(this.tempAmountOptions[ currency ])) {
@@ -425,6 +471,7 @@
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
+                        self.resetFormLogo();
                     },
                     onError(errors) {
                         oopsAlert();
@@ -433,6 +480,15 @@
                         self.loader.hide();
                     }
                 });
+            },
+
+            onFilePicked(event) {
+                this.logoImgUrl = event.target.result;
+            },
+
+            resetFormLogo() {
+                this.form.logo = null;
+                this.logoImgUrl = this.logoUrl;
             },
         },
     };
