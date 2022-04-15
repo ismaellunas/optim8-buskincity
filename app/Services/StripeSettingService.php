@@ -3,8 +3,12 @@
 namespace App\Services;
 
 use App\Entities\Caches\SettingCache;
+use App\Entities\CloudinaryStorage;
+use App\Models\Media;
 use App\Models\Setting;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Illuminate\Http\UploadedFile;
 
 class StripeSettingService
 {
@@ -59,7 +63,7 @@ class StripeSettingService
                 case 'array': $value = json_decode($setting->value); break;
                 case 'bool': $value = (bool)$setting->value; break;
                 case 'float': $value = (float)$setting->value; break;
-                case 'int': $value = (int)$setting->value; break;
+                case 'int': $value = in_array($setting->value, ['', null]) ? null : (int)$setting->value; break;
                 case 'object': $value = (object)json_decode($setting->value); break;
                 default: $value = $setting->value;
             }
@@ -158,5 +162,65 @@ class StripeSettingService
         return Setting::key('stripe_color_secondary')
             ->group('stripe')
             ->value('value');
+    }
+
+    public function logoMedia(): ?Media
+    {
+        $mediaId = Setting::key('stripe_logo_media_id')
+            ->group('stripe')
+            ->value('value');
+
+        if (!empty($mediaId)) {
+            return Media::find($mediaId);
+        }
+
+        return null;
+    }
+
+    public function saveLogoMedia(Media $media)
+    {
+        $setting = Setting::firstOrNew([
+            'key' => 'stripe_logo_media_id',
+            'group' => 'stripe'
+        ]);
+        $setting->value = $media->id;
+        $setting->save();
+    }
+
+    public function logoUrl(): string
+    {
+        $media = $this->logoMedia();
+
+        return !empty($media) ? $media->file_url : "";
+    }
+
+    public function deleteLogoFromStorage(Media $media)
+    {
+        app(MediaService::class)->destroy($media, new CloudinaryStorage());
+    }
+
+    public function uploadLogo(UploadedFile $file): Media
+    {
+        return app(MediaService::class)->uploadSetting(
+            $file,
+            Str::random(10),
+            new CloudinaryStorage(),
+            (!app()->environment('production') ? config('app.env') : null)
+        );
+    }
+
+    public function logoMimeTypes(): array
+    {
+        return [
+            'jpeg',
+            'jpg',
+            'png',
+            'gif',
+        ];
+    }
+
+    public function maxLogoSize(): int
+    {
+        return config('constants.one_megabyte') / 2;
     }
 }

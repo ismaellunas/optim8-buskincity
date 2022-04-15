@@ -64,6 +64,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(\App\Services\UserProfileService::class, function ($app) {
             return new \App\Services\UserProfileService();
         });
+
+        if ($this->app->environment('local')) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 
     /**

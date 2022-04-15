@@ -13,10 +13,10 @@
                     v-if="hasImage"
                     class="mb-2"
                     style="width: 200px; border: 1px solid #000"
-                    :src="imgUrl"
+                    :src="logoImgUrl"
                 />
                 <biz-input-file
-                    v-model="formMedia.file"
+                    v-model="formMedia"
                     :accept="acceptedTypes"
                     :is-name-displayed="false"
                     @on-file-picked="onFilePicked"
@@ -46,7 +46,7 @@
                 default: "",
             },
             modelValue: {
-                type: Object,
+                type: [File, Blob, null],
                 required: true,
             },
         },
@@ -64,22 +64,19 @@
                     '.jpg',
                     '.png',
                 ],
+                logoImgUrl: this.logoUrl,
             };
         },
 
         computed: {
             hasImage() {
-                return !isEmpty(this.logoUrl) || this.formMedia.file_url !== null;
-            },
-
-            imgUrl() {
-                return this.formMedia.file_url ?? this.logoUrl;
+                return !isEmpty(this.logoImgUrl);
             },
         },
 
         methods: {
             onFilePicked(event) {
-                this.formMedia.file_url = event.target.result;
+                this.logoImgUrl = event.target.result;
             },
         },
     }
