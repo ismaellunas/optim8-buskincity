@@ -3,12 +3,9 @@
 namespace App\Jobs;
 
 use App\Entities\UserMetaStripe;
-use App\Models\{
-    Media,
-    UserMeta,
-};
+use App\Models\UserMeta;
 use App\Services\{
-    SettingService,
+    StripeSettingService,
     StripeService,
 };
 use Illuminate\Bus\Queueable;
@@ -30,10 +27,8 @@ class UpdateStripeConnectedAccountBrandingLogo implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Media $logoMedia)
+    public function __construct()
     {
-        $this->logoMedia = $logoMedia;
-
         $this->stripeService = app(StripeService::class);
     }
 
@@ -53,7 +48,7 @@ class UpdateStripeConnectedAccountBrandingLogo implements ShouldQueue
             ->select('id', 'value', 'user_id')
             ->get();
 
-        $logoMedia = app(SettingService::class)->getLogoMedia();
+        $logoMedia = app(StripeSettingService::class)->logoMedia();
 
         if ($logoMedia) {
             $this->fileResource = $this

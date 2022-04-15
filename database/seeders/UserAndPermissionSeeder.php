@@ -7,6 +7,7 @@ use App\Models\{
     Permission,
     Role,
     User,
+    Setting,
 };
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Sequence;
@@ -23,7 +24,7 @@ class UserAndPermissionSeeder extends Seeder
         $this->setPermissionToRoles();
 
         $englishId = Language::where('code', 'en')->value('id');
-        $countryCode = config('geoip.default_location.location.country.code');
+        $countryCode = Setting::key('default_country')->value('value');
 
         $superAdminUser = User::factory()->create([
             'first_name' => 'Super',

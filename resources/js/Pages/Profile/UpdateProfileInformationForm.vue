@@ -12,11 +12,11 @@
             <template #form>
                 <biz-form-image-editable
                     v-model="form.photo"
-                    v-model:photo-url="form.photo_url"
+                    v-model:photo-url="photoUrl"
                     modal-label="Profile Photo"
                     delete-label="Remove Photo"
-                    :photo-url="form.photo_url"
-                    :show-delete-button="form.photo_url != null"
+                    :photo-url="photoUrl"
+                    :show-delete-button="hasPhoto"
                     :message="error('photo')"
                     @on-reset-value="resetImageForm()"
                     @on-delete-image="onDeleteImage()"
@@ -157,7 +157,6 @@
             return {
                 cropper: null,
                 acceptedTypes: acceptedImageTypes,
-                file: null,
                 form: this.$inertia.form({
                     _method: 'PUT',
                     first_name: this.user.first_name,
@@ -165,10 +164,10 @@
                     email: this.user.email,
                     country_code: this.user.country_code,
                     photo: null,
-                    photo_url: this.user.profile_photo_url,
-                    profile_photo_media_id: this.user.profile_photo_media_id,
+                    is_photo_deleted: false,
                     language_id: this.user.language_id
                 }),
+                photoUrl: this.user.profile_photo_url,
                 isImageEditing: false,
                 filteredCountries: this.countryOptions.slice(0, 10),
                 filteredLanguages: this.languageOptions.slice(0, 10),
@@ -176,6 +175,10 @@
         },
 
         computed: {
+            hasPhoto() {
+                return !isEmpty(this.photoUrl);
+            },
+
             selectedCountry: {
                 get() {
                     if (this.form.country_code) {
@@ -221,7 +224,7 @@
                     preserveScroll: true,
                     onSuccess: () => {
                         this.form.photo = null;
-                        this.form.profile_photo_media_id = this.user.profile_photo_media_id;
+                        this.form.is_photo_deleted = false;
 
                         this.$emit('after-update-profile');
 
@@ -237,16 +240,16 @@
             },
 
             resetImageForm() {
-                this.form.reset('photo', 'photo_url');
+                this.form.reset('photo', 'is_photo_deleted');
             },
 
             onDeleteImage() {
                 const self = this;
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
+                        self.photoUrl = null;
                         self.form.photo = null;
-                        self.form.photo_url = null;
-                        self.form.profile_photo_media_id = null;
+                        self.form.is_photo_deleted = true;
                     }
                 })
             },
