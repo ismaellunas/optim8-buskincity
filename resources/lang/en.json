@@ -757,5 +757,14 @@
     "Role Name": "Role Name",
     "Translation Manager": "Translation Manager",
     "Draft": "Draft",
-    "Published": "Published"
+    "Published": "Published",
+
+    "error 401": "Unauthorized",
+    "error 403": "Forbidden",
+    "error 404": "Not Found",
+    "error 419": "Page Expired",
+    "error 429": "Too Many Requests",
+    "error 500": "Server Error",
+    "error 503": "Service Unavailable",
+    "Opss! Something Missing": "Opss! Something Missing"
 }

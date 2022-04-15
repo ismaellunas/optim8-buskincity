@@ -13,3 +13,5 @@ export const textComponent = {
     block_formats: 'Paragraph=p; Header 1=h1; Header 2=h2; Header 3=h3',
     toolbar: 'formatselect | bold italic link | alignleft aligncenter alignright alignjustify | bullist numlist | table',
 };
+
+export const apiKey = process.env.MIX_TINYMCE_API_KEY;

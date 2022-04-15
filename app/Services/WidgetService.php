@@ -3,6 +3,7 @@
 namespace app\Services;
 
 use App\Entities\Caches\WidgetCache;
+use Illuminate\Support\Str;
 
 class WidgetService
 {
@@ -16,7 +17,7 @@ class WidgetService
 
     private function getWidgetClassName($widgetName): string
     {
-        return "\\App\\Entities\\Widgets\\".ucfirst($widgetName)."Widget";
+        return "\\App\\Entities\\Widgets\\".Str::of($widgetName)->studly()."Widget";
     }
 
     public function generateWidgets(): array

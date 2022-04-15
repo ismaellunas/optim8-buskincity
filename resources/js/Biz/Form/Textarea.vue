@@ -17,6 +17,8 @@
             />
         </div>
 
+        <slot name="note" />
+
         <biz-input-error :message="message" />
     </biz-form-field>
 </template>
