@@ -27,7 +27,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 
             $user->updateProfilePhoto($input['photo']);
         } else if (
-            $input['profile_photo_media_id'] == null
+            $input['is_photo_deleted']
             && $user->profile_photo_media_id != null
         ) {
             $user->deleteProfilePhoto();

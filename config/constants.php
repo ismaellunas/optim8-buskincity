@@ -91,6 +91,16 @@ return [
             'key' => 'header_logo_media_id',
         ],
     ],
+
+    'theme_error_page' => [
+        401,
+        403,
+        404,
+        429,
+        500,
+        503
+    ],
+
     'locale' => [
         'en',
         'sv',
@@ -115,6 +125,7 @@ return [
     'widget_cache' => [
         'post' => 'widget_post',
         'user' => 'widget_user',
+        'performer_application_link' => 'widget_performer_application_link',
     ],
 
     'throttle' => [

@@ -17,7 +17,7 @@ class UserProfileController extends JetUserProfileController
         return Jetstream::inertia()->render($request, 'Profile/Show', [
             'sessions' => $this->sessions($request)->all(),
             'countryOptions' => app(CountryService::class)->getCountryOptions(),
-            'shownLanguageOptions' => app(LanguageService::class)->getShownLanguageOptions(),
+            'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
         ]);
     }
 }
