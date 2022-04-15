@@ -15,6 +15,7 @@
 </template>
 
 <script>
+    import PerformerApplicationLink from '@/Biz/Widget/PerformerApplicationLink';
     import Post from '@/Biz/Widget/Post';
     import User from '@/Biz/Widget/User';
 
@@ -22,6 +23,7 @@
         name: 'BizWidgetColumns',
 
         components: {
+            PerformerApplicationLink,
             Post,
             User,
         },
