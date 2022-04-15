@@ -10,6 +10,7 @@ use App\Models\{
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class PostSeeder extends Seeder
 {
@@ -33,14 +34,21 @@ class PostSeeder extends Seeder
                 'slug' => Str::slug('Good News'),
                 'status' => Post::STATUS_PUBLISHED
             ],
+            [
+                'title' => 'Scheduled News',
+                'slug' => Str::slug('Scheduled News'),
+                'status' => Post::STATUS_SCHEDULED,
+                'scheduled_at' => Carbon::now()->addDays(2)
+            ],
         ];
 
         Post::factory()
-            ->count(2)
+            ->count(3)
             ->for($adminUser, 'author')
             ->state(new Sequence(
                 $posts[0],
                 $posts[1],
+                $posts[2],
             ))
             ->hasAttached($category)
             ->fakeContent()
