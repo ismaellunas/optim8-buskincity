@@ -225,7 +225,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->save();
     }
 
-    public function updateProfilePhoto(UploadedFile $photo)
+    public function updateProfilePhoto(UploadedFile $photo): void
     {
         $user = Auth::user();
         $media = app(MediaService::class)->uploadProfile(
@@ -247,7 +247,7 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->save();
     }
 
-    public function deleteProfilePhoto()
+    public function deleteProfilePhoto(): void
     {
         $media = Media::find($this->profile_photo_media_id);
 
@@ -260,7 +260,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return route('frontend.profiles', [
             'user' => $this->unique_key,
-            'firstname_lastname' => Str::of($this->fullName)->ascii()->replace(' ', '-')
+            'firstname_lastname' => Str::of($this->fullName)->ascii()->lower()->replace(' ', '-')
         ]);
     }
 

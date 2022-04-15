@@ -26,13 +26,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-        $schedule
-            ->command('telegram:send-trial-cron-message')
-            ->everyMinute()
-            ->when(function () {
-                return true;
-                //return Cron::shouldIRun('telegram:send-trial-cron-message', 1); //returns true every 10 minutes
-            });
+        if (config('telescope.enabled')) {
+            $schedule->command('telescope:prune --hours=48')->daily();
+        }
     }
 
     /**

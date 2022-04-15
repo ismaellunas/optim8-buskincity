@@ -2,11 +2,11 @@
 
 namespace App\Actions\Fortify;
 
-use App\Models\{
-    Language,
-    User
+use App\Models\User;
+use App\Services\{
+    IPService,
+    LanguageService
 };
-use App\Services\IPService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
@@ -32,8 +32,7 @@ class CreateNewUser implements CreatesNewUsers
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['required', 'accepted'] : '',
         ])->validate();
 
-        $this->setLocation($input);
-        $this->setCountry($input);
+        $this->transform($input);
 
         return User::factory()
             ->unverified()
@@ -47,17 +46,11 @@ class CreateNewUser implements CreatesNewUsers
             ]);
     }
 
-    private function setLocation(&$input): void
-    {
-        $languageId = Language::where('code', 'en')->value('id') ?? null;
-
-        $input['language_id'] = $languageId;
-    }
-
-    private function setCountry(&$input): void
+    private function transform(&$input): void
     {
         $clientData = app(IPService::class)->getClientData();
 
+        $input['language_id'] = app(LanguageService::class)->getDefaultId();
         $input['country_code'] = $clientData['location']['country']['code'];
     }
 }

@@ -10,6 +10,11 @@ class UserStoreRequest extends BaseFormRequest
 {
     use PasswordValidationRules;
 
+    public function authorize()
+    {
+        return true;
+    }
+
     public function rules(): array
     {
         return [
