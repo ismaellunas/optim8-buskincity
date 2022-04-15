@@ -50,7 +50,7 @@ class StripeSettingRequest extends BaseFormRequest
             'is_enabled' => [
                 'boolean'
             ],
-            'logo.file' => [
+            'logo' => [
                 'nullable',
                 'file',
                 'max:'.$stripeSettingService->maxLogoSize(),

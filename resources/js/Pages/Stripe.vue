@@ -232,10 +232,10 @@
                             :src="logoImgUrl"
                         />
                         <biz-form-file
-                            v-model="form.logo.file"
+                            v-model="form.logo"
                             :accepted-types="logoMimeTypes"
                             :is-name-displayed="false"
-                            :message="error('logo.file')"
+                            :message="error('logo')"
                             :notes="logoInstructions"
                             @on-file-picked="onFilePicked"
                         />
@@ -266,7 +266,7 @@
     import { debounce, difference, isEmpty, filter, find, forEach } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'StripeSettings',
@@ -366,10 +366,7 @@
                 payment_currencies: props.paymentCurrencies ?? [],
                 color_primary: props.colorPrimary ?? '',
                 color_secondary: props.colorSecondary ?? '',
-                logo: {
-                    file: null,
-                    file_url: null,
-                },
+                logo: null,
             };
 
             return {
@@ -381,6 +378,7 @@
             return {
                 filteredCountries: this.countryOptions.slice(0, 10),
                 loader: null,
+                logoImgUrl: this.logoUrl,
                 tempAmountOptions: {},
             }
         },
@@ -405,11 +403,7 @@
             },
 
             hasImageLogo() {
-                return !isEmpty(this.logoUrl) || !isEmpty(this.form.logo.file_url);
-            },
-
-            logoImgUrl() {
-                return this.form.logo.file_url ?? this.logoUrl;
+                return !isEmpty(this.logoImgUrl);
             },
         },
 
@@ -489,12 +483,12 @@
             },
 
             onFilePicked(event) {
-                this.form.logo.file_url = event.target.result;
+                this.logoImgUrl = event.target.result;
             },
 
             resetFormLogo() {
-                this.form.logo.file = null;
-                this.form.logo.file_url = null;
+                this.form.logo = null;
+                this.logoImgUrl = this.logoUrl;
             },
         },
     };

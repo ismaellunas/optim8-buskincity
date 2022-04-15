@@ -17,9 +17,10 @@
                     >
                         <form-user-profile
                             v-model="form"
-                            :role-options="roleOptions"
-                            :language-options="supportedLanguageOptions"
                             :country-options="countryOptions"
+                            :photo-url="photoUrl"
+                            :language-options="supportedLanguageOptions"
+                            :role-options="roleOptions"
                         />
 
                         <form-user-password
@@ -86,8 +87,7 @@
                 country_code: null,
                 language_id: props.record.language_id,
                 photo: null,
-                photo_url: null,
-                profile_photo_media_id: null,
+                is_photo_deleted: false,
             };
 
             return {
@@ -97,6 +97,7 @@
         data() {
             return {
                 baseRouteName: 'admin.users',
+                photoUrl: null,
                 isProcessing: false,
                 loader: null,
             };
@@ -115,6 +116,8 @@
                         successAlert(page.props.flash.message);
                         form.isDirty = false;
                         form.reset();
+
+                        self.photoUrl = null;
                     },
                     onFinish: () => {
                         self.loader.hide();
