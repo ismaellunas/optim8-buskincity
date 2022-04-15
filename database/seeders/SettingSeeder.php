@@ -230,6 +230,13 @@ class SettingSeeder extends Seeder
                 "group" => null,
                 "order" => "1",
             ],
+            [
+                "key" => "default_country",
+                "display_name" => null,
+                "value" => "US",
+                "group" => null,
+                "order" => "2",
+            ],
         ];
 
         foreach ($others as $other) {
