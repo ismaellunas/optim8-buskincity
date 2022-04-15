@@ -1,7 +1,7 @@
 <template>
     <Editor
         v-model="content"
-        api-key="gumlypbnhr1ushb1hnnynxp4n6osqza60b3hn7hdtfa6khjb"
+        :api-key="apiKey"
         :init="editorConfig"
         :disabled="disabled"
     />
@@ -9,7 +9,7 @@
 
 <script>
     import Editor from '@tinymce/tinymce-vue';
-    import { textComponent as editorConfig } from '@/Libs/tinymce-configs';
+    import { textComponent as editorConfig, apiKey } from '@/Libs/tinymce-configs';
     import { useModelWrapper } from '@/Libs/utils'
 
     export default {
@@ -29,6 +29,7 @@
         },
         setup(props, { emit }) {
             return {
+                apiKey: apiKey,
                 content: useModelWrapper(props, emit),
                 editorConfig: props.config ?? editorConfig,
             };

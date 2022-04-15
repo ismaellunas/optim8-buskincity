@@ -17,9 +17,10 @@
                     >
                         <form-user-profile
                             v-model="form"
-                            :role-options="roleOptions"
-                            :shown-language-options="shownLanguageOptions"
                             :country-options="countryOptions"
+                            :photo-url="photoUrl"
+                            :language-options="supportedLanguageOptions"
+                            :role-options="roleOptions"
                         />
 
                         <form-user-password
@@ -68,11 +69,12 @@
             FormUserProfile,
         },
         props: {
-            errors: Object,
-            roleOptions: { type: Array, default: () => [] },
-            shownLanguageOptions: { type: Array, default: () => [] },
             countryOptions: { type: Array, default: () => [] },
-            title: String,
+            errors: { type: Object, default: () => {} },
+            supportedLanguageOptions: { type: Array, default: () => [] },
+            record: {type: Object, default: () => {} },
+            roleOptions: { type: Array, default: () => [] },
+            title: { type: String, required: true },
         },
         setup(props) {
             const form = {
@@ -83,10 +85,9 @@
                 password: null,
                 password_confirmation: null,
                 country_code: null,
-                language_id: null,
+                language_id: props.record.language_id,
                 photo: null,
-                photo_url: null,
-                profile_photo_media_id: null,
+                is_photo_deleted: false,
             };
 
             return {
@@ -96,6 +97,7 @@
         data() {
             return {
                 baseRouteName: 'admin.users',
+                photoUrl: null,
                 isProcessing: false,
                 loader: null,
             };
@@ -114,6 +116,8 @@
                         successAlert(page.props.flash.message);
                         form.isDirty = false;
                         form.reset();
+
+                        self.photoUrl = null;
                     },
                     onFinish: () => {
                         self.loader.hide();

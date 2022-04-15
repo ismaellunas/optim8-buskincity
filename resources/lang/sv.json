@@ -721,5 +721,9 @@
     "Zambia": "Zambia",
     "Zimbabwe": "Zimbabwe",
     "Zip / Postal Code": "Postnummer",
-    "Åland Islands": "Åland Islands"
+    "Åland Islands": "Åland Islands",
+
+    "//Custom translations": "------------------------",
+
+    "I love programming.": "Jag älskar programmering."
 }

@@ -4,11 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Entities\CloudinaryStorage;
 use App\Http\Requests\ThemeHeaderLayoutRequest;
-use App\Jobs\UpdateStripeConnectedAccountBrandingLogo;
 use App\Models\{
-    Media,
     Menu,
-    MenuItem,
     Setting,
 };
 use App\Services\{
@@ -17,7 +14,6 @@ use App\Services\{
     SettingService,
     TranslationService,
 };
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -28,7 +24,6 @@ class ThemeHeaderController extends ThemeOptionController
     private $menuService;
     private $settingService;
     private $modelMenu = Menu::class;
-    private $modelMenuItem = MenuItem::class;
 
     protected $baseRouteName = 'admin.theme.header';
     protected $componentName = 'ThemeHeader/';
@@ -65,23 +60,21 @@ class ThemeHeaderController extends ThemeOptionController
 
     public function update(ThemeHeaderLayoutRequest $request)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
 
         $setting = Setting::firstOrNew(['key' => 'header_layout']);
         $setting->value = $inputs['layout'];
         $setting->save();
 
-        if ($request->hasFile('logo.file')) {
+        if ($request->hasFile('logo')) {
             $media = $this->mediaService->uploadSetting(
-                $inputs['logo']['file'],
+                $inputs['logo'],
                 Str::random(10),
                 new CloudinaryStorage(),
                 (!App::environment('production') ? config('app.env') : null)
             );
 
-            if ($inputs['logo']['media_id'] !== null) {
-                $this->deleteMedia($inputs['logo']['media_id']);
-            }
+            $existingMedia = $this->settingService->getLogoMedia();
 
             $setting = Setting::firstOrNew([
                 'key' => config("constants.theme_header.header_logo_media.key")
@@ -89,23 +82,16 @@ class ThemeHeaderController extends ThemeOptionController
             $setting->value = $media->id;
             $setting->save();
 
-            $job = new UpdateStripeConnectedAccountbrandingLogo($media);
-            $job->delay(now()->addMinutes(1));
-
-            dispatch($job);
+            if ($existingMedia) {
+                $this->mediaService->destroy(
+                    $existingMedia,
+                    new CloudinaryStorage()
+                );
+            }
         }
 
         $this->generateFlashMessage('Header layout updated successfully!');
 
         return redirect()->route($this->baseRouteName.'.edit');
-    }
-
-    private function deleteMedia($mediaId)
-    {
-        $media = Media::find($mediaId);
-
-        if ($media) {
-            $this->mediaService->destroy($media, new CloudinaryStorage());
-        }
     }
 }

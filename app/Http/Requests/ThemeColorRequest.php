@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\HexadecimalColor;
 use App\Services\SettingService;
 
 class ThemeColorRequest extends BaseFormRequest
 {
+    private $colorSettings;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -16,6 +19,15 @@ class ThemeColorRequest extends BaseFormRequest
         return true;
     }
 
+    private function getColorSettings(): array
+    {
+        if (is_null($this->colorSettings)) {
+            $this->colorSettings = app(SettingService::class)->getColors();
+        }
+
+        return $this->colorSettings;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -23,18 +35,22 @@ class ThemeColorRequest extends BaseFormRequest
      */
     public function rules()
     {
-        return [
-            '*' => 'regex:/^\#[\da-f]{6}$/i',
-        ];
+        $rules = [];
+
+        $colorKeys = array_keys($this->getColorSettings());
+
+        foreach ($colorKeys as $key) {
+            $rules[$key] = new HexadecimalColor();
+        }
+
+        return $rules;
     }
 
     protected function customAttributes(): array
     {
         $attributes = [];
 
-        $colors = (new SettingService())->getColors();
-
-        foreach ($colors as $key => $color) {
+        foreach ($this->getColorSettings() as $key => $color) {
             $attributes[$key] = $color['display_name'];
         }
 

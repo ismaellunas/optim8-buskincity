@@ -4,11 +4,11 @@
             <div class="column">
                 <biz-form-image-editable
                     v-model="form.photo"
-                    v-model:photo-url="form.photo_url"
+                    v-model:photo-url="imageUrl"
                     modal-label="Profile Photo"
                     delete-label="Remove Photo"
-                    :photo-url="form.photo_url"
-                    :show-delete-button="form.photo_url != null"
+                    :photo-url="imageUrl"
+                    :show-delete-button="hasPhoto"
                     :message="error('photo', errorBag)"
                     @on-reset-value="resetImageForm()"
                     @on-delete-image="onDeleteImage()"
@@ -158,7 +158,7 @@
             photoUrl: {type: [String, null], default: null},
             profilePageUrl: {type: String, default: ''},
             roleOptions: {type: Array, default: () => []},
-            shownLanguageOptions: {type: Array, default: () => []},
+            languageOptions: {type: Array, default: () => []},
         },
 
         setup(props, { emit }) {
@@ -170,11 +170,16 @@
         data() {
             return {
                 filteredCountries: this.countryOptions.slice(0, 10),
-                filteredLanguages: this.shownLanguageOptions.slice(0, 10),
+                filteredLanguages: this.languageOptions.slice(0, 10),
+                imageUrl: this.photoUrl,
             };
         },
 
         computed: {
+            hasPhoto() {
+                return !isEmpty(this.imageUrl);
+            },
+
             selectedCountry: {
                 get() {
                     if (this.form.country_code) {
@@ -195,10 +200,13 @@
                 get() {
                     if (this.form.language_id) {
                         let language = find(
-                            this.shownLanguageOptions,
+                            this.languageOptions,
                             ['id', parseInt(this.form.language_id)]
                         );
-                        return language.value;
+
+                        if (language) {
+                            return language.value;
+                        }
                     }
                     return '';
                 },
@@ -210,7 +218,7 @@
 
         methods: {
             resetImageForm() {
-                this.form.reset('photo', 'photo_url', 'profile_photo_media_id');
+                this.form.reset('photo', 'is_photo_deleted');
             },
 
             onDeleteImage() {
@@ -220,7 +228,9 @@
                     if (result.isConfirmed) {
                         self.form.photo = null;
                         self.form.photo_url = null;
-                        self.form.profile_photo_media_id = null;
+                        self.form.is_photo_deleted = true;
+
+                        self.imageUrl = null;
                     }
                 })
             },
@@ -237,11 +247,11 @@
 
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
-                    this.filteredLanguages = filter(this.shownLanguageOptions, function (language) {
+                    this.filteredLanguages = filter(this.languageOptions, function (language) {
                         return new RegExp(term, 'i').test(language.value);
                     }).slice(0, 10);
                 } else {
-                    this.filteredLanguages = this.shownLanguageOptions.slice(0, 10);
+                    this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
             }, debounceTime),
         },
