@@ -15,7 +15,21 @@
             @on-file-picked="$emit('on-file-picked', $event)"
         />
 
-        <slot name="note" />
+        <slot name="note">
+            <p
+                v-if="notes"
+                class="help is-info"
+            >
+                <ul>
+                    <li
+                        v-for="note, index in notes"
+                        :key="index"
+                    >
+                        {{ note }}
+                    </li>
+                </ul>
+            </p>
+        </slot>
 
         <template #error>
             <biz-input-error :message="message" />
@@ -48,6 +62,10 @@
             isNameDisplayed: {
                 type: Boolean,
                 default: true,
+            },
+            notes: {
+                type: Array,
+                default: () => [],
             },
             label: {
                 type: String,

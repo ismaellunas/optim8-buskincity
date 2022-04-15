@@ -24,8 +24,9 @@
                         <form-user-profile
                             v-model="profileForm"
                             :can-set-role="!record.isSuperAdministrator"
+                            :photo-url="photoUrl"
                             :role-options="roleOptions"
-                            :shown-language-options="shownLanguageOptions"
+                            :language-options="supportedLanguageOptions"
                             :country-options="countryOptions"
                             :error-bag="errorBag"
                             :profile-page-url="can.public_profile ? record.profilePageUrl : null"
@@ -144,7 +145,7 @@
             errors: { type: Object, default: () => {} },
             record: {type: Object, default: () => {} },
             roleOptions: { type: Array, default: () => [] },
-            shownLanguageOptions: { type: Array, default: () => [] },
+            supportedLanguageOptions: { type: Array, default: () => [] },
             title: { type: String, required: true },
         },
 
@@ -155,8 +156,7 @@
                 last_name: props.record.last_name,
                 email: props.record.email,
                 photo: null,
-                photo_url: props.record.profile_photo_url,
-                profile_photo_media_id: props.record.profile_photo_media_id,
+                is_photo_deleted: false,
                 country_code: props.record.country_code,
                 language_id: props.record.language_id,
             };
@@ -181,6 +181,7 @@
                 baseRouteName: 'admin.users',
                 biodataFormKey: 0,
                 errorBag: 'userUpdate',
+                photoUrl: this.record.profile_photo_url,
                 isFormBuilderShown: false,
                 isProcessing: false,
                 loader: null,
@@ -200,14 +201,14 @@
                         successAlert(page.props.flash.message);
                         self.profileForm.isDirty = false;
                         self.profileForm.photo = null;
+                        self.profileForm.is_photo_deleted = false;
+                        self.photoUrl = self.record.profile_photo_url;
+
+                        self.biodataFormKey += 1;
                     },
                     onFinish: () => {
                         self.loader.hide();
                         self.isProcessing = false;
-                        self.profileForm.photo = null;
-                        self.profileForm.profile_photo_media_id = self.record.profile_photo_media_id;
-
-                        self.biodataFormKey += 1;
                     }
                 });
             },

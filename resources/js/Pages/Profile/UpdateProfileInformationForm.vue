@@ -12,11 +12,11 @@
             <template #form>
                 <biz-form-image-editable
                     v-model="form.photo"
-                    v-model:photo-url="form.photo_url"
+                    v-model:photo-url="photoUrl"
                     modal-label="Profile Photo"
                     delete-label="Remove Photo"
-                    :photo-url="form.photo_url"
-                    :show-delete-button="form.photo_url != null"
+                    :photo-url="photoUrl"
+                    :show-delete-button="hasPhoto"
                     :message="error('photo')"
                     @on-reset-value="resetImageForm()"
                     @on-delete-image="onDeleteImage()"
@@ -122,7 +122,6 @@
     import { acceptedImageTypes, debounceTime } from '@/Libs/defaults';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
-    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -143,7 +142,7 @@
 
         props: {
             countryOptions: { type: Array, default: () => [] },
-            shownLanguageOptions: { type: Array, default: () => [] },
+            languageOptions: { type: Array, default: () => [] },
             user: {
                 type: Object,
                 required: true,
@@ -158,7 +157,6 @@
             return {
                 cropper: null,
                 acceptedTypes: acceptedImageTypes,
-                file: null,
                 form: this.$inertia.form({
                     _method: 'PUT',
                     first_name: this.user.first_name,
@@ -166,17 +164,21 @@
                     email: this.user.email,
                     country_code: this.user.country_code,
                     photo: null,
-                    photo_url: this.user.profile_photo_url,
-                    profile_photo_media_id: this.user.profile_photo_media_id,
+                    is_photo_deleted: false,
                     language_id: this.user.language_id
                 }),
+                photoUrl: this.user.profile_photo_url,
                 isImageEditing: false,
                 filteredCountries: this.countryOptions.slice(0, 10),
-                filteredLanguages: this.shownLanguageOptions.slice(0, 10),
+                filteredLanguages: this.languageOptions.slice(0, 10),
             }
         },
 
         computed: {
+            hasPhoto() {
+                return !isEmpty(this.photoUrl);
+            },
+
             selectedCountry: {
                 get() {
                     if (this.form.country_code) {
@@ -197,10 +199,13 @@
                 get() {
                     if (this.form.language_id) {
                         let language = find(
-                            this.shownLanguageOptions,
+                            this.languageOptions,
                             ['id', parseInt(this.form.language_id)]
                         );
-                        return language.value;
+
+                        if (language) {
+                            return language.value;
+                        }
                     }
                     return '';
                 },
@@ -219,7 +224,9 @@
                     preserveScroll: true,
                     onSuccess: () => {
                         this.form.photo = null;
-                        this.form.profile_photo_media_id = this.user.profile_photo_media_id;
+                        this.form.is_photo_deleted = false;
+
+                        this.$emit('after-update-profile');
 
                         successAlert("Saved");
                     },
@@ -228,22 +235,21 @@
                     },
                     onFinish: () => {
                         this.onEndLoadingOverlay();
-                        this.$emit('after-update-profile');
                     },
                 });
             },
 
             resetImageForm() {
-                this.form.reset('photo', 'photo_url');
+                this.form.reset('photo', 'is_photo_deleted');
             },
 
             onDeleteImage() {
                 const self = this;
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
+                        self.photoUrl = null;
                         self.form.photo = null;
-                        self.form.photo_url = null;
-                        self.form.profile_photo_media_id = null;
+                        self.form.is_photo_deleted = true;
                     }
                 })
             },
@@ -260,11 +266,11 @@
 
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
-                    this.filteredLanguages = filter(this.shownLanguageOptions, function (language) {
+                    this.filteredLanguages = filter(this.languageOptions, function (language) {
                         return new RegExp(term, 'i').test(language.value);
                     }).slice(0, 10);
                 } else {
-                    this.filteredLanguages = this.shownLanguageOptions.slice(0, 10);
+                    this.filteredLanguages = this.languageOptions.slice(0, 10);
                 }
             }, debounceTime),
         },
