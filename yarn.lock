@@ -2965,6 +2965,11 @@ easy-extender@^2.3.4:
   dependencies:
     lodash "^4.17.10"
 
+easyqrcodejs@^4.4.10:
+  version "4.4.10"
+  resolved "https://registry.yarnpkg.com/easyqrcodejs/-/easyqrcodejs-4.4.10.tgz#38e84f2002e94b30415fc1232861465e9ce1c5c6"
+  integrity sha512-DEr/Txdyfo0RsKuC0tX6t72GF5oqNFbnKVL9dTLatL5yiLJaId65BSfa5HKl4FaJt71yRX3DF1sf977FwynWtw==
+
 eazy-logger@3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/eazy-logger/-/eazy-logger-3.1.0.tgz#b169eb56df714608fa114f164c8a2956bec9f0f3"
