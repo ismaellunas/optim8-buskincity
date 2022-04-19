@@ -1,8 +1,8 @@
 <template>
-    <layout-guest>
+    <layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Frontend Dashboard
+                Dashboard
             </h2>
         </template>
 
@@ -15,18 +15,18 @@
                 </div>
             </div>
         </div>
-    </layout-guest>
+    </layout>
 </template>
 
 <script>
     import BizWidgetColumns from '@/Biz/Widget/WidgetColumns';
-    import LayoutGuest from '@/Layouts/GuestLayout';
+    import Layout from '@/Layouts/User';
     import Welcome from '@/Jetstream/Welcome';
 
     export default {
         components: {
             BizWidgetColumns,
-            LayoutGuest,
+            Layout,
             Welcome,
         },
 
