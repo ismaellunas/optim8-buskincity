@@ -9,7 +9,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return Inertia::render('AdminDashboard', [
+        return Inertia::render('DashboardAdmin', [
             "widgets" => app(WidgetService::class)->generateWidgets(),
         ]);
     }
