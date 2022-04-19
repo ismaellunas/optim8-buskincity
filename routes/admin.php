@@ -21,6 +21,7 @@ use App\Http\Controllers\{
     TranslationManagerController,
     UserController,
     UserProfileController,
+    VerifyEmailController,
 };
 
 use Illuminate\Support\Facades\Route;
@@ -187,12 +188,18 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
         ->name('two-factor.login.attempt');
 });
 
-Route::redirect('/', '/admin/login');
-
 if (Features::enabled(Features::emailVerification())) {
     if (config('fortify.views', true)) {
         Route::get('/email/verify', [EmailVerificationPromptController::class, '__invoke'])
             ->middleware([config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')])
             ->name('verification.notice');
     }
+
+    $verificationLimiter = config('fortify.limiters.verification', '6,1');
+
+    Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
+        ->middleware([config('fortify.auth_middleware', 'auth').':'.config('fortify.guard'), 'signed', 'throttle:'.$verificationLimiter])
+        ->name('verification.verify');
 }
+
+Route::redirect('/', '/admin/login');
