@@ -43,7 +43,7 @@ class ProfileController extends Controller
                 $data,
                 [
                     'qrCodeLogo' => $this->settingService->qrCodePublicPageLogo(),
-                    'qrCodeLogoName' => $this->qrCodeLogoName($user),
+                    'qrCodeLogoName' => $user->qr_code_logo_name,
                 ]
             );
         }
@@ -53,10 +53,5 @@ class ProfileController extends Controller
         }
 
         return view('profile', $data);
-    }
-
-    private function qrCodeLogoName(User $user): string
-    {
-        return 'qrcode-'.$user->unique_key.'-'.Str::of($user->fullName)->ascii()->lower()->replace(' ', '-');
     }
 }
