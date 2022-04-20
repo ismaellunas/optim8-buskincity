@@ -362,7 +362,7 @@ class MenuService
                 'isEnabled' => true,
                 'children' => [
                     [
-                        'title' => 'Stripe',
+                        'title' => 'Stripe Connect',
                         'link' => route('payment-management.stripe.show'),
                         'isActive' => $request->routeIs('payment-management.stripe.show'),
                         'isEnabled' => true,

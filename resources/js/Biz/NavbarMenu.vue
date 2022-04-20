@@ -11,9 +11,9 @@
                     class="navbar-item"
                 >
                     <img
-                        src="https://dummyimage.com/48x28/e5e5e5/000000.png&text=B+752"
                         alt=""
                         height="28"
+                        :src="logoImageUrl"
                     >
                 </biz-link>
 
@@ -148,6 +148,12 @@
             const navMenus = computed(() => usePage().props.value.menus.nav);
             const navLogo = computed(() => usePage().props.value.menus.navLogo);
             const navProfile = computed(() => usePage().props.value.menus.navProfile);
+            const logoImageUrl = computed(() => {
+                return (
+                    usePage().props.value.logoUrl
+                    ?? "https://dummyimage.com/48x28/e5e5e5/000000.png&text=Logo"
+                );
+            });
 
             const navbarDropdown = document.getElementsByClassName('navbar-item-dropdown');
 
@@ -183,6 +189,7 @@
             });
 
             return {
+                logoImageUrl,
                 navMenus,
                 navLogo,
                 navProfile,
