@@ -4,8 +4,8 @@ use App\Facades\Localization;
 use App\Http\Controllers\{
     ChangeLanguageController,
     CustomOAuthController,
-    DashboardController,
     FormController,
+    Frontend\DashboardController,
     Frontend\DonationController,
     Frontend\PageController,
     Frontend\PostCategoryController,

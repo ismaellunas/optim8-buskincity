@@ -1,13 +1,13 @@
 <?php
 
-namespace app\Services;
+namespace App\Services;
 
 use App\Entities\Caches\WidgetCache;
 use Illuminate\Support\Str;
 
 class WidgetService
 {
-    private function getWidgetLists(): array
+    protected function getWidgetLists(): array
     {
         return [
             'post',
@@ -15,7 +15,7 @@ class WidgetService
         ];
     }
 
-    private function getWidgetClassName($widgetName): string
+    protected function getWidgetClassName($widgetName): string
     {
         return "\\App\\Entities\\Widgets\\".Str::of($widgetName)->studly()."Widget";
     }

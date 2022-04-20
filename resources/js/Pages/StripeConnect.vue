@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <layout>
         <template #header>
             {{ title }}
         </template>
@@ -201,11 +201,11 @@
                 <p>No transactions</p>
             </div>
         </section>
-    </app-layout>
+    </layout>
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
+    import Layout from '@/Layouts/User';
     import BizButton from '@/Biz/Button';
     import BizFormSelect from '@/Biz/Form/Select';
     import BizTable from '@/Biz/Table';
@@ -219,7 +219,7 @@
 
     export default {
         components: {
-            AppLayout,
+            Layout,
             BizButton,
             BizFormSelect,
             BizTable,
@@ -245,7 +245,7 @@
             },
             title: {
                 type: String,
-                default: 'Stripe'
+                default: 'Stripe Connect'
             },
             balance: {
                 type: Object,
