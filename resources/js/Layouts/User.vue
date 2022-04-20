@@ -1,9 +1,12 @@
 <template>
-    <div id="main-container-wrapper">
-        <biz-navbar-menu />
+    <div
+        id="main-container-wrapper"
+        class="pb-4 mb-4"
+    >
+        <biz-navbar-menu class="is-info" />
 
         <biz-hero
-            class="is-primary mb-4"
+            class="box py-0"
             size="small"
         >
             <div class="container">
@@ -27,7 +30,7 @@
     import BizNavbarMenu from '@/Biz/NavbarMenu';
 
     export default {
-        name: 'LayoutGuest',
+        name: 'LayoutUser',
 
         components: {
             BizHero,
