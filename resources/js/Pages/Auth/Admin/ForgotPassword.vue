@@ -54,7 +54,12 @@
                 </div>
 
                 <vue-recaptcha
+                    ref="vueRecaptcha"
                     :sitekey="$page.props.recaptchaSiteKey"
+                    size="normal"
+                    theme="light"
+                    @expire="recaptchaExpired"
+                    @fail="recaptchaFailed"
                 />
 
                 <span
@@ -85,7 +90,7 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizLink from '@/Biz/Link';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
-    import { VueRecaptcha } from 'vue-recaptcha'
+    import vueRecaptcha from 'vue3-recaptcha2';
 
     export default {
         components: {
@@ -94,7 +99,7 @@
             BizFormInput,
             BizLink,
             LayoutAdmin,
-            VueRecaptcha,
+            vueRecaptcha,
         },
 
         mixins: [
@@ -127,6 +132,14 @@
             setLoader() {
                 this.onStartLoadingOverlay();
             },
+
+            recaptchaExpired() {
+                this.$refs.vueRecaptcha.reset();
+            },
+
+            recaptchaFailed() {
+                this.isRecaptchaError = true;
+            }
         }
     }
 </script>

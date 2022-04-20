@@ -7,9 +7,10 @@ use App\Actions\{
     AuthenticationPipeline,
     Fortify\View\AuthenticateLoginView,
     Fortify\View\PasswordResetLinkView,
+    Fortify\View\RegisterView,
     Fortify\View\ResetPasswordView,
     Fortify\View\TwoFactorChallengeView,
-    Fortify\View\RegisterView,
+    Fortify\View\VerifyEmailView,
     Jetstream\DeleteUser,
 };
 
@@ -54,11 +55,12 @@ class JetstreamServiceProvider extends ServiceProvider
 
         if (config('jetstream.stack') === 'inertia') {
             // View
-            Fortify::twoFactorChallengeView([new TwoFactorChallengeView(), '__invoke']);
-            Fortify::requestPasswordResetLinkView([new PasswordResetLinkView(), '__invoke']);
             Fortify::loginView([new AuthenticateLoginView(), '__invoke']);
-            Fortify::resetPasswordView([new ResetPasswordView(), '__invoke']);
             Fortify::registerView([new RegisterView(), '__invoke']);
+            Fortify::requestPasswordResetLinkView([new PasswordResetLinkView(), '__invoke']);
+            Fortify::resetPasswordView([new ResetPasswordView(), '__invoke']);
+            Fortify::twoFactorChallengeView([new TwoFactorChallengeView(), '__invoke']);
+            Fortify::verifyEmailView([new VerifyEmailView(), '__invoke']);
 
             // Authentication
             Fortify::authenticateUsing([new AuthenticateLoginAttempt(), '__invoke']);

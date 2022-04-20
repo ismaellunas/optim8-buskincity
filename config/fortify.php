@@ -155,6 +155,8 @@ return [
         'admin_login' => '/admin/login',
         'dashboard' => '/dashboard',
         'login' => '/login',
+        'email-verification' => RouteServiceProvider::HOME,
+        'email-verification-admin' => RouteServiceProvider::HOME_ADMIN,
     ],
 
     'routes' => [

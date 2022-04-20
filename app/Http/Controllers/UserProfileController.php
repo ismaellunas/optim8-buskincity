@@ -14,7 +14,13 @@ class UserProfileController extends JetUserProfileController
 {
     public function show(Request $request)
     {
-        return Jetstream::inertia()->render($request, 'Profile/Show', [
+        $pageComponent = 'Profile/ShowFrontend';
+
+        if ($request->routeIs('admin.*')) {
+            $pageComponent = 'Profile/ShowAdmin';
+        }
+
+        return Jetstream::inertia()->render($request, $pageComponent, [
             'sessions' => $this->sessions($request)->all(),
             'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
