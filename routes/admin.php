@@ -37,7 +37,7 @@ use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified', 'can:system.dashboard'])->group(function () {
     Route::resource('/pages', PageController::class)
         ->except(['show']);
 
@@ -65,7 +65,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::resource('/roles', RoleController::class);
 
     Route::get('dashboard', [DashboardController::class, 'index'])
-        ->middleware(['can:system.dashboard'])
         ->name('dashboard');
 
     Route::get('/profile', [UserProfileController::class, 'show'])
