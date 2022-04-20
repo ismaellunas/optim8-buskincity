@@ -50,6 +50,7 @@
                             </div>
                             <div class="column is-one-third">
                                 <performer-qr-code
+                                    :is-downloaded="true"
                                     qr-code-logo="{{ $qrCodeLogo }}"
                                     qr-code-logo-name="{{ $qrCodeLogoName }}"
                                 ></performer-qr-code>
