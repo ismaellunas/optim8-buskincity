@@ -6495,11 +6495,6 @@ vue-cropperjs@^5.0.0:
   dependencies:
     cropperjs "^1.5.6"
 
-vue-demi@^0.12.1:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/vue-demi/-/vue-demi-0.12.1.tgz#f7e18efbecffd11ab069d1472d7a06e319b4174c"
-  integrity sha512-QL3ny+wX8c6Xm1/EZylbgzdoDolye+VpCXRhI2hug9dJTP3OUJ3lmiKN3CsVV3mOJKwFi0nsstbgob0vG7aoIw==
-
 vue-eslint-parser@^7.10.0:
   version "7.11.0"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-7.11.0.tgz#214b5dea961007fcffb2ee65b8912307628d0daf"
@@ -6527,13 +6522,6 @@ vue-loading-overlay@^4.0:
   resolved "https://registry.yarnpkg.com/vue-loading-overlay/-/vue-loading-overlay-4.0.4.tgz#8ddad8ca6b4d3e9eedf3805321e2fb08c0b52e74"
   integrity sha512-ADIEUXLo+IEpK8hd2+iqhZtEV3m0WNh5FlGvAc6FWG0KJAEHGTGUFdugQgAtM6Y3iFZc/ovzMd7A9dN+7QC7hw==
 
-vue-recaptcha@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/vue-recaptcha/-/vue-recaptcha-2.0.1.tgz#b366133bf25b348095353df1fd7e48fe65dec818"
-  integrity sha512-k7IHZUEqmMAwWQafkcQz6Y2PxBed7VUerM0ehCY8BlA0hXokTO1OVmj3xnr8m0J54XiNyoG2Jin270zQOvvsDA==
-  dependencies:
-    vue-demi "^0.12.1"
-
 vue-style-loader@^4.1.3:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-4.1.3.tgz#6d55863a51fa757ab24e89d9371465072aa7bc35"
@@ -6548,6 +6536,11 @@ vue-sweetalert2@^5.0.2:
   integrity sha512-28pcpmvaFxwoXIUkOWwhZhmsV749jXxha8JicwPoSKyFKR5FhIaZU6UHO5WlUCLIVUI6sAWY6WngK2x/iXYwZg==
   dependencies:
     sweetalert2 "11.x"
+
+vue3-recaptcha2@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/vue3-recaptcha2/-/vue3-recaptcha2-1.5.0.tgz#62ae432a967186a3521ccf632038a623be226852"
+  integrity sha512-b0+UdrE9zb8OYZoJMwvoTCxQk84ulvDPwY3LYS+KW6EjP99+idlshT790/qyOhM59uPl6tjmOICtu3VTf81Rxg==
 
 vue@3.2.2:
   version "3.2.2"
