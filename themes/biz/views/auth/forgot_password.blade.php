@@ -58,6 +58,6 @@
     </div>
 
     @push('bottom_scripts')
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <script src="https://www.google.com/recaptcha/api.js" defer></script>
     @endpush
 </x-layouts.auth>

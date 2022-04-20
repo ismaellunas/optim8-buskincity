@@ -273,8 +273,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function sendEmailVerificationNotification()
     {
-        app()->setLocale($this->languageCode);
+        $verifyEmail = (new VerifyEmail())->locale($this->languageCode);
 
-        $this->notify(new VerifyEmail());
+        if ($this->can('system.dashboard')) {
+            $verifyEmail = $verifyEmail->admin();
+        }
+
+        $this->notify($verifyEmail);
     }
 }

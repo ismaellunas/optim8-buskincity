@@ -2,7 +2,7 @@
     <app-layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Admin Dashboard
+                {{ title }}
             </h2>
         </template>
 
@@ -27,10 +27,8 @@
         },
 
         props: {
-            widgets: {
-                type: Array,
-                default:() => [],
-            },
+            title: { type: String, default: 'Dashboard' },
+            widgets: { type: Array, default:() => [] },
         },
-    }
+    };
 </script>
