@@ -31,6 +31,10 @@ class PasswordResetLinkController extends FortifyPasswordResetLinkController
                     $isBackendUser = $user->roles->contains(function ($role) {
                         return $role->hasPermissionTo('system.dashboard');
                     });
+
+                    if ($user->isSuperAdministrator) {
+                        $isBackendUser = true;
+                    }
                 }
 
                 if (! $isBackendUser) {
