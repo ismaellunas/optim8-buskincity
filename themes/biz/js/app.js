@@ -12,7 +12,6 @@ require("./bootstrap");
 import ExampleComponent from './components/ExampleComponent';
 import FormDonation from './components/FormDonation';
 import LoadingOverlay from './components/LoadingOverlay';
-import PerformerQrCode from './components/PerformerQrCode';
 import { components as defaultComponents } from '@/frontend-bootstrap';
 import { createApp } from "vue";
 
@@ -20,7 +19,6 @@ const components = {
     ExampleComponent,
     FormDonation,
     LoadingOverlay,
-    PerformerQrCode,
 };
 
 const app = createApp({

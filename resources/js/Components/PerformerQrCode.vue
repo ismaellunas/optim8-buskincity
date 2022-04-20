@@ -2,6 +2,7 @@
     <div class="has-text-centered">
         <div ref="qrCode" />
         <a
+            v-if="isDownloaded"
             :download="qrCodeLogoName"
             :href="dataUrl"
             class="button is-primary"
@@ -9,6 +10,7 @@
             Download
         </a>
         <div
+            v-if="isDownloaded"
             ref="qrCodeDownload"
             class="is-hidden"
         />
@@ -22,6 +24,10 @@
         name: 'PerformerQrCode',
 
         props: {
+            isDownloaded: {
+                type: Boolean,
+                default: false
+            },
             qrCodeUrl: {
                 type: String,
                 default: window.location.href
@@ -36,11 +42,11 @@
             },
         },
 
-        data() {
+        data(props) {
             return {
                 dataUrl: null,
                 options: {
-                    text: this.qrCodeUrl,
+                    text: props.qrCodeUrl,
                     width: 150,
                     height: 150,
                     correctLevel: QRCode.CorrectLevel.H,
@@ -56,9 +62,11 @@
         mounted() {
             new QRCode(this.$refs.qrCode, this.options);
 
-            setTimeout(() => {
-                this.createDownloadQrCode();
-            }, 100);
+            if (this.isDownloaded) {
+                setTimeout(() => {
+                    this.createDownloadQrCode();
+                }, 100);
+            }
         },
 
         methods: {
