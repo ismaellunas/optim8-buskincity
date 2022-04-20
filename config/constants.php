@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'domain' => env('APP_DOMAIN', 'biz752.com'),
+
     'google_api_key' => env('GOOGLE_API_KEY'),
 
     'fontawesome_local' => env('FONTAWESOME_LOCAL', false),
