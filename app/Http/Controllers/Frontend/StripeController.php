@@ -78,7 +78,7 @@ class StripeController extends Controller
             $defaultCountry = app(StripeSettingService::class)->getDefaultCountry();
         }
 
-        return Inertia::render('PaymentManagementStripe', [
+        return Inertia::render('StripeConnect', [
             'balance' => $balance,
             'balanceTransactions' => $balanceTransactions,
             'countryOptions' => $countryOptions,
@@ -87,6 +87,7 @@ class StripeController extends Controller
             'hasPassedOnboarding' => $hasPassedOnboarding,
             'isEnabled' => $this->getUserMetaStripe()->isEnabled(),
             'pageQueryParams' => $pageQueryParams,
+            'title' => 'Stripe Connect',
         ]);
     }
 
