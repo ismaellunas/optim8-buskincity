@@ -17,6 +17,7 @@ use App\Http\Controllers\{
     UserProfileController,
     WebhookStripeController,
 };
+use App\Http\Middleware\EnsureLoginFromLoginRoute;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware(['auth:sanctum', 'verified', EnsureLoginFromLoginRoute::class])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 

@@ -23,7 +23,7 @@ use App\Http\Controllers\{
     UserProfileController,
     VerifyEmailController,
 };
-
+use App\Http\Middleware\EnsureLoginFromAdminLoginRoute;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
@@ -37,7 +37,12 @@ use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth:sanctum', 'verified', 'can:system.dashboard'])->group(function () {
+Route::middleware([
+    'auth:sanctum',
+    'verified',
+    'can:system.dashboard',
+    EnsureLoginFromAdminLoginRoute::class
+])->group(function () {
     Route::resource('/pages', PageController::class)
         ->except(['show']);
 
