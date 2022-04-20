@@ -18,7 +18,6 @@ use App\Http\Controllers\{
     UserProfileController,
     WebhookStripeController,
 };
-use App\Http\Middleware\AuthenticatePerformerApplication;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -72,8 +71,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         });
 
     Route::resource('/performer-application-form', PerformerApplicationController::class)
-        ->only(['create', 'store'])
-        ->middleware(AuthenticatePerformerApplication::class);
+        ->only(['create', 'store']);
 });
 
 Route::get('/oauth/{provider}/callback', [CustomOAuthController::class, 'handleProviderCallback'])
