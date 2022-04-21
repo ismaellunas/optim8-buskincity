@@ -37,7 +37,6 @@
                         >
 
                         <biz-button
-                            as="button"
                             class="button ml-3"
                         >
                             Log Out

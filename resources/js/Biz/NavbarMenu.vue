@@ -118,7 +118,6 @@
                                         :value="csrfToken"
                                     >
                                     <biz-button
-                                        as="button"
                                         class="navbar-item ml-2 is-ghost"
                                     >
                                         Log Out
