@@ -18,7 +18,8 @@ class AddForeignCurrentConnectedAccountIdToUsersTable extends Migration
                 ->foreignId('current_connected_account_id')
                 ->nullable()
                 ->after('profile_photo_path')
-                ->constrained('connected_accounts');
+                ->constrained('connected_accounts')
+                ->onDelete('set null');
         });
     }
 
