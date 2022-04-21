@@ -1,6 +1,30 @@
 <template>
     <div class="mx-auto py-10">
         <div
+            v-if="can.public_page && qrCodeIsDisplayed"
+            class="mb-5"
+        >
+            <biz-action-section>
+                <template #title>
+                    Scan Me
+                </template>
+
+                <template #description>
+                    Scan QR Code to see the performer public page.
+                </template>
+
+                <template #content>
+                    <performer-qr-code
+                        :is-downloaded="true"
+                        :qr-code-url="profilePageUrl"
+                        :qr-code-logo="qrCodeLogo"
+                        :qr-code-logo-name="qrCodeLogoName"
+                    />
+                </template>
+            </biz-action-section>
+        </div>
+
+        <div
             v-if="$page.props.jetstream.canUpdateProfileInformation"
             class="mb-5"
         >
@@ -68,33 +92,42 @@
 </template>
 
 <script>
-    import DeleteUserForm from './DeleteUserForm'
-    import LogoutOtherBrowserSessionsForm from './LogoutOtherBrowserSessionsForm'
-    import TwoFactorAuthenticationForm from './TwoFactorAuthenticationForm'
-    import SetPasswordForm from './SetPasswordForm'
-    import UpdatePasswordForm from './UpdatePasswordForm'
-    import UpdateProfileInformationForm from './UpdateProfileInformationForm'
-    import ConnectedAccountsForm from './ConnectedAccountsForm';
+    import PerformerQrCode from '@/Components/PerformerQrCode';
     import BiodataForm from './BiodataForm';
+    import BizActionSection from '@/Biz/ActionSection';
+    import ConnectedAccountsForm from './ConnectedAccountsForm';
+    import DeleteUserForm from './DeleteUserForm';
+    import LogoutOtherBrowserSessionsForm from './LogoutOtherBrowserSessionsForm';
+    import SetPasswordForm from './SetPasswordForm';
+    import TwoFactorAuthenticationForm from './TwoFactorAuthenticationForm';
+    import UpdatePasswordForm from './UpdatePasswordForm';
+    import UpdateProfileInformationForm from './UpdateProfileInformationForm';
     import { success, oops } from '@/Libs/alert';
 
     export default {
         components: {
+            PerformerQrCode,
             BiodataForm,
+            BizActionSection,
             ConnectedAccountsForm,
             DeleteUserForm,
             LogoutOtherBrowserSessionsForm,
-            TwoFactorAuthenticationForm,
             SetPasswordForm,
+            TwoFactorAuthenticationForm,
             UpdatePasswordForm,
             UpdateProfileInformationForm,
         },
 
         inject: [
-            'sessions',
+            'can',
             'countryOptions',
-            'supportedLanguageOptions',
             'errors',
+            'profilePageUrl',
+            'sessions',
+            'supportedLanguageOptions',
+            'qrCodeIsDisplayed',
+            'qrCodeLogo',
+            'qrCodeLogoName',
         ],
 
         data() {
