@@ -222,6 +222,27 @@ class SettingSeeder extends Seeder
 
         $this->createSetting($homePage);
 
+        $qrCodes = [
+            [
+                "key" => "qrcode_public_page_is_displayed",
+                "display_name" => null,
+                "value" => true,
+                "group" => "qrcode_public_page",
+                "order" => "1",
+            ],
+            [
+                "key" => "qrcode_public_page_logo_media_id",
+                "display_name" => null,
+                "value" => null,
+                "group" => "qrcode_public_page",
+                "order" => "2",
+            ],
+        ];
+
+        foreach ($qrCodes as $qrCode) {
+            $this->createSetting($qrCode);
+        }
+
         $others = [
             [
                 "key" => "default_language",

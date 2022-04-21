@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\CloudinaryStorage;
+use App\Helpers\HumanReadable;
 use App\Http\Requests\ThemeAdvanceRequest;
 use App\Models\Setting;
-use App\Services\MenuService;
-use App\Services\SettingService;
+use App\Services\{
+    MediaService,
+    MenuService,
+    SettingService,
+};
+use Illuminate\Support\{
+    Facades\App,
+    Str
+};
 use Inertia\Inertia;
 
 class ThemeAdvanceController extends ThemeOptionController
@@ -14,11 +23,16 @@ class ThemeAdvanceController extends ThemeOptionController
     protected $title = 'Advanced';
 
     private $settingService;
+    private $mediaService;
     private $menuService;
 
-    public function __construct(SettingService $settingService, MenuService $menuService)
-    {
+    public function __construct(
+        SettingService $settingService,
+        MediaService $mediaService,
+        MenuService $menuService
+    ) {
         $this->settingService = $settingService;
+        $this->mediaService = $mediaService;
         $this->menuService = $menuService;
     }
 
@@ -37,19 +51,61 @@ class ThemeAdvanceController extends ThemeOptionController
                 'trackingCodes' => $this->settingService->getTrackingCodes(),
                 'additionalCodes' => $this->settingService->getAdditionalCodes(),
                 'homePageId' => $this->settingService->getHomePage(),
+                'qrCodePublicPageIsDisplayed' => $this->settingService->qrCodePublicPageIsDisplayed(),
+                'qrCodePublicPageLogo' => $this->settingService->qrCodePublicPageLogo(),
                 'pageOptions' => $pageOptions,
+                'qrCodeLogoInstructions' => [
+                    __('Accepted file extensions: :extensions.', [
+                        'extensions' => implode(', ', config('constants.extensions.image'))
+                    ]),
+                    __('Max file size: :filesize.', [
+                        'filesize' => HumanReadable::bytesToHuman(
+                            50 * config('constants.one_megabyte')
+                        )
+                    ]),
+                ],
             ])
         );
     }
 
     public function update(ThemeAdvanceRequest $request)
     {
-        foreach ($request->validated() as $key => $code) {
-            $setting = Setting::firstOrNew(['key' => $key]);
+        $inputs = $request->validated();
+        foreach ($inputs as $key => $code) {
 
-            $setting->value = $code;
+            if ($key == 'qrcode_public_page_logo') {
 
-            $setting->save();
+                if ($request->hasFile('qrcode_public_page_logo')) {
+                    $media = $this->mediaService->uploadSetting(
+                        $inputs['qrcode_public_page_logo'],
+                        Str::random(10),
+                        new CloudinaryStorage(),
+                        (!App::environment('production') ? config('app.env') : null)
+                    );
+
+                    $existingMedia = $this->settingService->getQrCodePublicPageLogoMedia();
+
+                    $setting = Setting::firstOrNew([
+                        'key' => 'qrcode_public_page_logo_media_id'
+                    ]);
+                    $setting->value = $media->id;
+                    $setting->save();
+
+                    if ($existingMedia) {
+                        $this->mediaService->destroy(
+                            $existingMedia,
+                            new CloudinaryStorage()
+                        );
+                    }
+                }
+
+            } else {
+                $setting = Setting::firstOrNew(['key' => $key]);
+
+                $setting->value = $code;
+
+                $setting->save();
+            }
         }
 
         $this->settingService->clearStorageTheme();

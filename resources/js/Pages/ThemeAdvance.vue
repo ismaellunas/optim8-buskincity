@@ -54,6 +54,54 @@
 
                 <div class="columns">
                     <div class="column">
+                        <h2><b>QR Code Public Page</b></h2>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <h2><b>Is displayed?</b></h2>
+                    </div>
+                    <div class="column">
+                        <biz-form-select
+                            v-model="form.qrcode_public_page_is_displayed"
+                            :message="error('qrcode_public_page_is_displayed')"
+                        >
+                            <option :value="true">
+                                Enabled
+                            </option>
+                            <option :value="false">
+                                Disabled
+                            </option>
+                        </biz-form-select>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <b>Logo</b>
+                    </div>
+
+                    <div class="column">
+                        <biz-image
+                            v-if="hasQrCodeLogo"
+                            class="mb-2"
+                            style="width: 200px; border: 1px solid #000"
+                            :src="qrCodeLogoUrl"
+                        />
+                        <biz-form-file
+                            v-model="form.qrcode_public_page_logo"
+                            :accepted-types="imageTypes"
+                            :is-name-displayed="false"
+                            :message="error('qrcode_public_page_logo')"
+                            :notes="qrCodeLogoInstructions"
+                            @on-file-picked="onFilePicked"
+                        />
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
                         <h2><b>Additional Code</b></h2>
                     </div>
                 </div>
@@ -111,12 +159,15 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizFormSelect from '@/Biz/Form/Select';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizTextarea from '@/Biz/Textarea';
+    import BizFormFile from '@/Biz/Form/File';
+    import BizFormSelect from '@/Biz/Form/Select';
+    import BizImage from '@/Biz/Image';
     import BizInputError from '@/Biz/InputError';
-    import { assign, mapValues, sortBy } from 'lodash';
+    import BizTextarea from '@/Biz/Textarea';
+    import { assign, mapValues, sortBy, isEmpty } from 'lodash';
+    import { acceptedImageTypes } from '@/Libs/defaults';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
@@ -125,9 +176,11 @@
 
         components: {
             AppLayout,
-            BizFormSelect,
             BizButton,
             BizErrorNotifications,
+            BizFormFile,
+            BizFormSelect,
+            BizImage,
             BizInputError,
             BizTextarea,
         },
@@ -137,13 +190,16 @@
         ],
 
         props: {
-            baseRouteName: {type: String, required: true},
             additionalCodes: {type: Object, required: true},
-            trackingCodes: {type: Object, required: true},
+            baseRouteName: {type: String, required: true},
             errors: {type: Object, default: () => {}},
-            title: {type: String, required: true},
-            pageOptions: {type: Object, default: () => {}},
             homePageId: {type: [Number, String, null], default: null},
+            pageOptions: {type: Object, default: () => {}},
+            qrCodeLogoInstructions: {type: Array, default: () => []},
+            qrCodePublicPageIsDisplayed: {type: Boolean, required: true},
+            qrCodePublicPageLogo: {type: String, required: true},
+            title: {type: String, required: true},
+            trackingCodes: {type: Object, required: true},
         },
 
         setup(props) {
@@ -161,12 +217,26 @@
                 }
             );
 
-            const homePageForm = { home_page: props.homePageId }
+            const qrCodePublicPageForm = mapValues(
+                props.qrCodePublicPages,
+                (qrCodePublicPage) => {
+                    return qrCodePublicPage.value;
+                }
+            );
+
+            const qrCodeLogo = {
+                qrcode_public_page_is_displayed: props.qrCodePublicPageIsDisplayed,
+                qrcode_public_page_logo: null
+            };
+
+            const homePageForm = { home_page: props.homePageId };
 
             return {
                 form: useForm(assign(
                     additionalCodeForm,
                     trackingCodeForm,
+                    qrCodePublicPageForm,
+                    qrCodeLogo,
                     homePageForm,
                 )),
                 sortedPageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
@@ -177,13 +247,20 @@
             return {
                 isProcessing: false,
                 loader: null,
+                qrCodeLogoUrl: this.qrCodePublicPageLogo,
+                imageTypes: acceptedImageTypes,
             };
         },
 
         computed: {
+            hasQrCodeLogo() {
+                return !isEmpty(this.qrCodeLogoUrl);
+            },
+
             sortedAdditionalCodes() {
                 return sortBy(this.additionalCodes, ['order']);
             },
+
             sortedTrackingCodes() {
                 return sortBy(this.trackingCodes, ['order']);
             },
@@ -201,12 +278,18 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                         self.form.isDirty = false;
+                        self.form.qrcode_public_page_logo = null;
+                        self.qrCodeLogoUrl = self.qrCodePublicPageLogo;
                     },
                     onFinish: () => {
                         self.loader.hide();
                         self.isProcessing = false;
                     }
                 });
+            },
+
+            onFilePicked(event) {
+                this.qrCodeLogoUrl = event.target.result;
             },
         },
     };

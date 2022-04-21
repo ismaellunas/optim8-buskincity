@@ -296,6 +296,44 @@ class SettingService
         });
     }
 
+    public function qrCodePublicPageIsDisplayed(): bool
+    {
+        return app(SettingCache::class)->remember(
+            'qrcode_public_page_is_displayed',
+            function () {
+                $isDisplayed = Setting::key('qrcode_public_page_is_displayed')
+                    ->value('value')
+                    ?? "";
+
+                return filter_var($isDisplayed, FILTER_VALIDATE_BOOLEAN);
+            }
+        );
+    }
+
+    public function qrCodePublicPageLogo(): string
+    {
+        return app(SettingCache::class)->remember(
+            'qrcode_public_page_logo',
+            function () {
+                $media = $this->getQrCodePublicPageLogoMedia();
+
+                if ($media) {
+                    return $media->file_url;
+                }
+
+                return "";
+            }
+        );
+    }
+
+    public function getQrCodePublicPageLogoMedia(): ?Media
+    {
+        $mediaId = Setting::key('qrcode_public_page_logo_media_id')
+            ->value('value');
+
+        return $mediaId ? Media::find($mediaId) : null;
+    }
+
     public function generateThemeCss()
     {
         $activeTheme = Theme::active();
