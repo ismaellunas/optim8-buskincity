@@ -25,6 +25,15 @@ class ThemeAdvanceRequest extends BaseFormRequest
     {
         return [
             'home_page' => ['nullable', 'exists:pages,id'],
+            'qrcode_public_page_is_displayed' => [
+                'nullable'
+            ],
+            'qrcode_public_page_logo' => [
+                'nullable',
+                'file',
+                'max:'.config('constants.one_megabyte') * 50,
+                'mimes:'.implode(',', config('constants.extensions.image')),
+            ],
             'additional_css' => ['nullable', 'string'],
             'additional_javascript' => ['nullable', 'string'],
             'tracking_code_inside_head' => ['nullable', 'string'],
@@ -37,6 +46,8 @@ class ThemeAdvanceRequest extends BaseFormRequest
     {
         $attributes = collect([
             'home_page',
+            'qrcode_public_page_is_displayed',
+            'qrcode_public_page_logo',
             'additional_css',
             'additional_javascript',
             'tracking_code_inside_head',
