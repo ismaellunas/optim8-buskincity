@@ -12,7 +12,6 @@ class WidgetService
         return [
             'post',
             'user',
-            'performer_application_link',
         ];
     }
 
