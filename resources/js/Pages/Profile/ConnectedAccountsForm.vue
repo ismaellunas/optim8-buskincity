@@ -105,6 +105,7 @@
 <script>
     import ActionLink from '@/Socialstream/ActionLink';
     import ConnectedAccount from '@/Socialstream/ConnectedAccount';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import BizActionSection from '@/Biz/ActionSection';
     import BizButton from '@/Biz/Button';
@@ -120,6 +121,7 @@
         },
 
         mixins: [
+            MixinHasLoader,
             MixinHasModal,
         ],
 
@@ -163,9 +165,12 @@
             },
 
             removeConnectedAccount(id) {
+                this.onStartLoadingOverlay();
+
                 this.form.post(route('connected-accounts.destroy', {id}), {
                     preserveScroll: true,
                     onSuccess: () => (this.closeModal()),
+                    onFinish: () => (this.onEndLoadingOverlay()),
                 });
             },
         }
