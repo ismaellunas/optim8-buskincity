@@ -39,7 +39,7 @@
 
             <div class="column">
                 <!-- qrcode -->
-                @if ($qrCodeIsDisplayed)
+                @if ($qrCode['isDisplayed'])
                 <div class="card">
                     <div class="card-content">
                         <h3 class="title is-4">{{ __('Scan Me') }}</h3>
@@ -49,11 +49,11 @@
                                 <p>Scan QR Code to see the performer public page.</p>
                             </div>
                             <div class="column is-one-third">
-                                <performer-qr-code
-                                    :is-downloaded="true"
-                                    qr-code-logo="{{ $qrCodeLogo }}"
-                                    qr-code-logo-name="{{ $qrCodeLogoName }}"
-                                ></performer-qr-code>
+                                <biz-qr-code
+                                    :is-downloadable="true"
+                                    logo-url="{{ $qrCode['logoUrl'] }}"
+                                    name="{{ $qrCode['name'] }}"
+                                ></biz-qr-code>
                             </div>
                         </div>
                     </div>
