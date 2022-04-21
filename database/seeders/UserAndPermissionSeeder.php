@@ -25,11 +25,12 @@ class UserAndPermissionSeeder extends Seeder
 
         $englishId = Language::where('code', 'en')->value('id');
         $countryCode = Setting::key('default_country')->value('value');
+        $domain = config('constants.domain');
 
         $superAdminUser = User::factory()->create([
             'first_name' => 'Super',
             'last_name' => 'Administrator',
-            'email' => 'super.administrator@biz.com',
+            'email' => 'super.administrator@'.$domain,
             'country_code' => $countryCode,
             'language_id' => $englishId,
         ]);
@@ -40,7 +41,7 @@ class UserAndPermissionSeeder extends Seeder
             ->create([
                 'first_name' => 'Admin',
                 'last_name' => 'Administrator',
-                'email' => 'admin@biz.com',
+                'email' => 'admin@'.$domain,
                 'country_code' => $countryCode,
                 'language_id' => $englishId,
             ]);
@@ -53,14 +54,14 @@ class UserAndPermissionSeeder extends Seeder
                 [
                     'first_name' => 'Dan',
                     'last_name' => 'Rice',
-                    'email' => 'dan.rice@biz.com',
+                    'email' => 'dan.rice@'.$domain,
                     'country_code' => $countryCode,
                     'language_id' => $englishId,
                 ],
                 [
                     'first_name' => 'John',
                     'last_name' => 'Doe',
-                    'email' => 'john.doe@biz.com',
+                    'email' => 'john.doe@'.$domain,
                     'country_code' => $countryCode,
                     'language_id' => $englishId,
                 ],

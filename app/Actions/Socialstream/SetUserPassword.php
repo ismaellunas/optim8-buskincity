@@ -24,6 +24,7 @@ class SetUserPassword implements SetsUserPasswords
 
         $user->forceFill([
             'password' => Hash::make($input['password']),
+            'current_connected_account_id' => null,
         ])->save();
     }
 }

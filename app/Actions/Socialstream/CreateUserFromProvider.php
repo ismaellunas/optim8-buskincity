@@ -56,6 +56,7 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                 'email' => $providerUser->getEmail(),
                 'country_code' => $clientData['location']['country']['code'],
                 'language_id' => $languageId,
+                'password' => null,
             ]), function (User $user) use ($provider, $providerUser) {
                 $user->markEmailAsVerified();
 
