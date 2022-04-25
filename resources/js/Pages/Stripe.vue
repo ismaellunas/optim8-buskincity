@@ -330,7 +330,7 @@
                 type: Boolean,
                 default: false,
             },
-            logoUrl: {
+            logoStripeUrl: {
                 type: String,
                 default: "",
             },
@@ -378,7 +378,7 @@
             return {
                 filteredCountries: this.countryOptions.slice(0, 10),
                 loader: null,
-                logoImgUrl: this.logoUrl,
+                logoImgUrl: this.logoStripeUrl,
                 tempAmountOptions: {},
             }
         },
@@ -488,7 +488,7 @@
 
             resetFormLogo() {
                 this.form.logo = null;
-                this.logoImgUrl = this.logoUrl;
+                this.logoImgUrl = this.logoStripeUrl;
             },
         },
     };

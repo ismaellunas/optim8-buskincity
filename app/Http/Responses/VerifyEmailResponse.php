@@ -16,7 +16,7 @@ class VerifyEmailResponse extends FortifyVerifyEmailResponse implements VerifyEm
             && $request->routeIs('admin.*')
         ) {
             return redirect()->intended(
-                Fortify::redirects('email-verification-admin').'?verified=1'
+                Fortify::redirects('admin_dashboard').'?verified=1'
             );
         }
 

@@ -2,11 +2,13 @@
 
 namespace App\Actions;
 
-use App\Actions\Fortify\RedirectIfTwoFactorAuthenticatable;
+use App\Actions\Fortify\{
+    PrepareAuthenticatedSession,
+    RedirectIfTwoFactorAuthenticatable,
+};
 use Laravel\Fortify\Actions\{
     AttemptToAuthenticate,
     EnsureLoginIsNotThrottled,
-    PrepareAuthenticatedSession,
 };
 use Illuminate\Http\Request;
 
