@@ -35,15 +35,19 @@ class ProfileController extends Controller
             'fieldGroups' => $this->formService->getFieldGroupValues($user),
             'locale' => TranslationService::currentLanguage(),
             'user' => $user,
-            'qrCodeIsDisplayed' => $qrCodeIsDisplayed,
+            'qrCode' => [
+                'isDisplayed' => $qrCodeIsDisplayed
+            ],
         ];
 
         if ($qrCodeIsDisplayed) {
-            $data = array_merge(
+            $data = array_merge_recursive(
                 $data,
                 [
-                    'qrCodeLogo' => $this->settingService->qrCodePublicPageLogo(),
-                    'qrCodeLogoName' => $user->qr_code_logo_name,
+                    'qrCode' => [
+                        'logoUrl' => $this->settingService->qrCodePublicPageLogo(),
+                        'name' => $user->qr_code_logo_name,
+                    ]
                 ]
             );
         }

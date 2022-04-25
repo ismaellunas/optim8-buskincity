@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\LoginService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,12 +25,18 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
                 if (
                     Auth::user()->can('system.dashboard')
-                    && $request->route()->getName() == 'admin.login'
+                    && $request->routeIs('admin.login')
+                    && LoginService::isAdminHomeUrl()
                 ) {
                     return redirect(config('fortify.admin_home'));
                 }
 
-                return redirect(config('fortify.home'));
+                if (
+                    $request->routeIs('login')
+                    && LoginService::isUserHomeUrl()
+                ) {
+                    return redirect(config('fortify.home'));
+                }
             }
         }
 

@@ -64,7 +64,7 @@ class StripeController extends Controller
                 ]),
             ],
             'logoMimeTypes' => $logoMimeTypes,
-            'logoUrl' => $this->stripeSettingService->logoUrl(),
+            'logoStripeUrl' => $this->stripeSettingService->logoUrl(),
             'minimalAmounts' => $settings->get('stripe_minimal_amounts'),
             'paymentCurrencies' => $settings->get('stripe_payment_currencies'),
         ]);
