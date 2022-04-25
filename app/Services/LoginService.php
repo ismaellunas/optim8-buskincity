@@ -55,4 +55,15 @@ class LoginService
     {
         return session('home_url');
     }
+
+    public static function getAvailableSocialiteDrivers(): array
+    {
+        $drivers = app(SettingService::class)->getSocialiteDrivers();
+
+        if (app()->environment('testing') || is_null($drivers)) {
+            return config('socialstream.providers', []);
+        }
+
+        return $drivers;
+    }
 }
