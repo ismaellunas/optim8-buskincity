@@ -1,7 +1,7 @@
 <template>
     <div class="mx-auto py-10">
         <div
-            v-if="can.public_page && qrCodeIsDisplayed"
+            v-if="can.public_page && qrCode.isDisplayed"
             class="mb-5"
         >
             <biz-action-section>
@@ -14,11 +14,11 @@
                 </template>
 
                 <template #content>
-                    <performer-qr-code
-                        :is-downloaded="true"
-                        :qr-code-url="profilePageUrl"
-                        :qr-code-logo="qrCodeLogo"
-                        :qr-code-logo-name="qrCodeLogoName"
+                    <biz-qr-code
+                        :is-downloadable="true"
+                        :text="profilePageUrl"
+                        :logo-url="qrCode.logoUrl"
+                        :name="qrCode.name"
                     />
                 </template>
             </biz-action-section>
@@ -92,9 +92,9 @@
 </template>
 
 <script>
-    import PerformerQrCode from '@/Components/PerformerQrCode';
     import BiodataForm from './BiodataForm';
     import BizActionSection from '@/Biz/ActionSection';
+    import BizQrCode from '@/Biz/QrCode';
     import ConnectedAccountsForm from './ConnectedAccountsForm';
     import DeleteUserForm from './DeleteUserForm';
     import LogoutOtherBrowserSessionsForm from './LogoutOtherBrowserSessionsForm';
@@ -106,9 +106,9 @@
 
     export default {
         components: {
-            PerformerQrCode,
             BiodataForm,
             BizActionSection,
+            BizQrCode,
             ConnectedAccountsForm,
             DeleteUserForm,
             LogoutOtherBrowserSessionsForm,
@@ -125,9 +125,7 @@
             'profilePageUrl',
             'sessions',
             'supportedLanguageOptions',
-            'qrCodeIsDisplayed',
-            'qrCodeLogo',
-            'qrCodeLogoName',
+            'qrCode',
         ],
 
         data() {
