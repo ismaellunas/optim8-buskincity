@@ -1,6 +1,30 @@
 <template>
     <div class="mx-auto py-10">
         <div
+            v-if="can.public_page && qrCode.isDisplayed"
+            class="mb-5"
+        >
+            <biz-action-section>
+                <template #title>
+                    Scan Me
+                </template>
+
+                <template #description>
+                    Scan QR Code to see the performer public page.
+                </template>
+
+                <template #content>
+                    <biz-qr-code
+                        :is-downloadable="true"
+                        :text="profilePageUrl"
+                        :logo-url="qrCode.logoUrl"
+                        :name="qrCode.name"
+                    />
+                </template>
+            </biz-action-section>
+        </div>
+
+        <div
             v-if="$page.props.jetstream.canUpdateProfileInformation"
             class="mb-5"
         >
@@ -8,6 +32,7 @@
                 :user="$page.props.user"
                 :country-options="countryOptions"
                 :language-options="supportedLanguageOptions"
+                :profile-page-url="can.public_page ? profilePageUrl : null"
                 @after-update-profile="reSchema()"
             />
         </div>
@@ -68,33 +93,40 @@
 </template>
 
 <script>
-    import DeleteUserForm from './DeleteUserForm'
-    import LogoutOtherBrowserSessionsForm from './LogoutOtherBrowserSessionsForm'
-    import TwoFactorAuthenticationForm from './TwoFactorAuthenticationForm'
-    import SetPasswordForm from './SetPasswordForm'
-    import UpdatePasswordForm from './UpdatePasswordForm'
-    import UpdateProfileInformationForm from './UpdateProfileInformationForm'
-    import ConnectedAccountsForm from './ConnectedAccountsForm';
     import BiodataForm from './BiodataForm';
+    import BizActionSection from '@/Biz/ActionSection';
+    import BizQrCode from '@/Biz/QrCode';
+    import ConnectedAccountsForm from './ConnectedAccountsForm';
+    import DeleteUserForm from './DeleteUserForm';
+    import LogoutOtherBrowserSessionsForm from './LogoutOtherBrowserSessionsForm';
+    import SetPasswordForm from './SetPasswordForm';
+    import TwoFactorAuthenticationForm from './TwoFactorAuthenticationForm';
+    import UpdatePasswordForm from './UpdatePasswordForm';
+    import UpdateProfileInformationForm from './UpdateProfileInformationForm';
     import { success, oops } from '@/Libs/alert';
 
     export default {
         components: {
             BiodataForm,
+            BizActionSection,
+            BizQrCode,
             ConnectedAccountsForm,
             DeleteUserForm,
             LogoutOtherBrowserSessionsForm,
-            TwoFactorAuthenticationForm,
             SetPasswordForm,
+            TwoFactorAuthenticationForm,
             UpdatePasswordForm,
             UpdateProfileInformationForm,
         },
 
         inject: [
-            'sessions',
+            'can',
             'countryOptions',
-            'supportedLanguageOptions',
             'errors',
+            'profilePageUrl',
+            'sessions',
+            'supportedLanguageOptions',
+            'qrCode',
         ],
 
         data() {

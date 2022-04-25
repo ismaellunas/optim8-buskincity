@@ -38,8 +38,30 @@
             @endif
 
             <div class="column">
-                <!-- Profile -->
+                <!-- qrcode -->
+                @if ($qrCode['isDisplayed'])
                 <div class="card">
+                    <div class="card-content">
+                        <h3 class="title is-4">{{ __('Scan Me') }}</h3>
+
+                        <div class="columns">
+                            <div class="column">
+                                <p>Scan QR Code to see the performer public page.</p>
+                            </div>
+                            <div class="column is-one-third">
+                                <biz-qr-code
+                                    :is-downloadable="true"
+                                    logo-url="{{ $qrCode['logoUrl'] }}"
+                                    name="{{ $qrCode['name'] }}"
+                                ></biz-qr-code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+                <!-- qrcode -->
+                <!-- Profile -->
+                <div class="card mt-4">
                     <div class="card-content">
                         <h3 class="title is-4">Profile</h3>
 

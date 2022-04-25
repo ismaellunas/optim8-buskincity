@@ -53,7 +53,7 @@
     import BizButton from '@/Biz/Button';
     import BizFormPassword from '@/Biz/Form/Password';
     import BizFormSection from '@/Biz/FormSection';
-    import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
 
     export default {
         components: {
@@ -91,7 +91,7 @@
                     onError: () => {
                         if (this.form.errors.password) {
                             this.form.reset('password', 'password_confirmation')
-                            this.$refs.password.focus()
+                            this.$refs.password.$refs.input.focus();
                         }
 
                         oopsAlert();
