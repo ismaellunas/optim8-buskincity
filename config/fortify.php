@@ -151,12 +151,11 @@ return [
     'admin_home' => RouteServiceProvider::HOME_ADMIN,
 
     'redirects' => [
-        'admin_dashboard' => '/admin/dashboard',
+        'admin_dashboard' => RouteServiceProvider::HOME_ADMIN,
         'admin_login' => '/admin/login',
-        'dashboard' => '/dashboard',
-        'login' => '/login',
+        'dashboard' => RouteServiceProvider::HOME,
         'email-verification' => RouteServiceProvider::HOME,
-        'email-verification-admin' => RouteServiceProvider::HOME_ADMIN,
+        'login' => '/login',
     ],
 
     'routes' => [

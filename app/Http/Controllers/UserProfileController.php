@@ -30,14 +30,16 @@ class UserProfileController extends JetUserProfileController
         if ($canPublicPage && $qrCodeIsDisplayed) {
             $data = [
                 'profilePageUrl' => auth()->user()->profile_page_url,
-                'qrCodeLogo' => app(SettingService::class)->qrCodePublicPageLogo(),
-                'qrCodeLogoName' => auth()->user()->qr_code_logo_name,
+                'qrCode' => [
+                    'logoUrl' => app(SettingService::class)->qrCodePublicPageLogo(),
+                    'name' => auth()->user()->qr_code_logo_name,
+                ]
             ];
         }
 
         return Jetstream::inertia()->render(
             $request, $pageComponent,
-            array_merge(
+            array_merge_recursive(
                 $data,
                 [
                     'can' => [
@@ -46,7 +48,9 @@ class UserProfileController extends JetUserProfileController
                     'sessions' => $this->sessions($request)->all(),
                     'countryOptions' => app(CountryService::class)->getCountryOptions(),
                     'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
-                    'qrCodeIsDisplayed' => $qrCodeIsDisplayed,
+                    'qrCode' => [
+                        'isDisplayed' => $qrCodeIsDisplayed
+                    ],
                 ]
             )
         );
