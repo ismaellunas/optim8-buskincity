@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\LoginService;
 use JoelButcher\Socialstream\Http\Controllers\OAuthController;
 
 class CustomOAuthController extends OAuthController
 {
-
     protected function alreadyAuthenticated($user, $account, $provider, $providerAccount)
     {
         if ($account && $account->user_id !== $user->id) {
@@ -29,7 +29,8 @@ class CustomOAuthController extends OAuthController
         );
     }
 
-    private function getUserRouteName() {
+    private function getUserRouteName()
+    {
         $routeName = 'user.profile.show';
         $user = auth()->user();
         if ($user !== null) {
@@ -40,5 +41,12 @@ class CustomOAuthController extends OAuthController
             }
         }
         return $routeName;
+    }
+
+    protected function login($user)
+    {
+        LoginService::setUserHomeUrl();
+
+        return parent::login($user);
     }
 }

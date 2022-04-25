@@ -71,8 +71,10 @@ class Kernel extends HttpKernel
         'localeCookieRedirect'    => \Mcamara\LaravelLocalization\Middleware\LocaleCookieRedirect::class,
         'localeViewPath'          => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationViewPath::class,
 
+        'ensureLoginFromAdminLoginRoute' => \App\Http\Middleware\EnsureLoginFromAdminLoginRoute::class,
+        'ensureLoginFromLoginRoute' => \App\Http\Middleware\EnsureLoginFromLoginRoute::class,
+        'publicPage' => \App\Http\Middleware\PublicPageIsAvailable::class,
         'recaptcha' => \App\Http\Middleware\Recaptcha::class,
         'redirectLanguage' => \App\Http\Middleware\RedirectLanguage::class,
-        'publicPage' => \App\Http\Middleware\PublicPageIsAvailable::class,
     ];
 }
