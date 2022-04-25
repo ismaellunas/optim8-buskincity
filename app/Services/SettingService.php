@@ -392,4 +392,11 @@ class SettingService
         $process->run();
         return $process->isSuccessful();
     }
+
+    public function getSocialiteDrivers(): ?array
+    {
+        $drivers = Setting::key('socialite_drivers')->value('value');
+
+        return is_null($drivers) ? null : json_decode($drivers);
+    }
 }
