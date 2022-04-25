@@ -25,8 +25,10 @@
                     </form>
 
                     <form
+                        ref="logout"
                         method="POST"
                         :action="route('logout')"
+                        @submit.prevent="logout"
                     >
                         <input
                             type="hidden"
@@ -36,7 +38,6 @@
 
                         <biz-button
                             class="button ml-3"
-                            type="submit"
                         >
                             Log Out
                         </biz-button>
@@ -83,6 +84,14 @@
                     onStart: () => this.onStartLoadingOverlay(),
                     onFinish: () => this.onEndLoadingOverlay(),
                 })
+            },
+
+            logout() {
+                if (route().current('admin*')) {
+                    this.$inertia.post(route('logout'));
+                } else {
+                    this.$refs.logout.submit();
+                }
             },
         },
     }

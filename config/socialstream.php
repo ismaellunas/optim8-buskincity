@@ -31,9 +31,9 @@ return [
 
     'providers' => [
         //Providers::github(),
+        //Providers::twitter(),
         Providers::google(),
         Providers::facebook(),
-        Providers::twitter(),
     ],
 
     /*
@@ -48,9 +48,10 @@ return [
     */
 
     'features' => [
-        Features::createAccountOnFirstLogin(),
         // Features::generateMissingEmails(),
-        Features::rememberSession(),
+        Features::createAccountOnFirstLogin(),
+        Features::loginOnRegistration(),
         Features::providerAvatars(),
+        Features::rememberSession(),
     ],
 ];
