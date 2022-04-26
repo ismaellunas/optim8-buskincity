@@ -10,6 +10,7 @@ use App\Http\Requests\{
     StripeTransactionPaginationRequest,
 };
 use App\Services\{
+    IPService,
     StripeService,
     StripeSettingService,
 };
@@ -75,7 +76,9 @@ class StripeController extends Controller
         } else {
             $countryOptions = $this->stripeService->getCountryOptions();
 
-            $defaultCountry = app(StripeSettingService::class)->getDefaultCountry();
+            $defaultCountry = app(IPService::class)->getCountryCode(
+                app(StripeSettingService::class)->getDefaultCountry()
+            );
         }
 
         return Inertia::render('StripeConnect', [
