@@ -29,7 +29,6 @@ class UserProfileController extends JetUserProfileController
 
         if ($canPublicPage && $qrCodeIsDisplayed) {
             $data = [
-                'profilePageUrl' => auth()->user()->profile_page_url,
                 'qrCode' => [
                     'logoUrl' => app(SettingService::class)->qrCodePublicPageLogo(),
                     'name' => auth()->user()->qr_code_logo_name,
@@ -45,6 +44,7 @@ class UserProfileController extends JetUserProfileController
                     'can' => [
                         'public_page' => $canPublicPage,
                     ],
+                    'profilePageUrl' => $canPublicPage ? auth()->user()->profile_page_url : null,
                     'sessions' => $this->sessions($request)->all(),
                     'countryOptions' => app(CountryService::class)->getCountryOptions(),
                     'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
