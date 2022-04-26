@@ -79,7 +79,7 @@
 
         @stack('bottom_scripts')
 
-        <script src="{{ mix('js/app.js', 'themes/biz') }}" defer></script>
+        <script src="{{ mix('js/app.js', 'themes/' . config('theme.active')) }}" defer></script>
 
         @if ($additionalJavascript)
             <script>
