@@ -28,9 +28,7 @@
                 profilePageUrl: this.profilePageUrl,
                 sessions: this.sessions,
                 supportedLanguageOptions: this.supportedLanguageOptions,
-                qrCodeIsDisplayed: this.qrCodeIsDisplayed,
-                qrCodeLogo: this.qrCodeLogo,
-                qrCodeLogoName: this.qrCodeLogoName,
+                qrCode: this.qrCode,
             }
         },
 
@@ -41,9 +39,7 @@
             profilePageUrl: { type: String, default: null },
             sessions: { type: Array, default:() => [] },
             supportedLanguageOptions: { type: Array, default: () => [] },
-            qrCodeIsDisplayed: { type: Boolean, default: false },
-            qrCodeLogo: { type: String, default: null },
-            qrCodeLogoName: { type: String, default: null },
+            qrCode: { type: Object, required: true },
         },
     };
 </script>

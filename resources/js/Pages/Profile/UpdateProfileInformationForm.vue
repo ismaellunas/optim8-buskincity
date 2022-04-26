@@ -10,23 +10,42 @@
             </template>
 
             <template #form>
-                <biz-form-image-editable
-                    v-model="form.photo"
-                    v-model:photo-url="photoUrl"
-                    modal-label="Profile Photo"
-                    delete-label="Remove Photo"
-                    :photo-url="photoUrl"
-                    :show-delete-button="hasPhoto"
-                    :message="error('photo')"
-                    @on-reset-value="resetImageForm()"
-                    @on-delete-image="onDeleteImage()"
-                >
-                    <template #default-image-view>
-                        <user-icon
-                            style="width: 64px;"
-                        />
-                    </template>
-                </biz-form-image-editable>
+                <div class="columns">
+                    <div class="column">
+                        <biz-form-image-editable
+                            v-model="form.photo"
+                            v-model:photo-url="photoUrl"
+                            modal-label="Profile Photo"
+                            delete-label="Remove Photo"
+                            :photo-url="photoUrl"
+                            :show-delete-button="hasPhoto"
+                            :message="error('photo')"
+                            @on-reset-value="resetImageForm()"
+                            @on-delete-image="onDeleteImage()"
+                        >
+                            <template #default-image-view>
+                                <user-icon
+                                    style="width: 64px;"
+                                />
+                            </template>
+                        </biz-form-image-editable>
+                    </div>
+
+                    <div
+                        v-if="profilePageUrl"
+                        class="column has-text-right"
+                    >
+                        <a
+                            class="button as-text-black ml-1"
+                            target="_blank"
+                            title="Profile Page Url"
+                            :href="profilePageUrl"
+                        >
+                            Open Public Profile &nbsp;
+                            <i class="fas fa-id-card" />
+                        </a>
+                    </div>
+                </div>
 
                 <biz-form-input
                     v-model="form.first_name"
@@ -147,6 +166,7 @@
                 type: Object,
                 required: true,
             },
+            profilePageUrl: { type: [String, null], default: null },
         },
 
         emits: [

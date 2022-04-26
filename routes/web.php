@@ -31,7 +31,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::middleware([
+    'auth:sanctum',
+    'verified',
+    'ensureLoginFromLoginRoute'
+])->group(function () {
+
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 

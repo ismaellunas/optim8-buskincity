@@ -25,4 +25,34 @@ class LoginService
     {
         return $route->getName() == config('fortify.routes.admin_two_factor_login');
     }
+
+    public static function setUserHomeUrl()
+    {
+        session(['home_url' => config('fortify.home')]);
+    }
+
+    public static function setAdminHomeUrl()
+    {
+        session(['home_url' => config('fortify.admin_home')]);
+    }
+
+    public static function isUserHomeUrl(): bool
+    {
+        return session('home_url') === config('fortify.home');
+    }
+
+    public static function isAdminHomeUrl(): bool
+    {
+        return session('home_url') === config('fortify.admin_home');
+    }
+
+    public static function hasHomeUrl(): bool
+    {
+        return session()->has('home_url');
+    }
+
+    public static function getHomeUrl(): ?string
+    {
+        return session('home_url');
+    }
 }
