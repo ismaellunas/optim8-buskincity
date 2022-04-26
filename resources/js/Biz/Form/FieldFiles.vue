@@ -126,7 +126,7 @@
             },
             media: {
                 type: Array,
-                default: null
+                default:() => []
             },
             mediaComponent: {
                 type: String,
