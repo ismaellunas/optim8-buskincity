@@ -54,6 +54,25 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
+
+            // Route based on App Id
+            $AppIdRoute = $this->fileRouteName('admin');
+            if (file_exists($this->basePathRoute($AppIdRoute))) {
+
+                Route::middleware('web')
+                    ->namespace($this->namespace)
+                    ->prefix('admin')
+                    ->name('admin.')
+                    ->group(base_path('routes/' . $AppIdRoute));
+            }
+
+            $AppIdRoute = $this->fileRouteName('web');
+            if (file_exists($this->basePathRoute($AppIdRoute))) {
+
+                Route::middleware('web')
+                    ->namespace($this->namespace)
+                    ->group(base_path('routes/' . $AppIdRoute));
+            }
         });
 
         Route::model('medium', \App\Models\Media::class);
@@ -75,5 +94,17 @@ class RouteServiceProvider extends ServiceProvider
 
             return Limit::perMinute($max)->by($request->session()->getId());
         });
+    }
+
+    private function fileRouteName(string $name): string
+    {
+        $appId = config('app.id');
+
+        return $name .'_' . $appId . '.php';
+    }
+
+    private function basePathRoute(string $fileName): string
+    {
+        return base_path() . '/routes/' . $fileName;
     }
 }
