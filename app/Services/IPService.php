@@ -4,6 +4,8 @@ namespace App\Services;
 
 class IPService
 {
+    private $clientData;
+
     private function getClientIp()
     {
         $ipaddress = '';
@@ -30,8 +32,22 @@ class IPService
         return $ipaddress;
     }
 
-    public function getClientData()
+    public function getClientData(): mixed
     {
-        return geoip($this->getClientIp());
+        if (is_null($this->clientData)) {
+            $this->clientData = geoip($this->getClientIp());
+        }
+
+        return $this->clientData;
+    }
+
+    public function getCountryCode(string $default = null): ?string
+    {
+        return $this->getClientData()['location']['country']['code'] ?? $default;
+    }
+
+    public function getLanguageCode(): ?string
+    {
+        return $this->getClientData()['location']['language']['code'];
     }
 }
