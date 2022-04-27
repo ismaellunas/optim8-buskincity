@@ -1,53 +1,61 @@
 <template>
     <div>
-        <div class="tabs">
-            <ul>
-                <li
-                    v-for="(option, index) in localeOptions"
-                    :key="option.id"
-                    :class="{ 'is-active': option.id == selectedLocale }"
-                    @click="selectedLocale = option.id"
-                >
-                    <a>
-                        {{ option.name }}
-                        <span
-                            v-if="index == 0"
-                            class="tag is-primary ml-2"
-                        >
-                            Default
-                        </span>
-                    </a>
-                </li>
-            </ul>
-        </div>
+        <template v-if="!isEmptyForm">
+            <div class="tabs">
+                <ul>
+                    <li
+                        v-for="(option, index) in localeOptions"
+                        :key="option.id"
+                        :class="{ 'is-active': option.id == selectedLocale }"
+                        @click="selectedLocale = option.id"
+                    >
+                        <a>
+                            {{ option.name }}
+                            <span
+                                v-if="index == 0"
+                                class="tag is-primary ml-2"
+                            >
+                                Default
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-        <biz-error-notifications
-            :bags="[bagName]"
-            :errors="$page.props.errors"
-        />
-
-        <form @submit.prevent="submit">
-            <field-group
-                v-for="(group, index) in sortedFieldGroups"
-                :key="index"
-                :ref="'field_group__'+index"
-                v-model="form"
-                :group="group"
-                :selected-locale="selectedLocale"
+            <biz-error-notifications
+                :bags="[bagName]"
+                :errors="$page.props.errors"
             />
 
-            <slot name="buttons">
-                <div class="field is-grouped is-grouped-left">
-                    <div class="control">
-                        <biz-button
-                            class="is-primary"
-                        >
-                            Submit
-                        </biz-button>
+            <form @submit.prevent="submit">
+                <field-group
+                    v-for="(group, index) in sortedFieldGroups"
+                    :key="index"
+                    :ref="'field_group__'+index"
+                    v-model="form"
+                    :group="group"
+                    :selected-locale="selectedLocale"
+                />
+
+                <slot name="buttons">
+                    <div class="field is-grouped is-grouped-left">
+                        <div class="control">
+                            <biz-button
+                                class="is-primary"
+                            >
+                                Submit
+                            </biz-button>
+                        </div>
                     </div>
-                </div>
-            </slot>
-        </form>
+                </slot>
+            </form>
+        </template>
+
+        <template v-else>
+            <div class="notification is-warning">
+                The form is not available.
+            </div>
+        </template>
     </div>
 </template>
 
@@ -123,7 +131,11 @@
         computed: {
             sortedFieldGroups() {
                 return sortBy(this.fieldGroups, ['order']);
-            }
+            },
+
+            isEmptyForm() {
+                return isEmpty(this.fieldGroups);
+            },
         },
 
         mounted() {
