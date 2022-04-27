@@ -48,9 +48,7 @@ class CreateNewUser implements CreatesNewUsers
 
     private function transform(&$input): void
     {
-        $clientData = app(IPService::class)->getClientData();
-
         $input['language_id'] = app(LanguageService::class)->getDefaultId();
-        $input['country_code'] = $clientData['location']['country']['code'];
+        $input['country_code'] = app(IPService::class)->getCountryCode();
     }
 }
