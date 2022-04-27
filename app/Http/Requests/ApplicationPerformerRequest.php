@@ -147,7 +147,6 @@ class ApplicationPerformerRequest extends BaseFormRequest
         $attributes['phone.number'] = 'Phone';
         $attributes['photos.files'] = 'Photo';
 
-        // Array value
         for ($i = 0; $i < count($this->photos['files']); $i++) {
             $attributes['photos.files.'.$i] = 'Photo';
         }
