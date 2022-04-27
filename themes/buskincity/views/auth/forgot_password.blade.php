@@ -44,7 +44,11 @@
                             </div>
                         </div>
 
-                        <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                        <div
+                            class="g-recaptcha"
+                            data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"
+                            data-size="invisible"
+                        ></div>
 
                         <div class="mt-4">
                             <button type="submit" class="button is-info">
@@ -58,6 +62,11 @@
     </div>
 
     @push('bottom_scripts')
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <script>
+            var onloadCallback = function() {
+                grecaptcha.execute();
+            };
+        </script>
+        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
     @endpush
 </x-layouts.auth>
