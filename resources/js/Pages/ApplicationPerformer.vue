@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <layout>
         <template #header>
             {{ title }}
         </template>
@@ -291,11 +291,11 @@
                 </div>
             </form>
         </div>
-    </app-layout>
+    </layout>
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
+    import Layout from '@/Layouts/User';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormInput from '@/Biz/Form/Input';
@@ -311,7 +311,7 @@
         name: 'PerformerApplication',
 
         components: {
-            AppLayout,
+            Layout,
             BizButton,
             BizErrorNotifications,
             BizFormInput,
