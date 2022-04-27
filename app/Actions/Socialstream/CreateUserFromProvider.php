@@ -47,14 +47,13 @@ class CreateUserFromProvider implements CreatesUserFromProvider
     {
         return DB::transaction(function () use ($provider, $providerUser) {
             $name = UserService::splitName($providerUser->getName() ?? $providerUser->getNickname());
-            $clientData = app(IPService::class)->getClientData();
             $languageId = Language::where('code', 'en')->value('id') ?? null;
 
             return tap(User::factory()->create([
                 'first_name' => $name['firstName'],
                 'last_name' => $name['lastName'],
                 'email' => $providerUser->getEmail(),
-                'country_code' => $clientData['location']['country']['code'],
+                'country_code' => app(IPService::class)->getCountryCode(),
                 'language_id' => $languageId,
                 'password' => null,
             ]), function (User $user) use ($provider, $providerUser) {

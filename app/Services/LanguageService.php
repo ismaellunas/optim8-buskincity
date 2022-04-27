@@ -94,8 +94,7 @@ class LanguageService
 
     public function getOriginFromIP(): Language
     {
-        $clientData = app(IPService::class)->getClientData();
-        $locale = $clientData['location']['language']['code'];
+        $locale = app(IPService::class)->getLanguageCode();
 
         $language = Language::where('code', $locale)->first();
 
