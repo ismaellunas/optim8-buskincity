@@ -91,14 +91,6 @@ class PerformerApplicationController extends Controller
             $mailTo = 'tiago@biz752.com';
         }
 
-        foreach ($data['photos']['files'] as $key => $file) {
-            $data['photos']['files'][$key] = [
-                'path' => $file->getRealPath(),
-                'as' => $file->getClientOriginalName(),
-                'mime' => $file->getClientMimeType()
-            ];
-        }
-
-        Mail::to($mailTo)->queue(new ApplicationPerformer($data));
+        Mail::to($mailTo)->send(new ApplicationPerformer($data));
     }
 }

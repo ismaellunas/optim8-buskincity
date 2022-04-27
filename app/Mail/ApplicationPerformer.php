@@ -41,10 +41,10 @@ class ApplicationPerformer extends Mailable
 
         foreach ($this->data['photos']['files'] as $file) {
             $mail = $mail->attach(
-                $file['path'],
+                $file->getRealPath(),
                 [
-                    'as' => $file['as'],
-                    'mime' => $file['mime']
+                    'as' => $file->getClientOriginalName(),
+                    'mime' => $file->getClientMimeType()
                 ]
             );
         }
