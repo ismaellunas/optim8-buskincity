@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Routing\Route;
+use JoelButcher\Socialstream\Socialstream;
 
 class LoginService
 {
@@ -65,5 +66,10 @@ class LoginService
         }
 
         return $drivers;
+    }
+
+    public static function isConnectedAccountEnabled(): bool
+    {
+        return Socialstream::show() && self::isUserHomeUrl();
     }
 }
