@@ -74,9 +74,6 @@ Route::middleware([
                 ->middleware('signed')
                 ->name('return');
         });
-
-    Route::resource('/performer-application-form', PerformerApplicationController::class)
-        ->only(['create', 'store']);
 });
 
 Route::get('/oauth/{provider}/callback', [CustomOAuthController::class, 'handleProviderCallback'])
