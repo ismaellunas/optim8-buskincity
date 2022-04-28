@@ -31,7 +31,7 @@ return [
 
     'providers' => [
         //Providers::github(),
-        //Providers::twitter(),
+        Providers::twitter(),
         Providers::google(),
         Providers::facebook(),
     ],

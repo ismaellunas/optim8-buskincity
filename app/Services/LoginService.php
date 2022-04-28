@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Routing\Route;
+use JoelButcher\Socialstream\Socialstream;
 
 class LoginService
 {
@@ -54,5 +55,21 @@ class LoginService
     public static function getHomeUrl(): ?string
     {
         return session('home_url');
+    }
+
+    public static function getAvailableSocialiteDrivers(): array
+    {
+        $drivers = app(SettingService::class)->getSocialiteDrivers();
+
+        if (app()->environment('testing') || is_null($drivers)) {
+            return config('socialstream.providers', []);
+        }
+
+        return $drivers;
+    }
+
+    public static function isConnectedAccountEnabled(): bool
+    {
+        return Socialstream::show() && self::isUserHomeUrl();
     }
 }
