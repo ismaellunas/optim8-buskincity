@@ -1,4 +1,4 @@
-@inject('socialstreamProvider', 'JoelButcher\Socialstream\Providers')
+@inject('loginService', 'App\Services\LoginService')
 
 <x-layouts.auth>
     <div class="column is-three-fifths has-text-left">
@@ -30,21 +30,11 @@
                         <span>Please login to continue</span>
                     </h2>
                     <div class="has-text-centered">
-                        @if ($socialstreamProvider->enabled('google'))
-                            <a href="{{ route('oauth.redirect', 'google') }}" class="box">
-                                <i class="fab fa-google"></i> Continue with <b>Google</b>
+                        @foreach ($loginService->getAvailableSocialiteDrivers() as $driver)
+                            <a href="{{ route('oauth.redirect', $driver) }}" class="box">
+                                <i class="fab fa-{{ $driver }}"></i> Continue with <b>{{ Str::title($driver) }}</b>
                             </a>
-                        @endif
-                        @if ($socialstreamProvider->enabled('facebook'))
-                            <a href="{{ route('oauth.redirect', 'facebook') }}" class="box">
-                                <i class="fab fa-facebook"></i> Continue with <b>Facebook</b>
-                            </a>
-                        @endif
-                        @if ($socialstreamProvider->enabled('twitter'))
-                            <a href="{{ route('oauth.redirect', 'twitter') }}" class="box">
-                                <i class="fab fa-twitter"></i> Continue with <b>Twitter</b>
-                            </a>
-                        @endif
+                        @endforeach
 
                         <div class="h-line-wrapper">
                             <span class="h-line-words">or</span>

@@ -70,7 +70,7 @@
         </div>
 
         <div
-            v-if="$page.props.socialstream.show"
+            v-if="isConnectedAccountFormEnabled"
             class="mb-5"
         >
             <connected-accounts-form class="mt-10 sm:mt-0" />
@@ -127,15 +127,22 @@
             'countryOptions',
             'errors',
             'profilePageUrl',
-            'sessions',
-            'supportedLanguageOptions',
             'qrCode',
+            'sessions',
+            'socialiteDrivers',
+            'supportedLanguageOptions',
         ],
 
         data() {
             return {
                 biodataFormKey: 0,
             };
+        },
+
+        computed: {
+            isConnectedAccountFormEnabled() {
+                return this.socialiteDrivers.length > 0;
+            },
         },
 
         created() {
