@@ -26,9 +26,10 @@
                 countryOptions: this.countryOptions,
                 errors: this.errors,
                 profilePageUrl: this.profilePageUrl,
-                sessions: this.sessions,
-                supportedLanguageOptions: this.supportedLanguageOptions,
                 qrCode: this.qrCode,
+                sessions: this.sessions,
+                socialiteDrivers: this.socialiteDrivers,
+                supportedLanguageOptions: this.supportedLanguageOptions,
             }
         },
 
@@ -37,9 +38,10 @@
             countryOptions: { type: Array, default: () => [] },
             errors: {type: Object, default: () => {}},
             profilePageUrl: { type: String, default: null },
-            sessions: { type: Array, default:() => [] },
-            supportedLanguageOptions: { type: Array, default: () => [] },
             qrCode: { type: Object, required: true },
+            sessions: { type: Array, default:() => [] },
+            socialiteDrivers: { type: Array, default:() => []},
+            supportedLanguageOptions: { type: Array, default: () => [] },
         },
     };
 </script>
