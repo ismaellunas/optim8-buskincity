@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\{
     CountryService,
     LanguageService,
+    LoginService,
     SettingService,
 };
 use Illuminate\Http\Request;
@@ -22,6 +23,11 @@ class UserProfileController extends JetUserProfileController
             $pageComponent = 'Profile/ShowAdmin';
         }
 
+        $socialiteDrivers = [];
+        if (LoginService::isConnectedAccountEnabled()) {
+            $socialiteDrivers = LoginService::getAvailableSocialiteDrivers();
+        }
+
         $qrCodeIsDisplayed = app(SettingService::class)->qrCodePublicPageIsDisplayed();
         $canPublicPage = auth()->user()->roles->contains(function ($role) {
             return $role->hasPermissionTo('public_page.profile');
@@ -37,20 +43,22 @@ class UserProfileController extends JetUserProfileController
         }
 
         return Jetstream::inertia()->render(
-            $request, $pageComponent,
+            $request,
+            $pageComponent,
             array_merge_recursive(
                 $data,
                 [
                     'can' => [
                         'public_page' => $canPublicPage,
                     ],
-                    'profilePageUrl' => $canPublicPage ? auth()->user()->profile_page_url : null,
-                    'sessions' => $this->sessions($request)->all(),
                     'countryOptions' => app(CountryService::class)->getCountryOptions(),
-                    'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
+                    'profilePageUrl' => $canPublicPage ? auth()->user()->profile_page_url : null,
                     'qrCode' => [
                         'isDisplayed' => $qrCodeIsDisplayed
                     ],
+                    'sessions' => $this->sessions($request)->all(),
+                    'socialiteDrivers' => $socialiteDrivers,
+                    'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
                 ]
             )
         );
