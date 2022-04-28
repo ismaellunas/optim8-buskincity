@@ -34,9 +34,21 @@ class ApplicationPerformer extends Mailable
      */
     public function build()
     {
-        return $this
+        $mail = $this
             ->from($this->data['email'], $this->fullName)
             ->subject(__('Performer Application'))
             ->markdown('emails.html.application-performer', $this->data);
+
+        foreach ($this->data['photos']['files'] as $file) {
+            $mail = $mail->attach(
+                $file->getRealPath(),
+                [
+                    'as' => $file->getClientOriginalName(),
+                    'mime' => $file->getClientMimeType()
+                ]
+            );
+        }
+
+        return $mail;
     }
 }

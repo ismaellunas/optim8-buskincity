@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Helpers\HumanReadable;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ApplicationPerformerRequest;
 use App\Mail\ApplicationPerformer;
@@ -29,6 +30,16 @@ class PerformerApplicationController extends Controller
             'firstName' => $user->first_name,
             'lastName' => $user->last_name,
             'phoneCountryOptions' => app(CountryService::class)->getPhoneCountryOptions(),
+            'photoInstructions' => [
+                __('Accepted file extensions: :extensions.', [
+                    'extensions' => implode(', ', config('constants.extensions.image'))
+                ]),
+                __('Max file size: :filesize.', [
+                    'filesize' => HumanReadable::bytesToHuman(
+                        1536 * config('constants.one_megabyte')
+                    )
+                ]),
+            ],
         ]);
     }
 
@@ -43,6 +54,10 @@ class PerformerApplicationController extends Controller
             ->formatE164();
 
         $this->sendEmail($data);
+
+        if (isset($data['photos'])) {
+            unset($data['photos']);
+        }
 
         $performerApplication = new PerformerApplication();
         $performerApplication->applicant_id = $user->id;
@@ -76,6 +91,6 @@ class PerformerApplicationController extends Controller
             $mailTo = 'tiago@biz752.com';
         }
 
-        Mail::to($mailTo)->queue(new ApplicationPerformer($data));
+        Mail::to($mailTo)->send(new ApplicationPerformer($data));
     }
 }
