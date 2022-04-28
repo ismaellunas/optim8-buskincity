@@ -22,7 +22,7 @@
 
             <div class="mt-5">
                 <div
-                    v-for="(provider) in $page.props.socialstream.providers"
+                    v-for="(provider) in socialiteDrivers"
                     :key="provider"
                 >
                     <connected-account
@@ -123,6 +123,10 @@
         mixins: [
             MixinHasLoader,
             MixinHasModal,
+        ],
+
+        inject: [
+            'socialiteDrivers',
         ],
 
         data() {
