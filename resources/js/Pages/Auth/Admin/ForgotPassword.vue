@@ -56,10 +56,10 @@
                 <vue-recaptcha
                     ref="vueRecaptcha"
                     :sitekey="$page.props.recaptchaSiteKey"
-                    size="normal"
+                    size="invisible"
                     theme="light"
-                    @expire="recaptchaExpired"
-                    @fail="recaptchaFailed"
+                    @expired="recaptchaExpired"
+                    @error="recaptchaFailed"
                 />
 
                 <span
@@ -90,7 +90,7 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizLink from '@/Biz/Link';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
-    import vueRecaptcha from 'vue3-recaptcha2';
+    import { VueRecaptcha } from 'vue-recaptcha';
 
     export default {
         components: {
@@ -99,7 +99,7 @@
             BizFormInput,
             BizLink,
             LayoutAdmin,
-            vueRecaptcha,
+            VueRecaptcha,
         },
 
         mixins: [
@@ -122,10 +122,15 @@
                 isRecaptchaError: false,
                 form: this.$inertia.form({
                     email: '',
-                    'g-recaptcha-response': null,
                 }),
                 csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
+        },
+
+        mounted() {
+            setTimeout(() => {
+                this.$refs.vueRecaptcha.execute();
+            }, 500);
         },
 
         methods: {
