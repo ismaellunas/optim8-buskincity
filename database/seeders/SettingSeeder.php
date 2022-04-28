@@ -263,6 +263,8 @@ class SettingSeeder extends Seeder
         foreach ($others as $other) {
             $this->createSetting($other);
         }
+
+        $this->populateSocialiteSetting();
     }
 
     private function createSetting($data)
@@ -271,5 +273,25 @@ class SettingSeeder extends Seeder
             "created_at" => now(),
             "updated_at" => now(),
         ]));
+    }
+
+    private function populateSocialiteSetting()
+    {
+        $settings = [
+            [
+                "key" => "socialite_drivers",
+                "display_name" => "Socialite Drivers",
+                "value" => json_encode([
+                    'google',
+                    'facebook',
+                ]),
+                "group" => "socialite",
+                "order" => "1",
+            ],
+        ];
+
+        foreach ($settings as $setting) {
+            $this->createSetting($setting);
+        }
     }
 }
