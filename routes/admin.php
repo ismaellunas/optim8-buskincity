@@ -130,13 +130,11 @@ Route::middleware([
     });
 
     Route::name('users.')->prefix('users')->group(function () {
-        Route::get('/reassignment-candidates/{user}', [UserController::class, 'getReassignmentCandidates'])
-            ->name('reassignment-candidates');
         Route::post('/suspend/{user}', [UserController::class, 'suspend'])
             ->name('suspend');
         Route::post('/unsuspend/{user}', [UserController::class, 'unsuspend'])
             ->name('unsuspend');
-    });;
+    });
 });
 
 Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -148,6 +146,9 @@ Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->gr
 
     Route::post('/theme/footer/social-media', [ThemeFooterController::class, 'apiValidateSocialMedia'])
         ->name('theme.footer.social-media.validate');
+
+    Route::get('/users/reassignment-candidates/{user}', [UserController::class, 'getReassignmentCandidates'])
+        ->name('users.reassignment-candidates');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {

@@ -158,7 +158,7 @@
         <modal-form-delete
             v-if="isModalOpen"
             :errors="errors"
-            :get-candidates-route="baseRouteName+'.reassignment-candidates'"
+            :get-candidates-route="baseApiRouteName+'.reassignment-candidates'"
             :user="selectedUser"
             @close="closeModal"
             @delete-user="deleteUser"
@@ -207,6 +207,7 @@
         ],
 
         props: {
+            baseApiRouteName: { type: String, required: true },
             baseRouteName: { type: String, required: true },
             can: { type: Object, required: true },
             errors: { type: Object, default: () => {} },
