@@ -16,6 +16,8 @@ class UserWidget implements WidgetInterface
     protected $title = "Manage Users";
     protected $user;
 
+    private $baseApiRouteName = "admin.api.users";
+
     public function __construct()
     {
         $this->user = auth()->user();
@@ -34,6 +36,7 @@ class UserWidget implements WidgetInterface
     private function getWidgetData(): array
     {
         return [
+            'baseApiRouteName' => $this->baseApiRouteName,
             'baseRouteName' => $this->baseRouteName,
             'records' => $this->getRecords(),
             'permissions' => $this->getPermissions(),

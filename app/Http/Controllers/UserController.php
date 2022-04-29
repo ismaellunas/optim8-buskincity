@@ -22,6 +22,7 @@ class UserController extends CrudController
 {
     private $deleteUser;
     private $userService;
+    private $baseApiRouteName = "admin.api.users";
 
     protected $baseRouteName = 'admin.users';
     protected $title = 'User';
@@ -60,6 +61,7 @@ class UserController extends CrudController
         $this->userService->transformRecords($records, $user);
 
         return Inertia::render('User/Index', $this->getData([
+            'baseApiRouteName' => $this->baseApiRouteName,
             'can' => [
                 'add' => $user->can('user.add'),
                 'delete' => $user->can('user.delete'),
