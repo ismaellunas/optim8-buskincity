@@ -48,7 +48,7 @@ class FormService
 
         $forms = collect();
 
-        $models = FieldGroup::whereJsonContains('data->locations', $locationRoute)
+        $models = FieldGroup::whereJsonContains('data->locations', [ ['name' => $locationRoute] ])
             ->get();
 
         foreach ($models as $model) {
