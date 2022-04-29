@@ -6414,7 +6414,7 @@ vue-loader@^16.3.1:
     hash-sum "^2.0.0"
     loader-utils "^2.0.0"
 
-vue-loading-overlay@5.0:
+vue-loading-overlay@^5.0:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/vue-loading-overlay/-/vue-loading-overlay-5.0.3.tgz#2838297fe9c7e8b2a1e1ce3415c115487885933a"
   integrity sha512-6JWZalwlHF4do3HXsFZGt6PcWYseAI5FuNKpveEkljkzqskDWRr7rYmYHVx2kKu4qIvK0vLpL25T/hpFMNoevQ==
