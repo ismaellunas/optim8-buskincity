@@ -70,8 +70,11 @@
 
         <div id="app">
             <loading-overlay id="loader" class="is-hidden"></loading-overlay>
-
-            {{ $slot }}
+            <section class="section">
+                <div class="container">
+                    {{ $slot }}
+                </div>
+            </section>
         </div>
 
         @env ('local')
