@@ -13,7 +13,9 @@
         <title>{{ $title ?? config('app.name') }}</title>
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap">
         <link rel="stylesheet" href="{{ $appCssUrl }}">
 
         @if (!empty($fontUrls['mainTextFont']))
@@ -39,7 +41,7 @@
 
         @env ('local')
             <!-- Styles -->
-            <link rel="stylesheet" href="{{ mix('css/local.css') }}">
+            <!-- <link rel="stylesheet" href="{{ mix('css/local.css') }}"> -->
             <!-- Scripts -->
             <script src="{{ mix('js/local.js') }}" defer></script>
 
@@ -49,6 +51,8 @@
                 <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
             @endif
         @endenv
+
+        <link rel="stylesheet" type="text/css" href="{{ mix('css/template.css', 'themes/' . config('theme.active')) }}">
 
         @stack('scripts')
 
@@ -61,30 +65,13 @@
         {!! $trackingCodeInsideHead !!}
     </head>
 
-    <body class="font-sans antialiased">
+    <body>
         {!! $trackingCodeAfterBody !!}
 
         <div id="app">
             <loading-overlay id="loader" class="is-hidden"></loading-overlay>
 
-            <section class="hero is-fullheight">
-                <div class="hero-body">
-                    <div class="container has-text-centered">
-                        <div class="columns">
-                            <div class="column is-two-fifths has-text-left">
-                                <div class="card">
-                                    <div class="card-image">
-                                        <figure class="image is-3by4">
-                                            <img src="https://dummyimage.com/550x715/e5e5e5/ffffff.jpg">
-                                        </figure>
-                                    </div>
-                                </div>
-                            </div>
-                            {{ $slot }}
-                        </div>
-                    </div>
-                </div>
-            </section>
+            {{ $slot }}
         </div>
 
         @env ('local')
