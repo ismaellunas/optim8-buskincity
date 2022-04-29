@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <layout>
         <template #header>
             {{ title }}
         </template>
@@ -280,6 +280,37 @@
                             :message="error('promotional_video')"
                         />
                     </div>
+
+                    <div class="column is-half">
+                        <biz-form-field-files
+                            v-model="form.photos"
+                            label="Performance Photo"
+                            required
+                            :accepted-types="acceptedImageTypes"
+                            :file-messages="fileMessages"
+                            :max-file-number="10"
+                            :message="error('photos')"
+                            :selected-files="selectedFiles"
+                        >
+                            <template #note>
+                                <p class="help is-info">
+                                    <ul>
+                                        <li
+                                            v-for="instruction, index in photoInstructions"
+                                            :key="index"
+                                        >
+                                            {{ instruction }}
+                                        </li>
+                                    </ul>
+                                </p>
+                            </template>
+                        </biz-form-field-files>
+
+                        <p class="help">
+                            Upload photos of your Performance<br>
+                            Kindly upload up to 10 pictures of your performances, and make sure to pick your best photos, as this might have an impact on your application during the review process
+                        </p>
+                    </div>
                 </div>
 
                 <div class="field">
@@ -291,13 +322,14 @@
                 </div>
             </form>
         </div>
-    </app-layout>
+    </layout>
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
+    import Layout from '@/Layouts/User';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFormFieldFiles from '@/Biz/Form/FieldFiles';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormPhone from '@/Biz/Form/Phone';
     import BizFormSelect from '@/Biz/Form/Select';
@@ -305,15 +337,17 @@
     import BizLabel from '@/Biz/Label';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
+    import { acceptedImageTypes } from '@/Libs/defaults';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'PerformerApplication',
 
         components: {
-            AppLayout,
+            Layout,
             BizButton,
             BizErrorNotifications,
+            BizFormFieldFiles,
             BizFormInput,
             BizFormPhone,
             BizFormSelect,
@@ -334,6 +368,7 @@
             firstName: { type: String, default: null },
             lastName: { type: String, default: null },
             phoneCountryOptions: { type: Array, required: true},
+            photoInstructions: { type: Array, default:() => []},
         },
 
         setup(props) {
@@ -363,6 +398,9 @@
                 youtube: null,
                 other_links: null,
                 promotional_video: null,
+                photos: {
+                    files: [],
+                },
             };
 
             return {
@@ -372,8 +410,28 @@
 
         data() {
             return {
+                acceptedImageTypes: acceptedImageTypes,
                 loader: null,
+                selectedFiles: [],
             }
+        },
+
+        computed: {
+            fileMessages() {
+                const self = this;
+
+                let fileMessages = [];
+
+                self.form.photos.files.forEach((file, index) => {
+                    fileMessages.push(
+                        self.error(
+                            'photos.files.' + index,
+                        )
+                    );
+                });
+
+                return fileMessages;
+            },
         },
 
         methods: {

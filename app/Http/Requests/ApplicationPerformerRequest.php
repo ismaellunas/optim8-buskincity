@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\FieldMaxFile;
 use Illuminate\Support\Str;
 
 class ApplicationPerformerRequest extends BaseFormRequest
@@ -108,6 +109,17 @@ class ApplicationPerformerRequest extends BaseFormRequest
                 'required',
                 'url',
             ],
+            'photos.files' => [
+                'array',
+                'required',
+                new FieldMaxFile(10, [])
+            ],
+            'photos.files.*' => [
+                'required',
+                'file',
+                'max:'.config('constants.one_megabyte') * 1.5,
+                'mimes:'.implode(',', config('constants.extensions.image')),
+            ]
         ];
     }
 
@@ -133,6 +145,11 @@ class ApplicationPerformerRequest extends BaseFormRequest
         }
 
         $attributes['phone.number'] = 'Phone';
+        $attributes['photos.files'] = 'Photo';
+
+        for ($i = 0; $i < count($this->photos['files']); $i++) {
+            $attributes['photos.files.'.$i] = 'Photo';
+        }
 
         return $attributes;
     }
