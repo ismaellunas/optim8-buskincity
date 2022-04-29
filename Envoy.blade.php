@@ -12,6 +12,7 @@
     $heroku_vars = [
         'APP_DEBUG',
         'APP_ENV',
+        'APP_ID',
         'APP_KEY',
         'APP_NAME',
         'APP_URL',
