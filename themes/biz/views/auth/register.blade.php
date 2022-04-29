@@ -115,33 +115,6 @@
                                 @enderror
                             </div>
 
-                            <div class="field">
-                                <label class="label">Password Confirmation*</label>
-                                <div class="control">
-                                    <div class="field has-addons mb-0">
-                                        <div class="control is-expanded">
-                                            <input type="password" name="password_confirmation" id="input-password-confirmation" class="input" placeholder="Confirm Password" required>
-                                        </div>
-                                        <div class="control icon-password" onclick="showHidePassword(this)" data-target="input-password-confirmation">
-                                            <button type="button" class="button" tabindex="-1">
-                                                <span class="icon">
-                                                    <i class="fas fa-eye"></i>
-                                                </span>
-                                            </button>
-                                            <button type="button" class="button is-hidden" tabindex="-1">
-                                                <span class="icon">
-                                                    <i class="fas fa-eye-slash"></i>
-                                                </span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                @error('password_confirmation')
-                                    <p class="help is-danger">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-
                             <div class="flex mt-4">
                                 <div class="columns is-gapless">
                                     <div class="column is-two-thirds">
