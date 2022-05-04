@@ -224,4 +224,79 @@ class UserPermissionTest extends BaseRolePermissionTestCase
         // Assert
         $response->assertForbidden();
     }
+
+    /**
+     * @test
+     */
+    public function editSuperAdministratorCanBeDoneBySuperAdministrator()
+    {
+        $this->withoutMiddleware(\App\Http\Middleware\EnsureLoginFromAdminLoginRoute::class);
+
+        // Arrange
+        $user = User::factory()->create();
+        $user->assignRole(config('permission.super_admin_role'));
+
+        $this->user->assignRole(config('permission.super_admin_role'));
+
+        // Act
+        $response = $this->get(route($this->baseRouteName.'.edit', $user->id));
+
+        // Assert
+        $response->assertSuccessful();
+    }
+
+    /**
+     * @test
+     */
+    public function editSuperAdministratorCannotBeDoneByNonSuperAdministrator()
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $user->assignRole(config('permission.super_admin_role'));
+
+        $this->givePermissionToRole('edit');
+
+        // Act
+        $response = $this->get(route($this->baseRouteName.'.edit', $user->id));
+
+        // Assert
+        $response->assertForbidden();
+    }
+
+    /**
+     * @test
+     */
+    public function updateSuperAdministratorCanBeDoneBySuperAdministrator()
+    {
+        $this->withoutMiddleware(\App\Http\Middleware\EnsureLoginFromAdminLoginRoute::class);
+
+        // Arrange
+        $user = User::factory()->create();
+        $user->assignRole(config('permission.super_admin_role'));
+
+        $this->user->assignRole(config('permission.super_admin_role'));
+
+        // Act
+        $response = $this->put(route($this->baseRouteName.'.update', $user->id));
+
+        // Assert
+        $response->assertStatus(302);
+    }
+
+    /**
+     * @test
+     */
+    public function updateSuperAdministratorCannotBeDoneByNonSuperAdministrator()
+    {
+        // Arrange
+        $user = User::factory()->create();
+        $user->assignRole(config('permission.super_admin_role'));
+
+        $this->givePermissionToRole('edit');
+
+        $response = $this->put(route($this->baseRouteName.'.update', $user->id));
+
+        // Assert
+        $response->assertForbidden();
+    }
 }
