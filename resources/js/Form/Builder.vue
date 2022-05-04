@@ -123,7 +123,7 @@
         computed: {
             sortedFieldGroups() {
                 return sortBy(this.fieldGroups, ['order']);
-            }
+            },
         },
 
         mounted() {
