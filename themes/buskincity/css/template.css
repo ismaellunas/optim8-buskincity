@@ -469,7 +469,7 @@ table th {
 /* Bulma Elements */
 .box {
   background-color: white;
-  border-radius: 6px;
+  border-radius: 10px;
   -webkit-box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
           box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
   color: #4a4a4a;
@@ -4859,8 +4859,8 @@ button.dropdown-item.is-active {
 
 .modal-card-head {
   border-bottom: 1px solid #dbdbdb;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .modal-card-title {
@@ -4875,8 +4875,8 @@ button.dropdown-item.is-active {
 }
 
 .modal-card-foot {
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
   border-top: 1px solid #dbdbdb;
 }
 .modal-card-foot .button:not(:last-child) {
@@ -5817,7 +5817,7 @@ body.has-navbar-fixed-bottom-touch {
   }
   .navbar-item.has-dropdown-up .navbar-dropdown {
     border-bottom: 2px solid #dbdbdb;
-    border-radius: 6px 6px 0 0;
+    border-radius: 10px 10px 0 0;
     border-top: none;
     bottom: 100%;
     -webkit-box-shadow: 0 -8px 8px rgba(10, 10, 10, 0.1);
@@ -5858,8 +5858,8 @@ body.has-navbar-fixed-bottom-touch {
 
   .navbar-dropdown {
     background-color: white;
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
     border-top: 2px solid #dbdbdb;
     -webkit-box-shadow: 0 8px 8px rgba(10, 10, 10, 0.1);
             box-shadow: 0 8px 8px rgba(10, 10, 10, 0.1);
@@ -5887,7 +5887,7 @@ body.has-navbar-fixed-bottom-touch {
     color: #485fc7;
   }
   .navbar.is-spaced .navbar-dropdown, .navbar-dropdown.is-boxed {
-    border-radius: 6px;
+    border-radius: 10px;
     border-top: none;
     -webkit-box-shadow: 0 8px 8px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
             box-shadow: 0 8px 8px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
@@ -6190,7 +6190,7 @@ body.has-spaced-navbar-fixed-bottom {
   }
 }
 .panel {
-  border-radius: 6px;
+  border-radius: 10px;
   -webkit-box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
           box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
   font-size: 1rem;
@@ -6306,7 +6306,7 @@ body.has-spaced-navbar-fixed-bottom {
 
 .panel-heading {
   background-color: #ededed;
-  border-radius: 6px 6px 0 0;
+  border-radius: 10px 10px 0 0;
   color: #363636;
   font-size: 1.25em;
   font-weight: 700;
@@ -6379,8 +6379,8 @@ body.has-spaced-navbar-fixed-bottom {
   color: #485fc7;
 }
 .panel-block:last-child {
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 a.panel-block,
@@ -11833,4 +11833,8 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 .button.is-medium {
   font-size: 1rem;
   height: 3em;
+}
+
+.is-radius {
+  border-radius: 10px;
 }
