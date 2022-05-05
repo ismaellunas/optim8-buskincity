@@ -152,7 +152,7 @@
 
             <modal-form-delete
                 v-if="isModalOpen"
-                :get-candidates-route="data.baseApiRouteName+'.reassignment-candidates'"
+                :get-candidates-route="data.baseRouteName+'.reassignment-candidates'"
                 :user="selectedUser"
                 @close="closeModal"
                 @delete-user="deleteUser"
