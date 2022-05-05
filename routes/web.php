@@ -15,10 +15,12 @@ use App\Http\Controllers\{
     Frontend\StripeController,
     NewPasswordController,
     PasswordResetLinkController,
+    RegisteredUserController,
     UserProfileController,
     WebhookStripeController,
 };
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Features;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,11 +96,20 @@ Route::get('/user/remove-facebook', function() {
     echo "Remove facebook account page";
 });
 
-Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
-    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-        ->name('password.email')->middleware('recaptcha');
-    Route::post('/reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.update');
+Route::group(['middleware' => config('fortify.middleware', ['web'])], function () {
+    if (Features::enabled(Features::resetPasswords())) {
+        Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+            ->middleware(['guest:'.config('fortify.guard'), 'recaptcha'])
+            ->name('password.email');
+        Route::post('/reset-password', [NewPasswordController::class, 'store'])
+            ->middleware(['guest:'.config('fortify.guard')])
+            ->name('password.update');
+    }
+
+    if (Features::enabled(Features::registration())) {
+        Route::post('/register', [RegisteredUserController::class, 'store'])
+            ->middleware(['guest:'.config('fortify.guard')]);
+    }
 });
 
 Route::name('forms.')->prefix('forms')->group(function () {
