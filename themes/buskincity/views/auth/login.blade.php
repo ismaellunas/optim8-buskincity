@@ -7,7 +7,7 @@
 
     <div class="columns">
         <div class="column is-5 is-hidden-mobile">
-            <img src="https://dummyimage.com/560x680/e5e5e5/ffffff.jpg" alt="Login to BuskinCity">
+            <img src="{{ url('/themes/buskincity/images/login.jpg') }}" alt="BuskinCity buskers performing on the street" class="is-radius">
         </div>
         <div class="is-flex is-flex-direction-column column is-7">
             <nav class="level is-mobile">
