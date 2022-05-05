@@ -51,7 +51,10 @@
             <set-password-form class="mt-10 sm:mt-0" />
         </div>
 
-        <div class="mb-5">
+        <div
+            v-if="can.biodata_form"
+            class="mb-5"
+        >
             <biodata-form
                 :key="biodataFormKey"
                 :user="$page.props.user"
