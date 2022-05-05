@@ -15,6 +15,7 @@ use App\Http\Controllers\{
     NewPasswordController,
     PasswordResetLinkController,
     RegisteredUserController,
+    TwoFactorAuthenticatedSessionController,
     UserProfileController,
     WebhookStripeController,
 };
@@ -108,6 +109,16 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
     if (Features::enabled(Features::registration())) {
         Route::post('/register', [RegisteredUserController::class, 'store'])
             ->middleware(['guest:'.config('fortify.guard')]);
+    }
+
+    if (Features::enabled(Features::twoFactorAuthentication())) {
+        $twoFactorLimiter = config('fortify.limiters.two-factor');
+
+        Route::post('/two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'store'])
+            ->middleware(array_filter([
+                'guest:'.config('fortify.guard'),
+                $twoFactorLimiter ? 'throttle:'.$twoFactorLimiter : null,
+            ]));
     }
 });
 
