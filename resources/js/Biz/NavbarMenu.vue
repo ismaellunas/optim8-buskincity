@@ -197,7 +197,7 @@
         data() {
             return {
                 isMenuDisplay: false,
-                csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                csrfToken: this.$page.props.csrfToken,
             };
         },
         methods: {
