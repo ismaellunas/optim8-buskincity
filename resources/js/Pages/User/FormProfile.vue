@@ -76,28 +76,6 @@
         </biz-form-select>
 
         <biz-form-dropdown-search
-            label="Country"
-            required
-            :close-on-click="true"
-            :message="error('country_code', errorBag)"
-            @search="searchCountry($event)"
-        >
-            <template #trigger>
-                <span :style="{'min-width': '4rem'}">
-                    {{ selectedCountry }}
-                </span>
-            </template>
-
-            <biz-dropdown-item
-                v-for="option in filteredCountries"
-                :key="option.id"
-                @click="selectedCountry = option"
-            >
-                {{ option.value }}
-            </biz-dropdown-item>
-        </biz-form-dropdown-search>
-
-        <biz-form-dropdown-search
             label="Language"
             required
             :close-on-click="true"
@@ -153,7 +131,6 @@
         props: {
             canSetRole: {type: Boolean, default: true},
             errorBag: {type: String, default: 'default'},
-            countryOptions: {type: Array, default: () => []},
             modelValue: {},
             photoUrl: {type: [String, null], default: null},
             profilePageUrl: {type: String, default: ''},
@@ -169,7 +146,6 @@
 
         data() {
             return {
-                filteredCountries: this.countryOptions.slice(0, 10),
                 filteredLanguages: this.languageOptions.slice(0, 10),
                 imageUrl: this.photoUrl,
             };
@@ -234,16 +210,6 @@
                     }
                 })
             },
-
-            searchCountry: debounce(function(term) {
-                if (!isEmpty(term) && term.length > 1) {
-                    this.filteredCountries = filter(this.countryOptions, function (country) {
-                        return new RegExp(term, 'i').test(country.value);
-                    }).slice(0, 10);
-                } else {
-                    this.filteredCountries = this.countryOptions.slice(0, 10);
-                }
-            }, debounceTime),
 
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
