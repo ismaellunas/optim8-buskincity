@@ -46,6 +46,7 @@
 
         <div
             v-else
+            v-show="false"
             class="mb-5"
         >
             <set-password-form class="mt-10 sm:mt-0" />
