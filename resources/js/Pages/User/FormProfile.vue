@@ -23,17 +23,22 @@
 
             <div
                 v-if="profilePageUrl"
-                class="column has-text-right"
+                class="column"
             >
-                <a
-                    class="button as-text-black ml-1"
-                    target="_blank"
-                    title="Profile Page Url"
-                    :href="profilePageUrl"
-                >
-                    Open Public Profile &nbsp;
-                    <i class="fas fa-id-card" />
-                </a>
+                <div class="buttons is-right">
+                    <a
+                        class="button as-text-black ml-1"
+                        target="_blank"
+                        title="Profile Page Url"
+                        :href="profilePageUrl"
+                    >
+                        Open Public Profile &nbsp;
+                        <i class="fas fa-id-card" />
+                    </a>
+
+                    <!-- Todo: Remove after add on user profile -->
+                    <biz-social-media-share :data="socialMediaShare" />
+                </div>
             </div>
         </div>
 
@@ -128,6 +133,7 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSelect from '@/Biz/Form/Select';
+    import BizSocialMediaShare from '@/Biz/SocialMediaShare';
     import UserIcon from '@/Biz/Icon/User';
     import { confirmDelete } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';
@@ -143,6 +149,7 @@
             BizFormInput,
             BizFormImageEditable,
             BizFormSelect,
+            BizSocialMediaShare,
             UserIcon,
         },
 
@@ -172,6 +179,35 @@
                 filteredCountries: this.countryOptions.slice(0, 10),
                 filteredLanguages: this.languageOptions.slice(0, 10),
                 imageUrl: this.photoUrl,
+                socialMediaShare: {
+                    facebook: {
+                        url: this.profilePageUrl,
+                        title: 'Hello, ' + this.form.first_name + ' here!',
+                        description: '',
+                        quote: '',
+                        hashtags: '',
+                        icon: 'fab fa-facebook has-text-link',
+                        class: null,
+                    },
+                    twitter: {
+                        url: this.profilePageUrl,
+                        title: 'Hello, ' + this.form.first_name + ' here!',
+                        description: '',
+                        quote: '',
+                        hashtags: '',
+                        icon: 'fab fa-twitter has-text-info',
+                        class: null,
+                    },
+                    linkedIn: {
+                        url: this.profilePageUrl,
+                        title: 'Hello, ' + this.form.first_name + ' here!',
+                        description: '',
+                        quote: '',
+                        hashtags: '',
+                        icon: 'fab fa-linkedin-in has-text-link',
+                        class: null,
+                    }
+                }
             };
         },
 
