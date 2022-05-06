@@ -282,15 +282,14 @@
                     </div>
 
                     <div class="column is-half">
-                        <biz-form-field-files
-                            v-model="form.photos"
+                        <biz-form-file-upload
+                            v-model="form.photos.files"
                             label="Performance Photo"
                             required
+                            :allow-multiple="true"
                             :accepted-types="acceptedImageTypes"
-                            :file-messages="fileMessages"
-                            :max-file-number="10"
+                            :max-files="10"
                             :message="error('photos')"
-                            :selected-files="selectedFiles"
                         >
                             <template #note>
                                 <p class="help is-info">
@@ -304,7 +303,7 @@
                                     </ul>
                                 </p>
                             </template>
-                        </biz-form-field-files>
+                        </biz-form-file-upload>
 
                         <p class="help">
                             Upload photos of your Performance<br>
@@ -329,7 +328,7 @@
     import Layout from '@/Layouts/User';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFormFieldFiles from '@/Biz/Form/FieldFiles';
+    import BizFormFileUpload from '@/Biz/Form/FileUpload';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormPhone from '@/Biz/Form/Phone';
     import BizFormSelect from '@/Biz/Form/Select';
@@ -347,7 +346,7 @@
             Layout,
             BizButton,
             BizErrorNotifications,
-            BizFormFieldFiles,
+            BizFormFileUpload,
             BizFormInput,
             BizFormPhone,
             BizFormSelect,
@@ -414,24 +413,6 @@
                 loader: null,
                 selectedFiles: [],
             }
-        },
-
-        computed: {
-            fileMessages() {
-                const self = this;
-
-                let fileMessages = [];
-
-                self.form.photos.files.forEach((file, index) => {
-                    fileMessages.push(
-                        self.error(
-                            'photos.files.' + index,
-                        )
-                    );
-                });
-
-                return fileMessages;
-            },
         },
 
         methods: {
