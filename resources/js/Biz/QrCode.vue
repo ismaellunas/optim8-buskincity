@@ -1,17 +1,8 @@
 <template>
     <div class="has-text-centered">
         <div ref="qrCode" />
-        <a
-            v-if="isDownloadable"
-            :download="name"
-            :href="dataUrl"
-            class="button is-primary"
-        >
-            Download
-        </a>
         <div
-            v-if="isDownloadable"
-            ref="qrCodeDownload"
+            ref="qrCodePrint"
             class="is-hidden"
         />
     </div>
@@ -24,10 +15,6 @@
         name: 'PerformerQrCode',
 
         props: {
-            isDownloadable: {
-                type: Boolean,
-                default: false
-            },
             text: {
                 type: String,
                 default: window.location.href
@@ -42,39 +29,50 @@
             },
         },
 
+        emits: [
+            'data-url-download',
+            'data-url-print',
+        ],
+
         data(props) {
             return {
                 dataUrl: null,
                 options: {
                     text: props.text,
-                    width: 150,
-                    height: 150,
+                    width: 128,
+                    height: 128,
                     correctLevel: QRCode.CorrectLevel.H,
                     logo: this.logoUrl,
                     crossOrigin: "anonymous",
-                    onRenderingEnd: (qrCodeOptions, dataUrl) => {
-                        this.dataUrl = dataUrl;
-                    }
                 }
             };
         },
 
         mounted() {
-            new QRCode(this.$refs.qrCode, this.options);
+            const options = this.options;
 
-            if (this.isDownloadable) {
-                setTimeout(() => {
-                    this.createDownloadQrCode();
-                }, 100);
-            }
+            options['onRenderingEnd'] = (qrCodeOptions, dataUrl) => {
+                this.$emit('data-url-download', dataUrl);
+            };
+
+            new QRCode(this.$refs.qrCode, options);
+
+            setTimeout(() => {
+                this.createPrintQrCode();
+            }, 100);
         },
 
         methods: {
-            createDownloadQrCode() {
-                this.options.width = 1000;
-                this.options.height = 1000;
+            createPrintQrCode() {
+                const options = this.options;
 
-                new QRCode(this.$refs.qrCodeDownload, this.options);
+                options.width = 1000;
+                options.height = 1000;
+                options['onRenderingEnd'] = (qrCodeOptions, dataUrl) => {
+                    this.$emit('data-url-print', dataUrl);
+                };
+
+                new QRCode(this.$refs.qrCodePrint, options);
             },
         }
     }
