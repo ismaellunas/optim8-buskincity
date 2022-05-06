@@ -11,6 +11,8 @@ return [
     'stripe_sk' => env('STRIPE_SK'),
     'stripe_endpoint_secret' => env('STRIPE_ENDPOINT_SECRET'),
 
+    'recaptcha_site_key' => env('RECAPTCHA_SITE_KEY'),
+
     'one_megabyte' => 1024,
     'extensions' => [
         'image' => [
