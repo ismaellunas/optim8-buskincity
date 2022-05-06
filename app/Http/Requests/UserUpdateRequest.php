@@ -8,6 +8,11 @@ class UserUpdateRequest extends UserStoreRequest
 {
     protected $errorBag = 'userUpdate';
 
+    public function authorize()
+    {
+        return $this->user->can('update', $this->route('user'));
+    }
+
     public function rules(): array
     {
         $rules = [

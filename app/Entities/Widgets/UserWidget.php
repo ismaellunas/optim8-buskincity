@@ -56,6 +56,9 @@ class UserWidget implements WidgetInterface
                         'created_at',
                     ])
                     ->limit($this->recordLimit)
+                    ->whereDoesntHave('roles', function ($query) {
+                        $query->where('name', config('permission.super_admin_role'));
+                    })
                     ->get()
                     ->append('registered_at')
                     ->toArray();
