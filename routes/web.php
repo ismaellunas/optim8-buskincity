@@ -8,7 +8,6 @@ use App\Http\Controllers\{
     Frontend\DashboardController,
     Frontend\DonationController,
     Frontend\PageController,
-    Frontend\PerformerApplicationController,
     Frontend\PostCategoryController,
     Frontend\PostController,
     Frontend\ProfileController as FrontendProfileController,
