@@ -11,6 +11,8 @@ use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 
 class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 {
+    private $advanceUpdateProfile = false;
+
     /**
      * Validate and update the given user's profile information.
      *
@@ -33,17 +35,21 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->deleteProfilePhoto();
         }
 
-        if ($input['email'] !== $user->email &&
-            $user instanceof MustVerifyEmail) {
+        if (
+            $input['email'] !== $user->email
+            && $user instanceof MustVerifyEmail
+            && $this->advanceUpdateProfile
+        ) {
             $this->updateVerifiedUser($user, $input);
         } else {
-            $user->forceFill([
-                'first_name' => $input['first_name'],
-                'last_name' => $input['last_name'],
-                'email' => $input['email'],
+            $inputs = [
                 'country_code' => $input['country_code'],
                 'language_id' => $input['language_id'],
-            ])->save();
+            ];
+
+            $this->advanceUpdateProfileInputs($inputs, $input);
+
+            $user->forceFill($inputs)->save();
         }
     }
 
@@ -56,14 +62,15 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      */
     protected function updateVerifiedUser($user, array $input)
     {
-        $user->forceFill([
-            'first_name' => $input['first_name'],
-            'last_name' => $input['last_name'],
-            'email' => $input['email'],
+        $inputs = [
             'email_verified_at' => null,
             'country_code' => $input['country_code'],
             'language_id' => $input['language_id'],
-        ])->save();
+        ];
+
+        $this->advanceUpdateProfileInputs($inputs, $input);
+
+        $user->forceFill($inputs)->save();
 
         $user->sendEmailVerificationNotification();
     }
@@ -96,5 +103,16 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'country_code' => __('validation.attributes.country_code'),
             'language_id' => __('validation.attributes.language_id'),
         ])->validateWithBag('updateProfileInformation');
+    }
+
+    private function advanceUpdateProfileInputs(&$inputs, $input): void
+    {
+        if ($this->advanceUpdateProfile) {
+            $inputs = array_merge($inputs, [
+                'first_name' => $input['first_name'],
+                'last_name' => $input['last_name'],
+                'email' => $input['email'],
+            ]);
+        }
     }
 }
