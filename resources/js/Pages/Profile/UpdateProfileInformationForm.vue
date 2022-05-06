@@ -70,28 +70,6 @@
                 />
 
                 <biz-form-dropdown-search
-                    label="Country"
-                    required
-                    :close-on-click="true"
-                    :message="form.errors.country_code"
-                    @search="searchCountry($event)"
-                >
-                    <template #trigger>
-                        <span :style="{'min-width': '4rem'}">
-                            {{ selectedCountry }}
-                        </span>
-                    </template>
-
-                    <biz-dropdown-item
-                        v-for="option in filteredCountries"
-                        :key="option.id"
-                        @click="selectedCountry = option"
-                    >
-                        {{ option.value }}
-                    </biz-dropdown-item>
-                </biz-form-dropdown-search>
-
-                <biz-form-dropdown-search
                     label="Language"
                     required
                     :close-on-click="true"
@@ -160,7 +138,6 @@
         ],
 
         props: {
-            countryOptions: { type: Array, default: () => [] },
             languageOptions: { type: Array, default: () => [] },
             user: {
                 type: Object,
@@ -182,14 +159,12 @@
                     first_name: this.user.first_name,
                     last_name: this.user.last_name,
                     email: this.user.email,
-                    country_code: this.user.country_code,
                     photo: null,
                     is_photo_deleted: false,
                     language_id: this.user.language_id
                 }),
                 photoUrl: this.user.profile_photo_url,
                 isImageEditing: false,
-                filteredCountries: this.countryOptions.slice(0, 10),
                 filteredLanguages: this.languageOptions.slice(0, 10),
             }
         },
@@ -197,22 +172,6 @@
         computed: {
             hasPhoto() {
                 return !isEmpty(this.photoUrl);
-            },
-
-            selectedCountry: {
-                get() {
-                    if (this.form.country_code) {
-                        let country = find(
-                            this.countryOptions,
-                            ['id', this.form.country_code]
-                        );
-                        return country.value;
-                    }
-                    return '';
-                },
-                set(country) {
-                    this.form.country_code = country.id;
-                }
             },
 
             selectedLanguage: {
@@ -273,16 +232,6 @@
                     }
                 })
             },
-
-            searchCountry: debounce(function(term) {
-                if (!isEmpty(term) && term.length > 1) {
-                    this.filteredCountries = filter(this.countryOptions, function (country) {
-                        return new RegExp(term, 'i').test(country.value);
-                    }).slice(0, 10);
-                } else {
-                    this.filteredCountries = this.countryOptions.slice(0, 10);
-                }
-            }, 750),
 
             searchLanguage: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 1) {
