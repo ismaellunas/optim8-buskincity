@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use JoelButcher\Socialstream\Socialstream;
 
@@ -71,5 +72,14 @@ class LoginService
     public static function isConnectedAccountEnabled(): bool
     {
         return Socialstream::show() && self::isUserHomeUrl();
+    }
+
+    public static function setHomeUrl(Request $request): void
+    {
+        if ($request->routeIs('admin.*')) {
+            self::setAdminHomeUrl();
+        } else {
+            self::setUserHomeUrl();
+        }
     }
 }
