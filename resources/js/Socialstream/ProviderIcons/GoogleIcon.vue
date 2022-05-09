@@ -1,6 +1,6 @@
 <template>
     <span class="icon">
-        <i class="fab fa-google" />
+        <i class="fa-brands fa-google" />
     </span>
 </template>
 
