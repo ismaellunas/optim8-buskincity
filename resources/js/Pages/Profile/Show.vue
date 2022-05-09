@@ -68,15 +68,11 @@
             <connected-accounts-form class="mt-10 sm:mt-0" />
         </div>
 
-        <div
+        <logout-other-browser-sessions-form
             v-if="$page.props.socialstream.hasPassword"
-            class="mb-5"
-        >
-            <logout-other-browser-sessions-form
-                :sessions="sessions"
-                class="mt-10 sm:mt-0"
-            />
-        </div>
+            class="box mt-10 mb-5"
+            :sessions="sessions"
+        />
 
         <div
             v-if="$page.props.jetstream.hasAccountDeletionFeatures && $page.props.socialstream.hasPassword"
