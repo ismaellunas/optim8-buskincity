@@ -21,7 +21,7 @@
                     v-if="!hasFile"
                     class="file-label"
                 >
-                    Choose a file...
+                    {{ fileLabel }}
                 </span>
             </span>
 
@@ -59,6 +59,10 @@
                 type: Boolean,
                 default: false,
             },
+            fileLabel: {
+                type: String,
+                default: 'Choose a file'
+            }
         },
 
         emits: [
