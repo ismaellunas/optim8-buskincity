@@ -25,17 +25,19 @@
 
             <div
                 v-if="profilePageUrl"
-                class="column has-text-right"
+                class="column"
             >
-                <a
-                    class="button as-text-black ml-1"
-                    target="_blank"
-                    title="Profile Page Url"
-                    :href="profilePageUrl"
-                >
-                    Open Public Profile &nbsp;
-                    <i class="fas fa-id-card" />
-                </a>
+                <div class="buttons is-right">
+                    <a
+                        class="button as-text-black ml-1"
+                        target="_blank"
+                        title="Profile Page Url"
+                        :href="profilePageUrl"
+                    >
+                        Open Public Profile &nbsp;
+                        <i class="fas fa-id-card" />
+                    </a>
+                </div>
             </div>
         </div>
 
