@@ -54,12 +54,10 @@
             :user="$page.props.user"
         />
 
-        <div
+        <two-factor-authentication-form
             v-if="$page.props.jetstream.canManageTwoFactorAuthentication && $page.props.socialstream.hasPassword"
-            class="mb-5"
-        >
-            <two-factor-authentication-form class="mt-10 sm:mt-0" />
-        </div>
+            class="box mt-10 mb-5"
+        />
 
         <div
             v-if="isConnectedAccountFormEnabled"
