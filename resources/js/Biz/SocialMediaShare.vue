@@ -15,7 +15,7 @@
                 <span class="icon">
                     <i :class="socialmedia.icon" />
                 </span>
-                &nbsp; {{ titleCase(network) }}
+                <span class="has-text-weight-bold">{{ socialmedia.text }}</span>
             </ShareNetwork>
         </template>
     </div>
@@ -27,12 +27,6 @@
 
         props: {
             data: {type: Object, default:() => {}},
-        },
-
-        methods: {
-            titleCase(string) {
-                return string[0].toUpperCase() + string.slice(1).toLowerCase();
-            }
         },
     }
 </script>
