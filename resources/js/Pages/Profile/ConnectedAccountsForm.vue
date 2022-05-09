@@ -1,63 +1,43 @@
 <template>
-    <biz-action-section>
+    <action-section>
         <template #title>
             Connected Accounts
         </template>
 
-        <template #description>
-            Manage and remove your connected accounts.
-        </template>
-
         <template #content>
-            <h3 v-if="$page.props.socialstream.connectedAccounts.length === 0">
-                You have no connected accounts.
-            </h3>
-            <h3 v-else>
-                Your connected accounts.
-            </h3>
-
-            <p>
-                You are free to connect any social accounts to your profile and may remove any connected accounts at any time. If you feel any of your connected accounts have been compromised, you should disconnect them immediately and change your password.
-            </p>
-
-            <div class="mt-5">
-                <div
+            <div class="buttons">
+                <template
                     v-for="(provider) in socialiteDrivers"
                     :key="provider"
                 >
-                    <connected-account
-                        :provider="provider"
-                        :created-at="hasAccountForProvider(provider) ? getAccountForProvider(provider).created_at : null"
-                    >
-                        <template #action>
-                            <template v-if="hasAccountForProvider(provider)">
-                                <div class="flex is-justify-content-center my-2">
-                                    <biz-button
-                                        v-if="$page.props.jetstream.managesProfilePhotos && getAccountForProvider(provider).avatar_path"
-                                        class="cursor-pointer focus:outline-none"
-                                        @click="setProfilePhoto(getAccountForProvider(provider).id)"
-                                    >
-                                        Use Avatar as Profile Photo
-                                    </biz-button>
+                    <template v-if="hasAccountForProvider(provider)">
+                        <biz-button
+                            v-if="$page.props.socialstream.connectedAccounts.length > 1 || $page.props.socialstream.hasPassword"
+                            class="is-medium mr-4"
+                            @click="confirmRemove(getAccountForProvider(provider).id)"
+                        >
+                            <connected-account-icon :provider="provider" />
 
-                                    <biz-button
-                                        v-if="$page.props.socialstream.connectedAccounts.length > 1 || $page.props.socialstream.hasPassword"
-                                        class="is-danger"
-                                        @click="confirmRemove(getAccountForProvider(provider).id)"
-                                    >
-                                        Remove
-                                    </biz-button>
-                                </div>
-                            </template>
+                            <span class="has-text-weight-bold">
+                                {{ providerTitle(provider) }}
+                            </span>
+                            <span> - Connected</span>
+                        </biz-button>
+                    </template>
 
-                            <template v-else>
-                                <action-link :href="route('oauth.redirect', { provider })">
-                                    Connect
-                                </action-link>
-                            </template>
-                        </template>
-                    </connected-account>
-                </div>
+                    <template v-else>
+                        <a
+                            :href="route('oauth.redirect', { provider })"
+                            class="button is-medium mr-4"
+                        >
+                            <connected-account-icon :provider="provider" />
+
+                            <span class="has-text-weight-bold">
+                                {{ providerTitle(provider) }}
+                            </span>
+                        </a>
+                    </template>
+                </template>
             </div>
 
             <!-- Confirmation Modal -->
@@ -82,10 +62,9 @@
 
                 <template #footer>
                     <biz-button
-                        class="is-dark"
                         @click="closeModal()"
                     >
-                        Nevermind
+                        Cancel
                     </biz-button>
 
                     <biz-button
@@ -99,25 +78,23 @@
                 </template>
             </biz-modal-card>
         </template>
-    </biz-action-section>
+    </action-section>
 </template>
 
 <script>
-    import ActionLink from '@/Socialstream/ActionLink';
-    import ConnectedAccount from '@/Socialstream/ConnectedAccount';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizActionSection from '@/Biz/ActionSection';
+    import ActionSection from '@/Frontend/ActionSection';
     import BizButton from '@/Biz/Button';
     import BizModalCard from '@/Biz/ModalCard';
+    import ConnectedAccountIcon from '@/Socialstream/ConnectedAccountIcon';
 
     export default {
         components: {
-            ActionLink,
-            ConnectedAccount,
-            BizActionSection,
+            ActionSection,
             BizButton,
             BizModalCard,
+            ConnectedAccountIcon,
         },
 
         mixins: [
@@ -162,12 +139,6 @@
                 return null;
             },
 
-            setProfilePhoto(id) {
-                this.form.put(route('user-profile-photo.set', {id}), {
-                    preserveScroll: true,
-                });
-            },
-
             removeConnectedAccount(id) {
                 this.onStartLoadingOverlay();
 
@@ -177,6 +148,10 @@
                     onFinish: () => (this.onEndLoadingOverlay()),
                 });
             },
+
+            providerTitle(provider) {
+                return provider.charAt(0).toUpperCase() + provider.slice(1);
+            }
         }
     }
 </script>

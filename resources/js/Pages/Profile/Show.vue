@@ -47,16 +47,12 @@
             <set-password-form class="mt-10 sm:mt-0" />
         </div>
 
-        <div
+        <biodata-form
             v-if="can.biodata_form"
-            class="mb-5"
-        >
-            <biodata-form
-                :key="biodataFormKey"
-                :user="$page.props.user"
-                class="mt-10 sm:mt-0"
-            />
-        </div>
+            :key="biodataFormKey"
+            class="box mt-10 mb-5"
+            :user="$page.props.user"
+        />
 
         <div
             v-if="$page.props.jetstream.canManageTwoFactorAuthentication && $page.props.socialstream.hasPassword"
@@ -72,15 +68,11 @@
             <connected-accounts-form class="mt-10 sm:mt-0" />
         </div>
 
-        <div
+        <logout-other-browser-sessions-form
             v-if="$page.props.socialstream.hasPassword"
-            class="mb-5"
-        >
-            <logout-other-browser-sessions-form
-                :sessions="sessions"
-                class="mt-10 sm:mt-0"
-            />
-        </div>
+            class="box mt-10 mb-5"
+            :sessions="sessions"
+        />
 
         <div
             v-if="$page.props.jetstream.hasAccountDeletionFeatures && $page.props.socialstream.hasPassword"

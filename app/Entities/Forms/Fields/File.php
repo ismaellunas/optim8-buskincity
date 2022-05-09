@@ -17,6 +17,7 @@ class File extends BaseField
 {
     protected $type = "File";
 
+    public $fileLabel;
     public $placeholder;
     public $maxFileNumber;
     public $minFileNumber;
@@ -31,11 +32,13 @@ class File extends BaseField
 
         $this->maxFileNumber = $data['max_file_number'] ?? null;
         $this->minFileNumber = $data['min_file_number'] ?? 0;
+        $this->fileLabel = $data['file_label'] ?? 'Choose a file';
     }
 
     public function schema(): array
     {
         $schema = [
+            'file_label' => $this->fileLabel,
             'placeholder' => $this->placeholder,
             'max_file_number' => $this->maxFileNumber,
             'min_file_number' => $this->minFileNumber,
