@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Services\CountryService;
 use App\Models\FieldGroup;
 use Illuminate\Database\Seeder;
 
@@ -14,259 +15,169 @@ class FormSeeder extends Seeder
      */
     public function run()
     {
-        $biodata = [
-            "name" => "biodata",
-            "title" => "",
+        $imageMimes = implode(',', config('constants.extensions.image'));
+        $imageAndVideoMimes = implode(',', array_merge(
+            config('constants.extensions.image'),
+            config('constants.extensions.video'),
+        ));
+
+        $countryOptions = app(CountryService::class)
+            ->getCountryOptions()
+            ->flatMap(function ($country) {
+                return [
+                    $country['id'] => $country['value']
+                ];
+            })
+            ->all();
+
+        $aboutYou = [
+            "name" => "about_you",
+            "title" => "About you",
             "order" => 1,
             "visibility" => [
+                "roles" => ["Performer"]
             ],
             "locations" => [
                 'admin.profile.show',
                 'admin.users.edit',
             ],
             "fields" => [
-                "gender" => [
-                    "type" => "Radio",
-                    "label" => "Gender",
-                    "disabled" => false,
-                    "default_value" => null,
-                    "options" => [
-                        "male" => "Male",
-                        "female" => "Female",
-                    ],
-                    "validation" => [
-                        "rules" => [
-                            "required",
-                        ],
-                        "messages" => [],
-                    ],
-                    "translated" => false,
-                ],
-                "phone" => [
-                    "type" => "Phone",
-                    "label" => "Phone",
-                    "placeholder" => "Phone",
-                    "readonly" => false,
-                    "disabled" => false,
-                    "validation" => [
-                        "rules" => [
-                        ],
-                        "messages" => [],
-                    ],
-                    "translated" => false,
-                ],
-                "education" => [
+                "discipline" => [
                     "type" => "Select",
-                    "label" => "Education",
+                    "label" => "Discipline",
+                    "note" => null,
                     "readonly" => false,
                     "disabled" => false,
                     "options" => [
-                        "bachelor" => "Bachelor Degree",
-                        "master" => "Master Degree",
+                        "Acrobat" => "Acrobat",
+                        "BalanceAct" => "BalanceAct",
+                        "Clown" => "Clown",
+                        "Dance-Acrobatic" => "Dance-Acrobatic",
+                        "Dance/Break/Popping/Locking" => "Dance/Break/Popping/Locking",
+                        "Escapologist" => "Escapologist",
+                        "Juggler" => "Juggler",
+                        "Magician" => "Magician",
+                        "Multidisciplinary Circus/Variety" => "Multidisciplinary Circus/Variety",
+                        "Musician/Singer/Band" => "Musician/Singer/Band",
+                        "Music-Clown" => "Music-Clown",
+                        "Music-Acrobat" => "Music-Acrobat",
+                        "Performance" => "Performance",
+                        "Pupeteer" => "Pupeteer",
+                        "Stiltwalkers/Animation" => "Stiltwalkers/Animation",
+                        "Visual Comedy" => "Visual Comedy",
+                        "Other" => "Other",
                     ],
                     "validation" => [
-                        "rules" => [],
+                        "rules" => [
+                            "required",
+                        ],
                         "messages" => []
+                    ],
+                    "visibility" => [
+                        "roles" => ["Performer"]
                     ],
                     "translated" => false,
                 ],
-                "next_of_kin" => [
+                "stage_name" => [
                     "type" => "Text",
-                    "label" => "Next Of Kin",
-                    "placeholder" => "Next Of Kin",
-                    "default_value" => [],
+                    "label" => "Stage Name",
+                    "placeholder" => "Enter your stage name",
+                    "note" => null,
+                    "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
-                    "maxlength" => 64,
                     "validation" => [
                         "rules" => [
                             "required",
-                            "max:64"
+                            "max: 128",
                         ],
                         "messages" => []
                     ],
                     "visibility" => [
-                        "roles" => ["Administrator"]
-                    ],
-                    "translated" => true,
-                ],
-                "blood_type" => [
-                    "type" => "Radio",
-                    "label" => "Blood Type",
-                    "disabled" => false,
-                    "layout" => "horizontal",
-                    "options" => [
-                        "A" => "A",
-                        "B" => "B",
-                        "AB" => "AB",
-                        "O" => "O",
-                    ],
-                    "validation" => [
-                        "rules" => [
-                            "required",
-                        ],
-                        "messages" => [],
-                    ],
-                    "visibility" => [
-                        "roles" => ["Administrator"]
+                        "roles" => ["Performer"]
                     ],
                     "translated" => false,
                 ],
-
-                "about_me" => [
+                "short_bio" => [
                     "type" => "Textarea",
-                    "label" => "About Me",
-                    "placeholder" => "How to make the world see you.",
+                    "label" => "Short Bio",
+                    "placeholder" => "Short description about yourself",
+                    "note" => null,
                     "default_value" => [],
                     "readonly" => false,
                     "disabled" => false,
                     "maxlength" => "",
                     "rows" => "",
                     "validation" => [
-                        "rules" => [],
+                        "rules" => [
+                            "required",
+                            "max: 1000"
+                        ],
                         "messages" => []
                     ],
                     "visibility" => [],
                     "translated" => true,
                 ],
-
-                "facebook" => [
-                    "type" => "Text",
-                    "label" => "Facebook",
-                    "placeholder" => "facebook url",
-                    "default_value" => "",
-                    "readonly" => false,
-                    "disabled" => false,
-                    "maxlength" => 128,
-                    "validation" => [
-                        "rules" => [
-                            "max:128",
-                            "url"
-                        ],
-                        "messages" => []
-                    ],
-                    "visibility" => [],
-                ],
-
-                "instagram" => [
-                    "type" => "Text",
-                    "label" => "Instagram",
-                    "placeholder" => "instagram URL",
-                    "default_value" => "",
-                    "readonly" => false,
-                    "disabled" => false,
-                    "maxlength" => 128,
-                    "validation" => [
-                        "rules" => [
-                            "max:128",
-                            "url"
-                        ],
-                        "messages" => []
-                    ],
-                    "visibility" => [],
-                ],
-
-                "skills" => [
-                    "type" => "CheckboxGroup",
-                    "label" => "Skills",
-                    "disabled" => false,
-                    "readonly" => false,
-                    "default_value" => [],
-                    "is_raw" => false,
-                    "layout" => "horizontal",
-                    "options" => [
-                        "actor" => "Actor",
-                        "choreographer" => "Choreographer",
-                        "circus_performer" => "Circus Performer",
-                        "comedian" => "Comedian",
-                        "dancer" => "Dancer",
-                        "magician" => "Magician",
-                        "musician" => "Musician",
-                        "singer" => "Singer",
-                        "stuntman" => "Stuntman",
-                    ],
-                    "validation" => [
-                        "rules" => [],
-                        "messages" => [],
-                    ],
-                    "translated" => false,
-                ],
-
-                "criminal_record" => [
+                "long_bio" => [
                     "type" => "Textarea",
-                    "label" => "Criminal Record",
-                    "placeholder" => "...",
+                    "label" => "Long Bio",
+                    "placeholder" => "Long description about yourself",
+                    "note" => null,
                     "default_value" => [],
                     "readonly" => false,
                     "disabled" => false,
                     "maxlength" => "",
                     "rows" => "",
                     "validation" => [
-                        "rules" => [],
-                        "messages" => []
-                    ],
-                    "visibility" => [
-                        "roles" => ['Administrator']
-                    ],
-                    "translated" => true,
-                ],
-                "video" => [
-                    "type" => "Video",
-                    "label" => "Performance Video",
-                    "default_value" => null,
-                    "readonly" => false,
-                    "disabled" => false,
-                    "validation" => [
-                        "rules" => [],
-                        "messages" => []
-                    ],
-                    "visibility" => [
-                    ],
-                    "translated" => false,
-                ],
-
-                "term_and_condition" => [
-                    "type" => "Checkbox",
-                    "label" => "Term and Condition",
-                    "text" => "I agree to the <a href='/' target='_blank'>terms and conditions</a>",
-                    "disabled" => false,
-                    "true_value" => true,
-                    "false_value" => false,
-                    "default_value" => false,
-                    "is_raw" => true,
-                    "is_boolean" => true,
-                    "validation" => [
                         "rules" => [
                             "required",
-                            "accepted"
+                            "max: 2000"
                         ],
-                        "messages" => [],
+                        "messages" => []
                     ],
-                    "translated" => false,
+                    "visibility" => [],
+                    "translated" => true,
                 ],
             ]
         ];
 
         $address = [
             "name" => "address",
-            "title" => "Address",
+            "title" => "Address & contact information",
             "order" => 2,
             "visibility" => [
+                "roles" => ["Performer"]
             ],
             "locations" => [
                 'admin.profile.show',
                 'admin.users.edit',
             ],
             "fields" => [
+                "phone" => [
+                    "type" => "Phone",
+                    "label" => "Phone",
+                    "placeholder" => "Enter your phone number",
+                    "note" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                        ],
+                        "messages" => [],
+                    ],
+                    "visibility" => [],
+                    "translated" => false,
+                ],
                 "address" => [
-                    "type" => "Textarea",
+                    "type" => "Text",
                     "label" => "Address",
-                    "placeholder" => "Your Address",
+                    "placeholder" => "Street address",
+                    "note" => null,
                     "default_value" => [],
                     "readonly" => false,
                     "disabled" => false,
                     "maxlength" => "",
-                    "rows" => "",
                     "validation" => [
                         "rules" => [
                             "required",
@@ -274,15 +185,37 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
+                    "visibility" => [],
                     "translated" => true,
                 ],
-                "postcode" => [
+                "city" => [
                     "type" => "Text",
-                    "label" => "Post Code",
-                    "placeholder" => "Post Code",
+                    "label" => "City",
+                    "placeholder" => "City",
+                    "note" => null,
                     "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
+                    "column" => true,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                            "max:28",
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                    "translated" => false,
+                ],
+                "postcode" => [
+                    "type" => "Text",
+                    "label" => "Postcode",
+                    "placeholder" => "Postcode",
+                    "note" => null,
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "column" => true,
                     "validation" => [
                         "rules" => [
                             "required",
@@ -291,37 +224,212 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
+                    "visibility" => [],
+                    "translated" => false,
+                ],
+                "country" => [
+                    "type" => "Select",
+                    "label" => "Country",
+                    "note" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "options" => $countryOptions,
+                    "validation" => [
+                        "rules" => [
+                            "required"
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
                     "translated" => false,
                 ],
             ]
         ];
 
-        $document = [
-            "name" => "documents",
-            "title" => "Documents",
+        $promotional = [
+            "name" => "social_media",
+            "title" => "Social media",
             "order" => 3,
             "visibility" => [
+                "roles" => ["Performer"]
             ],
             "locations" => [
                 'admin.profile.show',
                 'admin.users.edit',
             ],
             "fields" => [
-                "licence" => [
-                    "type" => "File",
-                    "label" => "Licence",
-                    "placeholder" => "Your Licence",
+                "facebook" => [
+                    "type" => "Text",
+                    "label" => "Facebook",
+                    "placeholder" => "Your Facebook URL",
+                    "note" => 'E.g: https://www.facebook.com/buskincity',
+                    "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
-                    "max_file_number" => 3,
-                    "min_file_number" => 2,
+                    "maxlength" => 128,
+                    "validation" => [
+                        "rules" => [
+                            "max:128",
+                            "url"
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                    "translated" => false,
+                ],
+                "twitter" => [
+                    "type" => "Text",
+                    "label" => "Twitter",
+                    "placeholder" => "Your Twitter URL",
+                    "note" => 'E.g: https://twitter.com/BuskinCity',
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => 128,
+                    "validation" => [
+                        "rules" => [
+                            "max:128",
+                            "url"
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                    "translated" => false,
+                ],
+                "instagram" => [
+                    "type" => "Text",
+                    "label" => "Instagram",
+                    "placeholder" => "Your Instagram URL",
+                    "note" => 'E.g: https://www.instagram.com/buskincity/',
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => 128,
+                    "validation" => [
+                        "rules" => [
+                            "max:128",
+                            "url"
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                    "translated" => false,
+                ],
+                "youtube" => [
+                    "type" => "Text",
+                    "label" => "Youtube",
+                    "placeholder" => "Your Youtube URL",
+                    "note" => 'E.g: https://www.youtube.com/c/BuskinCity',
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => 128,
+                    "validation" => [
+                        "rules" => [
+                            "max:128",
+                            "url"
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                    "translated" => false,
+                ],
+                "tiktok" => [
+                    "type" => "Text",
+                    "label" => "Tiktok",
+                    "placeholder" => "Your TikTok URL",
+                    "note" => 'E.g: https://www.tiktok.com/@buskincity',
+                    "default_value" => "",
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => 128,
+                    "validation" => [
+                        "rules" => [
+                            "max:128",
+                            "url"
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                    "translated" => false,
+                ],
+            ]
+        ];
+
+        $appearance = [
+            "name" => "media",
+            "title" => "Media",
+            "order" => 4,
+            "visibility" => [
+                "roles" => ["Performer"]
+            ],
+            "locations" => [
+                'admin.profile.show',
+                'admin.users.edit',
+            ],
+            "fields" => [
+                "promotional_video" => [
+                    "type" => "Video",
+                    "label" => "Promotional Video",
+                    "placeholder" => "Youtube or Vimeo Link",
+                    "note" => 'E.g: https://vimeo.com/553766867',
+                    "default_value" => null,
+                    "readonly" => false,
+                    "disabled" => false,
                     "validation" => [
                         "rules" => [
                             "required",
-                            "mimes:pdf,doc,docx",
-                            "max:15",
+                            "max:128",
+                            "url"
                         ],
                         "messages" => []
+                    ],
+                    "visibility" => [
+                        "roles" => ["Performer"]
+                    ],
+                    "translated" => false,
+                ],
+                "top_background_picture" => [
+                    "type" => "File",
+                    "label" => "Top Background Picture",
+                    "file_label" => "Choose an image",
+                    "placeholder" => null,
+                    "note" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "max_file_number" => 1,
+                    "min_file_number" => 1,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                            "mimes:".$imageMimes,
+                            "max:".config('constants.one_megabyte') * 50,
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                    "translated" => false,
+                ],
+                "gallery" => [
+                    "type" => "File",
+                    "label" => "Gallery",
+                    "file_label" => "Choose an image",
+                    "placeholder" => null,
+                    "note" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "max_file_number" => 5,
+                    "min_file_number" => 1,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                            "mimes:".$imageAndVideoMimes,
+                            "max:".config('constants.one_megabyte') * 50,
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [
+                        "roles" => ["Performer"]
                     ],
                     "translated" => false,
                 ],
@@ -329,8 +437,8 @@ class FormSeeder extends Seeder
         ];
 
         FieldGroup::updateOrCreate(
-            ['title' => $biodata['name']],
-            ['data' => $biodata]
+            ['title' => $aboutYou['name']],
+            ['data' =>  $aboutYou]
         );
 
         FieldGroup::updateOrCreate(
@@ -339,8 +447,13 @@ class FormSeeder extends Seeder
         );
 
         FieldGroup::updateOrCreate(
-            ['title' => $document['name']],
-            ['data' => $document]
+            ['title' => $promotional['name']],
+            ['data' => $promotional]
+        );
+
+        FieldGroup::updateOrCreate(
+            ['title' => $appearance['name']],
+            ['data' => $appearance]
         );
     }
 }

@@ -2,38 +2,42 @@
     <div class="mb-3">
         <div class="columns">
             <div class="column">
-                <biz-form-image-editable
-                    v-model="form.photo"
-                    v-model:photo-url="imageUrl"
-                    modal-label="Profile Photo"
-                    delete-label="Remove Photo"
-                    :photo-url="imageUrl"
-                    :show-delete-button="hasPhoto"
-                    :message="error('photo', errorBag)"
-                    @on-reset-value="resetImageForm()"
-                    @on-delete-image="onDeleteImage()"
-                >
-                    <template #default-image-view>
-                        <user-icon
-                            style="width: 64px;"
-                        />
-                    </template>
-                </biz-form-image-editable>
+                <div class="field is-horizontal mb-5">
+                    <biz-form-image-editable
+                        v-model="form.photo"
+                        v-model:photo-url="imageUrl"
+                        modal-label="Profile Photo"
+                        delete-label="Remove Photo"
+                        :photo-url="imageUrl"
+                        :show-delete-button="hasPhoto"
+                        :message="error('photo', errorBag)"
+                        @on-reset-value="resetImageForm()"
+                        @on-delete-image="onDeleteImage()"
+                    >
+                        <template #default-image-view>
+                            <user-icon
+                                style="width: 128px;"
+                            />
+                        </template>
+                    </biz-form-image-editable>
+                </div>
             </div>
 
             <div
                 v-if="profilePageUrl"
-                class="column has-text-right"
+                class="column"
             >
-                <a
-                    class="button as-text-black ml-1"
-                    target="_blank"
-                    title="Profile Page Url"
-                    :href="profilePageUrl"
-                >
-                    Open Public Profile &nbsp;
-                    <i class="fas fa-id-card" />
-                </a>
+                <div class="buttons is-right">
+                    <a
+                        class="button as-text-black ml-1"
+                        target="_blank"
+                        title="Profile Page Url"
+                        :href="profilePageUrl"
+                    >
+                        Open Public Profile &nbsp;
+                        <i class="fas fa-id-card" />
+                    </a>
+                </div>
             </div>
         </div>
 

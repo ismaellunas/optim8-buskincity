@@ -26,6 +26,7 @@ if (theme) {
         ])
         */
         .sass('resources/sass/app.sass', 'public/css')
+        .css('resources/css/template.css', 'public/css')
         .alias({
             '@': path.join(__dirname, 'resources/js')
         });

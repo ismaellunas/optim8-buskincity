@@ -1,14 +1,13 @@
 <template>
-    <biz-action-section>
+    <action-section>
         <template #title>
             Browser Sessions
         </template>
 
-        <template #description>
-            Manage and log out your active sessions on other browsers and devices.
-        </template>
-
         <template #content>
+            <p>
+                Manage and log out your active sessions on other browsers and devices.
+            </p>
             <p>
                 If necessary, you may log out of all of your other browser sessions across all of your devices. Some of your recent sessions are listed below; however, this list may not be exhaustive. If you feel your account has been compromised, you should also update your password.
             </p>
@@ -64,7 +63,9 @@
                     class="is-primary"
                     @click="confirmLogout"
                 >
-                    Log Out Other Browser Sessions
+                    <span class="has-text-weight-bold">
+                        Log Out Other Browser Sessions
+                    </span>
                 </biz-button>
             </div>
 
@@ -119,14 +120,14 @@
                 </template>
             </biz-modal-card>
         </template>
-    </biz-action-section>
+    </action-section>
 </template>
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizActionSection from '@/Biz/ActionSection';
+    import ActionSection from '@/Frontend/ActionSection';
     import BizButton from '@/Biz/Button';
     import BizFormPassword from '@/Biz/Form/Password';
     import BizModalCard from '@/Biz/ModalCard';
@@ -134,7 +135,7 @@
 
     export default {
         components: {
-            BizActionSection,
+            ActionSection,
             BizButton,
             BizFormPassword,
             BizModalCard,

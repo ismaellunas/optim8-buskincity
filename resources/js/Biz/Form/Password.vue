@@ -1,5 +1,6 @@
 <template>
     <biz-form-field
+        :class="wrapperClass"
         :is-required="required"
     >
         <template
@@ -9,18 +10,16 @@
             {{ label }}
         </template>
 
-        <div class="control">
-            <biz-input-password
-                ref="input"
-                v-bind="$attrs"
-                v-model="computedValue"
-                :disabled="disabled"
-                :has-error="hasError"
-                :placeholder="placeholder"
-                :required="required"
-                @keypress="$emit('on-keypress', $event)"
-            />
-        </div>
+        <biz-input-password
+            ref="input"
+            v-bind="$attrs"
+            v-model="computedValue"
+            :disabled="disabled"
+            :has-error="hasError"
+            :placeholder="placeholder"
+            :required="required"
+            @keypress="$emit('on-keypress', $event)"
+        />
 
         <template #error>
             <biz-input-error :message="message" />
@@ -69,6 +68,10 @@
             required: {
                 type: Boolean,
                 default: false
+            },
+            wrapperClass: {
+                type: [Array, Object, String],
+                default: '',
             },
         },
 

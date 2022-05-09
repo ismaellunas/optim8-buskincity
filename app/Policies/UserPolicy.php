@@ -22,6 +22,17 @@ class UserPolicy extends BasePermissionPolicy
         );
     }
 
+    public function update(User $user, Model $selectedUser)
+    {
+        $isPermitted = parent::update($user, $selectedUser);
+
+        if ($selectedUser->isSuperAdministrator) {
+            $isPermitted = $isPermitted && $user->isSuperAdministrator;
+        }
+
+        return $isPermitted;
+    }
+
     public function suspend(User $user, Model $selectedUser)
     {
         return (

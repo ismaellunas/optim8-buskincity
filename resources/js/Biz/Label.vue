@@ -1,7 +1,10 @@
 <template>
     <label class="label">
         <slot />
-        <span v-if="isRequired">*</span>
+        <sup
+            v-if="isRequired"
+            class="has-text-danger"
+        >*</sup>
     </label>
 </template>
 

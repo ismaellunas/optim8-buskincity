@@ -1,6 +1,6 @@
 <template>
     <span class="icon">
-        <i class="fab fa-bitbucket" />
+        <i class="fa-brands fa-bitbucket" />
     </span>
 </template>
 

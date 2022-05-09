@@ -24,40 +24,35 @@
             </biz-action-section>
         </div>
 
-        <div
+        <update-profile-information-form
             v-if="$page.props.jetstream.canUpdateProfileInformation"
-            class="mb-5"
-        >
-            <update-profile-information-form
-                :user="$page.props.user"
-                :country-options="countryOptions"
-                :language-options="supportedLanguageOptions"
-                :profile-page-url="can.public_page ? profilePageUrl : null"
-                @after-update-profile="reSchema()"
-            />
-        </div>
+            class="box mb-5"
+            :user="$page.props.user"
+            :country-options="countryOptions"
+            :language-options="supportedLanguageOptions"
+            :profile-page-url="can.public_page ? profilePageUrl : null"
+            @after-update-profile="reSchema()"
+        />
 
-        <div
+        <update-password-form
             v-if="$page.props.jetstream.canUpdatePassword && $page.props.socialstream.hasPassword"
-            class="mb-5"
-        >
-            <update-password-form class="mt-10 sm:mt-0" />
-        </div>
+            class="box mt-10 mb-5"
+        />
 
         <div
             v-else
+            v-show="false"
             class="mb-5"
         >
             <set-password-form class="mt-10 sm:mt-0" />
         </div>
 
-        <div class="mb-5">
-            <biodata-form
-                :key="biodataFormKey"
-                :user="$page.props.user"
-                class="mt-10 sm:mt-0"
-            />
-        </div>
+        <biodata-form
+            v-if="can.biodata_form"
+            :key="biodataFormKey"
+            class="box mt-10 mb-5"
+            :user="$page.props.user"
+        />
 
         <div
             v-if="$page.props.jetstream.canManageTwoFactorAuthentication && $page.props.socialstream.hasPassword"
@@ -73,15 +68,11 @@
             <connected-accounts-form class="mt-10 sm:mt-0" />
         </div>
 
-        <div
+        <logout-other-browser-sessions-form
             v-if="$page.props.socialstream.hasPassword"
-            class="mb-5"
-        >
-            <logout-other-browser-sessions-form
-                :sessions="sessions"
-                class="mt-10 sm:mt-0"
-            />
-        </div>
+            class="box mt-10 mb-5"
+            :sessions="sessions"
+        />
 
         <div
             v-if="$page.props.jetstream.hasAccountDeletionFeatures && $page.props.socialstream.hasPassword"
