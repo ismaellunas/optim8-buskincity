@@ -15,6 +15,14 @@
         name: 'PerformerQrCode',
 
         props: {
+            height: {
+                type: Number,
+                default: 128
+            },
+            width: {
+                type: Number,
+                default: 128
+            },
             text: {
                 type: String,
                 default: window.location.href
@@ -39,8 +47,8 @@
                 dataUrl: null,
                 options: {
                     text: props.text,
-                    width: 128,
-                    height: 128,
+                    width: props.width,
+                    height: props.height,
                     correctLevel: QRCode.CorrectLevel.H,
                     logo: this.logoUrl,
                     crossOrigin: "anonymous",
