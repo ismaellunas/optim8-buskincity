@@ -1,39 +1,46 @@
 <template>
-    <div :class="wrapperClass">
-        <template v-if="group.title">
+    <div class="card mb-5">
+        <header
+            v-if="group.title"
+            class="card-header"
+        >
             <slot
                 name="title"
                 :title="group.title"
             >
-                <h4 class="subtitle is-4 mt-4">
+                <h3 class="card-header-title">
                     {{ group.title }}
-                </h4>
+                </h3>
             </slot>
-        </template>
+        </header>
 
-        <template
-            v-for="(field, name) in group.fields"
-            :key="name"
-        >
-            <component
-                :is="field.type"
-                v-if="!field.is_translated"
-                :ref="'field__' + name"
-                v-model="form[ name ]"
-                :errors="form.errors"
-                :schema="field"
-            />
+        <div class="card-content">
+            <template
+                v-for="(field, name) in group.fields"
+                :key="name"
+            >
+                <component
+                    :is="field.type"
+                    v-if="!field.is_translated"
+                    :ref="'field__' + name"
+                    v-model="form[ name ]"
+                    field-class="mb-5"
+                    :errors="form.errors"
+                    :schema="field"
+                />
 
-            <component
-                :is="field.type"
-                v-else
-                :ref="'field__' + name"
-                v-model="form[ name ][ selectedLocale ]"
-                :errors="form.errors"
-                :schema="field"
-                :selected-locale="selectedLocale"
-            />
-        </template>
+                <component
+                    :is="field.type"
+                    v-else
+                    :ref="'field__' + name"
+                    v-model="form[ name ][ selectedLocale ]"
+                    field-class="mb-5"
+                    :errors="form.errors"
+                    :schema="field"
+                    :selected-locale="selectedLocale"
+                />
+            </template>
+        </div>
     </div>
 </template>
 
@@ -75,10 +82,6 @@
                 type: Object,
                 required: true
             },
-            wrapperClass: {
-                type: [Array, Object, String],
-                default: "block"
-            },
             selectedLocale: {
                 type: String,
                 required: true,
@@ -89,6 +92,6 @@
             return {
                 form: useModelWrapper(props, emit),
             };
-        }
+        },
     };
 </script>
