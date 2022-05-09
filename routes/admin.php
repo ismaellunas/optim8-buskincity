@@ -19,6 +19,7 @@ use App\Http\Controllers\{
     ThemeHeaderController,
     ThemeHeaderMenuController,
     TranslationManagerController,
+    TwoFactorAuthenticatedSessionController,
     UserController,
     UserProfileController,
     VerifyEmailController,
@@ -28,7 +29,6 @@ use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\EmailVerificationPromptController;
 use Laravel\Fortify\Http\Controllers\NewPasswordController;
-use Laravel\Fortify\Http\Controllers\TwoFactorAuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -181,15 +181,17 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
             ->name('password.update');
     }
 
-    Route::get('/two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'create'])
-        ->name('two-factor.login');
+    if (Features::enabled(Features::twoFactorAuthentication())) {
+        Route::get('/two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'create'])
+            ->name('two-factor.login');
 
-    Route::post('/two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'store'])
-        ->middleware(array_filter([
-            'guest:'.config('fortify.guard'),
-            $twoFactorLimiter ? 'throttle:'.$twoFactorLimiter : null,
-        ]))
-        ->name('two-factor.login.attempt');
+        Route::post('/two-factor-challenge', [TwoFactorAuthenticatedSessionController::class, 'store'])
+            ->middleware(array_filter([
+                'guest:'.config('fortify.guard'),
+                $twoFactorLimiter ? 'throttle:'.$twoFactorLimiter : null,
+            ]))
+            ->name('two-factor.login.attempt');
+    }
 });
 
 if (Features::enabled(Features::emailVerification())) {
