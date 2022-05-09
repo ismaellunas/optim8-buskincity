@@ -123,4 +123,12 @@
             </div>
         </div>
     </div>
+
+    @push('bottom_scripts')
+        @if ($errors->any())
+            <script>
+                showForm();
+            </script>
+        @endif
+    @endpush
 </x-layouts.auth>
