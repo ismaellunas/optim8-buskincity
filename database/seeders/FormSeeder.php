@@ -30,9 +30,9 @@ class FormSeeder extends Seeder
             })
             ->all();
 
-        $appearance = [
-            "name" => "appearance",
-            "title" => "Appearance",
+        $aboutYou = [
+            "name" => "about_you",
+            "title" => "About you",
             "order" => 1,
             "visibility" => [
                 "roles" => ["Performer"]
@@ -42,57 +42,6 @@ class FormSeeder extends Seeder
                 'admin.users.edit',
             ],
             "fields" => [
-                "top_background_picture" => [
-                    "type" => "File",
-                    "label" => "Top Background Picture",
-                    "placeholder" => null,
-                    "note" => null,
-                    "readonly" => false,
-                    "disabled" => false,
-                    "max_file_number" => 1,
-                    "min_file_number" => 1,
-                    "validation" => [
-                        "rules" => [
-                            "required",
-                            "mimes:".$imageMimes,
-                            "max:".config('constants.one_megabyte') * 50,
-                        ],
-                        "messages" => []
-                    ],
-                    "visibility" => [],
-                    "translated" => false,
-                ],
-            ]
-        ];
-
-        $biodata = [
-            "name" => "biodata",
-            "title" => "Biodata",
-            "order" => 2,
-            "visibility" => [
-                "roles" => ["Performer"]
-            ],
-            "locations" => [
-                'admin.profile.show',
-                'admin.users.edit',
-            ],
-            "fields" => [
-                "phone" => [
-                    "type" => "Phone",
-                    "label" => "Phone",
-                    "placeholder" => "Phone",
-                    "note" => null,
-                    "readonly" => false,
-                    "disabled" => false,
-                    "validation" => [
-                        "rules" => [
-                            "required",
-                        ],
-                        "messages" => [],
-                    ],
-                    "visibility" => [],
-                    "translated" => false,
-                ],
                 "discipline" => [
                     "type" => "Select",
                     "label" => "Discipline",
@@ -132,7 +81,7 @@ class FormSeeder extends Seeder
                 "stage_name" => [
                     "type" => "Text",
                     "label" => "Stage Name",
-                    "placeholder" => "Stage Name",
+                    "placeholder" => "Enter your stage name",
                     "note" => null,
                     "default_value" => "",
                     "readonly" => false,
@@ -152,7 +101,7 @@ class FormSeeder extends Seeder
                 "short_bio" => [
                     "type" => "Textarea",
                     "label" => "Short Bio",
-                    "placeholder" => "Short Bio",
+                    "placeholder" => "Short description about yourself",
                     "note" => null,
                     "default_value" => [],
                     "readonly" => false,
@@ -172,7 +121,7 @@ class FormSeeder extends Seeder
                 "long_bio" => [
                     "type" => "Textarea",
                     "label" => "Long Bio",
-                    "placeholder" => "Long Bio",
+                    "placeholder" => "Long description about yourself",
                     "note" => null,
                     "default_value" => [],
                     "readonly" => false,
@@ -194,8 +143,8 @@ class FormSeeder extends Seeder
 
         $address = [
             "name" => "address",
-            "title" => "Address",
-            "order" => 3,
+            "title" => "Address & contact information",
+            "order" => 2,
             "visibility" => [
                 "roles" => ["Performer"]
             ],
@@ -204,16 +153,31 @@ class FormSeeder extends Seeder
                 'admin.users.edit',
             ],
             "fields" => [
+                "phone" => [
+                    "type" => "Phone",
+                    "label" => "Phone",
+                    "placeholder" => "Enter your phone number",
+                    "note" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                        ],
+                        "messages" => [],
+                    ],
+                    "visibility" => [],
+                    "translated" => false,
+                ],
                 "address" => [
-                    "type" => "Textarea",
+                    "type" => "Text",
                     "label" => "Address",
-                    "placeholder" => "Your Address",
+                    "placeholder" => "Street address",
                     "note" => null,
                     "default_value" => [],
                     "readonly" => false,
                     "disabled" => false,
                     "maxlength" => "",
-                    "rows" => "",
                     "validation" => [
                         "rules" => [
                             "required",
@@ -232,6 +196,7 @@ class FormSeeder extends Seeder
                     "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
+                    "column" => true,
                     "validation" => [
                         "rules" => [
                             "required",
@@ -244,12 +209,13 @@ class FormSeeder extends Seeder
                 ],
                 "postcode" => [
                     "type" => "Text",
-                    "label" => "Post Code",
-                    "placeholder" => "Post Code",
+                    "label" => "Postcode",
+                    "placeholder" => "Postcode",
                     "note" => null,
                     "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
+                    "column" => true,
                     "validation" => [
                         "rules" => [
                             "required",
@@ -281,9 +247,9 @@ class FormSeeder extends Seeder
         ];
 
         $promotional = [
-            "name" => "promotional",
-            "title" => "",
-            "order" => 4,
+            "name" => "social_media",
+            "title" => "Social media",
+            "order" => 3,
             "visibility" => [
                 "roles" => ["Performer"]
             ],
@@ -295,8 +261,8 @@ class FormSeeder extends Seeder
                 "facebook" => [
                     "type" => "Text",
                     "label" => "Facebook",
-                    "placeholder" => "facebook URL",
-                    "note" => null,
+                    "placeholder" => "Your Facebook URL",
+                    "note" => 'E.g: https://www.facebook.com/buskincity',
                     "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
@@ -314,8 +280,8 @@ class FormSeeder extends Seeder
                 "twitter" => [
                     "type" => "Text",
                     "label" => "Twitter",
-                    "placeholder" => "twitter URL",
-                    "note" => null,
+                    "placeholder" => "Your Twitter URL",
+                    "note" => 'E.g: https://twitter.com/BuskinCity',
                     "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
@@ -333,8 +299,8 @@ class FormSeeder extends Seeder
                 "instagram" => [
                     "type" => "Text",
                     "label" => "Instagram",
-                    "placeholder" => "instagram URL",
-                    "note" => null,
+                    "placeholder" => "Your Instagram URL",
+                    "note" => 'E.g: https://www.instagram.com/buskincity/',
                     "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
@@ -352,8 +318,8 @@ class FormSeeder extends Seeder
                 "youtube" => [
                     "type" => "Text",
                     "label" => "Youtube",
-                    "placeholder" => "youtube URL",
-                    "note" => null,
+                    "placeholder" => "Your Youtube URL",
+                    "note" => 'E.g: https://www.youtube.com/c/BuskinCity',
                     "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
@@ -371,8 +337,8 @@ class FormSeeder extends Seeder
                 "tiktok" => [
                     "type" => "Text",
                     "label" => "Tiktok",
-                    "placeholder" => "tiktok URL",
-                    "note" => null,
+                    "placeholder" => "Your TikTok URL",
+                    "note" => 'E.g: https://www.tiktok.com/@buskincity',
                     "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
@@ -387,11 +353,26 @@ class FormSeeder extends Seeder
                     "visibility" => [],
                     "translated" => false,
                 ],
+            ]
+        ];
+
+        $appearance = [
+            "name" => "media",
+            "title" => "Media",
+            "order" => 4,
+            "visibility" => [
+                "roles" => ["Performer"]
+            ],
+            "locations" => [
+                'admin.profile.show',
+                'admin.users.edit',
+            ],
+            "fields" => [
                 "promotional_video" => [
                     "type" => "Video",
                     "label" => "Promotional Video",
                     "placeholder" => "Youtube or Vimeo Link",
-                    "note" => "Please add embed link for promotional video.",
+                    "note" => 'E.g: https://vimeo.com/553766867',
                     "default_value" => null,
                     "readonly" => false,
                     "disabled" => false,
@@ -408,9 +389,31 @@ class FormSeeder extends Seeder
                     ],
                     "translated" => false,
                 ],
+                "top_background_picture" => [
+                    "type" => "File",
+                    "label" => "Top Background Picture",
+                    "file_label" => "Choose an image",
+                    "placeholder" => null,
+                    "note" => null,
+                    "readonly" => false,
+                    "disabled" => false,
+                    "max_file_number" => 1,
+                    "min_file_number" => 1,
+                    "validation" => [
+                        "rules" => [
+                            "required",
+                            "mimes:".$imageMimes,
+                            "max:".config('constants.one_megabyte') * 50,
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                    "translated" => false,
+                ],
                 "gallery" => [
                     "type" => "File",
                     "label" => "Gallery",
+                    "file_label" => "Choose an image",
                     "placeholder" => null,
                     "note" => null,
                     "readonly" => false,
@@ -434,13 +437,8 @@ class FormSeeder extends Seeder
         ];
 
         FieldGroup::updateOrCreate(
-            ['title' => $appearance['name']],
-            ['data' => $appearance]
-        );
-
-        FieldGroup::updateOrCreate(
-            ['title' => $biodata['name']],
-            ['data' => $biodata]
+            ['title' => $aboutYou['name']],
+            ['data' =>  $aboutYou]
         );
 
         FieldGroup::updateOrCreate(
@@ -451,6 +449,11 @@ class FormSeeder extends Seeder
         FieldGroup::updateOrCreate(
             ['title' => $promotional['name']],
             ['data' => $promotional]
+        );
+
+        FieldGroup::updateOrCreate(
+            ['title' => $appearance['name']],
+            ['data' => $appearance]
         );
     }
 }

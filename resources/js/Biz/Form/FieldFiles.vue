@@ -31,6 +31,7 @@
                         <biz-input-file
                             v-model="files[ index ]"
                             v-bind="$attrs"
+                            :file-label="fileLabel"
                             :accept="acceptedTypes"
                             :disabled="disabled"
                             :is-name-displayed="isNameDisplayed"
@@ -140,6 +141,10 @@
                 type: Array,
                 default: () => [null],
             },
+            fileLabel: {
+                type: String,
+                default: 'Choose a file',
+            }
         },
 
         emits: [

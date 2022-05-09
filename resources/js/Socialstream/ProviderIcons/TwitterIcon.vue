@@ -1,6 +1,6 @@
 <template>
     <span class="icon">
-        <i class="fab fa-twitter" />
+        <i class="fa-brands fa-twitter" />
     </span>
 </template>
 

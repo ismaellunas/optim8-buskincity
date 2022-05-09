@@ -1,5 +1,6 @@
 <template>
     <biz-form-field
+        :class="fieldClass"
         :is-required="required"
     >
         <template #label>
@@ -43,6 +44,10 @@
         inheritAttrs: false,
 
         props: {
+            fieldClass: {
+                type: [Object, Array, String],
+                default: undefined,
+            },
             label: {
                 type: String,
                 default: ''
