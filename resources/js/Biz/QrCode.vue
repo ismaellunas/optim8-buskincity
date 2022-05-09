@@ -47,8 +47,8 @@
                 dataUrl: null,
                 options: {
                     text: props.text,
-                    width: 150,
-                    height: 150,
+                    width: 128,
+                    height: 128,
                     correctLevel: QRCode.CorrectLevel.H,
                     logo: this.logoUrl,
                     crossOrigin: "anonymous",
