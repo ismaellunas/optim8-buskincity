@@ -129,12 +129,10 @@
                 <two-factor-authentication-form class="mt-10 sm:mt-0" />
             </div>
 
-            <div
+            <connected-accounts-form
                 v-if="isConnectedAccountFormEnabled"
-                class="mb-5"
-            >
-                <connected-accounts-form class="mt-10 sm:mt-0" />
-            </div>
+                class="column is-12"
+            />
 
             <div
                 v-if="$page.props.socialstream.hasPassword"
