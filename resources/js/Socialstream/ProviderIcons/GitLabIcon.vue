@@ -1,6 +1,6 @@
 <template>
     <span class="icon">
-        <i class="fab fa-gitlab" />
+        <i class="fa-brands fa-gitlab" />
     </span>
 </template>
 

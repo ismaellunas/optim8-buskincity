@@ -1,6 +1,6 @@
 <template>
     <span class="icon">
-        <i class="fab fa-facebook" />
+        <i class="fa-brands fa-facebook" />
     </span>
 </template>
 

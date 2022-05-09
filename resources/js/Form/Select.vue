@@ -1,6 +1,7 @@
 <template>
     <biz-form-select
         v-model="computedValue"
+        class="is-fullwidth"
         :disabled="schema.is_disabled"
         :label="schema.label"
         :message="error(schema.name, bagName, errors)"
