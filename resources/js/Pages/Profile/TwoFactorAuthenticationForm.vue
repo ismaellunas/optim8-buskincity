@@ -1,11 +1,7 @@
 <template>
-    <biz-action-section>
+    <form-action-section>
         <template #title>
             Two Factor Authentication
-        </template>
-
-        <template #description>
-            Add additional security to your account using two factor authentication.
         </template>
 
         <template #content>
@@ -94,21 +90,21 @@
                 </div>
             </div>
         </template>
-    </biz-action-section>
+    </form-action-section>
 </template>
 
 <script>
-    import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizActionSection from '@/Biz/ActionSection';
-    import BizConfirmPassword from '@/Biz/ConfirmPassword';
     import BizButton from '@/Biz/Button';
+    import BizConfirmPassword from '@/Biz/ConfirmPassword';
+    import FormActionSection from '@/Frontend/ActionSection';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import { oops as oopsAlert } from '@/Libs/alert';
 
     export default {
         components: {
-            BizActionSection,
-            BizConfirmPassword,
             BizButton,
+            BizConfirmPassword,
+            FormActionSection,
         },
 
         mixins: [
