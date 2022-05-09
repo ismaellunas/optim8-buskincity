@@ -1,11 +1,7 @@
 <template>
-    <biz-form-section @submitted="updatePassword">
+    <form-section @submitted="updatePassword">
         <template #title>
-            Update Password
-        </template>
-
-        <template #description>
-            Ensure your account is using a long, random password to stay secure.
+            Password
         </template>
 
         <template #form>
@@ -14,6 +10,8 @@
                 v-model="form.current_password"
                 autocomplete="current-password"
                 label="Current Password"
+                placeholder="Enter your password"
+                wrapper-class="mb-5"
                 :message="form.errors.current_password"
                 :required="true"
             />
@@ -23,44 +21,38 @@
                 v-model="form.password"
                 autocomplete="new-password"
                 label="New Password"
+                placeholder="Enter your password"
+                wrapper-class="mb-5"
                 :message="form.errors.password"
-                :required="true"
-            />
-
-            <biz-form-password
-                ref="password"
-                v-model="form.password_confirmation"
-                autocomplete="new-password"
-                label="Confirm Password"
-                :message="form.errors.password_confirmation"
                 :required="true"
             />
         </template>
 
         <template #actions>
-            <biz-button
-                :class="{ 'opacity-25': form.processing }"
-                :disabled="form.processing"
-                class="is-primary"
-            >
-                Save
-            </biz-button>
+            <div class="field mb-5">
+                <biz-button
+                    class="is-medium is-primary"
+                    :disabled="form.processing"
+                >
+                    <span class="has-text-weight-bold">Update password</span>
+                </biz-button>
+            </div>
         </template>
-    </biz-form-section>
+    </form-section>
 </template>
 
 <script>
-    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButton from '@/Biz/Button';
     import BizFormPassword from '@/Biz/Form/Password';
-    import BizFormSection from '@/Biz/FormSection';
+    import FormSection from '@/Frontend/FormSection';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
 
     export default {
         components: {
             BizButton,
             BizFormPassword,
-            BizFormSection,
+            FormSection,
         },
 
         mixins: [
@@ -72,7 +64,6 @@
                 form: this.$inertia.form({
                     current_password: '',
                     password: '',
-                    password_confirmation: '',
                 }),
             }
         },
@@ -91,8 +82,8 @@
                     },
                     onError: () => {
                         if (this.form.errors.password) {
-                            this.form.reset('password', 'password_confirmation')
-                            this.$refs.password.$refs.input.focus()
+                            this.form.reset('password');
+                            this.$refs.password.$refs.input.focus();
                         }
 
                         if (this.form.errors.current_password) {

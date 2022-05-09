@@ -5,22 +5,24 @@
     >
         <biz-navbar-menu class="is-info" />
 
-        <biz-hero
-            class="box py-0"
-            size="small"
-        >
+        <div class="section is-small">
             <div class="container">
-                <p class="title">
-                    <slot name="header" />
-                </p>
-            </div>
-        </biz-hero>
+                <div class="columns">
+                    <div class="column is-6">
+                        <h1 class="title is-2">
+                            <slot name="header" />
+                        </h1>
 
-        <div
-            id="main-container"
-            class="container mb-2"
-        >
-            <slot />
+                        <slot name="subheader" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section is-small has-background-light">
+            <div class="container">
+                <slot />
+            </div>
         </div>
     </div>
 </template>
@@ -33,7 +35,6 @@
         name: 'LayoutUser',
 
         components: {
-            BizHero,
             BizNavbarMenu,
         },
     };

@@ -1,5 +1,5 @@
 <template>
-    <biz-field class="has-addons mb-0">
+    <biz-field class="has-addons">
         <div class="control is-expanded">
             <input
                 ref="input"
@@ -15,14 +15,14 @@
         <div class="control">
             <biz-button-icon
                 v-show="isShowPassword"
-                icon="fas fa-eye-slash"
+                icon="fa-light fa-eye-slash"
                 type="button"
                 tabindex="-1"
                 @click="changeTypeInput()"
             />
             <biz-button-icon
                 v-show="!isShowPassword"
-                icon="fas fa-eye"
+                icon="fa-light fa-eye"
                 type="button"
                 tabindex="-1"
                 @click="changeTypeInput()"
