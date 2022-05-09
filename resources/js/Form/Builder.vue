@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="tabs">
+        <div class="tabs is-toggle">
             <ul>
                 <li
                     v-for="(option, index) in localeOptions"
@@ -9,10 +9,10 @@
                     @click="selectedLocale = option.id"
                 >
                     <a>
-                        {{ option.name }}
+                        <span>{{ option.name }}</span>
                         <span
                             v-if="index == 0"
-                            class="tag is-primary ml-2"
+                            class="tag is-link is-light ml-3"
                         >
                             Default
                         </span>
@@ -37,14 +37,10 @@
             />
 
             <slot name="buttons">
-                <div class="field is-grouped is-grouped-left">
-                    <div class="control">
-                        <biz-button
-                            class="is-primary"
-                        >
-                            Submit
-                        </biz-button>
-                    </div>
+                <div class="field">
+                    <biz-button class="is-medium is-primary">
+                        <span class="has-text-weight-bold">Submit</span>
+                    </biz-button>
                 </div>
             </slot>
         </form>

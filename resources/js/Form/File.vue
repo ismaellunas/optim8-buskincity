@@ -5,6 +5,7 @@
         :accepted-types="schema.accept"
         :disabled="schema.is_disabled"
         :file-messages="fileMessages"
+        :file-label="schema.file_label"
         :label="schema.label"
         :max-file-number="schema.max_file_number"
         :media="schema.media"

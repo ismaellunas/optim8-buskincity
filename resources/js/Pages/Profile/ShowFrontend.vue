@@ -20,11 +20,13 @@
                     <div class="columns">
                         <div class="column is-narrow">
                             <biz-qr-code
-                                height="128"
-                                width="128"
+                                :height="128"
+                                :width="128"
                                 :text="profilePageUrl"
                                 :logo-url="qrCode.logoUrl"
                                 :name="qrCode.name"
+                                @data-url-download="setDownloadUrl"
+                                @data-url-print="setPrintUrl"
                             />
                         </div>
 
@@ -33,15 +35,16 @@
 
                             <div class="buttons are-small mt-5">
                                 <a
-                                    href="#"
+                                    :href="qrCodeUrl.download"
                                     class="button is-primary"
-                                    download
+                                    :download="qrCode.name"
                                 >
                                     <span class="has-text-weight-bold">Download</span>
                                 </a>
                                 <a
-                                    href="#"
+                                    :href="qrCodeUrl.print"
                                     class="button"
+                                    :download="qrCode.name"
                                 >
                                     <span class="has-text-weight-bold">Print</span>
                                 </a>
@@ -90,21 +93,17 @@
 
             <div
                 v-else
+                v-show="false"
                 class="mb-5"
             >
                 <set-password-form class="mt-10 sm:mt-0" />
             </div>
 
-            <div
-                v-if="can.biodata_form"
-                class="mb-5"
-            >
-                <biodata-form
-                    :key="biodataFormKey"
-                    :user="$page.props.user"
-                    class="mt-10 sm:mt-0"
-                />
-            </div>
+            <biodata-form
+                class="column is-12"
+                :key="biodataFormKey"
+                :user="$page.props.user"
+            />
 
             <div
                 v-if="$page.props.jetstream.canManageTwoFactorAuthentication && $page.props.socialstream.hasPassword"
@@ -229,7 +228,11 @@
                         class: null,
                         text: 'LinkedIn',
                     }
-                }
+                },
+                qrCodeUrl: {
+                    download: null,
+                    print: null,
+                },
             };
         },
 
@@ -254,7 +257,15 @@
         methods: {
             reSchema() {
                 this.biodataFormKey += 1;
-            }
+            },
+
+            setDownloadUrl(url) {
+                this.qrCodeUrl.download = url;
+            },
+
+            setPrintUrl(url) {
+                this.qrCodeUrl.print = url;
+            },
         },
     };
 </script>
