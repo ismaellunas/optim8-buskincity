@@ -20,11 +20,13 @@
                     <div class="columns">
                         <div class="column is-narrow">
                             <biz-qr-code
-                                height="128"
-                                width="128"
+                                :height="128"
+                                :width="128"
                                 :text="profilePageUrl"
                                 :logo-url="qrCode.logoUrl"
                                 :name="qrCode.name"
+                                @data-url-download="setDownloadUrl"
+                                @data-url-print="setPrintUrl"
                             />
                         </div>
 
@@ -33,15 +35,16 @@
 
                             <div class="buttons are-small mt-5">
                                 <a
-                                    href="#"
+                                    :href="qrCodeUrl.download"
                                     class="button is-primary"
-                                    download
+                                    :download="qrCode.name"
                                 >
                                     <span class="has-text-weight-bold">Download</span>
                                 </a>
                                 <a
-                                    href="#"
+                                    :href="qrCodeUrl.print"
                                     class="button"
+                                    :download="qrCode.name"
                                 >
                                     <span class="has-text-weight-bold">Print</span>
                                 </a>
@@ -208,6 +211,10 @@
         data() {
             return {
                 biodataFormKey: 0,
+                qrCodeUrl: {
+                    download: null,
+                    print: null,
+                },
             };
         },
 
@@ -232,7 +239,15 @@
         methods: {
             reSchema() {
                 this.biodataFormKey += 1;
-            }
+            },
+
+            setDownloadUrl(url) {
+                this.qrCodeUrl.download = url;
+            },
+
+            setPrintUrl(url) {
+                this.qrCodeUrl.print = url;
+            },
         },
     };
 </script>
