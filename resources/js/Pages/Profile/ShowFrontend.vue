@@ -65,30 +65,14 @@
                     <p>As a performer, you have a public page to share with your audience. It's just like your unique site within BuskinCity. You can copy the link or share on your social media:</p>
 
                     <div class="buttons are-small mt-5">
-                        <a href="#" class="button is-primary" target="_blank">
+                        <a :href="profilePageUrl" class="button is-primary" target="_blank">
                             <span class="icon is-small">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </span>
                             <span class="has-text-weight-bold">View Page</span>
                         </a>
-                        <a href="#" class="button">
-                            <span class="icon is-small">
-                                <i class="fa-brands fa-facebook"></i>
-                            </span>
-                            <span class="has-text-weight-bold">Facebook</span>
-                        </a>
-                        <a href="#" class="button">
-                            <span class="icon is-small">
-                                <i class="fa-brands fa-twitter"></i>
-                            </span>
-                            <span class="has-text-weight-bold">Twitter</span>
-                        </a>
-                        <a href="#" class="button">
-                            <span class="icon is-small">
-                                <i class="fa-brands fa-linkedin-in"></i>
-                            </span>
-                            <span class="has-text-weight-bold">LinkedIn</span>
-                        </a>
+
+                        <biz-social-media-share :data="socialMediaShare" />
                     </div>
                 </div>
             </div>
@@ -158,6 +142,7 @@
 <script>
     import BiodataForm from './BiodataForm';
     import BizQrCode from '@/Biz/QrCode';
+    import BizSocialMediaShare from '@/Biz/SocialMediaShare';
     import ConnectedAccountsForm from './ConnectedAccountsForm';
     import DeleteUserForm from './DeleteUserForm';
     import Layout from '@/Layouts/User';
@@ -174,6 +159,7 @@
         components: {
             BiodataForm,
             BizQrCode,
+            BizSocialMediaShare,
             ConnectedAccountsForm,
             DeleteUserForm,
             Layout,
@@ -211,6 +197,38 @@
         data() {
             return {
                 biodataFormKey: 0,
+                socialMediaShare: {
+                    facebook: {
+                        url: this.profilePageUrl,
+                        title: 'Hello, ' + this.$page.props.user.first_name + ' here!',
+                        description: '',
+                        quote: '',
+                        hashtags: '',
+                        icon: 'fa-brands fa-facebook',
+                        class: null,
+                        text: 'Facebook',
+                    },
+                    twitter: {
+                        url: this.profilePageUrl,
+                        title: 'Hello, ' + this.$page.props.user.first_name + ' here!',
+                        description: '',
+                        quote: '',
+                        hashtags: '',
+                        icon: 'fa-brands fa-twitter',
+                        class: null,
+                        text: 'Twitter',
+                    },
+                    linkedIn: {
+                        url: this.profilePageUrl,
+                        title: 'Hello, ' + this.$page.props.user.first_name + ' here!',
+                        description: '',
+                        quote: '',
+                        hashtags: '',
+                        icon: 'fa-brands fa-linkedin-in',
+                        class: null,
+                        text: 'LinkedIn',
+                    }
+                },
                 qrCodeUrl: {
                     download: null,
                     print: null,
