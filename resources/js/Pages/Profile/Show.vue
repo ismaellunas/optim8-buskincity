@@ -24,28 +24,24 @@
             </biz-action-section>
         </div>
 
-        <div
+        <update-profile-information-form
             v-if="$page.props.jetstream.canUpdateProfileInformation"
-            class="mb-5"
-        >
-            <update-profile-information-form
-                :user="$page.props.user"
-                :country-options="countryOptions"
-                :language-options="supportedLanguageOptions"
-                :profile-page-url="can.public_page ? profilePageUrl : null"
-                @after-update-profile="reSchema()"
-            />
-        </div>
+            class="box mb-5"
+            :user="$page.props.user"
+            :country-options="countryOptions"
+            :language-options="supportedLanguageOptions"
+            :profile-page-url="can.public_page ? profilePageUrl : null"
+            @after-update-profile="reSchema()"
+        />
 
-        <div
+        <update-password-form
             v-if="$page.props.jetstream.canUpdatePassword && $page.props.socialstream.hasPassword"
-            class="mb-5"
-        >
-            <update-password-form class="mt-10 sm:mt-0" />
-        </div>
+            class="box mt-10 mb-5"
+        />
 
         <div
             v-else
+            v-show="false"
             class="mb-5"
         >
             <set-password-form class="mt-10 sm:mt-0" />

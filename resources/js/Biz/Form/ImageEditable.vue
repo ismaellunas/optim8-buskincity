@@ -1,57 +1,59 @@
 <template>
-    <div class="mb-2">
-        <biz-form-field
-            :is-required="required"
-        >
-            <template #label>
-                {{ label }}
-            </template>
+    <div :class="wrapperClass">
+        <div class="level">
+            <div class="level-left mr-4">
+                <div class="field is-narrow">
+                    <biz-image
+                        v-if="computedPhotoUrl"
+                        ratio="is-128x128"
+                        rounded="is-rounded"
+                        :src="computedPhotoUrl"
+                    />
 
-            <div
-                class="mt-2 mb-2"
-            >
-                <biz-image
-                    v-if="computedPhotoUrl"
-                    rounded="is-rounded"
-                    style="width: 64px;"
-                    :src="computedPhotoUrl"
-                />
-
-                <slot
-                    v-else
-                    name="default-image-view"
-                />
+                    <slot
+                        v-else
+                        name="default-image-view"
+                    />
+                </div>
             </div>
-
-            <div class="control">
-                <biz-input-file
-                    ref="input"
-                    v-bind="$attrs"
-                    v-model="computedPhoto"
-                    :class="{'is-danger': message}"
-                    :disabled="disabled"
-                    :required="required"
-                    :accept="acceptedTypes"
-                    :is-name-displayed="true"
-                    @blur="$emit('on-blur', $event)"
-                    @on-file-picked="onFilePicked"
-                />
-
-                <biz-button
-                    v-if="showDeleteButton"
-                    class="is-warning mt-2"
-                    type="button"
-                    :disabled="disabled"
-                    @click.prevent="$emit('on-delete-image', $event)"
+            <div class="level-right">
+                <biz-form-field
+                    :is-required="required"
                 >
-                    {{ deleteLabel }}
-                </biz-button>
-            </div>
+                    <template #label>
+                        {{ label }}
+                    </template>
 
-            <template #error>
-                <biz-input-error :message="message" />
-            </template>
-        </biz-form-field>
+                    <biz-input-file
+                        ref="input"
+                        v-bind="$attrs"
+                        v-model="computedPhoto"
+                        file-label="Choose a picture"
+                        :class="{'is-danger': message}"
+                        :disabled="disabled"
+                        :required="required"
+                        :accept="acceptedTypes"
+                        :is-name-displayed="true"
+                        @blur="$emit('on-blur', $event)"
+                        @on-file-picked="onFilePicked"
+                    />
+
+                    <biz-button
+                        v-if="showDeleteButton"
+                        class="is-warning mt-2"
+                        type="button"
+                        :disabled="disabled"
+                        @click.prevent="$emit('on-delete-image', $event)"
+                    >
+                        {{ deleteLabel }}
+                    </biz-button>
+
+                    <template #error>
+                        <biz-input-error :message="message" />
+                    </template>
+                </biz-form-field>
+            </div>
+        </div>
 
         <biz-modal-card
             v-if="isModalOpen"
@@ -216,6 +218,10 @@
             modalLabel: {
                 type: String,
                 default: 'Image',
+            },
+            wrapperClass: {
+                type: [Array, Object, String],
+                default: '',
             },
         },
 
