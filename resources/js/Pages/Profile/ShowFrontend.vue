@@ -130,15 +130,11 @@
                 class="column is-12"
             />
 
-            <div
+            <logout-other-browser-sessions-form
                 v-if="$page.props.socialstream.hasPassword"
-                class="mb-5"
-            >
-                <logout-other-browser-sessions-form
-                    :sessions="sessions"
-                    class="mt-10 sm:mt-0"
-                />
-            </div>
+                :sessions="sessions"
+                class="column is-12"
+            />
 
             <div
                 v-if="$page.props.jetstream.hasAccountDeletionFeatures && $page.props.socialstream.hasPassword"
