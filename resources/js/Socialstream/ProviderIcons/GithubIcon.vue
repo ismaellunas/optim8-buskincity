@@ -1,6 +1,6 @@
 <template>
     <span class="icon">
-        <i class="fab fa-github" />
+        <i class="fa-brands fa-github" />
     </span>
 </template>
 
