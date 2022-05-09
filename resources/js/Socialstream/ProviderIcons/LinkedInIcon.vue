@@ -1,6 +1,6 @@
 <template>
     <span class="icon">
-        <i class="fab fa-linkedin" />
+        <i class="fa-brands fa-linkedin" />
     </span>
 </template>
 
