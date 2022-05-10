@@ -31,15 +31,24 @@ class StripeConnectWidget implements WidgetInterface
     public function data(): array
     {
         return [
-            'title' => $this->title,
+            'title' => $this->getTitle(),
             'componentName' => $this->componentName,
             'data' => $this->data,
         ];
     }
 
+    private function getTitle(): string
+    {
+        if ($this->hasConnectedAccount()) {
+            return 'Stripe Connect';
+        }
+        return $this->title;
+    }
+
     private function getWidgetData(): array
     {
-        $hasConnectedAccount = $this->getUserMetaStripe()->hasAccount();
+        $hasConnectedAccount = $this->hasConnectedAccount();
+
         $defaultCountry = app(IPService::class)->getCountryCode(
             app(StripeSettingService::class)->getDefaultCountry()
         );
@@ -49,6 +58,11 @@ class StripeConnectWidget implements WidgetInterface
             'defaultCountry' => $defaultCountry,
             'hasConnectedAccount' => $hasConnectedAccount,
         ];
+    }
+
+    private function hasConnectedAccount(): bool
+    {
+        return $this->getUserMetaStripe()->hasAccount() ?? false;
     }
 
     private function getUserMetaStripe()

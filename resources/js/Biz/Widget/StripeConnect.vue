@@ -62,7 +62,7 @@
                         <span class="icon is-small">
                             <i class="fa-solid fa-arrow-up-right-from-square" />
                         </span>
-                        <span class="has-text-weight-bold">Get in Touch</span>
+                        <span class="has-text-weight-bold">Stripe Connect</span>
                     </biz-link>
                 </div>
             </div>
