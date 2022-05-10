@@ -9,6 +9,12 @@ class UpcomingEventsWidget implements WidgetInterface
     protected $data = [];
     protected $title = "Upcoming Events";
     protected $componentName = 'UpcomingEvents';
+    protected $user;
+
+    public function __construct()
+    {
+        $this->user = auth()->user();
+    }
 
     public function data(): array
     {
@@ -22,6 +28,6 @@ class UpcomingEventsWidget implements WidgetInterface
 
     public function canBeAccessed(): bool
     {
-        return true;
+        return $this->user->roles->isEmpty();
     }
 }
