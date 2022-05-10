@@ -71,6 +71,12 @@
                 </div>
             </div>
             <a
+                href="{{ route('register') }}"
+                class="navbar-item pr-5"
+            >
+                Sign Up
+            </a>
+            <a
                 href="{{ route('login') }}"
                 class="navbar-item pr-5"
             >
