@@ -6,6 +6,8 @@ class WidgetFrontendService extends WidgetService
 {
     protected function getWidgetLists(): array
     {
-        return [];
+        return [
+            'streetPerformersYouMightLike',
+        ];
     }
 }
