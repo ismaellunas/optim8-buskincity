@@ -1,12 +1,14 @@
 <template>
     <layout>
         <template #header>
-            {{ title }}
+            <h1 class="title is-2">
+                {{ title }}
+            </h1>
         </template>
 
         <biz-error-notifications :errors="$page.props.errors" />
 
-        <div class="box mb-6">
+        <div class="box is-shadowless">
             <form @submit.prevent="submit">
                 <div class="columns is-multiline">
                     <div class="column is-half">
@@ -314,8 +316,8 @@
 
                 <div class="field">
                     <div class="buttons is-centered">
-                        <biz-button class="is-primary">
-                            Submit Application
+                        <biz-button class="is-medium is-primary">
+                            <span class="has-text-weight-bold">Submit Application</span>
                         </biz-button>
                     </div>
                 </div>
