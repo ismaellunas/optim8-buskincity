@@ -16,18 +16,20 @@
 
 <script>
     import Post from '@/Biz/Widget/Post';
-    import User from '@/Biz/Widget/User';
-    import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
     import QrCode from '@/Biz/Widget/QrCode';
+    import SocialMediaShare from '@/Biz/Widget/SocialMediaShare';
+    import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
+    import User from '@/Biz/Widget/User';
 
     export default {
         name: 'BizWidgetColumns',
 
         components: {
             Post,
-            User,
-            StreetPerformersYouMightLike,
             QrCode,
+            SocialMediaShare,
+            StreetPerformersYouMightLike,
+            User,
         },
 
         props: {
