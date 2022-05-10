@@ -16,6 +16,7 @@
 </template>
 
 <script>
+    import QrCode from '@/Biz/Widget/QrCode';
     import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
     import UpcomingEvents from '@/Biz/Widget/UpcomingEvents';
 
@@ -23,6 +24,7 @@
         name: 'BizWidgetColumns',
 
         components: {
+            QrCode,
             StreetPerformersYouMightLike,
             UpcomingEvents,
         },
