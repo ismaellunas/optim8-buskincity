@@ -17,6 +17,7 @@
 
 <script>
     import QrCode from '@/Biz/Widget/QrCode';
+    import SocialMediaShare from '@/Biz/Widget/SocialMediaShare';
     import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
     import UpcomingEvents from '@/Biz/Widget/UpcomingEvents';
     import WantToBecomeAStreetPerformer from '@/Biz/Widget/WantToBecomeAStreetPerformer';
@@ -26,6 +27,7 @@
 
         components: {
             QrCode,
+            SocialMediaShare,
             StreetPerformersYouMightLike,
             UpcomingEvents,
             WantToBecomeAStreetPerformer,
