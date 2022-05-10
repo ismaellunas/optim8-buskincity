@@ -3,11 +3,12 @@
         class="column"
         :class="wrapperClass"
     >
-        <h2 class="title is-4 mt-5">
+        <h2 class="title is-4">
             {{ title }}
         </h2>
+
         <div class="box is-shadowless">
-            <p>Coming soon! We are brewing a new feature that will allow you to follow your favourite street performers. Have questions?</p>
+            <p>Coming soon! We are brewing a new feature that will allow you to see nearby city events and performances. Have questions?</p>
 
             <div class="buttons are-small mt-5">
                 <a
@@ -27,13 +28,13 @@
 
 <script>
     export default {
-        name: 'StreetPerformersYouMightLikeWidget',
+        name: 'UpcomingEventsWidget',
 
         props: {
-            columns: {type: [Number, String], default: 6},
             data: {type: Object, required: true},
-            order: {type: Number, required: true},
             title: {type: String, default: ""},
+            order: {type: Number, required: true},
+            columns: {type: [Number, String], default: 6},
         },
 
         computed: {

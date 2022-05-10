@@ -4,15 +4,11 @@ namespace App\Entities\Widgets;
 
 use App\Contracts\WidgetInterface;
 
-class StreetPerformersYouMightLikeWidget implements WidgetInterface
+class UpcomingEventsWidget implements WidgetInterface
 {
     protected $data = [];
-    protected $title = "Street Performers You Might Like";
-    protected $componentName = 'StreetPerformersYouMightLike';
-
-    public function __construct()
-    {
-    }
+    protected $title = "Upcoming Events";
+    protected $componentName = 'UpcomingEvents';
 
     public function data(): array
     {
@@ -20,7 +16,7 @@ class StreetPerformersYouMightLikeWidget implements WidgetInterface
             'title' => $this->title,
             'componentName' => $this->componentName,
             'data' => $this->data,
-            'columns' => '12',
+            'columns' => '6',
         ];
     }
 

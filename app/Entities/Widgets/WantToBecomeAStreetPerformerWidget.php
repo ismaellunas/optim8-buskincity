@@ -4,15 +4,11 @@ namespace App\Entities\Widgets;
 
 use App\Contracts\WidgetInterface;
 
-class StreetPerformersYouMightLikeWidget implements WidgetInterface
+class WantToBecomeAStreetPerformerWidget implements WidgetInterface
 {
     protected $data = [];
-    protected $title = "Street Performers You Might Like";
-    protected $componentName = 'StreetPerformersYouMightLike';
-
-    public function __construct()
-    {
-    }
+    protected $title = "Want to Become a Street Performer?";
+    protected $componentName = 'WantToBecomeAStreetPerformer';
 
     public function data(): array
     {

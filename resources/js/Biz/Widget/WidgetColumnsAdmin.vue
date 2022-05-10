@@ -17,24 +17,14 @@
 
 <script>
     import Post from '@/Biz/Widget/Post';
-    import QrCode from '@/Biz/Widget/QrCode';
-    import SocialMediaShare from '@/Biz/Widget/SocialMediaShare';
-    import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
-    import UpcomingEvents from '@/Biz/Widget/UpcomingEvents';
     import User from '@/Biz/Widget/User';
-    import WantToBecomeAStreetPerformer from '@/Biz/Widget/WantToBecomeAStreetPerformer';
 
     export default {
-        name: 'BizWidgetColumns',
+        name: 'BizWidgetColumnsAdmin',
 
         components: {
             Post,
-            QrCode,
-            SocialMediaShare,
-            StreetPerformersYouMightLike,
-            UpcomingEvents,
             User,
-            WantToBecomeAStreetPerformer,
         },
 
         props: {
