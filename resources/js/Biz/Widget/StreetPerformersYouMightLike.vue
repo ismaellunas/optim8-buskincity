@@ -1,10 +1,10 @@
 <template>
-    <div class="column is-12">
-        <h2
-            class="title is-4"
-            :class="{'mt-5': order != 0}"
-        >
-            Street Performers You Might Like
+    <div
+        class="column"
+        :class="wrapperClass"
+    >
+        <h2 class="title is-4 mt-5">
+            {{ title }}
         </h2>
         <div class="box is-shadowless">
             <p>Coming soon! We are brewing a new feature that will allow you to follow your favourite street performers. Have questions?</p>
@@ -30,9 +30,18 @@
         name: 'StreetPerformersYouMightLikeWidget',
 
         props: {
+            columns: {type: [Number, String], default: 6},
             data: {type: Object, required: true},
-            title: {type: String, default: ""},
             order: {type: Number, required: true},
+            title: {type: String, default: ""},
+        },
+
+        computed: {
+            wrapperClass() {
+                return [
+                    'is-'+this.columns,
+                ];
+            },
         },
     };
 </script>

@@ -1,9 +1,6 @@
 <template>
     <div class="column is-half">
-        <h2
-            class="title is-4"
-            :class="{'mt-5': order != 0}"
-        >
+        <h2 class="title is-4">
             {{ title }}
         </h2>
         <div class="box is-shadowless">

@@ -3,10 +3,7 @@
         class="column"
         :class="wrapperClass"
     >
-        <h2
-            class="title is-4"
-            :class="{'mt-5': order != 0}"
-        >
+        <h2 class="title is-4">
             {{ title }}
         </h2>
 
