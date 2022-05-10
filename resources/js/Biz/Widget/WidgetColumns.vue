@@ -17,12 +17,14 @@
 
 <script>
     import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
+    import UpcomingEvents from '@/Biz/Widget/UpcomingEvents';
 
     export default {
         name: 'BizWidgetColumns',
 
         components: {
             StreetPerformersYouMightLike,
+            UpcomingEvents,
         },
 
         props: {
