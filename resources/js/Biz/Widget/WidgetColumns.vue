@@ -18,6 +18,7 @@
     import Post from '@/Biz/Widget/Post';
     import User from '@/Biz/Widget/User';
     import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
+    import QrCode from '@/Biz/Widget/QrCode';
 
     export default {
         name: 'BizWidgetColumns',
@@ -26,6 +27,7 @@
             Post,
             User,
             StreetPerformersYouMightLike,
+            QrCode,
         },
 
         props: {
