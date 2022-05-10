@@ -6,9 +6,15 @@ use App\Contracts\WidgetInterface;
 
 class WantToBecomeAStreetPerformerWidget implements WidgetInterface
 {
+    protected $componentName = 'WantToBecomeAStreetPerformer';
     protected $data = [];
     protected $title = "Want to Become a Street Performer?";
-    protected $componentName = 'WantToBecomeAStreetPerformer';
+    protected $user;
+
+    public function __construct()
+    {
+        $this->user = auth()->user();
+    }
 
     public function data(): array
     {
@@ -22,6 +28,6 @@ class WantToBecomeAStreetPerformerWidget implements WidgetInterface
 
     public function canBeAccessed(): bool
     {
-        return true;
+        return $this->user->roles->isEmpty();
     }
 }

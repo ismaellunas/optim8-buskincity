@@ -9,9 +9,11 @@ class StreetPerformersYouMightLikeWidget implements WidgetInterface
     protected $data = [];
     protected $title = "Street Performers You Might Like";
     protected $componentName = 'StreetPerformersYouMightLike';
+    protected $user;
 
     public function __construct()
     {
+        $this->user = auth()->user();
     }
 
     public function data(): array
@@ -26,6 +28,6 @@ class StreetPerformersYouMightLikeWidget implements WidgetInterface
 
     public function canBeAccessed(): bool
     {
-        return true;
+        return $this->user->roles->isEmpty();
     }
 }

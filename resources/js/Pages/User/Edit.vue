@@ -98,6 +98,7 @@
                             route-name="admin.users.edit"
                             :entity-id="record.id"
                             :locale="$page.props.user.origin_language_code"
+                            @loaded-empty-field="isFormBuilderShown = false"
                             @loaded-successfully="isFormBuilderShown = true"
                         >
                             <template #buttons>
