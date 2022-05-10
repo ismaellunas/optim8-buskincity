@@ -1,74 +1,66 @@
 <template>
-    <div>
-        <biz-form-section @submitted="updateProfileInformation">
-            <template #title>
-                Account
-            </template>
+    <form-section @submitted="updateProfileInformation">
+        <template #title>
+            Account Details
+        </template>
 
-            <template #description>
-                Update your account's profile information and email address.
-            </template>
+        <template #form>
+            <div class="field is-horizontal mb-5">
+                <biz-form-image-editable
+                    v-model="form.photo"
+                    v-model:photo-url="photoUrl"
+                    delete-label="Remove"
+                    label="Profile picture"
+                    modal-label="Profile picture"
+                    wrapper-class="field-body"
+                    :photo-url="photoUrl"
+                    :show-delete-button="hasPhoto"
+                    :message="error('photo')"
+                    @on-reset-value="resetImageForm()"
+                    @on-delete-image="onDeleteImage()"
+                >
+                    <template #default-image-view>
+                        <user-icon
+                            style="width: 128px;"
+                        />
+                    </template>
+                </biz-form-image-editable>
+            </div>
 
-            <template #form>
-                <div class="columns">
-                    <div class="column">
-                        <biz-form-image-editable
-                            v-model="form.photo"
-                            v-model:photo-url="photoUrl"
-                            modal-label="Profile Photo"
-                            delete-label="Remove Photo"
-                            :photo-url="photoUrl"
-                            :show-delete-button="hasPhoto"
-                            :message="error('photo')"
-                            @on-reset-value="resetImageForm()"
-                            @on-delete-image="onDeleteImage()"
-                        >
-                            <template #default-image-view>
-                                <user-icon
-                                    style="width: 64px;"
-                                />
-                            </template>
-                        </biz-form-image-editable>
-                    </div>
-
-                    <div
-                        v-if="profilePageUrl"
-                        class="column has-text-right"
-                    >
-                        <a
-                            class="button as-text-black ml-1"
-                            target="_blank"
-                            title="Profile Page Url"
-                            :href="profilePageUrl"
-                        >
-                            Open Public Profile &nbsp;
-                            <i class="fas fa-id-card" />
-                        </a>
-                    </div>
+            <div class="field is-horizontal mb-5">
+                <div class="field-body">
+                    <biz-form-input
+                        v-model="form.first_name"
+                        disabled
+                        label="First name"
+                        required
+                        :message="form.errors.first_name"
+                    />
+                    <biz-form-input
+                        v-model="form.last_name"
+                        disabled
+                        label="Last name"
+                        required
+                        :message="form.errors.last_name"
+                    />
                 </div>
+            </div>
 
-                <biz-form-input
-                    v-model="form.first_name"
-                    label="First Name"
-                    required
-                    :message="form.errors.first_name"
-                />
-
-                <biz-form-input
-                    v-model="form.last_name"
-                    label="Last Name"
-                    required
-                    :message="form.errors.last_name"
-                />
-
+            <div class="field mb-5">
                 <biz-form-input
                     v-model="form.email"
+                    disabled
                     label="Email"
                     required
                     type="email"
                     :message="form.errors.email"
                 />
+            </div>
 
+            <div
+                v-if="false"
+                class="field mb-5"
+            >
                 <biz-form-dropdown-search
                     label="Language"
                     required
@@ -90,19 +82,21 @@
                         {{ option.value }}
                     </biz-dropdown-item>
                 </biz-form-dropdown-search>
-            </template>
+            </div>
+        </template>
 
-            <template #actions>
+        <template #actions>
+            <div class="field mb-5">
                 <biz-button
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
-                    class="is-primary"
+                    class="is-medium is-primary"
                 >
-                    Save
+                    <span class="has-text-weight-bold">Update details</span>
                 </biz-button>
-            </template>
-        </biz-form-section>
-    </div>
+            </div>
+        </template>
+    </form-section>
 </template>
 
 <script>
@@ -114,7 +108,7 @@
     import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormImageEditable from '@/Biz/Form/ImageEditable';
-    import BizFormSection from '@/Biz/FormSection';
+    import FormSection from '@/Frontend/FormSection';
     import UserIcon from '@/Biz/Icon/User';
     import { acceptedImageTypes, debounceTime } from '@/Libs/defaults';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
@@ -127,7 +121,7 @@
             BizFormDropdownSearch,
             BizFormInput,
             BizFormImageEditable,
-            BizFormSection,
+            FormSection,
             UserIcon,
         },
 
@@ -143,7 +137,6 @@
                 type: Object,
                 required: true,
             },
-            profilePageUrl: { type: [String, null], default: null },
         },
 
         emits: [

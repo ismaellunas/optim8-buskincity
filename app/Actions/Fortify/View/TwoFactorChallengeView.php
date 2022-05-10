@@ -10,15 +10,13 @@ class TwoFactorChallengeView
 {
     public function __invoke()
     {
-        $componentName = 'Auth/TwoFactorChallenge';
-
         $url = url()->current();
         $route = Url::getRoute($url);
 
         if (LoginService::isAdminTwoFactorLoginRoute($route)) {
-            $componentName = 'Auth/Admin/TwoFactorChallenge';
+            return Inertia::render('Auth/Admin/TwoFactorChallenge');
         }
 
-        return Inertia::render($componentName);
+        return view('auth.two_factor_challenge');
     }
 }

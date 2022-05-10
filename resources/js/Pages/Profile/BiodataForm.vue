@@ -1,11 +1,7 @@
 <template>
-    <biz-form-section v-show="isShown">
+    <form-section v-show="isShown">
         <template #title>
             Profile
-        </template>
-
-        <template #description>
-            &nbsp;
         </template>
 
         <template #form>
@@ -15,21 +11,29 @@
                 :locale="user.origin_language_code"
                 @loaded-forbidden="isShown = false"
                 @loaded-successfully="isShown = true"
-            />
+            >
+                <template #buttons>
+                    <div class="field">
+                        <button class="button is-medium is-primary">
+                            <span class="has-text-weight-bold">Update details</span>
+                        </button>
+                    </div>
+                </template>
+            </form-builder>
         </template>
-    </biz-form-section>
+    </form-section>
 </template>
 
 <script>
     import FormBuilder from '@/Form/Builder';
-    import BizFormSection from '@/Biz/FormSection';
+    import FormSection from '@/Frontend/FormSection';
 
     export default {
         name: 'BiodataForm',
 
         components: {
             FormBuilder,
-            BizFormSection,
+            FormSection,
         },
 
         props: {
