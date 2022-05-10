@@ -52,11 +52,11 @@
                 <div v-if="!twoFactorEnabled">
                     <biz-confirm-password @confirmed="enableTwoFactorAuthentication">
                         <biz-button
+                            class="is-medium is-primary"
                             :class="{ 'opacity-25': enabling }"
                             :disabled="enabling"
-                            class="is-primary"
                         >
-                            Enable
+                            <span class="has-text-weight-bold">Enable</span>
                         </biz-button>
                     </biz-confirm-password>
                 </div>
@@ -66,7 +66,7 @@
                         <biz-button
                             v-if="recoveryCodes.length > 0"
                         >
-                            Regenerate Recovery Codes
+                            <span class="has-text-weight-bold">Regenerate Recovery Codes</span>
                         </biz-button>
                     </biz-confirm-password>
 
@@ -74,17 +74,17 @@
                         <biz-button
                             v-if="recoveryCodes.length === 0"
                         >
-                            Show Recovery Codes
+                            <span class="has-text-weight-bold">Show Recovery Codes</span>
                         </biz-button>
                     </biz-confirm-password>
 
                     <biz-confirm-password @confirmed="disableTwoFactorAuthentication">
                         <biz-button
-                            class="is-danger ml-2"
+                            class="is-medium is-danger ml-2"
                             :class="{ 'opacity-25': disabling }"
                             :disabled="disabling"
                         >
-                            Disable
+                            <span class="has-text-weight-bold">Disable</span>
                         </biz-button>
                     </biz-confirm-password>
                 </div>
