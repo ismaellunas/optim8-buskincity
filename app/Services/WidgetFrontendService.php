@@ -10,6 +10,7 @@ class WidgetFrontendService extends WidgetService
             'qrCode',
             'upcomingEvents',
             'streetPerformersYouMightLike',
+            'wantToBecomeAStreetPerformer',
         ];
     }
 }
