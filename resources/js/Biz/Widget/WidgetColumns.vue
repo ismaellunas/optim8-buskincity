@@ -19,6 +19,7 @@
     import QrCode from '@/Biz/Widget/QrCode';
     import SocialMediaShare from '@/Biz/Widget/SocialMediaShare';
     import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
+    import StripeConnect from '@/Biz/Widget/StripeConnect';
     import UpcomingEvents from '@/Biz/Widget/UpcomingEvents';
     import WantToBecomeAStreetPerformer from '@/Biz/Widget/WantToBecomeAStreetPerformer';
 
@@ -29,6 +30,7 @@
             QrCode,
             SocialMediaShare,
             StreetPerformersYouMightLike,
+            StripeConnect,
             UpcomingEvents,
             WantToBecomeAStreetPerformer,
         },
