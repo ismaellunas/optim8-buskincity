@@ -57,10 +57,7 @@
                 />
             </div>
 
-            <div
-                v-if="false"
-                class="field mb-5"
-            >
+            <div class="field mb-5">
                 <biz-form-dropdown-search
                     label="Language"
                     required
