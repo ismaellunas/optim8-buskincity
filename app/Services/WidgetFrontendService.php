@@ -8,6 +8,8 @@ class WidgetFrontendService extends WidgetService
     {
         return [
             'qrCode',
+            'socialMediaShare',
+            'stripeConnect',
             'performer_application_link',
             'upcomingEvents',
             'streetPerformersYouMightLike',

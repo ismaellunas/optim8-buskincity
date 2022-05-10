@@ -11,29 +11,6 @@
         </template>
 
         <div class="columns is-multiline">
-            <div
-                v-if="can.public_page"
-                class="column is-6"
-            >
-                <h2 class="title is-4">
-                    Share your page
-                </h2>
-                <div class="box is-shadowless">
-                    <p>As a performer, you have a public page to share with your audience. It's just like your unique site within BuskinCity. You can copy the link or share on your social media:</p>
-
-                    <div class="buttons are-small mt-5">
-                        <a :href="profilePageUrl" class="button is-primary" target="_blank">
-                            <span class="icon is-small">
-                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                            </span>
-                            <span class="has-text-weight-bold">View Page</span>
-                        </a>
-
-                        <biz-social-media-share :data="socialMediaShare" />
-                    </div>
-                </div>
-            </div>
-
             <update-profile-information-form
                 v-if="$page.props.jetstream.canUpdateProfileInformation"
                 class="column is-12"
@@ -90,7 +67,6 @@
 
 <script>
     import BiodataForm from './BiodataForm';
-    import BizSocialMediaShare from '@/Biz/SocialMediaShare';
     import ConnectedAccountsForm from './ConnectedAccountsForm';
     import DeleteUserForm from './DeleteUserForm';
     import Layout from '@/Layouts/User';
@@ -106,7 +82,6 @@
 
         components: {
             BiodataForm,
-            BizSocialMediaShare,
             ConnectedAccountsForm,
             DeleteUserForm,
             Layout,
@@ -143,38 +118,6 @@
         data() {
             return {
                 biodataFormKey: 0,
-                socialMediaShare: {
-                    facebook: {
-                        url: this.profilePageUrl,
-                        title: 'Hello, ' + this.$page.props.user.first_name + ' here!',
-                        description: '',
-                        quote: '',
-                        hashtags: '',
-                        icon: 'fa-brands fa-facebook',
-                        class: null,
-                        text: 'Facebook',
-                    },
-                    twitter: {
-                        url: this.profilePageUrl,
-                        title: 'Hello, ' + this.$page.props.user.first_name + ' here!',
-                        description: '',
-                        quote: '',
-                        hashtags: '',
-                        icon: 'fa-brands fa-twitter',
-                        class: null,
-                        text: 'Twitter',
-                    },
-                    linkedIn: {
-                        url: this.profilePageUrl,
-                        title: 'Hello, ' + this.$page.props.user.first_name + ' here!',
-                        description: '',
-                        quote: '',
-                        hashtags: '',
-                        icon: 'fa-brands fa-linkedin-in',
-                        class: null,
-                        text: 'LinkedIn',
-                    }
-                },
             };
         },
 
