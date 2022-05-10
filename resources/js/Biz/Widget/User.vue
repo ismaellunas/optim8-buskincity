@@ -1,164 +1,166 @@
 <template>
-    <biz-panel class="is-white">
-        <template #heading>
-            <div class="columns">
-                <div class="column">
-                    {{ title }}
-                </div>
-                <div class="column">
-                    <biz-button-link
-                        v-if="data.permissions.add"
-                        class="is-primary is-small is-pulled-right"
-                        :href="route(data.baseRouteName+'.create')"
-                    >
-                        <span class="icon is-small">
-                            <i class="fas fa-plus" />
-                        </span>
-                        <span>Add New</span>
-                    </biz-button-link>
-                </div>
-            </div>
-        </template>
-
-        <template #default>
-            <template v-if="data.records.length > 0">
-                <biz-panel-block
-                    v-for="record in data.records"
-                    :key="record.id"
-                >
-                    <div
-                        class="media"
-                        style="width: 100%"
-                    >
-                        <biz-image
-                            v-if="record.profile_photo_url"
-                            class="media-left"
-                            ratio="is-64x64"
-                            rounded="is-rounded"
-                            :src="record.profile_photo_url"
-                        />
-
-                        <user-icon
-                            v-else
-                            class="mr-2"
-                            style="width: 64px;"
-                        />
-
-                        <div class="media-content">
-                            <div class="content">
-                                <p>
-                                    <strong>{{ record.full_name }}</strong>
-                                    <br>
-
-                                    <span>
-                                        {{ record.email }}
-                                    </span>
-                                    <br>
-
-                                    <span class="is-size-7 has-text-grey">
-                                        Registered, {{ record.registered_at }}
-                                    </span>
-                                    <br>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div
-                            v-if="showAction(record)"
-                            class="media-right"
-                        >
-                            <biz-dropdown class-button="is-ghost">
-                                <template #trigger>
-                                    <span class="icon">
-                                        <i class="fas fa-ellipsis-h" />
-                                    </span>
-                                </template>
-
-                                <biz-dropdown-item>
-                                    <biz-link
-                                        v-if="data.permissions.edit"
-                                        :href="route(data.baseRouteName+'.edit', {id: record.id})"
-                                    >
-                                        <span class="icon is-small mr-2">
-                                            <i class="fas fa-pen" />
-                                        </span>
-                                        <span>Edit</span>
-                                    </biz-link>
-                                </biz-dropdown-item>
-
-                                <template
-                                    v-if="data.permissions.delete
-                                        && record.id !== $page.props.user.id"
-                                >
-                                    <biz-dropdown-item>
-                                        <a
-                                            @click.prevent="deleteUserModal(record)"
-                                        >
-                                            <span class="icon is-small mr-2">
-                                                <i class="far fa-trash-alt" />
-                                            </span>
-                                            <span>Delete</span>
-                                        </a>
-                                    </biz-dropdown-item>
-                                    <biz-dropdown-item>
-                                        <a
-                                            v-if="!record.is_suspended"
-                                            @click.prevent="suspendUser(record)"
-                                        >
-                                            <span class="icon is-small mr-2">
-                                                <i class="fas fa-ban" />
-                                            </span>
-                                            <span>Suspend</span>
-                                        </a>
-                                        <a
-                                            v-if="record.is_suspended"
-                                            @click.prevent="unsuspendUser(record)"
-                                        >
-                                            <span class="icon is-small mr-2">
-                                                <i class="fas fa-hands-helping" />
-                                            </span>
-                                            <span>Unsuspend</span>
-                                        </a>
-                                    </biz-dropdown-item>
-                                </template>
-                            </biz-dropdown>
-                        </div>
+    <div class="column is-6">
+        <biz-panel class="is-white">
+            <template #heading>
+                <div class="columns">
+                    <div class="column">
+                        {{ title }}
                     </div>
-                </biz-panel-block>
-            </template>
-
-            <template v-else>
-                <biz-panel-block>
-                    Data empty.
-                </biz-panel-block>
-            </template>
-
-            <biz-panel-block>
-                <div
-                    class="level"
-                    style="width: 100%"
-                >
-                    <div class="level-left" />
-                    <div class="level-right">
+                    <div class="column">
                         <biz-button-link
-                            class="is-primary is-outlined is-small"
-                            :href="route(data.baseRouteName+'.index')"
+                            v-if="data.permissions.add"
+                            class="is-primary is-small is-pulled-right"
+                            :href="route(data.baseRouteName+'.create')"
                         >
-                            View All
+                            <span class="icon is-small">
+                                <i class="fas fa-plus" />
+                            </span>
+                            <span>Add New</span>
                         </biz-button-link>
                     </div>
                 </div>
-            </biz-panel-block>
+            </template>
 
-            <modal-form-delete
-                v-if="isModalOpen"
-                :get-candidates-route="data.baseRouteName+'.reassignment-candidates'"
-                :user="selectedUser"
-                @close="closeModal"
-                @delete-user="deleteUser"
-            />
-        </template>
-    </biz-panel>
+            <template #default>
+                <template v-if="data.records.length > 0">
+                    <biz-panel-block
+                        v-for="record in data.records"
+                        :key="record.id"
+                    >
+                        <div
+                            class="media"
+                            style="width: 100%"
+                        >
+                            <biz-image
+                                v-if="record.profile_photo_url"
+                                class="media-left"
+                                ratio="is-64x64"
+                                rounded="is-rounded"
+                                :src="record.profile_photo_url"
+                            />
+
+                            <user-icon
+                                v-else
+                                class="mr-2"
+                                style="width: 64px;"
+                            />
+
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <strong>{{ record.full_name }}</strong>
+                                        <br>
+
+                                        <span>
+                                            {{ record.email }}
+                                        </span>
+                                        <br>
+
+                                        <span class="is-size-7 has-text-grey">
+                                            Registered, {{ record.registered_at }}
+                                        </span>
+                                        <br>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div
+                                v-if="showAction(record)"
+                                class="media-right"
+                            >
+                                <biz-dropdown class-button="is-ghost">
+                                    <template #trigger>
+                                        <span class="icon">
+                                            <i class="fas fa-ellipsis-h" />
+                                        </span>
+                                    </template>
+
+                                    <biz-dropdown-item>
+                                        <biz-link
+                                            v-if="data.permissions.edit"
+                                            :href="route(data.baseRouteName+'.edit', {id: record.id})"
+                                        >
+                                            <span class="icon is-small mr-2">
+                                                <i class="fas fa-pen" />
+                                            </span>
+                                            <span>Edit</span>
+                                        </biz-link>
+                                    </biz-dropdown-item>
+
+                                    <template
+                                        v-if="data.permissions.delete
+                                            && record.id !== $page.props.user.id"
+                                    >
+                                        <biz-dropdown-item>
+                                            <a
+                                                @click.prevent="deleteUserModal(record)"
+                                            >
+                                                <span class="icon is-small mr-2">
+                                                    <i class="far fa-trash-alt" />
+                                                </span>
+                                                <span>Delete</span>
+                                            </a>
+                                        </biz-dropdown-item>
+                                        <biz-dropdown-item>
+                                            <a
+                                                v-if="!record.is_suspended"
+                                                @click.prevent="suspendUser(record)"
+                                            >
+                                                <span class="icon is-small mr-2">
+                                                    <i class="fas fa-ban" />
+                                                </span>
+                                                <span>Suspend</span>
+                                            </a>
+                                            <a
+                                                v-if="record.is_suspended"
+                                                @click.prevent="unsuspendUser(record)"
+                                            >
+                                                <span class="icon is-small mr-2">
+                                                    <i class="fas fa-hands-helping" />
+                                                </span>
+                                                <span>Unsuspend</span>
+                                            </a>
+                                        </biz-dropdown-item>
+                                    </template>
+                                </biz-dropdown>
+                            </div>
+                        </div>
+                    </biz-panel-block>
+                </template>
+
+                <template v-else>
+                    <biz-panel-block>
+                        Data empty.
+                    </biz-panel-block>
+                </template>
+
+                <biz-panel-block>
+                    <div
+                        class="level"
+                        style="width: 100%"
+                    >
+                        <div class="level-left" />
+                        <div class="level-right">
+                            <biz-button-link
+                                class="is-primary is-outlined is-small"
+                                :href="route(data.baseRouteName+'.index')"
+                            >
+                                View All
+                            </biz-button-link>
+                        </div>
+                    </div>
+                </biz-panel-block>
+
+                <modal-form-delete
+                    v-if="isModalOpen"
+                    :get-candidates-route="data.baseRouteName+'.reassignment-candidates'"
+                    :user="selectedUser"
+                    @close="closeModal"
+                    @delete-user="deleteUser"
+                />
+            </template>
+        </biz-panel>
+    </div>
 </template>
 
 <script>

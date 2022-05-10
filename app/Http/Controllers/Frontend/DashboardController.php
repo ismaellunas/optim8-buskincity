@@ -10,8 +10,12 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $firstName = auth()->user()->first_name;
+
         return Inertia::render('Dashboard', [
+            "title" => "Welcome, ".$firstName,
             "widgets" => app(WidgetFrontendService::class)->generateWidgets(),
+            "description" => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
         ]);
     }
 }

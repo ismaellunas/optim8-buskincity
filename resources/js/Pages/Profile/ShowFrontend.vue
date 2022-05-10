@@ -1,7 +1,9 @@
 <template>
     <layout>
         <template #header>
-            Profile
+            <h1 class="title is-2">
+                Profile
+            </h1>
         </template>
 
         <template #subheader>
@@ -9,51 +11,6 @@
         </template>
 
         <div class="columns is-multiline">
-            <div
-                v-if="can.public_page && qrCode.isDisplayed"
-                class="column is-6"
-            >
-                <h2 class="title is-4">
-                    Your QR code
-                </h2>
-                <div class="box is-shadowless">
-                    <div class="columns">
-                        <div class="column is-narrow">
-                            <biz-qr-code
-                                :height="128"
-                                :width="128"
-                                :text="profilePageUrl"
-                                :logo-url="qrCode.logoUrl"
-                                :name="qrCode.name"
-                                @data-url-download="setDownloadUrl"
-                                @data-url-print="setPrintUrl"
-                            />
-                        </div>
-
-                        <div class="column">
-                            <p>Print your QR code and place it on your pitch. It will allow your audience to find you on BuskinCity, send donations, book you for private gigs, or follow your work.</p>
-
-                            <div class="buttons are-small mt-5">
-                                <a
-                                    :href="qrCodeUrl.download"
-                                    class="button is-primary"
-                                    :download="qrCode.name"
-                                >
-                                    <span class="has-text-weight-bold">Download</span>
-                                </a>
-                                <a
-                                    :href="qrCodeUrl.print"
-                                    class="button"
-                                    :download="qrCode.name"
-                                >
-                                    <span class="has-text-weight-bold">Print</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div
                 v-if="can.public_page"
                 class="column is-6"
@@ -133,7 +90,6 @@
 
 <script>
     import BiodataForm from './BiodataForm';
-    import BizQrCode from '@/Biz/QrCode';
     import BizSocialMediaShare from '@/Biz/SocialMediaShare';
     import ConnectedAccountsForm from './ConnectedAccountsForm';
     import DeleteUserForm from './DeleteUserForm';
@@ -150,7 +106,6 @@
 
         components: {
             BiodataForm,
-            BizQrCode,
             BizSocialMediaShare,
             ConnectedAccountsForm,
             DeleteUserForm,
@@ -180,7 +135,6 @@
             countryOptions: { type: Array, default: () => [] },
             errors: {type: Object, default: () => {}},
             profilePageUrl: { type: String, default: null },
-            qrCode: { type: Object, required: true },
             sessions: { type: Array, default:() => [] },
             socialiteDrivers: { type: Array, default:() => []},
             supportedLanguageOptions: { type: Array, default: () => [] },
@@ -221,10 +175,6 @@
                         text: 'LinkedIn',
                     }
                 },
-                qrCodeUrl: {
-                    download: null,
-                    print: null,
-                },
             };
         },
 
@@ -249,14 +199,6 @@
         methods: {
             reSchema() {
                 this.biodataFormKey += 1;
-            },
-
-            setDownloadUrl(url) {
-                this.qrCodeUrl.download = url;
-            },
-
-            setPrintUrl(url) {
-                this.qrCodeUrl.print = url;
             },
         },
     };

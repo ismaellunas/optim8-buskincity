@@ -16,21 +16,15 @@
 </template>
 
 <script>
-    import PerformerApplicationLink from '@/Biz/Widget/PerformerApplicationLink';
-    import QrCode from '@/Biz/Widget/QrCode';
-    import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
-    import UpcomingEvents from '@/Biz/Widget/UpcomingEvents';
-    import WantToBecomeAStreetPerformer from '@/Biz/Widget/WantToBecomeAStreetPerformer';
+    import Post from '@/Biz/Widget/Post';
+    import User from '@/Biz/Widget/User';
 
     export default {
-        name: 'BizWidgetColumns',
+        name: 'BizWidgetColumnsAdmin',
 
         components: {
-            PerformerApplicationLink,
-            QrCode,
-            StreetPerformersYouMightLike,
-            UpcomingEvents,
-            WantToBecomeAStreetPerformer,
+            Post,
+            User,
         },
 
         props: {
