@@ -6,6 +6,13 @@ class WidgetFrontendService extends WidgetService
 {
     protected function getWidgetLists(): array
     {
-        return [];
+        return [
+            'qrCode',
+            'socialMediaShare',
+            'stripeConnect',
+            'upcomingEvents',
+            'streetPerformersYouMightLike',
+            'wantToBecomeAStreetPerformer',
+        ];
     }
 }

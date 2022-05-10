@@ -9,7 +9,7 @@
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <biz-widget-columns :widgets="widgets" />
+                    <biz-widget-columns-admin :widgets="widgets" />
                 </div>
             </div>
         </div>
@@ -18,12 +18,12 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
-    import BizWidgetColumns from '@/Biz/Widget/WidgetColumns';
+    import BizWidgetColumnsAdmin from '@/Biz/Widget/WidgetColumnsAdmin';
 
     export default {
         components: {
             AppLayout,
-            BizWidgetColumns,
+            BizWidgetColumnsAdmin,
         },
 
         props: {

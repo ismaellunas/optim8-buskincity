@@ -1,29 +1,38 @@
 <template>
     <div class="columns is-multiline">
-        <div
-            v-for="(widget, index) in widgets"
-            :key="index"
-            class="column is-half"
+        <template
+            v-for="(widget, order) in widgets"
+            :key="order"
         >
             <component
                 :is="widget.componentName"
+                :columns="widget.columns"
                 :data="widget.data"
+                :order="order"
                 :title="widget.title"
             />
-        </div>
+        </template>
     </div>
 </template>
 
 <script>
-    import Post from '@/Biz/Widget/Post';
-    import User from '@/Biz/Widget/User';
+    import QrCode from '@/Biz/Widget/QrCode';
+    import SocialMediaShare from '@/Biz/Widget/SocialMediaShare';
+    import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
+    import StripeConnect from '@/Biz/Widget/StripeConnect';
+    import UpcomingEvents from '@/Biz/Widget/UpcomingEvents';
+    import WantToBecomeAStreetPerformer from '@/Biz/Widget/WantToBecomeAStreetPerformer';
 
     export default {
         name: 'BizWidgetColumns',
 
         components: {
-            Post,
-            User,
+            QrCode,
+            SocialMediaShare,
+            StreetPerformersYouMightLike,
+            StripeConnect,
+            UpcomingEvents,
+            WantToBecomeAStreetPerformer,
         },
 
         props: {
