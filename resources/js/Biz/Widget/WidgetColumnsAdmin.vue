@@ -16,13 +16,15 @@
 </template>
 
 <script>
-    import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
+    import Post from '@/Biz/Widget/Post';
+    import User from '@/Biz/Widget/User';
 
     export default {
-        name: 'BizWidgetColumns',
+        name: 'BizWidgetColumnsAdmin',
 
         components: {
-            StreetPerformersYouMightLike,
+            Post,
+            User,
         },
 
         props: {
