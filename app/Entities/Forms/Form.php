@@ -157,15 +157,25 @@ class Form
             return false;
         }
 
-        if ($author->hasRole([
-            config('permission.super_admin_role'),
-            'Administrator'
-        ])) {
-            return true;
-        }
-
         if (!empty($roles)) {
             return $author->hasRole($roles);
+        }
+
+        return true;
+    }
+
+    public function canBeAccessedByLocation(string $locationRoute = null): bool
+    {
+        $author = $this->author;
+        $locations = $this->locations ?? [];
+
+        foreach ($locations as $location) {
+            if (
+                $location['name'] == $locationRoute
+                && !empty($location['visibility']['roles'])
+            ) {
+                return $author->hasRole($location['visibility']);
+            }
         }
 
         return true;

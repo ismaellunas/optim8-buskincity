@@ -81,6 +81,7 @@
         },
 
         emits: [
+            'loaded-empty-field',
             'loaded-forbidden',
             'loaded-successfully'
         ],
@@ -145,6 +146,10 @@
                     self.form = self.createForm(self.fieldGroups);
 
                     self.$emit('loaded-successfully', response.data);
+
+                    if (isEmpty(this.fieldGroups)) {
+                        self.$emit('loaded-empty-field');
+                    }
 
                 }).catch((error) => {
                     if (error.response) {

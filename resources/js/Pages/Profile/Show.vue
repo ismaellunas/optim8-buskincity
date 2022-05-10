@@ -48,7 +48,6 @@
         </div>
 
         <biodata-form
-            v-if="can.biodata_form"
             :key="biodataFormKey"
             class="box mt-10 mb-5"
             :user="$page.props.user"

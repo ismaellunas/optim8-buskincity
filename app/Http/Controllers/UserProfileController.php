@@ -40,7 +40,6 @@ class UserProfileController extends JetUserProfileController
                 [
                     'can' => [
                         'public_page' => $canPublicPage,
-                        'biodata_form' => auth()->user()->roles->isNotEmpty()
                     ],
                     'countryOptions' => app(CountryService::class)->getCountryOptions(),
                     'profilePageUrl' => $canPublicPage ? auth()->user()->profile_page_url : null,
