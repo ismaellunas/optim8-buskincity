@@ -49,6 +49,6 @@ class StripeConnectWidget implements WidgetInterface
 
     public function canBeAccessed(): bool
     {
-        return $this->user->hasRole('Performer');
+        return $this->user->can('manageStripeConnectedAccount', $this->user);
     }
 }
