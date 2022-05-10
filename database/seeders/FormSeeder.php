@@ -34,12 +34,25 @@ class FormSeeder extends Seeder
             "name" => "about_you",
             "title" => "About you",
             "order" => 1,
-            "visibility" => [
-                "roles" => ["Performer"]
-            ],
+            "visibility" => [],
             "locations" => [
-                'admin.profile.show',
-                'admin.users.edit',
+                [
+                    "name" => 'admin.profile.show',
+                    "visibility" => [
+                        "roles" => [
+                            "Performer"
+                        ]
+                    ]
+                ],
+                [
+                    "name" => 'admin.users.edit',
+                    "visibility" => [
+                        "roles" => [
+                            "Super Administrator",
+                            "Administrator"
+                        ]
+                    ]
+                ],
             ],
             "fields" => [
                 "discipline" => [
@@ -145,12 +158,25 @@ class FormSeeder extends Seeder
             "name" => "address",
             "title" => "Address & contact information",
             "order" => 2,
-            "visibility" => [
-                "roles" => ["Performer"]
-            ],
+            "visibility" => [],
             "locations" => [
-                'admin.profile.show',
-                'admin.users.edit',
+                [
+                    "name" => 'admin.profile.show',
+                    "visibility" => [
+                        "roles" => [
+                            "Performer"
+                        ]
+                    ]
+                ],
+                [
+                    "name" => 'admin.users.edit',
+                    "visibility" => [
+                        "roles" => [
+                            "Super Administrator",
+                            "Administrator"
+                        ]
+                    ]
+                ],
             ],
             "fields" => [
                 "phone" => [
@@ -250,12 +276,25 @@ class FormSeeder extends Seeder
             "name" => "social_media",
             "title" => "Social media",
             "order" => 3,
-            "visibility" => [
-                "roles" => ["Performer"]
-            ],
+            "visibility" => [],
             "locations" => [
-                'admin.profile.show',
-                'admin.users.edit',
+                [
+                    "name" => 'admin.profile.show',
+                    "visibility" => [
+                        "roles" => [
+                            "Performer",
+                            "Administrator"
+                        ]
+                    ]
+                ],
+                [
+                    "name" => 'admin.users.edit',
+                    "visibility" => [
+                        "roles" => [
+                            "Super Administrator"
+                        ]
+                    ]
+                ],
             ],
             "fields" => [
                 "facebook" => [
@@ -360,12 +399,25 @@ class FormSeeder extends Seeder
             "name" => "media",
             "title" => "Media",
             "order" => 4,
-            "visibility" => [
-                "roles" => ["Performer"]
-            ],
+            "visibility" => [],
             "locations" => [
-                'admin.profile.show',
-                'admin.users.edit',
+                [
+                    "name" => 'admin.profile.show',
+                    "visibility" => [
+                        "roles" => [
+                            "Performer"
+                        ]
+                    ]
+                ],
+                [
+                    "name" => 'admin.users.edit',
+                    "visibility" => [
+                        "roles" => [
+                            "Super Administrator",
+                            "Administrator"
+                        ]
+                    ]
+                ],
             ],
             "fields" => [
                 "promotional_video" => [

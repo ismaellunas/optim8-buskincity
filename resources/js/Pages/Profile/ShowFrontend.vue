@@ -34,8 +34,8 @@
             </div>
 
             <biodata-form
-                class="column is-12"
                 :key="biodataFormKey"
+                class="column is-12"
                 :user="$page.props.user"
             />
 
