@@ -6,6 +6,13 @@
             </h1>
         </template>
 
+        <template
+            v-if="description"
+            #headerDescription
+        >
+            <p>{{ description }}</p>
+        </template>
+
         <biz-widget-columns :widgets="widgets" />
     </layout>
 </template>
@@ -23,6 +30,7 @@
         props: {
             title: { type: String, default: 'Dashboard' },
             widgets: { type: Array, default:() => [] },
+            description: {type: String, default: null},
         },
     };
 </script>

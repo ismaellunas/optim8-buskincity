@@ -11,7 +11,7 @@
                     <div class="column is-6">
                         <slot name="header" />
 
-                        <slot name="subheader" />
+                        <slot name="headerDescription" />
                     </div>
                 </div>
             </div>

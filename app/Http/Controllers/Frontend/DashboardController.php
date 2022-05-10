@@ -15,6 +15,7 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', [
             "title" => "Welcome, ".$firstName,
             "widgets" => app(WidgetFrontendService::class)->generateWidgets(),
+            "description" => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
         ]);
     }
 }
