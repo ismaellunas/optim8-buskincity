@@ -1,5 +1,7 @@
 <template>
     <layout>
+        <Head title="Profile" />
+
         <template #header>
             <h1 class="title is-2">
                 Profile
@@ -80,6 +82,7 @@
     import UpdatePasswordForm from './UpdatePasswordForm';
     import UpdateProfileInformationForm from './UpdateProfileInformationForm';
     import { success, oops } from '@/Libs/alert';
+    import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'ProfileShowFrontend',
@@ -88,6 +91,7 @@
             BiodataForm,
             ConnectedAccountsForm,
             DeleteUserForm,
+            Head,
             Layout,
             LogoutOtherBrowserSessionsForm,
             SetPasswordForm,

@@ -1,5 +1,7 @@
 <template>
     <layout>
+        <Head title="Dashboard" />
+
         <template #header>
             <h1 class="title is-2">
                 {{ title }}
@@ -20,10 +22,12 @@
 <script>
     import BizWidgetColumns from '@/Biz/Widget/WidgetColumns';
     import Layout from '@/Layouts/User';
+    import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
             BizWidgetColumns,
+            Head,
             Layout,
         },
 
