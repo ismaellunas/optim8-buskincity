@@ -3,17 +3,15 @@
         id="main-container-wrapper"
         class="pb-4 mb-4"
     >
-        <biz-navbar-menu class="is-info" />
+        <frontend-navbar-menu />
 
         <div class="section is-small">
             <div class="container">
                 <div class="columns">
                     <div class="column is-6">
-                        <h1 class="title is-2">
-                            <slot name="header" />
-                        </h1>
+                        <slot name="header" />
 
-                        <slot name="subheader" />
+                        <slot name="headerDescription" />
                     </div>
                 </div>
             </div>
@@ -29,13 +27,13 @@
 
 <script>
     import BizHero from '@/Biz/Hero';
-    import BizNavbarMenu from '@/Biz/NavbarMenu';
+    import FrontendNavbarMenu from '@/Frontend/NavbarMenu';
 
     export default {
         name: 'LayoutUser',
 
         components: {
-            BizNavbarMenu,
+            FrontendNavbarMenu,
         },
     };
 </script>

@@ -20,22 +20,4 @@
             <img src="https://dummyimage.com/1408x400/808080/fff.png&text=B752" alt="hero-image">
         </figure>
     </section>
-
-    <section class="section theme-font">
-        <div class="container">
-            <div class="content">
-                <p>
-                    Hello there, {{ __('I love programming.') }}
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section class="section theme-font">
-        <div class="container">
-            <div class="notification is-info">
-                <button class="delete"></button>
-                Theme Default
-        </div>
-    </section>
 </x-layouts.master>

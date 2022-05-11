@@ -1,82 +1,22 @@
 <template>
     <layout>
+        <Head title="Profile" />
+
         <template #header>
-            Profile
+            <h1 class="title is-2">
+                Profile
+            </h1>
         </template>
 
-        <template #subheader>
-            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+        <template
+            v-if="description"
+            #headerDescription
+        >
+            <p>{{ description }}</p>
         </template>
+
 
         <div class="columns is-multiline">
-            <div
-                v-if="can.public_page && qrCode.isDisplayed"
-                class="column is-6"
-            >
-                <h2 class="title is-4">
-                    Your QR code
-                </h2>
-                <div class="box is-shadowless">
-                    <div class="columns">
-                        <div class="column is-narrow">
-                            <biz-qr-code
-                                :height="128"
-                                :width="128"
-                                :text="profilePageUrl"
-                                :logo-url="qrCode.logoUrl"
-                                :name="qrCode.name"
-                                @data-url-download="setDownloadUrl"
-                                @data-url-print="setPrintUrl"
-                            />
-                        </div>
-
-                        <div class="column">
-                            <p>Print your QR code and place it on your pitch. It will allow your audience to find you on BuskinCity, send donations, book you for private gigs, or follow your work.</p>
-
-                            <div class="buttons are-small mt-5">
-                                <a
-                                    :href="qrCodeUrl.download"
-                                    class="button is-primary"
-                                    :download="qrCode.name"
-                                >
-                                    <span class="has-text-weight-bold">Download</span>
-                                </a>
-                                <a
-                                    :href="qrCodeUrl.print"
-                                    class="button"
-                                    :download="qrCode.name"
-                                >
-                                    <span class="has-text-weight-bold">Print</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div
-                v-if="can.public_page"
-                class="column is-6"
-            >
-                <h2 class="title is-4">
-                    Share your page
-                </h2>
-                <div class="box is-shadowless">
-                    <p>As a performer, you have a public page to share with your audience. It's just like your unique site within BuskinCity. You can copy the link or share on your social media:</p>
-
-                    <div class="buttons are-small mt-5">
-                        <a :href="profilePageUrl" class="button is-primary" target="_blank">
-                            <span class="icon is-small">
-                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                            </span>
-                            <span class="has-text-weight-bold">View Page</span>
-                        </a>
-
-                        <biz-social-media-share :data="socialMediaShare" />
-                    </div>
-                </div>
-            </div>
-
             <update-profile-information-form
                 v-if="$page.props.jetstream.canUpdateProfileInformation"
                 class="column is-12"
@@ -100,17 +40,15 @@
             </div>
 
             <biodata-form
-                class="column is-12"
                 :key="biodataFormKey"
+                class="column is-12"
                 :user="$page.props.user"
             />
 
-            <div
+            <two-factor-authentication-form
                 v-if="$page.props.jetstream.canManageTwoFactorAuthentication && $page.props.socialstream.hasPassword"
-                class="mb-5"
-            >
-                <two-factor-authentication-form class="mt-10 sm:mt-0" />
-            </div>
+                class="column is-12"
+            />
 
             <connected-accounts-form
                 v-if="isConnectedAccountFormEnabled"
@@ -135,8 +73,6 @@
 
 <script>
     import BiodataForm from './BiodataForm';
-    import BizQrCode from '@/Biz/QrCode';
-    import BizSocialMediaShare from '@/Biz/SocialMediaShare';
     import ConnectedAccountsForm from './ConnectedAccountsForm';
     import DeleteUserForm from './DeleteUserForm';
     import Layout from '@/Layouts/User';
@@ -146,16 +82,16 @@
     import UpdatePasswordForm from './UpdatePasswordForm';
     import UpdateProfileInformationForm from './UpdateProfileInformationForm';
     import { success, oops } from '@/Libs/alert';
+    import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'ProfileShowFrontend',
 
         components: {
             BiodataForm,
-            BizQrCode,
-            BizSocialMediaShare,
             ConnectedAccountsForm,
             DeleteUserForm,
+            Head,
             Layout,
             LogoutOtherBrowserSessionsForm,
             SetPasswordForm,
@@ -180,9 +116,9 @@
         props: {
             can: { type: Object, required: true },
             countryOptions: { type: Array, default: () => [] },
+            description: { type: String, default: null },
             errors: {type: Object, default: () => {}},
             profilePageUrl: { type: String, default: null },
-            qrCode: { type: Object, required: true },
             sessions: { type: Array, default:() => [] },
             socialiteDrivers: { type: Array, default:() => []},
             supportedLanguageOptions: { type: Array, default: () => [] },
@@ -191,42 +127,6 @@
         data() {
             return {
                 biodataFormKey: 0,
-                socialMediaShare: {
-                    facebook: {
-                        url: this.profilePageUrl,
-                        title: 'Hello, ' + this.$page.props.user.first_name + ' here!',
-                        description: '',
-                        quote: '',
-                        hashtags: '',
-                        icon: 'fa-brands fa-facebook',
-                        class: null,
-                        text: 'Facebook',
-                    },
-                    twitter: {
-                        url: this.profilePageUrl,
-                        title: 'Hello, ' + this.$page.props.user.first_name + ' here!',
-                        description: '',
-                        quote: '',
-                        hashtags: '',
-                        icon: 'fa-brands fa-twitter',
-                        class: null,
-                        text: 'Twitter',
-                    },
-                    linkedIn: {
-                        url: this.profilePageUrl,
-                        title: 'Hello, ' + this.$page.props.user.first_name + ' here!',
-                        description: '',
-                        quote: '',
-                        hashtags: '',
-                        icon: 'fa-brands fa-linkedin-in',
-                        class: null,
-                        text: 'LinkedIn',
-                    }
-                },
-                qrCodeUrl: {
-                    download: null,
-                    print: null,
-                },
             };
         },
 
@@ -251,14 +151,6 @@
         methods: {
             reSchema() {
                 this.biodataFormKey += 1;
-            },
-
-            setDownloadUrl(url) {
-                this.qrCodeUrl.download = url;
-            },
-
-            setPrintUrl(url) {
-                this.qrCodeUrl.print = url;
             },
         },
     };

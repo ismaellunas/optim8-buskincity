@@ -1,34 +1,40 @@
 <template>
     <layout>
+        <Head title="Dashboard" />
+
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h1 class="title is-2">
                 {{ title }}
-            </h2>
+            </h1>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <biz-widget-columns :widgets="widgets" />
-                </div>
-            </div>
-        </div>
+        <template
+            v-if="description"
+            #headerDescription
+        >
+            <p>{{ description }}</p>
+        </template>
+
+        <biz-widget-columns :widgets="widgets" />
     </layout>
 </template>
 
 <script>
     import BizWidgetColumns from '@/Biz/Widget/WidgetColumns';
     import Layout from '@/Layouts/User';
+    import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
             BizWidgetColumns,
+            Head,
             Layout,
         },
 
         props: {
             title: { type: String, default: 'Dashboard' },
             widgets: { type: Array, default:() => [] },
+            description: {type: String, default: null},
         },
     };
 </script>

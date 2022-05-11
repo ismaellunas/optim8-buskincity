@@ -28,19 +28,9 @@ class UserProfileController extends JetUserProfileController
             $socialiteDrivers = LoginService::getAvailableSocialiteDrivers();
         }
 
-        $qrCodeIsDisplayed = app(SettingService::class)->qrCodePublicPageIsDisplayed();
         $canPublicPage = auth()->user()->roles->contains(function ($role) {
             return $role->hasPermissionTo('public_page.profile');
         });
-
-        if ($canPublicPage && $qrCodeIsDisplayed) {
-            $data = [
-                'qrCode' => [
-                    'logoUrl' => app(SettingService::class)->qrCodePublicPageLogo(),
-                    'name' => auth()->user()->qr_code_logo_name,
-                ]
-            ];
-        }
 
         return Jetstream::inertia()->render(
             $request,
@@ -50,16 +40,13 @@ class UserProfileController extends JetUserProfileController
                 [
                     'can' => [
                         'public_page' => $canPublicPage,
-                        'biodata_form' => auth()->user()->roles->isNotEmpty()
                     ],
                     'countryOptions' => app(CountryService::class)->getCountryOptions(),
                     'profilePageUrl' => $canPublicPage ? auth()->user()->profile_page_url : null,
-                    'qrCode' => [
-                        'isDisplayed' => $qrCodeIsDisplayed
-                    ],
                     'sessions' => $this->sessions($request)->all(),
                     'socialiteDrivers' => $socialiteDrivers,
                     'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
+                    'description' => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
                 ]
             )
         );
