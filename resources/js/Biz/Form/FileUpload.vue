@@ -6,15 +6,31 @@
             {{ label }}
         </template>
 
+        <div
+            v-for="medium in listMedia"
+            :key="medium.id"
+            class="columns mb-0"
+        >
+            <div class="column is-full">
+                <component
+                    :is="mediaComponent"
+                    :medium="medium"
+                    @on-delete-clicked="deleteMedium($event)"
+                />
+            </div>
+        </div>
+
         <file-pond
             ref="pond"
+            :key="filePondKey"
             name="file_upload"
             class-name="my-pond"
             :accepted-file-types="acceptedFileTypes"
             :allow-multiple="allowMultiple"
             :label-idle="placeholder"
-            :max-files="maxFiles"
-            :required="required"
+            :max-files="maxFileNumber"
+            :required="isRequired"
+            :disabled="disabled"
             @updatefiles="onUpdateFiles"
         />
 
@@ -43,11 +59,13 @@
 <script>
     import BizFormField from '@/Biz/Form/Field';
     import BizInputError from '@/Biz/InputError';
-    import vueFilePond from "vue-filepond";
+    import BizMediaTextItem from '@/Biz/Media/TextItem';
     import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
     import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-    import { useModelWrapper } from '@/Libs/utils';
+    import vueFilePond from "vue-filepond";
+    import { confirmDelete } from '@/Libs/alert';
     import { replace } from 'lodash';
+    import { useModelWrapper } from '@/Libs/utils';
 
     import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
     import "filepond/dist/filepond.min.css";
@@ -61,9 +79,10 @@
         name: 'FileUpload',
 
         components: {
-            FilePond,
             BizFormField,
             BizInputError,
+            BizMediaTextItem,
+            FilePond,
         },
 
         inheritAttrs: false,
@@ -89,6 +108,14 @@
                 type: [Object, null],
                 required: true,
             },
+            media: {
+                type: Array,
+                default:() => []
+            },
+            mediaComponent: {
+                type: String,
+                default: 'BizMediaTextItem',
+            },
             disabled: {
                 type: Boolean,
                 default: false
@@ -113,7 +140,6 @@
 
         emits: [
             'on-file-picked',
-            'update:modelValue',
         ],
 
         setup(props, { emit }) {
@@ -124,9 +150,51 @@
             });
 
             return {
-                files: useModelWrapper(props, emit),
+                computedValue: useModelWrapper(props, emit),
                 acceptedFileTypes: acceptedTypes.toString()
             };
+        },
+
+        data() {
+            return {
+                filePondKey: 0,
+            };
+        },
+
+        computed: {
+            hasMedia() {
+                return this.media && this.media.length > 0;
+            },
+
+            maxFileNumber() {
+                let mediaLength = 0;
+                let deleteMedia = 0;
+
+                if (this.hasMedia) {
+                    mediaLength = this.media.length;
+                }
+
+                if (this.computedValue.delete_media) {
+                    deleteMedia = this.computedValue.delete_media.length;
+                }
+
+                return this.maxFiles - mediaLength + deleteMedia;
+            },
+
+            listMedia() {
+                const self = this;
+
+                return this.media.filter((medium) => {
+                    return !self
+                        .computedValue
+                        .delete_media
+                        .includes(medium.id);
+                });
+            },
+
+            isRequired() {
+                return !this.hasMedia ? this.required : false;
+            },
         },
 
         methods: {
@@ -137,7 +205,21 @@
                     tmpFiles.push(file.source);
                 });
 
-                this.$emit('update:modelValue', tmpFiles);
+                this.computedValue.files = tmpFiles;
+            },
+
+            deleteMedium(medium) {
+                const self = this;
+
+                confirmDelete().then((result) => {
+                    if (result.isConfirmed) {
+                        self.computedValue.delete_media.push(medium.id);
+                    }
+                });
+            },
+
+            reset() {
+                this.filePondKey += 1;
             },
         },
     }
