@@ -10,7 +10,7 @@ class UserUpdateRequest extends UserStoreRequest
 
     public function authorize()
     {
-        return auth()->user()->can('user.update', $this->route('user'));
+        return auth()->user()->can('update', $this->route('user'));
     }
 
     public function rules(): array
