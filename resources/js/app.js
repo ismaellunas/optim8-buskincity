@@ -1,6 +1,7 @@
 require('./bootstrap');
 
 // Import modules...
+import { appName } from '@/Libs/defaults';
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3'
 import { InertiaProgress } from '@inertiajs/progress';
@@ -9,7 +10,7 @@ import VueLoading from 'vue-loading-overlay';
 import VueSocialSharing from 'vue-social-sharing'
 
 createInertiaApp({
-    title: title => `${title} - My App`,
+    title: title => `${title} | ${appName}`,
     resolve: (name) => import(`./Pages/${name}`),
     //resolve: name => require(`./Pages/${name}`),
     setup({ el, app, props, plugin }) {
