@@ -1,29 +1,5 @@
 <template>
     <div class="mx-auto py-10">
-        <div
-            v-if="can.public_page && qrCode.isDisplayed"
-            class="mb-5"
-        >
-            <biz-action-section>
-                <template #title>
-                    Scan Me
-                </template>
-
-                <template #description>
-                    Scan QR Code to see the performer public page.
-                </template>
-
-                <template #content>
-                    <biz-qr-code
-                        :is-downloadable="true"
-                        :text="profilePageUrl"
-                        :logo-url="qrCode.logoUrl"
-                        :name="qrCode.name"
-                    />
-                </template>
-            </biz-action-section>
-        </div>
-
         <update-profile-information-form
             v-if="$page.props.jetstream.canUpdateProfileInformation"
             class="box mb-5"
@@ -82,8 +58,6 @@
 
 <script>
     import BiodataForm from './BiodataForm';
-    import BizActionSection from '@/Biz/ActionSection';
-    import BizQrCode from '@/Biz/QrCode';
     import ConnectedAccountsForm from './ConnectedAccountsForm';
     import DeleteUserForm from './DeleteUserForm';
     import LogoutOtherBrowserSessionsForm from './LogoutOtherBrowserSessionsForm';
@@ -96,8 +70,6 @@
     export default {
         components: {
             BiodataForm,
-            BizActionSection,
-            BizQrCode,
             ConnectedAccountsForm,
             DeleteUserForm,
             LogoutOtherBrowserSessionsForm,
@@ -112,7 +84,6 @@
             'countryOptions',
             'errors',
             'profilePageUrl',
-            'qrCode',
             'sessions',
             'socialiteDrivers',
             'supportedLanguageOptions',
