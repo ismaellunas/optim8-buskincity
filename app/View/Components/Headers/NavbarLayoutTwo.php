@@ -5,7 +5,7 @@ namespace App\View\Components\Headers;
 class NavbarLayoutTwo extends BaseNavbarLayout
 {
     public $menuChunks;
-    public $layoutName = 'navbar-layout-two';
+    public $layoutName = 'navbar-layout-one';
 
     public function __construct($menus, $currentLanguage, $logoUrl, $languageOptions)
     {

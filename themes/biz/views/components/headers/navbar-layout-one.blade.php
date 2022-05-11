@@ -1,87 +1,74 @@
-<nav class="navbar is-info">
-    <div class="navbar-brand">
-        <a
-            class="navbar-item"
-            href="{{ route('homepage') }}"
-        >
-            <img
-                src="{{ $logo }}"
-                alt=""
-                height="28"
-            >
-        </a>
+<nav class="navbar has-shadow is-fixed-top" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="{{ route('homepage') }}">
+                <img src="{{ $logo }}">
+            </a>
 
-        <a
-            class="navbar-burger burger"
-            data-target="navbarExampleTransparentExample"
-        >
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-        </a>
-    </div>
-
-    <div
-        id="navbarExampleTransparentExample"
-        class="navbar-menu"
-    >
-        <div class="navbar-start">
-            @foreach ($menus as $menu)
-                @if ($menu->children)
-                    <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
-                        <a class="navbar-link">
-                            {{ $menu->title }}
-                        </a>
-                        <div class="navbar-dropdown">
-                            @foreach ($menu->children as $childMenu)
-                                <a
-                                    class="navbar-item"
-                                    href="{{ $childMenu->link }}"
-                                    target="{{ $childMenu->target }}"
-                                >
-                                    {{ $childMenu->title }}
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-                @else
-                    <a
-                        class="navbar-item"
-                        href="{{ $menu->link }}"
-                        target="{{ $menu->target }}"
-                    >
-                        {{ $menu->title }}
-                    </a>
-                @endif
-            @endforeach
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarExampleTransparentExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
         </div>
 
-        <div class="navbar-end">
-            <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
-                <span class="navbar-link">{{ strtoupper($currentLanguage) }}</span>
-                <div class="navbar-dropdown is-boxed">
-                    @foreach ($languageOptions as $language)
+        <div id="navbarExampleTransparentExample" class="navbar-menu">
+            <div class="navbar-start">
+                @foreach ($menus as $menu)
+                    @if ($menu->children)
+                        <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
+                            <a class="navbar-link">
+                                {{ $menu->title }}
+                            </a>
+                            <div class="navbar-dropdown">
+                                @foreach ($menu->children as $childMenu)
+                                    <a
+                                        class="navbar-item"
+                                        href="{{ $childMenu->link }}"
+                                        target="{{ $childMenu->target }}"
+                                    >
+                                        {{ $childMenu->title }}
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
                         <a
                             class="navbar-item"
-                            href="{{ route('language.change', $language['id']) }}"
+                            href="{{ $menu->link }}"
+                            target="{{ $menu->target }}"
                         >
-                            {{ strtoupper($language['id']) }}
+                            {{ $menu->title }}
                         </a>
-                    @endforeach
+                    @endif
+                @endforeach
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a href="#" class="navbar-link">{{ strtoupper($currentLanguage) }}</a>
+                    <div class="navbar-dropdown">
+                        @foreach ($languageOptions as $language)
+                            <a
+                                class="navbar-item"
+                                href="{{ route('language.change', $language['id']) }}"
+                            >
+                                {{ strtoupper($language['id']) }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a href="{{ route('register') }}" class="button is-primary">
+                            <span class="has-text-weight-bold">{{ __("Sign up") }}</span>
+                        </a>
+                        <a href="{{ route('login') }}" class="button is-light">
+                            <span class="has-text-weight-bold">{{ __("Log in") }}</span>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <a
-                href="{{ route('register') }}"
-                class="navbar-item pr-5"
-            >
-                Sign Up
-            </a>
-            <a
-                href="{{ route('login') }}"
-                class="navbar-item pr-5"
-            >
-                Login
-            </a>
         </div>
     </div>
 </nav>
