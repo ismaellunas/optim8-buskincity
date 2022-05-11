@@ -6,9 +6,13 @@
             </h1>
         </template>
 
-        <template #subheader>
-            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+        <template
+            v-if="description"
+            #headerDescription
+        >
+            <p>{{ description }}</p>
         </template>
+
 
         <div class="columns is-multiline">
             <update-profile-information-form
@@ -108,6 +112,7 @@
         props: {
             can: { type: Object, required: true },
             countryOptions: { type: Array, default: () => [] },
+            description: { type: String, default: null },
             errors: {type: Object, default: () => {}},
             profilePageUrl: { type: String, default: null },
             sessions: { type: Array, default:() => [] },
