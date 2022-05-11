@@ -40,6 +40,8 @@ class PerformerApplicationController extends Controller
                     )
                 ]),
             ],
+            'title' => __('Become a Performer'),
+            'description' => __('Fill in the form below to become a performer on BuskinCity. It will allow you to receive payments, private bookings and have your public page.')
         ]);
     }
 
