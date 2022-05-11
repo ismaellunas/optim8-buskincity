@@ -13,7 +13,9 @@
         <title>{{ $title ?? config('app.name') }}</title>
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="{{ $appCssUrl }}">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 
         @if (!empty($fontUrls['mainTextFont']))
             <link rel="stylesheet" href="{{ $fontUrls['mainTextFont'] }}">
@@ -29,11 +31,14 @@
 
         @stack('styles')
 
+        {{-- <link rel="stylesheet" href="{{ $appCssUrl }}"> --}}
+        <link rel="stylesheet" href="{{ mix('css/template.css') }}">
+
         @env ('production')
             <!-- Styles -->
-            <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@4/dist/vue-loading.css" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@4/dist/vue-loading.css">
             <!-- Scripts -->
-            <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
+            <script src="https://kit.fontawesome.com/32c120ba1c.js" crossorigin="anonymous"></script>
         @endenv
 
         @env ('local')
@@ -45,7 +50,7 @@
             @if (config('constants.fontawesome_local'))
                 <script src="{{ mix('js/fontawesome.js') }}" defer></script>
             @else
-                <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
+                <script src="https://kit.fontawesome.com/32c120ba1c.js" crossorigin="anonymous"></script>
             @endif
         @endenv
 
