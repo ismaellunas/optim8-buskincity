@@ -44,6 +44,7 @@
     import BizFormField from '@/Biz/Form/Field';
     import BizInputError from '@/Biz/InputError';
     import vueFilePond from "vue-filepond";
+    import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
     import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
     import FilePondPluginImagePreview from "filepond-plugin-image-preview";
     import { useModelWrapper } from '@/Libs/utils';
@@ -53,6 +54,7 @@
     import "filepond/dist/filepond.min.css";
 
     const FilePond = vueFilePond(
+        FilePondPluginFileValidateSize,
         FilePondPluginFileValidateType,
         FilePondPluginImagePreview
     );
