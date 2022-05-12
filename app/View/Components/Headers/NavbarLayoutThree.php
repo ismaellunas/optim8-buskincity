@@ -6,7 +6,7 @@ use App\Services\MenuService;
 
 class NavbarLayoutThree extends BaseNavbarLayout
 {
-    public $layoutName = 'navbar-layout-three';
+    public $layoutName = 'navbar-layout-one';
     public $socialMediaMenus;
 
     public function __construct($menus, $currentLanguage, $logoUrl, $languageOptions)
