@@ -150,7 +150,7 @@
             });
 
             return {
-                computedValue: useModelWrapper(props, emit),
+                fileUploadField: useModelWrapper(props, emit),
                 acceptedFileTypes: acceptedTypes.toString()
             };
         },
@@ -174,8 +174,8 @@
                     mediaLength = this.media.length;
                 }
 
-                if (this.computedValue.delete_media) {
-                    deleteMedia = this.computedValue.delete_media.length;
+                if (this.fileUploadField.deleted_media) {
+                    deleteMedia = this.fileUploadField.deleted_media.length;
                 }
 
                 return this.maxFiles - mediaLength + deleteMedia;
@@ -186,8 +186,8 @@
 
                 return this.media.filter((medium) => {
                     return !self
-                        .computedValue
-                        .delete_media
+                        .fileUploadField
+                        .deleted_media
                         .includes(medium.id);
                 });
             },
@@ -205,7 +205,7 @@
                     tmpFiles.push(file.source);
                 });
 
-                this.computedValue.files = tmpFiles;
+                this.fileUploadField.files = tmpFiles;
             },
 
             deleteMedium(medium) {
@@ -213,7 +213,7 @@
 
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
-                        self.computedValue.delete_media.push(medium.id);
+                        self.fileUploadField.deleted_media.push(medium.id);
                     }
                 });
             },
