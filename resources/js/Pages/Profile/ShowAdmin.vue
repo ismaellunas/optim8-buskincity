@@ -23,7 +23,6 @@
         provide() {
             return {
                 can: this.can,
-                countryOptions: this.countryOptions,
                 errors: this.errors,
                 profilePageUrl: this.profilePageUrl,
                 qrCode: this.qrCode,
@@ -35,7 +34,6 @@
 
         props: {
             can: { type: Object, required: true },
-            countryOptions: { type: Array, default: () => [] },
             errors: {type: Object, default: () => {}},
             profilePageUrl: { type: String, default: null },
             qrCode: { type: Object, required: true },

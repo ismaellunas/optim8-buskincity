@@ -28,7 +28,6 @@
             v-if="$page.props.jetstream.canUpdateProfileInformation"
             class="box mb-5"
             :user="$page.props.user"
-            :country-options="countryOptions"
             :language-options="supportedLanguageOptions"
             :profile-page-url="can.public_page ? profilePageUrl : null"
             @after-update-profile="reSchema()"
@@ -109,7 +108,6 @@
 
         inject: [
             'can',
-            'countryOptions',
             'errors',
             'profilePageUrl',
             'qrCode',
