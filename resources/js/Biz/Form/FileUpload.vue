@@ -14,6 +14,8 @@
             :allow-multiple="allowMultiple"
             :label-idle="placeholder"
             :max-files="maxFiles"
+            :max-file-size="maxFileSizeUpload"
+            :max-total-file-size="maxTotalFileSizeUpload"
             :required="required"
             @updatefiles="onUpdateFiles"
         />
@@ -109,6 +111,14 @@
                 type: Number,
                 default: 1
             },
+            maxFileSize: {
+                type: [Number, null],
+                default: null
+            },
+            maxTotalFileSize: {
+                type: [Number, null],
+                default: null
+            },
         },
 
         emits: [
@@ -127,6 +137,16 @@
                 files: useModelWrapper(props, emit),
                 acceptedFileTypes: acceptedTypes.toString()
             };
+        },
+
+        computed: {
+            maxFileSizeUpload() {
+                return this.maxFileSize ? this.maxFileSize + `KB` : null;
+            },
+
+            maxTotalFileSizeUpload() {
+                return this.maxTotalFileSize ? this.maxTotalFileSize + `KB` : null;
+            },
         },
 
         methods: {
