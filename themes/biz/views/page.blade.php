@@ -28,7 +28,9 @@
         </div>
     </section>
 
+    {{--
     <section class="section">
         <example-component />
     </section>
+    --}}
 </x-layouts.master>

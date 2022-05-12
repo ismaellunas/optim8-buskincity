@@ -3,38 +3,37 @@
         id="main-container-wrapper"
         class="pb-4 mb-4"
     >
-        <biz-navbar-menu class="is-info" />
+        <frontend-navbar-menu />
 
-        <biz-hero
-            class="box py-0"
-            size="small"
-        >
+        <div class="section is-small">
             <div class="container">
-                <p class="title">
-                    <slot name="header" />
-                </p>
-            </div>
-        </biz-hero>
+                <div class="columns">
+                    <div class="column is-6">
+                        <slot name="header" />
 
-        <div
-            id="main-container"
-            class="container mb-2"
-        >
-            <slot />
+                        <slot name="headerDescription" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section is-small has-background-light">
+            <div class="container">
+                <slot />
+            </div>
         </div>
     </div>
 </template>
 
 <script>
     import BizHero from '@/Biz/Hero';
-    import BizNavbarMenu from '@/Biz/NavbarMenu';
+    import FrontendNavbarMenu from '@/Frontend/NavbarMenu';
 
     export default {
         name: 'LayoutUser',
 
         components: {
-            BizHero,
-            BizNavbarMenu,
+            FrontendNavbarMenu,
         },
     };
 </script>

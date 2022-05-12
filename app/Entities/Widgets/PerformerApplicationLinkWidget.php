@@ -10,7 +10,7 @@ class PerformerApplicationLinkWidget implements WidgetInterface
     protected $baseRouteName = "performer-application-form";
     protected $componentName = "PerformerApplicationLink";
     protected $data = [];
-    protected $title = "Performer Application";
+    protected $title = "Become a Performer";
     protected $user;
 
     public function __construct()

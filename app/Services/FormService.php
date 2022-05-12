@@ -48,7 +48,7 @@ class FormService
 
         $forms = collect();
 
-        $models = FieldGroup::whereJsonContains('data->locations', $locationRoute)
+        $models = FieldGroup::whereJsonContains('data->locations', [ ['name' => $locationRoute] ])
             ->get();
 
         foreach ($models as $model) {
@@ -57,9 +57,12 @@ class FormService
 
             $form = new $className($model->id, $model->data, $author);
 
-            $form->model = $model;
+            if ($form->canBeAccessedByLocation($locationRoute)) {
+                $form->model = $model;
 
-            $forms->put($form->name, $form);
+                $forms->put($form->name, $form);
+            }
+
         }
 
         return $forms;
@@ -82,7 +85,9 @@ class FormService
         $rules = [];
 
         foreach ($forms as $form) {
-            $rules = array_merge($rules, $form->rules($location));
+            if ($form->canBeAccessed()) {
+                $rules = array_merge($rules, $form->rules($location));
+            }
         }
 
         return $rules;

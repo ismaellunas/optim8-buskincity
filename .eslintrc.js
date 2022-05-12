@@ -14,6 +14,7 @@ module.exports = {
     },
     "plugins": [],
     "rules": {
+        "vue/no-v-for-template-key": "off",
         "vue/html-indent": ["error", 4, {
             "attribute": 1,
             "baseIndent": 1,

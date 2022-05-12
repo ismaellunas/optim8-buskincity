@@ -1,11 +1,7 @@
 <template>
-    <biz-action-section>
+    <form-action-section>
         <template #title>
             Two Factor Authentication
-        </template>
-
-        <template #description>
-            Add additional security to your account using two factor authentication.
         </template>
 
         <template #content>
@@ -56,11 +52,11 @@
                 <div v-if="!twoFactorEnabled">
                     <biz-confirm-password @confirmed="enableTwoFactorAuthentication">
                         <biz-button
+                            class="is-medium is-primary"
                             :class="{ 'opacity-25': enabling }"
                             :disabled="enabling"
-                            class="is-primary"
                         >
-                            Enable
+                            <span class="has-text-weight-bold">Enable</span>
                         </biz-button>
                     </biz-confirm-password>
                 </div>
@@ -70,7 +66,7 @@
                         <biz-button
                             v-if="recoveryCodes.length > 0"
                         >
-                            Regenerate Recovery Codes
+                            <span class="has-text-weight-bold">Regenerate Recovery Codes</span>
                         </biz-button>
                     </biz-confirm-password>
 
@@ -78,37 +74,37 @@
                         <biz-button
                             v-if="recoveryCodes.length === 0"
                         >
-                            Show Recovery Codes
+                            <span class="has-text-weight-bold">Show Recovery Codes</span>
                         </biz-button>
                     </biz-confirm-password>
 
                     <biz-confirm-password @confirmed="disableTwoFactorAuthentication">
                         <biz-button
-                            class="is-danger ml-2"
+                            class="is-medium is-danger ml-2"
                             :class="{ 'opacity-25': disabling }"
                             :disabled="disabling"
                         >
-                            Disable
+                            <span class="has-text-weight-bold">Disable</span>
                         </biz-button>
                     </biz-confirm-password>
                 </div>
             </div>
         </template>
-    </biz-action-section>
+    </form-action-section>
 </template>
 
 <script>
-    import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizActionSection from '@/Biz/ActionSection';
-    import BizConfirmPassword from '@/Biz/ConfirmPassword';
     import BizButton from '@/Biz/Button';
+    import BizConfirmPassword from '@/Biz/ConfirmPassword';
+    import FormActionSection from '@/Frontend/ActionSection';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import { oops as oopsAlert } from '@/Libs/alert';
 
     export default {
         components: {
-            BizActionSection,
-            BizConfirmPassword,
             BizButton,
+            BizConfirmPassword,
+            FormActionSection,
         },
 
         mixins: [
