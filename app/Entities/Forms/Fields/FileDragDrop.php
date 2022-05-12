@@ -117,7 +117,7 @@ class FileDragDrop extends BaseField
 
         $files = $inputs[$this->name]['files'] ?? [];
 
-        $deleteMediaIds = $inputs[$this->name]['delete_media'] ?? [];
+        $deleteMediaIds = $inputs[$this->name]['deleted_media'] ?? [];
 
         if (! empty($deleteMediaIds)) {
             $deleteMediaIds = array_intersect(
@@ -178,7 +178,7 @@ class FileDragDrop extends BaseField
 
     private function deleteMediaKey(): string
     {
-        return $this->name.'.delete_media';
+        return $this->name.'.deleted_media';
     }
 
     private function getFileExtensions(): array
@@ -268,7 +268,7 @@ class FileDragDrop extends BaseField
     protected function getSchemaValue(): mixed
     {
         return [
-            'delete_media' => [],
+            'deleted_media' => [],
             'files' => [],
         ];
     }
