@@ -107,7 +107,7 @@ class File extends BaseField
         $data = [];
         $value = [];
 
-        if (! $inputs[$this->name]) {
+        if (! isset($inputs[$this->name])) {
             return $data;
         }
 
