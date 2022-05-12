@@ -6,11 +6,11 @@ use App\Contracts\MenuInterface;
 
 class UrlMenu extends BaseMenu implements MenuInterface
 {
-    public function __construct(array $attributes = [])
+    public function __construct($menuItem, $locale)
     {
-        parent::__construct($attributes);
+        parent::__construct($menuItem, $locale);
 
-        $this->url = $attributes['url'] ?? null;
+        $this->url = $menuItem->url;
     }
 
     public function getUrl(): string
