@@ -43,7 +43,6 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $this->updateVerifiedUser($user, $input);
         } else {
             $inputs = [
-                'country_code' => $input['country_code'],
                 'language_id' => $input['language_id'],
             ];
 
@@ -64,7 +63,6 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     {
         $inputs = [
             'email_verified_at' => null,
-            'country_code' => $input['country_code'],
             'language_id' => $input['language_id'],
         ];
 
@@ -86,11 +84,6 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'max:255',
                 Rule::unique('users')->ignore($user->id)
             ],
-            'country_code' => [
-                'required',
-                'max:2',
-                'exists:App\Models\Country,alpha2'
-            ],
             'photo' => [
                 'nullable',
                 'mimes:jpg,jpeg,png',
@@ -100,7 +93,6 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
         ],
         [],
         [
-            'country_code' => __('validation.attributes.country_code'),
             'language_id' => __('validation.attributes.language_id'),
         ])->validateWithBag('updateProfileInformation');
     }
