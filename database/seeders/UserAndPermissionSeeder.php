@@ -31,9 +31,11 @@ class UserAndPermissionSeeder extends Seeder
             'first_name' => 'Super',
             'last_name' => 'Administrator',
             'email' => 'super.administrator@'.$domain,
-            'country_code' => $countryCode,
             'language_id' => $englishId,
         ]);
+
+        $superAdminUser->setMeta('country', $countryCode);
+        $superAdminUser->saveMetas();
 
         $superAdminUser->assignRole(config('permission.super_admin_role'));
 
@@ -42,9 +44,11 @@ class UserAndPermissionSeeder extends Seeder
                 'first_name' => 'Admin',
                 'last_name' => 'Administrator',
                 'email' => 'admin@'.$domain,
-                'country_code' => $countryCode,
                 'language_id' => $englishId,
             ]);
+
+        $adminUser->setMeta('country', $countryCode);
+        $adminUser->saveMetas();
 
         $adminUser->assignRole('Administrator');
 
@@ -55,20 +59,21 @@ class UserAndPermissionSeeder extends Seeder
                     'first_name' => 'Dan',
                     'last_name' => 'Rice',
                     'email' => 'dan.rice@'.$domain,
-                    'country_code' => $countryCode,
                     'language_id' => $englishId,
                 ],
                 [
                     'first_name' => 'John',
                     'last_name' => 'Doe',
                     'email' => 'john.doe@'.$domain,
-                    'country_code' => $countryCode,
                     'language_id' => $englishId,
                 ],
             ))
             ->create();
 
         foreach ($performers as $performer) {
+            $performer->setMeta('country', $countryCode);
+            $performer->saveMetas();
+
             $performer->assignRole('Performer');
         }
     }

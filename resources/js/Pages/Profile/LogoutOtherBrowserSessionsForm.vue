@@ -60,7 +60,7 @@
 
             <div class="flex mt-5">
                 <biz-button
-                    class="is-primary"
+                    class="is-medium is-primary"
                     @click="confirmLogout"
                 >
                     <span class="has-text-weight-bold">

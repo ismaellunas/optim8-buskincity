@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\MenuItem;
+use App\Rules\ValidUrl;
 use App\Services\TranslationService;
 use Illuminate\Validation\Rule;
 
@@ -33,7 +34,7 @@ class MenuItemRequest extends BaseFormRequest
             ],
             'url' => [
                 'nullable',
-                'url',
+                new ValidUrl(),
             ],
             'is_blank' => [
                 'boolean',

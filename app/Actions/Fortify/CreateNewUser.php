@@ -34,7 +34,7 @@ class CreateNewUser implements CreatesNewUsers
 
         $this->transform($input);
 
-        return User::factory()
+        $user = User::factory()
             ->unverified()
             ->create([
                 'first_name' => $input['first_name'],
@@ -44,6 +44,11 @@ class CreateNewUser implements CreatesNewUsers
                 'country_code' => $input['country_code'],
                 'language_id' => $input['language_id'],
             ]);
+
+        $user->setMeta('country', $input['country_code']);
+        $user->saveMetas();
+
+        return $user;
     }
 
     private function transform(&$input): void
