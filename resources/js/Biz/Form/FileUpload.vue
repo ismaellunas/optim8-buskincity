@@ -21,6 +21,7 @@
         </div>
 
         <file-pond
+            v-if="maxFileNumber > 0"
             ref="pond"
             :key="filePondKey"
             name="file_upload"
