@@ -48,6 +48,7 @@
     import Checkbox from './Checkbox';
     import CheckboxGroup from './CheckboxGroup';
     import File from './File';
+    import FileDragDrop from './FileDragDrop';
     import Number from './Number';
     import Phone from './Phone';
     import Radio from './Radio';
@@ -64,6 +65,7 @@
             Checkbox,
             CheckboxGroup,
             File,
+            FileDragDrop,
             Number,
             Phone,
             Radio,
