@@ -23,9 +23,12 @@
                             <div class="navbar-dropdown">
                                 @foreach ($menu->children as $childMenu)
                                     <a
-                                        class="navbar-item"
-                                        href="{{ $childMenu->link }}"
-                                        target="{{ $childMenu->target }}"
+                                        @class([
+                                            'navbar-item',
+                                            'has-text-primary' => $childMenu->isActive(request()->url()),
+                                        ])
+                                        href="{{ $childMenu->getUrl() }}"
+                                        target="{{ $childMenu->getTarget() }}"
                                     >
                                         {{ $childMenu->title }}
                                     </a>
@@ -34,9 +37,12 @@
                         </div>
                     @else
                         <a
-                            class="navbar-item"
-                            href="{{ $menu->link }}"
-                            target="{{ $menu->target }}"
+                            @class([
+                                'navbar-item',
+                                'has-text-primary' => $menu->isActive(request()->url()),
+                            ])
+                            href="{{ $menu->getUrl() }}"
+                            target="{{ $menu->getTarget() }}"
                         >
                             {{ $menu->title }}
                         </a>

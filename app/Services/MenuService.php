@@ -18,6 +18,7 @@ use App\Entities\Caches\{
     MenuCache,
     SettingCache,
 };
+use Illuminate\Support\Collection;
 
 class MenuService
 {
@@ -28,51 +29,91 @@ class MenuService
         $locales = array_merge([config('app.fallback_locale')], $locales);
 
         foreach ($locales as $locale) {
-            $menus[$locale] = Menu::generateMenuItems($locale);
+            $menus[$locale] = $this->menuArrayFormatter(
+                $this->getStructuredHeaderMenu($locale)
+            );
         }
 
         return $menus;
     }
 
-    public function getHeaderMenu(string $locale): array
+    private function getTypeMenuClass(string $type)
+    {
+        return "\\App\\Entities\\Menus\\".MenuItem::TYPE_VALUES[$type]."Menu";
+    }
+
+    private function createStructuredMenus(
+        Collection $menuItems,
+        string $locale,
+        ?int $parentId = null
+    ): Collection {
+        $menus = collect();
+
+        $menuItems
+            ->where('parent_id', '==', $parentId)
+            ->sortBy('order')
+            ->each(function ($menuItem) use ($menus, $menuItems, $locale) {
+                $className = $this->getTypeMenuClass($menuItem->type);
+                $menu = new $className($menuItem, $locale);
+
+                if ($menuItems->contains('parent_id', $menuItem->id)) {
+                    $menu->children = $this->createStructuredMenus(
+                        $menuItems,
+                        $locale,
+                        $menuItem->id
+                    );
+                }
+
+                $menus->push($menu);
+            });
+
+        return $menus;
+    }
+
+    private function getStructuredHeaderMenu(string $locale): Collection
+    {
+        $menu = Menu::header()
+            ->locale($locale)
+            ->menuItemsBuilder()
+            ->first();
+
+        if ($menu) {
+            return $this->createStructuredMenus($menu->menuItems, $menu->locale);
+        } else {
+            return collect();
+        }
+    }
+
+    public function getHeaderMenu(string $locale): Collection
     {
         return app(MenuCache::class)->remember(
             'header_menu',
             function () use ($locale) {
-                $menu = Menu::header()
-                    ->locale($locale)
-                    ->with([
-                        'menuItems' => function ($query) {
-                            $query
-                                ->orderBy('order', 'ASC')
-                                ->orderBy('parent_id', 'ASC')
-                                ->with([
-                                    'post' => function ($query) {
-                                        $query->select([
-                                            'id',
-                                            'slug',
-                                        ]);
-                                    },
-                                    'page' => function ($query) {
-                                        $query->select('id');
-                                        $query->with('translations', function ($query) {
-                                            $query->select([
-                                                'id',
-                                                'page_id',
-                                                'locale',
-                                                'slug',
-                                            ]);
-                                        });
-                                    },
-                                ]);
-                        },
-                    ])
-                    ->first();
-
-                return $menu ? Menu::createArrayMenuItems($menu) : [];
+                return $this->getStructuredHeaderMenu($locale);
             },
             $locale
         );
+    }
+
+    private function menuArrayFormatter(Collection $typedMenus)
+    {
+        $menus = [];
+        foreach ($typedMenus as $menu) {
+            $menuItem = $menu->getModel();
+            $menuItem['link'] = $menu->getUrl();
+            $menuItem['target'] = $menu->getTarget();
+            $menuItem['isInternalLink'] = $menu->isInternalLink($menuItem['link']);
+
+            $menuItem['children'] = [];
+            if (!empty($menu->children)) {
+                $menuItem['children'] = $this->menuArrayFormatter(
+                    $menu->children
+                );
+            }
+
+            $menus[] = $menuItem;
+        }
+        return $menus;
     }
 
     public function getFooterMenus(array $locales = []): array
@@ -82,48 +123,34 @@ class MenuService
         $locales = array_merge([config('app.fallback_locale')], $locales);
 
         foreach ($locales as $locale) {
-            $menus[$locale] = Menu::generateMenuItems($locale, 2);
+            $menus[$locale] = $this->menuArrayFormatter(
+                $this->getStructuredFooterMenu($locale)
+            );
         }
 
         return $menus;
     }
 
-    public function getFooterMenu(string $locale): array
+    private function getStructuredFooterMenu(string $locale): Collection
+    {
+        $menu = Menu::footer()
+            ->locale($locale)
+            ->menuItemsBuilder()
+            ->first();
+
+        if ($menu) {
+            return $this->createStructuredMenus($menu->menuItems, $menu->locale);
+        } else {
+            return collect();
+        }
+    }
+
+    public function getFooterMenu(string $locale): Collection
     {
         return app(MenuCache::class)->remember(
             'footer_menu',
             function () use ($locale) {
-                $menu = Menu::footer()
-                    ->locale($locale)
-                    ->with([
-                        'menuItems' => function ($query) {
-                            $query
-                                ->orderBy('order', 'ASC')
-                                ->orderBy('parent_id', 'ASC')
-                                ->with([
-                                    'post' => function ($query) {
-                                        $query->select([
-                                            'id',
-                                            'slug',
-                                        ]);
-                                    },
-                                    'page' => function ($query) {
-                                        $query->select('id');
-                                        $query->with('translations', function ($query) {
-                                            $query->select([
-                                                'id',
-                                                'page_id',
-                                                'locale',
-                                                'slug',
-                                            ]);
-                                        });
-                                    },
-                                ]);
-                        },
-                    ])
-                    ->first();
-
-                return $menu ? Menu::createArrayMenuItems($menu) : [];
+                return $this->getStructuredFooterMenu($locale);
             },
             $locale
         );

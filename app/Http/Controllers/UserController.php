@@ -87,7 +87,6 @@ class UserController extends CrudController
             'record' => $record,
             'roleOptions' => $this->userService->getRoleOptions(),
             'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
-            'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'title' => $this->getCreateTitle(),
         ]));
     }
@@ -106,7 +105,6 @@ class UserController extends CrudController
             'first_name' => $inputs['first_name'],
             'last_name' => $inputs['last_name'],
             'email' => $inputs['email'],
-            'country_code' => $inputs['country_code'],
             'language_id' => $inputs['language_id'],
         ]);
 
@@ -178,7 +176,6 @@ class UserController extends CrudController
             'first_name',
             'last_name',
             'email',
-            'country_code',
             'language_id',
         ]));
 

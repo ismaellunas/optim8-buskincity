@@ -65,6 +65,7 @@
                     <biz-confirm-password @confirmed="regenerateRecoveryCodes">
                         <biz-button
                             v-if="recoveryCodes.length > 0"
+                            class="is-medium"
                         >
                             <span class="has-text-weight-bold">Regenerate Recovery Codes</span>
                         </biz-button>
@@ -73,6 +74,7 @@
                     <biz-confirm-password @confirmed="showRecoveryCodes">
                         <biz-button
                             v-if="recoveryCodes.length === 0"
+                            class="is-medium"
                         >
                             <span class="has-text-weight-bold">Show Recovery Codes</span>
                         </biz-button>

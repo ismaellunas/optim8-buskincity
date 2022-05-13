@@ -53,7 +53,6 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                 'first_name' => $name['firstName'],
                 'last_name' => $name['lastName'],
                 'email' => $providerUser->getEmail(),
-                'country_code' => app(IPService::class)->getCountryCode(),
                 'language_id' => $languageId,
                 'password' => null,
             ]), function (User $user) use ($provider, $providerUser) {
@@ -66,6 +65,9 @@ class CreateUserFromProvider implements CreatesUserFromProvider
                 $user->switchConnectedAccount(
                     $this->createsConnectedAccounts->create($user, $provider, $providerUser)
                 );
+
+                $user->setMeta('country', app(IPService::class)->getCountryCode());
+                $user->saveMetas();
             });
         });
     }

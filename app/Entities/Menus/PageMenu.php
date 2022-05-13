@@ -6,11 +6,11 @@ use App\Contracts\MenuInterface;
 
 class PageMenu extends BaseMenu implements MenuInterface
 {
-    public function __construct(array $attributes = [])
+    public function __construct($menuItem, $locale)
     {
-        parent::__construct($attributes);
+        parent::__construct($menuItem, $locale);
 
-        $this->page_id = $attributes['page_id'] ?? null;
+        $this->page_id = $menuItem->page_id;
     }
 
     protected function getEagerLoads(): array
@@ -33,8 +33,7 @@ class PageMenu extends BaseMenu implements MenuInterface
 
     public function getUrl(): string
     {
-        $locale = $this->getLocale();
-        $page = $this->getModel()->page->translateOrDefault($locale);
+        $page = $this->getModel()->page->translateOrDefault($this->locale);
 
         return route('frontend.pages.show', [
             'page_translation' => $page->slug,
