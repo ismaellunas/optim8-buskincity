@@ -6,11 +6,11 @@ use App\Contracts\MenuInterface;
 
 class PostMenu extends BaseMenu implements MenuInterface
 {
-    public function __construct(array $attributes = [])
+    public function __construct($menuItem, $locale)
     {
-        parent::__construct($attributes);
+        parent::__construct($menuItem, $locale);
 
-        $this->post_id = $attributes['post_id'] ?? null;
+        $this->post_id = $menuItem->post_id;
     }
 
     protected function getEagerLoads(): array
