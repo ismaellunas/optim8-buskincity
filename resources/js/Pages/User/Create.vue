@@ -17,7 +17,6 @@
                     >
                         <form-user-profile
                             v-model="form"
-                            :country-options="countryOptions"
                             :photo-url="photoUrl"
                             :language-options="supportedLanguageOptions"
                             :role-options="roleOptions"
@@ -69,7 +68,6 @@
             FormUserProfile,
         },
         props: {
-            countryOptions: { type: Array, default: () => [] },
             errors: { type: Object, default: () => {} },
             supportedLanguageOptions: { type: Array, default: () => [] },
             record: {type: Object, default: () => {} },

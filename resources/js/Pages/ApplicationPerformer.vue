@@ -300,6 +300,8 @@
                                     :allow-multiple="true"
                                     :accepted-types="acceptedImageTypes"
                                     :max-files="10"
+                                    :max-file-size="oneMegabyte * 1.5"
+                                    :max-total-file-size="(oneMegabyte * 1.5) * 10"
                                     :message="error('photos')"
                                 >
                                     <template #note>
@@ -349,7 +351,7 @@
     import BizLabel from '@/Biz/Label';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { acceptedImageTypes } from '@/Libs/defaults';
+    import { acceptedImageTypes, oneMegabyte } from '@/Libs/defaults';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -425,6 +427,7 @@
             return {
                 acceptedImageTypes: acceptedImageTypes,
                 loader: null,
+                oneMegabyte: oneMegabyte,
                 selectedFiles: [],
             }
         },
