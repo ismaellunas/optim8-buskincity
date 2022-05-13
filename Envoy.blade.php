@@ -50,16 +50,17 @@
     ];
 @endsetup
 
-@story('heroku:deploy-simple')
+@story('heroku:deploy')
+    git-restore-and-stash
     install-dependencies
     git-commit-deployment
-    heroku:config-set
     heroku:push
     heroku:migration
+    heroku:route-list
     heroku:clean-after-deploy
 @endstory
 
-@story('heroku:deploy')
+@story('heroku:deploy-full')
     git-restore-and-stash
     install-dependencies
     git-commit-deployment
@@ -77,7 +78,6 @@
 @task('heroku:clean-after-deploy')
     heroku run php artisan optimize:clear
     heroku run rm Envoy.blade.php
-    heroku run rm .env.deploy
     heroku maintenance:off
 @endtask
 
