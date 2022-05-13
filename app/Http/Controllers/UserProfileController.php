@@ -6,7 +6,6 @@ use App\Services\{
     CountryService,
     LanguageService,
     LoginService,
-    SettingService,
 };
 use Illuminate\Http\Request;
 use Laravel\Jetstream\Jetstream;
