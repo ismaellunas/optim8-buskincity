@@ -2,8 +2,8 @@
 
 namespace App\Entities\Menus;
 
-use App\Models\Menu;
 use App\Models\MenuItem;
+use Illuminate\Support\Str;
 
 abstract class BaseMenu
 {
@@ -19,27 +19,20 @@ abstract class BaseMenu
     public $page_id;
     public $post_id;
     public $category_id;
+    public $children;
 
-    protected $menu = null;
+    protected $locale;
     protected $menuItem = null;
     protected $modelName = MenuItem::class;
 
-    public function __construct(array $attributes = [])
+    public function __construct($menuItem, $locale)
     {
-        $model = new $this->modelName();
+        $this->locale = $locale;
+        $this->menuItem = $menuItem;
 
-        foreach ($model->getAttributes() as $attribute => $value) {
+        foreach ($menuItem->getAttributes() as $attribute => $value) {
             $this->$attribute = $value;
         }
-
-        $this->id = $attributes['id'] ?? null;
-        $this->title = $attributes['title'] ?? null;
-        $this->type = $attributes['type'] ?? null;
-        $this->order = $attributes['order'] ?? null;
-        $this->icon = $attributes['icon'] ?? null;
-        $this->is_blank = $attributes['is_blank'] ?? false;
-        $this->parent_id = $attributes['parent_id'] ?? null;
-        $this->menu_id = $attributes['menu_id'] ?? null;
     }
 
     protected function getEagerLoads(): array
@@ -47,40 +40,13 @@ abstract class BaseMenu
         return [];
     }
 
-    public function getAttributes(): array
-    {
-        $attributes = [];
-
-        $model = new $this->modelName();
-
-        foreach ($model->getFillable() as $attributeName) {
-            $attributes[ $attributeName ] = $this->$attributeName;
-        }
-
-        return $attributes;
-    }
-
-    protected function getParentModel(): ?Menu
-    {
-        if ($this->menu == null) {
-            $this->menu = $this->getModel()->menu;
-        }
-
-        return $this->menu;
-    }
-
-    protected function getModel(): ?MenuItem
+    public function getModel(): ?MenuItem
     {
         if ($this->menuItem == null && $this->id) {
             $this->loadModel();
         }
 
         return $this->menuItem;
-    }
-
-    protected function getLocale(): ?string
-    {
-        return $this->getParentModel()->locale ?? null;
     }
 
     protected function loadModel()
@@ -92,18 +58,20 @@ abstract class BaseMenu
             ->find($this->id);
     }
 
-    public function setModel(MenuItem $menuItem)
-    {
-        $this->menuItem = $menuItem;
-    }
-
-    public function setParentModel(Menu $menu)
-    {
-        $this->menu = $menu;
-    }
+    abstract public function getUrl();
 
     public function getTarget(): ?string
     {
         return $this->getModel()->is_blank ? "_blank" : null;
+    }
+
+    public function isInternalLink(): bool
+    {
+        return Str::startsWith($this->getUrl(), config('app.url'));
+    }
+
+    public function isActive(string $url): bool
+    {
+        return $this->getUrl() == $url;
     }
 }

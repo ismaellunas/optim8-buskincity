@@ -6,11 +6,11 @@ use App\Contracts\MenuInterface;
 
 class CategoryMenu extends BaseMenu implements MenuInterface
 {
-    public function __construct(array $attributes = [])
+    public function __construct($menuItem, $locale)
     {
-        parent::__construct($attributes);
+        parent::__construct($menuItem, $locale);
 
-        $this->category_id = $attributes['category_id'] ?? null;
+        $this->category_id = $menuItem->category_id;
     }
 
     protected function getEagerLoads(): array
