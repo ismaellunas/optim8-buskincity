@@ -5,17 +5,19 @@ namespace App\Entities\Forms\Fields;
 use App\Entities\CloudinaryStorage;
 use App\Helpers\HumanReadable;
 use App\Models\Media;
-use App\Rules\FieldMaxFile;
-use App\Rules\FieldMinFile;
+use App\Rules\{
+    FieldMaxFile,
+    FieldMinFile
+};
 use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
-class File extends BaseField
+class FileDragDrop extends BaseField
 {
-    protected $type = "File";
+    protected $type = "FileDragDrop";
 
     public $fileLabel;
     public $placeholder;
@@ -115,7 +117,7 @@ class File extends BaseField
 
         $files = $inputs[$this->name]['files'] ?? [];
 
-        $deleteMediaIds = $inputs[$this->name]['delete_media'] ?? [];
+        $deleteMediaIds = $inputs[$this->name]['deleted_media'] ?? [];
 
         if (! empty($deleteMediaIds)) {
             $deleteMediaIds = array_intersect(
@@ -176,7 +178,7 @@ class File extends BaseField
 
     private function deleteMediaKey(): string
     {
-        return $this->name.'.delete_media';
+        return $this->name.'.deleted_media';
     }
 
     private function getFileExtensions(): array
@@ -266,7 +268,7 @@ class File extends BaseField
     protected function getSchemaValue(): mixed
     {
         return [
-            'delete_media' => [],
+            'deleted_media' => [],
             'files' => [],
         ];
     }
