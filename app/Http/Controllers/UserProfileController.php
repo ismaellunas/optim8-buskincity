@@ -41,7 +41,6 @@ class UserProfileController extends JetUserProfileController
                     'can' => [
                         'public_page' => $canPublicPage,
                     ],
-                    'countryOptions' => app(CountryService::class)->getCountryOptions(),
                     'profilePageUrl' => $canPublicPage ? auth()->user()->profile_page_url : null,
                     'sessions' => $this->sessions($request)->all(),
                     'socialiteDrivers' => $socialiteDrivers,
