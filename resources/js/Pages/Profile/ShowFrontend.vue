@@ -21,7 +21,6 @@
                 v-if="$page.props.jetstream.canUpdateProfileInformation"
                 class="column is-12"
                 :user="$page.props.user"
-                :country-options="countryOptions"
                 :language-options="supportedLanguageOptions"
                 @after-update-profile="reSchema()"
             />
@@ -103,7 +102,6 @@
         provide() {
             return {
                 can: this.can,
-                countryOptions: this.countryOptions,
                 errors: this.errors,
                 profilePageUrl: this.profilePageUrl,
                 qrCode: this.qrCode,
@@ -115,7 +113,6 @@
 
         props: {
             can: { type: Object, required: true },
-            countryOptions: { type: Array, default: () => [] },
             description: { type: String, default: null },
             errors: {type: Object, default: () => {}},
             profilePageUrl: { type: String, default: null },
