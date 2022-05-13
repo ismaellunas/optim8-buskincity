@@ -29,6 +29,8 @@
             :allow-multiple="allowMultiple"
             :label-idle="placeholder"
             :max-files="maxFileNumber"
+            :max-file-size="maxFileSizeUpload"
+            :max-total-file-size="maxTotalFileSizeUpload"
             :required="isRequired"
             :disabled="disabled"
             @updatefiles="onUpdateFiles"
@@ -60,6 +62,7 @@
     import BizFormField from '@/Biz/Form/Field';
     import BizInputError from '@/Biz/InputError';
     import BizMediaTextItem from '@/Biz/Media/TextItem';
+    import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
     import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
     import FilePondPluginImagePreview from "filepond-plugin-image-preview";
     import vueFilePond from "vue-filepond";
@@ -71,6 +74,7 @@
     import "filepond/dist/filepond.min.css";
 
     const FilePond = vueFilePond(
+        FilePondPluginFileValidateSize,
         FilePondPluginFileValidateType,
         FilePondPluginImagePreview
     );
@@ -136,6 +140,14 @@
                 type: Number,
                 default: 1
             },
+            maxFileSize: {
+                type: [Number, null],
+                default: null
+            },
+            maxTotalFileSize: {
+                type: [Number, null],
+                default: null
+            },
         },
 
         emits: [
@@ -179,6 +191,14 @@
                 }
 
                 return this.maxFiles - mediaLength + deleteMedia;
+            },
+
+            maxFileSizeUpload() {
+                return this.maxFileSize ? this.maxFileSize + `KB` : null;
+            },
+
+            maxTotalFileSizeUpload() {
+                return this.maxTotalFileSize ? this.maxTotalFileSize + `KB` : null;
             },
 
             listMedia() {
