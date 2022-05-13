@@ -15,9 +15,9 @@
                     <p>
                         @foreach ($menus as $menu)
                             <a
-                                href="{{ $menu->link }}"
+                                href="{{ $menu->getUrl() }}"
                                 class="pl-5 has-text-black"
-                                target="{{ $menu->target }}"
+                                target="{{ $menu->getTarget() }}"
                             >
                                 {{ $menu->title }}
                             </a>

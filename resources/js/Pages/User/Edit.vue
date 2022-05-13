@@ -27,7 +27,6 @@
                             :photo-url="photoUrl"
                             :role-options="roleOptions"
                             :language-options="supportedLanguageOptions"
-                            :country-options="countryOptions"
                             :error-bag="errorBag"
                             :profile-page-url="can.public_profile ? record.profilePageUrl : null"
                         />
@@ -142,7 +141,6 @@
 
         props: {
             can: { type: Object, required: true },
-            countryOptions: { type: Array, default: () => [] },
             errors: { type: Object, default: () => {} },
             record: {type: Object, default: () => {} },
             roleOptions: { type: Array, default: () => [] },
@@ -158,7 +156,6 @@
                 email: props.record.email,
                 photo: null,
                 is_photo_deleted: false,
-                country_code: props.record.country_code,
                 language_id: props.record.language_id,
             };
 

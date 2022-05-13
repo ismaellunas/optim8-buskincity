@@ -43,7 +43,7 @@ class PostController extends Controller
 
         $post = $this->postService->getFirstBySlug($slug, $locale);
 
-        if ($post['status'] != Post::STATUS_PUBLISHED) {
+        if ($post && $post['status'] != Post::STATUS_PUBLISHED) {
 
             $user = auth()->user();
             if ($user === null || $user->can('post.read') === false) {
