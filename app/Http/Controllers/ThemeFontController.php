@@ -6,9 +6,6 @@ use App\Entities\Caches\SettingCache;
 use App\Http\Requests\ThemeFontRequest;
 use App\Models\Setting;
 use App\Services\SettingService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
 use Inertia\Inertia;
 
 class ThemeFontController extends ThemeOptionController
