@@ -26,7 +26,7 @@
             :key="filePondKey"
             name="file_upload"
             class-name="my-pond"
-            :accepted-file-types="acceptedFileTypes"
+            :accepted-file-types="acceptedTypes"
             :allow-multiple="allowMultiple"
             :label-idle="placeholder"
             :max-files="maxFileNumber"
@@ -156,15 +156,8 @@
         ],
 
         setup(props, { emit }) {
-            const acceptedTypes = [];
-
-            props.acceptedTypes.forEach(function (type) {
-                acceptedTypes.push(replace(type, '.', 'image/'));
-            });
-
             return {
                 fileUploadField: useModelWrapper(props, emit),
-                acceptedFileTypes: acceptedTypes.toString()
             };
         },
 

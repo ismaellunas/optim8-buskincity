@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
+use Symfony\Component\Mime\MimeTypes;
 
 class FileDragDrop extends BaseField
 {
@@ -49,7 +50,7 @@ class FileDragDrop extends BaseField
                 ? $this->getMedias($this->storedValue)
                 : $this->defaultValue
             ),
-            'accept' => $this->getDottedFileExtensions(),
+            'accept' => $this->getMimeTypes(),
         ];
 
         return array_merge(parent::schema(), $schema);
@@ -199,12 +200,19 @@ class FileDragDrop extends BaseField
         return $extensions;
     }
 
-    private function getDottedFileExtensions(): array
+    private function getMimeTypes()
     {
-        return array_map(
-            function ($value) { return '.'.$value;},
-            $this->getFileExtensions()
-        );
+        $mimeTypes = [];
+        $mimes = new MimeTypes();
+
+        foreach ($this->getFileExtensions() as $extension) {
+            $mimeTypes = array_merge(
+                $mimeTypes,
+                $mimes->getMimeTypes($extension)
+            );
+        }
+
+        return $mimeTypes;
     }
 
     public function validationRules(): array
