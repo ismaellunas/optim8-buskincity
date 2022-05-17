@@ -34,8 +34,7 @@
 
         @stack('styles')
 
-        {{-- <link rel="stylesheet" href="{{ $appCssUrl }}"> --}}
-        <link rel="stylesheet" href="{{ mix('css/template.css') }}">
+        <link rel="stylesheet" href="{{ $appCssUrl }}">
 
         @env ('production')
             <!-- Styles -->
