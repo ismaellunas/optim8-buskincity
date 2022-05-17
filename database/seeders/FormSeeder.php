@@ -472,6 +472,7 @@ class FormSeeder extends Seeder
                     "disabled" => false,
                     "max_file_number" => 5,
                     "min_file_number" => 1,
+                    "max_file_size" => config('constants.one_megabyte') * 50,
                     "validation" => [
                         "rules" => [
                             "required",

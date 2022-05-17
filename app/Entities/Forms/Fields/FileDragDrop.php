@@ -24,6 +24,7 @@ class FileDragDrop extends BaseField
     public $placeholder;
     public $maxFileNumber;
     public $minFileNumber;
+    public $maxFileSize;
 
     public $defaultValue = [];
 
@@ -35,6 +36,7 @@ class FileDragDrop extends BaseField
 
         $this->maxFileNumber = $data['max_file_number'] ?? null;
         $this->minFileNumber = $data['min_file_number'] ?? 0;
+        $this->maxFileSize = $data['max_file_size'] ?? null;
         $this->fileLabel = $data['file_label'] ?? 'Choose a file';
     }
 
@@ -45,6 +47,7 @@ class FileDragDrop extends BaseField
             'placeholder' => $this->placeholder,
             'max_file_number' => $this->maxFileNumber,
             'min_file_number' => $this->minFileNumber,
+            'max_file_size' => $this->maxFileSize,
             'media' => (
                 !empty($this->storedValue)
                 ? $this->getMedias($this->storedValue)
