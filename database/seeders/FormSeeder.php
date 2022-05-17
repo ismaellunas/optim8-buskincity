@@ -463,10 +463,10 @@ class FormSeeder extends Seeder
                     "translated" => false,
                 ],
                 "gallery" => [
-                    "type" => "File",
+                    "type" => "FileDragDrop",
                     "label" => "Gallery",
                     "file_label" => "Choose an image",
-                    "placeholder" => null,
+                    "placeholder" => "Drop files here...",
                     "note" => null,
                     "readonly" => false,
                     "disabled" => false,
