@@ -24,7 +24,7 @@ class PerformerApplicationController extends Controller
 
         return Inertia::render('ApplicationPerformer', [
             'countryOptions' => app(CountryService::class)->getCountryOptions(),
-            'defaultCountry' => $user->country_code,
+            'defaultCountry' => $user->getMetas(['country'])->first(),
             'disciplineOptions' => $this->getDisciplineOptions(),
             'email' => $user->email,
             'firstName' => $user->first_name,
