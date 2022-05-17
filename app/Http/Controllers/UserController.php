@@ -138,7 +138,11 @@ class UserController extends CrudController
             $query->limit(1);
         }]);
 
-        $user->append('isSuperAdministrator', 'profilePageUrl');
+        $user->append(
+            'isSuperAdministrator',
+            'profilePageUrl',
+            'isConnectedAccountUser'
+        );
 
         $user->roles->makeHidden('pivot');
 

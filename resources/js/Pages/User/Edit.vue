@@ -50,6 +50,7 @@
             </form>
 
             <form
+                v-if="!record.isConnectedAccountUser"
                 class="columns"
                 method="post"
                 @submit.prevent="onPasswordSubmit"
