@@ -6,17 +6,34 @@
             {{ label }}
         </template>
 
+        <div
+            v-for="medium in listMedia"
+            :key="medium.id"
+            class="columns mb-0"
+        >
+            <div class="column is-full">
+                <component
+                    :is="mediaComponent"
+                    :medium="medium"
+                    @on-delete-clicked="deleteMedium($event)"
+                />
+            </div>
+        </div>
+
         <file-pond
+            v-if="maxFileNumber > 0"
             ref="pond"
+            :key="filePondKey"
             name="file_upload"
             class-name="my-pond"
             :accepted-file-types="acceptedFileTypes"
             :allow-multiple="allowMultiple"
             :label-idle="placeholder"
-            :max-files="maxFiles"
+            :max-files="maxFileNumber"
             :max-file-size="maxFileSizeUpload"
             :max-total-file-size="maxTotalFileSizeUpload"
-            :required="required"
+            :required="isRequired"
+            :disabled="disabled"
             @updatefiles="onUpdateFiles"
         />
 
@@ -45,12 +62,14 @@
 <script>
     import BizFormField from '@/Biz/Form/Field';
     import BizInputError from '@/Biz/InputError';
-    import vueFilePond from "vue-filepond";
+    import BizMediaTextItem from '@/Biz/Media/TextItem';
     import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
     import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
     import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-    import { useModelWrapper } from '@/Libs/utils';
+    import vueFilePond from "vue-filepond";
+    import { confirmDelete } from '@/Libs/alert';
     import { replace } from 'lodash';
+    import { useModelWrapper } from '@/Libs/utils';
 
     import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
     import "filepond/dist/filepond.min.css";
@@ -65,9 +84,10 @@
         name: 'FileUpload',
 
         components: {
-            FilePond,
             BizFormField,
             BizInputError,
+            BizMediaTextItem,
+            FilePond,
         },
 
         inheritAttrs: false,
@@ -92,6 +112,14 @@
             modelValue: {
                 type: [Object, null],
                 required: true,
+            },
+            media: {
+                type: Array,
+                default:() => []
+            },
+            mediaComponent: {
+                type: String,
+                default: 'BizMediaTextItem',
             },
             disabled: {
                 type: Boolean,
@@ -125,7 +153,6 @@
 
         emits: [
             'on-file-picked',
-            'update:modelValue',
         ],
 
         setup(props, { emit }) {
@@ -136,18 +163,58 @@
             });
 
             return {
-                files: useModelWrapper(props, emit),
+                fileUploadField: useModelWrapper(props, emit),
                 acceptedFileTypes: acceptedTypes.toString()
             };
         },
 
+        data() {
+            return {
+                filePondKey: 0,
+            };
+        },
+
         computed: {
+            hasMedia() {
+                return this.media && this.media.length > 0;
+            },
+
+            maxFileNumber() {
+                let mediaLength = 0;
+                let deleteMedia = 0;
+
+                if (this.hasMedia) {
+                    mediaLength = this.media.length;
+                }
+
+                if (this.fileUploadField.deleted_media) {
+                    deleteMedia = this.fileUploadField.deleted_media.length;
+                }
+
+                return this.maxFiles - mediaLength + deleteMedia;
+            },
+
             maxFileSizeUpload() {
                 return this.maxFileSize ? this.maxFileSize + `KB` : null;
             },
 
             maxTotalFileSizeUpload() {
                 return this.maxTotalFileSize ? this.maxTotalFileSize + `KB` : null;
+            },
+
+            listMedia() {
+                const self = this;
+
+                return this.media.filter((medium) => {
+                    return !self
+                        .fileUploadField
+                        .deleted_media
+                        .includes(medium.id);
+                });
+            },
+
+            isRequired() {
+                return !this.hasMedia ? this.required : false;
             },
         },
 
@@ -159,7 +226,21 @@
                     tmpFiles.push(file.source);
                 });
 
-                this.$emit('update:modelValue', tmpFiles);
+                this.fileUploadField.files = tmpFiles;
+            },
+
+            deleteMedium(medium) {
+                const self = this;
+
+                confirmDelete().then((result) => {
+                    if (result.isConfirmed) {
+                        self.fileUploadField.deleted_media.push(medium.id);
+                    }
+                });
+            },
+
+            reset() {
+                this.filePondKey += 1;
             },
         },
     }

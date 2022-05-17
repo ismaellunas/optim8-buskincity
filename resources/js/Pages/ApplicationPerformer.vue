@@ -294,7 +294,7 @@
 
                             <div class="column is-half">
                                 <biz-form-file-upload
-                                    v-model="form.photos.files"
+                                    v-model="form.photos"
                                     label="Performance Photo"
                                     required
                                     :allow-multiple="true"
