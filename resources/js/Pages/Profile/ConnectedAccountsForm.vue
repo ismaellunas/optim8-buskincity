@@ -12,7 +12,6 @@
                 >
                     <template v-if="hasAccountForProvider(provider)">
                         <biz-button
-                            v-if="$page.props.socialstream.connectedAccounts.length > 1 || $page.props.socialstream.hasPassword"
                             class="is-medium mr-4"
                             @click="confirmRemove(getAccountForProvider(provider).id)"
                         >
@@ -118,13 +117,28 @@
             };
         },
 
+        computed: {
+            hasMoreThanOneConnectedAccount() {
+                return this.$page.props.socialstream.connectedAccounts.length > 1;
+            },
+
+            canRemoveConnectedAccount() {
+                return (
+                    this.hasMoreThanOneConnectedAccount
+                    || this.$page.props.socialstream.hasPassword
+                );
+            },
+        },
+
         methods: {
             confirmRemove(id) {
-                this.form.password = '';
+                if (this.canRemoveConnectedAccount) {
+                    this.form.password = '';
 
-                this.accountId = id;
+                    this.accountId = id;
 
-                this.openModal();
+                    this.openModal();
+                }
             },
 
             hasAccountForProvider(provider) {
