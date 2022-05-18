@@ -141,7 +141,6 @@ class UserController extends CrudController
         $user->append(
             'isSuperAdministrator',
             'profilePageUrl',
-            'isConnectedAccountUser'
         );
 
         $user->roles->makeHidden('pivot');
@@ -149,6 +148,7 @@ class UserController extends CrudController
         return Inertia::render('User/Edit', $this->getData([
             'can' => [
                 'public_profile' => $user->can('public_page.profile'),
+                'update_password' => auth()->user()->can('updatePassword', $user),
             ],
             'record' => $user,
             'roleOptions' => $this->userService->getRoleOptions(),

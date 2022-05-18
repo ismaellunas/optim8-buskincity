@@ -285,8 +285,8 @@ class User extends Authenticatable implements MustVerifyEmail
         $this->notify($verifyEmail);
     }
 
-    public function getIsConnectedAccountUserAttribute(): bool
+    public function getIsConnectedAccountAttribute(): bool
     {
-        return $this->password == null && ($this->connectedAccounts->count() > 0);
+        return is_null($this->password) && ($this->connectedAccounts->count() > 0);
     }
 }
