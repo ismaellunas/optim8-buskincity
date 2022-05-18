@@ -283,7 +283,6 @@ class FormSeeder extends Seeder
                     "visibility" => [
                         "roles" => [
                             "Performer",
-                            "Administrator"
                         ]
                     ]
                 ],
@@ -291,7 +290,8 @@ class FormSeeder extends Seeder
                     "name" => 'admin.users.edit',
                     "visibility" => [
                         "roles" => [
-                            "Super Administrator"
+                            "Super Administrator",
+                            "Administrator"
                         ]
                     ]
                 ],
