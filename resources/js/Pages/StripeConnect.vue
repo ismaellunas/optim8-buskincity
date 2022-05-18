@@ -1,5 +1,7 @@
 <template>
     <layout>
+        <Head title="Stripe Connect" />
+
         <template #header>
             <h1 class="title is-2">
                 {{ title }}
@@ -228,15 +230,16 @@
     import { confirm as confirmAlert, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { ref } from 'vue';
     import { merge } from 'lodash';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { Head, useForm } from '@inertiajs/inertia-vue3';
     import { isBlank } from '@/Libs/utils';
 
     export default {
         components: {
-            Layout,
             BizButton,
             BizFormSelect,
             BizTable,
+            Head,
+            Layout,
         },
 
         mixins: [
