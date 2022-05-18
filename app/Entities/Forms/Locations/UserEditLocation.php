@@ -13,4 +13,22 @@ class UserEditLocation extends UserProfileLocation
             || $author->hasPermissionTo('user.edit')
         );
     }
+
+    public function canBeAccessedByEntity(array $options = []): bool
+    {
+        if (is_null($this->entity)) {
+            return false;
+        }
+
+        foreach ($options['locations'] as $location) {
+            if (
+                $location['name'] == 'admin.profile.show'
+                && !empty($location['visibility']['roles'])
+            ) {
+                return $this->entity->hasRole($location['visibility']);
+            }
+        }
+
+        return false;
+    }
 }
