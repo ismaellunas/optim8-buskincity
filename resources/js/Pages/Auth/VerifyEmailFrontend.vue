@@ -1,7 +1,9 @@
 <template>
     <layout>
         <template #header>
-            Verify Email
+            <h1 class="title is-2">
+                Verify Email
+            </h1>
         </template>
 
         <verify-email
