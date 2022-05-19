@@ -153,10 +153,6 @@ class Form
         $author = $this->author;
         $roles = $this->visibility['roles'] ?? [];
 
-        if (is_null($author)) {
-            return false;
-        }
-
         if (!empty($roles)) {
             return $author->hasRole($roles);
         }

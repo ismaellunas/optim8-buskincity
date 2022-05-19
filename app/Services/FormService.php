@@ -135,7 +135,11 @@ class FormService
         foreach ($forms as $form) {
 
             if ($form->canBeAccessed()) {
-                $values = $formLocation->getValues($form->fields->keys());
+                $values = collect();
+
+                if ($actor) {
+                    $values = $formLocation->getValues($form->fields->keys());
+                }
 
                 $schema = $form->schema($values->all());
 
