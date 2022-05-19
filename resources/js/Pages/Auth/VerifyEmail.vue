@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div class="box is-shadowless">
         <div class="columns">
             <div class="column">
                 <div class="mb-4">
