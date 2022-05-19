@@ -53,7 +53,7 @@ class UserProfileLocation
         return ($user->id == $author->id);
     }
 
-    public function canBeAccessedByEntity(array $options = []): bool
+    public function canBeAccessedByEntity(array $locations = []): bool
     {
         return true;
     }

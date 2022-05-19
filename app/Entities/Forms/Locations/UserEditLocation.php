@@ -14,13 +14,13 @@ class UserEditLocation extends UserProfileLocation
         );
     }
 
-    public function canBeAccessedByEntity(array $options = []): bool
+    public function canBeAccessedByEntity(array $locations = []): bool
     {
         if (is_null($this->entity)) {
             return false;
         }
 
-        foreach ($options['locations'] as $location) {
+        foreach ($locations as $location) {
             if (
                 $location['name'] == 'admin.profile.show'
                 && !empty($location['visibility']['roles'])
