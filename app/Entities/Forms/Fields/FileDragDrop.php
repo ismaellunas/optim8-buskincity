@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
+use Symfony\Component\Mime\MimeTypes;
 
 class FileDragDrop extends BaseField
 {
@@ -23,6 +24,7 @@ class FileDragDrop extends BaseField
     public $placeholder;
     public $maxFileNumber;
     public $minFileNumber;
+    public $maxFileSize;
 
     public $defaultValue = [];
 
@@ -34,6 +36,7 @@ class FileDragDrop extends BaseField
 
         $this->maxFileNumber = $data['max_file_number'] ?? null;
         $this->minFileNumber = $data['min_file_number'] ?? 0;
+        $this->maxFileSize = $data['max_file_size'] ?? null;
         $this->fileLabel = $data['file_label'] ?? 'Choose a file';
     }
 
@@ -44,12 +47,13 @@ class FileDragDrop extends BaseField
             'placeholder' => $this->placeholder,
             'max_file_number' => $this->maxFileNumber,
             'min_file_number' => $this->minFileNumber,
+            'max_file_size' => $this->maxFileSize,
             'media' => (
                 !empty($this->storedValue)
                 ? $this->getMedias($this->storedValue)
                 : $this->defaultValue
             ),
-            'accept' => $this->getDottedFileExtensions(),
+            'accept' => $this->getMimeTypes(),
         ];
 
         return array_merge(parent::schema(), $schema);
@@ -199,12 +203,19 @@ class FileDragDrop extends BaseField
         return $extensions;
     }
 
-    private function getDottedFileExtensions(): array
+    private function getMimeTypes()
     {
-        return array_map(
-            function ($value) { return '.'.$value;},
-            $this->getFileExtensions()
-        );
+        $mimeTypes = [];
+        $mimes = new MimeTypes();
+
+        foreach ($this->getFileExtensions() as $extension) {
+            $mimeTypes = array_merge(
+                $mimeTypes,
+                $mimes->getMimeTypes($extension)
+            );
+        }
+
+        return $mimeTypes;
     }
 
     public function validationRules(): array

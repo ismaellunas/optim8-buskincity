@@ -33,6 +33,14 @@ class UserPolicy extends BasePermissionPolicy
         return $isPermitted;
     }
 
+    public function updatePassword(User $user, Model $selectedUser)
+    {
+        return (
+            parent::update($user, $selectedUser)
+            && !$selectedUser->isConnectedAccount
+        );
+    }
+
     public function suspend(User $user, Model $selectedUser)
     {
         return (

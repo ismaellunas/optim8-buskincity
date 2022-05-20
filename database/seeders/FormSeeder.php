@@ -283,7 +283,6 @@ class FormSeeder extends Seeder
                     "visibility" => [
                         "roles" => [
                             "Performer",
-                            "Administrator"
                         ]
                     ]
                 ],
@@ -291,7 +290,8 @@ class FormSeeder extends Seeder
                     "name" => 'admin.users.edit',
                     "visibility" => [
                         "roles" => [
-                            "Super Administrator"
+                            "Super Administrator",
+                            "Administrator"
                         ]
                     ]
                 ],
@@ -442,15 +442,16 @@ class FormSeeder extends Seeder
                     "translated" => false,
                 ],
                 "top_background_picture" => [
-                    "type" => "File",
+                    "type" => "FileDragDrop",
                     "label" => "Top Background Picture",
                     "file_label" => "Choose an image",
-                    "placeholder" => null,
+                    "placeholder" => 'Drop files here...',
                     "note" => null,
                     "readonly" => false,
                     "disabled" => false,
                     "max_file_number" => 1,
                     "min_file_number" => 1,
+                    "max_file_size" => config('constants.one_megabyte') * 50,
                     "validation" => [
                         "rules" => [
                             "required",
@@ -472,6 +473,7 @@ class FormSeeder extends Seeder
                     "disabled" => false,
                     "max_file_number" => 5,
                     "min_file_number" => 1,
+                    "max_file_size" => config('constants.one_megabyte') * 50,
                     "validation" => [
                         "rules" => [
                             "required",
