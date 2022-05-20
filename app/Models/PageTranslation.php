@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Casts\AsPageTranslationDataCollection;
 use App\Contracts\PublishableInterface;
 use App\Models\Page;
+use App\Traits\HasLocale;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 class PageTranslation extends Model implements PublishableInterface
 {
     use HasFactory;
+    use HasLocale;
     use MediaAlly;
 
     protected $fillable = [
