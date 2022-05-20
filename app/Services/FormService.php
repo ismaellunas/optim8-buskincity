@@ -85,7 +85,11 @@ class FormService
         $rules = [];
 
         foreach ($forms as $form) {
-            if ($form->canBeAccessed()) {
+
+            if (
+                $form->canBeAccessed()
+                && $location->canBeAccessedByEntity($form->locations)
+            ) {
                 $rules = array_merge($rules, $form->rules($location));
             }
         }
@@ -134,7 +138,10 @@ class FormService
 
         foreach ($forms as $form) {
 
-            if ($form->canBeAccessed()) {
+            if (
+                $form->canBeAccessed()
+                && $formLocation->canBeAccessedByEntity($form->locations)
+            ) {
                 $values = collect();
 
                 if ($actor) {
