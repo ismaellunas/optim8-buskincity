@@ -10,15 +10,10 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         {{-- <title>{{ config('app.name', 'Laravel') }}</title> --}}
+        <link rel="stylesheet" href="{{ $setting->getFrontendCssUrl() }}" defer>
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="{{ mix('css/template.css') }}" defer>
         <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-        {{--
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap">
-            <link rel="stylesheet" href="{{ $setting->getFrontendCssUrl() }}" defer>
-        --}}
 
         <!-- Scripts -->
         @routes
