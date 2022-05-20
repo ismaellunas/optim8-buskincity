@@ -9,7 +9,7 @@ class UserProfileLocation
 {
     public $entityId;
 
-    private $entity;
+    protected $entity;
     private $savedResults;
 
     public function __construct($userId = null)
@@ -51,6 +51,11 @@ class UserProfileLocation
         }
 
         return ($user->id == $author->id);
+    }
+
+    public function canBeAccessedByEntity(array $locations = []): bool
+    {
+        return true;
     }
 
     public function save(Collection $fields, array $inputs)
