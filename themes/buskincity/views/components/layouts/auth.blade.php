@@ -52,7 +52,7 @@
             @endif
         @endenv
 
-        <link rel="stylesheet" type="text/css" href="{{ mix('css/template.css', 'themes/' . config('theme.active')) }}">
+        <link rel="stylesheet" href="{{ $appCssUrl }}">
 
         @stack('scripts')
 
