@@ -80,4 +80,9 @@ class UserPolicy extends BasePermissionPolicy
             && app(StripeService::class)->isStripeConnectEnabled($selectedUser)
         );
     }
+
+    public function setPassword(User $user)
+    {
+        return !$user->isConnectedAccount;
+    }
 }

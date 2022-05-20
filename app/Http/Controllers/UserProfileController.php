@@ -39,6 +39,7 @@ class UserProfileController extends JetUserProfileController
                 [
                     'can' => [
                         'public_page' => $canPublicPage,
+                        'set_password' => auth()->user()->can('setPassword'),
                     ],
                     'profilePageUrl' => $canPublicPage ? auth()->user()->profile_page_url : null,
                     'sessions' => $this->sessions($request)->all(),
