@@ -81,12 +81,17 @@ class Post extends BaseModel implements PublishableInterface
         );
     }
 
-    public function scopeByCategory($query, $categoryId)
+    public function scopeByCategorySlug($query, $slug)
     {
         return $query->whereHas(
             'categories',
-            function ($query) use ($categoryId) {
-                $query->where('category_id', $categoryId);
+            function ($query) use ($slug) {
+                $query->whereHas(
+                    'translations',
+                    function ($query) use ($slug) {
+                        $query->where('slug', $slug);
+                    }
+                );
             }
         );
     }

@@ -23,16 +23,16 @@ class PostCategoryController extends Controller
         $this->translationService = $translationService;
     }
 
-    public function index(Request $request, $categoryId)
+    public function index(Request $request, string $slug)
     {
         return view('posts', [
-            'searchRoute' => route($this->baseRouteName.'.index', $categoryId),
+            'searchRoute' => route($this->baseRouteName.'.index', $slug),
             'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
             'records' => $this->postService->getBlogRecords(
                 $request->term ?? '',
                 $this->perPage,
                 $this->translationService->currentLanguage(),
-                $categoryId
+                $slug
             ),
         ]);
     }

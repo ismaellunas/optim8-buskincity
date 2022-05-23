@@ -59,14 +59,14 @@ class CategoryController extends CrudController
 
     public function store(CategoryRequest $request)
     {
-        $record = new $this->model;
+        $category = new $this->model;
         $inputs = $request->validated();
 
-        $record->saveFromInputs($inputs);
+        $category->saveFromInputs($inputs);
 
         $this->generateFlashMessage('Category created successfully!');
 
-        return redirect()->route($this->baseRouteName.'.index');
+        return redirect()->route($this->baseRouteName.'.edit', $category->id);
     }
 
     /**
@@ -85,7 +85,7 @@ class CategoryController extends CrudController
 
     public function update(CategoryRequest $request, Category $category)
     {
-        $inputs = $request->validated();
+        $inputs = $request->all();
 
         $category->saveFromInputs($inputs);
 
