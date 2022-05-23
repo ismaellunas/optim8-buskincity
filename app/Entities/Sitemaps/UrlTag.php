@@ -9,7 +9,7 @@ class UrlTag
     public $loc;
     public ?CarbonInterface $lastmod;
 
-    public function __construct($loc, array $optionalAttributes = [])
+    public function __construct(string $loc, array $optionalAttributes = [])
     {
         $this->loc = $loc;
         $this->lastmod = $optionalAttributes['lastmod'] ?? null;
