@@ -18,14 +18,14 @@ class SettingSeeder extends Seeder
             [
                 "key" => "color_primary",
                 "display_name" => "Primary Color",
-                "value" => "#00d1b2",
+                "value" => "#fc8e00",
                 "group" => "theme_color",
                 "order" => "1"
             ],
             [
                 "key" => "color_link",
                 "display_name" => "Link Color",
-                "value" => "#485fc7",
+                "value" => "#2ba2e3",
                 "group" => "theme_color",
                 "order" => "2"
             ],

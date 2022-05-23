@@ -7,6 +7,7 @@
         :disabled="schema.is_disabled"
         :label="schema.label"
         :max-files="schema.max_file_number"
+        :max-file-size="schema.max_file_size"
         :media="schema.media"
         :message="error(schema.name + '.files', bagName, errors)"
         :placeholder="schema.placeholder"
