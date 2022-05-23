@@ -83,7 +83,6 @@ class UserPolicy extends BasePermissionPolicy
 
     public function setPassword(User $user, Model $selectedUser)
     {
-        return !$user->isConnectedAccount;
         return (
             parent::update($user, $selectedUser)
             || !$selectedUser->isConnectedAccount
