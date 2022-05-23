@@ -45,6 +45,10 @@ class Page extends BaseSitemap
     {
         $homePageId = app(SettingService::class)->getHomePage();
 
+        if (!$homePageId) {
+            return null;
+        }
+
         return PageModel::
             with([
                 'translations' => function ($query) {
