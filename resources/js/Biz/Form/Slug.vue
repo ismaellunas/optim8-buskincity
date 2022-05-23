@@ -15,12 +15,14 @@
                     v-show="isSlugDisabled"
                     icon="fas fa-pen"
                     type="button"
+                    tabindex="-1"
                     @click="isSlugDisabled = false"
                 />
                 <biz-button-icon
                     v-show="!isSlugDisabled"
                     icon="fas fa-ban"
                     type="button"
+                    tabindex="-1"
                     @click="isSlugDisabled = true"
                 />
             </div>
