@@ -70,7 +70,7 @@ class FormService
 
     public function getFormLocation(string $routeName, int $entityId = null)
     {
-        $locationClass = $this->routeToLocationMaps[ $routeName ];
+        $locationClass = $this->routeToLocationMaps[ $routeName ] ?? null;
         $locationClass = $this->formLocationBasePath.'\\'.$locationClass;
 
         if (class_exists($locationClass)) {
@@ -85,7 +85,11 @@ class FormService
         $rules = [];
 
         foreach ($forms as $form) {
-            if ($form->canBeAccessed()) {
+
+            if (
+                $form->canBeAccessed()
+                && $location->canBeAccessedByEntity($form->locations)
+            ) {
                 $rules = array_merge($rules, $form->rules($location));
             }
         }
@@ -122,7 +126,7 @@ class FormService
 
     public function getSchemas(
         string $routeName,
-        User $actor,
+        ?User $actor = null,
         int $entityId = null
     ): Collection {
 
@@ -134,8 +138,15 @@ class FormService
 
         foreach ($forms as $form) {
 
-            if ($form->canBeAccessed()) {
-                $values = $formLocation->getValues($form->fields->keys());
+            if (
+                $form->canBeAccessed()
+                && $formLocation->canBeAccessedByEntity($form->locations)
+            ) {
+                $values = collect();
+
+                if ($actor) {
+                    $values = $formLocation->getValues($form->fields->keys());
+                }
 
                 $schema = $form->schema($values->all());
 
