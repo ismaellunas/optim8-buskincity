@@ -31,12 +31,25 @@
                             <h3>{{ fontSize.display_name }}</h3>
                         </div>
                         <div class="column">
-                            <biz-input
-                                v-model="form[fontSize.key]"
-                                maxlength="7"
-                                @blur="updateFontSizeNumber(fontSize.key)"
-                                @keypress="isNumber"
-                            />
+                            <div class="field has-addons has-addons-right">
+                                <p class="control">
+                                    <biz-input
+                                        v-model="form[fontSize.key]"
+                                        maxlength="7"
+                                        @blur="updateFontSizeNumber(fontSize.key)"
+                                        @keypress="isNumber"
+                                    />
+                                </p>
+                                <p class="control">
+                                    <button
+                                        class="button"
+                                        tabindex="-1"
+                                        type="button"
+                                    >
+                                        px
+                                    </button>
+                                </p>
+                            </div>
                             <p v-if="form.errors?.default && form.errors.default[fontSize.key]">
                                 <biz-input-error
                                     :message="error(fontSize.key)"
