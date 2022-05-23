@@ -13,11 +13,6 @@ use Qirolab\Theme\Theme;
 
 class Page extends BaseSitemap
 {
-    public function __construct(string $locale)
-    {
-        $this->locale = $locale;
-    }
-
     public function urls(): array|Collection
     {
         $locale = $this->locale;
