@@ -14,7 +14,7 @@ class UserPasswordController extends PasswordController
 
     public function store(Request $request, SetsUserPasswords $setter)
     {
-        $this->authorize('setPassword', User::class);
+        $this->authorize('setPassword', [User::class, auth()->user()]);
 
         return parent::store($request, $setter);
     }
