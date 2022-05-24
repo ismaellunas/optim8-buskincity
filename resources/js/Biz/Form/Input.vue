@@ -1,7 +1,6 @@
 <template>
     <biz-form-field
         :class="fieldClass"
-        :has-left-icon="hasLeftIcon"
         :is-required="required"
     >
         <template
@@ -11,19 +10,24 @@
             {{ label }}
         </template>
 
-        <slot name="leftIcons" />
+        <div
+            class="control"
+            :class="{'has-icons-left': hasLeftIcon}"
+        >
+            <slot name="leftIcons" />
 
-        <biz-input
-            ref="input"
-            v-bind="$attrs"
-            :class="{'is-danger': message}"
-            :disabled="disabled"
-            :required="required"
-            :value="modelValue"
-            @input="$emit('update:modelValue', $event.target.value)"
-            @keypress="$emit('on-keypress', $event)"
-            @blur="$emit('on-blur', $event)"
-        />
+            <biz-input
+                ref="input"
+                v-bind="$attrs"
+                :class="{'is-danger': message}"
+                :disabled="disabled"
+                :required="required"
+                :value="modelValue"
+                @input="$emit('update:modelValue', $event.target.value)"
+                @keypress="$emit('on-keypress', $event)"
+                @blur="$emit('on-blur', $event)"
+            />
+        </div>
 
         <slot name="note" />
 
