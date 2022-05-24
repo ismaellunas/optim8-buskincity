@@ -8,6 +8,7 @@ use App\Models\{
     User,
 };
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 class FormService
 {
@@ -117,6 +118,10 @@ class FormService
 
         $formLocation = $this->getFormLocation($routeName, $entityId);
 
+        if (!$formLocation->canBeAccessedBy($actor)) {
+            $this->abortAction();
+        }
+
         $forms = $this->getFormsOnRoute($routeName, $actor);
 
         foreach ($forms as $form) {
@@ -135,6 +140,10 @@ class FormService
         $forms = $this->getFormsOnRoute($routeName, $actor);
 
         $schemas = collect();
+
+        if (!$formLocation->canBeAccessedBy($actor)) {
+            $this->abortAction();
+        }
 
         foreach ($forms as $form) {
 
@@ -178,5 +187,10 @@ class FormService
         }
 
         return $values->all();
+    }
+
+    private function abortAction(): void
+    {
+        abort(Response::HTTP_FORBIDDEN);
     }
 }
