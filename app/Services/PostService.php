@@ -62,15 +62,15 @@ class PostService
         string $term,
         int $recordsPerPage = 10,
         string $locale = 'en',
-        ?string $slug = null
+        ?int $categoryId = null
     ) {
         $records = Post::orderBy('id', 'DESC')
             ->where('locale', $locale)
             ->when($term, function ($query, $term) {
                 $query->search($term);
             })
-            ->when($slug, function ($query, $slug) {
-                $query->byCategorySlug($slug);
+            ->when($categoryId, function ($query, $categoryId) {
+                $query->byCategory($categoryId);
             })
             ->published()
             ->with([

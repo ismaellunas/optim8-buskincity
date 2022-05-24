@@ -142,7 +142,7 @@ Route::group([
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');
 
-    Route::get('/category/{slug}', [PostCategoryController::class, 'index'])
+    Route::get('/category/{category_translation}', [PostCategoryController::class, 'index'])
         ->where('slug', '[\w\d\-\_]+')
         ->name('blog.category.index');
 

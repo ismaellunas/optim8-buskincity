@@ -14,4 +14,14 @@ class CategoryTranslation extends Model
         'name',
         'slug'
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
