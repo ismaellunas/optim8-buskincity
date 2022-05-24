@@ -8,7 +8,7 @@
             <slot name="label" />
         </biz-label>
 
-        <div class="control">
+        <div :class="['control', controlClasses]">
             <slot />
         </div>
 
@@ -33,6 +33,10 @@
                 type: Boolean,
                 default: false,
             },
+            hasLeftIcon: {
+                type: Boolean,
+                default: false,
+            },
             labelClass: {
                 type: [Array, Object, String],
                 default: '',
@@ -40,6 +44,16 @@
         },
 
         computed: {
+            controlClasses() {
+                const classes = [];
+
+                if (this.hasLeftIcon) {
+                    classes.push('has-icons-left');
+                }
+
+                return classes;
+            },
+
             hasLabelSlot() {
                 return !!this.$slots.label;
             }
