@@ -13,6 +13,11 @@ class Category extends BaseModel implements TranslatableContract
 
     public $translatedAttributes = ['name'];
 
+    public function posts()
+    {
+        return $this->belongsToMany(Post::class);
+    }
+
     public function saveFromInputs(array $inputs): bool
     {
         $this->fill($inputs);
