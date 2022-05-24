@@ -15,6 +15,7 @@ use App\Http\Controllers\{
     NewPasswordController,
     PasswordResetLinkController,
     RegisteredUserController,
+    SitemapController,
     TwoFactorAuthenticatedSessionController,
     UserPasswordController,
     UserProfileController,
@@ -142,6 +143,13 @@ Route::group([
     Route::get('/', [PageController::class, 'homePage'])
         ->name('homepage')
         ->middleware('redirectLanguage');
+
+    Route::get('sitemap_index.xml', [SitemapController::class, 'sitemaps'])
+        ->name('sitemap');
+
+    Route::get('{sitemapName}-sitemap.xml', [SitemapController::class, 'urls'])
+        ->where('sitemapName', 'post|page|category')
+        ->name('sitemap.urls');
 
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');
