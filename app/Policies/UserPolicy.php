@@ -85,7 +85,7 @@ class UserPolicy extends BasePermissionPolicy
     {
         return (
             parent::update($user, $selectedUser)
-            || !$selectedUser->isConnectedAccount
+            && !$selectedUser->isConnectedAccount
         );
     }
 }
