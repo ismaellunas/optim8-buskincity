@@ -18,7 +18,6 @@ class Category extends BaseSitemap
                     $table = CategoryTranslation::getTableName();
 
                     $query
-                        ->inLanguages([$locale])
                         ->select([
                             "$table.id",
                             "$table.category_id",
@@ -32,8 +31,8 @@ class Category extends BaseSitemap
                 'id',
                 'updated_at',
             ])
-            ->map(function ($page) {
-                return $this->createUrlTag($page);
+            ->map(function ($category) {
+                return $this->createUrlTag($category);
             });
     }
 
@@ -47,8 +46,14 @@ class Category extends BaseSitemap
         }
 
         return new UrlTag(
-            $this->locationUrl(route('blog.category.index', [$category->id])),
-            ['lastmod' => $lastmod]
+            $this->locationUrl(
+                route('blog.category.index', [
+                    $category->slug ?? $category->translations[0]->slug
+                ])
+            ),
+            [
+                'lastmod' => $lastmod
+            ]
         );
     }
 }
