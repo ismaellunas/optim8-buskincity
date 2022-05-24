@@ -163,7 +163,8 @@
             createForm(groupFields) {
                 let fieldValue = null;
                 const form = {
-                    id: this.entityId
+                    id: this.entityId,
+                    _token: usePage().props.value.csrfToken,
                 };
 
                 forOwn(groupFields, (groupField, key) => {
