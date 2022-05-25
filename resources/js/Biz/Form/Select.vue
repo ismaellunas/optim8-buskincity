@@ -7,14 +7,16 @@
             {{ label }}
         </template>
 
-        <biz-select
-            v-model="selected"
-            v-bind="$attrs"
-            :disabled="disabled"
-            :placeholder="placeholder"
-        >
-            <slot />
-        </biz-select>
+        <div class="control">
+            <biz-select
+                v-model="selected"
+                v-bind="$attrs"
+                :disabled="disabled"
+                :placeholder="placeholder"
+            >
+                <slot />
+            </biz-select>
+        </div>
 
         <slot name="note" />
 

@@ -8,9 +8,7 @@
             <slot name="label" />
         </biz-label>
 
-        <div class="control">
-            <slot />
-        </div>
+        <slot />
 
         <slot name="error" />
     </biz-field>

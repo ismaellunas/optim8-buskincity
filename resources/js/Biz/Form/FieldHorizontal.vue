@@ -7,9 +7,7 @@
         </div>
         <div class="field-body">
             <div class="field">
-                <div class="control">
-                    <slot />
-                </div>
+                <slot />
             </div>
         </div>
     </div>
