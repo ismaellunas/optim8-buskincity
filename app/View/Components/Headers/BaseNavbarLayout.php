@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Headers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Component;
 
 abstract class BaseNavbarLayout extends Component
@@ -11,6 +12,7 @@ abstract class BaseNavbarLayout extends Component
     public $logoUrl;
     public $languageOptions;
     public $layoutName;
+    public $isAuthenticated = false;
 
     public function __construct($menus, $currentLanguage, $logoUrl, $languageOptions)
     {
@@ -18,6 +20,7 @@ abstract class BaseNavbarLayout extends Component
         $this->menus = $menus ?? [];
         $this->logoUrl = $logoUrl;
         $this->languageOptions = $languageOptions;
+        $this->isAuthenticated = Auth::check();
     }
 
     public function logo(): string
