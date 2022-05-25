@@ -1,193 +1,116 @@
 <template>
-    <form
-        method="post"
-        @submit.prevent="$emit('on-submit', form)"
-    >
-        <p class="title is-3">Form Category</p>
-        <hr>
-
-        <fieldset :disabled="isInputDisabled">
-            <div class="mb-5">
-                <div class="columns is-multiline">
-                    <div
-                        v-for="translation in sortedExistingLocales"
-                        :key="translation"
-                        class="column is-half"
+    <div>
+        <div class="columns my-0">
+            <div class="column py-0">
+                <p class="buttons is-pulled-right">
+                    <biz-button
+                        v-for="locale in localeOptions"
+                        :key="locale.id"
+                        :class="['is-small is-link is-rounded', locale.id == selectedLocale ? '' : 'is-light' ]"
+                        @click="$emit('change-locale', locale.id)"
                     >
-                        <biz-form-input-addons
-                            v-model="form[translation].name"
-                            :label="`Category Name (${translation.toUpperCase()})`"
-                            :message="error(translation+'.name')"
-                        >
-                            <template #afterInput>
-                                <div class="control">
-                                    <biz-button-icon
-                                        v-if="translation !== defaultLocale"
-                                        class="is-danger"
-                                        icon="fas fa-minus"
-                                        type="button"
-                                        @click.prevent="removeTranslation(translation)"
-                                    />
-                                </div>
-                            </template>
-                        </biz-form-input-addons>
-                    </div>
-                </div>
+                        {{ locale.name }}
+                    </biz-button>
+                </p>
             </div>
-            <div class="mb-5" v-if="availableLocales.length">
-                <div class="control is-expanded">
-                    <biz-select v-model="selectedLocale">
-                        <option
-                            v-for="locale in availableLocales"
-                            :value="locale.id">
-                            {{ locale.name }}
-                        </option>
-                    </biz-select>
-                    <biz-button-icon
-                        icon="fas fa-plus"
-                        type="button"
-                        class="is-link is-light"
-                        @click.prevent="addTranslation"
-                    />
-                </div>
-            </div>
+        </div>
 
-            <div class="field is-grouped is-grouped-right">
+        <form
+            method="post"
+            @submit.prevent="$emit('on-submit', form)"
+        >
+            <biz-form-input
+                v-model="form.name"
+                label="Name"
+                :message="error(selectedLocale+'.name')"
+                placeholder="e.g Good News"
+                :disabled="isInputDisabled"
+                required
+                @on-blur="populateSlug()"
+            />
+
+            <biz-form-slug
+                v-model="form.slug"
+                label="Slug"
+                placeholder="e.g good-news"
+                :message="error(selectedLocale+'.slug')"
+                :disabled="isInputDisabled"
+            />
+
+            <div class="field is-grouped is-grouped-right mt-5">
                 <div class="control">
-                    <biz-button-link :href="route(baseRoute+'.index')" class="is-link is-light">
+                    <biz-button-link
+                        :href="route(baseRoute+'.index')"
+                        class="is-link is-light"
+                    >
                         Cancel
                     </biz-button-link>
                 </div>
                 <div class="control">
                     <biz-button class="is-link">
-                        <template v-if="isNew">Create</template>
-                        <template v-else>Update</template>
+                        <template v-if="isNew">
+                            Create
+                        </template>
+                        <template v-else>
+                            Update
+                        </template>
                     </biz-button>
                 </div>
             </div>
-        </fieldset>
-    </form>
+        </form>
+    </div>
 </template>
 
 <script>
     import HasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
-    import BizFormInputAddons from '@/Biz/Form/InputAddons';
-    import BizLabel from '@/Biz/Label';
-    import BizSelect from '@/Biz/Select';
-    import { confirmDelete } from '@/Libs/alert';
-    import { isBlank } from '@/Libs/utils';
-    import { reactive } from "vue";
-    import { pull, sortBy, isEmpty } from 'lodash';
+    import BizFormInput from '@/Biz/Form/Input';
+    import BizFormSlug from '@/Biz/Form/Slug';
+    import { isEmpty } from 'lodash';
+    import { useModelWrapper, convertToSlug } from '@/Libs/utils';
 
     export default {
         name: 'CategoryForm',
+
         components: {
             BizButton,
-            BizButtonIcon,
             BizButtonLink,
-            BizFormInputAddons,
-            BizSelect,
+            BizFormInput,
+            BizFormSlug,
         },
+
         mixins: [
             HasPageErrors
         ],
+
         props: {
-            baseRoute: String,
-            category: Object,
-            defaultLocale: String,
+            baseRoute: { type: String, required: true },
+            defaultLocale: { type: String, required: true },
+            errors: { type: Object, default:() => {} },
             isInputDisabled: {type: Boolean, default: false},
-            errors: {},
-            isEditMode: Boolean,
-            isNew: Boolean,
-            localeOptions: Array,
+            isNew: { type: Boolean, default: false },
+            localeOptions: { type: Array, default:() => [] },
+            modelValue: { type: Object, required: true },
+            selectedLocale: { type: String, required: true },
         },
+
         emits: [
+            'change-locale',
             'on-submit',
         ],
-        setup(props) {
-            let providedLocales = [];
-            let fields = {};
 
-            if (!isBlank(props.category)) {
-                providedLocales = props.category.translations.map(translation => {
-                    return translation.locale;
-                });
-
-                props.category.translations.forEach(translation => {
-                    fields[translation.locale] = {name: translation.name};
-                });
-
-                if (!providedLocales.includes(props.defaultLocale)) {
-                    fields[props.defaultLocale] = {name: null};
-                    providedLocales.push(props.defaultLocale);
-                }
-            } else {
-                providedLocales = [props.defaultLocale];
-
-                fields[props.defaultLocale] = {
-                    name: null
-                };
-            }
-
+        setup(props, { emit }) {
             return {
-                form: reactive(fields),
-                selectedLocale: props.localeOptions.find((localeOption) => {
-                    return !providedLocales.includes(localeOption.id);
-                })?.id,
+                form: useModelWrapper(props, emit),
             };
         },
-        computed: {
-            availableLocales() {
-                const usedLocales = Object.keys(this.form);
-                return sortBy(this.localeOptions.filter(localeOption => {
-                    return !usedLocales.includes(localeOption.id);
-                }), ['name']);
-            },
-            hasAvailableLocales() {
-                return !isBlank(this.availableLocales);
-            },
-            sortedExistingLocales() {
-                const sortedExistingLocales = pull(
-                    Object.keys(this.form),
-                    this.defaultLocale
-                );
 
-                sortedExistingLocales.unshift(this.defaultLocale);
-                return sortedExistingLocales;
-            }
-        },
         methods: {
-            updateSelectedLocale() {
-                const usedLocales = Object.keys(this.form);
-
-                if (this.hasAvailableLocales) {
-                    const firstAvailabeLocale = this
-                        .availableLocales
-                        .find((localeOption) => {
-                            return !usedLocales.includes(localeOption.id);
-                        });
-
-                    this.selectedLocale = firstAvailabeLocale?.id;
-                } else {
-                    this.selectedLocale = null;
+            populateSlug() {
+                if (isEmpty(this.form.slug) && !isEmpty(this.form.name)) {
+                    this.form.slug = convertToSlug(this.form.name);
                 }
-            },
-            addTranslation() {
-                this.form[this.selectedLocale] = {name: null,};
-
-                this.updateSelectedLocale();
-            },
-            removeTranslation(locale) {
-                const self = this;
-                confirmDelete().then((result) => {
-                    if (result.isConfirmed) {
-                        delete self.form[locale];
-                        self.updateSelectedLocale();
-                    }
-                });
             },
         },
     };

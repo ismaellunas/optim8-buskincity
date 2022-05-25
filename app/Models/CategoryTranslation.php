@@ -10,5 +10,18 @@ class CategoryTranslation extends BaseModel
     use HasFactory;
     use HasLocale;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'slug'
+    ];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }

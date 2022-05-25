@@ -11,7 +11,7 @@ class Category extends BaseModel implements TranslatableContract
     use HasFactory;
     use Translatable;
 
-    public $translatedAttributes = ['name'];
+    public $translatedAttributes = ['name', 'slug'];
 
     public function posts()
     {
@@ -22,17 +22,6 @@ class Category extends BaseModel implements TranslatableContract
     {
         $this->fill($inputs);
         return $this->save();
-    }
-
-    public function syncTranslations(array $providedLocales)
-    {
-        $existingLocales = array_keys($this->getTranslationsArray());
-
-        $unusedLocales = array_diff($existingLocales, $providedLocales);
-
-        if (!empty($unusedLocales)) {
-            $this->deleteTranslations($unusedLocales);
-        }
     }
 
     /* Accessors: */
