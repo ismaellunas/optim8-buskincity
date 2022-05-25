@@ -256,7 +256,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getProfilePageUrlAttribute(): string
     {
-        return route('frontend.profiles', [
+        return route('frontend.profile', [
             'user' => $this->unique_key,
             'firstname_lastname' => Str::of($this->fullName)->ascii()->lower()->replace(' ', '-')
         ]);
