@@ -315,6 +315,7 @@ class FormSeeder extends Seeder
                     ],
                     "visibility" => [],
                     "translated" => false,
+                    "left_icon" => 'fa-brands fa-facebook',
                 ],
                 "twitter" => [
                     "type" => "Text",
@@ -334,6 +335,7 @@ class FormSeeder extends Seeder
                     ],
                     "visibility" => [],
                     "translated" => false,
+                    "left_icon" => 'fa-brands fa-twitter',
                 ],
                 "instagram" => [
                     "type" => "Text",
@@ -353,6 +355,7 @@ class FormSeeder extends Seeder
                     ],
                     "visibility" => [],
                     "translated" => false,
+                    "left_icon" => 'fa-brands fa-instagram',
                 ],
                 "youtube" => [
                     "type" => "Text",
@@ -372,6 +375,7 @@ class FormSeeder extends Seeder
                     ],
                     "visibility" => [],
                     "translated" => false,
+                    "left_icon" => 'fa-brands fa-youtube',
                 ],
                 "tiktok" => [
                     "type" => "Text",
@@ -391,6 +395,7 @@ class FormSeeder extends Seeder
                     ],
                     "visibility" => [],
                     "translated" => false,
+                    "left_icon" => 'fa-brands fa-tiktok',
                 ],
             ]
         ];
@@ -440,6 +445,7 @@ class FormSeeder extends Seeder
                         "roles" => ["Performer"]
                     ],
                     "translated" => false,
+                    "left_icon" => 'fa-brands fa-vimeo',
                 ],
                 "top_background_picture" => [
                     "type" => "FileDragDrop",

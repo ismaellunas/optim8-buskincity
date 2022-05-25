@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -50,6 +51,10 @@ class Handler extends ExceptionHandler
                 if ($e instanceof AuthenticationException) {
                     return response('', Response::HTTP_CONFLICT)->header('X-Inertia-Location', $e->redirectTo());
                 } else {
+                    if ($e instanceof TokenMismatchException) {
+                        return $response;
+                    }
+
                     if ($request->routeIs('admin.*')) {
                         return response('', Response::HTTP_CONFLICT)->header('X-Inertia-Location', route('admin.login'));
                     } else {
@@ -78,7 +83,7 @@ class Handler extends ExceptionHandler
         if (in_array($response->status(), config('constants.theme_error_page'))) {
             if (
                 $response->status() == Response::HTTP_INTERNAL_SERVER_ERROR
-                && env('APP_DEBUG')
+                && config('app.debug')
             ) {
                 return $response;
             }
