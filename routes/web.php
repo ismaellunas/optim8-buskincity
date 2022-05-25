@@ -17,6 +17,7 @@ use App\Http\Controllers\{
     RegisteredUserController,
     SitemapController,
     TwoFactorAuthenticatedSessionController,
+    UserPasswordController,
     UserProfileController,
     WebhookStripeController,
 };
@@ -49,6 +50,9 @@ Route::middleware([
     Route::get('/user/profile', function () {
         return redirect()->route('dashboard');
     })->name('profile.show');
+
+    Route::put('/user/set-password', [UserPasswordController::class, 'store'])
+        ->name('user-password.set');
 
     Route::prefix('/payment-management/stripe')
         ->name('payment-management.stripe.')
