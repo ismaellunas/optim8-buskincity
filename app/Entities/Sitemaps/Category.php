@@ -22,7 +22,8 @@ class Category extends BaseSitemap
                             "$table.locale",
                             "$table.slug",
                             "$table.updated_at",
-                        ]);
+                        ])
+                        ->orderBy("$table.id", 'asc');
                 },
             ])
             ->get([
