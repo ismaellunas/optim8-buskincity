@@ -70,7 +70,7 @@ class PostCategoryController extends Controller
     ) {
         $defaultLocale = $this->translationService->getDefaultLocale();
 
-        if (!$category->hasTranslation($defaultLocale)) {
+        if ($category->hasTranslation($defaultLocale)) {
             $categoryTranslation = $category->translate($defaultLocale);
         } else {
             $categoryTranslation = $category->translations->first();

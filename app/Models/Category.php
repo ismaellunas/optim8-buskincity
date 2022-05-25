@@ -24,17 +24,6 @@ class Category extends BaseModel implements TranslatableContract
         return $this->save();
     }
 
-    public function syncTranslations(array $providedLocales)
-    {
-        $existingLocales = array_keys($this->getTranslationsArray());
-
-        $unusedLocales = array_diff($existingLocales, $providedLocales);
-
-        if (!empty($unusedLocales)) {
-            $this->deleteTranslations($unusedLocales);
-        }
-    }
-
     /* Accessors: */
     public function getFirstTranslationNameAttribute(): string
     {

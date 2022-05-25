@@ -42,8 +42,10 @@ class FixCategorySlug extends Command
         $categoryTranslations = CategoryTranslation::all();
 
         foreach ($categoryTranslations as $categoryTranslation) {
-            $categoryTranslation->slug = Str::slug($categoryTranslation->name);
-            $categoryTranslation->save();
+            if (!$categoryTranslation->slug) {
+                $categoryTranslation->slug = Str::slug($categoryTranslation->name);
+                $categoryTranslation->save();
+            }
         }
 
         return 0;

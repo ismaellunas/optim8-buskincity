@@ -89,11 +89,9 @@ class CategoryController extends CrudController
 
         $category->saveFromInputs($inputs);
 
-        $category->syncTranslations(array_keys($inputs));
-
         $this->generateFlashMessage('Category updated successfully!');
 
-        return redirect()->route($this->baseRouteName.'.index');
+        return redirect()->route($this->baseRouteName.'.edit', $category->id);
     }
 
     public function destroy(Category $category)
