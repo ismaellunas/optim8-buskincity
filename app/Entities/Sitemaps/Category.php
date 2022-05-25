@@ -47,7 +47,7 @@ class Category extends BaseSitemap
         return new UrlTag(
             $this->locationUrl(
                 route('blog.category.index', [
-                    $category->slug ?? $category->translations[0]->slug
+                    $category->slug ?? $category->translations->first()->slug
                 ])
             ),
             [
