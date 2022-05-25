@@ -10,11 +10,9 @@ class Category extends BaseSitemap
 {
     public function urls(): array|Collection
     {
-        $locale = $this->locale;
-
         return CategoryModel::
             with([
-                'translations' => function ($query) use ($locale) {
+                'translations' => function ($query) {
                     $table = CategoryTranslation::getTableName();
 
                     $query
