@@ -64,7 +64,7 @@
                         @endforeach
                     </div>
                 </div>
-                @if (!$isAuthenticated)
+                @guest
                 <div class="navbar-item">
                     <div class="buttons">
                         <a href="{{ route('register') }}" class="button is-primary">
@@ -75,7 +75,7 @@
                         </a>
                     </div>
                 </div>
-                @endif
+                @endguest
             </div>
         </div>
     </div>
