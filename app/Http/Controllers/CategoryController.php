@@ -91,7 +91,7 @@ class CategoryController extends CrudController
 
         $this->generateFlashMessage('Category updated successfully!');
 
-        return redirect()->route($this->baseRouteName.'.index');
+        return redirect()->route($this->baseRouteName.'.edit', $category->id);
     }
 
     public function destroy(Category $category)
