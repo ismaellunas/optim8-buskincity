@@ -21,6 +21,7 @@ use App\Http\Controllers\{
     UserProfileController,
     WebhookStripeController,
 };
+use App\Services\SitemapService;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -148,7 +149,7 @@ Route::group([
         ->name('sitemap');
 
     Route::get('{sitemapName}-sitemap.xml', [SitemapController::class, 'urls'])
-        ->where('sitemapName', 'post|page|category')
+        ->where('sitemapName', implode('|', SitemapService::sitemapNames()))
         ->name('sitemap.urls');
 
     Route::get('/blog', [PostController::class, 'index'])

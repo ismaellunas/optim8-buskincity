@@ -15,6 +15,17 @@ class SitemapService
             \App\Entities\Sitemaps\Page::class,
             \App\Entities\Sitemaps\Post::class,
             \App\Entities\Sitemaps\Category::class,
+            \App\Entities\Sitemaps\Performer::class,
+        ];
+    }
+
+    public static function sitemapNames(): array
+    {
+        return [
+            'post',
+            'page',
+            'category',
+            'performer',
         ];
     }
 
