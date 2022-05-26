@@ -27,26 +27,41 @@
                     <biz-input-file
                         ref="input"
                         v-bind="$attrs"
-                        v-model="computedPhoto"
+                        v-model="photoSelected"
                         file-label="Choose a picture"
+                        :accept="acceptedTypes"
                         :class="{'is-danger': message}"
                         :disabled="disabled"
-                        :required="required"
-                        :accept="acceptedTypes"
+                        :displayed-file-name="displayedFileName"
                         :is-name-displayed="true"
+                        :required="required"
                         @blur="$emit('on-blur', $event)"
                         @on-file-picked="onFilePicked"
                     />
 
-                    <biz-button
+                    <biz-button-icon
                         v-if="showDeleteButton"
-                        class="is-warning mt-2"
+                        class="is-danger mt-2 mr-2"
+                        icon="far fa-minus-square"
+                        icon-class="is-small"
                         type="button"
                         :disabled="disabled"
                         @click.prevent="$emit('on-delete-image', $event)"
                     >
-                        {{ deleteLabel }}
-                    </biz-button>
+                        <span class="has-text-weight-bold">{{ labelDelete }}</span>
+                    </biz-button-icon>
+
+                    <biz-button-icon
+                        v-if="computedPhoto"
+                        class="is-warning mt-2 mr-2"
+                        icon="far fa-history"
+                        icon-class="is-small"
+                        type="button"
+                        :disabled="disabled"
+                        @click.prevent="resetPreview"
+                    >
+                        <span class="has-text-weight-bold">{{ labelReset }}</span>
+                    </biz-button-icon>
 
                     <template #error>
                         <biz-input-error :message="message" />
@@ -55,133 +70,72 @@
             </div>
         </div>
 
-        <biz-modal-card
-            v-if="isModalOpen"
-            :is-close-hidden="true"
-            @close="closeModal()"
-        >
-            <template #header>
-                <p class="modal-card-title">
-                    {{ modalLabel }}
-                </p>
-                <biz-button
-                    aria-label="close"
-                    class="delete is-primary"
-                    type="button"
-                    @click="closeModal()"
-                />
-            </template>
-
-            <div class="columns">
-                <div class="column">
-                    <div
-                        class="card"
-                    >
-                        <div class="card-image">
-                            <biz-image
-                                :src="computedPhotoUrl"
-                                :img-style="{maxHeight: 500+'px'}"
-                            />
-                        </div>
-                        <footer class="card-footer">
-                            <biz-button
-                                class="card-footer-item is-borderless is-shadowless"
-                                type="button"
-                                @click="openImageEditorModal()"
-                            >
-                                Edit Image
-                            </biz-button>
-                        </footer>
-                    </div>
-                </div>
-            </div>
-
-            <template #footer>
-                <div
-                    class="columns"
-                    style="width: 100%"
-                >
-                    <div class="column">
-                        <div class="is-pulled-right">
-                            <div class="buttons">
-                                <biz-button
-                                    class="is-danger"
-                                    type="button"
-                                    @click="closeModal()"
-                                >
-                                    Cancel
-                                </biz-button>
-                                <biz-button
-                                    class="is-primary"
-                                    type="button"
-                                    @click="isModalOpen = false"
-                                >
-                                    Save
-                                </biz-button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </template>
-        </biz-modal-card>
-
-        <biz-modal-image-editor
+        <biz-modal-image-editor-square
             v-if="isImageEdit"
+            ref="cropperModal"
             v-model="photoUrlCropper"
-            v-model:cropper="cropper"
-            @close="closeImageEditorModal"
+            :is-huge="false"
+            :modal-title="modalTitle"
+            @close="[usePrevFileName(), closeImageEditorModal()]"
         >
             <template #actions>
                 <biz-button
                     type="button"
                     class="is-link"
                     :disabled="disabled"
-                    @click="updateImageFile"
+                    @click="updateImageFile()"
                 >
                     Done
                 </biz-button>
             </template>
-        </biz-modal-image-editor>
+        </biz-modal-image-editor-square>
     </div>
 </template>
 
 <script>
-    import MixinHasModal from '@/Mixins/HasModal';
     import BizButton from '@/Biz/Button';
+    import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizFormField from '@/Biz/Form/Field';
     import BizImage from '@/Biz/Image';
     import BizInputError from '@/Biz/InputError';
     import BizInputFile from '@/Biz/InputFile';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
+    import BizModalImageEditorSquare from '@/Biz/Modal/ImageEditorSquare';
     import { acceptedImageTypes } from '@/Libs/defaults';
-    import { includes } from 'lodash';
+    import { includes, last, pull } from 'lodash';
     import { oops as oopsAlert } from '@/Libs/alert';
     import { useModelWrapper, getCanvasBlob } from '@/Libs/utils';
 
     export default {
-        name: 'BizFormImageEditable',
+        name: 'BizFormImageSquare',
 
         components: {
             BizButton,
+            BizButtonIcon,
             BizFormField,
             BizImage,
             BizInputError,
             BizInputFile,
-            BizModalCard,
-            BizModalImageEditor,
+            BizModalImageEditorSquare,
         },
-
-        mixins: [
-            MixinHasModal,
-        ],
 
         inheritAttrs: false,
 
         props: {
+            acceptedTypes: {
+                type: Array,
+                default: acceptedImageTypes,
+            },
             label: {
                 type: String,
                 default: ''
+            },
+            labelDelete: {
+                type: String,
+                default: 'Remove',
+            },
+            labelReset: {
+                type: String,
+                default: 'Reset',
             },
             message: {
                 type: [Array, Object, String],
@@ -193,7 +147,7 @@
             },
             photoUrl: {
                 type: [String, null],
-                required: true,
+                default: null,
             },
             disabled: {
                 type: Boolean,
@@ -201,21 +155,13 @@
             },
             required: {
                 type: Boolean,
-                default: false
-            },
-            deleteLabel: {
-                type: String,
-                default: 'Remove Image',
+                default: null
             },
             showDeleteButton: {
                 type: Boolean,
                 default: false,
             },
-            acceptedTypes: {
-                type: Array,
-                default: acceptedImageTypes,
-            },
-            modalLabel: {
+            modalTitle: {
                 type: String,
                 default: 'Image',
             },
@@ -228,7 +174,8 @@
         emits: [
             'on-blur',
             'on-delete-image',
-            'on-reset-value',
+            'on-cropped-image',
+            'on-reset-preview',
             'update:modelValue',
             'update:photoUrl',
         ],
@@ -242,55 +189,90 @@
 
         data() {
             return {
-                cropper: null,
+                fileNames: [],
                 isImageEdit: false,
+                photoSelected: null,
                 photoUrlCropper: null,
             };
         },
 
+        computed: {
+            displayedFileName() {
+                if (this.computedPhoto && this.fileNames.length > 0) {
+                    return last(this.fileNames);
+                }
+                return null;
+            },
+        },
+
         methods: {
             onFilePicked(event) {
-                let fileType = "." + this.modelValue.type.split('/')[1];
+                const fileType = "." + this.photoSelected.type.split('/')[1];
 
                 if (includes(this.acceptedTypes, fileType)) {
-                    this.$emit('update:photoUrl', event.target.result);
 
-                    this.openModal();
+                    this.fileNames.push(this.photoSelected.name);
+
+                    this.photoUrlCropper = event.target.result;
+
+                    this.openImageEditorModal();
                 } else {
-                    this.$emit('update:modelValue', null);
+                    this.closeImageEditorModal();
 
                     oopsAlert({
                         text: "File must be a image format!"
                     });
                 }
+
+                this.photoSelected = null;
             },
 
-            onCloseModal() {
-                this.$emit('on-reset-value');
-            },
-
-            getCropperBlob() {
-                return getCanvasBlob(this.cropper.getCroppedCanvas());
+            getCropper() {
+                return this.$refs.cropperModal.$refs.cropper;
             },
 
             updateImageFile() {
                 const self = this;
-                self.getCropperBlob()
-                    .then((blob) => {
-                        self.$emit('update:modelValue', blob);
-                        self.$emit('update:photoUrl', URL.createObjectURL(blob));
-                        self.closeImageEditorModal();
-                    });
+
+                getCanvasBlob(
+                    self.getCropper().getCroppedCanvas()
+                ).then((blob) => {
+                    self.computedPhoto = blob;
+                    self.computedPhotoUrl = URL.createObjectURL(blob);
+
+                    self.keepLatestFileNameOnly();
+
+                    self.closeImageEditorModal();
+
+                    self.$emit('on-cropped-image');
+                });
             },
 
             openImageEditorModal() {
                 this.isImageEdit = true;
-                this.photoUrlCropper = this.computedPhotoUrl;
+            },
+
+            usePrevFileName() {
+                this.fileNames.pop();
+            },
+
+            keepLatestFileNameOnly() {
+                if (this.displayedFileName) {
+                    this.fileNames = [ this.displayedFileName ];
+                }
             },
 
             closeImageEditorModal() {
                 this.isImageEdit = false;
             },
+
+            resetPreview() {
+                this.usePrevFileName()
+
+                this.computedPhoto = null;
+
+                this.$emit('on-reset-preview');
+            }
         },
     };
 </script>
