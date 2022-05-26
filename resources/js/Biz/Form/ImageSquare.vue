@@ -70,15 +70,12 @@
             </div>
         </div>
 
-        <biz-modal-image-editor
+        <biz-modal-image-editor-square
             v-if="isImageEdit"
+            ref="cropperModal"
             v-model="photoUrlCropper"
-            v-model:cropper="cropper"
-            :can-crop="false"
-            :can-resize-state="false"
             :is-huge="false"
             :modal-title="modalTitle"
-            :cropper-options="{autoCrop: true, cropBoxMovable: false, cropBoxResizable: false, initialAspectRatio: 1}"
             @close="[usePrevFileName(), closeImageEditorModal()]"
         >
             <template #actions>
@@ -86,12 +83,12 @@
                     type="button"
                     class="is-link"
                     :disabled="disabled"
-                    @click="updateImageFile"
+                    @click="updateImageFile()"
                 >
                     Done
                 </biz-button>
             </template>
-        </biz-modal-image-editor>
+        </biz-modal-image-editor-square>
     </div>
 </template>
 
@@ -102,7 +99,7 @@
     import BizImage from '@/Biz/Image';
     import BizInputError from '@/Biz/InputError';
     import BizInputFile from '@/Biz/InputFile';
-    import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
+    import BizModalImageEditorSquare from '@/Biz/Modal/ImageEditorSquare';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { includes, last, pull } from 'lodash';
     import { oops as oopsAlert } from '@/Libs/alert';
@@ -118,7 +115,7 @@
             BizImage,
             BizInputError,
             BizInputFile,
-            BizModalImageEditor,
+            BizModalImageEditorSquare,
         },
 
         inheritAttrs: false,
@@ -231,23 +228,25 @@
                 this.photoSelected = null;
             },
 
-            getCropperBlob() {
-                return getCanvasBlob(this.cropper.getCroppedCanvas());
+            getCropper() {
+                return this.$refs.cropperModal.$refs.cropper;
             },
 
             updateImageFile() {
                 const self = this;
-                self.getCropperBlob()
-                    .then((blob) => {
-                        self.$emit('update:modelValue', blob);
-                        self.$emit('update:photoUrl', URL.createObjectURL(blob));
 
-                        self.keepLatestFileNameOnly();
+                getCanvasBlob(
+                    self.getCropper().getCroppedCanvas()
+                ).then((blob) => {
+                    self.computedPhoto = blob;
+                    self.computedPhotoUrl = URL.createObjectURL(blob);
 
-                        self.closeImageEditorModal();
+                    self.keepLatestFileNameOnly();
 
-                        self.$emit('on-cropped-image');
-                    });
+                    self.closeImageEditorModal();
+
+                    self.$emit('on-cropped-image');
+                });
             },
 
             openImageEditorModal() {
