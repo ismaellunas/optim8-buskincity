@@ -4,17 +4,19 @@
             Add New Category
         </template>
 
-        <biz-error-notifications :errors="$page.props.errors"/>
+        <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="box mb-6">
             <category-form
+                v-model="form[selectedLocale]"
                 :base-route="baseRoute"
                 :default-locale="defaultLocale"
                 :errors="errors"
-                :is-edit-mode="isEditMode"
                 :is-input-disabled="isProcessing"
                 :is-new="isNew"
                 :locale-options="localeOptions"
+                :selected-locale="selectedLocale"
+                @change-locale="changeLocale"
                 @on-submit="submit"
             />
         </div>
@@ -22,52 +24,85 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout';
-    import CategoryForm from '@/Pages/Category/Form';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import CategoryForm from '@/Pages/Category/Form';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage, useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
             AppLayout,
-            CategoryForm,
             BizErrorNotifications,
+            CategoryForm,
         },
+
+        mixins: [
+            MixinHasLoader
+        ],
+
         props: {
-            baseRoute: String,
-            errors: Object,
+            baseRoute: { type: String, required: true },
+            errors: { type: Object, default:() => {} },
         },
+
         setup() {
+            const defaultLocale = usePage().props.value.defaultLanguage;
+            const translationForm = {
+                [defaultLocale]: {
+                    name: null,
+                    slug: null,
+                }
+            };
+
             return {
-                defaultLocale: usePage().props.value.defaultLanguage,
+                defaultLocale: defaultLocale,
+                form: useForm(translationForm),
                 localeOptions: usePage().props.value.languageOptions,
             };
         },
+
         data() {
             return {
-                isEditMode: true,
                 isNew: true,
                 isProcessing: false,
-                loader: null,
+                selectedLocale: this.defaultLocale,
             };
         },
+
         methods: {
-            submit(form) {
+            submit() {
                 const self = this;
 
-                this.$inertia.post(route(this.baseRoute + '.store'), form, {
-                    onStart: () => {
-                        self.loader = self.$loading.show();
-                        self.isProcessing = true;
-                    },
-                    onSuccess: (page) => {
-                        successAlert(page.props.flash.message);
-                    },
-                    onFinish: () => {
-                        self.loader.hide();
-                        self.isProcessing = false;
-                    },
+                self.form.post(
+                    route(self.baseRoute + '.store'),
+                    {
+                        onStart: () => {
+                            self.onStartLoadingOverlay();
+                            self.isProcessing = true;
+                        },
+                        onSuccess: (page) => {
+                            successAlert(page.props.flash.message);
+                        },
+                        onFinish: () => {
+                            self.onEndLoadingOverlay();
+                            self.isProcessing = false;
+                        }
+                    }
+                );
+            },
+
+            changeLocale() {
+                let locale = {};
+                this.localeOptions.map(localeOption => {
+                    if (localeOption.id == this.defaultLocale) {
+                        locale = localeOption;
+                    }
+                });
+
+                oopsAlert({
+                    text: 'Please provide '+locale.name+' ('+locale.id.toUpperCase()+') translation first!',
                 });
             },
         },

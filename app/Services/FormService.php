@@ -8,6 +8,7 @@ use App\Models\{
     User,
 };
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 class FormService
 {
@@ -70,7 +71,7 @@ class FormService
 
     public function getFormLocation(string $routeName, int $entityId = null)
     {
-        $locationClass = $this->routeToLocationMaps[ $routeName ];
+        $locationClass = $this->routeToLocationMaps[ $routeName ] ?? null;
         $locationClass = $this->formLocationBasePath.'\\'.$locationClass;
 
         if (class_exists($locationClass)) {
@@ -117,6 +118,10 @@ class FormService
 
         $formLocation = $this->getFormLocation($routeName, $entityId);
 
+        if (!$formLocation->canBeAccessedBy($actor)) {
+            $this->abortAction();
+        }
+
         $forms = $this->getFormsOnRoute($routeName, $actor);
 
         foreach ($forms as $form) {
@@ -126,7 +131,7 @@ class FormService
 
     public function getSchemas(
         string $routeName,
-        User $actor,
+        ?User $actor = null,
         int $entityId = null
     ): Collection {
 
@@ -136,13 +141,21 @@ class FormService
 
         $schemas = collect();
 
+        if (!$formLocation->canBeAccessedBy($actor)) {
+            $this->abortAction();
+        }
+
         foreach ($forms as $form) {
 
             if (
                 $form->canBeAccessed()
                 && $formLocation->canBeAccessedByEntity($form->locations)
             ) {
-                $values = $formLocation->getValues($form->fields->keys());
+                $values = collect();
+
+                if ($actor) {
+                    $values = $formLocation->getValues($form->fields->keys());
+                }
 
                 $schema = $form->schema($values->all());
 
@@ -174,5 +187,10 @@ class FormService
         }
 
         return $values->all();
+    }
+
+    private function abortAction(): void
+    {
+        abort(Response::HTTP_FORBIDDEN);
     }
 }

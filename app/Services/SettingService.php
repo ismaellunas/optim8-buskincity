@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entities\Caches\SettingCache;
 use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
+use App\Helpers\CssUnitConverter;
 use App\Helpers\MinifyCss;
 use App\Models\{
     Media,
@@ -251,6 +252,21 @@ class SettingService
         });
     }
 
+    private function renderFontSizes(): string
+    {
+        $settings = Setting::where('group', 'font_size')
+                ->get(['key', 'value'])
+                ->mapWithKeys(function ($setting) {
+                    return [$setting->key => CssUnitConverter::pxToEm($setting->value ?? 0)];
+                })
+                ->all();
+
+        return view('theme_options.font_size_sass', array_merge(
+            config('constants.theme_font_sizes'),
+            $settings
+        ))->render();
+    }
+
     public function generateVariablesSass()
     {
         $variablesSass = view('theme_options.colors_sass', array_merge(
@@ -276,15 +292,9 @@ class SettingService
                     return json_decode($value);
                 })
                 ->all()
-        );
+        )->render();
 
-        $stylesAfterApp .= view('theme_options.font_size_sass', array_merge(
-            config('constants.theme_font_sizes'),
-            Setting::where('group', 'font_size')
-                ->get(['key', 'value'])
-                ->pluck('value', 'key')
-                ->all()
-        ));
+        $stylesAfterApp .= $this->renderFontSizes();
 
         $disk->put('styles_after.sass', $stylesAfterApp);
     }
