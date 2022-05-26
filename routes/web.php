@@ -15,10 +15,13 @@ use App\Http\Controllers\{
     NewPasswordController,
     PasswordResetLinkController,
     RegisteredUserController,
+    SitemapController,
     TwoFactorAuthenticatedSessionController,
+    UserPasswordController,
     UserProfileController,
     WebhookStripeController,
 };
+use App\Services\SitemapService;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -48,6 +51,9 @@ Route::middleware([
     Route::get('/user/profile', function () {
         return redirect()->route('dashboard');
     })->name('profile.show');
+
+    Route::put('/user/set-password', [UserPasswordController::class, 'store'])
+        ->name('user-password.set');
 
     Route::prefix('/payment-management/stripe')
         ->name('payment-management.stripe.')
@@ -139,10 +145,17 @@ Route::group([
         ->name('homepage')
         ->middleware('redirectLanguage');
 
+    Route::get('sitemap_index.xml', [SitemapController::class, 'sitemaps'])
+        ->name('sitemap');
+
+    Route::get('{sitemapName}-sitemap.xml', [SitemapController::class, 'urls'])
+        ->where('sitemapName', implode('|', SitemapService::sitemapNames()))
+        ->name('sitemap.urls');
+
     Route::get('/blog', [PostController::class, 'index'])
         ->name('blog.index');
 
-    Route::get('/category/{id}', [PostCategoryController::class, 'index'])
+    Route::get('/category/{category_translation}', [PostCategoryController::class, 'index'])
         ->name('blog.category.index');
 
     Route::get('blog/{slug}', [PostController::class, 'show'])
@@ -153,8 +166,8 @@ Route::group([
         ->name('frontend.pages.show')
         ->middleware('redirectLanguage');
 
-    Route::get('/profiles/{user:unique_key}/{firstname_lastname?}', [FrontendProfileController::class, 'show'])
-        ->name('frontend.profiles')
+    Route::get('/profile/{user:unique_key}/{firstname_lastname?}', [FrontendProfileController::class, 'show'])
+        ->name('frontend.profile')
         ->middleware('publicPage:profile')
         ->scopeBindings();
 

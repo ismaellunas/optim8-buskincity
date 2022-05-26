@@ -10,7 +10,7 @@ class UserEditLocation extends UserProfileLocation
     {
         return (
             parent::canBeAccessedBy($author)
-            || $author->hasPermissionTo('user.edit')
+            || ($author ? $author->hasPermissionTo('user.edit') : false)
         );
     }
 

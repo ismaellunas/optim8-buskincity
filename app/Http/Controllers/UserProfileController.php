@@ -15,7 +15,6 @@ class UserProfileController extends JetUserProfileController
 {
     public function show(Request $request)
     {
-        $data = [];
         $pageComponent = 'Profile/ShowFrontend';
 
         if ($request->routeIs('admin.*')) {
@@ -27,26 +26,25 @@ class UserProfileController extends JetUserProfileController
             $socialiteDrivers = LoginService::getAvailableSocialiteDrivers();
         }
 
-        $canPublicPage = auth()->user()->roles->contains(function ($role) {
+        $user = auth()->user();
+        $canPublicPage = $user->roles->contains(function ($role) {
             return $role->hasPermissionTo('public_page.profile');
         });
 
         return Jetstream::inertia()->render(
             $request,
             $pageComponent,
-            array_merge_recursive(
-                $data,
-                [
-                    'can' => [
-                        'public_page' => $canPublicPage,
-                    ],
-                    'profilePageUrl' => $canPublicPage ? auth()->user()->profile_page_url : null,
-                    'sessions' => $this->sessions($request)->all(),
-                    'socialiteDrivers' => $socialiteDrivers,
-                    'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
-                    'description' => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
-                ]
-            )
+            [
+                'can' => [
+                    'public_page' => $canPublicPage,
+                    'set_password' => $user->can('setPassword', $user),
+                ],
+                'profilePageUrl' => $canPublicPage ? $user->profile_page_url : null,
+                'sessions' => $this->sessions($request)->all(),
+                'socialiteDrivers' => $socialiteDrivers,
+                'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
+                'description' => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.",
+            ]
         );
     }
 }

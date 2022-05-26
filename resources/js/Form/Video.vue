@@ -9,6 +9,16 @@
         :required="schema.is_required"
         :message="error(schema.name, bagName, errors)"
     >
+        <template
+            v-if="hasLeftIcon"
+            #leftIcons
+        >
+            <biz-icon
+                class="is-small is-left"
+                :icon="schema.left_icon"
+            />
+        </template>
+
         <template #note>
             <p
                 v-if="schema.note"
@@ -21,14 +31,17 @@
 </template>
 
 <script>
+    import BizIcon from '@/Biz/Icon';
     import FormInput from '@/Biz/Form/Input';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import { isEmpty } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'FormVideo',
 
         components: {
+            BizIcon,
             FormInput,
         },
 
@@ -59,6 +72,12 @@
             return {
                 computedValue: useModelWrapper(props, emit),
             };
+        },
+
+        computed: {
+            hasLeftIcon() {
+                return !isEmpty(this.schema.left_icon);
+            },
         },
     };
 </script>
