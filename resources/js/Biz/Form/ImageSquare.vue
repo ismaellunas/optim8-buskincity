@@ -189,7 +189,6 @@
 
         data() {
             return {
-                cropper: null,
                 fileNames: [],
                 isImageEdit: false,
                 photoSelected: null,
