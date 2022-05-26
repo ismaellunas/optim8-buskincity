@@ -165,8 +165,8 @@ Route::group([
         ->name('frontend.pages.show')
         ->middleware('redirectLanguage');
 
-    Route::get('/profiles/{user:unique_key}/{firstname_lastname?}', [FrontendProfileController::class, 'show'])
-        ->name('frontend.profiles')
+    Route::get('/profile/{user:unique_key}/{firstname_lastname?}', [FrontendProfileController::class, 'show'])
+        ->name('frontend.profile')
         ->middleware('publicPage:profile')
         ->scopeBindings();
 
