@@ -8,6 +8,7 @@ class Text extends TranslatableField
 {
     protected $type = "Text";
 
+    public $leftIcon;
     public $maxlength;
     public $placeholder;
 
@@ -15,6 +16,7 @@ class Text extends TranslatableField
     {
         parent::__construct($name, $data);
 
+        $this->leftIcon = $data['left_icon'] ?? null;
         $this->maxlength = $data['maxlength'] ?? null;
         $this->placeholder = $data['placeholder'] ?? null;
     }
@@ -22,6 +24,7 @@ class Text extends TranslatableField
     public function schema(): array
     {
         $schema = [
+            'left_icon' => $this->leftIcon,
             'maxlength' => $this->maxlength ?? $this->max() ?? null,
             'placeholder' => $this->placeholder,
         ];

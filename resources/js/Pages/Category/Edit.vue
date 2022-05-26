@@ -1,19 +1,22 @@
 <template>
     <app-layout>
-        <template #header>Edit Category</template>
+        <template #header>
+            Edit Category
+        </template>
 
-        <biz-error-notifications :errors="$page.props.errors"/>
+        <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="box mb-6">
             <category-form
+                v-model="form[selectedLocale]"
                 :base-route="baseRoute"
-                :category="record"
                 :default-locale="defaultLocale"
                 :errors="errors"
-                :is-edit-mode="isEditMode"
                 :is-input-disabled="isProcessing"
                 :is-new="isNew"
                 :locale-options="localeOptions"
+                :selected-locale="selectedLocale"
+                @change-locale="onChangeLocale"
                 @on-submit="submit"
             />
         </div>
@@ -21,59 +24,119 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout';
-    import CategoryForm from '@/Pages/Category/Form';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import CategoryForm from '@/Pages/Category/Form';
+    import { getTranslation } from '@/Libs/translation';
+    import { isBlank } from '@/Libs/utils';
+    import { success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
+    import { usePage, useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
             AppLayout,
-            CategoryForm,
             BizErrorNotifications,
+            CategoryForm,
         },
+
+        mixins: [
+            MixinHasLoader
+        ],
+
         props: {
-            baseRoute: String,
-            errors: Object,
-            record: Object,
+            baseRoute: { type: String, required: true },
+            errors: { type: Object, default:() => {} },
+            record: { type: Object, required: true },
         },
-        setup() {
+
+        setup(props) {
+            const defaultLocale = usePage().props.value.defaultLanguage;
+            const translationForm = { [defaultLocale]: {} };
+
+            let translatedCategory = getTranslation(props.record, defaultLocale);
+
+            if (isBlank(translatedCategory)) {
+                translatedCategory = {
+                    name: null,
+                    slug: null,
+                };
+            }
+
+            translationForm[defaultLocale] = translatedCategory;
+
             return {
-                defaultLocale: usePage().props.value.defaultLanguage,
+                defaultLocale: defaultLocale,
                 localeOptions: usePage().props.value.languageOptions,
+                form: useForm(translationForm),
             };
         },
+
         data() {
             return {
-                isEditMode: true,
                 isNew: false,
                 isProcessing: false,
-                loader: null,
+                selectedLocale: this.defaultLocale,
             };
         },
+
         methods: {
-            submit(form) {
+            submit() {
                 const self = this;
 
-                self.$inertia.put(
+                self.form.put(
                     route(self.baseRoute + '.update', self.record.id),
-                    form,
                     {
                         onStart: () => {
-                            self.loader = self.$loading.show();
+                            self.onStartLoadingOverlay();
                             self.isProcessing = true;
                         },
                         onSuccess: (page) => {
                             successAlert(page.props.flash.message);
                         },
                         onFinish: () => {
-                            self.loader.hide();
+                            self.onEndLoadingOverlay();
                             self.isProcessing = false;
                         },
                     }
                 );
             },
+
+            onChangeLocale(locale) {
+                if (this.form.isDirty) {
+
+                    confirmLeaveProgress().then((result) => {
+                        if (result.isDismissed) {
+                            return false;
+                        } else if(result.isConfirmed) {
+                            this.changeLocale(locale);
+                        }
+                    })
+                } else {
+                    this.changeLocale(locale);
+                }
+            },
+
+            changeLocale(locale) {
+                this.setTranslationForm(locale);
+                this.selectedLocale = locale;
+            },
+
+            setTranslationForm(locale) {
+                const translatedCategory = getTranslation(this.record, locale);
+
+                let translationFrom = { [this.defaultLocale]: {} };
+
+                if (isBlank(translatedCategory)) {
+                    translationFrom[locale] = {
+                        name: null,
+                        slug: null,
+                    };
+                } else {
+                    translationFrom[locale] = translatedCategory;
+                }
+                this.form = useForm(translationFrom);
+            }
         },
     };
 </script>

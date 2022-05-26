@@ -10,7 +10,12 @@
             {{ label }}
         </template>
 
-        <div class="control">
+        <div
+            class="control"
+            :class="{'has-icons-left': hasLeftIcon}"
+        >
+            <slot name="leftIcons" />
+
             <biz-input
                 ref="input"
                 v-bind="$attrs"
@@ -80,5 +85,11 @@
             'on-keypress',
             'on-blur'
         ],
+
+        computed: {
+            hasLeftIcon() {
+                return !!this.$slots.leftIcons;
+            },
+        },
     };
 </script>

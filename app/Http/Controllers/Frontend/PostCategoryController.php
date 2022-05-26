@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\{
+    Category,
+    CategoryTranslation
+};
 use App\Http\Controllers\Controller;
 use App\Services\PostService;
 use App\Services\TranslationService;
@@ -23,16 +27,63 @@ class PostCategoryController extends Controller
         $this->translationService = $translationService;
     }
 
-    public function index(Request $request, $categoryId)
-    {
+    public function index(
+        Request $request,
+        CategoryTranslation $categoryTranslation
+    ) {
+        $locale = $this->translationService->currentLanguage();
+        $category = $categoryTranslation->category;
+
+        if (!$category->hasTranslation($locale)) {
+            return $this->goToCategoryWithDefaultLocale(
+                $request,
+                $category,
+                $locale,
+            );
+        } else {
+            $newCategoryTranslation = $category->translate($locale);
+
+            if ($newCategoryTranslation->slug !== $categoryTranslation->slug) {
+                return redirect()->route($this->baseRouteName.'.index', [
+                    $newCategoryTranslation->slug
+                ]);
+            }
+
+            return view('posts', [
+                'searchRoute' => route($this->baseRouteName.'.index', $newCategoryTranslation->slug),
+                'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
+                'records' => $this->postService->getBlogRecords(
+                    $request->term ?? '',
+                    $this->perPage,
+                    $this->translationService->currentLanguage(),
+                    $category->id
+                ),
+            ]);
+        }
+
+    }
+
+    private function goToCategoryWithDefaultLocale(
+        Request $request,
+        Category $category,
+        string $locale,
+    ) {
+        $defaultLocale = $this->translationService->getDefaultLocale();
+
+        if ($category->hasTranslation($defaultLocale)) {
+            $categoryTranslation = $category->translate($defaultLocale);
+        } else {
+            $categoryTranslation = $category->translations->first();
+        }
+
         return view('posts', [
-            'searchRoute' => route($this->baseRouteName.'.index', $categoryId),
+            'searchRoute' => route($this->baseRouteName.'.index', $categoryTranslation->slug),
             'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
             'records' => $this->postService->getBlogRecords(
                 $request->term ?? '',
                 $this->perPage,
-                $this->translationService->currentLanguage(),
-                $categoryId
+                $locale,
+                $category->id
             ),
         ]);
     }

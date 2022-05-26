@@ -18,7 +18,7 @@ class Form
     public $fields;
     public $order;
 
-    public User $author;
+    public ?User $author = null;
     public $formLocation;
 
     protected $data;
@@ -153,10 +153,6 @@ class Form
         $author = $this->author;
         $roles = $this->visibility['roles'] ?? [];
 
-        if (is_null($author)) {
-            return false;
-        }
-
         if (!empty($roles)) {
             return $author->hasRole($roles);
         }
@@ -173,6 +169,7 @@ class Form
             if (
                 $location['name'] == $locationRoute
                 && !empty($location['visibility']['roles'])
+                && !is_null($author)
             ) {
                 return $author->hasRole($location['visibility']);
             }

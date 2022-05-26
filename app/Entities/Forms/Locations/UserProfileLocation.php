@@ -55,6 +55,10 @@ class UserProfileLocation
 
     public function canBeAccessedByEntity(array $locations = []): bool
     {
+        if (!$this->entity) {
+            return false;
+        }
+
         return true;
     }
 
