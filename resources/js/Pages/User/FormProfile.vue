@@ -3,23 +3,21 @@
         <div class="columns">
             <div class="column">
                 <div class="field is-horizontal mb-5">
-                    <biz-form-image-editable
+                    <biz-form-image-square
                         v-model="form.photo"
                         v-model:photo-url="imageUrl"
-                        modal-label="Profile Photo"
-                        delete-label="Remove Photo"
-                        :photo-url="imageUrl"
-                        :show-delete-button="hasPhoto"
+                        label="Profile picture"
+                        modal-title="Profile picture"
+                        :show-delete-button="isDeleteButtonShown"
                         :message="error('photo', errorBag)"
-                        @on-reset-value="resetImageForm()"
+                        @on-cropped-image="onCroppedImage()"
                         @on-delete-image="onDeleteImage()"
+                        @on-reset-preview="resetPreview()"
                     >
                         <template #default-image-view>
-                            <user-icon
-                                style="width: 128px;"
-                            />
+                            <user-icon style="width: 128px;" />
                         </template>
-                    </biz-form-image-editable>
+                    </biz-form-image-square>
                 </div>
             </div>
 
@@ -104,12 +102,12 @@
 </template>
 
 <script>
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
+    import BizFormImageSquare from '@/Biz/Form/ImageSquare';
     import BizFormInput from '@/Biz/Form/Input';
-    import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSelect from '@/Biz/Form/Select';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import UserIcon from '@/Biz/Icon/User';
     import { confirmDelete } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';
@@ -122,8 +120,8 @@
         components: {
             BizDropdownItem,
             BizFormDropdownSearch,
+            BizFormImageSquare,
             BizFormInput,
-            BizFormImageEditable,
             BizFormSelect,
             UserIcon,
         },
@@ -156,8 +154,11 @@
         },
 
         computed: {
-            hasPhoto() {
-                return !isEmpty(this.imageUrl);
+            isDeleteButtonShown() {
+                return (
+                    !isEmpty(this.imageUrl)
+                    && !isEmpty(this.photoUrl)
+                );
             },
 
             selectedCountry: {
@@ -197,8 +198,12 @@
         },
 
         methods: {
-            resetImageForm() {
-                this.form.reset('photo', 'is_photo_deleted');
+            resetPreview() {
+                this.imageUrl = this.photoUrl;
+            },
+
+            onCroppedImage() {
+                this.form.is_photo_deleted = false;
             },
 
             onDeleteImage() {
