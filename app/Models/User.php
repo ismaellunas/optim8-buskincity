@@ -14,6 +14,7 @@ use App\Services\{
 };
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
@@ -138,9 +139,34 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function scopeInRoles($query, array $roleIds)
     {
-        return $query->whereHas('roles', function ($query) use ($roleIds) {
-            $query->whereIn('id', $roleIds);
-        });
+        return $query->whereHas(
+            'roles',
+            function (Builder $query) use ($roleIds) {
+                $query->whereIn('id', $roleIds);
+            }
+        );
+    }
+
+    public function scopeInRoleNames($query, array $roleNames)
+    {
+        return $query->whereHas(
+            'roles',
+            function (Builder $query) use ($roleNames) {
+                $query->whereIn('name', $roleNames);
+            }
+        );
+    }
+
+    public function scopeEmailVerified($query)
+    {
+        return $query->whereNotNull('email_verified_at');
+    }
+
+    public function scopeAvailable($query)
+    {
+        return $query
+            ->emailVerified()
+            ->where('is_suspended', false);
     }
 
     public function getFullNameAttribute(): string
