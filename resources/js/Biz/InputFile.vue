@@ -62,6 +62,10 @@
             fileLabel: {
                 type: String,
                 default: 'Choose a file'
+            },
+            displayedFileName: {
+                type: String,
+                default: null
             }
         },
 
@@ -88,7 +92,9 @@
             },
 
             fileName() {
-                if (this.hasFile) {
+                if (this.displayedFileName) {
+                    return this.displayedFileName;
+                } else if (this.hasFile) {
                     return this.file.name
                 }
                 return "...";

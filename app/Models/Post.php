@@ -7,12 +7,14 @@ use App\Helpers\HtmlToText;
 use App\Models\Category;
 use App\Models\Media;
 use App\Services\PostService;
+use App\Traits\HasLocale;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 
 class Post extends BaseModel implements PublishableInterface
 {
     use HasFactory;
+    use HasLocale;
 
     const STATUS_SCHEDULED = 2;
 
@@ -64,11 +66,6 @@ class Post extends BaseModel implements PublishableInterface
     public function scopeDraft($query)
     {
         return $query->where('status', self::STATUS_DRAFT);
-    }
-
-    public function scopeInLanguages($query, array $locales)
-    {
-        return $query->whereIn('locale', $locales);
     }
 
     public function scopeInCategories($query, array $categoryIds)

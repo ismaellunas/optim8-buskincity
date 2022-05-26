@@ -6,25 +6,22 @@
 
         <template #form>
             <div class="field is-horizontal mb-5">
-                <biz-form-image-editable
+                <biz-form-image-square
                     v-model="form.photo"
                     v-model:photo-url="photoUrl"
-                    delete-label="Remove"
                     label="Profile picture"
-                    modal-label="Profile picture"
+                    modal-title="Profile picture"
                     wrapper-class="field-body"
-                    :photo-url="photoUrl"
-                    :show-delete-button="hasPhoto"
+                    :show-delete-button="isDeleteButtonShown"
                     :message="error('photo')"
-                    @on-reset-value="resetImageForm()"
+                    @on-cropped-image="onCroppedImage()"
                     @on-delete-image="onDeleteImage()"
+                    @on-reset-preview="resetPreview()"
                 >
                     <template #default-image-view>
-                        <user-icon
-                            style="width: 128px;"
-                        />
+                        <user-icon style="width: 128px;" />
                     </template>
-                </biz-form-image-editable>
+                </biz-form-image-square>
             </div>
 
             <div class="field is-horizontal mb-5">
@@ -97,15 +94,14 @@
 </template>
 
 <script>
-    import MixinHasLoader from '@/Mixins/HasLoader';
-    import MixinHasModal from '@/Mixins/HasModal';
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button';
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
+    import BizFormImageSquare from '@/Biz/Form/ImageSquare';
     import BizFormInput from '@/Biz/Form/Input';
-    import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import FormSection from '@/Frontend/FormSection';
+    import MixinHasLoader from '@/Mixins/HasLoader';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import UserIcon from '@/Biz/Icon/User';
     import { acceptedImageTypes, debounceTime } from '@/Libs/defaults';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
@@ -116,15 +112,14 @@
             BizButton,
             BizDropdownItem,
             BizFormDropdownSearch,
+            BizFormImageSquare,
             BizFormInput,
-            BizFormImageEditable,
             FormSection,
             UserIcon,
         },
 
         mixins: [
             MixinHasLoader,
-            MixinHasModal,
             MixinHasPageErrors,
         ],
 
@@ -160,8 +155,11 @@
         },
 
         computed: {
-            hasPhoto() {
-                return !isEmpty(this.photoUrl);
+            isDeleteButtonShown() {
+                return (
+                    !isEmpty(this.photoUrl)
+                    && !isEmpty(this.user.profile_photo_url)
+                );
             },
 
             selectedLanguage: {
@@ -192,8 +190,7 @@
                     errorBag: 'updateProfileInformation',
                     preserveScroll: true,
                     onSuccess: () => {
-                        this.form.photo = null;
-                        this.form.is_photo_deleted = false;
+                        this.resetImageForm();
 
                         this.$emit('after-update-profile');
 
@@ -212,6 +209,10 @@
                 this.form.reset('photo', 'is_photo_deleted');
             },
 
+            resetPreview() {
+                this.photoUrl = this.user.profile_photo_url;
+            },
+
             onDeleteImage() {
                 const self = this;
                 confirmDelete().then((result) => {
@@ -221,6 +222,10 @@
                         self.form.is_photo_deleted = true;
                     }
                 })
+            },
+
+            onCroppedImage() {
+                this.form.is_photo_deleted = false;
             },
 
             searchLanguage: debounce(function(term) {

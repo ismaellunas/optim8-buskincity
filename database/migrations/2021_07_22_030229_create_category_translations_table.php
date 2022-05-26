@@ -16,7 +16,7 @@ class CreateCategoryTranslationsTable extends Migration
         Schema::create('category_translations', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
-            $table->string('slug', 255)->nullable();
+            $table->string('slug', 255);
             $table->string('locale', 15)->index();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->unique(['category_id', 'locale']);
