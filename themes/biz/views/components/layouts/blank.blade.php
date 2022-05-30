@@ -57,14 +57,9 @@
     <body class="font-sans antialiased">
         {!! $trackingCodeAfterBody !!}
 
-        <div id="app" class="has-background-grey-darker">
-            <div
-                class="is-flex is-justify-content-center is-align-items-center"
-                style="height: 100vh"
-            >
-                <div class="container has-text-white has-text-centered">
-                    {{ $slot }}
-                </div>
+        <div id="app">
+            <div class="content">
+                {{ $slot }}
             </div>
         </div>
 
