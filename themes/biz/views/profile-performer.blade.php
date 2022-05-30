@@ -9,7 +9,7 @@
         <div class="container">
             <div class="columns is-multiline is-centered">
                 <div class="column is-12">
-                    <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $userProfile->getMedias('top_background_picture')->first()->file_url ?? null }});">
+                    <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $userProfile->getMedias('cover_background_photo')->first()->file_url ?? null }});">
                         <div class="hero-body"></div>
                     </div>
                 </div>
