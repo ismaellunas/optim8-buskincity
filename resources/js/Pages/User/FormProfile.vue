@@ -15,7 +15,11 @@
                         @on-reset-preview="resetPreview()"
                     >
                         <template #default-image-view>
-                            <user-icon style="width: 128px;" />
+                            <biz-image
+                                ratio="is-128x128"
+                                rounded="is-rounded"
+                                src="/images/profile-picture-default.png"
+                            />
                         </template>
                     </biz-form-image-square>
                 </div>
@@ -107,8 +111,8 @@
     import BizFormImageSquare from '@/Biz/Form/ImageSquare';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormSelect from '@/Biz/Form/Select';
+    import BizImage from '@/Biz/Image';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import UserIcon from '@/Biz/Icon/User';
     import { confirmDelete } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
@@ -123,7 +127,7 @@
             BizFormImageSquare,
             BizFormInput,
             BizFormSelect,
-            UserIcon,
+            BizImage,
         },
 
         mixins: [
