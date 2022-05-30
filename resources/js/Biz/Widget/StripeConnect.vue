@@ -56,7 +56,7 @@
 
                 <div class="buttons are-small mt-5">
                     <biz-link
-                        :href=" route('payment-management.stripe.show')"
+                        :href=" route('payments.stripe.show')"
                         class="button is-info"
                     >
                         <span class="icon is-small">
@@ -110,7 +110,7 @@
         methods: {
             createConnectedAccount() {
                 const self = this;
-                const url = route('payment-management.stripe.create-connected-account');
+                const url = route('payments.stripe.create-connected-account');
 
                 confirmAlert(
                     "Please double-check your country!",
