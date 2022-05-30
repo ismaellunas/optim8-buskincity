@@ -385,8 +385,8 @@ class MenuService
         if ($user->can('manageStripeConnectedAccount', $user)) {
             $menus['paymentManagement'] = [
                 'title' => 'Payments',
-                'link' => route('payment-management.stripe.show'),
-                'isActive' => $request->routeIs('payment-management.stripe.show'),
+                'link' => route('payments.stripe.show'),
+                'isActive' => $request->routeIs('payments.stripe.show'),
                 'isEnabled' => true,
             ];
         }

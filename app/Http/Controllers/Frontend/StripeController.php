@@ -158,7 +158,7 @@ class StripeController extends Controller
 
     public function return()
     {
-        $redirect = redirect()->route('payment-management.stripe.show');
+        $redirect = redirect()->route('payments.stripe.show');
 
         $stripeAccountId = $this->getUserMetaStripe()->getAccountId();
 

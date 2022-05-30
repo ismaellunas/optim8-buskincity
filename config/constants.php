@@ -140,6 +140,13 @@ return [
         'date_time' => 'Y/m/d H:i:s',
     ],
 
+    'currency_symbols' => [
+        'SEK' => 'SEK',
+        'EUR' => '&euro;',
+        'GBP' => '&pound;',
+        'USD' => '&dollar;',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway

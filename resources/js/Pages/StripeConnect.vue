@@ -309,7 +309,7 @@
 
         data() {
             return {
-                baseUrl: route('payment-management.stripe.show'),
+                baseUrl: route('payments.stripe.show'),
             };
         },
 
@@ -355,7 +355,7 @@
         methods: {
             createConnectedAccount() {
                 const self = this;
-                const url = route('payment-management.stripe.create-connected-account');
+                const url = route('payments.stripe.create-connected-account');
 
                 confirmAlert(
                     "Please double-check your country!",
@@ -382,7 +382,7 @@
 
                 try {
                     const response = await axios.get(
-                        route('payment-management.stripe.redirect-to-stripe')
+                        route('payments.stripe.redirect-to-stripe')
                     );
 
                     window.open(response.data.url);
@@ -400,7 +400,7 @@
 
                 try {
                     const response = await axios.get(
-                        route('payment-management.stripe.account-link')
+                        route('payments.stripe.account-link')
                     );
 
                     window.open(response.data.url);
@@ -415,7 +415,7 @@
             },
 
             submit() {
-                this.settingForm.post(route('payment-management.stripe.update-setting'), {
+                this.settingForm.post(route('payments.stripe.update-setting'), {
                     onStart: () => {
                         this.loader = this.$loading.show();
                     },
