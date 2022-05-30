@@ -25,6 +25,13 @@ export const acceptedImageTypes = [
     '.gif',
 ];
 
+export const acceptedImageMimes = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+];
+
 export const acceptedVideoTypes = [
     '.mp4',
     '.mov',
