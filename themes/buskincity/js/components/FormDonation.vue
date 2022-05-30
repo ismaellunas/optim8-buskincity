@@ -1,97 +1,92 @@
 <template>
-    <div>
-        <form
-            ref="form"
-            v-if="hasRequirements"
-            :action="submitRoute"
-            method="POST"
-            @submit.prevent="submit"
+    <form
+        ref="form"
+        v-if="hasRequirements"
+        :action="submitRoute"
+        method="POST"
+        @submit.prevent="submit"
+    >
+        <input
+            type="hidden"
+            name="_token"
+            :value="csrf"
         >
-            <input
-                type="hidden"
-                name="_token"
-                :value="csrf"
+
+        <div class="buttons mt-5">
+            <template
+                v-for="amountOption, index in selectedAmountOptions"
+                :key="index"
             >
-
-            <div class="content">
-                <div class="field is-grouped">
-                    <p
-                        v-for="amountOption, index in selectedAmountOptions"
-                        :key="index"
-                        class="control"
-                    >
-                        <button
-                            class="button is-primary"
-                            type="button"
-                            @click.prevent="setAmount(amountOption)"
-                        >
-                            <span class="icon is-small">
-                                <i class="fas fa-money-bill" />
-                            </span>
-                            <span>{{ amountOption }}</span>
-                        </button>
-                    </p>
-                </div>
-
-                <div class="field has-addons mb-0">
-                    <div class="control">
-                        <span
-                            id="currency"
-                            class="select"
-                        >
-                            <biz-select
-                                id="currency"
-                                v-model="selectedCurrency"
-                                name="currency"
-                            >
-                                <option
-                                    v-for="currency in currencies"
-                                    :key="currency['id']"
-                                    :value="currency['id']"
-                                >
-                                    {{ currency['value'] }}
-                                </option>
-                            </biz-select>
-                        </span>
-                    </div>
-
-                    <div class="control is-expanded">
-                        <input
-                            type="number"
-                            name="amount"
-                            placeholder="Amount of money"
-                            min="1"
-                            required
-                            :class="{input: true, 'is-danger': messages.length > 0}"
-                            :value="filteredAmount"
-                            @paste="onPaste"
-                        >
-                    </div>
-                </div>
-
-                <div
-                    v-for="message, index in messages"
-                    :key="index"
-                    class="help is-danger"
-                >
-                    {{ message }}
-                </div>
-            </div>
-
-            <div class="buttons has-addons is-centered">
                 <button
-                    class="button is-link"
-                    :disabled="buttonDisabled"
+                    class="button is-link is-outlined is-flex-grow-1"
+                    type="button"
+                    @click.prevent="setAmount(amountOption)"
                 >
-                    {{ buttonText }}
+                    <span class="has-text-weight-bold">
+                        {{ currencyValue + ' ' + amountOption }}
+                    </span>
                 </button>
+            </template>
+        </div>
+        <div class="content">
+            <div class="field has-addons mb-0">
+                <div class="control is-expanded">
+                    <input
+                        v-model="filteredAmount"
+                        type="number"
+                        name="amount"
+                        placeholder="Enter the amount"
+                        min="1"
+                        required
+                        :class="{input: true, 'is-danger': messages.length > 0}"
+                        @paste="onPaste"
+                    >
+                </div>
+
+                <div class="control">
+                    <span
+                        id="currency"
+                        class="select"
+                    >
+                        <biz-select
+                            id="currency"
+                            v-model="selectedCurrency"
+                            name="currency"
+                        >
+                            <option
+                                v-for="currency in currencies"
+                                :key="currency['id']"
+                                :value="currency['id']"
+                            >
+                                {{ currency['value'] }}
+                            </option>
+                        </biz-select>
+                    </span>
+                </div>
             </div>
-        </form>
-    </div>
+
+            <div
+                v-for="message, index in messages"
+                :key="index"
+                class="help is-danger"
+            >
+                {{ message }}
+            </div>
+        </div>
+        <div class="buttons">
+            <button
+                class="button is-primary is-medium is-flex-grow-1"
+                :disabled="buttonDisabled"
+            >
+                <span class="has-text-weight-bold">{{ buttonText + ' ' + donationAmount }}</span>
+            </button>
+        </div>
+    </form>
 </template>
 
 <script>
     import BizSelect from '@/Biz/Select';
+    import { find } from 'lodash';
 
     export default {
         name: 'FormDonation',
@@ -156,6 +151,14 @@
 
             hasRequirements() {
                 return this.currencies.length > 0;
+            },
+
+            currencyValue() {
+                return find(this.currencies, { 'id': this.selectedCurrency }).value;
+            },
+
+            donationAmount() {
+                return this.amount ? this.currencyValue + ' ' + this.amount : '';
             }
         },
 
