@@ -71,11 +71,15 @@ class ProfileController extends Controller
             ->getMedias('top_background_picture')
             ->first();
 
+        $countryCode = $this->userProfileService
+            ->getMeta('country');
+
         $data = array_merge(
             $data,
             [
                 'profileBackgroundUrl' => $topBackgroundPicture->file_url ?? null,
                 'profilePhotoUrl' => $user->profilePhotoUrl ?? url('/images/profile-picture-default.png'),
+                'flagUrl' => $countryCode ? url('/themes/buskincity/images/flags/'.strtolower($countryCode).'.svg') : null,
             ]
         );
     }
