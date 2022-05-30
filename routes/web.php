@@ -11,6 +11,7 @@ use App\Http\Controllers\{
     Frontend\PostCategoryController,
     Frontend\PostController,
     Frontend\ProfileController as FrontendProfileController,
+    Frontend\QrCodeController,
     Frontend\StripeController,
     NewPasswordController,
     PasswordResetLinkController,
@@ -170,6 +171,10 @@ Route::group([
         ->name('frontend.profile')
         ->middleware('publicPage:profile')
         ->scopeBindings();
+
+    Route::get('/print/qrcode/{user:unique_key}', [QrCodeController::class, 'print'])
+        ->name('frontend.print.qrcode')
+        ->middleware('publicPage:profile');
 
     Route::get('donations/{user}/success', [DonationController::class, 'success'])
         ->name('donations.success');
