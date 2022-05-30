@@ -375,31 +375,53 @@ class MenuService
 
         $menus = [
             'dashboard' => [
-                'title' => 'Dashboard',
+                'title' => 'Home',
                 'link' => route('dashboard'),
                 'isActive' => $request->routeIs('dashboard'),
                 'isEnabled' => true,
             ],
+            'street_performers' => [
+                'title' => 'Street Performers',
+                'link' => '#',
+                'isActive' => false,
+                'isEnabled' => true,
+            ],
+            'blog' => [
+                'title' => 'Blog',
+                'link' => '#',
+                'isActive' => false,
+                'isEnabled' => true,
+            ],
+            'about' => [
+                'title' => 'About',
+                'link' => '#',
+                'isActive' => false,
+                'isEnabled' => true,
+            ],
         ];
 
-        if ($user->can('manageStripeConnectedAccount', $user)) {
-            $menus['paymentManagement'] = [
+        $dropdownRightMenus = [
+            [
+                'title' => 'Dashboard',
+                'link' => route('dashboard'),
+                'isEnabled' => true,
+            ],
+            [
                 'title' => 'Payments',
                 'link' => route('payments.stripe.show'),
-                'isActive' => $request->routeIs('payments.stripe.show'),
+                'isEnabled' => $user->can('manageStripeConnectedAccount', $user),
+            ],
+            [
+                'title' => 'Profile',
+                'link' => route('user.profile.show'),
                 'isEnabled' => true,
-            ];
-        }
-
-        $menuProfile = [
-            'title' => 'Profile',
-            'link' => route('user.profile.show'),
+            ],
         ];
 
         return [
             'nav' => $menus,
             'navLogo' => $menuLogo,
-            'navProfile' => $menuProfile,
+            'dropdownRightMenus' => $dropdownRightMenus,
         ];
     }
 
