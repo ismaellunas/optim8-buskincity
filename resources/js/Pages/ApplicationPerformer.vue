@@ -26,7 +26,7 @@
                                     v-model="form.first_name"
                                     label="First name"
                                     maxlength="128"
-                                    placeholder="Your First Name"
+                                    placeholder="Your first name"
                                     required
                                     :message="error('first_name')"
                                 />
@@ -37,7 +37,7 @@
                                     v-model="form.last_name"
                                     label="Last name"
                                     maxlength="128"
-                                    placeholder="Your Last Name"
+                                    placeholder="Your last name"
                                     required
                                     :message="error('first_name')"
                                 />
@@ -49,7 +49,7 @@
                                     v-model="form.company"
                                     label="Company (optional)"
                                     maxlength="128"
-                                    placeholder="Your Company Name"
+                                    placeholder="Your company name"
                                     :message="error('company')"
                                 />
                             </div>
@@ -59,7 +59,7 @@
                                     v-model="form.email"
                                     label="Email"
                                     maxlength="255"
-                                    placeholder="Your Email Address"
+                                    placeholder="Your email address"
                                     required
                                     :message="error('email')"
                                 />
@@ -70,7 +70,7 @@
                                     v-model="form.phone"
                                     label="Phone"
                                     maxlength="20"
-                                    placeholder="Your Phone Number"
+                                    placeholder="Your phone number"
                                     required
                                     :message="error('phone.number')"
                                     :country-options="phoneCountryOptions"
@@ -83,7 +83,7 @@
                                     v-model="form.stage_name"
                                     label="Stage name"
                                     maxlength="64"
-                                    placeholder="Your Stage Name"
+                                    placeholder="Your stage name"
                                     required
                                     :message="error('stage_name')"
                                 />
@@ -93,7 +93,7 @@
                                     v-model="form.discipline"
                                     label="Discipline"
                                     maxlength="64"
-                                    placeholder="Choose One"
+                                    placeholder="Choose one"
                                     required
                                     :message="error('discipline')"
                                 >
@@ -120,7 +120,7 @@
                                     id="address"
                                     ref="address"
                                     v-model="form.address"
-                                    label="Street Address"
+                                    label="Street address"
                                     maxlength="128"
                                     required
                                     :message="error('stage_name')"
@@ -141,7 +141,7 @@
                                 <biz-form-input
                                     id="postal_code"
                                     v-model="form.postal_code"
-                                    label="ZIP / Postal Code"
+                                    label="ZIP / Postal code"
                                     maxlength="32"
                                     required
                                     :message="error('postal_code')"
@@ -154,7 +154,7 @@
                                     v-model="form.country"
                                     label="Country"
                                     maxlength="2"
-                                    placeholder="Choose One"
+                                    placeholder="Choose one"
                                     required
                                     :message="error('country')"
                                 >
@@ -238,7 +238,7 @@
                                     id="facebook"
                                     v-model="form.facebook"
                                     label="Facebook"
-                                    placeholder="Facebook Link"
+                                    placeholder="Facebook link"
                                     :message="error('facebook')"
                                 />
                             </div>
@@ -247,7 +247,7 @@
                                     id="twitter"
                                     v-model="form.twitter"
                                     label="Twitter"
-                                    placeholder="Twitter Link"
+                                    placeholder="Twitter link"
                                     :message="error('twitter')"
                                 />
                             </div>
@@ -255,7 +255,7 @@
                                 <biz-form-input
                                     v-model="form.instagram"
                                     label="Instagram"
-                                    placeholder="Instagram Link"
+                                    placeholder="Instagram link"
                                     :message="error('instagram')"
                                 />
                             </div>
@@ -267,7 +267,7 @@
                                     id="youtube"
                                     v-model="form.youtube"
                                     label="Youtube"
-                                    placeholder="Youtube Link"
+                                    placeholder="Youtube link"
                                     :message="error('youtube')"
                                 />
                             </div>
@@ -276,7 +276,7 @@
                                     id="other_links"
                                     v-model="form.other_links"
                                     label="Other(s)"
-                                    placeholder="Other Links (separate by comma)"
+                                    placeholder="Other links (separate by comma)"
                                     :message="error('other_links') ?? error('other_links.*')"
                                 />
                             </div>
@@ -285,8 +285,8 @@
                                 <biz-form-input
                                     id="promotional_video"
                                     v-model="form.promotional_video"
-                                    label="Promotional Video"
-                                    placeholder="Youtube or Vimeo Link"
+                                    label="Promotional video"
+                                    placeholder="Youtube or Vimeo link"
                                     required
                                     :message="error('promotional_video')"
                                 />
@@ -295,7 +295,7 @@
                             <div class="column is-half">
                                 <biz-form-file-upload
                                     v-model="form.photos"
-                                    label="Performance Photo"
+                                    label="Performance photo"
                                     required
                                     :allow-multiple="true"
                                     :accepted-types="acceptedImageType"
@@ -319,8 +319,8 @@
                                 </biz-form-file-upload>
 
                                 <p class="help">
-                                    Upload photos of your Performance<br>
-                                    Kindly upload up to 10 pictures of your performances, and make sure to pick your best photos, as this might have an impact on your application during the review process
+                                    Upload photos of your Performance.<br>
+                                    Kindly upload up to 10 pictures of your performances, and make sure to pick your best photos, as this might have an impact on your application during the review process.
                                 </p>
                             </div>
                         </div>
@@ -436,7 +436,7 @@
             submit() {
                 const self = this;
 
-                this.form.post(this.route('performer-application-form.store'), {
+                this.form.post(this.route('performer-application.store'), {
                     preserveScroll: false,
                     onStart: () => {
                         self.loader = self.$loading.show();
