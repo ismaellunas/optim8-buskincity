@@ -25,7 +25,7 @@ class SettingSeeder extends Seeder
             [
                 "key" => "color_link",
                 "display_name" => "Link Color",
-                "value" => "#2ba2e3",
+                "value" => "#0071b0",
                 "group" => "theme_color",
                 "order" => "2"
             ],
