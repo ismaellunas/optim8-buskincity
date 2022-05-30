@@ -79,7 +79,7 @@ class ProfileController extends Controller
             [
                 'profileBackgroundUrl' => $topBackgroundPicture->file_url ?? null,
                 'profilePhotoUrl' => $user->profilePhotoUrl ?? url('/images/profile-picture-default.png'),
-                'flagUrl' => $countryCode ? url('/themes/buskincity/images/flags/'.strtolower($countryCode).'.svg') : null,
+                'flagUrl' => $countryCode ? url('/images/flags/'.strtolower($countryCode).'.svg') : null,
             ]
         );
     }
