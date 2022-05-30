@@ -14,7 +14,11 @@ class UserProfileService
 
     public function __construct()
     {
-        $user = request()->route()->parameter('user');
+        $user = null;
+
+        if (request()->route()) {
+            $user = request()->route()->parameter('user');
+        }
 
         if (is_string($user)) {
             $user = $this->getUser($user);
@@ -22,9 +26,13 @@ class UserProfileService
 
         $this->user = $user;
 
+        /*
+         * TODO: This is a bandage, because produces an error.
+         * TODO: I will be good if we remove abort() with throw an Exception
         if (!$this->user) {
             abort(404);
         }
+         */
     }
 
     public function getMeta(string $key, string $locale = null): mixed
