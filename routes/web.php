@@ -56,8 +56,8 @@ Route::middleware([
     Route::put('/user/set-password', [UserPasswordController::class, 'store'])
         ->name('user-password.set');
 
-    Route::prefix('/payment-management/stripe')
-        ->name('payment-management.stripe.')
+    Route::prefix('/payments/stripe')
+        ->name('payments.stripe.')
         ->middleware('can:manageStripeConnectedAccount,App\Models\User')
         ->group(function() {
             Route::get('/', [StripeController::class, 'show'])
