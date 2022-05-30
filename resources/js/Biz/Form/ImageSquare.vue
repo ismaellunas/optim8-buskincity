@@ -1,74 +1,69 @@
 <template>
     <div :class="wrapperClass">
-        <div class="level">
-            <div class="level-left mr-4">
-                <div class="field is-narrow">
-                    <biz-image
-                        v-if="computedPhotoUrl"
-                        ratio="is-128x128"
-                        rounded="is-rounded"
-                        :src="computedPhotoUrl"
-                    />
+        <div class="field is-narrow">
+            <biz-image
+                v-if="computedPhotoUrl"
+                ratio="is-128x128"
+                rounded="is-rounded"
+                :src="computedPhotoUrl"
+            />
 
-                    <slot
-                        v-else
-                        name="default-image-view"
-                    />
-                </div>
-            </div>
-            <div class="level-right">
-                <biz-form-field
-                    :is-required="required"
-                >
-                    <template #label>
-                        {{ label }}
-                    </template>
-
-                    <biz-input-file
-                        ref="input"
-                        v-bind="$attrs"
-                        v-model="photoSelected"
-                        file-label="Choose a picture"
-                        :accept="acceptedTypes"
-                        :class="{'is-danger': message}"
-                        :disabled="disabled"
-                        :displayed-file-name="displayedFileName"
-                        :is-name-displayed="true"
-                        :required="required"
-                        @blur="$emit('on-blur', $event)"
-                        @on-file-picked="onFilePicked"
-                    />
-
-                    <biz-button-icon
-                        v-if="showDeleteButton"
-                        class="is-danger mt-2 mr-2"
-                        icon="far fa-minus-square"
-                        icon-class="is-small"
-                        type="button"
-                        :disabled="disabled"
-                        @click.prevent="$emit('on-delete-image', $event)"
-                    >
-                        <span class="has-text-weight-bold">{{ labelDelete }}</span>
-                    </biz-button-icon>
-
-                    <biz-button-icon
-                        v-if="computedPhoto"
-                        class="is-warning mt-2 mr-2"
-                        icon="far fa-history"
-                        icon-class="is-small"
-                        type="button"
-                        :disabled="disabled"
-                        @click.prevent="resetPreview"
-                    >
-                        <span class="has-text-weight-bold">{{ labelReset }}</span>
-                    </biz-button-icon>
-
-                    <template #error>
-                        <biz-input-error :message="message" />
-                    </template>
-                </biz-form-field>
-            </div>
+            <slot
+                v-else
+                name="default-image-view"
+            />
         </div>
+
+        <biz-form-field
+            :is-required="required"
+        >
+            <template #label>
+                {{ label }}
+            </template>
+
+            <biz-input-file
+                ref="input"
+                v-bind="$attrs"
+                v-model="photoSelected"
+                file-label="Choose a picture"
+                :accept="acceptedTypes"
+                :class="{'is-danger': message}"
+                :disabled="disabled"
+                :displayed-file-name="displayedFileName"
+                :is-name-displayed="true"
+                :required="required"
+                @blur="$emit('on-blur', $event)"
+                @on-file-picked="onFilePicked"
+            />
+
+            <biz-button-icon
+                v-if="showDeleteButton"
+                class="is-danger is-small mt-3 mr-2"
+                icon="fa-solid fa-trash-can"
+                icon-class="is-small"
+                type="button"
+                :disabled="disabled"
+                @click.prevent="$emit('on-delete-image', $event)"
+            >
+                <span class="has-text-weight-bold">{{ labelDelete }}</span>
+            </biz-button-icon>
+
+            <biz-button-icon
+                v-if="computedPhoto"
+                class="is-warning is-small mt-3 mr-2"
+                icon="far fa-history"
+                icon-class="is-small"
+                type="button"
+                :disabled="disabled"
+                @click.prevent="resetPreview"
+            >
+                <span class="has-text-weight-bold">{{ labelReset }}</span>
+            </biz-button-icon>
+
+            <template #error>
+                <biz-input-error :message="message" />
+            </template>
+        </biz-form-field>
 
         <biz-modal-image-editor-square
             v-if="isImageEdit"
