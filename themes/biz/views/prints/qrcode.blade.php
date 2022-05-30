@@ -65,6 +65,10 @@
     @push('bottom_scripts')
     <script>
         window.print();
+
+        window.onafterprint = function() {
+            window.document.body.onfocus = function() { window.close(); }
+        };
     </script>
     @endpush
 </x-layouts.blank>
