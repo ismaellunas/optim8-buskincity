@@ -23,7 +23,7 @@
                     @click.prevent="setAmount(amountOption)"
                 >
                     <span class="has-text-weight-bold">
-                        {{ currencyValue + ' ' + amountOption }}
+                        <span v-html="currencySymbol" /> {{ amountOption }}
                     </span>
                 </button>
             </template>
@@ -57,9 +57,8 @@
                                 v-for="currency in currencies"
                                 :key="currency['id']"
                                 :value="currency['id']"
-                            >
-                                {{ currency['value'] }}
-                            </option>
+                                v-html="currency['symbol']"
+                            />
                         </biz-select>
                     </span>
                 </div>
@@ -78,7 +77,10 @@
                 class="button is-primary is-medium is-flex-grow-1"
                 :disabled="buttonDisabled"
             >
-                <span class="has-text-weight-bold">{{ buttonText + ' ' + donationAmount }}</span>
+                <span
+                    class="has-text-weight-bold"
+                    v-html="buttonText + ' ' + donationAmount"
+                />
             </button>
         </div>
     </form>
@@ -153,12 +155,12 @@
                 return this.currencies.length > 0;
             },
 
-            currencyValue() {
-                return find(this.currencies, { 'id': this.selectedCurrency }).value;
+            currencySymbol() {
+                return find(this.currencies, { 'id': this.selectedCurrency }).symbol;
             },
 
             donationAmount() {
-                return this.amount ? this.currencyValue + ' ' + this.amount : '';
+                return this.amount ? this.currencySymbol + ' ' + this.amount : '';
             }
         },
 
