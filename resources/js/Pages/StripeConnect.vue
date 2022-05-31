@@ -40,7 +40,7 @@
             </div>
 
             <div
-                v-else
+                v-if="false"
                 class="column is-12"
             >
                 <div class="box is-shadowless">
