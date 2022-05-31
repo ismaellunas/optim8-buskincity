@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Services\{
     FormService,
     SettingService,
-    TranslationService
+    TranslationService,
 };
 use Illuminate\Support\Str;
 

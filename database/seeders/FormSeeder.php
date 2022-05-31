@@ -93,7 +93,7 @@ class FormSeeder extends Seeder
                 ],
                 "stage_name" => [
                     "type" => "Text",
-                    "label" => "Stage Name",
+                    "label" => "Stage name",
                     "placeholder" => "Enter your stage name",
                     "note" => null,
                     "default_value" => "",
@@ -113,7 +113,7 @@ class FormSeeder extends Seeder
                 ],
                 "short_bio" => [
                     "type" => "Textarea",
-                    "label" => "Short Bio",
+                    "label" => "Short bio",
                     "placeholder" => "Short description about yourself",
                     "note" => null,
                     "default_value" => [],
@@ -124,7 +124,7 @@ class FormSeeder extends Seeder
                     "validation" => [
                         "rules" => [
                             "required",
-                            "max: 1000"
+                            "max: 3000"
                         ],
                         "messages" => []
                     ],
@@ -133,7 +133,7 @@ class FormSeeder extends Seeder
                 ],
                 "long_bio" => [
                     "type" => "Textarea",
-                    "label" => "Long Bio",
+                    "label" => "Long bio",
                     "placeholder" => "Long description about yourself",
                     "note" => null,
                     "default_value" => [],
@@ -144,7 +144,7 @@ class FormSeeder extends Seeder
                     "validation" => [
                         "rules" => [
                             "required",
-                            "max: 2000"
+                            "max: 65535"
                         ],
                         "messages" => []
                     ],
@@ -188,7 +188,6 @@ class FormSeeder extends Seeder
                     "disabled" => false,
                     "validation" => [
                         "rules" => [
-                            "required",
                         ],
                         "messages" => [],
                     ],
@@ -206,7 +205,6 @@ class FormSeeder extends Seeder
                     "maxlength" => "",
                     "validation" => [
                         "rules" => [
-                            "required",
                             "max:255"
                         ],
                         "messages" => []
@@ -225,7 +223,6 @@ class FormSeeder extends Seeder
                     "column" => true,
                     "validation" => [
                         "rules" => [
-                            "required",
                             "max:28",
                         ],
                         "messages" => []
@@ -244,9 +241,8 @@ class FormSeeder extends Seeder
                     "column" => true,
                     "validation" => [
                         "rules" => [
-                            "required",
                             "max:10",
-                            "digits_between:0,10"
+                            //"digits_between:0,10"
                         ],
                         "messages" => []
                     ],
@@ -379,7 +375,7 @@ class FormSeeder extends Seeder
                 ],
                 "tiktok" => [
                     "type" => "Text",
-                    "label" => "Tiktok",
+                    "label" => "TikTok",
                     "placeholder" => "Your TikTok URL",
                     "note" => 'E.g: https://www.tiktok.com/@buskincity',
                     "default_value" => "",
@@ -427,15 +423,14 @@ class FormSeeder extends Seeder
             "fields" => [
                 "promotional_video" => [
                     "type" => "Video",
-                    "label" => "Promotional Video",
-                    "placeholder" => "Youtube or Vimeo Link",
+                    "label" => "Promotional video",
+                    "placeholder" => "Youtube/Vimeo Video URL",
                     "note" => 'E.g: https://vimeo.com/553766867',
                     "default_value" => null,
                     "readonly" => false,
                     "disabled" => false,
                     "validation" => [
                         "rules" => [
-                            "required",
                             "max:128",
                             "url"
                         ],
@@ -447,20 +442,19 @@ class FormSeeder extends Seeder
                     "translated" => false,
                     "left_icon" => 'fa-brands fa-vimeo',
                 ],
-                "top_background_picture" => [
+                "cover_background_photo" => [
                     "type" => "FileDragDrop",
-                    "label" => "Top Background Picture",
+                    "label" => "Cover background photo",
                     "file_label" => "Choose an image",
                     "placeholder" => 'Drop files here...',
                     "note" => null,
                     "readonly" => false,
                     "disabled" => false,
                     "max_file_number" => 1,
-                    "min_file_number" => 1,
+                    "min_file_number" => 0,
                     "max_file_size" => config('constants.one_megabyte') * 50,
                     "validation" => [
                         "rules" => [
-                            "required",
                             "mimes:".$imageMimes,
                             "max:".config('constants.one_megabyte') * 50,
                         ],
@@ -478,11 +472,10 @@ class FormSeeder extends Seeder
                     "readonly" => false,
                     "disabled" => false,
                     "max_file_number" => 5,
-                    "min_file_number" => 1,
+                    "min_file_number" => 0,
                     "max_file_size" => config('constants.one_megabyte') * 50,
                     "validation" => [
                         "rules" => [
-                            "required",
                             "mimes:".$imageAndVideoMimes,
                             "max:".config('constants.one_megabyte') * 50,
                         ],

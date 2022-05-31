@@ -32,7 +32,9 @@ class QrCodeWidget implements WidgetInterface
         return [
             'logoUrl' => app(SettingService::class)->qrCodePublicPageLogo(),
             'name' => $this->user->qr_code_logo_name,
-            'text' => $this->user->profile_page_url
+            'text' => $this->user->profile_page_url,
+            'uniqueKey' => $this->user->unique_key,
+            'description' => __('Print your QR code and place it on your pitch. It will allow your audience to find you on BuskinCity, send donations, book you for private gigs, or follow your work.'),
         ];
     }
 

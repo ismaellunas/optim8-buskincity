@@ -64,17 +64,34 @@
                         @endforeach
                     </div>
                 </div>
-                @guest
-                <div class="navbar-item">
-                    <div class="buttons">
-                        <a href="{{ route('register') }}" class="button is-primary">
-                            <span class="has-text-weight-bold">{{ __("Sign up") }}</span>
-                        </a>
-                        <a href="{{ route('login') }}" class="button is-light">
-                            <span class="has-text-weight-bold">{{ __("Log in") }}</span>
-                        </a>
+
+                @auth
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a href="{{ $dashboardUrl }}" class="button is-primary">
+                                <span class="has-text-weight-bold">{{ __("Home") }}</span>
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                {{ csrf_field() }}
+                                <button class="button is-light">
+                                    <span class="has-text-weight-bold">{{ __("Logout") }}</span>
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                @endauth
+
+                @guest
+                    <div class="navbar-item">
+                        <div class="buttons">
+                            <a href="{{ route('register') }}" class="button is-primary">
+                                <span class="has-text-weight-bold">{{ __("Sign up") }}</span>
+                            </a>
+                            <a href="{{ route('login') }}" class="button is-light">
+                                <span class="has-text-weight-bold">{{ __("Log in") }}</span>
+                            </a>
+                        </div>
+                    </div>
                 @endguest
             </div>
         </div>

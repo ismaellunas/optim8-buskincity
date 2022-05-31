@@ -11,7 +11,7 @@
                     v-model:photo-url="photoUrl"
                     label="Profile picture"
                     modal-title="Profile picture"
-                    wrapper-class="field-body"
+                    wrapper-class="field-body is-align-items-center"
                     :show-delete-button="isDeleteButtonShown"
                     :message="error('photo')"
                     @on-cropped-image="onCroppedImage()"
@@ -19,7 +19,11 @@
                     @on-reset-preview="resetPreview()"
                 >
                     <template #default-image-view>
-                        <user-icon style="width: 128px;" />
+                        <biz-image
+                            ratio="is-128x128"
+                            rounded="is-rounded"
+                            src="/images/profile-picture-default.png"
+                        />
                     </template>
                 </biz-form-image-square>
             </div>
@@ -99,10 +103,10 @@
     import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
     import BizFormImageSquare from '@/Biz/Form/ImageSquare';
     import BizFormInput from '@/Biz/Form/Input';
+    import BizImage from '@/Biz/Image';
     import FormSection from '@/Frontend/FormSection';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import UserIcon from '@/Biz/Icon/User';
     import { acceptedImageTypes, debounceTime } from '@/Libs/defaults';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
@@ -114,8 +118,8 @@
             BizFormDropdownSearch,
             BizFormImageSquare,
             BizFormInput,
+            BizImage,
             FormSection,
-            UserIcon,
         },
 
         mixins: [

@@ -375,31 +375,53 @@ class MenuService
 
         $menus = [
             'dashboard' => [
-                'title' => 'Dashboard',
+                'title' => 'Home',
                 'link' => route('dashboard'),
                 'isActive' => $request->routeIs('dashboard'),
                 'isEnabled' => true,
             ],
+            'street_performers' => [
+                'title' => 'Street Performers',
+                'link' => '#',
+                'isActive' => false,
+                'isEnabled' => true,
+            ],
+            'blog' => [
+                'title' => 'Blog',
+                'link' => '#',
+                'isActive' => false,
+                'isEnabled' => true,
+            ],
+            'about' => [
+                'title' => 'About',
+                'link' => '#',
+                'isActive' => false,
+                'isEnabled' => true,
+            ],
         ];
 
-        if ($user->can('manageStripeConnectedAccount', $user)) {
-            $menus['paymentManagement'] = [
-                'title' => 'Payments',
-                'link' => route('payment-management.stripe.show'),
-                'isActive' => $request->routeIs('payment-management.stripe.show'),
+        $dropdownRightMenus = [
+            [
+                'title' => 'Dashboard',
+                'link' => route('dashboard'),
                 'isEnabled' => true,
-            ];
-        }
-
-        $menuProfile = [
-            'title' => 'Profile',
-            'link' => route('user.profile.show'),
+            ],
+            [
+                'title' => 'Payments',
+                'link' => route('payments.index'),
+                'isEnabled' => $user->can('payment.management'),
+            ],
+            [
+                'title' => 'Profile',
+                'link' => route('user.profile.show'),
+                'isEnabled' => true,
+            ],
         ];
 
         return [
             'nav' => $menus,
             'navLogo' => $menuLogo,
-            'navProfile' => $menuProfile,
+            'dropdownRightMenus' => $dropdownRightMenus,
         ];
     }
 

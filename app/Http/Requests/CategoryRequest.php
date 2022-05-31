@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Services\TranslationService;
 use Astrotomic\Translatable\Validation\RuleFactory;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class CategoryRequest extends BaseFormRequest
@@ -30,6 +32,25 @@ class CategoryRequest extends BaseFormRequest
                     ->ignore($inputs['id'] ?? null)
             ],
         ]);
+    }
+
+    protected function customAttributes(): array
+    {
+        $translatedAttributes = [];
+        $locales = array_keys($this->all());
+        $attributes = ['name', 'slug'];
+
+        foreach ($locales as $locale) {
+            foreach ($attributes as $attribute) {
+                $attributeKey = $locale.'.'.$attribute;
+                $translatedAttributes[$attributeKey] = (
+                    Str::title($attribute).
+                    " (".TranslationService::getLanguageFromLocale($locale).")"
+                );
+            }
+        }
+
+        return $translatedAttributes;
     }
 
     private function findInputByLocale(): array

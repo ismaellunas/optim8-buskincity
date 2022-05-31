@@ -9,6 +9,7 @@ use App\Mail\ApplicationPerformer;
 use App\Models\PerformerApplication;
 use App\Models\Setting;
 use App\Services\CountryService;
+use App\Services\IPService;
 use App\Traits\FlashNotifiable;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -18,13 +19,19 @@ class PerformerApplicationController extends Controller
 {
     use FlashNotifiable;
 
-    public function create()
+    public function index()
     {
         $user = auth()->user();
 
+        $defaultCountry = $user->getMetas(['country'])->first();
+
+        if (!$defaultCountry) {
+            $defaultCountry = app(IPService::class)->getCountryCode();
+        }
+
         return Inertia::render('ApplicationPerformer', [
             'countryOptions' => app(CountryService::class)->getCountryOptions(),
-            'defaultCountry' => $user->getMetas(['country'])->first(),
+            'defaultCountry' => $defaultCountry,
             'disciplineOptions' => $this->getDisciplineOptions(),
             'email' => $user->email,
             'firstName' => $user->first_name,

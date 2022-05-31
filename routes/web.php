@@ -7,10 +7,12 @@ use App\Http\Controllers\{
     FormController,
     Frontend\DashboardController,
     Frontend\DonationController,
+    Frontend\PaymentController,
     Frontend\PageController,
     Frontend\PostCategoryController,
     Frontend\PostController,
     Frontend\ProfileController as FrontendProfileController,
+    Frontend\QrCodeController,
     Frontend\StripeController,
     NewPasswordController,
     PasswordResetLinkController,
@@ -55,8 +57,16 @@ Route::middleware([
     Route::put('/user/set-password', [UserPasswordController::class, 'store'])
         ->name('user-password.set');
 
-    Route::prefix('/payment-management/stripe')
-        ->name('payment-management.stripe.')
+    Route::prefix('/payments')
+        ->name('payments.')
+        ->middleware('can:payment.management')
+        ->group(function() {
+            Route::get('/', [PaymentController::class, 'index'])
+                ->name('index');
+        });
+
+    Route::prefix('/payments/stripe')
+        ->name('payments.stripe.')
         ->middleware('can:manageStripeConnectedAccount,App\Models\User')
         ->group(function() {
             Route::get('/', [StripeController::class, 'show'])
@@ -170,6 +180,10 @@ Route::group([
         ->name('frontend.profile')
         ->middleware('publicPage:profile')
         ->scopeBindings();
+
+    Route::get('/print/qrcode/{user:unique_key}', [QrCodeController::class, 'print'])
+        ->name('frontend.print.qrcode')
+        ->middleware('publicPage:profile');
 
     Route::get('donations/{user}/success', [DonationController::class, 'success'])
         ->name('donations.success');
