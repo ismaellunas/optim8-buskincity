@@ -59,7 +59,7 @@ Route::middleware([
 
     Route::prefix('/payments')
         ->name('payments.')
-        ->middleware('can:manageStripeConnectedAccount,App\Models\User')
+        ->middleware('can:payment.management')
         ->group(function() {
             Route::get('/', [PaymentController::class, 'index'])
                 ->name('index');
