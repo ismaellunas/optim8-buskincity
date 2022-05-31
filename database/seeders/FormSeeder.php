@@ -124,7 +124,7 @@ class FormSeeder extends Seeder
                     "validation" => [
                         "rules" => [
                             "required",
-                            "max: 1000"
+                            "max: 3000"
                         ],
                         "messages" => []
                     ],
@@ -144,7 +144,7 @@ class FormSeeder extends Seeder
                     "validation" => [
                         "rules" => [
                             "required",
-                            "max: 2000"
+                            "max: 65535"
                         ],
                         "messages" => []
                     ],
