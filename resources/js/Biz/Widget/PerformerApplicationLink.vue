@@ -13,7 +13,7 @@
                 <div class="buttons are-small mt-5">
                     <biz-button-link
                         class="is-primary"
-                        :href="route(data.baseRouteName+'.create')"
+                        :href="route(data.baseRouteName+'.index')"
                     >
                         <span class="icon is-small">
                             <i class="fa-solid fa-arrow-up-right-from-square" />

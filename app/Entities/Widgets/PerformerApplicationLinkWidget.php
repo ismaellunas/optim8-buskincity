@@ -7,7 +7,7 @@ use App\Models\PerformerApplication;
 
 class PerformerApplicationLinkWidget implements WidgetInterface
 {
-    protected $baseRouteName = "performer-application-form";
+    protected $baseRouteName = "performer-application";
     protected $componentName = "PerformerApplicationLink";
     protected $data = [];
     protected $title = "Become a Performer";

@@ -18,7 +18,7 @@ class PerformerApplicationController extends Controller
 {
     use FlashNotifiable;
 
-    public function create()
+    public function index()
     {
         $user = auth()->user();
 

@@ -6,6 +6,6 @@ use App\Http\Controllers\{
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::resource('/performer-application-form', PerformerApplicationController::class)
-        ->only(['create', 'store']);
+    Route::resource('/performer-application', PerformerApplicationController::class)
+        ->only(['index', 'store']);
 });
