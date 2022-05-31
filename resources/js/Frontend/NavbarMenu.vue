@@ -83,14 +83,19 @@
                             {{ $page.props.user.full_name }}
                         </a>
 
-                        <div class="navbar-dropdown">
-                            <biz-link
-                                v-if="navProfile"
-                                :href="navProfile.link"
-                                class="navbar-item"
+                        <div class="navbar-dropdown is-right">
+                            <template
+                                v-for="(dropdownMenu, index) in $page.props.menus.dropdownRightMenus"
+                                :key="index"
                             >
-                                {{ navProfile.title }}
-                            </biz-link>
+                                <biz-link
+                                    v-if="dropdownMenu.isEnabled"
+                                    :href="dropdownMenu.link"
+                                    class="navbar-item"
+                                >
+                                    {{ dropdownMenu.title }}
+                                </biz-link>
+                            </template>
 
                             <biz-link
                                 v-if="$page.props.jetstream.hasApiFeatures"
@@ -140,7 +145,7 @@
         setup() {
             const navMenus = computed(() => usePage().props.value.menus.nav);
             const navLogo = computed(() => usePage().props.value.menus.navLogo);
-            const navProfile = computed(() => usePage().props.value.menus.navProfile);
+
             const logoImageUrl = computed(() => {
                 return (
                     usePage().props.value.logoUrl
@@ -185,7 +190,6 @@
                 logoImageUrl,
                 navMenus,
                 navLogo,
-                navProfile,
             };
         },
         data() {
