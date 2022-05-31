@@ -5,7 +5,9 @@
         </h2>
         <div class="box is-shadowless">
             <template v-if="!data.hasConnectedAccount">
-                <p>If you would like to receive donations and payments for private gigs through BuskinCity, please apply for payments with Stripe:</p>
+                <slot name="description">
+                    <p>If you would like to receive donations and payments for private gigs through BuskinCity, please apply for payments with Stripe:</p>
+                </slot>
 
                 <label class="label mt-5">Country<sup class="has-text-danger">*</sup></label>
                 <div class="field is-horizontal">
