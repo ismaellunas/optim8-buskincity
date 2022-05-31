@@ -9,8 +9,9 @@ use App\Notifications\{
 };
 use App\Traits\HasMetas;
 use App\Services\{
+    IPService,
     MediaService,
-    UserService
+    UserService,
 };
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -314,5 +315,18 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsConnectedAccountAttribute(): bool
     {
         return is_null($this->password) && ($this->connectedAccounts->count() > 0);
+    }
+
+    public function saveDefaultMetas(array $metas = [])
+    {
+        $metas = array_merge($metas, [
+            'country' => app(IPService::class)->getCountryCode(),
+        ]);
+
+        foreach ($metas as $key => $meta) {
+            $this->setMeta($key, $meta);
+        }
+
+        $this->saveMetas();
     }
 }
