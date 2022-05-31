@@ -408,8 +408,8 @@ class MenuService
             ],
             [
                 'title' => 'Payments',
-                'link' => route('payments.stripe.show'),
-                'isEnabled' => $user->can('manageStripeConnectedAccount', $user),
+                'link' => route('payments.index'),
+                'isEnabled' => $user->can('payment.management'),
             ],
             [
                 'title' => 'Profile',
