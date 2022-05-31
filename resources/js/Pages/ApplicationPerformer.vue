@@ -1,5 +1,7 @@
 <template>
     <layout>
+        <Head :title="title" />
+
         <template #header>
             <h1 class="title is-2">
                 {{ title }}
@@ -340,7 +342,6 @@
 </template>
 
 <script>
-    import Layout from '@/Layouts/User';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormFileUpload from '@/Biz/Form/FileUpload';
@@ -349,16 +350,17 @@
     import BizFormSelect from '@/Biz/Form/Select';
     import BizFormTextarea from '@/Biz/Form/Textarea';
     import BizLabel from '@/Biz/Label';
+    import Layout from '@/Layouts/User';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
+    import { Head } from '@inertiajs/inertia-vue3';
     import { acceptedImageMimes, oneMegabyte } from '@/Libs/defaults';
+    import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'PerformerApplication',
 
         components: {
-            Layout,
             BizButton,
             BizErrorNotifications,
             BizFormFileUpload,
@@ -367,6 +369,8 @@
             BizFormSelect,
             BizFormTextarea,
             BizLabel,
+            Head,
+            Layout,
         },
 
         mixins: [
