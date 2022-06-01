@@ -83,7 +83,7 @@
                             {{ $page.props.user.full_name }}
                         </a>
 
-                        <div class="navbar-dropdown">
+                        <div class="navbar-dropdown is-right">
                             <template
                                 v-for="(dropdownMenu, index) in $page.props.menus.dropdownRightMenus"
                                 :key="index"
