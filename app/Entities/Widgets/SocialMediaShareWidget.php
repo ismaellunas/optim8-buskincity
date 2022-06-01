@@ -67,9 +67,7 @@ class SocialMediaShareWidget implements WidgetInterface
 
     public function canBeAccessed(): bool
     {
-        $canPublicPage = $this->user->roles->contains(function ($role) {
-            return $role->hasPermissionTo('public_page.profile');
-        });
+        $canPublicPage = $this->user->hasPublicPage;
 
         return $canPublicPage;
     }
