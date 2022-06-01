@@ -8,6 +8,7 @@
                         v-model:photo-url="imageUrl"
                         label="Profile picture"
                         modal-title="Profile picture"
+                        wrapper-class="field-body is-align-items-center"
                         :show-delete-button="isDeleteButtonShown"
                         :message="error('photo', errorBag)"
                         @on-cropped-image="onCroppedImage()"
