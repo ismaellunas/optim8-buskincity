@@ -32,13 +32,9 @@
                 {!! $additionalCss !!}
             </style>
         @endif
-
-        {!! $trackingCodeInsideHead !!}
     </head>
 
     <body class="font-sans antialiased">
-        {!! $trackingCodeAfterBody !!}
-
         <div id="app">
             <div class="content">
                 {{ $slot }}
@@ -54,8 +50,6 @@
                 {!! $additionalJavascript !!}
             </script>
         @endif
-
-        {!! $trackingCodeBeforeBody !!}
     </body>
 
 </html>
