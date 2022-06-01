@@ -41,9 +41,7 @@ class QrCodeWidget implements WidgetInterface
     public function canBeAccessed(): bool
     {
         $qrCodeIsDisplayed = app(SettingService::class)->qrCodePublicPageIsDisplayed();
-        $canPublicPage = $this->user->roles->contains(function ($role) {
-            return $role->hasPermissionTo('public_page.profile');
-        });
+        $canPublicPage = $this->user->hasPublicPage;
 
         return $canPublicPage && $qrCodeIsDisplayed;
     }
