@@ -35,7 +35,7 @@
                                 class="media-left"
                                 ratio="is-64x64"
                                 rounded="is-rounded"
-                                :src="record.profile_photo_url ?? `/images/profile-picture-default.png`"
+                                :src="record.profile_photo_url ?? defaultUserUrl"
                             />
 
                             <div class="media-content">
@@ -168,6 +168,7 @@
     import BizPanelBlock from '@/Biz/PanelBlock';
     import ModalFormDelete from '@/Pages/User/ModalFormDelete';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { defaultUserUrl } from '@/Libs/image-url';
 
     export default {
         name: 'User',
@@ -202,6 +203,7 @@
 
         data() {
             return {
+                defaultUserUrl: defaultUserUrl,
                 selectedUser: null,
             };
         },

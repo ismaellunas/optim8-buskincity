@@ -18,7 +18,7 @@
                             <biz-image
                                 ratio="is-128x128"
                                 rounded="is-rounded"
-                                src="/images/profile-picture-default.png"
+                                :src="defaultUserUrl"
                             />
                         </template>
                     </biz-form-image-square>
@@ -117,6 +117,7 @@
     import { debounceTime } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
+    import { defaultUserUrl } from '@/Libs/image-url';
 
     export default {
         name: 'UserProfileForm',
@@ -152,6 +153,7 @@
 
         data() {
             return {
+                defaultUserUrl: defaultUserUrl,
                 filteredLanguages: this.languageOptions.slice(0, 10),
                 imageUrl: this.photoUrl,
             };

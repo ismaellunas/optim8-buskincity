@@ -1,0 +1,1 @@
+export const defaultUserUrl = '/images/profile-picture-default.png';
