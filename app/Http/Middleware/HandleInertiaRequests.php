@@ -95,14 +95,13 @@ class HandleInertiaRequests extends Middleware
 
     private function removeSensitiveDataExposure(array $sharedUserData): array
     {
-        $hiddenPropsAndRelations = [
+        $sensitiveKeys = [
             'connected_accounts',
             'created_at',
             'current_connected_account_id',
             'email_verified_at',
             'is_suspended',
             'language_id',
-            'origin_language',
             'origin_language',
             'permissions',
             'profile_photo',
@@ -111,7 +110,7 @@ class HandleInertiaRequests extends Middleware
             'updated_at',
         ];
 
-        foreach ($hiddenPropsAndRelations as $key) {
+        foreach ($sensitiveKeys as $key) {
             unset($sharedUserData[$key]);
         }
 
