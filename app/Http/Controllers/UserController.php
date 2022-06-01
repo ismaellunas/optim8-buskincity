@@ -110,6 +110,8 @@ class UserController extends CrudController
 
         $user->savePassword($request->password);
 
+        $user->saveDefaultMetas();
+
         $user->verifiyEmail();
 
         if ($request->hasFile('photo')) {
