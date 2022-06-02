@@ -52,27 +52,26 @@
                                         v-for="(childMenu, childIndex) in menu.children"
                                         :key="childIndex"
                                     >
-                                        <biz-link
+                                        <a
                                             v-if="childMenu.isEnabled"
                                             class="navbar-item"
                                             :href="childMenu.link"
                                             :class="{'is-active': menu.isActive}"
                                         >
                                             {{ childMenu.title }}
-                                        </biz-link>
+                                        </a>
                                     </template>
                                 </div>
                             </div>
                         </template>
                         <template v-else>
-                            <biz-link
-                                v-if="menu.isEnabled"
+                            <a
                                 class="navbar-item"
                                 :active="menu.isActive"
                                 :href="menu.link"
                             >
                                 {{ menu.title }}
-                            </biz-link>
+                            </a>
                         </template>
                     </template>
                 </div>
