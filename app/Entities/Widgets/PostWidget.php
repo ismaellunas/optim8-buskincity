@@ -71,7 +71,12 @@ class PostWidget implements WidgetInterface
                         },
                     ])
                     ->limit($this->recordLimit)
-                    ->get();
+                    ->get([
+                        'id',
+                        'cover_image_id',
+                        'locale',
+                        'title',
+                    ]);
 
                 $this->transformRecords($records);
 
@@ -83,17 +88,19 @@ class PostWidget implements WidgetInterface
     private function transformRecords($records): void
     {
         $records->transform(function ($record) {
-            $record->thumbnail_url = (
-                $record->coverImage
-                ? $record->coverImage->thumbnailUrl
-                : null
-            );
-
-            $record->categories->transform(function ($category) {
-                return $category->append('first_translation_name');
-            });
-
-            return $record;
+            return [
+                'id' => $record->id,
+                'categories' => $record->categories->map(function ($category) {
+                    return $category->firstTranslationName;
+                }),
+                'locale' => $record->locale,
+                'title' => $record->title,
+                'thumbnail_url' => (
+                    $record->coverImage
+                    ? $record->coverImage->thumbnailUrl
+                    : null
+                ),
+            ];
         });
     }
 
