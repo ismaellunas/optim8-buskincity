@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Fortify\Features;
@@ -12,6 +12,11 @@ use Tests\TestCase;
 class PasswordResetTest extends TestCase
 {
     use RefreshDatabase;
+
+    private function withoutRecaptchaMiddleware(): void
+    {
+        $this->withoutMiddleware(\App\Http\Middleware\Recaptcha::class);
+    }
 
     public function test_reset_password_link_screen_can_be_rendered()
     {
@@ -26,6 +31,8 @@ class PasswordResetTest extends TestCase
 
     public function test_reset_password_link_can_be_requested()
     {
+        $this->withoutRecaptchaMiddleware();
+
         if (! Features::enabled(Features::updatePasswords())) {
             return $this->markTestSkipped('Password updates are not enabled.');
         }
@@ -43,6 +50,8 @@ class PasswordResetTest extends TestCase
 
     public function test_reset_password_screen_can_be_rendered()
     {
+        $this->withoutRecaptchaMiddleware();
+
         if (! Features::enabled(Features::updatePasswords())) {
             return $this->markTestSkipped('Password updates are not enabled.');
         }
@@ -66,6 +75,8 @@ class PasswordResetTest extends TestCase
 
     public function test_password_can_be_reset_with_valid_token()
     {
+        $this->withoutRecaptchaMiddleware();
+
         if (! Features::enabled(Features::updatePasswords())) {
             return $this->markTestSkipped('Password updates are not enabled.');
         }
