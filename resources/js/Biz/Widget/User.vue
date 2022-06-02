@@ -32,17 +32,10 @@
                             style="width: 100%"
                         >
                             <biz-image
-                                v-if="record.profile_photo_url"
                                 class="media-left"
                                 ratio="is-64x64"
                                 rounded="is-rounded"
-                                :src="record.profile_photo_url"
-                            />
-
-                            <user-icon
-                                v-else
-                                class="mr-2"
-                                style="width: 64px;"
+                                :src="record.profile_photo_url ?? userImage"
                             />
 
                             <div class="media-content">
@@ -174,8 +167,8 @@
     import BizPanel from '@/Biz/Panel';
     import BizPanelBlock from '@/Biz/PanelBlock';
     import ModalFormDelete from '@/Pages/User/ModalFormDelete';
-    import UserIcon from '@/Biz/Icon/User';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { userImage } from '@/Libs/defaults';
 
     export default {
         name: 'User',
@@ -189,7 +182,6 @@
             BizPanel,
             BizPanelBlock,
             ModalFormDelete,
-            UserIcon,
         },
 
         mixins: [
@@ -211,6 +203,7 @@
 
         data() {
             return {
+                userImage: userImage,
                 selectedUser: null,
             };
         },
