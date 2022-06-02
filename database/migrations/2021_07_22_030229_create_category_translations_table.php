@@ -18,6 +18,8 @@ class CreateCategoryTranslationsTable extends Migration
             $table->string('name', 255);
             $table->string('slug', 255);
             $table->string('locale', 15)->index();
+            $table->string('meta_title', 255)->nullable();
+            $table->string('meta_description', 255)->nullable();
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->unique(['category_id', 'locale']);
             $table->timestamps();
