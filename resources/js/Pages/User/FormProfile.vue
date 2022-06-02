@@ -19,7 +19,7 @@
                             <biz-image
                                 ratio="is-128x128"
                                 rounded="is-rounded"
-                                :src="defaultUserUrl"
+                                :src="userImage"
                             />
                         </template>
                     </biz-form-image-square>
@@ -115,7 +115,7 @@
     import BizImage from '@/Biz/Image';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { confirmDelete } from '@/Libs/alert';
-    import { debounceTime, defaultUserUrl } from '@/Libs/defaults';
+    import { debounceTime, userImage } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -153,7 +153,7 @@
 
         data() {
             return {
-                defaultUserUrl: defaultUserUrl,
+                userImage: userImage,
                 filteredLanguages: this.languageOptions.slice(0, 10),
                 imageUrl: this.photoUrl,
             };
