@@ -115,10 +115,9 @@
     import BizImage from '@/Biz/Image';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { confirmDelete } from '@/Libs/alert';
-    import { debounceTime } from '@/Libs/defaults';
+    import { debounceTime, defaultUserUrl } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
-    import { defaultUserUrl } from '@/Libs/image-url';
 
     export default {
         name: 'UserProfileForm',

@@ -107,10 +107,9 @@
     import FormSection from '@/Frontend/FormSection';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import { acceptedImageTypes, debounceTime } from '@/Libs/defaults';
+    import { acceptedImageTypes, debounceTime, defaultUserUrl } from '@/Libs/defaults';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
-    import { defaultUserUrl } from '@/Libs/image-url';
 
     export default {
         components: {

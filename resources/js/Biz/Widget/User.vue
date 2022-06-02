@@ -168,7 +168,7 @@
     import BizPanelBlock from '@/Biz/PanelBlock';
     import ModalFormDelete from '@/Pages/User/ModalFormDelete';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { defaultUserUrl } from '@/Libs/image-url';
+    import { defaultUserUrl } from '@/Libs/defaults';
 
     export default {
         name: 'User',
