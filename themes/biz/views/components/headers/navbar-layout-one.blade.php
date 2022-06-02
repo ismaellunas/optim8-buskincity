@@ -69,7 +69,7 @@
                     <div class="navbar-item">
                         <div class="buttons">
                             <a href="{{ $dashboardUrl }}" class="button is-primary">
-                                <span class="has-text-weight-bold">{{ __("Home") }}</span>
+                                <span class="has-text-weight-bold">{{ __("Dashboard") }}</span>
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST">
                                 {{ csrf_field() }}
