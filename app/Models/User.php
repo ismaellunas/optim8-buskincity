@@ -317,6 +317,13 @@ class User extends Authenticatable implements MustVerifyEmail
         return is_null($this->password) && ($this->connectedAccounts->count() > 0);
     }
 
+    public function getHasPublicPageAttribute(): bool
+    {
+        return $this->roles->contains(function ($role) {
+            return $role->hasPermissionTo('public_page.profile');
+        });
+    }
+
     public function saveDefaultMetas(array $metas = [])
     {
         $metas = array_merge($metas, [
