@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\CategoryTranslation;
 use App\Services\TranslationService;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Support\Str;
@@ -31,6 +32,8 @@ class CategoryRequest extends BaseFormRequest
                     })
                     ->ignore($inputs['id'] ?? null)
             ],
+            '%meta_description%' => ['sometimes', 'max:250'],
+            '%meta_title%' => ['sometimes', 'max:250'],
         ]);
     }
 
@@ -38,13 +41,14 @@ class CategoryRequest extends BaseFormRequest
     {
         $translatedAttributes = [];
         $locales = array_keys($this->all());
-        $attributes = ['name', 'slug'];
+
+        $attributes = (new CategoryTranslation())->getFillable();
 
         foreach ($locales as $locale) {
             foreach ($attributes as $attribute) {
                 $attributeKey = $locale.'.'.$attribute;
                 $translatedAttributes[$attributeKey] = (
-                    Str::title($attribute).
+                    Str::of($attribute)->snake()->replace('_', ' ')->title().
                     " (".TranslationService::getLanguageFromLocale($locale).")"
                 );
             }

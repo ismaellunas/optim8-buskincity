@@ -60,6 +60,8 @@
                 translatedCategory = {
                     name: null,
                     slug: null,
+                    meta_title: null,
+                    meta_description: null,
                 };
             }
 

@@ -11,7 +11,12 @@ class Category extends BaseModel implements TranslatableContract
     use HasFactory;
     use Translatable;
 
-    public $translatedAttributes = ['name', 'slug'];
+    public $translatedAttributes = [
+        'name',
+        'slug',
+        'meta_title',
+        'meta_description',
+    ];
 
     public function posts()
     {
