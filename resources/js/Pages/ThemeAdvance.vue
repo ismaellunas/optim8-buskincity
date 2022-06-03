@@ -52,6 +52,39 @@
                     </div>
                 </div>
 
+                <hr>
+
+                <div class="columns">
+                    <div class="column">
+                        <h2><b>Favicon</b></h2>
+                    </div>
+                </div>
+
+                <div class="columns">
+                    <div class="column">
+                        <b>Icon</b>
+                    </div>
+
+                    <div class="column">
+                        <biz-image
+                            v-if="hasFavicon"
+                            class="mb-2"
+                            style="width: 200px; border: 1px solid #000"
+                            :src="faviconImageUrl"
+                        />
+                        <biz-form-file
+                            v-model="form.favicon"
+                            :accepted-types="imageTypes"
+                            :is-name-displayed="false"
+                            :message="error('favicon')"
+                            :notes="instructions.favicon"
+                            @on-file-picked="onFilePickedFavicon"
+                        />
+                    </div>
+                </div>
+
+                <hr>
+
                 <div class="columns">
                     <div class="column">
                         <h2><b>QR Code Public Page</b></h2>
@@ -94,11 +127,13 @@
                             :accepted-types="imageTypes"
                             :is-name-displayed="false"
                             :message="error('qrcode_public_page_logo')"
-                            :notes="qrCodeLogoInstructions"
-                            @on-file-picked="onFilePicked"
+                            :notes="instructions.qrcode"
+                            @on-file-picked="onFilePickedQrCode"
                         />
                     </div>
                 </div>
+
+                <hr>
 
                 <div class="columns">
                     <div class="column">
@@ -193,9 +228,10 @@
             additionalCodes: {type: Object, required: true},
             baseRouteName: {type: String, required: true},
             errors: {type: Object, default: () => {}},
+            faviconUrl: {type: String, default: ""},
             homePageId: {type: [Number, String, null], default: null},
+            instructions: {type: Object, default: () => {}},
             pageOptions: {type: Object, default: () => {}},
-            qrCodeLogoInstructions: {type: Array, default: () => []},
             qrCodePublicPageIsDisplayed: {type: Boolean, required: true},
             qrCodePublicPageLogo: {type: String, required: true},
             title: {type: String, required: true},
@@ -231,13 +267,16 @@
 
             const homePageForm = { home_page: props.homePageId };
 
+            const favicon = { favicon: null };
+
             return {
                 form: useForm(assign(
                     additionalCodeForm,
-                    trackingCodeForm,
-                    qrCodePublicPageForm,
-                    qrCodeLogo,
+                    favicon,
                     homePageForm,
+                    qrCodeLogo,
+                    qrCodePublicPageForm,
+                    trackingCodeForm,
                 )),
                 sortedPageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
             };
@@ -248,6 +287,7 @@
                 isProcessing: false,
                 loader: null,
                 qrCodeLogoUrl: this.qrCodePublicPageLogo,
+                faviconImageUrl: this.faviconUrl,
                 imageTypes: acceptedImageTypes,
             };
         },
@@ -255,6 +295,10 @@
         computed: {
             hasQrCodeLogo() {
                 return !isEmpty(this.qrCodeLogoUrl);
+            },
+
+            hasFavicon() {
+                return !isEmpty(this.faviconImageUrl);
             },
 
             sortedAdditionalCodes() {
@@ -278,18 +322,28 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                         self.form.isDirty = false;
+
                         self.form.qrcode_public_page_logo = null;
                         self.qrCodeLogoUrl = self.qrCodePublicPageLogo;
+
+                        self.form.favicon = null;
+                        self.faviconImageUrl = self.faviconUrl;
                     },
                     onFinish: () => {
                         self.loader.hide();
                         self.isProcessing = false;
+
+                        location.reload();
                     }
                 });
             },
 
-            onFilePicked(event) {
+            onFilePickedQrCode(event) {
                 this.qrCodeLogoUrl = event.target.result;
+            },
+
+            onFilePickedFavicon(event) {
+                this.faviconImageUrl = event.target.result;
             },
         },
     };

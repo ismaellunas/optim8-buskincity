@@ -1,3 +1,5 @@
+@inject('settingService', 'App\Services\SettingService')
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -6,6 +8,10 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         {{-- <title>{{ config('app.name', 'Laravel') }}</title> --}}
+
+        @if (!empty($settingService->getFaviconUrl()))
+            <link rel="icon" type="image/x-icon" href="{{ $settingService->getFaviconUrl() }}">
+        @endif
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap">

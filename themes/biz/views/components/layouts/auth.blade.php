@@ -12,6 +12,10 @@
 
         <title>{{ $title ?? config('app.name') }}</title>
 
+        @if (!empty($faviconUrl))
+            <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
+        @endif
+
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
         <link rel="stylesheet" href="{{ $appCssUrl }}">
