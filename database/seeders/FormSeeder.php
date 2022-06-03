@@ -231,7 +231,7 @@ class FormSeeder extends Seeder
                     "translated" => false,
                 ],
                 "postcode" => [
-                    "type" => "Text",
+                    "type" => "Postcode",
                     "label" => "Postcode",
                     "placeholder" => "Postcode",
                     "note" => null,

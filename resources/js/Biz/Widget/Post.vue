@@ -149,7 +149,7 @@
     import { head } from 'lodash';
 
     export default {
-        name: 'Post',
+        name: 'BizWidgetPost',
 
         components: {
             BizButtonLink,
@@ -183,8 +183,7 @@
 
         methods: {
             getFirstCategories(categories) {
-                return head(categories).name
-                    ?? head(categories).first_translation_name;
+                return head(categories);
             },
 
             deleteRow(post) {

@@ -22,7 +22,7 @@
                         <biz-image
                             ratio="is-128x128"
                             rounded="is-rounded"
-                            src="/images/profile-picture-default.png"
+                            :src="userImage"
                         />
                     </template>
                 </biz-form-image-square>
@@ -107,7 +107,7 @@
     import FormSection from '@/Frontend/FormSection';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import { acceptedImageTypes, debounceTime } from '@/Libs/defaults';
+    import { acceptedImageTypes, debounceTime, userImage } from '@/Libs/defaults';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
 
@@ -155,6 +155,7 @@
                 photoUrl: this.user.profile_photo_url,
                 isImageEditing: false,
                 filteredLanguages: this.languageOptions.slice(0, 10),
+                userImage: userImage,
             }
         },
 
