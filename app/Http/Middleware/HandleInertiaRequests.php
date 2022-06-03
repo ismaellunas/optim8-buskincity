@@ -9,6 +9,7 @@ use App\Services\{
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -59,6 +60,8 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
+        $sharedUserData = Inertia::getShared('user')() ?? [];
+
         return array_merge(parent::share($request), [
             'csrfToken' => csrf_token(),
             'debug' => config('app.debug'),
@@ -83,8 +86,35 @@ class HandleInertiaRequests extends Middleware
             'languageOptions' => TranslationSv::getLocaleOptions(),
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
-            ]
+            ],
+            'user' => function () use ($sharedUserData) {
+                return $this->removeSensitiveDataExposure($sharedUserData);
+            },
         ]);
+    }
+
+    private function removeSensitiveDataExposure(array $sharedUserData): array
+    {
+        $sensitiveKeys = [
+            'connected_accounts',
+            'created_at',
+            'current_connected_account_id',
+            'email_verified_at',
+            'is_suspended',
+            'language_id',
+            'origin_language',
+            'permissions',
+            'profile_photo',
+            'profile_photo_media_id',
+            'roles',
+            'updated_at',
+        ];
+
+        foreach ($sensitiveKeys as $key) {
+            unset($sharedUserData[$key]);
+        }
+
+        return $sharedUserData;
     }
 
     private function getMenus($request): array
