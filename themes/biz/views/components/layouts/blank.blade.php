@@ -12,9 +12,6 @@
             <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
         @endif
 
-        <!-- Fonts -->
-        <link rel="stylesheet" href="{{ $appCssUrl }}">
-
         @stack('styles')
 
         @stack('scripts')
