@@ -17,7 +17,7 @@
 
         <form
             method="post"
-            @submit.prevent="$emit('on-submit', form)"
+            @submit.prevent="onSubmit()"
         >
             <biz-form-input
                 v-model="form.name"
@@ -107,6 +107,12 @@
         },
 
         methods: {
+            onSubmit() {
+                this.populateSlug();
+
+                this.$emit('on-submit', this.form);
+            },
+
             populateSlug() {
                 if (isEmpty(this.form.slug) && !isEmpty(this.form.name)) {
                     this.form.slug = convertToSlug(this.form.name);

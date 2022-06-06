@@ -135,6 +135,8 @@ class UserController extends CrudController
      */
     public function edit(User $user)
     {
+        $canPublicPage = $user->hasPublicPage;
+
         $user->load(['roles' => function ($query) {
             $query->select(['id', 'name']);
             $query->limit(1);
@@ -149,7 +151,7 @@ class UserController extends CrudController
 
         return Inertia::render('User/Edit', $this->getData([
             'can' => [
-                'public_profile' => $user->can('public_page.profile'),
+                'public_profile' => $canPublicPage,
                 'update_password' => auth()->user()->can('updatePassword', $user),
             ],
             'record' => $user,

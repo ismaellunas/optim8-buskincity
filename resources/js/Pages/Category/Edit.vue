@@ -92,6 +92,8 @@
                             self.isProcessing = true;
                         },
                         onSuccess: (page) => {
+                            self.setTranslationForm(self.selectedLocale);
+
                             successAlert(page.props.flash.message);
                         },
                         onFinish: () => {

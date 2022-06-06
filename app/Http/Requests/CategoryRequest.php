@@ -67,4 +67,27 @@ class CategoryRequest extends BaseFormRequest
 
         return $inputs;
     }
+
+    protected function prepareForValidation()
+    {
+        $locales = array_keys($this->all());
+
+        foreach ($locales as $locale) {
+            if (count($this[$locale]) > 0) {
+                $input = $this[$locale];
+
+                $this->merge([
+                    $locale => array_merge(
+                        $input,
+                        [
+                            'slug' => Str::of($input['slug'])
+                                ->ascii()
+                                ->slug('-')
+                                ->__toString(),
+                        ]
+                    ),
+                ]);
+            }
+        }
+    }
 }

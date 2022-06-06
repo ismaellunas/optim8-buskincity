@@ -78,9 +78,7 @@ class UserService
         $records->getCollection()->transform(function ($user) use ($actor) {
             $user->can = [
                 'delete_user' => $actor->can('delete', $user),
-                'public_profile' => $user->roles->contains(function ($role) {
-                    return $role->hasPermissionTo('public_page.profile');
-                }),
+                'public_profile' => $user->hasPublicPage,
             ];
 
             $user->append('profile_page_url');
