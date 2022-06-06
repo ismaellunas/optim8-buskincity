@@ -1,4 +1,4 @@
-@inject('settingService', 'App\Services\SettingService')
+@inject('setting', 'App\Services\SettingService')
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -9,8 +9,8 @@
 
         {{-- <title>{{ config('app.name', 'Laravel') }}</title> --}}
 
-        @if (!empty($settingService->getFaviconUrl()))
-            <link rel="icon" type="image/x-icon" href="{{ $settingService->getFaviconUrl() }}">
+        @if (!empty($setting->getFaviconUrl()))
+            <link rel="icon" type="image/x-icon" href="{{ $setting->getFaviconUrl() }}">
         @endif
 
         <!-- Fonts -->
