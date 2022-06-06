@@ -21,15 +21,6 @@ class FormSeeder extends Seeder
             config('constants.extensions.video'),
         ));
 
-        $countryOptions = app(CountryService::class)
-            ->getCountryOptions()
-            ->flatMap(function ($country) {
-                return [
-                    $country['id'] => $country['value']
-                ];
-            })
-            ->all();
-
         $aboutYou = [
             "name" => "about_you",
             "title" => "About you",
@@ -250,12 +241,11 @@ class FormSeeder extends Seeder
                     "translated" => false,
                 ],
                 "country" => [
-                    "type" => "Select",
+                    "type" => "Country",
                     "label" => "Country",
                     "note" => null,
                     "readonly" => false,
                     "disabled" => false,
-                    "options" => $countryOptions,
                     "validation" => [
                         "rules" => [
                             "required"

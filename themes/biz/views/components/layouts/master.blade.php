@@ -15,6 +15,10 @@
 
         <title>{{ $title ?? config('app.name') }}</title>
 
+        @if (!empty($faviconUrl))
+            <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
+        @endif
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
