@@ -25,6 +25,12 @@ class ThemeAdvanceRequest extends BaseFormRequest
     {
         return [
             'home_page' => ['nullable', 'exists:pages,id'],
+            'favicon' => [
+                'nullable',
+                'file',
+                'max:'.config('constants.one_megabyte') * 1,
+                'mimes:'.implode(',', config('constants.extensions.image')),
+            ],
             'qrcode_public_page_is_displayed' => [
                 'nullable'
             ],
