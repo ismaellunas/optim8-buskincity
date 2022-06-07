@@ -12,7 +12,9 @@ class CategoryTranslation extends BaseModel
 
     protected $fillable = [
         'name',
-        'slug'
+        'slug',
+        'meta_title',
+        'meta_description',
     ];
 
     public function getRouteKeyName()
