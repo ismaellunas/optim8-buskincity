@@ -407,6 +407,21 @@ class MenuService
         ];
     }
 
+    public function getFrontendUserFooterMenus(Request $request): array
+    {
+        $user = $request->user();
+
+        $language = app(LifetimeCookie::class)->get('origin_language')
+            ?? $user->origin_language_code
+            ?? app(LanguageService::class)->getDefault()->code;
+
+        $menus = $this->menuArrayFormatter($this->getFooterMenu($language));
+
+        return [
+            'nav' => $menus,
+        ];
+    }
+
     public function getPageOptions(): array
     {
         return Page::with([

@@ -7,34 +7,32 @@
                     style="max-width:160px"
                 >
             </div>
-            <div class="column is-3">
-                <aside class="menu">
-                    <p class="menu-label">About</p>
-                    <ul class="menu-list">
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Contact us</a></li>
-                    </ul>
-                </aside>
-            </div>
-            <div class="column is-3">
-                <aside class="menu">
-                    <p class="menu-label">Performers</p>
-                    <ul class="menu-list">
-                        <li><a href="#">Street Performers</a></li>
-                        <li><a href="#">Become a Performer</a></li>
-                    </ul>
-                </aside>
-            </div>
-            <div class="column is-3">
-                <aside class="menu">
-                    <p class="menu-label">General</p>
-                    <ul class="menu-list">
-                        <li><a href="#">Terms & Conditions</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Cookie Policy</a></li>
-                    </ul>
-                </aside>
+            <div class="column is-9">
+                <div class="columns is-multiline">
+                    @foreach($menus as $menu)
+                        <div class="column is-4">
+                            <aside class="menu">
+                                <p class="menu-label">{{ $menu->title }}</p>
+                                <ul class="menu-list">
+                                    @foreach ($menu->children as $childMenu)
+                                        <li
+                                            @class([
+                                                'has-text-primary' => $childMenu->isActive(request()->url()),
+                                            ])
+                                        >
+                                            <a
+                                                href="{{ $childMenu->getUrl() }}"
+                                                target="{{ $childMenu->getTarget() }}"
+                                            >
+                                                {{ $childMenu->title }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </aside>
+                        </div>
+                    @endforeach
+                </div>
             </div>
             <div class="column is-12">
                 <p class="is-size-7 has-text-centered mt-5">
