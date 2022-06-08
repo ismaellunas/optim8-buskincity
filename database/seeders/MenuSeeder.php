@@ -21,49 +21,169 @@ class MenuSeeder extends Seeder
      */
     public function run()
     {
-        $pageIds = Page::pluck('id');
-        $post = Post::published()->first();
-
-        $menus = [
+        $headerMenus = [
             [
-                'title' => 'Dummy Page',
-                'type' => MenuItem::TYPE_PAGE,
+                'title' => 'Home',
+                'type' => MenuItem::TYPE_URL,
+                'url' => route('homepage'),
                 'order' => 1,
-                'page_id' => $pageIds->first(),
             ],
             [
-                'title' => 'Good News',
-                'type' => MenuItem::TYPE_POST,
+                'title' => 'Street Performers',
+                'type' => MenuItem::TYPE_URL,
+                'url' => '#',
                 'order' => 2,
-                'post_id' => $post->id,
             ],
             [
-                'title' => 'FAQ',
-                'type' => MenuItem::TYPE_PAGE,
+                'title' => 'Blog',
+                'type' => MenuItem::TYPE_URL,
+                'url' => route('blog.index'),
                 'order' => 3,
-                'page_id' => $pageIds->last(),
+            ],
+            [
+                'title' => 'About',
+                'type' => MenuItem::TYPE_URL,
+                'url' => '#',
+                'order' => 4,
             ],
         ];
 
-        // Header and Footer
+        // Header
         Menu::factory()
-            ->count(2)
             ->has(
                 MenuItem::factory()
-                    ->count(3)
+                    ->count(4)
                     ->state(new Sequence(
-                        $menus[0],
-                        $menus[1],
-                        $menus[2],
+                        $headerMenus[0],
+                        $headerMenus[1],
+                        $headerMenus[2],
+                        $headerMenus[3],
                     ))
             )
             ->state(new Sequence(
                 ['type' => Menu::TYPE_HEADER],
+            ))
+            ->create([
+                'locale' => config('app.fallback_locale'),
+            ]);
+
+        $footerMenus = [
+            [
+                'title' => 'About',
+                'type' => MenuItem::TYPE_SEGMENT,
+                'order' => 1,
+            ],
+            [
+                'title' => 'Performers',
+                'type' => MenuItem::TYPE_SEGMENT,
+                'order' => 2,
+            ],
+            [
+                'title' => 'General',
+                'type' => MenuItem::TYPE_SEGMENT,
+                'order' => 3,
+            ],
+        ];
+
+        // Footer
+        $menu = Menu::factory()
+            ->has(
+                MenuItem::factory()
+                    ->count(3)
+                    ->state(new Sequence(
+                        $footerMenus[0],
+                        $footerMenus[1],
+                        $footerMenus[2],
+                    ))
+            )
+            ->state(new Sequence(
                 ['type' => Menu::TYPE_FOOTER],
             ))
             ->create([
                 'locale' => config('app.fallback_locale'),
             ]);
+
+        $footerMenus = [
+            [
+                'title' => 'Blog',
+                'type' => MenuItem::TYPE_URL,
+                'url' => route('blog.index'),
+                'order' => 1,
+                'parent_id' => $menu->menuItems[0]->id,
+                'menu_id' => $menu->id,
+            ],
+            [
+                'title' => 'About',
+                'type' => MenuItem::TYPE_URL,
+                'url' => '#',
+                'order' => 2,
+                'parent_id' => $menu->menuItems[0]->id,
+                'menu_id' => $menu->id,
+            ],
+            [
+                'title' => 'Contact us',
+                'type' => MenuItem::TYPE_URL,
+                'url' => '#',
+                'order' => 3,
+                'parent_id' => $menu->menuItems[0]->id,
+                'menu_id' => $menu->id,
+            ],
+            [
+                'title' => 'Street Performer',
+                'type' => MenuItem::TYPE_URL,
+                'url' => '#',
+                'order' => 1,
+                'parent_id' => $menu->menuItems[1]->id,
+                'menu_id' => $menu->id,
+            ],
+            [
+                'title' => 'Become a Performer',
+                'type' => MenuItem::TYPE_URL,
+                'url' => '#',
+                'order' => 2,
+                'parent_id' => $menu->menuItems[1]->id,
+                'menu_id' => $menu->id,
+            ],
+            [
+                'title' => 'Terms & Conditions',
+                'type' => MenuItem::TYPE_URL,
+                'url' => '#',
+                'order' => 1,
+                'parent_id' => $menu->menuItems[2]->id,
+                'menu_id' => $menu->id,
+            ],
+            [
+                'title' => 'Privacy Policy',
+                'type' => MenuItem::TYPE_URL,
+                'url' => '#',
+                'order' => 2,
+                'parent_id' => $menu->menuItems[2]->id,
+                'menu_id' => $menu->id,
+            ],
+            [
+                'title' => 'Cookie Policy',
+                'type' => MenuItem::TYPE_URL,
+                'url' => '#',
+                'order' => 3,
+                'parent_id' => $menu->menuItems[2]->id,
+                'menu_id' => $menu->id,
+            ],
+        ];
+
+        // Footer
+        MenuItem::factory()
+            ->count(8)
+            ->state(new Sequence(
+                $footerMenus[0],
+                $footerMenus[1],
+                $footerMenus[2],
+                $footerMenus[3],
+                $footerMenus[4],
+                $footerMenus[5],
+                $footerMenus[6],
+                $footerMenus[7],
+            ))
+            ->create();
 
         $socialMedias = [
             [
