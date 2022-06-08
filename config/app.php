@@ -181,6 +181,7 @@ return [
         App\Providers\LocalizationServiceProvider::class,
         Spatie\TranslationLoader\TranslationServiceProvider::class,
         \Torann\GeoIP\GeoIPServiceProvider::class,
+        Axlon\PostalCodeValidation\ValidationServiceProvider::class,
 
     ],
 

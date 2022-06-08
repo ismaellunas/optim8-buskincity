@@ -8,6 +8,7 @@ use Illuminate\View\Component;
 class Master extends Component
 {
     public $appCssUrl;
+    public $faviconUrl;
     public $logoUrl;
     public $trackingCodeAfterBody;
     public $trackingCodeBeforeBody;
@@ -26,6 +27,7 @@ class Master extends Component
         $settingService = app(SettingService::class);
 
         $this->appCssUrl = $settingService->getFrontendCssUrl();
+        $this->faviconUrl = $settingService->getFaviconUrl();
         $this->logoUrl = $settingService->getLogoUrl();
         $this->trackingCodeAfterBody =  $settingService->getTrackingCodeAfterBody();
         $this->trackingCodeBeforeBody = $settingService->getTrackingCodeBeforeBody();

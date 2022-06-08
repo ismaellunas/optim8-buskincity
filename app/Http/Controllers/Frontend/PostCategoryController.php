@@ -52,6 +52,14 @@ class PostCategoryController extends Controller
             return view('posts', [
                 'searchRoute' => route($this->baseRouteName.'.index', $newCategoryTranslation->slug),
                 'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
+                'metaTitle' => (
+                    $newCategoryTranslation->meta_title
+                    ?? $newCategoryTranslation->name
+                ),
+                'metaDescription' => (
+                    $newCategoryTranslation->meta_description
+                    ?? $newCategoryTranslation->name
+                ),
                 'records' => $this->postService->getBlogRecords(
                     $request->term ?? '',
                     $this->perPage,
@@ -79,6 +87,14 @@ class PostCategoryController extends Controller
         return view('posts', [
             'searchRoute' => route($this->baseRouteName.'.index', $categoryTranslation->slug),
             'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
+            'metaTitle' => (
+                $categoryTranslation->meta_title
+                ?? $categoryTranslation->name
+            ),
+            'metaDescription' => (
+                $categoryTranslation->meta_description
+                ?? $categoryTranslation->name
+            ),
             'records' => $this->postService->getBlogRecords(
                 $request->term ?? '',
                 $this->perPage,
