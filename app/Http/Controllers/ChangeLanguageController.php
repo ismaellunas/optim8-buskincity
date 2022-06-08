@@ -6,6 +6,8 @@ use App\Entities\LifetimeCookie;
 use App\Helpers\Url;
 use App\Services\TranslationService as TranslationSv;
 use Illuminate\Support\Str;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ChangeLanguageController extends Controller
 {
@@ -19,28 +21,40 @@ class ChangeLanguageController extends Controller
         $url = url()->previous();
         $defaultLocale = TranslationSv::getDefaultLocale();
 
-        if ($newLocale === $defaultLocale) {
-            $newLocale = "";
-        }
-
         app(LifetimeCookie::class)->set(
             'origin_language',
             $newLocale != '' ? $newLocale : $defaultLocale
         );
 
         if (!empty($url)) {
-            $url = $this->removeLocaleFromUrl($url);
-            $route = app('router')->getRoutes($url)->match(app('request')->create($url));
+            $removedLocaleUrl = $this->removeLocaleFromUrl($url);
+
+            $prevRouteName = null;
+            $prevParams = [];
+
+            try {
+                $route = app('router')
+                    ->getRoutes($removedLocaleUrl)
+                    ->match(app('request')->create($removedLocaleUrl));
+
+            } catch (NotFoundHttpException $e){
+                $route = app('router')
+                    ->getRoutes($url)
+                    ->match(app('request')->create($url));
+            }
+
+            $prevParams = $route->parameters;
+
             $prevRouteName = $route->getName();
 
             if (empty($prevRouteName)) {
                 return redirect('/'.$newLocale);
             }
 
-            $prevParams = $route->parameters;
-            $url = $this->appendLocaleToUrl(
+            $url = LaravelLocalization::getURLFromRouteNameTranslated(
                 $newLocale,
-                route($prevRouteName, $prevParams)
+                $prevRouteName,
+                $prevParams
             );
 
             return redirect($url);
