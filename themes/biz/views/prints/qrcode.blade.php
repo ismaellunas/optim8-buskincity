@@ -1,6 +1,6 @@
 <x-layouts.blank>
     <div class="page">
-        <div class="subpage has-text-centered">
+        <div class="subpage text-centered">
             <biz-qr-code
                 :height="500"
                 :width="500"
@@ -35,6 +35,10 @@
         .subpage {
             padding: 1cm;
             height: 256mm;
+        }
+
+        .text-centered {
+            text-align: center;
         }
 
         @page {
