@@ -24,7 +24,7 @@
                                             <li :class="{'is-active': menu.isActive}">
                                                 <a
                                                     :href="childMenu.link"
-                                                    :target="childMenu.is_blank ? '_blank' : null"
+                                                    :target="childMenu.target"
                                                 >
                                                     {{ childMenu.title }}
                                                 </a>

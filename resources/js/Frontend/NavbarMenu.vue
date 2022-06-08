@@ -57,7 +57,7 @@
                                             class="navbar-item"
                                             :href="childMenu.link"
                                             :class="{'is-active': menu.isActive}"
-                                            :target="childMenu.is_blank ? '_blank' : null"
+                                            :target="childMenu.target"
                                         >
                                             {{ childMenu.title }}
                                         </a>
@@ -70,7 +70,7 @@
                                 class="navbar-item"
                                 :active="menu.isActive"
                                 :href="menu.link"
-                                :target="menu.is_blank ? '_blank' : null"
+                                :target="menu.target"
                             >
                                 {{ menu.title }}
                             </a>

@@ -119,6 +119,29 @@ class MenuService
         return $menus;
     }
 
+    private function frontendMenuArrayFormater(collection $typedMenus): array
+    {
+        $menus = [];
+        foreach ($typedMenus as $menu) {
+            $menuItem = [];
+            $menuItem['title'] = $menu->title;
+            $menuItem['link'] = $menu->getUrl();
+            $menuItem['target'] = $menu->getTarget();
+            $menuItem['isActive'] = $menu->isActive(request()->url());
+            $menuItem['isInternalLink'] = $menu->isInternalLink($menuItem['link']);
+
+            $menuItem['children'] = [];
+            if (!empty($menu->children)) {
+                $menuItem['children'] = $this->frontendMenuArrayFormater(
+                    $menu->children
+                );
+            }
+
+            $menus[] = $menuItem;
+        }
+        return $menus;
+    }
+
     public function getFooterMenus(array $locales = []): array
     {
         $menus = [];
@@ -380,7 +403,7 @@ class MenuService
             ?? $user->origin_language_code
             ?? app(LanguageService::class)->getDefault()->code;
 
-        $menus = $this->menuArrayFormatter($this->getHeaderMenu($language));
+        $menus = $this->frontendMenuArrayFormater($this->getHeaderMenu($language));
 
         $dropdownRightMenus = [
             [
@@ -415,7 +438,7 @@ class MenuService
             ?? $user->origin_language_code
             ?? app(LanguageService::class)->getDefault()->code;
 
-        $menus = $this->menuArrayFormatter($this->getFooterMenu($language));
+        $menus = $this->frontendMenuArrayFormater($this->getFooterMenu($language));
 
         return [
             'nav' => $menus,
