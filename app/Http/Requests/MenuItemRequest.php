@@ -30,7 +30,7 @@ class MenuItemRequest extends BaseFormRequest
             'type' => [
                 'required',
                 'integer',
-                Rule::in(array_keys(MenuItem::TYPE_VALUES)),
+                Rule::in(array_keys(MenuItem::ALL_TYPE_VALUES)),
             ],
             'url' => [
                 'nullable',

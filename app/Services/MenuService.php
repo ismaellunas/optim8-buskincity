@@ -39,7 +39,7 @@ class MenuService
 
     private function getTypeMenuClass(string $type)
     {
-        return "\\App\\Entities\\Menus\\".MenuItem::TYPE_VALUES[$type]."Menu";
+        return "\\App\\Entities\\Menus\\".MenuItem::ALL_TYPE_VALUES[$type]."Menu";
     }
 
     private function createStructuredMenus(
