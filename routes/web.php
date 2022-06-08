@@ -26,6 +26,7 @@ use App\Http\Controllers\{
 use App\Services\SitemapService;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,10 +99,6 @@ Route::get('/oauth/{provider}/callback', [CustomOAuthController::class, 'handleP
     ->middleware(config('socialstream.middleware', ['web']))
     ->name('oauth.callback');
 
-Route::get('language/{new_locale}', ChangeLanguageController::class)
-    ->where('new_locale', '[a-zA-Z]{2}')
-    ->name('language.change');
-
 Route::get('/user/privacy', function() {
     echo "Privacy page";
 });
@@ -151,6 +148,10 @@ Route::group([
     'prefix' => Localization::setLocale(),
     'middleware' => [ 'localizationRedirect' ]
 ], function () {
+    Route::get('language/{new_locale}', ChangeLanguageController::class)
+        ->where('new_locale', '[a-zA-Z]{2}')
+        ->name('language.change');
+
     Route::get('/', [PageController::class, 'homePage'])
         ->name('homepage')
         ->middleware('redirectLanguage');
