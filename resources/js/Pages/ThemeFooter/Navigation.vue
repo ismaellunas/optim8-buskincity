@@ -227,9 +227,12 @@
                             if (self.selectedLocale !== menuItem['locale']) {
                                 self.selectedLocale = menuItem['locale'];
                                 self.menuForm = self.getMenuForm(menuItem['locale']);
+
+                                self.menuForm.menu_items[0].children.push(menuItem);
+                            } else {
+                                self.menuForm.menu_items[self.segmentIndex].children.push(menuItem);
                             }
 
-                            self.menuForm.menu_items[self.segmentIndex].children.push(menuItem);
 
                             self.closeModal();
                         }
