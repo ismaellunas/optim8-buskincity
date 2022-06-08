@@ -41,7 +41,16 @@ class PostService
             ])
             ->when($term, function (Builder $query, $term) {
                 $query->search($term);
-            });
+            })
+            ->select([
+                'id',
+                'locale',
+                'title',
+                'slug',
+                'excerpt',
+                'status',
+                'cover_image_id',
+            ]);
 
         foreach ($scopeNames as $scopeName => $value) {
             if (is_int($scopeName)) {
@@ -92,6 +101,15 @@ class PostService
                         },
                     ]);
                 },
+            ])
+            ->select([
+                'id',
+                'locale',
+                'title',
+                'slug',
+                'excerpt',
+                'status',
+                'cover_image_id',
             ])
             ->paginate($recordsPerPage);
 

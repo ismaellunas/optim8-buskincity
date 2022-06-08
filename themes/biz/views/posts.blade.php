@@ -1,18 +1,13 @@
 <x-layouts.master>
-    @push('metas')
-        <meta head-key="description"
-            name="description"
-            content="{{ $title ?? 'Blog'}}"
-        />
-    @endpush
-
     <x-slot name="title">
-        {{ $title ?? 'Blog' }}
+        {{ $metaTitle }}
     </x-slot>
 
-    <x-slot name="metaDescription">
-        {{ $description ?? 'Blog'}}
-    </x-slot>
+    @if ($metaDescription)
+        <x-slot name="metaDescription">
+            {{ $metaDescription }}
+        </x-slot>
+    @endif
 
     <section class="section theme-font">
         <div

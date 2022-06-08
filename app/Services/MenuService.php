@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entities\LifetimeCookie;
 use App\Models\{
     Category,
     Media,
@@ -13,6 +14,7 @@ use App\Models\{
     Role,
     User,
 };
+use App\Services\LanguageService;
 use Illuminate\Http\Request;
 use App\Entities\Caches\{
     MenuCache,
@@ -102,6 +104,7 @@ class MenuService
             $menuItem = $menu->getModel();
             $menuItem['link'] = $menu->getUrl();
             $menuItem['target'] = $menu->getTarget();
+            $menuItem['isActive'] = $menu->isActive(request()->url());
             $menuItem['isInternalLink'] = $menu->isInternalLink($menuItem['link']);
 
             $menuItem['children'] = [];
@@ -373,32 +376,11 @@ class MenuService
             'link' => route('dashboard'),
         ];
 
-        $menus = [
-            'dashboard' => [
-                'title' => 'Home',
-                'link' => route('dashboard'),
-                'isActive' => $request->routeIs('dashboard'),
-                'isEnabled' => true,
-            ],
-            'street_performers' => [
-                'title' => 'Street Performers',
-                'link' => '#',
-                'isActive' => false,
-                'isEnabled' => true,
-            ],
-            'blog' => [
-                'title' => 'Blog',
-                'link' => '#',
-                'isActive' => false,
-                'isEnabled' => true,
-            ],
-            'about' => [
-                'title' => 'About',
-                'link' => '#',
-                'isActive' => false,
-                'isEnabled' => true,
-            ],
-        ];
+        $language = app(LifetimeCookie::class)->get('origin_language')
+            ?? $user->origin_language_code
+            ?? app(LanguageService::class)->getDefault()->code;
+
+        $menus = $this->menuArrayFormatter($this->getHeaderMenu($language));
 
         $dropdownRightMenus = [
             [

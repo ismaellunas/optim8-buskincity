@@ -37,6 +37,24 @@
                 :disabled="isInputDisabled"
             />
 
+            <biz-form-input
+                v-model="form.meta_title"
+                label="Meta title"
+                maxlength="250"
+                placeholder="Meta title"
+                :disabled="isInputDisabled"
+                :message="error(selectedLocale+'.meta_title')"
+            />
+
+            <biz-form-input
+                v-model="form.meta_description"
+                label="Meta description"
+                placeholder="Meta description"
+                maxlength="250"
+                :disabled="isInputDisabled"
+                :message="error(selectedLocale+'.meta_description')"
+            />
+
             <div class="field is-grouped is-grouped-right mt-5">
                 <div class="control">
                     <biz-button-link
