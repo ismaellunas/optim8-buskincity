@@ -372,36 +372,61 @@ class MenuService
         $user = $request->user();
 
         $menuLogo = [
-            'title' => 'Dashboard',
-            'link' => route('dashboard'),
+            'title' => 'Homepage',
+            'link' => route('homepage'),
         ];
 
+        $dropdownRightMenus = [];
+        $defaultLocale = app(LanguageService::class)->getDefault()->code;
         $language = app(LifetimeCookie::class)->get('origin_language')
-            ?? $user->origin_language_code
-            ?? app(LanguageService::class)->getDefault()->code;
+            ?? $defaultLocale;
 
-        $menus = $this->menuArrayFormatter($this->getHeaderMenu($language));
+        if ($user) {
+            $language =  $user->origin_language_code
+                ?? $defaultLocale;
 
-        $dropdownRightMenus = [
-            [
-                'title' => 'Dashboard',
-                'link' => route('dashboard'),
-                'isEnabled' => true,
-            ],
-            [
-                'title' => 'Payments',
-                'link' => route('payments.index'),
-                'isEnabled' => $user->can('payment.management'),
-            ],
-            [
-                'title' => 'Profile',
-                'link' => route('user.profile.show'),
-                'isEnabled' => true,
-            ],
-        ];
+            if ($user->isSuperAdministrator || $user->isSuperAdministrator) {
+                $dropdownRightMenus = [
+                    [
+                        'title' => 'Dashboard',
+                        'link' => route('admin.dashboard'),
+                        'isEnabled' => true,
+                    ],
+                    [
+                        'title' => 'Profile',
+                        'link' => route('admin.profile.show'),
+                        'isEnabled' => true,
+                    ],
+                ];
+            } else {
+                $dropdownRightMenus = [
+                    [
+                        'title' => 'Dashboard',
+                        'link' => route('dashboard'),
+                        'isEnabled' => true,
+                    ],
+                    [
+                        'title' => 'Payments',
+                        'link' => route('payments.index'),
+                        'isEnabled' => $user->can('payment.management'),
+                    ],
+                    [
+                        'title' => 'Profile',
+                        'link' => route('user.profile.show'),
+                        'isEnabled' => true,
+                    ],
+                ];
+            }
+        }
+
+        $headerMenu = $this->getHeaderMenu($language);
+
+        if ($headerMenu->count() === 0) {
+            $headerMenu = $this->getHeaderMenu($defaultLocale);
+        }
 
         return [
-            'nav' => $menus,
+            'nav' => $this->menuArrayFormatter($headerMenu),
             'navLogo' => $menuLogo,
             'dropdownRightMenus' => $dropdownRightMenus,
         ];

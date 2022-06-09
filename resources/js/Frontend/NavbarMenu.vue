@@ -6,12 +6,12 @@
     >
         <div class="container">
             <div class="navbar-brand">
-                <biz-link
+                <a
                     class="navbar-item"
                     :href="navLogo ? navLogo.link : null"
                 >
                     <img :src="logoImageUrl">
-                </biz-link>
+                </a>
 
                 <a
                     role="button"
