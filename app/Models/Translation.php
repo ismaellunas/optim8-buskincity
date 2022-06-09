@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Entities\Caches\TranslationCache;
+use App\Services\TranslationService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\TranslationLoader\TranslationLoaders\TranslationLoader;
@@ -32,24 +33,36 @@ class Translation extends Model implements TranslationLoader
         return $translationCache->remember(
             $locale,
             function () use ($locale, $group) {
-                return self::select([
-                        'locale',
-                        'group',
-                        'key',
-                        'value',
-                    ])
-                    ->where('locale', $locale)
-                    ->when($group, function ($query) use ($group) {
-                        if ($group !== "*") {
-                            return $query->where('group', $group);
-                        }
-                    })
-                    ->get()
-                    ->pluck('value', 'key')
-                    ->toArray();
+                $defaultLocale = TranslationService::getDefaultLocale();
+                $allTranslations = $this->getTranslations($locale, $group);
+                $fallbackRoutes = $this->getTranslations($defaultLocale, $group);
+
+                return array_merge(
+                    $fallbackRoutes,
+                    $allTranslations
+                );
             },
             $group,
         );
+    }
+
+    private function getTranslations(string $locale, string $group): array
+    {
+        return self::select([
+                'locale',
+                'group',
+                'key',
+                'value',
+            ])
+            ->where('locale', $locale)
+            ->when($group, function ($query) use ($group) {
+                if ($group !== "*") {
+                    return $query->where('group', $group);
+                }
+            })
+            ->get()
+            ->pluck('value', 'key')
+            ->toArray();
     }
 
     // Scope
