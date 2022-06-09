@@ -3,8 +3,10 @@
         :content-class="['is-huge']"
         :is-close-hidden="true"
     >
-        <template v-slot:header>
-            <p class="modal-card-title mb-1">Image Editor : {{ fileName ?? ''}}</p>
+        <template #header>
+            <p class="modal-card-title mb-1">
+                Image Editor : {{ fileName ?? ''}}
+            </p>
             <biz-button
                 aria-label="close"
                 class="delete is-primary"
@@ -14,8 +16,7 @@
             />
         </template>
 
-        <template v-slot:footer>
-
+        <template #footer>
             <template v-if="isCropState">
                 <div class="column">
                     <biz-button
@@ -82,25 +83,33 @@
             </template>
 
             <template v-else-if="isResizeState">
-                <div class="column"></div>
-                <div class="column is-8">
+                <div class="column" />
+                <div class="column is-6">
                     <div class="columns">
                         <div class="column">
                             <biz-form-field-horizontal>
-                                <template v-slot:label>Width</template>
-                                <biz-input
-                                    v-model="resize.width"
-                                    :disabled="isProcessing"
-                                />
+                                <template #label>
+                                    Width
+                                </template>
+                                <div class="control">
+                                    <biz-input
+                                        v-model="resize.width"
+                                        :disabled="isProcessing"
+                                    />
+                                </div>
                             </biz-form-field-horizontal>
                         </div>
                         <div class="column">
                             <biz-form-field-horizontal>
-                                <template v-slot:label>Height</template>
-                                <biz-input
-                                    v-model="resize.height"
-                                    :disabled="isProcessing"
-                                />
+                                <template #label>
+                                    Height
+                                </template>
+                                <div class="control">
+                                    <biz-input
+                                        v-model="resize.height"
+                                        :disabled="isProcessing"
+                                    />
+                                </div>
                             </biz-form-field-horizontal>
                         </div>
                     </div>
@@ -121,12 +130,12 @@
                             Resize
                         </biz-button>
                     </div>
-                    <div class="is-clearfix"></div>
+                    <div class="is-clearfix" />
                 </div>
             </template>
 
             <template v-else>
-                <div class="column"></div>
+                <div class="column" />
                 <div class="column has-text-centered">
                     <div class="columns">
                         <div class="column py-0">
@@ -183,17 +192,20 @@
                 </div>
                 <div class="column">
                     <div class="is-pulled-right">
-                        <slot name="actions" :cropper="cropper"></slot>
+                        <slot
+                            name="actions"
+                            :cropper="cropper"
+                        />
                     </div>
-                    <div class="is-clearfix"></div>
+                    <div class="is-clearfix" />
                 </div>
             </template>
         </template>
 
         <div id="image-editor-container">
             <vue-cropper
-                alt="Source Image"
                 ref="cropper"
+                alt="Source Image"
                 drag-mode="move"
                 :auto-crop-area="1"
                 :auto-crop="false"
@@ -212,7 +224,6 @@
     import BizFormFieldHorizontal from '@/Biz/Form/FieldHorizontal';
     import BizInput from '@/Biz/Input';
     import BizModalCard from '@/Biz/ModalCard';
-    import { reactive } from "vue";
     import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
 
@@ -228,11 +239,6 @@
             BizModalCard,
             VueCropper,
         },
-        emits: [
-            'close',
-            'update:cropper',
-            'update:modelValue'
-        ],
         props: {
             cropper: {},
             fileName: String,
@@ -241,14 +247,16 @@
             modelValue: {},
             updateImage: {},
         },
+        emits: [
+            'close',
+            'update:cropper',
+            'update:modelValue'
+        ],
         setup(props, { emit }) {
             return {
                 previewFileSrc: useModelWrapper(props, emit),
                 cropper: useModelWrapper(props, emit, 'cropper'),
             };
-        },
-        mounted() {
-            this.cropper = this.$refs.cropper;
         },
         data() {
             return {
@@ -265,6 +273,17 @@
                     none: null,
                 },
             }
+        },
+        computed: {
+            isCropState() {
+                return this.state === this.stateOptions.crop;
+            },
+            isResizeState() {
+                return this.state === this.stateOptions.resize;
+            },
+        },
+        mounted() {
+            this.cropper = this.$refs.cropper;
         },
         methods: {
             enableCropState() {
@@ -353,13 +372,5 @@
                 }
             },
         },
-        computed: {
-            isCropState() {
-                return this.state === this.stateOptions.crop;
-            },
-            isResizeState() {
-                return this.state === this.stateOptions.resize;
-            },
-        }
     };
 </script>
