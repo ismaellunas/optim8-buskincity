@@ -49,7 +49,9 @@ class ChangeLanguageController extends Controller
 
             if (empty($prevRouteName)) {
                 return redirect('/'.$newLocale);
-            }
+            };
+
+            $this->transformParams($prevParams, $prevRouteName);
 
             $url = LaravelLocalization::getURLFromRouteNameTranslated(
                 $newLocale,
@@ -63,19 +65,6 @@ class ChangeLanguageController extends Controller
         return redirect('/'.$newLocale);
     }
 
-    private function appendLocaleToUrl(
-        ?string $locale,
-        string $url
-    ): string {
-        $uriPath = Url::getPath($url);
-
-        if ($locale == "") {
-            return $url;
-        }
-
-        return config('app.url')."/".$locale.$uriPath;
-    }
-
     private function removeLocaleFromUrl(string $url): string
     {
         $uriPath = Url::getPath($url);
@@ -87,5 +76,13 @@ class ChangeLanguageController extends Controller
         }
 
         return config('app.url').$uriPath;
+    }
+
+    private function transformParams(&$prevParams, $prevRouteName): void
+    {
+        if ($prevRouteName == 'frontend.profile') {
+            $prevParams['user:unique_key'] = $prevParams['user'];
+            unset($prevParams['user']);
+        }
     }
 }
