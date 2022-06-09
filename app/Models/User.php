@@ -9,11 +9,13 @@ use App\Notifications\{
 };
 use App\Traits\HasMetas;
 use App\Services\{
+    IPService,
     MediaService,
-    UserService
+    UserService,
 };
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
@@ -138,9 +140,34 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function scopeInRoles($query, array $roleIds)
     {
-        return $query->whereHas('roles', function ($query) use ($roleIds) {
-            $query->whereIn('id', $roleIds);
-        });
+        return $query->whereHas(
+            'roles',
+            function (Builder $query) use ($roleIds) {
+                $query->whereIn('id', $roleIds);
+            }
+        );
+    }
+
+    public function scopeInRoleNames($query, array $roleNames)
+    {
+        return $query->whereHas(
+            'roles',
+            function (Builder $query) use ($roleNames) {
+                $query->whereIn('name', $roleNames);
+            }
+        );
+    }
+
+    public function scopeEmailVerified($query)
+    {
+        return $query->whereNotNull('email_verified_at');
+    }
+
+    public function scopeAvailable($query)
+    {
+        return $query
+            ->emailVerified()
+            ->where('is_suspended', false);
     }
 
     public function getFullNameAttribute(): string
@@ -256,7 +283,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getProfilePageUrlAttribute(): string
     {
-        return route('frontend.profiles', [
+        return route('frontend.profile', [
             'user' => $this->unique_key,
             'firstname_lastname' => Str::of($this->fullName)->ascii()->lower()->replace(' ', '-')
         ]);
@@ -288,5 +315,25 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsConnectedAccountAttribute(): bool
     {
         return is_null($this->password) && ($this->connectedAccounts->count() > 0);
+    }
+
+    public function getHasPublicPageAttribute(): bool
+    {
+        return $this->roles->contains(function ($role) {
+            return $role->hasPermissionTo('public_page.profile');
+        });
+    }
+
+    public function saveDefaultMetas(array $metas = [])
+    {
+        $metas = array_merge($metas, [
+            'country' => app(IPService::class)->getCountryCode(),
+        ]);
+
+        foreach ($metas as $key => $meta) {
+            $this->setMeta($key, $meta);
+        }
+
+        $this->saveMetas();
     }
 }

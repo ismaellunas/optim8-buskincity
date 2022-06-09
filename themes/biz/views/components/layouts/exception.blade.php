@@ -8,6 +8,10 @@
 
         <title>{{ $title ?? config('app.name') }}</title>
 
+        @if (!empty($faviconUrl))
+            <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
+        @endif
+
         <!-- Fonts -->
         <link rel="stylesheet" href="{{ $appCssUrl }}">
 
@@ -74,7 +78,7 @@
 
         @stack('bottom_scripts')
 
-        <script src="{{ mix('js/app.js', 'themes/biz') }}" defer></script>
+        <script src="{{ mix('js/app.js', 'themes/' . config('theme.active')) }}" defer></script>
 
         @if ($additionalJavascript)
             <script>

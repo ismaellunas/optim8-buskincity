@@ -7,10 +7,12 @@ use App\Http\Controllers\{
     FormController,
     Frontend\DashboardController,
     Frontend\DonationController,
+    Frontend\PaymentController,
     Frontend\PageController,
     Frontend\PostCategoryController,
     Frontend\PostController,
     Frontend\ProfileController as FrontendProfileController,
+    Frontend\QrCodeController,
     Frontend\StripeController,
     NewPasswordController,
     PasswordResetLinkController,
@@ -21,6 +23,7 @@ use App\Http\Controllers\{
     UserProfileController,
     WebhookStripeController,
 };
+use App\Services\SitemapService;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -54,8 +57,16 @@ Route::middleware([
     Route::put('/user/set-password', [UserPasswordController::class, 'store'])
         ->name('user-password.set');
 
-    Route::prefix('/payment-management/stripe')
-        ->name('payment-management.stripe.')
+    Route::prefix('/payments')
+        ->name('payments.')
+        ->middleware('can:payment.management')
+        ->group(function() {
+            Route::get('/', [PaymentController::class, 'index'])
+                ->name('index');
+        });
+
+    Route::prefix('/payments/stripe')
+        ->name('payments.stripe.')
         ->middleware('can:manageStripeConnectedAccount,App\Models\User')
         ->group(function() {
             Route::get('/', [StripeController::class, 'show'])
@@ -148,7 +159,7 @@ Route::group([
         ->name('sitemap');
 
     Route::get('{sitemapName}-sitemap.xml', [SitemapController::class, 'urls'])
-        ->where('sitemapName', 'post|page|category')
+        ->where('sitemapName', implode('|', SitemapService::sitemapNames()))
         ->name('sitemap.urls');
 
     Route::get('/blog', [PostController::class, 'index'])
@@ -165,10 +176,14 @@ Route::group([
         ->name('frontend.pages.show')
         ->middleware('redirectLanguage');
 
-    Route::get('/profiles/{user:unique_key}/{firstname_lastname?}', [FrontendProfileController::class, 'show'])
-        ->name('frontend.profiles')
+    Route::get('/profile/{user:unique_key}/{firstname_lastname?}', [FrontendProfileController::class, 'show'])
+        ->name('frontend.profile')
         ->middleware('publicPage:profile')
         ->scopeBindings();
+
+    Route::get('/print/qrcode/{user:unique_key}', [QrCodeController::class, 'print'])
+        ->name('frontend.print.qrcode')
+        ->middleware('publicPage:profile');
 
     Route::get('donations/{user}/success', [DonationController::class, 'success'])
         ->name('donations.success');

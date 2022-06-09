@@ -48,12 +48,12 @@ class StripeService
 
     private function refreshUrl(User $user): string
     {
-        return URL::signedRoute('payment-management.stripe.refresh', ['user' => $user->id]);
+        return URL::signedRoute('payments.stripe.refresh', ['user' => $user->id]);
     }
 
     private function returnUrl(): string
     {
-        return URL::signedRoute('payment-management.stripe.return');
+        return URL::signedRoute('payments.stripe.return');
     }
 
     private function getStripeClient(): StripeClient
@@ -173,14 +173,14 @@ class StripeService
 
         if ($totalData > 0) {
             $transactions['next_url'] = route(
-                    'payment-management.stripe.show',
+                    'payments.stripe.show',
                     [
                         'startingAfter' => $transactions['data'][$totalData - 1]['id'],
                     ]
                 );
 
             $transactions['previous_url'] = route(
-                    'payment-management.stripe.show',
+                    'payments.stripe.show',
                     [
                         'endingBefore' => $transactions['data'][0]['id'],
                     ]

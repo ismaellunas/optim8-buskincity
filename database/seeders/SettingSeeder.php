@@ -25,7 +25,7 @@ class SettingSeeder extends Seeder
             [
                 "key" => "color_link",
                 "display_name" => "Link Color",
-                "value" => "#2ba2e3",
+                "value" => "#0071b0",
                 "group" => "theme_color",
                 "order" => "2"
             ],
@@ -177,6 +177,16 @@ class SettingSeeder extends Seeder
         foreach ($qrCodes as $qrCode) {
             $this->createSetting($qrCode);
         }
+
+        $favicon = [
+            "key" => "favicon_media_id",
+            "display_name" => null,
+            "value" => null,
+            "group" => "favicon",
+            "order" => "1",
+        ];
+
+        $this->createSetting($favicon);
 
         $others = [
             [

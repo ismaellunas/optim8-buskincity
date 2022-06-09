@@ -1,40 +1,45 @@
-<footer class="footer has-background-info-light">
+<footer class="has-background-light pt-6 pb-6">
     <div class="container">
-        <div class="columns">
-            <div class="column">
-                <a href="{{ route('homepage') }}">
-                    <img
-                        src="{{ $logoUrl ?? 'https://dummyimage.com/150x100/e5e5e5/000000.png&text=B+752' }}"
-                        alt=""
-                        width="150"
-                    >
-                </a>
+        <div class="columns is-multiline">
+            <div class="column is-3">
+                <img
+                    src="{{ $logoUrl ?? 'https://dummyimage.com/150x100/e5e5e5/000000.png&text=B+752' }}"
+                    style="max-width:160px"
+                >
             </div>
-            <div class="column">
-                <div class="content has-text-right menu-footer">
-                    <p>
-                        @foreach ($menus as $menu)
-                            <a
-                                href="{{ $menu->getUrl() }}"
-                                class="pl-5 has-text-black"
-                                target="{{ $menu->getTarget() }}"
-                            >
-                                {{ $menu->title }}
-                            </a>
-                        @endforeach
-                    </p>
-                    <p class="mt-5">
-                        @foreach ($socialMediaMenus as $socialMediaMenu)
-                            <a
-                                href="{{ $socialMediaMenu['url'] }}"
-                                class="pl-3 has-text-black is-size-4"
-                                target="{{ $socialMediaMenu['target'] }}"
-                            >
-                                <i class="{{ $socialMediaMenu['icon'] }}"></i>
-                            </a>
-                        @endforeach
-                    </p>
-                </div>
+            <div class="column is-3">
+                <aside class="menu">
+                    <p class="menu-label">About</p>
+                    <ul class="menu-list">
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Contact us</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="column is-3">
+                <aside class="menu">
+                    <p class="menu-label">Performers</p>
+                    <ul class="menu-list">
+                        <li><a href="#">Street Performers</a></li>
+                        <li><a href="#">Become a Performer</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="column is-3">
+                <aside class="menu">
+                    <p class="menu-label">General</p>
+                    <ul class="menu-list">
+                        <li><a href="#">Terms & Conditions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </aside>
+            </div>
+            <div class="column is-12">
+                <p class="is-size-7 has-text-centered mt-5">
+                    © Copyright 2022, {{ config('app.name') }}
+                </p>
             </div>
         </div>
     </div>

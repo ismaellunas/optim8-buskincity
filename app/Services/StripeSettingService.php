@@ -109,6 +109,7 @@ class StripeSettingService
                     return [
                         'id' => $currency,
                         'value' => $currency,
+                        'symbol' => config('constants.currency_symbols')[$currency] ?? null,
                     ];
                 },
                 $paymentCurrencies

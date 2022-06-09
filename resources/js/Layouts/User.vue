@@ -22,17 +22,21 @@
                 <slot />
             </div>
         </div>
+
+        <frontend-footer-menu />
     </div>
 </template>
 
 <script>
     import BizHero from '@/Biz/Hero';
+    import FrontendFooterMenu from '@/Frontend/FooterMenu';
     import FrontendNavbarMenu from '@/Frontend/NavbarMenu';
 
     export default {
         name: 'LayoutUser',
 
         components: {
+            FrontendFooterMenu,
             FrontendNavbarMenu,
         },
     };

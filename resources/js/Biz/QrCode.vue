@@ -1,10 +1,6 @@
 <template>
     <div class="has-text-centered">
         <div ref="qrCode" />
-        <div
-            ref="qrCodePrint"
-            class="is-hidden"
-        />
     </div>
 </template>
 
@@ -39,7 +35,6 @@
 
         emits: [
             'data-url-download',
-            'data-url-print',
         ],
 
         data(props) {
@@ -64,24 +59,6 @@
             };
 
             new QRCode(this.$refs.qrCode, options);
-
-            setTimeout(() => {
-                this.createPrintQrCode();
-            }, 100);
         },
-
-        methods: {
-            createPrintQrCode() {
-                const options = this.options;
-
-                options.width = 1000;
-                options.height = 1000;
-                options['onRenderingEnd'] = (qrCodeOptions, dataUrl) => {
-                    this.$emit('data-url-print', dataUrl);
-                };
-
-                new QRCode(this.$refs.qrCodePrint, options);
-            },
-        }
     }
 </script>

@@ -17,7 +17,7 @@
 
         <form
             method="post"
-            @submit.prevent="$emit('on-submit', form)"
+            @submit.prevent="onSubmit()"
         >
             <biz-form-input
                 v-model="form.name"
@@ -35,6 +35,24 @@
                 placeholder="e.g good-news"
                 :message="error(selectedLocale+'.slug')"
                 :disabled="isInputDisabled"
+            />
+
+            <biz-form-input
+                v-model="form.meta_title"
+                label="Meta title"
+                maxlength="250"
+                placeholder="Meta title"
+                :disabled="isInputDisabled"
+                :message="error(selectedLocale+'.meta_title')"
+            />
+
+            <biz-form-input
+                v-model="form.meta_description"
+                label="Meta description"
+                placeholder="Meta description"
+                maxlength="250"
+                :disabled="isInputDisabled"
+                :message="error(selectedLocale+'.meta_description')"
             />
 
             <div class="field is-grouped is-grouped-right mt-5">
@@ -107,6 +125,12 @@
         },
 
         methods: {
+            onSubmit() {
+                this.populateSlug();
+
+                this.$emit('on-submit', this.form);
+            },
+
             populateSlug() {
                 if (isEmpty(this.form.slug) && !isEmpty(this.form.name)) {
                     this.form.slug = convertToSlug(this.form.name);

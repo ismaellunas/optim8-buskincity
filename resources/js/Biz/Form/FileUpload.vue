@@ -71,7 +71,6 @@
     import FilePondPluginImagePreview from "filepond-plugin-image-preview";
     import vueFilePond from "vue-filepond";
     import { confirmDelete } from '@/Libs/alert';
-    import { replace } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
@@ -241,3 +240,9 @@
         },
     }
 </script>
+
+<style>
+    .filepond--credits {
+        display: none !important;
+    }
+</style>

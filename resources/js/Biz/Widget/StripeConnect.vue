@@ -5,7 +5,9 @@
         </h2>
         <div class="box is-shadowless">
             <template v-if="!data.hasConnectedAccount">
-                <p>If you would like to receive donations and payments for private gigs through BuskinCity, please apply for payments with Stripe:</p>
+                <slot name="description">
+                    <p>If you would like to receive donations and payments for private gigs through BuskinCity, please apply for payments with Stripe:</p>
+                </slot>
 
                 <label class="label mt-5">Country<sup class="has-text-danger">*</sup></label>
                 <div class="field is-horizontal">
@@ -56,7 +58,7 @@
 
                 <div class="buttons are-small mt-5">
                     <biz-link
-                        :href=" route('payment-management.stripe.show')"
+                        :href=" route('payments.stripe.show')"
                         class="button is-info"
                     >
                         <span class="icon is-small">
@@ -110,7 +112,7 @@
         methods: {
             createConnectedAccount() {
                 const self = this;
-                const url = route('payment-management.stripe.create-connected-account');
+                const url = route('payments.stripe.create-connected-account');
 
                 confirmAlert(
                     "Please double-check your country!",

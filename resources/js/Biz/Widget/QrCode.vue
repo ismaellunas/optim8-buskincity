@@ -13,12 +13,11 @@
                         :logo-url="data.logoUrl"
                         :name="data.name"
                         @data-url-download="setDownloadUrl"
-                        @data-url-print="setPrintUrl"
                     />
                 </div>
 
                 <div class="column">
-                    <p>Print your QR code and place it on your pitch. It will allow your audience to find you on BuskinCity, send donations, book you for private gigs, or follow your work.</p>
+                    <p>{{ data.description }}</p>
 
                     <div class="buttons are-small mt-5">
                         <a
@@ -29,9 +28,9 @@
                             <span class="has-text-weight-bold">Download</span>
                         </a>
                         <a
-                            :href="qrCodeUrl.print"
+                            :href="route('frontend.print.qrcode', { user: data.uniqueKey })"
                             class="button"
-                            :download="data.name"
+                            target="_blank"
                         >
                             <span class="has-text-weight-bold">Print</span>
                         </a>
@@ -62,7 +61,6 @@
             return {
                 qrCodeUrl: {
                     download: null,
-                    print: null,
                 },
             };
         },
@@ -70,10 +68,6 @@
         methods: {
             setDownloadUrl(url) {
                 this.qrCodeUrl.download = url;
-            },
-
-            setPrintUrl(url) {
-                this.qrCodeUrl.print = url;
             },
         },
     };

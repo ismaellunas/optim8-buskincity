@@ -25,6 +25,13 @@ export const acceptedImageTypes = [
     '.gif',
 ];
 
+export const acceptedImageMimes = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
+];
+
 export const acceptedVideoTypes = [
     '.mp4',
     '.mov',
@@ -39,3 +46,5 @@ export const debounceTime = 750;
 export const appName = process.env.MIX_APP_NAME;
 
 export const oneMegabyte = 1024;
+
+export const userImage = '/images/profile-picture-default.png';

@@ -34,6 +34,8 @@ class PostController extends Controller
                 $this->perPage,
                 $this->translationService->currentLanguage(),
             ),
+            'metaTitle' => __('Blog'),
+            'metaDescription' => __('Blog lists'),
         ]);
     }
 

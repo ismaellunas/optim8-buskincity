@@ -3,23 +3,26 @@
         <div class="columns">
             <div class="column">
                 <div class="field is-horizontal mb-5">
-                    <biz-form-image-editable
+                    <biz-form-image-square
                         v-model="form.photo"
                         v-model:photo-url="imageUrl"
-                        modal-label="Profile Photo"
-                        delete-label="Remove Photo"
-                        :photo-url="imageUrl"
-                        :show-delete-button="hasPhoto"
+                        label="Profile picture"
+                        modal-title="Profile picture"
+                        wrapper-class="field-body is-align-items-center"
+                        :show-delete-button="isDeleteButtonShown"
                         :message="error('photo', errorBag)"
-                        @on-reset-value="resetImageForm()"
+                        @on-cropped-image="onCroppedImage()"
                         @on-delete-image="onDeleteImage()"
+                        @on-reset-preview="resetPreview()"
                     >
                         <template #default-image-view>
-                            <user-icon
-                                style="width: 128px;"
+                            <biz-image
+                                ratio="is-128x128"
+                                rounded="is-rounded"
+                                :src="userImage"
                             />
                         </template>
-                    </biz-form-image-editable>
+                    </biz-form-image-square>
                 </div>
             </div>
 
@@ -104,15 +107,15 @@
 </template>
 
 <script>
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
+    import BizFormImageSquare from '@/Biz/Form/ImageSquare';
     import BizFormInput from '@/Biz/Form/Input';
-    import BizFormImageEditable from '@/Biz/Form/ImageEditable';
     import BizFormSelect from '@/Biz/Form/Select';
-    import UserIcon from '@/Biz/Icon/User';
+    import BizImage from '@/Biz/Image';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { confirmDelete } from '@/Libs/alert';
-    import { debounceTime } from '@/Libs/defaults';
+    import { debounceTime, userImage } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -122,10 +125,10 @@
         components: {
             BizDropdownItem,
             BizFormDropdownSearch,
+            BizFormImageSquare,
             BizFormInput,
-            BizFormImageEditable,
             BizFormSelect,
-            UserIcon,
+            BizImage,
         },
 
         mixins: [
@@ -150,14 +153,18 @@
 
         data() {
             return {
+                userImage: userImage,
                 filteredLanguages: this.languageOptions.slice(0, 10),
                 imageUrl: this.photoUrl,
             };
         },
 
         computed: {
-            hasPhoto() {
-                return !isEmpty(this.imageUrl);
+            isDeleteButtonShown() {
+                return (
+                    !isEmpty(this.imageUrl)
+                    && !isEmpty(this.photoUrl)
+                );
             },
 
             selectedCountry: {
@@ -197,8 +204,12 @@
         },
 
         methods: {
-            resetImageForm() {
-                this.form.reset('photo', 'is_photo_deleted');
+            resetPreview() {
+                this.imageUrl = this.photoUrl;
+            },
+
+            onCroppedImage() {
+                this.form.is_photo_deleted = false;
             },
 
             onDeleteImage() {

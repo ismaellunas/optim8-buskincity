@@ -10,30 +10,28 @@ class Category extends BaseSitemap
 {
     public function urls(): array|Collection
     {
-        $locale = $this->locale;
-
         return CategoryModel::
             with([
-                'translations' => function ($query) use ($locale) {
+                'translations' => function ($query) {
                     $table = CategoryTranslation::getTableName();
 
                     $query
-                        ->inLanguages([$locale])
                         ->select([
                             "$table.id",
                             "$table.category_id",
                             "$table.locale",
                             "$table.slug",
                             "$table.updated_at",
-                        ]);
+                        ])
+                        ->orderBy("$table.id", 'asc');
                 },
             ])
             ->get([
                 'id',
                 'updated_at',
             ])
-            ->map(function ($page) {
-                return $this->createUrlTag($page);
+            ->map(function ($category) {
+                return $this->createUrlTag($category);
             });
     }
 
@@ -47,8 +45,14 @@ class Category extends BaseSitemap
         }
 
         return new UrlTag(
-            $this->locationUrl(route('blog.category.index', [$category->id])),
-            ['lastmod' => $lastmod]
+            $this->locationUrl(
+                route('blog.category.index', [
+                    $category->slug ?? $category->translations->first()->slug
+                ])
+            ),
+            [
+                'lastmod' => $lastmod
+            ]
         );
     }
 }

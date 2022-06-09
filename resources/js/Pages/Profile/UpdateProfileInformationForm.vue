@@ -6,25 +6,26 @@
 
         <template #form>
             <div class="field is-horizontal mb-5">
-                <biz-form-image-editable
+                <biz-form-image-square
                     v-model="form.photo"
                     v-model:photo-url="photoUrl"
-                    delete-label="Remove"
                     label="Profile picture"
-                    modal-label="Profile picture"
-                    wrapper-class="field-body"
-                    :photo-url="photoUrl"
-                    :show-delete-button="hasPhoto"
+                    modal-title="Profile picture"
+                    wrapper-class="field-body is-align-items-center"
+                    :show-delete-button="isDeleteButtonShown"
                     :message="error('photo')"
-                    @on-reset-value="resetImageForm()"
+                    @on-cropped-image="onCroppedImage()"
                     @on-delete-image="onDeleteImage()"
+                    @on-reset-preview="resetPreview()"
                 >
                     <template #default-image-view>
-                        <user-icon
-                            style="width: 128px;"
+                        <biz-image
+                            ratio="is-128x128"
+                            rounded="is-rounded"
+                            :src="userImage"
                         />
                     </template>
-                </biz-form-image-editable>
+                </biz-form-image-square>
             </div>
 
             <div class="field is-horizontal mb-5">
@@ -97,17 +98,16 @@
 </template>
 
 <script>
-    import MixinHasLoader from '@/Mixins/HasLoader';
-    import MixinHasModal from '@/Mixins/HasModal';
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button';
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
+    import BizFormImageSquare from '@/Biz/Form/ImageSquare';
     import BizFormInput from '@/Biz/Form/Input';
-    import BizFormImageEditable from '@/Biz/Form/ImageEditable';
+    import BizImage from '@/Biz/Image';
     import FormSection from '@/Frontend/FormSection';
-    import UserIcon from '@/Biz/Icon/User';
-    import { acceptedImageTypes, debounceTime } from '@/Libs/defaults';
+    import MixinHasLoader from '@/Mixins/HasLoader';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import { acceptedImageTypes, debounceTime, userImage } from '@/Libs/defaults';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
 
@@ -116,15 +116,14 @@
             BizButton,
             BizDropdownItem,
             BizFormDropdownSearch,
+            BizFormImageSquare,
             BizFormInput,
-            BizFormImageEditable,
+            BizImage,
             FormSection,
-            UserIcon,
         },
 
         mixins: [
             MixinHasLoader,
-            MixinHasModal,
             MixinHasPageErrors,
         ],
 
@@ -156,12 +155,16 @@
                 photoUrl: this.user.profile_photo_url,
                 isImageEditing: false,
                 filteredLanguages: this.languageOptions.slice(0, 10),
+                userImage: userImage,
             }
         },
 
         computed: {
-            hasPhoto() {
-                return !isEmpty(this.photoUrl);
+            isDeleteButtonShown() {
+                return (
+                    !isEmpty(this.photoUrl)
+                    && !isEmpty(this.user.profile_photo_url)
+                );
             },
 
             selectedLanguage: {
@@ -192,8 +195,7 @@
                     errorBag: 'updateProfileInformation',
                     preserveScroll: true,
                     onSuccess: () => {
-                        this.form.photo = null;
-                        this.form.is_photo_deleted = false;
+                        this.resetImageForm();
 
                         this.$emit('after-update-profile');
 
@@ -212,6 +214,10 @@
                 this.form.reset('photo', 'is_photo_deleted');
             },
 
+            resetPreview() {
+                this.photoUrl = this.user.profile_photo_url;
+            },
+
             onDeleteImage() {
                 const self = this;
                 confirmDelete().then((result) => {
@@ -221,6 +227,10 @@
                         self.form.is_photo_deleted = true;
                     }
                 })
+            },
+
+            onCroppedImage() {
+                this.form.is_photo_deleted = false;
             },
 
             searchLanguage: debounce(function(term) {

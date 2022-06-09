@@ -60,6 +60,8 @@
                 translatedCategory = {
                     name: null,
                     slug: null,
+                    meta_title: null,
+                    meta_description: null,
                 };
             }
 
@@ -92,6 +94,8 @@
                             self.isProcessing = true;
                         },
                         onSuccess: (page) => {
+                            self.setTranslationForm(self.selectedLocale);
+
                             successAlert(page.props.flash.message);
                         },
                         onFinish: () => {
@@ -131,6 +135,8 @@
                     translationFrom[locale] = {
                         name: null,
                         slug: null,
+                        meta_title: null,
+                        meta_description: null,
                     };
                 } else {
                     translationFrom[locale] = translatedCategory;

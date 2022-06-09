@@ -153,4 +153,9 @@ return [
     ],
 
     'super_admin_role' => 'Super Administrator',
+
+    'role_names' => [
+        'super_admin' => 'Super Administrator',
+        'performer' => 'Performer',
+    ],
 ];
