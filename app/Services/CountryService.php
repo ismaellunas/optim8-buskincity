@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Entities\Caches\CountryCache;
 use App\Models\Country;
+use App\Models\UserMeta;
 use Illuminate\Support\Collection;
 
 class CountryService
@@ -44,6 +45,29 @@ class CountryService
                             'value' => $country->display_name,
                         ];
                     });
+            });
+    }
+
+    public function getUserCountryOptions(): Collection
+    {
+        $countries = UserMeta::key('country')
+            ->select('value')
+            ->distinct()
+            ->pluck('value');
+
+        return Country::orderBy('display_name')
+            ->when($countries, function ($q, $countries) {
+                $q->whereIn('alpha2', $countries);
+            })
+            ->get([
+                'alpha2',
+                'display_name',
+            ])
+            ->map(function ($country) {
+                return [
+                    'id' => $country->alpha2,
+                    'value' => $country->display_name,
+                ];
             });
     }
 
