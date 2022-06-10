@@ -45,6 +45,14 @@ class ApiPageBuilderComponentUserListController extends Controller
                         'file_url',
                     ]);
                 },
+                'roles' => function ($q) {
+                    $q->select(['id', 'name', 'guard_name']);
+                    $q->with([
+                        'permissions' => function ($q) {
+                            $q->select(['id', 'name', 'guard_name']);
+                        },
+                    ]);
+                },
             ])
             ->get([
                 'id',
@@ -68,7 +76,11 @@ class ApiPageBuilderComponentUserListController extends Controller
                         $user->profilePhotoUrl
                         ?? config('constants.profile_photo_path')
                     ),
-                    'profile_page_url' => $user->profilePageUrl,
+                    'profile_page_url' => (
+                        $user->hasPublicPage
+                        ? $user->profilePageUrl
+                        : null
+                    ),
                 ],
                 $metas,
             );

@@ -23,14 +23,26 @@
 
                     <div class="content">
                         <p class="title is-4">
-                            <a :href="user.profile_page_url">
+                            <a
+                                v-if="user.profile_page_url"
+                                :href="user.profile_page_url"
+                            >
                                 @{{ user.stage_name ?? '&nbsp;' }}
                             </a>
+                            <span v-else>
+                                @{{ user.stage_name ?? '&nbsp;' }}
+                            </span>
                         </p>
                         <p class="subtitle is-6">
-                            <a :href="user.profile_page_url">
+                            <a
+                                v-if="user.profile_page_url"
+                                :href="user.profile_page_url"
+                            >
                                 @{{ user.full_name }}
                             </a>
+                            <span v-else>
+                                @{{ user.full_name }}
+                            </span>
                         </p>
                         <p class="subtitle is-6">@{{ user.country ?? '&nbsp;' }}</p>
                     </div>
