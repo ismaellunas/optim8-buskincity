@@ -15,22 +15,22 @@
         <div id="navbarExampleTransparentExample" class="navbar-menu">
             <div class="navbar-start">
                 @foreach ($menus['nav'] as $menu)
-                    @if ($menu->children)
+                    @if ($menu['children'])
                         <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
                             <a class="navbar-link">
-                                {{ $menu->title }}
+                                {{ $menu['title'] }}
                             </a>
                             <div class="navbar-dropdown">
-                                @foreach ($menu->children as $childMenu)
+                                @foreach ($menu['children'] as $childMenu)
                                     <a
                                         @class([
                                             'navbar-item',
-                                            'has-text-primary' => $childMenu->isActive,
+                                            'has-text-primary' => $childMenu['isActive'],
                                         ])
-                                        href="{{ $childMenu->url }}"
-                                        target="{{ $childMenu->target }}"
+                                        href="{{ $childMenu['link'] }}"
+                                        target="{{ $childMenu['target'] }}"
                                     >
-                                        {{ $childMenu->title }}
+                                        {{ $childMenu['title'] }}
                                     </a>
                                 @endforeach
                             </div>
@@ -39,12 +39,12 @@
                         <a
                             @class([
                                 'navbar-item',
-                                'has-text-primary' => $menu->isActive,
+                                'has-text-primary' => $menu['isActive'],
                             ])
-                            href="{{ $menu->url }}"
-                            target="{{ $menu->target }}"
+                            href="{{ $menu['link'] }}"
+                            target="{{ $menu['target'] }}"
                         >
-                            {{ $menu->title }}
+                            {{ $menu['title'] }}
                         </a>
                     @endif
                 @endforeach

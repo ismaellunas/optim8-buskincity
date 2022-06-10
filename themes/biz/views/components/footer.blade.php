@@ -12,15 +12,15 @@
                     @foreach($menus['nav'] as $menu)
                         <div class="column is-4">
                             <aside class="menu">
-                                <p class="menu-label">{{ $menu->title }}</p>
+                                <p class="menu-label">{{ $menu['title'] }}</p>
                                 <ul class="menu-list">
-                                    @foreach ($menu->children as $childMenu)
+                                    @foreach ($menu['children'] as $childMenu)
                                         <li>
                                             <a
-                                                href="{{ $childMenu->url }}"
-                                                target="{{ $childMenu->target }}"
+                                                href="{{ $childMenu['link'] }}"
+                                                target="{{ $childMenu['target'] }}"
                                             >
-                                                {{ $childMenu->title }}
+                                                {{ $childMenu['title'] }}
                                             </a>
                                         </li>
                                     @endforeach
