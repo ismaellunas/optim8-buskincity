@@ -27,7 +27,7 @@ class Header extends Component
 
         $this->logoUrl = $logoUrl !== "" ? $logoUrl : null;
         $this->currentLanguage = $currentLanguage;
-        $this->menus = $menuService->getHeaderMenu($currentLanguage) ?? [];
+        $this->menus = $menuService->getFrontendUserMenus(request()) ?? [];
         $this->headerLayout = $settingService->getHeaderLayout();
         $this->languageOptions = collect(TranslationService::getLocaleOptions())
             ->filter(function ($locale) use ($currentLanguage) {

@@ -9,20 +9,16 @@
             </div>
             <div class="column is-9">
                 <div class="columns is-multiline">
-                    @foreach($menus as $menu)
+                    @foreach($menus['nav'] as $menu)
                         <div class="column is-4">
                             <aside class="menu">
                                 <p class="menu-label">{{ $menu->title }}</p>
                                 <ul class="menu-list">
                                     @foreach ($menu->children as $childMenu)
-                                        <li
-                                            @class([
-                                                'has-text-primary' => $childMenu->isActive(request()->url()),
-                                            ])
-                                        >
+                                        <li>
                                             <a
-                                                href="{{ $childMenu->getUrl() }}"
-                                                target="{{ $childMenu->getTarget() }}"
+                                                href="{{ $childMenu->url }}"
+                                                target="{{ $childMenu->target }}"
                                             >
                                                 {{ $childMenu->title }}
                                             </a>

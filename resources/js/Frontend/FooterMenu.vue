@@ -61,13 +61,17 @@
                     ?? "https://dummyimage.com/48x28/e5e5e5/000000.png&text=Logo"
                 );
             });
-            const navMenus = computed(() => usePage().props.value.footerMenus.nav);
 
             return {
                 appName: appName,
                 logoImageUrl,
-                navMenus,
             };
+        },
+
+        computed: {
+            navMenus() {
+                return this.$page.props.footerMenus.nav;
+            },
         },
     }
 </script>
