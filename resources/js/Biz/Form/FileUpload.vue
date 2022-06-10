@@ -20,22 +20,25 @@
             </div>
         </div>
 
-        <file-pond
-            v-if="maxFileNumber > 0"
-            ref="pond"
-            :key="filePondKey"
-            name="file_upload"
-            class-name="my-pond"
-            :accepted-file-types="acceptedTypes"
-            :allow-multiple="allowMultiple"
-            :label-idle="placeholder"
-            :max-files="maxFileNumber"
-            :max-file-size="maxFileSizeUpload"
-            :max-total-file-size="maxTotalFileSizeUpload"
-            :required="isRequired"
-            :disabled="disabled"
-            @updatefiles="onUpdateFiles"
-        />
+        <div class="control">
+            <file-pond
+                v-if="maxFileNumber > 0"
+                ref="pond"
+                :key="filePondKey"
+                name="file_upload"
+                class-name="my-pond"
+                :accepted-file-types="acceptedTypes"
+                :allow-multiple="allowMultiple"
+                :label-idle="placeholder"
+                :max-files="maxFileNumber"
+                :max-file-size="maxFileSizeUpload"
+                :max-total-file-size="maxTotalFileSizeUpload"
+                :required="isRequired"
+                :disabled="disabled"
+                @updatefiles="onUpdateFiles"
+            />
+        </div>
+
 
         <slot name="note">
             <p
