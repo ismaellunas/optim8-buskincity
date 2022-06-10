@@ -8,12 +8,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <meta name="description" content="{{ $metaDescription ?? config('app.name') }}">
-        <meta name="keywords" content="{{ $metaKeywords ?? config('app.name') }}">
+        @if ($metaDescription)
+            <meta name="description" content="{{ $metaDescription }}">
+        @endif
 
         @stack('metas')
 
         <title>{{ $title ?? config('app.name') }}</title>
+
+        @if (!empty($faviconUrl))
+            <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
+        @endif
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -115,7 +115,7 @@ class File extends BaseField
 
         $files = $inputs[$this->name]['files'] ?? [];
 
-        $deleteMediaIds = $inputs[$this->name]['delete_media'] ?? [];
+        $deleteMediaIds = $inputs[$this->name]['deleted_media'] ?? [];
 
         if (! empty($deleteMediaIds)) {
             $deleteMediaIds = array_intersect(
@@ -176,10 +176,10 @@ class File extends BaseField
 
     private function deleteMediaKey(): string
     {
-        return $this->name.'.delete_media';
+        return $this->name.'.deleted_media';
     }
 
-    private function getFileExtensions(): array
+    protected function getFileExtensions(): array
     {
         $rules = collect($this->validation['rules'] ?? []);
 
@@ -266,7 +266,7 @@ class File extends BaseField
     protected function getSchemaValue(): mixed
     {
         return [
-            'delete_media' => [],
+            'deleted_media' => [],
             'files' => [],
         ];
     }
