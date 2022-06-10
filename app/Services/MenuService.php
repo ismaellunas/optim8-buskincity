@@ -436,14 +436,23 @@ class MenuService
     {
         $user = $request->user();
 
+        $defaultLocale = app(LanguageService::class)->getDefault()->code;
         $language = app(LifetimeCookie::class)->get('origin_language')
-            ?? $user->origin_language_code
-            ?? app(LanguageService::class)->getDefault()->code;
+            ?? $defaultLocale;
 
-        $menus = $this->menuArrayFormatter($this->getFooterMenu($language));
+        if ($user) {
+            $language =  $user->origin_language_code
+                ?? $defaultLocale;
+        }
+
+        $footerMenu = $this->getFooterMenu($language);
+
+        if ($footerMenu->count() === 0) {
+            $footerMenu = $this->getFooterMenu($defaultLocale);
+        }
 
         return [
-            'nav' => $menus,
+            'nav' => $this->menuArrayFormatter($footerMenu),
         ];
     }
 
