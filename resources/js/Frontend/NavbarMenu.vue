@@ -143,8 +143,8 @@
         components: {
             BizLink,
         },
+
         setup() {
-            const navMenus = computed(() => usePage().props.value.menus.nav);
             const navLogo = computed(() => usePage().props.value.menus.navLogo);
 
             const logoImageUrl = computed(() => {
@@ -189,16 +189,23 @@
 
             return {
                 logoImageUrl,
-                navMenus,
                 navLogo,
             };
         },
+
         data() {
             return {
                 isMenuDisplay: false,
                 csrfToken: this.$page.props.csrfToken,
             };
         },
+
+        computed: {
+            navMenus() {
+                return this.$page.props.menus.nav;
+            },
+        },
+
         methods: {
             switchToTeam(team) {
                 this.$inertia.put(route('current-team.update'), {
