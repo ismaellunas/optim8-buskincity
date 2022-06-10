@@ -4,7 +4,7 @@
             <div class="column">
                 <biz-dropdown
                     class="ml-1"
-                    :close-on-click="false"
+                    :close-on-click="true"
                 >
                     <template #trigger>
                         <span>Order By</span>
@@ -38,7 +38,7 @@
                 <biz-dropdown
                     v-if="canFilteredByCountry"
                     class="ml-1"
-                    :close-on-click="false"
+                    :close-on-click="true"
                 >
                     <template #trigger>
                         <span>Country</span>
