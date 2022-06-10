@@ -33,7 +33,7 @@ class FieldMinFile implements Rule, DataAwareRule
     {
         $index = strtok($attribute, '.');
 
-        $deleteMediaIds = $this->data[$index]['delete_media'] ?? [];
+        $deleteMediaIds = $this->data[$index]['deleted_media'] ?? [];
 
         $existingMediaIds = [];
 

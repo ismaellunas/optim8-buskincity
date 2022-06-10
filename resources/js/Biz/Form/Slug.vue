@@ -9,7 +9,7 @@
         @input="$emit('update:modelValue', $event.target.value)"
         @on-keypress="keyPressSlug"
     >
-        <template v-slot:afterInput>
+        <template #afterInput>
             <div class="control">
                 <biz-button-icon
                     v-show="isSlugDisabled"

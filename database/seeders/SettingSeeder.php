@@ -178,6 +178,16 @@ class SettingSeeder extends Seeder
             $this->createSetting($qrCode);
         }
 
+        $favicon = [
+            "key" => "favicon_media_id",
+            "display_name" => null,
+            "value" => null,
+            "group" => "favicon",
+            "order" => "1",
+        ];
+
+        $this->createSetting($favicon);
+
         $others = [
             [
                 "key" => "default_language",

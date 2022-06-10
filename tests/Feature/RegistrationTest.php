@@ -40,16 +40,18 @@ class RegistrationTest extends TestCase
             return $this->markTestSkipped('Registration support is not enabled.');
         }
 
+        // ACT
         $response = $this->post('/register', [
             'first_name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => 'P4ssword',
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature(),
         ]);
 
+        // ASSERT
         $this->assertAuthenticated();
+        $response->assertSessionHasNoErrors();
         $response->assertRedirect(RouteServiceProvider::HOME);
     }
 }

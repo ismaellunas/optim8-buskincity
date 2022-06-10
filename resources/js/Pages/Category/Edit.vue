@@ -60,6 +60,8 @@
                 translatedCategory = {
                     name: null,
                     slug: null,
+                    meta_title: null,
+                    meta_description: null,
                 };
             }
 
@@ -133,6 +135,8 @@
                     translationFrom[locale] = {
                         name: null,
                         slug: null,
+                        meta_title: null,
+                        meta_description: null,
                     };
                 } else {
                     translationFrom[locale] = translatedCategory;
