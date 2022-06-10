@@ -211,7 +211,6 @@
                     },
                     onFinish: () => {
                         this.onEndLoadingOverlay();
-                        location.reload();
                     },
                 });
             },
