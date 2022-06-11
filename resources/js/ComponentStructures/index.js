@@ -7,6 +7,7 @@ import heading from './heading';
 import image from './image';
 import tabs from './tabs';
 import text from './text';
+import userList from './user-list';
 
 export default {
     button: button,
@@ -18,4 +19,5 @@ export default {
     image: image,
     tabs: tabs,
     text: text,
+    userList: userList,
 }

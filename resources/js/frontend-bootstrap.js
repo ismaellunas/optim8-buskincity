@@ -4,6 +4,7 @@ window.JsFileDownloader = JsFileDownloader;
 import BizButton from '@/Biz/Button';
 import BizQrCode from '@/Biz/QrCode';
 import Carousel from '@/Components/Builder/Content/Carousel';
+import UserList from '@/Components/Builder/Content/UserList';
 import Tabs from '@/Components/Builder/Content/Tabs';
 
 export const components = {
@@ -11,4 +12,5 @@ export const components = {
     BizQrCode,
     Carousel,
     Tabs,
+    UserList,
 };

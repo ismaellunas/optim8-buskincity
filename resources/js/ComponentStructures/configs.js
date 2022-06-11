@@ -7,6 +7,7 @@ import { config as heading } from './heading';
 import { config as image } from './image';
 import { config as tabs } from './tabs';
 import { config as text } from './text';
+import { config as userList } from './user-list';
 
 export default {
     button: button,
@@ -18,4 +19,5 @@ export default {
     image: image,
     tabs: tabs,
     text: text,
-}
+    userList: userList,
+};
