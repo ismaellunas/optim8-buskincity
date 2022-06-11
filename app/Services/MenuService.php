@@ -450,7 +450,7 @@ class MenuService
 
         $footerMenu = $this->getFooterMenu($language);
 
-        if ($footerMenu->count() === 0) {
+        if ($footerMenu->isEmpty()) {
             $footerMenu = $this->getFooterMenu($defaultLocale);
         }
 
