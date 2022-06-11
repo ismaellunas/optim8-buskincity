@@ -56,6 +56,7 @@
     import Image from '@/Blocks/Contents/Image';
     import Tabs from '@/Blocks/Contents/Tabs';
     import Text from '@/Blocks/Contents/Text';
+    import UserList from '@/Blocks/Contents/UserList';
     import { isBlank } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3'
 
@@ -71,6 +72,7 @@
             Image,
             Tabs,
             Text,
+            UserList,
         },
         props: {
             can: Object,

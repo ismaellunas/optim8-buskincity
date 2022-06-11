@@ -2,13 +2,14 @@
 
 use App\Facades\Localization;
 use App\Http\Controllers\{
+    ApiPageBuilderComponentUserListController,
     ChangeLanguageController,
     CustomOAuthController,
     FormController,
     Frontend\DashboardController,
     Frontend\DonationController,
-    Frontend\PaymentController,
     Frontend\PageController,
+    Frontend\PaymentController,
     Frontend\PostCategoryController,
     Frontend\PostController,
     Frontend\ProfileController as FrontendProfileController,
@@ -133,6 +134,11 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
                 $twoFactorLimiter ? 'throttle:'.$twoFactorLimiter : null,
             ]));
     }
+});
+
+Route::name('api.')->prefix('api')->group(function () {
+    Route::get('/page-builder/components/user-list', ApiPageBuilderComponentUserListController::class)
+        ->name('page-builder.components.user-list');
 });
 
 Route::name('forms.')->prefix('forms')->group(function () {
