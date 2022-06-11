@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\{
+    ApiPageBuilderController,
     CategoryController,
     DashboardController,
     LanguageController,
@@ -148,6 +149,12 @@ Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->gr
 
     Route::post('/theme/footer/social-media', [ThemeFooterController::class, 'apiValidateSocialMedia'])
         ->name('theme.footer.social-media.validate');
+
+    Route::get('/page-builder/country-options', [ApiPageBuilderController::class, 'countryOptions'])
+        ->name('page-builder.country-options');
+
+    Route::get('/page-builder/role-options', [ApiPageBuilderController::class, 'roleOptions'])
+        ->name('page-builder.role-options');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {

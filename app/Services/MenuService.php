@@ -14,7 +14,10 @@ use App\Models\{
     Role,
     User,
 };
-use App\Services\LanguageService;
+use App\Services\{
+    LoginService,
+    TranslationService,
+};
 use Illuminate\Http\Request;
 use App\Entities\Caches\{
     MenuCache,
@@ -377,7 +380,7 @@ class MenuService
         ];
 
         $dropdownRightMenus = [];
-        $defaultLocale = app(LanguageService::class)->getDefault()->code;
+        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
         $language = app(LifetimeCookie::class)->get('origin_language')
             ?? $defaultLocale;
 
@@ -385,7 +388,7 @@ class MenuService
             $language =  $user->origin_language_code
                 ?? $defaultLocale;
 
-            if ($user->isSuperAdministrator || $user->isSuperAdministrator) {
+            if (LoginService::isAdminHomeUrl()) {
                 $dropdownRightMenus = [
                     [
                         'title' => 'Dashboard',
@@ -421,7 +424,7 @@ class MenuService
 
         $headerMenu = $this->getHeaderMenu($language);
 
-        if ($headerMenu->count() === 0) {
+        if ($headerMenu->isEmpty()) {
             $headerMenu = $this->getHeaderMenu($defaultLocale);
         }
 

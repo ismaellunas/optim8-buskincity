@@ -146,6 +146,8 @@ return [
         'USD' => '&dollar;',
     ],
 
+    'profile_photo_path' => '/images/profile-picture-default.png',
+
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway
