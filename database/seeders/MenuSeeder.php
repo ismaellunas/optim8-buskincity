@@ -53,12 +53,7 @@ class MenuSeeder extends Seeder
             ->has(
                 MenuItem::factory()
                     ->count(4)
-                    ->state(new Sequence(
-                        $headerMenus[0],
-                        $headerMenus[1],
-                        $headerMenus[2],
-                        $headerMenus[3],
-                    ))
+                    ->state(new Sequence(...$headerMenus))
             )
             ->state(new Sequence(
                 ['type' => Menu::TYPE_HEADER],
@@ -90,11 +85,7 @@ class MenuSeeder extends Seeder
             ->has(
                 MenuItem::factory()
                     ->count(3)
-                    ->state(new Sequence(
-                        $footerMenus[0],
-                        $footerMenus[1],
-                        $footerMenus[2],
-                    ))
+                    ->state(new Sequence(...$footerMenus))
             )
             ->state(new Sequence(
                 ['type' => Menu::TYPE_FOOTER],
@@ -173,16 +164,7 @@ class MenuSeeder extends Seeder
         // Footer
         MenuItem::factory()
             ->count(8)
-            ->state(new Sequence(
-                $footerMenus[0],
-                $footerMenus[1],
-                $footerMenus[2],
-                $footerMenus[3],
-                $footerMenus[4],
-                $footerMenus[5],
-                $footerMenus[6],
-                $footerMenus[7],
-            ))
+            ->state(new Sequence(...$footerMenus))
             ->create();
 
         $socialMedias = [
@@ -209,10 +191,7 @@ class MenuSeeder extends Seeder
             ->has(
                 MenuItem::factory()
                     ->count(2)
-                    ->state(new Sequence(
-                        $socialMedias[0],
-                        $socialMedias[1]
-                    ))
+                    ->state(new Sequence(...$socialMedias))
             )
             ->create([
                 'locale' => config('app.fallback_locale'),
