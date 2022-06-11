@@ -15,8 +15,8 @@ use App\Models\{
     User,
 };
 use App\Services\{
-    LanguageService,
     LoginService,
+    TranslationService,
 };
 use Illuminate\Http\Request;
 use App\Entities\Caches\{
@@ -380,7 +380,7 @@ class MenuService
         ];
 
         $dropdownRightMenus = [];
-        $defaultLocale = app(LanguageService::class)->getDefault()->code;
+        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
         $language = app(LifetimeCookie::class)->get('origin_language')
             ?? $defaultLocale;
 
