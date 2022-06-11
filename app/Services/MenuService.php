@@ -439,7 +439,7 @@ class MenuService
     {
         $user = $request->user();
 
-        $defaultLocale = app(LanguageService::class)->getDefault()->code;
+        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
         $language = app(LifetimeCookie::class)->get('origin_language')
             ?? $defaultLocale;
 
