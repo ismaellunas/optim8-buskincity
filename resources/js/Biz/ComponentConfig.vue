@@ -59,7 +59,10 @@
                             v-else-if="config.component"
                             v-model="entity.config[ groupName ][ key ]"
                             :label="config.label"
+                            :settings="config.settings"
                         />
+
+                        <hr>
                     </template>
                 </div>
             </div>
@@ -71,19 +74,26 @@
     import BizCheckbox from '@/Biz/Checkbox';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormSelect from '@/Biz/Form/Select';
+    import Checkboxes from '@/Blocks/Configs/Checkboxes';
+    import SelectMultiple from '@/Blocks/Configs/SelectMultiple';
     import TRBL from '@/Blocks/Configs/TRBL';
     import configs from '@/ComponentStructures/configs';
     import { camelCase } from "lodash";
     import { useModelWrapper } from '@/Libs/utils'
 
     export default {
+
         components: {
             BizCheckbox,
             BizFormInput,
             BizFormSelect,
+            Checkboxes,
+            SelectMultiple,
             TRBL,
         },
+
         props: ['modelValue'],
+
         setup(props, { emit }) {
             const entity = useModelWrapper(props, emit);
 

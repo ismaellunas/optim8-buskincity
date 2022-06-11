@@ -33,10 +33,6 @@ class CategoryMenu extends BaseMenu implements MenuInterface
 
     public function getUrl(): string
     {
-        $category = $this->getModel()->category->translateOrDefault($this->locale);
-
-        return route('blog.category.index', [
-            'category_translation' => $category->slug
-        ]);
+        return $this->getModel()->category->blogTranslatedUrl($this->locale);
     }
 }
