@@ -41,6 +41,7 @@
 
             <div
                 v-else
+                v-show="!hasPassedOnboarding"
                 class="column is-12"
             >
                 <div class="box is-shadowless">
