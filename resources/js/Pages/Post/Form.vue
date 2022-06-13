@@ -141,8 +141,8 @@
                         <biz-form-input
                             v-model="form.meta_title"
                             label="Meta Title"
-                            maxlength="200"
                             placeholder="Meta title"
+                            :maxlength="maxLength.meta_title"
                             :message="error('meta_title')"
                         />
 
@@ -150,8 +150,8 @@
                             v-model="form.meta_description"
                             label="Meta Description"
                             placeholder="Meta description"
-                            maxlength="200"
                             rows="2"
+                            :maxlength="maxLength.meta_description"
                             :message="error('meta_description')"
                         />
                     </div>
@@ -257,6 +257,7 @@
     import { head, isEmpty, keys, pull, sortBy } from 'lodash';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'PostForm',
@@ -316,6 +317,7 @@
                 activeTab: head(keys(this.tabs)),
                 baseRouteName: 'admin.posts',
                 isSlugDisabled: true,
+                maxLength: usePage().props.value.maxLength,
             };
         },
 

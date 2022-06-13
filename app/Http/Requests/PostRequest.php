@@ -39,8 +39,12 @@ class PostRequest extends BaseFormRequest
                 'required',
                 'max:3'
             ],
-            'meta_description' => ['max:200'],
-            'meta_title' => ['max:200'],
+            'meta_description' => [
+                'max:'.config('constants.max_length.meta_description'),
+            ],
+            'meta_title' => [
+                'max:'.config('constants.max_length.meta_title'),
+            ],
             'scheduled_at' => [
                 'nullable',
                 'date',
