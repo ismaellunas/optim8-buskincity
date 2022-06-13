@@ -76,6 +76,10 @@ class PageController extends CrudController
             ],
             'page' => new $this->model,
             'statusOptions' => $this->model::getStatusOptions(),
+            'maxLength' => [
+                'meta_title' => config('constants.max_length.meta_title'),
+                'meta_description' => config('constants.max_length.meta_description'),
+            ],
         ]);
     }
 
@@ -153,6 +157,10 @@ class PageController extends CrudController
             'images' => $images,
             'affectedHeaderMenu' => $affectedHeaderMenu,
             'affectedFooterMenu' => $affectedFooterMenu,
+            'maxLength' => [
+                'meta_title' => config('constants.max_length.meta_title'),
+                'meta_description' => config('constants.max_length.meta_description'),
+            ],
         ]);
     }
 
