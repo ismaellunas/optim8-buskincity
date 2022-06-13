@@ -4,11 +4,41 @@ namespace App\Entities\Sitemaps;
 
 use App\Models\Category as CategoryModel;
 use App\Models\CategoryTranslation;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class Category extends BaseSitemap
 {
     public function urls(): array|Collection
+    {
+        return $this->getModel()->map(function ($category) {
+                return $this->createUrlTag($category);
+            });
+    }
+
+    public function optionalTags(): array
+    {
+        $lastmod = Carbon::today();
+        $categories = $this->getModel()->sortByDesc('updated_at');
+
+        if (!$categories->isEmpty()) {
+            $lastmod = $categories->first()->updated_at;
+            $updatedAtTranslation = $categories->first()->translations->first()->updated_at ?? null;
+
+            if ($updatedAtTranslation && $updatedAtTranslation->gt($lastmod)) {
+                $lastmod = $updatedAtTranslation;
+            }
+        }
+
+        return array_merge(
+            parent::optionalTags(),
+            [
+                'lastmod' => $lastmod,
+            ]
+        );
+    }
+
+    private function getModel(): Collection
     {
         return CategoryModel::
             with([
@@ -29,10 +59,7 @@ class Category extends BaseSitemap
             ->get([
                 'id',
                 'updated_at',
-            ])
-            ->map(function ($category) {
-                return $this->createUrlTag($category);
-            });
+            ]);
     }
 
     private function createUrlTag(CategoryModel $category): UrlTag

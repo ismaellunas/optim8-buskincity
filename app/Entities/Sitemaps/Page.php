@@ -15,22 +15,41 @@ class Page extends BaseSitemap
 {
     public function urls(): array|Collection
     {
-        $locale = $this->locale;
-
-        $urls = PageTranslation::inLanguages([$locale])
-            ->published()
-            ->orderBy('slug')
-            ->get([
-                'slug',
-                'updated_at',
-            ])
-            ->map(function ($page) {
+        $urls = $this->getModel()->map(function ($page) {
                 return $this->createUrlTag($page);
             });
 
         $urls->prepend($this->homePageSitemapUrlTag());
 
         return $urls;
+    }
+
+    public function optionalTags(): array
+    {
+        $lastmod = Carbon::today();
+        $pageTranslations = $this->getModel()->sortByDesc('updated_at');
+
+        if (!$pageTranslations->isEmpty()) {
+            $lastmod = $pageTranslations->first()->updated_at;
+        }
+
+        return array_merge(
+            parent::optionalTags(),
+            [
+                'lastmod' => $lastmod,
+            ]
+        );
+    }
+
+    private function getModel(): Collection
+    {
+        return PageTranslation::inLanguages([$this->locale])
+            ->published()
+            ->orderBy('slug')
+            ->get([
+                'slug',
+                'updated_at',
+            ]);
     }
 
     private function createUrlTag(PageTranslation $pageTranslation): UrlTag
