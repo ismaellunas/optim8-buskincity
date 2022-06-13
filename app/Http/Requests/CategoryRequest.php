@@ -32,8 +32,14 @@ class CategoryRequest extends BaseFormRequest
                     })
                     ->ignore($inputs['id'] ?? null)
             ],
-            '%meta_description%' => ['sometimes', 'max:250'],
-            '%meta_title%' => ['sometimes', 'max:250'],
+            '%meta_description%' => [
+                'sometimes',
+                'max:'.config('constants.max_length.meta_description'),
+            ],
+            '%meta_title%' => [
+                'sometimes',
+                'max:'.config('constants.max_length.meta_title'),
+            ],
         ]);
     }
 
