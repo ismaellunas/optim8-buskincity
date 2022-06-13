@@ -141,11 +141,13 @@
                         placeholder="meta title"
                     />
 
-                    <biz-form-input
-                        label="Meta Description"
+                    <biz-form-textarea
                         v-model="form.meta_description"
+                        label="Meta Description"
+                        placeholder="Meta description"
+                        maxlength="200"
+                        rows="2"
                         :message="error('meta_description')"
-                        placeholder="meta description"
                     />
                 </div>
             </fieldset>
