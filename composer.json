@@ -9,6 +9,7 @@
         "astrotomic/laravel-translatable": "^11.9",
         "axlon/laravel-postal-code-validation": "^3.3",
         "cloudinary-labs/cloudinary-laravel": "^1.0",
+        "cohensive/oembed": "^0.16.0",
         "cviebrock/eloquent-sluggable": "^8.0",
         "doctrine/dbal": "^3.1",
         "fakerphp/faker": "^1.19",
