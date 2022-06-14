@@ -39,7 +39,7 @@ class FieldMaxFile implements Rule, DataAwareRule
 
         $storedValue = $this->storedValue ?? [];
 
-        $deleteMediaIds = $this->data[$index]['delete_media'] ?? [];
+        $deleteMediaIds = $this->data[$index]['deleted_media'] ?? [];
 
         $deleteMediaIds = array_intersect($storedValue, $deleteMediaIds);
 

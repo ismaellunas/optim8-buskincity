@@ -7,6 +7,7 @@
     "require": {
         "php": "~8.0.0",
         "astrotomic/laravel-translatable": "^11.9",
+        "axlon/laravel-postal-code-validation": "^3.3",
         "cloudinary-labs/cloudinary-laravel": "^1.0",
         "cviebrock/eloquent-sluggable": "^8.0",
         "doctrine/dbal": "^3.1",

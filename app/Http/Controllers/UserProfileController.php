@@ -27,9 +27,7 @@ class UserProfileController extends JetUserProfileController
         }
 
         $user = auth()->user();
-        $canPublicPage = $user->roles->contains(function ($role) {
-            return $role->hasPermissionTo('public_page.profile');
-        });
+        $canPublicPage = $user->hasPublicPage;
 
         return Jetstream::inertia()->render(
             $request,

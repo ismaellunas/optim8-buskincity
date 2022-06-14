@@ -120,7 +120,7 @@
                                     <biz-button
                                         class="navbar-item ml-2 is-ghost"
                                     >
-                                        Log Out
+                                        Logout
                                     </biz-button>
                                 </form>
                             </div>

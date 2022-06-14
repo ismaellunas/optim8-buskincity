@@ -128,14 +128,9 @@ class SettingService
 
     public function getLogoMedia(): ?Media
     {
-        $mediaId = Setting::key(config("constants.theme_header.header_logo_media.key"))
-            ->value('value');
-
-        if (!empty($mediaId)) {
-            return Media::find($mediaId);
-        }
-
-        return null;
+        return $this->getMediaFromSetting(
+            config("constants.theme_header.header_logo_media.key")
+        );
     }
 
     public function getHeaderLayout(): int
@@ -338,7 +333,33 @@ class SettingService
 
     public function getQrCodePublicPageLogoMedia(): ?Media
     {
-        $mediaId = Setting::key('qrcode_public_page_logo_media_id')
+        return $this->getMediaFromSetting('qrcode_public_page_logo_media_id');
+    }
+
+    public function getFaviconUrl(): string
+    {
+        return app(SettingCache::class)->remember(
+            'favicon_url',
+            function () {
+                $media = $this->getFaviconMedia();
+
+                if ($media) {
+                    return $media->file_url;
+                }
+
+                return "";
+            }
+        );
+    }
+
+    public function getFaviconMedia(): ?Media
+    {
+        return $this->getMediaFromSetting('favicon_media_id');
+    }
+
+    private function getMediaFromSetting(string $key): ?Media
+    {
+        $mediaId = Setting::key($key)
             ->value('value');
 
         return $mediaId ? Media::find($mediaId) : null;
