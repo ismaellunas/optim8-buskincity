@@ -385,8 +385,7 @@ class MenuService
             ?? $defaultLocale;
 
         if ($user) {
-            $language =  $user->origin_language_code
-                ?? $defaultLocale;
+            $language =  $user->languageCode;
 
             if (LoginService::isAdminHomeUrl()) {
                 $dropdownRightMenus = [
