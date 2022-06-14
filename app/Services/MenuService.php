@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Entities\LifetimeCookie;
 use App\Models\{
     Category,
     Media,
@@ -15,6 +14,7 @@ use App\Models\{
     User,
 };
 use App\Services\{
+    LanguageService,
     LoginService,
     TranslationService,
 };
@@ -405,13 +405,10 @@ class MenuService
         ];
 
         $dropdownRightMenus = [];
-        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
-        $language = app(LifetimeCookie::class)->get('origin_language')
-            ?? $defaultLocale;
+        $language = app(LanguageService::class)->getOriginLanguageFromCookie();
 
         if ($user) {
-            $language =  $user->origin_language_code
-                ?? $defaultLocale;
+            $language =  $user->languageCode;
 
             if (LoginService::isAdminHomeUrl()) {
                 $dropdownRightMenus = [
@@ -450,7 +447,9 @@ class MenuService
         $headerMenu = $this->getHeaderMenu($language);
 
         if ($headerMenu->isEmpty()) {
-            $headerMenu = $this->getHeaderMenu($defaultLocale);
+            $headerMenu = $this->getHeaderMenu(
+                app(TranslationService::class)->getDefaultLocale()
+            );
         }
 
         return [
@@ -464,19 +463,18 @@ class MenuService
     {
         $user = $request->user();
 
-        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
-        $language = app(LifetimeCookie::class)->get('origin_language')
-            ?? $defaultLocale;
+        $language = app(LanguageService::class)->getOriginLanguageFromCookie();
 
         if ($user) {
-            $language =  $user->origin_language_code
-                ?? $defaultLocale;
+            $language =  $user->languageCode;
         }
 
         $footerMenu = $this->getFooterMenu($language);
 
         if ($footerMenu->isEmpty()) {
-            $footerMenu = $this->getFooterMenu($defaultLocale);
+            $footerMenu = $this->getFooterMenu(
+                app(TranslationService::class)->getDefaultLocale()
+            );
         }
 
         return [
