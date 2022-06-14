@@ -440,19 +440,18 @@ class MenuService
     {
         $user = $request->user();
 
-        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
-        $language = app(LifetimeCookie::class)->get('origin_language')
-            ?? $defaultLocale;
+        $language = app(LanguageService::class)->getOriginLanguageFromCookie();
 
         if ($user) {
-            $language =  $user->origin_language_code
-                ?? $defaultLocale;
+            $language =  $user->languageCode;
         }
 
         $footerMenu = $this->getFooterMenu($language);
 
         if ($footerMenu->isEmpty()) {
-            $footerMenu = $this->getFooterMenu($defaultLocale);
+            $footerMenu = $this->getFooterMenu(
+                app(TranslationService::class)->getDefaultLocale()
+            );
         }
 
         return [
