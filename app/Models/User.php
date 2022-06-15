@@ -11,6 +11,7 @@ use App\Traits\HasMetas;
 use App\Services\{
     IPService,
     MediaService,
+    TranslationService,
     UserService,
 };
 use Carbon\Carbon;
@@ -223,7 +224,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getLanguageCodeAttribute(): string
     {
-        return $this->originLanguageCode ?? config('app.locale');
+        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
+
+        return $this->originLanguageCode ?? $defaultLocale;
     }
 
     public function saveFromInputs(array $inputs)

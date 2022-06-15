@@ -13,6 +13,11 @@ use App\Models\{
     Role,
     User,
 };
+use App\Services\{
+    LanguageService,
+    LoginService,
+    TranslationService,
+};
 use Illuminate\Http\Request;
 use App\Entities\Caches\{
     MenuCache,
@@ -102,6 +107,7 @@ class MenuService
             $menuItem = $menu->getModel();
             $menuItem['link'] = $menu->getUrl();
             $menuItem['target'] = $menu->getTarget();
+            $menuItem['isActive'] = $menu->isActive(request()->url());
             $menuItem['isInternalLink'] = $menu->isInternalLink($menuItem['link']);
 
             $menuItem['children'] = [];
@@ -369,57 +375,60 @@ class MenuService
         $user = $request->user();
 
         $menuLogo = [
-            'title' => 'Dashboard',
-            'link' => route('dashboard'),
+            'title' => 'Homepage',
+            'link' => route('homepage'),
         ];
 
-        $menus = [
-            'dashboard' => [
-                'title' => 'Home',
-                'link' => route('dashboard'),
-                'isActive' => $request->routeIs('dashboard'),
-                'isEnabled' => true,
-            ],
-            'street_performers' => [
-                'title' => 'Street Performers',
-                'link' => '#',
-                'isActive' => false,
-                'isEnabled' => true,
-            ],
-            'blog' => [
-                'title' => 'Blog',
-                'link' => '#',
-                'isActive' => false,
-                'isEnabled' => true,
-            ],
-            'about' => [
-                'title' => 'About',
-                'link' => '#',
-                'isActive' => false,
-                'isEnabled' => true,
-            ],
-        ];
+        $dropdownRightMenus = [];
+        $language = app(LanguageService::class)->getOriginLanguageFromCookie();
 
-        $dropdownRightMenus = [
-            [
-                'title' => 'Dashboard',
-                'link' => route('dashboard'),
-                'isEnabled' => true,
-            ],
-            [
-                'title' => 'Payments',
-                'link' => route('payments.index'),
-                'isEnabled' => $user->can('payment.management'),
-            ],
-            [
-                'title' => 'Profile',
-                'link' => route('user.profile.show'),
-                'isEnabled' => true,
-            ],
-        ];
+        if ($user) {
+            $language =  $user->languageCode;
+
+            if (LoginService::isAdminHomeUrl()) {
+                $dropdownRightMenus = [
+                    [
+                        'title' => 'Dashboard',
+                        'link' => route('admin.dashboard'),
+                        'isEnabled' => true,
+                    ],
+                    [
+                        'title' => 'Profile',
+                        'link' => route('admin.profile.show'),
+                        'isEnabled' => true,
+                    ],
+                ];
+            } else {
+                $dropdownRightMenus = [
+                    [
+                        'title' => 'Dashboard',
+                        'link' => route('dashboard'),
+                        'isEnabled' => true,
+                    ],
+                    [
+                        'title' => 'Payments',
+                        'link' => route('payments.index'),
+                        'isEnabled' => $user->can('payment.management'),
+                    ],
+                    [
+                        'title' => 'Profile',
+                        'link' => route('user.profile.show'),
+                        'isEnabled' => true,
+                    ],
+                ];
+            }
+        }
+
+        $headerMenu = $this->getHeaderMenu($language);
+
+        if ($headerMenu->isEmpty()) {
+            $headerMenu = $this->getHeaderMenu(
+                app(TranslationService::class)->getDefaultLocale()
+            );
+        }
 
         return [
-            'nav' => $menus,
+            'nav' => $this->menuArrayFormatter($headerMenu),
             'navLogo' => $menuLogo,
             'dropdownRightMenus' => $dropdownRightMenus,
         ];
