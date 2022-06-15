@@ -153,20 +153,11 @@ class FormSeeder extends Seeder
             "locations" => [
                 [
                     "name" => 'admin.profile.show',
-                    "visibility" => [
-                        "roles" => [
-                            "Performer"
-                        ]
-                    ]
+                    "visibility" => []
                 ],
                 [
                     "name" => 'admin.users.edit',
-                    "visibility" => [
-                        "roles" => [
-                            "Super Administrator",
-                            "Administrator"
-                        ]
-                    ]
+                    "visibility" => []
                 ],
             ],
             "fields" => [
