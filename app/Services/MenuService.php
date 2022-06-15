@@ -105,23 +105,54 @@ class MenuService
     private function menuArrayFormatter(Collection $typedMenus)
     {
         $menus = [];
+
         foreach ($typedMenus as $menu) {
             $menuItem = $menu->getModel();
-            $menuItem['link'] = $menu->getUrl();
-            $menuItem['target'] = $menu->getTarget();
-            $menuItem['isActive'] = $menu->isActive(request()->url());
-            $menuItem['isInternalLink'] = $menu->isInternalLink($menuItem['link']);
+            $children = $menu->children ?? collect([]);
 
-            $menuItem['children'] = [];
-            if (!empty($menu->children)) {
-                $menuItem['children'] = $this->menuArrayFormatter(
-                    $menu->children
-                );
-            }
+            $this->menuItemArrayFormater(
+                $menuItem,
+                $menu,
+                $this->menuArrayFormatter($children)
+            );
 
             $menus[] = $menuItem;
         }
+
         return $menus;
+    }
+
+    private function frontendMenuArrayFormater(Collection $typedMenus): array
+    {
+        $menus = [];
+
+        foreach ($typedMenus as $menu) {
+            $menuItem = [];
+            $children = $menu->children ?? collect([]);
+
+            $this->menuItemArrayFormater(
+                $menuItem,
+                $menu,
+                $this->frontendMenuArrayFormater($children)
+            );
+
+            $menus[] = $menuItem;
+        }
+
+        return $menus;
+    }
+
+    private function menuItemArrayFormater(
+        &$menuItem,
+        $menu,
+        $children
+    ): void {
+        $menuItem['title'] = $menu->title;
+        $menuItem['link'] = $menu->getUrl();
+        $menuItem['target'] = $menu->getTarget();
+        $menuItem['isActive'] = $menu->isActive(request()->url());
+        $menuItem['isInternalLink'] = $menu->isInternalLink($menuItem['link']);
+        $menuItem['children'] = $children;
     }
 
     public function getFooterMenus(array $locales = []): array
@@ -430,7 +461,7 @@ class MenuService
         }
 
         return [
-            'nav' => $this->menuArrayFormatter($headerMenu),
+            'nav' => $this->frontendMenuArrayFormater($headerMenu),
             'navLogo' => $menuLogo,
             'dropdownRightMenus' => $dropdownRightMenus,
         ];
@@ -455,7 +486,7 @@ class MenuService
         }
 
         return [
-            'nav' => $this->menuArrayFormatter($footerMenu),
+            'nav' => $this->frontendMenuArrayFormater($footerMenu),
         ];
     }
 
