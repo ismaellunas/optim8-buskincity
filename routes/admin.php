@@ -153,8 +153,8 @@ Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->gr
     Route::get('/page-builder/country-options', [ApiPageBuilderController::class, 'countryOptions'])
         ->name('page-builder.country-options');
 
-    Route::get('/page-builder/role-options', [ApiPageBuilderController::class, 'roleOptions'])
-        ->name('page-builder.role-options');
+    Route::get('/page-builder/user-list/role-options', [ApiPageBuilderController::class, 'userListRoleOptions'])
+        ->name('page-builder.user-list.role-options');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {

@@ -24,11 +24,15 @@
             </div>
         </template>
 
+        <template #header>
+            <slot name="header" />
+        </template>
+
         <template #footer>
             <a
                 v-if="!isChild"
                 class="panel-block p-4 has-background-white border-top has-text-link"
-                @click.prevent="$emit('open-form-modal')"
+                @click.prevent="$emit('open-form-modal', segmentIndex)"
             >
                 <span class="panel-icon handle-menu has-text-link">
                     <i
@@ -47,7 +51,6 @@
     import ThemeMenuItem from '@/Biz/ThemeMenuItem';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { confirmDelete } from '@/Libs/alert';
-    import { cloneDeep } from 'lodash';
 
     export default {
         name: 'NavigationMenu',
@@ -73,6 +76,10 @@
             selectedLocale: {
                 type: String,
                 default: "en"
+            },
+            segmentIndex: {
+                type: Number,
+                required: true,
             }
         },
 
@@ -123,7 +130,7 @@
             },
 
             duplicateMenuItem(menuItem) {
-                this.$emit('duplicate-menu-item', menuItem);
+                this.$emit('duplicate-menu-item', menuItem, this.segmentIndex);
             },
 
             updateLastDataMenuItems() {
