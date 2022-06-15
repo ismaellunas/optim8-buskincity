@@ -27,7 +27,7 @@ export const config = {
                 component: "Checkboxes",
                 label: "Role",
                 settings: {
-                    optionsRoute: "admin.api.page-builder.role-options",
+                    optionsRoute: "admin.api.page-builder.user-list.role-options",
                 },
             },
             excludedId: {
