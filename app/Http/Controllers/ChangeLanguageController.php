@@ -58,6 +58,27 @@ class ChangeLanguageController extends Controller
                 $prevRouteName,
                 $prevParams
             );
+            try {
+                $url = LaravelLocalization::getURLFromRouteNameTranslated(
+                    $newLocale,
+                    $prevRouteName,
+                    $prevParams
+                );
+
+                $unTranslatedRoutes = [
+                    'homepage',
+                    'frontend.pages.show',
+                ];
+
+                if (in_array($prevRouteName, $unTranslatedRoutes)) {
+                    app('router')
+                        ->getRoutes($url)
+                        ->match(app('request')->create($url));
+                }
+
+            } catch (NotFoundHttpException $e){
+                $url = route($prevRouteName, $prevParams);
+            }
 
             return redirect($url);
         }
