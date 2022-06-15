@@ -33,36 +33,24 @@ class Translation extends Model implements TranslationLoader
         return $translationCache->remember(
             $locale,
             function () use ($locale, $group) {
-                $defaultLocale = TranslationService::getDefaultLocale();
-                $allTranslations = $this->getTranslations($locale, $group);
-                $fallbackRoutes = $this->getTranslations($defaultLocale, $group);
-
-                return array_merge(
-                    $fallbackRoutes,
-                    $allTranslations
-                );
+                return self::select([
+                    'locale',
+                    'group',
+                    'key',
+                    'value',
+                ])
+                ->where('locale', $locale)
+                ->when($group, function ($query) use ($group) {
+                    if ($group !== "*") {
+                        return $query->where('group', $group);
+                    }
+                })
+                ->get()
+                ->pluck('value', 'key')
+                ->toArray();
             },
             $group,
         );
-    }
-
-    private function getTranslations(string $locale, string $group): array
-    {
-        return self::select([
-                'locale',
-                'group',
-                'key',
-                'value',
-            ])
-            ->where('locale', $locale)
-            ->when($group, function ($query) use ($group) {
-                if ($group !== "*") {
-                    return $query->where('group', $group);
-                }
-            })
-            ->get()
-            ->pluck('value', 'key')
-            ->toArray();
     }
 
     // Scope
