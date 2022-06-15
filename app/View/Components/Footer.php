@@ -20,7 +20,7 @@ class Footer extends Component
         $currentLanguage = TranslationService::currentLanguage();
 
         $this->logoUrl = $logoUrl !== "" ? $logoUrl : null;
-        $this->menus = $menuService->getFooterMenu($currentLanguage);
+        $this->menus = $menuService->getFrontendUserFooterMenus(request()) ?? [];
         $this->socialMediaMenus = $menuService->getSocialMediaMenus();
     }
 

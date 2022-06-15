@@ -11,6 +11,7 @@ use App\Traits\HasMetas;
 use App\Services\{
     IPService,
     MediaService,
+    TranslationService,
     UserService,
 };
 use Carbon\Carbon;
@@ -158,6 +159,15 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
+    public function scopeHasPermissionNames($query, array $permissionNames = [])
+    {
+        return $query->whereHas('roles', function ($query) use ($permissionNames) {
+            $query->whereHas('permissions', function ($query) use ($permissionNames) {
+                $query->whereIn('name', $permissionNames);
+            });
+        });
+    }
+
     public function scopeEmailVerified($query)
     {
         return $query->whereNotNull('email_verified_at');
@@ -214,7 +224,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getLanguageCodeAttribute(): string
     {
-        return $this->originLanguageCode ?? config('app.locale');
+        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
+
+        return $this->originLanguageCode ?? $defaultLocale;
     }
 
     public function saveFromInputs(array $inputs)

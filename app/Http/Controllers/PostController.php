@@ -72,6 +72,10 @@ class PostController extends CrudController
             'languageOptions' => $this->postService->getLanguageOptions(),
             'post' => new Post(),
             'statusOptions' => Post::getStatusOptions(),
+            'maxLength' => [
+                'meta_title' => config('constants.max_length.meta_title'),
+                'meta_description' => config('constants.max_length.meta_description'),
+            ],
         ]);
     }
 
@@ -132,6 +136,10 @@ class PostController extends CrudController
             'languageOptions' => $this->postService->getLanguageOptions($post),
             'post' => $post->load('categories'),
             'statusOptions' => Post::getStatusOptions(),
+            'maxLength' => [
+                'meta_title' => config('constants.max_length.meta_title'),
+                'meta_description' => config('constants.max_length.meta_description'),
+            ],
         ]);
     }
 
