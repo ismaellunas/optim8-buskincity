@@ -12,9 +12,12 @@ class ApiPageBuilderController extends Controller
         return app(CountryService::class)->getCountryOptions();
     }
 
-    public function roleOptions()
+    public function userListRoleOptions()
     {
         return Role::where('guard_name', 'web')
+            ->whereHas('permissions', function ($q) {
+                $q->where('name', 'public_page.profile');
+            })
             ->get(['id', 'name'])
             ->asOptions('id', 'name');
     }
