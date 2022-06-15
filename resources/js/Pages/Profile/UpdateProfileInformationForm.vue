@@ -140,6 +140,11 @@
         ],
 
         data() {
+            const language = find(
+                this.languageOptions,
+                ['code', this.user.origin_language_code]
+            );
+
             return {
                 cropper: null,
                 acceptedTypes: acceptedImageTypes,
@@ -150,7 +155,7 @@
                     email: this.user.email,
                     photo: null,
                     is_photo_deleted: false,
-                    language_id: this.user.language_id
+                    language_id: language.id ?? null
                 }),
                 photoUrl: this.user.profile_photo_url,
                 isImageEditing: false,

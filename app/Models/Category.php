@@ -29,6 +29,15 @@ class Category extends BaseModel implements TranslatableContract
         return $this->save();
     }
 
+    public function blogTranslatedUrl(string $locale): string
+    {
+        $translate = $this->translateOrDefault($locale);
+
+        return route('blog.category.index', [
+            'category_translation' => $translate->slug
+        ]);
+    }
+
     /* Accessors: */
     public function getFirstTranslationNameAttribute(): string
     {
