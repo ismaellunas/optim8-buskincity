@@ -79,11 +79,8 @@ Route::middleware([
             Route::post('update-setting', [StripeController::class, 'updateSetting'])
                 ->name('update-setting');
 
-            /*
-             * TODO: Hide redirect to stripe link for a while.
             Route::get('redirect-to-stripe', [StripeController::class, 'redirectToStripeAccount'])
                 ->name('redirect-to-stripe');
-             */
 
             Route::get('account-link', [StripeController::class, 'accountLink'])
                 ->name('account-link');
