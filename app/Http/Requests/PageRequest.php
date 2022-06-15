@@ -41,6 +41,16 @@ class PageRequest extends BaseFormRequest
                     })
                     ->ignore($inputs['id'])
             ],
+            '%meta_title%' => [
+                'sometimes',
+                'string',
+                'max:'.config('constants.max_length.meta_title'),
+            ],
+            '%meta_description%' => [
+                'sometimes',
+                'string',
+                'max:'.config('constants.max_length.meta_description'),
+            ],
         ]);
     }
 

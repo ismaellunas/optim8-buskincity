@@ -8,6 +8,7 @@ use App\Http\Requests\{
 };
 use App\Models\{
     Menu,
+    MenuItem,
     Setting,
 };
 use App\Services\{
@@ -51,6 +52,7 @@ class ThemeFooterController extends ThemeOptionController
                 'settings' => $this->settingService->getFooter(),
                 'socialMediaMenus' => $this->menuService->getSocialMediaMenus(),
                 'typeOptions' => $this->menuService->getMenuItemTypeOptions(),
+                'typeSegment' => MenuItem::TYPE_SEGMENT,
             ]),
         );
     }

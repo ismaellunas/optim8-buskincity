@@ -80,7 +80,8 @@ class HandleInertiaRequests extends Middleware
                 return (object)[];
             },
             'logoUrl' => $this->settingService->getLogoUrl(),
-            'menus' => $this->getMenus($request),
+            'menus' => $this->getHeaderMenus($request),
+            'footerMenus' => $this->getFooterMenus($request),
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
             'languageOptions' => TranslationSv::getLocaleOptions(),
@@ -117,7 +118,7 @@ class HandleInertiaRequests extends Middleware
         return $sharedUserData;
     }
 
-    private function getMenus($request): array
+    private function getHeaderMenus($request): array
     {
         $user = $request->user();
 
@@ -129,6 +130,24 @@ class HandleInertiaRequests extends Middleware
                 return app(MenuService::class)->getBackendNavMenus($request);
             } else {
                 return app(MenuService::class)->getFrontendUserMenus($request);
+            }
+        }
+
+        return [];
+    }
+
+    private function getFooterMenus($request): array
+    {
+        $user = $request->user();
+
+        if ($user) {
+            if (
+                $request->routeIs('admin.*')
+                && $user->can('system.dashboard')
+            ) {
+                return [];
+            } else {
+                return app(MenuService::class)->getFrontendUserFooterMenus($request);
             }
         }
 

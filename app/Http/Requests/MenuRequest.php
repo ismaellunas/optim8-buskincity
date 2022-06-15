@@ -30,7 +30,7 @@ class MenuRequest extends BaseFormRequest
                 'sometimes',
                 'required',
                 'integer',
-                Rule::in(array_keys(MenuItem::TYPE_VALUES)),
+                Rule::in(array_keys(MenuItem::getAllTypeValues())),
             ],
             'menu_items.*.url' => [
                 'nullable',

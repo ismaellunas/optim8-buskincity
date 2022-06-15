@@ -6,12 +6,12 @@
     >
         <div class="container">
             <div class="navbar-brand">
-                <biz-link
+                <a
                     class="navbar-item"
                     :href="navLogo ? navLogo.link : null"
                 >
                     <img :src="logoImageUrl">
-                </biz-link>
+                </a>
 
                 <a
                     role="button"
@@ -52,27 +52,28 @@
                                         v-for="(childMenu, childIndex) in menu.children"
                                         :key="childIndex"
                                     >
-                                        <biz-link
+                                        <a
                                             v-if="childMenu.isEnabled"
                                             class="navbar-item"
                                             :href="childMenu.link"
                                             :class="{'is-active': menu.isActive}"
+                                            :target="childMenu.target"
                                         >
                                             {{ childMenu.title }}
-                                        </biz-link>
+                                        </a>
                                     </template>
                                 </div>
                             </div>
                         </template>
                         <template v-else>
-                            <biz-link
-                                v-if="menu.isEnabled"
+                            <a
                                 class="navbar-item"
                                 :active="menu.isActive"
                                 :href="menu.link"
+                                :target="menu.target"
                             >
                                 {{ menu.title }}
-                            </biz-link>
+                            </a>
                         </template>
                     </template>
                 </div>
@@ -142,8 +143,8 @@
         components: {
             BizLink,
         },
+
         setup() {
-            const navMenus = computed(() => usePage().props.value.menus.nav);
             const navLogo = computed(() => usePage().props.value.menus.navLogo);
 
             const logoImageUrl = computed(() => {
@@ -188,16 +189,23 @@
 
             return {
                 logoImageUrl,
-                navMenus,
                 navLogo,
             };
         },
+
         data() {
             return {
                 isMenuDisplay: false,
                 csrfToken: this.$page.props.csrfToken,
             };
         },
+
+        computed: {
+            navMenus() {
+                return this.$page.props.menus.nav;
+            },
+        },
+
         methods: {
             switchToTeam(team) {
                 this.$inertia.put(route('current-team.update'), {
