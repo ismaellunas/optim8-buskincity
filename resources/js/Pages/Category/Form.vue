@@ -40,18 +40,19 @@
             <biz-form-input
                 v-model="form.meta_title"
                 label="Meta title"
-                maxlength="250"
                 placeholder="Meta title"
                 :disabled="isInputDisabled"
+                :maxlength="maxLength.meta_title"
                 :message="error(selectedLocale+'.meta_title')"
             />
 
-            <biz-form-input
+            <biz-form-textarea
                 v-model="form.meta_description"
                 label="Meta description"
                 placeholder="Meta description"
-                maxlength="250"
+                rows="2"
                 :disabled="isInputDisabled"
+                :maxlength="maxLength.meta_description"
                 :message="error(selectedLocale+'.meta_description')"
             />
 
@@ -85,8 +86,10 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormSlug from '@/Biz/Form/Slug';
+    import BizFormTextarea from '@/Biz/Form/Textarea';
     import { isEmpty } from 'lodash';
     import { useModelWrapper, convertToSlug } from '@/Libs/utils';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'CategoryForm',
@@ -96,6 +99,7 @@
             BizButtonLink,
             BizFormInput,
             BizFormSlug,
+            BizFormTextarea,
         },
 
         mixins: [
@@ -121,6 +125,12 @@
         setup(props, { emit }) {
             return {
                 form: useModelWrapper(props, emit),
+            };
+        },
+
+        data() {
+            return {
+                maxLength: usePage().props.value.maxLength,
             };
         },
 

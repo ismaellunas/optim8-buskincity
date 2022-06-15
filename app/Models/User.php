@@ -159,6 +159,15 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
+    public function scopeHasPermissionNames($query, array $permissionNames = [])
+    {
+        return $query->whereHas('roles', function ($query) use ($permissionNames) {
+            $query->whereHas('permissions', function ($query) use ($permissionNames) {
+                $query->whereIn('name', $permissionNames);
+            });
+        });
+    }
+
     public function scopeEmailVerified($query)
     {
         return $query->whereNotNull('email_verified_at');
