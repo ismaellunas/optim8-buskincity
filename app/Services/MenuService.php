@@ -44,7 +44,9 @@ class MenuService
 
     private function getTypeMenuClass(string $type)
     {
-        return "\\App\\Entities\\Menus\\".MenuItem::TYPE_VALUES[$type]."Menu";
+        $typeValues = MenuItem::getAllTypeValues();
+
+        return "\\App\\Entities\\Menus\\".$typeValues[$type]."Menu";
     }
 
     private function createStructuredMenus(
@@ -431,6 +433,29 @@ class MenuService
             'nav' => $this->menuArrayFormatter($headerMenu),
             'navLogo' => $menuLogo,
             'dropdownRightMenus' => $dropdownRightMenus,
+        ];
+    }
+
+    public function getFrontendUserFooterMenus(Request $request): array
+    {
+        $user = $request->user();
+
+        $language = app(LanguageService::class)->getOriginLanguageFromCookie();
+
+        if ($user) {
+            $language =  $user->languageCode;
+        }
+
+        $footerMenu = $this->getFooterMenu($language);
+
+        if ($footerMenu->isEmpty()) {
+            $footerMenu = $this->getFooterMenu(
+                app(TranslationService::class)->getDefaultLocale()
+            );
+        }
+
+        return [
+            'nav' => $this->menuArrayFormatter($footerMenu),
         ];
     }
 
