@@ -5,15 +5,32 @@ namespace App\Entities\Sitemaps;
 use App\Models\Category as CategoryModel;
 use App\Models\CategoryTranslation;
 use App\Models\Post;
+use App\Services\TranslationService;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class Category extends BaseSitemap
 {
     public function urls(): array|Collection
     {
-        return $this->getEloquentBuilder()
+        return CategoryModel::select([
+                'id',
+                'updated_at',
+            ])
+            ->with([
+                'translations' => function ($query) {
+                    $table = CategoryTranslation::getTableName();
+
+                    $query
+                        ->select([
+                            "$table.category_id",
+                            "$table.locale",
+                            "$table.slug",
+                            "$table.updated_at",
+                        ])
+                        ->orderBy("$table.updated_at", 'asc');
+                },
+            ])
             ->get()
             ->map(function ($category) {
                 return $this->createUrlTag($category);
@@ -24,25 +41,9 @@ class Category extends BaseSitemap
     public function optionalTags(): array
     {
         $lastmod = Carbon::today();
-        $latestCategoryTranslation = CategoryTranslation::select([
-                'category_id',
-                'updated_at',
-            ])
-            ->with([
-                'category.posts' => function ($query) {
-                    $table = Post::getTableName();
-
-                    $query
-                        ->select([
-                            "$table.updated_at",
-                        ])
-                        ->published()
-                        ->orderBy("$table.updated_at", 'asc');
-                }
-            ])
-            ->inLanguages([$this->locale])
-            ->orderBy('updated_at', 'asc')
-            ->first();
+        $latestCategoryTranslation = $this->getCategoryTranslation($this->locale)
+            ?? $this->getCategoryTranslation(TranslationService::getDefaultLocale())
+            ?? $this->getCategoryTranslation();
 
         if ($latestCategoryTranslation) {
             $lastmod = $latestCategoryTranslation->updated_at;
@@ -62,26 +63,29 @@ class Category extends BaseSitemap
         );
     }
 
-    private function getEloquentBuilder(): Builder
+    private function getCategoryTranslation(string $locale = null): ?CategoryTranslation
     {
-        return CategoryModel::select([
-                'id',
+        return CategoryTranslation::select([
+                'category_id',
                 'updated_at',
             ])
             ->with([
-                'translations' => function ($query) {
-                    $table = CategoryTranslation::getTableName();
+                'category.posts' => function ($query) {
+                    $table = Post::getTableName();
 
                     $query
                         ->select([
-                            "$table.category_id",
-                            "$table.locale",
-                            "$table.slug",
                             "$table.updated_at",
                         ])
+                        ->published()
                         ->orderBy("$table.updated_at", 'asc');
-                },
-            ]);
+                }
+            ])
+            ->when($locale, function ($query) use ($locale) {
+                $query->inLanguages([$locale]);
+            })
+            ->orderBy('updated_at', 'desc')
+            ->first();
     }
 
     private function createUrlTag(CategoryModel $category): UrlTag
