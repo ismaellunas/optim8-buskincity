@@ -9,6 +9,18 @@ class CategoryPermissionTest extends BaseRolePermissionTestCase
     protected $basePermissionName = 'category';
     protected $baseRouteName = 'admin.categories';
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->givePermissionToRole('dashboard', 'system');
+
+        $this->withoutMiddleware([
+            \App\Http\Middleware\EnsureLoginFromAdminLoginRoute::class,
+            \App\Http\Middleware\UserEmailIsVerified::class,
+        ]);
+    }
+
     /**
      * @test
      */
