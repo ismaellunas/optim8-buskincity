@@ -5,15 +5,19 @@ namespace App\Entities\Sitemaps;
 use App\Models\Category as CategoryModel;
 use App\Models\CategoryTranslation;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class Category extends BaseSitemap
 {
     public function urls(): array|Collection
     {
-        return $this->getModel()->map(function ($category) {
+        return $this->getEloquentBuilder()
+            ->get()
+            ->map(function ($category) {
                 return $this->createUrlTag($category);
-            });
+            })
+            ->sortBy('loc');
     }
 
     public function optionalTags(): array
@@ -38,27 +42,25 @@ class Category extends BaseSitemap
         );
     }
 
-    private function getModel(): Collection
+    private function getEloquentBuilder(): Builder
     {
-        return CategoryModel::
-            with([
+        return CategoryModel::select([
+                'id',
+                'updated_at',
+            ])
+            ->with([
                 'translations' => function ($query) {
                     $table = CategoryTranslation::getTableName();
 
                     $query
                         ->select([
-                            "$table.id",
                             "$table.category_id",
                             "$table.locale",
                             "$table.slug",
                             "$table.updated_at",
                         ])
-                        ->orderBy("$table.id", 'asc');
+                        ->orderBy("$table.updated_at", 'asc');
                 },
-            ])
-            ->get([
-                'id',
-                'updated_at',
             ]);
     }
 
