@@ -111,6 +111,66 @@ class Localization extends LaravelLocalization
         return $locales;
     }
 
+    // Override from Mcamara\LaravelLocalization\LaravelLocalization
+    public function transRoute($routeName)
+    {
+        $transRoute = parent::transRoute($routeName);
+
+        if ($transRoute == $routeName) {
+            $transRoute = $this->translator->get(
+                $routeName,
+                [],
+                TranslationService::getDefaultLocale()
+            );
+        }
+
+        return $transRoute;
+    }
+
+    // Override from Mcamara\LaravelLocalization\LaravelLocalization
+    public function getURLFromRouteNameTranslated($locale, $transKeyName, $attributes = [], $forceDefaultLocation = false)
+    {
+        try {
+            if (!$this->checkLocaleInSupportedLocales($locale)) {
+                throw new UnsupportedLocaleException('Locale \''.$locale.'\' is not in the list of supported locales.');
+            }
+
+            if (!\is_string($locale)) {
+                $locale = $this->getDefaultLocale();
+            }
+
+            $route = '';
+
+            if ($forceDefaultLocation || !($locale === $this->defaultLocale && $this->hideDefaultLocaleInURL())) {
+                $route = '/'.$locale;
+            }
+            if (\is_string($locale)) {
+                $translation = $this->translator->get($transKeyName, [], $locale);
+
+                if ($translation == $transKeyName) {
+                    $translation = $this->translator->get(
+                        $transKeyName,
+                        [],
+                        TranslationService::getDefaultLocale()
+                    );
+                }
+
+                $route .= '/'.$translation;
+
+                $route = $this->substituteAttributesInRoute($attributes, $route, $locale);
+            }
+
+            if (empty($route)) {
+                // This locale does not have any key for this route name
+                return false;
+            }
+
+            return rtrim($this->createUrlFromUri($route), '/');
+        } catch (\Throwable $th) {
+            return parent::getURLFromRouteNameTranslated($locale, $transKeyName, $attributes, $forceDefaultLocation);
+        }
+    }
+
     private function formatSupportedLocale(Collection $locales): array
     {
         return $locales
