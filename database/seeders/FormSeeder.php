@@ -181,7 +181,7 @@ class FormSeeder extends Seeder
                     "label" => "Address",
                     "placeholder" => "Street address",
                     "note" => null,
-                    "default_value" => [],
+                    "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
                     "maxlength" => "",
@@ -192,7 +192,7 @@ class FormSeeder extends Seeder
                         "messages" => []
                     ],
                     "visibility" => [],
-                    "translated" => true,
+                    "translated" => false,
                 ],
                 "city" => [
                     "type" => "Text",
