@@ -4,13 +4,17 @@ namespace App\Entities\Sitemaps;
 
 use App\Models\Post as PostModel;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class Post extends BaseSitemap
 {
     public function urls(): array|Collection
     {
-        return $this->getModel()->map(function ($post) {
+        return $this->getEloquentBuilder()
+            ->orderBy('slug')
+            ->get()
+            ->map(function ($post) {
                 return $this->createUrlTag($post);
             });
     }
@@ -18,10 +22,12 @@ class Post extends BaseSitemap
     public function optionalTags(): array
     {
         $lastmod = Carbon::today();
-        $posts = $this->getModel()->sortByDesc('updated_at');
+        $latestPost = $this->getEloquentBuilder()
+            ->orderBy('updated_at', 'desc')
+            ->first();
 
-        if (!$posts->isEmpty()) {
-            $lastmod = $posts->first()->updated_at;
+        if ($latestPost) {
+            $lastmod = $latestPost->updated_at;
         }
 
         return array_merge(
@@ -32,15 +38,14 @@ class Post extends BaseSitemap
         );
     }
 
-    private function getModel(): Collection
+    private function getEloquentBuilder(): Builder
     {
-        return PostModel::inLanguages([$this->locale])
-            ->published()
-            ->orderBy('slug')
-            ->get([
+        return PostModel::select([
                 'slug',
                 'updated_at',
-            ]);
+            ])
+            ->inLanguages([$this->locale])
+            ->published();
     }
 
     private function createUrlTag(PostModel $post): UrlTag
