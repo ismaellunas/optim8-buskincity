@@ -2,7 +2,7 @@
 
 <x-layouts.master>
     <x-slot name="title">
-        Profile
+        {{ $user->fullName }}
     </x-slot>
 
     <x-slot name="metaDescription">
@@ -91,19 +91,39 @@
                             <h2 class="title is-3">Gallery</h2>
                         </div>
                         <div class="column is-5">
-                            <div class="hero is-medium is-primary is-radius">
-                                <div class="hero-body">
-                                    
+                            @if ($userProfile->getMeta('promotional_video'))
+                                <figure class="image is-16by9">
+                                    {!! OEmbed::get($userProfile->getMeta('promotional_video'))->html(['class' => 'has-ratio']) !!}
+                                </figure>
+                            @else
+                                <div class="hero is-medium is-primary is-radius">
+                                    <div class="hero-body"></div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
 
                         <div class="column is-7">
-                            <div class="hero is-medium is-primary is-radius">
-                                <div class="hero-body">
-                                    
+                            @if ($userProfile->getMeta('gallery'))
+                                <gallery
+                                    :urls="{{ Illuminate\Support\Js::from($userProfile->getMedias('gallery')->pluck('file_url')) }}"
+                                >
+                                    <template v-slot="{ url, openModal }">
+                                        <div class="column is-one-third-desktop is-half-tablet">
+                                            <div class="card" @click.prevent="openModal(url)">
+                                                <div class="card-image">
+                                                    <figure class="image is-3by2">
+                                                        <img :src="url" alt="">
+                                                    </figure>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </gallery>
+                            @else
+                                <div class="hero is-medium is-primary is-radius">
+                                    <div class="hero-body"></div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -113,28 +133,69 @@
 
     <!-- Modal: Full performer description is-active -->
     <x-modal id="long-bio">
-        <h2 class="title is-4">{{ __('About me') }}</h2>
-        <div class="content">
-            <p>{{ $userProfile->getMeta('long_bio', $locale) }}</p>
+        <div class="modal-content">
+            <div class="card">
+                <div class="card-content">
+                    <h2 class="title is-4">{{ __('About me') }}</h2>
+                    <div class="content">
+                        <p>{{ $userProfile->getMeta('long_bio', $locale) }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </x-modal>
 
     <!-- Modal: Payment donation is-active -->
     @can ('receiveDonation', $user)
-    <x-modal id="donation" modalContentClass="is-small">
-        <div class="is-flex">
-            <figure class="profile-picture image is-48x48 mr-3">
-                <img src="{{ $user->profilePhotoUrl ?? url('/images/profile-picture-default.png') }}" alt="{{ $user->fullName }}" class="is-rounded">
-            </figure>
-            <div>
-                <h2 class="title is-5 m-0">{{ __('Donate to') }} {{ $userProfile->getMeta('stage_name') }}</h2>
-                <p>{{ __('Thank you for your support!') }}</p>
+    <x-modal id="donation">
+        <div class="modal-content is-small">
+            <div class="card">
+                <div class="card-content">
+                    <div class="is-flex">
+                        <figure class="profile-picture image is-48x48 mr-3">
+                            <img src="{{ $user->profilePhotoUrl ?? url('/images/profile-picture-default.png') }}" alt="{{ $user->fullName }}" class="is-rounded">
+                        </figure>
+                        <div>
+                            <h2 class="title is-5 m-0">{{ __('Donate to') }} {{ $userProfile->getMeta('stage_name') }}</h2>
+                            <p>{{ __('Thank you for your support!') }}</p>
+                        </div>
+                    </div>
+                    <x-stripe-form-donation :user-id="$user->id"/>
+                </div>
             </div>
         </div>
-
-        <x-stripe-form-donation :user-id="$user->id"/>
     </x-modal>
     @endcan
+
+    <x-modal id="modal-gallery">
+        <div class="modal-content">
+            <div class="card">
+                <div class="card-image">
+                    <figure class="image is-3by2">
+                        <img class="image-source" src="" alt="">
+                    </figure>
+                </div>
+                <footer class="card-footer">
+                    <div class="column">
+                        <div class="is-pulled-left">
+                            <a href="">
+                                <span class="icon is-small">
+                                    <i class="fas fa-lg fa-chevron-circle-left"></i>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="is-pulled-right has-text-primary">
+                            <a href="">
+                                <span class="icon is-small">
+                                    <i class="fas fa-lg fa-chevron-circle-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </x-modal>
 
     @push('bottom_scripts')
     <script>

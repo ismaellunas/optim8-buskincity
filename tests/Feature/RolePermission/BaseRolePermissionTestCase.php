@@ -35,7 +35,7 @@ class BaseRolePermissionTestCase extends TestCase
     protected function givePermissionToRole(string $permission, string $basePermission = null)
     {
         $this->role->givePermissionTo(
-            $basePermission ?? $this->basePermissionName.
+            (is_null($basePermission) ? $this->basePermissionName : $basePermission).
             '.'.
             $permission
         );
