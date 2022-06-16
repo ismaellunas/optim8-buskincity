@@ -78,7 +78,8 @@ class Category extends BaseSitemap
                             "$table.updated_at",
                         ])
                         ->published()
-                        ->orderBy("$table.updated_at", 'asc');
+                        ->orderBy("$table.updated_at", 'desc')
+                        ->limit(1);
                 }
             ])
             ->when($locale, function ($query) use ($locale) {
