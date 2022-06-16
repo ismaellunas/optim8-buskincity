@@ -87,27 +87,39 @@
                             <h2 class="title is-3">Gallery</h2>
                         </div>
                         <div class="column is-5">
-                            <figure class="image is-16by9">
-                                {!! OEmbed::get($userProfile->getMeta('promotional_video'))->html(['class' => 'has-ratio']) !!}
-                            </figure>
+                            @if ($userProfile->getMeta('promotional_video'))
+                                <figure class="image is-16by9">
+                                    {!! OEmbed::get($userProfile->getMeta('promotional_video'))->html(['class' => 'has-ratio']) !!}
+                                </figure>
+                            @else
+                                <div class="hero is-medium is-primary is-radius">
+                                    <div class="hero-body"></div>
+                                </div>
+                            @endif
                         </div>
 
                         <div class="column is-7">
-                            <gallery
-                                :urls="{{ Illuminate\Support\Js::from($userProfile->getMedias('gallery')->pluck('file_url')) }}"
-                            >
-                                <template v-slot="{ url, openModal }">
-                                    <div class="column is-one-third-desktop is-half-tablet">
-                                        <div class="card" @click.prevent="openModal(url)">
-                                            <div class="card-image">
-                                                <figure class="image is-3by2">
-                                                    <img :src="url" alt="">
-                                                </figure>
+                            @if ($userProfile->getMeta('gallery'))
+                                <gallery
+                                    :urls="{{ Illuminate\Support\Js::from($userProfile->getMedias('gallery')->pluck('file_url')) }}"
+                                >
+                                    <template v-slot="{ url, openModal }">
+                                        <div class="column is-one-third-desktop is-half-tablet">
+                                            <div class="card" @click.prevent="openModal(url)">
+                                                <div class="card-image">
+                                                    <figure class="image is-3by2">
+                                                        <img :src="url" alt="">
+                                                    </figure>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </template>
-                            </gallery>
+                                    </template>
+                                </gallery>
+                            @else
+                                <div class="hero is-medium is-primary is-radius">
+                                    <div class="hero-body"></div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
