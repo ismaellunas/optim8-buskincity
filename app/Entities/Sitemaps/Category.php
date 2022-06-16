@@ -4,6 +4,7 @@ namespace App\Entities\Sitemaps;
 
 use App\Models\Category as CategoryModel;
 use App\Models\CategoryTranslation;
+use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -23,14 +24,33 @@ class Category extends BaseSitemap
     public function optionalTags(): array
     {
         $lastmod = Carbon::today();
-        $categories = $this->getModel()->sortByDesc('updated_at');
+        $latestCategoryTranslation = CategoryTranslation::select([
+                'category_id',
+                'updated_at',
+            ])
+            ->with([
+                'category.posts' => function ($query) {
+                    $table = Post::getTableName();
 
-        if (!$categories->isEmpty()) {
-            $lastmod = $categories->first()->updated_at;
-            $updatedAtTranslation = $categories->first()->translations->first()->updated_at ?? null;
+                    $query
+                        ->select([
+                            "$table.updated_at",
+                        ])
+                        ->published()
+                        ->orderBy("$table.updated_at", 'asc');
+                }
+            ])
+            ->inLanguages([$this->locale])
+            ->orderBy('updated_at', 'asc')
+            ->first();
 
-            if ($updatedAtTranslation && $updatedAtTranslation->gt($lastmod)) {
-                $lastmod = $updatedAtTranslation;
+        if ($latestCategoryTranslation) {
+            $lastmod = $latestCategoryTranslation->updated_at;
+            $updatedAtPost = $latestCategoryTranslation->category->posts->last()->updated_at
+                ?? null;
+
+            if ($updatedAtPost && $updatedAtPost->gt($lastmod)) {
+                $lastmod = $updatedAtPost;
             }
         }
 
