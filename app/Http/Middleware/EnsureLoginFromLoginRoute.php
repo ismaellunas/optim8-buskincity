@@ -18,13 +18,10 @@ class EnsureLoginFromLoginRoute
      */
     public function handle(Request $request, Closure $next)
     {
-        if (! $request->expectsJson() && LoginService::hasHomeUrl()) {
-
-            if (LoginService::isUserHomeUrl()) {
-                return $next($request);
-            } else {
-                return redirect(LoginService::getHomeUrl());
-            }
+        if (LoginService::hasHomeUrl() && LoginService::isUserHomeUrl()) {
+            return $next($request);
+        } else if (! $request->expectsJson()) {
+            return redirect(LoginService::getHomeUrl());
         }
 
         abort(Response::HTTP_UNAUTHORIZED);
