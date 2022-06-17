@@ -102,12 +102,12 @@
 
         emits: [
             'update:modelValue',
+            'update:title',
+            'update:slug',
             'update:excerpt',
             'update:meta_description',
             'update:meta_title',
-            'update:slug',
             'update:status',
-            'update:title',
         ],
 
         setup(props, { emit }) {
