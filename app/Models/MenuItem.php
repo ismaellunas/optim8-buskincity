@@ -34,12 +34,22 @@ class MenuItem extends BaseModel
     const TYPE_PAGE = 2;
     const TYPE_POST = 3;
     const TYPE_CATEGORY = 4;
+    const TYPE_SEGMENT = 5;
     const TYPE_VALUES = [
         self::TYPE_URL => 'Url',
         self::TYPE_PAGE => 'Page',
         self::TYPE_POST => 'Post',
         self::TYPE_CATEGORY => 'Category',
     ];
+
+    public static function getAllTypeValues(): array
+    {
+        $typeValues = self::TYPE_VALUES;
+
+        $typeValues[self::TYPE_SEGMENT] = 'Segment';
+
+        return $typeValues;
+    }
 
     // Relation
     public function menu()

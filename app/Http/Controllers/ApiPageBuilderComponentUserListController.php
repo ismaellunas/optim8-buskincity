@@ -35,6 +35,7 @@ class ApiPageBuilderComponentUserListController extends Controller
             ->when($orderBy, function($q, $orderBy) {
                 $this->orderBy($q, $orderBy);
             })
+            ->hasPermissionNames(['public_page.profile'])
             ->with([
                 'metas' => function ($q) use ($metaKeys) {
                     $q->whereIn('key', $metaKeys);

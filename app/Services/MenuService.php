@@ -13,6 +13,11 @@ use App\Models\{
     Role,
     User,
 };
+use App\Services\{
+    LanguageService,
+    LoginService,
+    TranslationService,
+};
 use Illuminate\Http\Request;
 use App\Entities\Caches\{
     MenuCache,
@@ -39,7 +44,9 @@ class MenuService
 
     private function getTypeMenuClass(string $type)
     {
-        return "\\App\\Entities\\Menus\\".MenuItem::TYPE_VALUES[$type]."Menu";
+        $typeValues = MenuItem::getAllTypeValues();
+
+        return "\\App\\Entities\\Menus\\".$typeValues[$type]."Menu";
     }
 
     private function createStructuredMenus(
@@ -98,22 +105,54 @@ class MenuService
     private function menuArrayFormatter(Collection $typedMenus)
     {
         $menus = [];
+
         foreach ($typedMenus as $menu) {
             $menuItem = $menu->getModel();
-            $menuItem['link'] = $menu->getUrl();
-            $menuItem['target'] = $menu->getTarget();
-            $menuItem['isInternalLink'] = $menu->isInternalLink($menuItem['link']);
+            $children = $menu->children ?? collect([]);
 
-            $menuItem['children'] = [];
-            if (!empty($menu->children)) {
-                $menuItem['children'] = $this->menuArrayFormatter(
-                    $menu->children
-                );
-            }
+            $this->menuItemArrayFormater(
+                $menuItem,
+                $menu,
+                $this->menuArrayFormatter($children)
+            );
 
             $menus[] = $menuItem;
         }
+
         return $menus;
+    }
+
+    private function frontendMenuArrayFormater(Collection $typedMenus): array
+    {
+        $menus = [];
+
+        foreach ($typedMenus as $menu) {
+            $menuItem = [];
+            $children = $menu->children ?? collect([]);
+
+            $this->menuItemArrayFormater(
+                $menuItem,
+                $menu,
+                $this->frontendMenuArrayFormater($children)
+            );
+
+            $menus[] = $menuItem;
+        }
+
+        return $menus;
+    }
+
+    private function menuItemArrayFormater(
+        &$menuItem,
+        $menu,
+        $children
+    ): void {
+        $menuItem['title'] = $menu->title;
+        $menuItem['link'] = $menu->getUrl();
+        $menuItem['target'] = $menu->getTarget();
+        $menuItem['isActive'] = $menu->isActive(request()->url());
+        $menuItem['isInternalLink'] = $menu->isInternalLink($menuItem['link']);
+        $menuItem['children'] = $children;
     }
 
     public function getFooterMenus(array $locales = []): array
@@ -369,59 +408,85 @@ class MenuService
         $user = $request->user();
 
         $menuLogo = [
-            'title' => 'Dashboard',
-            'link' => route('dashboard'),
+            'title' => 'Homepage',
+            'link' => route('homepage'),
         ];
 
-        $menus = [
-            'dashboard' => [
-                'title' => 'Home',
-                'link' => route('dashboard'),
-                'isActive' => $request->routeIs('dashboard'),
-                'isEnabled' => true,
-            ],
-            'street_performers' => [
-                'title' => 'Street Performers',
-                'link' => '#',
-                'isActive' => false,
-                'isEnabled' => true,
-            ],
-            'blog' => [
-                'title' => 'Blog',
-                'link' => '#',
-                'isActive' => false,
-                'isEnabled' => true,
-            ],
-            'about' => [
-                'title' => 'About',
-                'link' => '#',
-                'isActive' => false,
-                'isEnabled' => true,
-            ],
-        ];
+        $dropdownRightMenus = [];
+        $language = app(LanguageService::class)->getOriginLanguageFromCookie();
 
-        $dropdownRightMenus = [
-            [
-                'title' => 'Dashboard',
-                'link' => route('dashboard'),
-                'isEnabled' => true,
-            ],
-            [
-                'title' => 'Payments',
-                'link' => route('payments.index'),
-                'isEnabled' => $user->can('payment.management'),
-            ],
-            [
-                'title' => 'Profile',
-                'link' => route('user.profile.show'),
-                'isEnabled' => true,
-            ],
-        ];
+        if ($user) {
+            $language =  $user->languageCode;
+
+            if (LoginService::isAdminHomeUrl()) {
+                $dropdownRightMenus = [
+                    [
+                        'title' => 'Dashboard',
+                        'link' => route('admin.dashboard'),
+                        'isEnabled' => true,
+                    ],
+                    [
+                        'title' => 'Profile',
+                        'link' => route('admin.profile.show'),
+                        'isEnabled' => true,
+                    ],
+                ];
+            } else {
+                $dropdownRightMenus = [
+                    [
+                        'title' => 'Dashboard',
+                        'link' => route('dashboard'),
+                        'isEnabled' => true,
+                    ],
+                    [
+                        'title' => 'Payments',
+                        'link' => route('payments.index'),
+                        'isEnabled' => $user->can('payment.management'),
+                    ],
+                    [
+                        'title' => 'Profile',
+                        'link' => route('user.profile.show'),
+                        'isEnabled' => true,
+                    ],
+                ];
+            }
+        }
+
+        $headerMenu = $this->getHeaderMenu($language);
+
+        if ($headerMenu->isEmpty()) {
+            $headerMenu = $this->getHeaderMenu(
+                app(TranslationService::class)->getDefaultLocale()
+            );
+        }
 
         return [
-            'nav' => $menus,
+            'nav' => $this->frontendMenuArrayFormater($headerMenu),
             'navLogo' => $menuLogo,
             'dropdownRightMenus' => $dropdownRightMenus,
+        ];
+    }
+
+    public function getFrontendUserFooterMenus(Request $request): array
+    {
+        $user = $request->user();
+
+        $language = app(LanguageService::class)->getOriginLanguageFromCookie();
+
+        if ($user) {
+            $language =  $user->languageCode;
+        }
+
+        $footerMenu = $this->getFooterMenu($language);
+
+        if ($footerMenu->isEmpty()) {
+            $footerMenu = $this->getFooterMenu(
+                app(TranslationService::class)->getDefaultLocale()
+            );
+        }
+
+        return [
+            'nav' => $this->frontendMenuArrayFormater($footerMenu),
         ];
     }
 

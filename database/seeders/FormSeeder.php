@@ -153,20 +153,11 @@ class FormSeeder extends Seeder
             "locations" => [
                 [
                     "name" => 'admin.profile.show',
-                    "visibility" => [
-                        "roles" => [
-                            "Performer"
-                        ]
-                    ]
+                    "visibility" => []
                 ],
                 [
                     "name" => 'admin.users.edit',
-                    "visibility" => [
-                        "roles" => [
-                            "Super Administrator",
-                            "Administrator"
-                        ]
-                    ]
+                    "visibility" => []
                 ],
             ],
             "fields" => [
@@ -190,7 +181,7 @@ class FormSeeder extends Seeder
                     "label" => "Address",
                     "placeholder" => "Street address",
                     "note" => null,
-                    "default_value" => [],
+                    "default_value" => "",
                     "readonly" => false,
                     "disabled" => false,
                     "maxlength" => "",
@@ -201,7 +192,7 @@ class FormSeeder extends Seeder
                         "messages" => []
                     ],
                     "visibility" => [],
-                    "translated" => true,
+                    "translated" => false,
                 ],
                 "city" => [
                     "type" => "Text",

@@ -27,6 +27,7 @@ if (theme) {
         */
         .sass('resources/sass/app.sass', 'public/css')
         .css('resources/css/template.css', 'public/css')
+        .js(['resources/js/bulma.js'], 'public/js/frontend-misc.js')
         .alias({
             '@': path.join(__dirname, 'resources/js')
         });
