@@ -1,7 +1,7 @@
 <nav class="navbar has-shadow is-fixed-top" role="navigation" aria-label="main navigation">
     <div class="container">
         <div class="navbar-brand">
-            <a class="navbar-item" href="{{ route('homepage') }}">
+            <a class="navbar-item" href="{{ $menus['navLogo']['link'] }}">
                 <img src="{{ $logo }}">
             </a>
 
@@ -14,23 +14,23 @@
 
         <div id="navbarExampleTransparentExample" class="navbar-menu">
             <div class="navbar-start">
-                @foreach ($menus as $menu)
-                    @if ($menu->children)
+                @foreach ($menus['nav'] as $menu)
+                    @if ($menu['children'])
                         <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
                             <a class="navbar-link">
-                                {{ $menu->title }}
+                                {{ $menu['title'] }}
                             </a>
                             <div class="navbar-dropdown">
-                                @foreach ($menu->children as $childMenu)
+                                @foreach ($menu['children'] as $childMenu)
                                     <a
                                         @class([
                                             'navbar-item',
-                                            'has-text-primary' => $childMenu->isActive(request()->url()),
+                                            'has-text-primary' => $childMenu['isActive'],
                                         ])
-                                        href="{{ $childMenu->getUrl() }}"
-                                        target="{{ $childMenu->getTarget() }}"
+                                        href="{{ $childMenu['link'] }}"
+                                        target="{{ $childMenu['target'] }}"
                                     >
-                                        {{ $childMenu->title }}
+                                        {{ $childMenu['title'] }}
                                     </a>
                                 @endforeach
                             </div>
@@ -39,47 +39,33 @@
                         <a
                             @class([
                                 'navbar-item',
-                                'has-text-primary' => $menu->isActive(request()->url()),
+                                'has-text-primary' => $menu['isActive'],
                             ])
-                            href="{{ $menu->getUrl() }}"
-                            target="{{ $menu->getTarget() }}"
+                            href="{{ $menu['link'] }}"
+                            target="{{ $menu['target'] }}"
                         >
-                            {{ $menu->title }}
+                            {{ $menu['title'] }}
                         </a>
                     @endif
                 @endforeach
             </div>
 
             <div class="navbar-end">
+                @guest
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a href="#" class="navbar-link">{{ strtoupper($currentLanguage) }}</a>
                     <div class="navbar-dropdown">
                         @foreach ($languageOptions as $language)
                             <a
                                 class="navbar-item"
-                                href="{{ route('language.change', $language['id']) }}"
+                                href="{{ LaravelLocalization::localizeURL(route('language.change', $language['id'])) }}"
                             >
                                 {{ strtoupper($language['id']) }}
                             </a>
                         @endforeach
                     </div>
                 </div>
-
-                @auth
-                    <div class="navbar-item">
-                        <div class="buttons">
-                            <a href="{{ $dashboardUrl }}" class="button is-primary">
-                                <span class="has-text-weight-bold">{{ __("Dashboard") }}</span>
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST">
-                                {{ csrf_field() }}
-                                <button class="button is-light">
-                                    <span class="has-text-weight-bold">{{ __("Logout") }}</span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                @endauth
+                @endguest
 
                 @guest
                     <div class="navbar-item">
@@ -93,7 +79,50 @@
                         </div>
                     </div>
                 @endguest
+
+                @auth
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            {{ auth()->user()->full_name }}
+                        </a>
+
+                        <div class="navbar-dropdown is-right">
+                            @foreach ($menus['dropdownRightMenus'] as $menu)
+                                @if ($menu['isEnabled'])
+                                    <a
+                                        class="navbar-item"
+                                        href="{{ $menu['link'] }}"
+                                    >
+                                        {{ $menu['title'] }}
+                                    </a>
+                                @endif
+                            @endforeach
+
+                            <hr class="navbar-divider">
+
+                            <form
+                                id="form-logout"
+                                method="POST"
+                                action="{{ route('logout') }}"
+                            >
+                                @csrf
+                                <a class="navbar-item" onclick="onLogout(event)">
+                                    Logout
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                @endauth
             </div>
         </div>
     </div>
 </nav>
+
+@push('bottom_scripts')
+<script>
+    function onLogout(e) {
+        e.preventDefault();
+        document.getElementById('form-logout').submit();
+    }
+</script>
+@endpush

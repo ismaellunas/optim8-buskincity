@@ -54,6 +54,10 @@ class CategoryController extends CrudController
         return Inertia::render('Category/Create', [
             'record' => new $this->model,
             'baseRoute' => $this->baseRouteName,
+            'maxLength' => [
+                'meta_title' => config('constants.max_length.meta_title'),
+                'meta_description' => config('constants.max_length.meta_description'),
+            ],
         ]);
     }
 
@@ -80,6 +84,10 @@ class CategoryController extends CrudController
         return Inertia::render('Category/Edit', [
             'record' => $category,
             'baseRoute' => $this->baseRouteName,
+            'maxLength' => [
+                'meta_title' => config('constants.max_length.meta_title'),
+                'meta_description' => config('constants.max_length.meta_description'),
+            ],
         ]);
     }
 

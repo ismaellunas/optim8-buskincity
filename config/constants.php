@@ -119,6 +119,7 @@ return [
             'pagination' => 'Pagination',
             'passwords' => 'Password',
             'validation' => 'Validation',
+            'routes' => 'Routes',
         ]
     ],
     'setting_cache' => [
@@ -147,6 +148,11 @@ return [
     ],
 
     'profile_photo_path' => '/images/profile-picture-default.png',
+
+    'max_length' => [
+        'meta_description' => 160,
+        'meta_title' => 80,
+    ],
 
     /*
     |--------------------------------------------------------------------------

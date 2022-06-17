@@ -29,6 +29,6 @@ class UserEditLocation extends UserProfileLocation
             }
         }
 
-        return false;
+        return true;
     }
 }
