@@ -128,17 +128,11 @@ class TranslationManagerController extends CrudController
         $this->translationManagerService->batchUpdate($translations);
 
         $translation = collect($translations)->first();
-        $groups = collect($translations)
-            ->groupBy('group')
-            ->keys();
 
         if ($translation) {
-            $groups->each(function ($group) use ($translation) {
-                $this->translationCache->flushGroup(
-                    $translation['locale'],
-                    $group
-                );
-            });
+            $this->translationCache->flushLocale(
+                $translation['locale'],
+            );
         }
 
         $this->generateFlashMessage('Translation updated successfully!');

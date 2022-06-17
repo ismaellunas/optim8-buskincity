@@ -5,6 +5,10 @@
         {{ $user->fullName }}
     </x-slot>
 
+    <x-slot name="metaDescription">
+        {{ $userProfile->getMeta('short_bio', $locale) ?? __('Public profile.') }}
+    </x-slot>
+
     <div class="b752-public-profile section is-small">
         <div class="container">
             <div class="columns is-multiline is-centered">
