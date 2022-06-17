@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Support\Str;
-use App\Services\TranslationService;
+use App\Helpers\StringManipulator;
+use App\Models\PageTranslation;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Validation\Rule;
 
@@ -41,6 +41,14 @@ class PageRequest extends BaseFormRequest
                     })
                     ->ignore($inputs['id'])
             ],
+            '%meta_title%' => [
+                'sometimes',
+                'max:'.config('constants.max_length.meta_title'),
+            ],
+            '%meta_description%' => [
+                'sometimes',
+                'max:'.config('constants.max_length.meta_description'),
+            ],
         ]);
     }
 
@@ -48,15 +56,13 @@ class PageRequest extends BaseFormRequest
     {
         $translatedAttributes = [];
         $locales = array_keys($this->all());
-        $attributes = ['title', 'slug'];
+
+        $attributes = (new PageTranslation())->getFillable();
 
         foreach ($locales as $locale) {
             foreach ($attributes as $attribute) {
                 $attributeKey = $locale.'.'.$attribute;
-                $translatedAttributes[$attributeKey] = (
-                    Str::title($attribute).
-                    " (".TranslationService::getLanguageFromLocale($locale).")"
-                );
+                $translatedAttributes[$attributeKey] = StringManipulator::snakeToTitle($attribute);
             }
         }
 

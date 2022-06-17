@@ -1,5 +1,8 @@
 <template>
-    <div class="modal is-active">
+    <div
+        class="modal"
+        :class="{'is-active': isActive}"
+    >
         <div class="modal-background" />
         <div
             class="modal-content"
@@ -17,11 +20,53 @@
 </template>
 
 <script>
+    import { ref, onMounted, onUnmounted } from 'vue';
+    import { isEmpty } from 'lodash';
+
     export default {
-        emits: ['close'],
         props: {
             contentClass: [Array, Object, String],
+            isActive: {type: Boolean, default: true},
             isCloseHidden: {type: Boolean, default: false},
         },
-    }
+
+        emits: ['close'],
+
+        setup(props, { emit }) {
+            const clickListener = function (event) {
+                const path = event.path || (event.composedPath && event.composedPath());
+                if (path) {
+                    const isFound = path.find((elm) => {
+                        if (!isEmpty(elm.classList)) {
+                            return (
+                                elm.classList.value.includes('modal-background')
+                                || elm.classList.value.includes('modal-close')
+                                || (
+                                    elm.classList.value.includes('modal-card-head')
+                                    && elm.classList.value.includes('delete')
+                                )
+                                || (
+                                    elm.classList.value.includes('modal-card-foot')
+                                    && elm.classList.value.includes('button')
+                                )
+                            );
+                        }
+                        return false;
+                    })
+
+                    if (isFound !== undefined) {
+                        emit('close');
+                    }
+                }
+            }
+
+            onMounted(() => {
+                window.addEventListener("click", clickListener);
+            });
+
+            onUnmounted(() => {
+                window.removeEventListener("click", clickListener);
+            });
+        }
+    };
 </script>

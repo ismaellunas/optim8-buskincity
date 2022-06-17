@@ -235,9 +235,10 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
         'Cloudinary' => CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::class,
         'GeoIP' => \Torann\GeoIP\Facades\GeoIP::class,
+        'OEmbed' => Cohensive\OEmbed\Facades\OEmbed::class,
     ],
 
 ];

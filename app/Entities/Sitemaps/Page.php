@@ -5,6 +5,7 @@ namespace App\Entities\Sitemaps;
 use App\Models\Page as PageModel;
 use App\Models\PageTranslation;
 use App\Services\SettingService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
@@ -15,15 +16,9 @@ class Page extends BaseSitemap
 {
     public function urls(): array|Collection
     {
-        $locale = $this->locale;
-
-        $urls = PageTranslation::inLanguages([$locale])
-            ->published()
+        $urls = $this->getEloquentBuilder()
             ->orderBy('slug')
-            ->get([
-                'slug',
-                'updated_at',
-            ])
+            ->get()
             ->map(function ($page) {
                 return $this->createUrlTag($page);
             });
@@ -31,6 +26,35 @@ class Page extends BaseSitemap
         $urls->prepend($this->homePageSitemapUrlTag());
 
         return $urls;
+    }
+
+    public function optionalTags(): array
+    {
+        $lastmod = Carbon::today();
+        $latestPageTranslation = $this->getEloquentBuilder()
+            ->orderBy('updated_at', 'desc')
+            ->first();
+
+        if ($latestPageTranslation) {
+            $lastmod = $latestPageTranslation->updated_at;
+        }
+
+        return array_merge(
+            parent::optionalTags(),
+            [
+                'lastmod' => $lastmod,
+            ]
+        );
+    }
+
+    private function getEloquentBuilder(): Builder
+    {
+        return PageTranslation::select([
+                'slug',
+                'updated_at',
+            ])
+            ->inLanguages([$this->locale])
+            ->published();
     }
 
     private function createUrlTag(PageTranslation $pageTranslation): UrlTag
