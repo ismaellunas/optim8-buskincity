@@ -6,6 +6,8 @@ use App\Entities\LifetimeCookie;
 use App\Helpers\Url;
 use App\Services\TranslationService as TranslationSv;
 use Illuminate\Support\Str;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ChangeLanguageController extends Controller
 {
@@ -19,47 +21,69 @@ class ChangeLanguageController extends Controller
         $url = url()->previous();
         $defaultLocale = TranslationSv::getDefaultLocale();
 
-        if ($newLocale === $defaultLocale) {
-            $newLocale = "";
-        }
-
         app(LifetimeCookie::class)->set(
             'origin_language',
             $newLocale != '' ? $newLocale : $defaultLocale
         );
 
         if (!empty($url)) {
-            $url = $this->removeLocaleFromUrl($url);
-            $route = app('router')->getRoutes($url)->match(app('request')->create($url));
+            $removedLocaleUrl = $this->removeLocaleFromUrl($url);
+
+            $prevRouteName = null;
+            $prevParams = [];
+
+            try {
+                $route = app('router')
+                    ->getRoutes($removedLocaleUrl)
+                    ->match(app('request')->create($removedLocaleUrl));
+
+            } catch (NotFoundHttpException $e){
+                $route = app('router')
+                    ->getRoutes($url)
+                    ->match(app('request')->create($url));
+            }
+
+            $prevParams = $route->parameters;
+
             $prevRouteName = $route->getName();
 
             if (empty($prevRouteName)) {
                 return redirect('/'.$newLocale);
-            }
+            };
 
-            $prevParams = $route->parameters;
-            $url = $this->appendLocaleToUrl(
+            $this->transformParams($prevParams, $prevRouteName);
+
+            $url = LaravelLocalization::getURLFromRouteNameTranslated(
                 $newLocale,
-                route($prevRouteName, $prevParams)
+                $prevRouteName,
+                $prevParams
             );
+            try {
+                $url = LaravelLocalization::getURLFromRouteNameTranslated(
+                    $newLocale,
+                    $prevRouteName,
+                    $prevParams
+                );
+
+                $unTranslatedRoutes = [
+                    'homepage',
+                    'frontend.pages.show',
+                ];
+
+                if (in_array($prevRouteName, $unTranslatedRoutes)) {
+                    app('router')
+                        ->getRoutes($url)
+                        ->match(app('request')->create($url));
+                }
+
+            } catch (NotFoundHttpException $e){
+                $url = route($prevRouteName, $prevParams);
+            }
 
             return redirect($url);
         }
 
         return redirect('/'.$newLocale);
-    }
-
-    private function appendLocaleToUrl(
-        ?string $locale,
-        string $url
-    ): string {
-        $uriPath = Url::getPath($url);
-
-        if ($locale == "") {
-            return $url;
-        }
-
-        return config('app.url')."/".$locale.$uriPath;
     }
 
     private function removeLocaleFromUrl(string $url): string
@@ -73,5 +97,13 @@ class ChangeLanguageController extends Controller
         }
 
         return config('app.url').$uriPath;
+    }
+
+    private function transformParams(&$prevParams, $prevRouteName): void
+    {
+        if ($prevRouteName == 'frontend.profile') {
+            $prevParams['user:unique_key'] = $prevParams['user'];
+            unset($prevParams['user']);
+        }
     }
 }

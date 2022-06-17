@@ -119,6 +119,7 @@ return [
             'pagination' => 'Pagination',
             'passwords' => 'Password',
             'validation' => 'Validation',
+            'routes' => 'Routes',
         ]
     ],
     'setting_cache' => [

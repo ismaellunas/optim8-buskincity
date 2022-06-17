@@ -58,7 +58,7 @@
                         @foreach ($languageOptions as $language)
                             <a
                                 class="navbar-item"
-                                href="{{ route('language.change', $language['id']) }}"
+                                href="{{ LaravelLocalization::localizeURL(route('language.change', $language['id'])) }}"
                             >
                                 {{ strtoupper($language['id']) }}
                             </a>
