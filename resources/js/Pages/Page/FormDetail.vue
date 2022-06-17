@@ -100,7 +100,15 @@
             'selectedLocale',
         ],
 
-        emits: ['update:modelValue'],
+        emits: [
+            'update:modelValue',
+            'update:title',
+            'update:slug',
+            'update:excerpt',
+            'update:meta_description',
+            'update:meta_title',
+            'update:status',
+        ],
 
         setup(props, { emit }) {
             return {
