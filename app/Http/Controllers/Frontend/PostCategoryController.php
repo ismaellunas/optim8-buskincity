@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Services\PostService;
 use App\Services\TranslationService;
 use Illuminate\Http\Request;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class PostCategoryController extends Controller
 {
@@ -43,14 +44,19 @@ class PostCategoryController extends Controller
         } else {
             $newCategoryTranslation = $category->translate($locale);
 
+            $url = LaravelLocalization::getURLFromRouteNameTranslated(
+                $locale,
+                'routes.blog.category.index',
+                ['category_translation' => $newCategoryTranslation->slug],
+                true
+            );
+
             if ($newCategoryTranslation->slug !== $categoryTranslation->slug) {
-                return redirect()->route($this->baseRouteName.'.index', [
-                    $newCategoryTranslation->slug
-                ]);
+                return redirect($url);
             }
 
             return view('posts', [
-                'searchRoute' => route($this->baseRouteName.'.index', $newCategoryTranslation->slug),
+                'searchRoute' => $url,
                 'pageQueryParams' => array_filter($request->only('term', 'view', 'status')),
                 'metaTitle' => (
                     $newCategoryTranslation->meta_title

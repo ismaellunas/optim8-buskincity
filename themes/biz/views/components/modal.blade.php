@@ -1,12 +1,6 @@
-<div id="{{ $id }}" class="modal">
+<div id="{{ $id }}" {{ $attributes->merge(['class' => 'modal']) }}>
     <div class="modal-background"></div>
-    <div class="modal-content {{ $modalContentClass }}">
-        <div class="card">
-            <div class="card-content">
-                {{ $slot }}
-            </div>
-        </div>
-    </div>
+    {{ $slot }}
     <button class="modal-close is-large" aria-label="close" onclick="modalClose()"></button>
 </div>
 
