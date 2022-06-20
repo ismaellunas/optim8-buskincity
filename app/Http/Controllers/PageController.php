@@ -72,7 +72,7 @@ class PageController extends CrudController
                     'edit' => $user->can('media.edit'),
                     'add' => $user->can('media.add'),
                     'delete' => $user->can('media.delete'),
-                ]
+                ],
             ],
             'page' => new $this->model,
             'statusOptions' => $this->model::getStatusOptions(),
@@ -149,7 +149,10 @@ class PageController extends CrudController
                     'edit' => $user->can('media.edit'),
                     'add' => $user->can('media.add'),
                     'delete' => $user->can('media.delete'),
-                ]
+                ],
+                'page' => [
+                    'read' => $user->can('page.read'),
+                ],
             ],
             'page' => $page,
             'entityId' => $page->id,
