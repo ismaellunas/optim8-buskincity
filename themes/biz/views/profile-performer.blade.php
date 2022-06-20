@@ -91,7 +91,10 @@
                             <h2 class="title is-3">Gallery</h2>
                         </div>
                         <div class="column is-5">
-                            @if ($userProfile->getMeta('promotional_video'))
+                            @if (
+                                $userProfile->getMeta('promotional_video')
+                                && OEmbed::get($userProfile->getMeta('promotional_video'))
+                            )
                                 <figure class="image is-16by9">
                                     {!! OEmbed::get($userProfile->getMeta('promotional_video'))->html(['class' => 'has-ratio']) !!}
                                 </figure>
