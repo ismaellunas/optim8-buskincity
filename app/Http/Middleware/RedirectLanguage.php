@@ -5,7 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Services\{
     LanguageService,
-    TranslationService
+    LoginService,
+    TranslationService,
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -24,7 +25,10 @@ class RedirectLanguage
         $path = $this->setPath($request->path());
         $redirect = $this->setRedirect($path);
 
-        if ($path != $redirect) {
+        if (
+            $path != $redirect
+            && !(LoginService::hasHomeUrl() && LoginService::isAdminHomeUrl())
+        ) {
             return redirect($redirect);
         } else {
             return $next($request);
