@@ -1,5 +1,22 @@
 <template>
     <div>
+        <div
+            v-if="pagePreview"
+            class="columns"
+        >
+            <div class="column">
+                <p class="buttons is-pulled-right">
+                    <biz-button-icon
+                        icon="fa-solid fa-arrow-up-right-from-square"
+                        :disabled="isDirty"
+                        @click="openShow(modelValue)"
+                    >
+                        <span>Page Preview</span>
+                    </biz-button-icon>
+                </p>
+            </div>
+        </div>
+
         <div class="columns my-0">
             <div class="column py-0">
                 <p class="buttons is-pulled-right">
@@ -75,6 +92,7 @@
     import FormBuilder from './FormBuilder';
     import FormDetail from './FormDetail';
     import BizButton from '@/Biz/Button';
+    import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
@@ -87,23 +105,33 @@
             FormBuilder,
             FormDetail,
             BizButton,
+            BizButtonIcon,
             BizButtonLink,
             BizProvideInjectTab,
             BizProvideInjectTabs,
         },
+
         props: {
             can: { type: Object, required: true },
+            contentConfigId: { type: String, default: "" },
             errors: { type: Object, default:() => {} },
+            isDirty: { type: Boolean, default: false },
             isEditMode: { type: Boolean, default: true },
             isNew: { type: Boolean, required: true },
+            localeOptions: { type: Array, default:() => [] },
+            modelValue: { type: Object, required: true },
+            pagePreview: { type: Boolean, default: false },
+            selectedLocale: { type: String, required: true },
             statusOptions: { type: Array, default:() => [] },
             tabActive: { type: [Boolean, null, String], default: null },
-            modelValue: { type: Object, required: true },
-            localeOptions: { type: Array, default:() => [] },
-            selectedLocale: { type: String, required: true },
-            contentConfigId: { type: String, default: "" },
         },
-        emits: ['change-locale', 'on-submit', 'update:contentConfigId'],
+
+        emits: [
+            'change-locale',
+            'on-submit',
+            'update:contentConfigId'
+        ],
+
         setup(props, { emit }) {
             let activeTab = null;
 
@@ -124,12 +152,43 @@
                 activeTab,
                 form: useModelWrapper(props, emit),
                 contentConfig: useModelWrapper(props, emit, 'contentConfigId'),
+                defaultLocale: usePage().props.value.defaultLanguage,
             };
         },
+
         data() {
             return {
                 disableInput: false,
             };
-        }
+        },
+
+        methods: {
+            openShow(page) {
+                if (
+                    this.can.page.read
+                    && !this.isDirty
+                ) {
+                    let showUrl = this.getShowUrl(this.selectedLocale, page);
+
+                    window.open(showUrl, "_blank");
+                }
+            },
+
+            getShowUrl(locale, page) {
+                let showUrl = null;
+                let defaultUrl = route('frontend.pages.show', {
+                    page_translation: page.slug
+                });
+                let url = new URL(defaultUrl);
+
+                if (locale !== this.defaultLocale) {
+                    showUrl = defaultUrl.replace(url.pathname, "/"+locale+url.pathname);
+                } else {
+                    showUrl = defaultUrl;
+                }
+
+                return showUrl;
+            }
+        },
     }
 </script>

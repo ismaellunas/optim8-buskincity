@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use App\Models\PageTranslation;
-use App\Services\PageService;
+use App\Services\{
+    PageService,
+    SettingService,
+};
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
@@ -105,5 +108,16 @@ class Page extends Model implements TranslatableContract
         }
 
         return $languages->all();
+    }
+
+    public function getIsHomePageAttribute(): bool
+    {
+        $homePageId = app(SettingService::class)->getHomePage();
+
+        if (!$homePageId) {
+            return false;
+        }
+
+        return $this->id == $homePageId;
     }
 }

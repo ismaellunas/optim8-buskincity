@@ -122,6 +122,10 @@ class PageController extends Controller
                 ]);
             }
 
+            if ($newPageTranslation->page->isHomePage) {
+                return $this->redirectFallback();
+            }
+
             return view('page', [
                 'currentLanguage' => $locale,
                 'images' => $this->getPageImages($newPageTranslation),
