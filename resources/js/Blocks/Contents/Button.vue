@@ -2,6 +2,7 @@
     <div>
         <biz-toolbar-content
             @delete-content="deleteContent"
+            @duplicate-content="duplicateContent"
         />
 
         <a
@@ -56,6 +57,7 @@
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
+    import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinHasModal from '@/Mixins/HasModal';
     import fontawesomeAllClasses from '@/Json/fontawesome-all-classes';
     import BizIconBrowser from '@/Biz/Modal/IconBrowser';
@@ -73,6 +75,7 @@
 
         mixins: [
             DeletableContentMixin,
+            MixinDuplicableContent,
             MixinHasModal,
         ],
 

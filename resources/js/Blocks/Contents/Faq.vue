@@ -2,6 +2,7 @@
     <div>
         <biz-toolbar-content
             @delete-content="deleteContent"
+            @duplicate-content="duplicateContent"
         />
         <component
             :is="headingTag"
@@ -18,7 +19,8 @@
 </template>
 
 <script>
-    import DeletableContentMixin from '@/Mixins/DeletableContent';
+    import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizTinymce from '@/Biz/EditorTinymce';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import FaqQuestionAnswer from '@/Blocks/Contents/Faq/QuestionAnswer';
@@ -33,7 +35,8 @@
             FaqQuestionAnswer,
         },
         mixins: [
-            DeletableContentMixin,
+            MixinDeletableContent,
+            MixinDuplicableContent
         ],
         props: {
             id: {type: String, default: null},
