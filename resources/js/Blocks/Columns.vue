@@ -41,6 +41,17 @@
                     <biz-button
                         type="button"
                         class="is-small"
+                        @click="duplicateBlock"
+                    >
+                        <span class="icon">
+                            <i class="fas fa-copy" />
+                        </span>
+                    </biz-button>
+                </p>
+                <p class="control">
+                    <biz-button
+                        type="button"
+                        class="is-small"
                         @click="deleteBlock"
                     >
                         <span class="icon">
@@ -79,33 +90,41 @@
 </template>
 
 <script>
-    import BlockColumn from '@/Blocks/Column';
-    import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import BizButton from '@/Biz/Button';
     import BizSelect from '@/Biz/Select';
+    import BlockColumn from '@/Blocks/Column';
+    import EditModeComponentMixin from '@/Mixins/EditModeComponent';
+    import { confirm, confirmDelete } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         components: {
-            BlockColumn,
             BizButton,
             BizSelect,
+            BlockColumn,
         },
-        mixins: [EditModeComponentMixin],
+
+        mixins: [
+            EditModeComponentMixin
+        ],
+
         props: {
-            can: Object,
-            dataEntities: {},
-            dataMedia: {},
-            id: {},
-            isEditMode: {default: false},
-            modelValue: {},
-            selectedLocale: String,
+            can: { type: Object, required: true },
+            dataEntities: { type: Object, default: () => {} },
+            dataMedia: { type: Array, default: () => [] },
+            id: { type: String, required: true },
+            isEditMode: { type: Boolean, default: false },
+            modelValue: { type: Object, required: true },
+            selectedLocale: { type: String, required: true },
         },
+
         emits: [
             'delete-block',
-            'setting-content'
+            'duplicate-block',
+            'setting-content',
         ],
+
         setup(props, { emit }) {
             return {
                 block: useModelWrapper(props, emit),
@@ -113,13 +132,15 @@
                 media: useModelWrapper(props, emit, 'dataMedia'),
             };
         },
+
         data() {
             return {
+                columnOptions: [1,2,3,4,5,6],
                 editModeWrapperClass: ['edit-mode-columns'],
                 numberOfColumns: this.block.columns.length,
-                columnOptions: [1,2,3,4,5,6],
             };
         },
+
         computed: {
             wrapperClass() {
                 let wrapperClass = [];
@@ -133,13 +154,18 @@
                 return wrapperClass;
             },
         },
+
         methods: {
             deleteBlock() {
-                const confirmText = 'Are you sure?';
-                if (confirm(confirmText) === true) {
-                    this.$emit('delete-block', this.id)
-                }
+                const self = this;
+
+                confirmDelete().then((result) => {
+                    if (result.isConfirmed) {
+                        self.$emit('delete-block', self.id)
+                    }
+                })
             },
+
             onColumnChange(event) {
                 const numberOfColumns = parseInt(event.target.value);
                 const originalNumberOfColumns = this.block.columns.length;
@@ -164,6 +190,18 @@
                     }
                 }
                 this.numberOfColumns = numberOfColumns;
+            },
+
+            duplicateBlock() {
+                const self = this;
+
+                confirm(
+                    'Duplicate Component?'
+                ).then((result) => {
+                    if (result.isConfirmed) {
+                        self.$emit('duplicate-block', self.id)
+                    }
+                });
             },
         },
     };
