@@ -91,6 +91,7 @@
                         :is-edit-mode="isEditMode"
                         :selected-locale="selectedLocale"
                         @delete-block="deleteBlock"
+                        @duplicate-block="duplicateBlock"
                         @setting-content="settingContent"
                     />
                 </template>
@@ -106,6 +107,7 @@
     import BizComponentConfig from '@/Biz/ComponentConfig';
     import { isBlank, generateElementId, useModelWrapper } from '@/Libs/utils'
     import { createBlock, createColumn } from '@/Libs/page-builder.js';
+    import { cloneDeep } from 'lodash';
 
     export default {
         components: {
@@ -211,9 +213,36 @@
                 const removeIndex = this.data.structures.map(block => block.id).indexOf(id);
                 this.data.structures.splice(removeIndex, 1);
             },
+            duplicateBlock(id) {
+                const duplicateIndex = this.data.structures.map(block => block.id).indexOf(id);
+                const duplicateBlock = cloneDeep(this.data.structures[duplicateIndex]);
+
+                duplicateBlock.id = generateElementId();
+                duplicateBlock.columns.map(column => {
+                    column.id = generateElementId();
+
+                    column.components.map(component => {
+                        const componentId = generateElementId();
+                        const duplicateComponent = cloneDeep(
+                            this.data.entities[component.id]
+                        );
+
+                        component.id = componentId;
+                        duplicateComponent.id = componentId;
+
+                        this.data.entities[componentId] = duplicateComponent;
+
+                        return component;
+                    });
+
+                    return column;
+                });
+
+                this.data.structures.splice( (duplicateIndex + 1), 0, duplicateBlock );
+            },
             settingContent(id) {
                 this.contentConfigId = id;
-            }
+            },
         },
     }
 </script>
