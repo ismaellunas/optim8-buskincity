@@ -12,14 +12,10 @@ export function generateElementId() {
     return 'ID'+uniqueId().substr(0,10);
 };
 
-export function emitModelValue(emit, value, name = 'modelValue') {
-    emit(`update:${name}`, value);
-}
-
 export function useModelWrapper(props, emit, name = 'modelValue') {
     return computed({
         get: () => props[name],
-        set: (value) => emitModelValue(emit, value, name)
+        set: (value) => emit(`update:${name}`, value)
     })
 }
 
