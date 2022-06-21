@@ -113,20 +113,27 @@
             Draggable,
             BizComponentConfig,
         },
+
         props: {
             can: Object,
+            contentConfigId: { type: String, default: "" },
             errors: Object,
             isEditMode: {type: Boolean, default: false},
             modelValue: {type: Object},
-            contentConfigId: {},
             selectedLocale: String,
         },
+
+        emits: [
+            'update:contentConfigId',
+        ],
+
         setup(props, { emit }) {
             return {
                 data: useModelWrapper(props, emit),
-                contentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
+                computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
             };
         },
+
         data() {
             return {
                 isDebugMode: false,
@@ -212,7 +219,7 @@
                 this.data.structures.splice(removeIndex, 1);
             },
             settingContent(id) {
-                this.contentConfigId = id;
+                this.computedContentConfigId = id;
             }
         },
     }
