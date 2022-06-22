@@ -30,6 +30,18 @@ class Category extends BaseSitemap
                         ])
                         ->orderBy("$table.updated_at", 'asc');
                 },
+
+                'posts' => function ($query) {
+                    $table = Post::getTableName();
+
+                    $query
+                        ->select([
+                            "$table.updated_at",
+                        ])
+                        ->published()
+                        ->orderBy("$table.updated_at", 'desc')
+                        ->limit(1);
+                }
             ])
             ->get()
             ->map(function ($category) {
@@ -96,6 +108,12 @@ class Category extends BaseSitemap
 
         if ($updatedAtTranslation && $updatedAtTranslation->gt($lastmod)) {
             $lastmod = $updatedAtTranslation;
+        }
+
+        $updatedAtPost = $category->posts->last()->updated_at ?? null;
+
+        if ($updatedAtPost && $updatedAtPost->gt($lastmod)) {
+            $lastmod = $updatedAtPost;
         }
 
         return new UrlTag(
