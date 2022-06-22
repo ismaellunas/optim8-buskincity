@@ -14,16 +14,16 @@ class Columns implements HasStyleInterface
         $this->data = $data;
     }
 
-    public function getStyleBlocks()
+    public function getStyleBlocks(): array
     {
-        $styleBlocks = collect();
+        $styleBlocks = [];
 
         if (! empty($this->data['config']['wrapper'])) {
             $wrapperConfig = $this->data['config']['wrapper'];
 
             $selector = '#'.$this->data['id'];
 
-            $styles = collect();
+            $styleBlock = new StyleBlock($selector);
 
             if (!empty($wrapperConfig['style.margin'])) {
 
@@ -34,8 +34,8 @@ class Columns implements HasStyleInterface
                 collect($marginsConfig)
                     ->except(['unit'])
                     ->filter(fn ($value) => ($value == "0" || !empty($value)))
-                    ->each(function ($value, $key) use ($styles, $unit) {
-                        $styles->put('margin-'.$key, $value.$unit);
+                    ->each(function ($value, $key) use ($styleBlock, $unit) {
+                        $styleBlock->addStyle('margin-'.$key, $value.$unit);
                     });
             }
 
@@ -48,15 +48,12 @@ class Columns implements HasStyleInterface
                 collect($paddingConfig)
                     ->except(['unit'])
                     ->filter(fn($value) => ($value == "0" || !empty($value)))
-                    ->each(function ($value, $key) use ($styles, $unit) {
-                        $styles->put('padding-'.$key, $value.$unit);
+                    ->each(function ($value, $key) use ($styleBlock, $unit) {
+                        $styleBlock->addStyle('padding-'.$key, $value.$unit);
                     });
             }
 
-            $styleBlocks->put(
-                $selector,
-                $styles->all()
-            );
+            $styleBlocks[] = $styleBlock;
         }
 
         return $styleBlocks;
