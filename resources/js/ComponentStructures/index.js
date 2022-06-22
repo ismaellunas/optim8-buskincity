@@ -1,3 +1,4 @@
+import columns from './columns';
 import button from './button';
 import card from './card';
 import cardText from './card-text';
@@ -11,6 +12,7 @@ import text from './text';
 import userList from './user-list';
 
 export default {
+    columns: columns,
     button: button,
     card: card,
     cardText: cardText,
