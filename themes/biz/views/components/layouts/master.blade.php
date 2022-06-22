@@ -94,6 +94,8 @@
         <script src="{{ mix('js/frontend-misc.js') }}" defer></script>
         <script src="{{ mix('js/app.js', 'themes/' . config('theme.active')) }}" defer></script>
 
+        @stack('bottom_styles')
+
         @if ($additionalJavascript)
             <script>
                 {!! $additionalJavascript !!}
