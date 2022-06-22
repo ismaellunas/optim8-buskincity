@@ -4,6 +4,7 @@ namespace App\Entities\Menus;
 
 use App\Models\MenuItem;
 use Illuminate\Support\Str;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 abstract class BaseMenu
 {
@@ -59,6 +60,11 @@ abstract class BaseMenu
     }
 
     abstract public function getUrl();
+
+    protected function getTranslatedUrl(string $url): string
+    {
+        return LaravelLocalization::localizeURL($url, $this->locale);
+    }
 
     public function getTarget(): ?string
     {
