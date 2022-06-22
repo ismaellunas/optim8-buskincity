@@ -26,11 +26,11 @@ class PageSeeder extends Seeder
                 'data' => [
                     "structures" => [
                         [
-                            "id" => "IDL0GDCLRMAK",
+                            "componentName" => "Columns",
                             "type" => "columns",
                             "columns" => [
                                 [
-                                    "id" => "IDL0GDCKCU2U",
+                                    "id" => "IDL4PBMGR07X",
                                     "components" => [
                                         [
                                             "id" => "IDL0GDCQ2FNJ",
@@ -38,14 +38,15 @@ class PageSeeder extends Seeder
                                         ]
                                     ]
                                 ]
-                            ]
+                            ],
+                            "id" => "IDL4PBMJ6GPF"
                         ],
                         [
-                            "id" => "IDL0GDD1JWXE",
+                            "componentName" => "Columns",
                             "type" => "columns",
                             "columns" => [
                                 [
-                                    "id" => "IDL0GDCKCU2U",
+                                    "id" => "IDL4PBMGR03Q",
                                     "components" => [
                                         [
                                             "id" => "IDL0GDEM20UE",
@@ -58,7 +59,7 @@ class PageSeeder extends Seeder
                                     ]
                                 ],
                                 [
-                                    "id" => "IDL0GDD8M4H0",
+                                    "id" => "IDL4PBMGR0Y8",
                                     "components" => [
                                         [
                                             "id" => "IDL0GDDBD53P",
@@ -66,14 +67,15 @@ class PageSeeder extends Seeder
                                         ]
                                     ]
                                 ]
-                            ]
+                            ],
+                            "id" => "IDL4PBMRSZW5"
                         ],
                         [
-                            "id" => "IDL0GDFMBT39",
+                            "componentName" => "Columns",
                             "type" => "columns",
                             "columns" => [
                                 [
-                                    "id" => "IDL0GDCKCU2U",
+                                    "id" => "IDL4PBMGR07X",
                                     "components" => [
                                         [
                                             "id" => "IDL0GDFNUXL8",
@@ -81,7 +83,8 @@ class PageSeeder extends Seeder
                                         ]
                                     ]
                                 ]
-                            ]
+                            ],
+                            "id" => "IDL4PBN90XUP"
                         ]
                     ],
                     "entities" => [
@@ -110,7 +113,8 @@ class PageSeeder extends Seeder
                                     "content" => [
                                         "html" => "<p><strong>Lorem ipsum</strong> dolor sit amet consectetur, adipisicing elit. Ad, quidem iure qui, dignissimos necessitatibus commodi laborum nisi atque quo quos libero pariatur deleniti natus laboriosam fuga, nemo non sequi tempore!</p>"
                                     ],
-                                    "media" => []
+                                    "media" => [
+                                    ]
                                 ]
                             ],
                             "config" => [
@@ -124,7 +128,7 @@ class PageSeeder extends Seeder
                             "title" => "Text",
                             "componentName" => "Text",
                             "content" => [
-                                "html" => "<h3><strong>What is Lorem Ipsum?</strong></h3>\n<p><strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Aenean aliquet risus eu risus finibus, ac accumsan ex aliquam. Duis et libero elementum, commodo mauris maximus, fringilla massa. Integer pellentesque neque at mauris sodales fringilla. Nunc sit amet nunc arcu. Pellentesque viverra quam a congue consequat. Nullam eget dui tempus mauris congue vulputate at et elit. Pellentesque efficitur eleifend ornare. Aliquam sollicitudin, mauris ut commodo volutpat, lacus risus condimentum turpis, at egestas orci diam et mauris. Donec malesuada facilisis ex et vulputate. Aenean in est eget odio rhoncus egestas non id ante. Nam ligula sem, aliquam nec aliquet eget, aliquam in odio. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>"
+                                "html" => "<h3><strong>What is Lorem Ipsum?</strong></h3><p><strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Aenean aliquet risus eu risus finibus, ac accumsan ex aliquam. Duis et libero elementum, commodo mauris maximus, fringilla massa. Integer pellentesque neque at mauris sodales fringilla. Nunc sit amet nunc arcu. Pellentesque viverra quam a congue consequat. Nullam eget dui tempus mauris congue vulputate at et elit. Pellentesque efficitur eleifend ornare. Aliquam sollicitudin, mauris ut commodo volutpat, lacus risus condimentum turpis, at egestas orci diam et mauris. Donec malesuada facilisis ex et vulputate. Aenean in est eget odio rhoncus egestas non id ante. Nam ligula sem, aliquam nec aliquet eget, aliquam in odio. Pellentesque habitant morbi tristique senectus et netuRead Mores et malesuada fames ac turpis egestas.</p>"
                             ],
                             "config" => [
                                 "text" => [
@@ -161,12 +165,12 @@ class PageSeeder extends Seeder
                                     [
                                         "name" => "Table",
                                         "icon" => "fas fa-table",
-                                        "html" => "<table style=\"border-collapse: collapse; width: 100%;\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width: 99.8762%;\"><strong>Category</strong></td>\n</tr>\n<tr>\n<td style=\"width: 99.8762%;\">News</td>\n</tr>\n<tr>\n<td style=\"width: 99.8762%;\">Sport</td>\n</tr>\n</tbody>\n</table>"
+                                        "html" => '<table style="border-collapse: collapse; width: 100%;" border="1"><tbody><tr><td style="width: 99.8762%;"><strong>Category</strong></td></tr><tr><td style="width: 99.8762%;">News</td></tr><tr><td style="width: 99.8762%;">Sport</td></tr></tbody></table>'
                                     ],
                                     [
                                         "name" => "Category Lists",
                                         "icon" => "fas fa-list",
-                                        "html" => "<h3>Category Lists:</h3>\n<ul>\n<li>News</li>\n<li>Sport</li>\n<li>Technology</li>\n</ul>"
+                                        "html" => '<h3>Category Lists:</h3><ul><li>News</li><li>Sport</li><li>Technology</li></ul>'
                                     ]
                                 ],
                                 "template" => [
@@ -207,21 +211,90 @@ class PageSeeder extends Seeder
                                 ]
                             ],
                             "id" => "IDL0GDML4ZC9"
+                        ],
+                        "IDL4PBMJ6GPF" => [
+                            "componentName" => "Columns",
+                            "type" => "columns",
+                            "config" => [
+                                "wrapper" => [
+                                    "style.padding" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ],
+                                    "style.margin" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ]
+                                ]
+                            ],
+                            "id" => "IDL4PBMJ6GPF"
+                        ],
+                        "IDL4PBMRSZW5" => [
+                            "componentName" => "Columns",
+                            "type" => "columns",
+                            "config" => [
+                                "wrapper" => [
+                                    "style.padding" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ],
+                                    "style.margin" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ]
+                                ]
+                            ],
+                            "id" => "IDL4PBMRSZW5"
+                        ],
+                        "IDL4PBN90XUP" => [
+                            "componentName" => "Columns",
+                            "type" => "columns",
+                            "config" => [
+                                "wrapper" => [
+                                    "style.padding" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ],
+                                    "style.margin" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ]
+                                ]
+                            ],
+                            "id" => "IDL4PBN90XUP"
                         ]
                     ],
                     "media" => []
-                ]
+                ],
             ],
             [
                 'title' => 'FAQ',
                 'data' => [
                     "structures" => [
                         [
-                            "id" => "IDL0GDUNZS5C",
+                            "componentName" => "Columns",
                             "type" => "columns",
                             "columns" => [
                                 [
-                                    "id" => "IDL0GDT2JHE7",
+                                    "id" => "IDL4PBL5QMK8",
                                     "components" => [
                                         [
                                             "id" => "IDL0GDUPE90F",
@@ -229,7 +302,8 @@ class PageSeeder extends Seeder
                                         ]
                                     ]
                                 ]
-                            ]
+                            ],
+                            "id" => "IDL4PBLOSY0U"
                         ]
                     ],
                     "entities" => [
@@ -255,7 +329,7 @@ class PageSeeder extends Seeder
                                         [
                                             "id" => "IDL0GDVA02ZW",
                                             "question" => "Where does it come from?",
-                                            "answer" => "<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section 1.10.32.</p>"
+                                            "answer" => '<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>'
                                         ],
                                         [
                                             "id" => "IDL0GDVK0YSX",
@@ -280,6 +354,29 @@ class PageSeeder extends Seeder
                                 ]
                             ],
                             "id" => "IDL0GDUPE90F"
+                        ],
+                        "IDL4PBLOSY0U" => [
+                            "componentName" => "Columns",
+                            "type" => "columns",
+                            "config" => [
+                                "wrapper" => [
+                                    "style.padding" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ],
+                                    "style.margin" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ]
+                                ]
+                            ],
+                            "id" => "IDL4PBLOSY0U"
                         ]
                     ],
                     "media" => []
