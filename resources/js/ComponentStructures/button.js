@@ -30,7 +30,7 @@ export default {
 
 export const config = {
     button: {
-        label: "Tabs",
+        label: "Button",
         config: {
             link: {
                 type: "input",
