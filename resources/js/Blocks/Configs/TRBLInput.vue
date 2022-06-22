@@ -19,7 +19,7 @@
                 </p>
                 <p class="control">
                     <a class="button is-static">
-                        px
+                        {{ trbl.unit }}
                     </a>
                 </p>
             </div>
