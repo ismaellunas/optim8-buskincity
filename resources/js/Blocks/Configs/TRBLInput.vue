@@ -3,22 +3,26 @@
         <biz-label>{{ label }}</biz-label>
 
         <biz-field-horizontal
-            v-for="(value, key) in trbl"
+            v-for="(name, key) in inputs"
             :key="key"
         >
             <template #label>
-                {{ capitalize(key) }}
+                {{ capitalize(name) }}
             </template>
 
-            <biz-select v-model="trbl[key]">
-                <option
-                    v-for="option in options"
-                    :key="option.name"
-                    :value="option.value"
-                >
-                    {{ option.name }}
-                </option>
-            </biz-select>
+            <div class="field has-addons">
+                <p class="control">
+                    <biz-number
+                        ref="input"
+                        v-model="trbl[name]"
+                    />
+                </p>
+                <p class="control">
+                    <a class="button is-static">
+                        px
+                    </a>
+                </p>
+            </div>
         </biz-field-horizontal>
     </div>
 </template>
@@ -26,22 +30,24 @@
 <script>
     import BizFieldHorizontal from '@/Biz/Form/FieldHorizontal';
     import BizLabel from '@/Biz/Label';
-    import BizSelect from '@/Biz/Select';
-    import { capitalize } from 'lodash';
-    import { defaultOption, suffixNumbers } from '@/ComponentStructures/style-options';
+    import BizNumber from '@/Biz/Number';
+    import { capitalize, keys } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         components: {
             BizFieldHorizontal,
             BizLabel,
-            BizSelect,
+            BizNumber,
         },
+
         props: {
-            modelValue: {},
-            label: String,
+            modelValue: { type: Object, default: undefined },
+            label: { type: String, default: "" },
         },
+
         emits: ['update:modelValue'],
+
         setup(props, {emit}) {
 
             if (typeof props.modelValue === "undefined") {
@@ -50,6 +56,7 @@
                     right: null,
                     bottom: null,
                     left: null,
+                    unit: 'px',
                 });
             }
 
@@ -57,13 +64,16 @@
                 trbl: useModelWrapper(props, emit),
             };
         },
+
         computed: {
-            options() {
-                return defaultOption.concat(suffixNumbers);
+            inputs() {
+                return keys(this.trbl)
+                    .filter((key) => key !== 'unit');
             }
         },
+
         methods: {
             capitalize: capitalize,
         },
-    }
+    };
 </script>
