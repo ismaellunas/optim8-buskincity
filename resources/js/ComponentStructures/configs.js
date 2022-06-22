@@ -4,6 +4,7 @@ import { config as cardText } from './card-text';
 import { config as carousel } from './carousel';
 import { config as faq } from './faq';
 import { config as heading } from './heading';
+import { config as icon } from './icon';
 import { config as image } from './image';
 import { config as tabs } from './tabs';
 import { config as text } from './text';
@@ -16,6 +17,7 @@ export default {
     carousel: carousel,
     faq: faq,
     heading: heading,
+    icon: icon,
     image: image,
     tabs: tabs,
     text: text,
