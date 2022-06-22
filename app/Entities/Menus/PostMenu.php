@@ -25,8 +25,10 @@ class PostMenu extends BaseMenu implements MenuInterface
 
     public function getUrl(): string
     {
-        return route('blog.show', [
-            'slug' => $this->getModel()->post->slug,
-        ]);
+        return $this->getTranslatedUrl(
+            route('blog.show', [
+                'slug' => $this->getModel()->post->slug,
+            ])
+        );
     }
 }

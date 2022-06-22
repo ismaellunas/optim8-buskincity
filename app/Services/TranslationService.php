@@ -6,6 +6,7 @@ use App\Entities\Caches\SettingCache;
 use App\Facades\Localization;
 use App\Services\LanguageService;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class TranslationService
@@ -15,6 +16,10 @@ class TranslationService
     public static function getDefaultLocale(): string
     {
         $key = config('constants.setting_cache.default_locale');
+
+        if (! Schema::hasTable('settings')) {
+            return config('app.fallback_locale');
+        }
 
         return app(SettingCache::class)->remember($key, function () {
             return app(LanguageService::class)->getDefault()->code ?? config('app.fallback_locale');

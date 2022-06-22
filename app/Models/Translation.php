@@ -6,6 +6,7 @@ use App\Entities\Caches\TranslationCache;
 use App\Services\TranslationService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 use Spatie\TranslationLoader\TranslationLoaders\TranslationLoader;
 
 class Translation extends Model implements TranslationLoader
@@ -28,6 +29,10 @@ class Translation extends Model implements TranslationLoader
     // Method from TranslationLoader-Interface
     public function loadTranslations(string $locale, string $group): array
     {
+        if (! Schema::hasTable($this->getTable())) {
+            return [];
+        }
+
         $translationCache = app(TranslationCache::class);
 
         return $translationCache->remember(
