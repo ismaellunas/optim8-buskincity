@@ -4,8 +4,9 @@ namespace App\View\Components\Builder\Content;
 
 class Icon extends BaseContent
 {
-    public $iconStyle = null;
     public $config = [];
+    public $iconStyle = null;
+    public $uid = null;
 
     /**
      * Create a new component instance.
@@ -17,18 +18,11 @@ class Icon extends BaseContent
         parent::__construct($entity);
 
         $this->config = $this->getIconConfig();
-        $this->iconStyle = $this->getIconStyle();
+        $this->uid = $entity['id'];
     }
 
     private function getIconConfig(): array
     {
         return $this->entity['config']['icon'] ?? [];
-    }
-
-    private function getIconStyle(): ?string
-    {
-        return $this->config['size']
-            ? 'font-size: ' . $this->config['size'] . 'px; height: auto; width: auto'
-            : null;
     }
 }

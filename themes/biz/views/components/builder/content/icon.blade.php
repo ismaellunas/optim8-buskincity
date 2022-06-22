@@ -3,8 +3,7 @@
         @class(['content', $config['alignment']])
     >
         <span
-            class="icon"
-            style="{{ $iconStyle }}"
+            {{ $attributes->merge(['id' => $uid, 'class' => 'icon']) }}
         >
             <i @class($config['class'])></i>
         </span>
