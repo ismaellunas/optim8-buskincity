@@ -108,7 +108,7 @@
     import Draggable from "vuedraggable";
     import BizComponentConfig from '@/Biz/ComponentConfig';
     import { isBlank, generateElementId, useModelWrapper } from '@/Libs/utils'
-    import { createBlock, createColumn } from '@/Libs/page-builder.js';
+    import { createColumn } from '@/Libs/page-builder.js';
 
     export default {
         components: {
@@ -156,7 +156,8 @@
                 let blocks = [];
 
                 for (let i = 1; i <= maxColumnNumber; i++) {
-                    let block = createBlock();
+                    let block = JSON.parse(JSON.stringify(ComponentStructures.columns));
+
                     for (let colIndex = 1; colIndex <= i; colIndex++) {
                         block.columns.push(createColumn());
                     }
@@ -202,7 +203,16 @@
             cloneBlock(seletectedBlock) {
                 const clonedBlock = JSON.parse(JSON.stringify(seletectedBlock));
                 clonedBlock.id = generateElementId();
+
                 delete clonedBlock.title;
+
+                const columnEntity = JSON.parse(JSON.stringify(clonedBlock));
+
+                delete columnEntity.columns;
+
+                this.data.entities[clonedBlock.id] = columnEntity;
+
+                delete clonedBlock.config;
 
                 return clonedBlock;
             },
@@ -220,6 +230,8 @@
             deleteBlock(id) {
                 const removeIndex = this.data.structures.map(block => block.id).indexOf(id);
                 this.data.structures.splice(removeIndex, 1);
+
+                delete this.data.entities[id];
             },
             settingContent(event) {
                 const configComponent = event.target.closest('.component-configurable');

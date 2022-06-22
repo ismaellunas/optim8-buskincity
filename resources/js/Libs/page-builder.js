@@ -7,14 +7,6 @@ export function createColumn() {
     };
 }
 
-export function createBlock() {
-    return {
-        id: generateElementId(),
-        type: 'columns',
-        columns: [],
-    }
-}
-
 export function createTrblClasses(trbl, prefix) {
     const suffix = {top: 't', right: 'r', bottom: 'b', left: 'l'};
     let classes = [];
