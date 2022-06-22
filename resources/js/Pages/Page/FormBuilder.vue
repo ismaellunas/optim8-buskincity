@@ -104,13 +104,13 @@
 </template>
 
 <script>
+    import BizComponentConfig from '@/Biz/ComponentConfig';
+    import BlockColumns from '@/ComponentStructures/columns';
     import ComponentStructures from '@/ComponentStructures';
     import Draggable from "vuedraggable";
-    import BizComponentConfig from '@/Biz/ComponentConfig';
     import { isBlank, generateElementId, useModelWrapper } from '@/Libs/utils'
     import { createColumn } from '@/Libs/page-builder.js';
     import { cloneDeep } from 'lodash';
-    import blockColumns from '@/ComponentStructures/columns';
 
     export default {
         components: {
