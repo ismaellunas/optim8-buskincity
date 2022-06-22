@@ -43,6 +43,7 @@ export const config = {
                 component: "InputAddons",
                 settings: {
                     addons: 'px',
+                    isNumber: true,
                 },
             },
         }
