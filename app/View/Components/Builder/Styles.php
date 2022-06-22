@@ -2,7 +2,7 @@
 
 namespace App\View\Components\Builder;
 
-use App\Contracts\StyleablePageComponentInterface;
+use App\Contracts\HasStyleInterface;
 use App\Services\PageService;
 use Illuminate\View\Component;
 
@@ -40,7 +40,7 @@ class Styles extends Component
 
                 if (class_exists($className)) {
                     return in_array(
-                        StyleablePageComponentInterface::class,
+                        HasStyleInterface::class,
                         class_implements($className)
                     );
                 }

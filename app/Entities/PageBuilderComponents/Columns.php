@@ -2,9 +2,10 @@
 
 namespace App\Entities\PageBuilderComponents;
 
-use App\Contracts\StyleablePageComponentInterface;
+use App\Contracts\HasStyleInterface;
+use App\Entities\StyleBlock;
 
-class Columns implements StyleablePageComponentInterface
+class Columns implements HasStyleInterface
 {
     protected $data;
 
