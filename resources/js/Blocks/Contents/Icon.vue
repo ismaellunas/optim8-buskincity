@@ -12,7 +12,6 @@
             >
                 <span
                     class="icon"
-                    style="height: auto; width: auto"
                     :style="iconStyle"
                 >
                     <template v-if="config.icon.class !== null">
@@ -59,9 +58,15 @@
 
         computed: {
             iconStyle() {
-                return this.config.icon.size
-                    ? 'font-size: ' + parseInt(this.config.icon.size) + 'px'
+                const styles = {};
+
+                styles['height'] = 'auto';
+                styles['width'] = 'auto';
+                styles['font-size'] = this.config.style?.size
+                    ? parseInt(this.config.style?.size) + 'px'
                     : null;
+
+                return styles;
             },
         },
     }
