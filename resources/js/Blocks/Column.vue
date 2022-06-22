@@ -19,12 +19,12 @@
                     :is="element.componentName"
                     :id="element.id"
                     v-model="dataEntities[element.id]"
-                    class="page-component"
+                    class="component-configurable"
                     :can="can"
-                    :is-edit-mode="isEditMode"
+                    :data-id="element.id"
                     :data-media="dataMedia"
+                    :is-edit-mode="isEditMode"
                     :selected-locale="selectedLocale"
-                    @click="settingContent(element.id)"
                     @delete-content="deleteContent"
                 />
             </template>
@@ -84,9 +84,6 @@
             dataMedia: {},
             selectedLocale: String,
         },
-        emits: [
-            'setting-content'
-        ],
         setup() {
             return {
                 entityId: usePage().props.value.entityId ?? null,
@@ -129,13 +126,8 @@
                     );
 
                     delete this.dataEntities[id];
-
-                    this.settingContent('');
                 }
             },
-            settingContent(event) {
-                this.$emit('setting-content', event)
-            },
         }
-    }
+    };
 </script>

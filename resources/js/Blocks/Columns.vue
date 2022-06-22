@@ -2,6 +2,7 @@
     <div
         class="columns"
         :class="wrapperClass"
+        :style="wrapperStyle"
     >
         <div
             v-if="isEditMode"
@@ -72,7 +73,6 @@
                 :data-media="media"
                 :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
-                @setting-content="$emit('setting-content', $event)"
             />
         </template>
     </div>
@@ -104,7 +104,6 @@
         },
         emits: [
             'delete-block',
-            'setting-content'
         ],
         setup(props, { emit }) {
             return {

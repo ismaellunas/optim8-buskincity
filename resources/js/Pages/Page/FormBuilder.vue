@@ -87,9 +87,12 @@
                         v-model="data.structures[index]"
                         v-model:data-entities="data.entities"
                         v-model:data-media="data.media"
+                        class="component-configurable"
                         :can="can"
+                        :data-id="element.id"
                         :is-edit-mode="isEditMode"
                         :selected-locale="selectedLocale"
+                        @click="settingContent"
                         @delete-block="deleteBlock"
                         @setting-content="settingContent"
                     />
@@ -218,9 +221,13 @@
                 const removeIndex = this.data.structures.map(block => block.id).indexOf(id);
                 this.data.structures.splice(removeIndex, 1);
             },
-            settingContent(id) {
-                this.computedContentConfigId = id;
-            }
+            settingContent(event) {
+                const configComponent = event.target.closest('.component-configurable');
+
+                if (configComponent.hasAttribute('data-id')) {
+                    this.computedContentConfigId = configComponent.getAttribute('data-id');
+                }
+            },
         },
     }
 </script>
