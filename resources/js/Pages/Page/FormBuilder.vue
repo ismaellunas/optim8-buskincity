@@ -247,19 +247,16 @@
                 const duplicateBlock = cloneDeep(this.data.structures[duplicateIndex]);
 
                 duplicateBlock.id = generateElementId();
+
                 duplicateBlock.columns.map(column => {
                     column.id = generateElementId();
 
                     column.components.map(component => {
                         const componentId = generateElementId();
-                        const duplicateComponent = cloneDeep(
-                            this.data.entities[component.id]
-                        );
+
+                        this.duplicateEntity(component.id, componentId);
 
                         component.id = componentId;
-                        duplicateComponent.id = componentId;
-
-                        this.data.entities[componentId] = duplicateComponent;
 
                         return component;
                     });
@@ -268,7 +265,15 @@
                 });
 
                 this.data.structures.splice( (duplicateIndex + 1), 0, duplicateBlock );
+
+                this.duplicateEntity(id, duplicateBlock.id);
             },
+            duplicateEntity(oldId, newId) {
+                const duplicateEntity = cloneDeep(this.data.entities[oldId]);
+                duplicateEntity.id = newId;
+
+                this.data.entities[newId] = duplicateEntity;
+            }
         },
     }
 </script>

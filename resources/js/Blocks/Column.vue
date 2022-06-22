@@ -134,18 +134,18 @@
             },
             duplicateContent(id) {
                 if (!isBlank(id)) {
-                    const componentId = generateElementId();
                     const duplicateComponent = cloneDeep(
                         this.computedComponents[
                             this.computedComponents.map(block => block.id).indexOf(id)
                         ]
                     );
-                    duplicateComponent.id = componentId;
+
+                    duplicateComponent.id = generateElementId();
 
                     const duplicateEntity = cloneDeep(this.computedDataEntities[id]);
-                    duplicateEntity.id = componentId;
+                    duplicateEntity.id = duplicateComponent.id;
 
-                    this.computedDataEntities[componentId] = duplicateEntity;
+                    this.computedDataEntities[duplicateComponent.id] = duplicateEntity;
                     this.computedComponents.push(duplicateComponent);
                 }
             },
