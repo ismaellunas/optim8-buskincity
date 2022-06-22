@@ -12,9 +12,11 @@ export default {
         icon: {
             class: null,
             color: null,
-            size: null,
             alignment: null,
         },
+        style: {
+            size: null,
+        }
     }
 };
 
@@ -26,18 +28,22 @@ export const config = {
                 label: "Class",
                 component: "InputIcon",
             },
-            size: {
-                label: "Size",
-                component: "InputAddons",
-                settings: {
-                    isNumber: true,
-                    addons: 'px',
-                },
-            },
             alignment: {
                 type: "select",
                 label: "Alignment",
                 options: defaultOption.concat(alignments),
+            },
+        }
+    },
+    style: {
+        label: "Style",
+        config: {
+            size: {
+                label: "Size",
+                component: "InputAddons",
+                settings: {
+                    addons: 'px',
+                },
             },
         }
     },
