@@ -109,6 +109,7 @@
     import BizComponentConfig from '@/Biz/ComponentConfig';
     import { isBlank, generateElementId, useModelWrapper } from '@/Libs/utils'
     import { createColumn } from '@/Libs/page-builder.js';
+    import blockColumns from '@/ComponentStructures/columns';
 
     export default {
         components: {
@@ -156,7 +157,7 @@
                 let blocks = [];
 
                 for (let i = 1; i <= maxColumnNumber; i++) {
-                    let block = JSON.parse(JSON.stringify(ComponentStructures.columns));
+                    let block = JSON.parse(JSON.stringify(blockColumns));
 
                     for (let colIndex = 1; colIndex <= i; colIndex++) {
                         block.columns.push(createColumn());
