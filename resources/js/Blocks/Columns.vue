@@ -2,6 +2,7 @@
     <div
         class="columns"
         :class="wrapperClass"
+        :style="wrapperStyle"
     >
         <div
             v-if="isEditMode"
@@ -72,7 +73,6 @@
                 :data-media="media"
                 :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
-                @setting-content="$emit('setting-content', $event)"
             />
         </template>
     </div>
@@ -104,7 +104,6 @@
         },
         emits: [
             'delete-block',
-            'setting-content'
         ],
         setup(props, { emit }) {
             return {
@@ -131,6 +130,38 @@
                 }
 
                 return wrapperClass;
+            },
+
+            dataEntity() {
+                return this.dataEntities[ this.block.id ] ?? null;
+            },
+
+            wrapperStyle() {
+                const styles = {};
+
+                const configWrapper = this.dataEntity?.config?.wrapper ?? null;
+
+                if (configWrapper && configWrapper["style.margin"]) {
+                    const styleMargin = configWrapper["style.margin"];
+
+                    for (const [key, margin] of Object.entries(styleMargin)) {
+                        if (! (styleMargin[key] == null || styleMargin[key] == "")) {
+                            styles['margin-'+key] = styleMargin[key]+'px !important';
+                        }
+                    }
+                }
+
+                if (configWrapper && configWrapper["style.padding"]) {
+                    const stylePadding = configWrapper["style.padding"];
+
+                    for (const [key, padding] of Object.entries(stylePadding)) {
+                        if (! (stylePadding[key] == null || stylePadding[key] == "")) {
+                            styles['padding-'+key] = stylePadding[key]+'px !important';
+                        }
+                    }
+                }
+
+                return styles;
             },
         },
         methods: {

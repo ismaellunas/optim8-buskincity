@@ -87,9 +87,12 @@
                         v-model="data.structures[index]"
                         v-model:data-entities="data.entities"
                         v-model:data-media="data.media"
+                        class="component-configurable"
                         :can="can"
+                        :data-id="element.id"
                         :is-edit-mode="isEditMode"
                         :selected-locale="selectedLocale"
+                        @click="settingContent"
                         @delete-block="deleteBlock"
                         @setting-content="settingContent"
                     />
@@ -105,7 +108,8 @@
     import Draggable from "vuedraggable";
     import BizComponentConfig from '@/Biz/ComponentConfig';
     import { isBlank, generateElementId, useModelWrapper } from '@/Libs/utils'
-    import { createBlock, createColumn } from '@/Libs/page-builder.js';
+    import { createColumn } from '@/Libs/page-builder.js';
+    import blockColumns from '@/ComponentStructures/columns';
 
     export default {
         components: {
@@ -113,20 +117,27 @@
             Draggable,
             BizComponentConfig,
         },
+
         props: {
             can: Object,
+            contentConfigId: { type: String, default: "" },
             errors: Object,
             isEditMode: {type: Boolean, default: false},
             modelValue: {type: Object},
-            contentConfigId: {},
             selectedLocale: String,
         },
+
+        emits: [
+            'update:contentConfigId',
+        ],
+
         setup(props, { emit }) {
             return {
                 data: useModelWrapper(props, emit),
-                contentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
+                computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
             };
         },
+
         data() {
             return {
                 isDebugMode: false,
@@ -146,7 +157,8 @@
                 let blocks = [];
 
                 for (let i = 1; i <= maxColumnNumber; i++) {
-                    let block = createBlock();
+                    let block = JSON.parse(JSON.stringify(blockColumns));
+
                     for (let colIndex = 1; colIndex <= i; colIndex++) {
                         block.columns.push(createColumn());
                     }
@@ -192,7 +204,16 @@
             cloneBlock(seletectedBlock) {
                 const clonedBlock = JSON.parse(JSON.stringify(seletectedBlock));
                 clonedBlock.id = generateElementId();
+
                 delete clonedBlock.title;
+
+                const columnEntity = JSON.parse(JSON.stringify(clonedBlock));
+
+                delete columnEntity.columns;
+
+                this.data.entities[clonedBlock.id] = columnEntity;
+
+                delete clonedBlock.config;
 
                 return clonedBlock;
             },
@@ -210,10 +231,16 @@
             deleteBlock(id) {
                 const removeIndex = this.data.structures.map(block => block.id).indexOf(id);
                 this.data.structures.splice(removeIndex, 1);
+
+                delete this.data.entities[id];
             },
-            settingContent(id) {
-                this.contentConfigId = id;
-            }
+            settingContent(event) {
+                const configComponent = event.target.closest('.component-configurable');
+
+                if (configComponent.hasAttribute('data-id')) {
+                    this.computedContentConfigId = configComponent.getAttribute('data-id');
+                }
+            },
         },
     }
 </script>

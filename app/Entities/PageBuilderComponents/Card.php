@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Entities\Components;
+namespace App\Entities\PageBuilderComponents;
 
 use App\Contracts\PageBuilderComponentInterface;
 use App\Helpers\HtmlToText;
 
-class CardText implements PageBuilderComponentInterface
+class Card implements PageBuilderComponentInterface
 {
     protected $data;
 
