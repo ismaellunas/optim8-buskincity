@@ -232,9 +232,16 @@
             },
             deleteBlock(id) {
                 const removeIndex = this.data.structures.map(block => block.id).indexOf(id);
+
+                let removeIds = this.getAllIdFromStructure(
+                    this.data.structures[removeIndex]
+                );
+
                 this.data.structures.splice(removeIndex, 1);
 
-                delete this.data.entities[id];
+                for (let i = 0; i < removeIds.length; i++) {
+                    delete this.data.entities[removeIds[i]];
+                }
             },
             settingContent(event) {
                 const configComponent = event.target.closest('.component-configurable');
@@ -274,6 +281,19 @@
                 duplicateEntity.id = newId;
 
                 this.data.entities[newId] = duplicateEntity;
+            },
+            getAllIdFromStructure(structure) {
+                const ids = [];
+
+                JSON.stringify(structure, (key, value) => {
+                    if (key === 'id') {
+                        ids.push(value);
+                    }
+
+                    return value;
+                });
+
+                return ids;
             }
         },
     }
