@@ -2,6 +2,7 @@
     <div :class="wrapperClass">
         <biz-toolbar-content
             @delete-content="deleteContent"
+            @duplicate-content="duplicateContent"
         />
 
         <div class="card">
@@ -69,6 +70,7 @@
 <script>
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinHasModal from '@/Mixins/HasModal';
     import BizButton from '@/Biz/Button';
     import BizEditor from '@/Biz/EditorTinymce';
@@ -92,6 +94,7 @@
         mixins: [
             MixinContentHasMediaLibrary,
             MixinDeletableContent,
+            MixinDuplicableContent,
             MixinHasModal,
         ],
         props: {

@@ -94,6 +94,7 @@
                         :selected-locale="selectedLocale"
                         @click="settingContent"
                         @delete-block="deleteBlock"
+                        @duplicate-block="duplicateBlock"
                         @setting-content="settingContent"
                     />
                 </template>
@@ -109,6 +110,7 @@
     import BizComponentConfig from '@/Biz/ComponentConfig';
     import { isBlank, generateElementId, useModelWrapper } from '@/Libs/utils'
     import { createColumn } from '@/Libs/page-builder.js';
+    import { cloneDeep } from 'lodash';
     import blockColumns from '@/ComponentStructures/columns';
 
     export default {
@@ -241,6 +243,38 @@
                     this.computedContentConfigId = configComponent.getAttribute('data-id');
                 }
             },
+            duplicateBlock(id) {
+                const duplicateIndex = this.data.structures.map(block => block.id).indexOf(id);
+                const duplicateBlock = cloneDeep(this.data.structures[duplicateIndex]);
+
+                duplicateBlock.id = generateElementId();
+
+                duplicateBlock.columns.map(column => {
+                    column.id = generateElementId();
+
+                    column.components.map(component => {
+                        const componentId = generateElementId();
+
+                        this.duplicateEntity(component.id, componentId);
+
+                        component.id = componentId;
+
+                        return component;
+                    });
+
+                    return column;
+                });
+
+                this.data.structures.splice( (duplicateIndex + 1), 0, duplicateBlock );
+
+                this.duplicateEntity(id, duplicateBlock.id);
+            },
+            duplicateEntity(oldId, newId) {
+                const duplicateEntity = cloneDeep(this.data.entities[oldId]);
+                duplicateEntity.id = newId;
+
+                this.data.entities[newId] = duplicateEntity;
+            }
         },
     }
 </script>
