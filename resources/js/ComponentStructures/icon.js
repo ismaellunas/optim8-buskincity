@@ -11,7 +11,6 @@ export default {
     config: {
         icon: {
             class: null,
-            color: null,
             alignment: null,
         },
         style: {
@@ -40,10 +39,9 @@ export const config = {
         config: {
             size: {
                 label: "Size",
-                component: "InputAddons",
+                component: "NumberAddons",
                 settings: {
                     addons: 'px',
-                    isNumber: true,
                 },
             },
         }

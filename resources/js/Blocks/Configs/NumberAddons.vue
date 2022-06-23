@@ -1,9 +1,8 @@
 <template>
     <div>
-        <biz-form-input-addons
+        <biz-form-number-addons
             v-model="value"
             :label="label"
-            @onKeypress="isNumber"
         >
             <template #afterInput>
                 <p class="control">
@@ -16,19 +15,19 @@
                     </button>
                 </p>
             </template>
-        </biz-form-input-addons>
+        </biz-form-number-addons>
     </div>
 </template>
 
 <script>
-    import BizFormInputAddons from '@/Biz/Form/InputAddons';
+    import BizFormNumberAddons from '@/Biz/Form/NumberAddons';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'InputAddons',
+        name: 'NumberAddons',
 
         components: {
-            BizFormInputAddons,
+            BizFormNumberAddons,
         },
 
         props: {
@@ -42,18 +41,5 @@
                 value: useModelWrapper(props, emit),
             };
         },
-
-        methods: {
-            isNumber(event) {
-                let keyCode = (event.keyCode ? event.keyCode : event.which);
-
-                if (
-                    this.settings.isNumber
-                    && (keyCode < 48 || keyCode > 57) && keyCode !== 46
-                ) {
-                    event.preventDefault();
-                }
-            },
-        }
     }
 </script>
