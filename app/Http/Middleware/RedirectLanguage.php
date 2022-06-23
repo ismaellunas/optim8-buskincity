@@ -25,10 +25,7 @@ class RedirectLanguage
         $path = $this->setPath($request->path());
         $redirect = $this->setRedirect($path);
 
-        if (
-            $path != $redirect
-            && !(LoginService::hasHomeUrl() && LoginService::isAdminHomeUrl())
-        ) {
+        if ($path != $redirect && !LoginService::hasHomeUrl()) {
             return redirect($redirect);
         } else {
             return $next($request);

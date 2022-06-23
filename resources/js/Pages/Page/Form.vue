@@ -56,7 +56,7 @@
                         <form-builder
                             id="page-form-builder"
                             v-model="form.data"
-                            v-model:content-config-id="contentConfig"
+                            v-model:content-config-id="computedContentConfigId"
                             :can="can"
                             :is-edit-mode="isEditMode"
                             :selected-locale="selectedLocale"
@@ -113,7 +113,7 @@
 
         props: {
             can: { type: Object, required: true },
-            contentConfigId: { type: String, default: "" },
+            contentConfigId: { type: String, required: true },
             errors: { type: Object, default:() => {} },
             isDirty: { type: Boolean, default: false },
             isEditMode: { type: Boolean, default: true },
@@ -129,7 +129,7 @@
         emits: [
             'change-locale',
             'on-submit',
-            'update:contentConfigId'
+            'update:contentConfigId',
         ],
 
         setup(props, { emit }) {
@@ -151,7 +151,7 @@
             return {
                 activeTab,
                 form: useModelWrapper(props, emit),
-                contentConfig: useModelWrapper(props, emit, 'contentConfigId'),
+                computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
                 defaultLocale: usePage().props.value.defaultLanguage,
             };
         },
@@ -190,5 +190,5 @@
                 return showUrl;
             }
         },
-    }
+    };
 </script>
