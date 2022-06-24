@@ -105,10 +105,10 @@ class LanguageService
     public function getOriginLanguageFromCookie(): string
     {
         $originLanguage = app(LifetimeCookie::class)->get('origin_language');
-        $supportedLanguageCodes = $this->getSupportedLanguages()->pluck('code')->all();
 
         if (!$originLanguage) {
             $originLanguage = $this->getOriginFromIP()->code;
+            $supportedLanguageCodes = $this->getSupportedLanguages()->pluck('code')->all();
 
             if (!in_array($originLanguage, $supportedLanguageCodes)) {
                 $originLanguage = app(TranslationService::class)->getDefaultLocale();
