@@ -11,6 +11,7 @@ use App\Entities\{
     Caches\SettingCache
 };
 use App\Services\IPService;
+use App\Services\TranslationService;
 use Illuminate\Support\Collection;
 
 class LanguageService
@@ -104,9 +105,14 @@ class LanguageService
     public function getOriginLanguageFromCookie(): string
     {
         $originLanguage = app(LifetimeCookie::class)->get('origin_language');
+        $supportedLanguageCodes = $this->getSupportedLanguages()->pluck('code')->all();
 
         if (!$originLanguage) {
             $originLanguage = $this->getOriginFromIP()->code;
+
+            if (!in_array($originLanguage, $supportedLanguageCodes)) {
+                $originLanguage = app(TranslationService::class)->getDefaultLocale();
+            }
 
             app(LifetimeCookie::class)->set('origin_language', $originLanguage);
         }
