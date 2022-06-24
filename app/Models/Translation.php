@@ -3,10 +3,9 @@
 namespace App\Models;
 
 use App\Entities\Caches\TranslationCache;
-use App\Services\TranslationService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\QueryException;
 use Spatie\TranslationLoader\TranslationLoaders\TranslationLoader;
 
 class Translation extends Model implements TranslationLoader
@@ -29,33 +28,35 @@ class Translation extends Model implements TranslationLoader
     // Method from TranslationLoader-Interface
     public function loadTranslations(string $locale, string $group): array
     {
-        if (! Schema::hasTable($this->getTable())) {
-            return [];
-        }
-
         $translationCache = app(TranslationCache::class);
 
-        return $translationCache->remember(
-            $locale,
-            function () use ($locale, $group) {
-                return self::select([
-                    'locale',
-                    'group',
-                    'key',
-                    'value',
-                ])
-                ->where('locale', $locale)
-                ->when($group, function ($query) use ($group) {
-                    if ($group !== "*") {
-                        return $query->where('group', $group);
-                    }
-                })
-                ->get()
-                ->pluck('value', 'key')
-                ->toArray();
-            },
-            $group,
-        );
+        try {
+            return $translationCache->remember(
+                $locale,
+                function () use ($locale, $group) {
+                    return self::select([
+                        'locale',
+                        'group',
+                        'key',
+                        'value',
+                    ])
+                    ->where('locale', $locale)
+                    ->when($group, function ($query) use ($group) {
+                        if ($group !== "*") {
+                            return $query->where('group', $group);
+                        }
+                    })
+                    ->get()
+                    ->pluck('value', 'key')
+                    ->toArray();
+                },
+                $group,
+            );
+        } catch (QueryException $e) {
+            if ($e->getCode() == "42P01") {
+                return [];
+            }
+        }
     }
 
     // Scope
