@@ -2,6 +2,7 @@
     <div>
         <biz-toolbar-content
             @delete-content="deleteContent"
+            @duplicate-content="duplicateContent"
         />
 
         <biz-image
@@ -60,6 +61,7 @@
 <script>
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinHasModal from '@/Mixins/HasModal';
     import BizButton from '@/Biz/Button';
     import BizImage from '@/Biz/Image';
@@ -79,6 +81,7 @@
         mixins: [
             MixinContentHasMediaLibrary,
             MixinDeletableContent,
+            MixinDuplicableContent,
             MixinHasModal,
         ],
         props: {

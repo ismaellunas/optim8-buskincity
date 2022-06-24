@@ -19,9 +19,12 @@ class Page extends BaseSitemap
         $urls = $this->getEloquentBuilder()
             ->orderBy('slug')
             ->get()
-            ->map(function ($page) {
-                return $this->createUrlTag($page);
-            });
+            ->map(function ($pageTranslation) {
+                if (!$pageTranslation->page->isHomePage) {
+                    return $this->createUrlTag($pageTranslation);
+                }
+            })
+            ->filter();
 
         $urls->prepend($this->homePageSitemapUrlTag());
 
@@ -52,7 +55,9 @@ class Page extends BaseSitemap
         return PageTranslation::select([
                 'slug',
                 'updated_at',
+                'page_id',
             ])
+            ->with(['page'])
             ->inLanguages([$this->locale])
             ->published();
     }

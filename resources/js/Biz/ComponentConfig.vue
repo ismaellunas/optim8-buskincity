@@ -77,6 +77,7 @@
     import Checkboxes from '@/Blocks/Configs/Checkboxes';
     import SelectMultiple from '@/Blocks/Configs/SelectMultiple';
     import TRBL from '@/Blocks/Configs/TRBL';
+    import TRBLInput from '@/Blocks/Configs/TRBLInput';
     import configs from '@/ComponentStructures/configs';
     import { camelCase } from "lodash";
     import { useModelWrapper } from '@/Libs/utils'
@@ -90,6 +91,7 @@
             Checkboxes,
             SelectMultiple,
             TRBL,
+            TRBLInput,
         },
 
         props: ['modelValue'],
@@ -111,10 +113,11 @@
                 entity,
             };
         },
+
         computed: {
             configOptions() {
                 return configs[ camelCase(this.entity.componentName) ];
             }
         },
-    }
+    };
 </script>

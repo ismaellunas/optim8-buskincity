@@ -2,6 +2,7 @@
     <div>
         <biz-toolbar-content
             @delete-content="deleteContent"
+            @duplicate-content="duplicateContent"
         />
 
         <biz-button
@@ -25,6 +26,7 @@
                 >
                     <biz-toolbar-content
                         v-if="totalTabs > 1"
+                        :can-duplicate="false"
                         :can-move="false"
                         @delete-content="deleteTabs(index)"
                     />
@@ -87,7 +89,8 @@
 </template>
 
 <script>
-    import DeletableContentMixin from '@/Mixins/DeletableContent';
+    import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinHasModal from '@/Mixins/HasModal';
     import fontawesomeAllClasses from '@/Json/fontawesome-all-classes';
     import BizButton from '@/Biz/Button';
@@ -109,7 +112,8 @@
         },
 
         mixins: [
-            DeletableContentMixin,
+            MixinDeletableContent,
+            MixinDuplicableContent,
             MixinHasModal,
         ],
 

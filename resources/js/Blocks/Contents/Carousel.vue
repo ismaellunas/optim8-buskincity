@@ -3,6 +3,7 @@
         <biz-toolbar-content
             style="z-index: 3"
             @delete-content="deleteContent"
+            @duplicate-content="duplicateContent"
         />
 
         <div class="container">
@@ -51,6 +52,7 @@
     import CarouselSlide from '@/Blocks/Contents/Carousel/CarouselSlide.vue';
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinHasModal from '@/Mixins/HasModal';
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
@@ -69,6 +71,7 @@
         mixins: [
             MixinContentHasMediaLibrary,
             MixinDeletableContent,
+            MixinDuplicableContent,
             MixinHasModal,
         ],
 
