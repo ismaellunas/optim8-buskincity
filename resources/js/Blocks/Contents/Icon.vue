@@ -71,12 +71,3 @@
         },
     }
 </script>
-
-<style scoped>
-    .empty-icon {
-        width: 15px;
-        height: 15px;
-        background: #D3D3D3;
-        border-radius: 50%;
-    }
-</style>
