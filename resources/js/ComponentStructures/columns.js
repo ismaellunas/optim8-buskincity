@@ -18,7 +18,11 @@ export default {
                 bottom: null,
                 left: null,
                 unit: 'px',
-            }
+            },
+        },
+        section: {
+            isIncluded: false,
+            size: null,
         }
     },
 };
@@ -35,7 +39,11 @@ export const config = {
             'style.padding': {
                 component: "TRBLInput",
                 label: "Padding",
-            }
+            },
         }
+    },
+    section: {
+        label: "Section",
+        component: "ConfigRowSection",
     }
 };
