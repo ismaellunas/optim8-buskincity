@@ -246,8 +246,10 @@
             settingContent(event) {
                 const configComponent = event.target.closest('.component-configurable');
 
-                if (configComponent.hasAttribute('data-id')) {
-                    this.computedContentConfigId = configComponent.getAttribute('data-id');
+                if (configComponent) {
+                    if (configComponent.hasAttribute('data-id')) {
+                        this.computedContentConfigId = configComponent.getAttribute('data-id');
+                    }
                 }
             },
             duplicateBlock(id) {
