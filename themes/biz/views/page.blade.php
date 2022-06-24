@@ -20,6 +20,7 @@
                 'container',
                 'theme-font',
                 'is-fluid' => $page->data->get('entities')[$structure['id']]['config']['wrapper']['isFullwidth'] ?? false,
+                $page->data->get('entities')[$structure['id']]['config']['wrapper']['backgroundColor'] ?? '',
             ])>
                 <x-builder.columns
                     :uid="$structure['id']"

@@ -218,6 +218,7 @@ class PageSeeder extends Seeder
                             "config" => [
                                 "wrapper" => [
                                     "isFullwidth" => false,
+                                    "backgroundColor" => "",
                                     "style.padding" => [
                                         "top" => null,
                                         "right" => null,
@@ -242,6 +243,7 @@ class PageSeeder extends Seeder
                             "config" => [
                                 "wrapper" => [
                                     "isFullwidth" => false,
+                                    "backgroundColor" => "",
                                     "style.padding" => [
                                         "top" => null,
                                         "right" => null,
@@ -266,6 +268,7 @@ class PageSeeder extends Seeder
                             "config" => [
                                 "wrapper" => [
                                     "isFullwidth" => false,
+                                    "backgroundColor" => "",
                                     "style.padding" => [
                                         "top" => null,
                                         "right" => null,
@@ -364,6 +367,7 @@ class PageSeeder extends Seeder
                             "config" => [
                                 "wrapper" => [
                                     "isFullwidth" => false,
+                                    "backgroundColor" => "",
                                     "style.padding" => [
                                         "top" => null,
                                         "right" => null,
