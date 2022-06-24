@@ -6,6 +6,7 @@ use App\Entities\Caches\SettingCache;
 use App\Facades\Localization;
 use App\Services\LanguageService;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 
 class TranslationService
@@ -16,9 +17,15 @@ class TranslationService
     {
         $key = config('constants.setting_cache.default_locale');
 
-        return app(SettingCache::class)->remember($key, function () {
-            return app(LanguageService::class)->getDefault()->code ?? config('app.fallback_locale');
-        });
+        try {
+            return app(SettingCache::class)->remember($key, function () {
+                return app(LanguageService::class)->getDefault()->code ?? config('app.fallback_locale');
+            });
+        } catch (QueryException $e) {
+            if ($e->getCode() == "42P01") {
+                return config('app.fallback_locale');
+            }
+        }
     }
 
     public static function getLocaleOptions(): array

@@ -79,3 +79,16 @@ export const otherColors = [
     { value: "is-black", name: "Black" },
     { value: "is-text", name: "Text" },
 ];
+
+export const backgroundColors = [
+    { value: "has-background-white", name: "White" },
+    { value: "has-background-black", name: "Black" },
+    { value: "has-background-light", name: "Light" },
+    { value: "has-background-dark", name: "Dark" },
+    { value: "has-background-primary", name: "Primary" },
+    { value: "has-background-link", name: "Link" },
+    { value: "has-background-info", name: "Info" },
+    { value: "has-background-success", name: "Success" },
+    { value: "has-background-warning", name: "Warning" },
+    { value: "has-background-danger", name: "Danger" },
+];

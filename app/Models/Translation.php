@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Entities\Caches\TranslationCache;
-use App\Services\TranslationService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
 use Spatie\TranslationLoader\TranslationLoaders\TranslationLoader;
 
 class Translation extends Model implements TranslationLoader
@@ -30,27 +30,33 @@ class Translation extends Model implements TranslationLoader
     {
         $translationCache = app(TranslationCache::class);
 
-        return $translationCache->remember(
-            $locale,
-            function () use ($locale, $group) {
-                return self::select([
-                    'locale',
-                    'group',
-                    'key',
-                    'value',
-                ])
-                ->where('locale', $locale)
-                ->when($group, function ($query) use ($group) {
-                    if ($group !== "*") {
-                        return $query->where('group', $group);
-                    }
-                })
-                ->get()
-                ->pluck('value', 'key')
-                ->toArray();
-            },
-            $group,
-        );
+        try {
+            return $translationCache->remember(
+                $locale,
+                function () use ($locale, $group) {
+                    return self::select([
+                        'locale',
+                        'group',
+                        'key',
+                        'value',
+                    ])
+                    ->where('locale', $locale)
+                    ->when($group, function ($query) use ($group) {
+                        if ($group !== "*") {
+                            return $query->where('group', $group);
+                        }
+                    })
+                    ->get()
+                    ->pluck('value', 'key')
+                    ->toArray();
+                },
+                $group,
+            );
+        } catch (QueryException $e) {
+            if ($e->getCode() == "42P01") {
+                return [];
+            }
+        }
     }
 
     // Scope
