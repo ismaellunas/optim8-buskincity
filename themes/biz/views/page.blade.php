@@ -14,9 +14,14 @@
         {{ $page->meta_description }}
     </x-slot>
 
-    <section class="section theme-font">
-        <div class="container">
-            @foreach ($page->data->get('structures') as $key => $structure)
+    <div class="page-wrapper py-6">
+        @foreach ($page->data->get('structures') as $key => $structure)
+            <div @class([
+                'container',
+                'theme-font',
+                'is-fluid' => $page->data->get('entities')[$structure['id']]['config']['wrapper']['isFullwidth'] ?? false,
+                $page->data->get('entities')[$structure['id']]['config']['wrapper']['backgroundColor'] ?? '',
+            ])>
                 <x-builder.columns
                     :uid="$structure['id']"
                     :columns="$structure['columns']"
@@ -24,15 +29,10 @@
                     :locale="$currentLanguage"
                     :images="$images"
                 />
-            @endforeach
-        </div>
-    </section>
+            </div>
+        @endforeach
+    </div>
 
-    {{--
-    <section class="section">
-        <example-component />
-    </section>
-    --}}
     @push('bottom_styles')
         <x-builder.styles
             :entities="$page->data->get('entities')"

@@ -146,11 +146,19 @@
 
                 if (this.isEditMode) {
                     wrapperClass = wrapperClass.concat(
-                        'edit-mode-columns', 'is-multiline', 'box', 'p-1', 'my-1'
+                        'edit-mode-columns',
+                        'is-multiline',
+                        'box',
+                        'p-1',
+                        'my-1'
                     );
                 }
 
-                return wrapperClass;
+                const configWrapper = this.dataEntity?.config?.wrapper ?? null;
+
+                return wrapperClass.concat(
+                    (configWrapper['backgroundColor'] ?? '')
+                ).filter(Boolean);
             },
 
             dataEntity() {
