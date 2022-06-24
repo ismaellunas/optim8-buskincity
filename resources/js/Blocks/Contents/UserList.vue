@@ -1,6 +1,9 @@
 <template>
     <div>
-        <biz-toolbar-content @delete-content="deleteContent" />
+        <biz-toolbar-content
+            @delete-content="deleteContent"
+            @duplicate-content="duplicateContent"
+        />
 
         <div class="columns">
             <div
@@ -38,6 +41,7 @@
 
 <script>
     import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat, last } from 'lodash';
     import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
@@ -53,6 +57,7 @@
 
         mixins: [
             MixinDeletableContent,
+            MixinDuplicableContent,
         ],
 
         props: {

@@ -1,6 +1,9 @@
 <template>
     <div>
-        <biz-toolbar-content @delete-content="deleteContent"/>
+        <biz-toolbar-content
+            @delete-content="deleteContent"
+            @duplicate-content="duplicateContent"
+        />
 
         <component
             :is="headingTag"
@@ -13,7 +16,8 @@
 </template>
 
 <script>
-    import DeletableContentMixin from '@/Mixins/DeletableContent';
+    import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils';
     import { last, concat } from 'lodash';
@@ -21,17 +25,18 @@
     export default {
         name: 'Heading',
 
-        mixins: [
-            DeletableContentMixin
-        ],
-
         components: {
             BizToolbarContent,
         },
 
+        mixins: [
+            MixinDeletableContent,
+            MixinDuplicableContent
+        ],
+
         props: {
-            id: String,
-            modelValue: {type: Object},
+            id: { type: String, required: true },
+            modelValue: { type: Object, required: true },
         },
 
         setup(props, { emit }) {
@@ -39,12 +44,6 @@
                 entity: useModelWrapper(props, emit),
                 config: props.modelValue.config,
             };
-        },
-
-        methods: {
-            onEdit(evt){
-                this.entity.content.heading.html = evt.target.innerText;
-            },
         },
 
         computed: {
@@ -59,6 +58,12 @@
                     this.config.heading?.alignment ?? "",
                 ).filter(Boolean);
             }
-        }
+        },
+
+        methods: {
+            onEdit(evt){
+                this.entity.content.heading.html = evt.target.innerText;
+            },
+        },
     }
 </script>

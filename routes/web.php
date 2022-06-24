@@ -180,8 +180,7 @@ Route::group([
         ->name('blog.show');
 
     Route::get('/{page_translation}', [PageController::class, 'show'])
-        ->name('frontend.pages.show')
-        ->middleware('redirectLanguage');
+        ->name('frontend.pages.show');
 
     Route::get(LaravelLocalization::transRoute('frontend.profile'), [FrontendProfileController::class, 'show'])
         ->name('frontend.profile')

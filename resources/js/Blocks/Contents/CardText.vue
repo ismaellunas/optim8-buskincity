@@ -2,6 +2,7 @@
     <div>
         <biz-toolbar-content
             @delete-content="deleteContent"
+            @duplicate-content="duplicateContent"
         />
 
         <div class="card biz-card-text">
@@ -15,7 +16,8 @@
 </template>
 
 <script>
-    import DeletableContentMixin from '@/Mixins/DeletableContent';
+    import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizEditor from '@/Biz/EditorTinymce';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils'
@@ -23,7 +25,8 @@
     export default {
         name: 'CardText',
         mixins: [
-            DeletableContentMixin
+            MixinDeletableContent,
+            MixinDuplicableContent
         ],
         components: {
             BizEditor,

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\PageBuilderComponentInterface;
 use App\Models\Page;
 use App\Services\{
     SettingService,
@@ -31,16 +32,28 @@ class PageService
         return $records;
     }
 
+    public static function getEntityClassName(string $componentName): string
+    {
+        return '\\App\\Entities\\PageBuilderComponents\\' . $componentName;
+    }
+
     public static function transformComponentToText($data): string
     {
         $string = "";
-        foreach($data['entities'] as $entity)
-        {
-            $class = '\\App\\Entities\\Components\\' . $entity['componentName'];
-            if(class_exists($class)){
-                $class = new $class($entity);
-                $string .= $class->getText() . ' ';
+
+        foreach ($data['entities'] as $entity) {
+
+            $className = self::getEntityClassName($entity['componentName']);
+
+            if (class_exists($className)) {
+
+                $class = new $className($entity);
+
+                if ($class instanceof PageBuilderComponentInterface) {
+                    $string .= $class->getText() . ' ';
+                }
             }
+
             continue;
         }
 
