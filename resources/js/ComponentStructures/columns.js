@@ -1,3 +1,8 @@
+import {
+    backgroundColors,
+    defaultOption,
+} from './style-options';
+
 export default {
     title: 'Columns',
     componentName: 'Columns',
@@ -6,6 +11,7 @@ export default {
     config: {
         wrapper: {
             isFullwidth: false,
+            backgroundColor: '',
             'style.padding': {
                 top: null,
                 right: null,
@@ -36,6 +42,11 @@ export const config = {
                     { value: false, name: "No"},
                     { value: true, name: "Yes"},
                 ],
+            },
+            backgroundColor: {
+                type: "select",
+                label: "Background Color",
+                options: defaultOption.concat(backgroundColors),
             },
             'style.margin': {
                 component: "TRBLInput",
