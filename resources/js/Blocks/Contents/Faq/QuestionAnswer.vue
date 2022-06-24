@@ -15,6 +15,7 @@
                     </div>
                     <div class="media-content">
                         <biz-toolbar-content
+                            :can-duplicate="false"
                             @delete-content="deleteConfirm(element.id)"
                         />
                         <div

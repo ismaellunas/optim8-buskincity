@@ -11,21 +11,22 @@
             item-key="id"
             :animation="300"
             :empty-insert-threshold="emptyInsertThreshold"
-            :list="components"
+            :list="computedComponents"
             @change="log"
         >
             <template #item="{ element }">
                 <component
                     :is="element.componentName"
                     :id="element.id"
-                    v-model="dataEntities[element.id]"
-                    class="page-component"
+                    v-model="computedDataEntities[element.id]"
+                    class="component-configurable"
                     :can="can"
-                    :is-edit-mode="isEditMode"
+                    :data-id="element.id"
                     :data-media="dataMedia"
+                    :is-edit-mode="isEditMode"
                     :selected-locale="selectedLocale"
-                    @click="settingContent(element.id)"
                     @delete-content="deleteContent"
+                    @duplicate-content="duplicateContent"
                 />
             </template>
         </draggable>
@@ -33,10 +34,10 @@
         <template v-else>
             <component
                 :is="element.componentName"
-                v-for="element in components"
+                v-for="element in computedComponents"
                 :id="element.id"
                 :key="element.id"
-                v-model="dataEntities[element.id]"
+                v-model="computedDataEntities[element.id]"
                 :data-media="dataMedia"
                 :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
@@ -57,8 +58,9 @@
     import Tabs from '@/Blocks/Contents/Tabs';
     import Text from '@/Blocks/Contents/Text';
     import UserList from '@/Blocks/Contents/UserList';
-    import { isBlank } from '@/Libs/utils';
-    import { usePage } from '@inertiajs/inertia-vue3'
+    import { isBlank, useModelWrapper, generateElementId } from '@/Libs/utils';
+    import { usePage } from '@inertiajs/inertia-vue3';
+    import { cloneDeep } from 'lodash';
 
     export default {
         components: {
@@ -79,22 +81,21 @@
             id: {},
             isEditMode: {default: false},
             isDebugMode: {default: false},
-            components: {type: Array, default: []},
+            components: { type: Array, default: () => [] },
             dataEntities: {},
             dataMedia: {},
             selectedLocale: String,
         },
-        emits: [
-            'setting-content'
-        ],
-        setup() {
+        setup(props, { emit }) {
             return {
+                computedComponents: useModelWrapper(props, emit, 'components'),
+                computedDataEntities: useModelWrapper(props, emit, 'dataEntities'),
                 entityId: usePage().props.value.entityId ?? null,
             };
         },
         computed: {
             isEmptyComponents() {
-                return !Array.isArray(this.components) || !this.components.length;
+                return !Array.isArray(this.computedComponents) || !this.computedComponents.length;
             },
             isDraggableEmpty() {
                 return this.isEditMode && this.isEmptyComponents;
@@ -123,19 +124,31 @@
             },
             deleteContent(id) {
                 if (!isBlank(id)) {
-                    this.components.splice(
-                        this.components.map(block => block.id).indexOf(id),
+                    this.computedComponents.splice(
+                        this.computedComponents.map(block => block.id).indexOf(id),
                         1
                     );
 
-                    delete this.dataEntities[id];
-
-                    this.settingContent('');
+                    delete this.computedDataEntities[id];
                 }
             },
-            settingContent(event) {
-                this.$emit('setting-content', event)
+            duplicateContent(id) {
+                if (!isBlank(id)) {
+                    const duplicateComponent = cloneDeep(
+                        this.computedComponents[
+                            this.computedComponents.map(block => block.id).indexOf(id)
+                        ]
+                    );
+
+                    duplicateComponent.id = generateElementId();
+
+                    const duplicateEntity = cloneDeep(this.computedDataEntities[id]);
+                    duplicateEntity.id = duplicateComponent.id;
+
+                    this.computedDataEntities[duplicateComponent.id] = duplicateEntity;
+                    this.computedComponents.push(duplicateComponent);
+                }
             },
         }
-    }
+    };
 </script>

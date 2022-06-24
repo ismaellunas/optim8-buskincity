@@ -2,6 +2,7 @@
     <div :class="wrapperClass">
         <biz-toolbar-content
             @delete-content="deleteContent"
+            @duplicate-content="duplicateContent"
         />
         <div
             class="content"
@@ -16,7 +17,8 @@
 </template>
 
 <script>
-    import DeletableContentMixin from '@/Mixins/DeletableContent';
+    import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizTinymce from '@/Biz/EditorTinymce';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat } from 'lodash';
@@ -26,7 +28,8 @@
     export default {
         name: 'Text',
         mixins: [
-            DeletableContentMixin,
+            MixinDeletableContent,
+            MixinDuplicableContent
         ],
         components: {
             BizTinymce,

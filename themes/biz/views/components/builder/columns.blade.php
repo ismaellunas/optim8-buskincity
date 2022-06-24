@@ -1,4 +1,4 @@
-<div class="columns">
+<div {{ $attributes->merge(['id' => $uid, 'class' => 'columns']) }}>
     @foreach ($columns as $column)
         <x-builder.column
             :uid="$column['id']"

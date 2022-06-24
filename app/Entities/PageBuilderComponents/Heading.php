@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Entities\Components;
+namespace App\Entities\PageBuilderComponents;
 
 use App\Contracts\PageBuilderComponentInterface;
 use App\Helpers\HtmlToText;
 
-class Text implements PageBuilderComponentInterface
+class Heading implements PageBuilderComponentInterface
 {
     protected $data;
 
@@ -16,6 +16,6 @@ class Text implements PageBuilderComponentInterface
 
     public function getText(): string
     {
-        return HtmlToText::convert($this->data['content']['html']);
+        return HtmlToText::convert($this->data['content']['heading']['html']);
     }
 }

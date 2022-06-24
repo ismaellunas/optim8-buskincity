@@ -2,10 +2,20 @@
     <div>
         <biz-label>{{ label }}</biz-label>
 
-        <biz-field-horizontal v-for="(value, key) in trbl">
-            <template #label>{{ capitalize(key)}}</template>
+        <biz-field-horizontal
+            v-for="(value, key) in trbl"
+            :key="key"
+        >
+            <template #label>
+                {{ capitalize(key) }}
+            </template>
+
             <biz-select v-model="trbl[key]">
-                <option v-for="option in options" :value="option.value">
+                <option
+                    v-for="option in options"
+                    :key="option.name"
+                    :value="option.value"
+                >
                     {{ option.name }}
                 </option>
             </biz-select>
@@ -31,6 +41,7 @@
             modelValue: {},
             label: String,
         },
+        emits: ['update:modelValue'],
         setup(props, {emit}) {
 
             if (typeof props.modelValue === "undefined") {
@@ -46,13 +57,13 @@
                 trbl: useModelWrapper(props, emit),
             };
         },
-        methods: {
-            capitalize: capitalize,
-        },
         computed: {
             options() {
                 return defaultOption.concat(suffixNumbers);
             }
-        }
+        },
+        methods: {
+            capitalize: capitalize,
+        },
     }
 </script>

@@ -2,6 +2,7 @@
     <div
         class="columns"
         :class="wrapperClass"
+        :style="wrapperStyle"
     >
         <div
             v-if="isEditMode"
@@ -41,6 +42,17 @@
                     <biz-button
                         type="button"
                         class="is-small"
+                        @click="duplicateBlock"
+                    >
+                        <span class="icon">
+                            <i class="fas fa-copy" />
+                        </span>
+                    </biz-button>
+                </p>
+                <p class="control">
+                    <biz-button
+                        type="button"
+                        class="is-small"
                         @click="deleteBlock"
                     >
                         <span class="icon">
@@ -72,40 +84,46 @@
                 :data-media="media"
                 :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
-                @setting-content="$emit('setting-content', $event)"
             />
         </template>
     </div>
 </template>
 
 <script>
-    import BlockColumn from '@/Blocks/Column';
-    import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import BizButton from '@/Biz/Button';
     import BizSelect from '@/Biz/Select';
+    import BlockColumn from '@/Blocks/Column';
+    import EditModeComponentMixin from '@/Mixins/EditModeComponent';
+    import { confirm, confirmDelete } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         components: {
-            BlockColumn,
             BizButton,
             BizSelect,
+            BlockColumn,
         },
-        mixins: [EditModeComponentMixin],
+
+        mixins: [
+            EditModeComponentMixin
+        ],
+
         props: {
-            can: Object,
-            dataEntities: {},
-            dataMedia: {},
-            id: {},
-            isEditMode: {default: false},
-            modelValue: {},
-            selectedLocale: String,
+            can: { type: Object, required: true },
+            dataEntities: { type: Object, default: () => {} },
+            dataMedia: { type: Array, default: () => [] },
+            id: { type: String, required: true },
+            isEditMode: { type: Boolean, default: false },
+            modelValue: { type: Object, required: true },
+            selectedLocale: { type: String, required: true },
         },
+
         emits: [
             'delete-block',
-            'setting-content'
+            'duplicate-block',
         ],
+
         setup(props, { emit }) {
             return {
                 block: useModelWrapper(props, emit),
@@ -113,33 +131,80 @@
                 media: useModelWrapper(props, emit, 'dataMedia'),
             };
         },
+
         data() {
             return {
+                columnOptions: [1,2,3,4,5,6],
                 editModeWrapperClass: ['edit-mode-columns'],
                 numberOfColumns: this.block.columns.length,
-                columnOptions: [1,2,3,4,5,6],
             };
         },
+
         computed: {
             wrapperClass() {
                 let wrapperClass = [];
 
                 if (this.isEditMode) {
                     wrapperClass = wrapperClass.concat(
-                        'edit-mode-columns', 'is-multiline', 'box', 'p-1', 'my-1'
+                        'edit-mode-columns',
+                        'is-multiline',
+                        'box',
+                        'p-1',
+                        'my-1'
                     );
                 }
 
-                return wrapperClass;
+                const configWrapper = this.dataEntity?.config?.wrapper ?? null;
+
+                return wrapperClass.concat(
+                    (configWrapper['backgroundColor'] ?? '')
+                ).filter(Boolean);
+            },
+
+            dataEntity() {
+                return this.dataEntities[ this.block.id ] ?? null;
+            },
+
+            wrapperStyle() {
+                const styles = {};
+
+                const configWrapper = this.dataEntity?.config?.wrapper ?? null;
+
+                if (configWrapper && configWrapper["style.margin"]) {
+                    const styleMargin = configWrapper["style.margin"];
+
+                    for (const [key, margin] of Object.entries(styleMargin)) {
+                        if (! (styleMargin[key] == null || styleMargin[key] == "")) {
+                            styles['margin-'+key] = styleMargin[key]+'px !important';
+                        }
+                    }
+                }
+
+                if (configWrapper && configWrapper["style.padding"]) {
+                    const stylePadding = configWrapper["style.padding"];
+
+                    for (const [key, padding] of Object.entries(stylePadding)) {
+                        if (! (stylePadding[key] == null || stylePadding[key] == "")) {
+                            styles['padding-'+key] = stylePadding[key]+'px !important';
+                        }
+                    }
+                }
+
+                return styles;
             },
         },
+
         methods: {
             deleteBlock() {
-                const confirmText = 'Are you sure?';
-                if (confirm(confirmText) === true) {
-                    this.$emit('delete-block', this.id)
-                }
+                const self = this;
+
+                confirmDelete().then((result) => {
+                    if (result.isConfirmed) {
+                        self.$emit('delete-block', self.id)
+                    }
+                })
             },
+
             onColumnChange(event) {
                 const numberOfColumns = parseInt(event.target.value);
                 const originalNumberOfColumns = this.block.columns.length;
@@ -164,6 +229,18 @@
                     }
                 }
                 this.numberOfColumns = numberOfColumns;
+            },
+
+            duplicateBlock() {
+                const self = this;
+
+                confirm(
+                    'Duplicate Component?'
+                ).then((result) => {
+                    if (result.isConfirmed) {
+                        self.$emit('duplicate-block', self.id)
+                    }
+                });
             },
         },
     };

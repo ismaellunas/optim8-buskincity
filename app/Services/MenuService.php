@@ -24,6 +24,7 @@ use App\Entities\Caches\{
     SettingCache,
 };
 use Illuminate\Support\Collection;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class MenuService
 {
@@ -407,11 +408,6 @@ class MenuService
     {
         $user = $request->user();
 
-        $menuLogo = [
-            'title' => 'Homepage',
-            'link' => route('homepage'),
-        ];
-
         $dropdownRightMenus = [];
         $language = app(LanguageService::class)->getOriginLanguageFromCookie();
 
@@ -451,6 +447,14 @@ class MenuService
                 ];
             }
         }
+
+        $menuLogo = [
+            'title' => 'Homepage',
+            'link' => LaravelLocalization::localizeURL(
+                route('homepage'),
+                $language
+            ),
+        ];
 
         $headerMenu = $this->getHeaderMenu($language);
 
