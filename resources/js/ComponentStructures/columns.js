@@ -5,6 +5,7 @@ export default {
     columns: [],
     config: {
         wrapper: {
+            isFullwidth: false,
             'style.padding': {
                 top: null,
                 right: null,
@@ -18,7 +19,7 @@ export default {
                 bottom: null,
                 left: null,
                 unit: 'px',
-            }
+            },
         }
     },
 };
@@ -28,6 +29,14 @@ export const config = {
         label: "Wrapper",
         isOpen: false,
         config: {
+            isFullwidth: {
+                type: "select",
+                label: "Fullwidth",
+                options: [
+                    { value: false, name: "No"},
+                    { value: true, name: "Yes"},
+                ],
+            },
             'style.margin': {
                 component: "TRBLInput",
                 label: "Margin",
@@ -35,7 +44,7 @@ export const config = {
             'style.padding': {
                 component: "TRBLInput",
                 label: "Padding",
-            }
+            },
         }
     }
 };

@@ -217,6 +217,7 @@ class PageSeeder extends Seeder
                             "type" => "columns",
                             "config" => [
                                 "wrapper" => [
+                                    "isFullwidth" => false,
                                     "style.padding" => [
                                         "top" => null,
                                         "right" => null,
@@ -240,6 +241,7 @@ class PageSeeder extends Seeder
                             "type" => "columns",
                             "config" => [
                                 "wrapper" => [
+                                    "isFullwidth" => false,
                                     "style.padding" => [
                                         "top" => null,
                                         "right" => null,
@@ -263,6 +265,7 @@ class PageSeeder extends Seeder
                             "type" => "columns",
                             "config" => [
                                 "wrapper" => [
+                                    "isFullwidth" => false,
                                     "style.padding" => [
                                         "top" => null,
                                         "right" => null,
@@ -360,6 +363,7 @@ class PageSeeder extends Seeder
                             "type" => "columns",
                             "config" => [
                                 "wrapper" => [
+                                    "isFullwidth" => false,
                                     "style.padding" => [
                                         "top" => null,
                                         "right" => null,
