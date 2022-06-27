@@ -1,72 +1,71 @@
 <template>
     <div>
-        <div
-            v-for="(group, groupName) in configOptions"
+        <template
+            v-for="(group, groupName, indexConfig) in configOptions"
             :key="groupName"
-            class="card"
         >
-            <header class="card-header">
-                <p class="card-header-title">
+            <component
+                :is="group.component"
+                v-if="group.component && !isBlank(entity.config[ groupName ])"
+                v-model="entity.config[ groupName ]"
+                :class="{'mb-1': indexConfig != numberOfOptions - 1}"
+            />
+
+            <card
+                v-else-if="!isBlank(entity.config[ groupName ])"
+                :class="{'mb-1': indexConfig != numberOfOptions - 1}"
+            >
+                <template #headerTitle>
                     {{ group.label }}
-                </p>
-                <!--
-                <button class="card-header-icon" aria-label="more options">
-                    <span class="icon">
-                        <i class="fas fa-angle-down" aria-hidden="true"></i>
-                    </span>
-                </button>
-                -->
-            </header>
-            <div class="card-content">
-                <div class="content">
-                    <template
-                        v-for="(config, key) in group.config"
-                        :key="key"
+                </template>
+
+                <template
+                    v-for="(config, key) in group.config"
+                    :key="key"
+                >
+                    <biz-form-select
+                        v-if="config.type === 'select'"
+                        v-model="entity.config[ groupName ][ key ]"
+                        :label="config.label"
                     >
-                        <biz-form-select
-                            v-if="config.type === 'select'"
-                            v-model="entity.config[ groupName ][ key ]"
-                            :label="config.label"
+                        <option
+                            v-for="(option, index) in config.options"
+                            :key="index"
+                            :value="option.value"
                         >
-                            <option
-                                v-for="(option, index) in config.options"
-                                :key="index"
-                                :value="option.value"
-                            >
-                                {{ option.name }}
-                            </option>
-                        </biz-form-select>
+                            {{ option.name }}
+                        </option>
+                    </biz-form-select>
 
-                        <biz-form-input
-                            v-else-if="config.type === 'input'"
-                            v-model="entity.config[ groupName ][ key ]"
-                            :label="config.label"
-                        />
+                    <biz-form-input
+                        v-else-if="config.type === 'input'"
+                        v-model="entity.config[ groupName ][ key ]"
+                        :label="config.label"
+                    />
 
-                        <biz-checkbox
-                            v-else-if="config.type === 'checkbox'"
-                            v-model:checked="entity.config[ groupName ][ key ]"
-                            :value="true"
-                            class="mb-2"
-                        >
-                            <span class="ml-2">
-                                {{ config.label }}
-                            </span>
-                        </biz-checkbox>
+                    <biz-checkbox
+                        v-else-if="config.type === 'checkbox'"
+                        v-model:checked="entity.config[ groupName ][ key ]"
+                        :value="true"
+                        class="mb-2"
+                    >
+                        <span class="ml-2">
+                            {{ config.label }}
+                        </span>
+                    </biz-checkbox>
 
-                        <component
-                            :is="config.component"
-                            v-else-if="config.component"
-                            v-model="entity.config[ groupName ][ key ]"
-                            :label="config.label"
-                            :settings="config.settings"
-                        />
+                    <component
+                        :is="config.component"
+                        v-else-if="config.component"
+                        v-model="entity.config[ groupName ][ key ]"
+                        :label="config.label"
+                        :settings="config.settings"
+                    />
 
-                        <hr>
-                    </template>
-                </div>
-            </div>
-        </div>
+                    <hr>
+                </template>
+            </card>
+        </template>
     </div>
 </template>
 
@@ -74,12 +73,15 @@
     import BizCheckbox from '@/Biz/Checkbox';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormSelect from '@/Biz/Form/Select';
+    import Card from '@/Biz/Card';
     import Checkboxes from '@/Blocks/Configs/Checkboxes';
+    import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
     import SelectMultiple from '@/Blocks/Configs/SelectMultiple';
     import TRBL from '@/Blocks/Configs/TRBL';
     import TRBLInput from '@/Blocks/Configs/TRBLInput';
     import configs from '@/ComponentStructures/configs';
     import { camelCase } from "lodash";
+    import { isBlank } from '@/Libs/utils';
     import { useModelWrapper } from '@/Libs/utils'
 
     export default {
@@ -88,7 +90,9 @@
             BizCheckbox,
             BizFormInput,
             BizFormSelect,
+            Card,
             Checkboxes,
+            ConfigRowSection,
             SelectMultiple,
             TRBL,
             TRBLInput,
@@ -117,7 +121,15 @@
         computed: {
             configOptions() {
                 return configs[ camelCase(this.entity.componentName) ];
-            }
+            },
+
+            numberOfOptions() {
+                return Object.keys(this.configOptions).length;
+            },
         },
+
+        methods: {
+            isBlank: isBlank,
+        }
     };
 </script>
