@@ -12,6 +12,8 @@ export default {
         wrapper: {
             isFullwidth: false,
             backgroundColor: '',
+        },
+        dimension: {
             'style.padding': {
                 top: null,
                 right: null,
@@ -48,6 +50,12 @@ export const config = {
                 label: "Background Color",
                 options: defaultOption.concat(backgroundColors),
             },
+        }
+    },
+    dimension: {
+        label: "Dimension",
+        isOpen: false,
+        config: {
             'style.margin': {
                 component: "TRBLInput",
                 label: "Margin",

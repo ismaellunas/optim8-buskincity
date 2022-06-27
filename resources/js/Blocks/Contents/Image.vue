@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="dimensionStyle">
         <biz-toolbar-content
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
@@ -19,8 +19,18 @@
                 type="button"
                 @click="toggleEdit"
             >
-                <span class="icon" v-if="isFormDisplayed"><i class="fas fa-times-circle"></i></span>
-                <span class="icon" v-else><i class="fas fa-pen"></i></span>
+                <span
+                    v-if="isFormDisplayed"
+                    class="icon"
+                >
+                    <i class="fas fa-times-circle" />
+                </span>
+                <span
+                    v-else
+                    class="icon"
+                >
+                    <i class="fas fa-pen" />
+                </span>
             </biz-button>
         </biz-image>
 
@@ -36,7 +46,7 @@
                 >
                     <span>Open Media</span>
                     <span class="icon is-small">
-                        <i class="far fa-image"></i>
+                        <i class="far fa-image" />
                     </span>
                 </biz-button>
             </div>
@@ -59,6 +69,7 @@
 </template>
 
 <script>
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
@@ -79,6 +90,7 @@
             BizToolbarContent,
         },
         mixins: [
+            MixinContentHasDimension,
             MixinContentHasMediaLibrary,
             MixinDeletableContent,
             MixinDuplicableContent,
@@ -108,6 +120,15 @@
                 modalImages: [],
             };
         },
+        computed: {
+            /* @overide */
+            canEdit() {
+                return this.hasImage;
+            },
+            isFormDisplayed() {
+                return !this.hasImage || this.isFormOpen;
+            },
+        },
         methods: {
             toggleEdit() {
                 this.isFormOpen = !this.isFormOpen;
@@ -135,14 +156,5 @@
                 this.closeModal();
             },
         },
-        computed: {
-            /* @overide */
-            canEdit() {
-                return this.hasImage;
-            },
-            isFormDisplayed() {
-                return !this.hasImage || this.isFormOpen;
-            },
-        }
     }
 </script>
