@@ -7,13 +7,14 @@ class Icon extends BaseContent
     public $config = [];
     public $iconStyle = null;
     public $uid = null;
+    public $images;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($entity)
+    public function __construct($entity, $images = [])
     {
         parent::__construct($entity);
 
