@@ -1,22 +1,24 @@
-<{{ $headingTag }} @class($headingClasses)>{!! $headingContent !!}</{{ $headingTag }}>
+<div @class($entity['id'])>
+    <{{ $headingTag }} @class($headingClasses)>{!! $headingContent !!}</{{ $headingTag }}>
 
-<div class="column p-0">
-    @foreach($faqContents as $content)
-        <article class="media">
-            <div class="media-left">
-                <i class="fas fa-question-circle"></i>
-            </div>
-            <div class="media-content">
-                <div class="content has-text-weight-bold">
-                    <p>{{ $content['question'] }}</p>
+    <div class="column p-0">
+        @foreach($faqContents as $content)
+            <article class="media">
+                <div class="media-left">
+                    <i class="fas fa-question-circle"></i>
                 </div>
-
-                <article class="media">
-                    <div class="content">
-                        {!! $content['answer'] !!}
+                <div class="media-content">
+                    <div class="content has-text-weight-bold">
+                        <p>{{ $content['question'] }}</p>
                     </div>
-                </article>
-            </div>
-        </article>
-    @endforeach
+
+                    <article class="media">
+                        <div class="content">
+                            {!! $content['answer'] !!}
+                        </div>
+                    </article>
+                </div>
+            </article>
+        @endforeach
+    </div>
 </div>

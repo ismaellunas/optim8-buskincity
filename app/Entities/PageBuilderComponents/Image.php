@@ -1,0 +1,8 @@
+<?php
+
+namespace App\Entities\PageBuilderComponents;
+
+class Image extends Carousel
+{
+    //
+}

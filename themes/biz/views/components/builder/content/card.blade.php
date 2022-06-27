@@ -1,6 +1,6 @@
 @aware(['locale' => null])
 
-<div @class($wrapperClasses) >
+<div @class($entity['id'])>
     <div class="card">
         @if ($hasImage)
             <div @class(array_merge(['card-image'], $cardImageClasses))>

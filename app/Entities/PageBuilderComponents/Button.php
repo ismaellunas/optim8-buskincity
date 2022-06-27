@@ -7,18 +7,11 @@ use App\Contracts\PageBuilderComponentInterface;
 use App\Entities\StyleBlock;
 use App\Helpers\HtmlToText;
 
-class Faq extends DimensionComponent implements HasStyleInterface,PageBuilderComponentInterface
+class Button extends DimensionComponent implements HasStyleInterface,PageBuilderComponentInterface
 {
     public function getText(): string
     {
-        $text = $this->data['content']['heading']['html'] . ' ';
-
-        foreach ($this->data['content']['faqContent']['contents'] as $content) {
-            $text .= HtmlToText::convert($content['question']) . ' ';
-            $text .= HtmlToText::convert($content['answer']) . ' ';
-        }
-
-        return trim($text);
+        return HtmlToText::convert($this->data['content']['button']['text']);
     }
 
     public function getStyleBlocks(): array

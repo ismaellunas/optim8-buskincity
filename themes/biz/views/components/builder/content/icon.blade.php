@@ -1,11 +1,13 @@
-<div class="contents">
-    <div
-        @class(['content', $config['alignment']])
-    >
-        <span
-            {{ $attributes->merge(['id' => $uid, 'class' => 'icon']) }}
+<div @class($entity['id'])>
+    <div class="contents">
+        <div
+            @class(['content', $config['alignment']])
         >
-            <i @class($config['class'])></i>
-        </span>
+            <span
+                @class(['icon', 'icon-'.$uid])
+            >
+                <i @class($config['class'])></i>
+            </span>
+        </div>
     </div>
 </div>

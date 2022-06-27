@@ -3,24 +3,10 @@
 namespace App\Entities\PageBuilderComponents;
 
 use App\Contracts\HasStyleInterface;
-use App\Contracts\PageBuilderComponentInterface;
 use App\Entities\StyleBlock;
-use App\Helpers\HtmlToText;
 
-class Faq extends DimensionComponent implements HasStyleInterface,PageBuilderComponentInterface
+class Carousel extends DimensionComponent implements HasStyleInterface
 {
-    public function getText(): string
-    {
-        $text = $this->data['content']['heading']['html'] . ' ';
-
-        foreach ($this->data['content']['faqContent']['contents'] as $content) {
-            $text .= HtmlToText::convert($content['question']) . ' ';
-            $text .= HtmlToText::convert($content['answer']) . ' ';
-        }
-
-        return trim($text);
-    }
-
     public function getStyleBlocks(): array
     {
         $styleBlocks = [];
