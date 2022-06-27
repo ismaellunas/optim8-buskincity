@@ -188,22 +188,6 @@
 </script>
 
 <style scoped>
-    .border-dash {
-        border: 1px #D3D3D3 dashed;
-    }
-
-    .input-area {
-        min-width: 20px;
-        border-bottom: 1px solid #D3D3D3;
-    }
-
-    .empty-icon {
-        width: 15px;
-        height: 15px;
-        background: #D3D3D3;
-        border-radius: 50%;
-    }
-
     .tabs.is-toggle li.is-active a {
         z-index: auto !important;
     }
