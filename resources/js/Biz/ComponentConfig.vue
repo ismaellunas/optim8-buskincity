@@ -75,6 +75,8 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormSelect from '@/Biz/Form/Select';
     import Checkboxes from '@/Blocks/Configs/Checkboxes';
+    import InputIcon from '@/Blocks/Configs/InputIcon';
+    import NumberAddons from '@/Blocks/Configs/NumberAddons';
     import SelectMultiple from '@/Blocks/Configs/SelectMultiple';
     import TRBL from '@/Blocks/Configs/TRBL';
     import TRBLInput from '@/Blocks/Configs/TRBLInput';
@@ -89,6 +91,8 @@
             BizFormInput,
             BizFormSelect,
             Checkboxes,
+            InputIcon,
+            NumberAddons,
             SelectMultiple,
             TRBL,
             TRBLInput,

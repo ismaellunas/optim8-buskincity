@@ -119,17 +119,3 @@
         },
     }
 </script>
-
-<style scoped>
-    .input-area {
-        min-width: 20px;
-        border-bottom: 1px solid #D3D3D3;
-    }
-
-    .empty-icon {
-        width: 15px;
-        height: 15px;
-        background: #D3D3D3;
-        border-radius: 50%;
-    }
-</style>
