@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="dimensionStyle">
         <biz-toolbar-content
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
@@ -28,6 +28,7 @@
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils';
@@ -41,6 +42,7 @@
 
         mixins: [
             DeletableContentMixin,
+            MixinContentHasDimension,
             MixinDuplicableContent,
         ],
 
