@@ -76,6 +76,8 @@
     import Card from '@/Biz/Card';
     import Checkboxes from '@/Blocks/Configs/Checkboxes';
     import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
+    import InputIcon from '@/Blocks/Configs/InputIcon';
+    import NumberAddons from '@/Blocks/Configs/NumberAddons';
     import SelectMultiple from '@/Blocks/Configs/SelectMultiple';
     import TRBL from '@/Blocks/Configs/TRBL';
     import TRBLInput from '@/Blocks/Configs/TRBLInput';
@@ -93,6 +95,8 @@
             Card,
             Checkboxes,
             ConfigRowSection,
+            InputIcon,
+            NumberAddons,
             SelectMultiple,
             TRBL,
             TRBLInput,

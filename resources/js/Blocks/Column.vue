@@ -54,6 +54,7 @@
     import Draggable from 'vuedraggable';
     import Faq from '@/Blocks/Contents/Faq';
     import Heading from '@/Blocks/Contents/Heading';
+    import Icon from '@/Blocks/Contents/Icon';
     import Image from '@/Blocks/Contents/Image';
     import Tabs from '@/Blocks/Contents/Tabs';
     import Text from '@/Blocks/Contents/Text';
@@ -71,6 +72,7 @@
             Faq,
             Draggable,
             Heading,
+            Icon,
             Image,
             Tabs,
             Text,
