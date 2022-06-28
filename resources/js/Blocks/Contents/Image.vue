@@ -133,7 +133,7 @@
             toggleEdit() {
                 this.isFormOpen = !this.isFormOpen;
             },
-            onContentDeleted() { /* @override Mixins/DeletableContent */
+            onContentDeleted() { /* @override Mixins/MixinDeletableContent */
                 if (!isBlank(this.entityImage.mediaId)) {
                     this.detachImageFromMedia(this.entityImage.mediaId, this.pageMedia);
                 }
@@ -142,18 +142,21 @@
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
             },
-            onImageListLoadedSuccess(data) { /* @override Mixins/ContentHasMediaLibrary */
+            onImageListLoadedSuccess(data) { /* @override Mixins/MixinContentHasMediaLibrary */
                 this.modalImages = data;
             },
-            onImageListLoadedFail(error) { /* @override Mixins/ContentHasMediaLibrary */
+            onImageListLoadedFail(error) { /* @override Mixins/MixinContentHasMediaLibrary */
                 this.closeModal();
             },
-            onImageSelected() { /* @override Mixins/ContentHasMediaLibrary */
+            onImageSelected() { /* @override Mixins/MixinContentHasMediaLibrary */
                 this.closeModal();
                 this.isFormOpen = false;
             },
-            onImageUpdated() { /* @override Mixins/ContentHasMediaLibrary */
+            onImageUpdated() { /* @override Mixins/MixinContentHasMediaLibrary */
                 this.closeModal();
+            },
+            onContentDuplicated() { /* @override Mixins/MixinDuplicableContent */
+                this.attachImageToMedia(this.entityImage.mediaId, this.pageMedia);
             },
         },
     }

@@ -28,6 +28,10 @@ export default {
                 left: null,
                 unit: 'px',
             },
+        },
+        section: {
+            isIncluded: false,
+            size: null,
         }
     },
 };
@@ -65,5 +69,9 @@ export const config = {
                 label: "Padding",
             },
         }
+    },
+    section: {
+        label: "Section",
+        component: "ConfigRowSection",
     }
 };
