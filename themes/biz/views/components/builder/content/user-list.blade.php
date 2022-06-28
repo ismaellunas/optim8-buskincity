@@ -1,4 +1,4 @@
-<div @class($entity['id'])>
+<div @class($uniqueClass)>
     <user-list
         :countries="{{ Illuminate\Support\Js::from($countries) }}"
         :country-options="{{ Illuminate\Support\Js::from($countryOptions) }}"

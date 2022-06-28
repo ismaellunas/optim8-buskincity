@@ -1,4 +1,4 @@
-<div @class($entity['id'])>
+<div @class($uniqueClass)>
     <carousel
         :config="{{ Illuminate\Support\Js::from($config) }}"
         :entity-images="{{ Illuminate\Support\Js::from($carouselImages) }}"

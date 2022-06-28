@@ -1,4 +1,4 @@
-<div @class($entity['id'])>
+<div @class($uniqueClass)>
     <a
         id="{{ 'button-'.$entity['id'] }}"
         href="{{ $link }}"

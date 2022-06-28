@@ -1,5 +1,5 @@
 @aware(['locale' => ''])
 
-<div @class($entity['id'])>
+<div @class($uniqueClass)>
     <{{ $headingTag }} @class($headingClasses)>{!! $contentHtml !!}</{{ $headingTag }}>
 </div>

@@ -1,4 +1,4 @@
-<div @class($entity['id'])>
+<div @class($uniqueClass)>
     <{{ $headingTag }} @class($headingClasses)>{!! $headingContent !!}</{{ $headingTag }}>
 
     <div class="column p-0">
