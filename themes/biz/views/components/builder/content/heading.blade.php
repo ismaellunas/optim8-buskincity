@@ -1,5 +1,3 @@
 @aware(['locale' => ''])
 
-<div @class($entity['id'])>
-    <{{ $headingTag }} @class($headingClasses)>{!! $contentHtml !!}</{{ $headingTag }}>
-</div>
+<{{ $headingTag }} @class(array_merge([$entity['id']], $headingClasses))>{!! $contentHtml !!}</{{ $headingTag }}>
