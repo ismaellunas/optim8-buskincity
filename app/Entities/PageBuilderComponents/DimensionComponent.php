@@ -12,12 +12,12 @@ abstract class DimensionComponent
     public function __construct($data)
     {
         $this->data = $data;
-        $this->selector = $this->setSelector();
+        $this->selector = $this->getSelector();
     }
 
-    protected function setSelector(): string
+    protected function getSelector(): string
     {
-        return '.'.$this->data['id'];
+        return '.pb-'.$this->data['id'];
     }
 
     protected function getDimensionStyles(
