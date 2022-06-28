@@ -13,7 +13,7 @@ class Icon extends Carousel
         if (! empty($this->data['config']['style'])) {
             $styleConfig = $this->data['config']['style'];
 
-            $selector = '.icon-'.$this->data['id'];
+            $selector = '.pb-icon-'.$this->data['id'];
 
             $styleBlock = new StyleBlock($selector);
 
