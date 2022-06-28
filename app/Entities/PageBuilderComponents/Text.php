@@ -4,11 +4,14 @@ namespace App\Entities\PageBuilderComponents;
 
 use App\Contracts\HasStyleInterface;
 use App\Contracts\PageBuilderComponentInterface;
-use App\Entities\StyleBlock;
+use App\Contracts\PageBuilderDimensionInterface;
 use App\Helpers\HtmlToText;
+use App\Traits\PageBuilderDimension;
 
-class Text extends DimensionComponent implements HasStyleInterface,PageBuilderComponentInterface
+class Text extends BaseComponent implements HasStyleInterface,PageBuilderComponentInterface,PageBuilderDimensionInterface
 {
+    use PageBuilderDimension;
+
     public function getText(): string
     {
         return HtmlToText::convert($this->data['content']['html']);
@@ -21,16 +24,12 @@ class Text extends DimensionComponent implements HasStyleInterface,PageBuilderCo
         if (! empty($this->data['config']['dimension'])) {
             $dimensionConfig = $this->data['config']['dimension'];
 
-            $styleBlock = new StyleBlock($this->selector);
-
-            $styleBlocks[] = $this->getDimensionStyles($dimensionConfig, $styleBlock);
+            $styleBlocks[] = $this->getDimensionStyleBlock(
+                $dimensionConfig,
+                $this->selector
+            );
         }
 
         return $styleBlocks;
-    }
-
-    protected function setSelector(): string
-    {
-        return '.'.$this->data['id'];
     }
 }

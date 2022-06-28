@@ -4,7 +4,7 @@ namespace App\Entities\PageBuilderComponents;
 
 use App\Entities\StyleBlock;
 
-class Icon extends Carousel
+class Icon extends image
 {
     public function getStyleBlocks(): array
     {

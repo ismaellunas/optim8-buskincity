@@ -1,29 +1,17 @@
 <?php
 
-namespace App\Entities\PageBuilderComponents;
+namespace App\Traits;
 
 use App\Entities\StyleBlock;
 
-abstract class DimensionComponent
+trait PageBuilderDimension
 {
-    protected $data;
-    protected $selector;
-
-    public function __construct($data)
-    {
-        $this->data = $data;
-        $this->selector = $this->setSelector();
-    }
-
-    protected function setSelector(): string
-    {
-        return '.'.$this->data['id'];
-    }
-
-    protected function getDimensionStyles(
+    public function getDimensionStyleBlock(
         array $styleConfig,
-        StyleBlock $styleBlock
+        string $rootSelector
     ): StyleBlock {
+        $styleBlock = new StyleBlock($rootSelector);
+
         if (!empty($styleConfig['style.margin'])) {
 
             $marginsConfig = $styleConfig['style.margin'];
