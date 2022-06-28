@@ -14,9 +14,9 @@
                     v-if="hasImage"
                     :src="imageSrc"
                     :alt="altText"
-                    :ratio="config?.image?.ratio"
-                    :rounded="config?.image?.rounded"
-                    :square="config?.image?.fixedSquare"
+                    :ratio="this.config?.image?.ratio"
+                    :rounded="this.config?.image?.rounded"
+                    :square="this.config?.image?.fixedSquare"
                 />
 
                 <biz-button

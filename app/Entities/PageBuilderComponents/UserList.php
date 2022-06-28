@@ -2,7 +2,7 @@
 
 namespace App\Entities\PageBuilderComponents;
 
-class UserList extends Carousel
+class UserList extends Image
 {
     //
 }

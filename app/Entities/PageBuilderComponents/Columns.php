@@ -3,11 +3,12 @@
 namespace App\Entities\PageBuilderComponents;
 
 use App\Contracts\HasStyleInterface;
-use App\Entities\StyleBlock;
+use App\Contracts\PageBuilderDimensionInterface;
+use App\Traits\PageBuilderDimension;
 
-class Columns extends DimensionComponent implements HasStyleInterface
+class Columns extends BaseComponent implements HasStyleInterface,PageBuilderDimensionInterface
 {
-    protected $data;
+    use PageBuilderDimension;
 
     public function getStyleBlocks(): array
     {
@@ -16,9 +17,10 @@ class Columns extends DimensionComponent implements HasStyleInterface
         if (! empty($this->data['config']['dimension'])) {
             $dimensionConfig = $this->data['config']['dimension'];
 
-            $styleBlock = new StyleBlock($this->selector);
-
-            $styleBlocks[] = $this->getDimensionStyles($dimensionConfig, $styleBlock);
+            $styleBlocks[] = $this->getDimensionStyleBlock(
+                $dimensionConfig,
+                $this->selector
+            );
         }
 
         return $styleBlocks;
