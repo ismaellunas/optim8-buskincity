@@ -301,6 +301,10 @@ class PageSeeder extends Seeder
                                         "left" => null,
                                         "unit" => "px"
                                     ]
+                                ],
+                                'section' => [
+                                    'isIncluded' => false,
+                                    'size' => null,
                                 ]
                             ],
                             "id" => "IDL4PBMJ6GPF"
@@ -328,6 +332,10 @@ class PageSeeder extends Seeder
                                         "left" => null,
                                         "unit" => "px"
                                     ]
+                                ],
+                                'section' => [
+                                    'isIncluded' => false,
+                                    'size' => null,
                                 ]
                             ],
                             "id" => "IDL4PBMRSZW5"
@@ -355,6 +363,10 @@ class PageSeeder extends Seeder
                                         "left" => null,
                                         "unit" => "px"
                                     ]
+                                ],
+                                'section' => [
+                                    'isIncluded' => false,
+                                    'size' => null,
                                 ]
                             ],
                             "id" => "IDL4PBN90XUP"
@@ -472,6 +484,10 @@ class PageSeeder extends Seeder
                                         "left" => null,
                                         "unit" => "px"
                                     ]
+                                ],
+                                'section' => [
+                                    'isIncluded' => false,
+                                    'size' => null,
                                 ]
                             ],
                             "id" => "IDL4PBLOSY0U"

@@ -16,20 +16,13 @@
 
     <div class="page-wrapper py-6">
         @foreach ($page->data->get('structures') as $key => $structure)
-            <div @class([
-                'container',
-                'theme-font',
-                'is-fluid' => $page->data->get('entities')[$structure['id']]['config']['wrapper']['isFullwidth'] ?? false,
-                $page->data->get('entities')[$structure['id']]['config']['wrapper']['backgroundColor'] ?? '',
-            ])>
-                <x-builder.columns
-                    :uid="$structure['id']"
-                    :columns="$structure['columns']"
-                    :entities="$page->data->get('entities')"
-                    :locale="$currentLanguage"
-                    :images="$images"
-                />
-            </div>
+            <x-builder.row
+                :uid="$structure['id']"
+                :columns="$structure['columns']"
+                :entities="$page->data->get('entities')"
+                :locale="$currentLanguage"
+                :images="$images"
+            />
         @endforeach
     </div>
 
