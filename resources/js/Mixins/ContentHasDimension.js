@@ -6,15 +6,9 @@ export default {
         'modelValue',
     ],
 
-    setup(props) {
-        return {
-            config: props.modelValue?.config,
-        };
-    },
-
     computed: {
         configDimension() {
-            return this.config?.dimension ?? null;
+            return this.modelValue?.config?.dimension ?? null;
         },
 
         dimensionStyle() {
