@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="dimensionStyle">
         <biz-toolbar-content
             style="z-index: 3"
             @delete-content="deleteContent"
@@ -50,6 +50,7 @@
 <script>
     import CarouselMain from '@/Blocks/Contents/Carousel/CarouselMain.vue';
     import CarouselSlide from '@/Blocks/Contents/Carousel/CarouselSlide.vue';
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
@@ -69,6 +70,7 @@
         },
 
         mixins: [
+            MixinContentHasDimension,
             MixinContentHasMediaLibrary,
             MixinDeletableContent,
             MixinDuplicableContent,

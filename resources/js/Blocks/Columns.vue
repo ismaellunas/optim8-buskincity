@@ -2,7 +2,7 @@
     <div
         class="columns"
         :class="wrapperClass"
-        :style="wrapperStyle"
+        :style="dimensionStyle"
     >
         <div
             v-if="isEditMode"
@@ -94,6 +94,7 @@
     import BizSelect from '@/Biz/Select';
     import BlockColumn from '@/Blocks/Column';
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import { confirm, confirmDelete } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
@@ -108,7 +109,8 @@
 
         mixins: [
             EditModeComponentMixin,
-            MixinContentHasMediaLibrary
+            MixinContentHasDimension,
+            MixinContentHasMediaLibrary,
         ],
 
         props: {
@@ -167,32 +169,8 @@
                 return this.dataEntities[ this.block.id ] ?? null;
             },
 
-            wrapperStyle() {
-                const styles = {};
-
-                const configWrapper = this.dataEntity?.config?.wrapper ?? null;
-
-                if (configWrapper && configWrapper["style.margin"]) {
-                    const styleMargin = configWrapper["style.margin"];
-
-                    for (const [key, margin] of Object.entries(styleMargin)) {
-                        if (! (styleMargin[key] == null || styleMargin[key] == "")) {
-                            styles['margin-'+key] = styleMargin[key]+'px !important';
-                        }
-                    }
-                }
-
-                if (configWrapper && configWrapper["style.padding"]) {
-                    const stylePadding = configWrapper["style.padding"];
-
-                    for (const [key, padding] of Object.entries(stylePadding)) {
-                        if (! (stylePadding[key] == null || stylePadding[key] == "")) {
-                            styles['padding-'+key] = stylePadding[key]+'px !important';
-                        }
-                    }
-                }
-
-                return styles;
+            configDimension() {
+                return this.dataEntity?.config?.dimension ?? null;
             },
         },
 

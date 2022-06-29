@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="dimensionStyle">
         <biz-toolbar-content
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
@@ -57,6 +57,7 @@
 
 <script>
     import DeletableContentMixin from '@/Mixins/DeletableContent';
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinHasModal from '@/Mixins/HasModal';
     import fontawesomeAllClasses from '@/Json/fontawesome-all-classes';
@@ -75,6 +76,7 @@
 
         mixins: [
             DeletableContentMixin,
+            MixinContentHasDimension,
             MixinDuplicableContent,
             MixinHasModal,
         ],
@@ -101,7 +103,7 @@
                     (this.config.button.width ?? ''),
                     (this.config.button.style ?? ''),
                 ).filter(Boolean);
-            }
+            },
         },
 
         methods: {
