@@ -21,7 +21,7 @@
                     <carousel-slide
                         :config="config"
                         :data-images="images"
-                        :data-media="dataMedia"
+                        :data-media="pageMedia"
                         :direction="direction"
                         :entity-media="entityImage"
                         :index="index"
@@ -82,10 +82,6 @@
         inject: ['can'],
 
         props: {
-            dataMedia: {
-                type: Array,
-                default:() => [],
-            },
             modelValue: {
                 type: Object,
                 required: true,
@@ -101,7 +97,7 @@
                 config: props.modelValue?.config,
                 dataImages: inject('dataImages'),
                 entity: useModelWrapper(props, emit),
-                pageMedia: useModelWrapper(props, emit, 'dataMedia'),
+                pageMedia: inject('dataMedia'),
             };
         },
 

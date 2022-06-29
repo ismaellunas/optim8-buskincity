@@ -80,7 +80,6 @@
                 :id="column.id"
                 :components="block.columns[index].components"
                 :data-entities="entities"
-                :data-media="media"
                 :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
             />
@@ -98,6 +97,7 @@
     import { confirm, confirmDelete } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
     import { useModelWrapper, isEmpty } from '@/Libs/utils';
+    import { provide, ref } from 'vue';
 
     export default {
         components: {
@@ -127,10 +127,14 @@
         ],
 
         setup(props, { emit }) {
+            let dataMedia = useModelWrapper(props, emit, 'dataMedia');
+
+            provide('dataMedia', dataMedia);
+
             return {
                 block: useModelWrapper(props, emit),
                 entities: useModelWrapper(props, emit, 'dataEntities'),
-                media: useModelWrapper(props, emit, 'dataMedia'),
+                media: dataMedia,
             };
         },
 

@@ -101,7 +101,6 @@
             id: String,
             entityId: {},
             modelValue: Object,
-            dataMedia: {type: Array, default: []},
             selectedLocale: String,
         },
         setup(props, { emit }) {
@@ -109,7 +108,7 @@
                 config: props.modelValue?.config,
                 dataImages: inject('dataImages'),
                 entity: useModelWrapper(props, emit),
-                pageMedia: useModelWrapper(props, emit, 'dataMedia'),
+                pageMedia: inject('dataMedia'),
             };
         },
         data() {
