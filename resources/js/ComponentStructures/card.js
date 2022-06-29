@@ -37,18 +37,20 @@ export default {
             alignment: null,
             size: null,
         },
-        wrapper: {
-            margin: {
+        dimension: {
+            'style.padding': {
                 top: null,
                 right: null,
                 bottom: null,
                 left: null,
+                unit: 'px',
             },
-            padding: {
+            'style.margin': {
                 top: null,
                 right: null,
                 bottom: null,
                 left: null,
+                unit: 'px',
             },
         }
     }
@@ -89,18 +91,18 @@ export const config = {
             },
         }
     },
-    wrapper: {
-        label: "Wrapper",
+    dimension: {
+        label: "Dimension",
         isOpen: false,
         config: {
-            margin: {
-                component: "TRBL",
+            'style.margin': {
+                component: "TRBLInput",
                 label: "Margin",
             },
-            padding: {
-                component: "TRBL",
+            'style.padding': {
+                component: "TRBLInput",
                 label: "Padding",
-            }
+            },
         }
     }
 };

@@ -1,12 +1,15 @@
 <template>
-    <div :class="wrapperClass">
+    <div>
         <biz-toolbar-content
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
         />
 
-        <div class="card">
-            <div class="card-image" :class="cardImageClass">
+        <div class="card" :style="dimensionStyle">
+            <div
+                class="card-image"
+                :class="cardImageClass"
+            >
                 <biz-image
                     v-if="hasImage"
                     :src="imageSrc"
@@ -22,11 +25,24 @@
                     class="is-overlay is-small"
                     @click="toggleEdit"
                 >
-                    <span class="icon" v-if="isFormDisplayed"><i class="fas fa-times-circle"></i></span>
-                    <span class="icon" v-else><i class="fas fa-pen"></i></span>
+                    <span
+                        v-if="isFormDisplayed"
+                        class="icon"
+                    >
+                        <i class="fas fa-times-circle" />
+                    </span>
+                    <span
+                        v-else
+                        class="icon"
+                    >
+                        <i class="fas fa-pen" />
+                    </span>
                 </biz-button>
 
-                <div class="card-content has-background-info-light" v-if="isFormDisplayed">
+                <div
+                    v-if="isFormDisplayed"
+                    class="card-content has-background-info-light"
+                >
                     <div class="block has-text-centered">
                         <biz-button
                             type="button"
@@ -35,7 +51,7 @@
                         >
                             <span>Open Media</span>
                             <span class="icon is-small">
-                                <i class="far fa-image"></i>
+                                <i class="far fa-image" />
                             </span>
                         </biz-button>
                     </div>
@@ -46,7 +62,7 @@
                     class="content"
                     :class="cardContentClass"
                 >
-                    <biz-editor v-model="entity.content.cardContent.content.html"/>
+                    <biz-editor v-model="entity.content.cardContent.content.html" />
                 </div>
             </div>
         </div>
@@ -68,6 +84,7 @@
 </template>
 
 <script>
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
@@ -78,7 +95,6 @@
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat } from 'lodash';
-    import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { inject } from "vue";
 
@@ -92,6 +108,7 @@
             BizToolbarContent,
         },
         mixins: [
+            MixinContentHasDimension,
             MixinContentHasMediaLibrary,
             MixinDeletableContent,
             MixinDuplicableContent,
@@ -120,6 +137,27 @@
                 modalImages: [],
             };
         },
+        computed: {
+            isFormDisplayed() {
+                return !this.hasImage || (this.hasImage && this.isFormOpen);
+            },
+            cardImageClass() {
+                let classes = [];
+                const suffix = {top: 't', right: 'r', bottom: 'b', left: 'l'};
+                if (this.config?.image?.padding) {
+                    for (const [key, value] of Object.entries(this.config.image.padding)) {
+                        classes.push( 'p'+suffix[key]+'-'+value );
+                    }
+                }
+                return classes;
+            },
+            cardContentClass() {
+                return concat(
+                    this.config.content?.size,
+                    this.config.content?.alignment
+                ).filter(Boolean);
+            },
+        },
         methods: {
             onContentDeleted() { /* @override Mixins/DeletableContent */
                 if (!isBlank(this.entityImage.mediaId)) {
@@ -146,33 +184,6 @@
             onImageListLoadedFail(error) { /* @override Mixins/ContentHasMediaLibrary */
                 this.closeModal();
             },
-        },
-        computed: {
-            isFormDisplayed() {
-                return !this.hasImage || (this.hasImage && this.isFormOpen);
-            },
-            cardImageClass() {
-                let classes = [];
-                const suffix = {top: 't', right: 'r', bottom: 'b', left: 'l'};
-                if (this.config?.image?.padding) {
-                    for (const [key, value] of Object.entries(this.config.image.padding)) {
-                        classes.push( 'p'+suffix[key]+'-'+value );
-                    }
-                }
-                return classes;
-            },
-            cardContentClass() {
-                return concat(
-                    this.config.content?.size,
-                    this.config.content?.alignment
-                ).filter(Boolean);
-            },
-            wrapperClass() {
-                return concat(
-                    createPaddingClasses(this.config.wrapper?.padding),
-                    createMarginClasses(this.config.wrapper?.margin)
-                ).filter(Boolean);
-            }
         },
     }
 </script>
