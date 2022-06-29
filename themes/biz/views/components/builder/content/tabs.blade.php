@@ -1,5 +1,7 @@
-<tabs
-    @class($uniqueClass)
-    :classes="{{ Illuminate\Support\Js::from($classes) }}"
-    :content="{{ Illuminate\Support\Js::from($tabsContent) }}"
-/>
+<div class="container">
+    <tabs
+        @class($uniqueClass)
+        :classes="{{ Illuminate\Support\Js::from($classes) }}"
+        :content="{{ Illuminate\Support\Js::from($tabsContent) }}"
+    />
+</div>
