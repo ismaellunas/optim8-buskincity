@@ -95,7 +95,7 @@
     import BlockColumn from '@/Blocks/Column';
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
-    import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
+    import MixinMediaImage from '@/Mixins/MediaImage';
     import { confirm, confirmDelete } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
     import { useModelWrapper, isEmpty } from '@/Libs/utils';
@@ -110,7 +110,7 @@
         mixins: [
             EditModeComponentMixin,
             MixinContentHasDimension,
-            MixinContentHasMediaLibrary,
+            MixinMediaImage,
         ],
 
         props: {
