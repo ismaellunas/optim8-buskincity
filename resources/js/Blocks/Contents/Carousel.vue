@@ -35,6 +35,8 @@
             <biz-modal-media-browser
                 v-if="isModalOpen"
                 :data="modalImages"
+                :is-download-enabled="can.media.read"
+                :is-upload-enabled="can.media.add"
                 :query-params="imageListQueryParams"
                 :search="search"
                 @close="closeModal"
@@ -76,6 +78,8 @@
             MixinDuplicableContent,
             MixinHasModal,
         ],
+
+        inject: ['can'],
 
         props: {
             dataMedia: {

@@ -114,8 +114,8 @@
             MixinDuplicableContent,
             MixinHasModal,
         ],
+        inject: ['can'],
         props: {
-            can: Object,
             dataMedia: {},
             id: {},
             modelValue: {},
