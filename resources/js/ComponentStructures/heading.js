@@ -13,6 +13,22 @@ export default {
             tag: "h1",
             type: "title",
             alignment: null,
+        },
+        dimension: {
+            'style.padding': {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+                unit: 'px',
+            },
+            'style.margin': {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+                unit: 'px',
+            },
         }
     }
 };
@@ -47,5 +63,19 @@ export const config = {
                 options: defaultOption.concat(alignments),
             },
         },
+    },
+    dimension: {
+        label: "Dimension",
+        isOpen: false,
+        config: {
+            'style.margin': {
+                component: "TRBLInput",
+                label: "Margin",
+            },
+            'style.padding': {
+                component: "TRBLInput",
+                label: "Padding",
+            },
+        }
     }
 };

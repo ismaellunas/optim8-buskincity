@@ -12,7 +12,6 @@
             <page-form
                 v-model="form[selectedLocale]"
                 v-model:content-config-id="contentConfigId"
-                :can="can"
                 :errors="errors"
                 :is-new="isNew"
                 :is-edit-mode="isEditMode"
@@ -41,6 +40,11 @@
             AppLayout,
             PageForm,
             BizErrorNotifications,
+        },
+        provide() {
+            return {
+                can: this.can,
+            }
         },
         props: {
             can: { type: Object, required: true },

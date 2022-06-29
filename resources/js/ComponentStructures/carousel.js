@@ -21,6 +21,22 @@ export default {
             autoPlay: true,
             // figure
             ratio: "is-16by9",
+        },
+        dimension: {
+            'style.padding': {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+                unit: 'px',
+            },
+            'style.margin': {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+                unit: 'px',
+            },
         }
     }
 }
@@ -53,6 +69,20 @@ export const config = {
                 type: "select",
                 label: "Ratio",
                 options: defaultOption.concat(imageRatios)
+            },
+        }
+    },
+    dimension: {
+        label: "Dimension",
+        isOpen: false,
+        config: {
+            'style.margin': {
+                component: "TRBLInput",
+                label: "Margin",
+            },
+            'style.padding': {
+                component: "TRBLInput",
+                label: "Padding",
             },
         }
     }

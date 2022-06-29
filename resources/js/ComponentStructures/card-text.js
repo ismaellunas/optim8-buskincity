@@ -7,9 +7,6 @@ export default {
         cardContent: {
             content: {
                 html: "",
-                //attributes: {
-                //    class: [],
-                //},
             },
             media: {},
         }
@@ -17,6 +14,22 @@ export default {
     config: {
         content: {
             size: null,
+        },
+        dimension: {
+            'style.padding': {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+                unit: 'px',
+            },
+            'style.margin': {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+                unit: 'px',
+            },
         }
     }
 }
@@ -30,6 +43,20 @@ export const config = {
                 label: "Size",
                 options: defaultOption.concat(contentSizes),
             }
+        }
+    },
+    dimension: {
+        label: "Dimension",
+        isOpen: false,
+        config: {
+            'style.margin': {
+                component: "TRBLInput",
+                label: "Margin",
+            },
+            'style.padding': {
+                component: "TRBLInput",
+                label: "Padding",
+            },
         }
     }
 };

@@ -1,55 +1,56 @@
 <template>
-    <div>
+    <div :style="dimensionStyle">
         <biz-toolbar-content
             style="z-index: 3"
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
         />
 
-        <div class="container">
-            <carousel-main
-                :config="config"
-                :total-image="entityImages.length"
-                :visible-slide="visibleSlide"
-                @next="nextSlide"
-                @prev="prevSlide"
+        <carousel-main
+            :config="config"
+            :total-image="entityImages.length"
+            :visible-slide="visibleSlide"
+            @next="nextSlide"
+            @prev="prevSlide"
+        >
+            <template
+                v-for="(entityImage, index) in entityImages"
+                :key="index"
             >
-                <template
-                    v-for="(entityImage, index) in entityImages"
-                    :key="index"
-                >
-                    <carousel-slide
-                        :config="config"
-                        :data-images="images"
-                        :data-media="dataMedia"
-                        :direction="direction"
-                        :entity-media="entityImage"
-                        :index="index"
-                        :selected-locale="selectedLocale"
-                        :visible-slide="visibleSlide"
-                        @openModal="openModalMedia(index)"
-                    />
-                </template>
-            </carousel-main>
+                <carousel-slide
+                    :config="config"
+                    :data-images="images"
+                    :data-media="dataMedia"
+                    :direction="direction"
+                    :entity-media="entityImage"
+                    :index="index"
+                    :selected-locale="selectedLocale"
+                    :visible-slide="visibleSlide"
+                    @openModal="openModalMedia(index)"
+                />
+            </template>
+        </carousel-main>
 
-            <biz-modal-media-browser
-                v-if="isModalOpen"
-                :data="modalImages"
-                :query-params="imageListQueryParams"
-                :search="search"
-                @close="closeModal"
-                @on-clicked-pagination="getImagesList"
-                @on-media-selected="selectImage"
-                @on-media-submitted="updateImage"
-                @on-view-changed="setView"
-            />
-        </div>
+        <biz-modal-media-browser
+            v-if="isModalOpen"
+            :data="modalImages"
+            :is-download-enabled="can.media.read"
+            :is-upload-enabled="can.media.add"
+            :query-params="imageListQueryParams"
+            :search="search"
+            @close="closeModal"
+            @on-clicked-pagination="getImagesList"
+            @on-media-selected="selectImage"
+            @on-media-submitted="updateImage"
+            @on-view-changed="setView"
+        />
     </div>
 </template>
 
 <script>
     import CarouselMain from '@/Blocks/Contents/Carousel/CarouselMain.vue';
     import CarouselSlide from '@/Blocks/Contents/Carousel/CarouselSlide.vue';
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
@@ -69,11 +70,14 @@
         },
 
         mixins: [
+            MixinContentHasDimension,
             MixinContentHasMediaLibrary,
             MixinDeletableContent,
             MixinDuplicableContent,
             MixinHasModal,
         ],
+
+        inject: ['can'],
 
         props: {
             dataMedia: {
@@ -220,6 +224,14 @@
                             this.detachImageFromMedia(this.entityImages[i].mediaId, this.pageMedia);
                         }
                     }
+                }
+            },
+
+            onContentDuplicated() { /* @override MixinDuplicableContent */
+                const countImage = this.entityImages.length;
+
+                for (let i = 0; i < countImage; i++) {
+                    this.attachImageToMedia(this.entityImages[i].mediaId, this.pageMedia);
                 }
             },
 

@@ -9,6 +9,7 @@ abstract class BaseContent extends Component
 {
     public $entity;
     public $wrapperClasses = [];
+    public $uniqueClass;
 
     protected $baseView = 'components.builder.content';
     protected $pageBuilderService;
@@ -25,6 +26,8 @@ abstract class BaseContent extends Component
         $this->entity = $entity;
 
         $this->wrapperClasses = $this->getWrapperClasses();
+
+        $this->uniqueClass = $this->getUniqueClass();
     }
 
     /**
@@ -68,5 +71,10 @@ abstract class BaseContent extends Component
         }
 
         return $classes->flatten()->all();
+    }
+
+    protected function getUniqueClass(): string
+    {
+        return 'pb-'.$this->entity['id'];
     }
 }
