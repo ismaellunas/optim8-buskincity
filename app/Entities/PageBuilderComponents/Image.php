@@ -3,19 +3,12 @@
 namespace App\Entities\PageBuilderComponents;
 
 use App\Contracts\HasStyleInterface;
-use App\Contracts\PageBuilderComponentInterface;
 use App\Contracts\PageBuilderDimensionInterface;
-use App\Helpers\HtmlToText;
 use App\Traits\PageBuilderDimension;
 
-class Text extends BaseComponent implements HasStyleInterface,PageBuilderComponentInterface,PageBuilderDimensionInterface
+class Image extends BaseComponent implements HasStyleInterface,PageBuilderDimensionInterface
 {
     use PageBuilderDimension;
-
-    public function getText(): string
-    {
-        return HtmlToText::convert($this->data['content']['html']);
-    }
 
     public function getStyleBlocks(): array
     {

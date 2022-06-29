@@ -3,57 +3,24 @@
 namespace App\Entities\PageBuilderComponents;
 
 use App\Contracts\HasStyleInterface;
-use App\Entities\StyleBlock;
+use App\Contracts\PageBuilderDimensionInterface;
+use App\Traits\PageBuilderDimension;
 
-class Columns implements HasStyleInterface
+class Columns extends BaseComponent implements HasStyleInterface,PageBuilderDimensionInterface
 {
-    protected $data;
-
-    public function __construct($data)
-    {
-        $this->data = $data;
-    }
+    use PageBuilderDimension;
 
     public function getStyleBlocks(): array
     {
         $styleBlocks = [];
 
-        if (! empty($this->data['config']['wrapper'])) {
-            $wrapperConfig = $this->data['config']['wrapper'];
+        if (! empty($this->data['config']['dimension'])) {
+            $dimensionConfig = $this->data['config']['dimension'];
 
-            $selector = '#'.$this->data['id'];
-
-            $styleBlock = new StyleBlock($selector);
-
-            if (!empty($wrapperConfig['style.margin'])) {
-
-                $marginsConfig = $wrapperConfig['style.margin'];
-
-                $unit = $marginsConfig['unit'] ?? 'px';
-
-                collect($marginsConfig)
-                    ->except(['unit'])
-                    ->filter(fn ($value) => ($value == "0" || !empty($value)))
-                    ->each(function ($value, $key) use ($styleBlock, $unit) {
-                        $styleBlock->addStyle('margin-'.$key, $value.$unit);
-                    });
-            }
-
-            if (!empty($wrapperConfig['style.padding'])) {
-
-                $paddingConfig = $wrapperConfig['style.padding'];
-
-                $unit = $paddingConfig['unit'] ?? 'px';
-
-                collect($paddingConfig)
-                    ->except(['unit'])
-                    ->filter(fn($value) => ($value == "0" || !empty($value)))
-                    ->each(function ($value, $key) use ($styleBlock, $unit) {
-                        $styleBlock->addStyle('padding-'.$key, $value.$unit);
-                    });
-            }
-
-            $styleBlocks[] = $styleBlock;
+            $styleBlocks[] = $this->getDimensionStyleBlock(
+                $dimensionConfig,
+                $this->selector
+            );
         }
 
         return $styleBlocks;
