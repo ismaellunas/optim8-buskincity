@@ -1,5 +1,5 @@
 <user-list
-    @class($entity['id'])
+    @class($uniqueClass)
     :countries="{{ Illuminate\Support\Js::from($countries) }}"
     :country-options="{{ Illuminate\Support\Js::from($countryOptions) }}"
     :order-by-options="{{ Illuminate\Support\Js::from($orderByOptions) }}"

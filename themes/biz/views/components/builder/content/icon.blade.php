@@ -1,10 +1,10 @@
-<div @class($entity['id'])>
+<div @class($uniqueClass)>
     <div class="contents">
         <div
             @class(['content', $config['alignment']])
         >
             <span
-                @class(['icon', 'icon-'.$uid])
+                @class(['icon', 'pb-icon-'.$uid])
             >
                 <i @class($config['class'])></i>
             </span>

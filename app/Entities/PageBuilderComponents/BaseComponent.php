@@ -15,6 +15,6 @@ abstract class BaseComponent
 
     protected function getSelector(): string
     {
-        return '.'.$this->data['id'];
+        return '.pb-'.$this->data['id'];
     }
 }

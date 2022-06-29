@@ -1,6 +1,6 @@
 @aware(['images' => [], 'locale' => null])
 
-<div @class($entity['id'])>
+<div @class($uniqueClass)>
     <x-image
         :media="$imageMedia"
         :locale="$locale"
