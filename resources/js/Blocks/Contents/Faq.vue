@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="dimensionStyle">
         <biz-toolbar-content
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizTinymce from '@/Biz/EditorTinymce';
@@ -35,6 +36,7 @@
             FaqQuestionAnswer,
         },
         mixins: [
+            MixinContentHasDimension,
             MixinDeletableContent,
             MixinDuplicableContent
         ],

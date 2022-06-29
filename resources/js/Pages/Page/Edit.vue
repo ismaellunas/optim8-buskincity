@@ -14,7 +14,6 @@
             <page-form
                 v-model="form[selectedLocale]"
                 v-model:content-config-id="contentConfigId"
-                :can="can"
                 :errors="errors"
                 :is-dirty="form.isDirty"
                 :is-edit-mode="isEditMode"
@@ -49,6 +48,11 @@
             PageForm,
             BizErrorNotifications,
             BizFlashNotifications,
+        },
+        provide() {
+            return {
+                can: this.can,
+            }
         },
         props: {
             can: { type: Object, required: true },

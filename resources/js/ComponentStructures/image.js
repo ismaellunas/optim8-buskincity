@@ -17,6 +17,22 @@ export default {
             ratio: "is-4by3",
             // img
             rounded: "",
+        },
+        dimension: {
+            'style.padding': {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+                unit: 'px',
+            },
+            'style.margin': {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+                unit: 'px',
+            },
         }
     }
 }
@@ -43,6 +59,20 @@ export const config = {
                     { value: "is-rounded", name: "Yes"},
                 ],
             }
+        }
+    },
+    dimension: {
+        label: "Dimension",
+        isOpen: false,
+        config: {
+            'style.margin': {
+                component: "TRBLInput",
+                label: "Margin",
+            },
+            'style.padding': {
+                component: "TRBLInput",
+                label: "Padding",
+            },
         }
     }
 };

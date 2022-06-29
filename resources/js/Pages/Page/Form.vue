@@ -57,7 +57,6 @@
                             id="page-form-builder"
                             v-model="form.data"
                             v-model:content-config-id="computedContentConfigId"
-                            :can="can"
                             :is-edit-mode="isEditMode"
                             :selected-locale="selectedLocale"
                         />
@@ -111,8 +110,9 @@
             BizProvideInjectTabs,
         },
 
+        inject: ['can'],
+
         props: {
-            can: { type: Object, required: true },
             contentConfigId: { type: String, required: true },
             errors: { type: Object, default:() => {} },
             isDirty: { type: Boolean, default: false },

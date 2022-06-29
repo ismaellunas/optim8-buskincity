@@ -101,6 +101,22 @@ class PageSeeder extends Seeder
                                     "tag" => "h1",
                                     "type" => "title",
                                     "alignment" => null
+                                ],
+                                "dimension" => [
+                                    "style.padding" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ],
+                                    "style.margin" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ]
                                 ]
                             ],
                             "id" => "IDL0GDCQ2FNJ"
@@ -120,6 +136,22 @@ class PageSeeder extends Seeder
                             "config" => [
                                 "content" => [
                                     "size" => null
+                                ],
+                                "dimension" => [
+                                    "style.padding" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ],
+                                    "style.margin" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ]
                                 ]
                             ],
                             "id" => "IDL0GDDBD53P"
@@ -135,18 +167,20 @@ class PageSeeder extends Seeder
                                     "size" => null,
                                     "alignment" => null
                                 ],
-                                "wrapper" => [
-                                    "margin" => [
+                                "dimension" => [
+                                    "style.padding" => [
                                         "top" => null,
                                         "right" => null,
                                         "bottom" => null,
-                                        "left" => null
+                                        "left" => null,
+                                        "unit" => "px"
                                     ],
-                                    "padding" => [
+                                    "style.margin" => [
                                         "top" => null,
                                         "right" => null,
                                         "bottom" => null,
-                                        "left" => null
+                                        "left" => null,
+                                        "unit" => "px"
                                     ]
                                 ]
                             ],
@@ -185,6 +219,22 @@ class PageSeeder extends Seeder
                                     "size" => null,
                                     "style" => "is-boxed",
                                     "width" => null
+                                ],
+                                "dimension" => [
+                                    "style.padding" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ],
+                                    "style.margin" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ]
                                 ]
                             ],
                             "id" => "IDL0GDFNUXL8"
@@ -208,6 +258,22 @@ class PageSeeder extends Seeder
                                     "width" => "is-fullwidth",
                                     "style" => "is-rounded",
                                     "iconPosition" => null
+                                ],
+                                "dimension" => [
+                                    "style.padding" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ],
+                                    "style.margin" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ]
                                 ]
                             ],
                             "id" => "IDL0GDML4ZC9"
@@ -219,6 +285,8 @@ class PageSeeder extends Seeder
                                 "wrapper" => [
                                     "isFullwidth" => false,
                                     "backgroundColor" => "",
+                                ],
+                                "dimension" => [
                                     "style.padding" => [
                                         "top" => null,
                                         "right" => null,
@@ -233,6 +301,10 @@ class PageSeeder extends Seeder
                                         "left" => null,
                                         "unit" => "px"
                                     ]
+                                ],
+                                'section' => [
+                                    'isIncluded' => false,
+                                    'size' => null,
                                 ]
                             ],
                             "id" => "IDL4PBMJ6GPF"
@@ -244,6 +316,8 @@ class PageSeeder extends Seeder
                                 "wrapper" => [
                                     "isFullwidth" => false,
                                     "backgroundColor" => "",
+                                ],
+                                "dimension" => [
                                     "style.padding" => [
                                         "top" => null,
                                         "right" => null,
@@ -258,6 +332,10 @@ class PageSeeder extends Seeder
                                         "left" => null,
                                         "unit" => "px"
                                     ]
+                                ],
+                                'section' => [
+                                    'isIncluded' => false,
+                                    'size' => null,
                                 ]
                             ],
                             "id" => "IDL4PBMRSZW5"
@@ -269,6 +347,8 @@ class PageSeeder extends Seeder
                                 "wrapper" => [
                                     "isFullwidth" => false,
                                     "backgroundColor" => "",
+                                ],
+                                "dimension" => [
                                     "style.padding" => [
                                         "top" => null,
                                         "right" => null,
@@ -283,6 +363,10 @@ class PageSeeder extends Seeder
                                         "left" => null,
                                         "unit" => "px"
                                     ]
+                                ],
+                                'section' => [
+                                    'isIncluded' => false,
+                                    'size' => null,
                                 ]
                             ],
                             "id" => "IDL4PBN90XUP"
@@ -357,17 +441,8 @@ class PageSeeder extends Seeder
                                     "tag" => "h1",
                                     "type" => "title",
                                     "alignment" => null
-                                ]
-                            ],
-                            "id" => "IDL0GDUPE90F"
-                        ],
-                        "IDL4PBLOSY0U" => [
-                            "componentName" => "Columns",
-                            "type" => "columns",
-                            "config" => [
-                                "wrapper" => [
-                                    "isFullwidth" => false,
-                                    "backgroundColor" => "",
+                                ],
+                                "dimension" => [
                                     "style.padding" => [
                                         "top" => null,
                                         "right" => null,
@@ -382,6 +457,37 @@ class PageSeeder extends Seeder
                                         "left" => null,
                                         "unit" => "px"
                                     ]
+                                ]
+                            ],
+                            "id" => "IDL0GDUPE90F"
+                        ],
+                        "IDL4PBLOSY0U" => [
+                            "componentName" => "Columns",
+                            "type" => "columns",
+                            "config" => [
+                                "wrapper" => [
+                                    "isFullwidth" => false,
+                                    "backgroundColor" => "",
+                                ],
+                                "dimension" => [
+                                    "style.padding" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ],
+                                    "style.margin" => [
+                                        "top" => null,
+                                        "right" => null,
+                                        "bottom" => null,
+                                        "left" => null,
+                                        "unit" => "px"
+                                    ]
+                                ],
+                                'section' => [
+                                    'isIncluded' => false,
+                                    'size' => null,
                                 ]
                             ],
                             "id" => "IDL4PBLOSY0U"

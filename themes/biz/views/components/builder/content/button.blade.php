@@ -1,28 +1,30 @@
-<a
-    id="{{ 'button-'.$entity['id'] }}"
-    href="{{ $link }}"
-    target="{{ $target }}"
-    @class(array_merge(['button'], $buttonClasses))
->
-    @if (
-        ($iconPosition === null || $iconPosition === 'left')
-        && $buttonContent['icon']
-    )
-        <span class="icon">
-            <i @class($buttonContent['icon'])></i>
-        </span>
-    @endif
+<div @class($uniqueClass)>
+    <a
+        id="{{ 'button-'.$entity['id'] }}"
+        href="{{ $link }}"
+        target="{{ $target }}"
+        @class(array_merge(['button'], $buttonClasses))
+    >
+        @if (
+            ($iconPosition === null || $iconPosition === 'left')
+            && $buttonContent['icon']
+        )
+            <span class="icon">
+                <i @class($buttonContent['icon'])></i>
+            </span>
+        @endif
 
-    <span>
-        {{ $buttonContent['text'] }}
-    </span>
-
-    @if ($iconPosition === 'right' && $buttonContent['icon'])
-        <span class="icon">
-            <i @class($buttonContent['icon'])></i>
+        <span>
+            {{ $buttonContent['text'] }}
         </span>
-    @endif
-</a>
+
+        @if ($iconPosition === 'right' && $buttonContent['icon'])
+            <span class="icon">
+                <i @class($buttonContent['icon'])></i>
+            </span>
+        @endif
+    </a>
+</div>
 
 @if ($isDownload)
     @push('bottom_scripts')

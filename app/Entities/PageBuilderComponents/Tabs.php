@@ -2,17 +2,15 @@
 
 namespace App\Entities\PageBuilderComponents;
 
+use App\Contracts\HasStyleInterface;
 use App\Contracts\PageBuilderComponentInterface;
+use App\Contracts\PageBuilderDimensionInterface;
 use App\Helpers\HtmlToText;
+use App\Traits\PageBuilderDimension;
 
-class Tabs implements PageBuilderComponentInterface
+class Tabs extends BaseComponent implements HasStyleInterface,PageBuilderComponentInterface,PageBuilderDimensionInterface
 {
-    protected $data;
-
-    public function __construct($data)
-    {
-        $this->data = $data;
-    }
+    use PageBuilderDimension;
 
     public function getText(): string
     {
@@ -24,5 +22,21 @@ class Tabs implements PageBuilderComponentInterface
         }
 
         return trim($text);
+    }
+
+    public function getStyleBlocks(): array
+    {
+        $styleBlocks = [];
+
+        if (! empty($this->data['config']['dimension'])) {
+            $dimensionConfig = $this->data['config']['dimension'];
+
+            $styleBlocks[] = $this->getDimensionStyleBlock(
+                $dimensionConfig,
+                $this->selector
+            );
+        }
+
+        return $styleBlocks;
     }
 }
