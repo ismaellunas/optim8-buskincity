@@ -32,9 +32,4 @@ class Card extends BaseComponent implements HasStyleInterface,PageBuilderCompone
 
         return $styleBlocks;
     }
-
-    protected function setSelector(): string
-    {
-        return '.'.$this->data['id'];
-    }
 }
