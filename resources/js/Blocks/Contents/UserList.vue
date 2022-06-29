@@ -5,7 +5,7 @@
             @duplicate-content="duplicateContent"
         />
 
-        <div class="columns">
+        <div class="columns is-multiline">
             <div
                 v-for="index in items"
                 :key="index"

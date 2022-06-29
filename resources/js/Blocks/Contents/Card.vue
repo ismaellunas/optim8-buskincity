@@ -114,8 +114,8 @@
             MixinDuplicableContent,
             MixinHasModal,
         ],
+        inject: ['can'],
         props: {
-            can: Object,
             dataMedia: {},
             id: {},
             modelValue: {},
@@ -159,16 +159,16 @@
             },
         },
         methods: {
-            onContentDeleted() { /* @override Mixins/DeletableContent */
+            onContentDeleted() { /* @override MixinDeletableContent */
                 if (!isBlank(this.entityImage.mediaId)) {
                     this.detachImageFromMedia(this.entityImage.mediaId, this.pageMedia);
                 }
             },
-            onImageSelected() { /* @override Mixins/ContentHasMediaLibrary */
+            onImageSelected() { /* @override MixinContentHasMediaLibrary */
                 this.closeModal();
                 this.isFormOpen = false;
             },
-            onImageUpdated() { /* @override Mixins/ContentHasMediaLibrary */
+            onImageUpdated() { /* @override MixinContentHasMediaLibrary */
                 this.closeModal();
             },
             toggleEdit() {
@@ -178,11 +178,14 @@
                 this.setTerm('');
                 this.getImagesList(route(this.imageListRouteName));
             },
-            onImageListLoadedSuccess(data) { /* @override Mixins/ContentHasMediaLibrary */
+            onImageListLoadedSuccess(data) { /* @override MixinContentHasMediaLibrary */
                 this.modalImages = data;
             },
-            onImageListLoadedFail(error) { /* @override Mixins/ContentHasMediaLibrary */
+            onImageListLoadedFail(error) { /* @override MixinContentHasMediaLibrary */
                 this.closeModal();
+            },
+            onContentDuplicated() { /* @override MixinDuplicableContent */
+                this.attachImageToMedia(this.entityImage.mediaId, this.pageMedia);
             },
         },
     }
