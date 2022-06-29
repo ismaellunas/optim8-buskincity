@@ -8,7 +8,7 @@
                 <p class="buttons is-pulled-right">
                     <biz-button-icon
                         icon="fa-solid fa-arrow-up-right-from-square"
-                        :disabled="isDirty"
+                        :disabled="pagePreviewIsDisabled"
                         @click="openShow(modelValue)"
                     >
                         <span>Page Preview</span>
@@ -162,11 +162,21 @@
             };
         },
 
+        computed: {
+            pagePreviewIsDisabled() {
+                if (!this.form.id) {
+                    return true;
+                }
+
+                return this.isDirty;
+            },
+        },
+
         methods: {
             openShow(page) {
                 if (
                     this.can.page.read
-                    && !this.isDirty
+                    && !this.pagePreviewIsDisabled
                 ) {
                     let showUrl = this.getShowUrl(this.selectedLocale, page);
 
