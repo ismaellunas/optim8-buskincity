@@ -94,9 +94,10 @@
     import BlockColumn from '@/Blocks/Column';
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
     import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
+    import MixinMediaImage from '@/Mixins/MediaImage';
     import { confirm, confirmDelete } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, isEmpty } from '@/Libs/utils';
 
     export default {
         components: {
@@ -108,6 +109,7 @@
         mixins: [
             EditModeComponentMixin,
             MixinContentHasDimension,
+            MixinMediaImage,
         ],
 
         props: {
@@ -176,6 +178,8 @@
 
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
+                        self.onBlockDeleted();
+
                         self.$emit('delete-block', self.id)
                     }
                 })
@@ -215,8 +219,65 @@
                 ).then((result) => {
                     if (result.isConfirmed) {
                         self.$emit('duplicate-block', self.id)
+
+                        self.onBlockDuplicated();
                     }
                 });
+            },
+
+            onBlockDuplicated() {
+                const self = this;
+                const mediaIds = this.getAllMediaIdsFromBlock();
+
+                mediaIds.forEach(function (mediaId) {
+                    if (mediaId) {
+                        self.attachImageToMedia(mediaId, self.media);
+                    }
+                });
+            },
+
+            onBlockDeleted() {
+                const self = this;
+                const mediaIds = this.getAllMediaIdsFromBlock();
+
+                mediaIds.forEach(function (mediaId) {
+                    if (mediaId) {
+                        self.detachImageFromMedia(mediaId, self.media);
+                    }
+                });
+            },
+
+            getAllMediaIdsFromBlock() {
+                const self = this;
+                let allMediaIds = [];
+                const blockIds = self.getResourceFromDataObject(self.block, 'id');
+
+                blockIds.forEach(function (blockId) {
+                    if (!isEmpty(self.entities[blockId])) {
+                        const mediaIds = self.getResourceFromDataObject(
+                            self.entities[blockId],
+                            'mediaId'
+                        );
+
+                        allMediaIds = allMediaIds.concat(mediaIds);
+                    }
+                });
+
+                return allMediaIds.filter(Boolean);
+            },
+
+            getResourceFromDataObject(dataObject, keyName) {
+                const resource = [];
+
+                JSON.stringify(dataObject, (key, value) => {
+                    if (key === keyName) {
+                        resource.push(value);
+                    }
+
+                    return value;
+                });
+
+                return resource;
             },
         },
     };

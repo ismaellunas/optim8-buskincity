@@ -229,6 +229,14 @@
                 }
             },
 
+            onContentDuplicated() { /* @override MixinDuplicableContent */
+                const countImage = this.entityImages.length;
+
+                for (let i = 0; i < countImage; i++) {
+                    this.attachImageToMedia(this.entityImages[i].mediaId, this.pageMedia);
+                }
+            },
+
             setImageNull() {
                 this.entityImages[this.indexModify].mediaId = null;
             },
