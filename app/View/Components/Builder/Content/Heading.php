@@ -15,9 +15,9 @@ class Heading extends BaseContent
     {
         parent::__construct($entity);
 
-        $this->headingClasses = $this->getHeadingClasses();
-
         $this->headingTag = $this->getHeadingTag();
+
+        $this->headingClasses = $this->getHeadingClasses();
     }
 
     private function getHeadingClasses(): array
@@ -26,6 +26,7 @@ class Heading extends BaseContent
         $classes = collect();
         $classes->push($configHeading['type'] ?? null);
         $classes->push($configHeading['alignment'] ?? null);
+        $classes->push('is-'.substr($this->headingTag, -1));
 
         return $classes->filter()->all();
     }

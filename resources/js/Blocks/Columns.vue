@@ -2,7 +2,7 @@
     <div
         class="columns"
         :class="wrapperClass"
-        :style="wrapperStyle"
+        :style="dimensionStyle"
     >
         <div
             v-if="isEditMode"
@@ -78,7 +78,6 @@
         >
             <block-column
                 :id="column.id"
-                :can="can"
                 :components="block.columns[index].components"
                 :data-entities="entities"
                 :data-media="media"
@@ -94,9 +93,11 @@
     import BizSelect from '@/Biz/Select';
     import BlockColumn from '@/Blocks/Column';
     import EditModeComponentMixin from '@/Mixins/EditModeComponent';
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
+    import MixinMediaImage from '@/Mixins/MediaImage';
     import { confirm, confirmDelete } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, isEmpty } from '@/Libs/utils';
 
     export default {
         components: {
@@ -106,11 +107,12 @@
         },
 
         mixins: [
-            EditModeComponentMixin
+            EditModeComponentMixin,
+            MixinContentHasDimension,
+            MixinMediaImage,
         ],
 
         props: {
-            can: { type: Object, required: true },
             dataEntities: { type: Object, default: () => {} },
             dataMedia: { type: Array, default: () => [] },
             id: { type: String, required: true },
@@ -165,32 +167,8 @@
                 return this.dataEntities[ this.block.id ] ?? null;
             },
 
-            wrapperStyle() {
-                const styles = {};
-
-                const configWrapper = this.dataEntity?.config?.wrapper ?? null;
-
-                if (configWrapper && configWrapper["style.margin"]) {
-                    const styleMargin = configWrapper["style.margin"];
-
-                    for (const [key, margin] of Object.entries(styleMargin)) {
-                        if (! (styleMargin[key] == null || styleMargin[key] == "")) {
-                            styles['margin-'+key] = styleMargin[key]+'px !important';
-                        }
-                    }
-                }
-
-                if (configWrapper && configWrapper["style.padding"]) {
-                    const stylePadding = configWrapper["style.padding"];
-
-                    for (const [key, padding] of Object.entries(stylePadding)) {
-                        if (! (stylePadding[key] == null || stylePadding[key] == "")) {
-                            styles['padding-'+key] = stylePadding[key]+'px !important';
-                        }
-                    }
-                }
-
-                return styles;
+            configDimension() {
+                return this.dataEntity?.config?.dimension ?? null;
             },
         },
 
@@ -200,6 +178,8 @@
 
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
+                        self.onBlockDeleted();
+
                         self.$emit('delete-block', self.id)
                     }
                 })
@@ -239,8 +219,65 @@
                 ).then((result) => {
                     if (result.isConfirmed) {
                         self.$emit('duplicate-block', self.id)
+
+                        self.onBlockDuplicated();
                     }
                 });
+            },
+
+            onBlockDuplicated() {
+                const self = this;
+                const mediaIds = this.getAllMediaIdsFromBlock();
+
+                mediaIds.forEach(function (mediaId) {
+                    if (mediaId) {
+                        self.attachImageToMedia(mediaId, self.media);
+                    }
+                });
+            },
+
+            onBlockDeleted() {
+                const self = this;
+                const mediaIds = this.getAllMediaIdsFromBlock();
+
+                mediaIds.forEach(function (mediaId) {
+                    if (mediaId) {
+                        self.detachImageFromMedia(mediaId, self.media);
+                    }
+                });
+            },
+
+            getAllMediaIdsFromBlock() {
+                const self = this;
+                let allMediaIds = [];
+                const blockIds = self.getResourceFromDataObject(self.block, 'id');
+
+                blockIds.forEach(function (blockId) {
+                    if (!isEmpty(self.entities[blockId])) {
+                        const mediaIds = self.getResourceFromDataObject(
+                            self.entities[blockId],
+                            'mediaId'
+                        );
+
+                        allMediaIds = allMediaIds.concat(mediaIds);
+                    }
+                });
+
+                return allMediaIds.filter(Boolean);
+            },
+
+            getResourceFromDataObject(dataObject, keyName) {
+                const resource = [];
+
+                JSON.stringify(dataObject, (key, value) => {
+                    if (key === keyName) {
+                        resource.push(value);
+                    }
+
+                    return value;
+                });
+
+                return resource;
             },
         },
     };

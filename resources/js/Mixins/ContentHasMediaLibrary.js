@@ -1,11 +1,13 @@
 import MixinContentHasImage from '@/Mixins/ContentHasImage';
-import { remove, forEach } from 'lodash';
+import MixinMediaImage from '@/Mixins/MediaImage';
+import { forEach } from 'lodash';
 import { isBlank } from '@/Libs/utils';
 import { oops as oopsAlert } from '@/Libs/alert';
 
 export default {
     mixins: [
         MixinContentHasImage,
+        MixinMediaImage,
     ],
     setup() {
         return {
@@ -19,32 +21,6 @@ export default {
         }
     },
     methods: {
-        attachImageToMedia(imageId, media) {
-            const existingMedia = media.find(media => media.id === imageId);
-
-            if (existingMedia) {
-                existingMedia.numberOfUsage++;
-            } else {
-                media.push({
-                    id: imageId,
-                    is_image: true,
-                    numberOfUsage: 1,
-                });
-            }
-        },
-        detachImageFromMedia(imageId, media) {
-            const existingMedia = media.find(media => media.id === imageId);
-
-            if (existingMedia) {
-                existingMedia.numberOfUsage--;
-
-                if (existingMedia.numberOfUsage === 0) {
-                    remove(media, function (medium) {
-                        return medium.id == existingMedia.id;
-                    });
-                }
-            }
-        },
         selectImage(image) {
             let hasImage = false;
             const locale = this.selectedLocale;

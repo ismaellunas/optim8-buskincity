@@ -36,3 +36,27 @@ export function onPageEditorClicked(event, contentConfigId) {
         contentConfigId.value = '';
     }
 }
+
+export function createDimensionStyles(dimension, prefix) {
+    const styles = {};
+
+    if (dimension && dimension["style." + prefix]) {
+        const dimensionStyle = dimension["style." + prefix];
+
+        for (const [key, style] of Object.entries(dimensionStyle)) {
+            if (! (dimensionStyle[key] == null || dimensionStyle[key] == "")) {
+                styles[prefix+'-'+key] = dimensionStyle[key]+'px !important';
+            }
+        }
+    }
+
+    return styles;
+}
+
+export function createMarginStyles(dimension) {
+    return createDimensionStyles(dimension, 'margin');
+}
+
+export function createPaddingStyles(dimension) {
+    return createDimensionStyles(dimension, 'padding');
+}

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="dimensionStyle">
         <biz-toolbar-content
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
@@ -89,6 +89,7 @@
 </template>
 
 <script>
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinHasModal from '@/Mixins/HasModal';
@@ -112,6 +113,7 @@
         },
 
         mixins: [
+            MixinContentHasDimension,
             MixinDeletableContent,
             MixinDuplicableContent,
             MixinHasModal,
@@ -186,22 +188,6 @@
 </script>
 
 <style scoped>
-    .border-dash {
-        border: 1px #D3D3D3 dashed;
-    }
-
-    .input-area {
-        min-width: 20px;
-        border-bottom: 1px solid #D3D3D3;
-    }
-
-    .empty-icon {
-        width: 15px;
-        height: 15px;
-        background: #D3D3D3;
-        border-radius: 50%;
-    }
-
     .tabs.is-toggle li.is-active a {
         z-index: auto !important;
     }

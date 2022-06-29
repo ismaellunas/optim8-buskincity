@@ -1,12 +1,15 @@
 <template>
-    <div :class="wrapperClass">
+    <div>
         <biz-toolbar-content
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
         />
 
-        <div class="card">
-            <div class="card-image" :class="cardImageClass">
+        <div class="card" :style="dimensionStyle">
+            <div
+                class="card-image"
+                :class="cardImageClass"
+            >
                 <biz-image
                     v-if="hasImage"
                     :src="imageSrc"
@@ -22,11 +25,24 @@
                     class="is-overlay is-small"
                     @click="toggleEdit"
                 >
-                    <span class="icon" v-if="isFormDisplayed"><i class="fas fa-times-circle"></i></span>
-                    <span class="icon" v-else><i class="fas fa-pen"></i></span>
+                    <span
+                        v-if="isFormDisplayed"
+                        class="icon"
+                    >
+                        <i class="fas fa-times-circle" />
+                    </span>
+                    <span
+                        v-else
+                        class="icon"
+                    >
+                        <i class="fas fa-pen" />
+                    </span>
                 </biz-button>
 
-                <div class="card-content has-background-info-light" v-if="isFormDisplayed">
+                <div
+                    v-if="isFormDisplayed"
+                    class="card-content has-background-info-light"
+                >
                     <div class="block has-text-centered">
                         <biz-button
                             type="button"
@@ -35,7 +51,7 @@
                         >
                             <span>Open Media</span>
                             <span class="icon is-small">
-                                <i class="far fa-image"></i>
+                                <i class="far fa-image" />
                             </span>
                         </biz-button>
                     </div>
@@ -46,7 +62,7 @@
                     class="content"
                     :class="cardContentClass"
                 >
-                    <biz-editor v-model="entity.content.cardContent.content.html"/>
+                    <biz-editor v-model="entity.content.cardContent.content.html" />
                 </div>
             </div>
         </div>
@@ -68,6 +84,7 @@
 </template>
 
 <script>
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
@@ -78,7 +95,6 @@
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat } from 'lodash';
-    import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { inject } from "vue";
 
@@ -92,13 +108,14 @@
             BizToolbarContent,
         },
         mixins: [
+            MixinContentHasDimension,
             MixinContentHasMediaLibrary,
             MixinDeletableContent,
             MixinDuplicableContent,
             MixinHasModal,
         ],
+        inject: ['can'],
         props: {
-            can: Object,
             dataMedia: {},
             id: {},
             modelValue: {},
@@ -120,33 +137,6 @@
                 modalImages: [],
             };
         },
-        methods: {
-            onContentDeleted() { /* @override Mixins/DeletableContent */
-                if (!isBlank(this.entityImage.mediaId)) {
-                    this.detachImageFromMedia(this.entityImage.mediaId, this.pageMedia);
-                }
-            },
-            onImageSelected() { /* @override Mixins/ContentHasMediaLibrary */
-                this.closeModal();
-                this.isFormOpen = false;
-            },
-            onImageUpdated() { /* @override Mixins/ContentHasMediaLibrary */
-                this.closeModal();
-            },
-            toggleEdit() {
-                this.isFormOpen = !this.isFormOpen;
-            },
-            onShownModal() { /* @overide */
-                this.setTerm('');
-                this.getImagesList(route(this.imageListRouteName));
-            },
-            onImageListLoadedSuccess(data) { /* @override Mixins/ContentHasMediaLibrary */
-                this.modalImages = data;
-            },
-            onImageListLoadedFail(error) { /* @override Mixins/ContentHasMediaLibrary */
-                this.closeModal();
-            },
-        },
         computed: {
             isFormDisplayed() {
                 return !this.hasImage || (this.hasImage && this.isFormOpen);
@@ -167,12 +157,36 @@
                     this.config.content?.alignment
                 ).filter(Boolean);
             },
-            wrapperClass() {
-                return concat(
-                    createPaddingClasses(this.config.wrapper?.padding),
-                    createMarginClasses(this.config.wrapper?.margin)
-                ).filter(Boolean);
-            }
+        },
+        methods: {
+            onContentDeleted() { /* @override MixinDeletableContent */
+                if (!isBlank(this.entityImage.mediaId)) {
+                    this.detachImageFromMedia(this.entityImage.mediaId, this.pageMedia);
+                }
+            },
+            onImageSelected() { /* @override MixinContentHasMediaLibrary */
+                this.closeModal();
+                this.isFormOpen = false;
+            },
+            onImageUpdated() { /* @override MixinContentHasMediaLibrary */
+                this.closeModal();
+            },
+            toggleEdit() {
+                this.isFormOpen = !this.isFormOpen;
+            },
+            onShownModal() { /* @overide */
+                this.setTerm('');
+                this.getImagesList(route(this.imageListRouteName));
+            },
+            onImageListLoadedSuccess(data) { /* @override MixinContentHasMediaLibrary */
+                this.modalImages = data;
+            },
+            onImageListLoadedFail(error) { /* @override MixinContentHasMediaLibrary */
+                this.closeModal();
+            },
+            onContentDuplicated() { /* @override MixinDuplicableContent */
+                this.attachImageToMedia(this.entityImage.mediaId, this.pageMedia);
+            },
         },
     }
 </script>

@@ -8,7 +8,7 @@
                 <p class="buttons is-pulled-right">
                     <biz-button-icon
                         icon="fa-solid fa-arrow-up-right-from-square"
-                        :disabled="isDirty"
+                        :disabled="pagePreviewIsDisabled"
                         @click="openShow(modelValue)"
                     >
                         <span>Page Preview</span>
@@ -57,7 +57,6 @@
                             id="page-form-builder"
                             v-model="form.data"
                             v-model:content-config-id="computedContentConfigId"
-                            :can="can"
                             :is-edit-mode="isEditMode"
                             :selected-locale="selectedLocale"
                         />
@@ -111,8 +110,9 @@
             BizProvideInjectTabs,
         },
 
+        inject: ['can'],
+
         props: {
-            can: { type: Object, required: true },
             contentConfigId: { type: String, required: true },
             errors: { type: Object, default:() => {} },
             isDirty: { type: Boolean, default: false },
@@ -162,11 +162,21 @@
             };
         },
 
+        computed: {
+            pagePreviewIsDisabled() {
+                if (!this.form.id) {
+                    return true;
+                }
+
+                return this.isDirty;
+            },
+        },
+
         methods: {
             openShow(page) {
                 if (
                     this.can.page.read
-                    && !this.isDirty
+                    && !this.pagePreviewIsDisabled
                 ) {
                     let showUrl = this.getShowUrl(this.selectedLocale, page);
 

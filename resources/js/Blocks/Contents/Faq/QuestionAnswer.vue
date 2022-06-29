@@ -114,9 +114,3 @@
         },
     }
 </script>
-
-<style scoped>
-    .border-dash {
-        border: 1px #D3D3D3 dashed;
-    }
-</style>

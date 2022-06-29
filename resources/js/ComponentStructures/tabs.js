@@ -36,6 +36,22 @@ export default {
             style: null,
             width: null,
         },
+        dimension: {
+            'style.padding': {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+                unit: 'px',
+            },
+            'style.margin': {
+                top: null,
+                right: null,
+                bottom: null,
+                left: null,
+                unit: 'px',
+            },
+        }
     }
 };
 
@@ -80,4 +96,18 @@ export const config = {
             },
         }
     },
+    dimension: {
+        label: "Dimension",
+        isOpen: false,
+        config: {
+            'style.margin': {
+                component: "TRBLInput",
+                label: "Margin",
+            },
+            'style.padding': {
+                component: "TRBLInput",
+                label: "Padding",
+            },
+        }
+    }
 };
