@@ -1,5 +1,5 @@
 <template>
-    <div :class="wrapperClass">
+    <div :style="dimensionStyle">
         <biz-toolbar-content
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
@@ -17,24 +17,25 @@
 </template>
 
 <script>
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizTinymce from '@/Biz/EditorTinymce';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { concat } from 'lodash';
-    import { createMarginClasses, createPaddingClasses } from '@/Libs/page-builder';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'Text',
-        mixins: [
-            MixinDeletableContent,
-            MixinDuplicableContent
-        ],
         components: {
             BizTinymce,
             BizToolbarContent,
         },
+        mixins: [
+            MixinContentHasDimension,
+            MixinDeletableContent,
+            MixinDuplicableContent
+        ],
         props: {
             id: String,
             modelValue: Object,
@@ -57,12 +58,6 @@
                     (this.config.text?.alignment ?? '')
                 ).filter(Boolean);
             },
-            wrapperClass() {
-                return concat(
-                    createPaddingClasses(this.config.wrapper?.padding),
-                    createMarginClasses(this.config.wrapper?.margin)
-                ).filter(Boolean);
-            }
         }
     }
 </script>

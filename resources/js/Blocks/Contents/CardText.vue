@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="dimensionStyle">
         <biz-toolbar-content
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
@@ -7,8 +7,11 @@
 
         <div class="card biz-card-text">
             <div class="card-content">
-                <div class="content" :class="cardContentClass">
-                    <biz-editor v-model="entity.content.cardContent.content.html"/>
+                <div
+                    class="content"
+                    :class="cardContentClass"
+                >
+                    <biz-editor v-model="entity.content.cardContent.content.html" />
                 </div>
             </div>
         </div>
@@ -16,22 +19,24 @@
 </template>
 
 <script>
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizEditor from '@/Biz/EditorTinymce';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import { useModelWrapper } from '@/Libs/utils'
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'CardText',
-        mixins: [
-            MixinDeletableContent,
-            MixinDuplicableContent
-        ],
         components: {
             BizEditor,
             BizToolbarContent,
         },
+        mixins: [
+            MixinContentHasDimension,
+            MixinDeletableContent,
+            MixinDuplicableContent
+        ],
         props: {
             id: String,
             modelValue: {type: Object, required: true},

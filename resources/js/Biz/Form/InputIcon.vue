@@ -26,6 +26,7 @@
         <biz-icon-browser
             v-if="isModalOpen"
             :icon-classes="iconClasses"
+            :has-type="hasType"
             @close="closeModal()"
             @on-selected-icon="onSelectedIcon"
         />
@@ -67,7 +68,7 @@
             },
             message: {
                 type: [Object, null],
-                required: true,
+                default: null,
             },
             modelValue: {
                 type: [String, null],
@@ -81,6 +82,14 @@
                 type: Boolean,
                 default: false
             },
+            canRemove: {
+                type: Boolean,
+                default: false
+            },
+            hasType: {
+                type: Boolean,
+                default: false
+            }
         },
         emits: [
             'on-keypress',
