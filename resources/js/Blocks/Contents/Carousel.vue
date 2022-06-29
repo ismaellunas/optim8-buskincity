@@ -6,46 +6,44 @@
             @duplicate-content="duplicateContent"
         />
 
-        <div class="container">
-            <carousel-main
-                :config="config"
-                :total-image="entityImages.length"
-                :visible-slide="visibleSlide"
-                @next="nextSlide"
-                @prev="prevSlide"
+        <carousel-main
+            :config="config"
+            :total-image="entityImages.length"
+            :visible-slide="visibleSlide"
+            @next="nextSlide"
+            @prev="prevSlide"
+        >
+            <template
+                v-for="(entityImage, index) in entityImages"
+                :key="index"
             >
-                <template
-                    v-for="(entityImage, index) in entityImages"
-                    :key="index"
-                >
-                    <carousel-slide
-                        :config="config"
-                        :data-images="images"
-                        :data-media="dataMedia"
-                        :direction="direction"
-                        :entity-media="entityImage"
-                        :index="index"
-                        :selected-locale="selectedLocale"
-                        :visible-slide="visibleSlide"
-                        @openModal="openModalMedia(index)"
-                    />
-                </template>
-            </carousel-main>
+                <carousel-slide
+                    :config="config"
+                    :data-images="images"
+                    :data-media="dataMedia"
+                    :direction="direction"
+                    :entity-media="entityImage"
+                    :index="index"
+                    :selected-locale="selectedLocale"
+                    :visible-slide="visibleSlide"
+                    @openModal="openModalMedia(index)"
+                />
+            </template>
+        </carousel-main>
 
-            <biz-modal-media-browser
-                v-if="isModalOpen"
-                :data="modalImages"
-                :is-download-enabled="can.media.read"
-                :is-upload-enabled="can.media.add"
-                :query-params="imageListQueryParams"
-                :search="search"
-                @close="closeModal"
-                @on-clicked-pagination="getImagesList"
-                @on-media-selected="selectImage"
-                @on-media-submitted="updateImage"
-                @on-view-changed="setView"
-            />
-        </div>
+        <biz-modal-media-browser
+            v-if="isModalOpen"
+            :data="modalImages"
+            :is-download-enabled="can.media.read"
+            :is-upload-enabled="can.media.add"
+            :query-params="imageListQueryParams"
+            :search="search"
+            @close="closeModal"
+            @on-clicked-pagination="getImagesList"
+            @on-media-selected="selectImage"
+            @on-media-submitted="updateImage"
+            @on-view-changed="setView"
+        />
     </div>
 </template>
 
