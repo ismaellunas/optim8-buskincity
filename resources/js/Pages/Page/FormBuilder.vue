@@ -88,7 +88,6 @@
                         v-model:data-entities="data.entities"
                         v-model:data-media="data.media"
                         class="component-configurable"
-                        :can="can"
                         :data-id="element.id"
                         :is-edit-mode="isEditMode"
                         :selected-locale="selectedLocale"
@@ -121,7 +120,6 @@
         },
 
         props: {
-            can: Object,
             contentConfigId: { type: String, default: "" },
             errors: Object,
             isEditMode: {type: Boolean, default: false},

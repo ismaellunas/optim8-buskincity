@@ -78,7 +78,6 @@
         >
             <block-column
                 :id="column.id"
-                :can="can"
                 :components="block.columns[index].components"
                 :data-entities="entities"
                 :data-media="media"
@@ -112,7 +111,6 @@
         ],
 
         props: {
-            can: { type: Object, required: true },
             dataEntities: { type: Object, default: () => {} },
             dataMedia: { type: Array, default: () => [] },
             id: { type: String, required: true },

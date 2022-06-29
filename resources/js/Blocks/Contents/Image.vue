@@ -96,8 +96,8 @@
             MixinDuplicableContent,
             MixinHasModal,
         ],
+        inject: ['can'],
         props: {
-            can: Object,
             id: String,
             entityId: {},
             modelValue: Object,
