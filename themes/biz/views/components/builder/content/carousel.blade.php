@@ -1,6 +1,5 @@
-<div class="container">
+<div @class($uniqueClass)>
     <carousel
-        @class($uniqueClass)
         :config="{{ Illuminate\Support\Js::from($config) }}"
         :entity-images="{{ Illuminate\Support\Js::from($carouselImages) }}"
         :slide-speed="{{ $slideSpeed }}"
