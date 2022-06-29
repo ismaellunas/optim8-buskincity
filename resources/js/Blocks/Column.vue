@@ -20,7 +20,6 @@
                     :id="element.id"
                     v-model="computedDataEntities[element.id]"
                     class="component-configurable"
-                    :can="can"
                     :data-id="element.id"
                     :data-media="dataMedia"
                     :is-edit-mode="isEditMode"
@@ -79,7 +78,6 @@
             UserList,
         },
         props: {
-            can: Object,
             id: {},
             isEditMode: {default: false},
             isDebugMode: {default: false},
