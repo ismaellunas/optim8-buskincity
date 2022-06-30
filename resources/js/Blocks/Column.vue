@@ -21,7 +21,6 @@
                     v-model="computedDataEntities[element.id]"
                     class="component-configurable"
                     :data-id="element.id"
-                    :data-media="dataMedia"
                     :is-edit-mode="isEditMode"
                     :selected-locale="selectedLocale"
                     @delete-content="deleteContent"
@@ -37,7 +36,6 @@
                 :id="element.id"
                 :key="element.id"
                 v-model="computedDataEntities[element.id]"
-                :data-media="dataMedia"
                 :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
             />

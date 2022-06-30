@@ -116,7 +116,6 @@
         ],
         inject: ['can'],
         props: {
-            dataMedia: {},
             id: {},
             modelValue: {},
             selectedLocale: String,
@@ -126,7 +125,7 @@
                 config: props.modelValue?.config,
                 dataImages: inject('dataImages'),
                 entity: useModelWrapper(props, emit),
-                pageMedia: useModelWrapper(props, emit, 'dataMedia'),
+                pageMedia: inject('dataMedia'),
             };
         },
         data() {
