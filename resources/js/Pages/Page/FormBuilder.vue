@@ -102,20 +102,20 @@
 </template>
 
 <script>
+    import BizComponentConfig from '@/Biz/ComponentConfig';
     import BlockColumns from '@/Blocks/Columns'
+    import blockColumns from '@/ComponentStructures/columns';
     import ComponentStructures from '@/ComponentStructures';
     import Draggable from "vuedraggable";
-    import BizComponentConfig from '@/Biz/ComponentConfig';
-    import { createColumn } from '@/Libs/page-builder.js';
     import { cloneDeep } from 'lodash';
-    import blockColumns from '@/ComponentStructures/columns';
+    import { createColumn } from '@/Libs/page-builder.js';
     import { isBlank, generateElementId, useModelWrapper, getResourceFromDataObject } from '@/Libs/utils'
 
     export default {
         components: {
+            BizComponentConfig,
             BlockColumns,
             Draggable,
-            BizComponentConfig,
         },
 
         provide() {
@@ -126,10 +126,9 @@
 
         props: {
             contentConfigId: { type: String, default: "" },
-            errors: Object,
-            isEditMode: {type: Boolean, default: false},
-            modelValue: {type: Object},
-            selectedLocale: String,
+            isEditMode: { type: Boolean, default: false },
+            modelValue: { type: Object, required: true },
+            selectedLocale: { type: String, required: true },
         },
 
         emits: [
@@ -138,15 +137,15 @@
 
         setup(props, { emit }) {
             return {
-                data: useModelWrapper(props, emit),
                 computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
+                data: useModelWrapper(props, emit),
             };
         },
 
         data() {
             return {
-                isDebugMode: false,
                 clonedComponent: null,
+                isDebugMode: false,
             };
         },
         computed: {

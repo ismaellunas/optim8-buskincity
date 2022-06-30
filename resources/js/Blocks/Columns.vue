@@ -136,7 +136,6 @@
         data() {
             return {
                 columnOptions: [1,2,3,4,5,6],
-                editModeWrapperClass: ['edit-mode-columns'],
                 numberOfColumns: this.block.columns.length,
             };
         },

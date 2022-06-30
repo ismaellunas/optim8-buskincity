@@ -28,6 +28,7 @@
                         v-if="totalTabs > 1"
                         :can-duplicate="false"
                         :can-move="false"
+                        style="z-index: 1"
                         @delete-content="deleteTabs(index)"
                     />
                     <a @click="selectedIndex = index">
@@ -186,13 +187,3 @@
         }
     }
 </script>
-
-<style scoped>
-    .tabs.is-toggle li.is-active a {
-        z-index: auto !important;
-    }
-
-    .tabs.is-toggle li a {
-        z-index: auto !important;
-    }
-</style>
