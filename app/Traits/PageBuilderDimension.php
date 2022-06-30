@@ -6,10 +6,20 @@ use App\Entities\StyleBlock;
 
 trait PageBuilderDimension
 {
-    public function getDimensionStyleBlock(
-        array $styleConfig,
-        string $rootSelector
-    ): StyleBlock {
+    protected function doesConfigHaveDimension(): bool
+    {
+        return !empty($this->getConfig()['dimension']);
+    }
+
+    protected function getDimensionConfig(): array
+    {
+        return $this->getConfig()['dimension'];
+    }
+
+    public function getDimensionStyleBlock(string $rootSelector): StyleBlock
+    {
+        $styleConfig = $this->getDimensionConfig();
+
         $styleBlock = new StyleBlock($rootSelector);
 
         if (!empty($styleConfig['style.margin'])) {
