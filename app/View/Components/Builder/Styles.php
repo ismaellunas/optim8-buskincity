@@ -52,7 +52,10 @@ class Styles extends Component
 
                 $entity = new $className($entity);
 
-                return $entity->getStyleBlocks();
+                return collect($entity->getStyleBlocks())
+                    ->filter(function ($styleBlock) {
+                        return !$styleBlock->isEmpty();
+                    });
             })
             ->all();
     }
