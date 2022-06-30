@@ -86,7 +86,6 @@
                         :id="element.id"
                         v-model="data.structures[index]"
                         v-model:data-entities="data.entities"
-                        v-model:data-media="data.media"
                         class="component-configurable"
                         :data-id="element.id"
                         :is-edit-mode="isEditMode"
@@ -117,6 +116,12 @@
             BlockColumns,
             Draggable,
             BizComponentConfig,
+        },
+
+        provide() {
+            return {
+                dataMedia: this.data.media,
+            };
         },
 
         props: {

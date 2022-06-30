@@ -97,7 +97,7 @@
     import { confirm, confirmDelete } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
     import { useModelWrapper, isEmpty } from '@/Libs/utils';
-    import { provide, ref } from 'vue';
+    import { inject } from "vue";
 
     export default {
         components: {
@@ -114,7 +114,6 @@
 
         props: {
             dataEntities: { type: Object, default: () => {} },
-            dataMedia: { type: Array, default: () => [] },
             id: { type: String, required: true },
             isEditMode: { type: Boolean, default: false },
             modelValue: { type: Object, required: true },
@@ -127,14 +126,10 @@
         ],
 
         setup(props, { emit }) {
-            let dataMedia = useModelWrapper(props, emit, 'dataMedia');
-
-            provide('dataMedia', dataMedia);
-
             return {
                 block: useModelWrapper(props, emit),
                 entities: useModelWrapper(props, emit, 'dataEntities'),
-                media: dataMedia,
+                media: inject('dataMedia'),
             };
         },
 
