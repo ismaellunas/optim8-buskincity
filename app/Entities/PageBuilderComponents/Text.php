@@ -3,12 +3,15 @@
 namespace App\Entities\PageBuilderComponents;
 
 use App\Contracts\HasStyleInterface;
-use App\Contracts\PageBuilderComponentInterface;
 use App\Contracts\PageBuilderDimensionInterface;
+use App\Contracts\PageBuilderSearchableTextInterface;
 use App\Helpers\HtmlToText;
 use App\Traits\PageBuilderDimension;
 
-class Text extends BaseComponent implements HasStyleInterface,PageBuilderComponentInterface,PageBuilderDimensionInterface
+class Text extends BaseComponent implements
+    HasStyleInterface,
+    PageBuilderDimensionInterface,
+    PageBuilderSearchableTextInterface
 {
     use PageBuilderDimension;
 
