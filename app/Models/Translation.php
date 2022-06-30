@@ -6,6 +6,7 @@ use App\Entities\Caches\TranslationCache;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
+use Predis\Connection\ConnectionException;
 use Spatie\TranslationLoader\TranslationLoaders\TranslationLoader;
 
 class Translation extends Model implements TranslationLoader
@@ -54,6 +55,10 @@ class Translation extends Model implements TranslationLoader
             );
         } catch (QueryException $e) {
             if ($e->getCode() == "42P01") {
+                return [];
+            }
+        } catch (ConnectionException $e) {
+            if (env('DEPLOYMENT')) {
                 return [];
             }
         }
