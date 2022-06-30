@@ -281,18 +281,3 @@
         },
     };
 </script>
-
-<style scoped>
-.edit-mode-buttons {
-    display: none;
-    position: absolute;
-    bottom: 0.5rem;
-    right: 0.5rem;
-}
-.edit-mode-columns {
-    position: relative;
-}
-.edit-mode-columns:hover > .edit-mode-buttons {
-    display: block;
-}
-</style>
