@@ -96,7 +96,7 @@
     import MixinMediaImage from '@/Mixins/MediaImage';
     import { confirm, confirmDelete } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
-    import { useModelWrapper, isEmpty } from '@/Libs/utils';
+    import { useModelWrapper, isEmpty, getResourceFromDataObject } from '@/Libs/utils';
     import { inject } from "vue";
 
     export default {
@@ -249,11 +249,11 @@
             getAllMediaIdsFromBlock() {
                 const self = this;
                 let allMediaIds = [];
-                const blockIds = self.getResourceFromDataObject(self.block, 'id');
+                const blockIds = getResourceFromDataObject(self.block, 'id');
 
                 blockIds.forEach(function (blockId) {
                     if (!isEmpty(self.entities[blockId])) {
-                        const mediaIds = self.getResourceFromDataObject(
+                        const mediaIds = getResourceFromDataObject(
                             self.entities[blockId],
                             'mediaId'
                         );
@@ -263,20 +263,6 @@
                 });
 
                 return allMediaIds.filter(Boolean);
-            },
-
-            getResourceFromDataObject(dataObject, keyName) {
-                const resource = [];
-
-                JSON.stringify(dataObject, (key, value) => {
-                    if (key === keyName) {
-                        resource.push(value);
-                    }
-
-                    return value;
-                });
-
-                return resource;
             },
         },
     };

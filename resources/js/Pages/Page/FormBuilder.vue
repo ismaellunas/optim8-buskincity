@@ -106,10 +106,10 @@
     import ComponentStructures from '@/ComponentStructures';
     import Draggable from "vuedraggable";
     import BizComponentConfig from '@/Biz/ComponentConfig';
-    import { isBlank, generateElementId, useModelWrapper } from '@/Libs/utils'
     import { createColumn } from '@/Libs/page-builder.js';
     import { cloneDeep } from 'lodash';
     import blockColumns from '@/ComponentStructures/columns';
+    import { isBlank, generateElementId, useModelWrapper, getResourceFromDataObject } from '@/Libs/utils'
 
     export default {
         components: {
@@ -236,8 +236,9 @@
             deleteBlock(id) {
                 const removeIndex = this.data.structures.map(block => block.id).indexOf(id);
 
-                let removeIds = this.getAllIdFromStructure(
-                    this.data.structures[removeIndex]
+                let removeIds = getResourceFromDataObject(
+                    this.data.structures[removeIndex],
+                    'id'
                 );
 
                 this.data.structures.splice(removeIndex, 1);
@@ -287,19 +288,6 @@
 
                 this.data.entities[newId] = duplicateEntity;
             },
-            getAllIdFromStructure(structure) {
-                const ids = [];
-
-                JSON.stringify(structure, (key, value) => {
-                    if (key === 'id') {
-                        ids.push(value);
-                    }
-
-                    return value;
-                });
-
-                return ids;
-            }
         },
     }
 </script>
