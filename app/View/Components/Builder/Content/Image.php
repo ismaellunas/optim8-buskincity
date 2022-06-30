@@ -34,17 +34,17 @@ class Image extends BaseContent
 
     public function ratio(): string
     {
-        return $this->entity['config']['image']['ratio'] ?? '';
+        return $this->getConfig()['image']['ratio'] ?? '';
     }
 
     public function rounded(): string
     {
-        return $this->entity['config']['image']['rounded'] ?? '';
+        return $this->getConfig()['image']['rounded'] ?? '';
     }
 
     public function fixedSquare(): string
     {
-        return $this->entity['config']['image']['fixedSquare'] ?? '';
+        return $this->getConfig()['image']['fixedSquare'] ?? '';
     }
 
     private function getImageMedia(): ?Media
