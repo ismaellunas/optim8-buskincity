@@ -38,8 +38,8 @@
             BizSelect,
         },
         props: {
-            modelValue: {},
-            label: String,
+            modelValue: { type: Object, required: true },
+            label: { type: String, default: null },
         },
         emits: ['update:modelValue'],
         setup(props, {emit}) {

@@ -68,7 +68,7 @@ export const config = {
             ratio: {
                 type: "select",
                 label: "Ratio",
-                options: defaultOption.concat(imageRatios)
+                options: imageRatios
             },
         }
     },

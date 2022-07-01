@@ -111,3 +111,17 @@ export function convertToSlug(text) {
 
     return result;
 }
+
+export function getResourceFromDataObject(dataObject, keyName) {
+    const resource = [];
+
+    JSON.stringify(dataObject, (key, value) => {
+        if (key === keyName) {
+            resource.push(value);
+        }
+
+        return value;
+    });
+
+    return resource;
+}
