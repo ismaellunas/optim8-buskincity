@@ -48,7 +48,7 @@
             :message="error(selectedLocale+'.excerpt')"
         />
         <biz-form-input
-            v-model="computedMeta_title"
+            v-model="computedMetaTitle"
             label="Meta Title"
             placeholder="Meta title"
             :disabled="disableInput"
@@ -56,7 +56,7 @@
             :message="error(selectedLocale+'.meta_title')"
         />
         <biz-form-textarea
-            v-model="computedMeta_description"
+            v-model="computedMetaDescription"
             label="Meta Description"
             placeholder="Meta description"
             rows="2"
@@ -87,34 +87,34 @@
 
         mixins: [HasPageErrors],
 
-        props: [
-            'title',
-            'slug',
-            'excerpt',
-            'meta_description',
-            'meta_title',
-            'status',
-            'errors',
-            'disableInput',
-            'statusOptions',
-            'selectedLocale',
-        ],
+        props: {
+            disableInput: { type: Boolean, default: false },
+            errors: { type: Object, default:() => {} },
+            excerpt: { type: String, default: null },
+            metaDescription: { type: String, default: null },
+            metaTitle: { type: String, default: null },
+            selectedLocale: { type: String, required: true },
+            slug: { type: String, default: null },
+            status: { type: Number, default: 0 },
+            statusOptions: { type: Array, default: () => [] },
+            title: { type: String, default: null },
+        },
 
         emits: [
             'update:modelValue',
             'update:title',
             'update:slug',
             'update:excerpt',
-            'update:meta_description',
-            'update:meta_title',
+            'update:metaDescription',
+            'update:metaTitle',
             'update:status',
         ],
 
         setup(props, { emit }) {
             return {
                 computedExcerpt: useModelWrapper(props, emit, 'excerpt'),
-                computedMeta_description: useModelWrapper(props, emit, 'meta_description'),
-                computedMeta_title: useModelWrapper(props, emit, 'meta_title'),
+                computedMetaDescription: useModelWrapper(props, emit, 'metaDescription'),
+                computedMetaTitle: useModelWrapper(props, emit, 'metaTitle'),
                 computedSlug: useModelWrapper(props, emit, 'slug'),
                 computedStatus: useModelWrapper(props, emit, 'status'),
                 computedTitle: useModelWrapper(props, emit, 'title'),

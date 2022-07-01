@@ -1,11 +1,11 @@
 <template>
-    <div>
+    <div :style="dimensionStyle">
         <biz-toolbar-content
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
         />
 
-        <div class="card" :style="dimensionStyle">
+        <div class="card">
             <div
                 class="card-image"
                 :class="cardImageClass"
@@ -116,17 +116,16 @@
         ],
         inject: ['can'],
         props: {
-            dataMedia: {},
-            id: {},
-            modelValue: {},
-            selectedLocale: String,
+            id: { type: String, required: true },
+            modelValue: { type: Object, required: true },
+            selectedLocale: { type: String, required: true },
         },
         setup(props, { emit }) {
             return {
                 config: props.modelValue?.config,
                 dataImages: inject('dataImages'),
                 entity: useModelWrapper(props, emit),
-                pageMedia: useModelWrapper(props, emit, 'dataMedia'),
+                pageMedia: inject('dataMedia'),
             };
         },
         data() {

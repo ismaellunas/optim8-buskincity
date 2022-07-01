@@ -98,18 +98,16 @@
         ],
         inject: ['can'],
         props: {
-            id: String,
-            entityId: {},
-            modelValue: Object,
-            dataMedia: {type: Array, default: []},
-            selectedLocale: String,
+            id: { type: String, required: true },
+            modelValue: { type: Object, required: true },
+            selectedLocale: { type: String, required: true },
         },
         setup(props, { emit }) {
             return {
                 config: props.modelValue?.config,
                 dataImages: inject('dataImages'),
                 entity: useModelWrapper(props, emit),
-                pageMedia: useModelWrapper(props, emit, 'dataMedia'),
+                pageMedia: inject('dataMedia'),
             };
         },
         data() {

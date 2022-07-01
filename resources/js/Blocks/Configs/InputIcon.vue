@@ -25,7 +25,7 @@
 
         props: {
             label: { type: String, default: '' },
-            modelValue: {},
+            modelValue: { type: [String, null], default: "" },
         },
 
         setup(props, { emit }) {
