@@ -123,9 +123,10 @@ return [
         ]
     ],
     'setting_cache' => [
-        'locale_options' => 'locale_options',
         'default_locale' => 'default_locale',
+        'locale_options' => 'locale_options',
         'shown_language_option' => 'shown_language_option',
+        'supported_languages' => 'supported_languages',
     ],
     'widget_cache' => [
         'post' => 'widget_post',
