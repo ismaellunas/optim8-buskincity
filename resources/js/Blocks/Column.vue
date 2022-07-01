@@ -76,13 +76,12 @@
             UserList,
         },
         props: {
-            id: {},
-            isEditMode: {default: false},
-            isDebugMode: {default: false},
+            id: { type: String, required: true },
+            isEditMode: { type: Boolean, default: false },
+            isDebugMode: { type: Boolean, default: false },
             components: { type: Array, default: () => [] },
-            dataEntities: {},
-            dataMedia: {},
-            selectedLocale: String,
+            dataEntities: { type: Object, default: () => {} },
+            selectedLocale: { type: String, required: true },
         },
         setup(props, { emit }) {
             return {

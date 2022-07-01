@@ -98,10 +98,9 @@
         ],
         inject: ['can'],
         props: {
-            id: String,
-            entityId: {},
-            modelValue: Object,
-            selectedLocale: String,
+            id: { type: String, required: true },
+            modelValue: { type: Object, required: true },
+            selectedLocale: { type: String, required: true },
         },
         setup(props, { emit }) {
             return {

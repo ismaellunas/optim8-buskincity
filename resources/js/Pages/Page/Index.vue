@@ -1,8 +1,10 @@
 <template>
     <app-layout>
-        <template #header>{{ title }}</template>
+        <template #header>
+            {{ title }}
+        </template>
 
-        <biz-flash-notifications :flash="$page.props.flash"/>
+        <biz-flash-notifications :flash="$page.props.flash" />
 
         <div class="box">
             <div class="columns">
@@ -44,7 +46,9 @@
                             <th>M.Description</th>
                             <th>Language</th>
                             <th>
-                                <div class="level-right">Actions</div>
+                                <div class="level-right">
+                                    Actions
+                                </div>
                             </th>
                         </tr>
                     </thead>
@@ -145,14 +149,14 @@
         mixins: [
             MixinFilterDataHandle,
         ],
-        props: [
-            'baseRouteName',
-            'can',
-            'defaultLocale',
-            'pageQueryParams',
-            'records',
-            'title',
-        ],
+        props: {
+            baseRouteName: { type: String, required: true },
+            can: { type: Object, required: true },
+            defaultLocale: { type: String, required: true },
+            pageQueryParams: { type: Array, default: () => [] },
+            records: { type: Object, required: true },
+            title: { type: String, default: '' },
+        },
         setup(props) {
             const queryParams = merge(
                 {},
@@ -184,7 +188,7 @@
             statusClass(status) {
                 let statusClass = ['is-small', 'is-rounded'];
                 switch(status) {
-                    case 1 : statusClass.push('is-success'); break;
+                    case 1 :statusClass.push('is-success'); break;
                     default: statusClass.push('is-light');
                 };
                 return statusClass;

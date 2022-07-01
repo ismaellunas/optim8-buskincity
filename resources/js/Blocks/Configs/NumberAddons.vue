@@ -32,7 +32,7 @@
 
         props: {
             label: { type: String, default: '' },
-            modelValue: {},
+            modelValue: { type: [Number, String, null], default: null },
             settings: { type: Object, default: () => {} },
         },
 

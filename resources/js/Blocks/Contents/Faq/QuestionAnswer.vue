@@ -2,7 +2,7 @@
     <div class="column p-0">
         <draggable
             tag="div"
-            :list="items"
+            :list="computedItems"
             class="mb-3"
             handle=".handle-content"
             item-key="id"
@@ -59,7 +59,7 @@
     import BizButton from '@/Biz/Button';
     import BizFormTextEditorFullInline from '@/Biz/Form/TextEditorFullInline';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import { generateElementId } from '@/Libs/utils';
+    import { generateElementId, useModelWrapper } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
     import { confirmDelete } from '@/Libs/alert';
 
@@ -84,15 +84,21 @@
             },
         },
 
+        setup(props, { emit }) {
+            return {
+                computedItems: useModelWrapper(props, emit, 'items'),
+            };
+        },
+
         methods: {
             onEditQuestion(evt, index){
-                this.items[index].question = evt.target.innerText;
+                this.computedItems[index].question = evt.target.innerText;
             },
 
             addQuestion() {
                 const question = this.template.question;
                 question.id = generateElementId();
-                this.items.push(cloneDeep(question));
+                this.computedItems.push(cloneDeep(question));
             },
 
             deleteConfirm(id) {
@@ -105,10 +111,10 @@
             },
 
             deleteQuestion(id) {
-                const index = this.items.findIndex(item => item.id == id);
+                const index = this.computedItems.findIndex(item => item.id == id);
 
                 if (index > -1) {
-                    this.items.splice(index, 1);
+                    this.computedItems.splice(index, 1);
                 }
             },
         },
