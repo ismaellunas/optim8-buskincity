@@ -184,7 +184,7 @@ class PostService
 
     public function getLanguageOptions(Post $post = null): array
     {
-        $localeOptions = collect(TranslationService::getLocaleOptions());
+        $localeOptions = collect(app(TranslationService::class)->getLocaleOptions());
 
         if ($post && !$localeOptions->contains('id', $post->locale)) {
             $localeOptions->push(

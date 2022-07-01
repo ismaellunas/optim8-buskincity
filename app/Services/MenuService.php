@@ -606,7 +606,7 @@ class MenuService
 
     public function removePageFromMenus(array $inputs)
     {
-        $languages = TranslationService::getLocales();
+        $languages = app(TranslationService::class)->getLocales();
         $headerMenuItems = $this->getHeaderMenus($languages);
         $footerMenuItems = $this->getFooterMenus($languages);
         foreach ($inputs as $locale => $input) {
