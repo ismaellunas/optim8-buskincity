@@ -34,6 +34,8 @@ abstract class BaseCache
             if (env('DEPLOYMENT')) {
                 return $default;
             }
+
+            throw $e;
         }
     }
 
