@@ -43,8 +43,8 @@
                             v-model:title="form.title"
                             v-model:slug="form.slug"
                             v-model:excerpt="form.excerpt"
-                            v-model:meta_description="form.meta_description"
-                            v-model:meta_title="form.meta_title"
+                            v-model:meta-description="form.meta_description"
+                            v-model:meta-title="form.meta_title"
                             v-model:status="form.status"
                             :disable-input="disableInput"
                             :errors="errors"
@@ -68,7 +68,8 @@
                 <div class="control">
                     <biz-button-link
                         :href="route('admin.pages.index')"
-                        class="is-link is-light">
+                        class="is-link is-light"
+                    >
                         Cancel
                     </biz-button-link>
                 </div>
@@ -88,26 +89,26 @@
 </template>
 
 <script>
-    import FormBuilder from './FormBuilder';
-    import FormDetail from './FormDetail';
     import BizButton from '@/Biz/Button';
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
+    import FormBuilder from './FormBuilder';
+    import FormDetail from './FormDetail';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { provide, ref } from "vue";
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
-            FormBuilder,
-            FormDetail,
             BizButton,
             BizButtonIcon,
             BizButtonLink,
             BizProvideInjectTab,
             BizProvideInjectTabs,
+            FormBuilder,
+            FormDetail,
         },
 
         inject: ['can'],

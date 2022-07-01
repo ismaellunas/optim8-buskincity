@@ -80,7 +80,6 @@
                 :id="column.id"
                 :components="block.columns[index].components"
                 :data-entities="entities"
-                :data-media="media"
                 :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
             />
@@ -97,7 +96,8 @@
     import MixinMediaImage from '@/Mixins/MediaImage';
     import { confirm, confirmDelete } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
-    import { useModelWrapper, isEmpty } from '@/Libs/utils';
+    import { useModelWrapper, isEmpty, getResourceFromDataObject } from '@/Libs/utils';
+    import { inject } from "vue";
 
     export default {
         components: {
@@ -114,7 +114,6 @@
 
         props: {
             dataEntities: { type: Object, default: () => {} },
-            dataMedia: { type: Array, default: () => [] },
             id: { type: String, required: true },
             isEditMode: { type: Boolean, default: false },
             modelValue: { type: Object, required: true },
@@ -130,14 +129,13 @@
             return {
                 block: useModelWrapper(props, emit),
                 entities: useModelWrapper(props, emit, 'dataEntities'),
-                media: useModelWrapper(props, emit, 'dataMedia'),
+                media: inject('dataMedia'),
             };
         },
 
         data() {
             return {
                 columnOptions: [1,2,3,4,5,6],
-                editModeWrapperClass: ['edit-mode-columns'],
                 numberOfColumns: this.block.columns.length,
             };
         },
@@ -250,11 +248,11 @@
             getAllMediaIdsFromBlock() {
                 const self = this;
                 let allMediaIds = [];
-                const blockIds = self.getResourceFromDataObject(self.block, 'id');
+                const blockIds = getResourceFromDataObject(self.block, 'id');
 
                 blockIds.forEach(function (blockId) {
                     if (!isEmpty(self.entities[blockId])) {
-                        const mediaIds = self.getResourceFromDataObject(
+                        const mediaIds = getResourceFromDataObject(
                             self.entities[blockId],
                             'mediaId'
                         );
@@ -265,35 +263,6 @@
 
                 return allMediaIds.filter(Boolean);
             },
-
-            getResourceFromDataObject(dataObject, keyName) {
-                const resource = [];
-
-                JSON.stringify(dataObject, (key, value) => {
-                    if (key === keyName) {
-                        resource.push(value);
-                    }
-
-                    return value;
-                });
-
-                return resource;
-            },
         },
     };
 </script>
-
-<style scoped>
-.edit-mode-buttons {
-    display: none;
-    position: absolute;
-    bottom: 0.5rem;
-    right: 0.5rem;
-}
-.edit-mode-columns {
-    position: relative;
-}
-.edit-mode-columns:hover > .edit-mode-buttons {
-    display: block;
-}
-</style>

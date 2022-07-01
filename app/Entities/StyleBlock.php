@@ -15,6 +15,11 @@ class StyleBlock
         $this->styles = $styles ?? collect();
     }
 
+    public function isEmpty(): bool
+    {
+        return $this->styles->isEmpty();
+    }
+
     public function addStyle(string $style, string $value)
     {
         $this->styles->put($style, $value);

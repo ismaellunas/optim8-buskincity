@@ -31,23 +31,23 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
-    import PageForm from '@/Pages/Page/Form';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
+    import PageForm from '@/Pages/Page/Form';
+    import { confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { getTranslation } from '@/Libs/translation';
     import { isBlank } from '@/Libs/utils';
     import { onPageEditorClicked } from '@/Libs/page-builder';
     import { ref, onMounted, onUnmounted } from 'vue';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
-    import { confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
 
     export default {
         components: {
             AppLayout,
-            PageForm,
             BizErrorNotifications,
             BizFlashNotifications,
+            PageForm,
         },
         provide() {
             return {
@@ -55,12 +55,12 @@
             }
         },
         props: {
-            can: { type: Object, required: true },
-            page: { type: Object, required: true },
-            errors: { type: Object, default:() => {} },
-            statusOptions: { type: Array, default:() => [] },
+            affectedFooterMenu: { type: Object, default:() => {} },
             affectedHeaderMenu: { type: Object, default:() => {} },
-            affectedFooterMenu: { type: Object, default:() => {} }
+            can: { type: Object, required: true },
+            errors: { type: Object, default:() => {} },
+            page: { type: Object, required: true },
+            statusOptions: { type: Array, default:() => [] },
         },
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
@@ -91,10 +91,10 @@
             return {
                 contentConfigId,
                 defaultLocale,
-                form: useForm(translationForm),
-                localeOptions: usePage().props.value.languageOptions,
-                headerMenuItems: props.headerMenuItems,
                 footerMenuItems: props.footerMenuItems,
+                form: useForm(translationForm),
+                headerMenuItems: props.headerMenuItems,
+                localeOptions: usePage().props.value.languageOptions,
             };
         },
         data() {
@@ -122,15 +122,15 @@
                                 return false;
                             } else if(result.isConfirmed) {
                                 this.form.put(submitRoute, {
-                                onSuccess: () => {
-                                    const translatedPage = getTranslation(
-                                        this.page,
-                                        this.selectedLocale
-                                    );
+                                    onSuccess: () => {
+                                        const translatedPage = getTranslation(
+                                            this.page,
+                                            this.selectedLocale
+                                        );
 
-                                    this.form[this.selectedLocale]['id'] = translatedPage.id;
-                                },
-                            });
+                                        this.form[this.selectedLocale]['id'] = translatedPage.id;
+                                    },
+                                });
                             }
                         })
                     } else {

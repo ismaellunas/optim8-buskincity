@@ -38,8 +38,8 @@
             MixinDuplicableContent
         ],
         props: {
-            id: String,
-            modelValue: {type: Object, required: true},
+            id: { type: String, required: true },
+            modelValue: { type: Object, required: true },
         },
         setup(props, { emit }) {
             return {

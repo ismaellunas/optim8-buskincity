@@ -21,7 +21,6 @@
                     v-model="computedDataEntities[element.id]"
                     class="component-configurable"
                     :data-id="element.id"
-                    :data-media="dataMedia"
                     :is-edit-mode="isEditMode"
                     :selected-locale="selectedLocale"
                     @delete-content="deleteContent"
@@ -37,7 +36,6 @@
                 :id="element.id"
                 :key="element.id"
                 v-model="computedDataEntities[element.id]"
-                :data-media="dataMedia"
                 :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
             />
@@ -78,13 +76,12 @@
             UserList,
         },
         props: {
-            id: {},
-            isEditMode: {default: false},
-            isDebugMode: {default: false},
+            id: { type: String, required: true },
+            isEditMode: { type: Boolean, default: false },
+            isDebugMode: { type: Boolean, default: false },
             components: { type: Array, default: () => [] },
-            dataEntities: {},
-            dataMedia: {},
-            selectedLocale: String,
+            dataEntities: { type: Object, default: () => {} },
+            selectedLocale: { type: String, required: true },
         },
         setup(props, { emit }) {
             return {
