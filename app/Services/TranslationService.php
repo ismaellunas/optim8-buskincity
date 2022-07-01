@@ -8,7 +8,6 @@ use App\Services\LanguageService;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
-use Predis\Connection\ConnectionException;
 
 class TranslationService
 {
@@ -19,15 +18,15 @@ class TranslationService
         $key = config('constants.setting_cache.default_locale');
 
         try {
-            return app(SettingCache::class)->remember($key, function () {
-                return app(LanguageService::class)->getDefault()->code ?? config('app.fallback_locale');
-            });
+            return app(SettingCache::class)->remember(
+                $key,
+                function () {
+                    return app(LanguageService::class)->getDefault()->code ?? config('app.fallback_locale');
+                },
+                config('app.fallback_locale')
+            );
         } catch (QueryException $e) {
             if ($e->getCode() == "42P01") {
-                return config('app.fallback_locale');
-            }
-        } catch (ConnectionException $e) {
-            if (env('DEPLOYMENT')) {
                 return config('app.fallback_locale');
             }
         }

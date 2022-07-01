@@ -74,7 +74,16 @@ class LanguageService
 
     public function getSupportedLanguages(): Collection
     {
-        return Language::active()->get();
+        $key = config('constants.setting_cache.supported_languages');
+
+        return app(SettingCache::class)->remember(
+            $key,
+            function () {
+                return Language::active()
+                    ->get(['id', 'name', 'code']);
+            },
+            collect()
+        );
     }
 
     public function getSupportedLanguageIds(): array
