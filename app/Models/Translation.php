@@ -31,7 +31,7 @@ class Translation extends Model implements TranslationLoader
         $translationCache = app(TranslationCache::class);
 
         try {
-            return $translationCache->rememberGroup(
+            return $translationCache->rememberForGroup(
                 $locale,
                 function () use ($locale, $group) {
                     return self::select([

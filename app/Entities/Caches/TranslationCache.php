@@ -41,7 +41,7 @@ class TranslationCache extends BaseCache
         );
     }
 
-    public function rememberGroup(
+    public function rememberForGroup(
         string $locale,
         Closure $callback,
         string $group = null,
