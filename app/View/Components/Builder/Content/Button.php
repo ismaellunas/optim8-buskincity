@@ -33,7 +33,7 @@ class Button extends BaseContent
 
     private function getButtonConfig(): array
     {
-        return $this->entity['config']['button'] ?? [];
+        return $this->getConfig()['button'] ?? [];
     }
 
     private function getButtonClasses(): array
