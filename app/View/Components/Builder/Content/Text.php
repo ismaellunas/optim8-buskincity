@@ -20,7 +20,7 @@ class Text extends BaseContent
 
     private function getClasses(): array
     {
-        $textConfig = $this->entity['config']['text'] ?? [];
+        $textConfig = $this->getConfig()['text'] ?? [];
         $classes = collect();
 
         $classes->push($textConfig['size'] ?? null);

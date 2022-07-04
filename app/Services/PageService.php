@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Contracts\PageBuilderComponentInterface;
+use App\Contracts\PageBuilderSearchableTextInterface;
 use App\Models\Page;
 use App\Services\{
     SettingService,
@@ -49,7 +49,7 @@ class PageService
 
                 $class = new $className($entity);
 
-                if ($class instanceof PageBuilderComponentInterface) {
+                if ($class instanceof PageBuilderSearchableTextInterface) {
                     $string .= $class->getText() . ' ';
                 }
             }

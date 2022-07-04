@@ -2,27 +2,20 @@
 
 namespace App\Entities\PageBuilderComponents;
 
-use App\Contracts\HasStyleInterface;
 use App\Contracts\PageBuilderDimensionInterface;
 use App\Traits\PageBuilderDimension;
 
-class Columns extends BaseComponent implements HasStyleInterface,PageBuilderDimensionInterface
+class Columns extends BaseComponent implements
+    PageBuilderDimensionInterface
 {
     use PageBuilderDimension;
 
-    public function getStyleBlocks(): array
+    protected function composeStyleBlocks(): void
     {
-        $styleBlocks = [];
-
-        if (! empty($this->data['config']['dimension'])) {
-            $dimensionConfig = $this->data['config']['dimension'];
-
-            $styleBlocks[] = $this->getDimensionStyleBlock(
-                $dimensionConfig,
-                $this->selector
+        if ($this->doesConfigHaveDimension()) {
+            $this->styleBlocks[] = $this->getDimensionStyleBlock(
+                $this->getSelector()
             );
         }
-
-        return $styleBlocks;
     }
 }
