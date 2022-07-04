@@ -15,6 +15,7 @@ use App\Http\Controllers\{
     Frontend\ProfileController as FrontendProfileController,
     Frontend\QrCodeController,
     Frontend\StripeController,
+    Frontend\StylePageBuilderController,
     NewPasswordController,
     PasswordResetLinkController,
     RegisteredUserController,
@@ -149,6 +150,9 @@ Route::name('forms.')->prefix('forms')->group(function () {
 });
 
 Route::post('webhooks/stripe', WebhookStripeController::class);
+
+Route::get('css/pb-{uid_page_builder}.css', StylePageBuilderController::class)
+    ->name('page.css');
 
 Route::group([
     'prefix' => Localization::setLocale(),

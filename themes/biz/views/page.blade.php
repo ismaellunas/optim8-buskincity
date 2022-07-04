@@ -27,8 +27,6 @@
     </div>
 
     @push('bottom_styles')
-        <x-builder.styles
-            :entities="$page->data->get('entities')"
-        />
+        <link rel="stylesheet" href="{{ $page->styleUrl }}">
     @endpush
 </x-layouts.master>
