@@ -19,13 +19,15 @@ class PageTranslation extends Model implements PublishableInterface
     protected $fillable = [
         'data',
         'excerpt',
+        'generate_style',
+        'locale',
         'meta_description',
         'meta_title',
+        'plain_text_content',
         'slug',
         'status',
         'title',
-        'locale',
-        'plain_text_content',
+        'unique_key',
     ];
 
     protected $casts = [
