@@ -3,6 +3,7 @@
 namespace App\Entities\Caches;
 
 use Illuminate\Support\Facades\Cache;
+use Predis\Connection\ConnectionException;
 use \Closure;
 
 abstract class BaseCache
@@ -18,12 +19,24 @@ abstract class BaseCache
 
     public function remember(
         string $key,
-        Closure $callback
+        Closure $callback,
+        mixed $default = null
     ): mixed {
-        return Cache::tags($this->getTags())->rememberForever(
-            $key,
-            $callback
-        );
+        try {
+
+            return Cache::tags($this->getTags())->rememberForever(
+                $key,
+                $callback
+            );
+
+        } catch (ConnectionException $e) {
+
+            if (env('DEPLOYMENT')) {
+                return $default;
+            }
+
+            throw $e;
+        }
     }
 
     public function flush(): bool

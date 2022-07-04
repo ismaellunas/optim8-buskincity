@@ -6,7 +6,6 @@ use App\Entities\Caches\TranslationCache;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
-use Predis\Connection\ConnectionException;
 use Spatie\TranslationLoader\TranslationLoaders\TranslationLoader;
 
 class Translation extends Model implements TranslationLoader
@@ -32,7 +31,7 @@ class Translation extends Model implements TranslationLoader
         $translationCache = app(TranslationCache::class);
 
         try {
-            return $translationCache->remember(
+            return $translationCache->rememberForGroup(
                 $locale,
                 function () use ($locale, $group) {
                     return self::select([
@@ -52,13 +51,10 @@ class Translation extends Model implements TranslationLoader
                     ->toArray();
                 },
                 $group,
+                []
             );
         } catch (QueryException $e) {
             if ($e->getCode() == "42P01") {
-                return [];
-            }
-        } catch (ConnectionException $e) {
-            if (env('DEPLOYMENT')) {
                 return [];
             }
         }
