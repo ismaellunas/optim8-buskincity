@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-interface PageBuilderComponentInterface
+interface PageBuilderSearchableTextInterface
 {
     public function getText(): string;
 }

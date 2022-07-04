@@ -4,14 +4,14 @@ namespace App\Entities\PageBuilderComponents;
 
 use App\Entities\StyleBlock;
 
-class Icon extends image
+class Icon extends Image
 {
-    public function getStyleBlocks(): array
+    protected function composeStyleBlocks(): void
     {
-        $styleBlocks = parent::getStyleBlocks();
+        parent::composeStyleBlocks();
 
-        if (! empty($this->data['config']['style'])) {
-            $styleConfig = $this->data['config']['style'];
+        if (! empty($this->getConfig()['style'])) {
+            $styleConfig = $this->getConfig()['style'];
 
             $selector = '.pb-icon-'.$this->data['id'];
 
@@ -27,9 +27,7 @@ class Icon extends image
                 }
             }
 
-            $styleBlocks[] = $styleBlock;
+            $this->styleBlocks[] = $styleBlock;
         }
-
-        return $styleBlocks;
     }
 }

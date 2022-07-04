@@ -15,7 +15,7 @@ class CardText extends BaseContent
 
     private function getCardContentClasses(): array
     {
-        $configContent = $this->entity['config']['content'] ?? [];
+        $configContent = $this->getConfig()['content'] ?? [];
         $classes = collect();
 
         $classes->push($configContent['size'] ?? null);
