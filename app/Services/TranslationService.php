@@ -5,9 +5,10 @@ namespace App\Services;
 use App\Entities\Caches\SettingCache;
 use App\Facades\Localization;
 use App\Services\LanguageService;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
+use Predis\Connection\ConnectionException;
 
 class TranslationService
 {
@@ -23,6 +24,10 @@ class TranslationService
             });
         } catch (QueryException $e) {
             if ($e->getCode() == "42P01") {
+                return config('app.fallback_locale');
+            }
+        } catch (ConnectionException $e) {
+            if (env('DEPLOYMENT')) {
                 return config('app.fallback_locale');
             }
         }
