@@ -8,8 +8,8 @@ use Illuminate\View\Component;
 abstract class BaseContent extends Component
 {
     public $entity;
-    public $wrapperClasses = [];
     public $uniqueClass;
+    public $wrapperClasses = [];
 
     protected $baseView = 'components.builder.content';
     protected $pageBuilderService;
@@ -38,6 +38,11 @@ abstract class BaseContent extends Component
     public function render()
     {
         return view($this->baseView . '.' . $this->getViewName());
+    }
+
+    public function id(): string
+    {
+        return $this->entity['id'] ?? '';
     }
 
     protected function getViewName(): string
@@ -75,6 +80,12 @@ abstract class BaseContent extends Component
 
     protected function getUniqueClass(): string
     {
-        return 'pb-'.$this->entity['id'];
+        return 'pb-'.$this->id();
     }
+
+    protected function getConfig(): array
+    {
+        return $this->entity['config'] ?? [];
+    }
+
 }
