@@ -25,8 +25,11 @@ class WidgetCache extends BaseCache
         );
     }
 
-    public function remember(string $key, Closure $callback): mixed
-    {
+    public function remember(
+        string $key,
+        Closure $callback,
+        mixed $default = null
+    ): mixed {
         $this->key = $key;
 
         return parent::remember($key, $callback);
