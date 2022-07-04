@@ -50,11 +50,25 @@ class Page extends Model implements TranslatableContract
         foreach ($inputs as $locale => $input) {
             if (!empty($inputs[$locale])) {
                 $inputs[$locale]['plain_text_content'] = PageService::transformComponentToText($input['data']);
+
+                $uniqueKey = $this->translate($locale)->unique_key ?? null;
+                if (!$uniqueKey) {
+                    $inputs[$locale]['unique_key'] = PageService::generateUniqueKey();
+                }
             }
         }
 
         $this->fill($inputs);
         $this->save();
+
+        $this->generateStylePageTranslation();
+    }
+
+    public function generateStylePageTranslation(): void
+    {
+        foreach ($this->translations as $pageTranslation) {
+            $pageTranslation->generatePageStyle();
+        }
     }
 
     public function saveAuthorId(int $authorId)
