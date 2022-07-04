@@ -18,7 +18,7 @@ abstract class TranslatableField extends BaseField
         parent::__construct($name, $data);
 
         $this->defaultLocale = TranslationService::getDefaultLocale();
-        $this->locales = TranslationService::getLocales();
+        $this->locales = app(TranslationService::class)->getLocales();
     }
 
     protected function setPropertiesBasedOnData()
@@ -104,7 +104,7 @@ abstract class TranslatableField extends BaseField
 
                 $translatedAttributes[$attributeKey] = (
                     Str::title($attributeName).
-                    " (".TranslationService::getLanguageFromLocale($locale).")"
+                    " (".app(TranslationService::class)->getLanguageFromLocale($locale).")"
                 );
             }
         }

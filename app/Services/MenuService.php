@@ -94,7 +94,7 @@ class MenuService
 
     public function getHeaderMenu(string $locale): Collection
     {
-        return app(MenuCache::class)->remember(
+        return app(MenuCache::class)->rememberForLocale(
             'header_menu',
             function () use ($locale) {
                 return $this->getStructuredHeaderMenu($locale);
@@ -187,7 +187,7 @@ class MenuService
 
     public function getFooterMenu(string $locale): Collection
     {
-        return app(MenuCache::class)->remember(
+        return app(MenuCache::class)->rememberForLocale(
             'footer_menu',
             function () use ($locale) {
                 return $this->getStructuredFooterMenu($locale);
@@ -606,7 +606,7 @@ class MenuService
 
     public function removePageFromMenus(array $inputs)
     {
-        $languages = TranslationService::getLocales();
+        $languages = app(TranslationService::class)->getLocales();
         $headerMenuItems = $this->getHeaderMenus($languages);
         $footerMenuItems = $this->getFooterMenus($languages);
         foreach ($inputs as $locale => $input) {

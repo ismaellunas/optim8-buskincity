@@ -2,13 +2,14 @@
 
 namespace App\Entities\PageBuilderComponents;
 
-use App\Contracts\HasStyleInterface;
-use App\Contracts\PageBuilderComponentInterface;
 use App\Contracts\PageBuilderDimensionInterface;
+use App\Contracts\PageBuilderSearchableTextInterface;
 use App\Helpers\HtmlToText;
 use App\Traits\PageBuilderDimension;
 
-class Heading extends BaseComponent implements HasStyleInterface,PageBuilderComponentInterface,PageBuilderDimensionInterface
+class Heading extends BaseComponent implements
+    PageBuilderDimensionInterface,
+    PageBuilderSearchableTextInterface
 {
     use PageBuilderDimension;
 
@@ -17,19 +18,12 @@ class Heading extends BaseComponent implements HasStyleInterface,PageBuilderComp
         return HtmlToText::convert($this->data['content']['heading']['html']);
     }
 
-    public function getStyleBlocks(): array
+    protected function composeStyleBlocks(): void
     {
-        $styleBlocks = [];
-
-        if (! empty($this->data['config']['dimension'])) {
-            $dimensionConfig = $this->data['config']['dimension'];
-
-            $styleBlocks[] = $this->getDimensionStyleBlock(
-                $dimensionConfig,
-                $this->selector
+        if ($this->doesConfigHaveDimension()) {
+            $this->styleBlocks[] = $this->getDimensionStyleBlock(
+                $this->getSelector()
             );
         }
-
-        return $styleBlocks;
     }
 }

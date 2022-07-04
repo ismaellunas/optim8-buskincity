@@ -29,7 +29,7 @@ class Header extends Component
         $this->currentLanguage = $currentLanguage;
         $this->menus = $menuService->getFrontendUserMenus(request()) ?? [];
         $this->headerLayout = $settingService->getHeaderLayout();
-        $this->languageOptions = collect(TranslationService::getLocaleOptions())
+        $this->languageOptions = collect(app(TranslationService::class)->getLocaleOptions())
             ->filter(function ($locale) use ($currentLanguage) {
                return $locale['id'] != $currentLanguage;
             })

@@ -13,13 +13,13 @@ class MenuCache extends BaseCache
         return $key.':'.$locale;
     }
 
-    public function remember(
+    public function rememberForLocale(
         string $key,
         Closure $callback,
         string $locale = null
     ): mixed {
         $key = $this->getKey($key, $locale);
 
-        return parent::remember($key, $callback);
+        return $this->remember($key, $callback);
     }
 }

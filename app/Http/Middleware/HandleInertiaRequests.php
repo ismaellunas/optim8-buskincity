@@ -84,7 +84,7 @@ class HandleInertiaRequests extends Middleware
             'footerMenus' => $this->getFooterMenus($request),
             'currentLanguage' => TranslationSv::currentLanguage(),
             'defaultLanguage' => TranslationSv::getDefaultLocale(),
-            'languageOptions' => TranslationSv::getLocaleOptions(),
+            'languageOptions' => app(TranslationSv::class)->getLocaleOptions(),
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
             ],

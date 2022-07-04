@@ -132,7 +132,7 @@ class PageController extends CrudController
         }
 
         $menuService = app(MenuService::class);
-        $languages = TranslationService::getLocales();
+        $languages = app(TranslationService::class)->getLocales();
         $headerMenuItems = $menuService->getHeaderMenus($languages);
         $footerMenuItems = $menuService->getFooterMenus($languages);
 

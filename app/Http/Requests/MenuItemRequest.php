@@ -20,7 +20,7 @@ class MenuItemRequest extends BaseFormRequest
             'locale' => [
                 'sometimes',
                 'required',
-                Rule::in(TranslationService::getLocales()),
+                Rule::in(app(TranslationService::class)->getLocales()),
             ],
             'title' => [
                 'sometimes',
