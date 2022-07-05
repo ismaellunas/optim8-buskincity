@@ -24,6 +24,7 @@ use App\Http\Controllers\{
     UserProfileController,
     WebhookStripeController,
 };
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Services\SitemapService;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
@@ -136,10 +137,15 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
     }
 });
 
-Route::name('api.')->prefix('api')->group(function () {
-    Route::get('/page-builder/components/user-list', ApiPageBuilderComponentUserListController::class)
-        ->name('page-builder.components.user-list');
-});
+Route::name('api.')
+    ->prefix('api')
+    ->withoutMiddleware(HandleInertiaRequests::class)
+    ->middleware('throttle:api')
+    ->group(function () {
+        Route::get('/page-builder/components/user-list', ApiPageBuilderComponentUserListController::class)
+            ->name('page-builder.components.user-list');
+    }
+);
 
 Route::name('forms.')->prefix('forms')->group(function () {
     Route::get('schemas', [FormController::class, 'getSchemas'])
@@ -150,49 +156,50 @@ Route::name('forms.')->prefix('forms')->group(function () {
 
 Route::post('webhooks/stripe', WebhookStripeController::class);
 
-Route::group([
-    'prefix' => Localization::setLocale(),
-    'middleware' => [ 'localizationRedirect' ]
-], function () {
-    Route::get('language/{new_locale}', ChangeLanguageController::class)
-        ->where('new_locale', '[a-zA-Z]{2}')
-        ->name('language.change');
+Route::prefix(Localization::setLocale())
+    ->middleware(['localizationRedirect'])
+    ->withoutMiddleware(HandleInertiaRequests::class)
+    ->group(function () {
+        Route::get('language/{new_locale}', ChangeLanguageController::class)
+            ->where('new_locale', '[a-zA-Z]{2}')
+            ->name('language.change');
 
-    Route::get('/', [PageController::class, 'homePage'])
-        ->name('homepage')
-        ->middleware('redirectLanguage');
+        Route::get('/', [PageController::class, 'homePage'])
+            ->name('homepage')
+            ->middleware('redirectLanguage');
 
-    Route::get('sitemap_index.xml', [SitemapController::class, 'sitemaps'])
-        ->name('sitemap');
+        Route::get('sitemap_index.xml', [SitemapController::class, 'sitemaps'])
+            ->name('sitemap');
 
-    Route::get('{sitemapName}-sitemap.xml', [SitemapController::class, 'urls'])
-        ->where('sitemapName', implode('|', SitemapService::sitemapNames()))
-        ->name('sitemap.urls');
+        Route::get('{sitemapName}-sitemap.xml', [SitemapController::class, 'urls'])
+            ->where('sitemapName', implode('|', SitemapService::sitemapNames()))
+            ->name('sitemap.urls');
 
-    Route::get(LaravelLocalization::transRoute('blog.index'), [PostController::class, 'index'])
-        ->name('blog.index');
+        Route::get(LaravelLocalization::transRoute('blog.index'), [PostController::class, 'index'])
+            ->name('blog.index');
 
-    Route::get(LaravelLocalization::transRoute('blog.category.index'), [PostCategoryController::class, 'index'])
-        ->name('blog.category.index');
+        Route::get(LaravelLocalization::transRoute('blog.category.index'), [PostCategoryController::class, 'index'])
+            ->name('blog.category.index');
 
-    Route::get(LaravelLocalization::transRoute('blog.show'), [PostController::class, 'show'])
-        ->where('slug', '[\w\d\-\_]+')
-        ->name('blog.show');
+        Route::get(LaravelLocalization::transRoute('blog.show'), [PostController::class, 'show'])
+            ->where('slug', '[\w\d\-\_]+')
+            ->name('blog.show');
 
-    Route::get('/{page_translation}', [PageController::class, 'show'])
-        ->name('frontend.pages.show');
+        Route::get('/{page_translation}', [PageController::class, 'show'])
+            ->name('frontend.pages.show');
 
-    Route::get(LaravelLocalization::transRoute('frontend.profile'), [FrontendProfileController::class, 'show'])
-        ->name('frontend.profile')
-        ->middleware('publicPage:profile')
-        ->scopeBindings();
+        Route::get(LaravelLocalization::transRoute('frontend.profile'), [FrontendProfileController::class, 'show'])
+            ->name('frontend.profile')
+            ->middleware('publicPage:profile')
+            ->scopeBindings();
 
-    Route::get('/print/qrcode/{user:unique_key}', [QrCodeController::class, 'print'])
-        ->name('frontend.print.qrcode')
-        ->middleware('publicPage:profile');
+        Route::get('/print/qrcode/{user:unique_key}', [QrCodeController::class, 'print'])
+            ->name('frontend.print.qrcode')
+            ->middleware('publicPage:profile');
 
-    Route::get('donations/{user}/success', [DonationController::class, 'success'])
-        ->name('donations.success');
-    Route::post('donations/checkout/{user}', [DonationController::class, 'checkout'])
-        ->name('donations.checkout')->middleware('throttle:checkout');
+        Route::get('donations/{user}/success', [DonationController::class, 'success'])
+            ->name('donations.success');
+
+        Route::post('donations/checkout/{user}', [DonationController::class, 'checkout'])
+            ->name('donations.checkout')->middleware('throttle:checkout');
 });
