@@ -32,7 +32,7 @@ class WidgetCache extends BaseCache
     ): mixed {
         $this->key = $key;
 
-        return parent::remember($key, $callback);
+        return parent::remember($key, $callback, $default);
     }
 
     public function flushWidget(string $widget): bool
