@@ -1,17 +1,10 @@
 <x-layouts.master>
-    @push('metas')
-        <meta head-key="description"
-            name="description"
-            content="{{ config('app.name') }}"
-        />
-    @endpush
-
     <x-slot name="title">
-        {{ $page->title }}
+        {{ trim($page->meta_title ?? $page->title).' | '.config('app.name') }}
     </x-slot>
 
     <x-slot name="metaDescription">
-        {{ $page->meta_description }}
+        {{ trim($page->meta_description) }}
     </x-slot>
 
     <div class="page-wrapper py-6">

@@ -50,8 +50,7 @@ class Translation extends Model implements TranslationLoader
                     ->pluck('value', 'key')
                     ->toArray();
                 },
-                $group,
-                []
+                $group
             );
         } catch (QueryException $e) {
             if ($e->getCode() == "42P01") {
