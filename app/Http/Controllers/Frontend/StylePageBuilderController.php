@@ -19,7 +19,7 @@ class StylePageBuilderController extends Controller
                 'generate_style',
                 'data'
             ])
-            ->findByUid($uidPageBuilder)
+            ->uid($uidPageBuilder)
             ->first();
 
         if ($pageTranslation) {

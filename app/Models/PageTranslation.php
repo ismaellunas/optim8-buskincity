@@ -53,7 +53,7 @@ class PageTranslation extends Model implements PublishableInterface
         return $query->where('status', self::STATUS_PUBLISHED);
     }
 
-    public function scopeFindByUid($query, $uid)
+    public function scopeUid($query, $uid)
     {
         $splitUid = $this->splitIdAndUniqueKey($uid);
 
