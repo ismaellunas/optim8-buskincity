@@ -25,7 +25,7 @@ class PageTranslation extends Model implements PublishableInterface
     protected $fillable = [
         'data',
         'excerpt',
-        'generate_style',
+        'generated_style',
         'locale',
         'meta_description',
         'meta_title',

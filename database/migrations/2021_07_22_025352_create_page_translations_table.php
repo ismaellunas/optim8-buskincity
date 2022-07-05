@@ -25,7 +25,7 @@ class CreatePageTranslationsTable extends Migration
             $table->string('meta_description', 255)->nullable();
             $table->longText('plain_text_content')->nullable();
             $table->tinyInteger('status')->default(0);
-            $table->text('generate_style')->nullable();
+            $table->text('generated_style')->nullable();
             $table->foreignId('page_id')
                 ->constrained()
                 ->onUpdate('cascade')

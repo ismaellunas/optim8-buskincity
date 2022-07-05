@@ -16,8 +16,8 @@ class StylePageBuilderController extends Controller
         }
 
         $pageTranslation = PageTranslation::select([
-                'generate_style',
                 'id',
+                'generated_style',
                 'data'
             ])
             ->uid($uidPageBuilder)
@@ -28,7 +28,7 @@ class StylePageBuilderController extends Controller
                 $pageTranslation->generatePageStyle();
             }
 
-            $response = Response::make($pageTranslation->generate_style);
+            $response = Response::make($pageTranslation->generated_style);
             $response->header('Content-Type', 'text/css');
             return $response;
         }
