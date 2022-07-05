@@ -2,10 +2,8 @@
 
 namespace App\Services;
 
-use App\Helpers\Url;
 use App\Contracts\PageBuilderSearchableTextInterface;
 use App\Models\Page;
-use App\Models\PageTranslation;
 use App\Services\{
     SettingService,
 };
@@ -93,14 +91,5 @@ class PageService
             ])
             ->where('id', $homePageId)
             ->first();
-    }
-
-    public static function generateUniqueKey()
-    {
-        $isCodeExist = function ($code) {
-            return PageTranslation::where('unique_key', $code)->exists();
-        };
-
-        return Url::randomDigitSegment($isCodeExist);
     }
 }

@@ -126,4 +126,24 @@ class PageTranslation extends Model implements PublishableInterface
             })
             ->all();
     }
+
+    public function hasUniqueKey(): bool
+    {
+        return $this->unique_key != null;
+    }
+
+    public static function isUniqueKeyExist(string $uniqueKey): bool
+    {
+        return self::where('unique_key', $uniqueKey)->exists();
+    }
+
+    public function setUniqueKey()
+    {
+        $this->unique_key = Url::randomDigitSegment([$this, 'isUniqueKeyExist']);
+    }
+
+    public function hasGeneratedStyle(): bool
+    {
+        return $this->generated_style != null;
+    }
 }

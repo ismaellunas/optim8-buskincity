@@ -17,13 +17,14 @@ class StylePageBuilderController extends Controller
 
         $pageTranslation = PageTranslation::select([
                 'generate_style',
+                'id',
                 'data'
             ])
             ->uid($uidPageBuilder)
             ->first();
 
         if ($pageTranslation) {
-            if ($pageTranslation->generate_style == null) {
+            if (!$pageTranslation->hasGeneratedStyle()) {
                 $pageTranslation->generatePageStyle();
             }
 

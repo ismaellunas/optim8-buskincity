@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Url;
 use App\Models\PageTranslation;
 use App\Services\{
     PageService,
@@ -51,9 +52,8 @@ class Page extends Model implements TranslatableContract
             if (!empty($inputs[$locale])) {
                 $inputs[$locale]['plain_text_content'] = PageService::transformComponentToText($input['data']);
 
-                $uniqueKey = $this->translate($locale)->unique_key ?? null;
-                if (!$uniqueKey) {
-                    $inputs[$locale]['unique_key'] = PageService::generateUniqueKey();
+                if (!$this->translate($locale)) {
+                    $inputs[$locale]['unique_key'] = Url::randomDigitSegment([PageTranslation::class, 'isUniqueKeyExist']);
                 }
             }
         }
