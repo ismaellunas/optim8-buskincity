@@ -45,7 +45,7 @@ class TranslationCache extends BaseCache
         string $locale,
         Closure $callback,
         string $group = null,
-        mixed $default = null
+        mixed $default = []
     ): mixed {
         $key = $this->getKey($locale, $group);
 
