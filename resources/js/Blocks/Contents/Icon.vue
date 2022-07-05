@@ -11,7 +11,7 @@
                 :class="config.icon.alignment"
             >
                 <span
-                    class="icon"
+                    :class="iconClass"
                     :style="iconStyle"
                 >
                     <template v-if="config.icon.class !== null">
@@ -32,6 +32,7 @@
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import { useModelWrapper } from '@/Libs/utils';
+    import { concat } from 'lodash';
 
     export default {
         name: "Icon",
@@ -70,6 +71,13 @@
 
                 return styles;
             },
+
+            iconClass() {
+                return concat(
+                    "icon",
+                    this.config.icon?.color ?? "",
+                ).filter(Boolean);
+            }
         },
     }
 </script>

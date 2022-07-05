@@ -1,6 +1,7 @@
 import {
     alignments,
     defaultOption,
+    textColors,
 
 } from './style-options';
 
@@ -12,6 +13,7 @@ export default {
         icon: {
             class: null,
             alignment: null,
+            color: null,
         },
         style: {
             size: null,
@@ -47,6 +49,11 @@ export const config = {
                 type: "select",
                 label: "Alignment",
                 options: defaultOption.concat(alignments),
+            },
+            color: {
+                type: "select",
+                label: "Color",
+                options: defaultOption.concat(textColors),
             },
         }
     },
