@@ -6,7 +6,6 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <meta name="description" content="{{ $metaDescription ?? config('app.name') }}">
-        <meta name="keywords" content="{{ $metaKeywords ?? config('app.name') }}">
 
         @stack('metas')
 
