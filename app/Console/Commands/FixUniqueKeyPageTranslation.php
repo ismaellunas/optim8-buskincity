@@ -42,12 +42,8 @@ class FixUniqueKeyPageTranslation extends Command
         $pageTranslations = PageTranslation::all();
 
         foreach ($pageTranslations as $pageTranslation) {
-            if (!$pageTranslation->unique_key) {
-                $isCodeExist = function ($code) {
-                    return PageTranslation::where('unique_key', $code)->exists();
-                };
-
-                $pageTranslation->unique_key = Url::randomDigitSegment($isCodeExist);
+            if (!$pageTranslation->hasUniqueKey()) {
+                $pageTranslation->setUniqueKey();
                 $pageTranslation->save();
             }
         }

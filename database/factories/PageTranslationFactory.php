@@ -25,9 +25,6 @@ class PageTranslationFactory extends Factory
     public function definition()
     {
         $title = $this->faker->sentence();
-        $isCodeExist = function ($code) {
-            return PageTranslation::where('unique_key', $code)->exists();
-        };
 
         return [
             'locale' => config('app.fallback_locale'),
@@ -36,7 +33,7 @@ class PageTranslationFactory extends Factory
             'status' => PageTranslation::STATUS_DRAFT,
             'page_id' => Page::factory(),
             'data' => json_decode('{"structures": [], "entities": {}, "media": []}'),
-            'unique_key' => Url::randomDigitSegment($isCodeExist),
+            'unique_key' => Url::randomDigitSegment([PageTranslation::class, 'isUniqueKeyExist']),
         ];
     }
 }
