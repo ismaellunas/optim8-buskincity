@@ -92,3 +92,16 @@ export const backgroundColors = [
     { value: "has-background-warning", name: "Warning" },
     { value: "has-background-danger", name: "Danger" },
 ];
+
+export const textColors = [
+    { value: "has-text-white", name: "White" },
+    { value: "has-text-black", name: "Black" },
+    { value: "has-text-light", name: "Light" },
+    { value: "has-text-dark", name: "Dark" },
+    { value: "has-text-primary", name: "Primary" },
+    { value: "has-text-link", name: "Link" },
+    { value: "has-text-info", name: "Info" },
+    { value: "has-text-success", name: "Success" },
+    { value: "has-text-warning", name: "Warning" },
+    { value: "has-text-danger", name: "Danger" },
+];
