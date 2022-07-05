@@ -3,6 +3,7 @@
 namespace App\Entities\PageBuilderComponents;
 
 use App\Contracts\HasStyleInterface;
+use Illuminate\Support\Str;
 
 abstract class BaseComponent implements HasStyleInterface
 {
@@ -22,7 +23,7 @@ abstract class BaseComponent implements HasStyleInterface
 
     protected function getSelector(): string
     {
-        return '.pb-'.$this->getId();
+        return '.pb-'.Str::lower($this->getId());
     }
 
     protected function getConfig(): array

@@ -1,4 +1,4 @@
-<div @class('pb-'.$uid)>
+<div @class('pb-'.strtolower($uid))>
     <div class="columns">
         @foreach ($columns as $column)
             <x-builder.column

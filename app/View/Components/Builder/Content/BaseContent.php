@@ -3,6 +3,7 @@
 namespace App\View\Components\Builder\Content;
 
 use App\Services\PageBuilderService;
+use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
 abstract class BaseContent extends Component
@@ -80,7 +81,7 @@ abstract class BaseContent extends Component
 
     protected function getUniqueClass(): string
     {
-        return 'pb-'.$this->id();
+        return 'pb-'.Str::lower($this->id());
     }
 
     protected function getConfig(): array
