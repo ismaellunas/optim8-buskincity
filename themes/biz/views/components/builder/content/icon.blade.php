@@ -4,7 +4,7 @@
             @class(['content', $config['alignment']])
         >
             <span
-                @class(['icon', 'pb-icon-'.$id, $config['color']])
+                @class(['icon', 'pb-icon-'.$id, $config['color'] ?? ''])
             >
                 <i @class($config['class'])></i>
             </span>
