@@ -81,7 +81,9 @@ class StripeSettingService
 
     public function getDefaultCountry(): ?string
     {
-        return Setting::key('stripe_default_country')->value('value');
+        return app(SettingCache::class)->remember('stripe_default_country', function () {
+            return Setting::key('stripe_default_country')->value('value') ?? "";
+        });
     }
 
     public function getAmountOptions(): array
