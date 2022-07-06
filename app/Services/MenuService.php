@@ -8,7 +8,6 @@ use App\Models\{
     Menu,
     MenuItem,
     Page,
-    PageTranslation,
     Post,
     Role,
     User,
@@ -588,56 +587,27 @@ class MenuService
             ->all();
     }
 
-    public function affectedMenuLocales(array $menus, int $page_id): array
+    public function removePageFromMenus(string $locale, int $pageId)
     {
-        $isPageUsed = [];
+        $menuItems = MenuItem::where('page_id', $pageId)
+            ->whereHas('menu', function ($q) use ($locale) {
+                $q->where('locale', $locale);
+            })
+            ->get();
 
-        foreach ($menus as $locale => $menuItems) {
-            $isPageUsed[$locale] = false;
-            foreach ($menuItems as $menuItem) {
-                if ($menuItem->page_id === $page_id) {
-                    $isPageUsed[$locale] = true;
-                }
-            }
-        }
+        $menuItems->each(function ($menuItem) {
+            $menuItem->delete();
+        });
 
-        return $isPageUsed;
-    }
-
-    public function removePageFromMenus(array $inputs)
-    {
-        $languages = app(TranslationService::class)->getLocales();
-        $headerMenuItems = $this->getHeaderMenus($languages);
-        $footerMenuItems = $this->getFooterMenus($languages);
-        foreach ($inputs as $locale => $input) {
-            if (count($input) > 0 && isset($input['page_id'])) {
-                $this->removeMenuItems($headerMenuItems, $locale, $input['page_id'], $input['status']);
-                $this->removeMenuItems($footerMenuItems, $locale, $input['page_id'], $input['status']);
-            }
-        }
         app(MenuCache::class)->flush();
     }
 
-    private function removeMenuItems(
-        array $menuItems,
-        string $locale,
-        int $pageId,
-        int $pageStatus
-    ) {
-        foreach($menuItems[$locale] as $menuItem) {
-            if ($pageId === $menuItem['page_id']) {
-                if ($pageStatus === PageTranslation::STATUS_DRAFT) {
-                    $menus = Menu::with(['menuItems' => function($query) use($pageId){
-                        $query->where('page_id', $pageId);
-                    }])
-                    ->where('locale', $locale)->get();
-                    foreach ($menus as $menu) {
-                        if (count($menu->menuItems) > 0) {
-                            $menu->menuItems[0]->delete();
-                        }
-                    }
-                }
-            }
-        }
+    public function isPageUsedByMenu(int $pageId, string $locale): bool
+    {
+        return MenuItem::where('page_id', $pageId)
+            ->whereHas('menu', function ($q) use ($locale) {
+                $q->where('locale', $locale);
+            })
+            ->exists();
     }
 }

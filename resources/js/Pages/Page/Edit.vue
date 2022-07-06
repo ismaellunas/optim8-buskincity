@@ -39,6 +39,7 @@
     import { getTranslation } from '@/Libs/translation';
     import { isBlank } from '@/Libs/utils';
     import { onPageEditorClicked } from '@/Libs/page-builder';
+    import { pageStatus } from '@/Libs/defaults';
     import { ref, onMounted, onUnmounted } from 'vue';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
@@ -106,46 +107,65 @@
             };
         },
         methods: {
-            onSubmit() {
-                const submitRoute = route('admin.pages.update', {id: this.page.id});
-                if (
-                    this.affectedHeaderMenu[this.selectedLocale] === true
-                    || this.affectedFooterMenu[this.selectedLocale] === true
-                ) {
-                    if (this.form[this.selectedLocale].status === 0) {
-                        confirmDelete(
-                            'Are You Sure?',
-                            'This action will also remove the page on the navigation menu.',
-                            'Yes'
-                        ).then((result) => {
-                            if (result.isDismissed) {
-                                return false;
-                            } else if(result.isConfirmed) {
-                                this.form.put(submitRoute, {
-                                    onSuccess: () => {
-                                        const translatedPage = getTranslation(
-                                            this.page,
-                                            this.selectedLocale
-                                        );
+            isUsedByMenu() {
+                const self = this;
 
-                                        this.form[this.selectedLocale]['id'] = translatedPage.id;
-                                    },
-                                });
-                            }
+                return new Promise((resolve, reject) => {
+                    const url = route('admin.api.pages.is-used-by-menu', {
+                        page: self.page.id,
+                        locale: self.selectedLocale,
+                    });
+
+                    axios.get(url)
+                        .then(response => {
+                            resolve(response.data == true);
                         })
-                    } else {
-                        this.form.put(submitRoute, {
-                            onSuccess: () => {
-                                const translatedPage = getTranslation(
-                                    this.page,
-                                    this.selectedLocale
-                                );
+                        .catch(error => {
+                            reject(error);
+                        })
+                });
+            },
 
-                                this.form[this.selectedLocale]['id'] = translatedPage.id;
-                            },
-                        });
+            async canSavePage() {
+                try {
+                    let translatedPage = getTranslation(
+                        this.page,
+                        this.selectedLocale
+                    );
+
+                    const pageTranslationStatus = this.form[this.selectedLocale]['status'];
+
+                    if (
+                        translatedPage
+                        && translatedPage.status == pageStatus.published
+                        && pageTranslationStatus == pageStatus.draft
+                    ) {
+                        const isUsedByMenu = await this.isUsedByMenu();
+
+                        if (isUsedByMenu) {
+                            const confirmResult = await confirmDelete(
+                                'Are You Sure?',
+                                'This action will also remove the page on the navigation menu.',
+                                'Yes'
+                            );
+
+                            return !!confirmResult.value;
+                        }
                     }
-                } else {
+
+                    return true;
+
+                } catch (error) {
+                    console.error(error);
+
+                    return true;
+                }
+            },
+
+            async onSubmit() {
+                if (await this.canSavePage()) {
+                    const submitRoute = route('admin.pages.update', {id: this.page.id});
+
                     this.form.put(submitRoute, {
                         onSuccess: () => {
                             const translatedPage = getTranslation(
@@ -158,6 +178,7 @@
                     });
                 }
             },
+
             onChangeLocale(locale) {
                 if (this.form.isDirty) {
 
