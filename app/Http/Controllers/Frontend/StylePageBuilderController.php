@@ -11,10 +11,6 @@ class StylePageBuilderController extends Controller
 {
     public function __invoke(string $uidPageBuilder)
     {
-        if (strlen($uidPageBuilder) <= 16) {
-            abort(ResponseVariable::HTTP_NOT_FOUND);
-        }
-
         $pageTranslation = PageTranslation::select([
                 'id',
                 'generated_style',
