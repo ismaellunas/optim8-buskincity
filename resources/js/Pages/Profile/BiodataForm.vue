@@ -8,7 +8,7 @@
             <form-builder
                 route-name="admin.profile.show"
                 :entity-id="user.id"
-                :locale="user.origin_language_code"
+                :locale="$page.props.userOriginLanguage"
                 @loaded-empty-field="isShown = false"
                 @loaded-forbidden="isShown = false"
                 @loaded-successfully="isShown = true"
