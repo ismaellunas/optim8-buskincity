@@ -42,14 +42,14 @@ abstract class BaseCache
     public function rememberWithTime(
         string $key,
         Closure $callback,
-        int $minutes = 1,
+        int $seconds,
         mixed $default = null
     ): mixed {
         try {
 
             return Cache::tags($this->getTags())->remember(
                 $key,
-                $minutes,
+                $seconds,
                 $callback
             );
 
