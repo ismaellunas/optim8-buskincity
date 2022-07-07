@@ -9,6 +9,23 @@ use Illuminate\Support\Collection;
 
 class CountryService
 {
+    private $caches = [];
+
+    private function hasLoadedKey($key): bool
+    {
+        return array_key_exists($key, $this->caches);
+    }
+
+    private function setLoadedKey($key, $value)
+    {
+        $this->caches[$key] = $value;
+    }
+
+    private function getLoadedKey($key): mixed
+    {
+        return $this->caches[$key];
+    }
+
     public function getPhoneCountryOptions(): Collection
     {
         return app(CountryCache::class)
@@ -32,9 +49,47 @@ class CountryService
 
     public function getCountryOptions(): Collection
     {
-        return app(CountryCache::class)
-            ->remember('country_options', function () {
-                return Country::orderBy('display_name')
+        $key = 'country_options';
+
+        if (! $this->hasLoadedKey($key)) {
+            $this->setLoadedKey(
+                $key,
+                app(CountryCache::class)
+                    ->remember('country_options', function () {
+                        return Country::orderBy('display_name')
+                            ->get([
+                                'alpha2',
+                                'display_name',
+                            ])
+                            ->map(function ($country) {
+                                return [
+                                    'id' => $country->alpha2,
+                                    'value' => $country->display_name,
+                                ];
+                            });
+                    })
+            );
+        }
+
+        return $this->getLoadedKey($key);
+    }
+
+    public function getUserCountryOptions(): Collection
+    {
+        $key = 'user_country_options';
+
+        if (! $this->hasLoadedKey($key)) {
+            $countries = UserMeta::key('country')
+                ->select('value')
+                ->distinct()
+                ->pluck('value');
+
+            $this->setLoadedKey(
+                $key,
+                Country::orderBy('display_name')
+                    ->when($countries, function ($q, $countries) {
+                        $q->whereIn('alpha2', $countries);
+                    })
                     ->get([
                         'alpha2',
                         'display_name',
@@ -44,31 +99,11 @@ class CountryService
                             'id' => $country->alpha2,
                             'value' => $country->display_name,
                         ];
-                    });
-            });
-    }
+                    })
+            );
+        }
 
-    public function getUserCountryOptions(): Collection
-    {
-        $countries = UserMeta::key('country')
-            ->select('value')
-            ->distinct()
-            ->pluck('value');
-
-        return Country::orderBy('display_name')
-            ->when($countries, function ($q, $countries) {
-                $q->whereIn('alpha2', $countries);
-            })
-            ->get([
-                'alpha2',
-                'display_name',
-            ])
-            ->map(function ($country) {
-                return [
-                    'id' => $country->alpha2,
-                    'value' => $country->display_name,
-                ];
-            });
+        return $this->getLoadedKey($key);
     }
 
     public function getCountryName(string $alpha2): string
