@@ -6,6 +6,7 @@ use App\Http\Requests\PageRequest;
 use App\Models\{
     Media,
     Page,
+    PageTranslation,
 };
 use App\Services\{
     MenuService,
@@ -131,14 +132,6 @@ class PageController extends CrudController
             }
         }
 
-        $menuService = app(MenuService::class);
-        $languages = app(TranslationService::class)->getLocales();
-        $headerMenuItems = $menuService->getHeaderMenus($languages);
-        $footerMenuItems = $menuService->getFooterMenus($languages);
-
-        $affectedHeaderMenu = $menuService->affectedMenuLocales($headerMenuItems, $page['id']);
-        $affectedFooterMenu = $menuService->affectedMenuLocales($footerMenuItems, $page['id']);
-
         $user = auth()->user();
 
         return Inertia::render('Page/Edit', [
@@ -158,8 +151,6 @@ class PageController extends CrudController
             'entityId' => $page->id,
             'statusOptions' => $this->model::getStatusOptions(),
             'images' => $images,
-            'affectedHeaderMenu' => $affectedHeaderMenu,
-            'affectedFooterMenu' => $affectedFooterMenu,
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
@@ -177,10 +168,25 @@ class PageController extends CrudController
     public function update(PageRequest $request, Page $page)
     {
         $inputs = $request->all();
+
+        $locale = collect($inputs)->pluck('locale')->filter()->first();
+
+        $oldStatus = $page->translate($locale)->status ?? null;
+
+        $pageTranslation = $inputs[$locale] ?? [];
+
         $page->saveFromInputs($inputs);
 
-        $menuService = app(MenuService::class);
-        $menuService->removePageFromMenus($inputs);
+        if (
+            !empty($pageTranslation['page_id'])
+            && $oldStatus == PageTranslation::STATUS_PUBLISHED
+            && $pageTranslation['status'] == PageTranslation::STATUS_DRAFT
+        ) {
+            app(MenuService::class)->removePageFromMenus(
+                $pageTranslation['locale'],
+                $pageTranslation['page_id']
+            );
+        }
 
         $this->generateFlashMessage('Page updated successfully!');
 
@@ -198,5 +204,10 @@ class PageController extends CrudController
         $page->delete();
         $request->session()->flash('message', 'Page deleted successfully!');
         return redirect()->route('admin.pages.index');
+    }
+
+    public function isUsedByMenus(Page $page, string $locale)
+    {
+        return app(MenuService::class)->isPageUsedByMenu($page->id, $locale);
     }
 }

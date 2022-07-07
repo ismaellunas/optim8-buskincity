@@ -48,3 +48,8 @@ export const appName = process.env.MIX_APP_NAME;
 export const oneMegabyte = 1024;
 
 export const userImage = '/images/profile-picture-default.png';
+
+export const pageStatus = {
+    draft: 0,
+    published: 1,
+};
