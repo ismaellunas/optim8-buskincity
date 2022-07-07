@@ -123,11 +123,9 @@ class StripeSettingService
 
     public function getCountrySpecs(): ?Setting
     {
-        return app(SettingCache::class)->remember('stripe_country_specs', function () {
-            return Setting::firstWhere([
-                'key' => 'stripe_country_specs',
-            ]);
-        });
+        return Setting::firstWhere([
+            'key' => 'stripe_country_specs',
+        ]);
     }
 
     public function saveCountrySpecs(array $countrySpecs)
