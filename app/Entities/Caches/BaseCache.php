@@ -39,6 +39,30 @@ abstract class BaseCache
         }
     }
 
+    public function rememberWithTime(
+        string $key,
+        Closure $callback,
+        int $minutes = 1,
+        mixed $default = null
+    ): mixed {
+        try {
+
+            return Cache::tags($this->getTags())->remember(
+                $key,
+                $minutes,
+                $callback
+            );
+
+        } catch (ConnectionException $e) {
+
+            if (env('DEPLOYMENT')) {
+                return $default;
+            }
+
+            throw $e;
+        }
+    }
+
     public function flush(): bool
     {
         return Cache::tags($this->tag)->flush();

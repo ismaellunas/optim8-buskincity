@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entities\Caches\SettingCache;
 use App\Entities\UserMetaStripe;
 use App\Helpers\HumanReadable;
 use App\Mail\ThankYouCheckoutCompleted;
@@ -364,35 +365,39 @@ class StripeService
 
     public function getCountryOptions(): Collection
     {
-        $stripeSettingService = app(StripeSettingService::class);
-        $countrySpecs = [];
+        $oneMonthSeconds = 60 * 60 * 24 * 30;
 
-        $countrySpecsSetting = $stripeSettingService->getCountrySpecs();
+        return app(SettingCache::class)->rememberWithTime('stripe_country_options', function () {
+            $stripeSettingService = app(StripeSettingService::class);
+            $countrySpecs = [];
 
-        if (
-            is_null($countrySpecsSetting)
-            || empty($countrySpecsSetting->value)
-            || $countrySpecsSetting->updated_at->lt(now()->subYear())
-        ) {
-            $response = $this->getStripeClient()->countrySpecs->all(['limit' => 100]);
+            $countrySpecsSetting = $stripeSettingService->getCountrySpecs();
 
-            $stripeSettingService->saveCountrySpecs($response->data);
+            if (
+                is_null($countrySpecsSetting)
+                || empty($countrySpecsSetting->value)
+                || $countrySpecsSetting->updated_at->lt(now()->subYear())
+            ) {
+                $response = $this->getStripeClient()->countrySpecs->all(['limit' => 100]);
 
-            $countrySpecs = $response->data;
-        } else {
-            $countrySpecs = json_decode($countrySpecsSetting->value);
-        }
+                $stripeSettingService->saveCountrySpecs($response->data);
 
-        $countrySpecs = collect($countrySpecs);
+                $countrySpecs = $response->data;
+            } else {
+                $countrySpecs = json_decode($countrySpecsSetting->value);
+            }
 
-        return Country::whereIn('alpha2', $countrySpecs->pluck('id'))
-            ->get(['alpha2', 'display_name'])
-            ->map(function ($country) {
-                return [
-                    'id' => $country->alpha2,
-                    'value' => $country->display_name,
-                ];
-            });
+            $countrySpecs = collect($countrySpecs);
+
+            return Country::whereIn('alpha2', $countrySpecs->pluck('id'))
+                ->get(['alpha2', 'display_name'])
+                ->map(function ($country) {
+                    return [
+                        'id' => $country->alpha2,
+                        'value' => $country->display_name,
+                    ];
+                });
+        }, $oneMonthSeconds);
     }
 
     public function getCurrencyOptions(): array
