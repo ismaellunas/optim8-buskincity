@@ -1,7 +1,7 @@
 <template>
-    <app-layout>
+    <app-layout :title="title">
         <template #header>
-            Media
+            {{ title }}
         </template>
 
         <div class="box">
@@ -41,12 +41,13 @@
             MixinFilterDataHandle,
         ],
         props: {
+            acceptedTypes: Array,
             baseRouteName: String,
             can: {},
-            records: {},
             pageNumber: String,
             pageQueryParams: Object,
-            acceptedTypes: Array,
+            records: {},
+            title: { type: String, required: true },
         },
         setup(props) {
             const queryParams = merge(
