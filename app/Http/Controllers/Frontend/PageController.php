@@ -122,7 +122,7 @@ class PageController extends Controller
                 ]);
             }
 
-            if ($newPageTranslation->page->isHomePage) {
+            if ($page->isHomePage) {
                 return $this->redirectFallback();
             }
 
