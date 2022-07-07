@@ -11,14 +11,15 @@ class StylePageBuilderController extends Controller
 {
     public function __invoke(string $uidPageBuilder)
     {
-        if (strlen($uidPageBuilder) <= 6) {
+        if (strlen($uidPageBuilder) <= 16) {
             abort(ResponseVariable::HTTP_NOT_FOUND);
         }
 
         $pageTranslation = PageTranslation::select([
                 'id',
                 'generated_style',
-                'data'
+                'data',
+                'updated_at'
             ])
             ->uid($uidPageBuilder)
             ->first();
@@ -30,6 +31,10 @@ class StylePageBuilderController extends Controller
 
             $response = Response::make($pageTranslation->generated_style);
             $response->header('Content-Type', 'text/css');
+            $response->header('Last-Modified', $pageTranslation->updated_at);
+            $response->header('Cache-Control', 'private');
+            $response->header('Expires', date('D, d M Y H:i:s \G\M\T', strtotime("+30 days")));
+
             return $response;
         }
 
