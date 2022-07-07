@@ -17,7 +17,7 @@ use App\Services\{
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class MediaController extends Controller
+class MediaController extends CrudController
 {
     private $mediaService;
 
@@ -25,6 +25,7 @@ class MediaController extends Controller
 
     protected $baseRouteName = 'admin.media';
     protected $recordsPerPage = 12;
+    protected $title = 'Media';
 
     public function __construct(MediaService $mediaService)
     {
@@ -41,14 +42,13 @@ class MediaController extends Controller
     {
         $user = auth()->user();
 
-        return Inertia::render('Media/Index', [
+        return Inertia::render('Media/Index', $this->getData([
             'can' => [
                 'add' => $user->can('media.add'),
                 'delete' => $user->can('media.delete'),
                 'edit' => $user->can('media.edit'),
                 'read' => $user->can('media.read'),
             ],
-            'baseRouteName' => $this->baseRouteName,
             'defaultLocale' => TranslationService::getDefaultLocale(),
             'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->all('term', 'view', 'types')),
@@ -56,7 +56,8 @@ class MediaController extends Controller
             'records' => $this
                 ->mediaService
                 ->getRecords($request->term, $request->types, $this->recordsPerPage),
-        ]);
+            'title' => $this->getIndexTitle(),
+        ]));
     }
 
     /**
@@ -66,9 +67,9 @@ class MediaController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Media/Create', [
-            'baseRouteName' => $this->baseRouteName,
-        ]);
+        return Inertia::render('Media/Create', $this->getData([
+            'title' => $this->getCreateTitle(),
+        ]));
     }
 
     protected function storeProcess(Request $request)
