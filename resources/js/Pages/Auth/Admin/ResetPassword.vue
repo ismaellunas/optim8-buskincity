@@ -1,5 +1,5 @@
 <template>
-    <layout-admin>
+    <layout-admin title="Reset Password">
         <template #back>
             <biz-link :href="route('login')">
                 <span class="icon">

@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <app-layout :title="title">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ title }}
@@ -27,7 +27,7 @@
         },
 
         props: {
-            title: { type: String, default: 'Dashboard' },
+            title: { type: String, required: true },
             widgets: { type: Array, default:() => [] },
         },
     };

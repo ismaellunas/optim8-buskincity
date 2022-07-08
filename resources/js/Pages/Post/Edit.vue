@@ -1,6 +1,8 @@
 <template>
-    <app-layout>
-        <template #header>Post</template>
+    <app-layout :title="title">
+        <template #header>
+            {{ title }}
+        </template>
 
         <biz-error-notifications :errors="$page.props.errors" />
 
@@ -40,9 +42,10 @@
             categoryOptions: { type: Array, required: true, },
             coverImage: { type: [Object, null], required: true },
             errors: { type: Object, default:() => {} },
-            post: { type: Object, required: true },
             languageOptions: { type: Object, required: true },
+            post: { type: Object, required: true },
             statusOptions: { type: Array, required: true, },
+            title: { type: String, required: true },
         },
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
