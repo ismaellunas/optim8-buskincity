@@ -85,7 +85,6 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $appends = [
         'profile_photo_url',
         'full_name',
-        'origin_language_code'
     ];
 
     /* Relationship: */

@@ -1,5 +1,5 @@
 <template>
-    <layout-admin>
+    <layout-admin title="Forgot Password">
         <template #back>
             <biz-link :href="route('admin.login')">
                 <span class="icon">

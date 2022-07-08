@@ -1,6 +1,8 @@
 <template>
-    <app-layout>
-        <template #header>Post</template>
+    <app-layout :title="title">
+        <template #header>
+            {{ title }}
+        </template>
 
         <div class="box">
             <div class="columns">
@@ -196,6 +198,7 @@
             pageNumber: String,
             pageQueryParams: Object,
             records: {},
+            title: { type: String, required: true },
         },
         setup(props) {
             const queryParams = merge(

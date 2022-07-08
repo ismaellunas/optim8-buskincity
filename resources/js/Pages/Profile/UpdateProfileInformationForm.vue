@@ -108,8 +108,9 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { acceptedImageTypes, debounceTime, userImage } from '@/Libs/defaults';
-    import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { find, debounce, isEmpty, filter } from 'lodash';
+    import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
+    import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -142,7 +143,7 @@
         data() {
             const language = find(
                 this.languageOptions,
-                ['code', this.user.origin_language_code]
+                ['code', usePage().props.value.userOriginLanguage]
             );
 
             return {

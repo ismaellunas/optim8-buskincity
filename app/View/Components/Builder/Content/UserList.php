@@ -17,9 +17,9 @@ class UserList extends BaseContent
     {
         parent::__construct($entity);
 
-        $this->countries = $this->entity['config']['list']['countries'] ?? [];
+        $this->countries = $this->getConfig()['list']['countries'] ?? [];
         $this->countryOptions = app(CountryService::class)->getUserCountryOptions();
-        $this->defaultOrderBy = $this->entity['config']['list']['orderBy'] ?? null;
+        $this->defaultOrderBy = $this->getConfig()['list']['orderBy'] ?? null;
         $this->orderByOptions = app(PageBuilderService::class)->userListOrderOptions();
     }
 
@@ -30,7 +30,7 @@ class UserList extends BaseContent
 
     public function encryptedExcludedId(): ?string
     {
-        $excludedId = $this->entity['config']['list']['excludedId'];
+        $excludedId = $this->getConfig()['list']['excludedId'];
 
         if ($excludedId) {
             return Crypt::encryptString($excludedId);
@@ -41,7 +41,7 @@ class UserList extends BaseContent
 
     public function roles(): ?string
     {
-        $roleIds = $this->entity['config']['list']['roles'] ?? [];
+        $roleIds = $this->getConfig()['list']['roles'] ?? [];
 
         if (!empty($roleIds)) {
             return Crypt::encrypt($roleIds);
