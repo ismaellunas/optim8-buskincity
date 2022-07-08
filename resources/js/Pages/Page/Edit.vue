@@ -1,7 +1,7 @@
 <template>
-    <app-layout>
+    <app-layout :title="title">
         <template #header>
-            Update Page
+            {{ title }}
         </template>
 
         <biz-error-notifications
@@ -31,23 +31,24 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
-    import PageForm from '@/Pages/Page/Form';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
+    import PageForm from '@/Pages/Page/Form';
+    import { confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { getTranslation } from '@/Libs/translation';
     import { isBlank } from '@/Libs/utils';
     import { onPageEditorClicked } from '@/Libs/page-builder';
+    import { pageStatus } from '@/Libs/defaults';
     import { ref, onMounted, onUnmounted } from 'vue';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
-    import { confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
 
     export default {
         components: {
             AppLayout,
-            PageForm,
             BizErrorNotifications,
             BizFlashNotifications,
+            PageForm,
         },
         provide() {
             return {
@@ -55,12 +56,13 @@
             }
         },
         props: {
-            can: { type: Object, required: true },
-            page: { type: Object, required: true },
-            errors: { type: Object, default:() => {} },
-            statusOptions: { type: Array, default:() => [] },
+            affectedFooterMenu: { type: Object, default:() => {} },
             affectedHeaderMenu: { type: Object, default:() => {} },
-            affectedFooterMenu: { type: Object, default:() => {} }
+            can: { type: Object, required: true },
+            errors: { type: Object, default:() => {} },
+            page: { type: Object, required: true },
+            statusOptions: { type: Array, default:() => [] },
+            title: { type: String, required: true },
         },
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
@@ -91,10 +93,10 @@
             return {
                 contentConfigId,
                 defaultLocale,
-                form: useForm(translationForm),
-                localeOptions: usePage().props.value.languageOptions,
-                headerMenuItems: props.headerMenuItems,
                 footerMenuItems: props.footerMenuItems,
+                form: useForm(translationForm),
+                headerMenuItems: props.headerMenuItems,
+                localeOptions: usePage().props.value.languageOptions,
             };
         },
         data() {
@@ -106,46 +108,65 @@
             };
         },
         methods: {
-            onSubmit() {
-                const submitRoute = route('admin.pages.update', {id: this.page.id});
-                if (
-                    this.affectedHeaderMenu[this.selectedLocale] === true
-                    || this.affectedFooterMenu[this.selectedLocale] === true
-                ) {
-                    if (this.form[this.selectedLocale].status === 0) {
-                        confirmDelete(
-                            'Are You Sure?',
-                            'This action will also remove the page on the navigation menu.',
-                            'Yes'
-                        ).then((result) => {
-                            if (result.isDismissed) {
-                                return false;
-                            } else if(result.isConfirmed) {
-                                this.form.put(submitRoute, {
-                                onSuccess: () => {
-                                    const translatedPage = getTranslation(
-                                        this.page,
-                                        this.selectedLocale
-                                    );
+            isUsedByMenu() {
+                const self = this;
 
-                                    this.form[this.selectedLocale]['id'] = translatedPage.id;
-                                },
-                            });
-                            }
+                return new Promise((resolve, reject) => {
+                    const url = route('admin.api.pages.is-used-by-menu', {
+                        page: self.page.id,
+                        locale: self.selectedLocale,
+                    });
+
+                    axios.get(url)
+                        .then(response => {
+                            resolve(response.data == true);
                         })
-                    } else {
-                        this.form.put(submitRoute, {
-                            onSuccess: () => {
-                                const translatedPage = getTranslation(
-                                    this.page,
-                                    this.selectedLocale
-                                );
+                        .catch(error => {
+                            reject(error);
+                        })
+                });
+            },
 
-                                this.form[this.selectedLocale]['id'] = translatedPage.id;
-                            },
-                        });
+            async canSavePage() {
+                try {
+                    let translatedPage = getTranslation(
+                        this.page,
+                        this.selectedLocale
+                    );
+
+                    const pageTranslationStatus = this.form[this.selectedLocale]['status'];
+
+                    if (
+                        translatedPage
+                        && translatedPage.status == pageStatus.published
+                        && pageTranslationStatus == pageStatus.draft
+                    ) {
+                        const isUsedByMenu = await this.isUsedByMenu();
+
+                        if (isUsedByMenu) {
+                            const confirmResult = await confirmDelete(
+                                'Are You Sure?',
+                                'This action will also remove the page on the navigation menu.',
+                                'Yes'
+                            );
+
+                            return !!confirmResult.value;
+                        }
                     }
-                } else {
+
+                    return true;
+
+                } catch (error) {
+                    console.error(error);
+
+                    return true;
+                }
+            },
+
+            async onSubmit() {
+                if (await this.canSavePage()) {
+                    const submitRoute = route('admin.pages.update', {id: this.page.id});
+
                     this.form.put(submitRoute, {
                         onSuccess: () => {
                             const translatedPage = getTranslation(
@@ -158,6 +179,7 @@
                     });
                 }
             },
+
             onChangeLocale(locale) {
                 if (this.form.isDirty) {
 

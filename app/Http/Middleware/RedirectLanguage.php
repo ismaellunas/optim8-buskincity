@@ -34,7 +34,7 @@ class RedirectLanguage
 
     private function setRedirect(string $path): string {
         $originLanguage = $this->setOriginLanguage();
-        $locales = TranslationService::getLocales();
+        $locales = app(TranslationService::class)->getLocales();
 
         $uriSegments = explode('/', $path);
 
@@ -57,7 +57,7 @@ class RedirectLanguage
     {
         $originLanguage = app(LanguageService::class)->getOriginLanguageFromCookie();
         $defaultLanguage = TranslationService::getDefaultLocale();
-        $locales = TranslationService::getLocales();
+        $locales = app(TranslationService::class)->getLocales();
 
         if (!in_array($originLanguage, $locales)) {
             $originLanguage = $defaultLanguage;

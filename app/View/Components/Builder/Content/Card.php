@@ -39,17 +39,17 @@ class Card extends BaseContent
 
     public function ratio(): string
     {
-        return $this->entity['config']['image']['ratio'] ?? '';
+        return $this->getConfig()['image']['ratio'] ?? '';
     }
 
     public function rounded(): string
     {
-        return $this->entity['config']['image']['rounded'] ?? '';
+        return $this->getConfig()['image']['rounded'] ?? '';
     }
 
     public function fixedSquare(): string
     {
-        return $this->entity['config']['image']['fixedSquare'] ?? '';
+        return $this->getConfig()['image']['fixedSquare'] ?? '';
     }
 
     private function getImageMedia(): ?Media
@@ -69,7 +69,7 @@ class Card extends BaseContent
 
     private function getCardContentClasses(): array
     {
-        $configContent = $this->entity['config']['content'] ?? [];
+        $configContent = $this->getConfig()['content'] ?? [];
         $classes = collect();
 
         $classes->push($configContent['size'] ?? null);
@@ -80,7 +80,7 @@ class Card extends BaseContent
 
     private function getCardImageClasses(): array
     {
-        $configImage = $this->entity['config']['image'] ?? [];
+        $configImage = $this->getConfig()['image'] ?? [];
         $classes = collect();
 
         if ($configImage['padding']) {

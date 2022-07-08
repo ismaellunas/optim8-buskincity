@@ -52,7 +52,7 @@ class FixUserMetaTranslation extends Command
     {
         $schemas = [];
         $models = FieldGroup::all();
-        $locales = TranslationService::getLocales();
+        $locales = app(TranslationService::class)->getLocales();
 
         foreach ($models as $model) {
             $data = $model->data;

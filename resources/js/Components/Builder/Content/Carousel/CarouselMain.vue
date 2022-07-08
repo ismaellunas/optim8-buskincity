@@ -1,7 +1,7 @@
 <template>
     <figure
         class="carousel is-relative is-clipped has-background-grey-lighter image"
-        :class="config?.ratio"
+        :class="ratio"
     >
         <slot />
 
@@ -62,5 +62,11 @@
         },
 
         emits: ['prev', 'next'],
+
+        computed: {
+            ratio() {
+                return this.config?.ratio ?? 'is-16by9';
+            },
+        },
     }
 </script>

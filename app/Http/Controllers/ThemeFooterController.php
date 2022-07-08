@@ -45,7 +45,7 @@ class ThemeFooterController extends ThemeOptionController
                 'categoryOptions' => $this->menuService->getCategoryOptions(),
                 'menu' => $this->modelMenu::footer()->first(),
                 'footerMenus' => $this->menuService->getFooterMenus(
-                    TranslationService::getLocales()
+                    app(TranslationService::class)->getLocales()
                 ),
                 'pageOptions' => $this->menuService->getPageOptions(),
                 'postOptions' => $this->menuService->getPostOptions(),

@@ -1,13 +1,6 @@
 <x-layouts.master>
-    @push('metas')
-        <meta head-key="description"
-            name="description"
-            content="{{ $post->meta_description }}"
-        />
-    @endpush
-
     <x-slot name="title">
-        {{ $post->meta_title }}
+        {{ trim($post->meta_title ?? $post->title). ' | ' .config('app.name') }}
     </x-slot>
 
     <x-slot name="metaDescription">

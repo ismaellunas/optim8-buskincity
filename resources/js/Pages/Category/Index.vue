@@ -1,6 +1,8 @@
 <template>
-    <app-layout>
-        <template #header>{{ title }}</template>
+    <app-layout :title="title">
+        <template #header>
+            {{ title }}
+        </template>
 
         <div class="box">
             <div class="columns">
@@ -9,9 +11,12 @@
                         v-if="can.add"
                         class="is-pulled-right"
                     >
-                        <biz-button-link :href="route(baseRouteName+'.create')" class="is-primary">
+                        <biz-button-link
+                            :href="route(baseRouteName+'.create')"
+                            class="is-primary"
+                        >
                             <span class="icon is-small">
-                                <i class="fas fa-plus"></i>
+                                <i class="fas fa-plus" />
                             </span>
                             <span>Add New</span>
                         </biz-button-link>
@@ -24,7 +29,7 @@
                     <biz-filter-search
                         v-model="term"
                         @search="search"
-                    ></biz-filter-search>
+                    />
                 </div>
             </div>
 
@@ -33,18 +38,29 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th v-for="locale in localeOptions" :key="locale.id">
+                            <th
+                                v-for="locale in localeOptions"
+                                :key="locale.id"
+                            >
                                 {{ locale.name }}
                             </th>
                             <th>
-                                <div class="level-right">Actions</div>
+                                <div class="level-right">
+                                    Actions
+                                </div>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="record in records.data" :key="record.id">
+                        <tr
+                            v-for="record in records.data"
+                            :key="record.id"
+                        >
                             <th>{{ record.id }}</th>
-                            <td v-for="locale in localeOptions" :key="locale.id">
+                            <td
+                                v-for="locale in localeOptions"
+                                :key="locale.id"
+                            >
                                 {{ getNameByLocale(record, locale.id) }}
                             </td>
                             <td>
@@ -55,7 +71,7 @@
                                         :href="route(baseRouteName + '.edit', record.id)"
                                     >
                                         <span class="icon is-small">
-                                            <i class="fas fa-pen"></i>
+                                            <i class="fas fa-pen" />
                                         </span>
                                     </biz-button-link>
                                     <biz-button
@@ -64,7 +80,7 @@
                                         @click.prevent="deleteRow(record)"
                                     >
                                         <span class="icon is-small">
-                                            <i class="far fa-trash-alt"></i>
+                                            <i class="far fa-trash-alt" />
                                         </span>
                                     </biz-button>
                                 </div>
@@ -112,7 +128,7 @@
             pageNumber: String,
             pageQueryParams: Object,
             records: Object,
-            title: String,
+            title: { type: String, required: true },
         },
         setup(props) {
             return {

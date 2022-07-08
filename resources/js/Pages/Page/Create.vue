@@ -1,7 +1,7 @@
 <template>
-    <app-layout>
+    <app-layout :title="title">
         <template #header>
-            Create New Page
+            {{ title }}
         </template>
 
         <biz-error-notifications
@@ -29,9 +29,9 @@
     import AppLayout from '@/Layouts/AppLayout';
     import PageForm from '@/Pages/Page/Form';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import { oops as oopsAlert } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { onPageEditorClicked } from '@/Libs/page-builder';
+    import { oops as oopsAlert } from '@/Libs/alert';
     import { ref, onMounted, onUnmounted } from 'vue';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
@@ -48,9 +48,10 @@
         },
         props: {
             can: { type: Object, required: true },
-            page: { type: Object, required: true },
             errors: { type: Object, default:() => {} },
+            page: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
+            title: { type: String, required: true },
         },
         setup() {
             const defaultLocale = usePage().props.value.defaultLanguage;
