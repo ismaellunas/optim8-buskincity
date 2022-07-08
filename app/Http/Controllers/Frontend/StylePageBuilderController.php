@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\PageTranslation;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\Response as ResponseVariable;
 
@@ -27,9 +28,9 @@ class StylePageBuilderController extends Controller
 
             $response = Response::make($pageTranslation->generated_style);
             $response->header('Content-Type', 'text/css');
-            $response->header('Last-Modified', $pageTranslation->updated_at);
+            $response->header('Last-Modified', $pageTranslation->updated_at->toRfc7231String());
             $response->header('Cache-Control', 'private');
-            $response->header('Expires', date('D, d M Y H:i:s \G\M\T', strtotime("+30 days")));
+            $response->header('Expires', Carbon::now()->addMonth()->toRfc7231String());
 
             return $response;
         }
