@@ -5,35 +5,46 @@ namespace App\Services;
 use App\Entities\Caches\SettingCache;
 use App\Facades\Localization;
 use App\Services\LanguageService;
-use Illuminate\Support\Facades\Lang;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 
 class TranslationService
 {
     public static $localeKey = 'locale';
 
+    private static $defaultLocale;
+
+    private $localeOptions;
+
     public static function getDefaultLocale(): string
     {
-        $key = config('constants.setting_cache.default_locale');
+        if (is_null(self::$defaultLocale)) {
 
-        try {
-            return app(SettingCache::class)->remember($key, function () {
-                return app(LanguageService::class)->getDefault()->code ?? config('app.fallback_locale');
-            });
-        } catch (QueryException $e) {
-            if ($e->getCode() == "42P01") {
-                return config('app.fallback_locale');
+            $key = config('constants.setting_cache.default_locale');
+
+            try {
+                self::$defaultLocale = app(SettingCache::class)->remember(
+                    $key,
+                    function () {
+                        return app(LanguageService::class)->getDefault()->code ?? config('app.fallback_locale');
+                    },
+                    config('app.fallback_locale')
+                );
+            } catch (QueryException $e) {
+                if ($e->getCode() == "42P01") {
+                    return config('app.fallback_locale');
+                }
             }
         }
+
+        return self::$defaultLocale;
     }
 
-    public static function getLocaleOptions(): array
+    public function getLocaleOptions(): array
     {
-        $key = config('constants.setting_cache.locale_options');
-
-        return app(SettingCache::class)->remember($key, function () {
-            return app(LanguageService::class)
+        if (is_null($this->localeOptions)) {
+            $this->localeOptions = app(LanguageService::class)
                 ->getSupportedLanguages()
                 ->map(function ($language) {
                     return [
@@ -46,20 +57,22 @@ class TranslationService
                 })
                 ->values()
                 ->all();
-        });
+        }
+
+        return $this->localeOptions;
     }
 
-    public static function getLocales(): array
+    public function getLocales(): array
     {
         return array_map(
             function ($option) { return $option['id']; },
-            self::getLocaleOptions()
+            $this->getLocaleOptions()
         );
     }
 
-    public static function getLanguageFromLocale($locale): ?string
+    public function getLanguageFromLocale($locale): ?string
     {
-        $firstOption = collect(self::getLocaleOptions())
+        $firstOption = collect($this->getLocaleOptions())
             ->firstWhere('id', $locale);
         return empty($firstOption) ? null : $firstOption['name'];
     }
@@ -99,7 +112,7 @@ class TranslationService
 
                 $translatedAttributes[$attributeKey] = (
                     Str::title($attributeName).
-                    " (".TranslationService::getLanguageFromLocale($locale).")"
+                    " (".app(TranslationService::class)->getLanguageFromLocale($locale).")"
                 );
             }
         }

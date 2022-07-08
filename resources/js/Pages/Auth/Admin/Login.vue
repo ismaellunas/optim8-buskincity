@@ -1,5 +1,5 @@
 <template>
-    <layout-admin>
+    <layout-admin title="Login">
         <template #back>
             <a @click.prevent="back">
                 <span class="icon">

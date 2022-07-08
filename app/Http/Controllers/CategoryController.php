@@ -13,7 +13,7 @@ class CategoryController extends CrudController
     protected $model = Category::class;
     protected $baseRouteName = 'admin.categories';
     protected $categoryService;
-    protected $title = "Categories";
+    protected $title = "Category";
 
     public function __construct(CategoryService $categoryService)
     {
@@ -41,6 +41,7 @@ class CategoryController extends CrudController
             'records' => $this
                 ->categoryService
                 ->getRecords($request->term, $this->recordsPerPage),
+            'title' => $this->getIndexTitle(),
         ]));
     }
 
@@ -51,14 +52,14 @@ class CategoryController extends CrudController
      */
     public function create()
     {
-        return Inertia::render('Category/Create', [
+        return Inertia::render('Category/Create', $this->getData([
             'record' => new $this->model,
-            'baseRoute' => $this->baseRouteName,
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
-        ]);
+            'title' => $this->getCreateTitle(),
+        ]));
     }
 
     public function store(CategoryRequest $request)
@@ -81,14 +82,14 @@ class CategoryController extends CrudController
      */
     public function edit(Category $category)
     {
-        return Inertia::render('Category/Edit', [
+        return Inertia::render('Category/Edit', $this->getData([
             'record' => $category,
-            'baseRoute' => $this->baseRouteName,
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
-        ]);
+            'title' => $this->getEditTitle(),
+        ]));
     }
 
     public function update(CategoryRequest $request, Category $category)

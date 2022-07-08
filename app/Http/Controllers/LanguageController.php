@@ -22,7 +22,7 @@ class LanguageController extends Controller
     public function edit()
     {
         return Inertia::render('Language', [
-            'title' => __('Language'),
+            'title' => __('Languages'),
             'baseRouteName' => $this->baseRouteName,
             'supportedLanguages' => $this->languageService->getSupportedLanguageIds(),
             'defaultLanguage' => $this->languageService->getDefaultId(),

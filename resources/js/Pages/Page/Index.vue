@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <app-layout :title="title">
         <template #header>
             {{ title }}
         </template>
@@ -155,7 +155,7 @@
             defaultLocale: { type: String, required: true },
             pageQueryParams: { type: Array, default: () => [] },
             records: { type: Object, required: true },
-            title: { type: String, default: '' },
+            title: { type: String, required: true },
         },
         setup(props) {
             const queryParams = merge(

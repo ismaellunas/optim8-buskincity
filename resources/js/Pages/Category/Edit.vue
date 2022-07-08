@@ -1,7 +1,7 @@
 <template>
-    <app-layout>
+    <app-layout :title="title">
         <template #header>
-            Edit Category
+            {{ title }}
         </template>
 
         <biz-error-notifications :errors="$page.props.errors" />
@@ -9,7 +9,7 @@
         <div class="box mb-6">
             <category-form
                 v-model="form[selectedLocale]"
-                :base-route="baseRoute"
+                :base-route="baseRouteName"
                 :default-locale="defaultLocale"
                 :errors="errors"
                 :is-input-disabled="isProcessing"
@@ -45,9 +45,10 @@
         ],
 
         props: {
-            baseRoute: { type: String, required: true },
+            baseRouteName: { type: String, required: true },
             errors: { type: Object, default:() => {} },
             record: { type: Object, required: true },
+            title: { type: String, required: true },
         },
 
         setup(props) {
@@ -87,7 +88,7 @@
                 const self = this;
 
                 self.form.put(
-                    route(self.baseRoute + '.update', self.record.id),
+                    route(self.baseRouteName + '.update', self.record.id),
                     {
                         onStart: () => {
                             self.onStartLoadingOverlay();

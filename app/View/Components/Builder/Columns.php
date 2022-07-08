@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Builder;
 
+use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
 class Columns extends Component
@@ -11,6 +12,7 @@ class Columns extends Component
     public $entities;
     public $locale;
     public $images;
+    public $uniqueClass;
 
     /**
      * Create a new component instance.
@@ -24,6 +26,7 @@ class Columns extends Component
         $this->entities = $entities;
         $this->locale = $locale;
         $this->images = $images;
+        $this->uniqueClass = $this->getUniqueClass();
     }
 
     /**
@@ -34,5 +37,10 @@ class Columns extends Component
     public function render()
     {
         return view('components.builder.columns');
+    }
+
+    private function getUniqueClass(): string
+    {
+        return 'pb-'.Str::lower($this->uid);
     }
 }

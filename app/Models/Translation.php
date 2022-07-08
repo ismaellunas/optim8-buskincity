@@ -31,7 +31,7 @@ class Translation extends Model implements TranslationLoader
         $translationCache = app(TranslationCache::class);
 
         try {
-            return $translationCache->remember(
+            return $translationCache->rememberForGroup(
                 $locale,
                 function () use ($locale, $group) {
                     return self::select([
@@ -50,7 +50,7 @@ class Translation extends Model implements TranslationLoader
                     ->pluck('value', 'key')
                     ->toArray();
                 },
-                $group,
+                $group
             );
         } catch (QueryException $e) {
             if ($e->getCode() == "42P01") {

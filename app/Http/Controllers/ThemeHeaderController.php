@@ -47,7 +47,7 @@ class ThemeHeaderController extends ThemeOptionController
                 'categoryOptions' => $this->menuService->getCategoryOptions(),
                 'menu' => $this->modelMenu::header()->first(),
                 'headerMenus' => $this->menuService->getHeaderMenus(
-                    TranslationService::getLocales()
+                    app(TranslationService::class)->getLocales()
                 ),
                 'logoUrl' => $this->settingService->getLogoUrl(),
                 'pageOptions' => $this->menuService->getPageOptions(),
