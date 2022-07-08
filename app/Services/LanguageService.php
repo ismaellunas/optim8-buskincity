@@ -16,6 +16,8 @@ use Illuminate\Support\Collection;
 
 class LanguageService
 {
+    private $supportedLanguages;
+
     public function getShownLanguageOptions(): Collection
     {
         $key = config('constants.setting_cache.shown_language_option');
@@ -74,7 +76,19 @@ class LanguageService
 
     public function getSupportedLanguages(): Collection
     {
-        return Language::active()->get();
+        if (is_null($this->supportedLanguages)) {
+            $key = config('constants.setting_cache.supported_languages');
+
+            $this->supportedLanguages = app(SettingCache::class)->remember(
+                $key,
+                function () {
+                    return Language::active()
+                        ->get(['id', 'name', 'code']);
+                },
+                collect()
+            );
+        }
+        return $this->supportedLanguages;
     }
 
     public function getSupportedLanguageIds(): array

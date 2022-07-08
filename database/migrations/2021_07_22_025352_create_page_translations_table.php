@@ -15,6 +15,7 @@ class CreatePageTranslationsTable extends Migration
     {
         Schema::create('page_translations', function (Blueprint $table) {
             $table->id();
+            $table->string('unique_key', 16)->unique();
             $table->string('locale', 15)->index();
             $table->string('title', 255);
             $table->text('excerpt')->nullable();
@@ -24,6 +25,7 @@ class CreatePageTranslationsTable extends Migration
             $table->string('meta_description', 255)->nullable();
             $table->longText('plain_text_content')->nullable();
             $table->tinyInteger('status')->default(0);
+            $table->text('generated_style')->nullable();
             $table->foreignId('page_id')
                 ->constrained()
                 ->onUpdate('cascade')

@@ -41,17 +41,18 @@ class TranslationCache extends BaseCache
         );
     }
 
-    public function remember(
+    public function rememberForGroup(
         string $locale,
         Closure $callback,
-        string $group = null
+        string $group = null,
+        mixed $default = []
     ): mixed {
         $key = $this->getKey($locale, $group);
 
         $this->locale = $locale;
         $this->group = $group;
 
-        return parent::remember($key, $callback);
+        return $this->remember($key, $callback, $default);
     }
 
     public function flushLocale(string $locale): bool

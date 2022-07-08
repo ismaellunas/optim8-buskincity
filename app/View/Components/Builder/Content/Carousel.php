@@ -9,7 +9,6 @@ class Carousel extends BaseContent
     public $carouselImages = [];
     public $config;
     public $images;
-    public $locale;
     public $slideSpeed = 6000;
 
     /**
@@ -19,15 +18,13 @@ class Carousel extends BaseContent
      */
     public function __construct(
         $entity,
-        string $locale = null,
         Collection $images = null
     ) {
         parent::__construct($entity);
 
         $this->images = $images;
         $this->carouselImages = $this->getCarouselImages();
-        $this->locale = $locale;
-        $this->config = $this->entity['config']['carousel'];
+        $this->config = $this->getConfig()['carousel'];
     }
 
     private function getCarouselImages(): array

@@ -12,6 +12,7 @@ class PostController extends CrudController
 {
     protected $postService;
     protected $baseRouteName = 'admin.posts';
+    protected $title = 'Post';
 
     public function __construct(PostService $postService)
     {
@@ -23,7 +24,7 @@ class PostController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Post/Index', [
+        return Inertia::render('Post/Index', $this->getData([
             'can' => [
                 'add' => $user->can('post.add'),
                 'delete' => $user->can('post.delete'),
@@ -46,7 +47,8 @@ class PostController extends CrudController
                     'inCategories' => $request->categories,
                 ])
             ),
-        ]);
+            'title' => $this->getIndexTitle(),
+        ]));
     }
 
     /**
@@ -58,7 +60,7 @@ class PostController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Post/Create', [
+        return Inertia::render('Post/Create', $this->getData([
             'can' => [
                 'media' => [
                     'browse' => $user->can('media.browse'),
@@ -76,7 +78,8 @@ class PostController extends CrudController
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
-        ]);
+            'title' => $this->getCreateTitle(),
+        ]));
     }
 
     /**
@@ -121,7 +124,7 @@ class PostController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Post/Edit', [
+        return Inertia::render('Post/Edit', $this->getData([
             'can' => [
                 'media' => [
                     'browse' => $user->can('media.browse'),
@@ -140,7 +143,8 @@ class PostController extends CrudController
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
-        ]);
+            'title' => $this->getEditTitle(),
+        ]));
     }
 
     /**

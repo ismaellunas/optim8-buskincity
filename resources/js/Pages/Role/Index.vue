@@ -1,6 +1,6 @@
 <template>
-    <app-layout>
-        <template v-slot:header>{{ title }}</template>
+    <app-layout :title="title">
+        <template #header>{{ title }}</template>
 
         <div class="box">
             <div class="columns">

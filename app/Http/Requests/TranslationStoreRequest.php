@@ -66,7 +66,7 @@ class TranslationStoreRequest extends BaseFormRequest
     {
         $attributes = [];
 
-        foreach (TranslationService::getLocaleOptions() as $locale) {
+        foreach (app(TranslationService::class)->getLocaleOptions() as $locale) {
             $attributes['value.' . $locale['id']] = Str::title($locale['name'] . ' value');
         }
 

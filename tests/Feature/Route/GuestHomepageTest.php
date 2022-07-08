@@ -45,7 +45,7 @@ class GuestHomepageTest extends LocalizationRouteTestCase
     public function guestCanAccessActiveLanguage()
     {
         // Arrange
-        $locales = TranslationService::getLocales();
+        $locales = app(TranslationService::class)->getLocales();
 
         // Act
         foreach ($locales as $locale) {
