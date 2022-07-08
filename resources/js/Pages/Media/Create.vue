@@ -1,7 +1,7 @@
 <template>
-    <app-layout>
+    <app-layout :title="title">
         <template #header>
-            Media
+            {{ title }}
         </template>
 
         <div class="box">
@@ -11,15 +11,21 @@
                         :disabled="false"
                         type="file"
                         @input="form.file = $event.target.files[0]"
-                        />
+                    />
                 </div>
-                <progress v-if="form.progress" :value="form.progress.percentage" max="100">
+                <progress
+                    v-if="form.progress"
+                    :value="form.progress.percentage"
+                    max="100"
+                >
                     {{ form.progress.percentage }}%
                 </progress>
 
                 <div class="field is-grouped mt-4">
                     <div class="control">
-                        <biz-button class="is-link">Submit</biz-button>
+                        <biz-button class="is-link">
+                            Submit
+                        </biz-button>
                     </div>
                     <div class="control">
                         <biz-button-link :href="route(baseRouteName+'.index')">
@@ -37,9 +43,7 @@
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizInput from '@/Biz/Input';
-    import { Inertia } from "@inertiajs/inertia";
     import { isBlank } from '@/Libs/utils';
-    import { reactive } from "vue";
     import { useForm } from '@inertiajs/inertia-vue3'
 
     export default {
@@ -54,6 +58,7 @@
             entityId: Number,
             errors: Object,
             baseRouteName: String,
+            title: { type: String, required: true },
         },
         setup(props) {
             const isNew = isBlank(props.entityId);

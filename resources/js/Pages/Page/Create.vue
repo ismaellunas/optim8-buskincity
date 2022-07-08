@@ -1,7 +1,7 @@
 <template>
-    <app-layout>
+    <app-layout :title="title">
         <template #header>
-            Create New Page
+            {{ title }}
         </template>
 
         <biz-error-notifications
@@ -51,6 +51,7 @@
             errors: { type: Object, default:() => {} },
             page: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
+            title: { type: String, required: true },
         },
         setup() {
             const defaultLocale = usePage().props.value.defaultLanguage;

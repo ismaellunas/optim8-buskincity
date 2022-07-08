@@ -6,8 +6,6 @@ use App\Http\Requests\RoleRequest;
 use App\Models\Role;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class RoleController extends CrudController
@@ -38,7 +36,7 @@ class RoleController extends CrudController
                 $request->term,
                 $this->recordsPerPage,
             ),
-            'title' => Str::plural($this->title),
+            'title' => $this->getIndexTitle(),
         ]));
     }
 

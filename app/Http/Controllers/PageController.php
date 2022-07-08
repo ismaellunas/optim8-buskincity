@@ -23,7 +23,7 @@ class PageController extends CrudController
     protected $model = Page::class;
     protected $baseRouteName = 'admin.pages';
     protected $pageService;
-    protected $title = "Pages";
+    protected $title = "Page";
 
     public function __construct(PageService $pageService)
     {
@@ -53,6 +53,7 @@ class PageController extends CrudController
                 $this->recordsPerPage,
             ),
             'defaultLocale' => TranslationService::getDefaultLocale(),
+            'title' => $this->getIndexTitle(),
         ]));
     }
 
@@ -65,7 +66,7 @@ class PageController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Page/Create', [
+        return Inertia::render('Page/Create', $this->getData([
             'can' => [
                 'media' => [
                     'browse' => $user->can('media.browse'),
@@ -81,7 +82,8 @@ class PageController extends CrudController
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
-        ]);
+            'title' => $this->getCreateTitle(),
+        ]));
     }
 
     /**
@@ -134,7 +136,7 @@ class PageController extends CrudController
 
         $user = auth()->user();
 
-        return Inertia::render('Page/Edit', [
+        return Inertia::render('Page/Edit', $this->getData([
             'can' => [
                 'media' => [
                     'browse' => $user->can('media.browse'),
@@ -155,7 +157,8 @@ class PageController extends CrudController
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
-        ]);
+            'title' => $this->getEditTitle(),
+        ]));
     }
 
     /**

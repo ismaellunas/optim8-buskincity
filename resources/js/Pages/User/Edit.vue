@@ -1,5 +1,5 @@
 <template>
-    <app-layout>
+    <app-layout :title="title">
         <template #header>{{ title }}</template>
 
         <biz-error-notifications
