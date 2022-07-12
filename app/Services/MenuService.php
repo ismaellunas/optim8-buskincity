@@ -24,6 +24,7 @@ use App\Entities\Caches\{
 };
 use Illuminate\Support\Collection;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Nwidart\Modules\Facades\Module;
 
 class MenuService
 {
@@ -374,6 +375,8 @@ class MenuService
                 ],
             ];
 
+            $moduleMenus = $this->moduleMenus();
+
             $menuProfile = [
                 'title' => 'Profile',
                 'link' => route('admin.profile.show'),
@@ -390,6 +393,8 @@ class MenuService
                 ],
             ];
 
+            $moduleMenus = [];
+
             $menuProfile = [
                 'title' => 'Profile',
                 'link' => route('user.profile.show'),
@@ -397,7 +402,7 @@ class MenuService
         }
 
         return [
-            'nav' => $menus,
+            'nav' => array_merge($menus, $moduleMenus),
             'navLogo' => $menuLogo,
             'navProfile' => $menuProfile,
         ];
@@ -609,5 +614,18 @@ class MenuService
                 $q->where('locale', $locale);
             })
             ->exists();
+    }
+
+    private function moduleMenus(): array
+    {
+        $modules = Module::all();
+        $menus = [];
+
+        foreach ($modules as $module) {
+            $moduleService = '\\Modules\\'.$module->getName().'\\ModuleService';
+            $menus[] = $moduleService::adminMenus();
+        }
+
+        return $menus;
     }
 }
