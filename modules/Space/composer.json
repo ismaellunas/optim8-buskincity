@@ -1,0 +1,23 @@
+{
+    "name": "nwidart/space",
+    "description": "",
+    "authors": [
+        {
+            "name": "Biz 752",
+            "email": "tiago@biz752.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Space\\": ""
+        }
+    }
+}
