@@ -142,14 +142,15 @@
         data() {
             return {
                 filteredIcon: [],
-                selectedType: 'fas',
+                selectedType: null,
                 term: "",
                 typeOptions: [
-                    { value: 'fas', name: 'Solid' },
-                    { value: 'far', name: 'Regular' },
-                    { value: 'fal', name: 'Light' },
-                    { value: 'fad', name: 'Duotone' },
-                ]
+                    { value: 'fa-solid', name: 'Solid' },
+                    { value: 'fa-regular', name: 'Regular' },
+                    { value: 'fa-light', name: 'Light' },
+                    { value: 'fa-thin', name: 'Thin' },
+                    { value: 'fa-duotone', name: 'Duotone' },
+                ],
             };
         },
 
