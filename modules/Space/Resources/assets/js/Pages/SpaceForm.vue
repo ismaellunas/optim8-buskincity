@@ -27,7 +27,7 @@
         />
         <biz-form-input
             v-model="space.longitude"
-            label="Latitude"
+            label="Longitude"
         />
         <biz-form-textarea
             v-model="space.address"
