@@ -204,9 +204,10 @@ class PageController extends CrudController
      */
     public function destroy(Request $request, Page $page)
     {
-        app(MenuService::class)->removePageFromMenus($page->id);
+        if ($page->delete()) {
+            app(MenuService::class)->removePageFromMenus($page->id);
+        }
 
-        $page->delete();
         $request->session()->flash('message', 'Page deleted successfully!');
         return redirect()->route('admin.pages.index');
     }
