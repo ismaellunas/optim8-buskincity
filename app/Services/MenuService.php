@@ -587,7 +587,7 @@ class MenuService
             ->all();
     }
 
-    public function removePageFromMenus(string $locale, int $pageId)
+    public function removePageFromMenus(int $pageId, ?string $locale = null)
     {
         $menuItems = MenuItem::where('page_id', $pageId)
             ->whereHas('menu', function ($q) use ($locale) {
@@ -602,7 +602,7 @@ class MenuService
         app(MenuCache::class)->flush();
     }
 
-    public function isPageUsedByMenu(int $pageId, string $locale): bool
+    public function isPageUsedByMenu(int $pageId, ?string $locale = null): bool
     {
         return MenuItem::where('page_id', $pageId)
             ->whereHas('menu', function ($q) use ($locale) {

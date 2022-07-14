@@ -186,8 +186,8 @@ class PageController extends CrudController
             && $pageTranslation['status'] == PageTranslation::STATUS_DRAFT
         ) {
             app(MenuService::class)->removePageFromMenus(
-                $pageTranslation['locale'],
-                $pageTranslation['page_id']
+                $pageTranslation['page_id'],
+                $pageTranslation['locale']
             );
         }
 
@@ -209,7 +209,7 @@ class PageController extends CrudController
         return redirect()->route('admin.pages.index');
     }
 
-    public function isUsedByMenus(Page $page, string $locale)
+    public function isUsedByMenus(Page $page, ?string $locale = null)
     {
         return app(MenuService::class)->isPageUsedByMenu($page->id, $locale);
     }
