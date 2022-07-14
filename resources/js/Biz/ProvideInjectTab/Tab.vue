@@ -10,7 +10,7 @@
     export default {
         props: {
             title: { type: String, required: true },
-            isDisplayed: {type: Boolean, default: true },
+            isRendered: {type: Boolean, default: true },
         },
         setup(props) {
             const instance = getCurrentInstance();
