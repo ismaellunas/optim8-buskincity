@@ -14,7 +14,7 @@ class SpaceService
                 $query->whereNull('parent_id');
             })
             ->when(!is_null($parentId), function ($query) use ($parentId) {
-                $query->where('parent_id', $parentId);
+                $query->where('id', $parentId);
             })
             ->get()
             ->toArray();
