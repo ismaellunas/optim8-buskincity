@@ -169,15 +169,6 @@
             };
         },
         methods: {
-            deleteRow(page) {
-                const self = this;
-
-                confirmDelete().then(result => {
-                    if (result.isConfirmed) {
-                        self.$inertia.delete(route('admin.pages.destroy', {id: page.id}));
-                    }
-                });
-            },
             openShow(locale, page) {
                 if (this.can.read) {
                     let showUrl = this.getShowUrl(locale, page);
@@ -185,6 +176,7 @@
                     window.open(showUrl, "_blank");
                 }
             },
+
             statusClass(status) {
                 let statusClass = ['is-small', 'is-rounded'];
                 switch(status) {
@@ -209,7 +201,60 @@
                 }
 
                 return showUrl;
-            }
+            },
+
+            isUsedByMenu(pageId) {
+                const self = this;
+
+                return new Promise((resolve, reject) => {
+                    const url = route('admin.api.pages.is-used-by-menu', {
+                        page: pageId,
+                    });
+
+                    axios.get(url)
+                        .then(response => {
+                            resolve(response.data == true);
+                        })
+                        .catch(error => {
+                            reject(error);
+                        })
+                });
+            },
+
+            async canDeletePage(pageId) {
+                try {
+                    const isUsedByMenu = await this.isUsedByMenu(pageId);
+
+                    if (isUsedByMenu) {
+                        const confirmResult = await confirmDelete(
+                            'Are You Sure?',
+                            'This action will also remove the page on the navigation menu.',
+                            'Yes'
+                        );
+
+                        return !!confirmResult.value;
+                    }
+
+                    return await confirmDelete().then(result => {
+                        return result.isConfirmed;
+                    });
+
+                } catch (error) {
+                    console.error(error);
+
+                    return true;
+                }
+            },
+
+            async deleteRow(page) {
+                const self = this;
+
+                if (await self.canDeletePage(page.id)) {
+                    const deleteRoute = route('admin.pages.destroy', {id: page.id});
+
+                    self.$inertia.delete(deleteRoute);
+                }
+            },
         },
     }
 </script>

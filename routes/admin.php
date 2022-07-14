@@ -150,7 +150,7 @@ Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->gr
     Route::post('/theme/footer/social-media', [ThemeFooterController::class, 'apiValidateSocialMedia'])
         ->name('theme.footer.social-media.validate');
 
-    Route::get('/pages/{page}/is-used-by-menu/{locale}', [PageController::class, 'isUsedByMenus'])
+    Route::get('/pages/{page}/is-used-by-menu/{locale?}', [PageController::class, 'isUsedByMenus'])
         ->middleware('can:page.edit')
         ->name('pages.is-used-by-menu');
 
