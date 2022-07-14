@@ -23,6 +23,7 @@ use App\Entities\Caches\{
     SettingCache,
 };
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class MenuService
@@ -589,11 +590,7 @@ class MenuService
 
     public function removePageFromMenus(int $pageId, ?string $locale = null)
     {
-        $menuItems = MenuItem::where('page_id', $pageId)
-            ->whereHas('menu', function ($q) use ($locale) {
-                $q->where('locale', $locale);
-            })
-            ->get();
+        $menuItems = $this->getQueryBuilderMenuItem($pageId, $locale)->get();
 
         $menuItems->each(function ($menuItem) {
             $menuItem->delete();
@@ -604,10 +601,16 @@ class MenuService
 
     public function isPageUsedByMenu(int $pageId, ?string $locale = null): bool
     {
+        return $this->getQueryBuilderMenuItem($pageId, $locale)->exists();
+    }
+
+    private function getQueryBuilderMenuItem(int $pageId, ?string $locale): Builder
+    {
         return MenuItem::where('page_id', $pageId)
             ->whereHas('menu', function ($q) use ($locale) {
-                $q->where('locale', $locale);
-            })
-            ->exists();
+                $q->when($locale, function ($q) use ($locale) {
+                    $q->where('locale', $locale);
+                });
+            });
     }
 }
