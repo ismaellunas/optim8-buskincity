@@ -1,14 +1,18 @@
 <template>
     <div class="tabs" :class="class">
         <ul>
-            <li
+            <template
                 v-for="(tab, i) of tabs"
                 :key="i"
-                :class="active === i ? 'is-active' : ''"
-                @click="selectTab(i)"
             >
-                <a><span>{{ tab.props.title }}</span></a>
-            </li>
+                <li
+                    v-if="tab.props.isDisplayed"
+                    :class="active === i ? 'is-active' : ''"
+                    @click="selectTab(i)"
+                >
+                    <a><span>{{ tab.props.title }}</span></a>
+                </li>
+            </template>
         </ul>
     </div>
 

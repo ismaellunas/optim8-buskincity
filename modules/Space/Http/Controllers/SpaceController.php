@@ -113,12 +113,9 @@ class SpaceController extends CrudController
      */
     public function edit(Space $space)
     {
-        $pages = Page::get();
-
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => 'Edit Space',
             'spaceRecord' => $space,
-            'pages' => $pages,
             'parentOptions' => $this
                 ->spaceService
                 ->parentOptions([$space->parent_id]),
