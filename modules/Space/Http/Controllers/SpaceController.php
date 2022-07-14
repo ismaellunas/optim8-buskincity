@@ -35,12 +35,11 @@ class SpaceController extends CrudController
 
         $parentSpace = Space::select(['id', 'name as value'])->find($parent);
 
-        return Inertia::render('Space::SpaceIndex', [
+        return Inertia::render('Space::SpaceIndex', $this->getData([
             'parentOptions' => $this->spaceService->parentOptions(),
             'spaces' => $this->spaceService->spaceTree($parent),
-            'title' => "Space",
             'parent' => $parentSpace,
-        ]);
+        ]));
     }
 
     public function index2()
@@ -137,9 +136,12 @@ class SpaceController extends CrudController
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
+    public function destroy(Request $request, Space $space)
     {
-        //
+        $space->delete();
+        $request->session()->flash('message', $this->title.' deleted successfully!');
+
+        return redirect()->route($this->baseRouteName.'.index');
     }
 
     public function moveNode(Request $request, $current, $parent = null)

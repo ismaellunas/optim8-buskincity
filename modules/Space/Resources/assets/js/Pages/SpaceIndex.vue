@@ -7,7 +7,57 @@
         <div class="box">
             <div class="columns">
                 <div class="column">
-                    <div class="is-pulled-right" />
+                    <div class="is-pulled-left">
+                        <!--
+                        <biz-filter-search
+                            v-model="term"
+                            @search="search"
+                        />
+                        -->
+                    </div>
+
+                    <biz-dropdown
+                        :close-on-click="false"
+                    >
+                        <template #trigger>
+                            <span>
+                                {{ selectedParent ? selectedParent.value : 'Select Space' }}
+                            </span>
+
+                            <span class="icon is-small">
+                                <i
+                                    class="fas fa-angle-down"
+                                    aria-hidden="true"
+                                />
+                            </span>
+                        </template>
+
+                        <biz-dropdown-scroll
+                            :max-height="300"
+                        >
+                            <biz-dropdown-item
+                                v-for="option in parentOptions"
+                                :key="option.id"
+                                @click="selectedParent = option"
+                            >
+                                {{ option.value }}
+                            </biz-dropdown-item>
+                        </biz-dropdown-scroll>
+                    </biz-dropdown>
+                </div>
+
+                <div class="column">
+                    <div class="is-pulled-right">
+                        <biz-button-link
+                            :href="route('admin.spaces.create')"
+                            class="is-primary"
+                        >
+                            <span class="icon is-small">
+                                <i class="fas fa-plus" />
+                            </span>
+                            <span>Create New</span>
+                        </biz-button-link>
+                    </div>
                 </div>
             </div>
 
@@ -15,6 +65,7 @@
                 class="px-2 py-4"
                 :spaces="spaces"
                 @on-end="onEnd"
+                @delete-row="deleteSpace"
             />
         </div>
     </app-layout>
@@ -22,16 +73,33 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizDropdown from '@/Biz/Dropdown';
+    import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizDropdownScroll from '@/Biz/DropdownScroll';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import NestedDraggable from './NestedDraggable';
     import { useForm } from '@inertiajs/inertia-vue3';
+    import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
 
     export default {
         components: {
             AppLayout,
+            BizButtonLink,
+            BizDropdown,
+            BizDropdownItem,
+            BizDropdownScroll,
             NestedDraggable,
         },
 
+        mixins: [
+            MixinHasLoader,
+        ],
+
         props: {
+            baseRouteName: { type: String, required: true },
+            parent: { type: [Object, null], required: true },
+            parentOptions: { type: Array, required: true },
             spaces: { type: Array, required: true },
             title: { type: String, default: "" },
         },
@@ -42,6 +110,19 @@
                     spaces: props.spaces,
                 }),
             };
+        },
+
+        data() {
+            return {
+                selectedParent: this.parent,
+            };
+        },
+
+        watch: {
+            selectedParent(newParent) {
+                const url = route('admin.spaces.index', {parent: newParent.id});
+                this.$inertia.visit(url);
+            },
         },
 
         methods: {
@@ -59,6 +140,28 @@
                         replace: true,
                     });
                 }
+            },
+
+            deleteSpace(space) {
+                const self = this;
+
+                confirmDelete().then(result => {
+                    if (result.isConfirmed) {
+                        self.$inertia.delete(
+                            route(this.baseRouteName+'.destroy', space.id),
+                            {
+                                onStart: self.onStartLoadingOverlay,
+                                onFinish: self.onEndLoadingOverlay,
+                                onError: () => {
+                                    oopsAlert();
+                                },
+                                onSuccess: (page) => {
+                                    successAlert(page.props.flash.message);
+                                },
+                            }
+                        );
+                    }
+                })
             },
         },
     };
