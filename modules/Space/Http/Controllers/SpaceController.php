@@ -80,6 +80,15 @@ class SpaceController extends CrudController
         $space->longitude = $request->longitude;
         $space->address = $request->address;
         $space->parent_id = $request->parent_id;
+
+        if ($space->parent_id) {
+            $parentSpace = Space::find($space->parent_id);
+
+            if ($parentSpace) {
+                $space->depth = $parentSpace->depth + 1;
+            }
+        }
+
         $space->save();
 
         $request->session()->flash('message', 'Space created successfully!');
