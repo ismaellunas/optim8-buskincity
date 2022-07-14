@@ -55,6 +55,24 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="column">
+                        <biz-button
+                            v-if="!showAll"
+                            type="button"
+                            @click="showIconBlock()"
+                        >
+                            Show All Icons
+                        </biz-button>
+
+                        <biz-button
+                            v-else
+                            type="button"
+                            @click="showIconBlock()"
+                        >
+                            Show Minimal Icon
+                        </biz-button>
+                    </div>
                 </div>
                 <div
                     v-if="canRemove"
@@ -143,6 +161,8 @@
             return {
                 filteredIcon: [],
                 selectedType: null,
+                showAll: false,
+                iconDelay: 100,
                 term: "",
                 typeOptions: [
                     { value: 'fa-solid', name: 'Solid' },
@@ -155,7 +175,8 @@
         },
 
         mounted() {
-            this.filteredIcon = this.iconClasses.slice(0, 52);
+            this.selectedType = this.typeOptions[0].value;
+            this.filteredIcon = this.iconSlice(this.iconClasses);
         },
 
         methods: {
@@ -166,23 +187,55 @@
 
             searchIcon: debounce(function(term) {
                 if (!isEmpty(term) && term.length > 2) {
-                    this.filteredIcon = filter(this.iconClasses, function (icon) {
-                        return new RegExp(term, 'i').test(icon.name);
-                    }).slice(0, 52);
+                    this.filteredIcon = this.iconSlice(
+                        filter(this.iconClasses, function (icon) {
+                            return new RegExp(term, 'i').test(icon.name);
+                        })
+                    );
                 } else {
-                    this.filteredIcon = this.iconClasses.slice(0, 52);
+                    this.filteredIcon = this.iconSlice(
+                        this.iconClasses
+                    );
                 }
             }, debounceTime),
 
             onSelectedIcon(icon) {
-                this.$emit('close');
-                this.$emit('on-selected-icon', icon);
+                setTimeout(() => {
+                    this.$emit('close');
+                    this.$emit('on-selected-icon', icon);
+                }, this.iconDelay);
             },
 
             removeIcon() {
                 this.$emit('close');
                 this.$emit('remove-icon');
-            }
+            },
+
+            showIconBlock() {
+                setTimeout(() => {
+                    this.showAll = !this.showAll;
+
+                    if (this.term) {
+                        this.searchIcon(this.term);
+                    } else {
+                        this.filteredIcon = this.iconSlice(
+                            this.iconClasses
+                        );
+                    }
+                }, this.iconDelay);
+            },
+
+            iconSlice(icons) {
+                if (this.showAll) {
+
+                    return icons.slice(0);
+
+                } else {
+
+                    return icons.slice(0, 52);
+
+                }
+            },
         },
     }
 </script>
