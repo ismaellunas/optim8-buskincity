@@ -623,7 +623,10 @@ class MenuService
 
         foreach ($modules as $module) {
             $moduleService = '\\Modules\\'.$module->getName().'\\ModuleService';
-            $menus[] = $moduleService::adminMenus();
+
+            if (class_exists($moduleService)) {
+                $menus[] = $moduleService::adminMenus();
+            }
         }
 
         return $menus;
