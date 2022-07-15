@@ -25,7 +25,3 @@ Route::name('admin.')->prefix('admin/')->middleware([
         Route::post('/move-node/{current}/{parent?}', 'SpaceController@moveNode')->name('move-node');
     });
 });
-
-Route::prefix('space')->group(function() {
-    Route::get('/', 'SpaceController@index2');
-});
