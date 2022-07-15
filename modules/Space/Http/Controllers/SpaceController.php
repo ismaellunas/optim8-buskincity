@@ -42,11 +42,6 @@ class SpaceController extends CrudController
         ]));
     }
 
-    public function index2()
-    {
-        return view('modules/space/test');
-    }
-
     /**
      * Show the form for creating a new resource.
      * @return Renderable
