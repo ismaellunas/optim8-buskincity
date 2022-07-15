@@ -42,4 +42,23 @@ class Space extends Model
             $child->updateDepth($childDepth);
         }
     }
+
+    public function saveFromInputs(array $inputs)
+    {
+        $this->name = $inputs['name'];
+        $this->latitude = $inputs['latitude'];
+        $this->longitude = $inputs['longitude'];
+        $this->address = $inputs['address'];
+        $this->parent_id = $inputs['parent_id'];
+
+        if ($this->parent_id) {
+            $parentSpace = Space::find($this->parent_id);
+
+            if ($parentSpace) {
+                $this->depth = $parentSpace->depth + 1;
+            }
+        }
+
+        $this->save();
+    }
 }

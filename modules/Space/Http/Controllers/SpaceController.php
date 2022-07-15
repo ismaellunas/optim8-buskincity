@@ -25,10 +25,6 @@ class SpaceController extends CrudController
         $this->spaceService = $spaceService;
     }
 
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
     public function index(Request $request)
     {
         $parent = $request->parent;
@@ -42,10 +38,6 @@ class SpaceController extends CrudController
         ]));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
     public function create(Request $request)
     {
         $parentId = $request->parent;
@@ -62,40 +54,17 @@ class SpaceController extends CrudController
         ]));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
     public function store(SpaceRequest $request)
     {
         $space = new Space();
-        $space->name = $request->name;
-        $space->latitude = $request->latitude;
-        $space->longitude = $request->longitude;
-        $space->address = $request->address;
-        $space->parent_id = $request->parent_id;
 
-        if ($space->parent_id) {
-            $parentSpace = Space::find($space->parent_id);
+        $space->saveFromInputs($request->all());
 
-            if ($parentSpace) {
-                $space->depth = $parentSpace->depth + 1;
-            }
-        }
-
-        $space->save();
-
-        $request->session()->flash('message', 'Space created successfully!');
+        $request->session()->flash('message', 'Successfully creating '.$this->title.'!');
 
         return redirect()->route($this->baseRouteName.'.edit', $space->id);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
     public function edit(Space $space)
     {
         return Inertia::render('Space::SpaceEdit', $this->getData([
@@ -107,12 +76,6 @@ class SpaceController extends CrudController
         ]));
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
     public function update(Request $request, Space $space)
     {
         $space->name = $request->name;
@@ -122,11 +85,6 @@ class SpaceController extends CrudController
         return back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
     public function destroy(Request $request, Space $space)
     {
         $space->delete();

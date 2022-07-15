@@ -44,7 +44,7 @@
                                     </div>
                                     <div class="control">
                                         <biz-button class="is-link">
-                                            Edit
+                                            Update
                                         </biz-button>
                                     </div>
                                 </div>
@@ -107,6 +107,7 @@
         data() {
             return {
                 space: pick(this.spaceRecord, [
+                    'id',
                     'address',
                     'latitude',
                     'longitude',

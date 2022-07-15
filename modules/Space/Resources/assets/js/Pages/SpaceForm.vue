@@ -11,6 +11,7 @@
             v-model="space.parent_id"
             class="is-fullwidth"
             label="Parent"
+            :disabled="!!space.id"
             :message="error('parent_id')"
         >
             <option
