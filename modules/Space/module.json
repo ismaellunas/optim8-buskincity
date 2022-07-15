@@ -1,0 +1,13 @@
+{
+    "name": "Space",
+    "alias": "space",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Space\\Providers\\SpaceServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

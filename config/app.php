@@ -166,6 +166,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Modules\Space\Providers\RouteServiceProvider::class,
 
         /*
          * Application Service Providers...

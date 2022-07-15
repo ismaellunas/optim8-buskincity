@@ -29,7 +29,8 @@ if (theme) {
         .css('resources/css/template.css', 'public/css')
         .js(['resources/js/bulma.js'], 'public/js/frontend-misc.js')
         .alias({
-            '@': path.join(__dirname, 'resources/js')
+            '@': path.join(__dirname, 'resources/js'),
+            '@mod': path.join(__dirname, 'modules')
         });
 
     mix.js('resources/js/frontend.js', 'public/js').vue()

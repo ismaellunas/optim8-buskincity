@@ -21,3 +21,5 @@ public/js/fontawesome.js
 public/css/local.css
 public/js/local.js
 .DS_Store
+/modules/*/node_modules
+public/js/modules_*_js_Pages*

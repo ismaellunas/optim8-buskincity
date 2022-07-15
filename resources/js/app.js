@@ -11,8 +11,17 @@ import VueSocialSharing from 'vue-social-sharing'
 
 createInertiaApp({
     title: title => `${title} | ${appName}`,
-    resolve: (name) => import(`./Pages/${name}`),
     //resolve: name => require(`./Pages/${name}`),
+    resolve: (name) => {
+        let module = name.split('::');
+
+        if (module[1]) {
+            if (module[0] == 'Space') {
+                return import(`@mod/Space/Resources/assets/js/Pages/${module[1]}`);
+            }
+        }
+        return import(`./Pages/${name}`);
+    },
     setup({ el, app, props, plugin }) {
         createApp({ render: () => h(app, props) })
             .mixin({ methods: { route } })
