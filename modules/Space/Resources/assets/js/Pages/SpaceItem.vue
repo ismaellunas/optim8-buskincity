@@ -22,48 +22,46 @@
             </div>
 
             <div class="level-right">
-                <biz-button
+                <biz-button-link
                     v-if="canAddItem"
-                    class="is-ghost has-text-black"
-                    type="button"
-                    @click="$emit('edit-row', space)"
+                    class="is-white"
+                    :href="route('admin.spaces.create', {parent: space.id})"
                 >
                     <span class="icon is-small">
-                        <i class="fas fa-plus" />
+                        <i class="fa-light fa-plus" />
                     </span>
-                </biz-button>
-                <biz-button
-                    class="is-ghost has-text-black"
-                    type="button"
-                    @click="$emit('edit-row', space)"
-                >
-                    <span class="icon is-small">
-                        <i class="fas fa-pen" />
-                    </span>
-                </biz-button>
+                </biz-button-link>
 
-                <biz-button
-                    class="is-ghost has-text-black ml-1"
-                    type="button"
-                    @click="$emit('delete-row', space)"
+                <biz-button-link
+                    class="is-white"
+                    :href="route('admin.spaces.edit', space.id)"
                 >
                     <span class="icon is-small">
-                        <i class="far fa-trash-alt" />
+                        <i class="fa-light fa-pen" />
                     </span>
-                </biz-button>
+                </biz-button-link>
+
+                <biz-button-icon
+                    class="is-white ml-1"
+                    type="button"
+                    icon="fa-light fa-trash"
+                    @click="$emit('delete-row', space)"
+                />
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
+    import BizButtonIcon from '@/Biz/ButtonIcon';
+    import BizButtonLink from '@/Biz/ButtonLink';
 
     export default {
         name: 'SpaceItem',
 
         components: {
-            BizButton,
+            BizButtonIcon,
+            BizButtonLink,
         },
 
         props:{
@@ -74,8 +72,6 @@
 
         emits: [
             'delete-row',
-            'duplicate-menu-item',
-            'edit-row',
         ],
     };
 </script>

@@ -2,8 +2,9 @@
 
 namespace Modules\Space\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\ServiceProvider;
+use Modules\Space\Services\SpaceService;
 
 class SpaceServiceProvider extends ServiceProvider
 {
@@ -38,6 +39,10 @@ class SpaceServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+
+        $this->app->singleton(SpaceService::class, function ($app) {
+            return new SpaceService();
+        });
     }
 
     /**

@@ -1,19 +1,25 @@
 <template>
-    <div class="tabs" :class="class">
-        <ul>
-            <li
-                v-for="(tab, i) of tabs"
-                :key="i"
-                :class="active === i ? 'is-active' : ''"
-                @click="selectTab(i)"
-            >
-                <a><span>{{ tab.props.title }}</span></a>
-            </li>
-        </ul>
-    </div>
+    <div>
+        <div class="tabs" :class="class">
+            <ul>
+                <template
+                    v-for="(tab, i) of tabs"
+                    :key="i"
+                >
+                    <li
+                        v-if="tab.props.isRendered"
+                        :class="active === i ? 'is-active' : ''"
+                        @click="selectTab(i)"
+                    >
+                        <a><span>{{ tab.props.title }}</span></a>
+                    </li>
+                </template>
+            </ul>
+        </div>
 
-    <div class="mt-3">
-        <slot />
+        <div class="mt-3">
+            <slot />
+        </div>
     </div>
 </template>
 
@@ -26,7 +32,7 @@
                 type: [String, Number],
                 class: {},
             },
-            class: {},
+            class: { type: [String, Object, Array], default: "" },
         },
         emits: ["update:modelValue"],
         setup(props, { slots, emit }) {

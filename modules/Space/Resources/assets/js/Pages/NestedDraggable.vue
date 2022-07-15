@@ -13,6 +13,7 @@
                     :data-id="element.id"
                     :space="element"
                     :can-add-item="canAddItem(element)"
+                    @delete-row="$emit('delete-row', $event)"
                 />
 
                 <nested-draggable
@@ -21,6 +22,7 @@
                     :spaces="element.children"
                     :data-parent="element.id"
                     @on-end="onEnd"
+                    @delete-row="$emit('delete-row', $event)"
                 />
             </li>
         </template>
@@ -44,7 +46,10 @@
             depth: { type: Number, default: 0 },
         },
 
-        emits: ['on-end'],
+        emits: [
+            'on-end',
+            'delete-row',
+        ],
 
         methods: {
             canAddItem(element) {
