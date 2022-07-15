@@ -65,8 +65,10 @@ class PageTranslation extends Model implements PublishableInterface
 
     private function splitIdAndUniqueKey(string $uid)
     {
-        $uniqueKey = substr($uid, -$this->uniqueKeyLength, $this->uniqueKeyLength);
-        $id = substr($uid, 0, strlen($uid) - strlen($uniqueKey));
+        $timestampLength = 12;
+
+        $uniqueKey = substr($uid, (-$this->uniqueKeyLength - $timestampLength), $this->uniqueKeyLength);
+        $id = substr($uid, 0, strlen($uid) - strlen($uniqueKey) - $timestampLength);
 
         return [
             "id" => $id,
@@ -94,7 +96,7 @@ class PageTranslation extends Model implements PublishableInterface
 
     public function getStyleUrlAttribute()
     {
-        $uid = $this->id.$this->unique_key;
+        $uid = $this->id.$this->unique_key.$this->updated_at->format('dmyHis');
 
         return route('page.css', $uid);
     }
