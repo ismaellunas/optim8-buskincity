@@ -13,7 +13,9 @@ export const ellipsis = iconFormatter('fa-ellipsis-h');
 export const eraser = iconFormatter('fa-eraser');
 export const expand = iconFormatter('fa-expand');
 export const idCard = iconFormatter('fa-id-card');
+export const image = iconFormatter('fa-image');
 export const move = iconFormatter('fa-arrows-alt');
+export const plusCircle = iconFormatter('fa-plus-circle');
 export const preview = iconFormatter('fa-arrow-up-right-from-square');
 export const remove = iconFormatter('fa-trash-can');
 export const show = iconFormatter('fa-eye');
@@ -42,7 +44,9 @@ export default {
     eraser,
     expand,
     idCard,
+    image,
     move,
+    plusCircle,
     preview,
     remove,
     show,

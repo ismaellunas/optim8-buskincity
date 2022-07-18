@@ -29,7 +29,7 @@
                             </span>
                             <span class="icon is-small">
                                 <i
-                                    class="fas fa-angle-down"
+                                    :class="icon.angleDown"
                                     aria-hidden="true"
                                 />
                             </span>
