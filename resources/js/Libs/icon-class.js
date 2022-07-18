@@ -1,28 +1,32 @@
 export const iconType = 'fa-light';
 
-export const add = iconType + ' fa-plus';
-export const angleDown = iconType + ' fa-angle-down';
-export const back = iconType + ' fa-arrow-left';
-export const checkCircle = iconType + ' fa-check-circle';
-export const clear = iconType + ' fa-times';
-export const close = iconType + ' fa-xmark';
-export const copy = iconType + ' fa-copy';
-export const download = iconType + ' fa-download';
-export const edit = iconType + ' fa-pen';
-export const ellipsis = iconType + ' fa-ellipsis-h';
-export const eraser = iconType + ' fa-eraser';
-export const expand = iconType + ' fa-expand';
-export const idCard = iconType + ' fa-id-card';
-export const move = iconType + ' fa-arrows-alt';
-export const preview = iconType + ' fa-arrow-up-right-from-square';
-export const remove = iconType + ' fa-trash-can';
-export const show = iconType + ' fa-eye';
-export const signIn = iconType + ' fa-sign-in-alt';
-export const suspend = iconType + ' fa-ban';
-export const table = iconType + ' fa-th';
-export const tableList = iconType + ' fa-th-list';
-export const unsuspend = iconType + ' fa-hands-helping';
-export const upload = iconType + ' fa-upload';
+export const add = iconFormatter('fa-plus');
+export const angleDown = iconFormatter('fa-angle-down');
+export const back = iconFormatter('fa-arrow-left');
+export const checkCircle = iconFormatter('fa-check-circle');
+export const clear = iconFormatter('fa-times');
+export const close = iconFormatter('fa-xmark');
+export const copy = iconFormatter('fa-copy');
+export const download = iconFormatter('fa-download');
+export const edit = iconFormatter('fa-pen');
+export const ellipsis = iconFormatter('fa-ellipsis-h');
+export const eraser = iconFormatter('fa-eraser');
+export const expand = iconFormatter('fa-expand');
+export const idCard = iconFormatter('fa-id-card');
+export const move = iconFormatter('fa-arrows-alt');
+export const preview = iconFormatter('fa-arrow-up-right-from-square');
+export const remove = iconFormatter('fa-trash-can');
+export const show = iconFormatter('fa-eye');
+export const signIn = iconFormatter('fa-sign-in-alt');
+export const suspend = iconFormatter('fa-ban');
+export const table = iconFormatter('fa-th');
+export const tableList = iconFormatter('fa-th-list');
+export const unsuspend = iconFormatter('fa-hands-helping');
+export const upload = iconFormatter('fa-upload');
+
+export function iconFormatter(iconClass) {
+    return iconType + ' ' + iconClass;
+}
 
 export default {
     add,
