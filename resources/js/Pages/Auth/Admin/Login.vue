@@ -3,7 +3,7 @@
         <template #back>
             <a @click.prevent="back">
                 <span class="icon">
-                    <i class="fas fa-arrow-left" />
+                    <i :class="icon.back" />
                 </span>
                 <span>Back</span>
             </a>
@@ -61,7 +61,7 @@
                     <biz-button
                         class="is-block is-info is-fullwidth"
                     >
-                        Log In <i class="fas fa-sign-in-alt" />
+                        Log In <i :class="icon.signIn" />
                     </biz-button>
                 </form>
             </div>
@@ -79,6 +79,7 @@
     import BizFormPassword from '@/Biz/Form/Password';
     import BizLink from '@/Biz/Link';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -109,7 +110,8 @@
                     email: '',
                     password: '',
                     remember: false
-                })
+                }),
+                icon,
             }
         },
 

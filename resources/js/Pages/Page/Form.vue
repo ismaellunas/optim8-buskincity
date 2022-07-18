@@ -7,7 +7,7 @@
             <div class="column">
                 <p class="buttons is-pulled-right">
                     <biz-button-icon
-                        icon="fa-solid fa-arrow-up-right-from-square"
+                        :icon="icon.preview"
                         :disabled="pagePreviewIsDisabled"
                         @click="openShow(modelValue)"
                     >
@@ -99,6 +99,7 @@
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { provide, ref } from "vue";
     import { usePage } from '@inertiajs/inertia-vue3';
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -160,6 +161,7 @@
         data() {
             return {
                 disableInput: false,
+                icon,
             };
         },
 

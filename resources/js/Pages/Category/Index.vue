@@ -16,7 +16,7 @@
                             class="is-primary"
                         >
                             <span class="icon is-small">
-                                <i class="fas fa-plus" />
+                                <i :class="icon.add" />
                             </span>
                             <span>Add New</span>
                         </biz-button-link>
@@ -71,7 +71,7 @@
                                         :href="route(baseRouteName + '.edit', record.id)"
                                     >
                                         <span class="icon is-small">
-                                            <i class="fas fa-pen" />
+                                            <i :class="icon.edit" />
                                         </span>
                                     </biz-button-link>
                                     <biz-button
@@ -80,7 +80,7 @@
                                         @click.prevent="deleteRow(record)"
                                     >
                                         <span class="icon is-small">
-                                            <i class="far fa-trash-alt" />
+                                            <i :class="icon.remove" />
                                         </span>
                                     </biz-button>
                                 </div>
@@ -109,6 +109,7 @@
     import { merge } from 'lodash';
     import { ref } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -141,6 +142,7 @@
         data() {
             return {
                 loader: null,
+                icon,
             };
         },
         methods: {

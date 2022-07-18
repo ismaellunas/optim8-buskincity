@@ -64,7 +64,7 @@
                             :href="route(baseRouteName+'.create')"
                         >
                             <span class="icon is-small">
-                                <i class="fas fa-plus" />
+                                <i :class="icon.add" />
                             </span>
                             <span>Add New</span>
                         </biz-button-link>
@@ -102,7 +102,7 @@
                                         title="Profile Page Url"
                                         :href="record.profile_page_url"
                                     >
-                                        <i class="fas fa-id-card" />
+                                        <i :class="icon.idCard" />
                                     </a>
 
                                     <biz-button-link
@@ -111,7 +111,7 @@
                                         :href="route(baseRouteName + '.edit', record.id)"
                                     >
                                         <span class="icon is-small">
-                                            <i class="fas fa-pen" />
+                                            <i :class="icon.edit" />
                                         </span>
                                     </biz-button-link>
 
@@ -121,7 +121,7 @@
                                         <biz-button-icon
                                             class="is-ghost has-text-black ml-1"
                                             icon-class="is-small"
-                                            icon="far fa-trash-alt"
+                                            :icon="icon.remove"
                                             title="Delete User"
                                             @click.prevent="deleteUserModal(record)"
                                         />
@@ -129,7 +129,7 @@
                                             v-if="!record.is_suspended"
                                             class="is-ghost has-text-black ml-1"
                                             icon-class="is-small"
-                                            icon="fas fa-ban"
+                                            :icon="icon.suspend"
                                             title="Suspend User"
                                             @click.prevent="suspendUser(record)"
                                         />
@@ -137,7 +137,7 @@
                                             v-if="record.is_suspended"
                                             class="is-ghost has-text-black ml-1"
                                             icon-class="is-small"
-                                            icon="fas fa-hands-helping"
+                                            :icon="icon.unsuspend"
                                             title="Unsuspend User"
                                             @click.prevent="unsuspendUser(record)"
                                         />
@@ -184,6 +184,7 @@
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from 'vue';
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -234,6 +235,7 @@
             return {
                 seletectedUser: null,
                 loader: null,
+                icon,
             };
         },
 

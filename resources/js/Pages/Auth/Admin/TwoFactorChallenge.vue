@@ -3,7 +3,7 @@
         <template #back>
             <a @click.prevent="redirectBack()">
                 <span class="icon">
-                    <i class="fas fa-arrow-left" />
+                    <i :class="icon.back" />
                 </span>
                 <span>Back</span>
             </a>
@@ -84,6 +84,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormInput from '@/Biz/Form/Input';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -103,7 +104,8 @@
                 form: this.$inertia.form({
                     code: '',
                     recovery_code: '',
-                })
+                }),
+                icon,
             }
         },
 
