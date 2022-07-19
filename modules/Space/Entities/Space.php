@@ -2,12 +2,15 @@
 
 namespace Modules\Space\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Kalnoy\Nestedset\NodeTrait;
 
 class Space extends Model
 {
     use HasFactory;
+    use NodeTrait;
 
     protected $fillable = [];
 
@@ -16,31 +19,9 @@ class Space extends Model
         return \Modules\Space\Database\factories\SpaceFactory::new();
     }
 
-    public function parent()
+    public function managers()
     {
-        return $this->belongsToOne(static::class, 'parent_id');
-    }
-
-    public function children()
-    {
-        return $this->hasMany(static::class, 'parent_id');
-    }
-
-    public function updateDepth($newDepth)
-    {
-        $this->depth = $newDepth;
-        $this->save();
-
-        $this->updateChildrenDepth();
-    }
-
-    private function updateChildrenDepth()
-    {
-        $childDepth = $this->depth + 1;
-
-        foreach ($this->children as $child) {
-            $child->updateDepth($childDepth);
-        }
+        return $this->belongsToMany(User::class);
     }
 
     public function saveFromInputs(array $inputs)
@@ -50,14 +31,6 @@ class Space extends Model
         $this->longitude = $inputs['longitude'];
         $this->address = $inputs['address'];
         $this->parent_id = $inputs['parent_id'];
-
-        if ($this->parent_id) {
-            $parentSpace = Space::find($this->parent_id);
-
-            if ($parentSpace) {
-                $this->depth = $parentSpace->depth + 1;
-            }
-        }
 
         $this->save();
     }

@@ -52,6 +52,23 @@
                         </space-form>
                     </form>
                 </biz-provide-inject-tab>
+                <biz-provide-inject-tab title="Manager">
+                    <form @submit.prevent="submitManager">
+                        <space-manager
+                            v-model="managers"
+                        >
+                            <template #action>
+                                <div class="field is-grouped is-grouped-right mt-4">
+                                    <div class="control">
+                                        <biz-button class="is-link">
+                                            Update
+                                        </biz-button>
+                                    </div>
+                                </div>
+                            </template>
+                        </space-manager>
+                    </form>
+                </biz-provide-inject-tab>
             </biz-provide-inject-tabs>
         </div>
     </app-layout>
@@ -67,7 +84,8 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasTab from '@/Mixins/HasTab';
     import SpaceForm from './SpaceForm';
-    import { pick } from 'lodash';
+    import SpaceManager from './SpaceManager';
+    import { pick, map } from 'lodash';
     import { ref } from "vue";
     import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
@@ -81,6 +99,7 @@
             BizProvideInjectTab,
             BizProvideInjectTabs,
             SpaceForm,
+            SpaceManager,
         },
 
         mixins: [
@@ -91,6 +110,7 @@
         props: {
             baseRouteName: { type: String, default: '' },
             parentOptions: { type: Object, default: () => {} },
+            spaceManagers: { type: Array, default: () => [] },
             spaceRecord: { type: Object, required: true },
             tab: { type: Number, default: 0 },
             title: { type: String, default: "" },
@@ -115,6 +135,7 @@
                     'parent_id',
                     'is_page_enabled',
                 ]),
+                managers: this.spaceManagers,
             };
         },
 
@@ -124,6 +145,22 @@
                 const form = useForm(self.space);
 
                 form.put(route(self.baseRouteName+'.update', self.spaceRecord.id), {
+                    replace: true,
+                    onStart: self.onStartLoadingOverlay,
+                    onSuccess: (page) => {
+                        successAlert(page.props.flash.message);
+                    },
+                    onFinish: self.onEndLoadingOverlay
+                });
+            },
+
+            submitManager() {
+                const self = this;
+                const form = useForm({
+                    managers: map(this.managers, 'id')
+                });
+
+                form.post(route(self.baseRouteName+'.update-managers', self.spaceRecord.id), {
                     replace: true,
                     onStart: self.onStartLoadingOverlay,
                     onSuccess: (page) => {

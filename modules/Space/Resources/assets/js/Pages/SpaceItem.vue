@@ -1,8 +1,8 @@
 <template>
-    <div class="box panel-block has-background-white mb-0">
+    <div class="space-item box panel-block has-background-white mb-0">
         <div class="level">
             <div class="level-left">
-                <span class="panel-icon handle-menu">
+                <span class="panel-icon handle is-moveable">
                     <i
                         class="fas fa-bars"
                         aria-hidden="true"
@@ -27,24 +27,26 @@
                     class="is-white"
                     :href="route('admin.spaces.create', {parent: space.id})"
                 >
-                    <span class="icon is-small">
-                        <i class="fa-light fa-plus" />
-                    </span>
+                    <biz-icon
+                        class="is-small"
+                        icon="fa-solid fa-plus"
+                    />
                 </biz-button-link>
 
                 <biz-button-link
                     class="is-white"
                     :href="route('admin.spaces.edit', space.id)"
                 >
-                    <span class="icon is-small">
-                        <i class="fa-light fa-pen" />
-                    </span>
+                    <biz-icon
+                        class="is-small"
+                        icon="fa-solid fa-pen"
+                    />
                 </biz-button-link>
 
                 <biz-button-icon
                     class="is-white ml-1"
                     type="button"
-                    icon="fa-light fa-trash"
+                    icon="fa-solid fa-trash-can"
                     @click="$emit('delete-row', space)"
                 />
             </div>
@@ -55,6 +57,7 @@
 <script>
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
+    import BizIcon from '@/Biz/Icon';
 
     export default {
         name: 'SpaceItem',
@@ -62,11 +65,11 @@
         components: {
             BizButtonIcon,
             BizButtonLink,
+            BizIcon,
         },
 
         props:{
             space: { type: Object, required: true },
-            //isChild: { type: Boolean, required: false },
             canAddItem: { type: Boolean, required: true },
         },
 
@@ -75,13 +78,3 @@
         ],
     };
 </script>
-
-<style scoped>
-    .handle-menu {
-        cursor: pointer;
-    }
-
-    .level {
-        width: 100%;
-    }
-</style>

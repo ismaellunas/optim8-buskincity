@@ -3,6 +3,7 @@
 namespace Modules\Space\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Space\Entities\Space;
 
 class SpaceRequest extends FormRequest
 {
@@ -33,6 +34,14 @@ class SpaceRequest extends FormRequest
             'parent_id' => [
                 'nullable',
                 'integer',
+                function ($attribute, $value, $fail) {
+                    $user = auth()->user();
+                    $space = Space::find($value);
+
+                    if (! $user->can('manage', $space, Space::class)) {
+                        $fail(__('The Parent is invalid.'));
+                    }
+                },
             ]
         ];
     }
