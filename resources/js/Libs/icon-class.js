@@ -21,8 +21,8 @@ export const remove = iconFormatter('fa-trash-can');
 export const show = iconFormatter('fa-eye');
 export const signIn = iconFormatter('fa-sign-in-alt');
 export const suspend = iconFormatter('fa-ban');
-export const table = iconFormatter('fa-th');
-export const tableList = iconFormatter('fa-th-list');
+export const grid = iconFormatter('fa-th');
+export const list = iconFormatter('fa-th-list');
 export const unsuspend = iconFormatter('fa-hands-helping');
 export const upload = iconFormatter('fa-upload');
 
@@ -52,8 +52,8 @@ export default {
     show,
     signIn,
     suspend,
-    table,
-    tableList,
+    grid,
+    list,
     unsuspend,
     upload,
 }

@@ -4,7 +4,7 @@
         :class="class"
     >
         <biz-button-icon
-            :icon="icon.table"
+            :icon="icon.grid"
             title="Gallery View"
             type="button"
             :class="{'is-primary': view === 'gallery'}"
@@ -12,7 +12,7 @@
         />
 
         <biz-button-icon
-            :icon="icon.tableList"
+            :icon="icon.list"
             title="List View"
             type="button"
             :class="{'is-primary': view === 'list'}"
