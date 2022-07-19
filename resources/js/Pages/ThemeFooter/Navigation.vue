@@ -36,7 +36,7 @@
                     @click="addSegment()"
                 >
                     <span class="icon">
-                        <i class="fas fa-plus" />
+                        <i :class="icon.add" />
                     </span>
                     &nbsp;
                     Add new segment
@@ -60,6 +60,7 @@
     import BizButton from '@/Biz/Button';
     import NavigationFormDuplicate from '@/Pages/ThemeHeader/NavigationFormDuplicate';
     import NavigationSegment from './NavigationSegment';
+    import icon from '@/Libs/icon-class';
     import { cloneDeep, isEmpty } from 'lodash';
     import { success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
@@ -101,6 +102,7 @@
                     layout: { title: 'Layout'},
                     navigation: {title: 'Navigation'},
                 },
+                icon,
             }
         },
 

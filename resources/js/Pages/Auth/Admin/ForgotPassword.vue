@@ -3,7 +3,7 @@
         <template #back>
             <biz-link :href="route('admin.login')">
                 <span class="icon">
-                    <i class="fas fa-arrow-left" />
+                    <i :class="icon.back" />
                 </span>
                 <span>Back</span>
             </biz-link>
@@ -91,6 +91,7 @@
     import BizLink from '@/Biz/Link';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
     import { VueRecaptcha } from 'vue-recaptcha';
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -123,7 +124,8 @@
                 form: this.$inertia.form({
                     email: '',
                 }),
-                csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                csrfToken: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                icon,
             }
         },
 

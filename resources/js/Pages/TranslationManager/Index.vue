@@ -33,7 +33,7 @@
                             class="is-primary mr-2"
                         >
                             <span class="icon is-small">
-                                <i class="fas fa-plus" />
+                                <i :class="icon.add" />
                             </span>
                             <span>Add New</span>
                         </biz-button-link>
@@ -58,7 +58,7 @@
 
                             <span class="icon is-small">
                                 <i
-                                    class="fas fa-angle-down"
+                                    :class="icon.angleDown"
                                     aria-hidden="true"
                                 />
                             </span>
@@ -98,7 +98,7 @@
                             </span>
                             <span class="icon is-small">
                                 <i
-                                    class="fas fa-angle-down"
+                                    :class="icon.angleDown"
                                     aria-hidden="true"
                                 />
                             </span>
@@ -202,7 +202,7 @@
                                             @click.prevent="onClear(index)"
                                         >
                                             <span class="icon is-small">
-                                                <i class="fas fa-eraser" />
+                                                <i :class="icon.eraser" />
                                             </span>
                                         </biz-button>
 
@@ -213,7 +213,7 @@
                                             @click.prevent="onDelete(page)"
                                         >
                                             <span class="icon is-small">
-                                                <i class="far fa-trash-alt" />
+                                                <i :class="icon.remove" />
                                             </span>
                                         </biz-button>
                                     </div>
@@ -326,6 +326,7 @@
     import { success as successAlert, confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';
     import { useForm } from '@inertiajs/inertia-vue3';
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -422,6 +423,7 @@
                 form: useForm({
                     translations: this.records.data,
                 }),
+                icon,
             };
         },
 

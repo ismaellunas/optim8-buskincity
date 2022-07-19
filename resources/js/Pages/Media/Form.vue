@@ -37,7 +37,7 @@
                             </template>
                         </biz-select>
                         <biz-button-icon
-                            icon="fas fa-plus"
+                            :icon="icon.add"
                             type="button"
                             @click="addTranslation"
                         />
@@ -91,6 +91,7 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormTextarea from '@/Biz/Form/Textarea';
     import BizSelect from '@/Biz/Select';
+    import icon from '@/Libs/icon-class';
     import { buildFormData, regexFileName } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
     import { isEmpty, keys, last } from 'lodash';
@@ -188,6 +189,7 @@
                     description: 'Description',
                 },
                 loader: null,
+                icon,
             };
         },
         computed: {

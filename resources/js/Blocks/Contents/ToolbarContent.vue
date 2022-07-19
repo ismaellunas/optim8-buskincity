@@ -11,7 +11,7 @@
                     @click="$emit('duplicate-content', $event)"
                 >
                     <span class="icon">
-                        <i class="fas fa-copy" />
+                        <i :class="icon.copy" />
                     </span>
                 </biz-button>
             </p>
@@ -25,7 +25,7 @@
                     @click="$emit('delete-content', $event)"
                 >
                     <span class="icon">
-                        <i class="fas fa-trash" />
+                        <i :class="icon.remove" />
                     </span>
                 </biz-button>
             </p>
@@ -38,7 +38,7 @@
                     class="is-small handle-content"
                 >
                     <span class="icon">
-                        <i class="fas fa-arrows-alt" />
+                        <i :class="icon.move" />
                     </span>
                 </biz-button>
             </p>
@@ -48,6 +48,7 @@
 
 <script>
     import BizButton from '@/Biz/Button';
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -64,5 +65,11 @@
             'delete-content',
             'duplicate-content',
         ],
+
+        data() {
+            return {
+                icon,
+            };
+        },
     }
 </script>
