@@ -1,5 +1,5 @@
 {
-    "name": "nwidart/space",
+    "name": "biz752/space",
     "description": "",
     "authors": [
         {
@@ -19,5 +19,8 @@
         "psr-4": {
             "Modules\\Space\\": ""
         }
+    },
+    "require": {
+        "kalnoy/nestedset": "^6.0"
     }
 }
