@@ -1,10 +1,12 @@
 <template>
     <draggable
         class="drag-area has-background-light"
+        handle=".handle"
         item-key="id"
         tag="ul"
-        :list="spaces"
+        :disabled="disabled"
         :group="{ name: 'space' }"
+        :list="spaces"
         @end="onEnd"
     >
         <template #item="{ element }">
@@ -13,14 +15,17 @@
                     :data-id="element.id"
                     :space="element"
                     :can-add-item="canAddItem(element)"
+                    @delete-row="$emit('delete-row', $event)"
                 />
 
                 <nested-draggable
                     v-if="canAddItem(element)"
                     class="children"
-                    :spaces="element.children"
                     :data-parent="element.id"
+                    :disabled="disabled"
+                    :spaces="element.children"
                     @on-end="onEnd"
+                    @delete-row="$emit('delete-row', $event)"
                 />
             </li>
         </template>
@@ -40,11 +45,15 @@
         },
 
         props: {
-            spaces: { type: Array, default: () => [] },
             depth: { type: Number, default: 0 },
+            disabled: { type: Boolean, default: false },
+            spaces: { type: Array, default: () => [] },
         },
 
-        emits: ['on-end'],
+        emits: [
+            'on-end',
+            'delete-row',
+        ],
 
         methods: {
             canAddItem(element) {

@@ -13,7 +13,7 @@
                             :href="route(data.baseRouteName+'.create')"
                         >
                             <span class="icon is-small">
-                                <i class="fas fa-plus" />
+                                <i :class="icon.add" />
                             </span>
                             <span>Add New</span>
                         </biz-button-link>
@@ -64,7 +64,7 @@
                                 <biz-dropdown class-button="is-ghost">
                                     <template #trigger>
                                         <span class="icon">
-                                            <i class="fas fa-ellipsis-h" />
+                                            <i :class="icon.ellipsis" />
                                         </span>
                                     </template>
 
@@ -74,7 +74,7 @@
                                             :href="route(data.baseRouteName+'.edit', {id: record.id})"
                                         >
                                             <span class="icon is-small mr-2">
-                                                <i class="fas fa-pen" />
+                                                <i :class="icon.edit" />
                                             </span>
                                             <span>Edit</span>
                                         </biz-link>
@@ -89,7 +89,7 @@
                                                 @click.prevent="deleteUserModal(record)"
                                             >
                                                 <span class="icon is-small mr-2">
-                                                    <i class="far fa-trash-alt" />
+                                                    <i :class="icon.remove" />
                                                 </span>
                                                 <span>Delete</span>
                                             </a>
@@ -100,7 +100,7 @@
                                                 @click.prevent="suspendUser(record)"
                                             >
                                                 <span class="icon is-small mr-2">
-                                                    <i class="fas fa-ban" />
+                                                    <i :class="icon.suspend" />
                                                 </span>
                                                 <span>Suspend</span>
                                             </a>
@@ -109,7 +109,7 @@
                                                 @click.prevent="unsuspendUser(record)"
                                             >
                                                 <span class="icon is-small mr-2">
-                                                    <i class="fas fa-hands-helping" />
+                                                    <i :class="icon.unsuspend" />
                                                 </span>
                                                 <span>Unsuspend</span>
                                             </a>
@@ -169,6 +169,7 @@
     import ModalFormDelete from '@/Pages/User/ModalFormDelete';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { userImage } from '@/Libs/defaults';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'User',
@@ -203,6 +204,7 @@
 
         data() {
             return {
+                icon,
                 userImage: userImage,
                 selectedUser: null,
             };

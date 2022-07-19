@@ -158,6 +158,16 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
+    public function scopeNotInRoleNames($query, array $roleNames)
+    {
+        return $query->whereDoesntHave(
+            'roles',
+            function (Builder $query) use ($roleNames) {
+                $query->whereIn('name', $roleNames);
+            }
+        );
+    }
+
     public function scopeHasPermissionNames($query, array $permissionNames = [])
     {
         return $query->whereHas('roles', function ($query) use ($permissionNames) {
@@ -177,6 +187,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $query
             ->emailVerified()
             ->where('is_suspended', false);
+    }
+
+    public function scopeBackend($query)
+    {
+        return $query->hasPermissionNames(['system.dashboard']);
     }
 
     public function getFullNameAttribute(): string
