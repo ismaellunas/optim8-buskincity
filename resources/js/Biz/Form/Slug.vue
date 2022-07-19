@@ -13,14 +13,14 @@
             <div class="control">
                 <biz-button-icon
                     v-show="isSlugDisabled"
-                    icon="fas fa-pen"
+                    :icon="icon.edit"
                     type="button"
                     tabindex="-1"
                     @click="isSlugDisabled = false"
                 />
                 <biz-button-icon
                     v-show="!isSlugDisabled"
-                    icon="fas fa-ban"
+                    :icon="icon.suspend"
                     type="button"
                     tabindex="-1"
                     @click="isSlugDisabled = true"
@@ -34,6 +34,7 @@
     import BizFormInputAddons from '@/Biz/Form/InputAddons';
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import { useModelWrapper, regexSlug } from '@/Libs/utils';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'BizFormSlug',
@@ -64,6 +65,7 @@
         data() {
             return {
                 isSlugDisabled: true,
+                icon,
             };
         },
 

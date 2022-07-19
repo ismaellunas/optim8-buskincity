@@ -2,8 +2,10 @@
 
 namespace Modules\Space\Providers;
 
+use App\Models\User;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
+use Modules\Space\Entities\Space;
+use Modules\Space\Services\SpaceService;
 
 class SpaceServiceProvider extends ServiceProvider
 {
@@ -28,6 +30,10 @@ class SpaceServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+
+        User::resolveRelationUsing('spaces', function ($userModel) {
+            return $userModel->belongsToMany(Space::class);
+        });
     }
 
     /**
@@ -38,6 +44,10 @@ class SpaceServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+
+        $this->app->singleton(SpaceService::class, function ($app) {
+            return new SpaceService();
+        });
     }
 
     /**

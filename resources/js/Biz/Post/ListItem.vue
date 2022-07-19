@@ -44,19 +44,22 @@
                         :href="editLink"
                     >
                         <span class="icon is-small">
-                            <i class="fas fa-pen"></i>
+                            <i :class="icon.edit" />
                         </span>
                     </biz-button-link>
 
                     <biz-button-icon
                         v-if="isDeleteEnabled"
                         class="is-ghost has-text-black ml-1"
-                        icon="far fa-trash-alt"
+                        :icon="icon.remove"
                         type="button"
                         @click="$emit('on-delete-clicked', record)"
                     />
 
-                    <slot name="actions" :record="record"></slot>
+                    <slot
+                        name="actions"
+                        :record="record"
+                    />
                 </div>
             </article>
         </td>
@@ -68,9 +71,8 @@
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizImage from '@/Biz/Image';
-    import BizLink from '@/Biz/Link';
     import BizTag from '@/Biz/Tag';
-    import { head } from 'lodash';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'PostListItem',
@@ -78,7 +80,6 @@
             BizButtonIcon,
             BizButtonLink,
             BizImage,
-            BizLink,
             BizTag,
         },
         mixins: [
@@ -94,5 +95,10 @@
         emits: [
             'on-delete-clicked',
         ],
+        data() {
+            return {
+                icon,
+            };
+        },
     };
 </script>

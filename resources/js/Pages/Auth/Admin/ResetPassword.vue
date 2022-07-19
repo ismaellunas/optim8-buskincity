@@ -1,9 +1,9 @@
 <template>
     <layout-admin title="Reset Password">
         <template #back>
-            <biz-link :href="route('login')">
+            <biz-link :href="route('admin.login')">
                 <span class="icon">
-                    <i class="fas fa-arrow-left" />
+                    <i :class="icon.back" />
                 </span>
                 <span>Back</span>
             </biz-link>
@@ -73,7 +73,8 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormPassword from '@/Biz/Form/Password';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
-    import BizLink from '@/Biz/Link'
+    import BizLink from '@/Biz/Link';
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -109,7 +110,8 @@
                     password: '',
                     password_confirmation: '',
                     processing: true,
-                })
+                }),
+                icon,
             }
         },
 

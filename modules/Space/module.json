@@ -5,6 +5,7 @@
     "keywords": [],
     "priority": 0,
     "providers": [
+        "Modules\\Space\\Providers\\AuthServiceProvider",
         "Modules\\Space\\Providers\\SpaceServiceProvider"
     ],
     "aliases": {},

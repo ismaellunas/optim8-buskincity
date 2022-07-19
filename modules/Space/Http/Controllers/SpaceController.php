@@ -2,115 +2,153 @@
 
 namespace Modules\Space\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use App\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Inertia\Inertia;
 use Modules\Space\Entities\Space;
+use Modules\Space\Http\Requests\SpaceRequest;
+use Modules\Space\Services\SpaceService;
 
-class SpaceController extends Controller
+class SpaceController extends CrudController
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
+    protected $model = Space::class;
+    protected $baseRouteName = 'admin.spaces';
+    protected $pageService;
+    protected $title = "Space";
+
+    private $spaceService;
+
+    public function __construct(SpaceService $spaceService)
+    {
+        $this->authorizeResource(Space::class, 'space');
+
+        $this->spaceService = $spaceService;
+    }
+
     public function index(Request $request)
     {
-        $parent = $request->parent;
+        $user = auth()->user();
 
-        $spaces = Space::with('children.children')
-            ->when($parent == null, function ($query) {
-                $query->whereNull('parent_id');
-            })
-            ->when($parent !== null, function ($query) use ($parent) {
-                $query->where('parent_id', $parent);
-            })
-            ->get()
-            ->toArray();
+        $spaces = $this->spaceService->spaceTree($user, $request->parent);
 
-        return Inertia::render('Space::SpaceIndex', [
-            'title' => "Space",
+        $spaceOptions = $this->spaceService->parentOptions($user);
+
+        return Inertia::render('Space::SpaceIndex', $this->getData([
+            'isSortableEnabled' => $user->can('changeParent', Space::class),
+            'parent' => $request->parent,
+            'parentOptions' => $spaceOptions,
             'spaces' => $spaces,
-        ]);
+        ]));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
+    public function create(Request $request)
     {
-        return view('space::create');
+        $user = auth()->user();
+
+        if ($request->parent) {
+            $parentOptions = [Space::select('id', 'name as value')->find($request->parent)];
+        } else {
+            $parentOptions = $this->spaceService->parentOptions(
+                $user,
+                $user->can('space.create')
+            );
+        }
+
+        return Inertia::render('Space::SpaceCreate', $this->getData([
+            'title' => 'Add New Space',
+            'parentOptions' => $parentOptions,
+            'maxLength' => [
+                'meta_title' => config('constants.max_length.meta_title'),
+                'meta_description' => config('constants.max_length.meta_description'),
+            ],
+        ]));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
+    public function store(SpaceRequest $request)
     {
-        //
+        $space = new Space();
+
+        $space->saveFromInputs($request->all());
+
+        $request->session()->flash('message', 'Successfully creating '.$this->title.'!');
+
+        return redirect()->route($this->baseRouteName.'.edit', $space->id);
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
+    public function edit(Space $space)
     {
-        return view('space::show');
+        $spaceManagers = $space->managers->map(function ($manager) {
+            return [
+                'id' => $manager->id,
+                'value' => $manager->fullName,
+            ];
+        });
+
+        $parent = null;
+
+        if ($space->parent_id) {
+            $parent = [
+                'id' => $space->parent_id,
+                'value' => $space->parent->name,
+            ];
+        }
+
+        return Inertia::render('Space::SpaceEdit', $this->getData([
+            'title' => 'Edit Space',
+            'spaceRecord' => $space,
+            'parentOptions' => $parent ? [$parent] : [],
+            'spaceManagers' => $spaceManagers,
+        ]));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
+    public function update(Request $request, Space $space)
     {
-        return view('space::edit');
+        $space->name = $request->name;
+        $space->is_page_enabled = $request->is_page_enabled;
+        $space->save();
+
+        return back();
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
+    public function destroy(Request $request, Space $space)
     {
-        //
+        $space->delete();
+        $request->session()->flash('message', $this->title.' deleted successfully!');
+
+        return redirect()->route($this->baseRouteName.'.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
+    public function moveNode($current, $parent = null)
     {
-        //
-    }
+        $this->authorize('changeParent', Space::class);
 
-    public function moveNode(Request $request, $current, $parent = null)
-    {
         $currentSpace = Space::find($current);
 
         if (! $parent) {
-            $currentSpace->parent_id = null;
-            $currentSpace->save();
-
-            $currentSpace->updateDepth(0);
+            $currentSpace->saveAsRoot();
 
         } else {
 
             $parentSpace = Space::find($parent);
-            $currentSpace->parent_id = $parentSpace->id;
-
-            $currentSpace->updateDepth($parentSpace->depth + 1);
+            $parentSpace->appendNode($currentSpace);
         }
+
+        return back();
+    }
+
+    public function searchManagers(Request $request)
+    {
+        return $this->spaceService->managers(
+            $request->term,
+            $request->excluded ?? []
+        );
+    }
+
+    public function updateManagers(Request $request, Space $space)
+    {
+        $space->managers()->sync($request->managers);
+
+        $request->session()->flash('message', 'Space created successfully!');
 
         return back();
     }

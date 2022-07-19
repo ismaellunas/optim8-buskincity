@@ -164,7 +164,7 @@
                                                                 :disabled="!canAddAmountOption(tempAmountOptions[ currency ])"
                                                                 @click.prevent="addAmount(currency)"
                                                             >
-                                                                <i class="fas fa-plus-circle" />
+                                                                <i :class="icon.plusCircle" />
                                                             </button>
                                                         </p>
                                                     </template>
@@ -263,6 +263,7 @@
     import BizSelect from '@/Biz/Select';
     import BizTable from '@/Biz/Table';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import icon from '@/Libs/icon-class';
     import { debounce, difference, isEmpty, filter, find, forEach } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
@@ -377,6 +378,7 @@
         data() {
             return {
                 filteredCountries: this.countryOptions.slice(0, 10),
+                icon,
                 loader: null,
                 logoImgUrl: this.logoStripeUrl,
                 tempAmountOptions: {},

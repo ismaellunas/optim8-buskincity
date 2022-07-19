@@ -13,7 +13,7 @@
                             :href="route(data.baseRouteName+'.create')"
                         >
                             <span class="icon is-small">
-                                <i class="fas fa-plus" />
+                                <i :class="icon.add" />
                             </span>
                             <span>Add New</span>
                         </biz-button-link>
@@ -77,7 +77,7 @@
                                 <biz-dropdown class-button="is-ghost">
                                     <template #trigger>
                                         <span class="icon">
-                                            <i class="fas fa-ellipsis-h" />
+                                            <i :class="icon.ellipsis" />
                                         </span>
                                     </template>
 
@@ -87,7 +87,7 @@
                                             :href="route(data.baseRouteName+'.edit', {id: record.id})"
                                         >
                                             <span class="icon is-small mr-2">
-                                                <i class="fas fa-pen" />
+                                                <i :class="icon.edit" />
                                             </span>
                                             <span>Edit</span>
                                         </biz-link>
@@ -98,7 +98,7 @@
                                             @click.prevent="deleteRow(record)"
                                         >
                                             <span class="icon is-small mr-2">
-                                                <i class="far fa-trash-alt" />
+                                                <i :class="icon.remove" />
                                             </span>
                                             <span>Delete</span>
                                         </biz-link>
@@ -147,6 +147,7 @@
     import BizTag from '@/Biz/Tag';
     import { confirmDelete } from '@/Libs/alert';
     import { head } from 'lodash';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'BizWidgetPost',
@@ -172,6 +173,12 @@
                 type: String,
                 default: "",
             },
+        },
+
+        data() {
+            return {
+                icon,
+            };
         },
 
         computed: {

@@ -17,27 +17,63 @@ class SpaceSeeder extends Seeder
     {
         Model::unguard();
 
-        $country = Space::factory()->create([
-            'name' => "Sweden",
-            'depth' => 0,
-        ]);
+        $countries = [
+            [
+                'name' => "Sweden",
+                'children' => [
+                    [
+                        'name' => "Stockholm",
+                        'children' => [
+                            [
+                                'name' => "Town Park",
+                            ],
+                            [
+                                'name' => "City Garden",
+                            ]
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'name' => "United Kingdom",
+                'children' => [
+                    [
+                        'name' => "London",
+                        'children' => [
+                            [
+                                'name' => "London Town Hall",
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'name' => "Singapore",
+                'children' => [
+                    [
+                        'name' => "Jurong Bird Park",
+                    ],
+                    [
+                        'name' => "Flower Dome",
+                    ],
+                    [
+                        'name' => "Botanical Garden Singapore",
+                    ],
+                    [
+                        'name' => "Merlion Park",
+                    ],
+                    [
+                        'name' => "Marina Bay Sands",
+                    ],
+                    [
+                        'name' => "Cloud Forest",
+                    ],
+                ],
+            ],
+        ];
 
-        $city = Space::factory()->create([
-            'name' => "Stockholm",
-            'depth' => 1,
-            'parent_id' => $country->id,
-        ]);
-
-        Space::factory()->create([
-            'name' => "Town Park",
-            'depth' => 2,
-            'parent_id' => $city->id,
-        ]);
-
-        Space::factory()->create([
-            'name' => "City Garden",
-            'depth' => 2,
-            'parent_id' => $city->id,
-        ]);
+        foreach ($countries as $country) {
+            Space::create($country);
+        }
     }
 }

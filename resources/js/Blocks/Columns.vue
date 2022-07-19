@@ -45,7 +45,7 @@
                         @click="duplicateBlock"
                     >
                         <span class="icon">
-                            <i class="fas fa-copy" />
+                            <i :class="icon.copy" />
                         </span>
                     </biz-button>
                 </p>
@@ -56,7 +56,7 @@
                         @click="deleteBlock"
                     >
                         <span class="icon">
-                            <i class="fas fa-trash" />
+                            <i :class="icon.remove" />
                         </span>
                     </biz-button>
                 </p>
@@ -66,7 +66,7 @@
                         class="is-small handle-columns"
                     >
                         <span class="icon">
-                            <i class="fas fa-arrows-alt" />
+                            <i :class="icon.move" />
                         </span>
                     </biz-button>
                 </p>
@@ -98,6 +98,7 @@
     import { createColumn } from '@/Libs/page-builder.js';
     import { useModelWrapper, isEmpty, getResourceFromDataObject } from '@/Libs/utils';
     import { inject } from "vue";
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -136,6 +137,7 @@
         data() {
             return {
                 columnOptions: [1,2,3,4,5,6],
+                icon,
                 numberOfColumns: this.block.columns.length,
             };
         },
