@@ -97,7 +97,7 @@
                                         :href="route('admin.pages.edit', {id: page.id})"
                                     >
                                         <span class="icon is-small">
-                                            <i class="fas fa-pen" />
+                                            <i :class="icon.edit" />
                                         </span>
                                     </biz-button-link>
                                     <biz-button
@@ -106,7 +106,7 @@
                                         @click.prevent="deleteRow(page)"
                                     >
                                         <span class="icon is-small">
-                                            <i class="far fa-trash-alt" />
+                                            <i :class="icon.remove" />
                                         </span>
                                     </biz-button>
                                 </div>
@@ -132,6 +132,7 @@
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import BizPagination from '@/Biz/Pagination';
     import BizTag from '@/Biz/Tag';
+    import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge, filter } from 'lodash';
     import { ref } from 'vue';
@@ -166,6 +167,11 @@
             return {
                 queryParams: ref(queryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
+            };
+        },
+        data() {
+            return {
+                icon,
             };
         },
         methods: {
