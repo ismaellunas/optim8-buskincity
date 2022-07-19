@@ -80,7 +80,7 @@
                             <biz-button-icon
                                 v-if="!hasCover"
                                 class="is-borderless is-shadowless is-inverted"
-                                icon="far fa-image"
+                                :icon="icon.image"
                                 type="button"
                                 :disabled="!can.media.browse"
                                 @click="openModal()"
@@ -99,7 +99,7 @@
                                         <footer class="card-footer">
                                             <biz-button-icon
                                                 class="card-footer-item is-borderless is-shadowless is-inverted"
-                                                icon="far fa-image"
+                                                :icon="icon.image"
                                                 type="button"
                                                 @click="openModal"
                                             >
@@ -252,6 +252,7 @@
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizTab from '@/Biz/Tab';
     import BizTabList from '@/Biz/TabList';
+    import icon from '@/Libs/icon-class';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { convertToSlug } from '@/Libs/utils';
     import { head, isEmpty, keys, pull, sortBy } from 'lodash';
@@ -316,6 +317,7 @@
                 acceptedTypes: acceptedImageTypes,
                 activeTab: head(keys(this.tabs)),
                 baseRouteName: 'admin.posts',
+                icon,
                 isSlugDisabled: true,
                 maxLength: usePage().props.value.maxLength,
             };

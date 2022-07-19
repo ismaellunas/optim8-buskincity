@@ -15,14 +15,14 @@
         <div class="control">
             <biz-button-icon
                 v-show="isShowPassword"
-                icon="fa-light fa-eye-slash"
+                :icon="icon.eyeSlash"
                 type="button"
                 tabindex="-1"
                 @click="changeTypeInput()"
             />
             <biz-button-icon
                 v-show="!isShowPassword"
-                icon="fa-light fa-eye"
+                :icon="icon.eye"
                 type="button"
                 tabindex="-1"
                 @click="changeTypeInput()"
@@ -34,6 +34,7 @@
 <script>
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizField from '@/Biz/Field';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'BizInputPassword',
@@ -57,8 +58,9 @@
 
         data() {
             return {
-                type: 'password',
+                icon,
                 isShowPassword: false,
+                type: 'password',
             };
         },
 

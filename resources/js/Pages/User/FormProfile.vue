@@ -38,7 +38,7 @@
                         :href="profilePageUrl"
                     >
                         Open Public Profile &nbsp;
-                        <i class="fas fa-id-card" />
+                        <i :class="icon.idCard" />
                     </a>
                 </div>
             </div>
@@ -114,6 +114,7 @@
     import BizFormSelect from '@/Biz/Form/Select';
     import BizImage from '@/Biz/Image';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { debounceTime, userImage } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
@@ -156,6 +157,7 @@
                 userImage: userImage,
                 filteredLanguages: this.languageOptions.slice(0, 10),
                 imageUrl: this.photoUrl,
+                icon,
             };
         },
 

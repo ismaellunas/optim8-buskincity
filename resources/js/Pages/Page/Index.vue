@@ -26,7 +26,7 @@
                             class="is-primary"
                         >
                             <span class="icon is-small">
-                                <i class="fas fa-plus" />
+                                <i :class="icon.add" />
                             </span>
                             <span>Create New</span>
                         </biz-button-link>
@@ -68,13 +68,13 @@
                             <td>
                                 <i
                                     v-if="page.hasMetaTitle"
-                                    class="far fa-check-circle"
+                                    :class="icon.checkCircle"
                                 />
                             </td>
                             <td>
                                 <i
                                     v-if="page.hasMetaDescription"
-                                    class="far fa-check-circle"
+                                    :class="icon.checkCircle"
                                 />
                             </td>
                             <td>
