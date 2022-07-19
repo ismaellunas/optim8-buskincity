@@ -4,7 +4,7 @@
         :class="class"
     >
         <biz-button-icon
-            icon="fas fa-th"
+            :icon="icon.grid"
             title="Gallery View"
             type="button"
             :class="{'is-primary': view === 'gallery'}"
@@ -12,7 +12,7 @@
         />
 
         <biz-button-icon
-            icon="fas fa-th-list"
+            :icon="icon.list"
             title="List View"
             type="button"
             :class="{'is-primary': view === 'list'}"
@@ -24,6 +24,7 @@
 <script>
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import { useModelWrapper } from '@/Libs/utils';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'BizButtonsDisplayView',
@@ -41,6 +42,7 @@
         ],
         setup(props, {emit}) {
             return {
+                icon,
                 view: useModelWrapper(props, emit),
             }
         },

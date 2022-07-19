@@ -1,8 +1,8 @@
 <template>
-    <div class="box panel-block has-background-white mb-0">
+    <div class="space-item box panel-block has-background-white mb-0">
         <div class="level">
             <div class="level-left">
-                <span class="panel-icon handle-menu">
+                <span class="panel-icon handle is-moveable">
                     <i
                         class="fas fa-bars"
                         aria-hidden="true"
@@ -22,70 +22,59 @@
             </div>
 
             <div class="level-right">
-                <biz-button
+                <biz-button-link
                     v-if="canAddItem"
-                    class="is-ghost has-text-black"
-                    type="button"
-                    @click="$emit('edit-row', space)"
+                    class="is-white"
+                    :href="route('admin.spaces.create', {parent: space.id})"
                 >
-                    <span class="icon is-small">
-                        <i class="fas fa-plus" />
-                    </span>
-                </biz-button>
-                <biz-button
-                    class="is-ghost has-text-black"
-                    type="button"
-                    @click="$emit('edit-row', space)"
-                >
-                    <span class="icon is-small">
-                        <i class="fas fa-pen" />
-                    </span>
-                </biz-button>
+                    <biz-icon
+                        class="is-small"
+                        icon="fa-solid fa-plus"
+                    />
+                </biz-button-link>
 
-                <biz-button
-                    class="is-ghost has-text-black ml-1"
-                    type="button"
-                    @click="$emit('delete-row', space)"
+                <biz-button-link
+                    class="is-white"
+                    :href="route('admin.spaces.edit', space.id)"
                 >
-                    <span class="icon is-small">
-                        <i class="far fa-trash-alt" />
-                    </span>
-                </biz-button>
+                    <biz-icon
+                        class="is-small"
+                        icon="fa-solid fa-pen"
+                    />
+                </biz-button-link>
+
+                <biz-button-icon
+                    class="is-white ml-1"
+                    type="button"
+                    icon="fa-solid fa-trash-can"
+                    @click="$emit('delete-row', space)"
+                />
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
+    import BizButtonIcon from '@/Biz/ButtonIcon';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizIcon from '@/Biz/Icon';
 
     export default {
         name: 'SpaceItem',
 
         components: {
-            BizButton,
+            BizButtonIcon,
+            BizButtonLink,
+            BizIcon,
         },
 
         props:{
             space: { type: Object, required: true },
-            //isChild: { type: Boolean, required: false },
             canAddItem: { type: Boolean, required: true },
         },
 
         emits: [
             'delete-row',
-            'duplicate-menu-item',
-            'edit-row',
         ],
     };
 </script>
-
-<style scoped>
-    .handle-menu {
-        cursor: pointer;
-    }
-
-    .level {
-        width: 100%;
-    }
-</style>

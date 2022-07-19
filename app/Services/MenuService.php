@@ -376,7 +376,7 @@ class MenuService
                 ],
             ];
 
-            $moduleMenus = $this->moduleMenus();
+            $moduleMenus = $this->moduleMenus($request);
 
             $menuProfile = [
                 'title' => 'Profile',
@@ -619,14 +619,17 @@ class MenuService
             });
     }
 
-    private function moduleMenus(): array
+    private function moduleMenus(Request $request): array
     {
         $modules = Module::all();
         $menus = [];
 
         foreach ($modules as $module) {
             $moduleService = '\\Modules\\'.$module->getName().'\\ModuleService';
-            $menus[] = $moduleService::adminMenus();
+
+            if (class_exists($moduleService)) {
+                $menus[] = $moduleService::adminMenus($request);
+            }
         }
 
         return $menus;

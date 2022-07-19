@@ -29,7 +29,7 @@
                             </span>
                             <span class="icon is-small">
                                 <i
-                                    class="fas fa-angle-down"
+                                    :class="icon.angleDown"
                                     aria-hidden="true"
                                 />
                             </span>
@@ -91,7 +91,7 @@
                             :href="route(baseRouteName+'.create')"
                         >
                             <span class="icon is-small">
-                                <i class="fas fa-plus" />
+                                <i :class="icon.add" />
                             </span>
                             <span>Create New</span>
                         </biz-button-link>
@@ -168,6 +168,7 @@
     import { clone, keys, head, merge } from 'lodash';
     import { ref } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -208,8 +209,9 @@
 
             return {
                 categories: ref(props.pageQueryParams?.categories ?? []),
-                localeOptions: ref(usePage().props.value.languageOptions ?? []),
+                icon,
                 languages: ref(props.pageQueryParams?.languages ?? []),
+                localeOptions: ref(usePage().props.value.languageOptions ?? []),
                 queryParams: ref(queryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
                 view: ref(props.pageQueryParams?.view ?? 'gallery'),

@@ -16,7 +16,7 @@
             <div class="column">
                 <div class="control">
                     <biz-button-icon
-                        icon="fas fa-times"
+                        :icon="icon.clear"
                         type="button"
                         @click="reset()"
                     />
@@ -33,6 +33,7 @@
     import { useModelWrapper } from '@/Libs/utils';
     import { debounceTime } from '@/Libs/defaults';
     import { debounce } from 'lodash';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'BizFilterSearch',
@@ -55,6 +56,12 @@
         setup(props, { emit }) {
             return {
                 term: useModelWrapper(props, emit),
+            };
+        },
+
+        data() {
+            return {
+                icon,
             };
         },
 

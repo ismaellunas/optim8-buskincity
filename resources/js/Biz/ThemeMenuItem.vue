@@ -39,7 +39,7 @@
                     @click.prevent="$emit('duplicate-menu-item', menuItem)"
                 >
                     <span class="icon is-small">
-                        <i class="far fa-copy" />
+                        <i :class="icon.copy" />
                     </span>
                 </biz-button>
 
@@ -49,7 +49,7 @@
                     @click="$emit('edit-row', menuItem)"
                 >
                     <span class="icon is-small">
-                        <i class="fas fa-pen" />
+                        <i :class="icon.edit" />
                     </span>
                 </biz-button>
 
@@ -59,7 +59,7 @@
                     @click="$emit('delete-row', menuItemIndex)"
                 >
                     <span class="icon is-small">
-                        <i class="far fa-trash-alt" />
+                        <i :class="icon.remove" />
                     </span>
                 </biz-button>
             </div>
@@ -70,6 +70,7 @@
 <script>
     import BizButton from '@/Biz/Button';
     import BizTag from '@/Biz/Tag';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'ThemeMenuItem',
@@ -107,6 +108,12 @@
             'duplicate-menu-item',
             'edit-row',
         ],
+
+        data() {
+            return {
+                icon,
+            };
+        },
     };
 </script>
 

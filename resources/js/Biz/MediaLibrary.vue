@@ -48,7 +48,7 @@
                                     ({{types.length}})
                                 </span>
                                 <span class="icon is-small">
-                                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                                    <i :class="icon.angleDown" aria-hidden="true"></i>
                                 </span>
                             </template>
 
@@ -258,6 +258,7 @@
     import { includes } from 'lodash';
     import { ref } from "vue";
     import { useForm } from '@inertiajs/inertia-vue3';
+    import icon from '@/Libs/icon-class';
 
     function getEmptyFormMedia() {
         return {
@@ -343,6 +344,7 @@
                     successSubmitForm: "Media has been updated",
                     successDeleteMedia: "Deleted",
                 },
+                icon,
             };
         },
         computed: {

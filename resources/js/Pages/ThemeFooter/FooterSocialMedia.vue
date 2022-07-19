@@ -37,7 +37,7 @@
                                     @click.prevent="openFormModal(socialMedia, index)"
                                 >
                                     <span class="icon is-small">
-                                        <i class="fas fa-pen" />
+                                        <i :class="icon.edit" />
                                     </span>
                                 </biz-button>
                                 <biz-button
@@ -45,7 +45,7 @@
                                     @click.prevent="deleteSocialMedia(index)"
                                 >
                                     <span class="icon is-small">
-                                        <i class="far fa-trash-alt" />
+                                        <i :class="icon.remove" />
                                     </span>
                                 </biz-button>
                             </div>
@@ -57,7 +57,7 @@
                     >
                         <span class="panel-icon has-text-link">
                             <i
-                                class="fas fa-plus"
+                                :class="icon.add"
                                 aria-hidden="true"
                             />
                         </span>
@@ -86,6 +86,7 @@
     import { useModelWrapper } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
     import { cloneDeep } from 'lodash';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'FooterSocialMedia',
@@ -114,6 +115,7 @@
 
         data() {
             return {
+                icon,
                 selectedIndex: null,
                 selectedSocialMedia: {},
                 socialMediaErrors: {},

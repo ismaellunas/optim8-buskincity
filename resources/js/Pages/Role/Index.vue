@@ -1,6 +1,8 @@
 <template>
     <app-layout :title="title">
-        <template #header>{{ title }}</template>
+        <template #header>
+            {{ title }}
+        </template>
 
         <div class="box">
             <div class="columns">
@@ -9,7 +11,7 @@
                         <biz-filter-search
                             v-model="term"
                             @search="search"
-                        ></biz-filter-search>
+                        />
                     </div>
                 </div>
                 <div class="column">
@@ -19,7 +21,7 @@
                             :href="route(baseRouteName+'.create')"
                         >
                             <span class="icon is-small">
-                                <i class="fas fa-plus"></i>
+                                <i :class="icon.add" />
                             </span>
                             <span>Add New</span>
                         </biz-button-link>
@@ -34,12 +36,17 @@
                             <th>#</th>
                             <th>Name</th>
                             <th>
-                                <div class="level-right">Actions</div>
+                                <div class="level-right">
+                                    Actions
+                                </div>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="record in records.data" :key="record.id">
+                        <tr
+                            v-for="record in records.data"
+                            :key="record.id"
+                        >
                             <th>{{ record.id }}</th>
                             <td>{{ record.name }}</td>
                             <td>
@@ -49,7 +56,7 @@
                                         :href="route(baseRouteName + '.edit', record.id)"
                                     >
                                         <span class="icon is-small">
-                                            <i class="fas fa-pen"></i>
+                                            <i :class="icon.edit" />
                                         </span>
                                     </biz-button-link>
                                     <biz-button
@@ -57,7 +64,7 @@
                                         @click.prevent="deleteRecord(record)"
                                     >
                                         <span class="icon is-small">
-                                            <i class="far fa-trash-alt"></i>
+                                            <i :class="icon.remove" />
                                         </span>
                                     </biz-button>
                                 </div>
@@ -86,6 +93,7 @@
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from 'vue';
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -119,6 +127,7 @@
         },
         data() {
             return {
+                icon,
                 loader: null,
             };
         },

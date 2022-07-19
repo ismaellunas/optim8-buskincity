@@ -19,8 +19,11 @@ Route::name('admin.')->prefix('admin/')->middleware([
     'can:system.dashboard',
     'ensureLoginFromAdminLoginRoute',
 ])->group(function () {
+    Route::resource('spaces', SpaceController::class)
+        ->except(['show']);
     Route::prefix('spaces')->name('spaces.')->group(function() {
-        Route::get('/', 'SpaceController@index')->name('index');
         Route::post('/move-node/{current}/{parent?}', 'SpaceController@moveNode')->name('move-node');
+        Route::post('/update-manager/{space}', 'SpaceController@updateManagers')->name('update-managers');
+        Route::get('/search-managers', 'SpaceController@searchManagers')->name('search-managers');
     });
 });

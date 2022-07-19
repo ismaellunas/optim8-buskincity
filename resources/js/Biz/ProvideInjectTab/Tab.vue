@@ -9,7 +9,8 @@
 
     export default {
         props: {
-            title: String,
+            title: { type: String, required: true },
+            isRendered: {type: Boolean, default: true },
         },
         setup(props) {
             const instance = getCurrentInstance();
