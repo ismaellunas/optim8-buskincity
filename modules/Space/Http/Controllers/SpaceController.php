@@ -113,4 +113,21 @@ class SpaceController extends CrudController
 
         return back();
     }
+
+    public function searchManagers(Request $request)
+    {
+        return $this->spaceService->managers(
+            $request->term,
+            $request->excluded ?? []
+        );
+    }
+
+    public function updateManagers(Request $request, Space $space)
+    {
+        $space->managers()->sync($request->managers);
+
+        $request->session()->flash('message', 'Space created successfully!');
+
+        return back();
+    }
 }

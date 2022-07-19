@@ -22,4 +22,5 @@ public/css/local.css
 public/js/local.js
 .DS_Store
 /modules/*/node_modules
+/modules/*/vendor
 public/js/modules_*_js_Pages*
