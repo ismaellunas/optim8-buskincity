@@ -38,7 +38,7 @@
                             <biz-dropdown-item
                                 v-for="option in parentOptions"
                                 :key="option.id"
-                                @click="selectedParent = option"
+                                @click="parentId = option.id"
                             >
                                 {{ option.value }}
                             </biz-dropdown-item>
@@ -64,6 +64,7 @@
             <nested-draggable
                 class="px-2 py-4"
                 :spaces="spaces"
+                :disabled="!isSortableEnabled"
                 @on-end="onEnd"
                 @delete-row="deleteSpace"
             />
@@ -98,6 +99,7 @@
 
         props: {
             baseRouteName: { type: String, required: true },
+            isSortableEnabled: { type: Boolean, default: true },
             parent: { type: [Object, null], required: true },
             parentOptions: { type: Array, required: true },
             spaces: { type: Array, required: true },
@@ -114,13 +116,19 @@
 
         data() {
             return {
-                selectedParent: this.parent,
+                parentId: this.parent,
             };
         },
 
+        computed: {
+            selectedParent() {
+                return this.parentOptions.find(option => option.id == this.parentId);
+            },
+        },
+
         watch: {
-            selectedParent(newParent) {
-                const url = route('admin.spaces.index', {parent: newParent.id});
+            parentId(newParentId) {
+                const url = route('admin.spaces.index', {parent: newParentId});
                 this.$inertia.visit(url);
             },
         },
