@@ -12,6 +12,8 @@ export const edit = iconFormatter('fa-pen');
 export const ellipsis = iconFormatter('fa-ellipsis-h');
 export const eraser = iconFormatter('fa-eraser');
 export const expand = iconFormatter('fa-expand');
+export const eye = iconFormatter('fa-eye');
+export const eyeSlash = iconFormatter('fa-eye-slash');
 export const idCard = iconFormatter('fa-id-card');
 export const image = iconFormatter('fa-image');
 export const move = iconFormatter('fa-arrows-alt');
@@ -43,6 +45,8 @@ export default {
     ellipsis,
     eraser,
     expand,
+    eye,
+    eyeSlash,
     idCard,
     image,
     move,
