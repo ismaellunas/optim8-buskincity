@@ -61,13 +61,15 @@
                 </div>
             </div>
 
-            <nested-draggable
-                class="px-2 py-4"
-                :spaces="spaces"
-                :disabled="!isSortableEnabled"
-                @on-end="onEnd"
-                @delete-row="deleteSpace"
-            />
+            <div class="space-list">
+                <nested-draggable
+                    class="px-2 py-4"
+                    :spaces="spaces"
+                    :disabled="!isSortableEnabled"
+                    @on-end="onEnd"
+                    @delete-row="deleteSpace"
+                />
+            </div>
         </div>
     </app-layout>
 </template>
