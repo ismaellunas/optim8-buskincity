@@ -2,28 +2,21 @@
 
 namespace Modules\Space\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Kalnoy\Nestedset\NodeTrait;
 
 class Space extends Model
 {
     use HasFactory;
+    use NodeTrait;
 
     protected $fillable = [];
 
     protected static function newFactory()
     {
         return \Modules\Space\Database\factories\SpaceFactory::new();
-    }
-
-    public function parent()
-    {
-        return $this->belongsToOne(static::class, 'parent_id');
-    }
-
-    public function children()
-    {
-        return $this->hasMany(static::class, 'parent_id');
     }
 
     public function updateDepth($newDepth)
