@@ -1,6 +1,11 @@
 <?php
 
+use App\Facades\Localization;
+use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Support\Facades\Route;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
+use Modules\Space\Http\Controllers\Frontend\SpaceController as FrontendSpaceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,4 +31,12 @@ Route::name('admin.')->prefix('admin/')->middleware([
         Route::post('/update-manager/{space}', 'SpaceController@updateManagers')->name('update-managers');
         Route::get('/search-managers', 'SpaceController@searchManagers')->name('search-managers');
     });
+});
+
+Route::prefix(Localization::setLocale())
+    ->middleware(['localizationRedirect'])
+    ->withoutMiddleware(HandleInertiaRequests::class)
+    ->group(function () {
+        Route::get(LaravelLocalization::transRoute('frontend.spaces.show'), [FrontendSpaceController::class, 'show'])
+            ->name('frontend.spaces.show');
 });
