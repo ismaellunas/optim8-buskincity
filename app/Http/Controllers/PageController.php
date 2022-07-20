@@ -112,27 +112,9 @@ class PageController extends CrudController
      */
     public function edit(Page $page)
     {
-        $images = [];
-
         $page->load('translations');
 
-        foreach ($page->translations as $translation) {
-            if (!empty($translation->data['media'])) {
-                $locale = $translation->locale;
-                $mediaIds = collect($translation->data['media'])->pluck('id');
-
-                $images[$locale] = Media::whereIn('id', $mediaIds)
-                    ->image()
-                    ->with([
-                        'translations' => function ($q) use ($locale) {
-                            $q->select(['id', 'locale', 'alt', 'media_id']);
-                            $q->where('locale', $locale);
-                        },
-                    ])
-                    ->default()
-                    ->get(['id', 'file_url']);
-            }
-        }
+        $images = $this->pageService->getImagesFromPage($page);
 
         $user = auth()->user();
 
@@ -172,7 +154,7 @@ class PageController extends CrudController
     {
         $inputs = $request->all();
 
-        $locale = collect($inputs)->pluck('locale')->filter()->first();
+        $locale = (string) collect($inputs)->pluck('locale')->filter()->first();
 
         $oldStatus = $page->translate($locale)->status ?? null;
 
