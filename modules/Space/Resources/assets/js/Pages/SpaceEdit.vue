@@ -17,6 +17,7 @@
                         <space-form
                             v-model="space"
                             :parent-options="parentOptions"
+                            :type-options="typeOptions"
                         >
                             <biz-form-select
                                 v-model="space.is_page_enabled"
@@ -110,6 +111,7 @@
         props: {
             baseRouteName: { type: String, default: '' },
             parentOptions: { type: Object, default: () => {} },
+            typeOptions: { type: Object, default: () => {} },
             spaceManagers: { type: Array, default: () => [] },
             spaceRecord: { type: Object, required: true },
             tab: { type: Number, default: 0 },
@@ -132,6 +134,7 @@
                     'latitude',
                     'longitude',
                     'name',
+                    'type',
                     'parent_id',
                     'is_page_enabled',
                 ]),
@@ -150,7 +153,10 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                     },
-                    onFinish: self.onEndLoadingOverlay
+                    onFinish: () => {
+                        self.getSpace();
+                        self.onEndLoadingOverlay();
+                    }
                 });
             },
 
@@ -168,6 +174,19 @@
                     },
                     onFinish: self.onEndLoadingOverlay
                 });
+            },
+
+            getSpace() {
+                this.space = pick(this.spaceRecord, [
+                    'id',
+                    'address',
+                    'latitude',
+                    'longitude',
+                    'name',
+                    'type',
+                    'parent_id',
+                    'is_page_enabled',
+                ]);
             },
         },
     };

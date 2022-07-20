@@ -57,6 +57,7 @@ class SpaceController extends CrudController
         return Inertia::render('Space::SpaceCreate', $this->getData([
             'title' => 'Add New Space',
             'parentOptions' => $parentOptions,
+            'typeOptions' => $this->spaceService->typeOptions(),
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
@@ -68,7 +69,9 @@ class SpaceController extends CrudController
     {
         $space = new Space();
 
-        $space->saveFromInputs($request->all());
+        $inputs = $request->all();
+
+        $space->saveFromInputs($inputs);
 
         $request->session()->flash('message', 'Successfully creating '.$this->title.'!');
 
@@ -97,15 +100,17 @@ class SpaceController extends CrudController
             'title' => 'Edit Space',
             'spaceRecord' => $space,
             'parentOptions' => $parent ? [$parent] : [],
+            'typeOptions' => $this->spaceService->typeOptions(),
             'spaceManagers' => $spaceManagers,
         ]));
     }
 
-    public function update(Request $request, Space $space)
+    public function update(SpaceRequest $request, Space $space)
     {
-        $space->name = $request->name;
-        $space->is_page_enabled = $request->is_page_enabled;
-        $space->save();
+        $inputs = $request->all();
+        $space->saveFromInputs($inputs);
+
+        $request->session()->flash('message', 'Successfully updating '.$this->title.'!');
 
         return back();
     }
@@ -113,6 +118,7 @@ class SpaceController extends CrudController
     public function destroy(Request $request, Space $space)
     {
         $space->delete();
+
         $request->session()->flash('message', $this->title.' deleted successfully!');
 
         return redirect()->route($this->baseRouteName.'.index');

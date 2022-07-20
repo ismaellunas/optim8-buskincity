@@ -30,7 +30,9 @@ class Space extends Model
         $this->latitude = $inputs['latitude'];
         $this->longitude = $inputs['longitude'];
         $this->address = $inputs['address'];
+        $this->type = $inputs['type'];
         $this->parent_id = $inputs['parent_id'];
+        $this->is_page_enabled = $inputs['is_page_enabled'] ?? false;
 
         $this->save();
     }

@@ -22,6 +22,20 @@
                 {{ option.value }}
             </option>
         </biz-form-select>
+        <biz-form-select
+            v-model="space.type"
+            class="is-fullwidth"
+            label="Type"
+            :message="error('type')"
+        >
+            <option
+                v-for="option in typeOptions"
+                :key="option.id"
+                :value="option.id"
+            >
+                {{ option.value }}
+            </option>
+        </biz-form-select>
         <biz-form-input
             v-model="space.latitude"
             label="Latitude"
@@ -65,6 +79,7 @@
         props: {
             modelValue: { type: Object, required: true },
             parentOptions: { type: Object, required: true },
+            typeOptions: { type: Object, required: true },
         },
 
         setup(props, { emit }) {

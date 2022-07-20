@@ -12,6 +12,7 @@
                 <space-form
                     v-model="space"
                     :parent-options="parentOptions"
+                    :type-options="typeOptions"
                 />
                 <div class="field is-grouped is-grouped-right mt-4">
                     <div class="control">
@@ -59,6 +60,7 @@
         props: {
             baseRouteName: { type: String, default: '' },
             parentOptions: { type: Object, default: () => {} },
+            typeOptions: { type: Object, default: () => {} },
             title: { type: String, default: "" },
         },
 
@@ -76,6 +78,7 @@
                     longitude: null,
                     name: null,
                     parent_id: this.parentOptions[0].id ?? null,
+                    type: null,
                 },
             };
         },

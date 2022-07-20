@@ -3,7 +3,9 @@
 namespace Modules\Space\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Modules\Space\Entities\Space;
+use Modules\Space\Services\SpaceService;
 
 class SpaceRequest extends FormRequest
 {
@@ -14,6 +16,10 @@ class SpaceRequest extends FormRequest
      */
     public function rules()
     {
+        $types = collect(app(SpaceService::class)->types())
+            ->keys()
+            ->all();
+
         return [
             'name' => [
                 'required',
@@ -30,6 +36,11 @@ class SpaceRequest extends FormRequest
             'address' => [
                 'nullable',
                 'max:500',
+            ],
+            'type' => [
+                'nullable',
+                'integer',
+                Rule::in($types)
             ],
             'parent_id' => [
                 'nullable',
