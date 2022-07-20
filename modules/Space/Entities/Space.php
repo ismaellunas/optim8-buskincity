@@ -2,6 +2,7 @@
 
 namespace Modules\Space\Entities;
 
+use App\Models\Page;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,6 +23,11 @@ class Space extends Model
     public function managers()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function page()
+    {
+        return $this->belongsTo(Page::class, 'page_id');
     }
 
     public function saveFromInputs(array $inputs)

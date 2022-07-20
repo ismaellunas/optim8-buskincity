@@ -2,6 +2,7 @@
 
 namespace Modules\Space\Providers;
 
+use App\Models\Page;
 use App\Models\User;
 use Illuminate\Support\ServiceProvider;
 use Modules\Space\Entities\Space;
@@ -33,6 +34,10 @@ class SpaceServiceProvider extends ServiceProvider
 
         User::resolveRelationUsing('spaces', function ($userModel) {
             return $userModel->belongsToMany(Space::class);
+        });
+
+        Page::resolveRelationUsing('space', function ($pageModel) {
+            return $pageModel->hasOne(Space::class, 'page_id');
         });
     }
 
