@@ -3,9 +3,10 @@
 namespace Modules\Space\Entities;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
+use Modules\Space\Entities\Page;
 
 class Space extends Model
 {
@@ -22,6 +23,11 @@ class Space extends Model
     public function managers()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function page()
+    {
+        return $this->belongsTo(Page::class);
     }
 
     public function saveFromInputs(array $inputs)
