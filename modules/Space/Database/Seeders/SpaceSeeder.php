@@ -2,8 +2,11 @@
 
 namespace Modules\Space\Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use App\Models\Page;
+use App\Models\PageTranslation;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use Modules\Space\Entities\Space;
 
 class SpaceSeeder extends Seeder
@@ -17,9 +20,25 @@ class SpaceSeeder extends Seeder
     {
         Model::unguard();
 
+        $title = 'Sweden Space';
+        $swedenPage = Page::factory()
+            ->hasTranslations(1, [
+                'title' => $title,
+                'slug' => Str::slug($title),
+                'status' => PageTranslation::STATUS_PUBLISHED,
+                'data' => [
+                    "structures" => [],
+                    "entities" => [],
+                    "media" => []
+                ],
+            ])
+            ->create();
+
         $countries = [
             [
                 'name' => "Sweden",
+                'page_id' => $swedenPage->id,
+                'is_page_enabled' => true,
                 'children' => [
                     [
                         'name' => "Stockholm",
