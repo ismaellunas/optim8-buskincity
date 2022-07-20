@@ -18,7 +18,7 @@
                                 <div class="level-item">
                                     <biz-link @click.prevent="redirectBack()">
                                         <span class="icon">
-                                            <i class="fas fa-arrow-left" />
+                                            <i :class="icon.back" />
                                         </span>
                                         <span>Back</span>
                                     </biz-link>
@@ -109,7 +109,8 @@
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormInput from '@/Biz/Form/Input';
-    import BizLink from '@/Biz/Link'
+    import BizLink from '@/Biz/Link';
+    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
@@ -129,7 +130,8 @@
                 form: this.$inertia.form({
                     code: '',
                     recovery_code: '',
-                })
+                }),
+                icon,
             }
         },
 

@@ -36,7 +36,7 @@
             >
                 <span class="panel-icon handle-menu has-text-link">
                     <i
-                        class="fas fa-plus"
+                        :class="icon.add"
                         aria-hidden="true"
                     />
                 </span>
@@ -49,6 +49,7 @@
 <script>
     import Draggable from "vuedraggable";
     import ThemeMenuItem from '@/Biz/ThemeMenuItem';
+    import icon from '@/Libs/icon-class';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { confirmDelete } from '@/Libs/alert';
 
@@ -94,6 +95,12 @@
         setup() {
             return {
                 baseRouteName: usePage().props.value.baseRouteName ?? null,
+            };
+        },
+
+        data() {
+            return {
+                icon
             };
         },
 

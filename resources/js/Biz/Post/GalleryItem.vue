@@ -10,7 +10,7 @@
                 class="icon is-large"
             >
                 <span class="fa-stack fa-lg">
-                    <i :class="['fas fa-image', 'fa-5x']"></i>
+                    <i :class="['fas fa-image', 'fa-5x']" />
                 </span>
             </span>
         </div>
@@ -27,7 +27,10 @@
                         </biz-tag>
                     </p>
                     <p class="title is-4">
-                        <a :href="previewLink" target="_blank">
+                        <a
+                            :href="previewLink"
+                            target="_blank"
+                        >
                             <strong>{{ record.title }}</strong>
                         </a>
                     </p>
@@ -42,7 +45,6 @@
         </div>
 
         <footer class="card-footer">
-
             <biz-button-link
                 v-if="isEditEnabled"
                 title="Edit"
@@ -51,20 +53,23 @@
                 :href="editLink"
             >
                 <span class="icon is-small">
-                    <i class="fas fa-pen"></i>
+                    <i :class="icon.edit" />
                 </span>
             </biz-button-link>
 
             <biz-button-icon
                 v-if="isDeleteEnabled"
-                icon="far fa-trash-alt"
+                :icon="icon.remove"
                 title="Delete"
                 type="button"
                 :class="[actionClass, 'is-ghost', 'has-text-black', 'ml-1']"
                 @click="$emit('on-delete-clicked', record)"
             />
 
-            <slot name="actions" :record="record"></slot>
+            <slot
+                name="actions"
+                :record="record"
+            />
         </footer>
     </div>
 </template>
@@ -74,8 +79,8 @@
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizImage from '@/Biz/Image';
-    import BizLink from '@/Biz/Link';
     import BizTag from '@/Biz/Tag';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'PostGalleryItem',
@@ -83,7 +88,6 @@
             BizButtonIcon,
             BizButtonLink,
             BizImage,
-            BizLink,
             BizTag,
         },
         mixins: [
@@ -102,6 +106,7 @@
         data() {
             return {
                 actionClass: "card-footer-item p-2 is-borderless is-shadowless is-inverted",
+                icon,
             };
         },
     }
