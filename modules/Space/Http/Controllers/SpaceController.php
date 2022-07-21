@@ -3,8 +3,8 @@
 namespace Modules\Space\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
-use App\Models\Page;
-use App\Models\PageTranslation;
+use Modules\Space\Entities\Page;
+use Modules\Space\Entities\PageTranslation;
 use App\Services\PageService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
