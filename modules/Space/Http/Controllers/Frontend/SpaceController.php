@@ -21,7 +21,13 @@ class SpaceController extends Controller
 
     public function show(PageTranslation $pageTranslation)
     {
-        $viewName = $this->getViewNameBasedOnPage($pageTranslation);
+        $viewName = null;
+
+        if ($pageTranslation->page->space->is_page_enabled) {
+            $this->reTranslatePage($pageTranslation);
+
+            $viewName = $this->getViewNameBasedOnPage($pageTranslation);
+        }
 
         if (
             !$viewName
@@ -45,28 +51,32 @@ class SpaceController extends Controller
         return view($this->viewFallback(), $data);
     }
 
-    private function getViewNameBasedOnPage(PageTranslation $pageTranslation): ?string
+    private function reTranslatePage(PageTranslation &$pageTranslation): void
     {
         $page = $pageTranslation->page;
 
+        if ($pageTranslation->page->hasTranslation($this->locale)) {
+            $pageTranslation = $page->translate($this->locale);
+        } else {
+            $pageTranslation = $page->translate(
+                app(TranslationService::class)->getDefaultLocale()
+            );
+        }
+    }
+
+    private function getViewNameBasedOnPage(PageTranslation $pageTranslation): ?string
+    {
         if (
-            $page->space->is_page_enabled
-            && $page->hasTranslation($this->locale)
+            $pageTranslation->status != PageTranslation::STATUS_PUBLISHED
+            && !$this->userCanAccessPage()
         ) {
-            $newPageTranslation = $pageTranslation->page->translate($this->locale);
+            return null;
+        }
 
-            if (
-                $newPageTranslation->status != PageTranslation::STATUS_PUBLISHED
-                && !$this->userCanAccessPage()
-            ) {
-                return null;
-            }
+        $viewName = $this->getViewName($pageTranslation->slug, $this->locale);
 
-            $viewName = $this->getViewName($newPageTranslation->slug, $this->locale);
-
-            if ($this->isViewExists($viewName)) {
-                return $viewName;
-            }
+        if ($this->isViewExists($viewName)) {
+            return $viewName;
         }
 
         return null;
