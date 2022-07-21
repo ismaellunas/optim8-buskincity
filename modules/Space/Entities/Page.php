@@ -6,11 +6,16 @@ use App\Models\Page as ModelPage;
 
 class Page extends ModelPage
 {
-    protected const TYPE = 'space';
+    public const TYPE = 'space';
 
     protected $attributes = [
         'type' => self::TYPE,
     ];
+
+    protected static function newFactory()
+    {
+        return \Modules\Space\Database\factories\PageFactory::new();
+    }
 
     public function newQuery(bool $excludeDeleted = true)
     {
