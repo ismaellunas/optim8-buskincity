@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\PageBuilderSearchableTextInterface;
+use App\Models\Media;
 use App\Models\Page;
 use App\Services\{
     SettingService,
@@ -91,5 +92,30 @@ class PageService
             ])
             ->where('id', $homePageId)
             ->first();
+    }
+
+    public function getImagesFromPage(Page $page): array
+    {
+        $images = [];
+
+        foreach ($page->translations as $translation) {
+            if (!empty($translation->data['media'])) {
+                $locale = $translation->locale;
+                $mediaIds = collect($translation->data['media'])->pluck('id');
+
+                $images[$locale] = Media::whereIn('id', $mediaIds)
+                    ->image()
+                    ->with([
+                        'translations' => function ($q) use ($locale) {
+                            $q->select(['id', 'locale', 'alt', 'media_id']);
+                            $q->where('locale', $locale);
+                        },
+                    ])
+                    ->default()
+                    ->get(['id', 'file_url']);
+            }
+        }
+
+        return $images;
     }
 }

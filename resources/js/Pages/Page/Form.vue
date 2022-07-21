@@ -37,7 +37,10 @@
             @submit.prevent="$emit('on-submit')"
         >
             <div class="mb-5">
-                <biz-provide-inject-tabs v-model="activeTab" class="is-boxed">
+                <biz-provide-inject-tabs
+                    v-model="activeTab"
+                    class="is-boxed"
+                >
                     <biz-provide-inject-tab title="Details">
                         <form-detail
                             v-model:title="form.title"
@@ -48,11 +51,14 @@
                             v-model:status="form.status"
                             :disable-input="disableInput"
                             :errors="errors"
-                            :status-options="statusOptions"
                             :selected-locale="selectedLocale"
+                            :status-options="statusOptions"
                         />
                     </biz-provide-inject-tab>
-                    <biz-provide-inject-tab title="Builder">
+                    <biz-provide-inject-tab
+                        title="Builder"
+                        :is-rendered="isPageBuilderRendered"
+                    >
                         <form-builder
                             id="page-form-builder"
                             v-model="form.data"
@@ -64,26 +70,26 @@
                 </biz-provide-inject-tabs>
             </div>
 
-            <div class="field is-grouped is-grouped-right">
-                <div class="control">
-                    <biz-button-link
-                        :href="route('admin.pages.index')"
-                        class="is-link is-light"
-                    >
-                        Cancel
-                    </biz-button-link>
+            <slot
+                name="action"
+                :is-new="isNew"
+            >
+                <div class="field is-grouped is-grouped-right">
+                    <div class="control">
+                        <biz-button-link
+                            class="is-link is-light"
+                            :href="route('admin.pages.index')"
+                        >
+                            Cancel
+                        </biz-button-link>
+                    </div>
+                    <div class="control">
+                        <biz-button class="is-link">
+                            {{ isNew ? 'Create' : 'Update' }}
+                        </biz-button>
+                    </div>
                 </div>
-                <div class="control">
-                    <biz-button class="is-link">
-                        <template v-if="isNew">
-                            Create
-                        </template>
-                        <template v-else>
-                            Update
-                        </template>
-                    </biz-button>
-                </div>
-            </div>
+            </slot>
         </form>
     </div>
 </template>
@@ -120,6 +126,7 @@
             isDirty: { type: Boolean, default: false },
             isEditMode: { type: Boolean, default: true },
             isNew: { type: Boolean, required: true },
+            isPageBuilderRendered: { type: Boolean, default: true },
             localeOptions: { type: Array, default:() => [] },
             modelValue: { type: Object, required: true },
             pagePreview: { type: Boolean, default: false },
@@ -167,7 +174,7 @@
 
         computed: {
             pagePreviewIsDisabled() {
-                if (!this.form.id) {
+                if (!this.form?.id) {
                     return true;
                 }
 

@@ -26,11 +26,15 @@ Route::name('admin.')->prefix('admin/')->middleware([
 ])->group(function () {
     Route::resource('spaces', SpaceController::class)
         ->except(['show']);
+
     Route::prefix('spaces')->name('spaces.')->group(function() {
         Route::post('/move-node/{current}/{parent?}', 'SpaceController@moveNode')->name('move-node');
         Route::post('/update-manager/{space}', 'SpaceController@updateManagers')->name('update-managers');
         Route::get('/search-managers', 'SpaceController@searchManagers')->name('search-managers');
     });
+
+    Route::resource('spaces.pages', PageController::class)
+        ->only(['store', 'update']);
 });
 
 Route::prefix(Localization::setLocale())
