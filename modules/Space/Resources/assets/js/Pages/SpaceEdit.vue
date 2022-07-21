@@ -84,7 +84,8 @@
                         :is-new="isPageNew"
                         :is-page-builder-rendered="false"
                         :locale-options="localeOptions"
-                        :page-preview="false"
+                        :page-preview="true"
+                        :page-preview-url="pagePreviewUrl"
                         :selected-locale="selectedLocale"
                         :status-options="statusOptions"
                         @change-locale="onChangeLocale"
@@ -212,6 +213,7 @@
                     'is_page_enabled',
                 ]),
                 selectedLocale: this.defaultLocale,
+                pagePreviewUrl: null,
             };
         },
 
@@ -219,6 +221,10 @@
             isPageNew() {
                 return !this.page?.id;
             },
+        },
+
+        mounted() {
+            this.setPagePreviewUrl(this.pageForm[this.defaultLocale]);
         },
 
         methods: {
@@ -314,6 +320,7 @@
                 }
 
                 this.pageForm = useForm(translationFrom);
+                this.setPagePreviewUrl(translationFrom[locale]);
             },
 
             submitPage() {
@@ -335,7 +342,7 @@
 
                 const options = {
                     replace: true,
-                    onStart: self.onStartLoadingOverlay,
+                    onStart: this.onStartLoadingOverlay,
                     onSuccess: (page) => {
                         const translatedPage = getTranslation(
                             this.page,
@@ -346,11 +353,18 @@
 
                         successAlert(page.props.flash.message);
                     },
-                    onFinish: self.onEndLoadingOverlay
+                    onFinish: () => {
+                        this.setTranslationForm(this.selectedLocale);
+                        this.onEndLoadingOverlay();
+                    }
                 };
 
                 this.pageForm.submit(method, url, options);
             },
+
+            setPagePreviewUrl(page) {
+                this.pagePreviewUrl = page.landing_page_space_url + `?&preview`;
+            }
         },
     };
 </script>

@@ -2,16 +2,20 @@
 
 namespace Modules\Space\Http\Controllers\Frontend;
 
-use App\Models\PageTranslation;
 use App\Services\TranslationService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Modules\Space\Entities\Page;
+use Modules\Space\Entities\PageTranslation;
+use Modules\Space\Exceptions\PageNotFoundException;
 use Modules\Space\Services\SpaceService;
 
 class SpaceController extends Controller
 {
+    use AuthorizesRequests;
+
     private $locale;
 
     public function __construct()
@@ -19,110 +23,165 @@ class SpaceController extends Controller
         $this->locale = app(TranslationService::class)->currentLanguage();
     }
 
-    public function show(PageTranslation $pageTranslation)
-    {
-        $viewName = null;
-
-        if ($pageTranslation->page->space->is_page_enabled) {
-            $this->reTranslatePage($pageTranslation);
-
-            $viewName = $this->getViewNameBasedOnPage($pageTranslation);
-        }
-
-        if (
-            !$viewName
-            && $pageTranslation->page->space->type
-        ) {
-            $viewName = $this->getViewNameBasedOnType(
-                $pageTranslation->page->space->type
-            );
-        }
-
-        $data = [
-            'space' => $pageTranslation->page->space,
-            'metaTitle' => $pageTranslation->meta_title,
-            'metaDescription' => $pageTranslation->meta_description,
-        ];
-
-        if ($viewName) {
-            return view($viewName, $data);
-        }
-
-        return view($this->viewFallback(), $data);
-    }
-
-    private function reTranslatePage(PageTranslation &$pageTranslation): void
+    public function show(Request $request, PageTranslation $pageTranslation)
     {
         $page = $pageTranslation->page;
 
-        if ($pageTranslation->page->hasTranslation($this->locale)) {
-            $pageTranslation = $page->translate($this->locale);
-        } else {
-            $pageTranslation = $page->translate(
-                app(TranslationService::class)->getDefaultLocale()
-            );
+        if ($this->canAccessPage($page)) {
+            try {
+                if ($request->exists('preview')) {
+                    return $this->showPreview($page);
+                }
+
+                return $this->showGuest($page);
+            } catch (PageNotFoundException $exception) {
+
+                return $exception->render();
+
+            } catch (\Throwable $th) {
+
+                return $this->notFoundHandler();
+
+            }
         }
+
+        return $this->notFoundHandler();
     }
 
-    private function getViewNameBasedOnPage(PageTranslation $pageTranslation): ?string
+    private function canAccessPage(Page $page): bool
     {
+        $space = $page->space;
+
+        return (
+            $space
+            && $space->is_page_enabled
+        );
+    }
+
+    private function showPreview(Page $page)
+    {
+        $this->authorize('accessPreviewPage', $page->space);
+
+        $pageTranslation = $page->translate($this->locale);
+
+        return $this->showPage($pageTranslation);
+    }
+
+    private function showGuest(Page $page)
+    {
+        $pageTranslation = $page->translate($this->locale);
+
         if (
-            $pageTranslation->status != PageTranslation::STATUS_PUBLISHED
-            && !$this->userCanAccessPage()
+            $pageTranslation
+            && $pageTranslation->status !== PageTranslation::STATUS_DRAFT
         ) {
-            return null;
+            return $this->showPage($pageTranslation);
         }
 
-        $viewName = $this->getViewName($pageTranslation->slug, $this->locale);
+        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
+        $pageTranslation = $page->translate($defaultLocale);
 
-        if ($this->isViewExists($viewName)) {
-            return $viewName;
+        if (
+            $pageTranslation
+            && $pageTranslation->status !== PageTranslation::STATUS_DRAFT
+        ) {
+            return $this->showPage($pageTranslation);
+        }
+
+        throw new PageNotFoundException();
+    }
+
+    private function showPage(PageTranslation $pageTranslation)
+    {
+        $renderResponse = $this->getViewName($pageTranslation);
+
+        if (!$renderResponse) {
+            $renderResponse = $this->getBuilder($pageTranslation);
+        }
+
+        if (!$renderResponse) {
+            $renderResponse = $this->getFallbackSpace($pageTranslation);
+        }
+
+         return $renderResponse;
+    }
+
+    private function getViewName(PageTranslation $pageTranslation)
+    {
+        $viewNameTemplates= [
+            'page-{id}-{lang}',
+            'page-{id}',
+            'page-{slug}-{lang}',
+            'page-{slug}',
+        ];
+
+        foreach ($viewNameTemplates as $template) {
+            $viewName = Str::swap([
+                '{id}' => $pageTranslation->page_id,
+                '{lang}' => $pageTranslation->locale,
+                '{slug}' => $pageTranslation->slug,
+            ], $template);
+
+            if (view()->exists($viewName)) {
+                return view($viewName, $this->getLandingPageData($pageTranslation));
+            };
         }
 
         return null;
     }
 
-    private function getViewNameBasedOnType(int $type): ?string
+    private function getBuilder(PageTranslation $pageTranslation)
+    {
+        $data = json_decode($pageTranslation->data, true);
+
+        if (
+            $data['structures']
+            && $data['entities']
+        ) {
+            // page builder code
+        }
+
+        return null;
+    }
+
+    private function getFallbackSpace(PageTranslation $pageTranslation)
     {
         $types = app(SpaceService::class)->types();
-        $type = Str::lower($types[$type]);
 
-        $viewName = $this->getViewName($type, $this->locale);
+        $viewNameTemplates= [
+            'page-{type}-{lang}',
+            'page-{type}',
+            'page-space-{lang}',
+            'page-space',
+        ];
 
-        if ($this->isViewExists($viewName)) {
-            return $viewName;
-        }
+        foreach ($viewNameTemplates as $template) {
+            $viewName = Str::swap([
+                '{type}' => $types[$pageTranslation->page->space->type] ?? null,
+                '{lang}' => $pageTranslation->locale,
+            ], $template);
 
-        $viewName = $this->getViewName($type);
-
-        if ($this->isViewExists($viewName)) {
-            return $viewName;
+            if (view()->exists($viewName)) {
+                return view($viewName, $this->getLandingPageData($pageTranslation));
+            };
         }
 
         return null;
     }
 
-    private function getViewName(string $prefix, string $locale = null): string
-    {
-        return 'page' . '-' . $prefix . ($locale ? '-' . $locale : null);
+    private function getLandingPageData(
+        PageTranslation $pageTranslation,
+        array $additionalData = []
+    ): array {
+        return array_merge([
+            'space' => $pageTranslation->page->space,
+            'metaTitle' => $pageTranslation->meta_title,
+            'metaDescription' => $pageTranslation->meta_description,
+        ], $additionalData);
     }
 
-    private function viewFallback(): string
+    private function notFoundHandler()
     {
-        return 'page-space';
-    }
-
-    private function isViewExists($viewName): bool
-    {
-        return view()->exists($viewName);
-    }
-
-    private function userCanAccessPage(): bool
-    {
-        if (Auth::check()) {
-            return Auth::user()->can('page.read');
-        } else {
-            return false;
-        }
+        return redirect()->route('homepage');
     }
 }

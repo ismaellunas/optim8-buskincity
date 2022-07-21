@@ -3,9 +3,13 @@
 namespace Modules\Space\Entities;
 
 use App\Models\Page as ModelPage;
+use Modules\Space\Entities\PageTranslation;
+use Modules\Space\Entities\Space;
 
 class Page extends ModelPage
 {
+    protected $translationModel = PageTranslation::class;
+
     public const TYPE = 'space';
 
     protected $attributes = [
@@ -20,5 +24,10 @@ class Page extends ModelPage
     public function newQuery(bool $excludeDeleted = true)
     {
         return parent::newQuery($excludeDeleted)->type(self::TYPE);
+    }
+
+    public function space()
+    {
+        return $this->hasOne(Space::class);
     }
 }
