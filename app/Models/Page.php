@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use App\Helpers\Url;
-use App\Models\PageTranslation;
+use App\Models\{
+    User,
+    PageTranslation
+};
 use App\Services\{
     PageService,
     SettingService,
@@ -31,6 +34,8 @@ class Page extends Model implements TranslatableContract
         'locale',
         'plain_text_content',
     ];
+
+    protected $translationModel = PageTranslation::class;
 
     public static function getStatusOptions(): array
     {
@@ -86,6 +91,11 @@ class Page extends Model implements TranslatableContract
                 ->orWhere('slug', 'ILIKE', '%'.$term.'%')
                 ->orWhere('plain_text_content', 'ILIKE', '%'.$term.'%');
         });
+    }
+
+    public function scopeType($query, string $type)
+    {
+        return $query->where('type', $type);
     }
 
     // Relationships:
