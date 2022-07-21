@@ -34,8 +34,8 @@ class SpaceController extends Controller
 
         $data = [
             'space' => $pageTranslation->page->space,
-            'metaTitle' => $pageTranslation->meta_title ?? null,
-            'metaDescription' => $pageTranslation->meta_description ?? null,
+            'metaTitle' => $pageTranslation->meta_title,
+            'metaDescription' => $pageTranslation->meta_description,
         ];
 
         if ($viewName) {
