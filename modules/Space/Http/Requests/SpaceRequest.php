@@ -20,7 +20,7 @@ class SpaceRequest extends FormRequest
             ->keys()
             ->all();
 
-        return [
+        $rules = [
             'name' => [
                 'required',
                 'max:128',
@@ -42,19 +42,26 @@ class SpaceRequest extends FormRequest
                 'integer',
                 Rule::in($types)
             ],
-            'parent_id' => [
+        ];
+
+        $routeName = request()->route()->getName();
+
+        if ($routeName == 'admin.spaces.store') {
+            $rules['parent_id'] = [
                 'nullable',
                 'integer',
                 function ($attribute, $value, $fail) {
-                    $user = auth()->user();
                     $space = Space::find($value);
+                    $user = auth()->user();
 
-                    if (! $user->can('manage', $space, Space::class)) {
+                    if (! $user->can('create', $space, Space::class)) {
                         $fail(__('The Parent is invalid.'));
                     }
                 },
-            ]
-        ];
+            ];
+        }
+
+        return $rules;
     }
 
     /**
