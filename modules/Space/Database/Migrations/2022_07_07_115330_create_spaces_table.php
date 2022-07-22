@@ -21,6 +21,8 @@ class CreateSpacesTable extends Migration
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
             $table->boolean('is_page_enabled')->default(false);
+            $table->tinyInteger('type')->nullable();
+
             $table->foreignId('page_id')
                 ->nullable()
                 ->constrained('pages')

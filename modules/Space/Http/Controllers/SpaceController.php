@@ -3,6 +3,9 @@
 namespace Modules\Space\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
+use Modules\Space\Entities\Page;
+use Modules\Space\Entities\PageTranslation;
+use App\Services\PageService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Space\Entities\Space;
@@ -13,16 +16,17 @@ class SpaceController extends CrudController
 {
     protected $model = Space::class;
     protected $baseRouteName = 'admin.spaces';
-    protected $pageService;
     protected $title = "Space";
 
     private $spaceService;
+    private $pageService;
 
-    public function __construct(SpaceService $spaceService)
+    public function __construct(SpaceService $spaceService, PageService $pageService)
     {
         $this->authorizeResource(Space::class, 'space');
 
         $this->spaceService = $spaceService;
+        $this->pageService = $pageService;
     }
 
     public function index(Request $request)
@@ -57,6 +61,7 @@ class SpaceController extends CrudController
         return Inertia::render('Space::SpaceCreate', $this->getData([
             'title' => 'Add New Space',
             'parentOptions' => $parentOptions,
+            'typeOptions' => $this->spaceService->typeOptions(),
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
@@ -68,15 +73,37 @@ class SpaceController extends CrudController
     {
         $space = new Space();
 
-        $space->saveFromInputs($request->all());
+        $inputs = $request->all();
 
-        $request->session()->flash('message', 'Successfully creating '.$this->title.'!');
+        $space->saveFromInputs($inputs);
+
+        $this->generateFlashMessage('Successfully creating '.$this->title.'!');
 
         return redirect()->route($this->baseRouteName.'.edit', $space->id);
     }
 
+    private function makePage(): Page
+    {
+        $page = new Page();
+
+        $pageTranslation = (new PageTranslation())->fill([
+            'title' => null,
+            'slug' => null,
+            'unique_key' => null,
+        ]);
+
+        $page->setRelation(
+            'translations',
+            collect()->push($pageTranslation)
+        );
+
+        return $page;
+    }
+
     public function edit(Space $space)
     {
+        $user = auth()->user();
+
         $spaceManagers = $space->managers->map(function ($manager) {
             return [
                 'id' => $manager->id,
@@ -84,28 +111,63 @@ class SpaceController extends CrudController
             ];
         });
 
-        $parent = null;
-
-        if ($space->parent_id) {
-            $parent = [
+        $parent = (
+            $space->parent_id
+            ? [
                 'id' => $space->parent_id,
                 'value' => $space->parent->name,
-            ];
+            ]
+            : null
+        );
+
+        $page = $space->page;
+
+        $images = [];
+
+        if (! $page) {
+            $page = $this->makePage();
+
+        } else {
+
+            $page->load('translations');
+
+            $images = $this->pageService->getImagesFromPage($page);
         }
 
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => 'Edit Space',
             'spaceRecord' => $space,
             'parentOptions' => $parent ? [$parent] : [],
+            'typeOptions' => $this->spaceService->typeOptions(),
             'spaceManagers' => $spaceManagers,
+            'can' => [
+                'media' => [
+                    'browse' => $user->can('media.browse'),
+                    'read' => $user->can('media.read'),
+                    'edit' => $user->can('media.edit'),
+                    'add' => $user->can('media.add'),
+                    'delete' => $user->can('media.delete'),
+                ],
+                'page' => [
+                    'read' => $user->can('space.read'),
+                ],
+            ],
+            'statusOptions' => Page::getStatusOptions(),
+            'page' => $page,
+            'images' => $images,
+            'maxLength' => [
+                'meta_title' => config('constants.max_length.meta_title'),
+                'meta_description' => config('constants.max_length.meta_description'),
+            ],
         ]));
     }
 
-    public function update(Request $request, Space $space)
+    public function update(SpaceRequest $request, Space $space)
     {
-        $space->name = $request->name;
-        $space->is_page_enabled = $request->is_page_enabled;
-        $space->save();
+        $inputs = $request->all();
+        $space->saveFromInputs($inputs);
+
+        $this->generateFlashMessage('Successfully updating '.$this->title.'!');
 
         return back();
     }
@@ -113,7 +175,8 @@ class SpaceController extends CrudController
     public function destroy(Request $request, Space $space)
     {
         $space->delete();
-        $request->session()->flash('message', $this->title.' deleted successfully!');
+
+        $this->generateFlashMessage($this->title.' deleted successfully!');
 
         return redirect()->route($this->baseRouteName.'.index');
     }
@@ -148,7 +211,7 @@ class SpaceController extends CrudController
     {
         $space->managers()->sync($request->managers);
 
-        $request->session()->flash('message', 'Space created successfully!');
+        $this->generateFlashMessage('Space created successfully!');
 
         return back();
     }

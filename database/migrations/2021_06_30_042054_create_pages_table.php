@@ -15,6 +15,7 @@ class CreatePagesTable extends Migration
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
+            $table->string('type', 32)->nullable();
             $table
                 ->foreignId('author_id')
                 ->nullable()
