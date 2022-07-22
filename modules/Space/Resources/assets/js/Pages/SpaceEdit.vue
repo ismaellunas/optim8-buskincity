@@ -239,7 +239,7 @@
                         successAlert(page.props.flash.message);
                     },
                     onFinish: () => {
-                        self.getSpace();
+                        self.setSpace();
                         self.onEndLoadingOverlay();
                     }
                 });
@@ -261,7 +261,7 @@
                 });
             },
 
-            getSpace() {
+            setSpace() {
                 this.space = pick(this.spaceRecord, [
                     'id',
                     'address',
