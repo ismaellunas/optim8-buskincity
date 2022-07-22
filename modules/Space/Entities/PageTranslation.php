@@ -10,6 +10,11 @@ class PageTranslation extends AppPageTranslation
 {
     protected $appends = ['landing_page_space_url'];
 
+    protected static function newFactory()
+    {
+        return \Modules\Space\Database\factories\PageTranslationFactory::new();
+    }
+
     // Override from Page::class
     public function page()
     {
