@@ -36,7 +36,7 @@ class SpaceController extends Controller
                 return $this->showGuest($page);
             } catch (PageNotFoundException $exception) {
 
-                return $exception->render();
+                return $this->notFoundHandler();
 
             } catch (\Throwable $th) {
 
@@ -60,7 +60,7 @@ class SpaceController extends Controller
 
     private function showPreview(Page $page)
     {
-        $this->authorize('accessPreviewPage', $page->space);
+        $this->authorize('update', $page->space);
 
         $pageTranslation = $page->translate($this->locale);
 

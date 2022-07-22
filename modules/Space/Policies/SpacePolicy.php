@@ -50,14 +50,6 @@ class SpacePolicy
         return $user->can('space.read');
     }
 
-    public function accessPreviewPage(User $user, Space $space)
-    {
-        return (
-            $user->can('space.read')
-            || $this->manage($user, $space)
-        );
-    }
-
     public function manage(User $user, Space $space): bool
     {
         if ($user->spaces->isEmpty()) {
