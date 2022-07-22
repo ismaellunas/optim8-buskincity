@@ -42,7 +42,7 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import SpaceForm from './SpaceForm';
     import { ref } from "vue";
-    import { success as successAlert } from '@/Libs/alert';
+    import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -95,6 +95,7 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                     },
+                    onError: () => { oopsAlert() },
                     onFinish: () => {
                         self.onEndLoadingOverlay();
                     }
