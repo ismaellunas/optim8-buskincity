@@ -18,14 +18,16 @@ class SpacePolicy
         );
     }
 
-    public function create(User $user)
+    public function create(User $user, ?Space $parentSpace = null)
     {
-        $parentId = request()->get('parent');
+        if (is_null($parentSpace)) {
+            $parentSpace = Space::find(request()->get('parent'));
+        }
 
         return (
             $user->can('space.add')
-            || ($parentId && $this->manage($user, Space::find($parentId)))
-            || (!$parentId && $user->spaces->isNotEmpty())
+            || ($parentSpace && $this->manage($user, $parentSpace))
+            || (!$parentSpace && $user->spaces->isNotEmpty())
         );
     }
 
