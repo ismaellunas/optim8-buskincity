@@ -6,6 +6,7 @@
             placeholder="e.g My Location"
             required
             maxlength="128"
+            :message="error('name')"
         />
         <biz-form-select
             v-model="space.parent_id"
@@ -39,10 +40,12 @@
         <biz-form-input
             v-model="space.latitude"
             label="Latitude"
+            :message="error('latitude')"
         />
         <biz-form-input
             v-model="space.longitude"
             label="Longitude"
+            :message="error('longitude')"
         />
         <biz-form-textarea
             v-model="space.address"
@@ -50,6 +53,7 @@
             placeholder="Address"
             rows="3"
             maxlength="500"
+            :message="error('address')"
         />
 
         <slot />
