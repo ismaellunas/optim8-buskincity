@@ -77,7 +77,7 @@ class SpaceController extends CrudController
 
         $space->saveFromInputs($inputs);
 
-        $request->session()->flash('message', 'Successfully creating '.$this->title.'!');
+        $this->generateFlashMessage('Successfully creating '.$this->title.'!');
 
         return redirect()->route($this->baseRouteName.'.edit', $space->id);
     }
@@ -167,7 +167,7 @@ class SpaceController extends CrudController
         $inputs = $request->all();
         $space->saveFromInputs($inputs);
 
-        $request->session()->flash('message', 'Successfully updating '.$this->title.'!');
+        $this->generateFlashMessage('Successfully updating '.$this->title.'!');
 
         return back();
     }
@@ -176,7 +176,7 @@ class SpaceController extends CrudController
     {
         $space->delete();
 
-        $request->session()->flash('message', $this->title.' deleted successfully!');
+        $this->generateFlashMessage($this->title.' deleted successfully!');
 
         return redirect()->route($this->baseRouteName.'.index');
     }
@@ -211,7 +211,7 @@ class SpaceController extends CrudController
     {
         $space->managers()->sync($request->managers);
 
-        $request->session()->flash('message', 'Space created successfully!');
+        $this->generateFlashMessage('Space created successfully!');
 
         return back();
     }
