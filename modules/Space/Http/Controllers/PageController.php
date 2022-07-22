@@ -3,6 +3,7 @@
 namespace Modules\Space\Http\Controllers;
 
 use App\Models\PageTranslation;
+use App\Services\MenuService;
 use App\Traits\FlashNotifiable;
 use Illuminate\Routing\Controller;
 use Modules\Space\Entities\Page;

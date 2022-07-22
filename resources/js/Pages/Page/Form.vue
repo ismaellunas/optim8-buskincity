@@ -130,6 +130,7 @@
             localeOptions: { type: Array, default:() => [] },
             modelValue: { type: Object, required: true },
             pagePreview: { type: Boolean, default: false },
+            pagePreviewUrl: { type: String, default: null },
             selectedLocale: { type: String, required: true },
             statusOptions: { type: Array, default:() => [] },
             tabActive: { type: [Boolean, null, String], default: null },
@@ -188,7 +189,7 @@
                     this.can.page.read
                     && !this.pagePreviewIsDisabled
                 ) {
-                    let showUrl = this.getShowUrl(this.selectedLocale, page);
+                    let showUrl = this.pagePreviewUrl ?? this.getShowUrl(this.selectedLocale, page);
 
                     window.open(showUrl, "_blank");
                 }

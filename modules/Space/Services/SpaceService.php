@@ -132,4 +132,26 @@ class SpaceService
                 ];
             });
     }
+
+    public function types(): array
+    {
+        return [
+            '1' => 'Country',
+            '2' => 'City',
+            '3' => 'Pitch',
+        ];
+    }
+
+    public function typeOptions(): Collection
+    {
+        $options = collect();
+
+        $options->push(['id' => null, 'value' => __('None')]);
+
+        foreach ($this->types() as $key => $type) {
+            $options->push(['id' => $key, 'value' => __($type)]);
+        }
+
+        return $options;
+    }
 }

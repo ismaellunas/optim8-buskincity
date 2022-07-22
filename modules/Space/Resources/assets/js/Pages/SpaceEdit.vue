@@ -17,6 +17,7 @@
                         <space-form
                             v-model="space"
                             :parent-options="parentOptions"
+                            :type-options="typeOptions"
                         >
                             <biz-form-select
                                 v-model="space.is_page_enabled"
@@ -83,7 +84,8 @@
                         :is-new="isPageNew"
                         :is-page-builder-rendered="false"
                         :locale-options="localeOptions"
-                        :page-preview="false"
+                        :page-preview="true"
+                        :page-preview-url="pagePreviewUrl"
                         :selected-locale="selectedLocale"
                         :status-options="statusOptions"
                         @change-locale="onChangeLocale"
@@ -162,6 +164,7 @@
         props: {
             baseRouteName: { type: String, default: '' },
             parentOptions: { type: Object, default: () => {} },
+            typeOptions: { type: Object, default: () => {} },
             spaceManagers: { type: Array, default: () => [] },
             spaceRecord: { type: Object, required: true },
             tab: { type: Number, default: 0 },
@@ -205,10 +208,12 @@
                     'latitude',
                     'longitude',
                     'name',
+                    'type',
                     'parent_id',
                     'is_page_enabled',
                 ]),
                 selectedLocale: this.defaultLocale,
+                pagePreviewUrl: null,
             };
         },
 
@@ -216,6 +221,10 @@
             isPageNew() {
                 return !this.page?.id;
             },
+        },
+
+        mounted() {
+            this.setPagePreviewUrl(this.pageForm[this.defaultLocale]);
         },
 
         methods: {
@@ -229,7 +238,10 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                     },
-                    onFinish: self.onEndLoadingOverlay
+                    onFinish: () => {
+                        self.setSpace();
+                        self.onEndLoadingOverlay();
+                    }
                 });
             },
 
@@ -247,6 +259,19 @@
                     },
                     onFinish: self.onEndLoadingOverlay
                 });
+            },
+
+            setSpace() {
+                this.space = pick(this.spaceRecord, [
+                    'id',
+                    'address',
+                    'latitude',
+                    'longitude',
+                    'name',
+                    'type',
+                    'parent_id',
+                    'is_page_enabled',
+                ]);
             },
 
             onChangeLocale(locale) {
@@ -295,6 +320,7 @@
                 }
 
                 this.pageForm = useForm(translationFrom);
+                this.setPagePreviewUrl(translationFrom[locale]);
             },
 
             submitPage() {
@@ -316,7 +342,7 @@
 
                 const options = {
                     replace: true,
-                    onStart: self.onStartLoadingOverlay,
+                    onStart: this.onStartLoadingOverlay,
                     onSuccess: (page) => {
                         const translatedPage = getTranslation(
                             this.page,
@@ -327,11 +353,18 @@
 
                         successAlert(page.props.flash.message);
                     },
-                    onFinish: self.onEndLoadingOverlay
+                    onFinish: () => {
+                        this.setTranslationForm(this.selectedLocale);
+                        this.onEndLoadingOverlay();
+                    }
                 };
 
                 this.pageForm.submit(method, url, options);
             },
+
+            setPagePreviewUrl(page) {
+                this.pagePreviewUrl = page.landing_page_space_url + `?&preview`;
+            }
         },
     };
 </script>
