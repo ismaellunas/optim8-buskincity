@@ -17,6 +17,7 @@
                         <space-form
                             v-model="space"
                             :parent-options="parentOptions"
+                            :type-options="typeOptions"
                         >
                             <biz-form-select
                                 v-model="space.is_page_enabled"
@@ -52,6 +53,7 @@
                         </space-form>
                     </form>
                 </biz-provide-inject-tab>
+
                 <biz-provide-inject-tab title="Manager">
                     <form @submit.prevent="submitManager">
                         <space-manager
@@ -69,6 +71,47 @@
                         </space-manager>
                     </form>
                 </biz-provide-inject-tab>
+
+                <biz-provide-inject-tab
+                    title="Page"
+                    :is-rendered="spaceRecord.is_page_enabled"
+                >
+                    <page-form
+                        v-model="pageForm[selectedLocale]"
+                        v-model:content-config-id="contentConfigId"
+                        :errors="errors"
+                        :is-dirty="pageForm.isDirty"
+                        :is-new="isPageNew"
+                        :is-page-builder-rendered="false"
+                        :locale-options="localeOptions"
+                        :page-preview="true"
+                        :page-preview-url="pagePreviewUrl"
+                        :selected-locale="selectedLocale"
+                        :status-options="statusOptions"
+                        @change-locale="onChangeLocale"
+                    >
+                        <template #action="pageFormProps">
+                            <div class="field is-grouped is-grouped-right">
+                                <div class="control">
+                                    <biz-button-link
+                                        class="is-link is-light"
+                                        :href="route('admin.spaces.index')"
+                                    >
+                                        Cancel
+                                    </biz-button-link>
+                                </div>
+                                <div class="control">
+                                    <biz-button
+                                        class="is-link"
+                                        @click="submitPage"
+                                    >
+                                        {{ pageFormProps.isNew ? 'Create' : 'Update' }}
+                                    </biz-button>
+                                </div>
+                            </div>
+                        </template>
+                    </page-form>
+                </biz-provide-inject-tab>
             </biz-provide-inject-tabs>
         </div>
     </app-layout>
@@ -83,12 +126,16 @@
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasTab from '@/Mixins/HasTab';
+    import PageForm from '@/Pages/Page/Form';
     import SpaceForm from './SpaceForm';
     import SpaceManager from './SpaceManager';
+    import { confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { getEmptyPageTranslation } from '@/Libs/page';
+    import { getTranslation } from '@/Libs/translation';
+    import { isBlank } from '@/Libs/utils';
     import { pick, map } from 'lodash';
     import { ref } from "vue";
-    import { success as successAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
@@ -100,6 +147,7 @@
             BizProvideInjectTabs,
             SpaceForm,
             SpaceManager,
+            PageForm,
         },
 
         mixins: [
@@ -107,36 +155,76 @@
             MixinHasTab,
         ],
 
+        provide() {
+            return {
+                can: this.can,
+            }
+        },
+
         props: {
             baseRouteName: { type: String, default: '' },
             parentOptions: { type: Object, default: () => {} },
+            typeOptions: { type: Object, default: () => {} },
             spaceManagers: { type: Array, default: () => [] },
             spaceRecord: { type: Object, required: true },
             tab: { type: Number, default: 0 },
             title: { type: String, default: "" },
+            can: { type: Object, required: true },
+            errors: { type: Object, default:() => {} },
+            images: { type: Object, required: true },
+            page: { type: Object, required: true },
+            statusOptions: { type: Array, default:() => [] },
         },
 
         setup(props) {
+            const defaultLocale = usePage().props.value.defaultLanguage;
+            const translationForm = { [defaultLocale]: {} };
+
+            let translatedPage = getTranslation(props.page, defaultLocale);
+
+            if (isBlank(translatedPage)) {
+                translatedPage = getEmptyPageTranslation();
+            }
+
+            translationForm[defaultLocale] = JSON.parse(JSON.stringify(translatedPage));
+
             return {
                 activeTab: ref(props.tab),
                 routeIndex: route(props.baseRouteName+'.index'),
                 pageEnabledOptions: { No: false, Yes: true },
+                contentConfigId: ref(''),
+                defaultLocale,
+                localeOptions: usePage().props.value.languageOptions,
+                pageForm: useForm(translationForm),
             };
         },
 
         data() {
             return {
+                managers: this.spaceManagers,
                 space: pick(this.spaceRecord, [
                     'id',
                     'address',
                     'latitude',
                     'longitude',
                     'name',
+                    'type',
                     'parent_id',
                     'is_page_enabled',
                 ]),
-                managers: this.spaceManagers,
+                selectedLocale: this.defaultLocale,
+                pagePreviewUrl: null,
             };
+        },
+
+        computed: {
+            isPageNew() {
+                return !this.page?.id;
+            },
+        },
+
+        mounted() {
+            this.setPagePreviewUrl(this.pageForm[this.defaultLocale]);
         },
 
         methods: {
@@ -150,7 +238,10 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                     },
-                    onFinish: self.onEndLoadingOverlay
+                    onFinish: () => {
+                        self.setSpace();
+                        self.onEndLoadingOverlay();
+                    }
                 });
             },
 
@@ -169,6 +260,111 @@
                     onFinish: self.onEndLoadingOverlay
                 });
             },
+
+            setSpace() {
+                this.space = pick(this.spaceRecord, [
+                    'id',
+                    'address',
+                    'latitude',
+                    'longitude',
+                    'name',
+                    'type',
+                    'parent_id',
+                    'is_page_enabled',
+                ]);
+            },
+
+            onChangeLocale(locale) {
+                if (this.isPageNew) {
+                    const locale = this
+                        .localeOptions
+                        .find(localeOption => localeOption.id == this.defaultLocale);
+
+                    oopsAlert({
+                        text: (
+                            'Please provide '
+                            +locale.name+' ('+locale.id.toUpperCase()+') translation first!'
+                        ),
+                    });
+
+                } else if (this.pageForm.isDirty) {
+
+                    confirmLeaveProgress().then((result) => {
+                        if (result.isDismissed) {
+                            return false;
+                        } else if (result.isConfirmed) {
+                            this.changeLocale(locale);
+                        }
+                    });
+
+                } else {
+
+                    this.changeLocale(locale);
+                }
+            },
+
+            changeLocale(locale) {
+                this.setTranslationForm(locale);
+                this.selectedLocale = locale;
+            },
+
+            setTranslationForm(locale) {
+                const translatedPage = getTranslation(this.page, locale);
+
+                let translationFrom = { [this.defaultLocale]: {} };
+
+                if (isBlank(translatedPage)) {
+                    translationFrom[locale] = getEmptyPageTranslation();
+                } else {
+                    translationFrom[locale] = JSON.parse(JSON.stringify(translatedPage));
+                }
+
+                this.pageForm = useForm(translationFrom);
+                this.setPagePreviewUrl(translationFrom[locale]);
+            },
+
+            submitPage() {
+                let method = null;
+                let url = null;
+
+                if (! this.page?.id) {
+                    method = 'post';
+                    url = route('admin.spaces.pages.store', this.spaceRecord.id);
+
+                } else {
+
+                    method = 'put';
+                    url = route(
+                        'admin.spaces.pages.update',
+                        [this.spaceRecord.id, this.page.id]
+                    );
+                }
+
+                const options = {
+                    replace: true,
+                    onStart: this.onStartLoadingOverlay,
+                    onSuccess: (page) => {
+                        const translatedPage = getTranslation(
+                            this.page,
+                            this.selectedLocale
+                        );
+
+                        this.pageForm[this.selectedLocale]['id'] = translatedPage.id;
+
+                        successAlert(page.props.flash.message);
+                    },
+                    onFinish: () => {
+                        this.setTranslationForm(this.selectedLocale);
+                        this.onEndLoadingOverlay();
+                    }
+                };
+
+                this.pageForm.submit(method, url, options);
+            },
+
+            setPagePreviewUrl(page) {
+                this.pagePreviewUrl = page.landing_page_space_url + `?&preview`;
+            }
         },
     };
 </script>
