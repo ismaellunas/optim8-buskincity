@@ -115,12 +115,14 @@ class SpaceController extends Controller
             'page-{slug}',
         ];
 
+        $swapText = [
+            '{id}' => $pageTranslation->page_id,
+            '{lang}' => $pageTranslation->locale,
+            '{slug}' => $pageTranslation->slug,
+        ];
+
         foreach ($viewNameTemplates as $template) {
-            $viewName = Str::swap([
-                '{id}' => $pageTranslation->page_id,
-                '{lang}' => $pageTranslation->locale,
-                '{slug}' => $pageTranslation->slug,
-            ], $template);
+            $viewName = Str::swap($swapText, $template);
 
             if (view()->exists($viewName)) {
                 return view($viewName, $this->getLandingPageData($pageTranslation));
@@ -155,11 +157,14 @@ class SpaceController extends Controller
             'page-space',
         ];
 
+        $type = $types[$pageTranslation->page->space->type] ?? null;
+        $swapText = [
+            '{type}' => $type,
+            '{lang}' => $pageTranslation->locale,
+        ];
+
         foreach ($viewNameTemplates as $template) {
-            $viewName = Str::swap([
-                '{type}' => $types[$pageTranslation->page->space->type] ?? null,
-                '{lang}' => $pageTranslation->locale,
-            ], $template);
+            $viewName = Str::swap($swapText, $template);
 
             if (view()->exists($viewName)) {
                 return view($viewName, $this->getLandingPageData($pageTranslation));
