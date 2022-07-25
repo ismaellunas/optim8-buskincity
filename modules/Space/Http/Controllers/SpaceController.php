@@ -167,8 +167,7 @@ class SpaceController extends CrudController
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
-            'countryOptions' => $this->countryService ->getPhoneCountryOptions()->all(),
-            'defaultCountry' => app(IPService::class)->getCountryCode('EN'),
+            'countryOptions' => $this->countryService->getPhoneCountryOptions()->all(),
         ]));
     }
 

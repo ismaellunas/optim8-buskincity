@@ -42,6 +42,25 @@ class SpaceRequest extends FormRequest
                 'integer',
                 Rule::in($types)
             ],
+            'contacts' => [
+                'nullable',
+            ],
+            'contacts.*.name' => [
+                'required',
+                'max:128',
+            ],
+            'contacts.*.email' => [
+                'nullable',
+                'email',
+                'max:255',
+            ],
+            'contacts.*.phone.number' => [
+                'nullable',
+                'phone:contacts.*.phone.country',
+            ],
+            'contacts.*.phone.country' => [
+                'required_with:contacts.*.phone.number',
+            ],
         ];
 
         $routeName = request()->route()->getName();

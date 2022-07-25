@@ -15,6 +15,10 @@ class Space extends Model
 
     protected $fillable = [];
 
+    protected $casts = [
+        'contacts' => 'array',
+    ];
+
     protected static function newFactory()
     {
         return \Modules\Space\Database\factories\SpaceFactory::new();
@@ -39,6 +43,7 @@ class Space extends Model
         $this->type = $inputs['type'];
         $this->parent_id = $inputs['parent_id'];
         $this->is_page_enabled = $inputs['is_page_enabled'] ?? false;
+        $this->contacts = $inputs['contacts'] ?? [];
 
         $this->save();
     }

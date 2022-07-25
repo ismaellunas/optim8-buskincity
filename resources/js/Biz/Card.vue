@@ -12,6 +12,7 @@
                 v-if="$slots.headerButton"
                 class="card-header-icon"
                 aria-label="more options"
+                type="button"
             >
                 <slot name="headerButton" />
             </button>

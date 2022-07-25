@@ -72,13 +72,6 @@
             </div>
         </div>
 
-        <biz-form-text-editor
-            v-model="space.contact"
-            label="Contact"
-            placeholder="Contact"
-            :message="error('contact')"
-        />
-
         <div class="field">
             <biz-label>Contact</biz-label>
 
@@ -93,19 +86,27 @@
 
         <div class="columns is-multiline pl-3">
             <div
-                v-for="contact, index in space.contacts"
+                v-for="(contact, index) in space.contacts"
                 :key="index"
                 class="column is-4"
             >
                 <biz-card>
+                    <template #headerTitle>
+                        {{ contact.name }}
+                    </template>
+
+                    <template #headerButton>
+                        <biz-icon
+                            :icon="icon.close"
+                            @click="removeContact(index)"
+                        />
+                    </template>
+
                     <p>
-                        Name: {{ formContact.name }}
+                        Email: {{ contact.email }}
                     </p>
                     <p>
-                        Email: {{ formContact.email }}
-                    </p>
-                    <p>
-                        Phone: {{ formContact.phone.number }}
+                        Phone: {{ contact.phone.number }}
                     </p>
                 </biz-card>
             </div>
@@ -138,14 +139,14 @@
                             label="Name"
                             required
                             maxlength="128"
-                            :message="formContact.errors.name"
+                            :message="error('name', null, contactErrors)"
                         />
 
                         <biz-form-input
                             v-model="formContact.email"
                             label="Email"
                             maxlength="255"
-                            :message="formContact.errors.email"
+                            :message="error('email', null, contactErrors)"
                         />
                     </div>
 
@@ -154,10 +155,9 @@
                             v-model="formContact.phone"
                             label="Phone"
                             :country-options="countryOptions"
-                            :default-country="defaultCountry"
                             :dropdown-max-height="180"
                             :dropdown-max-width="280"
-                            :message="formContact.errors['phone.number'] ?? ''"
+                            :message="error('phone.number', null, contactErrors)"
                         />
                     </div>
                 </div>
@@ -190,30 +190,30 @@
 </template>
 
 <script>
+    import BizButton from '@/Biz/Button';
+    import BizCard from '@/Biz/Card';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormPhone from '@/Biz/Form/Phone';
     import BizFormSelect from '@/Biz/Form/Select';
-    import BizFormTextEditor from '@/Biz/Form/TextEditor';
     import BizFormTextarea from '@/Biz/Form/Textarea';
+    import BizIcon from '@/Biz/Icon';
     import BizLabel from '@/Biz/Label';
     import BizModalCard from '@/Biz/ModalCard';
-    import BizButton from '@/Biz/Button';
-    import BizCard from '@/Biz/Card';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import icon from '@/Libs/icon-class';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         components: {
+            BizButton,
+            BizCard,
             BizFormInput,
             BizFormPhone,
             BizFormSelect,
-            BizFormTextEditor,
             BizFormTextarea,
+            BizIcon,
             BizLabel,
             BizModalCard,
-            BizButton,
-            BizCard,
         },
 
         mixins: [
@@ -238,6 +238,8 @@
             return {
                 formContact: this.initForm(),
                 isContactModalOpen: false,
+                contactErrors: {},
+                icon,
             };
         },
 
@@ -245,37 +247,38 @@
             openContactModal() {
                 this.formContact = this.initForm();
                 this.isContactModalOpen = true;
+                this.contactErrors = {};
             },
+
             closeContactModal() {
                 this.isContactModalOpen = false;
             },
 
             initForm() {
-                return useForm({
+                return {
                     name: null,
                     phone: {},
                     email: null,
-                });
+                };
             },
 
             addContact() {
                 const self = this;
+                const url = route('admin.api.spaces.contact.validate');
 
-                self.formContact.post(
-                    route('admin.api.spaces.contact.validate'),
-                    {
-                        errorBag: 'contactValidation',
-                        onSuccess: page => {
-                            self.space.contacts.push({
-                                name: formContact.name,
-                                phone: formContact.phone,
-                                email: formContact.email,
-                            })
+                axios.post(url, self.formContact)
+                    .then(() => {
+                        self.space.contacts.push(self.formContact);
 
-                            self.closeContactModal();
-                        },
-                    }
-                );
+                        self.closeContactModal();
+                    })
+                    .catch((error) => {
+                        self.contactErrors = error.response.data.errors;
+                    });
+            },
+
+            removeContact(index) {
+                this.space.contacts.splice(index, 1);
             },
         },
     };

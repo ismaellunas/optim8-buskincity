@@ -16,6 +16,7 @@
                     >
                         <space-form
                             v-model="space"
+                            :country-options="countryOptions"
                             :parent-options="parentOptions"
                             :type-options="typeOptions"
                         >
@@ -174,6 +175,7 @@
             images: { type: Object, required: true },
             page: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
+            countryOptions: { type: Array, default:() => [] },
         },
 
         setup(props) {
@@ -211,6 +213,7 @@
                     'type',
                     'parent_id',
                     'is_page_enabled',
+                    'contacts',
                 ]),
                 selectedLocale: this.defaultLocale,
                 pagePreviewUrl: null,
@@ -233,7 +236,6 @@
                 const form = useForm(self.space);
 
                 form.put(route(self.baseRouteName+'.update', self.spaceRecord.id), {
-                    replace: true,
                     onStart: self.onStartLoadingOverlay,
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
@@ -273,6 +275,7 @@
                     'type',
                     'parent_id',
                     'is_page_enabled',
+                    'contacts'
                 ]);
             },
 
