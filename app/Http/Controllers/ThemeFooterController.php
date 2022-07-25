@@ -13,11 +13,12 @@ use App\Models\{
 };
 use App\Services\{
     MenuService,
+    ModuleService,
     SettingService,
     TranslationService,
 };
-use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Space\Services\PageService as SpacePageService;
 
 class ThemeFooterController extends ThemeOptionController
 {
@@ -39,6 +40,13 @@ class ThemeFooterController extends ThemeOptionController
 
     public function edit()
     {
+        $additionalPageOptions = [];
+        $isModuleSpaceActive = app(ModuleService::class)->isModuleActive('space');
+
+        if ($isModuleSpaceActive) {
+            $additionalPageOptions = app(SpacePageService::class)->getPageOptions();
+        }
+
         return Inertia::render(
             $this->componentName.'Edit',
             $this->getData([
@@ -47,7 +55,10 @@ class ThemeFooterController extends ThemeOptionController
                 'footerMenus' => $this->menuService->getFooterMenus(
                     app(TranslationService::class)->getLocales()
                 ),
-                'pageOptions' => $this->menuService->getPageOptions(),
+                'pageOptions' => array_merge(
+                    $this->menuService->getPageOptions(),
+                    $additionalPageOptions
+                ),
                 'postOptions' => $this->menuService->getPostOptions(),
                 'settings' => $this->settingService->getFooter(),
                 'socialMediaMenus' => $this->menuService->getSocialMediaMenus(),

@@ -11,12 +11,14 @@ use App\Models\{
 use App\Services\{
     MediaService,
     MenuService,
+    ModuleService,
     SettingService,
     TranslationService,
 };
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Modules\Space\Services\PageService as SpacePageService;
 
 class ThemeHeaderController extends ThemeOptionController
 {
@@ -41,6 +43,13 @@ class ThemeHeaderController extends ThemeOptionController
 
     public function edit()
     {
+        $additionalPageOptions = [];
+        $isModuleSpaceActive = app(ModuleService::class)->isModuleActive('space');
+
+        if ($isModuleSpaceActive) {
+            $additionalPageOptions = app(SpacePageService::class)->getPageOptions();
+        }
+
         return Inertia::render(
             $this->componentName.'Edit',
             $this->getData([
@@ -50,7 +59,10 @@ class ThemeHeaderController extends ThemeOptionController
                     app(TranslationService::class)->getLocales()
                 ),
                 'logoUrl' => $this->settingService->getLogoUrl(),
-                'pageOptions' => $this->menuService->getPageOptions(),
+                'pageOptions' => array_merge(
+                    $this->menuService->getPageOptions(),
+                    $additionalPageOptions
+                ),
                 'postOptions' => $this->menuService->getPostOptions(),
                 'settings' => $this->settingService->getHeader(),
                 'typeOptions' => $this->menuService->getMenuItemTypeOptions(),
