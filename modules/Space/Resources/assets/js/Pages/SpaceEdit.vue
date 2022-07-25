@@ -238,6 +238,7 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                     },
+                    onError: () => { oopsAlert() },
                     onFinish: () => {
                         self.setSpace();
                         self.onEndLoadingOverlay();
@@ -257,6 +258,7 @@
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
                     },
+                    onError: () => { oopsAlert() },
                     onFinish: self.onEndLoadingOverlay
                 });
             },
@@ -353,6 +355,7 @@
 
                         successAlert(page.props.flash.message);
                     },
+                    onError: () => { oopsAlert() },
                     onFinish: () => {
                         this.setTranslationForm(this.selectedLocale);
                         this.onEndLoadingOverlay();
