@@ -3,11 +3,13 @@
 namespace Modules\Space\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
-use Modules\Space\Entities\Page;
-use Modules\Space\Entities\PageTranslation;
+use App\Services\CountryService;
 use App\Services\PageService;
+use App\Services\IPService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Space\Entities\Page;
+use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
 use Modules\Space\Http\Requests\SpaceRequest;
 use Modules\Space\Services\SpaceService;
@@ -21,12 +23,16 @@ class SpaceController extends CrudController
     private $spaceService;
     private $pageService;
 
-    public function __construct(SpaceService $spaceService, PageService $pageService)
-    {
+    public function __construct(
+        SpaceService $spaceService,
+        PageService $pageService,
+        CountryService $countryService
+    ) {
         $this->authorizeResource(Space::class, 'space');
 
         $this->spaceService = $spaceService;
         $this->pageService = $pageService;
+        $this->countryService = $countryService;
     }
 
     public function index(Request $request)
@@ -66,6 +72,8 @@ class SpaceController extends CrudController
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
+            'countryOptions' => $this->countryService ->getPhoneCountryOptions()->all(),
+            'defaultCountry' => app(IPService::class)->getCountryCode('US'),
         ]));
     }
 
@@ -159,6 +167,8 @@ class SpaceController extends CrudController
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
+            'countryOptions' => $this->countryService ->getPhoneCountryOptions()->all(),
+            'defaultCountry' => app(IPService::class)->getCountryCode('EN'),
         ]));
     }
 

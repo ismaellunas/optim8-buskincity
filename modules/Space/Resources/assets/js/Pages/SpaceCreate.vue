@@ -13,6 +13,8 @@
                     v-model="space"
                     :parent-options="parentOptions"
                     :type-options="typeOptions"
+                    :country-options="countryOptions"
+                    :default-country="defaultCountry"
                 />
                 <div class="field is-grouped is-grouped-right mt-4">
                     <div class="control">
@@ -62,6 +64,8 @@
             parentOptions: { type: Object, default: () => {} },
             typeOptions: { type: Object, default: () => {} },
             title: { type: String, default: "" },
+            countryOptions: { type: Array, default: () => [] },
+            defaultCountry: { type: String, default: '' },
         },
 
         setup(props) {
@@ -79,6 +83,7 @@
                     name: null,
                     parent_id: this.parentOptions[0].id ?? null,
                     type: null,
+                    contacts: [],
                 },
             };
         },

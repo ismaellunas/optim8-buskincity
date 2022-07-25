@@ -1,7 +1,5 @@
 <template>
-    <div
-        :style="{ maxHeight: maxHeight + 'px', overflowX: 'auto' }"
-    >
+    <div :style="styles">
         <slot />
     </div>
 </template>
@@ -11,7 +9,26 @@
         name: "BizDropdownScroll",
 
         props: {
-            maxHeight: { type: Number, default: 200 }
+            maxHeight: { type: Number, default: 200 },
+            maxWidth: { type: Number, default: null }
         },
-    }
+
+        computed: {
+            styles() {
+                const styles = {};
+
+                if (this.maxHeight) {
+                    styles['maxHeight'] = this.maxHeight + 'px';
+                    styles['overflowX'] = 'auto';
+                }
+
+                if (this.maxWidth) {
+                    styles['maxWidth'] = this.maxWidth + 'px';
+                    styles['overflowY'] = 'auto';
+                }
+
+                return styles;
+            },
+        },
+    };
 </script>
