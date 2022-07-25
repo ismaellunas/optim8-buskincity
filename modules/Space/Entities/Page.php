@@ -3,6 +3,7 @@
 namespace Modules\Space\Entities;
 
 use App\Models\Page as ModelPage;
+use Illuminate\Database\Eloquent\Builder;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
 
@@ -21,9 +22,9 @@ class Page extends ModelPage
         return \Modules\Space\Database\factories\PageFactory::new();
     }
 
-    public function newQuery(bool $excludeDeleted = true)
+    protected function customNewQuery($newQuery): Builder
     {
-        return parent::newQuery($excludeDeleted)->type(self::TYPE);
+        return $newQuery->type(self::TYPE);
     }
 
     public function space()

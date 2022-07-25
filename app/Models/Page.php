@@ -14,6 +14,7 @@ use App\Services\{
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,6 +37,18 @@ class Page extends Model implements TranslatableContract
     ];
 
     protected $translationModel = PageTranslation::class;
+
+    public function newQuery(bool $excludeDeleted = true)
+    {
+        return $this->customNewQuery(
+            parent::newQuery($excludeDeleted)
+        );
+    }
+
+    protected function customNewQuery($newQuery): Builder
+    {
+        return $newQuery->whereNull('type');
+    }
 
     public static function getStatusOptions(): array
     {
