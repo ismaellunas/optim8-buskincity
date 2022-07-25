@@ -5,6 +5,7 @@ namespace Modules\Space\Providers;
 use App\Models\User;
 use Illuminate\Support\ServiceProvider;
 use Modules\Space\Entities\Space;
+use Modules\Space\Services\PageService;
 use Modules\Space\Services\SpaceService;
 
 class SpaceServiceProvider extends ServiceProvider
@@ -24,6 +25,11 @@ class SpaceServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
+    public $singletons = [
+        PageService::class => PageService::class,
+    ];
+
     public function boot()
     {
         $this->registerTranslations();
