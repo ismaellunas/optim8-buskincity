@@ -112,6 +112,16 @@ class SpaceController extends CrudController
     {
         $user = auth()->user();
 
+        if (! $space->contacts) {
+            $space->contacts = [];
+        }
+
+        $space->load('translations');
+
+        if ($space->translations->isEmpty()) {
+            $space->translations['en'] = (object)[];
+        }
+
         $spaceManagers = $space->managers->map(function ($manager) {
             return [
                 'id' => $manager->id,

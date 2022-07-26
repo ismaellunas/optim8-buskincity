@@ -9,8 +9,6 @@ class ContactController extends Controller
 {
     public function apiValidateContact(ContactRequest $request)
     {
-        return [
-            'passed' => true
-        ];
+        return response('passed', 200);
     }
 }
