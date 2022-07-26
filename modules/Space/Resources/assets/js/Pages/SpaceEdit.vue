@@ -17,6 +17,7 @@
                         <space-form
                             v-model="space"
                             :country-options="countryOptions"
+                            :default-country="defaultCountry"
                             :parent-options="parentOptions"
                             :type-options="typeOptions"
                         >
@@ -33,6 +34,11 @@
                                     {{ optKey }}
                                 </option>
                             </biz-form-select>
+
+                            <space-form-translatable
+                                v-model="space"
+                                class="py-2"
+                            />
 
                             <template #action>
                                 <div class="field is-grouped is-grouped-right mt-4">
@@ -129,6 +135,7 @@
     import MixinHasTab from '@/Mixins/HasTab';
     import PageForm from '@/Pages/Page/Form';
     import SpaceForm from './SpaceForm';
+    import SpaceFormTranslatable from './SpaceFormTranslatable';
     import SpaceManager from './SpaceManager';
     import { confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';
@@ -147,6 +154,7 @@
             BizProvideInjectTab,
             BizProvideInjectTabs,
             SpaceForm,
+            SpaceFormTranslatable,
             SpaceManager,
             PageForm,
         },
@@ -164,6 +172,8 @@
 
         props: {
             baseRouteName: { type: String, default: '' },
+            countryOptions: { type: Array, default:() => [] },
+            defaultCountry: { type: String, required: true },
             parentOptions: { type: Object, default: () => {} },
             typeOptions: { type: Object, default: () => {} },
             spaceManagers: { type: Array, default: () => [] },
@@ -175,7 +185,6 @@
             images: { type: Object, required: true },
             page: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
-            countryOptions: { type: Array, default:() => [] },
         },
 
         setup(props) {
@@ -204,17 +213,7 @@
         data() {
             return {
                 managers: this.spaceManagers,
-                space: pick(this.spaceRecord, [
-                    'id',
-                    'address',
-                    'latitude',
-                    'longitude',
-                    'name',
-                    'type',
-                    'parent_id',
-                    'is_page_enabled',
-                    'contacts',
-                ]),
+                space: {},
                 selectedLocale: this.defaultLocale,
                 pagePreviewUrl: null,
             };
@@ -224,6 +223,10 @@
             isPageNew() {
                 return !this.page?.id;
             },
+        },
+
+        beforeMount() {
+            this.setSpace();
         },
 
         mounted() {
@@ -242,7 +245,6 @@
                     },
                     onError: () => { oopsAlert() },
                     onFinish: () => {
-                        self.setSpace();
                         self.onEndLoadingOverlay();
                     }
                 });
@@ -269,13 +271,14 @@
                 this.space = pick(this.spaceRecord, [
                     'id',
                     'address',
+                    'contacts',
+                    'is_page_enabled',
                     'latitude',
                     'longitude',
                     'name',
-                    'type',
                     'parent_id',
-                    'is_page_enabled',
-                    'contacts'
+                    'translations',
+                    'type',
                 ]);
             },
 

@@ -9,8 +9,13 @@ class SpaceTranslation extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
-    
+    protected $fillable = [
+        'condition',
+        'description',
+        'excerpt',
+        'surface',
+    ];
+
     protected static function newFactory()
     {
         return \Modules\Space\Database\factories\SpaceTranslationFactory::new();

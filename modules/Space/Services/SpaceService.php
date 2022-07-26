@@ -154,4 +154,41 @@ class SpaceService
 
         return $options;
     }
+
+    public function formattedManagers(Space $space): Collection
+    {
+        return $space->managers->map(function ($manager) {
+            return [
+                'id' => $manager->id,
+                'value' => $manager->fullName,
+            ];
+        });
+    }
+
+    public function editableRecord(Space $space = null): array
+    {
+        if (is_null($space)) {
+            $space = new Space();
+        }
+
+        $spaceData = $space->only(array_merge(
+            ['id'],
+            $space->getFillable()
+        ));
+
+        if (! $space->contacts) {
+            $spaceData['contacts'] = [];
+        }
+
+        $spaceData['managers'] = $space->managers;
+
+        if ($space->translations->isEmpty()) {
+            $space->translateOrNew();
+            $spaceData['translations'] = $space->getTranslationsArray();
+        } else {
+            $spaceData['translations'] = $space->getTranslationsArray();
+        }
+
+        return $spaceData;
+    }
 }

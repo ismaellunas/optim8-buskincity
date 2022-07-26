@@ -106,82 +106,21 @@
                         Email: {{ contact.email }}
                     </p>
                     <p>
-                        Phone: {{ contact.phone.number }}
+                        Phone: {{ getDial(contact.phone) }} {{ contact.phone.number }}
                     </p>
                 </biz-card>
             </div>
         </div>
 
-        <biz-modal-card
+        <space-modal-contact
             v-if="isContactModalOpen"
-            class="wrapper-modal"
-            :is-close-hidden="true"
+            v-model="formContact"
+            :contact-errors="contactErrors"
+            :country-options="countryOptions"
+            :default-country="defaultCountry"
+            @add="addContact"
             @close="closeContactModal"
-        >
-            <template #header>
-                <p class="modal-card-title">
-                    Contact
-                </p>
-
-                <biz-button
-                    aria-label="close"
-                    class="delete is-primary"
-                    type="button"
-                    @click="closeContactModal"
-                />
-            </template>
-
-            <form @submit.prevent="addContact">
-                <div class="columns">
-                    <div class="column is-half">
-                        <biz-form-input
-                            v-model="formContact.name"
-                            label="Name"
-                            required
-                            maxlength="128"
-                            :message="error('name', null, contactErrors)"
-                        />
-
-                        <biz-form-input
-                            v-model="formContact.email"
-                            label="Email"
-                            maxlength="255"
-                            :message="error('email', null, contactErrors)"
-                        />
-                    </div>
-
-                    <div class="column is-half">
-                        <biz-form-phone
-                            v-model="formContact.phone"
-                            label="Phone"
-                            :country-options="countryOptions"
-                            :dropdown-max-height="180"
-                            :dropdown-max-width="280"
-                            :message="error('phone.number', null, contactErrors)"
-                        />
-                    </div>
-                </div>
-            </form>
-
-            <template #footer>
-                <div class="buttons is-right">
-                    <a
-                        class="button is-link"
-                        type="button"
-                        @click.prevent="addContact"
-                    >
-                        Save
-                    </a>
-                    <a
-                        class="button"
-                        type="button"
-                        @click.prevent="closeContactModal"
-                    >
-                        Cancel
-                    </a>
-                </div>
-            </template>
-        </biz-modal-card>
+        />
 
         <slot />
 
@@ -190,30 +129,27 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
     import BizCard from '@/Biz/Card';
     import BizFormInput from '@/Biz/Form/Input';
-    import BizFormPhone from '@/Biz/Form/Phone';
     import BizFormSelect from '@/Biz/Form/Select';
     import BizFormTextarea from '@/Biz/Form/Textarea';
     import BizIcon from '@/Biz/Icon';
     import BizLabel from '@/Biz/Label';
-    import BizModalCard from '@/Biz/ModalCard';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import SpaceModalContact from './SpaceModalContact';
     import icon from '@/Libs/icon-class';
     import { useModelWrapper } from '@/Libs/utils';
+    import { find } from 'lodash';
 
     export default {
         components: {
-            BizButton,
             BizCard,
             BizFormInput,
-            BizFormPhone,
             BizFormSelect,
             BizFormTextarea,
             BizIcon,
             BizLabel,
-            BizModalCard,
+            SpaceModalContact,
         },
 
         mixins: [
@@ -279,6 +215,16 @@
 
             removeContact(index) {
                 this.space.contacts.splice(index, 1);
+            },
+
+            getDial(phone) {
+                if (phone.number) {
+                    const country = find(this.countryOptions, ['id', phone.country]);
+
+                    return country ? '+' + country.dial : '';
+                }
+
+                return "";
             },
         },
     };

@@ -65,7 +65,7 @@
             typeOptions: { type: Object, default: () => {} },
             title: { type: String, default: "" },
             countryOptions: { type: Array, default: () => [] },
-            defaultCountry: { type: String, default: '' },
+            defaultCountry: { type: String, required: true },
         },
 
         setup(props) {

@@ -66,14 +66,14 @@ class SpaceController extends CrudController
 
         return Inertia::render('Space::SpaceCreate', $this->getData([
             'title' => 'Add New Space',
+            'countryOptions' => $this->countryService ->getPhoneCountryOptions(),
+            'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $parentOptions,
             'typeOptions' => $this->spaceService->typeOptions(),
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
-            'countryOptions' => $this->countryService ->getPhoneCountryOptions()->all(),
-            'defaultCountry' => app(IPService::class)->getCountryCode('US'),
         ]));
     }
 
@@ -112,23 +112,6 @@ class SpaceController extends CrudController
     {
         $user = auth()->user();
 
-        if (! $space->contacts) {
-            $space->contacts = [];
-        }
-
-        $space->load('translations');
-
-        if ($space->translations->isEmpty()) {
-            $space->translations['en'] = (object)[];
-        }
-
-        $spaceManagers = $space->managers->map(function ($manager) {
-            return [
-                'id' => $manager->id,
-                'value' => $manager->fullName,
-            ];
-        });
-
         $parent = (
             $space->parent_id
             ? [
@@ -154,10 +137,12 @@ class SpaceController extends CrudController
 
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => 'Edit Space',
-            'spaceRecord' => $space,
+            'countryOptions' => $this->countryService->getPhoneCountryOptions(),
+            'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $parent ? [$parent] : [],
+            'spaceManagers' => $this->spaceService->formattedManagers($space),
+            'spaceRecord' => $this->spaceService->editableRecord($space),
             'typeOptions' => $this->spaceService->typeOptions(),
-            'spaceManagers' => $spaceManagers,
             'can' => [
                 'media' => [
                     'browse' => $user->can('media.browse'),
@@ -170,14 +155,13 @@ class SpaceController extends CrudController
                     'read' => $user->can('space.read'),
                 ],
             ],
-            'statusOptions' => Page::getStatusOptions(),
             'page' => $page,
+            'statusOptions' => Page::getStatusOptions(),
             'images' => $images,
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
-            'countryOptions' => $this->countryService->getPhoneCountryOptions()->all(),
         ]));
     }
 

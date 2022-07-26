@@ -3,17 +3,36 @@
 namespace Modules\Space\Entities;
 
 use App\Models\User;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
 use Modules\Space\Entities\Page;
 
-class Space extends Model
+class Space extends Model implements TranslatableContract
 {
     use HasFactory;
     use NodeTrait;
+    use Translatable;
 
-    protected $fillable = [];
+    public $translatedAttributes = [
+        'condition',
+        'description',
+        'excerpt',
+        'surface',
+    ];
+
+    protected $fillable = [
+        'address',
+        'contacts',
+        'is_page_enabled',
+        'latitude',
+        'longitude',
+        'name',
+        'parent_id',
+        'type',
+    ];
 
     protected $casts = [
         'contacts' => 'array',
@@ -44,6 +63,10 @@ class Space extends Model
         $this->parent_id = $inputs['parent_id'];
         $this->is_page_enabled = $inputs['is_page_enabled'] ?? false;
         $this->contacts = $inputs['contacts'] ?? [];
+
+        if (!empty($inputs['translations'])) {
+            $this->fill($inputs['translations']);
+        }
 
         $this->save();
     }
