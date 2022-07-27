@@ -23,6 +23,14 @@ class ModuleService
                     'isActive' => $request->routeIs('admin.spaces.index'),
                     'isEnabled' => $canManageSpace,
                 ],
+                [
+                    'title' => 'Settings',
+                    'link' => route('admin.spaces.settings.index'),
+                    'isActive' => $request->routeIs('admin.spaces.settings.index'),
+                    'isEnabled' => (
+                        $user->isSuperAdministrator || $user->isAdministrator
+                    ),
+                ],
             ],
         ];
     }
