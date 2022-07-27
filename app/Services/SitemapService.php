@@ -26,7 +26,10 @@ class SitemapService
         $modules = app(ModuleService::class)->getModuleListByStatus(true);
 
         foreach ($modules as $module) {
-            $classes[] = '\\Modules\\'.$module->getName().'\\Entities\\Sitemaps\\Space';
+            $className = '\\Modules\\'.$module->getName().'\\Entities\\Sitemaps\\Space';
+            if (class_exists($className)) {
+                $classes[] = $className;
+            }
         }
 
         return $classes;
