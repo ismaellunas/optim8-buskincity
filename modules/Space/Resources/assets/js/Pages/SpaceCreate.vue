@@ -86,6 +86,8 @@
                     parent_id: this.parentOptions[0].id ?? null,
                     type: null,
                     contacts: [],
+                    logo: null,
+                    cover: null,
                 },
             };
         },
