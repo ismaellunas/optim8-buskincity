@@ -29,10 +29,10 @@
             </div>
             <div class="column is-half">
                 <biz-form-select
-                    v-model="space.type"
+                    v-model="space.type_id"
                     class="is-fullwidth"
                     label="Type"
-                    :message="error('type')"
+                    :message="error('type_id')"
                 >
                     <option
                         v-for="option in typeOptions"
