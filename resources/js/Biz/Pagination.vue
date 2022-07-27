@@ -80,7 +80,7 @@
         props: {
             links: {
                 type: Array,
-                required: true,
+                default: () => [],
             },
             isAjax: {
                 type: Boolean,
