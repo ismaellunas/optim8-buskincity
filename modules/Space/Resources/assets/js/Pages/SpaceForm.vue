@@ -203,7 +203,7 @@
     import SpaceModalContact from './SpaceModalContact';
     import icon from '@/Libs/icon-class';
     import { acceptedImageTypes } from '@/Libs/defaults';
-    import { find } from 'lodash';
+    import { find, set, unset } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -313,25 +313,27 @@
             onFilePicked(event) {
                 this.logoSrc = event.target.result;
 
-                delete this.space.deleted_media.logo;
+                unset(this.space, 'deleted_media.logo');
             },
 
             onCoverFilePicked(event) {
                 this.coverSrc = event.target.result;
 
-                delete this.space.deleted_media.cover;
+                unset(this.space, 'deleted_media.cover');
             },
 
             deleteLogo() {
                 this.space.logo = null;
                 this.logoSrc = null;
-                this.space.deleted_media.logo = true;
+
+                set(this.space, 'deleted_media.logo', true);
             },
 
             deleteCover() {
                 this.space.cover = null;
                 this.coverSrc = null;
-                this.space.deleted_media.cover = true;
+
+                set(this.space, 'deleted_media.cover', true);
             }
         },
     };
