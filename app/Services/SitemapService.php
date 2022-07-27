@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Services\ModuleService;
 use App\Entities\Sitemaps\BaseSitemap;
 use App\Entities\Sitemaps\UrlTag;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -11,21 +12,40 @@ class SitemapService
 {
     public function sitemapClasses(): array
     {
-        return [
+        return array_merge([
             \App\Entities\Sitemaps\Page::class,
             \App\Entities\Sitemaps\Post::class,
             \App\Entities\Sitemaps\Category::class,
             \App\Entities\Sitemaps\Performer::class,
-        ];
+        ], $this->moduleSitemapClasses());
+    }
+
+    private function moduleSitemapClasses(): array
+    {
+        $classes = [];
+        $modules = app(ModuleService::class)->getModuleListByStatus(true);
+
+        foreach ($modules as $module) {
+            $classes[] = '\\Modules\\'.$module->getName().'\\Entities\\Sitemaps\\Space';
+        }
+
+        return $classes;
     }
 
     public static function sitemapNames(): array
     {
-        return [
+        return array_merge([
             'post',
             'page',
             'category',
             'performer',
+        ], self::moduleSitemapNames());
+    }
+
+    private static function moduleSitemapNames(): array
+    {
+        return [
+            'space'
         ];
     }
 
@@ -34,12 +54,14 @@ class SitemapService
         $urls = [];
 
         foreach ($this->sitemapClasses() as $sitemapClass) {
-            $sitemap = new $sitemapClass($locale);
+            if (class_exists($sitemapClass)) {
+                $sitemap = new $sitemapClass($locale);
 
-            $urls[] = new UrlTag(
-                $sitemap->locTag(),
-                $sitemap->optionalTags(),
-            );
+                $urls[] = new UrlTag(
+                    $sitemap->locTag(),
+                    $sitemap->optionalTags(),
+                );
+            }
         }
 
         return $urls;
@@ -50,7 +72,22 @@ class SitemapService
         $className = "\\App\\Entities\\Sitemaps\\".Str::studly($sitemapName);
 
         if (!class_exists($className)) {
-            throw new FileNotFoundException($className." is not found.");
+            return $this->moduleSitemap($sitemapName, $locale);
+        }
+
+        return new $className($locale);
+    }
+
+    private function moduleSitemap(string $sitemapName, string $locale)
+    {
+        $modules = app(ModuleService::class)->getModuleListByStatus(true);
+
+        foreach ($modules as $module) {
+            $className = '\\Modules\\'.$module->getName().'\\Entities\\Sitemaps\\'.Str::studly($sitemapName);
+
+            if (!class_exists($className)) {
+                throw new FileNotFoundException($className." is not found.");
+            }
         }
 
         return new $className($locale);
