@@ -25,6 +25,7 @@
                             :type-options="typeOptions"
                         >
                             <biz-form-select
+                                v-if="can.page.edit"
                                 v-model="space.is_page_enabled"
                                 label="Is Page Enabled ?"
                             >
@@ -64,7 +65,10 @@
                     </form>
                 </biz-provide-inject-tab>
 
-                <biz-provide-inject-tab title="Manager">
+                <biz-provide-inject-tab
+                    title="Manager"
+                    :is-rendered="isManagerRendered"
+                >
                     <form @submit.prevent="submitManager">
                         <space-manager
                             v-model="managers"
@@ -84,7 +88,7 @@
 
                 <biz-provide-inject-tab
                     title="Page"
-                    :is-rendered="spaceRecord.is_page_enabled"
+                    :is-rendered="isPageRendered"
                 >
                     <page-form
                         v-model="pageForm[selectedLocale]"
@@ -180,7 +184,6 @@
             coverUrl: { type: String, default: '' },
             defaultCountry: { type: String, required: true },
             errors: { type: Object, default:() => {} },
-            images: { type: Object, required: true },
             instructions: { type: Object, required: true },
             logoUrl: { type: String, default: '' },
             page: { type: Object, required: true },
@@ -228,6 +231,14 @@
         computed: {
             isPageNew() {
                 return !this.page?.id;
+            },
+
+            isPageRendered() {
+                return this.spaceRecord.is_page_enabled && this.can.page.edit;
+            },
+
+            isManagerRendered() {
+                return this.can.manager.edit;
             },
         },
 

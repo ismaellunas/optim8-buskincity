@@ -54,4 +54,14 @@ class ModuleService
             'cover' => self::MEDIA_TYPE_COVER,
         ];
     }
+
+    public static function maxLengths(): array
+    {
+        return [
+            'description' => 65000,
+            'surface' => 500,
+            'excerpt' => 500,
+            'condition' => 500,
+        ];
+    }
 }
