@@ -61,6 +61,22 @@ class SpaceRequest extends FormRequest
             'contacts.*.phone.country' => [
                 'required_with:contacts.*.phone.number',
             ],
+            'logo' => [
+                'nullable',
+                'file',
+                'max:'.config('constants.one_megabyte') * 5,
+                'mimes:'.implode(',', config('constants.extensions.image')),
+            ],
+            'cover' => [
+                'nullable',
+                'file',
+                'max:'.config('constants.one_megabyte') * 50,
+                'mimes:'.implode(',', config('constants.extensions.image')),
+            ],
+            'deleted_media' => [
+                'nullable',
+                'array'
+            ],
         ];
 
         $routeName = request()->route()->getName();

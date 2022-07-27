@@ -15,6 +15,7 @@
                     :type-options="typeOptions"
                     :country-options="countryOptions"
                     :default-country="defaultCountry"
+                    :instructions="instructions"
                 />
                 <div class="field is-grouped is-grouped-right mt-4">
                     <div class="control">
@@ -61,11 +62,12 @@
 
         props: {
             baseRouteName: { type: String, default: '' },
-            parentOptions: { type: Object, default: () => {} },
-            typeOptions: { type: Object, default: () => {} },
-            title: { type: String, default: "" },
             countryOptions: { type: Array, default: () => [] },
             defaultCountry: { type: String, required: true },
+            instructions: { type: Object, required: true },
+            parentOptions: { type: Object, default: () => {} },
+            title: { type: String, default: "" },
+            typeOptions: { type: Object, default: () => {} },
         },
 
         setup(props) {
