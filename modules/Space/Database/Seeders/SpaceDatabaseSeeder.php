@@ -18,5 +18,6 @@ class SpaceDatabaseSeeder extends Seeder
 
         $this->call("Modules\Space\Database\Seeders\SpaceSeeder");
         $this->call("Modules\Space\Database\Seeders\PermissionSeeder");
+        $this->call("Modules\Space\Database\Seeders\GlobalOptionSeeder");
     }
 }
