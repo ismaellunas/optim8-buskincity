@@ -22,7 +22,11 @@ class CreateSpacesTable extends Migration
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
             $table->boolean('is_page_enabled')->default(false);
-            $table->tinyInteger('type')->nullable();
+            $table->foreignId('type_id')
+                ->nullable()
+                ->constrained('global_options')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
 
             $table
                 ->foreignId('logo_media_id')

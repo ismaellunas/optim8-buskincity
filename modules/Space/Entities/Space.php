@@ -2,6 +2,7 @@
 
 namespace Modules\Space\Entities;
 
+use App\Models\GlobalOption;
 use App\Models\User;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
@@ -31,7 +32,7 @@ class Space extends Model implements TranslatableContract
         'longitude',
         'name',
         'parent_id',
-        'type',
+        'type_id',
     ];
 
     protected $casts = [
@@ -51,6 +52,11 @@ class Space extends Model implements TranslatableContract
     public function page()
     {
         return $this->belongsTo(Page::class);
+    }
+
+    public function Type()
+    {
+        return $this->belongsTo(GlobalOption::class, 'type_id');
     }
 
     public function saveFromInputs(array $inputs)
