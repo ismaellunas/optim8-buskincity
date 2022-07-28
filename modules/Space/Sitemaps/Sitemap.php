@@ -1,16 +1,15 @@
 <?php
 
-namespace Modules\Space\Entities\Sitemaps;
+namespace Modules\Space\Sitemaps;
 
 use App\Entities\Sitemaps\BaseSitemap;
 use App\Entities\Sitemaps\UrlTag;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Modules\Space\Entities\Page;
 use Modules\Space\Entities\PageTranslation;
 
-class Space extends BaseSitemap
+class Sitemap extends BaseSitemap
 {
     public function urls(): array|Collection
     {
@@ -18,9 +17,7 @@ class Space extends BaseSitemap
             ->orderBy('slug')
             ->get()
             ->map(function ($pageTranslation) {
-                if (!$pageTranslation->page->isHomePage) {
-                    return $this->createUrlTag($pageTranslation);
-                }
+                return $this->createUrlTag($pageTranslation);
             })
             ->filter();
 
@@ -55,10 +52,7 @@ class Space extends BaseSitemap
             ])
             ->with(['page'])
             ->inLanguages([$this->locale])
-            ->published()
-            ->whereHas('page', function (Builder $query) {
-                $query->type(Page::TYPE);
-            });
+            ->published();
     }
 
     private function createUrlTag(PageTranslation $pageTranslation): UrlTag
