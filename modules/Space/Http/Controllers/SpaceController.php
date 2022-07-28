@@ -2,12 +2,15 @@
 
 namespace Modules\Space\Http\Controllers;
 
+use App\Helpers\HumanReadable;
 use App\Http\Controllers\CrudController;
-use Modules\Space\Entities\Page;
-use Modules\Space\Entities\PageTranslation;
+use App\Services\CountryService;
+use App\Services\IPService;
 use App\Services\PageService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Space\Entities\Page;
+use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
 use Modules\Space\Http\Requests\SpaceRequest;
 use Modules\Space\Services\SpaceService;
@@ -21,12 +24,16 @@ class SpaceController extends CrudController
     private $spaceService;
     private $pageService;
 
-    public function __construct(SpaceService $spaceService, PageService $pageService)
-    {
+    public function __construct(
+        SpaceService $spaceService,
+        PageService $pageService,
+        CountryService $countryService
+    ) {
         $this->authorizeResource(Space::class, 'space');
 
         $this->spaceService = $spaceService;
         $this->pageService = $pageService;
+        $this->countryService = $countryService;
     }
 
     public function index(Request $request)
@@ -45,6 +52,35 @@ class SpaceController extends CrudController
         ]));
     }
 
+    private function instructions(): array
+    {
+        $extensions = implode(', ', config('constants.extensions.image'));
+
+        $imageExtensionsText = __(
+            'Accepted file extensions: :extensions.',
+            [ 'extensions' => $extensions ]
+        );
+
+        $maxFileText = function ($megaBytes) {
+            return __('Max file size: :filesize.', [
+                'filesize' => HumanReadable::bytesToHuman(
+                    ($megaBytes * config('constants.one_megabyte')) * 1024
+                )
+            ]);
+        };
+
+        return [
+            'logo' => [
+                $imageExtensionsText,
+                $maxFileText(5),
+            ],
+            'cover' => [
+                $imageExtensionsText,
+                $maxFileText(50),
+            ],
+        ];
+    }
+
     public function create(Request $request)
     {
         $user = auth()->user();
@@ -60,12 +96,15 @@ class SpaceController extends CrudController
 
         return Inertia::render('Space::SpaceCreate', $this->getData([
             'title' => 'Add New Space',
+            'countryOptions' => $this->countryService ->getPhoneCountryOptions(),
+            'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $parentOptions,
             'typeOptions' => $this->spaceService->typeOptions(),
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
+            'instructions' => $this->instructions(),
         ]));
     }
 
@@ -76,6 +115,14 @@ class SpaceController extends CrudController
         $inputs = $request->all();
 
         $space->saveFromInputs($inputs);
+
+        if ($request->hasFile('logo')) {
+            $this->spaceService->replaceLogo($space, $request->file('logo'));
+        }
+
+        if ($request->hasFile('cover')) {
+            $this->spaceService->replaceCover($space, $request->file('cover'));
+        }
 
         $this->generateFlashMessage('Successfully creating '.$this->title.'!');
 
@@ -104,13 +151,6 @@ class SpaceController extends CrudController
     {
         $user = auth()->user();
 
-        $spaceManagers = $space->managers->map(function ($manager) {
-            return [
-                'id' => $manager->id,
-                'value' => $manager->fullName,
-            ];
-        });
-
         $parent = (
             $space->parent_id
             ? [
@@ -136,10 +176,14 @@ class SpaceController extends CrudController
 
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => 'Edit Space',
-            'spaceRecord' => $space,
+            'countryOptions' => $this->countryService->getPhoneCountryOptions(),
+            'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $parent ? [$parent] : [],
+            'spaceManagers' => $this->spaceService->formattedManagers($space),
+            'spaceRecord' => $this->spaceService->editableRecord($space),
             'typeOptions' => $this->spaceService->typeOptions(),
-            'spaceManagers' => $spaceManagers,
+            'coverUrl' => $space->coverUrl,
+            'logoUrl' => $space->logoUrl,
             'can' => [
                 'media' => [
                     'browse' => $user->can('media.browse'),
@@ -152,19 +196,43 @@ class SpaceController extends CrudController
                     'read' => $user->can('space.read'),
                 ],
             ],
-            'statusOptions' => Page::getStatusOptions(),
             'page' => $page,
+            'statusOptions' => Page::getStatusOptions(),
             'images' => $images,
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
+            'instructions' => $this->instructions(),
         ]));
     }
 
     public function update(SpaceRequest $request, Space $space)
     {
         $inputs = $request->all();
+
+        if (
+            !empty($request->get('deleted_media')['logo'])
+            && !$request->hasFile('logo')
+        ) {
+            $this->spaceService->deleteLogo($space);
+        }
+
+        if (
+            !empty($request->get('deleted_media')['cover'])
+            && !$request->hasFile('cover')
+        ) {
+            $this->spaceService->deleteCover($space);
+        }
+
+        if ($request->hasFile('logo')) {
+            $this->spaceService->replaceLogo($space, $request->file('logo'));
+        }
+
+        if ($request->hasFile('cover')) {
+            $this->spaceService->replaceCover($space, $request->file('cover'));
+        }
+
         $space->saveFromInputs($inputs);
 
         $this->generateFlashMessage('Successfully updating '.$this->title.'!');

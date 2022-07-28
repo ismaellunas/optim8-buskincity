@@ -4,7 +4,7 @@ use App\Facades\Localization;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-
+use Modules\Space\Http\Controllers\ContactController;
 use Modules\Space\Http\Controllers\Frontend\SpaceController as FrontendSpaceController;
 
 /*
@@ -35,6 +35,11 @@ Route::name('admin.')->prefix('admin/')->middleware([
 
     Route::resource('spaces.pages', PageController::class)
         ->only(['store', 'update']);
+
+    Route::name('api.')->prefix('api')->group(function () {
+        Route::post('/spaces/contact', [ContactController::class, 'apiValidateContact'])
+            ->name('spaces.contact.validate');
+    });
 });
 
 Route::prefix(Localization::setLocale())

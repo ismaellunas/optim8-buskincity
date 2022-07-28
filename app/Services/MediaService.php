@@ -146,7 +146,8 @@ class MediaService
     public function upload(
         UploadedFile $file,
         string $fileName,
-        MediaStorage $mediaStorage
+        MediaStorage $mediaStorage,
+        string $folder = null
     ): Media {
         $media = new Media();
 
@@ -164,9 +165,18 @@ class MediaService
             $extension
         );
 
+        $params = [$file, $fileName, $extension];
+
+        if (! is_null($folder)) {
+            array_push($params, $folder);
+        }
+
         $this->fillMediaWithMediaAsset(
             $media,
-            $mediaStorage->upload($file, $fileName, $extension)
+            call_user_func_array(
+                [$mediaStorage, 'upload'],
+                $params
+            )
         );
         $media->save();
 

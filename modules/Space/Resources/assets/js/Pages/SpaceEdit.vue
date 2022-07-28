@@ -16,6 +16,11 @@
                     >
                         <space-form
                             v-model="space"
+                            :country-options="countryOptions"
+                            :cover-url="coverUrl"
+                            :default-country="defaultCountry"
+                            :instructions="instructions"
+                            :logo-url="logoUrl"
                             :parent-options="parentOptions"
                             :type-options="typeOptions"
                         >
@@ -32,6 +37,11 @@
                                     {{ optKey }}
                                 </option>
                             </biz-form-select>
+
+                            <space-form-translatable
+                                v-model="space"
+                                class="py-2"
+                            />
 
                             <template #action>
                                 <div class="field is-grouped is-grouped-right mt-4">
@@ -128,6 +138,7 @@
     import MixinHasTab from '@/Mixins/HasTab';
     import PageForm from '@/Pages/Page/Form';
     import SpaceForm from './SpaceForm';
+    import SpaceFormTranslatable from './SpaceFormTranslatable';
     import SpaceManager from './SpaceManager';
     import { confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';
@@ -146,6 +157,7 @@
             BizProvideInjectTab,
             BizProvideInjectTabs,
             SpaceForm,
+            SpaceFormTranslatable,
             SpaceManager,
             PageForm,
         },
@@ -163,17 +175,22 @@
 
         props: {
             baseRouteName: { type: String, default: '' },
-            parentOptions: { type: Object, default: () => {} },
-            typeOptions: { type: Object, default: () => {} },
-            spaceManagers: { type: Array, default: () => [] },
-            spaceRecord: { type: Object, required: true },
-            tab: { type: Number, default: 0 },
-            title: { type: String, default: "" },
             can: { type: Object, required: true },
+            countryOptions: { type: Array, default:() => [] },
+            coverUrl: { type: String, default: '' },
+            defaultCountry: { type: String, required: true },
             errors: { type: Object, default:() => {} },
             images: { type: Object, required: true },
+            instructions: { type: Object, required: true },
+            logoUrl: { type: String, default: '' },
             page: { type: Object, required: true },
+            parentOptions: { type: Object, default: () => {} },
+            spaceManagers: { type: Array, default: () => [] },
+            spaceRecord: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
+            tab: { type: Number, default: 0 },
+            title: { type: String, default: "" },
+            typeOptions: { type: Object, default: () => {} },
         },
 
         setup(props) {
@@ -202,16 +219,7 @@
         data() {
             return {
                 managers: this.spaceManagers,
-                space: pick(this.spaceRecord, [
-                    'id',
-                    'address',
-                    'latitude',
-                    'longitude',
-                    'name',
-                    'type',
-                    'parent_id',
-                    'is_page_enabled',
-                ]),
+                space: {},
                 selectedLocale: this.defaultLocale,
                 pagePreviewUrl: null,
             };
@@ -223,6 +231,10 @@
             },
         },
 
+        beforeMount() {
+            this.setSpace();
+        },
+
         mounted() {
             this.setPagePreviewUrl(this.pageForm[this.defaultLocale]);
         },
@@ -230,20 +242,27 @@
         methods: {
             submit() {
                 const self = this;
-                const form = useForm(self.space);
+                const url = route(self.baseRouteName+'.update', self.spaceRecord.id);
 
-                form.put(route(self.baseRouteName+'.update', self.spaceRecord.id), {
-                    replace: true,
-                    onStart: self.onStartLoadingOverlay,
-                    onSuccess: (page) => {
-                        successAlert(page.props.flash.message);
-                    },
-                    onError: () => { oopsAlert() },
-                    onFinish: () => {
-                        self.setSpace();
-                        self.onEndLoadingOverlay();
-                    }
-                });
+                self.space
+                    .transform((data) => ({
+                        ...data,
+                        _method: 'put',
+                    }))
+                    .post(url, {
+                        onStart: self.onStartLoadingOverlay,
+                        onSuccess: (page) => {
+                            self.space.deleted_media = {};
+                            self.space.logo = null;
+                            self.space.cover = null;
+
+                            successAlert(page.props.flash.message);
+                        },
+                        onError: () => { oopsAlert() },
+                        onFinish: () => {
+                            self.onEndLoadingOverlay();
+                        }
+                    });
             },
 
             submitManager() {
@@ -264,16 +283,24 @@
             },
 
             setSpace() {
-                this.space = pick(this.spaceRecord, [
+                const space = pick(this.spaceRecord, [
                     'id',
                     'address',
+                    'contacts',
+                    'is_page_enabled',
                     'latitude',
                     'longitude',
                     'name',
-                    'type',
                     'parent_id',
-                    'is_page_enabled',
+                    'translations',
+                    'type',
                 ]);
+
+                space['logo'] = null;
+                space['cover'] = null;
+                space['deleted_media'] = {};
+
+                this.space = useForm(space);
             },
 
             onChangeLocale(locale) {
@@ -367,7 +394,7 @@
 
             setPagePreviewUrl(page) {
                 this.pagePreviewUrl = page.landing_page_space_url + `?&preview`;
-            }
+            },
         },
     };
 </script>
