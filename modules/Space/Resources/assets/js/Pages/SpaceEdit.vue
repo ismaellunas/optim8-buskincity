@@ -253,6 +253,9 @@
                         onStart: self.onStartLoadingOverlay,
                         onSuccess: (page) => {
                             self.space.deleted_media = {};
+                            self.space.logo = null;
+                            self.space.cover = null;
+
                             successAlert(page.props.flash.message);
                         },
                         onError: () => { oopsAlert() },
@@ -295,7 +298,6 @@
 
                 space['logo'] = null;
                 space['cover'] = null;
-                space['_method'] = 'put';
                 space['deleted_media'] = {};
 
                 this.space = useForm(space);
