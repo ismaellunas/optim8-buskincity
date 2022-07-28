@@ -17,7 +17,10 @@
                         <space-form
                             v-model="space"
                             :country-options="countryOptions"
+                            :cover-url="coverUrl"
                             :default-country="defaultCountry"
+                            :instructions="instructions"
+                            :logo-url="logoUrl"
                             :parent-options="parentOptions"
                             :type-options="typeOptions"
                         >
@@ -172,19 +175,22 @@
 
         props: {
             baseRouteName: { type: String, default: '' },
-            countryOptions: { type: Array, default:() => [] },
-            defaultCountry: { type: String, required: true },
-            parentOptions: { type: Object, default: () => {} },
-            typeOptions: { type: Object, default: () => {} },
-            spaceManagers: { type: Array, default: () => [] },
-            spaceRecord: { type: Object, required: true },
-            tab: { type: Number, default: 0 },
-            title: { type: String, default: "" },
             can: { type: Object, required: true },
+            countryOptions: { type: Array, default:() => [] },
+            coverUrl: { type: String, default: '' },
+            defaultCountry: { type: String, required: true },
             errors: { type: Object, default:() => {} },
             images: { type: Object, required: true },
+            instructions: { type: Object, required: true },
+            logoUrl: { type: String, default: '' },
             page: { type: Object, required: true },
+            parentOptions: { type: Object, default: () => {} },
+            spaceManagers: { type: Array, default: () => [] },
+            spaceRecord: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
+            tab: { type: Number, default: 0 },
+            title: { type: String, default: "" },
+            typeOptions: { type: Object, default: () => {} },
         },
 
         setup(props) {
@@ -236,18 +242,24 @@
         methods: {
             submit() {
                 const self = this;
-                const form = useForm(self.space);
+                const url = route(self.baseRouteName+'.update', self.spaceRecord.id);
 
-                form.put(route(self.baseRouteName+'.update', self.spaceRecord.id), {
-                    onStart: self.onStartLoadingOverlay,
-                    onSuccess: (page) => {
-                        successAlert(page.props.flash.message);
-                    },
-                    onError: () => { oopsAlert() },
-                    onFinish: () => {
-                        self.onEndLoadingOverlay();
-                    }
-                });
+                self.space
+                    .transform((data) => ({
+                        ...data,
+                        _method: 'put',
+                    }))
+                    .post(url, {
+                        onStart: self.onStartLoadingOverlay,
+                        onSuccess: (page) => {
+                            self.space.deleted_media = {};
+                            successAlert(page.props.flash.message);
+                        },
+                        onError: () => { oopsAlert() },
+                        onFinish: () => {
+                            self.onEndLoadingOverlay();
+                        }
+                    });
             },
 
             submitManager() {
@@ -268,7 +280,7 @@
             },
 
             setSpace() {
-                this.space = pick(this.spaceRecord, [
+                const space = pick(this.spaceRecord, [
                     'id',
                     'address',
                     'contacts',
@@ -280,6 +292,13 @@
                     'translations',
                     'type_id',
                 ]);
+
+                space['logo'] = null;
+                space['cover'] = null;
+                space['_method'] = 'put';
+                space['deleted_media'] = {};
+
+                this.space = useForm(space);
             },
 
             onChangeLocale(locale) {
@@ -373,7 +392,7 @@
 
             setPagePreviewUrl(page) {
                 this.pagePreviewUrl = page.landing_page_space_url + `?&preview`;
-            }
+            },
         },
     };
 </script>

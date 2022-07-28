@@ -2,14 +2,27 @@
 
 namespace Modules\Space\Services;
 
+use App\Contracts\MediaStorageInterface as MediaStorage;
+use App\Models\Media;
 use App\Models\User;
 use App\Services\GlobalOptionService;
+use App\Services\MediaService;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Modules\Space\Entities\Space;
+use Modules\Space\ModuleService;
 
 class SpaceService
 {
+    private $mediaService;
+
+    public function __construct(MediaService $mediaService)
+    {
+        $this->mediaService = $mediaService;
+    }
+
     private function filterRootIds(array $ids)
     {
         $spaceIds = collect($ids);
@@ -189,5 +202,109 @@ class SpaceService
         }
 
         return $spaceData;
+    }
+
+    public function upload(
+        UploadedFile $file,
+        string $fileName,
+        string $mediaType = null,
+    ): Media {
+        $folder = ModuleService::mediaFolder();
+
+        $folderPrefix = !app()->environment('production')
+            ? config('app.env')
+            : null;
+
+        if ($folderPrefix) {
+            $folder = $folderPrefix.'_'.$folder;
+        }
+
+        $media = $this->mediaService->upload(
+            $file,
+            $fileName,
+            app(MediaStorage::class),
+            $folder
+        );
+
+        $media->type = $mediaType;
+        $media->save();
+
+        return $media;
+    }
+
+    private function uploadLogo(UploadedFile $file): Media
+    {
+        return $this->upload(
+            $file,
+            'logo_'.Str::random(10),
+            ModuleService::MEDIA_TYPE_LOGO
+        );
+    }
+
+    private function uploadCover(UploadedFile $file): Media
+    {
+        return $this->upload(
+            $file,
+            'cover_'.Str::random(10),
+            ModuleService::MEDIA_TYPE_COVER
+        );
+    }
+
+    private function deleteLogoFromStorage(Space $space)
+    {
+        $media = $space->logo;
+
+        if ($media) {
+            $this->mediaService->destroy($media, app(MediaStorage::class));
+        }
+    }
+
+    private function deleteCoverFromStorage(Space $space)
+    {
+        $media = $space->cover;
+
+        if ($media) {
+            $this->mediaService->destroy($media, app(MediaStorage::class));
+        }
+    }
+
+    public function replaceLogo(Space $space, UploadedFile $file)
+    {
+        $media = $this->uploadLogo($file);
+
+        $space->media()->save($media);
+
+        $this->deleteLogoFromStorage($space);
+
+        $space->logo_media_id = $media->id;
+        $space->save();
+    }
+
+    public function replaceCover(Space $space, UploadedFile $file)
+    {
+        $media = $this->uploadCover($file);
+
+        $space->media()->save($media);
+
+        $this->deleteCoverFromStorage($space);
+
+        $space->cover_media_id = $media->id;
+        $space->save();
+    }
+
+    public function deleteLogo(Space $space)
+    {
+        $this->deleteLogoFromStorage($space);
+
+        $space->logo_media_id = null;
+        $space->save();
+    }
+
+    public function deleteCover(Space $space)
+    {
+        $this->deleteCoverFromStorage($space);
+
+        $space->cover_media_id = null;
+        $space->save();
     }
 }

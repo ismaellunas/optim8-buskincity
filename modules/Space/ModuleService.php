@@ -7,6 +7,9 @@ use Modules\Space\Entities\Space;
 
 class ModuleService
 {
+    const MEDIA_TYPE_LOGO = 11;
+    const MEDIA_TYPE_COVER = 12;
+
     public static function adminMenus(Request $request): array
     {
         $user = $request->user();
@@ -44,6 +47,19 @@ class ModuleService
             'space.edit',
             'space.add',
             'space.delete',
+        ];
+    }
+
+    public static function mediaFolder(): string
+    {
+        return 'space';
+    }
+
+    public static function mediaTypes(): array
+    {
+        return [
+            'logo' => self::MEDIA_TYPE_LOGO,
+            'cover' => self::MEDIA_TYPE_COVER,
         ];
     }
 }

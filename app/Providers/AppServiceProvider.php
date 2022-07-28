@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
-use App\Entities\LifetimeCookie;
+use App\Contracts\MediaStorageInterface;
+use App\Entities\{
+    CloudinaryStorage,
+    LifetimeCookie,
+};
 use App\Entities\Caches\{
     CountryCache,
     MenuCache,
@@ -56,6 +60,8 @@ class AppServiceProvider extends ServiceProvider
         StripeSettingService::class => StripeSettingService::class,
         TranslationService::class => TranslationService::class,
         WidgetService::class => WidgetService::class,
+
+        MediaStorageInterface::class => CloudinaryStorage::class,
     ];
 
     /**

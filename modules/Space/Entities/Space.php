@@ -4,6 +4,7 @@ namespace Modules\Space\Entities;
 
 use App\Models\GlobalOption;
 use App\Models\User;
+use App\Models\Media;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -57,6 +58,31 @@ class Space extends Model implements TranslatableContract
     public function Type()
     {
         return $this->belongsTo(GlobalOption::class, 'type_id');
+    }
+
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'medially');
+    }
+
+    public function logo()
+    {
+        return $this->hasOne(Media::class, 'id', 'logo_media_id');
+    }
+
+    public function cover()
+    {
+        return $this->hasOne(Media::class, 'id', 'cover_media_id');
+    }
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        return $this->logo ? $this->logo->file_url : null;
+    }
+
+    public function getCoverUrlAttribute(): ?string
+    {
+        return $this->cover ? $this->cover->file_url : null;
     }
 
     public function saveFromInputs(array $inputs)

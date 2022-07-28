@@ -72,16 +72,77 @@
             </div>
         </div>
 
-        <div class="field">
-            <biz-label>Contact</biz-label>
+        <div class="columns">
+            <div class="column is-half">
+                <div class="field">
+                    <biz-label>Logo</biz-label>
 
-            <button
-                class="button"
+                    <biz-image
+                        v-if="logoDisplay"
+                        :src="logoDisplay"
+                        :img-style="{'max-width': '300px', 'max-height': '300px'}"
+                    />
+
+                    <biz-button-icon
+                        v-if="logoDisplay"
+                        class="is-small is-danger"
+                        type="button"
+                        :icon="icon.remove"
+                        @click="deleteLogo"
+                    >
+                        <span>Delete</span>
+                    </biz-button-icon>
+
+                    <biz-form-file
+                        v-model="space.logo"
+                        :is-name-displayed="false"
+                        :message="error('logo')"
+                        :notes="instructions.logo"
+                        @on-file-picked="onFilePicked"
+                    />
+                </div>
+            </div>
+            <div class="column is-half">
+                <div class="field">
+                    <biz-label>Cover</biz-label>
+
+                    <biz-image
+                        v-if="coverDisplay"
+                        :src="coverDisplay"
+                        :img-style="{'max-width': '600px', 'max-height': '400px'}"
+                    />
+
+                    <biz-button-icon
+                        v-if="coverDisplay"
+                        class="is-small is-danger"
+                        type="button"
+                        :icon="icon.remove"
+                        @click="deleteCover"
+                    >
+                        <span>Delete</span>
+                    </biz-button-icon>
+
+                    <biz-form-file
+                        v-model="space.cover"
+                        :is-name-displayed="false"
+                        :message="error('cover')"
+                        :notes="instructions.cover"
+                        @on-file-picked="onCoverFilePicked"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <biz-label>Contacts</biz-label>
+
+            <biz-button-icon
+                :icon="icon.add"
                 type="button"
-                @click.prevent="openContactModal"
+                @click="openContactModal"
             >
-                Add Contact
-            </button>
+                <span>Add Contact</span>
+            </biz-button-icon>
         </div>
 
         <div class="columns is-multiline pl-3">
@@ -129,25 +190,32 @@
 </template>
 
 <script>
+    import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizCard from '@/Biz/Card';
+    import BizFormFile from '@/Biz/Form/File';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormSelect from '@/Biz/Form/Select';
     import BizFormTextarea from '@/Biz/Form/Textarea';
     import BizIcon from '@/Biz/Icon';
+    import BizImage from '@/Biz/Image';
     import BizLabel from '@/Biz/Label';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import SpaceModalContact from './SpaceModalContact';
     import icon from '@/Libs/icon-class';
+    import { acceptedImageTypes } from '@/Libs/defaults';
+    import { find, set, unset } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
-    import { find } from 'lodash';
 
     export default {
         components: {
+            BizButtonIcon,
             BizCard,
+            BizFormFile,
             BizFormInput,
             BizFormSelect,
             BizFormTextarea,
             BizIcon,
+            BizImage,
             BizLabel,
             SpaceModalContact,
         },
@@ -158,10 +226,13 @@
 
         props: {
             modelValue: { type: Object, required: true },
+            countryOptions: { type: Array, default: () => [] },
+            coverUrl: { type: [String, null], default: '' },
+            defaultCountry: { type: String, default: '' },
+            instructions: { type: Object, default: () => {} },
+            logoUrl: { type: [String, null], default: '' },
             parentOptions: { type: Object, required: true },
             typeOptions: { type: Object, required: true },
-            countryOptions: { type: Array, default: () => [] },
-            defaultCountry: { type: String, default: '' },
         },
 
         setup(props, { emit }) {
@@ -176,7 +247,19 @@
                 isContactModalOpen: false,
                 contactErrors: {},
                 icon,
+                logoSrc: this.logoUrl,
+                coverSrc: this.coverUrl,
             };
+        },
+
+        computed: {
+            logoDisplay() {
+                return this.logoSrc ?? null;
+            },
+
+            coverDisplay() {
+                return this.coverSrc ?? null;
+            },
         },
 
         methods: {
@@ -226,6 +309,32 @@
 
                 return "";
             },
+
+            onFilePicked(event) {
+                this.logoSrc = event.target.result;
+
+                unset(this.space, 'deleted_media.logo');
+            },
+
+            onCoverFilePicked(event) {
+                this.coverSrc = event.target.result;
+
+                unset(this.space, 'deleted_media.cover');
+            },
+
+            deleteLogo() {
+                this.space.logo = null;
+                this.logoSrc = null;
+
+                set(this.space, 'deleted_media.logo', true);
+            },
+
+            deleteCover() {
+                this.space.cover = null;
+                this.coverSrc = null;
+
+                set(this.space, 'deleted_media.cover', true);
+            }
         },
     };
 </script>
