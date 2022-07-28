@@ -26,7 +26,7 @@ class SitemapService
         $modules = app(ModuleService::class)->getModuleListByStatus(true);
 
         foreach ($modules as $module) {
-            $className = '\\Modules\\'.$module->getName().'\\Entities\\Sitemaps\\Space';
+            $className = '\\Modules\\'.$module->getName().'\\Sitemaps\\Sitemap';
             if (class_exists($className)) {
                 $classes[] = $className;
             }
@@ -73,18 +73,18 @@ class SitemapService
         $className = "\\App\\Entities\\Sitemaps\\".Str::studly($sitemapName);
 
         if (!class_exists($className)) {
-            return $this->moduleSitemap($sitemapName, $locale);
+            return $this->moduleSitemap($locale);
         }
 
         return new $className($locale);
     }
 
-    private function moduleSitemap(string $sitemapName, string $locale)
+    private function moduleSitemap(string $locale)
     {
         $modules = app(ModuleService::class)->getModuleListByStatus(true);
 
         foreach ($modules as $module) {
-            $className = '\\Modules\\'.$module->getName().'\\Entities\\Sitemaps\\'.Str::studly($sitemapName);
+            $className = '\\Modules\\'.$module->getName().'\\Sitemaps\\Sitemap';
 
             if (!class_exists($className)) {
                 throw new FileNotFoundException($className." is not found.");
