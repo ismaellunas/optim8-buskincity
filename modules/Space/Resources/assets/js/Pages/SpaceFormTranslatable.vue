@@ -27,7 +27,7 @@
                 label="Description"
                 placeholder="Description"
                 rows="3"
-                maxlength="1000"
+                :maxlength="maxLength.description"
             />
 
             <biz-form-textarea
@@ -35,7 +35,7 @@
                 label="Condition"
                 placeholder="Condition"
                 rows="3"
-                maxlength="500"
+                :maxlength="maxLength.condition"
                 :message="error('condition')"
             />
 
@@ -44,7 +44,7 @@
                 label="Surface"
                 placeholder="Surface"
                 rows="3"
-                maxlength="500"
+                :maxlength="maxLength.surface"
                 :message="error('surface')"
             />
         </div>
@@ -90,6 +90,7 @@
             }
 
             return {
+                maxLength: usePage().props.value.maxLength,
                 localeOptions: localeOptions,
                 selectedLocale: ref(selectedLocale),
                 space: useModelWrapper(props, emit),

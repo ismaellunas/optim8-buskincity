@@ -49,7 +49,7 @@ class SpacePolicy
 
     public function changeParent(User $user)
     {
-        return $user->can('space.read');
+        return $user->isAdministrator || $user->isSuperAdministrator;
     }
 
     public function manage(User $user, Space $space): bool
@@ -64,5 +64,15 @@ class SpacePolicy
                 return $currentSpace->isAncestorOf($space);
             })
         );
+    }
+
+    public function managePage(User $user)
+    {
+        return $user->isAdministrator || $user->isSuperAdministrator;
+    }
+
+    public function manageManager(User $user)
+    {
+        return $user->isAdministrator || $user->isSuperAdministrator;
     }
 }
