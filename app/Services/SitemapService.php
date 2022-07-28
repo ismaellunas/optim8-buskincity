@@ -57,14 +57,12 @@ class SitemapService
         $urls = [];
 
         foreach ($this->sitemapClasses() as $sitemapClass) {
-            if (class_exists($sitemapClass)) {
-                $sitemap = new $sitemapClass($locale);
+            $sitemap = new $sitemapClass($locale);
 
-                $urls[] = new UrlTag(
-                    $sitemap->locTag(),
-                    $sitemap->optionalTags(),
-                );
-            }
+            $urls[] = new UrlTag(
+                $sitemap->locTag(),
+                $sitemap->optionalTags(),
+            );
         }
 
         return $urls;
