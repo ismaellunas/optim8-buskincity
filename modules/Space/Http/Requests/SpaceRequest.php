@@ -18,7 +18,9 @@ class SpaceRequest extends FormRequest
     public function rules()
     {
         $types = collect(app(SpaceService::class)->types())
-            ->keys()
+            ->map(function ($type) {
+                return $type->id;
+            })
             ->all();
 
         $maxLengths = ModuleService::maxLengths();
@@ -40,7 +42,7 @@ class SpaceRequest extends FormRequest
                 'nullable',
                 'max:500',
             ],
-            'type' => [
+            'type_id' => [
                 'nullable',
                 'integer',
                 Rule::in($types)

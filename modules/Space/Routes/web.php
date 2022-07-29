@@ -31,6 +31,14 @@ Route::name('admin.')->prefix('admin/')->middleware([
         Route::post('/move-node/{current}/{parent?}', 'SpaceController@moveNode')->name('move-node');
         Route::post('/update-manager/{space}', 'SpaceController@updateManagers')->name('update-managers');
         Route::get('/search-managers', 'SpaceController@searchManagers')->name('search-managers');
+
+        Route::prefix('settings')->name('settings.')->group(function() {
+            Route::get('/', 'SettingController@index')->name('index');
+
+            Route::get('space-types/records', 'SpaceTypeController@records')->name('space-types.records');
+            Route::resource('space-types', SpaceTypeController::class)
+                ->only(['store', 'update', 'destroy']);
+        });
     });
 
     Route::resource('spaces.pages', PageController::class)
@@ -39,6 +47,8 @@ Route::name('admin.')->prefix('admin/')->middleware([
     Route::name('api.')->prefix('api')->group(function () {
         Route::post('/spaces/contact', [ContactController::class, 'apiValidateContact'])
             ->name('spaces.contact.validate');
+        Route::post('/spaces/settings/space-types', 'SpaceTypeController@apiValidateSpaceType')
+            ->name('spaces.settings.space-types.validate');
     });
 });
 

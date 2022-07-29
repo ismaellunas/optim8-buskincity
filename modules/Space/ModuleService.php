@@ -2,6 +2,7 @@
 
 namespace Modules\Space;
 
+use App\Models\GlobalOption;
 use Illuminate\Http\Request;
 use Modules\Space\Entities\Space;
 
@@ -25,6 +26,12 @@ class ModuleService
                     'link' => route('admin.spaces.index'),
                     'isActive' => $request->routeIs('admin.spaces.index'),
                     'isEnabled' => $canManageSpace,
+                ],
+                [
+                    'title' => 'Settings',
+                    'link' => route('admin.spaces.settings.index'),
+                    'isActive' => $request->routeIs('admin.spaces.settings.index'),
+                    'isEnabled' => $user->can('viewAny', GlobalOption::class),
                 ],
             ],
         ];

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\{
     Category,
     ConnectedAccount,
+    GlobalOption,
     Media,
     Page,
     Post,
@@ -14,6 +15,7 @@ use App\Models\{
 use App\Policies\{
     CategoryPolicy,
     ConnectedAccountPolicy,
+    GlobalOptionPolicy,
     MediaPolicy,
     PagePolicy,
     PostPolicy,
@@ -35,6 +37,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Category::class => CategoryPolicy::class,
         ConnectedAccount::class => ConnectedAccountPolicy::class,
+        GlobalOption::class => GlobalOptionPolicy::class,
         Media::class => MediaPolicy::class,
         Page::class => PagePolicy::class,
         Post::class => PostPolicy::class,
