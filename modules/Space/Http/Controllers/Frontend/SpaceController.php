@@ -162,7 +162,7 @@ class SpaceController extends Controller
             'page-space',
         ];
 
-        $type = Str::lower($space->type->name ?? null);
+        $type = Str::of($space->type->name ?? null)->lower()->snake();
         $swapText = [
             '{type}' => $type,
             '{lang}' => $pageTranslation->locale,
