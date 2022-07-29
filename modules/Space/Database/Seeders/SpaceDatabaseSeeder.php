@@ -16,8 +16,8 @@ class SpaceDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
+        $this->call("Modules\Space\Database\Seeders\GlobalOptionSeeder");
         $this->call("Modules\Space\Database\Seeders\SpaceSeeder");
         $this->call("Modules\Space\Database\Seeders\PermissionSeeder");
-        $this->call("Modules\Space\Database\Seeders\GlobalOptionSeeder");
     }
 }
