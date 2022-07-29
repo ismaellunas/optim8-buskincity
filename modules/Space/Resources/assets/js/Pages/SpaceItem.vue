@@ -4,7 +4,7 @@
             <div class="level-left">
                 <span class="panel-icon handle is-moveable">
                     <i
-                        class="fas fa-bars"
+                        class="fa-solid fa-bars"
                         aria-hidden="true"
                     />
                 </span>
@@ -13,7 +13,7 @@
                     class="panel-icon"
                 >
                     <i
-                        class="fas fa-caret-down"
+                        class="fa-solid fa-caret-down"
                         aria-hidden="true"
                     />
                 </span>
@@ -29,7 +29,7 @@
                 >
                     <biz-icon
                         class="is-small"
-                        icon="fa-solid fa-plus"
+                        :icon="icon.add"
                     />
                 </biz-button-link>
 
@@ -39,14 +39,14 @@
                 >
                     <biz-icon
                         class="is-small"
-                        icon="fa-solid fa-pen"
+                        :icon="icon.edit"
                     />
                 </biz-button-link>
 
                 <biz-button-icon
                     class="is-white ml-1"
                     type="button"
-                    icon="fa-solid fa-trash-can"
+                    :icon="icon.remove"
                     @click="$emit('delete-row', space)"
                 />
             </div>
@@ -58,6 +58,7 @@
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizIcon from '@/Biz/Icon';
+    import icon from '@/Libs/icon-class';
 
     export default {
         name: 'SpaceItem',
@@ -76,5 +77,11 @@
         emits: [
             'delete-row',
         ],
+
+        data() {
+            return {
+                icon,
+            };
+        },
     };
 </script>

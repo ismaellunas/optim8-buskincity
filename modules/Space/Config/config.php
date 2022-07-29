@@ -1,5 +1,7 @@
 <?php
 
 return [
-    'name' => 'Space'
+    'name' => 'Space',
+
+    'type_option' => 'space_type',
 ];

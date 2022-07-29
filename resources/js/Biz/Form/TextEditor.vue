@@ -7,11 +7,11 @@
                 v-model="editorValue"
                 :disabled="disabled"
                 :placeholder="placeholder"
-                :config="config"
+                :config="config ?? editorConfig"
             />
         </div>
 
-        <biz-input-error :message="message"/>
+        <biz-input-error :message="message" />
     </div>
 </template>
 
@@ -23,27 +23,36 @@
 
     export default {
         name: 'BizFormTextEditor',
+
         components: {
             BizInputError,
             BizLabel,
             BizTextEditor,
         },
+
+        props: {
+            modelValue: { type: [String, null], required: true },
+            config: { type: Object, default: () => {} },
+            disabled: { type: Boolean, default: false },
+            label: { type: String, default: "" },
+            message: { type: Object, default: () => {} },
+            placeholder: { type: String, default: ""},
+        },
+
         emits: ['update:modelValue'],
+
         setup(props, { emit }) {
             return {
                 editorValue: useModelWrapper(props, emit),
             };
         },
-        props: {
-            config: Object,
-            disabled: {
-                type: Boolean,
-                default: false
-            },
-            label: String,
-            message: Object,
-            modelValue: {},
-            placeholder: String,
-        }
+
+        data() {
+            return {
+                editorConfig: {
+                    inline: false,
+                },
+            };
+        },
     };
 </script>

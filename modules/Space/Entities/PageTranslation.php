@@ -3,6 +3,7 @@
 namespace Modules\Space\Entities;
 
 use App\Models\PageTranslation as AppPageTranslation;
+use Illuminate\Database\Eloquent\Builder;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Space\Entities\Page;
 
@@ -15,7 +16,18 @@ class PageTranslation extends AppPageTranslation
         return \Modules\Space\Database\factories\PageTranslationFactory::new();
     }
 
-    // Override from Page::class
+    protected static function booted()
+    {
+        static::addGlobalScope('spacePageTranslation', function (Builder $query) {
+            $query->whereHas('page', function (Builder $query) {
+                $query->type(Page::TYPE);
+            });
+        });
+    }
+
+    /**
+     * @override
+     */
     public function page()
     {
         return $this->belongsTo(Page::class);
