@@ -15,10 +15,12 @@ class CreateGlobalOptionsTable extends Migration
     {
         Schema::create('global_options', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 32);
+            $table->string('name', 128);
             $table->string('key', 255);
             $table->string('default_value', 255)->nullable();
             $table->timestamps();
+
+            $table->index('key');
         });
     }
 
