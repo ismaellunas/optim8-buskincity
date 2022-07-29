@@ -12,7 +12,10 @@
                     </span>
                 </template>
 
-                <biz-dropdown-scroll :max-height="350">
+                <biz-dropdown-scroll
+                    :max-height="dropdownMaxHeight"
+                    :max-width="dropdownMaxWidth"
+                >
                     <biz-dropdown-item
                         v-for="country in filteredCountries"
                         :key="country.id"
@@ -63,6 +66,8 @@
             modelValue: { type: [Object], default: undefined },
             countryOptions: { type: Array, required: true },
             defaultCountry: { type: String, default: 'US' },
+            dropdownMaxHeight: { type: [Number], default: 350 },
+            dropdownMaxWidth: { type: [Number], default: null },
         },
 
         setup(props, {emit}) {

@@ -1,3 +1,5 @@
+@inject('pageSpace', 'Modules\Space\Services\PageSpaceService')
+
 <x-layouts.master>
     <x-slot name="title">
         {{ trim($metaTitle ?? $space->name). ' | ' .config('app.name') }}
@@ -7,71 +9,117 @@
         {{ $metaDescription ?? $space->name }}
     </x-slot>
 
-    <section class="section theme-font">
-        <div
-            id="main-container"
-            class="container mt-4"
-        >
-            <section class="hero is-medium is-info hero-image">
-                <div class="hero-body">
-                    <div class="columns">
-                        <div class="column">
-                            <h1 class="title is-size-1">
-                                Organize a Lively Event in {{ ucwords($space->name) }}
-                            </h1>
-                            <p class="subtitle">
-                                Are you organizing live entertainment in your city? BuskinCity is the place where all the talented street performers in Europe unite.
-                            </p>
-
-                            <a href="#" class="button is-primary">Book Now</a>
-                        </div>
-                        <div class="column"></div>
+    <div class="b752-public-profile section is-small">
+        <div class="container">
+            <div class="columns is-multiline is-centered">
+                <div class="column is-12">
+                    <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $space->coverUrl }});">
+                        <div class="hero-body"></div>
                     </div>
                 </div>
-            </section>
+                <div class="column is-11">
+                    <figure class="profile-picture image is-250x250">
+                        <img src="{{ $space->logoUrl ?? $pageSpace->defaultLogoUrl() }}" alt="{{ $space->name }}" class="is-rounded">
+                    </figure>
 
-            <div class="columns mt-6">
-                <div class="column is-two-fifths">
-                    <h3 class="title is-size-3">
-                        Find Gifted Street<br>Performers in {{ ucwords($space->name) }}
-                    </h3>
-                </div>
-                <div class="column">
-                    <p>
-                        <b>I'm in space page (Fallback)</b><br>
-                        The best {{ ucwords($space->name) }} street performers such as {{ ucwords($space->name) }} dancers to {{ ucwords($space->name) }} street musicians come together in BuskinCity looking for a worldwide stage.
-                    </p>
+                    <h1 class="title is-2 mt-5 mb-2">{{ ucwords($space->name) }}</h1>
+                    <p class="is-size-7">{{ $space->address }}</p>
+
+                    <div class="columns is-multiline mt-3">
+                        <div class="column">
+                            <div class="content">
+                                <p>{{ $space->description }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h1 class="title is-2 mt-5 mb-2">Contact</h1>
+
+                    <div class="columns is-multiline mt-3">
+                        @if ($space->contacts)
+                            @foreach ($space->contacts as $contact)
+                                <div class="column is-4">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <i class="fa-solid fa-user"></i> : {{ $contact['name'] }}<br>
+                                            <i class="fa-solid fa-phone"></i> : {{ $pageSpace->getPhoneNumberFormat($contact['phone']) }}<br>
+                                            <i class="fa-solid fa-envelope"></i> : {{ $contact['email'] ?? '-' }}
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="column">
+                                <p>No contact</p>
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="columns is-multiline mt-3">
+                        @foreach ($pageSpace->getChildren() as $spaceChild)
+                            @if ($loop->iteration % 2 == 0)
+                                <div class="column is-12 pt-6 pb-6">
+                                    <div class="columns">
+                                        <div class="column">
+                                            <figure class="image is-250x250 is-pulled-left">
+                                                <img src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}" alt="{{ $spaceChild->name }}" class="is-rounded">
+                                            </figure>
+                                        </div>
+                                        <div class="column">
+                                            <h4 class="title is-4 has-text-primary">
+                                                {{ ucwords($spaceChild->name) }}
+                                            </h4>
+                                            <b>Address: </b>{{ $spaceChild->address ?? '-' }}<br>
+                                            <b>Surface: </b>{{ $spaceChild->surface ?? '-' }}<br>
+                                            <b>Condition: </b>{{ $spaceChild->condition ?? '-' }}<br>
+
+                                            <h6 class="title is-6 mt-4 mb-1 has-text-primary">
+                                                Description
+                                            </h6>
+                                            <p>
+                                                {{ $spaceChild->description ?? '-' }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="column is-12 pt-6 pb-6">
+                                    <div class="columns">
+                                        <div class="column">
+                                            <h4 class="title is-4 has-text-primary">
+                                                {{ ucwords($spaceChild->name) }}
+                                            </h4>
+                                            <b>Address: </b>{{ $spaceChild->address ?? '-' }}<br>
+                                            <b>Surface: </b>{{ $spaceChild->surface ?? '-' }}<br>
+                                            <b>Condition: </b>{{ $spaceChild->condition ?? '-' }}<br>
+
+                                            <h6 class="title is-6 mt-4 mb-1 has-text-primary">
+                                                Description
+                                            </h6>
+                                            <p>
+                                                {{ $spaceChild->description ?? '-' }}
+                                            </p>
+                                        </div>
+                                        <div class="column">
+                                            <figure class="image is-250x250 is-pulled-right">
+                                                <img src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}" alt="{{ $spaceChild->name }}" class="is-rounded">
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+
+                    <div class="columns">
+                        <div class="column has-text-centered">
+                            <p class="is-size-7">
+                                Theme name: <b>{{ $themeName ?? 'Fallback' }}</b>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="columns mt-6">
-                <div class="column">
-                    <img src="https://res.cloudinary.com/sdb-agency/image/upload/v1658301082/street-art-performers-in-sweden.jpg_ciubgk.webp" alt="performers" style="border-radius: 20px; width: 90%">
-                </div>
-                <div class="column">
-                    <h3 class="title is-size-3">
-                        What is {{ ucwords($space->name) }} Best Known for?
-                    </h3>
-                    <p class="has-text-weight-semibold">
-                        Swedish is no doubt the master of pop music. There's a good chance that you've heard {{ ucwords($space->name) }}-created music, even if you can't name a current musician off the top of your head.<br><br>
-                        Swedish-written and produced songs, including the top British and American hits such as ABBA, have been at the leader board's top since 1974. Ever since the success of ABBA, the band has opened doors for more Swedish acts, including Roxette, Robyn, Avicii, Lykke Li and much more. They have gained popularity in their music over the years.<br><br>
-                        These Swedish street performers also flourished in the country's streets, with famous international street festivals such as the Stockholm Street Festival, which takes place every year since its first edition in 2010. Other shows and performances from Gothenburg's Nightlife, Swedish Design Tour, Gothenburg Instagram Tour are the best places to catch Swedish bands and to find buskers in {{ ucwords($space->name) }}. BuskinCity helps you find the best pop musicians and top street performers in {{ ucwords($space->name) }} to cheer up your event.
-                    </p>
-                </div>
-            </div>
-
-            <img src="https://res.cloudinary.com/sdb-agency/image/upload/v1658301399/culture-and-traditions-1536x485.jpg_vyceps.webp" alt="performers" style="border-radius: 20px">
         </div>
-    </section>
-
-    @push('styles')
-        <style>
-            .hero-image {
-                border-radius: 20px;
-                background: url('https://res.cloudinary.com/sdb-agency/image/upload/v1658299730/book-street-artists-in-sweden_esvgim.jpg') no-repeat center;
-                background-size: cover;
-                box-shadow:inset 0 0 0 2000px rgba(0, 0, 0, 0.3);
-            }
-        </style>
-    @endpush
+    </div>
 </x-layouts.master>

@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Carbon\Carbon;
+use Propaganistas\LaravelPhone\PhoneNumber;
 
 class HumanReadable
 {
@@ -21,5 +22,11 @@ class HumanReadable
     {
         return Carbon::parse($timestamp)
             ->format(config('constants.format.date_time'));
+    }
+
+    public static function phoneNumberFormat(string $number, string $country)
+    {
+        return PhoneNumber::make($number, $country)
+            ->formatInternational();
     }
 }
