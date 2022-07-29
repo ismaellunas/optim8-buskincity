@@ -18,7 +18,7 @@
             <biz-form-input
                 v-model="form.name"
                 label="Name"
-                maxlength="128"
+                maxlength="32"
                 :required="true"
                 :message="error('name', null, formErrors)"
             />
