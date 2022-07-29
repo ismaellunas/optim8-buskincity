@@ -37,7 +37,7 @@ Route::name('admin.')->prefix('admin/')->middleware([
 
             Route::get('space-types/records', 'SpaceTypeController@records')->name('space-types.records');
             Route::resource('space-types', SpaceTypeController::class)
-            ->only(['store', 'update', 'destroy']);
+                ->only(['store', 'update', 'destroy']);
         });
     });
 

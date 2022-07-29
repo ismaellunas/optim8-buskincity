@@ -18,6 +18,7 @@
             <biz-form-input
                 v-model="form.name"
                 label="Name"
+                maxlength="128"
                 :required="true"
                 :message="error('name', null, formErrors)"
             />
@@ -108,9 +109,8 @@
                         self.$emit('on-submit', self.form);
                     })
                     .catch((error) => {
-                        console.log(error);
                         self.formErrors = error.response.data.errors;
-                    });;
+                    });
             },
         },
     };
