@@ -92,9 +92,15 @@ class Space extends Model implements TranslatableContract
         $this->longitude = $inputs['longitude'];
         $this->address = $inputs['address'];
         $this->type_id = $inputs['type_id'];
-        $this->parent_id = $inputs['parent_id'];
-        $this->is_page_enabled = $inputs['is_page_enabled'] ?? false;
         $this->contacts = $inputs['contacts'] ?? [];
+
+        if (array_key_exists('parent_id', $inputs)) {
+            $this->parent_id = $inputs['parent_id'];
+        }
+
+        if (array_key_exists('is_page_enabled', $inputs)) {
+            $this->is_page_enabled = $inputs['is_page_enabled'] ?? false;
+        }
 
         if (!empty($inputs['translations'])) {
             $this->fill($inputs['translations']);

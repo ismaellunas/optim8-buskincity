@@ -5,6 +5,7 @@ namespace Modules\Space\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Modules\Space\Entities\Space;
+use Modules\Space\ModuleService;
 use Modules\Space\Services\SpaceService;
 
 class SpaceRequest extends FormRequest
@@ -21,6 +22,8 @@ class SpaceRequest extends FormRequest
                 return $type->id;
             })
             ->all();
+
+        $maxLengths = ModuleService::maxLengths();
 
         $rules = [
             'name' => [
@@ -78,6 +81,25 @@ class SpaceRequest extends FormRequest
             'deleted_media' => [
                 'nullable',
                 'array'
+            ],
+            'translations' => [
+                'array'
+            ],
+            'translations.*.description' => [
+                'nullable',
+                'max:'.$maxLengths['description'],
+            ],
+            'translations.*.excerpt' => [
+                'nullable',
+                'max:'.$maxLengths['excerpt'],
+            ],
+            'translations.*.condition' => [
+                'nullable',
+                'max:'.$maxLengths['condition'],
+            ],
+            'translations.*.surface' => [
+                'nullable',
+                'max:'.$maxLengths['surface'],
             ],
         ];
 

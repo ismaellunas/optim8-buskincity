@@ -13,6 +13,7 @@ use Modules\Space\Entities\Page;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
 use Modules\Space\Http\Requests\SpaceRequest;
+use Modules\Space\ModuleService;
 use Modules\Space\Services\SpaceService;
 
 class SpaceController extends CrudController
@@ -25,15 +26,15 @@ class SpaceController extends CrudController
     private $pageService;
 
     public function __construct(
-        SpaceService $spaceService,
+        CountryService $countryService,
         PageService $pageService,
-        CountryService $countryService
+        SpaceService $spaceService
     ) {
         $this->authorizeResource(Space::class, 'space');
 
-        $this->spaceService = $spaceService;
-        $this->pageService = $pageService;
         $this->countryService = $countryService;
+        $this->pageService = $pageService;
+        $this->spaceService = $spaceService;
     }
 
     public function index(Request $request)
@@ -112,7 +113,7 @@ class SpaceController extends CrudController
     {
         $space = new Space();
 
-        $inputs = $request->all();
+        $inputs = $request->validated();
 
         $space->saveFromInputs($inputs);
 
@@ -162,16 +163,10 @@ class SpaceController extends CrudController
 
         $page = $space->page;
 
-        $images = [];
-
         if (! $page) {
             $page = $this->makePage();
-
         } else {
-
             $page->load('translations');
-
-            $images = $this->pageService->getImagesFromPage($page);
         }
 
         return Inertia::render('Space::SpaceEdit', $this->getData([
@@ -185,31 +180,30 @@ class SpaceController extends CrudController
             'coverUrl' => $space->coverUrl,
             'logoUrl' => $space->logoUrl,
             'can' => [
-                'media' => [
-                    'browse' => $user->can('media.browse'),
-                    'read' => $user->can('media.read'),
-                    'edit' => $user->can('media.edit'),
-                    'add' => $user->can('media.add'),
-                    'delete' => $user->can('media.delete'),
-                ],
                 'page' => [
-                    'read' => $user->can('space.read'),
+                    'read' => $user->can('managePage', Space::class),
+                    'edit' => $user->can('managePage', Space::class),
                 ],
+                'manager' => [
+                    'edit' => $user->can('manageManager', Space::class),
+                ]
             ],
             'page' => $page,
             'statusOptions' => Page::getStatusOptions(),
-            'images' => $images,
-            'maxLength' => [
-                'meta_title' => config('constants.max_length.meta_title'),
-                'meta_description' => config('constants.max_length.meta_description'),
-            ],
+            'maxLength' => array_merge(
+                [
+                    'meta_title' => config('constants.max_length.meta_title'),
+                    'meta_description' => config('constants.max_length.meta_description'),
+                ],
+                ModuleService::maxLengths(),
+            ),
             'instructions' => $this->instructions(),
         ]));
     }
 
     public function update(SpaceRequest $request, Space $space)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
 
         if (
             !empty($request->get('deleted_media')['logo'])
@@ -277,9 +271,11 @@ class SpaceController extends CrudController
 
     public function updateManagers(Request $request, Space $space)
     {
+        $this->authorize('manageManager', Space::class);
+
         $space->managers()->sync($request->managers);
 
-        $this->generateFlashMessage('Space created successfully!');
+        $this->generateFlashMessage('Manager updated successfully!');
 
         return back();
     }

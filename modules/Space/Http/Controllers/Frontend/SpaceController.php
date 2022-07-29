@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\PageTranslation;
+use Modules\Space\Entities\Space;
 use Modules\Space\Exceptions\PageNotFoundException;
 use Modules\Space\Services\SpaceService;
 
@@ -29,11 +30,15 @@ class SpaceController extends Controller
 
         if ($this->canAccessPage($page)) {
             try {
-                if ($request->exists('preview')) {
+                if (
+                    $request->exists('preview')
+                    && $request->user()->can('managePage', Space::class)
+                ) {
                     return $this->showPreview($page);
                 }
 
                 return $this->showGuest($page);
+
             } catch (PageNotFoundException $exception) {
 
                 return $this->notFoundHandler();
