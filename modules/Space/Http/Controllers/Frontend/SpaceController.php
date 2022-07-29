@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Exceptions\PageNotFoundException;
-use Modules\Space\Services\SpaceService;
 
 class SpaceController extends Controller
 {
@@ -109,16 +108,17 @@ class SpaceController extends Controller
     private function getViewName(PageTranslation $pageTranslation)
     {
         $viewNameTemplates= [
-            'page-{id}-{lang}',
-            'page-{id}',
-            'page-{slug}-{lang}',
-            'page-{slug}',
+            'page-{moduleName}_id_{id}-{lang}',
+            'page-{moduleName}_id_{id}',
+            'page-{moduleName}_slug_{slug}-{lang}',
+            'page-{moduleName}_slug_{slug}',
         ];
 
         $swapText = [
             '{id}' => $pageTranslation->page_id,
             '{lang}' => $pageTranslation->locale,
             '{slug}' => $pageTranslation->slug,
+            '{moduleName}' => Str::lower(config('space.name')),
         ];
 
         foreach ($viewNameTemplates as $template) {
@@ -151,16 +151,17 @@ class SpaceController extends Controller
         $space = $pageTranslation->page->space;
 
         $viewNameTemplates= [
-            'page-{type}-{lang}',
-            'page-{type}',
-            'page-space-{lang}',
-            'page-space',
+            'page-{moduleName}_type_{type}-{lang}',
+            'page-{moduleName}_type_{type}',
+            'page-{moduleName}-{lang}',
+            'page-{moduleName}',
         ];
 
         $type = Str::lower($space->type->name ?? null);
         $swapText = [
             '{type}' => $type,
             '{lang}' => $pageTranslation->locale,
+            '{moduleName}' => Str::lower(config('space.name')),
         ];
 
         foreach ($viewNameTemplates as $template) {
