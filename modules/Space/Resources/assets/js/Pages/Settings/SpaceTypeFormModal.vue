@@ -109,9 +109,8 @@
                         self.$emit('on-submit', self.form);
                     })
                     .catch((error) => {
-                        console.log(error);
                         self.formErrors = error.response.data.errors;
-                    });;
+                    });
             },
         },
     };
