@@ -5,6 +5,7 @@ namespace Modules\Space\Services;
 use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Models\Media;
 use App\Models\User;
+use App\Services\GlobalOptionService;
 use App\Services\MediaService;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
@@ -146,13 +147,11 @@ class SpaceService
             });
     }
 
-    public function types(): array
+    public function types(): Collection
     {
-        return [
-            '1' => 'Country',
-            '2' => 'City',
-            '3' => 'Pitch',
-        ];
+        return app(GlobalOptionService::class)->getOptionByKey(
+            config('space.type_option')
+        );
     }
 
     public function typeOptions(): Collection
@@ -161,8 +160,8 @@ class SpaceService
 
         $options->push(['id' => null, 'value' => __('None')]);
 
-        foreach ($this->types() as $key => $type) {
-            $options->push(['id' => $key, 'value' => __($type)]);
+        foreach ($this->types() as $type) {
+            $options->push(['id' => $type->id, 'value' => __($type->name)]);
         }
 
         return $options;

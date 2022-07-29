@@ -153,7 +153,7 @@ class SpaceController extends Controller
 
     private function getFallbackSpace(PageTranslation $pageTranslation)
     {
-        $types = app(SpaceService::class)->types();
+        $space = $pageTranslation->page->space;
 
         $viewNameTemplates= [
             'page-{type}-{lang}',
@@ -162,7 +162,7 @@ class SpaceController extends Controller
             'page-space',
         ];
 
-        $type = $types[$pageTranslation->page->space->type] ?? null;
+        $type = Str::of($space->type->name ?? null)->lower()->snake();
         $swapText = [
             '{type}' => $type,
             '{lang}' => $pageTranslation->locale,

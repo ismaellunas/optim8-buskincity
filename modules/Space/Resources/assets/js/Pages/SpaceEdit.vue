@@ -304,7 +304,7 @@
                     'name',
                     'parent_id',
                     'translations',
-                    'type',
+                    'type_id',
                 ]);
 
                 space['logo'] = null;
