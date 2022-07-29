@@ -1,6 +1,9 @@
 <template>
     <div class="card">
-        <header class="card-header">
+        <header
+            v-if="$slots.headerTitle || $slots.headerButton"
+            class="card-header"
+        >
             <p class="card-header-title">
                 <slot name="headerTitle" />
             </p>
@@ -9,6 +12,7 @@
                 v-if="$slots.headerButton"
                 class="card-header-icon"
                 aria-label="more options"
+                type="button"
             >
                 <slot name="headerButton" />
             </button>

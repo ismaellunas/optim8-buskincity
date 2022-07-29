@@ -3,17 +3,41 @@
 namespace Modules\Space\Entities;
 
 use App\Models\User;
+use App\Models\Media;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
 use Modules\Space\Entities\Page;
 
-class Space extends Model
+class Space extends Model implements TranslatableContract
 {
     use HasFactory;
     use NodeTrait;
+    use Translatable;
 
-    protected $fillable = [];
+    public $translatedAttributes = [
+        'condition',
+        'description',
+        'excerpt',
+        'surface',
+    ];
+
+    protected $fillable = [
+        'address',
+        'contacts',
+        'is_page_enabled',
+        'latitude',
+        'longitude',
+        'name',
+        'parent_id',
+        'type',
+    ];
+
+    protected $casts = [
+        'contacts' => 'array',
+    ];
 
     protected static function newFactory()
     {
@@ -30,6 +54,31 @@ class Space extends Model
         return $this->belongsTo(Page::class);
     }
 
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'medially');
+    }
+
+    public function logo()
+    {
+        return $this->hasOne(Media::class, 'id', 'logo_media_id');
+    }
+
+    public function cover()
+    {
+        return $this->hasOne(Media::class, 'id', 'cover_media_id');
+    }
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        return $this->logo ? $this->logo->file_url : null;
+    }
+
+    public function getCoverUrlAttribute(): ?string
+    {
+        return $this->cover ? $this->cover->file_url : null;
+    }
+
     public function saveFromInputs(array $inputs)
     {
         $this->name = $inputs['name'];
@@ -37,8 +86,19 @@ class Space extends Model
         $this->longitude = $inputs['longitude'];
         $this->address = $inputs['address'];
         $this->type = $inputs['type'];
-        $this->parent_id = $inputs['parent_id'];
-        $this->is_page_enabled = $inputs['is_page_enabled'] ?? false;
+        $this->contacts = $inputs['contacts'] ?? [];
+
+        if (array_key_exists('parent_id', $inputs)) {
+            $this->parent_id = $inputs['parent_id'];
+        }
+
+        if (array_key_exists('is_page_enabled', $inputs)) {
+            $this->is_page_enabled = $inputs['is_page_enabled'] ?? false;
+        }
+
+        if (!empty($inputs['translations'])) {
+            $this->fill($inputs['translations']);
+        }
 
         $this->save();
     }

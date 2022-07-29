@@ -15,6 +15,8 @@
             :default-country="defaultCountry"
             :disabled="disabled"
             :required="required"
+            :dropdown-max-height="dropdownMaxHeight"
+            :dropdown-max-width="dropdownMaxWidth"
         />
 
         <slot name="note" />
@@ -80,7 +82,15 @@
             defaultCountry: {
                 type: String,
                 default: 'US',
-            }
+            },
+            dropdownMaxHeight: {
+                type: Number,
+                default: 350
+            },
+            dropdownMaxWidth: {
+                type: Number,
+                default: null
+            },
         },
 
         emits: [
