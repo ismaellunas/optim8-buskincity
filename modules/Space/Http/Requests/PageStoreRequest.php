@@ -3,6 +3,7 @@
 namespace Modules\Space\Http\Requests;
 
 use App\Http\Requests\PageRequest as AppPageRequest;
+use Modules\Space\Entities\Space;
 
 class PageStoreRequest extends AppPageRequest
 {
@@ -11,7 +12,10 @@ class PageStoreRequest extends AppPageRequest
         $user = $this->user();
         $space = $this->route('space');
 
-        if ($space) {
+        if (
+            $user->can('managePage', Space::class)
+            && $space
+        ) {
             return (
                 parent::authorize()
                 && !$space->page_id

@@ -10,7 +10,7 @@
                     class="navbar-item"
                     :href="navLogo ? navLogo.link : null"
                 >
-                    <img :src="logoImageUrl">
+                    <img :src="appLogoImageUrl">
                 </a>
 
                 <a
@@ -147,9 +147,9 @@
         setup() {
             const navLogo = computed(() => usePage().props.value.menus.navLogo);
 
-            const logoImageUrl = computed(() => {
+            const appLogoImageUrl = computed(() => {
                 return (
-                    usePage().props.value.logoUrl
+                    usePage().props.value.appLogoUrl
                     ?? "https://dummyimage.com/48x28/e5e5e5/000000.png&text=Logo"
                 );
             });
@@ -188,7 +188,7 @@
             });
 
             return {
-                logoImageUrl,
+                appLogoImageUrl,
                 navLogo,
             };
         },

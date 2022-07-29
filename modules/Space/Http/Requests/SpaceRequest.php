@@ -5,6 +5,7 @@ namespace Modules\Space\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Modules\Space\Entities\Space;
+use Modules\Space\ModuleService;
 use Modules\Space\Services\SpaceService;
 
 class SpaceRequest extends FormRequest
@@ -17,10 +18,14 @@ class SpaceRequest extends FormRequest
     public function rules()
     {
         $types = collect(app(SpaceService::class)->types())
-            ->keys()
+            ->map(function ($type) {
+                return $type->id;
+            })
             ->all();
 
-        return [
+        $maxLengths = ModuleService::maxLengths();
+
+        $rules = [
             'name' => [
                 'required',
                 'max:128',
@@ -37,24 +42,85 @@ class SpaceRequest extends FormRequest
                 'nullable',
                 'max:500',
             ],
-            'type' => [
+            'type_id' => [
                 'nullable',
                 'integer',
                 Rule::in($types)
             ],
-            'parent_id' => [
+            'contacts' => [
+                'nullable',
+            ],
+            'contacts.*.name' => [
+                'required',
+                'max:128',
+            ],
+            'contacts.*.email' => [
+                'nullable',
+                'email',
+                'max:255',
+            ],
+            'contacts.*.phone.number' => [
+                'nullable',
+                'phone:contacts.*.phone.country',
+            ],
+            'contacts.*.phone.country' => [
+                'required_with:contacts.*.phone.number',
+            ],
+            'logo' => [
+                'nullable',
+                'file',
+                'max:'.config('constants.one_megabyte') * 5,
+                'mimes:'.implode(',', config('constants.extensions.image')),
+            ],
+            'cover' => [
+                'nullable',
+                'file',
+                'max:'.config('constants.one_megabyte') * 50,
+                'mimes:'.implode(',', config('constants.extensions.image')),
+            ],
+            'deleted_media' => [
+                'nullable',
+                'array'
+            ],
+            'translations' => [
+                'array'
+            ],
+            'translations.*.description' => [
+                'nullable',
+                'max:'.$maxLengths['description'],
+            ],
+            'translations.*.excerpt' => [
+                'nullable',
+                'max:'.$maxLengths['excerpt'],
+            ],
+            'translations.*.condition' => [
+                'nullable',
+                'max:'.$maxLengths['condition'],
+            ],
+            'translations.*.surface' => [
+                'nullable',
+                'max:'.$maxLengths['surface'],
+            ],
+        ];
+
+        $routeName = request()->route()->getName();
+
+        if ($routeName == 'admin.spaces.store') {
+            $rules['parent_id'] = [
                 'nullable',
                 'integer',
                 function ($attribute, $value, $fail) {
-                    $user = auth()->user();
                     $space = Space::find($value);
+                    $user = auth()->user();
 
-                    if (! $user->can('manage', $space, Space::class)) {
+                    if (! $user->can('create', $space, Space::class)) {
                         $fail(__('The Parent is invalid.'));
                     }
                 },
-            ]
-        ];
+            ];
+        }
+
+        return $rules;
     }
 
     /**

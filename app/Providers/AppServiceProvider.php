@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
-use App\Entities\LifetimeCookie;
+use App\Contracts\MediaStorageInterface;
+use App\Entities\{
+    CloudinaryStorage,
+    LifetimeCookie,
+};
 use App\Entities\Caches\{
     CountryCache,
     MenuCache,
@@ -13,10 +17,12 @@ use App\Entities\Caches\{
 use App\Services\{
     CountryService,
     FormService,
+    GlobalOptionService,
     IPService,
     LanguageService,
     MediaService,
     MenuService,
+    ModuleService,
     PageBuilderService,
     PageService,
     SettingService,
@@ -41,10 +47,12 @@ class AppServiceProvider extends ServiceProvider
 
         CountryService::class => CountryService::class,
         FormService::class => FormService::class,
+        GlobalOptionService::class => GlobalOptionService::class,
         IPService::class => IPService::class,
         LanguageService::class => LanguageService::class,
         MediaService::class => MediaService::class,
         MenuService::class => MenuService::class,
+        ModuleService::class => ModuleService::class,
         PageBuilderService::class => PageBuilderService::class,
         PageService::class => PageService::class,
         SettingService::class => SettingService::class,
@@ -52,6 +60,8 @@ class AppServiceProvider extends ServiceProvider
         StripeSettingService::class => StripeSettingService::class,
         TranslationService::class => TranslationService::class,
         WidgetService::class => WidgetService::class,
+
+        MediaStorageInterface::class => CloudinaryStorage::class,
     ];
 
     /**

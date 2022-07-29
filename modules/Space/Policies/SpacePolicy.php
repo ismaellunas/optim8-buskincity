@@ -18,14 +18,16 @@ class SpacePolicy
         );
     }
 
-    public function create(User $user)
+    public function create(User $user, ?Space $parentSpace = null)
     {
-        $parentId = request()->get('parent');
+        if (is_null($parentSpace)) {
+            $parentSpace = Space::find(request()->get('parent'));
+        }
 
         return (
             $user->can('space.add')
-            || ($parentId && $this->manage($user, Space::find($parentId)))
-            || (!$parentId && $user->spaces->isNotEmpty())
+            || ($parentSpace && $this->manage($user, $parentSpace))
+            || (!$parentSpace && $user->spaces->isNotEmpty())
         );
     }
 
@@ -47,7 +49,7 @@ class SpacePolicy
 
     public function changeParent(User $user)
     {
-        return $user->can('space.read');
+        return $user->isAdministrator || $user->isSuperAdministrator;
     }
 
     public function manage(User $user, Space $space): bool
@@ -62,5 +64,15 @@ class SpacePolicy
                 return $currentSpace->isAncestorOf($space);
             })
         );
+    }
+
+    public function managePage(User $user)
+    {
+        return $user->isAdministrator || $user->isSuperAdministrator;
+    }
+
+    public function manageManager(User $user)
+    {
+        return $user->isAdministrator || $user->isSuperAdministrator;
     }
 }

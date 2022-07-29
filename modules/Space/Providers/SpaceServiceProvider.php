@@ -3,8 +3,10 @@
 namespace Modules\Space\Providers;
 
 use App\Models\User;
+use App\Services\MediaService;
 use Illuminate\Support\ServiceProvider;
 use Modules\Space\Entities\Space;
+use Modules\Space\Services\PageService;
 use Modules\Space\Services\SpaceService;
 
 class SpaceServiceProvider extends ServiceProvider
@@ -24,6 +26,11 @@ class SpaceServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
+    public $singletons = [
+        PageService::class => PageService::class,
+    ];
+
     public function boot()
     {
         $this->registerTranslations();
@@ -46,7 +53,7 @@ class SpaceServiceProvider extends ServiceProvider
         $this->app->register(RouteServiceProvider::class);
 
         $this->app->singleton(SpaceService::class, function ($app) {
-            return new SpaceService();
+            return new SpaceService($app->make(MediaService::class));
         });
     }
 

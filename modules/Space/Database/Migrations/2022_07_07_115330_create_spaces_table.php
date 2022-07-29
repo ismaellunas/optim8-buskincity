@@ -18,17 +18,38 @@ class CreateSpacesTable extends Migration
             $table->id();
             $table->string('name', 128);
             $table->string('address', 512)->nullable();
+            $table->json('contacts')->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
             $table->boolean('is_page_enabled')->default(false);
-            $table->tinyInteger('type')->nullable();
+            $table->foreignId('type_id')
+                ->nullable()
+                ->constrained('global_options')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
+
+            $table
+                ->foreignId('logo_media_id')
+                ->nullable()
+                ->constrained('media')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
+
+            $table
+                ->foreignId('cover_media_id')
+                ->nullable()
+                ->constrained('media')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
 
             $table->foreignId('page_id')
                 ->nullable()
                 ->constrained('pages')
                 ->onUpdate('cascade')
                 ->onDelete('set null');
+
             NestedSet::columns($table);
+
             $table->timestamps();
         });
     }

@@ -17,9 +17,9 @@ abstract class BaseSitemap
 
     public function locTag()
     {
-        $name = (new \ReflectionClass($this))->getShortName();
-
-        return route('sitemap.urls', [Str::slug($name)]);
+        return route('sitemap.urls', [
+            Str::slug($this->getLocName())
+        ]);
     }
 
     public function optionalTags(): array
@@ -36,6 +36,11 @@ abstract class BaseSitemap
         }
 
         return $url;
+    }
+
+    protected function getLocName(): string
+    {
+        return (new \ReflectionClass($this))->getShortName();
     }
 
     abstract public function urls(): array|Collection;
