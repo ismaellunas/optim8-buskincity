@@ -7,11 +7,11 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
 use Modules\Space\Exceptions\PageNotFoundException;
-use Modules\Space\Services\SpaceService;
 
 class SpaceController extends Controller
 {
@@ -114,16 +114,17 @@ class SpaceController extends Controller
     private function getViewName(PageTranslation $pageTranslation)
     {
         $viewNameTemplates= [
-            'page-{id}-{lang}',
-            'page-{id}',
-            'page-{slug}-{lang}',
-            'page-{slug}',
+            'page-{moduleName}_id_{id}-{lang}',
+            'page-{moduleName}_id_{id}',
+            'page-{moduleName}_slug_{slug}-{lang}',
+            'page-{moduleName}_slug_{slug}',
         ];
 
         $swapText = [
             '{id}' => $pageTranslation->page_id,
             '{lang}' => $pageTranslation->locale,
             '{slug}' => $pageTranslation->slug,
+            '{moduleName}' => $this->textToLowerKebab(config('space.name')),
         ];
 
         foreach ($viewNameTemplates as $template) {
@@ -156,16 +157,17 @@ class SpaceController extends Controller
         $space = $pageTranslation->page->space;
 
         $viewNameTemplates= [
-            'page-{type}-{lang}',
-            'page-{type}',
-            'page-space-{lang}',
-            'page-space',
+            'page-{moduleName}_type_{type}-{lang}',
+            'page-{moduleName}_type_{type}',
+            'page-{moduleName}-{lang}',
+            'page-{moduleName}',
         ];
 
-        $type = Str::of($space->type->name ?? null)->lower()->snake();
+        $type = $space->type ? $this->textToLowerKebab($space->type->name) : null;
         $swapText = [
             '{type}' => $type,
             '{lang}' => $pageTranslation->locale,
+            '{moduleName}' => $this->textToLowerKebab(config('space.name')),
         ];
 
         foreach ($viewNameTemplates as $template) {
@@ -193,5 +195,10 @@ class SpaceController extends Controller
     private function notFoundHandler()
     {
         return redirect()->route('homepage');
+    }
+
+    private function textToLowerKebab(string $text): Stringable
+    {
+        return Str::of($text)->lower()->kebab();
     }
 }
