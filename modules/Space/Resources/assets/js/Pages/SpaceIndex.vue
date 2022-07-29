@@ -26,7 +26,7 @@
 
                             <span class="icon is-small">
                                 <i
-                                    class="fas fa-angle-down"
+                                    :class="icon.angleDown"
                                     aria-hidden="true"
                                 />
                             </span>
@@ -53,7 +53,7 @@
                             class="is-primary"
                         >
                             <span class="icon is-small">
-                                <i class="fas fa-plus" />
+                                <i :class="icon.add" />
                             </span>
                             <span>Create New</span>
                         </biz-button-link>
@@ -80,6 +80,7 @@
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizDropdownScroll from '@/Biz/DropdownScroll';
+    import icon from '@/Libs/icon-class';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import NestedDraggable from './NestedDraggable';
     import { useForm } from '@inertiajs/inertia-vue3';
@@ -119,6 +120,7 @@
         data() {
             return {
                 parentId: this.parent,
+                icon,
             };
         },
 
