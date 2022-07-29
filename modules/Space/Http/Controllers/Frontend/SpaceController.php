@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
@@ -123,7 +124,7 @@ class SpaceController extends Controller
             '{id}' => $pageTranslation->page_id,
             '{lang}' => $pageTranslation->locale,
             '{slug}' => $pageTranslation->slug,
-            '{moduleName}' => Str::lower(config('space.name')),
+            '{moduleName}' => $this->textToLowerKebab(config('space.name')),
         ];
 
         foreach ($viewNameTemplates as $template) {
@@ -162,11 +163,11 @@ class SpaceController extends Controller
             'page-{moduleName}',
         ];
 
-        $type = Str::of($space->type->name ?? null)->lower()->snake();
+        $type = $space->type ? $this->textToLowerKebab($space->type->name) : null;
         $swapText = [
             '{type}' => $type,
             '{lang}' => $pageTranslation->locale,
-            '{moduleName}' => Str::lower(config('space.name')),
+            '{moduleName}' => $this->textToLowerKebab(config('space.name')),
         ];
 
         foreach ($viewNameTemplates as $template) {
@@ -194,5 +195,10 @@ class SpaceController extends Controller
     private function notFoundHandler()
     {
         return redirect()->route('homepage');
+    }
+
+    private function textToLowerKebab(string $text): Stringable
+    {
+        return Str::of($text)->lower()->kebab();
     }
 }
