@@ -11,6 +11,14 @@ use Modules\Space\Entities\PageTranslation;
 
 class Sitemap extends BaseSitemap
 {
+    /**
+     * @override
+     */
+    protected function getLocName(): string
+    {
+        return config('space.name');
+    }
+
     public function urls(): array|Collection
     {
         $urls = $this->getEloquentBuilder()
