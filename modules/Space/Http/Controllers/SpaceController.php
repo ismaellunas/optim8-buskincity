@@ -241,7 +241,7 @@ class SpaceController extends CrudController
         );
 
         if ($space->delete()) {
-            $this->removeAllMedia(
+            $this->spaceService->removeAllMedia(
                 array_merge($allChildren, [$space])
             );
         }
@@ -286,13 +286,5 @@ class SpaceController extends CrudController
         $this->generateFlashMessage('Manager updated successfully!');
 
         return back();
-    }
-
-    private function removeAllMedia(array $spaces): void
-    {
-        foreach ($spaces as $space) {
-            $this->spaceService->deleteLogoFromStorage($space);
-            $this->spaceService->deleteCoverFromStorage($space);
-        }
     }
 }

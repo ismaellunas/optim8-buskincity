@@ -251,7 +251,7 @@ class SpaceService
         );
     }
 
-    public function deleteLogoFromStorage(Space $space)
+    private function deleteLogoFromStorage(Space $space)
     {
         $media = $space->logo;
 
@@ -260,7 +260,7 @@ class SpaceService
         }
     }
 
-    public function deleteCoverFromStorage(Space $space)
+    private function deleteCoverFromStorage(Space $space)
     {
         $media = $space->cover;
 
@@ -325,5 +325,13 @@ class SpaceService
         }
 
         return $allChildren;
+    }
+
+    public function removeAllMedia(array $spaces): void
+    {
+        foreach ($spaces as $space) {
+            $this->deleteLogoFromStorage($space);
+            $this->deleteCoverFromStorage($space);
+        }
     }
 }
