@@ -17,6 +17,8 @@ class SpaceRequest extends FormRequest
      */
     public function rules()
     {
+        $user = auth()->user();
+
         $types = collect(app(SpaceService::class)->types())
             ->map(function ($type) {
                 return $type->id;
@@ -113,14 +115,19 @@ class SpaceRequest extends FormRequest
             $rules['parent_id'] = [
                 'nullable',
                 'integer',
-                function ($attribute, $value, $fail) {
+                function ($attribute, $value, $fail) use ($user) {
                     $space = Space::find($value);
-                    $user = auth()->user();
 
                     if (! $user->can('create', $space, Space::class)) {
                         $fail(__('The Parent is invalid.'));
                     }
                 },
+            ];
+        }
+
+        if ($user->can('managePage', Space::class)) {
+            $rules['is_page_enabled'] = [
+                'boolean',
             ];
         }
 
