@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Kalnoy\Nestedset\Collection as NestedSetCollection;
 use Modules\Space\Entities\Space;
 use Modules\Space\ModuleService;
 
@@ -306,5 +307,23 @@ class SpaceService
 
         $space->cover_media_id = null;
         $space->save();
+    }
+
+    public function getAllChildren(NestedSetCollection $spaceChildren): array
+    {
+        $allChildren = [];
+
+        foreach ($spaceChildren as $child) {
+            $children = [];
+
+            if ($child->children()->exists()) {
+                $children = $this->getAllChildren($child->children()->get());
+            }
+
+            $allChildren[] = $child;
+            $allChildren = array_merge($allChildren, $children);
+        }
+
+        return $allChildren;
     }
 }
