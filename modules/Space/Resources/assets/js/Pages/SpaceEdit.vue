@@ -66,6 +66,15 @@
                 </biz-provide-inject-tab>
 
                 <biz-provide-inject-tab
+                    title="Event"
+                    :is-rendered="isEventRendered"
+                >
+                    <space-event
+                        :space="space"
+                    />
+                </biz-provide-inject-tab>
+
+                <biz-provide-inject-tab
                     title="Manager"
                     :is-rendered="isManagerRendered"
                 >
@@ -144,6 +153,7 @@
     import SpaceForm from './SpaceForm';
     import SpaceFormTranslatable from './SpaceFormTranslatable';
     import SpaceManager from './SpaceManager';
+    import SpaceEvent from './SpaceEvent';
     import { confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { getTranslation } from '@/Libs/translation';
@@ -160,10 +170,11 @@
             BizFormSelect,
             BizProvideInjectTab,
             BizProvideInjectTabs,
+            PageForm,
+            SpaceEvent,
             SpaceForm,
             SpaceFormTranslatable,
             SpaceManager,
-            PageForm,
         },
 
         mixins: [
@@ -238,6 +249,10 @@
             },
 
             isManagerRendered() {
+                return this.can.manager.edit;
+            },
+
+            isEventRendered() {
                 return this.can.manager.edit;
             },
         },
