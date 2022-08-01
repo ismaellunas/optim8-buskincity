@@ -6,7 +6,6 @@ use App\Helpers\HumanReadable;
 use App\Http\Controllers\CrudController;
 use App\Services\CountryService;
 use App\Services\IPService;
-use App\Services\PageService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Space\Entities\Page;
@@ -23,17 +22,14 @@ class SpaceController extends CrudController
     protected $title = "Space";
 
     private $spaceService;
-    private $pageService;
 
     public function __construct(
         CountryService $countryService,
-        PageService $pageService,
         SpaceService $spaceService
     ) {
         $this->authorizeResource(Space::class, 'space');
 
         $this->countryService = $countryService;
-        $this->pageService = $pageService;
         $this->spaceService = $spaceService;
     }
 
