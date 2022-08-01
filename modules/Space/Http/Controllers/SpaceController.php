@@ -236,7 +236,15 @@ class SpaceController extends CrudController
 
     public function destroy(Request $request, Space $space)
     {
-        $space->delete();
+        $allChildren = $this->spaceService->getAllChildren(
+            $space->children()->get()
+        );
+
+        if ($space->delete()) {
+            $this->removeAllMedia(
+                array_merge($allChildren, [$space])
+            );
+        }
 
         $this->generateFlashMessage($this->title.' deleted successfully!');
 
@@ -278,5 +286,13 @@ class SpaceController extends CrudController
         $this->generateFlashMessage('Manager updated successfully!');
 
         return back();
+    }
+
+    private function removeAllMedia(array $spaces): void
+    {
+        foreach ($spaces as $space) {
+            $this->spaceService->deleteLogoFromStorage($space);
+            $this->spaceService->deleteCoverFromStorage($space);
+        }
     }
 }
