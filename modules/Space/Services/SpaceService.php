@@ -334,4 +334,13 @@ class SpaceService
             $this->deleteCoverFromStorage($space);
         }
     }
+
+    public function removeAllPages(array $spaces): void
+    {
+        foreach ($spaces as $space) {
+            if ($space->page) {
+                $space->page->delete();
+            }
+        }
+    }
 }
