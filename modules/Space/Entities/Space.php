@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
 use Modules\Space\Entities\Page;
+use Modules\Event\Entities\Event;
 
 class Space extends Model implements TranslatableContract
 {
@@ -73,6 +74,11 @@ class Space extends Model implements TranslatableContract
     public function cover()
     {
         return $this->hasOne(Media::class, 'id', 'cover_media_id');
+    }
+
+    public function events()
+    {
+        return $this->morphMany(Event::class, 'eventable');
     }
 
     public function getLogoUrlAttribute(): ?string
