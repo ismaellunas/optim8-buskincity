@@ -19,7 +19,7 @@
             modelValue: Date|Array|null,
             options: {
                 type: Object,
-                default: {}
+                default: () => {}
             }
         },
         emits: ['update:modelValue'],
