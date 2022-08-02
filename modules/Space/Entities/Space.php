@@ -11,8 +11,6 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
-use Modules\Event\Entities\Event;
-use Modules\Space\Entities\Page;
 
 class Space extends Model implements TranslatableContract
 {
