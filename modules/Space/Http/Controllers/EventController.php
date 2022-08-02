@@ -2,7 +2,6 @@
 
 namespace Modules\Space\Http\Controllers;
 
-use App\Traits\FlashNotifiable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\Event\Entities\Event;
@@ -12,8 +11,6 @@ use Modules\Space\Services\EventService;
 
 class EventController extends Controller
 {
-    use FlashNotifiable;
-
     private $title = "Event";
 
     private $eventService;
@@ -52,7 +49,7 @@ class EventController extends Controller
         return $this->eventService->getEditableRecord($space, $event);
     }
 
-    public function destroy(Request $request, Space $space, Event $event)
+    public function destroy(Space $space, Event $event)
     {
         $event->delete();
 
