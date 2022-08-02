@@ -84,10 +84,6 @@ class SpaceRequest extends FormRequest
                 'nullable',
                 'array'
             ],
-            'is_page_enabled' => [
-                'nullable',
-                'boolean',
-            ],
             'translations' => [
                 'array'
             ],
