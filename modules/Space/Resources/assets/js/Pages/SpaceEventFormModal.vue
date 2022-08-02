@@ -16,27 +16,6 @@
             />
         </template>
 
-        <div class="tabs is-toggle">
-            <ul>
-                <li
-                    v-for="(option, index) in selectableLocales"
-                    :key="option.id"
-                    :class="{ 'is-active': option.id == selectedLocale }"
-                    @click="changeLocale(option.id, $event)"
-                >
-                    <a>
-                        <span>{{ option.name }}</span>
-                        <span
-                            v-if="index == 0"
-                            class="tag is-link is-light ml-3"
-                        >
-                            Default
-                        </span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-
         <form
             v-if="!isBlank(form)"
             @submit.prevent="submit"
@@ -79,25 +58,48 @@
                 :message="error('address', null, formErrors)"
             />
 
-            <template v-if="form.translations[selectedLocale]">
-                <biz-form-textarea
-                    v-model="form.translations[ selectedLocale ].excerpt"
-                    label="Excerpt"
-                    placeholder="Excerpt"
-                    rows="2"
-                    maxlength="150"
-                    :message="error('translations.'+selectedLocale+'.excerpt', null, formErrors)"
-                />
+            <div class="box">
+                <div class="tabs is-toggle">
+                    <ul>
+                        <li
+                            v-for="(option, index) in selectableLocales"
+                            :key="option.id"
+                            :class="{ 'is-active': option.id == selectedLocale }"
+                            @click="changeLocale(option.id, $event)"
+                        >
+                            <a>
+                                <span>{{ option.name }}</span>
+                                <span
+                                    v-if="index == 0"
+                                    class="tag is-link is-light ml-3"
+                                >
+                                    Default
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
 
-                <biz-form-textarea
-                    v-model="form.translations[ selectedLocale ].description"
-                    label="Description"
-                    placeholder="Description"
-                    rows="4"
-                    maxlength="65000"
-                    :message="error('translations.'+selectedLocale+'.description', null, formErrors)"
-                />
-            </template>
+                <template v-if="form.translations[selectedLocale]">
+                    <biz-form-textarea
+                        v-model="form.translations[ selectedLocale ].excerpt"
+                        label="Excerpt"
+                        placeholder="Excerpt"
+                        rows="2"
+                        maxlength="150"
+                        :message="error('translations.'+selectedLocale+'.excerpt', null, formErrors)"
+                    />
+
+                    <biz-form-textarea
+                        v-model="form.translations[ selectedLocale ].description"
+                        label="Description"
+                        placeholder="Description"
+                        rows="4"
+                        maxlength="65000"
+                        :message="error('translations.'+selectedLocale+'.description', null, formErrors)"
+                    />
+                </template>
+            </div>
         </form>
 
         <template #footer>
