@@ -6,4 +6,5 @@ return [
     'blog.show' => 'blog/{slug}',
     'frontend.profile' => 'profile/{user:unique_key}/{firstname_lastname?}',
     'frontend.spaces.show' => 'spaces/{page_translation}',
+    'frontend.spaces.index' => 'spaces',
 ];

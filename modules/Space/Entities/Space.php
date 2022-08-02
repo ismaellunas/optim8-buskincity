@@ -3,15 +3,16 @@
 namespace Modules\Space\Entities;
 
 use App\Models\GlobalOption;
-use App\Models\User;
 use App\Models\Media;
+use App\Models\User;
+use App\Services\TranslationService;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
-use Modules\Space\Entities\Page;
 use Modules\Event\Entities\Event;
+use Modules\Space\Entities\Page;
 
 class Space extends Model implements TranslatableContract
 {
@@ -91,6 +92,30 @@ class Space extends Model implements TranslatableContract
         return $this->cover ? $this->cover->file_url : null;
     }
 
+    public function getLandingPageUrlAttribute(): ?string
+    {
+        $page = $this->page;
+
+        if (
+            !$page
+            && !$this->is_page_enabled
+        ) {
+            return null;
+        }
+
+        $locale = TranslationService::currentLanguage();
+
+        if (!$page->hasTranslation($locale)) {
+            $locale = TranslationService::getDefaultLocale();
+        }
+
+        $pageTranslation = $page->translate($locale);
+
+        return $pageTranslation
+            ? route('frontend.spaces.show', $pageTranslation->slug)
+            : null;
+    }
+
     public function saveFromInputs(array $inputs)
     {
         $this->name = $inputs['name'];
@@ -113,5 +138,10 @@ class Space extends Model implements TranslatableContract
         }
 
         $this->save();
+    }
+
+    public function scopeTopParent($query)
+    {
+        return $query->whereNull('parent_id');
     }
 }

@@ -163,6 +163,10 @@ class SpaceController extends CrudController
             $page = $this->makePage();
         } else {
             $page->load('translations');
+
+            $page->translations->transform(function ($translation) {
+                return $translation->append('landingPageSpaceUrl');
+            });
         }
 
         return Inertia::render('Space::SpaceEdit', $this->getData([
@@ -232,15 +236,7 @@ class SpaceController extends CrudController
 
     public function destroy(Request $request, Space $space)
     {
-        $allChildren = $this->spaceService->getAllChildren(
-            $space->children()->get()
-        );
-
-        if ($space->delete()) {
-            $this->spaceService->removeAllMedia(
-                array_merge($allChildren, [$space])
-            );
-        }
+        $space->delete();
 
         $this->generateFlashMessage($this->title.' deleted successfully!');
 

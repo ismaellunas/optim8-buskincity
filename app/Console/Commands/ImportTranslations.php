@@ -15,7 +15,7 @@ class ImportTranslations extends Command
         $translation = app(TranslationSeeder::class);
         $translation->run($this->option('replace'));
 
-        $this->info('The import translation is successful!');
+        $this->info('The import translation is successfully!');
         return Command::SUCCESS;
     }
 }

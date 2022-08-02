@@ -2,8 +2,9 @@
 
 namespace Modules\Space\Services;
 
-use Modules\Space\Entities\Space;
 use App\Helpers\HumanReadable;
+use Modules\Space\Entities\Space;
+use Modules\Space\ModuleService;
 
 class PageSpaceService
 {
@@ -35,31 +36,19 @@ class PageSpaceService
 
     public function getChildren(): array
     {
-        $lastChildren = collect();
+        $allChildren = [];
 
-        $firstChildern = $this->space->children()->get();
-
-        foreach ($firstChildern as $firstChild) {
-            $secondChildren = $firstChild->children();
-
-            if ($secondChildren->exists()) {
-                foreach ($secondChildren->get() as $secondChild) {
-
-                    $lastChildren->push($secondChild);
-
-                }
-            } else {
-
-                $lastChildren->push($firstChild);
-
+        foreach ($this->space->descendants->all() as $child) {
+            if (!$child->children()->exists()) {
+                $allChildren[] = $child;
             }
         }
 
-        return $lastChildren->sortBy('name')->all();
+        return $allChildren;
     }
 
     public function defaultLogoUrl(): string
     {
-        return 'https://dummyimage.com/600x600/ccc/fff.png&text=+';
+        return ModuleService::defaultLogoUrl();
     }
 }
