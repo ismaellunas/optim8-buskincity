@@ -22,7 +22,7 @@
                     v-for="(option, index) in selectableLocales"
                     :key="option.id"
                     :class="{ 'is-active': option.id == selectedLocale }"
-                    @click="changeLocale(option.id)"
+                    @click="changeLocale(option.id, $event)"
                 >
                     <a>
                         <span>{{ option.name }}</span>
@@ -262,8 +262,12 @@
                     });
             },
 
-            changeLocale(locale) {
+            changeLocale(locale, event) {
                 const self = this;
+
+                if (locale == this.selectedLocale) {
+                    return event.preventDefault();
+                }
 
                 if (this.form.isDirty) {
                     confirmLeaveProgress().then((result) => {
