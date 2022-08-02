@@ -97,7 +97,6 @@ class SpaceController extends CrudController
 
         return Inertia::render('Space::SpaceCreate', $this->getData([
             'title' => 'Add New Space',
-            'countryOptions' => $this->countryService ->getPhoneCountryOptions(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $parentOptions,
             'typeOptions' => $this->spaceService->typeOptions(),
@@ -171,7 +170,6 @@ class SpaceController extends CrudController
 
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => 'Edit Space',
-            'countryOptions' => $this->countryService->getPhoneCountryOptions(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $parent ? [$parent] : [],
             'spaceManagers' => $this->spaceService->formattedManagers($space),

@@ -204,7 +204,7 @@
     import icon from '@/Libs/icon-class';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { find, set, unset } from 'lodash';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, getPhoneCountries } from '@/Libs/utils';
 
     export default {
         components: {
@@ -226,7 +226,6 @@
 
         props: {
             modelValue: { type: Object, required: true },
-            countryOptions: { type: Array, default: () => [] },
             coverUrl: { type: [String, null], default: '' },
             defaultCountry: { type: String, default: '' },
             instructions: { type: Object, default: () => {} },
@@ -249,6 +248,7 @@
                 icon,
                 logoSrc: this.logoUrl,
                 coverSrc: this.coverUrl,
+                countryOptions: [],
             };
         },
 
@@ -260,6 +260,10 @@
             coverDisplay() {
                 return this.coverSrc ?? null;
             },
+        },
+
+        mounted: async function() {
+            this.countryOptions = await getPhoneCountries();
         },
 
         methods: {

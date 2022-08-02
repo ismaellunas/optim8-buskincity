@@ -105,7 +105,7 @@
 
         data() {
             return {
-                selectedCountryCode: 'ID',
+                selectedCountryCode: this.defaultCountry,
             };
         },
 
