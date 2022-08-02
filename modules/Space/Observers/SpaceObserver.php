@@ -11,7 +11,7 @@ class SpaceObserver
     {
         $allSpaces = array_merge(
             [$space],
-            $space->descendants()->get()->all()
+            $space->descendants->all()
         );
 
         app(SpaceService::class)->removeAllMedia($allSpaces);
