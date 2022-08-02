@@ -4,7 +4,7 @@ namespace Modules\Space\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\AbstractPaginator;
-use Modules\Event\Entities\Event;
+use Modules\Space\Entities\Event;
 use Modules\Space\Entities\Space;
 
 class EventService
@@ -14,25 +14,24 @@ class EventService
         ?string $term = null,
         int $perPage = 10
     ): LengthAwarePaginator {
-        $query = Event::orderBy('started_at', 'ASC')
-            ->whereHasMorph('eventable', Space::class, function ($query) use ($space) {
-                $query->where('id', $space->id);
+        return Event::orderBy('started_at', 'ASC')
+            ->hasSpace($space->id)
+            ->when($term, function ($query, $term) {
+                $query->search($term);
             })
-            ->when($term, function ($query) use ($term) {
-                $query->where('title', 'ILIKE', '%'.$term.'%');
-            });
-
-        return $query->paginate($perPage);
+            ->paginate($perPage);
     }
 
     public function transformRecords(AbstractPaginator $records)
     {
         $records->getCollection()->transform(function ($event) {
+            $dateFormat = config('constants.format.date_time_minute');
+
             return [
                 'id' => $event->id,
                 'title' => $event->title,
-                'started_at' => $event->started_at->toDateTimeString(),
-                'ended_at' => $event->ended_at->toDateTimeString(),
+                'started_at' => $event->started_at->format($dateFormat),
+                'ended_at' => $event->ended_at->format($dateFormat),
             ];
         });
     }

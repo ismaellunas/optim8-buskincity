@@ -38,4 +38,9 @@ class Event extends Model implements TranslatableContract
     {
         return $this->morphTo();
     }
+
+    public function scopeSearch($query, string $term)
+    {
+        $query->where('title', 'ILIKE', '%'.$term.'%');
+    }
 }
