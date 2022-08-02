@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PageRequest;
 use App\Models\{
-    Media,
     Page,
     PageTranslation,
 };
