@@ -55,7 +55,7 @@ class Space extends Model implements TranslatableContract
         return $this->belongsTo(Page::class);
     }
 
-    public function Type()
+    public function type()
     {
         return $this->belongsTo(GlobalOption::class, 'type_id');
     }
