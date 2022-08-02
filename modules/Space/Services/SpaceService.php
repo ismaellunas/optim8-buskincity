@@ -325,4 +325,19 @@ class SpaceService
             }
         }
     }
+
+    public function getTopParents(): NestedSetCollection
+    {
+        return Space::topParent()
+            ->select([
+                'id',
+                'name',
+                'logo_media_id',
+                'cover_media_id',
+                'page_id',
+                'parent_id',
+            ])
+            ->orderBy('name', 'asc')
+            ->get();
+    }
 }
