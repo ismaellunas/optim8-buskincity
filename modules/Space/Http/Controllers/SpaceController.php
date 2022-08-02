@@ -232,7 +232,15 @@ class SpaceController extends CrudController
 
     public function destroy(Request $request, Space $space)
     {
-        $space->delete();
+        $allChildren = $this->spaceService->getAllChildren(
+            $space->children()->get()
+        );
+
+        if ($space->delete()) {
+            $this->spaceService->removeAllMedia(
+                array_merge($allChildren, [$space])
+            );
+        }
 
         $this->generateFlashMessage($this->title.' deleted successfully!');
 
