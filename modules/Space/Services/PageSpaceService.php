@@ -2,8 +2,9 @@
 
 namespace Modules\Space\Services;
 
-use Modules\Space\Entities\Space;
 use App\Helpers\HumanReadable;
+use Modules\Space\Entities\Space;
+use Modules\Space\ModuleService;
 
 class PageSpaceService
 {
@@ -60,6 +61,6 @@ class PageSpaceService
 
     public function defaultLogoUrl(): string
     {
-        return 'https://dummyimage.com/600x600/ccc/fff.png&text=+';
+        return ModuleService::defaultLogoUrl();
     }
 }
