@@ -49,16 +49,18 @@ class SpaceService
             $spaceIds = $this->filterRootIds($ids);
         }
 
-        Space::select(['id', 'parent_id', '_lft', '_rgt'])
+        Space::select(['id', 'name', 'parent_id', '_lft', '_rgt'])
             ->when(is_null($ids), function ($query) {
                 $query->whereNull('parent_id');
             })
             ->when($spaceIds, function ($query, $spaceIds) {
                 $query->whereIn('id', $spaceIds->all());
             })
+            ->orderBy('name', 'asc')
             ->get()
             ->each(function ($space) use ($roots) {
                 $tree = Space::select(['id', 'name', 'parent_id', '_lft', '_rgt'])
+                    ->orderBy('name', 'asc')
                     ->withDepth()
                     ->descendantsAndSelf($space);
 
