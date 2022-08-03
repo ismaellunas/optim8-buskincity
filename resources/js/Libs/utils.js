@@ -125,3 +125,13 @@ export function getResourceFromDataObject(dataObject, keyName) {
 
     return resource;
 }
+
+export function getPhoneCountries(url = null) {
+    if (url === null ) {
+        url = route('admin.api.options.phone-countries');
+    }
+
+    return axios.get(url)
+        .then((response) => {return response.data; })
+        .catch((error) => { throw error; })
+}

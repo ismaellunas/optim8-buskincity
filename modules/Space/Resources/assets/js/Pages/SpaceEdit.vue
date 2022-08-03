@@ -16,7 +16,6 @@
                     >
                         <space-form
                             v-model="space"
-                            :country-options="countryOptions"
                             :cover-url="coverUrl"
                             :default-country="defaultCountry"
                             :instructions="instructions"
@@ -191,7 +190,6 @@
         props: {
             baseRouteName: { type: String, default: '' },
             can: { type: Object, required: true },
-            countryOptions: { type: Array, default:() => [] },
             coverUrl: { type: String, default: '' },
             defaultCountry: { type: String, required: true },
             errors: { type: Object, default:() => {} },

@@ -14,6 +14,7 @@
         <div class="field has-addons mb-0">
             <p class="control has-icons-left is-expanded">
                 <biz-input
+                    ref="input"
                     v-model="term"
                     :placeholder="placeholder"
                     @keyup.prevent="$emit('search', term)"
@@ -68,6 +69,10 @@
         },
 
         methods: {
+            focus() {
+                this.$refs.input.focus();
+            },
+
             clearTerm() {
                 this.term = null;
                 this.$emit('search', null);
