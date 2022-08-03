@@ -12,6 +12,8 @@ use Modules\Space\Entities\Page;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
 use Modules\Space\Exceptions\PageNotFoundException;
+use Modules\Space\ModuleService;
+use Modules\Space\Services\SpaceService;
 
 class SpaceController extends Controller
 {
@@ -22,6 +24,16 @@ class SpaceController extends Controller
     public function __construct()
     {
         $this->locale = app(TranslationService::class)->currentLanguage();
+    }
+
+    public function index()
+    {
+        return view('spaces', [
+            'defaultLogoUrl' => ModuleService::defaultLogoUrl(),
+            'metaDescription' => __('Space lists'),
+            'metaTitle' => __('Spaces'),
+            'spaces' => app(SpaceService::class)->getTopParents(),
+        ]);
     }
 
     public function show(Request $request, PageTranslation $pageTranslation)
@@ -186,9 +198,10 @@ class SpaceController extends Controller
         array $additionalData = []
     ): array {
         return array_merge([
-            'space' => $pageTranslation->page->space,
-            'metaTitle' => $pageTranslation->meta_title,
+            'dateFormat' => config('constants.format.date_time_minute'),
             'metaDescription' => $pageTranslation->meta_description,
+            'metaTitle' => $pageTranslation->meta_title,
+            'space' => $pageTranslation->page->space,
         ], $additionalData);
     }
 
