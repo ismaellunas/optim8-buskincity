@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Kalnoy\Nestedset\Collection as NestedSetCollection;
 use Modules\Space\Entities\Space;
 use Modules\Space\ModuleService;
 
@@ -48,16 +49,18 @@ class SpaceService
             $spaceIds = $this->filterRootIds($ids);
         }
 
-        Space::select(['id', 'parent_id', '_lft', '_rgt'])
+        Space::select(['id', 'name', 'parent_id', '_lft', '_rgt'])
             ->when(is_null($ids), function ($query) {
                 $query->whereNull('parent_id');
             })
             ->when($spaceIds, function ($query, $spaceIds) {
                 $query->whereIn('id', $spaceIds->all());
             })
+            ->orderBy('name', 'asc')
             ->get()
             ->each(function ($space) use ($roots) {
                 $tree = Space::select(['id', 'name', 'parent_id', '_lft', '_rgt'])
+                    ->orderBy('name', 'asc')
                     ->withDepth()
                     ->descendantsAndSelf($space);
 
@@ -306,5 +309,37 @@ class SpaceService
 
         $space->cover_media_id = null;
         $space->save();
+    }
+
+    public function removeAllMedia(array $spaces): void
+    {
+        foreach ($spaces as $space) {
+            $this->deleteLogoFromStorage($space);
+            $this->deleteCoverFromStorage($space);
+        }
+    }
+
+    public function removeAllPages(array $spaces): void
+    {
+        foreach ($spaces as $space) {
+            if ($space->page) {
+                $space->page->delete();
+            }
+        }
+    }
+
+    public function getTopParents(): NestedSetCollection
+    {
+        return Space::topParent()
+            ->select([
+                'id',
+                'name',
+                'logo_media_id',
+                'cover_media_id',
+                'page_id',
+                'parent_id',
+            ])
+            ->orderBy('name', 'asc')
+            ->get();
     }
 }

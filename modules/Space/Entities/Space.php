@@ -3,14 +3,14 @@
 namespace Modules\Space\Entities;
 
 use App\Models\GlobalOption;
-use App\Models\User;
 use App\Models\Media;
+use App\Models\User;
+use App\Services\TranslationService;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
-use Modules\Space\Entities\Page;
 
 class Space extends Model implements TranslatableContract
 {
@@ -55,7 +55,7 @@ class Space extends Model implements TranslatableContract
         return $this->belongsTo(Page::class);
     }
 
-    public function Type()
+    public function type()
     {
         return $this->belongsTo(GlobalOption::class, 'type_id');
     }
@@ -75,6 +75,11 @@ class Space extends Model implements TranslatableContract
         return $this->hasOne(Media::class, 'id', 'cover_media_id');
     }
 
+    public function events()
+    {
+        return $this->morphMany(Event::class, 'eventable');
+    }
+
     public function getLogoUrlAttribute(): ?string
     {
         return $this->logo ? $this->logo->file_url : null;
@@ -83,6 +88,30 @@ class Space extends Model implements TranslatableContract
     public function getCoverUrlAttribute(): ?string
     {
         return $this->cover ? $this->cover->file_url : null;
+    }
+
+    public function getLandingPageUrlAttribute(): ?string
+    {
+        $page = $this->page;
+
+        if (
+            !$page
+            && !$this->is_page_enabled
+        ) {
+            return null;
+        }
+
+        $locale = TranslationService::currentLanguage();
+
+        if (!$page->hasTranslation($locale)) {
+            $locale = TranslationService::getDefaultLocale();
+        }
+
+        $pageTranslation = $page->translate($locale);
+
+        return $pageTranslation
+            ? route('frontend.spaces.show', $pageTranslation->slug)
+            : null;
     }
 
     public function saveFromInputs(array $inputs)
@@ -107,5 +136,10 @@ class Space extends Model implements TranslatableContract
         }
 
         $this->save();
+    }
+
+    public function scopeTopParent($query)
+    {
+        return $query->whereNull('parent_id');
     }
 }
