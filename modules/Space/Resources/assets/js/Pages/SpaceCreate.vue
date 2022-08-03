@@ -13,7 +13,6 @@
                     v-model="space"
                     :parent-options="parentOptions"
                     :type-options="typeOptions"
-                    :country-options="countryOptions"
                     :default-country="defaultCountry"
                     :instructions="instructions"
                 />
@@ -62,7 +61,6 @@
 
         props: {
             baseRouteName: { type: String, default: '' },
-            countryOptions: { type: Array, default: () => [] },
             defaultCountry: { type: String, required: true },
             instructions: { type: Object, required: true },
             parentOptions: { type: Object, default: () => {} },
