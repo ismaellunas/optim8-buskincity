@@ -198,9 +198,10 @@ class SpaceController extends Controller
         array $additionalData = []
     ): array {
         return array_merge([
-            'space' => $pageTranslation->page->space,
-            'metaTitle' => $pageTranslation->meta_title,
+            'dateFormat' => config('constants.format.date_time_minute'),
             'metaDescription' => $pageTranslation->meta_description,
+            'metaTitle' => $pageTranslation->meta_title,
+            'space' => $pageTranslation->page->space,
         ], $additionalData);
     }
 
