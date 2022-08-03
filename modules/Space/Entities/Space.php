@@ -3,15 +3,14 @@
 namespace Modules\Space\Entities;
 
 use App\Models\GlobalOption;
-use App\Models\User;
 use App\Models\Media;
+use App\Models\User;
+use App\Services\TranslationService;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
-use Modules\Space\Entities\Page;
-use App\Services\TranslationService;
 
 class Space extends Model implements TranslatableContract
 {
@@ -56,7 +55,7 @@ class Space extends Model implements TranslatableContract
         return $this->belongsTo(Page::class);
     }
 
-    public function Type()
+    public function type()
     {
         return $this->belongsTo(GlobalOption::class, 'type_id');
     }
@@ -74,6 +73,11 @@ class Space extends Model implements TranslatableContract
     public function cover()
     {
         return $this->hasOne(Media::class, 'id', 'cover_media_id');
+    }
+
+    public function events()
+    {
+        return $this->morphMany(Event::class, 'eventable');
     }
 
     public function getLogoUrlAttribute(): ?string

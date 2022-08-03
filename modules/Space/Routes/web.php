@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Space\Http\Controllers\ContactController;
 use Modules\Space\Http\Controllers\Frontend\SpaceController as FrontendSpaceController;
+use Modules\Space\Http\Middleware\CanManageEvent;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,14 @@ Route::name('admin.')->prefix('admin/')->middleware([
 
     Route::resource('spaces.pages', PageController::class)
         ->only(['store', 'update']);
+
+    Route::middleware(CanManageEvent::class)->group(function () {
+        Route::resource('spaces.events', EventController::class)
+            ->only(['store', 'update', 'show', 'destroy']);
+
+        Route::get('spaces/{space}/event-records', 'EventController@records')
+            ->name('spaces.events.records');
+    });
 
     Route::name('api.')->prefix('api')->group(function () {
         Route::post('/spaces/contact', [ContactController::class, 'apiValidateContact'])

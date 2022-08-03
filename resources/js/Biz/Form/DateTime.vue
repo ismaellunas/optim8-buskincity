@@ -6,6 +6,7 @@
 
         <biz-date-time
             v-model="modelValue"
+            v-bind="$attrs"
             :disabled="disabled"
             @input="$emit('update:modelValue', $event)"
         />
@@ -28,6 +29,7 @@
             BizDateTime,
             BizInputError,
         },
+        inheritAttrs: false,
         props: {
             label: {
                 type: String

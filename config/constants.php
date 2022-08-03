@@ -139,6 +139,7 @@ return [
 
     'format' => [
         'date_time' => 'Y/m/d H:i:s',
+        'date_time_minute' => 'Y/m/d H:i',
     ],
 
     'currency_symbols' => [
