@@ -402,7 +402,7 @@
             },
 
             setPagePreviewUrl(page) {
-                this.pagePreviewUrl = page.landing_page_space_url + `?&preview`;
+                this.pagePreviewUrl = page.landingPageSpaceUrl + `?&preview`;
             },
         },
     };

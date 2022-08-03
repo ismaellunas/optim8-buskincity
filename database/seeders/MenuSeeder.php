@@ -6,8 +6,6 @@ use App\Entities\Caches\MenuCache;
 use App\Models\{
     Menu,
     MenuItem,
-    Page,
-    Post,
 };
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Sequence;

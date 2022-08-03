@@ -71,4 +71,9 @@ class ModuleService
             'condition' => 500,
         ];
     }
+
+    public static function defaultLogoUrl(): string
+    {
+        return 'https://dummyimage.com/600x600/ccc/fff.png&text=+';
+    }
 }

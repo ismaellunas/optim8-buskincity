@@ -309,29 +309,35 @@ class SpaceService
         $space->save();
     }
 
-    public function getAllChildren(NestedSetCollection $spaceChildren): array
-    {
-        $allChildren = [];
-
-        foreach ($spaceChildren as $child) {
-            $children = [];
-
-            if ($child->children()->exists()) {
-                $children = $this->getAllChildren($child->children()->get());
-            }
-
-            $allChildren[] = $child;
-            $allChildren = array_merge($allChildren, $children);
-        }
-
-        return $allChildren;
-    }
-
     public function removeAllMedia(array $spaces): void
     {
         foreach ($spaces as $space) {
             $this->deleteLogoFromStorage($space);
             $this->deleteCoverFromStorage($space);
         }
+    }
+
+    public function removeAllPages(array $spaces): void
+    {
+        foreach ($spaces as $space) {
+            if ($space->page) {
+                $space->page->delete();
+            }
+        }
+    }
+
+    public function getTopParents(): NestedSetCollection
+    {
+        return Space::topParent()
+            ->select([
+                'id',
+                'name',
+                'logo_media_id',
+                'cover_media_id',
+                'page_id',
+                'parent_id',
+            ])
+            ->orderBy('name', 'asc')
+            ->get();
     }
 }
