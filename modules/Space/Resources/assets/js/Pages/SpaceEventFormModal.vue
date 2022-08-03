@@ -1,6 +1,5 @@
 <template>
     <biz-modal-card
-        class="wrapper-modal"
         content-class="is-huge"
         @close="$emit('close')"
     >
@@ -336,6 +335,8 @@
                         successAlert(response.data.message);
 
                         self.$emit('after-submit');
+
+                        self.formErrors = {};
                     })
                     .catch((error) => {
                         self.formErrors = error.response.data.errors;
