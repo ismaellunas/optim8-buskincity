@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Carbon\Carbon;
 use Propaganistas\LaravelPhone\PhoneNumber;
+use App\Services\IPService;
 
 class HumanReadable
 {
@@ -22,6 +23,12 @@ class HumanReadable
     {
         return Carbon::parse($timestamp)
             ->format(config('constants.format.date_time'));
+    }
+
+    public static function dateTimeByUserTimezone(Carbon $dateTime, string $format) {
+        $timezone = app(IPService::class)->getTimezone();
+
+        return $dateTime->setTimezone($timezone)->format($format);
     }
 
     public static function phoneNumberFormat(string $number, string $country)
