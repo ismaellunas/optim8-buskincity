@@ -50,4 +50,9 @@ class IPService
     {
         return $this->getClientData()['location']['language']['code'];
     }
+
+    public function getTimezone(): ?string
+    {
+        return $this->getClientData()['time_zone']['id'] ?? config('app.timezone');
+    }
 }
