@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Entities\Caches\MenuCache;
+use App\Entities\Menus\SegmentMenuBuilder;
+use App\Entities\Menus\UrlMenuBuilder;
 use App\Models\{
     Menu,
     MenuItem,
@@ -19,28 +21,31 @@ class MenuSeeder extends Seeder
      */
     public function run()
     {
+        $typeUrl = (new UrlMenuBuilder())->getKey();
+        $typeSegment = (new SegmentMenuBuilder())->getKey();
+
         $headerMenus = [
             [
                 'title' => 'Home',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'url' => route('homepage'),
                 'order' => 1,
             ],
             [
                 'title' => 'Street Performers',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'url' => '#',
                 'order' => 2,
             ],
             [
                 'title' => 'Blog',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'url' => route('blog.index'),
                 'order' => 3,
             ],
             [
                 'title' => 'About',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'url' => '#',
                 'order' => 4,
             ],
@@ -63,17 +68,17 @@ class MenuSeeder extends Seeder
         $footerMenus = [
             [
                 'title' => 'About',
-                'type' => MenuItem::TYPE_SEGMENT,
+                'type' => $typeSegment,
                 'order' => 1,
             ],
             [
                 'title' => 'Performers',
-                'type' => MenuItem::TYPE_SEGMENT,
+                'type' => $typeSegment,
                 'order' => 2,
             ],
             [
                 'title' => 'General',
-                'type' => MenuItem::TYPE_SEGMENT,
+                'type' => $typeSegment,
                 'order' => 3,
             ],
         ];
@@ -95,7 +100,7 @@ class MenuSeeder extends Seeder
         $footerMenus = [
             [
                 'title' => 'Blog',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'url' => route('blog.index'),
                 'order' => 1,
                 'parent_id' => $menu->menuItems[0]->id,
@@ -103,7 +108,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'About',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'url' => '#',
                 'order' => 2,
                 'parent_id' => $menu->menuItems[0]->id,
@@ -111,7 +116,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Contact us',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'url' => '#',
                 'order' => 3,
                 'parent_id' => $menu->menuItems[0]->id,
@@ -119,7 +124,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Street Performer',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'url' => '#',
                 'order' => 1,
                 'parent_id' => $menu->menuItems[1]->id,
@@ -127,7 +132,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Become a Performer',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'url' => '#',
                 'order' => 2,
                 'parent_id' => $menu->menuItems[1]->id,
@@ -135,7 +140,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Terms & Conditions',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'url' => '#',
                 'order' => 1,
                 'parent_id' => $menu->menuItems[2]->id,
@@ -143,7 +148,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Privacy Policy',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'url' => '#',
                 'order' => 2,
                 'parent_id' => $menu->menuItems[2]->id,
@@ -151,7 +156,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Cookie Policy',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'url' => '#',
                 'order' => 3,
                 'parent_id' => $menu->menuItems[2]->id,
@@ -168,7 +173,7 @@ class MenuSeeder extends Seeder
         $socialMedias = [
             [
                 'title' => 'Facebook',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'order' => 1,
                 'url' => 'https://www.facebook.com/',
                 'is_blank' => true,
@@ -176,7 +181,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Twitter',
-                'type' => MenuItem::TYPE_URL,
+                'type' => $typeUrl,
                 'order' => 2,
                 'url' => 'https://twitter.com/',
                 'is_blank' => true,
