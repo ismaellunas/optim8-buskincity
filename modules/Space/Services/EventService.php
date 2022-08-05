@@ -26,7 +26,7 @@ class EventService
     public function transformRecords(AbstractPaginator $records)
     {
         $records->getCollection()->transform(function ($event) {
-            $dateFormat = config('constants.format.date_time_minute');
+            $dateFormat = config('constants.format.date_time_event');
 
             return [
                 'id' => $event->id,
