@@ -222,9 +222,7 @@
                 this.selectedMenuItem['type'] = menuItem['type'];
                 this.selectedMenuItem['url'] = menuItem['url'];
                 this.selectedMenuItem['is_blank'] = menuItem['is_blank'];
-                this.selectedMenuItem['page_id'] = menuItem['page_id'];
-                this.selectedMenuItem['post_id'] = menuItem['post_id'];
-                this.selectedMenuItem['category_id'] = menuItem['category_id'];
+                this.selectedMenuItem['menu_itemable_id'] = menuItem['menu_itemable_id'];
             },
 
             addMenuItem(menuItem) {

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Entities\Caches\MenuCache;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\MenuService;
 
 class Menu extends Model
 {
@@ -87,11 +88,18 @@ class Menu extends Model
 
         $fillableAttributes = (new MenuItem())->getFillable();
 
+        $typeModels = collect(
+                app(MenuService::class)->getMenuItemTypeOptions(true)
+            )
+            ->pluck('model', 'id')
+            ->all();
+
         foreach ($menuItems as $menuItem) {
 
             $menuItem['order'] = $order;
             $menuItem['parent_id'] = $parentId;
             $menuItem['menu_id'] = $this->id;
+            $menuItem['menu_itemable_type'] = $typeModels[$menuItem['type']] ?? null;
 
             $menuItemAttributes = collect($menuItem)
                 ->only($fillableAttributes)

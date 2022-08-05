@@ -123,9 +123,6 @@
                     is_blank: false,
                     menu_id: this.menu.id,
                     order: null,
-                    page_id: null,
-                    parent_id: null,
-                    post_id: null,
                     title: null,
                     type: usePage().props.value.typeSegment,
                     url: null,
@@ -249,9 +246,7 @@
                 this.selectedMenuItem['type'] = menuItem['type'];
                 this.selectedMenuItem['url'] = menuItem['url'];
                 this.selectedMenuItem['is_blank'] = menuItem['is_blank'];
-                this.selectedMenuItem['page_id'] = menuItem['page_id'];
-                this.selectedMenuItem['post_id'] = menuItem['post_id'];
-                this.selectedMenuItem['category_id'] = menuItem['category_id'];
+                this.selectedMenuItem['menu_itemable_id'] = menuItem['menu_itemable_id'];
             },
 
             updateMenuItems() {

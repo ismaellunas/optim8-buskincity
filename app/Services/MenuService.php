@@ -15,6 +15,7 @@ use App\Models\{
 use App\Services\{
     LanguageService,
     LoginService,
+    ModuleService,
     TranslationService,
 };
 use Illuminate\Http\Request;
@@ -23,6 +24,7 @@ use App\Entities\Caches\{
     SettingCache,
 };
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Nwidart\Modules\Facades\Module;
@@ -44,11 +46,26 @@ class MenuService
         return $menus;
     }
 
-    private function getTypeMenuClass(string $type)
+    private function getTypeMenuClass(string $type): ?string
     {
-        $typeValues = MenuItem::getAllTypeValues();
+        $className = "\\App\\Entities\\Menus\\GenerateUrls\\".Str::studly($type)."Menu";
 
-        return "\\App\\Entities\\Menus\\".$typeValues[$type]."Menu";
+        if (class_exists($className)) {
+            return $className;
+        }
+
+        return $this->getModuleTypeMenuClass($type);
+    }
+
+    private function getModuleTypeMenuClass(string $type): ?string
+    {
+        $className = '\\Modules\\'. Str::studly($type) .'\\Menus\\MenuUrlBuilder';
+
+        if (class_exists($className)) {
+            return $className;
+        }
+
+        return null;
     }
 
     private function createStructuredMenus(
@@ -63,17 +80,20 @@ class MenuService
             ->sortBy('order')
             ->each(function ($menuItem) use ($menus, $menuItems, $locale) {
                 $className = $this->getTypeMenuClass($menuItem->type);
-                $menu = new $className($menuItem, $locale);
 
-                if ($menuItems->contains('parent_id', $menuItem->id)) {
-                    $menu->children = $this->createStructuredMenus(
-                        $menuItems,
-                        $locale,
-                        $menuItem->id
-                    );
+                if ($className) {
+                    $menu = new $className($menuItem, $locale);
+
+                    if ($menuItems->contains('parent_id', $menuItem->id)) {
+                        $menu->children = $this->createStructuredMenus(
+                            $menuItems,
+                            $locale,
+                            $menuItem->id
+                        );
+                    }
+
+                    $menus->push($menu);
                 }
-
-                $menus->push($menu);
             });
 
         return $menus;
@@ -211,7 +231,7 @@ class MenuService
                                     'is_blank',
                                     'menu_id',
                                 ]);
-                            $query->where('type', MenuItem::TYPE_URL);
+                            $query->where('type', 'url');
                         }
                     ])
                     ->socialMedia()
@@ -581,16 +601,66 @@ class MenuService
             ->all();
     }
 
-    public function getMenuItemTypeOptions(): array
+    private function menuBuilderClasses(): array
     {
-        return collect(MenuItem::TYPE_VALUES)
-            ->map(function ($item, $key) {
-                return [
-                    'id' => $key,
-                    'value' => $item,
-                ];
-            })
+        return array_merge([
+            \App\Entities\Menus\UrlMenuBuilder::class,
+            \App\Entities\Menus\PageMenuBuilder::class,
+            \App\Entities\Menus\PostMenuBuilder::class,
+            \App\Entities\Menus\CategoryMenuBuilder::class,
+            \App\Entities\Menus\SegmentMenuBuilder::class,
+        ], $this->moduleMenuBuilderClasses());
+    }
+
+    private function moduleMenuBuilderClasses(): array
+    {
+        $classes = [];
+        $activeModules = app(ModuleService::class)->getModuleListByStatus();
+
+        foreach ($activeModules as $activeModule) {
+            $classes[] = '\\Modules\\'. $activeModule->getName() .'\\Menus\\MenuBuilder';
+        }
+
+        return $classes;
+    }
+
+    public function getMenuItemTypeOptions(bool $isDisplayAllOption = false): array
+    {
+        $options = [];
+
+        foreach ($this->menuBuilderClasses() as $menuBuilderClass) {
+            if (class_exists($menuBuilderClass)) {
+                $menuBuilder = new $menuBuilderClass;
+
+                if (!$isDisplayAllOption) {
+                    if ($menuBuilder->isOptionDisplayed()) {
+                        $options[] = $menuBuilder->getTypeOptions();
+                    }
+                } else {
+                    $options[] = $menuBuilder->getTypeOptions();
+                }
+            }
+        }
+
+        return collect($options)
+            ->sortBy('value')
+            ->values()
             ->all();
+    }
+
+    public function getMenuOptions(): array
+    {
+        $options = [];
+
+        foreach ($this->menuBuilderClasses() as $menuBuilderClass) {
+            if (class_exists($menuBuilderClass)) {
+                $menuBuilder = new $menuBuilderClass;
+
+                $options[$menuBuilder->getKey()] = $menuBuilder->getMenuOptions();
+            }
+        }
+
+        return $options;
     }
 
     public function removePageFromMenus(int $pageId, ?string $locale = null)
