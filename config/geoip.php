@@ -210,7 +210,7 @@ return [
             'in_eu' => false,
         ),
         'time_zone' => array(
-            'id' => 'ETC/UTC',
+            'id' => env('GEOIP_TIMEZONE', 'ETC/UTC'),
             'abbreviation' => '',
             'current_time' => '',
             'name' => '',

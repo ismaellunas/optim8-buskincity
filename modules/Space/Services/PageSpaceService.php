@@ -5,6 +5,7 @@ namespace Modules\Space\Services;
 use App\Helpers\HumanReadable;
 use Modules\Space\Entities\Space;
 use Modules\Space\ModuleService;
+use Illuminate\Support\Carbon;
 
 class PageSpaceService
 {
@@ -50,5 +51,13 @@ class PageSpaceService
     public function defaultLogoUrl(): string
     {
         return ModuleService::defaultLogoUrl();
+    }
+
+    public function eventDateTimeFormat(string $dateTime): string
+    {
+        $format = config('constants.format.date_time_event');
+        $dateTime = Carbon::parse($dateTime);
+
+        return HumanReadable::dateTimeByUserTimezone($dateTime, $format);
     }
 }
