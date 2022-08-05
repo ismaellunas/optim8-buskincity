@@ -6,6 +6,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\AbstractPaginator;
 use Modules\Space\Entities\Event;
 use Modules\Space\Entities\Space;
+use App\Helpers\HumanReadable;
 
 class EventService
 {
@@ -25,13 +26,19 @@ class EventService
     public function transformRecords(AbstractPaginator $records)
     {
         $records->getCollection()->transform(function ($event) {
-            $dateFormat = config('constants.format.date_time_minute');
+            $dateFormat = config('constants.format.date_time_event');
 
             return [
                 'id' => $event->id,
                 'title' => $event->title,
-                'started_at' => $event->started_at->format($dateFormat),
-                'ended_at' => $event->ended_at->format($dateFormat),
+                'started_at' => HumanReadable::dateTimeByUserTimezone(
+                    $event->started_at,
+                    $dateFormat
+                ),
+                'ended_at' => HumanReadable::dateTimeByUserTimezone(
+                    $event->ended_at,
+                    $dateFormat
+                ),
             ];
         });
     }

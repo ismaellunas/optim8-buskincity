@@ -73,8 +73,12 @@
                                                 <b>{{ $event->title }}</b><br>
                                                 {{ $event->description ?? null }}
                                             </td>
-                                            <td>{{ $event->started_at->format($dateFormat) }}</td>
-                                            <td>{{ $event->ended_at->format($dateFormat) }}</td>
+                                            <td>
+                                                {{ $pageSpace->eventDateTimeFormat($event->started_at) }}
+                                            </td>
+                                            <td>
+                                                {{ $pageSpace->eventDateTimeFormat($event->ended_at) }}
+                                            </td>
                                             <td>{{ $event->address }}</td>
                                         </tr>
                                     @endforeach
