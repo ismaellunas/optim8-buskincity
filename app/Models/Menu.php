@@ -53,25 +53,7 @@ class Menu extends Model
                 $query
                     ->orderBy('order', 'ASC')
                     ->orderBy('parent_id', 'ASC')
-                    ->with([
-                        'post' => function ($query) {
-                            $query->select([
-                                'id',
-                                'slug',
-                            ]);
-                        },
-                        'page' => function ($query) {
-                            $query->select('id');
-                            $query->with('translations', function ($query) {
-                                $query->select([
-                                    'id',
-                                    'page_id',
-                                    'locale',
-                                    'slug',
-                                ]);
-                            });
-                        },
-                    ]);
+                    ->with(['menuItemable']);
             },
         ]);
     }
