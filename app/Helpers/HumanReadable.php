@@ -25,7 +25,9 @@ class HumanReadable
             ->format(config('constants.format.date_time'));
     }
 
-    public static function dateTimeByUserTimezone(Carbon $dateTime, string $format) {
+    public static function dateTimeByUserTimezone(Carbon $dateTime, string $format = null): string
+    {
+        $format = $format ?? config('constants.format.date_time');
         $timezone = app(IPService::class)->getTimezone();
 
         return $dateTime->setTimezone($timezone)->format($format);
