@@ -16,7 +16,6 @@
                     >
                         <space-form
                             v-model="space"
-                            :country-options="countryOptions"
                             :cover-url="coverUrl"
                             :default-country="defaultCountry"
                             :instructions="instructions"
@@ -63,6 +62,15 @@
                             </template>
                         </space-form>
                     </form>
+                </biz-provide-inject-tab>
+
+                <biz-provide-inject-tab
+                    title="Event"
+                    :is-rendered="isEventRendered"
+                >
+                    <space-event
+                        :space="space"
+                    />
                 </biz-provide-inject-tab>
 
                 <biz-provide-inject-tab
@@ -144,6 +152,7 @@
     import SpaceForm from './SpaceForm';
     import SpaceFormTranslatable from './SpaceFormTranslatable';
     import SpaceManager from './SpaceManager';
+    import SpaceEvent from './SpaceEvent';
     import { confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { getTranslation } from '@/Libs/translation';
@@ -160,10 +169,11 @@
             BizFormSelect,
             BizProvideInjectTab,
             BizProvideInjectTabs,
+            PageForm,
+            SpaceEvent,
             SpaceForm,
             SpaceFormTranslatable,
             SpaceManager,
-            PageForm,
         },
 
         mixins: [
@@ -180,7 +190,6 @@
         props: {
             baseRouteName: { type: String, default: '' },
             can: { type: Object, required: true },
-            countryOptions: { type: Array, default:() => [] },
             coverUrl: { type: String, default: '' },
             defaultCountry: { type: String, required: true },
             errors: { type: Object, default:() => {} },
@@ -238,6 +247,10 @@
             },
 
             isManagerRendered() {
+                return this.can.manager.edit;
+            },
+
+            isEventRendered() {
                 return this.can.manager.edit;
             },
         },
@@ -404,7 +417,7 @@
             },
 
             setPagePreviewUrl(page) {
-                this.pagePreviewUrl = page.landing_page_space_url + `?&preview`;
+                this.pagePreviewUrl = page.landingPageSpaceUrl + `?&preview`;
             },
         },
     };

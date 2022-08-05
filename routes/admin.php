@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\{
+    ApiOptionController,
     ApiPageBuilderController,
     CategoryController,
     DashboardController,
@@ -159,6 +160,9 @@ Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->gr
 
     Route::get('/page-builder/user-list/role-options', [ApiPageBuilderController::class, 'userListRoleOptions'])
         ->name('page-builder.user-list.role-options');
+
+    Route::get('/options/phone-countries', [ApiOptionController::class, 'phoneCountryOptions'])
+        ->name('options.phone-countries');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {

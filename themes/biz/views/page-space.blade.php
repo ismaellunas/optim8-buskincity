@@ -55,6 +55,44 @@
                         @endif
                     </div>
 
+                    <h1 class="title is-2 mt-5 mb-2">Events</h1>
+
+                    <div class="columns mt-3">
+                        <div class="column">
+                            <table class="table is-bordered is-fullwidth">
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Started At</th>
+                                    <th>Ended At</th>
+                                    <th>Address</th>
+                                </tr>
+                                @if ($space->events()->exists())
+                                    @foreach ($space->events as $event)
+                                        <tr>
+                                            <td>
+                                                <b>{{ $event->title }}</b><br>
+                                                {{ $event->description ?? null }}
+                                            </td>
+                                            <td>
+                                                {{ $pageSpace->eventDateTimeFormat($event->started_at) }}
+                                            </td>
+                                            <td>
+                                                {{ $pageSpace->eventDateTimeFormat($event->ended_at) }}
+                                            </td>
+                                            <td>{{ $event->address }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                <tr>
+                                    <td colspan="4" class="has-text-centered">
+                                        {{ __('No event') }}
+                                    </td>
+                                </tr>
+                                @endif
+                            </table>
+                        </div>
+                    </div>
+
                     <div class="columns is-multiline mt-3">
                         @foreach ($pageSpace->getChildren() as $spaceChild)
                             @if ($loop->iteration % 2 == 0)

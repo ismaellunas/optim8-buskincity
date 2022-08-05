@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 use App\Models\{
+    Page,
     Post,
     Role,
     Setting,
     User,
 };
 use App\Observers\{
+    PageObserver,
     PostObserver,
     RoleObserver,
     SettingObserver,
@@ -39,6 +41,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Page::observe(PageObserver::class);
         Post::observe(PostObserver::class);
         Role::observe(RoleObserver::class);
         Setting::observe(SettingObserver::class);

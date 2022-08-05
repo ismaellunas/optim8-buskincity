@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Space\Http\Controllers\ContactController;
 use Modules\Space\Http\Controllers\Frontend\SpaceController as FrontendSpaceController;
+use Modules\Space\Http\Middleware\CanManageEvent;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,14 @@ Route::name('admin.')->prefix('admin/')->middleware([
     Route::resource('spaces.pages', PageController::class)
         ->only(['store', 'update']);
 
+    Route::middleware(CanManageEvent::class)->group(function () {
+        Route::resource('spaces.events', EventController::class)
+            ->only(['store', 'update', 'show', 'destroy']);
+
+        Route::get('spaces/{space}/event-records', 'EventController@records')
+            ->name('spaces.events.records');
+    });
+
     Route::name('api.')->prefix('api')->group(function () {
         Route::post('/spaces/contact', [ContactController::class, 'apiValidateContact'])
             ->name('spaces.contact.validate');
@@ -56,6 +65,8 @@ Route::prefix(Localization::setLocale())
     ->middleware(['localizationRedirect'])
     ->withoutMiddleware(HandleInertiaRequests::class)
     ->group(function () {
+        Route::get(LaravelLocalization::transRoute('frontend.spaces.index'), [FrontendSpaceController::class, 'index'])
+            ->name('frontend.spaces.index');
         Route::get(LaravelLocalization::transRoute('frontend.spaces.show'), [FrontendSpaceController::class, 'show'])
             ->name('frontend.spaces.show');
 });
