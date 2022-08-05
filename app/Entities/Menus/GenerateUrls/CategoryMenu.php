@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities\Menus;
+namespace App\Entities\Menus\GenerateUrls;
 
 use App\Contracts\MenuInterface;
 
@@ -16,7 +16,7 @@ class CategoryMenu extends BaseMenu implements MenuInterface
     protected function getEagerLoads(): array
     {
         return [
-            'category' => function ($query) {
+            'menuItemable' => function ($query) {
                 $query->select('id');
                 $query->with('translations', function ($query) {
                     $query->select([
@@ -34,7 +34,7 @@ class CategoryMenu extends BaseMenu implements MenuInterface
     public function getUrl(): string
     {
         return $this->getTranslatedUrl(
-            $this->getModel()->category->blogTranslatedUrl($this->locale)
+            $this->getModel()->menuItemable->blogTranslatedUrl($this->locale)
         );
     }
 }

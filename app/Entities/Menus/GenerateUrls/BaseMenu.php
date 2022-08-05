@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities\Menus;
+namespace App\Entities\Menus\GenerateUrls;
 
 use App\Models\MenuItem;
 use Illuminate\Support\Str;
