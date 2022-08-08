@@ -152,7 +152,7 @@ class SpaceService
 
     public function types(): Collection
     {
-        return app(GlobalOptionService::class)->getOptionByKey(
+        return app(GlobalOptionService::class)->getOptionByType(
             config('space.type_option')
         );
     }
