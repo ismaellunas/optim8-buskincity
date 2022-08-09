@@ -11,6 +11,7 @@ use App\Models\Page;
 use App\Services\PageService;
 use App\Traits\HasLocale;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -147,5 +148,14 @@ class PageTranslation extends Model implements PublishableInterface
     public function hasGeneratedStyle(): bool
     {
         return $this->generated_style != null;
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('spacePageTranslation', function (Builder $query) {
+            $query->whereHas('page', function (Builder $query) {
+                $query->whereNull('type');
+            });
+        });
     }
 }

@@ -26,10 +26,7 @@ class SitemapService
         $modules = app(ModuleService::class)->getModuleListByStatus(true);
 
         foreach ($modules as $module) {
-            $className = '\\Modules\\'.$module->getName().'\\Sitemaps\\Sitemap';
-            if (class_exists($className)) {
-                $classes[] = $className;
-            }
+            $classes[] = '\\Modules\\'.$module->getName().'\\Sitemaps\\Sitemap';
         }
 
         return $classes;
@@ -57,12 +54,14 @@ class SitemapService
         $urls = [];
 
         foreach ($this->sitemapClasses() as $sitemapClass) {
-            $sitemap = new $sitemapClass($locale);
+            if (class_exists($sitemapClass)) {
+                $sitemap = new $sitemapClass($locale);
 
-            $urls[] = new UrlTag(
-                $sitemap->locTag(),
-                $sitemap->optionalTags(),
-            );
+                $urls[] = new UrlTag(
+                    $sitemap->locTag(),
+                    $sitemap->optionalTags(),
+                );
+            }
         }
 
         return $urls;
@@ -73,24 +72,24 @@ class SitemapService
         $className = "\\App\\Entities\\Sitemaps\\".Str::studly($sitemapName);
 
         if (!class_exists($className)) {
-            return $this->moduleSitemap($locale);
+            $className = $this->moduleSitemap($sitemapName);
+        }
+
+        if (!class_exists($className)) {
+            throw new FileNotFoundException($className." is not found.");
         }
 
         return new $className($locale);
     }
 
-    private function moduleSitemap(string $locale)
+    private function moduleSitemap(string $sitemapName): ?string
     {
-        $modules = app(ModuleService::class)->getModuleListByStatus(true);
+        $isModuleActive = app(ModuleService::class)->isModuleActive($sitemapName);
 
-        foreach ($modules as $module) {
-            $className = '\\Modules\\'.$module->getName().'\\Sitemaps\\Sitemap';
-
-            if (!class_exists($className)) {
-                throw new FileNotFoundException($className." is not found.");
-            }
+        if (!$isModuleActive) {
+            throw new FileNotFoundException("Sitemap on module ". $sitemapName ." is not found.");
         }
 
-        return new $className($locale);
+        return '\\Modules\\'.Str::studly($sitemapName).'\\Sitemaps\\Sitemap';
     }
 }
