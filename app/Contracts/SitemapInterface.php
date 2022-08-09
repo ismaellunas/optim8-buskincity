@@ -11,6 +11,4 @@ interface SitemapInterface
     public function locTag(): string;
 
     public function optionalTags(): array;
-
-    public function locationUrl(string $url): string;
 }
