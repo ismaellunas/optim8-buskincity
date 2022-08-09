@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entities\Menus;
+namespace App\Entities\Menus\Options;
 
-class SegmentMenuBuilder extends UrlMenuBuilder
+class SegmentOption extends UrlOption
 {
     protected $key = 'segment';
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Entities\Menus;
+namespace App\Entities\Menus\Options;
 
 use App\Contracts\MenuBuilderInterface;
 use App\Models\Post;
 use Illuminate\Support\Str;
 
-class PostMenuBuilder implements MenuBuilderInterface
+class PostOption implements MenuBuilderInterface
 {
     protected $key = 'post';
 

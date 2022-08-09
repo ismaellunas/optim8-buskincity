@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Entities\Menus;
+namespace App\Entities\Menus\Options;
 
 use App\Contracts\MenuBuilderInterface;
 use App\Models\Category;
 use Illuminate\Support\Str;
 
-class CategoryMenuBuilder implements MenuBuilderInterface
+class CategoryOption implements MenuBuilderInterface
 {
     protected $key = 'category';
 

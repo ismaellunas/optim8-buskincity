@@ -6,7 +6,7 @@ use App\Contracts\MenuBuilderInterface;
 use Modules\Space\Entities\Space;
 use Illuminate\Support\Str;
 
-class MenuBuilder implements MenuBuilderInterface
+class MenuOption implements MenuBuilderInterface
 {
     protected $key = 'space';
 

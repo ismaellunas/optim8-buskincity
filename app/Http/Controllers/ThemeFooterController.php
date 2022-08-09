@@ -16,7 +16,7 @@ use App\Services\{
     TranslationService,
 };
 use Inertia\Inertia;
-use App\Entities\Menus\SegmentMenuBuilder;
+use App\Entities\Menus\Options\SegmentOption;
 
 class ThemeFooterController extends ThemeOptionController
 {
@@ -49,7 +49,7 @@ class ThemeFooterController extends ThemeOptionController
                 'socialMediaMenus' => $this->menuService->getSocialMediaMenus(),
                 'typeOptions' => $this->menuService->getMenuItemTypeOptions(),
                 'menuOptions' => $this->menuService->getMenuOptions(),
-                'typeSegment' => (new SegmentMenuBuilder)->getKey(),
+                'typeSegment' => (new SegmentOption)->getKey(),
             ]),
         );
     }

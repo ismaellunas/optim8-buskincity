@@ -48,7 +48,7 @@ class MenuService
 
     private function getTypeMenuClass(string $type): ?string
     {
-        $className = "\\App\\Entities\\Menus\\GenerateUrls\\".Str::studly($type)."Menu";
+        $className = "\\App\\Entities\\Menus\\".Str::studly($type)."Menu";
 
         if (class_exists($className)) {
             return $className;
@@ -59,7 +59,7 @@ class MenuService
 
     private function getModuleTypeMenuClass(string $type): ?string
     {
-        $className = '\\Modules\\'. Str::studly($type) .'\\Menus\\MenuUrlBuilder';
+        $className = '\\Modules\\'. Str::studly($type) .'\\Menus\\MenuUrl';
 
         if (class_exists($className)) {
             return $className;
@@ -604,11 +604,11 @@ class MenuService
     private function menuBuilderClasses(): array
     {
         return array_merge([
-            \App\Entities\Menus\UrlMenuBuilder::class,
-            \App\Entities\Menus\PageMenuBuilder::class,
-            \App\Entities\Menus\PostMenuBuilder::class,
-            \App\Entities\Menus\CategoryMenuBuilder::class,
-            \App\Entities\Menus\SegmentMenuBuilder::class,
+            \App\Entities\Menus\Options\UrlOption::class,
+            \App\Entities\Menus\Options\PageOption::class,
+            \App\Entities\Menus\Options\PostOption::class,
+            \App\Entities\Menus\Options\CategoryOption::class,
+            \App\Entities\Menus\Options\SegmentOption::class,
         ], $this->moduleMenuBuilderClasses());
     }
 
@@ -618,7 +618,7 @@ class MenuService
         $activeModules = app(ModuleService::class)->getModuleListByStatus();
 
         foreach ($activeModules as $activeModule) {
-            $classes[] = '\\Modules\\'. $activeModule->getName() .'\\Menus\\MenuBuilder';
+            $classes[] = '\\Modules\\'. $activeModule->getName() .'\\Menus\\MenuOption';
         }
 
         return $classes;

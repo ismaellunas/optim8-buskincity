@@ -3,10 +3,10 @@
 namespace Modules\Space\Menus;
 
 use App\Contracts\MenuInterface;
-use App\Entities\Menus\GenerateUrls\BaseMenu;
+use App\Entities\Menus\BaseMenu;
 use App\Models\MenuItem;
 
-class MenuUrlBuilder extends BaseMenu implements MenuInterface
+class MenuUrl extends BaseMenu implements MenuInterface
 {
     protected $modelName = MenuItem::class;
 

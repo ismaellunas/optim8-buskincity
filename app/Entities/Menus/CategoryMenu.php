@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entities\Menus\GenerateUrls;
+namespace App\Entities\Menus;
 
 use App\Contracts\MenuInterface;
 

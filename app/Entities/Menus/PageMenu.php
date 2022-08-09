@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Entities\Menus\GenerateUrls;
+namespace App\Entities\Menus;
 
 use App\Contracts\MenuInterface;
 use App\Models\MenuItem;
-use App\Services\ModuleService;
 
 class PageMenu extends BaseMenu implements MenuInterface
 {

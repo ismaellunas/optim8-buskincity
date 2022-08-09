@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Entities\Menus;
+namespace App\Entities\Menus\Options;
 
 use App\Contracts\MenuBuilderInterface;
 use Illuminate\Support\Str;
 
-class UrlMenuBuilder implements MenuBuilderInterface
+class UrlOption implements MenuBuilderInterface
 {
     protected $key = 'page';
 

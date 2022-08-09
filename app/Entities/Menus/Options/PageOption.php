@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Entities\Menus;
+namespace App\Entities\Menus\Options;
 
 use App\Contracts\MenuBuilderInterface;
 use App\Models\Page;
 use Illuminate\Support\Str;
 
-class PageMenuBuilder implements MenuBuilderInterface
+class PageOption implements MenuBuilderInterface
 {
     protected $key = 'page';
 
