@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
+use App\Contracts\SitemapInterface;
 use App\Services\ModuleService;
-use App\Entities\Sitemaps\BaseSitemap;
 use App\Entities\Sitemaps\UrlTag;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
@@ -67,7 +67,7 @@ class SitemapService
         return $urls;
     }
 
-    public function sitemap(string $sitemapName, string $locale): BaseSitemap
+    public function sitemap(string $sitemapName, string $locale): SitemapInterface
     {
         $className = "\\App\\Entities\\Sitemaps\\".Str::studly($sitemapName);
 

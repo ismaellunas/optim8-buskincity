@@ -2,6 +2,7 @@
 
 namespace Modules\Space\Sitemaps;
 
+use App\Contracts\SitemapInterface;
 use App\Entities\Sitemaps\BaseSitemap;
 use App\Entities\Sitemaps\UrlTag;
 use Carbon\Carbon;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Modules\Space\Entities\PageTranslation;
 
-class Sitemap extends BaseSitemap
+class Sitemap extends BaseSitemap implements SitemapInterface
 {
     /**
      * @override
