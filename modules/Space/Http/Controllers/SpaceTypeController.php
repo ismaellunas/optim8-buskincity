@@ -18,7 +18,7 @@ class SpaceTypeController extends CrudController
     public function store(SpaceTypeRequest $request)
     {
         $inputs = $request->validated();
-        $inputs['key'] = config('space.type_option');
+        $inputs['type'] = config('space.type_option');
 
         $globalOption = new GlobalOption();
 
@@ -52,7 +52,7 @@ class SpaceTypeController extends CrudController
         return app(GlobalOptionService::class)->getRecords(
             $request->term,
             [
-                'key' => config('space.type_option')
+                'type' => config('space.type_option')
             ]
         );
     }
