@@ -11,13 +11,13 @@ class GlobalOption extends BaseModel
     public function saveFromInputs(array $inputs): void
     {
         $this->name = $inputs['name'];
-        $this->key = $inputs['key'];
+        $this->type = $inputs['type'];
         $this->default_value = $inputs['default_value'] ?? null;
         $this->save();
     }
 
-    public function scopeKey($query, $value)
+    public function scopeType($query, $value)
     {
-        $query->where('key', $value);
+        $query->where('type', $value);
     }
 }
