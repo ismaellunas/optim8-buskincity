@@ -29,8 +29,8 @@ class GlobalOptionService
         return $query->paginate($perPage);
     }
 
-    public function getOptionByKey(string $key): Collection
+    public function getOptionByType(string $type): Collection
     {
-        return GlobalOption::where('key', $key)->get();
+        return GlobalOption::type($type)->get();
     }
 }
