@@ -109,7 +109,10 @@ class SpaceService
 
         $roots->each(function ($root) use ($options) {
             foreach ($root as $space) {
-                if ($space->depth <= 1) {
+                if (
+                    $space->depth <= 1
+                    && $space->children()->exists()
+                ) {
                     $options->push([
                         'id' => $space->id,
                         'value' => $space->name,
@@ -152,7 +155,7 @@ class SpaceService
 
     public function types(): Collection
     {
-        return app(GlobalOptionService::class)->getOptionByKey(
+        return app(GlobalOptionService::class)->getOptionByType(
             config('space.type_option')
         );
     }
