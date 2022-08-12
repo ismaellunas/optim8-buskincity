@@ -20,15 +20,15 @@ class GlobalOptionSeeder extends Seeder
         $options = [
             [
                 'name' => 'Country',
-                'key' => 'space_type',
+                'type' => 'space',
             ],
             [
                 'name' => 'City',
-                'key' => 'space_type',
+                'type' => 'space',
             ],
             [
                 'name' => 'Pitch',
-                'key' => 'space_type',
+                'type' => 'space',
             ],
         ];
 
