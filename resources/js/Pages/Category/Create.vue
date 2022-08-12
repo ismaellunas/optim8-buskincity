@@ -16,7 +16,7 @@
                 :is-new="isNew"
                 :locale-options="localeOptions"
                 :selected-locale="selectedLocale"
-                @change-locale="changeLocale"
+                @on-change-locale="onChangeLocale"
                 @on-submit="submit"
             />
         </div>
@@ -96,7 +96,7 @@
                 );
             },
 
-            changeLocale() {
+            onChangeLocale() {
                 let locale = {};
                 this.localeOptions.map(localeOption => {
                     if (localeOption.id == this.defaultLocale) {

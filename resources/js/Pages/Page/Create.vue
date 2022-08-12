@@ -18,7 +18,7 @@
                 :status-options="statusOptions"
                 :locale-options="localeOptions"
                 :selected-locale="selectedLocale"
-                @change-locale="changeLocale"
+                @on-change-locale="onChangeLocale"
                 @on-submit="onSubmit"
             />
         </div>
@@ -96,7 +96,7 @@
                 const submitRoute = route('admin.pages.store');
                 this.form.post(submitRoute);
             },
-            changeLocale() {
+            onChangeLocale() {
                 let locale = {};
                 this.localeOptions.map(localeOption => {
                     if (localeOption.id == this.defaultLocale) {
