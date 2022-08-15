@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <div class="box mb-6">
             <biz-provide-inject-tabs
                 v-model="activeTab"
@@ -136,7 +132,7 @@
                 </biz-provide-inject-tab>
             </biz-provide-inject-tabs>
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -163,7 +159,6 @@
 
     export default {
         components: {
-            AppLayout,
             BizButton,
             BizButtonLink,
             BizFormSelect,
@@ -186,6 +181,8 @@
                 can: this.can,
             }
         },
+
+        layout: AppLayout,
 
         props: {
             baseRouteName: { type: String, default: '' },

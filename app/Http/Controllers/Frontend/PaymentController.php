@@ -48,6 +48,7 @@ class PaymentController extends Controller
             'defaultCountry' => $defaultCountry,
             'hasConnectedAccount' => $hasConnectedAccount,
             'title' => 'Payments',
+            'description' => 'BuskinCity allows you to receive payments/donations from your audience, to activate payments you need to apply with our partners.',
         ]);
     }
 }

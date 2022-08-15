@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <div class="box mb-6">
             <form
                 action=""
@@ -33,23 +29,20 @@
                 </div>
             </form>
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import SpaceForm from './SpaceForm';
-    import { ref } from "vue";
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
-            AppLayout,
             BizButton,
             BizButtonLink,
             SpaceForm,
@@ -58,6 +51,8 @@
         mixins: [
             MixinHasLoader,
         ],
+
+        layout: AppLayout,
 
         props: {
             baseRouteName: { type: String, default: '' },

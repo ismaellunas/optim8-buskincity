@@ -29,6 +29,8 @@ class DonationController extends Controller
 
     public function success(User $user)
     {
-        return view('donation-success', ['user' => $user]);
+        return view('donation-success', [
+            'user' => $user,
+        ]);
     }
 }
