@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
-//use Illuminate\Support\ServiceProvider;
 
 class GetCandyServiceProvider extends VendorGetCandyServiceProvider
 {
@@ -74,10 +73,4 @@ class GetCandyServiceProvider extends VendorGetCandyServiceProvider
             [CartSessionAuthListener::class, 'logout']
         );
     }
-
-    /*
-    protected function loadMigrationsFrom($paths)
-    {
-    }
-     */
 }
