@@ -25,4 +25,9 @@ class ModuleService
 
         return false;
     }
+
+    public function getAllEnabledNames(): array
+    {
+        return collect(Module::allEnabled())->keys()->all();
+    }
 }
