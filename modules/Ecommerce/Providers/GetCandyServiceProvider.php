@@ -41,7 +41,7 @@ class GetCandyServiceProvider extends VendorGetCandyServiceProvider
             });
 
             $this->publishes([
-                __DIR__.'/../database/migrations/' => database_path('migrations'),
+                base_path('vendor/getcandy/core/database/migrations/') => database_path('migrations'),
             ], 'getcandy-migrations');
 
             $this->commands([
