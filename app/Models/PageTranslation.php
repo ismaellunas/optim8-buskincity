@@ -152,10 +152,10 @@ class PageTranslation extends Model implements PublishableInterface
 
     protected static function booted()
     {
-        static::addGlobalScope('spacePageTranslation', function (Builder $query) {
             $query->whereHas('page', function (Builder $query) {
                 $query->whereNull('type');
             });
+        static::addGlobalScope('pageTranslation', function (Builder $query) {
         });
     }
 }
