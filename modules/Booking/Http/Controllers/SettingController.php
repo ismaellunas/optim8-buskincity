@@ -1,0 +1,49 @@
+<?php
+
+namespace Modules\Booking\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\CrudController;
+use Inertia\Inertia;
+use App\Models\Setting;
+
+class SettingController extends CrudController
+{
+    public function edit()
+    {
+        $settings = Setting::whereIn('key', [
+            'booking_email_new_booking',
+            'booking_email_reminder',
+            'booking_email_cancellation',
+        ])->get()->pluck('value', 'key');
+
+        return Inertia::render('Booking::Settings', $this->getData([
+            'title' => 'Settings',
+            'booking_settings' => $settings,
+        ]));
+    }
+
+    public function update(Request $request)
+    {
+        $inputs = $request->all();
+
+        Setting::updateOrCreate(
+            ['key' => 'booking_email_new_booking'],
+            ['order' => 0, 'value' => $inputs['email_new_booking']]
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'booking_email_reminder'],
+            ['order' => 0, 'value' => $inputs['email_reminder']]
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'booking_email_cancellation'],
+            ['order' => 0, 'value' => $inputs['email_cancellation']]
+        );
+
+        $this->generateFlashMessage('Setting has been updated');
+
+        return back();
+    }
+}

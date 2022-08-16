@@ -50,6 +50,12 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
             ->group(module_path('Booking', '/Routes/web.php'));
+
+        Route::middleware('web')
+            ->namespace($this->moduleNamespace)
+            ->prefix('admin')
+            ->name('admin.')
+            ->group(module_path('Booking', '/Routes/admin.php'));
     }
 
     /**
