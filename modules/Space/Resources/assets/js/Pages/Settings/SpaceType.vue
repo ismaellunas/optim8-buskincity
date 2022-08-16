@@ -1,6 +1,6 @@
 <template>
     <div>
-        <form-section @submitted="updateProfileInformation">
+        <form-section>
             <template #title>
                 Space Types
             </template>
