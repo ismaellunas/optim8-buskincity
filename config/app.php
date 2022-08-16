@@ -166,6 +166,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Modules\Ecommerce\Providers\GetCandyServiceProvider::class,
         Modules\Space\Providers\RouteServiceProvider::class,
 
         /*
