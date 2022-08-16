@@ -97,7 +97,7 @@
 
         methods: {
             submit() {
-                const url = route('admin.ecommerce.settings.update');
+                const url = route('admin.booking.settings.update');
 
                 this.form.post(url, {
                     replace: true,
