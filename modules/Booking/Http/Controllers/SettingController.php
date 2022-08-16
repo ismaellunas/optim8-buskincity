@@ -2,10 +2,11 @@
 
 namespace Modules\Booking\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\CrudController;
-use Inertia\Inertia;
 use App\Models\Setting;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Modules\Booking\Http\Requests\SettingRequest;
 
 class SettingController extends CrudController
 {
@@ -23,7 +24,7 @@ class SettingController extends CrudController
         ]));
     }
 
-    public function update(Request $request)
+    public function update(SettingRequest $request)
     {
         $inputs = $request->all();
 
