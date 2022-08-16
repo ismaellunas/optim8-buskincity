@@ -1,9 +1,9 @@
 <template>
     <div>
         <biz-form-dropdown-search
-            label="Choose Manager"
             :close-on-click="true"
-            @search="searchManager($event)"
+            :label="label"
+            @search="searchUser($event)"
         >
             <template #trigger>
                 <span :style="{'min-width': '4rem'}">
@@ -12,32 +12,30 @@
             </template>
 
             <biz-dropdown-item
-                v-for="option in managerOptions"
+                v-for="option in userOptions"
                 :key="option.id"
-                @click="addManager(option)"
+                @click="addUser(option)"
             >
                 {{ option.value }}
             </biz-dropdown-item>
         </biz-form-dropdown-search>
 
         <div
-            v-show="currentManagers.length > 0"
+            v-show="currentUsers.length > 0"
             class="box"
         >
             <span
-                v-for="manager in currentManagers"
-                :key="manager.id"
+                v-for="user in currentUsers"
+                :key="user.id"
                 class="tag is-medium mx-1"
             >
-                {{ manager.value }}
+                {{ user.value }}
                 <button
                     class="delete is-small"
-                    @click="removeManager(manager)"
+                    @click="removeUser(user)"
                 />
             </span>
         </div>
-
-        <slot name="action" />
     </div>
 </template>
 
@@ -56,67 +54,69 @@
 
         props: {
             modelValue: { type: Array, default: () => [] },
+            label: { type: String, default: "Choose User" },
+            getUsersUrl: { type: String, required: true },
         },
 
         setup(props, { emit }) {
             return {
-                currentManagers: useModelWrapper(props, emit),
+                currentUsers: useModelWrapper(props, emit),
             };
         },
 
         data() {
             return {
-                filteredManagers: [],
+                filteredUsers: [],
                 term: null,
             };
         },
 
         computed: {
-            managerIds() {
-                return this.currentManagers.map(manager => manager.id);
+            userIds() {
+                return this.currentUsers.map(user => user.id);
             },
 
-            managerOptions() {
-                return this.filteredManagers
-                    .filter((manager) => !this.managerIds.includes(manager.id));
+            userOptions() {
+                return this.filteredUsers
+                    .filter((user) => !this.userIds.includes(user.id));
             },
         },
 
         mounted() {
-            this.getManagers(null, this.managerIds);
+            this.getUsers(null, this.userIds);
         },
 
         methods: {
-            getManagers(term, excludedIds) {
+            getUsers(term, excludedIds) {
                 const self = this;
-                const url = route('admin.spaces.search-managers');
+                const url = this.getUsersUrl;
 
                 axios.get(url, {
                     params: {term: term, excluded: excludedIds},
                 }).then((response) => {
-                    self.filteredManagers = response.data;
+                    self.filteredUsers = response.data;
                 });
             },
 
-            searchManager: debounce(function(term) {
+            searchUser: debounce(function(term) {
                 this.term = term;
-                this.getManagers(term, this.managerIds);
+                this.getUsers(term, this.userIds);
             }, debounceTime),
 
-            addManager(manager) {
-                if (! this.managerIds.includes(manager.id)) {
-                    this.currentManagers.push(manager);
+            addUser(user) {
+                if (! this.userIds.includes(user.id)) {
+                    this.currentUsers.push(user);
                 }
             },
 
-            removeManager(manager) {
-                if (this.managerIds.includes(manager.id)) {
-                    remove(this.currentManagers, (currentManager) => {
-                        return currentManager.id == manager.id;
+            removeUser(user) {
+                if (this.userIds.includes(user.id)) {
+                    remove(this.currentUsers, (currentUser) => {
+                        return currentUser.id == user.id;
                     });
 
-                    if (this.currentManagers.length <= 0) {
-                        this.getManagers(this.term, this.managerIds);
+                    if (this.currentUsers.length <= 0) {
+                        this.getUsers(this.term, this.userIds);
                     }
                 }
             },

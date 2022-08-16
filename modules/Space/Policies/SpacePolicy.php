@@ -3,6 +3,7 @@
 namespace Modules\Space\Policies;
 
 use App\Models\User;
+use App\Services\ModuleService;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Modules\Space\Entities\Space;
 
@@ -74,5 +75,13 @@ class SpacePolicy
     public function manageManager(User $user)
     {
         return $user->isAdministrator || $user->isSuperAdministrator;
+    }
+
+    public function manageProductManager(User $user)
+    {
+        return (
+            app(ModuleService::class)->isModuleActive('Ecommerce')
+            && ($user->isAdministrator || $user->isSuperAdministrator)
+        );
     }
 }
