@@ -3,8 +3,6 @@
 use Illuminate\Support\Facades\Route;
 
 Route::group([
-    'prefix' => 'booking',
-    'name' => 'booking.',
     'middleware' => [
         'auth:sanctum',
         'verified',
@@ -12,9 +10,12 @@ Route::group([
         'ensureLoginFromAdminLoginRoute',
     ],
 ], function () {
-    Route::middleware('role:Super Administrator|Administrator')->group(function() {
-        Route::get('/settings', 'SettingController@edit');
-        Route::post('/settings/update', 'SettingController@update')
-            ->name('settings.update');
+    Route::prefix('booking')->name('booking.')->group(function() {
+        Route::middleware('role:Super Administrator|Administrator')->group(function () {
+            Route::get('/settings', 'SettingController@edit')
+                ->name('settings.edit');
+            Route::post('/settings/update', 'SettingController@update')
+                ->name('settings.update');
+        });
     });
 });
