@@ -50,6 +50,11 @@ class Space extends Model implements TranslatableContract
         return $this->belongsToMany(User::class);
     }
 
+    public function productManagers()
+    {
+        return $this->belongsToMany(User::class, 'space_product_managers');
+    }
+
     public function page()
     {
         return $this->belongsTo(Page::class);
