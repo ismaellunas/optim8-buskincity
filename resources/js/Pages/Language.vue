@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="mb-6">
@@ -76,7 +72,7 @@
                 </div>
             </form>
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -97,7 +93,6 @@
         name: 'Language',
 
         components: {
-            AppLayout,
             BizButton,
             BizButtonOption,
             BizDropdownItem,
@@ -109,6 +104,8 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        layout: AppLayout,
 
         props: {
             supportedLanguages: {type: Array, required: true},

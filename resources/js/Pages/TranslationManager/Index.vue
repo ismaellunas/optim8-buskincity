@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <biz-flash-notifications :flash="$page.props.flash" />
         <biz-error-notifications
             :bags="['default']"
@@ -297,7 +293,7 @@
                 </div>
             </template>
         </biz-modal-card>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -330,7 +326,6 @@
 
     export default {
         components: {
-            AppLayout,
             BizButton,
             BizButtonLink,
             BizButtonDownload,
@@ -354,6 +349,8 @@
             MixinHasModal,
             MixinHasPageErrors,
         ],
+
+        layout: AppLayout,
 
         props: {
             baseRouteName: {
