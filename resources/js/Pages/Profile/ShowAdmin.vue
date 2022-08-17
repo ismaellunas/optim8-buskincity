@@ -1,11 +1,7 @@
 <template>
-    <app-layout title="Profile">
-        <template #header>
-            Profile
-        </template>
-
+    <div>
         <show-content />
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -16,7 +12,6 @@
         name: 'ProfileShow',
 
         components: {
-            AppLayout,
             ShowContent,
         },
 
@@ -31,6 +26,8 @@
             }
         },
 
+        layout: (h, page) => { return h(AppLayout, () => page) },
+
         props: {
             can: { type: Object, required: true },
             errors: {type: Object, default: () => {}},
@@ -38,6 +35,7 @@
             sessions: { type: Array, default:() => [] },
             socialiteDrivers: { type: Array, default:() => []},
             supportedLanguageOptions: { type: Array, default: () => [] },
+            title: { type: String, default: 'Profile' },
         },
     };
 </script>

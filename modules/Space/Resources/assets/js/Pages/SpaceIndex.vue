@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <div class="box">
             <div class="columns">
                 <div class="column">
@@ -71,7 +67,7 @@
                 />
             </div>
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -88,7 +84,6 @@
 
     export default {
         components: {
-            AppLayout,
             BizButtonLink,
             BizDropdown,
             BizDropdownItem,
@@ -99,6 +94,8 @@
         mixins: [
             MixinHasLoader,
         ],
+
+        layout: AppLayout,
 
         props: {
             baseRouteName: { type: String, required: true },

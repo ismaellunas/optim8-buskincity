@@ -1,13 +1,9 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <div class="box mb-6">
             <space-type v-if="can.spaceType.view" />
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -16,9 +12,10 @@
 
     export default {
         components: {
-            AppLayout,
             SpaceType,
         },
+
+        layout: AppLayout,
 
         props: {
             can: { type: Object, required: true },
