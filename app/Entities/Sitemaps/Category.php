@@ -2,6 +2,7 @@
 
 namespace App\Entities\Sitemaps;
 
+use App\Contracts\SitemapInterface;
 use App\Models\Category as CategoryModel;
 use App\Models\CategoryTranslation;
 use App\Models\Post;
@@ -9,7 +10,7 @@ use App\Services\TranslationService;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
-class Category extends BaseSitemap
+class Category extends BaseSitemap implements SitemapInterface
 {
     public function urls(): array|Collection
     {

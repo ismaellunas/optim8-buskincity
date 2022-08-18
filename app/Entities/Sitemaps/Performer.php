@@ -2,12 +2,13 @@
 
 namespace App\Entities\Sitemaps;
 
+use App\Contracts\SitemapInterface;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
-class Performer extends BaseSitemap
+class Performer extends BaseSitemap implements SitemapInterface
 {
     public function urls(): array|Collection
     {
