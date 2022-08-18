@@ -19,7 +19,6 @@ class DefaultSeeder extends Seeder
     {
         Model::unguard();
 
-        /*
         ProductType::create([
             'name' => 'Event',
         ]);
@@ -29,7 +28,6 @@ class DefaultSeeder extends Seeder
             'name' => 'English',
             'default' => true,
         ]);
-         */
 
         TaxClass::create([
             'name' => 'Default Tax Class',
