@@ -4,7 +4,6 @@ namespace Modules\Booking\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
 use App\Models\Setting;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Booking\Http\Requests\SettingRequest;
 
