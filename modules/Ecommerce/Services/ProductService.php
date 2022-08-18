@@ -9,6 +9,7 @@ use App\Services\UserService;
 use GetCandy\Models\Product;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Ecommerce\ModuleService;
 
@@ -46,12 +47,12 @@ class ProductService
         });
     }
 
-    public function roleOptions()
+    public function roleOptions(): Collection
     {
-        return array_merge(
+        return collect(array_merge(
             [['id' => null, 'value' => '- '.__('Select').' -']],
             app(UserService::class)->getRoleOptions()
-        );
+        ));
     }
 
     public function upload(

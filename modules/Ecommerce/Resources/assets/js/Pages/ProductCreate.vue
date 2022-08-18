@@ -8,7 +8,7 @@
                 @submit.prevent="submit"
             >
                 <div class="box">
-                    <h5 class="title is-5">
+                    <h5 class="title is-5 mb-2">
                         Details
                     </h5>
 
@@ -29,7 +29,6 @@
                     <biz-form-select
                         v-model="form.status"
                         label="Status"
-                        required
                         :message="error('status')"
                     >
                         <option
@@ -41,14 +40,13 @@
                         </option>
                     </biz-form-select>
 
-                    <h5 class="title is-5">
+                    <h5 class="title is-5 mt-5 mb-3">
                         Visibility
                     </h5>
 
                     <biz-form-select
                         v-model="form.roles"
                         label="Roles"
-                        required
                         :message="error('roles')"
                     >
                         <option
@@ -60,20 +58,20 @@
                         </option>
                     </biz-form-select>
 
-                    <h5 class="title is-5">
-                        Images
+                    <h5 class="title is-5 mt-5 mb-3">
+                        Gallery
                     </h5>
 
                     <biz-form-file-upload
                         ref="file_upload"
-                        v-model="form.images"
+                        v-model="form.gallery"
                         :accepted-types="['image/jpeg', 'image/png']"
                         :allow-multiple="true"
                         :max-file-size="500"
                         :max-files="10"
                         :media="[]"
                         :message="error('gallery')"
-                        label="Gallery"
+                        label="Upload"
                     >
                         <template #medium="mediumProps">
                             {{ mediumProps.file_url }}
@@ -144,7 +142,7 @@
                 status: 'draft',
                 description: null,
                 roles: null,
-                images: {
+                gallery: {
                     deleted_media: [],
                     files: [],
                 },

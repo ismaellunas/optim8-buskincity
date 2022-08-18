@@ -14,6 +14,7 @@ use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\ModuleService;
 use Modules\Ecommerce\Services\ProductService;
+use Modules\Ecommerce\Http\Requests\ProductCreateRequest;
 
 class ProductController extends CrudController
 {
@@ -77,7 +78,7 @@ class ProductController extends CrudController
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(ProductCreateRequest $request)
     {
         $productType = ProductType::where('name', 'Event')->first();
 
