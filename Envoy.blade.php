@@ -43,6 +43,7 @@
         'QUEUE_CONNECTION',
         'RECAPTCHA_SECRET_KEY',
         'RECAPTCHA_SITE_KEY',
+        'SCOUT_DRIVER',
         'STRIPE_PK',
         'STRIPE_SK',
         // 'REDIS_CLIENT',
