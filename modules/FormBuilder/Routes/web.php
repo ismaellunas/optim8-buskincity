@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\FormBuilder\Http\Controllers\FormBuilderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::prefix('formbuilder')->group(function() {
-//     Route::get('/', 'FormBuilderController@index');
-// });
+Route::name('admin.')->prefix('admin/')->middleware([
+    'auth:sanctum',
+    'verified',
+    'can:system.dashboard',
+    'ensureLoginFromAdminLoginRoute',
+])->group(function () {
+    Route::resource('form-builders', FormBuilderController::class);
+});
