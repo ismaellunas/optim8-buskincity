@@ -2,10 +2,7 @@
 
 namespace Modules\Ecommerce\Http\Controllers;
 
-//use GetCandy\Models\Product;
-//use Illuminate\Routing\Controller;
 use App\Http\Controllers\CrudController;
-use App\Services\UserService;
 use GetCandy\FieldTypes\Text;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\ProductType;
@@ -15,6 +12,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\ModuleService;
 use Modules\Ecommerce\Services\ProductService;
 
 class ProductController extends CrudController
@@ -69,7 +67,8 @@ class ProductController extends CrudController
                     'value' => 'Published',
                 ],
             ],
-            'roleOptions' => app(UserService::class)->getRoleOptions(),
+            'roleOptions' => $this->productService->roleOptions(),
+            'imageMimes' => config('constants.extensions.image'),
         ]));
     }
 
@@ -95,22 +94,44 @@ class ProductController extends CrudController
                     'en' => new Text($inputs['description']),
                 ])),
             ],
-            'sku' => 'test'.date('YmdHis'),
         ]);
 
         $taxClass = TaxClass::getDefault();
 
-        $variant = ProductVariant::create([
+        ProductVariant::create([
             'product_id' => $product->id,
             'tax_class_id' => $taxClass->id,
             'purchasable' => 'always',
-            'shippable' => true,
+            'shippable' => false,
             'stock' => 0,
             'backorder' => 0,
-            'sku' => 'EVT-'.$product->id,
+            'sku' => 'EVENT-'.$product->id,
         ]);
 
-        return back();
+        $meta = [
+            'roles' => empty($inputs['roles']) ? [] : [$inputs['roles']],
+        ];
+
+        $product->setMeta($meta);
+        $product->save();
+
+        $files = $inputs['images']['files'] ?? [];
+
+        $media = [];
+
+        if (! empty($files)) {
+            foreach ($files as $file) {
+                $media[] = $this->productService->upload(
+                    $product,
+                    $file,
+                    ModuleService::MEDIA_TYPE_PRODUCT
+                );
+            }
+        }
+
+        $this->generateFlashMessage('Successfully updating '.$this->title.'!');
+
+        return redirect()->route($this->baseRouteName.'.edit', $product->id);
     }
 
     /**

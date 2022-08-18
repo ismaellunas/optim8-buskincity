@@ -2,6 +2,7 @@
 
 namespace Modules\Ecommerce\Entities;
 
+use App\Models\Media;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\Product as GetCandyProduct;
 use Illuminate\Support\Arr;
@@ -16,6 +17,11 @@ class Product extends GetCandyProduct
     public function getMetaTable(): string
     {
         return config('getcandy.database.table_prefix').'products_meta';
+    }
+
+    public function gallery()
+    {
+        return $this->morphMany(Media::class, 'medially');
     }
 
     /**

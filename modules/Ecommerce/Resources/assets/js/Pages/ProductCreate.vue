@@ -52,8 +52,8 @@
                         :message="error('roles')"
                     >
                         <option
-                            v-for="roleOption in roleOptions"
-                            :key="roleOption.id"
+                            v-for="(roleOption, index) in roleOptions"
+                            :key="index"
                             :value="roleOption.id"
                         >
                             {{ roleOption.value }}
@@ -63,6 +63,22 @@
                     <h5 class="title is-5">
                         Images
                     </h5>
+
+                    <biz-form-file-upload
+                        ref="file_upload"
+                        v-model="form.images"
+                        :accepted-types="['image/jpeg', 'image/png']"
+                        :allow-multiple="true"
+                        :max-file-size="500"
+                        :max-files="10"
+                        :media="[]"
+                        :message="error('gallery')"
+                        label="Gallery"
+                    >
+                        <template #medium="mediumProps">
+                            {{ mediumProps.file_url }}
+                        </template>
+                    </biz-form-file-upload>
 
                     <div class="field is-grouped is-grouped-right">
                         <div class="control">
@@ -92,6 +108,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormSelect from '@/Biz/Form/Select';
+    import BizFormFileUpload from '@/Biz/Form/FileUpload';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -103,6 +120,7 @@
             BizButtonLink,
             BizErrorNotifications,
             BizFormInput,
+            BizFormFileUpload,
             BizFormSelect,
         },
 
@@ -117,6 +135,7 @@
             baseRouteName: {type: String, required: true},
             roleOptions: { type: Array, required: true },
             statusOptions: { type: Array, required: true },
+            imageMimes: {type: Array, required: true },
         },
 
         setup(props, { emit }) {
@@ -124,8 +143,11 @@
                 name: null,
                 status: 'draft',
                 description: null,
-                roles: [],
-                images: [],
+                roles: null,
+                images: {
+                    deleted_media: [],
+                    files: [],
+                },
             };
 
             return {
