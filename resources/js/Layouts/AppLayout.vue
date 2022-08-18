@@ -1,15 +1,15 @@
 <template>
     <div id="main-container-wrapper">
-        <Head :title="title" />
+        <Head :title="title ?? titleChild" />
 
         <biz-navbar-menu />
 
         <section class="hero is-small is-primary mb-4">
             <div class="hero-body">
                 <div class="container">
-                    <p class="title">
-                        <slot name="header" />
-                    </p>
+                    <h3 class="title is-size-3">
+                        {{ title ?? titleChild }}
+                    </h3>
                 </div>
             </div>
         </section>
@@ -29,9 +29,10 @@
     import BizNavbarMenu from '@/Biz/NavbarMenu';
     import BizFlashExpired from '@/Biz/FlashExpired';
     import { Head } from '@inertiajs/inertia-vue3';
+    import { head } from 'lodash';
 
     export default {
-        name: 'LayoutApp',
+        name: 'AppLayout',
 
         components: {
             BizNavbarMenu,
@@ -40,7 +41,13 @@
         },
 
         props: {
-            title: { type: String, required: true },
+            title: { type: String, default: null },
+        },
+
+        computed: {
+            titleChild() {
+                return head(this.$slots.default())?.type.props.title?.default ?? '';
+            },
         },
     };
 </script>

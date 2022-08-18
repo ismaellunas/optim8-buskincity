@@ -1,0 +1,25 @@
+{
+    "name": "biz752/ecommerce",
+    "description": "",
+    "authors": [
+        {
+            "name": "Biz 752",
+            "email": "tiago@biz752.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "require": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Ecommerce\\": ""
+        }
+    }
+}
