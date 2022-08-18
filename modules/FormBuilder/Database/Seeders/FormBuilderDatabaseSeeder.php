@@ -16,6 +16,6 @@ class FormBuilderDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        // $this->call("OthersTableSeeder");
+        $this->call("Modules\FormBuilder\Database\Seeders\PermissionSeeder");
     }
 }
