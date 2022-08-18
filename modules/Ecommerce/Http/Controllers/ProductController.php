@@ -39,6 +39,7 @@ class ProductController extends CrudController
 
         return Inertia::render('Ecommerce::ProductIndex', $this->getData([
             'title' => $this->getIndexTitle(),
+            'pageQueryParams' => array_filter($request->only('term')),
             'products' => $this->productService->getRecords(
                 $request->term
             ),
@@ -129,7 +130,9 @@ class ProductController extends CrudController
      */
     public function edit($id)
     {
-        return view('ecommerce::edit');
+        return Inertia::render('Ecommerce::ProductEdit', $this->getData([
+            'title' => $this->getEditTitle(),
+        ]));
     }
 
     /**

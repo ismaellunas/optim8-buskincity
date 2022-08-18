@@ -36,7 +36,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Title</th>
+                        <th>Name</th>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -77,6 +77,11 @@
                 </tbody>
             </biz-table>
         </div>
+
+        <biz-pagination
+            :links="products.links"
+            :query-params="queryParams"
+        />
     </div>
 </template>
 
@@ -85,15 +90,19 @@
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizIcon from '@/Biz/Icon';
+    import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { merge } from 'lodash';
+    import { ref } from "vue";
 
     export default {
         components: {
             BizButtonIcon,
             BizButtonLink,
             BizIcon,
+            BizPagination,
             BizTable,
         },
 
@@ -102,12 +111,20 @@
         props: {
             baseRouteName: { type: String, required: true },
             can: { type: Object, required: true },
+            pageQueryParams: { type: Array, default: () => [] },
             products: { type: Object, required: true },
         },
 
-        setup() {
+        setup(props) {
+            const queryParams = merge(
+                {},
+                props.pageQueryParams
+            );
+
             return {
-                icon
+                icon,
+                queryParams: ref(queryParams),
+                term: ref(props.pageQueryParams?.term ?? null),
             };
         },
 
