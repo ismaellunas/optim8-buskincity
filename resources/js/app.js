@@ -19,7 +19,12 @@ createInertiaApp({
             if (module[0] == 'Space') {
                 return import(`@mod/Space/Resources/assets/js/Pages/${module[1]}`);
             }
+
+            if (module[0] == 'Booking') {
+                return import(`@mod/Booking/Resources/assets/js/Pages/${module[1]}`);
+            }
         }
+
         return import(`./Pages/${name}`);
     },
     setup({ el, app, props, plugin }) {
