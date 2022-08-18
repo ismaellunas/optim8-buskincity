@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Space;
+namespace Modules\Booking;
 
 use Illuminate\Http\Request;
 
