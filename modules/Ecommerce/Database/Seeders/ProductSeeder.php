@@ -42,7 +42,7 @@ class ProductSeeder extends Seeder
                 'product_id' => $product->id,
                 'tax_class_id' => $taxClass->id,
                 'purchasable' => 'always',
-                'shippable' => true,
+                'shippable' => false,
                 'stock' => 0,
                 'backorder' => 0,
                 'sku' => 'EVENT-'.$product->id,
