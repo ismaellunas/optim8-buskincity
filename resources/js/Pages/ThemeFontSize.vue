@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <biz-error-notifications
             :errors="$page.props.errors"
         />
@@ -60,7 +56,7 @@
                 </fieldset>
             </form>
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -78,7 +74,6 @@
         name: 'ThemeOptionFontSizeEdit',
 
         components: {
-            AppLayout,
             BizButton,
             BizErrorNotifications,
             BizInput,
@@ -88,6 +83,8 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        layout: AppLayout,
 
         props: {
             baseRouteName: {

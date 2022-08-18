@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="mb-6">
@@ -20,7 +16,7 @@
                 @on-submit="onSubmit"
             />
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -33,10 +29,10 @@
 
     export default {
         components: {
-            AppLayout,
             PostForm,
             BizErrorNotifications,
         },
+        layout: AppLayout,
         props: {
             can: { type: Object, required: true },
             categoryOptions: { type: Array, required: true, },

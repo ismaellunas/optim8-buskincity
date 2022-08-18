@@ -19,6 +19,7 @@
     import BizInputError from '@/Biz/InputError';
     import BizLabel from '@/Biz/Label';
     import BizTextEditor from '@/Biz/EditorTinymce';
+    import { emailConfig } from '@/Libs/tinymce-configs';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -34,9 +35,17 @@
             modelValue: { type: [String, null], required: true },
             config: { type: Object, default: () => {} },
             disabled: { type: Boolean, default: false },
+            height: { type: [Number, String], default: 300 },
             label: { type: String, default: "" },
             message: { type: Object, default: () => {} },
-            placeholder: { type: String, default: ""},
+            mode: {
+                type: String,
+                default: 'default',
+                validator(value) {
+                    return ['email', 'default'].includes(value);
+                },
+            },
+            placeholder: { type: String, default: "" },
         },
 
         emits: ['update:modelValue'],
@@ -47,12 +56,20 @@
             };
         },
 
-        data() {
-            return {
-                editorConfig: {
+        computed: {
+            editorConfig() {
+                const defaultConfig = {
                     inline: false,
-                },
-            };
+                    height: this.height,
+                    placeholder: this.placeholder,
+                };
+
+                if (this.mode == 'email') {
+                    return Object.assign(defaultConfig, emailConfig);
+                }
+
+                return defaultConfig;
+            },
         },
     };
 </script>

@@ -1,17 +1,5 @@
 <template>
-    <layout>
-        <Head :title="title" />
-
-        <template #header>
-            <h1 class="title is-2">
-                {{ title }}
-            </h1>
-        </template>
-
-        <template #headerDescription>
-            <p>BuskinCity allows you to receive payments/donations from your audience, to activate payments you need to apply with our partners.</p>
-        </template>
-
+    <div>
         <div class="columns is-multiline">
             <biz-widget-stripe-connect
                 title="Stripe Connected"
@@ -23,25 +11,24 @@
                 </template>
             </biz-widget-stripe-connect>
         </div>
-    </layout>
+    </div>
 </template>
 
 <script>
     import BizWidgetStripeConnect from '@/Biz/Widget/StripeConnect';
     import Layout from '@/Layouts/User';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import { Head } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
             BizWidgetStripeConnect,
-            Head,
-            Layout,
         },
 
         mixins: [
             MixinHasPageErrors,
         ],
+
+        layout: Layout,
 
         props: {
             hasConnectedAccount: {
@@ -51,10 +38,6 @@
             errors: {
                 type: Object,
                 default: () => {},
-            },
-            title: {
-                type: String,
-                default: 'Payments'
             },
             countryOptions: {
                 type: Object,

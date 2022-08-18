@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="box mb-6">
@@ -243,7 +239,7 @@
                 </div>
             </form>
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -273,7 +269,6 @@
         name: 'StripeSettings',
 
         components: {
-            AppLayout,
             BizButton,
             BizCheckbox,
             BizDropdownItem,
@@ -293,6 +288,8 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        layout: AppLayout,
 
         props: {
             amountOptions: {
