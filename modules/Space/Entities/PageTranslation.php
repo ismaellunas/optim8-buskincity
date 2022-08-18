@@ -17,9 +17,7 @@ class PageTranslation extends AppPageTranslation
     protected static function booted()
     {
         static::addGlobalScope('spacePageTranslation', function (Builder $query) {
-            $query->whereHas('page', function (Builder $query) {
-                $query->type(Page::TYPE);
-            });
+            $query->type(Page::TYPE);
         });
     }
 

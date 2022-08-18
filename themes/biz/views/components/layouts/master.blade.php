@@ -10,7 +10,7 @@
 
         <title>{{ $title ?? config('app.name') }}</title>
 
-        @if ($metaDescription && $metaDescription != "")
+        @if (!empty($metaDescription) && $metaDescription != "")
             <meta name="description" content="{{ $metaDescription }}">
         @endif
 

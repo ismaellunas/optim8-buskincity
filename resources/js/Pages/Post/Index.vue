@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <div class="box">
             <div class="columns">
                 <div class="column">
@@ -143,7 +139,7 @@
                 :query-params="queryParams"
             />
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -172,7 +168,6 @@
 
     export default {
         components: {
-            AppLayout,
             BizButtonLink,
             BizButtonsDisplayView,
             BizCheckbox,
@@ -192,6 +187,7 @@
             MixinFilterDataHandle,
             MixinHasTab,
         ],
+        layout: AppLayout,
         props: {
             can: {},
             categoryOptions: Object,

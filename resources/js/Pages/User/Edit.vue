@@ -1,7 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>{{ title }}</template>
-
+    <div>
         <biz-error-notifications
             :bags="['userUpdate']"
             :errors="$page.props.errors"
@@ -115,7 +113,7 @@
                 </div>
             </div>
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -131,7 +129,6 @@
 
     export default {
         components: {
-            AppLayout,
             BizButton,
             BizButtonLink,
             BizErrorNotifications,
@@ -139,6 +136,8 @@
             FormUserPassword,
             FormUserProfile,
         },
+
+        layout: AppLayout,
 
         props: {
             can: { type: Object, required: true },

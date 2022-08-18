@@ -1,13 +1,5 @@
 <template>
-    <layout>
-        <Head title="Stripe Connect" />
-
-        <template #header>
-            <h1 class="title is-2">
-                {{ title }}
-            </h1>
-        </template>
-
+    <div>
         <div class="columns is-multiline">
             <div
                 v-if="!hasConnectedAccount"
@@ -217,7 +209,7 @@
                 </div>
             </div>
         </div>
-    </layout>
+    </div>
 </template>
 
 <script>
@@ -230,7 +222,7 @@
     import { confirm as confirmAlert, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { ref } from 'vue';
     import { merge } from 'lodash';
-    import { Head, useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/inertia-vue3';
     import { isBlank } from '@/Libs/utils';
 
     export default {
@@ -238,14 +230,14 @@
             BizButton,
             BizFormSelect,
             BizTable,
-            Head,
-            Layout,
         },
 
         mixins: [
             MixinHasLoader,
             MixinHasPageErrors,
         ],
+
+        layout: (h, page) => { return h(Layout, () => page) },
 
         props: {
             hasConnectedAccount: {

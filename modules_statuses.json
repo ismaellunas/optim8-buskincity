@@ -1,4 +1,6 @@
 {
     "Space": true,
-    "Event": true
+    "Event": true,
+    "Ecommerce": true,
+    "Booking": true
 }

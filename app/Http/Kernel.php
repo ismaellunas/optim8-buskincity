@@ -76,5 +76,8 @@ class Kernel extends HttpKernel
         'publicPage' => \App\Http\Middleware\PublicPageIsAvailable::class,
         'recaptcha' => \App\Http\Middleware\Recaptcha::class,
         'redirectLanguage' => \App\Http\Middleware\RedirectLanguage::class,
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
     ];
 }

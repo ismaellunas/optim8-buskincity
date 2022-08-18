@@ -14,4 +14,21 @@ export const textComponent = {
     toolbar: 'formatselect | bold italic link | alignleft aligncenter alignright alignjustify | bullist numlist | table',
 };
 
+export const emailConfig = {
+    plugins: 'link lists',
+    toolbar: 'formatselect | bold italic forecolor backcolor link ' +
+        '| align bullist numlist | removeformat',
+    menubar: false,
+    target_list: false,
+    object_resizing : false,
+    block_formats: (
+        'Paragraph=p; '+
+        'Header 1=h1; '+
+        'Header 2=h2; '+
+        'Header 3=h3'
+    ),
+    toolbar_mode: "wrap",
+    noneditable_regexp: /\{\{[^\}]+\}\}/g,
+};
+
 export const apiKey = process.env.MIX_TINYMCE_API_KEY;

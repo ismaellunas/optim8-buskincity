@@ -6,6 +6,7 @@ use App\Helpers\HumanReadable;
 use App\Http\Controllers\CrudController;
 use App\Services\CountryService;
 use App\Services\IPService;
+use App\Services\ModuleService as AppModuleService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Space\Entities\Page;
@@ -168,11 +169,18 @@ class SpaceController extends CrudController
             });
         }
 
+        $canManagerProductManager = $user->can('manageProductManager', Space::class);
+
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => 'Edit Space',
             'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $parent ? [$parent] : [],
             'spaceManagers' => $this->spaceService->formattedManagers($space),
+            'spaceProductManagers' => (
+                $canManagerProductManager
+                ? $this->spaceService->formattedProductManagers($space)
+                : []
+            ),
             'spaceRecord' => $this->spaceService->editableRecord($space),
             'typeOptions' => $this->spaceService->typeOptions(),
             'coverUrl' => $space->coverUrl,
@@ -184,6 +192,9 @@ class SpaceController extends CrudController
                 ],
                 'manager' => [
                     'edit' => $user->can('manageManager', Space::class),
+                ],
+                'productManager' => [
+                    'edit' => $canManagerProductManager,
                 ]
             ],
             'page' => $page,
