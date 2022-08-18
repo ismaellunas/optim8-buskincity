@@ -93,6 +93,7 @@
 
         methods: {
             submit() {
+                const self = this;
                 const url = route('admin.booking.settings.update');
 
                 this.form.post(url, {
