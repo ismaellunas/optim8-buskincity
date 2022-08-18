@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <biz-error-notifications
             :errors="$page.props.errors"
         />
@@ -22,7 +18,7 @@
                 @on-submit="onSubmit"
             />
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -37,15 +33,18 @@
 
     export default {
         components: {
-            AppLayout,
             PageForm,
             BizErrorNotifications,
         },
+
         provide() {
             return {
                 can: this.can,
             }
         },
+
+        layout: AppLayout,
+
         props: {
             can: { type: Object, required: true },
             errors: { type: Object, default:() => {} },
@@ -53,6 +52,7 @@
             statusOptions: { type: Array, default:() => [] },
             title: { type: String, required: true },
         },
+
         setup() {
             const defaultLocale = usePage().props.value.defaultLanguage;
             const translations = {};
@@ -83,6 +83,7 @@
                 localeOptions: usePage().props.value.languageOptions,
             };
         },
+
         data() {
             return {
                 disableInput: false,
@@ -91,6 +92,7 @@
                 selectedLocale: this.defaultLocale,
             };
         },
+
         methods: {
             onSubmit() {
                 const submitRoute = route('admin.pages.store');

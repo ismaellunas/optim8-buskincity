@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <div class="box mb-6">
             <biz-provide-inject-tabs
                 v-model="activeTab"
@@ -77,20 +73,43 @@
                     title="Manager"
                     :is-rendered="isManagerRendered"
                 >
-                    <form @submit.prevent="submitManager">
-                        <space-manager
+                    <form
+                        class="box"
+                        @submit.prevent="submitManager"
+                    >
+                        <biz-form-assign-user
                             v-model="managers"
-                        >
-                            <template #action>
-                                <div class="field is-grouped is-grouped-right mt-4">
-                                    <div class="control">
-                                        <biz-button class="is-link">
-                                            Update
-                                        </biz-button>
-                                    </div>
-                                </div>
-                            </template>
-                        </space-manager>
+                            label="Choose Manager"
+                            :get-users-url="route('admin.spaces.search-managers')"
+                        />
+
+                        <div class="field is-grouped is-grouped-right mt-4">
+                            <div class="control">
+                                <biz-button class="is-link">
+                                    Update
+                                </biz-button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <form
+                        v-if="can.productManager.edit"
+                        class="box"
+                        @submit.prevent="submitProductManager"
+                    >
+                        <biz-form-assign-user
+                            v-model="productManagers"
+                            label="Choose Product Manager"
+                            :get-users-url="route('admin.spaces.product-managers.search', space.id)"
+                        />
+
+                        <div class="field is-grouped is-grouped-right mt-4">
+                            <div class="control">
+                                <biz-button class="is-link">
+                                    Update
+                                </biz-button>
+                            </div>
+                        </div>
                     </form>
                 </biz-provide-inject-tab>
 
@@ -136,23 +155,23 @@
                 </biz-provide-inject-tab>
             </biz-provide-inject-tabs>
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
+    import BizFormAssignUser from '@/Biz/Form/AssignUser';
     import BizFormSelect from '@/Biz/Form/Select';
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasTab from '@/Mixins/HasTab';
     import PageForm from '@/Pages/Page/Form';
+    import SpaceEvent from './SpaceEvent';
     import SpaceForm from './SpaceForm';
     import SpaceFormTranslatable from './SpaceFormTranslatable';
-    import SpaceManager from './SpaceManager';
-    import SpaceEvent from './SpaceEvent';
     import { confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { getTranslation } from '@/Libs/translation';
@@ -163,9 +182,9 @@
 
     export default {
         components: {
-            AppLayout,
             BizButton,
             BizButtonLink,
+            BizFormAssignUser,
             BizFormSelect,
             BizProvideInjectTab,
             BizProvideInjectTabs,
@@ -173,7 +192,6 @@
             SpaceEvent,
             SpaceForm,
             SpaceFormTranslatable,
-            SpaceManager,
         },
 
         mixins: [
@@ -187,6 +205,8 @@
             }
         },
 
+        layout: AppLayout,
+
         props: {
             baseRouteName: { type: String, default: '' },
             can: { type: Object, required: true },
@@ -198,6 +218,7 @@
             page: { type: Object, required: true },
             parentOptions: { type: Object, default: () => {} },
             spaceManagers: { type: Array, default: () => [] },
+            spaceProductManagers: { type: Array, default: () => [] },
             spaceRecord: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
             tab: { type: Number, default: 0 },
@@ -231,6 +252,7 @@
         data() {
             return {
                 managers: this.spaceManagers,
+                productManagers: this.spaceProductManagers,
                 space: {},
                 selectedLocale: this.defaultLocale,
                 pagePreviewUrl: null,
@@ -296,6 +318,27 @@
                 });
 
                 form.post(route(self.baseRouteName+'.update-managers', self.spaceRecord.id), {
+                    replace: true,
+                    onStart: self.onStartLoadingOverlay,
+                    onSuccess: (page) => {
+                        successAlert(page.props.flash.message);
+                    },
+                    onError: () => { oopsAlert() },
+                    onFinish: self.onEndLoadingOverlay
+                });
+            },
+
+            submitProductManager() {
+                const self = this;
+                const form = useForm({
+                    managers: map(this.productManagers, 'id')
+                });
+                const url = route(
+                    self.baseRouteName+'.product-managers.update',
+                    self.spaceRecord.id
+                );
+
+                form.post(url, {
                     replace: true,
                     onStart: self.onStartLoadingOverlay,
                     onSuccess: (page) => {
