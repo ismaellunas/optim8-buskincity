@@ -4,7 +4,6 @@ namespace Modules\Booking\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
 use App\Models\Setting;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Booking\Http\Requests\SettingRequest;
 
@@ -19,8 +18,8 @@ class SettingController extends CrudController
         ])->get()->pluck('value', 'key');
 
         return Inertia::render('Booking::Settings', $this->getData([
-            'title' => 'Settings',
-            'booking_settings' => $settings,
+            'title' => 'Booking Settings',
+            'bookingSettings' => $settings,
         ]));
     }
 
