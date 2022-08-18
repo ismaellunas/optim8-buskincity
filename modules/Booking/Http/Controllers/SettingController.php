@@ -19,8 +19,8 @@ class SettingController extends CrudController
         ])->get()->pluck('value', 'key');
 
         return Inertia::render('Booking::Settings', $this->getData([
-            'title' => 'Settings',
-            'booking_settings' => $settings,
+            'title' => 'Booking Settings',
+            'bookingSettings' => $settings,
         ]));
     }
 

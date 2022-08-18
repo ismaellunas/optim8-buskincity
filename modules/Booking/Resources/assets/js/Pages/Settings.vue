@@ -1,50 +1,44 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
+    <div class="box mb-6">
+        <biz-provide-inject-tabs
+            v-model="activeTab"
+            class="is-boxed"
+        >
+            <biz-provide-inject-tab title="Email">
+                <form
+                    method="post"
+                    @submit.prevent="submit"
+                >
+                    <biz-form-text-editor
+                        v-model="form.email_new_booking"
+                        height="200"
+                        label="New Booking"
+                        mode="email"
+                    />
+                    <biz-form-text-editor
+                        v-model="form.email_reminder"
+                        height="200"
+                        label="Booking Reminder"
+                        mode="email"
+                    />
+                    <biz-form-text-editor
+                        v-model="form.email_cancellation"
+                        height="200"
+                        label="Booking Cancellation"
+                        mode="email"
+                    />
 
-        <div class="box mb-6">
-            <biz-provide-inject-tabs
-                v-model="activeTab"
-                class="is-boxed"
-            >
-                <biz-provide-inject-tab title="Email">
-                    <form
-                        method="post"
-                        @submit.prevent="submit"
-                    >
-                        <biz-form-text-editor
-                            v-model="form.email_new_booking"
-                            height="200"
-                            label="New Booking"
-                            mode="email"
-                        />
-                        <biz-form-text-editor
-                            v-model="form.email_reminder"
-                            height="200"
-                            label="Booking Reminder"
-                            mode="email"
-                        />
-                        <biz-form-text-editor
-                            v-model="form.email_cancellation"
-                            height="200"
-                            label="Booking Cancellation"
-                            mode="email"
-                        />
-
-                        <div class="field is-grouped is-grouped-right mt-4">
-                            <div class="control">
-                                <biz-button class="is-link">
-                                    Save
-                                </biz-button>
-                            </div>
+                    <div class="field is-grouped is-grouped-right mt-4">
+                        <div class="control">
+                            <biz-button class="is-link">
+                                Save
+                            </biz-button>
                         </div>
-                    </form>
-                </biz-provide-inject-tab>
-            </biz-provide-inject-tabs>
-        </div>
-    </app-layout>
+                    </div>
+                </form>
+            </biz-provide-inject-tab>
+        </biz-provide-inject-tabs>
+    </div>
 </template>
 
 <script>
@@ -61,7 +55,6 @@
 
     export default {
         components: {
-            AppLayout,
             BizButton,
             BizFormTextEditor,
             BizProvideInjectTab,
@@ -73,15 +66,18 @@
             MixinHasTab,
         ],
 
+        layout: AppLayout,
+
         props: {
+            bookingSettings: { type: Object, required: true },
             title: { type: String, default: "Settings" },
         },
 
         setup(props) {
             const form = {
-                email_new_booking: props.booking_settings?.booking_email_new_booking ?? "",
-                email_reminder: props.booking_settings?.booking_email_reminder ?? "",
-                email_cancellation: props.booking_settings?.booking_email_cancellation ?? "",
+                email_new_booking: props.bookingSettings?.booking_email_new_booking ?? "",
+                email_reminder: props.bookingSettings?.booking_email_reminder ?? "",
+                email_cancellation: props.bookingSettings?.booking_email_cancellation ?? "",
             };
 
             return {
