@@ -124,5 +124,5 @@
 @endtask
 
 @task('heroku:route-list')
-    heroku run php artisan route:list --path="admin" -c
+    heroku run php artisan route:list --path="admin"
 @endtask
