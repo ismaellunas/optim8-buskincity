@@ -41,12 +41,12 @@ class TranslationUpdateRequest extends BaseFormRequest
                 'max: 127',
                 Rule::in($groups)
             ],
-            'translations.*.key' => [
+            'translations.*.key' => array_filter([
                 'required',
                 'distinct',
                 'max: 1024',
                 $uniqueRule
-            ],
+            ]),
             'translations.*.value' => [
                 'nullable',
                 'max: 65535',

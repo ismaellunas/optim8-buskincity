@@ -64,6 +64,17 @@ class PageTranslation extends Model implements PublishableInterface
             ->where('unique_key', $splitUid['uniqueKey']);
     }
 
+    public function scopeType($query, string $type = null)
+    {
+        return $query->whereHas('page', function (Builder $q) use ($type) {
+            if ($type) {
+                $q->type($type);
+            } else {
+                $q->whereNull('type');
+            }
+        });
+    }
+
     private function splitIdAndUniqueKey(string $uid)
     {
         $timestampLength = 12;
@@ -152,10 +163,8 @@ class PageTranslation extends Model implements PublishableInterface
 
     protected static function booted()
     {
-        static::addGlobalScope('spacePageTranslation', function (Builder $query) {
-            $query->whereHas('page', function (Builder $query) {
-                $query->whereNull('type');
-            });
+        static::addGlobalScope('pageTranslation', function (Builder $query) {
+            $query->type();
         });
     }
 }

@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <div class="box">
             <biz-media-library
                 :accepted-types="acceptedTypes"
@@ -21,7 +17,7 @@
                 @on-type-changed="onTypeChanged"
             />
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -34,12 +30,12 @@
 
     export default {
         components: {
-            AppLayout,
             BizMediaLibrary,
         },
         mixins: [
             MixinFilterDataHandle,
         ],
+        layout: AppLayout,
         props: {
             acceptedTypes: Array,
             baseRouteName: String,

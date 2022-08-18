@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <div class="box">
             <div class="columns">
                 <div class="column">
@@ -163,7 +159,7 @@
             @close="closeModal"
             @delete-user="deleteUser"
         />
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -188,7 +184,6 @@
 
     export default {
         components: {
-            AppLayout,
             ModalFormDelete,
             BizButtonIcon,
             BizButtonLink,
@@ -206,6 +201,8 @@
             MixinHasModal,
             MixinHasPageErrors,
         ],
+
+        layout: AppLayout,
 
         props: {
             baseRouteName: { type: String, required: true },
