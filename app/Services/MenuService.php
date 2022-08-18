@@ -697,7 +697,10 @@ class MenuService
         foreach ($modules as $module) {
             $moduleService = '\\Modules\\'.$module->getName().'\\ModuleService';
 
-            if (class_exists($moduleService)) {
+            if (
+                class_exists($moduleService)
+                && method_exists($moduleService, 'adminMenus')
+            ) {
                 $menus[] = $moduleService::adminMenus($request);
             }
         }

@@ -1,5 +1,5 @@
 <template>
-    <app-layout :title="title">
+    <div>
         <Head>
             <link
                 rel="preconnect"
@@ -26,10 +26,6 @@
                 :href="buttonsFontHref"
             >
         </Head>
-
-        <template #header>
-            {{ title }}
-        </template>
 
         <biz-error-notifications
             :errors="$page.props.errors"
@@ -324,7 +320,7 @@
                 </fieldset>
             </form>
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -348,7 +344,6 @@
         name: 'ThemeOptionFonts',
 
         components: {
-            AppLayout,
             Head,
             BizButton,
             BizCheckbox,
@@ -364,6 +359,8 @@
         mixins: [
             MixinHasPageErrors,
         ],
+
+        layout: AppLayout,
 
         props: {
             baseRouteName: {type: String, required: true},

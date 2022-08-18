@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="box mb-6">
@@ -20,7 +16,7 @@
                 @on-submit="submit"
             />
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -33,7 +29,6 @@
 
     export default {
         components: {
-            AppLayout,
             BizErrorNotifications,
             CategoryForm,
         },
@@ -41,6 +36,8 @@
         mixins: [
             MixinHasLoader
         ],
+
+        layout: AppLayout,
 
         props: {
             baseRouteName: { type: String, required: true },

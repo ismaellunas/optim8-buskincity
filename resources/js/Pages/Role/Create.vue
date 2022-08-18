@@ -1,8 +1,6 @@
 <template>
-    <app-layout :title="title">
-        <template #header>{{ title }}</template>
-
-        <biz-error-notifications :errors="$page.props.errors"/>
+    <div>
+        <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="mb-6">
             <form
@@ -19,7 +17,7 @@
                             v-model="form"
                             :errors="errors"
                             :permission-options="permissions"
-                        ></form-role>
+                        />
 
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
@@ -39,7 +37,7 @@
                 </div>
             </form>
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -48,18 +46,17 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import FormRole from '@/Pages/Role/Form';
-    import { map } from 'lodash';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { success as successAlert } from '@/Libs/alert';
 
     export default {
         components: {
-            AppLayout,
             BizButton,
             BizButtonLink,
             BizErrorNotifications,
             FormRole,
         },
+        layout: AppLayout,
         props: {
             baseRouteName: String,
             errors: Object,

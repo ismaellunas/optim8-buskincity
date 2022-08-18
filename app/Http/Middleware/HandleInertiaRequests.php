@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Services\{
     MenuService,
+    ModuleService,
     SettingService,
     TranslationService as TranslationSv,
 };
@@ -92,6 +93,7 @@ class HandleInertiaRequests extends Middleware
                 return $this->removeSensitiveDataExposure($sharedUserData);
             },
             'userOriginLanguage' => $request->user()->origin_language_code ?? null,
+            'modules' => app(ModuleService::class)->getAllEnabledNames() ?? [],
         ]);
     }
 

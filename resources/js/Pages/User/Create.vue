@@ -1,7 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>{{ title }}</template>
-
+    <div>
         <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="mb-6">
@@ -45,7 +43,7 @@
                 </div>
             </form>
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -60,13 +58,13 @@
 
     export default {
         components: {
-            AppLayout,
             BizButton,
             BizButtonLink,
             BizErrorNotifications,
             FormUserPassword,
             FormUserProfile,
         },
+        layout: AppLayout,
         props: {
             errors: { type: Object, default: () => {} },
             supportedLanguageOptions: { type: Array, default: () => [] },

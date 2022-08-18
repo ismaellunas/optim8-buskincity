@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <div class="box">
             <div class="columns">
                 <div class="column">
@@ -79,7 +75,7 @@
                 :query-params="queryParams"
             />
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -97,7 +93,6 @@
 
     export default {
         components: {
-            AppLayout,
             BizButton,
             BizButtonLink,
             BizFilterSearch,
@@ -107,6 +102,7 @@
         mixins: [
             MixinFilterDataHandle,
         ],
+        layout: AppLayout,
         props: {
             baseRouteName: String,
             pageNumber: String,
