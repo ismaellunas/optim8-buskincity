@@ -5,9 +5,19 @@ namespace Modules\Ecommerce\Entities;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\Product as GetCandyProduct;
 use Illuminate\Support\Arr;
+use Kodeine\Metable\Metable;
 
 class Product extends GetCandyProduct
 {
+    use Metable;
+
+    protected $metaKeyName = 'product_id';
+
+    public function getMetaTable(): string
+    {
+        return config('getcandy.database.table_prefix').'products_meta';
+    }
+
     /**
      * {@inheritDoc}
      */
