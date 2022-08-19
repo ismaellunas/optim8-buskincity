@@ -13,4 +13,9 @@ class FieldGroup extends ModelFieldGroup
     {
         return $newQuery->type(self::TYPE);
     }
+
+    public function entries()
+    {
+        return $this->hasMany(FieldGroupEntrie::class, 'field_group_id');
+    }
 }
