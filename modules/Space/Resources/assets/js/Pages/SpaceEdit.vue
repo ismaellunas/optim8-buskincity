@@ -129,7 +129,7 @@
                         :page-preview-url="pagePreviewUrl"
                         :selected-locale="selectedLocale"
                         :status-options="statusOptions"
-                        @change-locale="onChangeLocale"
+                        @on-change-locale="onChangeLocale"
                     >
                         <template #action="pageFormProps">
                             <div class="field is-grouped is-grouped-right">

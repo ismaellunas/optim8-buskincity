@@ -1,24 +1,14 @@
 <template>
     <div>
-        <div class="tabs is-toggle">
-            <ul>
-                <li
-                    v-for="(option, index) in localeOptions"
-                    :key="option.id"
-                    :class="{ 'is-active': option.id == selectedLocale }"
-                    @click="selectedLocale = option.id"
-                >
-                    <a>
-                        <span>{{ option.name }}</span>
-                        <span
-                            v-if="index == 0"
-                            class="tag is-link is-light ml-3"
-                        >
-                            Default
-                        </span>
-                    </a>
-                </li>
-            </ul>
+        <div class="columns">
+            <div class="column">
+                <biz-language-tab
+                    class="is-pulled-right"
+                    :locale-options="localeOptions"
+                    :selected-locale="selectedLocale"
+                    @on-change-locale="onChangeLocale"
+                />
+            </div>
         </div>
 
         <biz-error-notifications
@@ -50,6 +40,7 @@
 <script>
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizLanguageTab from '@/Biz/LanguageTab';
     import FieldGroup from './FieldGroup';
     import { isEmpty, forOwn, sortBy, forEach, find } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
@@ -62,6 +53,7 @@
         components: {
             BizButton,
             BizErrorNotifications,
+            BizLanguageTab,
             FieldGroup,
         },
 
@@ -236,6 +228,10 @@
                         }
                     });
                 });
+            },
+
+            onChangeLocale(localeId) {
+                this.selectedLocale = localeId;
             }
         },
     };
