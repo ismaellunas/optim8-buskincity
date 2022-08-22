@@ -1,5 +1,14 @@
 <?php
 
 return [
-    'name' => 'FormBuilder'
+    'name' => 'FormBuilder',
+
+    'permissions' => [
+        'form_builder.*',
+        'form_builder.browse',
+        'form_builder.read',
+        'form_builder.edit',
+        'form_builder.add',
+        'form_builder.delete',
+    ]
 ];
