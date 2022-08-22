@@ -2,12 +2,13 @@
 
 namespace App\Entities\Sitemaps;
 
+use App\Contracts\SitemapInterface;
 use App\Models\Post as PostModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
-class Post extends BaseSitemap
+class Post extends BaseSitemap implements SitemapInterface
 {
     public function urls(): array|Collection
     {
