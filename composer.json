@@ -14,7 +14,7 @@
         "cloudinary-labs/cloudinary-laravel": "^2.0",
         "cohensive/oembed": "^0.16.0",
         "cviebrock/eloquent-sluggable": "^9.0",
-        "doctrine/dbal": "^3.1",
+        "doctrine/dbal": "3.3.7",
         "fakerphp/faker": "^1.19",
         "fruitcake/laravel-cors": "^2.0",
         "getcandy/core": "^2.0@beta",
