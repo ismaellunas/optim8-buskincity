@@ -39,11 +39,11 @@ class ProductService
     public function transformRecords($records)
     {
         $records->getCollection()->transform(function ($record) {
-            $record->id = $record->id;
-            $record->name = $record->translateAttribute('name');
-            $record->status = $record->status;
-
-            return $record;
+            return (object) [
+                'id' => $record->id,
+                'name' => $record->translateAttribute('name', config('app.locale')),
+                'status' => Str::title($record->status),
+            ];
         });
     }
 
