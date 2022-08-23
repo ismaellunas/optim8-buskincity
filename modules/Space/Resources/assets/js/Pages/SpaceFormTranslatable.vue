@@ -1,27 +1,17 @@
 <template>
     <div>
-        <div class="tabs is-toggle">
-            <ul>
-                <li
-                    v-for="(option, index) in localeOptions"
-                    :key="option.id"
-                    :class="{ 'is-active': option.id == selectedLocale }"
-                    @click="selectedLocale = option.id"
-                >
-                    <a>
-                        <span>{{ option.name }}</span>
-                        <span
-                            v-if="index == 0"
-                            class="tag is-link is-light ml-3"
-                        >
-                            Default
-                        </span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-
         <div class="box">
+            <div class="columns">
+                <div class="column">
+                    <biz-language-tab
+                        class="is-pulled-right"
+                        :locale-options="localeOptions"
+                        :selected-locale="selectedLocale"
+                        @on-change-locale="onChangeLocale"
+                    />
+                </div>
+            </div>
+
             <biz-form-textarea
                 v-model="spaceLocale.description"
                 label="Description"
@@ -53,6 +43,7 @@
 
 <script>
     import BizFormTextarea from '@/Biz/Form/Textarea';
+    import BizLanguageTab from '@/Biz/LanguageTab';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { isEmpty, find, sortBy } from 'lodash';
     import { ref } from 'vue';
@@ -62,6 +53,7 @@
     export default {
         components: {
             BizFormTextarea,
+            BizLanguageTab,
         },
 
         mixins: [
@@ -125,6 +117,10 @@
                     excerpt: null,
                     surface: null,
                 };
+            },
+
+            onChangeLocale(localeId) {
+                this.selectedLocale = localeId;
             },
         },
     };
