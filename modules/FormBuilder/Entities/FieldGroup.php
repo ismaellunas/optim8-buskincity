@@ -16,6 +16,6 @@ class FieldGroup extends ModelFieldGroup
 
     public function entries()
     {
-        return $this->hasMany(FieldGroupEntrie::class, 'field_group_id');
+        return $this->hasMany(FieldGroupEntry::class, 'field_group_id');
     }
 }

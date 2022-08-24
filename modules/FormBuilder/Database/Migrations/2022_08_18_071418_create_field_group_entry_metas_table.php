@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('field_group_entrie_metas', function (Blueprint $table) {
+        Schema::create('field_group_entry_metas', function (Blueprint $table) {
             $table->id();
             $table->string('key', 255)->unique();
             $table->text('value')->nullable();
 
-            $table->foreignId('field_group_entrie_id')
+            $table->foreignId('field_group_entry_id')
                 ->constrained('field_groups')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('field_group_entrie_metas');
+        Schema::dropIfExists('field_group_entry_metas');
     }
 };
