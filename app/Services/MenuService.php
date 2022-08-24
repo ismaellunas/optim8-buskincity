@@ -16,6 +16,7 @@ use App\Services\{
     LanguageService,
     LoginService,
     TranslationService,
+    ModuleService,
 };
 use Illuminate\Http\Request;
 use App\Entities\Caches\{
@@ -25,7 +26,6 @@ use App\Entities\Caches\{
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Nwidart\Modules\Facades\Module;
 
 class MenuService
 {
@@ -621,11 +621,12 @@ class MenuService
 
     private function moduleMenus(Request $request): array
     {
-        $modules = Module::all();
+        $modules = app(ModuleService::class)->getAllEnabledNames();
+
         $menus = [];
 
         foreach ($modules as $module) {
-            $moduleService = '\\Modules\\'.$module->getName().'\\ModuleService';
+            $moduleService = '\\Modules\\'.$module.'\\ModuleService';
 
             if (
                 class_exists($moduleService)
