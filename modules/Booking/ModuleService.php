@@ -16,6 +16,12 @@ class ModuleService
             'isEnabled' => true,
             'children' => [
                 [
+                    'title' => 'Products',
+                    'link' => route('admin.ecommerce.products.index'),
+                    'isActive' => $request->routeIs('admin.ecommerce.products.index'),
+                    'isEnabled' => $user->hasRole(['Administrator', 'Super Administrator']),
+                ],
+                [
                     'title' => 'Settings',
                     'link' => route('admin.booking.settings.edit'),
                     'isActive' => $request->routeIs('admin.booking.settings.edit'),
