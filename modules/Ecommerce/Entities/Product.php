@@ -2,12 +2,28 @@
 
 namespace Modules\Ecommerce\Entities;
 
+use App\Models\Media;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\Product as GetCandyProduct;
 use Illuminate\Support\Arr;
+use Kodeine\Metable\Metable;
 
 class Product extends GetCandyProduct
 {
+    use Metable;
+
+    protected $metaKeyName = 'product_id';
+
+    public function getMetaTable(): string
+    {
+        return config('getcandy.database.table_prefix').'products_meta';
+    }
+
+    public function gallery()
+    {
+        return $this->morphMany(Media::class, 'medially');
+    }
+
     /**
      * {@inheritDoc}
      */
