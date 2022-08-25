@@ -40,7 +40,9 @@ class FormBuilderController extends CrudController
 
     public function create()
     {
-        // return view('formbuilder::create');
+        return Inertia::render('FormBuilder::Create', $this->getData([
+            'title' => $this->getCreateTitle(),
+        ]));
     }
 
     public function store(Request $request)
