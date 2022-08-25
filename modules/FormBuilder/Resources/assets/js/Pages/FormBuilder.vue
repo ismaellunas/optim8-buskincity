@@ -34,7 +34,6 @@
                             :clone="cloneComponent"
                             :sort="false"
                             item-key="id"
-                            @end="onEnd"
                             @change="log"
                         >
                             <template #item="{ element }">
@@ -240,18 +239,6 @@
             log: function(evt) {
                 if (this.isDebugMode) {
                     console.log(evt);
-                }
-            },
-
-            isComponentCloned(evt) {
-                return (evt.pullMode === "clone");
-            },
-
-            onEnd(evt) {
-                const component = this.clonedComponent;
-
-                if (!this.isComponentCloned(evt)) {
-                    delete this.form.builders.entities[component.id];
                 }
             },
 
