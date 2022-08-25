@@ -16,11 +16,11 @@ return new class extends Migration
         Schema::create('field_group_notification_settings', function (Blueprint $table) {
             $table->id();
             $table->string('name', 127);
-            $table->string('send_to');
+            $table->json('send_to');
             $table->string('from_name', 127)->nullable();
             $table->string('from_email', 127)->nullable();
             $table->string('reply_to', 127)->nullable();
-            $table->string('bcc')->nullable();
+            $table->json('bcc')->nullable();
             $table->string('subject');
             $table->text('message')->nullable();
             $table->tinyInteger('is_active')->default(1);
