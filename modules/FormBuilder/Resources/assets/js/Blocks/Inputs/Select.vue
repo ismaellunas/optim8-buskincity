@@ -7,17 +7,29 @@
         <form-select
             v-model="value"
             class="is-fullwidth"
-            :label="config.properties.label"
-            :required="config.validation.required"
-            :disabled="config.attributes.disabled"
+            :label="entity.label"
+            :required="entity.validation.rules.required"
+            :disabled="entity.disabled"
+            :readonly="entity.readonly"
         >
             <template
-                v-for="(option, index) in config.data.options"
+                v-for="(option, index) in entity.options"
                 :key="index"
             >
                 <option :value="option.id">
                     {{ option.value }}
                 </option>
+            </template>
+
+            <template
+                v-if="entity.note"
+                #note
+            >
+                <p
+                    class="help"
+                >
+                    {{ entity.note }}
+                </p>
             </template>
         </form-select>
     </div>
@@ -50,7 +62,6 @@
 
         setup(props, { emit }) {
             return {
-                config: props.modelValue.config,
                 entity: useModelWrapper(props, emit),
             };
         },

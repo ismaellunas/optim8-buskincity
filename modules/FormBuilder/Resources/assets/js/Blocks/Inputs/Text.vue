@@ -6,12 +6,23 @@
         />
         <form-input
             v-model="value"
-            :label="config.properties.label"
-            :required="config.validation.required"
-            :disabled="config.attributes.disabled"
-            :readonly="config.attributes.readonly"
-            :placeholder="config.properties.placeholder"
-        />
+            :label="entity.label"
+            :required="entity.validation.rules.required"
+            :disabled="entity.disabled"
+            :readonly="entity.readonly"
+            :placeholder="entity.placeholder"
+        >
+            <template
+                v-if="entity.note"
+                #note
+            >
+                <p
+                    class="help"
+                >
+                    {{ entity.note }}
+                </p>
+            </template>
+        </form-input>
     </div>
 </template>
 
@@ -42,7 +53,6 @@
 
         setup(props, { emit }) {
             return {
-                config: props.modelValue.config,
                 entity: useModelWrapper(props, emit),
             };
         },
