@@ -2,6 +2,6 @@ export function getEmptyForm() {
     return {
         name: null,
         key: null,
-        builder: { structures: [], entities: {}},
+        fields: { structures: [], entities: {}},
     };
 }

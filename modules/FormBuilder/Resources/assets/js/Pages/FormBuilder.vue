@@ -81,7 +81,7 @@
 
                     <template v-else>
                         <input-config
-                            v-model="form.builder.entities[contentConfigId]"
+                            v-model="form.fields.entities[contentConfigId]"
                             class="form-builder-content-config"
                         />
                     </template>
@@ -99,15 +99,15 @@
                     item-key="id"
                     :animation="300"
                     :empty-insert-threshold="5"
-                    :list="form.builder.structures"
+                    :list="form.fields.structures"
                     :scroll-sensitivity="200"
                     :sort="true"
                 >
                     <template #item="{element, index}">
                         <block-columns
                             :id="element.id"
-                            v-model="form.builder.structures[index]"
-                            v-model:data-entities="form.builder.entities"
+                            v-model="form.fields.structures[index]"
+                            v-model:data-entities="form.fields.entities"
                             :data-id="element.id"
                             @click="settingContent"
                             @delete-block="deleteBlock"
@@ -147,12 +147,13 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import InputConfig from './../Blocks/InputConfig';
     import BlockColumns from './../Blocks/Columns'
-    import blockColumnStructures from '@/ComponentStructures/columns';
+    import blockColumnStructures from './../ComponentStructures/columns';
     import ComponentStructures from './../ComponentStructures';
     import Draggable from "vuedraggable";
     import { isBlank, useModelWrapper, generateElementId, getResourceFromDataObject } from '@/Libs/utils';
     import { createColumn } from './../Libs/form-builder.js';
     import { usePage } from '@inertiajs/inertia-vue3';
+    import { cloneDeep } from 'lodash';
 
     export default {
         name: 'FormBuilder',
@@ -203,7 +204,7 @@
             isComponentConfigOpen() {
                 return (
                     !isBlank(this.contentConfigId)
-                    && this.form.builder.entities[this.contentConfigId]
+                    && this.form.fields.entities[this.contentConfigId]
                 );
             },
 
@@ -234,7 +235,7 @@
             },
 
             hasBlok() {
-                return isBlank(this.form.builder.structures) ? false : this.form.builder.structures.length > 0;
+                return isBlank(this.form.fields.structures) ? false : this.form.fields.structures.length > 0;
             },
         },
 
@@ -253,7 +254,7 @@
                 const component = this.clonedComponent;
 
                 if (!this.isComponentCloned(evt)) {
-                    delete this.form.builder.entities[component.id];
+                    delete this.form.fields.entities[component.id];
                 }
             },
 
@@ -261,7 +262,7 @@
                 this.clonedComponent = JSON.parse(JSON.stringify(seletectedComponent));
                 this.clonedComponent.id = generateElementId();
 
-                this.form.builder.entities[this.clonedComponent.id] = this.clonedComponent;
+                this.form.fields.entities[this.clonedComponent.id] = this.clonedComponent;
 
                 return {
                     id: this.clonedComponent.id,
@@ -279,7 +280,7 @@
 
                 delete columnEntity.columns;
 
-                this.form.builder.entities[clonedBlock.id] = columnEntity;
+                this.form.fields.entities[clonedBlock.id] = columnEntity;
 
                 delete clonedBlock.config;
 
@@ -297,25 +298,52 @@
             },
 
             deleteBlock(id) {
-                const removeIndex = this.form.builder.structures.map(block => block.id).indexOf(id);
+                const removeIndex = this.form.fields.structures.map(block => block.id).indexOf(id);
 
                 let removeIds = getResourceFromDataObject(
-                    this.form.builder.structures[removeIndex],
+                    this.form.fields.structures[removeIndex],
                     'id'
                 );
 
-                this.form.builder.structures.splice(removeIndex, 1);
+                this.form.fields.structures.splice(removeIndex, 1);
 
                 for (let i = 0; i < removeIds.length; i++) {
-                    delete this.form.builder.entities[removeIds[i]];
+                    delete this.form.fields.entities[removeIds[i]];
                 }
             },
 
             duplicateBlock(id) {
-                //
+                const duplicateIndex = this.form.fields.structures.map(block => block.id).indexOf(id);
+                const duplicateBlock = cloneDeep(this.form.fields.structures[duplicateIndex]);
+
+                duplicateBlock.id = generateElementId();
+
+                duplicateBlock.columns.map(column => {
+                    column.id = generateElementId();
+
+                    column.components.map(component => {
+                        const componentId = generateElementId();
+
+                        this.duplicateEntity(component.id, componentId);
+
+                        component.id = componentId;
+
+                        return component;
+                    });
+
+                    return column;
+                });
+
+                this.form.fields.structures.splice( (duplicateIndex + 1), 0, duplicateBlock );
+
+                this.duplicateEntity(id, duplicateBlock.id);
             },
+
             duplicateEntity(oldId, newId) {
-                //
+                const duplicateEntity = cloneDeep(this.form.fields.entities[oldId]);
+                duplicateEntity.id = newId;
+
+                this.form.fields.entities[newId] = duplicateEntity;
             },
 
             onSubmit() {

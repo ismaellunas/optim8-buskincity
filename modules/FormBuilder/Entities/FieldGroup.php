@@ -17,8 +17,9 @@ class FieldGroup extends ModelFieldGroup
     public function saveFromInputs(array $inputs): void
     {
         $this->name = $inputs['name'];
+        $this->data = $inputs['fields'];
         $this->title = $inputs['key'];
-        $this->data = $inputs['builder'];
+        $this->type = self::TYPE;
         $this->save();
     }
 
