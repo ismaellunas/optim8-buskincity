@@ -1,3 +1,5 @@
+import { defaultOption, columnSizes } from '@/ComponentStructures/style-options';
+
 export default {
     title: 'Textarea',
     componentName: 'Textarea',
@@ -19,32 +21,62 @@ export default {
             disabled: false,
             readonly: false,
         }
-    }
+    },
+
+    type: "Textarea",
+    title: "Textarea",
+    column: 'is-12',
+    label: "Textarea",
+    name: null,
+    placeholder: null,
+    note: null,
+    default_value: null,
+    readonly: false,
+    disabled: false,
+    validation: {
+        rules: {
+            required: false,
+            max: null,
+            min: null,
+        },
+        message: []
+    },
+    visibility: [],
+    translated: false,
 };
 
 export const config = {
     properties: {
         label: "Properties",
         config: {
-            name: {
-                type: "input",
-                label: "Name",
-            },
             label: {
-                type: "input",
+                component: "ConfigInput",
                 label: "Label",
             },
+            name: {
+                component: "ConfigInput",
+                label: "Name",
+            },
             placeholder: {
-                type: "input",
+                component: "ConfigInput",
                 label: "Placeholder",
+            },
+            note: {
+                component: "ConfigInput",
+                label: "Note",
+            },
+            column: {
+                type: "select",
+                label: "Column",
+                options: defaultOption.concat(columnSizes)
             },
         }
     },
     data: {
         label: "Data",
         config: {
-            default: {
-                type: "input",
+            default_value: {
+                component: "ConfigInput",
                 label: "Default Value",
             }
         },
@@ -53,16 +85,16 @@ export const config = {
         label: "Validation",
         config: {
             required: {
-                type: "checkbox",
+                component: "ConfigCheckbox",
                 label: "Required",
             },
-            minLength: {
-                type: "input",
-                label: "Min Length",
+            min: {
+                component: "ConfigNumber",
+                label: "Min",
             },
-            maxLength: {
-                type: "input",
-                label: "Max Length",
+            max: {
+                component: "ConfigNumber",
+                label: "Max",
             },
         },
 
