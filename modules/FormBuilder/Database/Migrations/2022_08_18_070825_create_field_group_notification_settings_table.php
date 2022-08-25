@@ -23,7 +23,7 @@ return new class extends Migration
             $table->json('bcc')->nullable();
             $table->string('subject');
             $table->text('message')->nullable();
-            $table->tinyInteger('is_active')->default(1);
+            $table->boolean('is_active')->default(1);
 
             $table->foreignId('field_group_id')
                 ->constrained('field_groups')
