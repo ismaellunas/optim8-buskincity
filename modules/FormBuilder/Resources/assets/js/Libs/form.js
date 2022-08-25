@@ -6,8 +6,8 @@ export function getEmptyForm() {
             name: null,
             title: null,
             order: null,
-            visibility: null,
-            locations: null,
+            visibility: [],
+            locations: [],
             fields: [],
         }
     };
