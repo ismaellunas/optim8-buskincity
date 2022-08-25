@@ -23,9 +23,8 @@ class FormBuilderRequest extends FormRequest
                 'max: 127',
                 'unique:field_groups,title',
             ],
-            'fields' => [
+            'builders' => [
                 'nullable',
-                'array:structures,entities'
             ]
         ];
     }
