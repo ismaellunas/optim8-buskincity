@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\FieldGroup;
 use Modules\FormBuilder\Services\FormBuilderService;
+use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
 
 class FormBuilderController extends CrudController
 {
@@ -45,9 +46,16 @@ class FormBuilderController extends CrudController
         ]));
     }
 
-    public function store(Request $request)
+    public function store(FormBuilderRequest $request)
     {
-        //
+        $inputs = $request->validated();
+        $fieldGroup = new FieldGroup();
+
+        $fieldGroup->saveFromInputs($inputs);
+
+        $this->generateFlashMessage('Form created successfully!');
+
+        return redirect()->route($this->baseRouteName . '.edit', $fieldGroup->id);
     }
 
     public function show($id)
