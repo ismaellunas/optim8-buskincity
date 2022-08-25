@@ -63,9 +63,17 @@ class FormBuilderController extends CrudController
         // return view('formbuilder::show');
     }
 
-    public function edit($id)
+    public function edit(FieldGroup $formBuilder)
     {
-        // return view('formbuilder::edit');
+        $formBuilder->fields = $formBuilder->data;
+        $formBuilder->key = $formBuilder->title;
+        unset($formBuilder->data);
+        unset($formBuilder->title);
+
+        return Inertia::render('FormBuilder::Edit', $this->getData([
+            'title' => $this->getEditTitle(),
+            'formBuilder' => $formBuilder,
+        ]));
     }
 
     public function update(Request $request, $id)
