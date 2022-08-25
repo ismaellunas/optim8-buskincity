@@ -4,7 +4,9 @@
             v-model="activeTab"
             class="is-boxed"
         >
-            <biz-provide-inject-tab title="Builders">
+            <biz-provide-inject-tab
+                title="Builders"
+            >
                 <form-builder
                     v-model="formBuilder"
                     v-model:content-config-id="computedContentConfigId"

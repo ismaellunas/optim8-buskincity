@@ -1,8 +1,8 @@
 <template>
     <div>
         <biz-toolbar-content
-            :can-duplicate="false"
             @delete-content="deleteContent"
+            @duplicate-content="duplicateContent"
         />
         <form-select
             v-model="value"
@@ -25,6 +25,7 @@
 
 <script>
     import MixinDeletableContent from '@/Mixins/DeletableContent';
+    import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import FormSelect from '@/Biz/Form/Select';
     import { useModelWrapper } from '@/Libs/utils';
@@ -39,6 +40,7 @@
 
         mixins: [
             MixinDeletableContent,
+            MixinDuplicableContent,
         ],
 
         props: {

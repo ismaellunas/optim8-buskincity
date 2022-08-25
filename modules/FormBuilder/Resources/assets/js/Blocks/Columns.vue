@@ -35,7 +35,7 @@
             class="column is-9 p-1"
         >
             <div class="field has-addons is-pulled-right">
-                <!-- <p class="control">
+                <p class="control">
                     <biz-button
                         type="button"
                         class="is-small"
@@ -45,7 +45,7 @@
                             <i :class="icon.copy" />
                         </span>
                     </biz-button>
-                </p> -->
+                </p>
                 <p class="control">
                     <biz-button
                         type="button"
@@ -148,8 +148,6 @@
 
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
-                        self.onBlockDeleted();
-
                         self.$emit('delete-block', self.id)
                     }
                 })
@@ -188,15 +186,15 @@
             },
 
             duplicateBlock() {
-                //
-            },
+                const self = this;
 
-            onBlockDuplicated() {
-                //
-            },
-
-            onBlockDeleted() {
-                //
+                confirm(
+                    'Duplicate Component?'
+                ).then((result) => {
+                    if (result.isConfirmed) {
+                        self.$emit('duplicate-block', self.id)
+                    }
+                });
             },
         },
     };

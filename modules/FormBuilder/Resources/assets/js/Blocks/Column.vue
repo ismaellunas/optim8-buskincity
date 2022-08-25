@@ -25,17 +25,6 @@
                 />
             </template>
         </draggable>
-
-        <!-- <template v-else>
-            <component
-                :is="element.componentName"
-                v-for="element in computedComponents"
-                :id="element.id"
-                :key="element.id"
-                v-model="computedDataEntities[element.id]"
-                :selected-locale="selectedLocale"
-            />
-        </template> -->
     </div>
 </template>
 
@@ -124,7 +113,21 @@
             },
 
             duplicateContent(id) {
-                //
+                if (!isBlank(id)) {
+                    const duplicateComponent = cloneDeep(
+                        this.computedComponents[
+                            this.computedComponents.map(block => block.id).indexOf(id)
+                        ]
+                    );
+
+                    duplicateComponent.id = generateElementId();
+
+                    const duplicateEntity = cloneDeep(this.computedDataEntities[id]);
+                    duplicateEntity.id = duplicateComponent.id;
+
+                    this.computedDataEntities[duplicateComponent.id] = duplicateEntity;
+                    this.computedComponents.push(duplicateComponent);
+                }
             },
         }
     };
