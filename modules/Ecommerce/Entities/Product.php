@@ -33,6 +33,11 @@ class Product extends GetCandyProduct
         return $this->morphOne(Schedule::class, 'schedulable');
     }
 
+    public function productable()
+    {
+        return $this->morphTo();
+    }
+
     /**
      * {@inheritDoc}
      */
