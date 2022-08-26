@@ -3,7 +3,7 @@
         ref="datetimepicker"
         :value="modelValue"
         :options="options"
-        @input="$emit('update:modelValue', $event)"
+        @input="onInput"
     />
 </template>
 
@@ -12,9 +12,11 @@
 
     export default {
         name: 'BizDateTime',
+
         components: {
             BulmaCalendar,
         },
+
         props: {
             modelValue: Date|Array|null,
             options: {
@@ -22,10 +24,47 @@
                 default: () => {}
             }
         },
-        emits: ['update:modelValue'],
+
+        emits: [
+            'update:modelValue',
+            'input',
+        ],
+
+        computed: {
+            isRange() {
+                return this.$refs.datetimepicker.range;
+            },
+
+            isTimeType() {
+                return this.$refs.datetimepicker.type == 'time';
+            },
+        },
+
         methods: {
             focus() {
                 this.$refs.input.focus()
+            },
+
+            onInput(date, event) {
+                if (this.isRange && this.isTimeType) {
+                    date = this.emitTimeRange(date);
+                }
+
+                this.$emit('update:modelValue', date, event);
+                this.$emit('input', date, event);
+            },
+
+            emitTimeRange(date) {
+                const timeRanges = this.$refs.datetimepicker.$refs.cal.value.split(' - ');
+
+                timeRanges.forEach((timeRange, index) => {
+                    const timeParts = timeRange.split(':');
+
+                    date[index].setHours(timeParts[0]);
+                    date[index].setMinutes(timeParts[1]);
+                });
+
+                return date;
             },
         },
     };
