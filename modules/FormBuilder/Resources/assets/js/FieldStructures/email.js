@@ -82,11 +82,11 @@ export const config = {
         label: "Attributes",
         config: {
             disabled: {
-                type: "checkbox",
+                component: "ConfigCheckbox",
                 label: "Disabled",
             },
             readonly: {
-                type: "checkbox",
+                component: "ConfigCheckbox",
                 label: "Readonly",
             },
         },
