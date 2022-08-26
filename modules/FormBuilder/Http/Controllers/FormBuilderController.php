@@ -58,11 +58,6 @@ class FormBuilderController extends CrudController
         return redirect()->route($this->baseRouteName . '.edit', $fieldGroup->id);
     }
 
-    public function show($id)
-    {
-        // return view('formbuilder::show');
-    }
-
     public function edit(FieldGroup $formBuilder)
     {
         $formBuilder->builders = $formBuilder->data;
