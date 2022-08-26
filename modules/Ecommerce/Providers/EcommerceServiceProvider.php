@@ -2,8 +2,10 @@
 
 namespace Modules\Ecommerce\Providers;
 
+use App\Services\MediaService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\Ecommerce\Services\ProductService;
 
 class EcommerceServiceProvider extends ServiceProvider
 {
@@ -38,6 +40,10 @@ class EcommerceServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+
+        $this->app->singleton(ProductService::class, function ($app) {
+            return new ProductService($app->make(MediaService::class));
+        });
     }
 
     /**
