@@ -7,9 +7,9 @@
         <biz-flash-notifications :flash="$page.props.flash" />
 
         <div class="box">
-            <form-builder-form
+            <form-builder
                 v-model="form"
-                v-model:content-config-id="contentConfigId"
+                v-model:input-config-id="inputConfigId"
             />
         </div>
     </div>
@@ -19,7 +19,7 @@
     import AppLayout from '@/Layouts/AppLayout';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import FormBuilderForm from './Form';
+    import FormBuilder from './Form';
     import { onFormEditorClicked } from './../Libs/form-builder';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { ref, onMounted, onUnmounted } from 'vue';
@@ -30,7 +30,7 @@
         components: {
             BizErrorNotifications,
             BizFlashNotifications,
-            FormBuilderForm,
+            FormBuilder,
         },
 
         provide: {
@@ -45,10 +45,10 @@
         },
 
         setup(props) {
-            const contentConfigId = ref('');
+            const inputConfigId = ref('');
 
             function pageListener(event) {
-                onFormEditorClicked(event, contentConfigId);
+                onFormEditorClicked(event, inputConfigId);
             }
 
             onMounted(() => {
@@ -60,7 +60,7 @@
             });
 
             return {
-                contentConfigId,
+                inputConfigId,
                 form: useForm(props.formBuilder)
             };
         },
