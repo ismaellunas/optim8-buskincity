@@ -19,6 +19,8 @@ class FormBuilderController extends CrudController
 
     public function __construct(FormBuilderService $formBuilderService)
     {
+        $this->authorizeResource(FieldGroup::class, 'form_builder');
+
         $this->formBuilderService = $formBuilderService;
     }
 
