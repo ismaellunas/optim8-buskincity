@@ -25,4 +25,9 @@ class FieldGroup extends Model
     {
         return $newQuery->whereNull('type');
     }
+
+    public function scopeType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
 }

@@ -4,8 +4,9 @@ namespace Modules\FormBuilder\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
+use Modules\FormBuilder\Entities\FieldGroup;
 
-class FormBuilderDatabaseSeeder extends Seeder
+class FieldGroupSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,7 +17,12 @@ class FormBuilderDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call("Modules\FormBuilder\Database\Seeders\PermissionSeeder");
-        $this->call("Modules\FormBuilder\Database\Seeders\FieldGroupSeeder");
+        $data = [
+            'name' => 'Dummy Form',
+            'title' => 'dummy_form', // Key
+            'type' => FieldGroup::TYPE,
+        ];
+
+        FieldGroup::create($data);
     }
 }
