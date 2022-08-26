@@ -2,10 +2,12 @@
 
 namespace Modules\Ecommerce\Providers;
 
+use App\Models\User;
 use App\Services\MediaService;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Illuminate\Support\ServiceProvider;
 use Modules\Ecommerce\Services\ProductService;
+use Modules\Space\Entities\Space;
 
 class EcommerceServiceProvider extends ServiceProvider
 {
@@ -30,6 +32,10 @@ class EcommerceServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+
+        User::resolveRelationUsing('managedSpaceProducts', function ($userModel) {
+            return $userModel->belongsToMany(Space::class, 'space_product_managers');
+        });
     }
 
     /**
