@@ -73,9 +73,15 @@ class FormBuilderController extends CrudController
         ]));
     }
 
-    public function update(Request $request, $id)
+    public function update(FormBuilderRequest $request, FieldGroup $formBuilder)
     {
-        //
+        $inputs = $request->validated();
+
+        $formBuilder->saveFromInputs($inputs);
+
+        $this->generateFlashMessage('Form updated successfully!');
+
+        return redirect()->route($this->baseRouteName . '.edit', $formBuilder->id);
     }
 
     public function destroy(FieldGroup $formBuilder)
