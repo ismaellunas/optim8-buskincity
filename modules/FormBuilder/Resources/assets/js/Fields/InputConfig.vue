@@ -23,40 +23,9 @@
                     v-for="(config, key) in group.config"
                     :key="key"
                 >
-                    <biz-form-select
-                        v-if="config.type === 'select'"
-                        v-model="entity[ key ]"
-                        :label="config.label"
-                    >
-                        <option
-                            v-for="(option, index) in config.options"
-                            :key="index"
-                            :value="option.value"
-                        >
-                            {{ option.name }}
-                        </option>
-                    </biz-form-select>
-
-                    <biz-form-input
-                        v-else-if="config.type === 'input'"
-                        v-model="entity[ key ]"
-                        :label="config.label"
-                    />
-
-                    <biz-checkbox
-                        v-else-if="config.type === 'checkbox'"
-                        v-model:checked="entity[ key ]"
-                        :value="true"
-                        class="mb-2"
-                    >
-                        <span class="ml-2">
-                            {{ config.label }}
-                        </span>
-                    </biz-checkbox>
-
                     <component
                         :is="config.component"
-                        v-else-if="config.component && groupName != 'validation'"
+                        v-if="config.component && groupName != 'validation'"
                         v-model="entity[ key ]"
                         :label="config.label"
                         :settings="config.settings"
@@ -79,11 +48,7 @@
 
 <script>
     import AddOption from '@/Blocks/Configs/AddOption';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormSelect from '@/Biz/Form/Select';
     import Card from '@/Biz/Card';
-    import Checkboxes from '@/Blocks/Configs/Checkboxes';
     import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
     import ConfigInput from '@/Blocks/Configs/Input';
     import ConfigNumber from '@/Blocks/Configs/Number';
@@ -103,11 +68,7 @@
 
         components: {
             AddOption,
-            BizCheckbox,
-            BizFormInput,
-            BizFormSelect,
             Card,
-            Checkboxes,
             ConfigCheckbox,
             ConfigInput,
             ConfigNumber,
