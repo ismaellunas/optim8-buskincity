@@ -6,7 +6,7 @@ use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Models\Media;
 use App\Services\MediaService;
 use App\Services\UserService;
-use GetCandy\Models\Product;
+use Modules\Ecommerce\Entities\Product;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
@@ -89,5 +89,29 @@ class ProductService
         $product->gallery()->save($media);
 
         return $media;
+    }
+
+    public function statusOptions(): Collection
+    {
+        return collect([
+            ['id' => Product::STATUS_DRAFT, 'value' => Str::title(Product::STATUS_DRAFT)],
+            ['id' => Product::STATUS_PUBLISHED, 'value' => Str::title(Product::STATUS_PUBLISHED)]
+        ]);
+    }
+
+    public function formObject(Product $product)
+    {
+        return [
+            'id' => $product->id,
+            'name' => $product->translateAttribute('name', config('app.locale')),
+            'description' => $product->translateAttribute('description', config('app.locale')),
+            'status' => $product->status,
+            'roles' => $product->roles[0] ?? null,
+            'gallery' => $product->gallery->map(fn ($media) => [
+                'id' => $media->id,
+                'display_file_name' => $media->displayFileName,
+                'file_url' => $media->file_url,
+            ]),
+        ];
     }
 }

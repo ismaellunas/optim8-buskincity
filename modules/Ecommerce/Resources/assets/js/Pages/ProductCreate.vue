@@ -14,7 +14,7 @@
 
                     <biz-form-input
                         v-model="form.name"
-                        label="Title"
+                        label="Name"
                         :message="error('name')"
                         required
                     />

@@ -137,7 +137,6 @@
             BizButton,
             BizFormDateTime,
             BizFormInput,
-            BizFormInput,
             BizFormTextarea,
             BizLanguageTab,
             BizModalCard,
