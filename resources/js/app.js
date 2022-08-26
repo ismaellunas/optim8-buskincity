@@ -23,6 +23,14 @@ createInertiaApp({
             if (module[0] == 'Booking') {
                 return import(`@mod/Booking/Resources/assets/js/Pages/${module[1]}`);
             }
+
+            if (module[0] == 'Ecommerce') {
+                return import(`@mod/Ecommerce/Resources/assets/js/Pages/${module[1]}`);
+            }
+
+            if (module[0] == 'FormBuilder') {
+                return import(`@mod/FormBuilder/Resources/assets/js/Pages/${module[1]}`);
+            }
         }
 
         return import(`./Pages/${name}`);

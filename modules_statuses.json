@@ -2,5 +2,6 @@
     "Space": true,
     "Event": true,
     "Ecommerce": true,
-    "Booking": true
+    "Booking": true,
+    "FormBuilder": true
 }

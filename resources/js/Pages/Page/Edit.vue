@@ -18,7 +18,7 @@
                 :page-preview="true"
                 :selected-locale="selectedLocale"
                 :status-options="statusOptions"
-                @change-locale="onChangeLocale"
+                @on-change-locale="onChangeLocale"
                 @on-submit="onSubmit"
             />
         </div>

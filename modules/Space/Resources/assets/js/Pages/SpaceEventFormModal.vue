@@ -58,25 +58,15 @@
             />
 
             <div class="box">
-                <div class="tabs is-toggle">
-                    <ul>
-                        <li
-                            v-for="(option, index) in selectableLocales"
-                            :key="option.id"
-                            :class="{ 'is-active': option.id == selectedLocale }"
-                            @click="changeLocale(option.id, $event)"
-                        >
-                            <a>
-                                <span>{{ option.name }}</span>
-                                <span
-                                    v-if="index == 0"
-                                    class="tag is-link is-light ml-3"
-                                >
-                                    Default
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
+                <div class="columns">
+                    <div class="column">
+                        <biz-language-tab
+                            class="is-pulled-right"
+                            :locale-options="selectableLocales"
+                            :selected-locale="selectedLocale"
+                            @on-change-locale="onChangeLocale"
+                        />
+                    </div>
                 </div>
 
                 <template v-if="form.translations[selectedLocale]">
@@ -127,12 +117,13 @@
 </template>
 
 <script>
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button';
+    import BizFormDateTime from '@/Biz/Form/DateTime';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormTextarea from '@/Biz/Form/Textarea';
+    import BizLanguageTab from '@/Biz/LanguageTab';
     import BizModalCard from '@/Biz/ModalCard';
-    import BizFormDateTime from '@/Biz/Form/DateTime';
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { cloneDeep, find, sortBy } from 'lodash';
     import { isBlank } from '@/Libs/utils';
     import { ref } from 'vue';
@@ -144,11 +135,12 @@
 
         components: {
             BizButton,
+            BizFormDateTime,
             BizFormInput,
             BizFormInput,
             BizFormTextarea,
+            BizLanguageTab,
             BizModalCard,
-            BizFormDateTime,
         },
 
         mixins: [
@@ -263,11 +255,11 @@
                     });
             },
 
-            changeLocale(locale, event) {
+            onChangeLocale(locale) {
                 const self = this;
 
                 if (locale == this.selectedLocale) {
-                    return event.preventDefault();
+                    return false;
                 }
 
                 if (this.form.isDirty) {
