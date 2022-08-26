@@ -121,14 +121,13 @@
     import BizFormInput from '@/Biz/Form/Input';
     import FieldStructures from './../FieldStructures';
     import Draggable from "vuedraggable";
-    import Email from './../Blocks/Inputs/Email';
-    import InputConfig from './../Blocks/InputConfig';
-    import Number from './../Blocks/Inputs/Number';
-    import Select from './../Blocks/Inputs/Select';
-    import Text from './../Blocks/Inputs/Text';
-    import Textarea from './../Blocks/Inputs/Textarea';
+    import Email from './../Fields/Inputs/Email';
+    import InputConfig from './../Fields/InputConfig';
+    import Number from './../Fields/Inputs/Number';
+    import Select from './../Fields/Inputs/Select';
+    import Text from './../Fields/Inputs/Text';
+    import Textarea from './../Fields/Inputs/Textarea';
     import { cloneDeep } from 'lodash';
-    import { createColumn } from './../Libs/form-builder.js';
     import { usePage } from '@inertiajs/inertia-vue3';
     import {
         isBlank,
