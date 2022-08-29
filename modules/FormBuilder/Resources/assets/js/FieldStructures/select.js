@@ -70,7 +70,7 @@ export const config = {
         config: {
             required: {
                 component: "ConfigCheckbox",
-                label: "Required",
+                label: "Is Required?",
             },
         },
 
@@ -80,11 +80,11 @@ export const config = {
         config: {
             disabled: {
                 component: "ConfigCheckbox",
-                label: "Disabled",
+                label: "Is Disabled?",
             },
             readonly: {
                 component: "ConfigCheckbox",
-                label: "Readonly",
+                label: "Is Readonly?",
             },
         },
     },

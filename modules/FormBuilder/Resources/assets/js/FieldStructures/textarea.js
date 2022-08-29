@@ -88,15 +88,15 @@ export const config = {
         config: {
             required: {
                 component: "ConfigCheckbox",
-                label: "Required",
+                label: "Is Required?",
             },
             min: {
                 component: "ConfigNumber",
-                label: "Min",
+                label: "Minimal Character",
             },
             max: {
                 component: "ConfigNumber",
-                label: "Max",
+                label: "Maximal Character",
             },
         },
 
@@ -106,11 +106,11 @@ export const config = {
         config: {
             disabled: {
                 component: "ConfigCheckbox",
-                label: "Disabled",
+                label: "Is Disabled?",
             },
             readonly: {
                 component: "ConfigCheckbox",
-                label: "Readonly",
+                label: "Is Readonly?",
             },
         },
     },

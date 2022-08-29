@@ -66,15 +66,15 @@ export const config = {
         config: {
             required: {
                 component: "ConfigCheckbox",
-                label: "Required",
+                label: "Is Required?",
             },
             min: {
                 component: "ConfigNumber",
-                label: "Min",
+                label: "Minimal Value",
             },
             max: {
                 component: "ConfigNumber",
-                label: "Max",
+                label: "Maximal Value",
             },
         },
 
