@@ -16,7 +16,7 @@
                 v-if="isEditMode"
                 title="Settings"
             >
-                Settings Page
+                <setting />
             </biz-provide-inject-tab>
         </biz-provide-inject-tabs>
     </div>
@@ -26,6 +26,7 @@
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
     import FormBuilder from './FormBuilder';
+    import Setting from './Setting';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -35,6 +36,7 @@
             BizProvideInjectTab,
             BizProvideInjectTabs,
             FormBuilder,
+            Setting,
         },
 
         inject: {
@@ -59,7 +61,7 @@
 
         data() {
             return {
-                activeTab: 0,
+                activeTab: 1,
             };
         },
     }
