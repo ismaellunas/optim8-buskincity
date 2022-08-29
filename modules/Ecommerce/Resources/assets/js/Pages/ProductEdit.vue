@@ -109,6 +109,7 @@
             </biz-provide-inject-tab>
 
             <biz-provide-inject-tab
+                id="product-event-tab"
                 title="Event"
                 class="mb-6"
             >
@@ -215,7 +216,7 @@
                                                                 :key="hour.uid"
                                                             >
                                                                 <td>
-                                                                    <div class="time-range">
+                                                                    <div class="event-time-range">
                                                                         <biz-date-time
                                                                             v-model="eventForm.weekly_hours[index].hours[hourIdx].timeRange"
                                                                             type="time"
@@ -357,6 +358,7 @@
 
         <product-edit-modal-date-override
             v-if="isModalOpen"
+            id="product-event-date-override-modal"
             v-model="selectedDateOverride"
             @close="closeModal()"
             @after-apply="afterApply"
@@ -612,13 +614,7 @@
 </script>
 
 <style scoped>
-.time-range {
-    width: 14.5rem;
-}
 </style>
 
 <style>
-button.datetimepicker-clear-button {
-    display: none;
-}
 </style>

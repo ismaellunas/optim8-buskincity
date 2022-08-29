@@ -47,7 +47,7 @@
                             class="columns"
                         >
                             <div class="column is-narrow">
-                                <div class="time-range">
+                                <div class="event-time-range">
                                     <biz-date-time
                                         v-model="timeRanges[index].timeRange"
                                         type="time"
@@ -273,15 +273,3 @@
         },
     };
 </script>
-
-<style scoped>
-.time-range {
-    width: 14rem;
-}
-</style>
-
-<style>
-button.is-active.is-today {
-    background-color: transparent;
-}
-</style>
