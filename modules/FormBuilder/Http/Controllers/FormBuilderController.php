@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\FieldGroup;
 use Modules\FormBuilder\Services\FormBuilderService;
+use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
 
 class FormBuilderController extends CrudController
 {
@@ -40,12 +41,21 @@ class FormBuilderController extends CrudController
 
     public function create()
     {
-        // return view('formbuilder::create');
+        return Inertia::render('FormBuilder::Create', $this->getData([
+            'title' => $this->getCreateTitle(),
+        ]));
     }
 
-    public function store(Request $request)
+    public function store(FormBuilderRequest $request)
     {
-        //
+        $inputs = $request->validated();
+        $fieldGroup = new FieldGroup();
+
+        $fieldGroup->saveFromInputs($inputs);
+
+        $this->generateFlashMessage('Form created successfully!');
+
+        return redirect()->route($this->baseRouteName . '.edit', $fieldGroup->id);
     }
 
     public function show($id)
@@ -53,9 +63,17 @@ class FormBuilderController extends CrudController
         // return view('formbuilder::show');
     }
 
-    public function edit($id)
+    public function edit(FieldGroup $formBuilder)
     {
-        // return view('formbuilder::edit');
+        $formBuilder->builders = $formBuilder->data;
+        $formBuilder->key = $formBuilder->title;
+        unset($formBuilder->data);
+        unset($formBuilder->title);
+
+        return Inertia::render('FormBuilder::Edit', $this->getData([
+            'title' => $this->getEditTitle(),
+            'formBuilder' => $formBuilder,
+        ]));
     }
 
     public function update(Request $request, $id)
