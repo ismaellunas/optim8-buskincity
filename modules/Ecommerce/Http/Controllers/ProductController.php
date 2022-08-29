@@ -107,6 +107,9 @@ class ProductController extends CrudController
                 'description' => new TranslatedText(collect([
                     'en' => new Text($inputs['description']),
                 ])),
+                'short_description' => new TranslatedText(collect([
+                    'en' => new Text($inputs['short_description']),
+                ])),
             ],
         ]);
 
@@ -179,7 +182,7 @@ class ProductController extends CrudController
             'imageMimes' => config('constants.extensions.image'),
             'roleOptions' => $this->productService->roleOptions(),
             'statusOptions' => $this->productService->statusOptions(),
-            'product' => $this->productService->formObject($product),
+            'product' => $this->productService->formResource($product),
             'eventDurationOptions' => $this->productEventService->durationOptions(),
             'event' => $this->productEventService->formResource($product),
             'timezoneOptions' => $this->productEventService->timezoneOptions(),
@@ -199,6 +202,9 @@ class ProductController extends CrudController
             ])),
             'description' => new TranslatedText(collect([
                 'en' => new Text($inputs['description']),
+            ])),
+            'short_description' => new TranslatedText(collect([
+                'en' => new Text($inputs['short_description']),
             ])),
         ];
 

@@ -38,6 +38,9 @@ class ProductSeeder extends Seeder
                     'description' => new TranslatedText(collect([
                         'en' => new Text($faker->text()),
                     ])),
+                    'short_description' => new TranslatedText(collect([
+                        'en' => new Text($faker->text()),
+                    ])),
                 ],
             ]);
 
