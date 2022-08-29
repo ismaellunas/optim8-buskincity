@@ -10,7 +10,10 @@ use GetCandy\Models\ProductVariant;
 use GetCandy\Models\TaxClass;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Entities\ProductStatus;
+use Modules\Ecommerce\Entities\Schedule;
 
 class ProductSeeder extends Seeder
 {
@@ -27,7 +30,7 @@ class ProductSeeder extends Seeder
         for ($i = 0; $i < 16; $i++) {
             $product = Product::create([
                 'product_type_id' => $productType->id,
-                'status' => '',
+                'status' => Arr::random(ProductStatus::cases())->value,
                 'attribute_data' => [
                     'name' => new TranslatedText(collect([
                         'en' => new Text($faker->sentence(3)),
@@ -47,6 +50,22 @@ class ProductSeeder extends Seeder
                 'backorder' => 0,
                 'sku' => 'EVENT-'.$product->id,
             ]);
+
+            $meta = [
+                'roles' => empty($inputs['roles']) ? [] : [$inputs['roles']],
+                'duration' => 30,
+                'duration_unit' => 'minute',
+                'bookable_data_range_type' => 'calendar_days_into_the_future',
+                'bookable_data_range' => 60,
+            ];
+
+            $product->setMeta($meta);
+            $product->save();
+
+            Schedule::factory()->state([
+                'schedulable_type' => Product::class,
+                'schedulable_id' => $product->id,
+            ])->create();
         }
     }
 }
