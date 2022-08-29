@@ -2,78 +2,73 @@
 
 namespace Modules\FormBuilder\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
+use App\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use Inertia\Inertia;
+use Modules\FormBuilder\Entities\FieldGroup;
+use Modules\FormBuilder\Services\FormBuilderService;
 
-class FormBuilderController extends Controller
+class FormBuilderController extends CrudController
 {
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
-    public function index()
+    protected $baseRouteName = 'admin.form-builders';
+    protected $recordsPerPage = 15;
+    protected $title = 'Form Builder';
+
+    private $formBuilderService;
+
+    public function __construct(FormBuilderService $formBuilderService)
     {
-        // return view('formbuilder::index');
+        $this->formBuilderService = $formBuilderService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
+    public function index(Request $request)
+    {
+        $user = auth()->user();
+
+        return Inertia::render('FormBuilder::Index', $this->getData([
+            'can' => [
+                'add' => $user->can('form_builder.add'),
+                'edit' => $user->can('form_builder.edit'),
+                'delete' => $user->can('form_builder.delete'),
+            ],
+            'records' => $this->formBuilderService->getRecords(
+                $request->term,
+                $this->recordsPerPage,
+            ),
+        ]));
+    }
+
     public function create()
     {
         // return view('formbuilder::create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
     public function show($id)
     {
         // return view('formbuilder::show');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
     public function edit($id)
     {
         // return view('formbuilder::edit');
     }
 
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
+    public function destroy(FieldGroup $formBuilder)
     {
-        //
+        $formBuilder->delete();
+
+        $this->generateFlashMessage('Form deleted successfully!');
+
+        return redirect()->route($this->baseRouteName.'.index');
     }
 }
