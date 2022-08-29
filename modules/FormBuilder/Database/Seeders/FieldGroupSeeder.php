@@ -21,6 +21,14 @@ class FieldGroupSeeder extends Seeder
             'name' => 'Dummy Form',
             'title' => 'dummy_form', // Key
             'type' => FieldGroup::TYPE,
+            'data' => [
+                'name' => null,
+                'title' => null,
+                'order' => null,
+                'visibility' => [],
+                'location' => [],
+                'fields' => [],
+            ],
         ];
 
         FieldGroup::create($data);

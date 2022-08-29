@@ -14,6 +14,15 @@ class FieldGroup extends ModelFieldGroup
         return $newQuery->type(self::TYPE);
     }
 
+    public function saveFromInputs(array $inputs): void
+    {
+        $this->name = $inputs['name'];
+        $this->data = $inputs['builders'];
+        $this->title = $inputs['key'];
+        $this->type = self::TYPE;
+        $this->save();
+    }
+
     public function entries()
     {
         return $this->hasMany(FieldGroupEntry::class, 'field_group_id');
