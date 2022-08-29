@@ -37,6 +37,7 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
+                        <th>Status</th>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -51,6 +52,7 @@
                     >
                         <td>{{ product.id }}</td>
                         <td>{{ product.name }}</td>
+                        <td>{{ product.status }}</td>
                         <td>
                             <div class="level-right">
                                 <biz-button-link

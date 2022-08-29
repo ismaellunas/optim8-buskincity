@@ -11,6 +11,7 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
+use Modules\Ecommerce\Entities\Product;
 
 class Space extends Model implements TranslatableContract
 {
@@ -83,6 +84,11 @@ class Space extends Model implements TranslatableContract
     public function events()
     {
         return $this->morphMany(Event::class, 'eventable');
+    }
+
+    public function product()
+    {
+        return $this->morphOne(Product::class, 'productable');
     }
 
     public function getLogoUrlAttribute(): ?string
