@@ -1,9 +1,9 @@
-import { defaultOption, columnSizes } from '@/ComponentStructures/style-options';
+import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
 
 export default {
     type: "Text",
     title: "Text",
-    column: "is-12",
+    column: 'is-full',
     label: "Text",
     name: null,
     placeholder: null,
@@ -48,7 +48,7 @@ export const config = {
                 component: "ConfigSelect",
                 label: "Column",
                 settings: {
-                    options: defaultOption.concat(columnSizes),
+                    options: defaultOption.concat(columnFieldSizes),
                 }
             },
         }

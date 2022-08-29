@@ -1,10 +1,9 @@
-import { defaultOption, columnSizes } from '@/ComponentStructures/style-options';
-import { values } from 'lodash';
+import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
 
 export default {
     type: "Select",
     title: "Select",
-    column: 'is-12',
+    column: 'is-full',
     label: "Select",
     name: null,
     placeholder: null,
@@ -48,7 +47,7 @@ export const config = {
                 component: "ConfigSelect",
                 label: "Column",
                 settings: {
-                    options: defaultOption.concat(columnSizes),
+                    options: defaultOption.concat(columnFieldSizes),
                 }
             },
         }

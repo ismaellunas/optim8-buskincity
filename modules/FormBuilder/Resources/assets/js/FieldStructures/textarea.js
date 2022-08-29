@@ -1,4 +1,4 @@
-import { defaultOption, columnSizes } from '@/ComponentStructures/style-options';
+import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
 
 export default {
     title: 'Textarea',
@@ -25,7 +25,7 @@ export default {
 
     type: "Textarea",
     title: "Textarea",
-    column: 'is-12',
+    column: 'is-full',
     label: "Textarea",
     name: null,
     placeholder: null,
@@ -69,7 +69,7 @@ export const config = {
                 component: "ConfigSelect",
                 label: "Column",
                 settings: {
-                    options: defaultOption.concat(columnSizes),
+                    options: defaultOption.concat(columnFieldSizes),
                 }
             },
         }
