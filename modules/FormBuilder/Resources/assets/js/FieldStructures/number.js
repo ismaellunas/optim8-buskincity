@@ -94,11 +94,11 @@ export const config = {
         config: {
             disabled: {
                 component: "ConfigCheckbox",
-                label: "Disabled",
+                label: "Is Disabled?",
             },
             readonly: {
                 component: "ConfigCheckbox",
-                label: "Readonly",
+                label: "Is Readonly?",
             },
         },
     },

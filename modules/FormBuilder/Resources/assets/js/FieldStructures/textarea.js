@@ -1,28 +1,6 @@
 import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
 
 export default {
-    title: 'Textarea',
-    componentName: 'Textarea',
-    config: {
-        properties: {
-            name: null,
-            label: 'Textarea',
-            placeholder: null,
-        },
-        data: {
-            default: null,
-        },
-        validation: {
-            required: false,
-            minLength: null,
-            maxLength: null,
-        },
-        attributes: {
-            disabled: false,
-            readonly: false,
-        }
-    },
-
     type: "Textarea",
     title: "Textarea",
     column: 'is-full',
