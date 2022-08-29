@@ -53,6 +53,7 @@
     import ConfigInput from '@/Blocks/Configs/Input';
     import ConfigNumber from '@/Blocks/Configs/Number';
     import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
+    import ConfigSelect from '@/Blocks/Configs/Select';
     import configs from './../FieldStructures/configs';
     import InputIcon from '@/Blocks/Configs/InputIcon';
     import NumberAddons from '@/Blocks/Configs/NumberAddons';
@@ -73,6 +74,7 @@
             ConfigInput,
             ConfigNumber,
             ConfigRowSection,
+            ConfigSelect,
             InputIcon,
             NumberAddons,
             SelectMultiple,
