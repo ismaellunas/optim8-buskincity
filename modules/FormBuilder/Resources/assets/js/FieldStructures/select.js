@@ -45,9 +45,11 @@ export const config = {
                 label: "Note",
             },
             column: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Column",
-                options: defaultOption.concat(columnSizes)
+                settings: {
+                    options: defaultOption.concat(columnSizes),
+                }
             },
         }
     },
