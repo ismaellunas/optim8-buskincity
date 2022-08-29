@@ -5,7 +5,7 @@ export default {
     title: "Select",
     column: 'is-full',
     label: "Select",
-    name: null,
+    name: 'select',
     placeholder: null,
     note: null,
     default_value: null,

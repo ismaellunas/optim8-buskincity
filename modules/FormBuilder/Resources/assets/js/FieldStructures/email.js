@@ -5,7 +5,7 @@ export default {
     title: "Email",
     column: 'is-full',
     label: "Email",
-    name: null,
+    name: "email",
     placeholder: 'e.g. example@mail.com',
     note: null,
     default_value: "",

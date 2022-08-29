@@ -27,7 +27,7 @@ export default {
     title: "Textarea",
     column: 'is-full',
     label: "Textarea",
-    name: null,
+    name: 'textarea',
     placeholder: null,
     note: null,
     default_value: null,

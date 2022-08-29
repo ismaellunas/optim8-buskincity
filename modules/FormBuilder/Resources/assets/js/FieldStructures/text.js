@@ -5,7 +5,7 @@ export default {
     title: "Text",
     column: 'is-full',
     label: "Text",
-    name: null,
+    name: "text",
     placeholder: null,
     note: null,
     default_value: "",
