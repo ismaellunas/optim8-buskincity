@@ -7,16 +7,12 @@
                 </div>
             </div>
             <div class="column">
-                <p class="buttons is-pulled-right">
-                    <biz-button
-                        v-for="locale in localeOptions"
-                        :key="locale.id"
-                        :class="['is-small is-link is-rounded', locale.id == selectedLocale ? '' : 'is-light' ]"
-                        @click="changeLocale(locale.id)"
-                    >
-                        {{ locale.name }}
-                    </biz-button>
-                </p>
+                <biz-language-tab
+                    class="is-pulled-right"
+                    :locale-options="localeOptions"
+                    :selected-locale="selectedLocale"
+                    @on-change-locale="onChangeLocale"
+                />
             </div>
         </div>
 
@@ -58,9 +54,10 @@
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import BizButton from '@/Biz/Button';
+    import BizLanguageTab from '@/Biz/LanguageTab';
+    import icon from '@/Libs/icon-class';
     import NavigationFormDuplicate from '@/Pages/ThemeHeader/NavigationFormDuplicate';
     import NavigationSegment from './NavigationSegment';
-    import icon from '@/Libs/icon-class';
     import { cloneDeep, isEmpty } from 'lodash';
     import { success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
@@ -70,6 +67,7 @@
 
         components: {
             BizButton,
+            BizLanguageTab,
             NavigationFormDuplicate,
             NavigationSegment,
         },
@@ -162,7 +160,7 @@
                 });
             },
 
-            changeLocale(locale) {
+            onChangeLocale(locale) {
                 if (this.menuForm.isDirty) {
                     confirmLeaveProgress().then((result) => {
                         if (result.isDismissed) {

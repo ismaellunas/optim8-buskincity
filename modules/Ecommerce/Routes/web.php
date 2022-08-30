@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use Modules\Ecommerce\Http\Controllers\ProductEventController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,3 +17,20 @@
 //Route::prefix('ecommerce')->group(function() {
 //    Route::get('/', 'EcommerceController@index');
 //});
+
+Route::
+    prefix('admin/ecommerce')
+    ->name('admin.ecommerce.')
+    ->middleware([
+        'auth:sanctum',
+        'verified',
+        'can:system.dashboard',
+        'ensureLoginFromAdminLoginRoute',
+    ])
+    ->group(function () {
+        Route::resource('/products', ProductController::class)
+            ->except(['show']);
+
+        Route::put('/product/{product}/event', [ProductEventController::class, 'update'])
+            ->name('products.events.update');
+    });

@@ -2,16 +2,12 @@
     <div>
         <div class="columns my-0">
             <div class="column py-0">
-                <p class="buttons is-pulled-right">
-                    <biz-button
-                        v-for="locale in localeOptions"
-                        :key="locale.id"
-                        :class="['is-small is-link is-rounded', locale.id == selectedLocale ? '' : 'is-light' ]"
-                        @click="$emit('change-locale', locale.id)"
-                    >
-                        {{ locale.name }}
-                    </biz-button>
-                </p>
+                <biz-language-tab
+                    class="is-pulled-right"
+                    :locale-options="localeOptions"
+                    :selected-locale="selectedLocale"
+                    @on-change-locale="onChangeLocale"
+                />
             </div>
         </div>
 
@@ -84,6 +80,7 @@
     import HasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
+    import BizLanguageTab from '@/Biz/LanguageTab';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormSlug from '@/Biz/Form/Slug';
     import BizFormTextarea from '@/Biz/Form/Textarea';
@@ -97,6 +94,7 @@
         components: {
             BizButton,
             BizButtonLink,
+            BizLanguageTab,
             BizFormInput,
             BizFormSlug,
             BizFormTextarea,
@@ -118,7 +116,7 @@
         },
 
         emits: [
-            'change-locale',
+            'on-change-locale',
             'on-submit',
         ],
 
@@ -146,6 +144,10 @@
                     this.form.slug = convertToSlug(this.form.name);
                 }
             },
+
+            onChangeLocale(localeId) {
+                this.$emit('on-change-locale', localeId);
+            }
         },
     };
 </script>

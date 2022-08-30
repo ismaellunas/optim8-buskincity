@@ -1,0 +1,14 @@
+{
+    "name": "FormBuilder",
+    "alias": "formbuilder",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\FormBuilder\\Providers\\AuthServiceProvider",
+        "Modules\\FormBuilder\\Providers\\FormBuilderServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

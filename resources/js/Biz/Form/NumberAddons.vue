@@ -8,7 +8,10 @@
         </biz-label>
 
         <biz-field class="has-addons mb-0">
-            <div class="control is-expanded">
+            <p
+                class="control"
+                :class="{'is-expanded': isExpanded}"
+            >
                 <biz-number
                     ref="input"
                     v-bind="$attrs"
@@ -20,7 +23,7 @@
                     @keypress="$emit('on-keypress', $event)"
                     @blur="$emit('on-blur', $event)"
                 />
-            </div>
+            </p>
 
             <slot name="afterInput" />
         </biz-field>
@@ -55,6 +58,7 @@
             placeholder: { type: String, default: null },
             required: { type: Boolean, default: false },
             wrapperClass: { type: [String, Array, Object], default: () => [] },
+            isExpanded: { type: Boolean, default: true },
         },
 
         emits: [
