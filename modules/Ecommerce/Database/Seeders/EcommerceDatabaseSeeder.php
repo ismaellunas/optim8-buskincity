@@ -19,5 +19,6 @@ class EcommerceDatabaseSeeder extends Seeder
         $this->call("Modules\Ecommerce\Database\Seeders\PermissionSeeder");
         $this->call("Modules\Ecommerce\Database\Seeders\DefaultSeeder");
         $this->call("Modules\Ecommerce\Database\Seeders\ProductSeeder");
+        $this->call("Modules\Ecommerce\Database\Seeders\OrderSeeder");
     }
 }
