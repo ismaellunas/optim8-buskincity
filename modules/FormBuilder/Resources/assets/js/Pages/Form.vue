@@ -9,7 +9,7 @@
             >
                 <form-builder
                     v-model="formBuilder"
-                    v-model:content-config-id="computedContentConfigId"
+                    v-model:input-config-id="computedInputConfigId"
                 />
             </biz-provide-inject-tab>
             <biz-provide-inject-tab
@@ -42,18 +42,18 @@
         },
 
         props: {
-            contentConfigId: { type: String, required: true },
+            inputConfigId: { type: String, required: true },
             modelValue: { type: Object, required: true },
         },
 
         emits: [
-            'update:contentConfigId',
+            'update:inputConfigId',
         ],
 
         setup(props, {emit}) {
             return {
                 formBuilder: useModelWrapper(props, emit),
-                computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
+                computedInputConfigId: useModelWrapper(props, emit, 'inputConfigId'),
             };
         },
 
