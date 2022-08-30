@@ -99,12 +99,15 @@ class ProductService
         ]);
     }
 
-    public function formObject(Product $product)
+    public function formResource(Product $product): array
     {
+        $locale = config('app.locale');
+
         return [
             'id' => $product->id,
-            'name' => $product->translateAttribute('name', config('app.locale')),
-            'description' => $product->translateAttribute('description', config('app.locale')),
+            'name' => $product->translateAttribute('name', $locale),
+            'description' => $product->translateAttribute('description', $locale),
+            'short_description' => $product->translateAttribute('description', $locale),
             'status' => $product->status,
             'roles' => $product->roles[0] ?? null,
             'gallery' => $product->gallery->map(fn ($media) => [
