@@ -19,6 +19,8 @@ class FormBuilderController extends CrudController
 
     public function __construct(FormBuilderService $formBuilderService)
     {
+        $this->authorizeResource(FieldGroup::class, 'form_builder');
+
         $this->formBuilderService = $formBuilderService;
     }
 
@@ -58,11 +60,6 @@ class FormBuilderController extends CrudController
         return redirect()->route($this->baseRouteName . '.edit', $fieldGroup->id);
     }
 
-    public function show($id)
-    {
-        // return view('formbuilder::show');
-    }
-
     public function edit(FieldGroup $formBuilder)
     {
         $formBuilder->builders = $formBuilder->data;
@@ -76,9 +73,15 @@ class FormBuilderController extends CrudController
         ]));
     }
 
-    public function update(Request $request, $id)
+    public function update(FormBuilderRequest $request, FieldGroup $formBuilder)
     {
-        //
+        $inputs = $request->validated();
+
+        $formBuilder->saveFromInputs($inputs);
+
+        $this->generateFlashMessage('Form updated successfully!');
+
+        return redirect()->route($this->baseRouteName . '.edit', $formBuilder->id);
     }
 
     public function destroy(FieldGroup $formBuilder)
