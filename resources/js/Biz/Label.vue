@@ -5,6 +5,13 @@
             v-if="isRequired"
             class="has-text-danger"
         >*</sup>
+
+        <span
+            v-if="hasLabelAddons"
+            class="is-pulled-right"
+        >
+            <slot name="labelAddons" />
+        </span>
     </label>
 </template>
 
@@ -14,6 +21,12 @@
 
         props: {
             isRequired: Boolean,
-        }
+        },
+
+        computed: {
+            hasLabelAddons() {
+                return !!this.$slots.labelAddons;
+            },
+        },
     };
 </script>

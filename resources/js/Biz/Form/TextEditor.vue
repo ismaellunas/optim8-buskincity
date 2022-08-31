@@ -1,8 +1,24 @@
 <template>
-    <div class="field">
-        <biz-label>{{ label }}</biz-label>
+    <biz-form-field
+        :class="fieldClass"
+    >
+        <template
+            v-if="label"
+            #label
+        >
+            {{ label }}
+        </template>
 
-        <div class="control">
+        <template
+            v-if="hasLabelAddons"
+            #labelAddons
+        >
+            <slot name="labelAddons" />
+        </template>
+
+        <div
+            class="control"
+        >
             <biz-text-editor
                 v-model="editorValue"
                 :disabled="disabled"
@@ -11,13 +27,17 @@
             />
         </div>
 
-        <biz-input-error :message="message" />
-    </div>
+        <slot name="note" />
+
+        <template #error>
+            <biz-input-error :message="message" />
+        </template>
+    </biz-form-field>
 </template>
 
 <script>
+    import BizFormField from '@/Biz/Form/Field';
     import BizInputError from '@/Biz/InputError';
-    import BizLabel from '@/Biz/Label';
     import BizTextEditor from '@/Biz/EditorTinymce';
     import { emailConfig } from '@/Libs/tinymce-configs';
     import { useModelWrapper } from '@/Libs/utils';
@@ -26,12 +46,13 @@
         name: 'BizFormTextEditor',
 
         components: {
+            BizFormField,
             BizInputError,
-            BizLabel,
             BizTextEditor,
         },
 
         props: {
+            fieldClass: { type: [Object, Array, String], default: undefined },
             modelValue: { type: [String, null], required: true },
             config: { type: Object, default: () => {} },
             disabled: { type: Boolean, default: false },
@@ -57,6 +78,10 @@
         },
 
         computed: {
+            hasLabelAddons() {
+                return !!this.$slots.labelAddons;
+            },
+
             editorConfig() {
                 const defaultConfig = {
                     inline: false,
