@@ -25,6 +25,11 @@ class ScheduleRule extends Model
         return \Modules\Ecommerce\Database\factories\ScheduleRuleFactory::new();
     }
 
+    public function schedule()
+    {
+        return $this->belongsTo(Schedule::class);
+    }
+
     public function times()
     {
         return $this->hasMany(ScheduleRuleTime::class);
@@ -33,7 +38,18 @@ class ScheduleRule extends Model
     public function getDisplayDatesAttribute(): string
     {
         $format = 'j M Y';
+
         return $this->started_date->format($format)
             .($this->ended_date ? ' - '.$this->ended_date->format($format) : '');
+    }
+
+    public function getFormattedStartedDateAttribute(): string
+    {
+        return $this->started_date->toDateString();
+    }
+
+    public function getFormattedEndedDateAttribute(): string|null
+    {
+        return $this->ended_date ? $this->ended_date->toDateString() : null;
     }
 }
