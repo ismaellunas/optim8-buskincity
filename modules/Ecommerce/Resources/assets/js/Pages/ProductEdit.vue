@@ -15,76 +15,12 @@
                     @submit.prevent="submit"
                 >
                     <div class="box">
-                        <h5 class="title is-5 mb-2">
-                            Details
-                        </h5>
-
-                        <hr class="mt-0">
-
-                        <biz-form-input
-                            v-model="form.name"
-                            label="Name"
-                            :message="error('name')"
-                            required
-                        />
-
-                        <biz-form-input
-                            v-model="form.description"
-                            label="Description"
-                            :message="error('description')"
-                            required
-                        />
-
-                        <biz-form-select
-                            v-model="form.status"
-                            label="Status"
-                            :message="error('status')"
-                        >
-                            <option
-                                v-for="statusOption in statusOptions"
-                                :key="statusOption.id"
-                                :value="statusOption.id"
-                            >
-                                {{ statusOption.value }}
-                            </option>
-                        </biz-form-select>
-
-                        <h5 class="title is-5 mt-6 mb-2">
-                            Visibility
-                        </h5>
-
-                        <hr class="mt-0">
-
-                        <biz-form-select
-                            v-model="form.roles"
-                            label="Roles"
-                            :message="error('roles')"
-                        >
-                            <option
-                                v-for="(roleOption, index) in roleOptions"
-                                :key="index"
-                                :value="roleOption.id"
-                            >
-                                {{ roleOption.value }}
-                            </option>
-                        </biz-form-select>
-
-                        <h5 class="title is-5 mt-6 mb-2">
-                            Gallery
-                        </h5>
-
-                        <hr class="mt-0">
-
-                        <biz-form-file-upload
-                            ref="file_upload"
-                            v-model="form.gallery"
-                            :accepted-types="['image/jpeg', 'image/png']"
-                            :allow-multiple="true"
-                            :max-file-size="500"
-                            :max-files="10"
-                            :media="product.gallery"
-                            :message="error('gallery')"
-                            label="Upload"
+                        <product-form
+                            ref="product_form"
+                            v-model="form"
+                            :role-options="roleOptions"
+                            :status-options="statusOptions"
+                            :gallery="product.gallery"
                         />
 
                         <hr>
@@ -374,8 +310,6 @@
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDateTime from '@/Biz/DateTime';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFormFileUpload from '@/Biz/Form/FileUpload';
-    import BizFormInput from '@/Biz/Form/Input';
     import BizFormNumberAddons from '@/Biz/Form/NumberAddons';
     import BizFormSelect from '@/Biz/Form/Select';
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
@@ -386,6 +320,7 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import MixinHasTab from '@/Mixins/HasTab';
     import ProductEditModalDateOverride from './ProductEditModalDateOverride';
+    import ProductForm from './ProductForm';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import { generateElementId } from '@/Libs/utils';
@@ -401,14 +336,13 @@
             BizCheckbox,
             BizDateTime,
             BizErrorNotifications,
-            BizFormFileUpload,
-            BizFormInput,
             BizFormNumberAddons,
             BizFormSelect,
             BizProvideInjectTab,
             BizProvideInjectTabs,
             BizTag,
             ProductEditModalDateOverride,
+            ProductForm,
         },
 
         mixins: [
@@ -439,6 +373,7 @@
                 name: props.product.name,
                 status: props.product.status,
                 description: props.product.description,
+                short_description: props.product.short_description,
                 roles: props.product.roles ?? null,
                 gallery: {
                     deleted_media: [],
@@ -520,7 +455,7 @@
                         onStart: self.onStartLoadingOverlay,
                         onSuccess: (page) => {
                             self.form.gallery.files = [];
-                            self.$refs.file_upload.reset();
+                            self.$refs.product_form.$refs.file_upload.reset();
 
                             successAlert(page.props.flash.message);
                         },

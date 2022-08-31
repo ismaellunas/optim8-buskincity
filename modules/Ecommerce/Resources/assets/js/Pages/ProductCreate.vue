@@ -8,75 +8,13 @@
                 @submit.prevent="submit"
             >
                 <div class="box">
-                    <h5 class="title is-5 mb-2">
-                        Details
-                    </h5>
-
-                    <biz-form-input
-                        v-model="form.name"
-                        label="Name"
-                        :message="error('name')"
-                        required
+                    <product-form
+                        v-model="form"
+                        :role-options="roleOptions"
+                        :status-options="statusOptions"
                     />
 
-                    <biz-form-input
-                        v-model="form.description"
-                        label="Description"
-                        :message="error('description')"
-                        required
-                    />
-
-                    <biz-form-select
-                        v-model="form.status"
-                        label="Status"
-                        :message="error('status')"
-                    >
-                        <option
-                            v-for="statusOption in statusOptions"
-                            :key="statusOption.id"
-                            :value="statusOption.id"
-                        >
-                            {{ statusOption.value }}
-                        </option>
-                    </biz-form-select>
-
-                    <h5 class="title is-5 mt-5 mb-3">
-                        Visibility
-                    </h5>
-
-                    <biz-form-select
-                        v-model="form.roles"
-                        label="Roles"
-                        :message="error('roles')"
-                    >
-                        <option
-                            v-for="(roleOption, index) in roleOptions"
-                            :key="index"
-                            :value="roleOption.id"
-                        >
-                            {{ roleOption.value }}
-                        </option>
-                    </biz-form-select>
-
-                    <h5 class="title is-5 mt-5 mb-3">
-                        Gallery
-                    </h5>
-
-                    <biz-form-file-upload
-                        ref="file_upload"
-                        v-model="form.gallery"
-                        :accepted-types="['image/jpeg', 'image/png']"
-                        :allow-multiple="true"
-                        :max-file-size="500"
-                        :max-files="10"
-                        :media="[]"
-                        :message="error('gallery')"
-                        label="Upload"
-                    >
-                        <template #medium="mediumProps">
-                            {{ mediumProps.file_url }}
-                        </template>
-                    </biz-form-file-upload>
+                    <hr>
 
                     <div class="field is-grouped is-grouped-right">
                         <div class="control">
@@ -104,11 +42,9 @@
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizFormFileUpload from '@/Biz/Form/FileUpload';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import ProductForm from './ProductForm';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -117,9 +53,7 @@
             BizButton,
             BizButtonLink,
             BizErrorNotifications,
-            BizFormInput,
-            BizFormFileUpload,
-            BizFormSelect,
+            ProductForm,
         },
 
         mixins: [
@@ -141,6 +75,7 @@
                 name: null,
                 status: 'draft',
                 description: null,
+                short_description: null,
                 roles: null,
                 gallery: {
                     deleted_media: [],
