@@ -7,6 +7,9 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Modules\Ecommerce\Entities\Order;
+use Modules\Ecommerce\Entities\ScheduleBooking;
+use Modules\Ecommerce\Enums\BookingStatus;
+use Modules\Ecommerce\Enums\OrderStatus;
 
 class OrderService
 {
@@ -49,15 +52,20 @@ class OrderService
         });
     }
 
-    public function getRecord($order): array
+    public function getRecord(Order $order): array
     {
-        $orderSubset = $order
+        $replicatedOrder = $order->replicate();
+        $replicatedOrder->id = $order->id;
+
+        $replicatedOrder->load('user', 'lines.purchasable.product');
+
+        $orderSubset = $replicatedOrder
             ->append('user_full_name', 'formatted_placed_at')
             ->only('id', 'status', 'reference', 'formatted_placed_at', 'lines', 'user_full_name');
 
         $orderSubset['status'] = Str::title($orderSubset['status']);
 
-        $orderSubset['lines']->transform(function ($line) {
+        $orderSubset['lines'] = $orderSubset['lines']->map(function ($line) {
             $lineArray = $line->only('id', 'identifier', 'purchasable', 'scheduleBooking');
 
             $purchaseable = $lineArray['purchasable'];
@@ -79,5 +87,17 @@ class OrderService
         });
 
         return $orderSubset;
+    }
+
+    public function cancelOrder(Order $order)
+    {
+        $order->status = OrderStatus::CANCELED->value;
+        $order->save();
+    }
+
+    public function cancelEvent(ScheduleBooking $booking)
+    {
+        $booking->status = BookingStatus::CANCELED->value;
+        $booking->save();
     }
 }
