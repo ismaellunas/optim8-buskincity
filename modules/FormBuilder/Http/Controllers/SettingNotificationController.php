@@ -63,11 +63,6 @@ class SettingNotificationController extends CrudController
         ]);
     }
 
-    public function show($id)
-    {
-        // return view('formbuilder::show');
-    }
-
     public function edit(
         FieldGroup $formBuilder,
         FieldGroupNotificationSetting $notification

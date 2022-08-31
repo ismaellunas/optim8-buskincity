@@ -31,7 +31,8 @@ Route::name('admin.')->prefix('admin/')->middleware([
             Route::get('notifications/records', [SettingNotificationController::class, 'records'])
                 ->name('notifications.records');
 
-            Route::resource('notifications', SettingNotificationController::class);
+            Route::resource('notifications', SettingNotificationController::class)
+                ->except(['show']);
         });
     });
 });
