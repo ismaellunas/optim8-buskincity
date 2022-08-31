@@ -11,6 +11,7 @@
             @mouseenter="onHover"
         >
             <biz-button
+                v-if="isTriggerButton"
                 :aria-controls="menuId"
                 :style="styleButton"
                 aria-haspopup="true"
@@ -20,6 +21,15 @@
             >
                 <slot name="trigger" />
             </biz-button>
+
+            <a
+                v-else
+                href.prevent="#"
+                aria-haspopup="true"
+                :aria-controls="menuId"
+            >
+                <slot name="trigger" />
+            </a>
         </div>
 
         <div
@@ -72,7 +82,15 @@
                 type: [Array, Object, String],
                 default: ""
             },
+            isTriggerButton: {
+                type: Boolean,
+                default: true
+            },
         },
+
+        emits: [
+            'on-click'
+        ],
 
         setup(props) {
             const isActive = ref(props.active);
@@ -101,6 +119,7 @@
 
             toggle() {
                 this.isActive = !this.isActive;
+                this.$emit('on-click');
             },
 
             isInWhiteList(el) {
