@@ -13,10 +13,11 @@ class SettingNotificationService
         string $term = null,
         int $perPage = 10
     ): LengthAwarePaginator {
-        return FieldGroupNotificationSetting::select([
+        $records = FieldGroupNotificationSetting::select([
                 'id',
                 'name',
-                'subject'
+                'subject',
+                'is_active'
             ])
             ->orderBy('id', 'DESC')
             ->when($term, function ($query) use ($term) {
@@ -24,6 +25,21 @@ class SettingNotificationService
                     ->orWhere('subject', 'ILIKE', '%'.$term.'%');
             })
             ->paginate($perPage);
+
+        $this->transformRecords($records);
+
+        return $records;
+    }
+
+    private function transformRecords($records)
+    {
+        $records->getCollection()->transform(function ($record) {
+            $record->status = $this->getValueActiveOption($record->is_active);
+
+            return $record;
+        });
+    }
+
     public function getFieldNameOptions(FieldGroup $fieldGroup): array
     {
         $fieldNames = [];
@@ -47,5 +63,12 @@ class SettingNotificationService
     public function getActiveOptions(): array
     {
         return ModuleService::activeOptions();
+    }
+
+    private function getValueActiveOption($id): string
+    {
+        $options = collect($this->getActiveOptions());
+
+        return $options->where('id', $id)->value('value');
     }
 }
