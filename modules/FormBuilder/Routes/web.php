@@ -20,5 +20,6 @@ Route::name('admin.')->prefix('admin/')->middleware([
     'can:system.dashboard',
     'ensureLoginFromAdminLoginRoute',
 ])->group(function () {
-    Route::resource('form-builders', FormBuilderController::class);
+    Route::resource('form-builders', FormBuilderController::class)
+        ->except(['show']);
 });

@@ -21,7 +21,10 @@ class FormBuilderRequest extends FormRequest
             'key' => [
                 'required',
                 'max: 127',
-                'unique:field_groups,title',
+                'regex:/^[a-z0-9\_]+$/',
+                'unique:field_groups,title' . (
+                    $this->id ? ',' . $this->id : null
+                ),
             ],
             'builders' => [
                 'nullable',

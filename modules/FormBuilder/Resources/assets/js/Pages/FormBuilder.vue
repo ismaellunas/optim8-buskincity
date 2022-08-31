@@ -17,6 +17,7 @@
                     placeholder="e.g. contact_form"
                     :required="true"
                     :message="error('key')"
+                    @on-keypress="onKeyPress"
                 />
             </div>
         </div>
@@ -55,7 +56,7 @@
                     <template v-else>
                         <input-config
                             v-model="fieldByConfigId"
-                            class="form-builder-content-config"
+                            class="form-builder-input-config"
                         />
                     </template>
                 </div>
@@ -83,9 +84,9 @@
                             class="component-configurable builder-area column"
                             :class="element.column"
                             :data-id="element.id"
-                            @click="settingContent"
-                            @delete-content="deleteContent"
-                            @duplicate-content="duplicateContent"
+                            @click="settingInput"
+                            @delete-content="deleteInput"
+                            @duplicate-content="duplicateInput"
                         />
                     </template>
                 </draggable>
@@ -121,14 +122,13 @@
     import BizFormInput from '@/Biz/Form/Input';
     import FieldStructures from './../FieldStructures';
     import Draggable from "vuedraggable";
-    import Email from './../Blocks/Inputs/Email';
-    import InputConfig from './../Blocks/InputConfig';
-    import Number from './../Blocks/Inputs/Number';
-    import Select from './../Blocks/Inputs/Select';
-    import Text from './../Blocks/Inputs/Text';
-    import Textarea from './../Blocks/Inputs/Textarea';
+    import Email from './../Fields/Inputs/Email';
+    import InputConfig from './../Fields/InputConfig';
+    import Number from './../Fields/Inputs/Number';
+    import Select from './../Fields/Inputs/Select';
+    import Text from './../Fields/Inputs/Text';
+    import Textarea from './../Fields/Inputs/Textarea';
     import { cloneDeep } from 'lodash';
-    import { createColumn } from './../Libs/form-builder.js';
     import { usePage } from '@inertiajs/inertia-vue3';
     import {
         isBlank,
@@ -162,18 +162,18 @@
         },
 
         props: {
-            contentConfigId: { type: String, default: "" },
+            inputConfigId: { type: String, default: "" },
             modelValue: { type: Object, required: true },
         },
 
         emits: [
-            'update:contentConfigId',
+            'update:inputConfigId',
         ],
 
         setup(props, {emit}) {
             return {
                 form: useModelWrapper(props, emit),
-                computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
+                computedInputConfigId: useModelWrapper(props, emit, 'inputConfigId'),
                 isDebugMode: false,
                 baseRouteName: usePage().props.value.baseRouteName,
             };
@@ -210,7 +210,7 @@
             },
 
             fieldByConfigId() {
-                const index = this.computedFields.findIndex(field => field.id == this.contentConfigId);
+                const index = this.computedFields.findIndex(field => field.id == this.inputConfigId);
 
                 return this.computedFields[index] ?? {};
             },
@@ -218,7 +218,7 @@
             isComponentConfigOpen() {
                 return (
                     !isBlank(this.fieldByConfigId)
-                    && !isBlank(this.contentConfigId)
+                    && !isBlank(this.inputConfigId)
                 );
             },
 
@@ -249,12 +249,12 @@
                 return this.clonedComponent;
             },
 
-            settingContent(event) {
+            settingInput(event) {
                 let configComponent = event.target.closest('.component-configurable');
 
                 if (configComponent) {
                     if (configComponent.hasAttribute('data-id')) {
-                        this.computedContentConfigId = configComponent.getAttribute('data-id');
+                        this.computedInputConfigId = configComponent.getAttribute('data-id');
                     }
                 }
             },
@@ -262,16 +262,26 @@
             onSubmit() {
                 const self = this;
 
-                self.form.post(
-                    route(self.baseRouteName + '.store'),
-                    {
-                        onStart: () => self.onStartLoadingOverlay(),
-                        onFinish: () => self.onEndLoadingOverlay(),
-                    }
-                )
+                if (!this.isEditMode) {
+                    self.form.post(
+                        route(self.baseRouteName + '.store'),
+                        {
+                            onStart: () => self.onStartLoadingOverlay(),
+                            onFinish: () => self.onEndLoadingOverlay(),
+                        }
+                    )
+                } else {
+                    self.form.put(
+                        route(self.baseRouteName + '.update', self.form.id),
+                        {
+                            onStart: () => self.onStartLoadingOverlay(),
+                            onFinish: () => self.onEndLoadingOverlay(),
+                        }
+                    )
+                }
             },
 
-            deleteContent(id) {
+            deleteInput(id) {
                 if (!isBlank(id)) {
                     this.computedFields.splice(
                         this.computedFields.map(field => field.id).indexOf(id),
@@ -280,7 +290,7 @@
                 }
             },
 
-            duplicateContent(id) {
+            duplicateInput(id) {
                 if (!isBlank(id)) {
                     const duplicateField = cloneDeep(
                         this.computedFields[
@@ -293,6 +303,22 @@
                     this.computedFields.push(duplicateField);
                 }
             },
+
+            onKeyPress(event) {
+                let char = String.fromCharCode(event.keyCode);
+                const lastCharacter = event.target.value.slice(-1);
+                const regexKey = "a-z0-9\_";
+
+                if ( (char === ' ' || char === '-') && (lastCharacter !== '_')) {
+                    event.target.value += '_';
+                } else if (char === '_' && lastCharacter === '_') {
+                    event.target.value += '';
+                } else if ((new RegExp('^['+regexKey+']+$')).test(char)) {
+                    return true;
+                }
+
+                event.preventDefault();
+            }
         },
     }
 </script>
