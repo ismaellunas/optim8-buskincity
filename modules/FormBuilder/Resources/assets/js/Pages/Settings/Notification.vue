@@ -59,7 +59,7 @@
                         <td>
                             <div class="level-right">
                                 <biz-button-link
-                                    href="#"
+                                    :href="route(baseRouteName + '.edit', {'form_builder': formBuilder.id, 'notification': record.id})"
                                     class="is-ghost has-text-black"
                                 >
                                     <span class="icon is-small">
