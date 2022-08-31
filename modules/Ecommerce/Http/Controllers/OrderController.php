@@ -38,18 +38,14 @@ class OrderController extends CrudController
         ]));
     }
 
-    public function create()
+    public function show(Order $order)
     {
-        return view('ecommerce::create');
-    }
+        $order->load('user', 'lines.purchasable.product');
 
-    public function store(Request $request)
-    {
-    }
-
-    public function show($id)
-    {
-        return Inertia::render('Ecommerce::OrderShow', $this->getData([]));
+        return Inertia::render('Ecommerce::OrderShow', $this->getData([
+            'title' => $this->title.' #'.$order->reference,
+            'order' => $this->orderService->getRecord($order),
+        ]));
     }
 
     public function edit($id)
@@ -57,10 +53,6 @@ class OrderController extends CrudController
     }
 
     public function update(Request $request, $id)
-    {
-    }
-
-    public function destroy($id)
     {
     }
 }
