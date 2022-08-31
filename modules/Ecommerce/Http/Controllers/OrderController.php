@@ -5,6 +5,7 @@ namespace Modules\Ecommerce\Http\Controllers;
 use App\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Services\OrderService;
 
 class OrderController extends CrudController
@@ -17,6 +18,8 @@ class OrderController extends CrudController
     public function __construct(OrderService $orderService)
     {
         $this->orderService = $orderService;
+
+        $this->authorizeResource(Order::class, 'order');
     }
 
     public function index(Request $request)
