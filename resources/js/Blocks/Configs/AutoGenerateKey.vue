@@ -4,6 +4,7 @@
             v-model="computedValue"
             :label="label"
             :placeholder="settings.placeholder"
+            :required="false"
         />
     </div>
 </template>
