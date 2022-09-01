@@ -1,5 +1,5 @@
 <template>
-    <biz-input-list>
+    <biz-list-section>
         <template #title>
             Notification
         </template>
@@ -80,7 +80,7 @@
             :query-params="queryParams"
             @on-clicked-pagination="getSettingNotifications"
         />
-    </biz-input-list>
+    </biz-list-section>
 </template>
 
 <script>
@@ -88,7 +88,7 @@
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizInputList from '@/Biz/InputList';
+    import BizListSection from '@/Biz/ListSection';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
     import icon from '@/Libs/icon-class';
@@ -102,7 +102,7 @@
             BizButton,
             BizButtonLink,
             BizFilterSearch,
-            BizInputList,
+            BizListSection,
             BizPagination,
             BizTable,
         },
