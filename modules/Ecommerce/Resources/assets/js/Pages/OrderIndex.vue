@@ -92,7 +92,7 @@
         props: {
             baseRouteName: { type: String, required: true },
             can: { type: Object, required: true },
-            pageQueryParams: { type: Array, default: () => [] },
+            pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, required: true },
         },
 
