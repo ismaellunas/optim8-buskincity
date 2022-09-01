@@ -8,6 +8,7 @@
                     placeholder="Contact Form"
                     :required="true"
                     :message="error('name')"
+                    @on-blur="populateKey"
                 />
             </div>
             <div class="column">
@@ -17,7 +18,6 @@
                     placeholder="e.g. contact_form"
                     :required="true"
                     :message="error('key')"
-                    @on-keypress="onKeyPress"
                 />
             </div>
         </div>
@@ -120,6 +120,7 @@
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFormInput from '@/Biz/Form/Input';
+    import BizFormKey from '@/Biz/Form/Key';
     import FieldStructures from './../FieldStructures';
     import Draggable from "vuedraggable";
     import Email from './../Fields/Inputs/Email';
@@ -128,12 +129,13 @@
     import Select from './../Fields/Inputs/Select';
     import Text from './../Fields/Inputs/Text';
     import Textarea from './../Fields/Inputs/Textarea';
-    import { cloneDeep } from 'lodash';
+    import { cloneDeep, isEmpty } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
     import {
         isBlank,
         useModelWrapper,
         generateElementId,
+        convertToKey,
     } from '@/Libs/utils';
 
     export default {
@@ -143,6 +145,7 @@
             BizButton,
             BizButtonLink,
             BizFormInput,
+            BizFormKey,
             Draggable,
             Email,
             InputConfig,
@@ -306,21 +309,11 @@
                 }
             },
 
-            onKeyPress(event) {
-                let char = String.fromCharCode(event.keyCode);
-                const lastCharacter = event.target.value.slice(-1);
-                const regexKey = "a-z0-9\_";
-
-                if ( (char === ' ' || char === '-') && (lastCharacter !== '_')) {
-                    event.target.value += '_';
-                } else if (char === '_' && lastCharacter === '_') {
-                    event.target.value += '';
-                } else if ((new RegExp('^['+regexKey+']+$')).test(char)) {
-                    return true;
+            populateKey(event) {
+                if (isEmpty(this.form.form_id) && !isEmpty(this.form.name)) {
+                    this.form.form_id = convertToKey(this.form.name);
                 }
-
-                event.preventDefault();
-            }
+            },
         },
     }
 </script>
