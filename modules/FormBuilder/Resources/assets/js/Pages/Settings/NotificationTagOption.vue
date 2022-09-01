@@ -2,7 +2,6 @@
     <biz-dropdown-search
         class="is-right"
         :close-on-click="true"
-        :is-trigger-button="false"
         @search="searchFieldName($event)"
     >
         <template #trigger>

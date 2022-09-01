@@ -6,13 +6,6 @@
             :is-required="isRequired"
         >
             <slot name="label" />
-
-            <template
-                v-if="hasLabelAddons"
-                #labelAddons
-            >
-                <slot name="labelAddons" />
-            </template>
         </biz-label>
 
         <slot />
@@ -47,10 +40,6 @@
         computed: {
             hasLabelSlot() {
                 return !!this.$slots.label;
-            },
-
-            hasLabelAddons() {
-                return !!this.$slots.labelAddons;
             },
         },
     };

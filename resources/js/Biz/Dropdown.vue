@@ -24,7 +24,6 @@
 
             <a
                 v-else
-                href.prevent="#"
                 aria-haspopup="true"
                 :aria-controls="menuId"
             >
