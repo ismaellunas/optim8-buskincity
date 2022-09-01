@@ -3,6 +3,7 @@
         <biz-form-key
             v-model="computedValue"
             :label="label"
+            :placeholder="settings.placeholder"
         />
     </div>
 </template>
@@ -33,7 +34,7 @@
 
         computed: {
             entityGenerated() {
-                return this.entity[this.settings.generateBy];
+                return this.entity[this.settings.generateBasedOn];
             },
         },
 

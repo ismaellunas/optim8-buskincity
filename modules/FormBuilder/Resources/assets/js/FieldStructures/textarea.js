@@ -35,7 +35,8 @@ export const config = {
                 component: "ConfigAutoGenerateKey",
                 label: "Name",
                 settings: {
-                    generateBy: 'label'
+                    generateBasedOn: 'label',
+                    placeholder: 'field_name'
                 },
             },
             placeholder: {
