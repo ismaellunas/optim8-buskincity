@@ -45,9 +45,11 @@ export const config = {
                 label: "Note",
             },
             column: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Column",
-                options: defaultOption.concat(columnSizes)
+                settings: {
+                    options: defaultOption.concat(columnSizes),
+                }
             },
         }
     },
@@ -82,11 +84,11 @@ export const config = {
         label: "Attributes",
         config: {
             disabled: {
-                type: "checkbox",
+                component: "ConfigCheckbox",
                 label: "Disabled",
             },
             readonly: {
-                type: "checkbox",
+                component: "ConfigCheckbox",
                 label: "Readonly",
             },
         },
