@@ -89,10 +89,16 @@ export const config = {
             disabled: {
                 component: "ConfigCheckbox",
                 label: "Is Disabled?",
+                settings: {
+                    disabledBasedOn: 'validation.rules.required'
+                }
             },
             readonly: {
                 component: "ConfigCheckbox",
                 label: "Is Readonly?",
+                settings: {
+                    disabledBasedOn: 'validation.rules.required'
+                }
             },
         },
     },
