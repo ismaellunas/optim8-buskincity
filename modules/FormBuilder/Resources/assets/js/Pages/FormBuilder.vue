@@ -11,9 +11,9 @@
                 />
             </div>
             <div class="column">
-                <biz-form-input
-                    v-model="form.key"
-                    label="Key"
+                <biz-form-key
+                    v-model="form.form_id"
+                    label="Form ID"
                     placeholder="e.g. contact_form"
                     :required="true"
                     :message="error('key')"

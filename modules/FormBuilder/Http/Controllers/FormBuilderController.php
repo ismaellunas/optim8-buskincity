@@ -63,7 +63,7 @@ class FormBuilderController extends CrudController
     public function edit(FieldGroup $formBuilder)
     {
         $formBuilder->builders = $formBuilder->data;
-        $formBuilder->key = $formBuilder->title;
+        $formBuilder->form_id = $formBuilder->title;
         unset($formBuilder->data);
         unset($formBuilder->title);
 
