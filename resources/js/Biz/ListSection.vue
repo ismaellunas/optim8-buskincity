@@ -11,6 +11,6 @@
 
 <script>
     export default {
-        name: 'BizInputList',
+        name: 'BizListSection',
     };
 </script>
