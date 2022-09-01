@@ -39,11 +39,19 @@
 
         computed: {
             isDisabled() {
-                if (this.settings?.disabledBasedOn) {
-                    return this.getValueFromNotation(this.entity, this.settings.disabledBasedOn);
+                if (this.settings?.disableBasedOn) {
+                    return this.getValueFromNotation(this.entity, this.settings.disableBasedOn);
                 }
 
                 return false;
+            }
+        },
+
+        watch: {
+            isDisabled(newData, oldData) {
+                if (newData) {
+                    this.computedValue = !newData;
+                }
             }
         },
 
