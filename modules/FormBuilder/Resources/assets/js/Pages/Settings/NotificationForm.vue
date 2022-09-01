@@ -30,12 +30,12 @@
                     </template>
                 </biz-form-input>
 
-                <biz-form-input
+                <biz-form-input-addons
                     v-model="form.from_name"
                     label="From Name"
                     :message="error('from_name')"
                 >
-                    <template #labelAddons>
+                    <template #afterInput>
                         <notification-tag-option
                             :options="fieldNameOptions"
                             input-name="from_name"
@@ -48,14 +48,14 @@
                             {{ fieldNotes.from_name }}
                         </p>
                     </template>
-                </biz-form-input>
+                </biz-form-input-addons>
 
-                <biz-form-input
+                <biz-form-input-addons
                     v-model="form.from_email"
                     label="From Email"
                     :message="error('from_email')"
                 >
-                    <template #labelAddons>
+                    <template #afterInput>
                         <notification-tag-option
                             :options="fieldNameOptions"
                             input-name="from_email"
@@ -68,14 +68,14 @@
                             {{ fieldNotes.from_email }}
                         </p>
                     </template>
-                </biz-form-input>
+                </biz-form-input-addons>
 
-                <biz-form-input
+                <biz-form-input-addons
                     v-model="form.reply_to"
                     label="Reply To"
                     :message="error('reply_to')"
                 >
-                    <template #labelAddons>
+                    <template #afterInput>
                         <notification-tag-option
                             :options="fieldNameOptions"
                             input-name="reply_to"
@@ -88,15 +88,15 @@
                             {{ fieldNotes.reply_to }}
                         </p>
                     </template>
-                </biz-form-input>
+                </biz-form-input-addons>
 
-                <biz-form-input
+                <biz-form-input-addons
                     v-model="form.bcc"
                     label="Bcc"
                     placeholder="Separate by comma"
                     :message="error('bcc')"
                 >
-                    <template #labelAddons>
+                    <template #afterInput>
                         <notification-tag-option
                             :options="fieldNameOptions"
                             input-name="bcc"
@@ -109,22 +109,22 @@
                             {{ fieldNotes.bcc }}
                         </p>
                     </template>
-                </biz-form-input>
+                </biz-form-input-addons>
 
-                <biz-form-input
+                <biz-form-input-addons
                     v-model="form.subject"
                     label="Subject"
                     :required="true"
                     :message="error('subject')"
                 >
-                    <template #labelAddons>
+                    <template #afterInput>
                         <notification-tag-option
                             :options="fieldNameOptions"
                             input-name="subject"
                             @on-select-option="onSelectOption"
                         />
                     </template>
-                </biz-form-input>
+                </biz-form-input-addons>
 
                 <biz-form-text-editor
                     v-model="form.message"
