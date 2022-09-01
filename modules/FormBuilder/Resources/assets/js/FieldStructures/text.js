@@ -33,8 +33,11 @@ export const config = {
                 label: "Label",
             },
             name: {
-                component: "ConfigInput",
+                component: "ConfigAutoGenerateKey",
                 label: "Name",
+                settings: {
+                    generateBy: 'label'
+                },
             },
             placeholder: {
                 component: "ConfigInput",
