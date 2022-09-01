@@ -17,7 +17,7 @@
                     label="Form ID"
                     placeholder="e.g. contact_form"
                     :required="true"
-                    :message="error('key')"
+                    :message="error('form_id')"
                 />
             </div>
         </div>
