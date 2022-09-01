@@ -112,6 +112,20 @@ export function convertToSlug(text) {
     return result;
 }
 
+export function convertToKey(text) {
+    let result = text
+        .toLowerCase()
+        .replace(/ /g,'_')
+        .replace(/[-]+/g, '_')
+        .replace(/[^\w-]+/g,'');
+
+    if (result && result.slice(-1) === '_') {
+        return result.slice(0, -1);
+    }
+
+    return result;
+}
+
 export function getResourceFromDataObject(dataObject, keyName) {
     const resource = [];
 
