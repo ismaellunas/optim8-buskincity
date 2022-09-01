@@ -9,13 +9,6 @@
             {{ label }}
         </template>
 
-        <template
-            v-if="hasLabelAddons"
-            #labelAddons
-        >
-            <slot name="labelAddons" />
-        </template>
-
         <div
             class="control"
         >
@@ -78,10 +71,6 @@
         },
 
         computed: {
-            hasLabelAddons() {
-                return !!this.$slots.labelAddons;
-            },
-
             editorConfig() {
                 const defaultConfig = {
                     inline: false,
