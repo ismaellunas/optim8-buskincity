@@ -128,18 +128,9 @@
 
                 <biz-form-text-editor
                     v-model="form.message"
-                    height="200"
                     label="Message"
-                    mode="email"
-                >
-                    <template #labelAddons>
-                        <notification-tag-option
-                            :options="fieldNameOptions"
-                            input-name="message"
-                            @on-select-option="onSelectOption"
-                        />
-                    </template>
-                </biz-form-text-editor>
+                    :config="messageConfig"
+                />
             </div>
         </div>
 
@@ -186,6 +177,7 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizFormInput from '@/Biz/Form/Input';
+    import BizFormInputAddons from '@/Biz/Form/InputAddons';
     import BizFormSelect from '@/Biz/Form/Select';
     import BizFormTextEditor from '@/Biz/Form/TextEditor';
     import BizButton from '@/Biz/Button';
@@ -195,12 +187,14 @@
     import { useModelWrapper } from '@/Libs/utils';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
+    import { emailConfig } from '@/Libs/tinymce-configs';
 
     export default {
         name: 'Form',
 
         components: {
             BizFormInput,
+            BizFormInputAddons,
             BizFormSelect,
             BizFormTextEditor,
             BizButton,
@@ -229,9 +223,34 @@
         ],
 
         setup(props, {emit}) {
+            const messageConfig = {
+                inline: false,
+                toolbar: 'formatselect | bold italic forecolor backcolor link ' +
+                    '| align bullist numlist | removeformat | listTag',
+                setup: (editor) => {
+                    editor.ui.registry.addMenuButton('listTag', {
+                        text: '{&#183;&#183;&#183;}',
+                        fetch: (callback) => {
+                            var items = [];
+
+                            props.fieldNameOptions.forEach(function (option) {
+                                items.push({
+                                    type: 'menuitem',
+                                    text: option.value,
+                                    onAction: () => editor.insertContent('{'+ option.id + '}'),
+                                })
+                            });
+
+                            callback(items);
+                        }
+                    });
+                }
+            };
+
             return {
                 baseRouteName: 'admin.form-builder',
                 form: useModelWrapper(props, emit),
+                messageConfig: Object.assign(emailConfig, messageConfig),
             };
         },
 
@@ -252,7 +271,7 @@
                 }
 
                 this.form[inputName] = this.form[inputName] + appendText;
-            }
+            },
         },
     }
 </script>
