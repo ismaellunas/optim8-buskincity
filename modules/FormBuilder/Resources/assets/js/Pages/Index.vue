@@ -36,7 +36,7 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Key</th>
+                            <th>Form ID</th>
                             <th>Entries</th>
                             <th>
                                 <div class="level-right">
