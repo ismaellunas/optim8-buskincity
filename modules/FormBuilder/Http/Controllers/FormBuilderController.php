@@ -12,6 +12,7 @@ use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
 class FormBuilderController extends CrudController
 {
     protected $baseRouteName = 'admin.form-builders';
+    protected $baseRouteNameSetting = 'admin.form-builders.settings';
     protected $recordsPerPage = 15;
     protected $title = 'Form Builder';
 
@@ -68,8 +69,9 @@ class FormBuilderController extends CrudController
         unset($formBuilder->title);
 
         return Inertia::render('FormBuilder::Edit', $this->getData([
-            'title' => $this->getEditTitle(),
+            'baseRouteNameSetting' => $this->baseRouteNameSetting,
             'formBuilder' => $formBuilder,
+            'title' => $this->getEditTitle(),
         ]));
     }
 
