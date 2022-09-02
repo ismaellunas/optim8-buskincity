@@ -16,6 +16,7 @@
 <script>
     import BizCheckbox from '@/Biz/Checkbox';
     import { useModelWrapper } from '@/Libs/utils';
+    import { get } from 'lodash';
 
     export default {
         name: 'Checkbox',
@@ -40,7 +41,7 @@
         computed: {
             isDisabled() {
                 if (this.settings?.disableBasedOn) {
-                    return this.getValueFromNotation(this.entity, this.settings.disableBasedOn);
+                    return get(this.entity, this.settings.disableBasedOn);
                 }
 
                 return false;
@@ -52,22 +53,6 @@
                 if (newData) {
                     this.computedValue = !newData;
                 }
-            }
-        },
-
-        methods: {
-            getValueFromNotation(object, notation) {
-                if (typeof notation == 'string') {
-
-                    return this.getValueFromNotation(object, notation.split('.'));
-
-                } else if (notation.length == 0) {
-
-                    return object;
-
-                }
-
-                return this.getValueFromNotation(object[notation[0]], notation.slice(1));
             }
         },
     }
