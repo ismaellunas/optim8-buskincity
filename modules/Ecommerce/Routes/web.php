@@ -33,4 +33,7 @@ Route::
 
         Route::put('/product/{product}/event', [ProductEventController::class, 'update'])
             ->name('products.events.update');
+
+        Route::resource('/orders', OrderController::class)
+            ->only(['index', 'show']);
     });

@@ -15,4 +15,9 @@ class ScheduleRuleTime extends Model
     {
         return \Modules\Ecommerce\Database\factories\ScheduleRuleTimeFactory::new();
     }
+
+    public function scheduleRule()
+    {
+        return $this->belongsTo(ScheduleRule::class);
+    }
 }

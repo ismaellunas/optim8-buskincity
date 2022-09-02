@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Ecommerce\Entities;
+namespace Modules\Ecommerce\Enums;
 
 enum ProductStatus: string
 {
