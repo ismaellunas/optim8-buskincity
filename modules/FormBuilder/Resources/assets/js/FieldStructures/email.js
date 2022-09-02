@@ -1,11 +1,11 @@
-import { defaultOption, columnSizes } from '@/ComponentStructures/style-options';
+import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
 
 export default {
     type: "Email",
     title: "Email",
-    column: 'is-12',
+    column: 'is-full',
     label: "Email",
-    name: null,
+    name: "email",
     placeholder: 'e.g. example@mail.com',
     note: null,
     default_value: "",
@@ -33,8 +33,12 @@ export const config = {
                 label: "Label",
             },
             name: {
-                component: "ConfigInput",
+                component: "ConfigAutoGenerateKey",
                 label: "Name",
+                settings: {
+                    generateBasedOn: 'label',
+                    placeholder: 'field_name'
+                },
             },
             placeholder: {
                 component: "ConfigInput",
@@ -48,7 +52,7 @@ export const config = {
                 component: "ConfigSelect",
                 label: "Column",
                 settings: {
-                    options: defaultOption.concat(columnSizes),
+                    options: defaultOption.concat(columnFieldSizes),
                 }
             },
         }
@@ -67,15 +71,15 @@ export const config = {
         config: {
             required: {
                 component: "ConfigCheckbox",
-                label: "Required",
+                label: "Is Required?",
             },
             min: {
                 component: "ConfigNumber",
-                label: "Min",
+                label: "Minimal Character",
             },
             max: {
                 component: "ConfigNumber",
-                label: "Max",
+                label: "Maximal Character",
             },
         },
 
@@ -85,11 +89,11 @@ export const config = {
         config: {
             disabled: {
                 component: "ConfigCheckbox",
-                label: "Disabled",
+                label: "Is Disabled?",
             },
             readonly: {
                 component: "ConfigCheckbox",
-                label: "Readonly",
+                label: "Is Readonly?",
             },
         },
     },

@@ -246,6 +246,8 @@
                 this.clonedComponent = JSON.parse(JSON.stringify(seletectedComponent));
                 this.clonedComponent.id = generateElementId();
 
+                this.computedInputConfigId = this.clonedComponent.id;
+
                 return this.clonedComponent;
             },
 
