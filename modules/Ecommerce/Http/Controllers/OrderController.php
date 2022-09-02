@@ -5,6 +5,7 @@ namespace Modules\Ecommerce\Http\Controllers;
 use App\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Services\OrderService;
 
 class OrderController extends CrudController
@@ -17,6 +18,8 @@ class OrderController extends CrudController
     public function __construct(OrderService $orderService)
     {
         $this->orderService = $orderService;
+
+        $this->authorizeResource(Order::class, 'order');
     }
 
     public function index(Request $request)
@@ -35,18 +38,14 @@ class OrderController extends CrudController
         ]));
     }
 
-    public function create()
+    public function show(Order $order)
     {
-        return view('ecommerce::create');
-    }
+        $order->load('user', 'lines.purchasable.product');
 
-    public function store(Request $request)
-    {
-    }
-
-    public function show($id)
-    {
-        return Inertia::render('Ecommerce::OrderShow', $this->getData([]));
+        return Inertia::render('Ecommerce::OrderShow', $this->getData([
+            'title' => $this->title.' #'.$order->reference,
+            'order' => $this->orderService->getRecord($order),
+        ]));
     }
 
     public function edit($id)
@@ -54,10 +53,6 @@ class OrderController extends CrudController
     }
 
     public function update(Request $request, $id)
-    {
-    }
-
-    public function destroy($id)
     {
     }
 }

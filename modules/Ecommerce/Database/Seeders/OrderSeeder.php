@@ -2,6 +2,7 @@
 
 namespace Modules\Ecommerce\Database\Seeders;
 
+use App\Models\User;
 use Carbon\Carbon;
 use GetCandy\Models\Channel;
 use GetCandy\Models\Currency;
@@ -10,8 +11,11 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Enums\OrderLineStatus;
 use Modules\Ecommerce\Enums\OrderStatus;
+use Modules\Ecommerce\Enums\ProductStatus;
 use GetCandy\Base\OrderReferenceGeneratorInterface;
 use GetCandy\Models\Order;
+use Modules\Ecommerce\Database\factories\ScheduleBookingFactory;
+use Modules\Ecommerce\Entities\ScheduleBooking;
 
 class OrderSeeder extends Seeder
 {
@@ -24,14 +28,20 @@ class OrderSeeder extends Seeder
     {
         Model::unguard();
 
-        $lines = collect();
+        $products = Product::orderBy('id', 'DESC')
+            ->whereStatus(ProductStatus::PUBLISHED->value)
+            ->has('eventSchedule.weeklyHours', '>', 3)
+            ->limit(5)
+            ->get();
 
-        $products = Product::orderBy('id', 'DESC')->limit(5)->get();
         $currency = Currency::getDefault();
         $channel = Channel::getDefault();
         $generator = app(OrderReferenceGeneratorInterface::class);
+        $user = User::first();
 
         foreach ($products as $product) {
+            $lines = collect();
+
             $variant = $product->variants->first();
 
             $lines->push([
@@ -52,7 +62,7 @@ class OrderSeeder extends Seeder
             ]);
 
             $order = [
-                'user_id' => null,
+                'user_id' => $user->id,
                 'channel_id' => $channel->id,
                 'status' => OrderStatus::COMPLETED->value,
                 'sub_total' => 0,
@@ -70,6 +80,14 @@ class OrderSeeder extends Seeder
             $orderModel->save();
 
             $orderModel->lines()->createMany($lines->toArray());
+
+            $orderModel->load('lines');
+            $orderLine = $orderModel->lines->first();
+
+            ScheduleBooking::factory()->state([
+                'schedule_id' => $product->eventSchedule->id,
+                'order_line_id' => $orderLine->id,
+            ])->create();
         }
     }
 }
