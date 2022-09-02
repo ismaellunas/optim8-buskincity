@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\ServiceProvider;
 use Modules\Ecommerce\Services\ProductService;
 use Modules\Space\Entities\Space;
+use GetCandy\Base\OrderReferenceGeneratorInterface;
+use GetCandy\Base\OrderReferenceGenerator;
+use GetCandy\Models\OrderLine;
+use Modules\Ecommerce\Entities\ScheduleBooking;
 
 class EcommerceServiceProvider extends ServiceProvider
 {
@@ -36,6 +40,10 @@ class EcommerceServiceProvider extends ServiceProvider
         User::resolveRelationUsing('managedSpaceProducts', function ($userModel) {
             return $userModel->belongsToMany(Space::class, 'space_product_managers');
         });
+
+        OrderLine::resolveRelationUsing('scheduleBooking', function ($orderLine) {
+            return $orderLine->hasOne(ScheduleBooking::class);
+        });
     }
 
     /**
@@ -49,6 +57,10 @@ class EcommerceServiceProvider extends ServiceProvider
 
         $this->app->singleton(ProductService::class, function ($app) {
             return new ProductService($app->make(MediaService::class));
+        });
+
+        $this->app->singleton(OrderReferenceGeneratorInterface::class, function () {
+            return new OrderReferenceGenerator();
         });
     }
 
