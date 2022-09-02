@@ -162,7 +162,8 @@ class MediaService
         $fileName = MediaService::getUniqueFileName(
             Str::lower($fileName),
             [],
-            $extension
+            $extension,
+            $folder
         );
 
         $params = [$file, $fileName, $extension];

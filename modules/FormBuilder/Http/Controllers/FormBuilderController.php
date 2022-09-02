@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\FieldGroup;
 use Modules\FormBuilder\Services\FormBuilderService;
+use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
 
 class FormBuilderController extends CrudController
 {
     protected $baseRouteName = 'admin.form-builders';
+    protected $baseRouteNameSetting = 'admin.form-builders.settings';
     protected $recordsPerPage = 15;
     protected $title = 'Form Builder';
 
@@ -18,6 +20,8 @@ class FormBuilderController extends CrudController
 
     public function __construct(FormBuilderService $formBuilderService)
     {
+        $this->authorizeResource(FieldGroup::class, 'form_builder');
+
         $this->formBuilderService = $formBuilderService;
     }
 
@@ -40,27 +44,46 @@ class FormBuilderController extends CrudController
 
     public function create()
     {
-        // return view('formbuilder::create');
+        return Inertia::render('FormBuilder::Create', $this->getData([
+            'title' => $this->getCreateTitle(),
+        ]));
     }
 
-    public function store(Request $request)
+    public function store(FormBuilderRequest $request)
     {
-        //
+        $inputs = $request->validated();
+        $fieldGroup = new FieldGroup();
+
+        $fieldGroup->saveFromInputs($inputs);
+
+        $this->generateFlashMessage('Form created successfully!');
+
+        return redirect()->route($this->baseRouteName . '.edit', $fieldGroup->id);
     }
 
-    public function show($id)
+    public function edit(FieldGroup $formBuilder)
     {
-        // return view('formbuilder::show');
+        $formBuilder->builders = $formBuilder->data;
+        $formBuilder->form_id = $formBuilder->title;
+        unset($formBuilder->data);
+        unset($formBuilder->title);
+
+        return Inertia::render('FormBuilder::Edit', $this->getData([
+            'baseRouteNameSetting' => $this->baseRouteNameSetting,
+            'formBuilder' => $formBuilder,
+            'title' => $this->getEditTitle(),
+        ]));
     }
 
-    public function edit($id)
+    public function update(FormBuilderRequest $request, FieldGroup $formBuilder)
     {
-        // return view('formbuilder::edit');
-    }
+        $inputs = $request->validated();
 
-    public function update(Request $request, $id)
-    {
-        //
+        $formBuilder->saveFromInputs($inputs);
+
+        $this->generateFlashMessage('Form updated successfully!');
+
+        return redirect()->route($this->baseRouteName . '.edit', $formBuilder->id);
     }
 
     public function destroy(FieldGroup $formBuilder)

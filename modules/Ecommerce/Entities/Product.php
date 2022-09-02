@@ -7,10 +7,14 @@ use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\Product as GetCandyProduct;
 use Illuminate\Support\Arr;
 use Kodeine\Metable\Metable;
+use Modules\Ecommerce\Entities\Schedule;
 
 class Product extends GetCandyProduct
 {
     use Metable;
+
+    const STATUS_DRAFT = 'draft';
+    const STATUS_PUBLISHED = 'published';
 
     protected $metaKeyName = 'product_id';
 
@@ -22,6 +26,16 @@ class Product extends GetCandyProduct
     public function gallery()
     {
         return $this->morphMany(Media::class, 'medially');
+    }
+
+    public function eventSchedule()
+    {
+        return $this->morphOne(Schedule::class, 'schedulable');
+    }
+
+    public function productable()
+    {
+        return $this->morphTo();
     }
 
     /**
