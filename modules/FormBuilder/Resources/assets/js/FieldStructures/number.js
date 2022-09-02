@@ -1,11 +1,11 @@
-import { defaultOption, columnSizes } from '@/ComponentStructures/style-options';
+import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
 
 export default {
     type: "Number",
     title: "Number",
-    column: 'is-12',
+    column: 'is-full',
     label: "Number",
-    name: null,
+    name: "number",
     placeholder: null,
     note: null,
     default_value: null,
@@ -16,6 +16,8 @@ export default {
             required: false,
             min: null,
             max: null,
+            min_digits: null,
+            max_digits: null,
         },
         message: []
     },
@@ -32,8 +34,12 @@ export const config = {
                 label: "Label",
             },
             name: {
-                component: "ConfigInput",
+                component: "ConfigAutoGenerateKey",
                 label: "Name",
+                settings: {
+                    generateBasedOn: 'label',
+                    placeholder: 'field_name'
+                },
             },
             placeholder: {
                 component: "ConfigInput",
@@ -47,7 +53,7 @@ export const config = {
                 component: "ConfigSelect",
                 label: "Column",
                 settings: {
-                    options: defaultOption.concat(columnSizes),
+                    options: defaultOption.concat(columnFieldSizes),
                 }
             },
         }
@@ -66,15 +72,23 @@ export const config = {
         config: {
             required: {
                 component: "ConfigCheckbox",
-                label: "Required",
+                label: "Is Required?",
             },
             min: {
                 component: "ConfigNumber",
-                label: "Min",
+                label: "Minimal Value",
             },
             max: {
                 component: "ConfigNumber",
-                label: "Max",
+                label: "Maximal Value",
+            },
+            'min_digits': {
+                component: "ConfigNumber",
+                label: "Minimal Length of Value",
+            },
+            'max_digits': {
+                component: "ConfigNumber",
+                label: "Maximal Length of Value",
             },
         },
 
@@ -84,11 +98,11 @@ export const config = {
         config: {
             disabled: {
                 component: "ConfigCheckbox",
-                label: "Disabled",
+                label: "Is Disabled?",
             },
             readonly: {
                 component: "ConfigCheckbox",
-                label: "Readonly",
+                label: "Is Readonly?",
             },
         },
     },
