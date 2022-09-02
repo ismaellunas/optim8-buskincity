@@ -15,4 +15,9 @@ class ModuleService
     {
         return 'product';
     }
+
+    public static function maxProductMediaNumber(): int
+    {
+        return 10;
+    }
 }

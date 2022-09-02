@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Ecommerce\Http\Controllers\ProductEventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,5 +28,12 @@ Route::
         'ensureLoginFromAdminLoginRoute',
     ])
     ->group(function () {
-        Route::resource('/products', ProductController::class);
+        Route::resource('/products', ProductController::class)
+            ->except(['show']);
+
+        Route::put('/product/{product}/event', [ProductEventController::class, 'update'])
+            ->name('products.events.update');
+
+        Route::resource('/orders', OrderController::class)
+            ->only(['index', 'show']);
     });

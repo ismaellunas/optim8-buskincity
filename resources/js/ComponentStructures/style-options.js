@@ -105,3 +105,9 @@ export const textColors = [
     { value: "has-text-warning", name: "Warning" },
     { value: "has-text-danger", name: "Danger" },
 ];
+
+export const columnFieldSizes = [
+    { value: "is-full", name: "1 Column" },
+    { value: "is-half", name: "2 Column" },
+    { value: "is-one-third", name: "3 Column" },
+];

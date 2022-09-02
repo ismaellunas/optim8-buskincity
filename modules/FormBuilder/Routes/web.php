@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\FormBuilder\Http\Controllers\FormBuilderController;
+use Modules\FormBuilder\Http\Controllers\{
+    FormBuilderController,
+    SettingNotificationController,
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +23,15 @@ Route::name('admin.')->prefix('admin/')->middleware([
     'can:system.dashboard',
     'ensureLoginFromAdminLoginRoute',
 ])->group(function () {
-    Route::resource('form-builders', FormBuilderController::class);
+    Route::resource('form-builders', FormBuilderController::class)
+        ->except(['show']);
+
+    Route::prefix('form-builders/{form_builder}')->name('form-builders.')->group(function() {
+        Route::prefix('settings')->name('settings.')->group(function() {
+            Route::get('notifications/records', [SettingNotificationController::class, 'records'])
+                ->name('notifications.records');
+
+            Route::resource('notifications', SettingNotificationController::class);
+        });
+    });
 });
