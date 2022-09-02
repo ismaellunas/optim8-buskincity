@@ -10,4 +10,9 @@ class FieldGroupEntry extends Model
 {
     use HasFactory;
     use Metable;
+
+    protected static function newFactory()
+    {
+        return \Modules\FormBuilder\Database\factories\FieldGroupEntryFactory::new();
+    }
 }
