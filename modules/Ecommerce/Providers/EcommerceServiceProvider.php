@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factory;
 use Illuminate\Support\ServiceProvider;
 use Modules\Ecommerce\Services\ProductService;
 use Modules\Space\Entities\Space;
+use GetCandy\Base\OrderReferenceGeneratorInterface;
+use GetCandy\Base\OrderReferenceGenerator;
 
 class EcommerceServiceProvider extends ServiceProvider
 {
@@ -49,6 +51,10 @@ class EcommerceServiceProvider extends ServiceProvider
 
         $this->app->singleton(ProductService::class, function ($app) {
             return new ProductService($app->make(MediaService::class));
+        });
+
+        $this->app->singleton(OrderReferenceGeneratorInterface::class, function () {
+            return new OrderReferenceGenerator();
         });
     }
 
