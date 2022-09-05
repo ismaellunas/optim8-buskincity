@@ -112,8 +112,6 @@ class OrderController extends CrudController
 
     public function rescheduleUpdate(OrderRescheduleRequest $request, Order $order)
     {
-        $this->authorize('reschedule', $order);
-
         $inputs = $request->all();
 
         $this->orderService->rescheduleEvent(
