@@ -28,6 +28,7 @@
                         v-if="config.component && groupName != 'validation'"
                         v-model="entity[ key ]"
                         :label="config.label"
+                        :entity="entity"
                         :settings="config.settings"
                     />
 
@@ -36,6 +37,7 @@
                         v-else-if="config.component && groupName == 'validation'"
                         v-model="validationRules[ key ]"
                         :label="config.label"
+                        :entity="entity"
                         :settings="config.settings"
                     />
 
@@ -49,6 +51,7 @@
 <script>
     import AddOption from '@/Blocks/Configs/AddOption';
     import Card from '@/Biz/Card';
+    import ConfigAutoGenerateKey from '@/Blocks/Configs/AutoGenerateKey';
     import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
     import ConfigInput from '@/Blocks/Configs/Input';
     import ConfigNumber from '@/Blocks/Configs/Number';
@@ -70,6 +73,7 @@
         components: {
             AddOption,
             Card,
+            ConfigAutoGenerateKey,
             ConfigCheckbox,
             ConfigInput,
             ConfigNumber,

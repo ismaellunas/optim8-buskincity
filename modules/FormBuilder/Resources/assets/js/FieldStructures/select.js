@@ -1,12 +1,11 @@
-import { defaultOption, columnSizes } from '@/ComponentStructures/style-options';
-import { values } from 'lodash';
+import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
 
 export default {
     type: "Select",
     title: "Select",
-    column: 'is-12',
+    column: 'is-full',
     label: "Select",
-    name: null,
+    name: 'select',
     placeholder: null,
     note: null,
     default_value: null,
@@ -37,8 +36,12 @@ export const config = {
                 label: "Label",
             },
             name: {
-                component: "ConfigInput",
+                component: "ConfigAutoGenerateKey",
                 label: "Name",
+                settings: {
+                    generateBasedOn: 'label',
+                    placeholder: 'field_name'
+                },
             },
             note: {
                 component: "ConfigInput",
@@ -48,7 +51,7 @@ export const config = {
                 component: "ConfigSelect",
                 label: "Column",
                 settings: {
-                    options: defaultOption.concat(columnSizes),
+                    options: defaultOption.concat(columnFieldSizes),
                 }
             },
         }
@@ -71,7 +74,7 @@ export const config = {
         config: {
             required: {
                 component: "ConfigCheckbox",
-                label: "Required",
+                label: "Is Required?",
             },
         },
 
@@ -81,11 +84,11 @@ export const config = {
         config: {
             disabled: {
                 component: "ConfigCheckbox",
-                label: "Disabled",
+                label: "Is Disabled?",
             },
             readonly: {
                 component: "ConfigCheckbox",
-                label: "Readonly",
+                label: "Is Readonly?",
             },
         },
     },

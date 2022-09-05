@@ -1,33 +1,11 @@
-import { defaultOption, columnSizes } from '@/ComponentStructures/style-options';
+import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
 
 export default {
-    title: 'Textarea',
-    componentName: 'Textarea',
-    config: {
-        properties: {
-            name: null,
-            label: 'Textarea',
-            placeholder: null,
-        },
-        data: {
-            default: null,
-        },
-        validation: {
-            required: false,
-            minLength: null,
-            maxLength: null,
-        },
-        attributes: {
-            disabled: false,
-            readonly: false,
-        }
-    },
-
     type: "Textarea",
     title: "Textarea",
-    column: 'is-12',
+    column: 'is-full',
     label: "Textarea",
-    name: null,
+    name: 'textarea',
     placeholder: null,
     note: null,
     default_value: null,
@@ -54,8 +32,12 @@ export const config = {
                 label: "Label",
             },
             name: {
-                component: "ConfigInput",
+                component: "ConfigAutoGenerateKey",
                 label: "Name",
+                settings: {
+                    generateBasedOn: 'label',
+                    placeholder: 'field_name'
+                },
             },
             placeholder: {
                 component: "ConfigInput",
@@ -69,7 +51,7 @@ export const config = {
                 component: "ConfigSelect",
                 label: "Column",
                 settings: {
-                    options: defaultOption.concat(columnSizes),
+                    options: defaultOption.concat(columnFieldSizes),
                 }
             },
         }
@@ -88,15 +70,15 @@ export const config = {
         config: {
             required: {
                 component: "ConfigCheckbox",
-                label: "Required",
+                label: "Is Required?",
             },
             min: {
                 component: "ConfigNumber",
-                label: "Min",
+                label: "Minimal Character",
             },
             max: {
                 component: "ConfigNumber",
-                label: "Max",
+                label: "Maximal Character",
             },
         },
 
@@ -106,11 +88,11 @@ export const config = {
         config: {
             disabled: {
                 component: "ConfigCheckbox",
-                label: "Disabled",
+                label: "Is Disabled?",
             },
             readonly: {
                 component: "ConfigCheckbox",
-                label: "Readonly",
+                label: "Is Readonly?",
             },
         },
     },
