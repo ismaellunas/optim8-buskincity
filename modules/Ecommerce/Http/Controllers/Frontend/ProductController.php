@@ -37,7 +37,8 @@ class ProductController extends CrudController
             'pageQueryParams' => array_filter($request->only('term')),
             'products' => $this->productService->getFrontendRecords(
                 $user,
-                $request->term
+                $request->term,
+                3
             ),
         ]));
     }
