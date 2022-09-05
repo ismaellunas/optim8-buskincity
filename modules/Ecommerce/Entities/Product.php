@@ -64,4 +64,14 @@ class Product extends GetCandyProduct
 
         return $data;
     }
+
+    public function getCoverAttribute()
+    {
+        return $this->gallery->first();
+    }
+
+    public function getCoverThumbnailUrlAttribute(): ?string
+    {
+        return $this->cover->thumbnailUrl ?? null;
+    }
 }
