@@ -40,7 +40,7 @@
         computed: {
             hasLabelSlot() {
                 return !!this.$slots.label;
-            }
+            },
         },
     };
 </script>

@@ -34,6 +34,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Subject</th>
+                        <th>Status</th>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -48,6 +49,13 @@
                     >
                         <td>{{ record.name }}</td>
                         <td>{{ record.subject }}</td>
+                        <td>
+                            <biz-tag
+                                :class="{ 'is-success': record.is_active, 'is-dark': !record.is_active }"
+                            >
+                                {{ record.status }}
+                            </biz-tag>
+                        </td>
                         <td>
                             <div class="level-right">
                                 <biz-button-link
@@ -91,6 +99,7 @@
     import BizListSection from '@/Biz/ListSection';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
+    import BizTag from '@/Biz/Tag';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { usePage } from '@inertiajs/inertia-vue3';
@@ -105,6 +114,7 @@
             BizListSection,
             BizPagination,
             BizTable,
+            BizTag,
         },
 
         mixins: [
