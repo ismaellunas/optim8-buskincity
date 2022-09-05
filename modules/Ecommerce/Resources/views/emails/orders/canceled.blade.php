@@ -8,9 +8,9 @@
     | SKU | {{ $line->identifier }} |
     | Order Reference | {{ $order->reference }} |
     | User | {{ $order->user->fullName }} |
-    | Produdt | {{ $order->reference }} |
-    | Booked At | {{ $schedule->formattedBookedAt }} |
-    | Duration | {{ $schedule->displayDuration }} |
+    | Product | {{ $order->reference }} |
+    | Booked At | {{ $event->formattedBookedAt }} |
+    | Duration | {{ $event->displayDuration }} |
 @endcomponent
 
 {{ __('Regards') }},<br/>
