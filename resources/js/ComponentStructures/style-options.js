@@ -106,17 +106,8 @@ export const textColors = [
     { value: "has-text-danger", name: "Danger" },
 ];
 
-export const columnSizes = [
-    { value: "is-1", name: "Columns 1" },
-    { value: "is-2", name: "Columns 2" },
-    { value: "is-3", name: "Columns 3" },
-    { value: "is-4", name: "Columns 4" },
-    { value: "is-5", name: "Columns 5" },
-    { value: "is-6", name: "Columns 6" },
-    { value: "is-7", name: "Columns 7" },
-    { value: "is-8", name: "Columns 8" },
-    { value: "is-9", name: "Columns 9" },
-    { value: "is-10", name: "Columns 10" },
-    { value: "is-11", name: "Columns 11" },
-    { value: "is-12", name: "Columns 12" },
+export const columnFieldSizes = [
+    { value: "is-full", name: "1 Column" },
+    { value: "is-half", name: "2 Column" },
+    { value: "is-one-third", name: "3 Column" },
 ];
