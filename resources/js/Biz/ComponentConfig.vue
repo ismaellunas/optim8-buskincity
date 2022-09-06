@@ -108,6 +108,8 @@
         props: ['modelValue'],
 
         setup(props, { emit }) {
+            const entity = useModelWrapper(props, emit);
+
             let allConfig = merge(configs, moduleConfigs);
             let componentConfig = allConfig[ camelCase(entity.value.componentName) ];
 
