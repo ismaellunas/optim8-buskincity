@@ -5,7 +5,7 @@
             :label="label"
         >
             <template
-                v-for="(option, index) in settings.options"
+                v-for="(option, index) in options"
                 :key="index"
             >
                 <option :value="option.value">
@@ -37,6 +37,36 @@
             return {
                 computedValue: useModelWrapper(props, emit),
             };
+        },
+
+        data() {
+            return {
+                options: this.settings.options,
+            };
+        },
+
+        mounted() {
+            if (!this.options) {
+                this.getOptions();
+            }
+        },
+
+        methods: {
+            getOptions() {
+                const self = this;
+                const optionsRoute = self.settings.optionsRoute;
+
+                if (optionsRoute) {
+                    axios.get(route(optionsRoute))
+                        .then((results) => {
+                            self.options = results.data;
+
+                            return;
+                        })
+                }
+
+                self.options = [];
+            },
         },
     }
 </script>
