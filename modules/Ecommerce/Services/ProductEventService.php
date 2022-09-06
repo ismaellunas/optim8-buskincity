@@ -173,8 +173,8 @@ class ProductEventService
             ->map(function ($rule) {
                 return [
                     'id' => $rule->id,
-                    'started_date' => $rule->started_date->toDateString(),
-                    'ended_date' => $rule->ended_date ? $rule->ended_date->toDateString() : null,
+                    'started_date' => $rule->formattedStartedDate,
+                    'ended_date' => $rule->formattedEndedDate,
                     'is_available' => $rule->is_available,
                     'displayDates' => $rule->displayDates,
                     'times' => $rule->times->map(function ($time) {

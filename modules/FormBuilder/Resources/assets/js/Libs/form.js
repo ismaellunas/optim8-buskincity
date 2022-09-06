@@ -1,7 +1,7 @@
 export function getEmptyForm() {
     return {
         name: null,
-        key: null,
+        form_id: null,
         builders: {
             name: null,
             title: null,

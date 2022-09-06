@@ -12,6 +12,8 @@ class ScheduleRuleTimeFactory extends Factory
     public function definition()
     {
         return [
+            'started_time' => '09:00',
+            'ended_time' => '17:00',
             'schedule_rule_id' => ScheduleRule::factory(),
         ];
     }

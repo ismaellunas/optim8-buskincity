@@ -18,7 +18,7 @@ class FormBuilderRequest extends FormRequest
                 'required',
                 'max: 127',
             ],
-            'key' => [
+            'form_id' => [
                 'required',
                 'max: 127',
                 'regex:/^[a-z0-9\_]+$/',

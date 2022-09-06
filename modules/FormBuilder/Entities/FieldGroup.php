@@ -18,7 +18,7 @@ class FieldGroup extends ModelFieldGroup
     {
         $this->name = $inputs['name'];
         $this->data = $inputs['builders'];
-        $this->title = $inputs['key'];
+        $this->title = $inputs['form_id'];
         $this->type = self::TYPE;
         $this->save();
     }
