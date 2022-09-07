@@ -39,14 +39,12 @@ class ScheduleSeeder extends Seeder
                 ScheduleRuleTime::factory()->for($scheduleRule)->create();
             }
 
-            $scheduleRule = ScheduleRule::factory()
+            ScheduleRule::factory()
                 ->available(false)
                 ->dateOverrideType()
                 ->dateRange(today()->endOfWeek())
                 ->for($schedule)
                 ->create();
-
-            ScheduleRuleTime::factory()->for($scheduleRule)->create();
         }
     }
 }

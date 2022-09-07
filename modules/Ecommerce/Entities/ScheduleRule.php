@@ -35,6 +35,11 @@ class ScheduleRule extends Model
         return $this->hasMany(ScheduleRuleTime::class);
     }
 
+    public function scopeAvailable($query, $isAvailable = true)
+    {
+        return $query->where('is_available', $isAvailable);
+    }
+
     public function getDisplayDatesAttribute(): string
     {
         $format = 'j M Y';

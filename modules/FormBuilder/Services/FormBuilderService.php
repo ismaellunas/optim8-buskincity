@@ -58,7 +58,7 @@ class FormBuilderService
             $records->push($record);
         }
 
-        return $records->paginateCollection($perPage);
+        return $records->paginate($perPage);
     }
 
     public function getDataFromFields(array $fields, string $key): array
