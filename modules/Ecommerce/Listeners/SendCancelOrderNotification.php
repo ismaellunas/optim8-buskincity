@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
-use Modules\Ecommerce\Emails\OrderCanceled as EmailsOrderCanceled;
+use Modules\Ecommerce\Emails\OrderCanceled as OrderCanceledEmail;
 use Modules\Ecommerce\Events\OrderCanceled;
 
 class SendCancelOrderNotification implements ShouldQueue
@@ -18,8 +18,6 @@ class SendCancelOrderNotification implements ShouldQueue
      */
     public function __construct()
     {
-        //
-        \Log::info('asdf asdf');
     }
 
     /**
@@ -37,6 +35,6 @@ class SendCancelOrderNotification implements ShouldQueue
 
         Mail::to($order->user)
             ->cc($ccUsers)
-            ->send(new EmailsOrderCanceled($order));
+            ->send(new OrderCanceledEmail($order));
     }
 }

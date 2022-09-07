@@ -32,16 +32,18 @@ class OrderCanceled extends Mailable
      */
     public function build()
     {
-        $line = $this->order->lines->first();
-        $schedule = $line->scheduleBooking;
+        $line = $this->order->firstEventline;
+
+        $event = $line->latestEvent;
 
         $template = Setting::key('booking_email_cancellation')->value('value');
 
         return $this
+            ->subject(__('An event has been canceled'))
             ->markdown('ecommerce::emails.orders.canceled')
             ->with([
                 'line' => $line,
-                'schedule' => $schedule,
+                'event' => $event,
                 'template' => $template,
             ]);
     }

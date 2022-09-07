@@ -3,6 +3,7 @@
 namespace Modules\Ecommerce\Services;
 
 use App\Services\MediaService;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
@@ -23,7 +24,6 @@ class OrderService
         int $perPage = 15
     ): LengthAwarePaginator {
         $records = Order::orderBy('reference', 'DESC')
-            //->select(['id', 'status', 'attribute_data'])
             ->when($term, function ($query) use ($term) {
                 $query
                     ->where('reference', 'ILIKE', '%'.$term.'%')
@@ -66,7 +66,7 @@ class OrderService
         $orderSubset['status'] = Str::title($orderSubset['status']);
 
         $orderSubset['lines'] = $orderSubset['lines']->map(function ($line) {
-            $lineArray = $line->only('id', 'identifier', 'purchasable', 'scheduleBooking');
+            $lineArray = $line->only('id', 'identifier', 'purchasable', 'latestEvent');
 
             $purchaseable = $lineArray['purchasable'];
             $lineArray['purchasable'] = [
@@ -75,13 +75,15 @@ class OrderService
                 'sku' => $purchaseable->sku,
             ];
 
-            $scheduleBooking = $lineArray['scheduleBooking'];
-            $lineArray['scheduleBooking'] = [
-                'booked_at' => $scheduleBooking->formattedBookedAt,
-                'timezone' => $scheduleBooking->schedule->timezone,
-                'duration' => $scheduleBooking->displayDuration,
-                'status' => Str::title($scheduleBooking->status),
+            $event = $lineArray['latestEvent'];
+            $lineArray['event'] = [
+                'booked_at' => $event->formattedBookedAt,
+                'timezone' => $event->schedule->timezone,
+                'duration' => $event->displayDuration,
+                'status' => Str::title($event->status),
             ];
+
+            unset($lineArray['latestEvent']);
 
             return $lineArray;
         });
@@ -99,5 +101,20 @@ class OrderService
     {
         $booking->status = BookingStatus::CANCELED->value;
         $booking->save();
+    }
+
+    public function rescheduleEvent(ScheduleBooking $event, Carbon $dateTime)
+    {
+        $newEvent = $event->replicate();
+
+        $newEvent->booked_at = $dateTime->format('Y-m-d H:i');
+        $newEvent->status = BookingStatus::UPCOMING->value;
+        $newEvent->save();
+
+        $event->status = BookingStatus::RESCHEDULED->value;
+        $event->save();
+
+        return $newEvent;
+
     }
 }
