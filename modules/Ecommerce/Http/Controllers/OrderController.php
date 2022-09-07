@@ -32,7 +32,7 @@ class OrderController extends CrudController
 
         $this->eventService = $eventService;
         $this->orderService = $orderService;
-        $this->productEventService = $this->productEventService;
+        $this->productEventService = $productEventService;
     }
 
     public function index()
