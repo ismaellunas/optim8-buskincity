@@ -4,14 +4,13 @@ namespace Modules\Ecommerce\Providers;
 
 use App\Models\User;
 use App\Services\MediaService;
-use Illuminate\Database\Eloquent\Factory;
+use GetCandy\Base\OrderReferenceGenerator;
+use GetCandy\Base\OrderReferenceGeneratorInterface;
+use GetCandy\Models\OrderLine;
 use Illuminate\Support\ServiceProvider;
+use Modules\Ecommerce\Entities\ScheduleBooking;
 use Modules\Ecommerce\Services\ProductService;
 use Modules\Space\Entities\Space;
-use GetCandy\Base\OrderReferenceGeneratorInterface;
-use GetCandy\Base\OrderReferenceGenerator;
-use GetCandy\Models\OrderLine;
-use Modules\Ecommerce\Entities\ScheduleBooking;
 
 class EcommerceServiceProvider extends ServiceProvider
 {
@@ -43,6 +42,16 @@ class EcommerceServiceProvider extends ServiceProvider
 
         OrderLine::resolveRelationUsing('scheduleBooking', function ($orderLine) {
             return $orderLine->hasOne(ScheduleBooking::class);
+        });
+
+        OrderLine::resolveRelationUsing('events', function ($orderLine) {
+            return $orderLine->hasMany(ScheduleBooking::class);
+        });
+
+        OrderLine::resolveRelationUsing('latestEvent', function ($orderLine) {
+            return $orderLine
+                ->hasOne(ScheduleBooking::class)
+                ->latest();
         });
     }
 
