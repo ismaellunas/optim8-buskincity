@@ -21,7 +21,7 @@ class TranslationManagerService
 
         $groupAndKeys = $this->getGroupAndKeys($groups, $term);
 
-        $records = $groupAndKeys->paginateCollection($perPage);
+        $records = $groupAndKeys->paginate($perPage);
 
         $this->transformRecords(
             $locale,

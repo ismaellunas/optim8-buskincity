@@ -32,8 +32,6 @@ use App\Services\{
     WidgetService,
 };
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use Illuminate\Pagination\LengthAwarePaginator as Paginator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -99,25 +97,6 @@ class AppServiceProvider extends ServiceProvider
                         'value' => $item->$valueKey,
                     ];
                 });
-            }
-        );
-
-        Collection::macro(
-            'paginateCollection',
-            function (int $perPage = 15) {
-                $page = Paginator::resolveCurrentPage('page');
-                $total = $this->count();
-
-                return new Paginator(
-                    $this->forPage($page, $perPage),
-                    $total,
-                    $perPage,
-                    $page,
-                    [
-                        'path' => Paginator::resolveCurrentPath(),
-                        'pageName' => 'page',
-                    ]
-                );
             }
         );
     }

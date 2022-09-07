@@ -23,6 +23,11 @@ class Product extends GetCandyProduct
         return config('getcandy.database.table_prefix').'products_meta';
     }
 
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
     public function gallery()
     {
         return $this->morphMany(Media::class, 'medially');
