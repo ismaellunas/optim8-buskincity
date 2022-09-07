@@ -9,12 +9,11 @@ use GetCandy\Models\Currency;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Ecommerce\Entities\Product;
-use Modules\Ecommerce\Enums\OrderLineStatus;
+use Modules\Ecommerce\Enums\OrderLineType;
 use Modules\Ecommerce\Enums\OrderStatus;
 use Modules\Ecommerce\Enums\ProductStatus;
 use GetCandy\Base\OrderReferenceGeneratorInterface;
 use GetCandy\Models\Order;
-use Modules\Ecommerce\Database\factories\ScheduleBookingFactory;
 use Modules\Ecommerce\Entities\ScheduleBooking;
 
 class OrderSeeder extends Seeder
@@ -47,7 +46,7 @@ class OrderSeeder extends Seeder
             $lines->push([
                 'purchasable_type' => get_class($variant),
                 'purchasable_id' => $variant->id,
-                'type' => OrderLineStatus::EVENT->value,
+                'type' => OrderLineType::EVENT->value,
                 'description' => "",
                 'option' => null,
                 'identifier' => $variant->sku,

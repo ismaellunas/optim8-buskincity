@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Booking\Http\Requests;
+namespace Modules\Ecommerce\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SettingRequest extends FormRequest
+class OrderRescheduleRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -13,14 +13,15 @@ class SettingRequest extends FormRequest
      */
     public function rules()
     {
-        $emailRules = [
-            'max:5000',
-        ];
-
         return [
-            'email_new_booking' => $emailRules,
-            'email_reminder' => $emailRules,
-            'email_cancellation' => $emailRules,
+            'date' => [
+                'required',
+                'date_format:Y-m-d',
+            ],
+            'time' => [
+                'required',
+                'date_format:H:i',
+            ],
         ];
     }
 
@@ -31,6 +32,6 @@ class SettingRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->can('reschedule', $this->route('order'));
     }
 }

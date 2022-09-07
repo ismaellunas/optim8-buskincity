@@ -38,8 +38,8 @@ class ProductEventService
     {
         return [
             'duration' => $product->duration,
-            'bookable_date_range_type' => $product->bookable_data_range_type,
-            'bookable_date_range' => $product->bookable_data_range,
+            'bookable_date_range_type' => $product->bookable_date_range_type,
+            'bookable_date_range' => $product->bookable_date_range,
             'location' => null,
             'timezone' => $product->eventSchedule->timezone ?? null,
         ];
