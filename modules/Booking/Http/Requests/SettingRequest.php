@@ -14,7 +14,7 @@ class SettingRequest extends FormRequest
     public function rules()
     {
         $emailRules = [
-            'max:250',
+            'max:5000',
         ];
 
         return [

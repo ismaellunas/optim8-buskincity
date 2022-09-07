@@ -6,6 +6,7 @@
     "priority": 0,
     "providers": [
         "Modules\\Ecommerce\\Providers\\AuthServiceProvider",
+        "Modules\\Ecommerce\\Providers\\EventServiceProvider",
         "Modules\\Ecommerce\\Providers\\EcommerceServiceProvider"
     ],
     "aliases": {},

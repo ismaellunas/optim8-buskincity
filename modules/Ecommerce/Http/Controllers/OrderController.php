@@ -6,6 +6,7 @@ use App\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Order;
+use Modules\Ecommerce\Events\OrderCanceled;
 use Modules\Ecommerce\Services\OrderService;
 
 class OrderController extends CrudController
@@ -40,11 +41,14 @@ class OrderController extends CrudController
 
     public function show(Order $order)
     {
-        $order->load('user', 'lines.purchasable.product');
+        $user = auth()->user();
 
         return Inertia::render('Ecommerce::OrderShow', $this->getData([
             'title' => $this->title.' #'.$order->reference,
             'order' => $this->orderService->getRecord($order),
+            'can' => [
+                'cancel' => $user->can('cancel', $order),
+            ],
         ]));
     }
 
@@ -54,5 +58,17 @@ class OrderController extends CrudController
 
     public function update(Request $request, $id)
     {
+    }
+
+    public function cancel(Request $request, Order $order)
+    {
+        $this->authorize('cancel', $order);
+
+        $this->orderService->cancelOrder($order);
+        $this->orderService->cancelEvent($order->lines->first()->scheduleBooking);
+
+        OrderCanceled::dispatch($order);
+
+        return back();
     }
 }
