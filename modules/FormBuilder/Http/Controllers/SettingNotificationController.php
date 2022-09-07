@@ -63,11 +63,6 @@ class SettingNotificationController extends CrudController
         ]);
     }
 
-    public function show($id)
-    {
-        // return view('formbuilder::show');
-    }
-
     public function edit(
         FieldGroup $formBuilder,
         FieldGroupNotificationSetting $notification
@@ -86,9 +81,22 @@ class SettingNotificationController extends CrudController
         ]));
     }
 
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(
+        SettingNotificationRequest $request,
+        FieldGroup $formBuilder,
+        FieldGroupNotificationSetting $notification
+    ) {
+        $inputs = $request->validated();
+        $inputs['field_group_id'] = $formBuilder->id;
+
+        $notification->saveFromInputs($inputs);
+
+        $this->generateFlashMessage('Form updated successfully!');
+
+        return redirect()->route($this->baseRouteName . '.edit', [
+            'form_builder' => $formBuilder->id,
+            'notification' => $notification->id
+        ]);
     }
 
     public function destroy(
