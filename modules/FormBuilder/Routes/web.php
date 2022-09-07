@@ -46,3 +46,8 @@ Route::name('admin.')->prefix('admin/')->middleware([
         });
     });
 });
+
+Route::name('form-builders.')->prefix('form-builders')->group(function () {
+    Route::get('schemas', [FormBuilderController::class, 'getSchemas'])
+        ->name('schemas');
+});
