@@ -1,9 +1,14 @@
 <template>
-    <biz-dropdown>
+    <biz-dropdown
+        :is-trigger-button="isTriggerButton"
+    >
         <template #trigger>
             <slot name="trigger" />
 
-            <span class="icon is-small">
+            <span
+                v-if="isTriggerButton"
+                class="icon is-small"
+            >
                 <i
                     class="fas fa-angle-down"
                     aria-hidden="true"
@@ -55,6 +60,11 @@
             placeholder: {
                 type: String,
                 default: 'Search ...'
+            },
+
+            isTriggerButton: {
+                type: Boolean,
+                default: true
             },
         },
 
