@@ -9,13 +9,24 @@
         :readonly="schema.is_readonly"
         :required="schema.is_required"
     >
-        <option
+        <template
             v-for="option, index in schema.options"
             :key="index"
-            :value="index"
         >
-            {{ option }}
-        </option>
+            <option
+                v-if="typeof option === 'object' && option !== null"
+                :value="option.id"
+            >
+                {{ option.value }}
+            </option>
+
+            <option
+                v-else
+                :value="index"
+            >
+                {{ option }}
+            </option>
+        </template>
 
         <template #note>
             <p
