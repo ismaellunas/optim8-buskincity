@@ -6,13 +6,13 @@ use App\Http\Controllers\CrudController;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Order;
-use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Events\EventRescheduled;
 use Modules\Ecommerce\Events\OrderCanceled;
 use Modules\Ecommerce\Http\Requests\OrderRescheduleRequest;
 use Modules\Ecommerce\Services\EventService;
 use Modules\Ecommerce\Services\OrderService;
 use Modules\Ecommerce\Services\ProductService;
+use Modules\Ecommerce\Services\ProductEventService;
 
 class OrderController extends CrudController
 {
@@ -21,15 +21,18 @@ class OrderController extends CrudController
 
     private $eventService;
     private $orderService;
+    private $productEventService;
 
     public function __construct(
         EventService $eventService,
-        OrderService $orderService
+        OrderService $orderService,
+        ProductEventService $productEventService
     ) {
         $this->authorizeResource(Order::class, 'order');
 
         $this->eventService = $eventService;
         $this->orderService = $orderService;
+        $this->productEventService = $this->productEventService;
     }
 
     public function index()
@@ -81,10 +84,10 @@ class OrderController extends CrudController
 
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
-        $minDate = today();
-        $maxDate = today()->addDays($product->bookable_date_range);
-
         $schedule = $product->eventSchedule;
+
+        $minDate = $this->productEventService->minBookableDate();
+        $maxDate = $this->productEventService->maxBookableDate($product);
 
         $disabledDates = $this->eventService->disabledDates($schedule, $minDate, $maxDate);
 
