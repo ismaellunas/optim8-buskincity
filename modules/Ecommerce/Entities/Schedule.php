@@ -31,4 +31,9 @@ class Schedule extends Model
     {
         return $this->rules()->where('type', ScheduleRule::TYPE_DATE_OVERRIDE);
     }
+
+    public function schedulable()
+    {
+        return $this->morphTo();
+    }
 }

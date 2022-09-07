@@ -13,6 +13,7 @@
             v-bind="$attrs"
             :disabled="disabled"
             :placeholder="placeholder"
+            :is-trigger-button="isTriggerButton"
         >
             <template #trigger>
                 <slot name="trigger" />
@@ -64,6 +65,10 @@
                 type: Boolean,
                 default: false
             },
+            isTriggerButton: {
+                type: Boolean,
+                default: true
+            }
         },
     };
 </script>

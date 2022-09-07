@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Ecommerce\Http\Controllers\OrderController;
 use Modules\Ecommerce\Http\Controllers\ProductEventController;
 
 /*
@@ -36,4 +37,16 @@ Route::
 
         Route::resource('/orders', OrderController::class)
             ->only(['index', 'show']);
+
+        Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])
+            ->name('orders.cancel');
+
+        Route::get('/orders/{order}/reschedule', [OrderController::class, 'reschedule'])
+            ->name('orders.reschedule');
+
+        Route::post('/orders/{order}/reschedule', [OrderController::class, 'rescheduleUpdate'])
+            ->name('orders.reschedule.update');
+
+        Route::get('/orders/{order}/available-times/{date}', [OrderController::class, 'availableTimes'])
+            ->name('orders.available-times');
     });
