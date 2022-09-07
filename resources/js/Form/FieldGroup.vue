@@ -15,31 +15,36 @@
         </header>
 
         <div class="card-content">
-            <template
-                v-for="(field, name) in group.fields"
-                :key="name"
-            >
-                <component
-                    :is="field.type"
-                    v-if="!field.is_translated"
-                    :ref="'field__' + name"
-                    v-model="form[ name ]"
-                    field-class="mb-5"
-                    :errors="form.errors"
-                    :schema="field"
-                />
+            <div class="columns is-multiline">
+                <template
+                    v-for="(field, name) in group.fields"
+                    :key="name"
+                >
+                    <div
+                        class="column"
+                        :class="field.column ? field.column : `is-full`"
+                    >
+                        <component
+                            :is="field.type"
+                            v-if="!field.is_translated"
+                            :ref="'field__' + name"
+                            v-model="form[ name ]"
+                            :errors="form.errors"
+                            :schema="field"
+                        />
 
-                <component
-                    :is="field.type"
-                    v-else
-                    :ref="'field__' + name"
-                    v-model="form[ name ][ selectedLocale ]"
-                    field-class="mb-5"
-                    :errors="form.errors"
-                    :schema="field"
-                    :selected-locale="selectedLocale"
-                />
-            </template>
+                        <component
+                            :is="field.type"
+                            v-else
+                            :ref="'field__' + name"
+                            v-model="form[ name ][ selectedLocale ]"
+                            :errors="form.errors"
+                            :schema="field"
+                            :selected-locale="selectedLocale"
+                        />
+                    </div>
+                </template>
+            </div>
         </div>
     </div>
 </template>
@@ -47,6 +52,7 @@
 <script>
     import Checkbox from './Checkbox';
     import CheckboxGroup from './CheckboxGroup';
+    import Email from './Email';
     import File from './File';
     import FileDragDrop from './FileDragDrop';
     import Number from './Number';
@@ -64,6 +70,7 @@
         components: {
             Checkbox,
             CheckboxGroup,
+            Email,
             File,
             FileDragDrop,
             Number,
@@ -86,7 +93,7 @@
             },
             selectedLocale: {
                 type: String,
-                required: true,
+                default: null,
             },
         },
 
