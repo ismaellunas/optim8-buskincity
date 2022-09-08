@@ -4,17 +4,17 @@ namespace Modules\Ecommerce\Database\Seeders;
 
 use App\Models\User;
 use Carbon\Carbon;
+use GetCandy\Base\OrderReferenceGeneratorInterface;
 use GetCandy\Models\Channel;
 use GetCandy\Models\Currency;
-use Illuminate\Database\Seeder;
+use GetCandy\Models\Order;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Seeder;
+use Modules\Ecommerce\Entities\Event;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Enums\OrderLineType;
 use Modules\Ecommerce\Enums\OrderStatus;
 use Modules\Ecommerce\Enums\ProductStatus;
-use GetCandy\Base\OrderReferenceGeneratorInterface;
-use GetCandy\Models\Order;
-use Modules\Ecommerce\Entities\ScheduleBooking;
 
 class OrderSeeder extends Seeder
 {
@@ -28,7 +28,7 @@ class OrderSeeder extends Seeder
         Model::unguard();
 
         $products = Product::orderBy('id', 'DESC')
-            ->whereStatus(ProductStatus::PUBLISHED->value)
+            ->whereStatus(ProductStatus::PUBLISHED)
             ->has('eventSchedule.weeklyHours', '>', 3)
             ->limit(5)
             ->get();
@@ -46,7 +46,7 @@ class OrderSeeder extends Seeder
             $lines->push([
                 'purchasable_type' => get_class($variant),
                 'purchasable_id' => $variant->id,
-                'type' => OrderLineType::EVENT->value,
+                'type' => OrderLineType::EVENT,
                 'description' => "",
                 'option' => null,
                 'identifier' => $variant->sku,
@@ -63,7 +63,7 @@ class OrderSeeder extends Seeder
             $order = [
                 'user_id' => $user->id,
                 'channel_id' => $channel->id,
-                'status' => OrderStatus::COMPLETED->value,
+                'status' => OrderStatus::COMPLETED,
                 'sub_total' => 0,
                 'tax_breakdown' => [],
                 'tax_total' => 0,
@@ -80,12 +80,12 @@ class OrderSeeder extends Seeder
 
             $orderModel->lines()->createMany($lines->toArray());
 
-            $orderModel->load('lines');
             $orderLine = $orderModel->lines->first();
 
-            ScheduleBooking::factory()->state([
+            Event::factory()->state([
                 'schedule_id' => $product->eventSchedule->id,
                 'order_line_id' => $orderLine->id,
+                'timezone' => 'UTC',
             ])->create();
         }
     }
