@@ -14,6 +14,11 @@ class FieldGroup extends ModelFieldGroup
         return $newQuery->type(self::TYPE);
     }
 
+    protected static function newFactory()
+    {
+        return \Modules\FormBuilder\Database\factories\FieldGroupFactory::new();
+    }
+
     public function saveFromInputs(array $inputs): void
     {
         $this->name = $inputs['name'];

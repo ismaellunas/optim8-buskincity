@@ -52,9 +52,26 @@
                         >
                             <td>{{ form.name }}</td>
                             <td>{{ form.title }}</td>
-                            <td>{{ form.totalEntries }}</td>
+                            <td>
+                                <biz-link
+                                    :href="route(baseRouteName + '.entries', form.id)"
+                                    title="List Entries"
+                                >
+                                    {{ form.totalEntries }}
+                                </biz-link>
+                            </td>
                             <td>
                                 <div class="level-right">
+                                    <biz-button-link
+                                        v-if="can.browse"
+                                        class="is-ghost has-text-black"
+                                        title="List Entries"
+                                        :href="route(baseRouteName + '.entries', form.id)"
+                                    >
+                                        <span class="icon is-small">
+                                            <i :class="icon.rectangleList" />
+                                        </span>
+                                    </biz-button-link>
                                     <biz-button-link
                                         v-if="can.edit"
                                         class="is-ghost has-text-black"
@@ -95,6 +112,7 @@
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import BizPagination from '@/Biz/Pagination';
+    import BizLink from '@/Biz/Link';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge } from 'lodash';
@@ -109,6 +127,7 @@
             BizFilterSearch,
             BizFlashNotifications,
             BizPagination,
+            BizLink,
         },
 
         mixins: [

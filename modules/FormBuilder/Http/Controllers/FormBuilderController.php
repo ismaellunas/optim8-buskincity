@@ -6,14 +6,14 @@ use App\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\FieldGroup;
-use Modules\FormBuilder\Services\FormBuilderService;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
+use Modules\FormBuilder\Services\FormBuilderService;
 
 class FormBuilderController extends CrudController
 {
     protected $baseRouteName = 'admin.form-builders';
     protected $baseRouteNameSetting = 'admin.form-builders.settings';
-    protected $recordsPerPage = 15;
+    protected $recordsPerPage = 10;
     protected $title = 'Form Builder';
 
     private $formBuilderService;
@@ -31,6 +31,7 @@ class FormBuilderController extends CrudController
 
         return Inertia::render('FormBuilder::Index', $this->getData([
             'can' => [
+                'browse' => $user->can('form_builder.browse'),
                 'add' => $user->can('form_builder.add'),
                 'edit' => $user->can('form_builder.edit'),
                 'delete' => $user->can('form_builder.delete'),
@@ -93,5 +94,26 @@ class FormBuilderController extends CrudController
         $this->generateFlashMessage('Form deleted successfully!');
 
         return redirect()->route($this->baseRouteName.'.index');
+    }
+
+    public function entries(Request $request, FieldGroup $formBuilder)
+    {
+        return Inertia::render('FormBuilder::Entries', $this->getData([
+            'title' => $this->title . ' Entries - ' . $formBuilder->name,
+            'formBuilder' => $formBuilder,
+            'records' => $this->formBuilderService->getEntryRecords(
+                $formBuilder,
+                $request->term,
+                $this->recordsPerPage,
+            ),
+            'fieldLabels' => $this->formBuilderService->getDataFromFields(
+                $formBuilder->data['fields'],
+                'label'
+            ),
+            'fieldNames' => $this->formBuilderService->getDataFromFields(
+                $formBuilder->data['fields'],
+                'name'
+            ),
+        ]));
     }
 }
