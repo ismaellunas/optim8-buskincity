@@ -19,12 +19,12 @@ class Order extends GetCandyOrder
         return OrderFactory::new();
     }
 
-    public function getUserFullNameAttribute(): string|null
+    public function getUserFullNameAttribute(): ?string
     {
         return $this->user->fullName ?? null;
     }
 
-    public function getFormattedPlacedAtAttribute(): string|null
+    public function getFormattedPlacedAtAttribute(): ?string
     {
         return $this->placed_at
             ? $this->placed_at->format(config('constants.format.date_time'))
