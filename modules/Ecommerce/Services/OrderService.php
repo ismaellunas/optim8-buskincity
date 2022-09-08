@@ -216,4 +216,23 @@ class OrderService
 
         return $orderModel;
     }
+
+    public function emailReceipients(Order $order): Collection
+    {
+        $recipients = User::inRoleNames([config('permission.role_names.admin')])
+            ->get(['id', 'first_name', 'last_name', 'email'])
+            ->map(function ($user) {
+                return (object)[
+                    'name'  => $user->fullName,
+                    'email' => $user->email,
+                ];
+            });
+
+        $recipients->push((object) [
+            'name' => $order->user->fullName,
+            'email' => $order->user->email,
+        ]);
+
+        return $recipients;
+    }
 }
