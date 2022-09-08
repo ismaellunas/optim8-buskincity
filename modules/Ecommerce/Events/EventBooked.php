@@ -6,7 +6,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Modules\Ecommerce\Entities\Order;
 
-class OrderCanceled
+class EventBooked
 {
     use Dispatchable, SerializesModels;
 
