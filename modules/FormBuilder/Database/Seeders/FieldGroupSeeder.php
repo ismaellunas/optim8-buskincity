@@ -5,6 +5,7 @@ namespace Modules\FormBuilder\Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use Modules\FormBuilder\Entities\FieldGroup;
+use Faker\Factory as Faker;
 
 class FieldGroupSeeder extends Seeder
 {
@@ -17,20 +18,20 @@ class FieldGroupSeeder extends Seeder
     {
         Model::unguard();
 
-        $data = [
-            'name' => 'Dummy Form',
-            'title' => 'dummy_form', // Key
-            'type' => FieldGroup::TYPE,
-            'data' => [
-                'name' => null,
-                'title' => null,
-                'order' => null,
-                'visibility' => [],
-                'location' => [],
-                'fields' => [],
-            ],
-        ];
+        $faker = Faker::create();
 
-        FieldGroup::create($data);
+        FieldGroup::factory()
+            ->hasEntries(10, function (array $attributes, FieldGroup $fieldGroup) use ($faker) {
+                return [
+                    'first_name' => $faker->firstName(),
+                    'last_name' => $faker->lastName(),
+                    'email' => $faker->email(),
+                    'gender' => $faker->randomElement(['f', 'm']),
+                    'age' => $faker->numberBetween(10, 25),
+                    'message' => $faker->paragraph(),
+                ];
+            })
+            ->count(10)
+            ->create();
     }
 }
