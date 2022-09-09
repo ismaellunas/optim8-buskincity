@@ -4,10 +4,10 @@ namespace Modules\Ecommerce\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Modules\Ecommerce\Entities\Schedule;
 use Modules\Ecommerce\Entities\ScheduleRule;
 use Modules\Ecommerce\Enums\BookingStatus;
+use Modules\Ecommerce\Helpers\EventTimeHelper;
 
 class EventService
 {
@@ -54,11 +54,6 @@ class EventService
         return $dates;
     }
 
-    private function getAddIntervalMethodName($unit): string
-    {
-        return 'add'.Str::title(Str::plural($unit));
-    }
-
     private function bookedTimes(Schedule $schedule, Carbon $date): Collection
     {
         return $schedule
@@ -73,7 +68,7 @@ class EventService
                 'duration'
             ])
             ->map(function ($event) {
-                $method = $this->getAddIntervalMethodName($event->duration_unit);
+                $method = EventTimeHelper::calculateDurationMethodName($event->duration_unit);
 
                 $startTime = Carbon::parse(
                     $event->booked_at->format('H:i')
@@ -145,7 +140,7 @@ class EventService
 
             $product = $schedule->schedulable;
             $duration = $product->duration;
-            $method = $this->getAddIntervalMethodName($product->duration_unit);
+            $method = EventTimeHelper::calculateDurationMethodName($product->duration_unit);
 
             for ($i = $startedTime; $i->lte($endedTime); $i->$method($duration)) {
                 $currentEndTime = $i->copy();
