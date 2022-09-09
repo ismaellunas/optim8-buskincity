@@ -42,4 +42,22 @@ class ModuleService
             ],
         ];
     }
+
+    public static function frontendMenus(Request $request): array
+    {
+        return [
+            [
+                'title' => 'Products',
+                'link' => route('ecommerce.products.index'),
+                'isActive' => $request->routeIs('ecommerce.products.index'),
+                'isEnabled' => true,
+            ],
+            [
+                'title' => 'Orders',
+                'link' => route('ecommerce.orders.index'),
+                'isActive' => $request->routeIs('ecommerce.products.index'),
+                'isEnabled' => true,
+            ],
+        ];
+    }
 }

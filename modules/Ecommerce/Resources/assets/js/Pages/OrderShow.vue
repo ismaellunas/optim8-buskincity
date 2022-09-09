@@ -25,19 +25,19 @@
                                         <tbody>
                                             <tr>
                                                 <th>Booked at</th>
-                                                <td>{{ line.scheduleBooking.booked_at }}</td>
+                                                <td>{{ line.event.booked_at }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Timezone</th>
-                                                <td>{{ line.scheduleBooking.timezone }}</td>
+                                                <td>{{ line.event.timezone }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Duration</th>
-                                                <td>{{ line.scheduleBooking.duration }}</td>
+                                                <td>{{ line.event.duration }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Status</th>
-                                                <td>{{ line.scheduleBooking.status }}</td>
+                                                <td>{{ line.event.status }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -46,8 +46,43 @@
                         </td>
                     </tr>
                 </table>
+
+                <div class="field is-grouped">
+                    <p class="control">
+                        <biz-button-link
+                            :href="route(baseRouteName + '.index')"
+                        >
+                            Back
+                        </biz-button-link>
+                    </p>
+                    <p
+                        v-if="can.reschedule"
+                        class="control"
+                    >
+                        <button
+                            class="button is-link"
+                            type="button"
+                            @click="reschedule"
+                        >
+                            Reschedule
+                        </button>
+                    </p>
+                    <p
+                        v-if="can.cancel"
+                        class="control"
+                    >
+                        <button
+                            class="button is-danger"
+                            type="button"
+                            @click="cancel(line)"
+                        >
+                            Cancel
+                        </button>
+                    </p>
+                </div>
             </div>
         </div>
+
         <div class="column is-5">
             <div class="box">
                 <table class="table is-fullwidth">
@@ -83,14 +118,62 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import BizButtonLink from '@/Biz/ButtonLink';
+    import MixinHasLoader from '@/Mixins/HasLoader';
+    import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
 
     export default {
+        components: {
+            BizButtonLink,
+        },
+
+        mixins: [
+            MixinHasLoader,
+        ],
+
         layout: AppLayout,
 
         props: {
-            //can: { type: Object, required: true },
+            can: { type: Object, required: true },
             baseRouteName: { type: String, required: true },
             order: { type: Object, required: true },
+        },
+
+        methods: {
+            onError(errors) {
+                oopsAlert();
+            },
+
+            onSuccess(page) {
+                successAlert(page.props.flash.message);
+            },
+
+            cancel(line) {
+                const self = this;
+
+                confirmDelete('Are you sure want to cancel this Booking?')
+                    .then(result => {
+                        if (result.isConfirmed) {
+                            self.$inertia.post(
+                                route(self.baseRouteName + '.cancel', self.order.id),
+                                {},
+                                {
+                                    onStart: self.onStartLoadingOverlay,
+                                    onFinish: self.onEndLoadingOverlay,
+                                    onError: self.onError,
+                                    onSuccess: self.onSuccess,
+                                }
+                            );
+                        }
+                    });
+
+            },
+
+            reschedule() {
+                this.$inertia.visit(
+                    route(this.baseRouteName + '.reschedule', this.order.id)
+                );
+            },
         },
     };
 </script>

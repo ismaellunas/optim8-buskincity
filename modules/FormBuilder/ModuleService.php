@@ -30,4 +30,18 @@ class ModuleService
             ],
         ];
     }
+
+    public static function activeOptions()
+    {
+        return [
+            [
+                'id' => true,
+                'value' => 'Activated'
+            ],
+            [
+                'id' => false,
+                'value' => 'Deactivated'
+            ]
+        ];
+    }
 }

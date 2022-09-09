@@ -29,17 +29,17 @@ class SettingController extends CrudController
 
         Setting::updateOrCreate(
             ['key' => 'booking_email_new_booking'],
-            ['order' => 0, 'value' => $inputs['email_new_booking']]
+            ['value' => $inputs['email_new_booking']]
         );
 
         Setting::updateOrCreate(
             ['key' => 'booking_email_reminder'],
-            ['order' => 0, 'value' => $inputs['email_reminder']]
+            ['value' => $inputs['email_reminder']]
         );
 
         Setting::updateOrCreate(
             ['key' => 'booking_email_cancellation'],
-            ['order' => 0, 'value' => $inputs['email_cancellation']]
+            ['value' => $inputs['email_cancellation']]
         );
 
         $this->generateFlashMessage('Setting has been updated');

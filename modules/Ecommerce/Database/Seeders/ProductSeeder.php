@@ -58,8 +58,8 @@ class ProductSeeder extends Seeder
                 'roles' => empty($inputs['roles']) ? [] : [$inputs['roles']],
                 'duration' => 30,
                 'duration_unit' => 'minute',
-                'bookable_data_range_type' => 'calendar_days_into_the_future',
-                'bookable_data_range' => 60,
+                'bookable_date_range_type' => 'calendar_days_into_the_future',
+                'bookable_date_range' => 60,
             ];
 
             $product->setMeta($meta);

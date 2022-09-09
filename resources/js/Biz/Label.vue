@@ -14,6 +14,6 @@
 
         props: {
             isRequired: Boolean,
-        }
+        },
     };
 </script>
