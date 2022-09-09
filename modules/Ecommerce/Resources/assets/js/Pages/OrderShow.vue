@@ -25,19 +25,19 @@
                                         <tbody>
                                             <tr>
                                                 <th>Booked at</th>
-                                                <td>{{ line.scheduleBooking.booked_at }}</td>
+                                                <td>{{ line.event.booked_at }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Timezone</th>
-                                                <td>{{ line.scheduleBooking.timezone }}</td>
+                                                <td>{{ line.event.timezone }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Duration</th>
-                                                <td>{{ line.scheduleBooking.duration }}</td>
+                                                <td>{{ line.event.duration }}</td>
                                             </tr>
                                             <tr>
                                                 <th>Status</th>
-                                                <td>{{ line.scheduleBooking.status }}</td>
+                                                <td>{{ line.event.status }}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -49,6 +49,16 @@
 
                 <div class="field is-grouped">
                     <p class="control">
+                        <biz-button-link
+                            :href="route(baseRouteName + '.index')"
+                        >
+                            Back
+                        </biz-button-link>
+                    </p>
+                    <p
+                        v-if="can.reschedule"
+                        class="control"
+                    >
                         <button
                             class="button is-link"
                             type="button"
@@ -68,13 +78,6 @@
                         >
                             Cancel
                         </button>
-                    </p>
-                    <p class="control">
-                        <biz-button-link
-                            :href="route(baseRouteName + '.index')"
-                        >
-                            Back
-                        </biz-button-link>
                     </p>
                 </div>
             </div>
@@ -166,7 +169,11 @@
 
             },
 
-            reschedule() {},
+            reschedule() {
+                this.$inertia.visit(
+                    route(this.baseRouteName + '.reschedule', this.order.id)
+                );
+            },
         },
     };
 </script>

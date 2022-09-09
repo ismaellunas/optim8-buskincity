@@ -9,12 +9,12 @@ use App\Services\MediaService;
 use GetCandy\FieldTypes\Text;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\ProductType;
-use GetCandy\Models\ProductVariant;
 use GetCandy\Models\TaxClass;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Ecommerce\Entities\Schedule;
 use Modules\Ecommerce\Http\Requests\ProductCreateRequest;
 use Modules\Ecommerce\Http\Requests\ProductUpdateRequest;
@@ -129,8 +129,8 @@ class ProductController extends CrudController
             'roles' => empty($inputs['roles']) ? [] : [$inputs['roles']],
             'duration' => 30,
             'duration_unit' => 'minute',
-            'bookable_data_range_type' => 'calendar_days_into_the_future',
-            'bookable_data_range' => 60,
+            'bookable_date_range_type' => 'calendar_days_into_the_future',
+            'bookable_date_range' => 60,
         ];
 
         $product->setMeta($meta);

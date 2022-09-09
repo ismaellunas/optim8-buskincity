@@ -51,6 +51,7 @@
         setup(props) {
             provide('formBuilderId', props.formBuilder.id);
             provide('fieldNotes', props.fieldNotes);
+            provide('isEditMode', true);
 
             return {
                 form: useForm(props.settingNotification)
@@ -59,7 +60,18 @@
 
         methods: {
             onSubmit() {
-                //
+                const self = this;
+
+                self.form.put(
+                    route(self.baseRouteName + '.update', {
+                        'form_builder': self.formBuilder.id,
+                        'notification': self.settingNotification.id
+                    }),
+                    {
+                        onStart: () => self.onStartLoadingOverlay(),
+                        onFinish: () => self.onEndLoadingOverlay(),
+                    }
+                )
             }
         },
     }

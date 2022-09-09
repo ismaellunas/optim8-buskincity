@@ -2,10 +2,12 @@
 
 namespace Modules\Ecommerce\Entities;
 
+use Carbon\Carbon;
 use GetCandy\Models\OrderLine;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Modules\Ecommerce\Enums\BookingStatus;
 
 class ScheduleBooking extends Model
 {
@@ -43,5 +45,14 @@ class ScheduleBooking extends Model
             $this->duration_unit,
             $this->duration
         );
+    }
+
+    public function getEndedTimeAttribute(): Carbon
+    {
+        $bookedAt = $this->booked_at->copy();
+
+        $method = 'add'.Str::title(Str::plural($this->duration_unit));
+
+        return $bookedAt->$method($this->duration);
     }
 }

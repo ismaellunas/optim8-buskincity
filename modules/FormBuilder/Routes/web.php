@@ -23,6 +23,8 @@ Route::name('admin.')->prefix('admin/')->middleware([
     'can:system.dashboard',
     'ensureLoginFromAdminLoginRoute',
 ])->group(function () {
+    Route::get('form-builders/{form_builder}/entries', [FormBuilderController::class, 'entries'])
+        ->name('form-builders.entries');
     Route::resource('form-builders', FormBuilderController::class)
         ->except(['show']);
 
@@ -31,7 +33,8 @@ Route::name('admin.')->prefix('admin/')->middleware([
             Route::get('notifications/records', [SettingNotificationController::class, 'records'])
                 ->name('notifications.records');
 
-            Route::resource('notifications', SettingNotificationController::class);
+            Route::resource('notifications', SettingNotificationController::class)
+                ->except(['show']);
         });
     });
 });

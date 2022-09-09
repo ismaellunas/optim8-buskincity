@@ -8,6 +8,7 @@ use GetCandy\Models\Product as GetCandyProduct;
 use Illuminate\Support\Arr;
 use Kodeine\Metable\Metable;
 use Modules\Ecommerce\Entities\Schedule;
+use Modules\Ecommerce\Enums\ProductStatus;
 
 class Product extends GetCandyProduct
 {
@@ -23,6 +24,11 @@ class Product extends GetCandyProduct
         return config('getcandy.database.table_prefix').'products_meta';
     }
 
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
     public function gallery()
     {
         return $this->morphMany(Media::class, 'medially');
@@ -36,6 +42,21 @@ class Product extends GetCandyProduct
     public function productable()
     {
         return $this->morphTo();
+    }
+
+    public function scopePublished($query)
+    {
+        return $query->where('status', ProductStatus::PUBLISHED);
+    }
+
+    public function scopeSearchWithoutScout($query, string $term)
+    {
+        $locale = config('app.locale');
+
+        return $query
+            ->where("attribute_data->name->value->{$locale}", 'ILIKE', "%{$term}%")
+            ->orWhere("attribute_data->description->value->{$locale}", 'ILIKE', "%{$term}%")
+            ->orWhere("attribute_data->short_description->value->{$locale}", 'ILIKE', "%{$term}%");
     }
 
     /**
@@ -58,5 +79,15 @@ class Product extends GetCandyProduct
         }
 
         return $data;
+    }
+
+    public function getCoverAttribute()
+    {
+        return $this->gallery->first();
+    }
+
+    public function getCoverThumbnailUrlAttribute(): ?string
+    {
+        return $this->cover->thumbnailUrl ?? null;
     }
 }
