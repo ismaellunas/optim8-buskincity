@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('field_group_entry_metas', function (Blueprint $table) {
+        Schema::create('field_group_entries_meta', function (Blueprint $table) {
             $table->id();
-            $table->string('key', 255)->unique();
+            $table->string('type')->default('null');
+            $table->string('key')->index();
             $table->text('value')->nullable();
 
             $table->foreignId('field_group_entry_id')
-                ->constrained('field_groups')
+                ->constrained('field_group_entries')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
