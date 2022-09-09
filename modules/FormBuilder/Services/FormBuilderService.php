@@ -3,6 +3,7 @@
 namespace Modules\FormBuilder\Services;
 
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 use Modules\FormBuilder\Entities\FieldGroup;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -116,7 +117,7 @@ class FormBuilderService
         return null;
     }
 
-    private function getFormLocation()
+    public function getFormLocation()
     {
         $className = $this->formLocationBasePath.'\\'.'GuestLocation';
 
@@ -147,8 +148,25 @@ class FormBuilderService
         return null;
     }
 
-    private function abortAction(): void
+    public function abortAction(): void
     {
         abort(Response::HTTP_FORBIDDEN);
+    }
+
+    public function transformInputs(&$inputs): void
+    {
+        $formId = $inputs['form_id'] ?? null;
+        $fieldGroup = FieldGroup::where('title', $formId)->first();
+
+        if (!$fieldGroup) {
+            $this->formBuilderService->abortAction();
+        }
+
+        if (Auth::check()) {
+            $inputs['user_id'] = Auth::user()->id;
+        }
+
+        $inputs['field_group_id'] = $fieldGroup->id;
+        unset($inputs['form_id']);
     }
 }

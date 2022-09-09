@@ -1,5 +1,7 @@
 <template>
     <div v-if="isShown">
+        <biz-flash-notifications :flash="flash" />
+
         <form @submit.prevent="submit">
             <field-group
                 ref="field_group"
@@ -20,11 +22,12 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButton from '@/Biz/Button';
+    import BizFlashNotifications from '@/Biz/FlashNotifications';
     import FieldGroup from '@/Form/FieldGroup';
-    import { isEmpty, forOwn, sortBy, forEach, find } from 'lodash';
+    import { isEmpty, forOwn, forEach } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
     import { reactive } from 'vue';
 
     export default {
@@ -32,8 +35,13 @@
 
         components: {
             BizButton,
+            BizFlashNotifications,
             FieldGroup,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         provide() {
             return {
@@ -42,16 +50,17 @@
         },
 
         props: {
-            bagName: { type: String, default: 'formBuilder' },
+            bagName: { type: String, default: null },
             formId: { type: [String, null], required: true },
             routeGetSchema: { type: String, default: 'form-builders.schema' },
         },
 
         data() {
             return {
-                form: useForm({}),
-                loader: null,
                 fieldGroup: {},
+                flash: {
+                    message: null
+                },
                 form: reactive({}),
                 formErrors: {},
                 isShown: false,

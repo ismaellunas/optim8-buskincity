@@ -6,6 +6,8 @@ use App\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\FieldGroup;
+use Modules\FormBuilder\Entities\FieldGroupEntry;
+use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
 use Modules\FormBuilder\Services\FormBuilderService;
 
@@ -123,5 +125,19 @@ class FormBuilderController extends CrudController
     {
         return $this->formBuilderService->getSchema($request->form_id);
     }
+
+    public function submit(FormBuilderFrontendRequest $request)
+    {
+        $inputs = $request->all();
+        $this->formBuilderService->transformInputs($inputs);
+
+        $fieldGroupEntry = new FieldGroupEntry();
+
+        $fieldGroupEntry->saveFromInputs($inputs);
+
+        return [
+            'success' => true,
+            'message' => __('Thank you for filling out the form.'),
+        ];
     }
 }
