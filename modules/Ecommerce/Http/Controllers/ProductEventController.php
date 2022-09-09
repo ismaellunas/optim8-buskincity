@@ -1,0 +1,47 @@
+<?php
+
+namespace Modules\Ecommerce\Http\Controllers;
+
+//use Illuminate\Http\Request;
+use App\Http\Controllers\CrudController;
+use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Entities\Schedule;
+use Modules\Ecommerce\Http\Requests\ProductEventRequest;
+use Modules\Ecommerce\Services\ProductEventService;
+
+class ProductEventController extends CrudController
+{
+    private $productEventService;
+
+    public function __construct(ProductEventService $productEventService)
+    {
+        $this->productEventService = $productEventService;
+    }
+
+    protected $title = 'Product Event';
+
+    public function update(ProductEventRequest $request, Product $product)
+    {
+        $inputs = $request->all();
+
+        $product->duration = $inputs['duration'];
+        $product->bookable_date_range = $inputs['bookable_date_range'];
+        $product->save();
+
+        $schedule = $product->eventSchedule ?? Schedule::factory()->state([
+            'schedulable_type' => Product::class,
+            'schedulable_id' => $product->id,
+        ])->make();
+
+        $schedule->timezone = $inputs['timezone'];
+        $schedule->save();
+
+        $this->productEventService->saveWeeklyHours($inputs['weekly_hours'], $schedule);
+
+        $this->productEventService->saveDateOverrides(collect($inputs['date_overrides']), $schedule);
+
+        $this->generateFlashMessage('Successfully updating '.$this->title.'!');
+
+        return back();
+    }
+}

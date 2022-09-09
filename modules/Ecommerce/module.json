@@ -1,0 +1,15 @@
+{
+    "name": "Ecommerce",
+    "alias": "ecommerce",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Ecommerce\\Providers\\AuthServiceProvider",
+        "Modules\\Ecommerce\\Providers\\EventServiceProvider",
+        "Modules\\Ecommerce\\Providers\\EcommerceServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

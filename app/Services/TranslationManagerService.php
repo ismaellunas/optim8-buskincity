@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Translation;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Support\Collection;
 
 class TranslationManagerService
@@ -22,10 +21,7 @@ class TranslationManagerService
 
         $groupAndKeys = $this->getGroupAndKeys($groups, $term);
 
-        $records = $this->paginateCollection(
-            $groupAndKeys,
-            $perPage
-        );
+        $records = $groupAndKeys->paginate($perPage);
 
         $this->transformRecords(
             $locale,
@@ -263,25 +259,6 @@ class TranslationManagerService
         }
 
         return $translations;
-    }
-
-    private function paginateCollection(
-        Collection $items,
-        int $perPage = 15
-    ): LengthAwarePaginator {
-        $page = Paginator::resolveCurrentPage('page');
-        $total = $items->count();
-
-        return new Paginator(
-            $items->forPage($page, $perPage),
-            $total,
-            $perPage,
-            $page,
-            [
-                'path' => Paginator::resolveCurrentPath(),
-                'pageName' => 'page',
-            ]
-        );
     }
 
     public function saveTranslation(

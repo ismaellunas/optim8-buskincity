@@ -7,15 +7,21 @@
             {{ label }}
         </template>
 
-        <div class="control">
-            <biz-select
-                v-model="selected"
-                v-bind="$attrs"
-                :disabled="disabled"
-                :placeholder="placeholder"
-            >
-                <slot />
-            </biz-select>
+        <div :class="inputFieldClass">
+            <slot name="beforeInput" />
+
+            <div class="control">
+                <biz-select
+                    v-model="selected"
+                    v-bind="$attrs"
+                    :disabled="disabled"
+                    :placeholder="placeholder"
+                >
+                    <slot />
+                </biz-select>
+            </div>
+
+            <slot name="afterInput" />
         </div>
 
         <slot name="note" />
@@ -71,12 +77,30 @@
             fieldClass: {
                 type: [Object, Array, String],
                 default: undefined,
-            }
+            },
+            hasAddons: {
+                type: Boolean,
+                default: false
+            },
         },
+
         setup(props, { emit }) {
             return {
                 selected: useModelWrapper(props, emit),
             };
+        },
+
+        computed: {
+            inputFieldClass() {
+                const classes = {field: false};
+
+                if (this.hasAddons) {
+                    classes['field'] = true;
+                    classes['has-addons'] = true;
+                }
+
+                return classes;
+            },
         },
     };
 </script>

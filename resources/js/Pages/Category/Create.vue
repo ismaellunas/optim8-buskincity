@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="box mb-6">
@@ -16,11 +12,11 @@
                 :is-new="isNew"
                 :locale-options="localeOptions"
                 :selected-locale="selectedLocale"
-                @change-locale="changeLocale"
+                @on-change-locale="onChangeLocale"
                 @on-submit="submit"
             />
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -33,7 +29,6 @@
 
     export default {
         components: {
-            AppLayout,
             BizErrorNotifications,
             CategoryForm,
         },
@@ -41,6 +36,8 @@
         mixins: [
             MixinHasLoader
         ],
+
+        layout: AppLayout,
 
         props: {
             baseRouteName: { type: String, required: true },
@@ -96,7 +93,7 @@
                 );
             },
 
-            changeLocale() {
+            onChangeLocale() {
                 let locale = {};
                 this.localeOptions.map(localeOption => {
                     if (localeOption.id == this.defaultLocale) {

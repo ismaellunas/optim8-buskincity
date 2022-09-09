@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <biz-flash-notifications :flash="$page.props.flash" />
 
         <div class="box">
@@ -120,7 +116,7 @@
                 :query-params="queryParams"
             />
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -139,7 +135,6 @@
 
     export default {
         components: {
-            AppLayout,
             BizButton,
             BizButtonLink,
             BizFilterSearch,
@@ -147,9 +142,13 @@
             BizPagination,
             BizTag,
         },
+
         mixins: [
             MixinFilterDataHandle,
         ],
+
+        layout: AppLayout,
+
         props: {
             baseRouteName: { type: String, required: true },
             can: { type: Object, required: true },
@@ -158,6 +157,7 @@
             records: { type: Object, required: true },
             title: { type: String, required: true },
         },
+
         setup(props) {
             const queryParams = merge(
                 {},
@@ -169,11 +169,13 @@
                 term: ref(props.pageQueryParams?.term ?? null),
             };
         },
+
         data() {
             return {
                 icon,
             };
         },
+
         methods: {
             openShow(locale, page) {
                 if (this.can.read) {

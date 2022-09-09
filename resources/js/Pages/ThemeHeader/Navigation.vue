@@ -7,16 +7,12 @@
                 </div>
             </div>
             <div class="column">
-                <p class="buttons is-pulled-right">
-                    <biz-button
-                        v-for="locale in localeOptions"
-                        :key="locale.id"
-                        :class="['is-small is-link is-rounded', locale.id == selectedLocale ? '' : 'is-light' ]"
-                        @click="changeLocale(locale.id)"
-                    >
-                        {{ locale.name }}
-                    </biz-button>
-                </p>
+                <biz-language-tab
+                    class="is-pulled-right"
+                    :locale-options="localeOptions"
+                    :selected-locale="selectedLocale"
+                    @on-change-locale="onChangeLocale"
+                />
             </div>
         </div>
         <div class="columns">
@@ -60,10 +56,10 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
+    import BizLanguageTab from '@/Biz/LanguageTab';
     import NavigationFormDuplicate from './NavigationFormDuplicate';
     import NavigationFormMenu from './NavigationFormMenuItem';
     import NavigationMenu from './NavigationMenu';
-    import BizButton from '@/Biz/Button';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
     import { oops as oopsAlert, success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { forEach, cloneDeep } from 'lodash';
@@ -72,10 +68,10 @@
         name: 'ThemeHeaderNavigation',
 
         components: {
+            BizLanguageTab,
             NavigationFormDuplicate,
             NavigationFormMenu,
             NavigationMenu,
-            BizButton,
         },
 
         mixins: [
@@ -140,7 +136,7 @@
                 });
             },
 
-            changeLocale(locale) {
+            onChangeLocale(locale) {
                 if (this.menuForm.isDirty) {
                     confirmLeaveProgress().then((result) => {
                         if (result.isDismissed) {

@@ -3,15 +3,23 @@
         id="main-container-wrapper"
         class="pb-4 mb-4"
     >
+        <Head :title="title ?? titleChild" />
+
         <frontend-navbar-menu />
 
         <div class="section is-small">
             <div class="container">
                 <div class="columns">
                     <div class="column is-6">
-                        <slot name="header" />
+                        <h1 class="title is-2">
+                            {{ title ?? titleChild }}
+                        </h1>
 
-                        <slot name="headerDescription" />
+                        <p
+                            v-if="description || descriptionChild"
+                        >
+                            {{ description ?? descriptionChild }}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -28,9 +36,10 @@
 </template>
 
 <script>
-    import BizHero from '@/Biz/Hero';
     import FrontendFooterMenu from '@/Frontend/FooterMenu';
     import FrontendNavbarMenu from '@/Frontend/NavbarMenu';
+    import { Head } from '@inertiajs/inertia-vue3';
+    import { head } from 'lodash';
 
     export default {
         name: 'LayoutUser',
@@ -38,6 +47,22 @@
         components: {
             FrontendFooterMenu,
             FrontendNavbarMenu,
+            Head,
+        },
+
+        props: {
+            description: {type: String, default: null},
+            title: { type: String, default: null },
+        },
+
+        computed: {
+            titleChild() {
+                return head(this.$slots.default())?.type.props.title?.default ?? '';
+            },
+
+            descriptionChild() {
+                return head(this.$slots.default())?.type.props.description?.default ?? '';
+            },
         },
     };
 </script>

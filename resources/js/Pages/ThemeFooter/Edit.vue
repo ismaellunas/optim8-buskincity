@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <biz-error-notifications :errors="$page.props.errors" />
 
         <div class="box mb-6">
@@ -43,7 +39,7 @@
                 :menu="menu"
             />
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -59,7 +55,6 @@
 
     export default {
         components: {
-            AppLayout,
             Layout,
             Navigation,
             BizButton,
@@ -70,6 +65,7 @@
         mixins: [
             MixinHasTab,
         ],
+        layout: AppLayout,
         props: {
             baseRouteName: {
                 type: String,

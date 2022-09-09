@@ -2,6 +2,7 @@
 
 namespace App\Entities\Sitemaps;
 
+use App\Contracts\SitemapInterface;
 use App\Models\Page as PageModel;
 use App\Models\PageTranslation;
 use App\Services\SettingService;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FileNotFoundException;
 use Qirolab\Theme\Theme;
 
-class Page extends BaseSitemap
+class Page extends BaseSitemap implements SitemapInterface
 {
     public function urls(): array|Collection
     {

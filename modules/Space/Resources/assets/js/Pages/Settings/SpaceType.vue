@@ -1,89 +1,87 @@
 <template>
     <div>
-        <form-section @submitted="updateProfileInformation">
+        <biz-list-section>
             <template #title>
                 Space Types
             </template>
 
-            <template #form>
-                <div class="columns">
-                    <div class="column">
-                        <div class="is-pulled-left">
-                            <biz-filter-search
-                                v-model="term"
-                                @search="search"
-                            />
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="is-pulled-right">
-                            <biz-button
-                                type="button"
-                                class="is-primary"
-                                @click="openModalCreate()"
-                            >
-                                <span class="icon is-small">
-                                    <i :class="icon.add" />
-                                </span>
-                                <span>Add New</span>
-                            </biz-button>
-                        </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="is-pulled-left">
+                        <biz-filter-search
+                            v-model="term"
+                            @search="search"
+                        />
                     </div>
                 </div>
-
-                <div class="table-container">
-                    <biz-table class="is-fullwidth">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>
-                                    <div class="level-right">
-                                        Actions
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="record in types.data"
-                                :key="record.id"
-                            >
-                                <td>{{ record.name }}</td>
-                                <td>
-                                    <div class="level-right">
-                                        <biz-button
-                                            type="button"
-                                            class="is-ghost has-text-black"
-                                            @click="openModalEdit(record)"
-                                        >
-                                            <span class="icon is-small">
-                                                <i :class="icon.edit" />
-                                            </span>
-                                        </biz-button>
-                                        <biz-button
-                                            type="button"
-                                            class="is-ghost has-text-black ml-1"
-                                            @click="onDelete(record)"
-                                        >
-                                            <span class="icon is-small">
-                                                <i :class="icon.remove" />
-                                            </span>
-                                        </biz-button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </biz-table>
+                <div class="column">
+                    <div class="is-pulled-right">
+                        <biz-button
+                            type="button"
+                            class="is-primary"
+                            @click="openModalCreate()"
+                        >
+                            <span class="icon is-small">
+                                <i :class="icon.add" />
+                            </span>
+                            <span>Add New</span>
+                        </biz-button>
+                    </div>
                 </div>
+            </div>
 
-                <biz-pagination
-                    :is-ajax="true"
-                    :links="types.links"
-                    :query-params="queryParams"
-                    @on-clicked-pagination="getSpaceTypes"
-                />
-            </template>
-        </form-section>
+            <div class="table-container">
+                <biz-table class="is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>
+                                <div class="level-right">
+                                    Actions
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            v-for="record in types.data"
+                            :key="record.id"
+                        >
+                            <td>{{ record.name }}</td>
+                            <td>
+                                <div class="level-right">
+                                    <biz-button
+                                        type="button"
+                                        class="is-ghost has-text-black"
+                                        @click="openModalEdit(record)"
+                                    >
+                                        <span class="icon is-small">
+                                            <i :class="icon.edit" />
+                                        </span>
+                                    </biz-button>
+                                    <biz-button
+                                        type="button"
+                                        class="is-ghost has-text-black ml-1"
+                                        @click="onDelete(record)"
+                                    >
+                                        <span class="icon is-small">
+                                            <i :class="icon.remove" />
+                                        </span>
+                                    </biz-button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </biz-table>
+            </div>
+
+            <biz-pagination
+                :is-ajax="true"
+                :links="types.links"
+                :query-params="queryParams"
+                @on-clicked-pagination="getSpaceTypes"
+            />
+        </biz-list-section>
 
         <space-type-form-modal
             v-if="isModalOpen"
@@ -99,9 +97,9 @@
     import MixinHasModal from '@/Mixins/HasModal';
     import BizButton from '@/Biz/Button';
     import BizFilterSearch from '@/Biz/Filter/Search';
+    import BizListSection from '@/Biz/ListSection';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
-    import FormSection from '@/Frontend/FormSection';
     import icon from '@/Libs/icon-class';
     import SpaceTypeFormModal from './SpaceTypeFormModal';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -113,9 +111,9 @@
         components: {
             BizButton,
             BizFilterSearch,
+            BizListSection,
             BizPagination,
             BizTable,
-            FormSection,
             SpaceTypeFormModal,
         },
 

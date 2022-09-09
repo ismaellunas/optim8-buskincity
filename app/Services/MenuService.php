@@ -16,6 +16,7 @@ use App\Services\{
     LanguageService,
     LoginService,
     TranslationService,
+    ModuleService,
 };
 use Illuminate\Http\Request;
 use App\Entities\Caches\{
@@ -25,7 +26,6 @@ use App\Entities\Caches\{
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Nwidart\Modules\Facades\Module;
 
 class MenuService
 {
@@ -444,11 +444,20 @@ class MenuService
                         'link' => route('payments.index'),
                         'isEnabled' => $user->can('payment.management'),
                     ],
-                    [
-                        'title' => 'Profile',
-                        'link' => route('user.profile.show'),
-                        'isEnabled' => true,
-                    ],
+                ];
+
+                $moduleRightMenus = $this->moduleMenus($request, 'frontend');
+
+                foreach ($moduleRightMenus as $frontendRightMenus) {
+                    foreach ($frontendRightMenus as $menu) {
+                        $dropdownRightMenus[] = $menu;
+                    }
+                }
+
+                $dropdownRightMenus[] = [
+                    'title' => 'Profile',
+                    'link' => route('user.profile.show'),
+                    'isEnabled' => true,
                 ];
             }
         }
@@ -619,16 +628,22 @@ class MenuService
             });
     }
 
-    private function moduleMenus(Request $request): array
+    private function moduleMenus(Request $request, $method = 'admin'): array
     {
-        $modules = Module::all();
+        $modules = app(ModuleService::class)->getAllEnabledNames();
+
         $menus = [];
 
         foreach ($modules as $module) {
-            $moduleService = '\\Modules\\'.$module->getName().'\\ModuleService';
+            $moduleService = '\\Modules\\'.$module.'\\ModuleService';
 
-            if (class_exists($moduleService)) {
-                $menus[] = $moduleService::adminMenus($request);
+            $methodName = $method.'Menus';
+
+            if (
+                class_exists($moduleService)
+                && method_exists($moduleService, $methodName)
+            ) {
+                $menus[] = $moduleService::$methodName($request);
             }
         }
 

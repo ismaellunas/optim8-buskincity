@@ -15,7 +15,7 @@ abstract class BaseSitemap
         $this->locale = $locale;
     }
 
-    public function locTag()
+    public function locTag(): string
     {
         return route('sitemap.urls', [
             Str::slug($this->getLocName())

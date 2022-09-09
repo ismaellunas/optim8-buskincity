@@ -1,9 +1,5 @@
 <template>
-    <app-layout :title="title">
-        <template #header>
-            {{ title }}
-        </template>
-
+    <div>
         <biz-error-notifications
             :errors="$page.props.errors"
         />
@@ -22,11 +18,11 @@
                 :page-preview="true"
                 :selected-locale="selectedLocale"
                 :status-options="statusOptions"
-                @change-locale="onChangeLocale"
+                @on-change-locale="onChangeLocale"
                 @on-submit="onSubmit"
             />
         </div>
-    </app-layout>
+    </div>
 </template>
 
 <script>
@@ -45,16 +41,19 @@
 
     export default {
         components: {
-            AppLayout,
             BizErrorNotifications,
             BizFlashNotifications,
             PageForm,
         },
+
         provide() {
             return {
                 can: this.can,
             }
         },
+
+        layout: AppLayout,
+
         props: {
             affectedFooterMenu: { type: Object, default:() => {} },
             affectedHeaderMenu: { type: Object, default:() => {} },
@@ -64,6 +63,7 @@
             statusOptions: { type: Array, default:() => [] },
             title: { type: String, required: true },
         },
+
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
             const translationForm = { [defaultLocale]: {} };
@@ -99,6 +99,7 @@
                 localeOptions: usePage().props.value.languageOptions,
             };
         },
+
         data() {
             return {
                 disableInput: false,
@@ -107,6 +108,7 @@
                 selectedLocale: this.defaultLocale,
             };
         },
+
         methods: {
             isUsedByMenu() {
                 const self = this;
