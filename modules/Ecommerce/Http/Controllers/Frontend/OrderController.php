@@ -46,10 +46,13 @@ class OrderController extends CrudController
 
     public function show(Order $order)
     {
-        $user = auth()->user();
+        $product = $order->firstEventLine->purchasable->product;
+        $event = $order->firstEventLine->latestEvent;
 
         return Inertia::render('Ecommerce::FrontendOrderShow', $this->getData([
-            'title' => $this->title.' #'.$order->reference,
+            'title' => $product->displayName,
+            'description' => $event->timezonedBookedAt->format(config('ecommerce.format.date_event_email_title')),
+            'order' => $this->orderService->getFrontendRecord($order),
         ]));
     }
 

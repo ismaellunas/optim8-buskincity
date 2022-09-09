@@ -5,6 +5,7 @@ namespace Modules\Ecommerce\Services;
 use App\Models\User;
 use App\Services\MediaService;
 use Carbon\Carbon;
+use Carbon\CarbonTimeZone;
 use GetCandy\Base\OrderReferenceGeneratorInterface;
 use GetCandy\Models\Channel;
 use GetCandy\Models\Currency;
@@ -118,6 +119,24 @@ class OrderService
         });
 
         return $orderSubset;
+    }
+
+    public function getFrontendRecord(Order $order): array
+    {
+        $event = $order->firstEventLine->latestEvent;
+
+        $product = $order->firstEventLine->purchasable->product;
+
+        $carbonTimeZone = CarbonTimeZone::create($event->schedule->timezone);
+
+        return [
+            'event_date' => $event->timezonedBookedAt->format('d F Y'),
+            'event_start_end_time' => $event->displayStartEndTime,
+            'product_name' => $product->displayName,
+            'status' => Str::title($event->status),
+            'timezone' => $event->schedule->timezone,
+            'timezoneOffset' => 'UTC '.$carbonTimeZone->toOffsetName(),
+        ];
     }
 
     public function cancelOrder(Order $order)
