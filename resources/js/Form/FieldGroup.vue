@@ -29,7 +29,7 @@
                             v-if="!field.is_translated"
                             :ref="'field__' + name"
                             v-model="form[ name ]"
-                            :errors="form.errors"
+                            :errors="formErrors"
                             :schema="field"
                         />
 
@@ -38,7 +38,7 @@
                             v-else
                             :ref="'field__' + name"
                             v-model="form[ name ][ selectedLocale ]"
-                            :errors="form.errors"
+                            :errors="formErrors"
                             :schema="field"
                             :selected-locale="selectedLocale"
                         />
@@ -62,7 +62,7 @@
     import Text from './Text';
     import Textarea from './Textarea';
     import Video from './Video';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, isEmpty } from '@/Libs/utils';
 
     export default {
         name: 'FormFieldGroup',
@@ -95,12 +95,26 @@
                 type: String,
                 default: null,
             },
+            errors: {
+                type: Object,
+                default: () => {},
+            },
         },
 
         setup(props, { emit }) {
             return {
                 form: useModelWrapper(props, emit),
             };
+        },
+
+        computed: {
+            formErrors() {
+                if (this.form.errors) {
+                    return this.form.errors;
+                }
+
+                return this.errors;
+            },
         },
     };
 </script>

@@ -5,6 +5,7 @@
                 ref="field_group"
                 v-model="form"
                 :group="fieldGroup"
+                :errors="formErrors"
             />
 
             <slot name="buttons">
@@ -52,6 +53,7 @@
                 loader: null,
                 fieldGroup: {},
                 form: reactive({}),
+                formErrors: {},
                 isShown: false,
             };
         },
