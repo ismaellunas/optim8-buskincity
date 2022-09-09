@@ -2,7 +2,7 @@
 
 namespace Modules\Ecommerce\Enums;
 
-enum OrderLineStatus: string
+enum OrderLineType: string
 {
     case PHYSICAL = 'physical';
     case DIGITAL = 'digital';
