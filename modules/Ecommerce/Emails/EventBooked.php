@@ -48,7 +48,7 @@ class EventBooked extends Mailable
             ->setTimezone($schedule->timezone);
 
         $inviteeName = $user->fullName ?? null;
-        $productName = $line->purchasable->product->translateAttribute('name');
+        $productName = $line->purchasable->product->displayName;
 
         $template = Setting::key('booking_email_new_booking')->value('value');
 
