@@ -11,6 +11,7 @@
             :disabled="entity.disabled"
             :readonly="entity.readonly"
             :placeholder="entity.placeholder"
+            :country-options="computedCountryOptions"
         >
             <template
                 v-if="entity.note"
@@ -46,6 +47,10 @@
             MixinDuplicableContent,
         ],
 
+        inject: [
+            'countryOptions'
+        ],
+
         props: {
             id: { type: String, required: true },
             modelValue: { type: Object, required: true },
@@ -64,6 +69,12 @@
                     number: null,
                 },
             };
+        },
+
+        computed: {
+            computedCountryOptions() {
+                return this.countryOptions();
+            },
         },
     };
 </script>
