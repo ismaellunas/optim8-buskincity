@@ -4,6 +4,7 @@ namespace Modules\Ecommerce\Services;
 
 use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Models\Media;
+use App\Models\User;
 use App\Services\MediaService;
 use App\Services\UserService;
 use Modules\Ecommerce\Entities\Product;
@@ -43,6 +44,48 @@ class ProductService
                 'id' => $record->id,
                 'name' => $record->translateAttribute('name', config('app.locale')),
                 'status' => Str::title($record->status),
+            ];
+        });
+    }
+
+    public function getFrontendRecords(
+        User $user,
+        string $term = null,
+        int $perPage = 15
+    ) {
+        $builder = Product::orderBy('id', 'DESC')
+            ->select(['id', 'status', 'attribute_data'])
+            ->when($term, function ($query) use ($term) {
+                $query->searchWithoutScout($term);
+            })
+            ->with(['gallery'])
+            ->published();
+
+        if (!($user->isAdministrator || $user->isSuperAdministrator)) {
+            $builder->whereHas('metas', function ($query) use ($user) {
+                $roleIds = $user->roles->pluck('id');
+
+                $query
+                    ->where('key', 'roles')
+                    ->whereJsonContains('value', $roleIds);
+            });
+        }
+
+        $records = $builder->paginate($perPage);
+
+        $this->transformFrontendRecords($records);
+
+        return $records;
+    }
+
+    public function transformFrontendRecords($records)
+    {
+        $records->getCollection()->transform(function ($record) {
+            return (object) [
+                'id' => $record->id,
+                'name' => $record->translateAttribute('name', config('app.locale')),
+                'status' => Str::title($record->status),
+                'coverUrl' => $record->coverThumbnailUrl,
             ];
         });
     }
