@@ -24,7 +24,7 @@ class EventBookRequest extends FormRequest
             ],
             'time' => [
                 'required',
-                'date_format:H',
+                'date_format:H:i',
                 new AvailableBookingTime($product->eventSchedule),
             ],
         ];
