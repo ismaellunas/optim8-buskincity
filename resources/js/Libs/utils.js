@@ -149,7 +149,3 @@ export function getPhoneCountries(url = null) {
         .then((response) => {return response.data; })
         .catch((error) => { throw error; })
 }
-
-export function pascalCase(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}

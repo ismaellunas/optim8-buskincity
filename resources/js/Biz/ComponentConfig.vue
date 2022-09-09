@@ -86,7 +86,7 @@
     import TRBLInput from '@/Blocks/Configs/TRBLInput';
     import { camelCase, merge } from "lodash";
     import { isBlank } from '@/Libs/utils';
-    import { useModelWrapper, pascalCase } from '@/Libs/utils'
+    import { useModelWrapper } from '@/Libs/utils'
 
     export default {
 

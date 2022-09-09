@@ -111,7 +111,13 @@
     import { cloneDeep } from 'lodash';
     import { createColumn } from '@/Libs/page-builder.js';
     import { isModuleActive } from '@/Libs/module';
-    import { isBlank, generateElementId, useModelWrapper, getResourceFromDataObject, pascalCase } from '@/Libs/utils'
+    import { pascalCase } from 'change-case';
+    import {
+        isBlank,
+        generateElementId,
+        useModelWrapper,
+        getResourceFromDataObject
+    } from '@/Libs/utils';
 
     export default {
         components: {
