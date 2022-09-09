@@ -64,10 +64,6 @@ class OrderController extends CrudController
     {
     }
 
-    public function availableTimes(Order $order, string $date)
-    {
-    }
-
     public function rescheduleUpdate(OrderRescheduleRequest $request, Order $order)
     {
     }
