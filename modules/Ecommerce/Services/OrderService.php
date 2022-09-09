@@ -72,14 +72,41 @@ class OrderService
                     ->orWhere('status', 'ILIKE', '%'.$term.'%')
                     ->orWhereHas('user', function (Builder $query) use ($term) {
                         $query->search($term);
+                    })
+                    ->orWhereHas('firstEventLine.purchasable.product', function (Builder $query) use ($term) {
+                        $query->searchWithoutScout($term);
                     });
             })
+            ->with([
+                'firstEventLine.latestEvent.schedule',
+                'firstEventLine.purchasable.product' => function ($query) {
+                    $query->select('id', 'product_type_id', 'attribute_data');
+                },
+            ])
             ->where('user_id', $user->id)
             ->paginate($perPage);
 
-        $this->transformRecords($records);
+        $this->transformFrontendRecords($records);
 
         return $records;
+    }
+
+    public function transformFrontendRecords($records)
+    {
+        $records->getCollection()->transform(function ($record) {
+            $event = $record->firstEventLine->latestEvent;
+
+            $product = $record->firstEventLine->purchasable->product;
+
+            return (object) [
+                'id' => $record->id,
+                'product_name' => $product->displayName,
+                'reference' => $record->reference,
+                'status' => Str::title($event->status),
+                'start_end_time' => $event->displayStartEndTime,
+                'date' => $event->timezonedBookedAt->format('d M Y'),
+            ];
+        });
     }
 
     public function getRecord(Order $order): array
