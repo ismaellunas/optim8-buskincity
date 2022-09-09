@@ -98,28 +98,22 @@ class FormBuilderService
             ->all();
     }
 
-    public function getSchemas(
+    public function getSchema(
         string $formId,
-    ) {
+    ):array {
         $formLocation = $this->getFormLocation();
 
-        $forms = $this->getForms($formId);
-
-        $schemas = collect();
+        $form = $this->getForm($formId);
 
         if (!$formLocation->canBeAccessedBy()) {
             $this->abortAction();
         }
 
-        foreach ($forms as $form) {
-            if ($form->canBeAccessed()) {
-                $schema = $form->schema();
-
-                $schemas->push($schema);
-            }
+        if ($form->canBeAccessed()) {
+            return $form->schema();
         }
 
-        return $schemas;
+        return null;
     }
 
     private function getFormLocation()
@@ -134,10 +128,8 @@ class FormBuilderService
         return $this->formBasePath."\\".$type.'Form';
     }
 
-    private function getForms(string $formId)
+    public function getForm(string $formId)
     {
-        $forms = collect();
-
         $model = FieldGroup::where('title', $formId)->first();
 
         if ($model) {
@@ -148,11 +140,11 @@ class FormBuilderService
             if ($form->canBeAccessedByLocation()) {
                 $form->model = $model;
 
-                $forms->put($form->name, $form);
+                return $form;
             }
         }
 
-        return $forms;
+        return null;
     }
 
     private function abortAction(): void

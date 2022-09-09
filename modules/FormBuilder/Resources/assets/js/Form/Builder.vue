@@ -2,11 +2,9 @@
     <div v-if="isShown">
         <form @submit.prevent="submit">
             <field-group
-                v-for="(group, index) in sortedFieldGroups"
-                :key="index"
-                :ref="'field_group__'+index"
+                ref="field_group"
                 v-model="form"
-                :group="group"
+                :group="fieldGroup"
             />
 
             <slot name="buttons">
@@ -26,7 +24,7 @@
     import { isEmpty, forOwn, sortBy, forEach, find } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
-    import { ref } from 'vue';
+    import { reactive } from 'vue';
 
     export default {
         name: 'FormBuilder',
@@ -44,35 +42,30 @@
 
         props: {
             bagName: { type: String, default: 'formBuilder' },
-            routeGetSchemas: { type: String, default: 'form-builders.schemas' },
             formId: { type: [String, null], required: true },
+            routeGetSchema: { type: String, default: 'form-builders.schema' },
         },
 
         data() {
             return {
-                fieldGroups: {},
                 form: useForm({}),
                 loader: null,
+                fieldGroup: {},
+                form: reactive({}),
                 isShown: false,
             };
         },
 
-        computed: {
-            sortedFieldGroups() {
-                return sortBy(this.fieldGroups, ['order']);
-            },
-        },
-
         mounted() {
-            this.getSchemas();
+            this.getSchema();
         },
 
         methods: {
-            getSchemas() {
+            getSchema() {
                 const self = this;
 
                 return axios.get(
-                    route(self.routeGetSchemas),
+                    route(self.routeGetSchema),
                     {
                         params: {
                             form_id: self.formId,
@@ -80,13 +73,13 @@
                     }
 
                 ).then((response) => {
-                    self.fieldGroups = response.data;
+                    self.fieldGroup = response.data;
 
-                    self.form = self.createForm(self.fieldGroups);
+                    self.form = self.createForm(self.fieldGroup);
 
                     self.isShown = true;
 
-                    if (isEmpty(this.fieldGroups)) {
+                    if (isEmpty(this.fieldGroup)) {
                         self.isShown = false;
                     }
 
@@ -99,38 +92,71 @@
                 });
             },
 
-            createForm(groupFields) {
+            createForm(groupField) {
                 let fieldValue = null;
                 const form = {};
 
-                forOwn(groupFields, (groupField, key) => {
-                    if (!isEmpty(groupField)) {
+                form['form_id'] = this.formId;
 
-                        forOwn(groupField.fields, (field, key) => {
-                            if (typeof field.value === 'undefined') {
-                                form[ key ] = undefined;
-                            } else {
-                                form[ key ] = field.value;
+                if (!isEmpty(groupField)) {
+                    forOwn(groupField.fields, (field, key) => {
+                        if (typeof field.value === 'undefined') {
+                            form[ key ] = undefined;
+                        } else {
+                            form[ key ] = field.value;
 
-                                if (field.is_translated && field.value.length == 0) {
-                                    fieldValue = {};
+                            if (field.is_translated && field.value.length == 0) {
+                                fieldValue = {};
 
-                                    this.localeOptions.forEach(function(locale) {
-                                        fieldValue[ locale.id ] = null
-                                    })
+                                this.localeOptions.forEach(function(locale) {
+                                    fieldValue[ locale.id ] = null
+                                })
 
-                                    form[ key ] = fieldValue;
-                                }
+                                form[ key ] = fieldValue;
                             }
-                        });
-                    }
+                        }
+                    });
+                }
+
+                return reactive(form);
+            },
+
+            resetFields() {
+                forEach(this.$refs, (fieldGroup, fieldGroupKey) => {
+                    forEach(fieldGroup.$refs, (field, fieldKey) => {
+                        if (field.reset) {
+                            field.reset();
+                        }
+                    });
                 });
 
-                return useForm(form);
+                this.formErrors = {};
             },
 
             submit() {
-                //
+                const self = this;
+
+                self.onStartLoadingOverlay();
+
+                axios.post(
+                    route('form-builders.save'),
+                    this.form,
+                )
+                    .then((response) => {
+                        successAlert('Successfully');
+                        self.flash.message = response.data.message;
+
+                        self.getSchema();
+                        self.resetFields();
+                    })
+                    .catch((error) => {
+                        oopsAlert();
+
+                        self.formErrors = error.response.data.errors;
+                    })
+                    .then(() => {
+                        self.onEndLoadingOverlay();
+                    })
             },
         },
     };
