@@ -76,4 +76,20 @@ class FormBuilderService
 
         return $data;
     }
+
+    public function getFormOptions(): array
+    {
+        return FieldGroup::select([
+                'id',
+                'name'
+            ])
+            ->get()
+            ->map(function ($field) {
+                return [
+                    'value' => $field->id,
+                    'name' => $field->name
+                ];
+            })
+            ->all();
+    }
 }

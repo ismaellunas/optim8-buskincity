@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\FormBuilder\Http\Controllers\{
     FormBuilderController,
     SettingNotificationController,
+    PageBuilderController,
 };
 
 /*
@@ -35,6 +36,13 @@ Route::name('admin.')->prefix('admin/')->middleware([
 
             Route::resource('notifications', SettingNotificationController::class)
                 ->except(['show']);
+        });
+    });
+
+    Route::prefix('api')->name('api.')->group(function() {
+        Route::prefix('page-builders')->name('page-builders.')->group(function() {
+            Route::get('form-options', [PageBuilderController::class, 'formOptions'])
+                ->name('form-options');
         });
     });
 });

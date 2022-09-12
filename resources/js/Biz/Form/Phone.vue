@@ -73,10 +73,10 @@
             countryOptions: {
                 type: [Array, Object],
                 default: () => [
-                    {code: 'AU', countryName: "Australia", dial: '+61'},
-                    {code: 'ID', countryName: "Indonesia", dial: '+62'},
-                    {code: 'SG', countryName: "Singapore", dial: '+65'},
-                    {code: 'US', countryName: "United States", dial: '+1'},
+                    {id: 'AU', value: "Australia", dial: '61'},
+                    {id: 'ID', value: "Indonesia", dial: '62'},
+                    {id: 'SG', value: "Singapore", dial: '65'},
+                    {id: 'US', value: "United States", dial: '1'},
                 ]
             },
             defaultCountry: {
