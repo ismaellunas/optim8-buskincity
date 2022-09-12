@@ -10,10 +10,11 @@ use GetCandy\Models\Channel;
 use GetCandy\Models\Currency;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
-use Modules\Ecommerce\Entities\ScheduleBooking;
+use Modules\Ecommerce\Entities\Event;
 use Modules\Ecommerce\Enums\BookingStatus;
 use Modules\Ecommerce\Enums\OrderLineType;
 use Modules\Ecommerce\Enums\OrderStatus;
@@ -125,13 +126,13 @@ class OrderService
         $order->save();
     }
 
-    public function cancelEvent(ScheduleBooking $booking)
+    public function cancelEvent(Event $booking)
     {
         $booking->status = BookingStatus::CANCELED->value;
         $booking->save();
     }
 
-    public function rescheduleEvent(ScheduleBooking $event, Carbon $dateTime)
+    public function rescheduleEvent(Event $event, Carbon $dateTime)
     {
         $newEvent = $event->replicate();
 
@@ -159,7 +160,7 @@ class OrderService
         $lines->push([
             'purchasable_type' => get_class($variant),
             'purchasable_id' => $variant->id,
-            'type' => OrderLineType::EVENT->value,
+            'type' => OrderLineType::EVENT,
             'description' => "",
             'option' => null,
             'identifier' => $variant->sku,
@@ -176,7 +177,7 @@ class OrderService
         $order = [
             'user_id' => $user->id,
             'channel_id' => $channel->id,
-            'status' => OrderStatus::COMPLETED->value,
+            'status' => OrderStatus::COMPLETED,
             'sub_total' => 0,
             'tax_breakdown' => [],
             'tax_total' => 0,
@@ -199,18 +200,39 @@ class OrderService
 
         $orderModel->lines()->createMany($lines->toArray());
 
-        $orderModel->load('lines');
         $orderLine = $orderModel->lines->first();
 
-        ScheduleBooking::factory()->state([
-            'schedule_id' => $product->eventSchedule->id,
+        $schedule = $product->eventSchedule;
+
+        Event::factory()->state([
+            'schedule_id' => $schedule->id,
             'order_line_id' => $orderLine->id,
             'booked_at' => $dateTime,
             'duration' => $product->duration,
             'duration_unit' => $product->duration_unit,
-            'status' => BookingStatus::UPCOMING->value,
+            'status' => BookingStatus::UPCOMING,
+            'timezone' => $schedule->timezone,
         ])->create();
 
         return $orderModel;
+    }
+
+    public function emailReceipients(Order $order): Collection
+    {
+        $recipients = User::inRoleNames([config('permission.role_names.admin')])
+            ->get(['id', 'first_name', 'last_name', 'email'])
+            ->map(function ($user) {
+                return (object)[
+                    'name'  => $user->fullName,
+                    'email' => $user->email,
+                ];
+            });
+
+        $recipients->push((object) [
+            'name' => $order->user->fullName,
+            'email' => $order->user->email,
+        ]);
+
+        return $recipients;
     }
 }

@@ -133,7 +133,7 @@
                     </h2>
                 </div>
 
-                <div class="column is-12">
+                <div class="column is-8">
                     <booking-time
                         v-model="form"
                         :available-times="availableTimes"
@@ -206,6 +206,7 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import moment from 'moment';
+    import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -332,11 +333,16 @@
                     .post(
                         route('ecommerce.orders.book-event', self.product.id),
                         {
-                            onStart: self.onStartLoadingOverlay,
+                            onStart: () => self.onStartLoadingOverlay(),
                             onSuccess: (page) => {
                                 successAlert(page.props.flash.message);
                             },
-                            onFinish: self.onEndLoadingOverlay,
+                            onError: (errors) => {
+                                oopsAlert();
+                            },
+                            onFinish: () => {
+                                self.onEndLoadingOverlay();
+                            },
                         }
                     );
             },

@@ -7,7 +7,7 @@ use Carbon\Carbon;
 use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Events\EventRescheduled;
-use Modules\Ecommerce\Events\OrderCanceled;
+use Modules\Ecommerce\Events\EventCanceled;
 use Modules\Ecommerce\Http\Requests\OrderRescheduleRequest;
 use Modules\Ecommerce\Services\EventService;
 use Modules\Ecommerce\Services\OrderService;
@@ -71,7 +71,7 @@ class OrderController extends CrudController
 
         $this->orderService->cancelEvent($order->firstEventLine->latestEvent);
 
-        OrderCanceled::dispatch($order);
+        EventCanceled::dispatch($order);
 
         $this->generateFlashMessage('The Event has been canceled!');
 

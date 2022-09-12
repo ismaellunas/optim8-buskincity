@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Events\EventBooked;
+use Modules\Ecommerce\Http\Requests\EventBookRequest;
 use Modules\Ecommerce\Http\Requests\OrderRescheduleRequest;
 use Modules\Ecommerce\Services\EventService;
 use Modules\Ecommerce\Services\OrderService;
@@ -67,7 +69,7 @@ class OrderController extends CrudController
     {
     }
 
-    public function bookEvent(Request $request, Product $product)
+    public function bookEvent(EventBookRequest $request, Product $product)
     {
         $inputs = $request->all();
 
@@ -77,7 +79,7 @@ class OrderController extends CrudController
             auth()->user(),
         );
 
-        //EventRescheduled::dispatch($order);
+        EventBooked::dispatch($order);
 
         $this->generateFlashMessage('The Event has been booked!');
 
