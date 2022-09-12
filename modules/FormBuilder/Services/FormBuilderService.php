@@ -4,7 +4,9 @@ namespace Modules\FormBuilder\Services;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Modules\FormBuilder\Entities\FieldGroup;
+use Modules\FormBuilder\Entities\FieldGroupEntry;
 use Symfony\Component\HttpFoundation\Response;
 
 class FormBuilderService
@@ -168,5 +170,19 @@ class FormBuilderService
 
         $inputs['field_group_id'] = $fieldGroup->id;
         unset($inputs['form_id']);
+    }
+
+    public function swapTagWithEntryValue(FieldGroupEntry $entry, string $value): string
+    {
+        $swapLists = [];
+        $entryValues = $entry->metas
+            ->pluck('value', 'key')
+            ->toArray();
+
+        foreach ($entryValues as $key => $entryValue) {
+            $swapLists['{'.$key.'}'] = $entryValue;
+        }
+
+        return Str::swap($swapLists, $value);
     }
 }
