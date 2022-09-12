@@ -27,7 +27,7 @@
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
     import FormBuilder from './FormBuilder';
     import Setting from './Setting';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, getPhoneCountries } from '@/Libs/utils';
 
     export default {
         name: 'Form',
@@ -41,6 +41,12 @@
 
         inject: {
             isEditMode: { default: false },
+        },
+
+        provide() {
+            return {
+                countryOptions: () => this.countryOptions
+            };
         },
 
         props: {
@@ -62,7 +68,12 @@
         data() {
             return {
                 activeTab: 0,
+                countryOptions: [],
             };
+        },
+
+        mounted: async function() {
+            this.countryOptions = await getPhoneCountries();
         },
     }
 </script>
