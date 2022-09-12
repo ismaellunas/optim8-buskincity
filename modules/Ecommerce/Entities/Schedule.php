@@ -36,4 +36,9 @@ class Schedule extends Model
     {
         return $this->morphTo();
     }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
 }
