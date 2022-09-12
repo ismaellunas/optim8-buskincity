@@ -26,7 +26,7 @@
     import BizButton from '@/Biz/Button';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import FieldGroup from '@/Form/FieldGroup';
-    import { isEmpty, forOwn, forEach } from 'lodash';
+    import { isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { reactive } from 'vue';
 
@@ -132,18 +132,6 @@
                 return reactive(form);
             },
 
-            resetFields() {
-                forEach(this.$refs, (fieldGroup, fieldGroupKey) => {
-                    forEach(fieldGroup.$refs, (field, fieldKey) => {
-                        if (field.reset) {
-                            field.reset();
-                        }
-                    });
-                });
-
-                this.formErrors = {};
-            },
-
             submit() {
                 const self = this;
 
@@ -158,7 +146,7 @@
                         self.flash.message = response.data.message;
 
                         self.getSchema();
-                        self.resetFields();
+                        self.formErrors = {};
                     })
                     .catch((error) => {
                         oopsAlert();
