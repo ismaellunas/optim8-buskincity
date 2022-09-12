@@ -38,4 +38,9 @@ class FormBuilderFrontendRequest extends FormValueRequest
 
         return $this->formLocation;
     }
+
+    protected function prepareForValidation()
+    {
+        unset($this['g-recaptcha-response']);
+    }
 }
