@@ -52,5 +52,6 @@ Route::name('form-builders.')->prefix('form-builders')->group(function () {
         ->name('schema');
 
     Route::post('save', [FormBuilderController::class, 'submit'])
+        ->middleware(['recaptcha'])
         ->name('save');
 });
