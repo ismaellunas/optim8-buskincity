@@ -1,5 +1,5 @@
 <template>
-    <div class='box'>
+    <div class="box">
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">

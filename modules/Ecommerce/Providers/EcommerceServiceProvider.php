@@ -8,7 +8,7 @@ use GetCandy\Base\OrderReferenceGenerator;
 use GetCandy\Base\OrderReferenceGeneratorInterface;
 use GetCandy\Models\OrderLine;
 use Illuminate\Support\ServiceProvider;
-use Modules\Ecommerce\Entities\ScheduleBooking;
+use Modules\Ecommerce\Entities\Event;
 use Modules\Ecommerce\Services\ProductService;
 use Modules\Space\Entities\Space;
 
@@ -40,17 +40,13 @@ class EcommerceServiceProvider extends ServiceProvider
             return $userModel->belongsToMany(Space::class, 'space_product_managers');
         });
 
-        OrderLine::resolveRelationUsing('scheduleBooking', function ($orderLine) {
-            return $orderLine->hasOne(ScheduleBooking::class);
-        });
-
         OrderLine::resolveRelationUsing('events', function ($orderLine) {
-            return $orderLine->hasMany(ScheduleBooking::class);
+            return $orderLine->hasMany(Event::class);
         });
 
         OrderLine::resolveRelationUsing('latestEvent', function ($orderLine) {
             return $orderLine
-                ->hasOne(ScheduleBooking::class)
+                ->hasOne(Event::class)
                 ->latest();
         });
     }

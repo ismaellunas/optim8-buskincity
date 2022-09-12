@@ -1,21 +1,22 @@
 import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
 
 export default {
-    type: "Number",
-    title: "Number",
+    type: "Phone",
+    title: "Phone",
     column: 'is-full',
-    label: "Number",
-    name: "number",
+    label: "Phone",
+    name: "phone",
     placeholder: null,
     note: null,
-    default_value: null,
+    default_value: {
+        country: null,
+        number: null
+    },
     readonly: false,
     disabled: false,
     validation: {
         rules: {
             required: false,
-            min: null,
-            max: null,
         },
         message: []
     },
@@ -56,30 +57,13 @@ export const config = {
             },
         }
     },
-    data: {
-        label: "Data",
-        config: {
-            default_value: {
-                component: "ConfigInput",
-                label: "Default Value",
-            }
-        },
-    },
     validation: {
         label: "Validation",
         config: {
             required: {
                 component: "ConfigCheckbox",
                 label: "Is Required?",
-            },
-            min: {
-                component: "ConfigNumber",
-                label: "Minimal Value",
-            },
-            max: {
-                component: "ConfigNumber",
-                label: "Maximal Value",
-            },
+            }
         },
 
     },
