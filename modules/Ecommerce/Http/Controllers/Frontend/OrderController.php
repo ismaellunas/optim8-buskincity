@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Events\EventBooked;
+use Modules\Ecommerce\Events\EventCanceled;
 use Modules\Ecommerce\Events\EventRescheduled;
 use Modules\Ecommerce\Http\Requests\EventBookRequest;
 use Modules\Ecommerce\Http\Requests\OrderRescheduleRequest;
@@ -68,6 +69,17 @@ class OrderController extends CrudController
 
     public function cancel(Order $order)
     {
+        $this->authorize('cancel', $order);
+
+        $this->orderService->cancelOrder($order);
+
+        $this->orderService->cancelEvent($order->firstEventLine->latestEvent);
+
+        EventCanceled::dispatch($order);
+
+        $this->generateFlashMessage('The Event has been canceled!');
+
+        return back();
     }
 
     public function reschedule(Order $order)

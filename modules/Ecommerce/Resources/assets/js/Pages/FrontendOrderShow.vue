@@ -64,6 +64,7 @@
                                 class="is-fullwidth"
                                 type="button"
                                 :icon="icon.remove"
+                                @click="cancel"
                             >
                                 <span>Cancel</span>
                             </biz-button-icon>
@@ -83,8 +84,10 @@
     import BizTable from '@/Biz/Table';
     import BizTag from '@/Biz/Tag';
     import Layout from '@/Layouts/User';
-    import icon from '@/Libs/icon-class';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import ecommerceIcon from '../Libs/ecommerce-icon';
+    import icon from '@/Libs/icon-class';
+    import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
 
     export default {
         components: {
@@ -95,6 +98,10 @@
             BizTable,
             BizTag,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         layout: Layout,
 
@@ -112,6 +119,30 @@
         },
 
         methods: {
+            cancel() {
+                const self = this;
+
+                confirmDelete('Are you sure want to cancel this Booking?')
+                    .then(result => {
+                        if (result.isConfirmed) {
+                            self.$inertia.post(
+                                route(self.baseRouteName + '.cancel', self.order.id),
+                                {},
+                                {
+                                    onStart: () => self.onStartLoadingOverlay(),
+                                    onFinish: () => self.onEndLoadingOverlay(),
+                                    onError: (errors) => {
+                                        oopsAlert();
+                                    },
+                                    onSuccess: (page) => {
+                                        successAlert(page.props.flash.message);
+                                    },
+                                }
+                            );
+                        }
+                    });
+
+            },
         },
     };
 </script>
