@@ -1,13 +1,15 @@
 import email from './email';
+import number from './number';
+import phone from './phone';
 import select from './select';
 import text from './text';
 import textarea from './textarea';
-import number from './number';
 
 export default {
     email: email,
+    number: number,
+    phone: phone,
     select: select,
     text: text,
     textarea: textarea,
-    number: number,
 }
