@@ -9,10 +9,12 @@ use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Events\EventBooked;
+use Modules\Ecommerce\Events\EventRescheduled;
 use Modules\Ecommerce\Http\Requests\EventBookRequest;
 use Modules\Ecommerce\Http\Requests\OrderRescheduleRequest;
 use Modules\Ecommerce\Services\EventService;
 use Modules\Ecommerce\Services\OrderService;
+use Modules\Ecommerce\Services\ProductEventService;
 
 class OrderController extends CrudController
 {
@@ -21,13 +23,21 @@ class OrderController extends CrudController
 
     private $eventService;
     private $orderService;
+    private $productEventService;
 
     public function __construct(
         EventService $eventService,
-        OrderService $orderService
+        OrderService $orderService,
+        ProductEventService $productEventService
     ) {
         $this->eventService = $eventService;
         $this->orderService = $orderService;
+        $this->productEventService = $productEventService;
+    }
+
+    private function availableTimesRouteName(): string
+    {
+        return "ecommerce.products.available-times";
     }
 
     public function index()
@@ -62,10 +72,38 @@ class OrderController extends CrudController
 
     public function reschedule(Order $order)
     {
+        $eventLine = $order->firstEventLine;
+        $product = $eventLine->purchasable->product;
+        $schedule = $product->eventSchedule;
+
+        $minDate = $this->productEventService->minBookableDate();
+        $maxDate = $this->productEventService->maxBookableDate($product);
+
+        $disabledDates = $this->eventService->disabledDates($schedule, $minDate, $maxDate);
+
+        return Inertia::render('Ecommerce::FrontendOrderReschedule', $this->getData([
+            'title' => 'Reschedule Event',
+            'order' => $this->orderService->getFrontendRecord($order),
+            'minDate' => $minDate->toDateString(),
+            'maxDate' => $maxDate->toDateString(),
+            'disabledDates' => $disabledDates,
+            'timezone' => $eventLine->latestEvent->schedule->timezone,
+            'availableTimesRouteName' => $this->availableTimesRouteName(),
+        ]));
     }
 
     public function rescheduleUpdate(OrderRescheduleRequest $request, Order $order)
     {
+        $this->orderService->rescheduleEvent(
+            $order->firstEventLine->latestEvent,
+            Carbon::parse($request->get('date'). ' '.$request->get('time'))
+        );
+
+        EventRescheduled::dispatch($order);
+
+        $this->generateFlashMessage('The Event has been rescheduled!');
+
+        return redirect()->route($this->baseRouteName.'.show', [$order->id]);
     }
 
     public function bookEvent(EventBookRequest $request, Product $product)
