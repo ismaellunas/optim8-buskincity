@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Ecommerce\Http\Controllers\Frontend\OrderController as FrontendOrderController;
+use Modules\Ecommerce\Http\Controllers\Frontend\ProductController as FrontendProductController;
 use Modules\Ecommerce\Http\Controllers\OrderController;
 use Modules\Ecommerce\Http\Controllers\ProductEventController;
 
@@ -65,4 +67,10 @@ Route::
 
         Route::resource('/orders', Frontend\OrderController::class)
             ->only(['index', 'show']);
+
+        Route::get('/products/{product}/available-times/{date}', [FrontendProductController::class, 'availableTimes'])
+            ->name('products.available-times');
+
+        Route::post('/orders/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
+            ->name('orders.book-event');
     });
