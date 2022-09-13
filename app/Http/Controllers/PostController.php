@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Services\PostService;
+use App\Traits\HasModule;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PostController extends CrudController
 {
+    use HasModule;
+
     protected $postService;
     protected $baseRouteName = 'admin.posts';
     protected $title = 'Post';
@@ -60,26 +63,31 @@ class PostController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Post/Create', $this->getData([
-            'can' => [
-                'media' => [
-                    'browse' => $user->can('media.browse'),
-                    'read' => $user->can('media.edit'),
-                    'edit' => $user->can('media.edit'),
-                    'add' => $user->can('media.add'),
-                    'delete' => $user->can('media.delete'),
+        return Inertia::render('Post/Create', $this->getData(
+            array_merge_recursive(
+                [
+                    'can' => [
+                        'media' => [
+                            'browse' => $user->can('media.browse'),
+                            'read' => $user->can('media.edit'),
+                            'edit' => $user->can('media.edit'),
+                            'add' => $user->can('media.add'),
+                            'delete' => $user->can('media.delete'),
+                        ],
+                    ],
+                    'categoryOptions' => $this->postService->getCategoryOptions(),
+                    'languageOptions' => $this->postService->getLanguageOptions(),
+                    'post' => new Post(),
+                    'statusOptions' => Post::getStatusOptions(),
+                    'maxLength' => [
+                        'meta_title' => config('constants.max_length.meta_title'),
+                        'meta_description' => config('constants.max_length.meta_description'),
+                    ],
+                    'title' => $this->getCreateTitle(),
                 ],
-            ],
-            'categoryOptions' => $this->postService->getCategoryOptions(),
-            'languageOptions' => $this->postService->getLanguageOptions(),
-            'post' => new Post(),
-            'statusOptions' => Post::getStatusOptions(),
-            'maxLength' => [
-                'meta_title' => config('constants.max_length.meta_title'),
-                'meta_description' => config('constants.max_length.meta_description'),
-            ],
-            'title' => $this->getCreateTitle(),
-        ]));
+                $this->getDataModules()
+            )
+        ));
     }
 
     /**
@@ -124,27 +132,32 @@ class PostController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Post/Edit', $this->getData([
-            'can' => [
-                'media' => [
-                    'browse' => $user->can('media.browse'),
-                    'read' => $user->can('media.edit'),
-                    'edit' => $user->can('media.edit'),
-                    'add' => $user->can('media.add'),
-                    'delete' => $user->can('media.delete'),
+        return Inertia::render('Post/Edit', $this->getData(
+            array_merge_recursive(
+                [
+                    'can' => [
+                        'media' => [
+                            'browse' => $user->can('media.browse'),
+                            'read' => $user->can('media.edit'),
+                            'edit' => $user->can('media.edit'),
+                            'add' => $user->can('media.add'),
+                            'delete' => $user->can('media.delete'),
+                        ],
+                    ],
+                    'categoryOptions' => $this->postService->getCategoryOptions(),
+                    'coverImage' => $post->coverImage,
+                    'languageOptions' => $this->postService->getLanguageOptions($post),
+                    'post' => $post->load('categories'),
+                    'statusOptions' => Post::getStatusOptions(),
+                    'maxLength' => [
+                        'meta_title' => config('constants.max_length.meta_title'),
+                        'meta_description' => config('constants.max_length.meta_description'),
+                    ],
+                    'title' => $this->getEditTitle(),
                 ],
-            ],
-            'categoryOptions' => $this->postService->getCategoryOptions(),
-            'coverImage' => $post->coverImage,
-            'languageOptions' => $this->postService->getLanguageOptions($post),
-            'post' => $post->load('categories'),
-            'statusOptions' => Post::getStatusOptions(),
-            'maxLength' => [
-                'meta_title' => config('constants.max_length.meta_title'),
-                'meta_description' => config('constants.max_length.meta_description'),
-            ],
-            'title' => $this->getEditTitle(),
-        ]));
+                $this->getDataModules()
+            )
+        ));
     }
 
     /**
