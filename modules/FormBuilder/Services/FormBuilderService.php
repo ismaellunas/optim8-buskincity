@@ -51,6 +51,7 @@ class FormBuilderService
             ->whereHas('metas', function ($query) use ($term) {
                 $query->where('value', 'ILIKE', '%'.$term.'%');
             })
+            ->orderBy('id', 'DESC')
             ->get();
 
         foreach ($entries as $entry) {
@@ -155,10 +156,9 @@ class FormBuilderService
 
     public function transformInputs(&$inputs): void
     {
-        $formId = $inputs['form_id'] ?? null;
-        $fieldGroup = FieldGroup::where('title', $formId)->first();
+        $fieldGroupId = FieldGroup::where('title', $inputs['form_id'])->value('id');
 
-        if (!$fieldGroup) {
+        if (!$fieldGroupId) {
             $this->formBuilderService->abortAction();
         }
 
@@ -166,7 +166,7 @@ class FormBuilderService
             $inputs['user_id'] = Auth::user()->id;
         }
 
-        $inputs['field_group_id'] = $fieldGroup->id;
+        $inputs['field_group_id'] = $fieldGroupId;
         unset($inputs['form_id']);
     }
 }

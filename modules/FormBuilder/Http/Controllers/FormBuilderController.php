@@ -128,7 +128,8 @@ class FormBuilderController extends CrudController
 
     public function submit(FormBuilderFrontendRequest $request)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
+
         $this->formBuilderService->transformInputs($inputs);
 
         $fieldGroupEntry = new FieldGroupEntry();
