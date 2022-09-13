@@ -129,10 +129,12 @@
                         <biz-form-text-editor-full
                             v-model="form.content"
                             label="Content"
+                            :config="editorConfig"
                             :disabled="isInputDisabled"
                             :is-download-enabled="can.media.read"
                             :is-media-enabled="can.media.browse"
                             :is-upload-enabled="can.media.add"
+                            :is-config-combine="true"
                             :message="error('content')"
                         />
                     </div>
@@ -296,14 +298,47 @@
             isProcessing: Boolean,
             localeOptions: { type: Array, default: () => [] },
             modelValue: { type: Object, required: true },
+            modules: { type: Object, default: () => {} },
             statusOptions: { type: Array, default: () => [] },
         },
 
         emits: ['on-submit'],
 
         setup(props, { emit }) {
+            const editorConfig = {
+                toolbar2: (
+                    'alignleft aligncenter alignright alignjustify | ' +
+                    'bullist numlist outdent indent hr | ' +
+                    'anchor link table charmap code | formLists'
+                ),
+                setup: (editor) => {
+                    if (props.modules?.form_builder) {
+                        editor.ui.registry.addMenuButton('formLists', {
+                            text: 'Form Lists',
+                            fetch: (callback) => {
+                                let items = [];
+                                let formOptions = props.modules?.form_builder?.formOptions;
+
+                                formOptions.forEach(function (option) {
+                                    items.push({
+                                        type: 'menuitem',
+                                        text: option.name,
+                                        onAction: () => editor.insertContent(
+                                            '[form-builder form-id="'+ option.value + '"]'
+                                        ),
+                                    })
+                                });
+
+                                callback(items);
+                            }
+                        });
+                    }
+                }
+            };
+
             return {
                 coverSrc: ref(props.coverImage?.file_url ?? null),
+                editorConfig,
                 form: useModelWrapper(props, emit),
                 tabs: {
                     content: { title: "Content"},
