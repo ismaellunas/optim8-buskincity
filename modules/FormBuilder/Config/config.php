@@ -13,5 +13,5 @@ return [
     ],
 
     // Email
-    'default_from_email' => 'noreply@biz752.com',
+    'default_from_email' => 'noreply@'.config('constants.domain'),
 ];
