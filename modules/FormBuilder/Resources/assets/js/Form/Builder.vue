@@ -102,8 +102,15 @@
         },
 
         methods: {
+            recaptchaExecute() {
+                setTimeout(() => {
+                    this.$refs.vueRecaptcha.execute();
+                }, 500);
+            },
+
             recaptchaExpired() {
                 this.$refs.vueRecaptcha.reset();
+                this.recaptchaExecute();
             },
 
             recaptchaFailed() {
@@ -132,9 +139,7 @@
 
                     self.isShown = true;
 
-                    setTimeout(() => {
-                        self.$refs.vueRecaptcha.execute();
-                    }, 500);
+                    self.recaptchaExecute();
 
                     if (isEmpty(this.fieldGroup)) {
                         self.isShown = false;
@@ -210,6 +215,8 @@
                     })
                     .then(() => {
                         self.onEndLoadingOverlay();
+
+                        self.recaptchaExpired();
                     })
             },
         },
