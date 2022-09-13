@@ -10,7 +10,7 @@ use Modules\FormBuilder\Entities\FieldGroupEntry;
 use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
 use Modules\FormBuilder\Services\FormBuilderService;
-use Modules\FormBuilder\Events\FormNotification;
+use Modules\FormBuilder\Events\FormSubmitted;
 
 class FormBuilderController extends CrudController
 {
@@ -129,14 +129,15 @@ class FormBuilderController extends CrudController
 
     public function submit(FormBuilderFrontendRequest $request)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
+
         $this->formBuilderService->transformInputs($inputs);
 
         $fieldGroupEntry = new FieldGroupEntry();
 
         $fieldGroupEntry->saveFromInputs($inputs);
 
-        FormNotification::dispatch($fieldGroupEntry);
+        FormSubmitted::dispatch($fieldGroupEntry);
 
         return [
             'success' => true,

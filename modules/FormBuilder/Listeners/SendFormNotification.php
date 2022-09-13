@@ -4,8 +4,8 @@ namespace Modules\FormBuilder\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
-use Modules\FormBuilder\Emails\FormNotification as FormNotificationEmail;
-use Modules\FormBuilder\Events\FormNotification;
+use Modules\FormBuilder\Emails\FormNotification;
+use Modules\FormBuilder\Events\FormSubmitted;
 
 class SendFormNotification implements ShouldQueue
 {
@@ -22,10 +22,10 @@ class SendFormNotification implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param FormNotification $event
+     * @param FormSubmitted $event
      * @return void
      */
-    public function handle(FormNotification $event)
+    public function handle(FormSubmitted $event)
     {
         $entry = $event->fieldGroupEntry;
         $notificationSettings = $entry->fieldGroup->activeNotificationSettings;
@@ -37,7 +37,7 @@ class SendFormNotification implements ShouldQueue
             foreach ($recipients as $recipient) {
                 Mail::to($recipient)
                     ->bcc($bcc)
-                    ->queue(new FormNotificationEmail($entry, $notificationSetting));
+                    ->queue(new FormNotification($entry, $notificationSetting));
             }
         }
 

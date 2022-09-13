@@ -3,7 +3,7 @@
 namespace Modules\FormBuilder\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Modules\FormBuilder\Events\FormNotification;
+use Modules\FormBuilder\Events\FormSubmitted;
 use Modules\FormBuilder\Listeners\SendFormNotification;
 
 class EventServiceProvider extends ServiceProvider
@@ -14,7 +14,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        FormNotification::class => [
+        FormSubmitted::class => [
             SendFormNotification::class,
         ],
     ];

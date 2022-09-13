@@ -6,7 +6,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Modules\FormBuilder\Entities\FieldGroupEntry;
 
-class FormNotification
+class FormSubmitted
 {
     use Dispatchable, SerializesModels;
 
