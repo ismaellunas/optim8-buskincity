@@ -81,9 +81,7 @@
 
         computed: {
             schemaName() {
-                let schemaName = this.schema.name;
-
-                return schemaName;
+                return this.schema.name;
             },
 
             hasLeftIcon() {

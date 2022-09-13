@@ -14,7 +14,7 @@
             :key="index"
         >
             <option
-                v-if="typeof option === 'object' && option !== null"
+                v-if="typeof option === 'object'"
                 :value="option.id"
             >
                 {{ option.value }}
