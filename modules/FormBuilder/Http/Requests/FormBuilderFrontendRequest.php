@@ -13,6 +13,18 @@ class FormBuilderFrontendRequest extends FormValueRequest
         return true;
     }
 
+    public function rules()
+    {
+        $rules = parent::rules();
+
+        $rules['form_id'] = [
+            'required',
+            'exists:Modules\FormBuilder\Entities\FieldGroup,title'
+        ];
+
+        return $rules;
+    }
+
     protected function getForms(): Collection
     {
         $formBuilderService = app(FormBuilderService::class);

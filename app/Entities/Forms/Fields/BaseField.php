@@ -165,7 +165,7 @@ abstract class BaseField
 
     private function transformToFlatten(&$rules)
     {
-        $rules = collect($rules)->map(function ($rule) {
+        $rules = collect($rules)->transform(function ($rule) {
             $newRules = [];
 
             foreach ($rule as $validationName => $validationValue) {
