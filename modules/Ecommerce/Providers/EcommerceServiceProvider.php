@@ -7,6 +7,7 @@ use App\Services\MediaService;
 use GetCandy\Base\OrderReferenceGenerator;
 use GetCandy\Base\OrderReferenceGeneratorInterface;
 use GetCandy\Models\OrderLine;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 use Modules\Ecommerce\Entities\Event;
 use Modules\Ecommerce\Services\ProductService;
@@ -35,6 +36,13 @@ class EcommerceServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            $schedule->command('booking-event:status-to-ongoing')->everyMinute()->runInBackground();
+            $schedule->command('booking-event:status-to-passed')->everyMinute()->runInBackground();
+        });
 
         User::resolveRelationUsing('managedSpaceProducts', function ($userModel) {
             return $userModel->belongsToMany(Space::class, 'space_product_managers');
@@ -67,6 +75,11 @@ class EcommerceServiceProvider extends ServiceProvider
         $this->app->singleton(OrderReferenceGeneratorInterface::class, function () {
             return new OrderReferenceGenerator();
         });
+
+        $this->commands([
+            \Modules\Ecommerce\Console\SetEventOngoing::class,
+            \Modules\Ecommerce\Console\SetEventPassed::class,
+        ]);
     }
 
     /**
