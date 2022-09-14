@@ -184,6 +184,7 @@ return [
         Spatie\TranslationLoader\TranslationServiceProvider::class,
         \Torann\GeoIP\GeoIPServiceProvider::class,
         Axlon\PostalCodeValidation\ValidationServiceProvider::class,
+        Webwizo\Shortcodes\ShortcodesServiceProvider::class,
 
     ],
 
@@ -241,6 +242,7 @@ return [
         'Cloudinary' => CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::class,
         'GeoIP' => \Torann\GeoIP\Facades\GeoIP::class,
         'OEmbed' => Cohensive\OEmbed\Facades\OEmbed::class,
+        'Shortcode' => Webwizo\Shortcodes\Facades\Shortcode::class,
     ],
 
 ];
