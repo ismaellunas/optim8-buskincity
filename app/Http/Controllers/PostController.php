@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Services\PostService;
-use App\Traits\HasModule;
+use App\Traits\HasModuleViewData;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PostController extends CrudController
 {
-    use HasModule;
+    use HasModuleViewData;
 
     protected $postService;
     protected $baseRouteName = 'admin.posts';
@@ -85,7 +85,7 @@ class PostController extends CrudController
                     ],
                     'title' => $this->getCreateTitle(),
                 ],
-                $this->getDataModules()
+                $this->getModulesViewData()
             )
         ));
     }
@@ -155,7 +155,7 @@ class PostController extends CrudController
                     ],
                     'title' => $this->getEditTitle(),
                 ],
-                $this->getDataModules()
+                $this->getModulesViewData()
             )
         ));
     }

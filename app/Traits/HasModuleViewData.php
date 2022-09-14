@@ -5,9 +5,9 @@ namespace App\Traits;
 use App\Services\ModuleService;
 use Illuminate\Support\Str;
 
-trait HasModule
+trait HasModuleViewData
 {
-    protected function getDataModules($method = 'Admin'): array
+    protected function getModulesViewData($method = 'Admin'): array
     {
         $modules = app(ModuleService::class)->getAllEnabledNames();
 
