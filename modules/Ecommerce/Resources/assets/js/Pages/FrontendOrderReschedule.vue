@@ -187,8 +187,8 @@
                 );
 
                 const endTime = moment(startTime).add(
-                    this.order.event_duration_details.unit,
                     this.order.event_duration_details.duration,
+                    this.order.event_duration_details.unit
                 );
 
                 return (
