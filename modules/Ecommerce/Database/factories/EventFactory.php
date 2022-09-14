@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Modules\Ecommerce\Entities\Schedule;
 use Modules\Ecommerce\Enums\BookingStatus;
 
-class ScheduleBookingFactory extends Factory
+class EventFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = \Modules\Ecommerce\Entities\ScheduleBooking::class;
+    protected $model = \Modules\Ecommerce\Entities\Event::class;
 
     /**
      * Define the model's default state.

@@ -21,6 +21,7 @@ abstract class BaseField
     public $storedValue;
     public $entity;
     public $note;
+    public $column;
 
     public function __construct(string $name, array $data = [])
     {
@@ -48,13 +49,18 @@ abstract class BaseField
             $this->note = $data['note'];
         }
 
+        if (array_key_exists('column', $data)) {
+            $this->column = $data['column'];
+        }
+
         $this->value = $data['value'] ?? $this->defaultValue;
     }
 
     protected function isRequired(): bool
     {
         if (!empty($this->validation['rules'])) {
-            return in_array('required', $this->validation['rules']);
+            return array_key_exists('required', $this->validation['rules'])
+                && $this->validation['rules']['required'];
         }
 
         return false;
@@ -85,6 +91,7 @@ abstract class BaseField
             'instructions' => $this->getInstructions(),
             'value' => $this->getSchemaValue(),
             'note' => $this->note,
+            'column' => $this->column,
         ];
     }
 
@@ -94,6 +101,7 @@ abstract class BaseField
 
         $rules[$this->name] = $this->validation['rules'] ?? [];
 
+        $this->transformToFlatten($rules);
         $this->adjustNullableRule($rules);
 
         return $rules;
@@ -154,5 +162,28 @@ abstract class BaseField
         }
 
         return null;
+    }
+
+    protected function transformToFlatten(&$rules)
+    {
+        $rules = collect($rules)->transform(function ($rule) {
+            $newRules = [];
+
+            foreach ($rule as $validationName => $validationValue) {
+                if (is_object($validationValue)) {
+                    $newRules[] = $validationValue;
+                } else if (is_bool($validationValue)) {
+                    if ($validationValue) {
+                        $newRules[] = $validationName;
+                    }
+                } else {
+                    if ($validationValue) {
+                        $newRules[] = $validationName.':'.$validationValue;
+                    }
+                }
+            }
+
+            return $newRules;
+        })->all();
     }
 }

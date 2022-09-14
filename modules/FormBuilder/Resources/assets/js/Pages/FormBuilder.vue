@@ -121,11 +121,12 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormKey from '@/Biz/Form/Key';
-    import FieldStructures from './../FieldStructures';
     import Draggable from "vuedraggable";
     import Email from './../Fields/Inputs/Email';
+    import FieldStructures from './../FieldStructures';
     import InputConfig from './../Fields/InputConfig';
     import Number from './../Fields/Inputs/Number';
+    import Phone from './../Fields/Inputs/Phone';
     import Select from './../Fields/Inputs/Select';
     import Text from './../Fields/Inputs/Text';
     import Textarea from './../Fields/Inputs/Textarea';
@@ -150,6 +151,7 @@
             Email,
             InputConfig,
             Number,
+            Phone,
             Select,
             Text,
             Textarea,

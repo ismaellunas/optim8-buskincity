@@ -150,7 +150,7 @@ class ProductService
             'id' => $product->id,
             'name' => $product->translateAttribute('name', $locale),
             'description' => $product->translateAttribute('description', $locale),
-            'short_description' => $product->translateAttribute('description', $locale),
+            'short_description' => $product->translateAttribute('short_description', $locale),
             'status' => $product->status,
             'roles' => $product->roles[0] ?? null,
             'gallery' => $product->gallery->map(fn ($media) => [
@@ -159,5 +159,25 @@ class ProductService
                 'file_url' => $media->file_url,
             ]),
         ];
+    }
+
+    public function productDetailResource(Product $product): array
+    {
+        $locale = config('app.locale');
+
+        $resource = [
+            'id' => $product->id,
+            'sku' => $product->variants->first()->sku,
+            'name' => $product->translateAttribute('name', $locale),
+            'description' => $product->translateAttribute('description', $locale),
+            'short_description' => $product->translateAttribute('short_description', $locale),
+            'gallery' => $product->gallery->map(fn ($media) => [
+                'id' => $media->id,
+                'display_file_name' => $media->displayFileName,
+                'file_url' => $media->file_url,
+            ]),
+        ];
+
+        return $resource;
     }
 }

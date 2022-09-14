@@ -2,6 +2,7 @@
 
 namespace Modules\Ecommerce\Database\Seeders;
 
+use App\Models\Role;
 use Faker\Factory as Faker;
 use GetCandy\FieldTypes\Text;
 use GetCandy\FieldTypes\TranslatedText;
@@ -36,7 +37,7 @@ class ProductSeeder extends Seeder
                         'en' => new Text($faker->sentence(3)),
                     ])),
                     'description' => new TranslatedText(collect([
-                        'en' => new Text($faker->text()),
+                        'en' => new Text($faker->realText()),
                     ])),
                     'short_description' => new TranslatedText(collect([
                         'en' => new Text($faker->text()),
@@ -54,8 +55,11 @@ class ProductSeeder extends Seeder
                 'sku' => 'EVENT-'.$product->id,
             ]);
 
+
+            $performerRole = Role::findByName('Performer');
+
             $meta = [
-                'roles' => empty($inputs['roles']) ? [] : [$inputs['roles']],
+                'roles' => [$performerRole->id],
                 'duration' => 30,
                 'duration_unit' => 'minute',
                 'bookable_date_range_type' => 'calendar_days_into_the_future',
