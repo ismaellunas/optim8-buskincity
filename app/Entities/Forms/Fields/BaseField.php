@@ -21,6 +21,7 @@ abstract class BaseField
     public $storedValue;
     public $entity;
     public $note;
+    public $column;
 
     public function __construct(string $name, array $data = [])
     {
@@ -46,6 +47,10 @@ abstract class BaseField
 
         if (array_key_exists('note', $data)) {
             $this->note = $data['note'];
+        }
+
+        if (array_key_exists('column', $data)) {
+            $this->column = $data['column'];
         }
 
         $this->value = $data['value'] ?? $this->defaultValue;
@@ -85,6 +90,7 @@ abstract class BaseField
             'instructions' => $this->getInstructions(),
             'value' => $this->getSchemaValue(),
             'note' => $this->note,
+            'column' => $this->column,
         ];
     }
 

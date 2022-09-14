@@ -11,7 +11,7 @@ const path = require('path');
  | file for the application as well as bundling up all the JS files.
  |
  */
- 
+
 let theme = process.env.npm_config_theme;
 
 mix.setPublicPath("public/themes/"+theme)
@@ -20,6 +20,7 @@ mix.setPublicPath("public/themes/"+theme)
     .sass(`${__dirname}/sass/app.sass`, "css")
     .alias({
         '@': path.join(__dirname, '../../resources/js'),
+        '@mod': path.join(__dirname, '../../modules'),
         '@sass': path.join(__dirname, '../../resources/sass')
     });
 

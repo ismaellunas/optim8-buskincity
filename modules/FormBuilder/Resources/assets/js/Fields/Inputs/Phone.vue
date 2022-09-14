@@ -5,6 +5,7 @@
             @duplicate-content="duplicateContent"
         />
         <biz-form-phone
+            v-if="hasCountryOption"
             v-model="value"
             :label="entity.label"
             :required="entity.validation.rules.required"
@@ -32,7 +33,7 @@
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import BizFormPhone from '@/Biz/Form/Phone';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, isEmpty } from '@/Libs/utils';
 
     export default {
         name: 'Phone',
@@ -74,6 +75,10 @@
         computed: {
             computedCountryOptions() {
                 return this.countryOptions();
+            },
+
+            hasCountryOption() {
+                return !isEmpty(this.computedCountryOptions);
             },
         },
     };

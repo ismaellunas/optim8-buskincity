@@ -4,9 +4,13 @@ namespace Modules\FormBuilder\Services;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Modules\FormBuilder\Entities\FieldGroup;
+use Symfony\Component\HttpFoundation\Response;
 
 class FormBuilderService
 {
+    private $formBasePath = 'App\\Entities\\Forms';
+    private $formLocationBasePath = "Modules\\FormBuilder\\Forms\\Locations";
+
     public function getRecords(
         string $term = null,
         int $perPage = 15
@@ -80,16 +84,79 @@ class FormBuilderService
     public function getFormOptions(): array
     {
         return FieldGroup::select([
-                'id',
+                'title',
                 'name'
             ])
+            ->orderBy('name')
             ->get()
             ->map(function ($field) {
                 return [
-                    'value' => $field->id,
+                    'value' => $field->title,
                     'name' => $field->name
                 ];
             })
             ->all();
+    }
+
+    public function getSchemas(
+        string $formId,
+    ) {
+        $formLocation = $this->getFormLocation();
+
+        $forms = $this->getForms($formId);
+
+        $schemas = collect();
+
+        if (!$formLocation->canBeAccessedBy()) {
+            $this->abortAction();
+        }
+
+        foreach ($forms as $form) {
+            if ($form->canBeAccessed()) {
+                $schema = $form->schema();
+
+                $schemas->push($schema);
+            }
+        }
+
+        return $schemas;
+    }
+
+    private function getFormLocation()
+    {
+        $className = $this->formLocationBasePath.'\\'.'GuestLocation';
+
+        return new $className();
+    }
+
+    private function getFormClassName(?string $type = null): string
+    {
+        return $this->formBasePath."\\".$type.'Form';
+    }
+
+    private function getForms(string $formId)
+    {
+        $forms = collect();
+
+        $model = FieldGroup::where('title', $formId)->first();
+
+        if ($model) {
+            $className = $this->getFormClassName();
+
+            $form = new $className($model->id, $model->data);
+
+            if ($form->canBeAccessedByLocation()) {
+                $form->model = $model;
+
+                $forms->put($form->name, $form);
+            }
+        }
+
+        return $forms;
+    }
+
+    private function abortAction(): void
+    {
+        abort(Response::HTTP_FORBIDDEN);
     }
 }

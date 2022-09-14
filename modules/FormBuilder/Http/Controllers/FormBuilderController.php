@@ -118,4 +118,9 @@ class FormBuilderController extends CrudController
             ),
         ]));
     }
+
+    public function getSchemas(Request $request)
+    {
+        return $this->formBuilderService->getSchemas($request->form_id);
+    }
 }
