@@ -8,7 +8,7 @@
                     v-model="editorValue"
                     :disabled="disabled"
                     :placeholder="placeholder"
-                    :config="config ?? editorConfig"
+                    :config="editorConfig"
                 />
             </div>
 
@@ -42,7 +42,7 @@
     import BizLabel from '@/Biz/Label';
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizTextEditor from '@/Biz/EditorTinymce';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper, isEmpty } from '@/Libs/utils';
 
     export default {
         name: 'BizFormTextEditorFull',
@@ -61,7 +61,7 @@
         ],
 
         props: {
-            config: Object,
+            config: {type: Object, default: () => {}},
             disabled: {type: Boolean, default: false},
             isDownloadEnabled: {type: Boolean, default: true},
             isMediaEnabled: {type: Boolean, default: true},
@@ -71,6 +71,7 @@
             modelValue: {},
             placeholder: String,
             height: {type: Number, default: 500},
+            isConfigCombined: {type: Boolean, default: false},
         },
 
         emits: ['update:modelValue'],
@@ -128,6 +129,14 @@
                     ),
                     media_live_embeds: true,
                 };
+
+                if (this.isConfigCombined) {
+                    return Object.assign(editorConfig, this.config)
+                }
+
+                if (!isEmpty(this.config)) {
+                    return this.config;
+                }
 
                 return editorConfig;
             },

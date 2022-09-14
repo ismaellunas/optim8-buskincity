@@ -7,7 +7,8 @@
     "providers": [
         "Modules\\FormBuilder\\Providers\\AuthServiceProvider",
         "Modules\\FormBuilder\\Providers\\EventServiceProvider",
-        "Modules\\FormBuilder\\Providers\\FormBuilderServiceProvider"
+        "Modules\\FormBuilder\\Providers\\FormBuilderServiceProvider",
+        "Modules\\FormBuilder\\Providers\\ShortcodesServiceProvider"
     ],
     "aliases": {},
     "files": [],

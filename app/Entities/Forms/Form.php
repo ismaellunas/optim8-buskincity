@@ -71,7 +71,7 @@ class Form
 
         foreach ($fields as $name => $field) {
             $className = $this->getFieldClassName($field['type']);
-            $fieldName = is_int($name) ? $field['name'] : $name;
+            $fieldName = $field['name'];
 
             if (class_exists($className)) {
                 $fieldObject = new $className($fieldName, $field);
@@ -185,7 +185,7 @@ class Form
 
         foreach ($this->data['fields'] as $name => $field) {
             $className = $this->getFieldClassName($field['type']);
-            $fieldName = is_int($name) ? $field['name'] : $name;
+            $fieldName = $field['name'];
 
             if (class_exists($className)) {
                 $fieldObject = new $className($fieldName, $field);
