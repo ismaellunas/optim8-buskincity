@@ -128,10 +128,6 @@ class FieldGroupFactory extends Factory
                         "disabled" => false,
                         "options" => [
                             [
-                                "id" => null,
-                                "value" => "- Select -"
-                            ],
-                            [
                                 "id" => "m",
                                 "value" => "Male"
                             ],

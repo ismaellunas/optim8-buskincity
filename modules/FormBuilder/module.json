@@ -6,6 +6,7 @@
     "priority": 0,
     "providers": [
         "Modules\\FormBuilder\\Providers\\AuthServiceProvider",
+        "Modules\\FormBuilder\\Providers\\EventServiceProvider",
         "Modules\\FormBuilder\\Providers\\FormBuilderServiceProvider"
     ],
     "aliases": {},

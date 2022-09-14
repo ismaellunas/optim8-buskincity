@@ -8,7 +8,10 @@ export default {
     name: "phone",
     placeholder: null,
     note: null,
-    default_value: null,
+    default_value: {
+        country: null,
+        number: null
+    },
     readonly: false,
     disabled: false,
     validation: {
@@ -53,15 +56,6 @@ export const config = {
                 }
             },
         }
-    },
-    data: {
-        label: "Data",
-        config: {
-            default_value: {
-                component: "ConfigInput",
-                label: "Default Value",
-            }
-        },
     },
     validation: {
         label: "Validation",

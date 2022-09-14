@@ -15,4 +15,18 @@ class FieldGroupEntry extends Model
     {
         return \Modules\FormBuilder\Database\factories\FieldGroupEntryFactory::new();
     }
+
+    public function saveFromInputs($inputs): void
+    {
+        foreach ($inputs as $key => $value) {
+            $this->$key = $value;
+        }
+
+        $this->save();
+    }
+
+    public function fieldGroup()
+    {
+        return $this->belongsTo(FieldGroup::class, 'field_group_id');
+    }
 }

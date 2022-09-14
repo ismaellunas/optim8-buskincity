@@ -16,8 +16,6 @@ export default {
             required: false,
             min: null,
             max: null,
-            min_digits: null,
-            max_digits: null,
         },
         message: []
     },
@@ -81,14 +79,6 @@ export const config = {
             max: {
                 component: "ConfigNumber",
                 label: "Maximal Value",
-            },
-            'min_digits': {
-                component: "ConfigNumber",
-                label: "Minimal Length of Value",
-            },
-            'max_digits': {
-                component: "ConfigNumber",
-                label: "Maximal Length of Value",
             },
         },
 
