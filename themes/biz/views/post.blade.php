@@ -14,7 +14,7 @@
         >
             <h1 class="title is-1 has-text-centered">{{ $post->title }}</h1>
             <div class="content">
-                {!! $post->content !!}
+                {!! Shortcode::compile($post->content) !!}
             </div>
         </div>
     </section>

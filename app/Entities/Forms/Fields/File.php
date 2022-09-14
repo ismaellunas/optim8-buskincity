@@ -185,12 +185,10 @@ class File extends BaseField
 
         $extensions = [];
 
-        $mimes = $rules->first(function($rule) {
-            return is_string($rule) && Str::startsWith($rule, 'mimes:');
-        });
+        $mimes = $rules['mimes'] ?? [];
 
         if ($mimes) {
-            $mimes = preg_replace('/\s+/', '', Str::after($mimes, 'mimes:'));
+            $mimes = preg_replace('/\s+/', '', $mimes);
             $extensions = explode(',', $mimes);
         }
 
@@ -228,6 +226,8 @@ class File extends BaseField
         );
 
         $rules[$this->name.'.files.*'] = $definedRules;
+
+        $this->transformToFlatten($rules);
 
         return $rules;
     }

@@ -12,6 +12,7 @@
                 :status-options="statusOptions"
                 :locale-options="localeOptions"
                 :category-options="categoryOptions"
+                :modules="modules"
                 @on-submit="onSubmit"
             />
         </div>
@@ -39,6 +40,7 @@
             post: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
             title: { type: String, required: true },
+            modules: { type: Object, default: () => {} },
         },
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;

@@ -185,8 +185,6 @@
     import NotificationTagOption from './NotificationTagOption';
     import icon from '@/Libs/icon-class';
     import { useModelWrapper } from '@/Libs/utils';
-    import { find, debounce, isEmpty, filter } from 'lodash';
-    import { debounceTime } from '@/Libs/defaults';
     import { emailConfig } from '@/Libs/tinymce-configs';
 
     export default {
