@@ -51,6 +51,7 @@
     import { VueRecaptcha } from 'vue-recaptcha';
     import { isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
+    import { recaptchaSiteKey } from '@/Libs/defaults';
     import { reactive } from 'vue';
 
     export default {
@@ -77,7 +78,6 @@
         props: {
             bagName: { type: String, default: null },
             formId: { type: [String, null], required: true },
-            recaptchaSiteKey: { type: String, required: true },
         },
 
         data() {
@@ -92,8 +92,9 @@
                 isShown: false,
                 isRecaptchaError: false,
                 recaptchaResponse: null,
+                recaptchaSiteKey,
                 urls: {
-                    getSchemas: '/form-builders/schema',
+                    getSchema: '/form-builders/schema',
                     save: '/form-builders/save',
                 },
             };
@@ -104,8 +105,15 @@
         },
 
         methods: {
+            recaptchaExecute() {
+                setTimeout(() => {
+                    this.$refs.vueRecaptcha.execute();
+                }, 500);
+            },
+
             recaptchaExpired() {
                 this.$refs.vueRecaptcha.reset();
+                this.recaptchaExecute();
             },
 
             recaptchaFailed() {
@@ -120,7 +128,7 @@
                 const self = this;
 
                 return axios.get(
-                    self.urls.getSchemas,
+                    self.urls.getSchema,
                     {
                         params: {
                             form_id: self.formId,
@@ -134,9 +142,7 @@
 
                     self.isShown = true;
 
-                    setTimeout(() => {
-                        self.$refs.vueRecaptcha.execute();
-                    }, 500);
+                    self.recaptchaExecute();
 
                     if (isEmpty(this.fieldGroup)) {
                         self.isShown = false;
@@ -212,6 +218,8 @@
                     })
                     .then(() => {
                         self.onEndLoadingOverlay();
+
+                        self.recaptchaExpired();
                     })
             },
         },

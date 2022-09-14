@@ -41,7 +41,8 @@
         "spatie/laravel-translation-loader": "^2.7",
         "stripe/stripe-php": "^7.113",
         "tightenco/ziggy": "^1.0",
-        "torann/geoip": "^3.0"
+        "torann/geoip": "^3.0",
+        "webwizo/laravel-shortcodes": "1.0.*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",

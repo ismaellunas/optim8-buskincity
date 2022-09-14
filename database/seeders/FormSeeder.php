@@ -46,34 +46,86 @@ class FormSeeder extends Seeder
                 ],
             ],
             "fields" => [
-                "discipline" => [
+                [
                     "type" => "Select",
+                    "name" => "discipline",
                     "label" => "Discipline",
                     "note" => null,
                     "readonly" => false,
                     "disabled" => false,
                     "options" => [
-                        "Acrobat" => "Acrobat",
-                        "BalanceAct" => "BalanceAct",
-                        "Clown" => "Clown",
-                        "Dance-Acrobatic" => "Dance-Acrobatic",
-                        "Dance/Break/Popping/Locking" => "Dance/Break/Popping/Locking",
-                        "Escapologist" => "Escapologist",
-                        "Juggler" => "Juggler",
-                        "Magician" => "Magician",
-                        "Multidisciplinary Circus/Variety" => "Multidisciplinary Circus/Variety",
-                        "Musician/Singer/Band" => "Musician/Singer/Band",
-                        "Music-Clown" => "Music-Clown",
-                        "Music-Acrobat" => "Music-Acrobat",
-                        "Performance" => "Performance",
-                        "Pupeteer" => "Pupeteer",
-                        "Stiltwalkers/Animation" => "Stiltwalkers/Animation",
-                        "Visual Comedy" => "Visual Comedy",
-                        "Other" => "Other",
+                        [
+                            "id" => "Acrobat",
+                            "value" => "Acrobat",
+                        ],
+                        [
+                            "id" => "BalanceAct",
+                            "value" => "BalanceAct",
+                        ],
+                        [
+                            "id" => "Clown",
+                            "value" => "Clown",
+                        ],
+                        [
+                            "id" => "Acrobatic",
+                            "value" => "Acrobatic",
+                        ],
+                        [
+                            "id" => "Dance/Break/Popping/Locking",
+                            "value" => "Dance/Break/Popping/Locking",
+                        ],
+                        [
+                            "id" => "Escapologist",
+                            "value" => "Escapologist",
+                        ],
+                        [
+                            "id" => "Juggler",
+                            "value" => "Juggler",
+                        ],
+                        [
+                            "id" => "Magician",
+                            "value" => "Magician",
+                        ],
+                        [
+                            "id" => "Multidisciplinary Circus/Variety",
+                            "value" => "Multidisciplinary Circus/Variety",
+                        ],
+                        [
+                            "id" => "Musician/Singer/Band",
+                            "value" => "Musician/Singer/Band",
+                        ],
+                        [
+                            "id" => "Music-Clown",
+                            "value" => "Music-Clown",
+                        ],
+                        [
+                            "id" => "Music-Acrobat",
+                            "value" => "Music-Acrobat",
+                        ],
+                        [
+                            "id" => "Performance",
+                            "value" => "Performance",
+                        ],
+                        [
+                            "id" => "Pupeteer",
+                            "value" => "Pupeteer",
+                        ],
+                        [
+                            "id" => "Stiltwalkers/Animation",
+                            "value" => "Stiltwalkers/Animation",
+                        ],
+                        [
+                            "id" => "Visual Comedy",
+                            "value" => "Visual Comedy",
+                        ],
+                        [
+                            "id" => "Other",
+                            "value" => "Other",
+                        ],
                     ],
                     "validation" => [
                         "rules" => [
-                            "required",
+                            "required" => true,
                         ],
                         "messages" => []
                     ],
@@ -82,8 +134,9 @@ class FormSeeder extends Seeder
                     ],
                     "translated" => false,
                 ],
-                "stage_name" => [
+                [
                     "type" => "Text",
+                    "name" => "stage_name",
                     "label" => "Stage name",
                     "placeholder" => "Enter your stage name",
                     "note" => null,
@@ -92,8 +145,8 @@ class FormSeeder extends Seeder
                     "disabled" => false,
                     "validation" => [
                         "rules" => [
-                            "required",
-                            "max: 128",
+                            "required" => true,
+                            "max" => 128,
                         ],
                         "messages" => []
                     ],
@@ -102,8 +155,9 @@ class FormSeeder extends Seeder
                     ],
                     "translated" => false,
                 ],
-                "short_bio" => [
+                [
                     "type" => "Textarea",
+                    "name" => "short_bio",
                     "label" => "Short bio",
                     "placeholder" => "Short description about yourself",
                     "note" => null,
@@ -114,16 +168,17 @@ class FormSeeder extends Seeder
                     "rows" => "",
                     "validation" => [
                         "rules" => [
-                            "required",
-                            "max: 1000"
+                            "required" => true,
+                            "max" => 1000
                         ],
                         "messages" => []
                     ],
                     "visibility" => [],
                     "translated" => true,
                 ],
-                "long_bio" => [
+                [
                     "type" => "Textarea",
+                    "name" => "long_bio",
                     "label" => "Long bio",
                     "placeholder" => "Long description about yourself",
                     "note" => null,
@@ -134,8 +189,8 @@ class FormSeeder extends Seeder
                     "rows" => "",
                     "validation" => [
                         "rules" => [
-                            "required",
-                            "max: 2000"
+                            "required" => true,
+                            "max" => 2000
                         ],
                         "messages" => []
                     ],
@@ -161,23 +216,24 @@ class FormSeeder extends Seeder
                 ],
             ],
             "fields" => [
-                "phone" => [
+                [
                     "type" => "Phone",
+                    "name" => "phone",
                     "label" => "Phone",
                     "placeholder" => "Enter your phone number",
                     "note" => null,
                     "readonly" => false,
                     "disabled" => false,
                     "validation" => [
-                        "rules" => [
-                        ],
+                        "rules" => [],
                         "messages" => [],
                     ],
                     "visibility" => [],
                     "translated" => false,
                 ],
-                "address" => [
+                [
                     "type" => "Text",
+                    "name" => "address",
                     "label" => "Address",
                     "placeholder" => "Street address",
                     "note" => null,
@@ -187,15 +243,16 @@ class FormSeeder extends Seeder
                     "maxlength" => "",
                     "validation" => [
                         "rules" => [
-                            "max:255"
+                            "max" => 255
                         ],
                         "messages" => []
                     ],
                     "visibility" => [],
                     "translated" => false,
                 ],
-                "city" => [
+                [
                     "type" => "Text",
+                    "name" => "city",
                     "label" => "City",
                     "placeholder" => "City",
                     "note" => null,
@@ -205,15 +262,16 @@ class FormSeeder extends Seeder
                     "column" => true,
                     "validation" => [
                         "rules" => [
-                            "max:28",
+                            "max" => 28,
                         ],
                         "messages" => []
                     ],
                     "visibility" => [],
                     "translated" => false,
                 ],
-                "postcode" => [
+                [
                     "type" => "Postcode",
+                    "name" => "postcode",
                     "label" => "Postcode",
                     "placeholder" => "Postcode",
                     "note" => null,
@@ -223,23 +281,23 @@ class FormSeeder extends Seeder
                     "column" => true,
                     "validation" => [
                         "rules" => [
-                            "max:10",
-                            //"digits_between:0,10"
+                            "max" => 10,
                         ],
                         "messages" => []
                     ],
                     "visibility" => [],
                     "translated" => false,
                 ],
-                "country" => [
+                [
                     "type" => "Country",
+                    "name" => "country",
                     "label" => "Country",
                     "note" => null,
                     "readonly" => false,
                     "disabled" => false,
                     "validation" => [
                         "rules" => [
-                            "required"
+                            "required" => true,
                         ],
                         "messages" => []
                     ],
@@ -274,8 +332,9 @@ class FormSeeder extends Seeder
                 ],
             ],
             "fields" => [
-                "facebook" => [
+                [
                     "type" => "Text",
+                    "name" => "facebook",
                     "label" => "Facebook",
                     "placeholder" => "Your Facebook URL",
                     "note" => 'E.g: https://www.facebook.com/buskincity',
@@ -285,8 +344,8 @@ class FormSeeder extends Seeder
                     "maxlength" => 128,
                     "validation" => [
                         "rules" => [
-                            "max:128",
-                            "url"
+                            "max" => 128,
+                            "url" => true
                         ],
                         "messages" => []
                     ],
@@ -294,8 +353,9 @@ class FormSeeder extends Seeder
                     "translated" => false,
                     "left_icon" => 'fa-brands fa-facebook',
                 ],
-                "twitter" => [
+                [
                     "type" => "Text",
+                    "name" => "twitter",
                     "label" => "Twitter",
                     "placeholder" => "Your Twitter URL",
                     "note" => 'E.g: https://twitter.com/BuskinCity',
@@ -305,8 +365,8 @@ class FormSeeder extends Seeder
                     "maxlength" => 128,
                     "validation" => [
                         "rules" => [
-                            "max:128",
-                            "url"
+                            "max" => 128,
+                            "url" => true
                         ],
                         "messages" => []
                     ],
@@ -314,8 +374,9 @@ class FormSeeder extends Seeder
                     "translated" => false,
                     "left_icon" => 'fa-brands fa-twitter',
                 ],
-                "instagram" => [
+                [
                     "type" => "Text",
+                    "name" => "instagram",
                     "label" => "Instagram",
                     "placeholder" => "Your Instagram URL",
                     "note" => 'E.g: https://www.instagram.com/buskincity/',
@@ -325,8 +386,8 @@ class FormSeeder extends Seeder
                     "maxlength" => 128,
                     "validation" => [
                         "rules" => [
-                            "max:128",
-                            "url"
+                            "max" => 128,
+                            "url" => true
                         ],
                         "messages" => []
                     ],
@@ -334,8 +395,9 @@ class FormSeeder extends Seeder
                     "translated" => false,
                     "left_icon" => 'fa-brands fa-instagram',
                 ],
-                "youtube" => [
+                [
                     "type" => "Text",
+                    "name" => "youtube",
                     "label" => "Youtube",
                     "placeholder" => "Your Youtube URL",
                     "note" => 'E.g: https://www.youtube.com/c/BuskinCity',
@@ -345,8 +407,8 @@ class FormSeeder extends Seeder
                     "maxlength" => 128,
                     "validation" => [
                         "rules" => [
-                            "max:128",
-                            "url"
+                            "max" => 128,
+                            "url" => true
                         ],
                         "messages" => []
                     ],
@@ -354,8 +416,9 @@ class FormSeeder extends Seeder
                     "translated" => false,
                     "left_icon" => 'fa-brands fa-youtube',
                 ],
-                "tiktok" => [
+                [
                     "type" => "Text",
+                    "name" => "tiktok",
                     "label" => "TikTok",
                     "placeholder" => "Your TikTok URL",
                     "note" => 'E.g: https://www.tiktok.com/@buskincity',
@@ -365,8 +428,8 @@ class FormSeeder extends Seeder
                     "maxlength" => 128,
                     "validation" => [
                         "rules" => [
-                            "max:128",
-                            "url"
+                            "max" => 128,
+                            "url" => true
                         ],
                         "messages" => []
                     ],
@@ -402,8 +465,9 @@ class FormSeeder extends Seeder
                 ],
             ],
             "fields" => [
-                "promotional_video" => [
+                [
                     "type" => "Video",
+                    "name" => "promotional_video",
                     "label" => "Promotional video",
                     "placeholder" => "Youtube/Vimeo Video URL",
                     "note" => 'E.g: https://vimeo.com/553766867',
@@ -412,8 +476,8 @@ class FormSeeder extends Seeder
                     "disabled" => false,
                     "validation" => [
                         "rules" => [
-                            "max:128",
-                            "url"
+                            "max" => 128,
+                            "url" => true
                         ],
                         "messages" => []
                     ],
@@ -423,8 +487,9 @@ class FormSeeder extends Seeder
                     "translated" => false,
                     "left_icon" => 'fa-brands fa-vimeo',
                 ],
-                "cover_background_photo" => [
+                [
                     "type" => "FileDragDrop",
+                    "name" => "cover_background_photo",
                     "label" => "Cover background photo",
                     "file_label" => "Choose an image",
                     "placeholder" => 'Drop files here...',
@@ -436,16 +501,17 @@ class FormSeeder extends Seeder
                     "max_file_size" => config('constants.one_megabyte') * 50,
                     "validation" => [
                         "rules" => [
-                            "mimes:".$imageMimes,
-                            "max:".config('constants.one_megabyte') * 50,
+                            "mimes" => $imageMimes,
+                            "max" => config('constants.one_megabyte') * 50,
                         ],
                         "messages" => []
                     ],
                     "visibility" => [],
                     "translated" => false,
                 ],
-                "gallery" => [
+                [
                     "type" => "FileDragDrop",
+                    "name" => "gallery",
                     "label" => "Gallery",
                     "file_label" => "Choose an image",
                     "placeholder" => "Drop files here...",
@@ -457,8 +523,8 @@ class FormSeeder extends Seeder
                     "max_file_size" => config('constants.one_megabyte') * 50,
                     "validation" => [
                         "rules" => [
-                            "mimes:".$imageAndVideoMimes,
-                            "max:".config('constants.one_megabyte') * 50,
+                            "mimes" => $imageAndVideoMimes,
+                            "max" => config('constants.one_megabyte') * 50,
                         ],
                         "messages" => []
                     ],
