@@ -44,7 +44,6 @@
 
         props: {
             bagName: { type: String, default: 'formBuilder' },
-            routeGetSchemas: { type: String, default: 'form-builders.schemas' },
             formId: { type: [String, null], required: true },
         },
 
@@ -54,6 +53,9 @@
                 form: useForm({}),
                 loader: null,
                 isShown: false,
+                urls: {
+                    getSchemas: '/form-builders/schemas',
+                },
             };
         },
 
@@ -72,7 +74,7 @@
                 const self = this;
 
                 return axios.get(
-                    route(self.routeGetSchemas),
+                    self.urls.getSchemas,
                     {
                         params: {
                             form_id: self.formId,
