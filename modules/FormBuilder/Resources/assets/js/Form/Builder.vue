@@ -64,7 +64,8 @@
                 formErrors: {},
                 isShown: false,
                 urls: {
-                    getSchemas: '/form-builders/schemas',
+                    getSchemas: '/form-builders/schema',
+                    save: '/form-builders/save',
                 },
             };
         },
@@ -140,8 +141,8 @@
                 self.onStartLoadingOverlay();
 
                 axios.post(
-                    route('form-builders.save'),
-                    this.form,
+                    self.urls.save,
+                    self.form,
                 )
                     .then((response) => {
                         successAlert('Successfully');
