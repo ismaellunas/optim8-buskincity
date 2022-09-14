@@ -1,31 +1,23 @@
 <template>
-    <biz-form-select
+    <form-input
         v-model="computedValue"
-        class="is-fullwidth"
-        :disabled="schema.is_disabled"
+        type="email"
         :label="schema.label"
-        :message="error(schema.name, bagName, errors)"
+        :maxlength="schema.maxlength"
         :placeholder="schema.placeholder"
+        :disabled="schema.is_disabled"
         :readonly="schema.is_readonly"
         :required="schema.is_required"
+        :message="error(schemaName, bagName, errors)"
     >
         <template
-            v-for="option, index in schema.options"
-            :key="index"
+            v-if="hasLeftIcon"
+            #leftIcons
         >
-            <option
-                v-if="typeof option === 'object'"
-                :value="option.id"
-            >
-                {{ option.value }}
-            </option>
-
-            <option
-                v-else
-                :value="index"
-            >
-                {{ option }}
-            </option>
+            <biz-icon
+                class="is-small is-left"
+                :icon="schema.left_icon"
+            />
         </template>
 
         <template #note>
@@ -36,19 +28,22 @@
                 {{ schema.note }}
             </p>
         </template>
-    </biz-form-select>
+    </form-input>
 </template>
 
 <script>
-    import BizFormSelect from '@/Biz/Form/Select';
+    import BizIcon from '@/Biz/Icon';
+    import FormInput from '@/Biz/Form/Input';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import { isEmpty } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'FormSelect',
+        name: 'FormText',
 
         components: {
-            BizFormSelect,
+            BizIcon,
+            FormInput,
         },
 
         mixins: [
@@ -66,11 +61,15 @@
             },
             modelValue: {
                 type: [String, Number, null],
-                default: ''
+                default: null
             },
             schema: {
                 type: Object,
                 required: true
+            },
+            selectedLocale: {
+                type: [String],
+                default: null
             },
         },
 
@@ -80,12 +79,14 @@
             };
         },
 
-        mounted() {
-            if (this.modelValue == '') {
-                if (this.schema.default_value == this.modelValue) {
-                    this.computedValue = null;
-                }
-            }
+        computed: {
+            schemaName() {
+                return this.schema.name;
+            },
+
+            hasLeftIcon() {
+                return !isEmpty(this.schema.left_icon);
+            },
         },
     };
 </script>

@@ -98,7 +98,7 @@
             selectedCountry() {
                 return find(
                     this.countryOptions,
-                    (option) => option.id == this.computedValue.country
+                    (option) => option.id == (this.computedValue.country ?? this.defaultCountry)
                 );
             },
 

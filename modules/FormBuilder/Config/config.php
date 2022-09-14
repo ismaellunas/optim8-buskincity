@@ -10,5 +10,8 @@ return [
         'form_builder.edit',
         'form_builder.add',
         'form_builder.delete',
-    ]
+    ],
+
+    // Email
+    'default_from_email' => 'noreply@'.config('constants.domain'),
 ];

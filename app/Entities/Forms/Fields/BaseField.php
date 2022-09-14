@@ -21,6 +21,7 @@ abstract class BaseField
     public $storedValue;
     public $entity;
     public $note;
+    public $column;
 
     public function __construct(string $name, array $data = [])
     {
@@ -46,6 +47,10 @@ abstract class BaseField
 
         if (array_key_exists('note', $data)) {
             $this->note = $data['note'];
+        }
+
+        if (array_key_exists('column', $data)) {
+            $this->column = $data['column'];
         }
 
         $this->value = $data['value'] ?? $this->defaultValue;
@@ -85,6 +90,7 @@ abstract class BaseField
             'instructions' => $this->getInstructions(),
             'value' => $this->getSchemaValue(),
             'note' => $this->note,
+            'column' => $this->column,
         ];
     }
 
@@ -94,6 +100,7 @@ abstract class BaseField
 
         $rules[$this->name] = $this->validation['rules'] ?? [];
 
+        $this->transformToFlatten($rules);
         $this->adjustNullableRule($rules);
 
         return $rules;
@@ -154,5 +161,30 @@ abstract class BaseField
         }
 
         return null;
+    }
+
+    private function transformToFlatten(&$rules)
+    {
+        $rules = collect($rules)->transform(function ($rule) {
+            $newRules = [];
+
+            foreach ($rule as $validationName => $validationValue) {
+                if (is_int($validationName)) {
+                    $newRules[] = $validationValue;
+                } else {
+                    if (is_bool($validationValue)) {
+                        if ($validationValue) {
+                            $newRules[] = $validationName;
+                        }
+                    } else {
+                        if ($validationValue) {
+                            $newRules[] = $validationName.':'.$validationValue;
+                        }
+                    }
+                }
+            }
+
+            return $newRules;
+        })->all();
     }
 }

@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 class FormValueRequest extends BaseFormRequest
 {
-    private $forms;
-    private $formLocation;
+    protected $forms;
+    protected $formLocation;
 
     protected $errorBag = 'formBuilder';
 
@@ -55,7 +55,7 @@ class FormValueRequest extends BaseFormRequest
         return $attributes;
     }
 
-    private function getForms(): Collection
+    protected function getForms(): Collection
     {
         $formService = app(FormService::class);
 
@@ -69,7 +69,7 @@ class FormValueRequest extends BaseFormRequest
         return $this->forms;
     }
 
-    private function getFormLocation()
+    protected function getFormLocation()
     {
         $formService = app(FormService::class);
 

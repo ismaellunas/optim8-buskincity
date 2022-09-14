@@ -6,8 +6,11 @@ use App\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\FieldGroup;
+use Modules\FormBuilder\Entities\FieldGroupEntry;
+use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
 use Modules\FormBuilder\Services\FormBuilderService;
+use Modules\FormBuilder\Events\FormSubmitted;
 
 class FormBuilderController extends CrudController
 {
@@ -117,5 +120,28 @@ class FormBuilderController extends CrudController
                 'name'
             ),
         ]));
+    }
+
+    public function getSchema(Request $request)
+    {
+        return $this->formBuilderService->getSchema($request->form_id);
+    }
+
+    public function submit(FormBuilderFrontendRequest $request)
+    {
+        $inputs = $request->validated();
+
+        $this->formBuilderService->transformInputs($inputs);
+
+        $fieldGroupEntry = new FieldGroupEntry();
+
+        $fieldGroupEntry->saveFromInputs($inputs);
+
+        FormSubmitted::dispatch($fieldGroupEntry);
+
+        return [
+            'success' => true,
+            'message' => __('Thank you for filling out the form.'),
+        ];
     }
 }
