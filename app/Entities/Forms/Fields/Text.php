@@ -19,6 +19,10 @@ class Text extends TranslatableField
         $this->leftIcon = $data['left_icon'] ?? null;
         $this->maxlength = $data['maxlength'] ?? null;
         $this->placeholder = $data['placeholder'] ?? null;
+
+        if (isset($this->validation['rules']['regex'])) {
+            $this->adjustRegexRule();
+        }
     }
 
     public function schema(): array
@@ -45,5 +49,20 @@ class Text extends TranslatableField
         }
 
         return null;
+    }
+
+    private function adjustRegexRule(): void
+    {
+        $regex = $this->validation['rules']['regex'];
+
+        try {
+            preg_match($regex, '');
+        } catch (\Throwable $th) {
+            $regex = null;
+        }
+
+        if (!$regex) {
+            unset($this->validation['rules']['regex']);
+        }
     }
 }
