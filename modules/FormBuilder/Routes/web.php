@@ -48,6 +48,9 @@ Route::name('admin.')->prefix('admin/')->middleware([
 });
 
 Route::name('form-builders.')->prefix('form-builders')->group(function () {
-    Route::get('schemas', [FormBuilderController::class, 'getSchemas'])
-        ->name('schemas');
+    Route::get('schema', [FormBuilderController::class, 'getSchema'])
+        ->name('schema');
+
+    Route::post('save', [FormBuilderController::class, 'submit'])
+        ->name('save');
 });

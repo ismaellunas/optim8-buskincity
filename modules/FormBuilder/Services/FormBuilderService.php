@@ -3,6 +3,7 @@
 namespace Modules\FormBuilder\Services;
 
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Auth;
 use Modules\FormBuilder\Entities\FieldGroup;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -50,6 +51,7 @@ class FormBuilderService
             ->whereHas('metas', function ($query) use ($term) {
                 $query->where('value', 'ILIKE', '%'.$term.'%');
             })
+            ->orderBy('id', 'DESC')
             ->get();
 
         foreach ($entries as $entry) {
@@ -98,31 +100,25 @@ class FormBuilderService
             ->all();
     }
 
-    public function getSchemas(
+    public function getSchema(
         string $formId,
-    ) {
+    ):array {
         $formLocation = $this->getFormLocation();
 
-        $forms = $this->getForms($formId);
-
-        $schemas = collect();
+        $form = $this->getForm($formId);
 
         if (!$formLocation->canBeAccessedBy()) {
             $this->abortAction();
         }
 
-        foreach ($forms as $form) {
-            if ($form->canBeAccessed()) {
-                $schema = $form->schema();
-
-                $schemas->push($schema);
-            }
+        if ($form->canBeAccessed()) {
+            return $form->schema();
         }
 
-        return $schemas;
+        return null;
     }
 
-    private function getFormLocation()
+    public function getFormLocation()
     {
         $className = $this->formLocationBasePath.'\\'.'GuestLocation';
 
@@ -134,10 +130,8 @@ class FormBuilderService
         return $this->formBasePath."\\".$type.'Form';
     }
 
-    private function getForms(string $formId)
+    public function getForm(string $formId)
     {
-        $forms = collect();
-
         $model = FieldGroup::where('title', $formId)->first();
 
         if ($model) {
@@ -148,15 +142,31 @@ class FormBuilderService
             if ($form->canBeAccessedByLocation()) {
                 $form->model = $model;
 
-                $forms->put($form->name, $form);
+                return $form;
             }
         }
 
-        return $forms;
+        return null;
     }
 
-    private function abortAction(): void
+    public function abortAction(): void
     {
         abort(Response::HTTP_FORBIDDEN);
+    }
+
+    public function transformInputs(&$inputs): void
+    {
+        $fieldGroupId = FieldGroup::where('title', $inputs['form_id'])->value('id');
+
+        if (!$fieldGroupId) {
+            $this->formBuilderService->abortAction();
+        }
+
+        if (Auth::check()) {
+            $inputs['user_id'] = Auth::user()->id;
+        }
+
+        $inputs['field_group_id'] = $fieldGroupId;
+        unset($inputs['form_id']);
     }
 }

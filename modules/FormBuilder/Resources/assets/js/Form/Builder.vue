@@ -1,12 +1,13 @@
 <template>
     <div v-if="isShown">
+        <biz-flash-notifications :flash="flash" />
+
         <form @submit.prevent="submit">
             <field-group
-                v-for="(group, index) in sortedFieldGroups"
-                :key="index"
-                :ref="'field_group__'+index"
+                ref="field_group"
                 v-model="form"
-                :group="group"
+                :group="fieldGroup"
+                :errors="formErrors"
             />
 
             <slot name="buttons">
@@ -21,20 +22,26 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButton from '@/Biz/Button';
+    import BizFlashNotifications from '@/Biz/FlashNotifications';
     import FieldGroup from '@/Form/FieldGroup';
-    import { isEmpty, forOwn, sortBy, forEach, find } from 'lodash';
+    import { isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
-    import { ref } from 'vue';
+    import { reactive } from 'vue';
 
     export default {
         name: 'FormBuilder',
 
         components: {
             BizButton,
+            BizFlashNotifications,
             FieldGroup,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         provide() {
             return {
@@ -43,34 +50,32 @@
         },
 
         props: {
-            bagName: { type: String, default: 'formBuilder' },
+            bagName: { type: String, default: null },
             formId: { type: [String, null], required: true },
         },
 
         data() {
             return {
-                fieldGroups: {},
-                form: useForm({}),
-                loader: null,
+                fieldGroup: {},
+                flash: {
+                    message: null
+                },
+                form: reactive({}),
+                formErrors: {},
                 isShown: false,
                 urls: {
-                    getSchemas: '/form-builders/schemas',
+                    getSchemas: '/form-builders/schema',
+                    save: '/form-builders/save',
                 },
             };
         },
 
-        computed: {
-            sortedFieldGroups() {
-                return sortBy(this.fieldGroups, ['order']);
-            },
-        },
-
         mounted() {
-            this.getSchemas();
+            this.getSchema();
         },
 
         methods: {
-            getSchemas() {
+            getSchema() {
                 const self = this;
 
                 return axios.get(
@@ -82,13 +87,13 @@
                     }
 
                 ).then((response) => {
-                    self.fieldGroups = response.data;
+                    self.fieldGroup = response.data;
 
-                    self.form = self.createForm(self.fieldGroups);
+                    self.form = self.createForm(self.fieldGroup);
 
                     self.isShown = true;
 
-                    if (isEmpty(this.fieldGroups)) {
+                    if (isEmpty(this.fieldGroup)) {
                         self.isShown = false;
                     }
 
@@ -101,38 +106,59 @@
                 });
             },
 
-            createForm(groupFields) {
+            createForm(groupField) {
                 let fieldValue = null;
                 const form = {};
 
-                forOwn(groupFields, (groupField, key) => {
-                    if (!isEmpty(groupField)) {
+                form['form_id'] = this.formId;
 
-                        forOwn(groupField.fields, (field, key) => {
-                            if (typeof field.value === 'undefined') {
-                                form[ key ] = undefined;
-                            } else {
-                                form[ key ] = field.value;
+                if (!isEmpty(groupField)) {
+                    forOwn(groupField.fields, (field, key) => {
+                        if (typeof field.value === 'undefined') {
+                            form[ key ] = undefined;
+                        } else {
+                            form[ key ] = field.value;
 
-                                if (field.is_translated && field.value.length == 0) {
-                                    fieldValue = {};
+                            if (field.is_translated && field.value.length == 0) {
+                                fieldValue = {};
 
-                                    this.localeOptions.forEach(function(locale) {
-                                        fieldValue[ locale.id ] = null
-                                    })
+                                this.localeOptions.forEach(function(locale) {
+                                    fieldValue[ locale.id ] = null
+                                })
 
-                                    form[ key ] = fieldValue;
-                                }
+                                form[ key ] = fieldValue;
                             }
-                        });
-                    }
-                });
+                        }
+                    });
+                }
 
-                return useForm(form);
+                return reactive(form);
             },
 
             submit() {
-                //
+                const self = this;
+
+                self.onStartLoadingOverlay();
+
+                axios.post(
+                    self.urls.save,
+                    self.form,
+                )
+                    .then((response) => {
+                        successAlert('Successfully');
+                        self.flash.message = response.data.message;
+
+                        self.getSchema();
+                        self.formErrors = {};
+                    })
+                    .catch((error) => {
+                        oopsAlert();
+
+                        self.formErrors = error.response.data.errors;
+                    })
+                    .then(() => {
+                        self.onEndLoadingOverlay();
+                    })
             },
         },
     };

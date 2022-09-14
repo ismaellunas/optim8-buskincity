@@ -4,9 +4,13 @@ namespace Modules\FormBuilder\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\FormBuilder\Services\FormBuilderService;
 
 class FormBuilderServiceProvider extends ServiceProvider
 {
+    public $singletons = [
+        FormBuilderService::class => FormBuilderService::class,
+    ];
     /**
      * @var string $moduleName
      */

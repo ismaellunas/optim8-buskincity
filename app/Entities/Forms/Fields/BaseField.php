@@ -100,6 +100,7 @@ abstract class BaseField
 
         $rules[$this->name] = $this->validation['rules'] ?? [];
 
+        $this->transformToFlatten($rules);
         $this->adjustNullableRule($rules);
 
         return $rules;
@@ -160,5 +161,30 @@ abstract class BaseField
         }
 
         return null;
+    }
+
+    private function transformToFlatten(&$rules)
+    {
+        $rules = collect($rules)->transform(function ($rule) {
+            $newRules = [];
+
+            foreach ($rule as $validationName => $validationValue) {
+                if (is_int($validationName)) {
+                    $newRules[] = $validationValue;
+                } else {
+                    if (is_bool($validationValue)) {
+                        if ($validationValue) {
+                            $newRules[] = $validationName;
+                        }
+                    } else {
+                        if ($validationValue) {
+                            $newRules[] = $validationName.':'.$validationValue;
+                        }
+                    }
+                }
+            }
+
+            return $newRules;
+        })->all();
     }
 }
