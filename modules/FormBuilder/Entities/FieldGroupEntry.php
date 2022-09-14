@@ -24,4 +24,9 @@ class FieldGroupEntry extends Model
 
         $this->save();
     }
+
+    public function fieldGroup()
+    {
+        return $this->belongsTo(FieldGroup::class, 'field_group_id');
+    }
 }

@@ -1,6 +1,10 @@
 <template>
     <div v-if="isShown">
         <biz-flash-notifications :flash="flash" />
+        <biz-notifications
+            class="is-danger"
+            :message="errorMessage"
+        />
 
         <form @submit.prevent="submit">
             <field-group
@@ -9,6 +13,23 @@
                 :group="fieldGroup"
                 :errors="formErrors"
             />
+
+            <vue-recaptcha
+                ref="vueRecaptcha"
+                :sitekey="recaptchaSiteKey"
+                size="invisible"
+                theme="light"
+                @expired="recaptchaExpired"
+                @error="recaptchaFailed"
+                @verify="recaptchaVerify"
+            />
+
+            <span
+                v-if="isRecaptchaError"
+                class="has-text-danger"
+            >
+                Please check the captcha!
+            </span>
 
             <slot name="buttons">
                 <div class="field">
@@ -25,7 +46,9 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButton from '@/Biz/Button';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
+    import BizNotifications from '@/Biz/Notifications';
     import FieldGroup from '@/Form/FieldGroup';
+    import { VueRecaptcha } from 'vue-recaptcha';
     import { isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { reactive } from 'vue';
@@ -36,7 +59,9 @@
         components: {
             BizButton,
             BizFlashNotifications,
+            BizNotifications,
             FieldGroup,
+            VueRecaptcha,
         },
 
         mixins: [
@@ -52,10 +77,12 @@
         props: {
             bagName: { type: String, default: null },
             formId: { type: [String, null], required: true },
+            recaptchaSiteKey: { type: String, required: true },
         },
 
         data() {
             return {
+                errorMessage: null,
                 fieldGroup: {},
                 flash: {
                     message: null
@@ -63,6 +90,8 @@
                 form: reactive({}),
                 formErrors: {},
                 isShown: false,
+                isRecaptchaError: false,
+                recaptchaResponse: null,
                 urls: {
                     getSchemas: '/form-builders/schema',
                     save: '/form-builders/save',
@@ -75,6 +104,18 @@
         },
 
         methods: {
+            recaptchaExpired() {
+                this.$refs.vueRecaptcha.reset();
+            },
+
+            recaptchaFailed() {
+                this.isRecaptchaError = true;
+            },
+
+            recaptchaVerify(response) {
+                this.recaptchaResponse = response;
+            },
+
             getSchema() {
                 const self = this;
 
@@ -92,6 +133,10 @@
                     self.form = self.createForm(self.fieldGroup);
 
                     self.isShown = true;
+
+                    setTimeout(() => {
+                        self.$refs.vueRecaptcha.execute();
+                    }, 500);
 
                     if (isEmpty(this.fieldGroup)) {
                         self.isShown = false;
@@ -140,16 +185,25 @@
 
                 self.onStartLoadingOverlay();
 
+                self.form['g-recaptcha-response'] = self.recaptchaResponse;
+
                 axios.post(
                     self.urls.save,
                     self.form,
                 )
                     .then((response) => {
-                        successAlert('Successfully');
-                        self.flash.message = response.data.message;
+                        let data = response.data;
 
-                        self.getSchema();
-                        self.formErrors = {};
+                        if (data.success) {
+                            successAlert('Successfully');
+                            self.flash.message = data.message;
+
+                            self.getSchema();
+                            self.formErrors = {};
+                            self.errorMessage = null;
+                        } else {
+                            self.errorMessage = data.message;
+                        }
                     })
                     .catch((error) => {
                         oopsAlert();

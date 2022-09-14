@@ -4,13 +4,16 @@ namespace Modules\FormBuilder\Services;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Modules\FormBuilder\Entities\FieldGroup;
+use Modules\FormBuilder\Entities\FieldGroupEntry;
 use Symfony\Component\HttpFoundation\Response;
 
 class FormBuilderService
 {
     private $formBasePath = 'App\\Entities\\Forms';
     private $formLocationBasePath = "Modules\\FormBuilder\\Forms\\Locations";
+    private $fieldPath = "Modules\\FormBuilder\\Fields";
 
     public function getRecords(
         string $term = null,
@@ -44,7 +47,8 @@ class FormBuilderService
         int $perPage = 15
     ): LengthAwarePaginator {
         $records = collect();
-        $fieldNames = $this->getDataFromFields($formBuilder->data['fields'], 'name');
+        $fields = $formBuilder->data['fields'];
+        $fieldNames = $this->getDataFromFields($fields, 'name');
 
         $entries = $formBuilder
             ->entries()
@@ -58,7 +62,12 @@ class FormBuilderService
             $record = [];
 
             foreach ($fieldNames as $fieldName) {
-                $record[$fieldName] = $entry[$fieldName] ?? null;
+                $field = collect($fields)->where('name', $fieldName)->first();
+
+                $record[$fieldName] = $this->getDisplayValue(
+                    $field,
+                    $entry[$fieldName] ?? null
+                );
             }
 
             $records->push($record);
@@ -168,5 +177,49 @@ class FormBuilderService
 
         $inputs['field_group_id'] = $fieldGroupId;
         unset($inputs['form_id']);
+    }
+
+    public function swapTagWithEntryValue(FieldGroupEntry $entry, string $value): string
+    {
+        $swapLists = [];
+        $fields = $entry->fieldGroup->data['fields'];
+        $entryValues = $this->getDisplayValues($fields, $entry);
+
+        foreach ($entryValues as $key => $entryValue) {
+            $swapLists['{'.$key.'}'] = $entryValue;
+        }
+
+        return Str::swap($swapLists, $value);
+    }
+
+    public function getDisplayValues($fields, $entry)
+    {
+        $displayValues = [];
+        $fields = collect($fields);
+        $entryValues = $entry->metas
+            ->pluck('value', 'key')
+            ->toArray();
+
+        foreach ($entryValues as $key => $entryValue) {
+            $value = $entryValue;
+            $field = $fields->where('name', $key)->first();
+
+            $displayValues[$key] = $this->getDisplayValue($field, $value);
+        }
+
+        return $displayValues;
+    }
+
+    public function getDisplayValue($field, $value): mixed
+    {
+        $className = $this->fieldPath.'\\'.Str::studly($field['type']);
+
+        if (class_exists($className)) {
+            $fieldClass = new $className($field, $value);
+
+            return $fieldClass->value();
+        }
+
+        return $value;
     }
 }
