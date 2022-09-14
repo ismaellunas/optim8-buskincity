@@ -50,7 +50,10 @@
 
                 <div class="is-4">
                     <div class="columns is-multiline is-centered">
-                        <div class="column is-8">
+                        <div
+                            v-if="can.reschedule"
+                            class="column is-8"
+                        >
                             <biz-button-link
                                 class="is-fullwidth"
                                 :href="route(baseRouteName+'.reschedule', order.id)"
@@ -59,7 +62,10 @@
                                 <span>Reschedule</span>
                             </biz-button-link>
                         </div>
-                        <div class="column is-8">
+                        <div
+                            v-if="can.cancel"
+                            class="column is-8"
+                        >
                             <biz-button-icon
                                 class="is-fullwidth"
                                 type="button"
@@ -107,6 +113,7 @@
 
         props: {
             baseRouteName: { type: String, required: true },
+            can: { type: Object, required: true },
             description: { type: String, required: true },
             order: { type: Object, required: true },
         },

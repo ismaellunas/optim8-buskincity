@@ -59,11 +59,16 @@ class OrderController extends CrudController
     {
         $product = $order->firstEventLine->purchasable->product;
         $event = $order->firstEventLine->latestEvent;
+        $user = auth()->user();
 
         return Inertia::render('Ecommerce::FrontendOrderShow', $this->getData([
             'title' => $product->displayName,
             'description' => $event->timezonedBookedAt->format(config('ecommerce.format.date_event_email_title')),
             'order' => $this->orderService->getFrontendRecord($order),
+            'can' => [
+                'cancel' => $user->can('cancel', $order),
+                'reschedule' => $user->can('reschedule', $order),
+            ],
         ]));
     }
 
@@ -84,6 +89,8 @@ class OrderController extends CrudController
 
     public function reschedule(Order $order)
     {
+        $this->authorize('cancel', $order);
+
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
         $schedule = $product->eventSchedule;
