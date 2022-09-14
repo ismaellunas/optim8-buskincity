@@ -77,17 +77,17 @@ abstract class TranslatableField extends BaseField
         foreach ($this->locales as $locale) {
             if ($this->originLanguage != $locale) {
                 $rules[$this->name.".".$locale] = $providedRules->filter(
-                        function ($value) {
-                            return $value != 'required';
+                        function ($value, $key) {
+                            return $key != 'required';
                         }
                     )
-                    ->values()
                     ->all();
             } else {
                 $rules[$this->name.".".$locale] = $providedRules->all();
             }
         }
 
+        $this->transformToFlatten($rules);
         $this->adjustNullableRule($rules);
 
         return $rules;
