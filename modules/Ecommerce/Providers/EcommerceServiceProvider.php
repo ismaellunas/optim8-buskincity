@@ -42,6 +42,7 @@ class EcommerceServiceProvider extends ServiceProvider
 
             $schedule->command('booking-event:status-to-ongoing')->everyMinute()->runInBackground();
             $schedule->command('booking-event:status-to-passed')->everyMinute()->runInBackground();
+            $schedule->command('booking-event:email-reminder')->everyTenMinutes()->runInBackground();
         });
 
         User::resolveRelationUsing('managedSpaceProducts', function ($userModel) {
@@ -69,6 +70,7 @@ class EcommerceServiceProvider extends ServiceProvider
         });
 
         $this->commands([
+            \Modules\Ecommerce\Console\EventEmailReminder::class,
             \Modules\Ecommerce\Console\SetEventOngoing::class,
             \Modules\Ecommerce\Console\SetEventPassed::class,
         ]);

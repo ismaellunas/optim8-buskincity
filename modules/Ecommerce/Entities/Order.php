@@ -36,6 +36,14 @@ class Order extends GetCandyOrder
             : null;
     }
 
+    public function getEmailRecipientAttribute(): object
+    {
+        return (object) [
+            'name' => $this->user->fullName,
+            'email' => $this->user->email,
+        ];
+    }
+
     public function firstEventLine()
     {
         return $this
