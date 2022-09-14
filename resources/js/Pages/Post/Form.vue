@@ -134,7 +134,7 @@
                             :is-download-enabled="can.media.read"
                             :is-media-enabled="can.media.browse"
                             :is-upload-enabled="can.media.add"
-                            :is-config-combine="true"
+                            :is-config-combined="true"
                             :message="error('content')"
                         />
                     </div>
