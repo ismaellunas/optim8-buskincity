@@ -33,7 +33,7 @@ class EventBooked extends Mailable
      */
     public function build()
     {
-        $line = $this->order->firstEventline;
+        $line = $this->order->firstEventLine;
         $user = $this->order->user;
 
         $upcomingEvent = $line
@@ -54,7 +54,7 @@ class EventBooked extends Mailable
 
         return $this
             ->subject( __('New Event: :inviteeName - :startedTime :date - :productName', [
-                'date' => $eventDateTime->format(config('ecommerce.format.date_email_title')),
+                'date' => $eventDateTime->format(config('ecommerce.format.date_event_email_title')),
                 'inviteeName' => $inviteeName,
                 'productName' => $productName,
                 'startedTime' => $eventDateTime->format('H:i'),
