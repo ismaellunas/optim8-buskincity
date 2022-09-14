@@ -76,13 +76,15 @@
     import Card from '@/Biz/Card';
     import Checkboxes from '@/Blocks/Configs/Checkboxes';
     import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
+    import configs from '@/ComponentStructures/configs';
     import InputIcon from '@/Blocks/Configs/InputIcon';
+    import moduleConfigs from '@/Modules/ComponentStructures/configs';
     import NumberAddons from '@/Blocks/Configs/NumberAddons';
+    import Select from '@/Blocks/Configs/Select';
     import SelectMultiple from '@/Blocks/Configs/SelectMultiple';
     import TRBL from '@/Blocks/Configs/TRBL';
     import TRBLInput from '@/Blocks/Configs/TRBLInput';
-    import configs from '@/ComponentStructures/configs';
-    import { camelCase } from "lodash";
+    import { camelCase, merge } from "lodash";
     import { isBlank } from '@/Libs/utils';
     import { useModelWrapper } from '@/Libs/utils'
 
@@ -97,6 +99,7 @@
             ConfigRowSection,
             InputIcon,
             NumberAddons,
+            Select,
             SelectMultiple,
             TRBL,
             TRBLInput,
@@ -107,7 +110,8 @@
         setup(props, { emit }) {
             const entity = useModelWrapper(props, emit);
 
-            let componentConfig = configs[ camelCase(entity.value.componentName) ];
+            let allConfig = merge(configs, moduleConfigs);
+            let componentConfig = allConfig[ camelCase(entity.value.componentName) ];
 
             for (const [groupKey, group] of Object.entries(componentConfig)) {
                 for (const [key, value] of Object.entries(group)) {
@@ -124,7 +128,8 @@
 
         computed: {
             configOptions() {
-                return configs[ camelCase(this.entity.componentName) ];
+                let componentConfigs = merge(configs, moduleConfigs);
+                return componentConfigs[ camelCase(this.entity.componentName) ];
             },
 
             numberOfOptions() {

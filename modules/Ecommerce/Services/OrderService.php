@@ -2,14 +2,22 @@
 
 namespace Modules\Ecommerce\Services;
 
+use App\Models\User;
 use App\Services\MediaService;
 use Carbon\Carbon;
+use Carbon\CarbonTimeZone;
+use GetCandy\Base\OrderReferenceGeneratorInterface;
+use GetCandy\Models\Channel;
+use GetCandy\Models\Currency;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Ecommerce\Entities\Order;
-use Modules\Ecommerce\Entities\ScheduleBooking;
+use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Entities\Event;
 use Modules\Ecommerce\Enums\BookingStatus;
+use Modules\Ecommerce\Enums\OrderLineType;
 use Modules\Ecommerce\Enums\OrderStatus;
 
 class OrderService
@@ -48,6 +56,55 @@ class OrderService
                 'status' => Str::title($record->status),
                 'customer_name' => $record->user->fullName ?? null,
                 'date_placed' => $record->placed_at->toDateString(),
+            ];
+        });
+    }
+
+    public function getFrontendRecords(
+        User $user,
+        string $term = null,
+        int $perPage = 15
+    ): LengthAwarePaginator {
+        $records = Order::orderBy('reference', 'DESC')
+            ->when($term, function ($query) use ($term) {
+                $query
+                    ->where('reference', 'ILIKE', '%'.$term.'%')
+                    ->orWhere('status', 'ILIKE', '%'.$term.'%')
+                    ->orWhereHas('user', function (Builder $query) use ($term) {
+                        $query->search($term);
+                    })
+                    ->orWhereHas('firstEventLine.purchasable.product', function (Builder $query) use ($term) {
+                        $query->searchWithoutScout($term);
+                    });
+            })
+            ->with([
+                'firstEventLine.latestEvent.schedule',
+                'firstEventLine.purchasable.product' => function ($query) {
+                    $query->select('id', 'product_type_id', 'attribute_data');
+                },
+            ])
+            ->where('user_id', $user->id)
+            ->paginate($perPage);
+
+        $this->transformFrontendRecords($records);
+
+        return $records;
+    }
+
+    public function transformFrontendRecords($records)
+    {
+        $records->getCollection()->transform(function ($record) {
+            $event = $record->firstEventLine->latestEvent;
+
+            $product = $record->firstEventLine->purchasable->product;
+
+            return (object) [
+                'id' => $record->id,
+                'product_name' => $product->displayName,
+                'reference' => $record->reference,
+                'status' => Str::title($event->status),
+                'start_end_time' => $event->displayStartEndTime,
+                'date' => $event->timezonedBookedAt->format('d M Y'),
             ];
         });
     }
@@ -91,19 +148,37 @@ class OrderService
         return $orderSubset;
     }
 
+    public function getFrontendRecord(Order $order): array
+    {
+        $event = $order->firstEventLine->latestEvent;
+
+        $product = $order->firstEventLine->purchasable->product;
+
+        $carbonTimeZone = CarbonTimeZone::create($event->schedule->timezone);
+
+        return [
+            'event_date' => $event->timezonedBookedAt->format('d F Y'),
+            'event_start_end_time' => $event->displayStartEndTime,
+            'product_name' => $product->displayName,
+            'status' => Str::title($event->status),
+            'timezone' => $event->schedule->timezone,
+            'timezoneOffset' => 'UTC '.$carbonTimeZone->toOffsetName(),
+        ];
+    }
+
     public function cancelOrder(Order $order)
     {
         $order->status = OrderStatus::CANCELED->value;
         $order->save();
     }
 
-    public function cancelEvent(ScheduleBooking $booking)
+    public function cancelEvent(Event $booking)
     {
         $booking->status = BookingStatus::CANCELED->value;
         $booking->save();
     }
 
-    public function rescheduleEvent(ScheduleBooking $event, Carbon $dateTime)
+    public function rescheduleEvent(Event $event, Carbon $dateTime)
     {
         $newEvent = $event->replicate();
 
@@ -116,5 +191,94 @@ class OrderService
 
         return $newEvent;
 
+    }
+
+    public function bookEvent(Product $product, Carbon $dateTime, User $user): Order
+    {
+        $currency = Currency::getDefault();
+        $channel = Channel::getDefault();
+        $generator = app(OrderReferenceGeneratorInterface::class);
+
+        $lines = collect();
+
+        $variant = $product->variants->first();
+
+        $lines->push([
+            'purchasable_type' => get_class($variant),
+            'purchasable_id' => $variant->id,
+            'type' => OrderLineType::EVENT,
+            'description' => "",
+            'option' => null,
+            'identifier' => $variant->sku,
+            'unit_price' => 0,
+            'unit_quantity' => 0,
+            'quantity' => 1,
+            'sub_total' => 0,
+            'discount_total' => 0,
+            'tax_breakdown' => [],
+            'tax_total' => 0,
+            'total' =>	0,
+        ]);
+
+        $order = [
+            'user_id' => $user->id,
+            'channel_id' => $channel->id,
+            'status' => OrderStatus::COMPLETED,
+            'sub_total' => 0,
+            'tax_breakdown' => [],
+            'tax_total' => 0,
+            'total' => 0,
+            'currency_code' => $currency->code,
+            'compare_currency_code' => $currency->code,
+            'placed_at' => Carbon::now(),
+            'meta' => [
+                'product_id' => $product->id,
+                'sku' => $variant->sku,
+                'booked_at' => $dateTime,
+                'duration' => $product->duration,
+                'duration_unit' => 'minute',
+            ],
+        ];
+
+        $orderModel = Order::factory()->create($order);
+        $orderModel->reference = $generator->generate($orderModel);
+        $orderModel->save();
+
+        $orderModel->lines()->createMany($lines->toArray());
+
+        $orderLine = $orderModel->lines->first();
+
+        $schedule = $product->eventSchedule;
+
+        Event::factory()->state([
+            'schedule_id' => $schedule->id,
+            'order_line_id' => $orderLine->id,
+            'booked_at' => $dateTime,
+            'duration' => $product->duration,
+            'duration_unit' => $product->duration_unit,
+            'status' => BookingStatus::UPCOMING,
+            'timezone' => $schedule->timezone,
+        ])->create();
+
+        return $orderModel;
+    }
+
+    public function emailReceipients(Order $order): Collection
+    {
+        $recipients = User::inRoleNames([config('permission.role_names.admin')])
+            ->get(['id', 'first_name', 'last_name', 'email'])
+            ->map(function ($user) {
+                return (object)[
+                    'name'  => $user->fullName,
+                    'email' => $user->email,
+                ];
+            });
+
+        $recipients->push((object) [
+            'name' => $order->user->fullName,
+            'email' => $order->user->email,
+        ]);
+
+        return $recipients;
     }
 }

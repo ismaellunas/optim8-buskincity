@@ -7,6 +7,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 use Modules\Ecommerce\Emails\EventRescheduled as EventRescheduledEmail;
 use Modules\Ecommerce\Events\EventRescheduled;
+use Modules\Ecommerce\Services\OrderService;
 
 class SendRescheduledEventNotification implements ShouldQueue
 {
@@ -29,7 +30,11 @@ class SendRescheduledEventNotification implements ShouldQueue
     {
         $order = $event->order;
 
-        Mail::to($order->user)
-            ->send(new EventRescheduledEmail($order));
+        $recipients = app(OrderService::class)->emailReceipients($order);
+
+        foreach ($recipients as $recipient) {
+            Mail::to($recipient)
+                ->queue(new EventRescheduledEmail($order));
+        }
     }
 }

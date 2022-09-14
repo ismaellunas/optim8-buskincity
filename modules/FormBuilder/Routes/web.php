@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\FormBuilder\Http\Controllers\{
     FormBuilderController,
     SettingNotificationController,
+    PageBuilderController,
 };
 
 /*
@@ -37,4 +38,20 @@ Route::name('admin.')->prefix('admin/')->middleware([
                 ->except(['show']);
         });
     });
+
+    Route::prefix('api')->name('api.')->group(function() {
+        Route::prefix('page-builders')->name('page-builders.')->group(function() {
+            Route::get('form-options', [PageBuilderController::class, 'formOptions'])
+                ->name('form-options');
+        });
+    });
+});
+
+Route::name('form-builders.')->prefix('form-builders')->group(function () {
+    Route::get('schema', [FormBuilderController::class, 'getSchema'])
+        ->name('schema');
+
+    Route::post('save', [FormBuilderController::class, 'submit'])
+        ->middleware(['recaptcha'])
+        ->name('save');
 });

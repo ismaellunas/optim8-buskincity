@@ -38,6 +38,9 @@
                 v-model="computedValue['number']"
                 class="input"
                 :class="{'is-danger': hasError}"
+                :placeholder="placeholder"
+                :disabled="disabled"
+                :required="required"
                 @keypress="keyPress"
             >
             <span class="icon is-left">
@@ -65,14 +68,17 @@
         },
 
         props: {
-            hasError: { type: Boolean, default: false },
-            modelValue: { type: Object, default: undefined },
             countryOptions: { type: Array, required: true },
             defaultCountry: { type: String, default: 'US' },
+            disabled: { type: Boolean, default: false },
             dropdownMaxHeight: { type: Number, default: 350 },
             dropdownMaxWidth: { type: Number, default: null },
-            optionsMaxNumber: { type: Number, default: 25 },
+            hasError: { type: Boolean, default: false },
+            modelValue: { type: Object, default: undefined },
             optionsIncreaseNumber: { type: Number, default: 50 },
+            optionsMaxNumber: { type: Number, default: 25 },
+            placeholder: { type: String, default: null },
+            required: { type: Boolean, default: false },
         },
 
         setup(props, {emit}) {
@@ -92,7 +98,7 @@
             selectedCountry() {
                 return find(
                     this.countryOptions,
-                    (option) => option.id == this.computedValue.country
+                    (option) => option.id == (this.computedValue.country ?? this.defaultCountry)
                 );
             },
 

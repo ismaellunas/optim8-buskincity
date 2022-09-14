@@ -50,6 +50,7 @@
     import Carousel from '@/Blocks/Contents/Carousel';
     import Draggable from 'vuedraggable';
     import Faq from '@/Blocks/Contents/Faq';
+    import FormBuilder from '@mod/FormBuilder/Resources/assets/js/Blocks/Contents/FormBuilder';
     import Heading from '@/Blocks/Contents/Heading';
     import Icon from '@/Blocks/Contents/Icon';
     import Image from '@/Blocks/Contents/Image';
@@ -67,6 +68,7 @@
             CardText,
             Carousel,
             Faq,
+            FormBuilder,
             Draggable,
             Heading,
             Icon,

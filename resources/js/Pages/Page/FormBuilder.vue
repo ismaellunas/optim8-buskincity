@@ -106,10 +106,18 @@
     import BlockColumns from '@/Blocks/Columns'
     import blockColumns from '@/ComponentStructures/columns';
     import ComponentStructures from '@/ComponentStructures';
+    import ModuleComponentStructures from '@/Modules/ComponentStructures';
     import Draggable from "vuedraggable";
     import { cloneDeep } from 'lodash';
     import { createColumn } from '@/Libs/page-builder.js';
-    import { isBlank, generateElementId, useModelWrapper, getResourceFromDataObject } from '@/Libs/utils'
+    import { isModuleActive } from '@/Libs/module';
+    import { pascalCase } from 'change-case';
+    import {
+        isBlank,
+        generateElementId,
+        useModelWrapper,
+        getResourceFromDataObject
+    } from '@/Libs/utils';
 
     export default {
         components: {
@@ -154,6 +162,13 @@
                 for (const property in ComponentStructures) {
                     components.push(ComponentStructures[property]);
                 }
+
+                for (const property in ModuleComponentStructures) {
+                    if (isModuleActive(pascalCase(property))) {
+                        components.push(ModuleComponentStructures[property]);
+                    }
+                }
+
                 return components;
             },
             availableBlocks() {
