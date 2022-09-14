@@ -71,7 +71,7 @@
             modelValue: {},
             placeholder: String,
             height: {type: Number, default: 500},
-            isConfigCombine: {type: Boolean, default: false},
+            isConfigCombined: {type: Boolean, default: false},
         },
 
         emits: ['update:modelValue'],
@@ -130,7 +130,7 @@
                     media_live_embeds: true,
                 };
 
-                if (this.isConfigCombine) {
+                if (this.isConfigCombined) {
                     return Object.assign(editorConfig, this.config)
                 }
 

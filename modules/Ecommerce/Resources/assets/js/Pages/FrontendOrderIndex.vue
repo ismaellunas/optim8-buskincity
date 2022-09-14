@@ -16,9 +16,9 @@
                 <thead>
                     <tr>
                         <th>Status</th>
-                        <th>Reference</th>
-                        <th>Customer Name</th>
-                        <th>Date Placed</th>
+                        <th>Event</th>
+                        <th>Time</th>
+                        <th>Date</th>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -32,13 +32,13 @@
                         :key="order.id"
                     >
                         <td>
-                            <biz-tag class="is-medium is-primary">
+                            <biz-tag class="is-medium">
                                 {{ order.status }}
                             </biz-tag>
                         </td>
-                        <td>{{ order.reference }}</td>
-                        <td>{{ order.customer_name ?? '-' }}</td>
-                        <td>{{ order.date_placed }}</td>
+                        <td>{{ order.product_name }}</td>
+                        <td>{{ order.start_end_time }}</td>
+                        <td>{{ order.date }}</td>
                         <td>
                             <div class="level-right">
                                 <biz-button-link

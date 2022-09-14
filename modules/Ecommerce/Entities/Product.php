@@ -90,4 +90,9 @@ class Product extends GetCandyProduct
     {
         return $this->cover->thumbnailUrl ?? null;
     }
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->translateAttribute('name', config('app.locale'));
+    }
 }

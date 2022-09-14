@@ -59,7 +59,8 @@ abstract class BaseField
     protected function isRequired(): bool
     {
         if (!empty($this->validation['rules'])) {
-            return in_array('required', $this->validation['rules']);
+            return array_key_exists('required', $this->validation['rules'])
+                && $this->validation['rules']['required'];
         }
 
         return false;
