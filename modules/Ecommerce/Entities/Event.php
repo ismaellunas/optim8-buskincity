@@ -7,6 +7,7 @@ use GetCandy\Models\OrderLine;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Modules\Ecommerce\Helpers\EventTimeHelper;
 
 class Event extends Model
 {
@@ -48,12 +49,24 @@ class Event extends Model
         );
     }
 
+    public function getTimezonedBookedAtAttribute(): Carbon
+    {
+        return $this->booked_at->setTimezone($this->schedule->timezone);
+    }
+
     public function getEndedTimeAttribute(): Carbon
     {
-        $bookedAt = $this->booked_at->copy();
+        $bookedAt = $this->timezonedBookedAt->copy();
 
-        $method = 'add'.Str::title(Str::plural($this->duration_unit));
+        $method = EventTimeHelper::calculateDurationMethodName($this->duration_unit);
 
         return $bookedAt->$method($this->duration);
+    }
+
+    public function getDisplayStartEndTimeAttribute(): string
+    {
+        return $this->timezonedBookedAt->format('G:i')
+            .' - '
+            .$this->endedTime->format('G:i');
     }
 }

@@ -24,6 +24,7 @@ export const move = iconFormatter('fa-arrows-alt');
 export const plusCircle = iconFormatter('fa-plus-circle');
 export const preview = iconFormatter('fa-arrow-up-right-from-square');
 export const rectangleList = iconFormatter('fa-rectangle-list');
+export const recycle = iconFormatter('fa-recycle');
 export const remove = iconFormatter('fa-trash-can');
 export const show = iconFormatter('fa-eye');
 export const signIn = iconFormatter('fa-sign-in-alt');
@@ -58,6 +59,7 @@ export default {
     plusCircle,
     preview,
     rectangleList,
+    recycle,
     remove,
     show,
     signIn,
