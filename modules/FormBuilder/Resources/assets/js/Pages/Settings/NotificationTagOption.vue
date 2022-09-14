@@ -26,7 +26,7 @@
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizDropdownSearch from '@/Biz/DropdownSearch';
     import icon from '@/Libs/icon-class';
-    import { find, debounce, isEmpty, filter } from 'lodash';
+    import { debounce, isEmpty, filter } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
 
     export default {

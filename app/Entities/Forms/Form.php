@@ -71,16 +71,17 @@ class Form
 
         foreach ($fields as $name => $field) {
             $className = $this->getFieldClassName($field['type']);
+            $fieldName = is_int($name) ? $field['name'] : $name;
 
             if (class_exists($className)) {
-                $fieldObject = new $className($name, $field);
+                $fieldObject = new $className($fieldName, $field);
 
                 if ($fieldObject instanceof TranslatableField) {
                     $fieldObject->setOriginLanguage($this->originLanguage);
                 }
 
                 if ($fieldObject->canBeAccessed($this->author)) {
-                    $fieldCollection->put($name, $fieldObject);
+                    $fieldCollection->put($fieldName, $fieldObject);
                 }
             }
         }
@@ -184,15 +185,16 @@ class Form
 
         foreach ($this->data['fields'] as $name => $field) {
             $className = $this->getFieldClassName($field['type']);
+            $fieldName = is_int($name) ? $field['name'] : $name;
 
             if (class_exists($className)) {
-                $fieldObject = new $className($name, $field);
+                $fieldObject = new $className($fieldName, $field);
 
                 $fieldValues = [
                     "type" => $field['type'],
                     "label" => $field['label'],
-                    "value" => array_key_exists($name, $metas)
-                        ? $metas[$name]
+                    "value" => array_key_exists($fieldName, $metas)
+                        ? $metas[$fieldName]
                         : null,
                 ];
 

@@ -8,6 +8,9 @@ import Gallery from '@/Components/Builder/Content/Gallery';
 import Tabs from '@/Components/Builder/Content/Tabs';
 import UserList from '@/Components/Builder/Content/UserList';
 
+// Modules
+import FormBuilder from '@mod/FormBuilder/Resources/assets/js/Form/Builder';
+
 export const components = {
     BizButton,
     BizQrCode,
@@ -15,4 +18,7 @@ export const components = {
     Gallery,
     Tabs,
     UserList,
+
+    // Modules
+    FormBuilder,
 };

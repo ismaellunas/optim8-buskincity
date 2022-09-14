@@ -33,7 +33,17 @@ class Select extends BaseField
 
     private function adjustInRule(&$rules)
     {
-        $rules[$this->name][] = 'in:'.implode(',', array_keys($this->options));
+        $validValues = collect($this->options)
+            ->map(function ($option, $key) {
+                if (isset($option['id'])) {
+                    return $option['id'];
+                }
+
+                return $key;
+            })
+            ->all();
+
+        $rules[$this->name][] = 'in:'.implode(',', $validValues);
     }
 
     public function validationRules(): array

@@ -12,6 +12,7 @@ require("./bootstrap");
 import ExampleComponent from './components/ExampleComponent';
 import FormDonation from './components/FormDonation';
 import LoadingOverlay from './components/LoadingOverlay';
+import VueLoading from 'vue-loading-overlay';
 import { components as defaultComponents } from '@/frontend-bootstrap';
 import { createApp } from "vue";
 
@@ -22,8 +23,9 @@ const components = {
 };
 
 const app = createApp({
-    components: Object.assign(defaultComponents, components),
-});
+        components: Object.assign(defaultComponents, components),
+    })
+    .use(VueLoading, {color: '#3280bf', loader: 'dots', opacity: 0.3, zIndex: 8000});
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => app.component(key.split('/').pop().split('.')[0], files(key).default))
