@@ -83,7 +83,7 @@ export const config = {
             },
             regex: {
                 component: "ConfigInput",
-                label: "regex",
+                label: "Regex",
             }
         },
 

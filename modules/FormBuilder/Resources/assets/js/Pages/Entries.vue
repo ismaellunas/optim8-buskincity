@@ -3,6 +3,18 @@
         <div class="box">
             <div class="columns">
                 <div class="column">
+                    <biz-button-link
+                        class="is-link is-pulled-left mr-5"
+                        :href="route(baseRouteName + '.index')"
+                    >
+                        <span class="icon-text">
+                            <span class="icon">
+                                <i :class="icon.back" />
+                            </span>
+                            <span>Back</span>
+                        </span>
+                    </biz-button-link>
+
                     <div class="is-pulled-left">
                         <biz-filter-search
                             v-model="term"
@@ -50,6 +62,7 @@
 <script>
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import AppLayout from '@/Layouts/AppLayout';
+    import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizPagination from '@/Biz/Pagination';
     import icon from '@/Libs/icon-class';
@@ -60,6 +73,7 @@
         name: 'FormBuilderEntries',
 
         components: {
+            BizButtonLink,
             BizFilterSearch,
             BizPagination,
         },

@@ -2,6 +2,7 @@
 
 namespace Modules\Ecommerce\Services;
 
+use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Support\Collection;
@@ -43,6 +44,27 @@ class ProductEventService
             'location' => null,
             'timezone' => $product->eventSchedule->timezone ?? null,
         ];
+    }
+
+    public function detailResource(Product $product): array
+    {
+        $schedule = $product->eventSchedule;
+
+        return [
+            'duration' => $this->displayDuration($product),
+            'bookable_date_range_type' => $product->bookable_date_range_type,
+            'bookable_date_range' => $product->bookable_date_range,
+            'location' => null,
+            'timezone' => $schedule->timezone ?? null,
+        ];
+    }
+
+    private function displayDuration($product): string
+    {
+        return $product->duration.' '.Str::plural(
+            $product->duration_unit,
+            $product->duration
+        );
     }
 
     public function bookableDateRangeTypeOptions(): Collection
@@ -324,5 +346,15 @@ class ProductEventService
                 $scheduleRuleTime->save();
             }
         }
+    }
+
+    public function minBookableDate(): ?Carbon
+    {
+        return today();
+    }
+
+    public function maxBookableDate(Product $product): ?Carbon
+    {
+        return today()->addDays($product->bookable_date_range);
     }
 }
