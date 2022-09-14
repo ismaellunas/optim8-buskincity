@@ -4,7 +4,6 @@ namespace Modules\Ecommerce\Entities;
 
 use App\Models\User;
 use GetCandy\Models\Order as GetCandyOrder;
-use GetCandy\Models\OrderLine;
 use Modules\Ecommerce\Enums\OrderLineType;
 use Modules\Ecommerce\Database\factories\OrderFactory;
 
@@ -18,6 +17,11 @@ class Order extends GetCandyOrder
     protected static function newFactory(): OrderFactory
     {
         return OrderFactory::new();
+    }
+
+    public function lines()
+    {
+        return $this->hasMany(OrderLine::class);
     }
 
     public function getUserFullNameAttribute(): ?string

@@ -47,16 +47,6 @@ class EcommerceServiceProvider extends ServiceProvider
         User::resolveRelationUsing('managedSpaceProducts', function ($userModel) {
             return $userModel->belongsToMany(Space::class, 'space_product_managers');
         });
-
-        OrderLine::resolveRelationUsing('events', function ($orderLine) {
-            return $orderLine->hasMany(Event::class);
-        });
-
-        OrderLine::resolveRelationUsing('latestEvent', function ($orderLine) {
-            return $orderLine
-                ->hasOne(Event::class)
-                ->latest();
-        });
     }
 
     /**
