@@ -89,8 +89,6 @@
             <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>
         @endenv
 
-        @routes
-
         @stack('bottom_scripts')
 
         <script src="{{ mix('js/frontend-misc.js') }}" defer></script>

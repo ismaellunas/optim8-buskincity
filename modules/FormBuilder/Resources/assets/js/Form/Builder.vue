@@ -78,7 +78,6 @@
             bagName: { type: String, default: null },
             formId: { type: [String, null], required: true },
             recaptchaSiteKey: { type: String, required: true },
-            routeGetSchema: { type: String, default: 'form-builders.schema' },
         },
 
         data() {
@@ -93,6 +92,10 @@
                 isShown: false,
                 isRecaptchaError: false,
                 recaptchaResponse: null,
+                urls: {
+                    getSchemas: '/form-builders/schema',
+                    save: '/form-builders/save',
+                },
             };
         },
 
@@ -117,7 +120,7 @@
                 const self = this;
 
                 return axios.get(
-                    route(self.routeGetSchema),
+                    self.urls.getSchemas,
                     {
                         params: {
                             form_id: self.formId,
@@ -185,7 +188,7 @@
                 self.form['g-recaptcha-response'] = self.recaptchaResponse;
 
                 axios.post(
-                    route('form-builders.save'),
+                    self.urls.save,
                     self.form,
                 )
                     .then((response) => {
