@@ -164,23 +164,21 @@ abstract class BaseField
         return null;
     }
 
-    private function transformToFlatten(&$rules)
+    protected function transformToFlatten(&$rules)
     {
         $rules = collect($rules)->transform(function ($rule) {
             $newRules = [];
 
             foreach ($rule as $validationName => $validationValue) {
-                if (is_int($validationName)) {
+                if (is_object($validationValue)) {
                     $newRules[] = $validationValue;
+                } else if (is_bool($validationValue)) {
+                    if ($validationValue) {
+                        $newRules[] = $validationName;
+                    }
                 } else {
-                    if (is_bool($validationValue)) {
-                        if ($validationValue) {
-                            $newRules[] = $validationName;
-                        }
-                    } else {
-                        if ($validationValue) {
-                            $newRules[] = $validationName.':'.$validationValue;
-                        }
+                    if ($validationValue) {
+                        $newRules[] = $validationName.':'.$validationValue;
                     }
                 }
             }
