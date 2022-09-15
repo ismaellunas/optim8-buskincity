@@ -41,6 +41,11 @@ class Event extends Model
         return $query->where('status', BookingStatus::UPCOMING);
     }
 
+    public function scopePassed($query)
+    {
+        return $query->where('status', BookingStatus::PASSED);
+    }
+
     public function getFormattedBookedAtAttribute(): string
     {
         return $this->booked_at->format(config('constants.format.date_time_minute'));
