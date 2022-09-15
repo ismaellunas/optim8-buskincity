@@ -55,6 +55,7 @@ class UpcomingEventWidget implements WidgetInterface
             ->whereHas('orderLine.order', function ($query) {
                 $query->where('user_id', $this->user->id);
             })
+            ->orderBy('booked_at', 'ASC')
             ->limit(10)
             ->get();
 
