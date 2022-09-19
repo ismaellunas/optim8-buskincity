@@ -6,6 +6,7 @@ use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Http\Controllers\CrudController;
 use App\Models\Media;
 use App\Services\MediaService;
+use App\Services\IPService;
 use GetCandy\FieldTypes\Text;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\ProductType;
@@ -189,6 +190,7 @@ class ProductController extends CrudController
             'weekdays' => $this->productEventService->weekdays()->pluck('value', 'id'),
             'weeklyHours' => $this->productEventService->weeklyHours($product),
             'dateOverrides' => $this->productEventService->dateOverrides($product),
+            'geoLocation' => app(IPService::class)->getGeoLocation(),
         ]));
     }
 

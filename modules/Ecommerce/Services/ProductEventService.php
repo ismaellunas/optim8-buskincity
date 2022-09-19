@@ -43,6 +43,11 @@ class ProductEventService
             'bookable_date_range' => $product->bookable_date_range,
             'location' => null,
             'timezone' => $product->eventSchedule->timezone ?? null,
+            'location' => $product->locations[0] ?? [
+                'address' => null,
+                'latitude' => null,
+                'longitude' => null,
+            ],
         ];
     }
 

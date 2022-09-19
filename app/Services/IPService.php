@@ -55,4 +55,19 @@ class IPService
     {
         return $this->getClientData()['time_zone']['id'] ?? config('app.timezone');
     }
+
+    public function getGeoLocation(): ?array
+    {
+        if ($this->getClientIp() == '127.0.0.1') {
+            return [
+                'latitude' => 51.507351,
+                'longitude' => -0.127758,
+            ];
+        }
+
+        return [
+            'latitude' => $this->getClientData()['location']['longitude'],
+            'longitude' => $this->getClientData()['location']['latitude'],
+        ];
+    }
 }
