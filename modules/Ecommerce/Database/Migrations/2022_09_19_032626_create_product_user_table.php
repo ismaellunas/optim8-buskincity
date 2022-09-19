@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('space_product_managers', function (Blueprint $table) {
+        Schema::create('product_user', function (Blueprint $table) {
             $table->id();
             $table
-                ->foreignId('space_id')
-                ->constrained()
+                ->foreignId('product_id')
+                ->constrained(config('getcandy.database.table_prefix').'products')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table
@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('space_product_managers');
+        Schema::dropIfExists('product_managers');
     }
 };
