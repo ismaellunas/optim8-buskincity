@@ -22,17 +22,27 @@ class ProductService
     }
 
     public function getRecords(
+        User $user,
         string $term = null,
         int $perPage = 15
     ): LengthAwarePaginator {
+        $productIds = null;
+
+        if (!$user->can('product.browse')) {
+            $productIds = $user->products->pluck('id');
+        }
+
         $records = Product::orderBy('id', 'DESC')
             ->select(['id', 'status', 'attribute_data'])
             ->when($term, function ($query) use ($term) {
                 $query->search($term);
             })
+            ->when($productIds, function ($query, $productIds) {
+                $query->whereIn('id', $productIds);
+            })
             ->paginate($perPage);
 
-        $this->transformRecords($records);
+        $this->transformRecords($records, $user);
 
         return $records;
     }
