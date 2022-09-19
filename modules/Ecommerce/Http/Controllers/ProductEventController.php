@@ -26,6 +26,7 @@ class ProductEventController extends CrudController
 
         $product->duration = $inputs['duration'];
         $product->bookable_date_range = $inputs['bookable_date_range'];
+        $product->locations = [$inputs['location']];
         $product->save();
 
         $schedule = $product->eventSchedule ?? Schedule::factory()->state([

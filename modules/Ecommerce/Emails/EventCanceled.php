@@ -32,7 +32,7 @@ class EventCanceled extends Mailable
      */
     public function build()
     {
-        $line = $this->order->firstEventline;
+        $line = $this->order->firstEventLine;
         $event = $line->latestEvent;
         $schedule = $event->schedule;
 

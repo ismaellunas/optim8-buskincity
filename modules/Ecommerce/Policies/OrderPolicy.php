@@ -15,9 +15,12 @@ class OrderPolicy extends BasePermissionPolicy
     public function cancel(User $user, Order $order)
     {
         return (
-            $user->can('order.edit')
-            && $order->status != OrderStatus::CANCELED->value
+            $order->status != OrderStatus::CANCELED->value
             && $order->firstEventline->latestEvent->status == BookingStatus::UPCOMING->value
+            && (
+                $user->can('order.edit')
+                || $order->isUserWhoPlacedTheOrder($user)
+            )
         );
     }
 
