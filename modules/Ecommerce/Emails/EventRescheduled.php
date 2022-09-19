@@ -55,7 +55,7 @@ class EventRescheduled extends Mailable
         return $this
             ->subject( __('Updated: :inviteeName - :startedTime :date - :productName', [
                 'productName' => $productName,
-                'date' => $upcomingEventDateTime->format(config('ecommerce.format.date_email_title')),
+                'date' => $upcomingEventDateTime->format(config('ecommerce.format.date_event_email_title')),
                 'startedTime' => $upcomingEventDateTime->format('H:i'),
                 'inviteeName' => $inviteeName,
             ]))

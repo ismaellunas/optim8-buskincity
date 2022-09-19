@@ -135,8 +135,14 @@ class OrderService
             $event = $lineArray['latestEvent'];
             $lineArray['event'] = [
                 'booked_at' => $event->formattedBookedAt,
+                'booked_date' => $event->booked_at->format('j F Y'),
                 'timezone' => $event->schedule->timezone,
                 'duration' => $event->displayDuration,
+                'duration_details' => [
+                    'duration' => $event->duration,
+                    'unit' => $event->duration_unit,
+                ],
+                'start_end_time' => $event->displayStartEndTime,
                 'status' => Str::title($event->status),
             ];
 
@@ -157,8 +163,16 @@ class OrderService
         $carbonTimeZone = CarbonTimeZone::create($event->schedule->timezone);
 
         return [
+            'id' => $order->id,
             'event_date' => $event->timezonedBookedAt->format('d F Y'),
+            'event_duration' => $event->displayDuration,
+            'event_duration_details' => [
+                'duration' => $event->duration,
+                'unit' => $event->duration_unit,
+            ],
             'event_start_end_time' => $event->displayStartEndTime,
+            'event_time' => $event->timezonedBookedAt->format('H:i'),
+            'product_id' => $product->id,
             'product_name' => $product->displayName,
             'status' => Str::title($event->status),
             'timezone' => $event->schedule->timezone,

@@ -71,6 +71,15 @@ Route::
         Route::get('/products/{product}/available-times/{date}', [FrontendProductController::class, 'availableTimes'])
             ->name('products.available-times');
 
+        Route::get('/orders/{order}/reschedule', [FrontendOrderController::class, 'reschedule'])
+            ->name('orders.reschedule');
+
+        Route::post('/orders/{order}/reschedule', [FrontendOrderController::class, 'rescheduleUpdate'])
+            ->name('orders.reschedule.update');
+
+        Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])
+            ->name('orders.cancel');
+
         Route::post('/orders/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
             ->name('orders.book-event');
     });
