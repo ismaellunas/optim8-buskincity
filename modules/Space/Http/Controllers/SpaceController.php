@@ -169,18 +169,11 @@ class SpaceController extends CrudController
             });
         }
 
-        $canManagerProductManager = $user->can('manageProductManager', Space::class);
-
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => 'Edit Space',
             'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $parent ? [$parent] : [],
             'spaceManagers' => $this->spaceService->formattedManagers($space),
-            'spaceProductManagers' => (
-                $canManagerProductManager
-                ? $this->spaceService->formattedProductManagers($space)
-                : []
-            ),
             'spaceRecord' => $this->spaceService->editableRecord($space),
             'typeOptions' => $this->spaceService->typeOptions(),
             'coverUrl' => $space->coverUrl,
@@ -193,9 +186,6 @@ class SpaceController extends CrudController
                 'manager' => [
                     'edit' => $user->can('manageManager', Space::class),
                 ],
-                'productManager' => [
-                    'edit' => $canManagerProductManager,
-                ]
             ],
             'page' => $page,
             'statusOptions' => Page::getStatusOptions(),

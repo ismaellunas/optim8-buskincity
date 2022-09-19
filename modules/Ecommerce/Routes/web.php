@@ -31,6 +31,16 @@ Route::
         'ensureLoginFromAdminLoginRoute',
     ])
     ->group(function () {
+
+        Route::prefix('products')->name('products.')->group(function() {
+            Route::middleware('can:manageManager,Modules\Ecommerce\Entities\Product')->group(function () {
+                Route::get('{product}/managers/search', 'ProductManagerController@search')
+                    ->name('managers.search');
+                Route::post('{product}/managers/update', 'ProductManagerController@updateManagers')
+                    ->name('managers.update');
+            });
+        });
+
         Route::resource('/products', ProductController::class)
             ->except(['show']);
 
