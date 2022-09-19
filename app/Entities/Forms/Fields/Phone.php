@@ -3,6 +3,7 @@
 namespace App\Entities\Forms\Fields;
 
 use App\Services\CountryService;
+use App\Services\IPService;
 use Propaganistas\LaravelPhone\PhoneNumber;
 
 class Phone extends BaseField
@@ -79,7 +80,7 @@ class Phone extends BaseField
 
     public function getDefaultCountryIsoAlpha2(): ?string
     {
-        return "US";
+        return app(IPService::class)->getCountryCode('US');
     }
 
     public function getLabels(array $inputs = []): array
