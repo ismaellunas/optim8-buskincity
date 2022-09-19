@@ -1,35 +1,35 @@
 <?php
 
-namespace Modules\Space\Http\Controllers;
+namespace Modules\Ecommerce\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Traits\FlashNotifiable;
 use Illuminate\Http\Request;
-use Modules\Space\Entities\Space;
-use Modules\Space\Services\SpaceService;
+use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Services\ProductService;
 
 class ProductManagerController extends Controller
 {
     use FlashNotifiable;
 
-    private $spaceService;
+    private $productService;
 
-    public function __construct(SpaceService $spaceService)
+    public function __construct(ProductService $productService)
     {
-        $this->spaceService = $spaceService;
+        $this->productService = $productService;
     }
 
     public function search(Request $request)
     {
-        return $this->spaceService->managers(
+        return $this->productService->managers(
             $request->term,
             $request->excluded ?? []
         );
     }
 
-    public function updateManagers(Request $request, Space $space)
+    public function updateManagers(Request $request, Product $product)
     {
-        $space->productManagers()->sync($request->managers);
+        $product->managers()->sync($request->managers);
 
         $this->generateFlashMessage('Product Manager updated successfully!');
 
