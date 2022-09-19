@@ -57,7 +57,7 @@ class SettingNotificationController extends CrudController
 
         $notificationSetting->saveFromInputs($inputs);
 
-        $this->generateFlashMessage('Form created successfully!');
+        $this->generateFlashMessage('Notification setting created successfully!');
 
         return redirect()->route($this->baseRouteName . '.edit', [
             'form_builder' => $formBuilder->id,
@@ -93,7 +93,7 @@ class SettingNotificationController extends CrudController
 
         $notification->saveFromInputs($inputs);
 
-        $this->generateFlashMessage('Form updated successfully!');
+        $this->generateFlashMessage('Notification setting updated successfully!');
 
         return redirect()->route($this->baseRouteName . '.edit', [
             'form_builder' => $formBuilder->id,
