@@ -6,11 +6,10 @@ use App\Models\User;
 use App\Services\MediaService;
 use GetCandy\Base\OrderReferenceGenerator;
 use GetCandy\Base\OrderReferenceGeneratorInterface;
-use GetCandy\Models\OrderLine;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
-use Modules\Ecommerce\Entities\Event;
+use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Services\ProductService;
-use Modules\Space\Entities\Space;
 
 class EcommerceServiceProvider extends ServiceProvider
 {
@@ -36,18 +35,16 @@ class EcommerceServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
 
-        User::resolveRelationUsing('managedSpaceProducts', function ($userModel) {
-            return $userModel->belongsToMany(Space::class, 'space_product_managers');
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            $schedule->command('booking-event:status-to-ongoing')->everyMinute()->runInBackground();
+            $schedule->command('booking-event:status-to-passed')->everyMinute()->runInBackground();
+            $schedule->command('booking-event:email-reminder')->everyTenMinutes()->runInBackground();
         });
 
-        OrderLine::resolveRelationUsing('events', function ($orderLine) {
-            return $orderLine->hasMany(Event::class);
-        });
-
-        OrderLine::resolveRelationUsing('latestEvent', function ($orderLine) {
-            return $orderLine
-                ->hasOne(Event::class)
-                ->latest();
+        User::resolveRelationUsing('products', function ($userModel) {
+            return $userModel->belongsToMany(Product::class, 'product_user');
         });
     }
 
@@ -58,6 +55,8 @@ class EcommerceServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->register(AuthServiceProvider::class);
+        $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
 
         $this->app->singleton(ProductService::class, function ($app) {
@@ -67,6 +66,12 @@ class EcommerceServiceProvider extends ServiceProvider
         $this->app->singleton(OrderReferenceGeneratorInterface::class, function () {
             return new OrderReferenceGenerator();
         });
+
+        $this->commands([
+            \Modules\Ecommerce\Console\EventEmailReminder::class,
+            \Modules\Ecommerce\Console\SetEventOngoing::class,
+            \Modules\Ecommerce\Console\SetEventPassed::class,
+        ]);
     }
 
     /**

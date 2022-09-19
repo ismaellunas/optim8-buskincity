@@ -14,27 +14,11 @@
             />
         </template>
 
-        <form @submit.prevent="reschedule">
-            <h5 class="title is-5">
-                {{ product.name }}
-            </h5>
+        <slot name="event" />
 
-            <p>
-                <span class="tag">
-                    {{ product.identifier }}
-                </span>
-            </p>
+        <slot name="reschedule" />
 
-            <table class="table">
-                <tr
-                    v-for="(detail, index) in details"
-                    :key="index"
-                >
-                    <th>{{ detail.field }}</th>
-                    <td>{{ detail.value }}</td>
-                </tr>
-            </table>
-        </form>
+        <slot name="form" />
 
         <template #footer>
             <div
@@ -66,9 +50,6 @@
         },
 
         props: {
-            details: { type: Array, required: true },
-            product: { type: Object, required: true },
-            submitText: { type: String, default: "Book" },
             title: { type: String, default: "Reschedule Event Confirmation" },
         },
 

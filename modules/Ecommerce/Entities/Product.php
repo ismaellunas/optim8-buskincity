@@ -3,6 +3,7 @@
 namespace Modules\Ecommerce\Entities;
 
 use App\Models\Media;
+use App\Models\User;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\Product as GetCandyProduct;
 use Illuminate\Support\Arr;
@@ -42,6 +43,11 @@ class Product extends GetCandyProduct
     public function productable()
     {
         return $this->morphTo();
+    }
+
+    public function managers()
+    {
+        return $this->belongsToMany(User::class, 'product_user');
     }
 
     public function scopePublished($query)

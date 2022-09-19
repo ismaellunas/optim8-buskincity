@@ -3,10 +3,10 @@
 namespace Modules\Ecommerce\Entities;
 
 use Carbon\Carbon;
-use GetCandy\Models\OrderLine;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Modules\Ecommerce\Enums\BookingStatus;
 use Modules\Ecommerce\Helpers\EventTimeHelper;
 
 class Event extends Model
@@ -34,6 +34,16 @@ class Event extends Model
     public function orderLine()
     {
         return $this->belongsTo(OrderLine::class);
+    }
+
+    public function scopeUpcoming($query)
+    {
+        return $query->where('status', BookingStatus::UPCOMING);
+    }
+
+    public function scopePassed($query)
+    {
+        return $query->where('status', BookingStatus::PASSED);
     }
 
     public function getFormattedBookedAtAttribute(): string
