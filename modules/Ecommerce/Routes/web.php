@@ -77,6 +77,9 @@ Route::
         Route::post('/orders/{order}/reschedule', [FrontendOrderController::class, 'rescheduleUpdate'])
             ->name('orders.reschedule.update');
 
+        Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])
+            ->name('orders.cancel');
+
         Route::post('/orders/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
             ->name('orders.book-event');
     });

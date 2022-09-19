@@ -50,7 +50,10 @@
 
                 <div class="is-4">
                     <div class="columns is-multiline is-centered">
-                        <div class="column is-8">
+                        <div
+                            v-if="can.reschedule"
+                            class="column is-8"
+                        >
                             <biz-button-link
                                 class="is-fullwidth"
                                 :href="route(baseRouteName+'.reschedule', order.id)"
@@ -59,11 +62,15 @@
                                 <span>Reschedule</span>
                             </biz-button-link>
                         </div>
-                        <div class="column is-8">
+                        <div
+                            v-if="can.cancel"
+                            class="column is-8"
+                        >
                             <biz-button-icon
                                 class="is-fullwidth"
                                 type="button"
                                 :icon="icon.remove"
+                                @click="cancel"
                             >
                                 <span>Cancel</span>
                             </biz-button-icon>
@@ -83,8 +90,10 @@
     import BizTable from '@/Biz/Table';
     import BizTag from '@/Biz/Tag';
     import Layout from '@/Layouts/User';
-    import icon from '@/Libs/icon-class';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import ecommerceIcon from '../Libs/ecommerce-icon';
+    import icon from '@/Libs/icon-class';
+    import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
 
     export default {
         components: {
@@ -96,10 +105,15 @@
             BizTag,
         },
 
+        mixins: [
+            MixinHasLoader,
+        ],
+
         layout: Layout,
 
         props: {
             baseRouteName: { type: String, required: true },
+            can: { type: Object, required: true },
             description: { type: String, required: true },
             order: { type: Object, required: true },
         },
@@ -112,6 +126,30 @@
         },
 
         methods: {
+            cancel() {
+                const self = this;
+
+                confirmDelete('Are you sure want to cancel this Booking?')
+                    .then(result => {
+                        if (result.isConfirmed) {
+                            self.$inertia.post(
+                                route(self.baseRouteName + '.cancel', self.order.id),
+                                {},
+                                {
+                                    onStart: () => self.onStartLoadingOverlay(),
+                                    onFinish: () => self.onEndLoadingOverlay(),
+                                    onError: (errors) => {
+                                        oopsAlert();
+                                    },
+                                    onSuccess: (page) => {
+                                        successAlert(page.props.flash.message);
+                                    },
+                                }
+                            );
+                        }
+                    });
+
+            },
         },
     };
 </script>
