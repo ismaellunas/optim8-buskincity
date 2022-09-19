@@ -340,6 +340,31 @@
                     </div>
                 </form>
             </biz-provide-inject-tab>
+
+            <biz-provide-inject-tab
+                title="Manager"
+                :is-rendered="can.productManager.edit"
+            >
+                <form
+                    v-if="can.productManager.edit"
+                    class="box"
+                    @submit.prevent="submitManager"
+                >
+                    <biz-form-assign-user
+                        v-model="productManagers"
+                        label="Choose Product Manager"
+                        :get-users-url="route(baseRouteName+'.managers.search', product.id)"
+                    />
+
+                    <div class="field is-grouped is-grouped-right mt-4">
+                        <div class="control">
+                            <biz-button class="is-link">
+                                Update
+                            </biz-button>
+                        </div>
+                    </div>
+                </form>
+            </biz-provide-inject-tab>
         </biz-provide-inject-tabs>
 
         <product-edit-modal-date-override
@@ -360,6 +385,7 @@
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDateTime from '@/Biz/DateTime';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFormAssignUser from '@/Biz/Form/AssignUser';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormNumberAddons from '@/Biz/Form/NumberAddons';
     import BizFormSelect from '@/Biz/Form/Select';
@@ -376,7 +402,7 @@
     import ProductForm from './ProductForm';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
-    import { cloneDeep, padStart } from 'lodash';
+    import { cloneDeep, padStart, map } from 'lodash';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { generateElementId } from '@/Libs/utils';
     import { useForm } from '@inertiajs/inertia-vue3';
@@ -389,6 +415,7 @@
             BizCheckbox,
             BizDateTime,
             BizErrorNotifications,
+            BizFormAssignUser,
             BizFormInput,
             BizFormNumberAddons,
             BizFormSelect,
@@ -412,6 +439,7 @@
 
         props: {
             baseRouteName: { type: String, required: true},
+            can: { type: Object, required: true },
             roleOptions: { type: Array, required: true },
             statusOptions: { type: Array, required: true },
             eventDurationOptions: { type: Array, required: true },
@@ -423,6 +451,7 @@
             weeklyHours: { type: Object, required: true },
             dateOverrides: { type: Array, required: true },
             geoLocation: { type: Object, required: true },
+            managers: { type: Array, default: () => [] },
         },
 
         setup(props, { emit }) {
@@ -492,6 +521,7 @@
                 },
                 selectedDateOverride: null,
                 isMapOpen: false,
+                productManagers: this.managers,
             };
         },
 
@@ -605,6 +635,26 @@
 
             toggleMap() {
                 this.isMapOpen = !this.isMapOpen;
+            },
+
+            submitManager() {
+                const self = this;
+                const form = useForm({managers: map(this.productManagers, 'id')});
+
+                const url = route(
+                    self.baseRouteName+'.managers.update',
+                    self.product.id
+                );
+
+                form.post(url, {
+                    replace: true,
+                    onStart: () => self.onStartLoadingOverlay(),
+                    onSuccess: (page) => {
+                        successAlert(page.props.flash.message);
+                    },
+                    onError: () => { oopsAlert() },
+                    onFinish: () => self.onEndLoadingOverlay()
+                });
             },
         },
     };

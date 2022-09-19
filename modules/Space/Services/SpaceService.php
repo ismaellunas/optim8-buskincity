@@ -183,16 +183,6 @@ class SpaceService
         });
     }
 
-    public function formattedProductManagers(Space $space): Collection
-    {
-        return $space->productManagers->map(function ($manager) {
-            return [
-                'id' => $manager->id,
-                'value' => $manager->fullName,
-            ];
-        });
-    }
-
     public function editableRecord(Space $space = null): array
     {
         if (is_null($space)) {

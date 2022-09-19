@@ -37,13 +37,17 @@ class ProductService
         return $records;
     }
 
-    public function transformRecords($records)
+    public function transformRecords($records, User $user)
     {
-        $records->getCollection()->transform(function ($record) {
+        $records->getCollection()->transform(function ($record) use ($user) {
             return (object) [
                 'id' => $record->id,
                 'name' => $record->translateAttribute('name', config('app.locale')),
                 'status' => Str::title($record->status),
+                'can' => [
+                    'edit' => $user->can('update', $record),
+                    'delete' => $user->can('delete', $record),
+                ],
             ];
         });
     }
@@ -179,5 +183,44 @@ class ProductService
         ];
 
         return $resource;
+    }
+
+    public function managers(
+        string $term = null,
+        array $excludedIds = [],
+        int $limit = 15,
+    ): Collection {
+
+        return User::available()
+            ->backend()
+            ->notInRoleNames([config('permission.super_admin_role')])
+            ->when($term, function ($query, $term) {
+                $query->search($term);
+            })
+            ->when($excludedIds, function ($query, $excludedIds) {
+                $query->whereNotIn('id', $excludedIds);
+            })
+            ->limit($limit)
+            ->get([
+                'id',
+                'first_name',
+                'last_name',
+            ])
+            ->map(function ($user) {
+                return [
+                    'id' => $user->id,
+                    'value' => $user->fullName,
+                ];
+            });
+    }
+
+    public function formattedManagers(Product $product): Collection
+    {
+        return $product->managers->map(function ($manager) {
+            return [
+                'id' => $manager->id,
+                'value' => $manager->fullName,
+            ];
+        });
     }
 }

@@ -178,6 +178,8 @@ class ProductController extends CrudController
      */
     public function edit(Product $product)
     {
+        $canManageManager = auth()->user()->can('manageManager', Product::class);
+
         return Inertia::render('Ecommerce::ProductEdit', $this->getData([
             'title' => $this->getEditTitle(),
             'imageMimes' => config('constants.extensions.image'),
@@ -191,6 +193,16 @@ class ProductController extends CrudController
             'weeklyHours' => $this->productEventService->weeklyHours($product),
             'dateOverrides' => $this->productEventService->dateOverrides($product),
             'geoLocation' => app(IPService::class)->getGeoLocation(),
+            'managers' => (
+                $canManageManager
+                ? $this->productService->formattedManagers($product)
+                : []
+            ),
+            'can' => [
+                'productManager' => [
+                    'edit' => $canManageManager,
+                ]
+            ],
         ]));
     }
 
