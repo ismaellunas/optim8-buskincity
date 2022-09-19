@@ -2,6 +2,7 @@
 
 namespace Modules\Ecommerce\Entities;
 
+use App\Models\User;
 use GetCandy\Models\Order as GetCandyOrder;
 use GetCandy\Models\OrderLine;
 use Modules\Ecommerce\Enums\OrderLineType;
@@ -36,5 +37,10 @@ class Order extends GetCandyOrder
         return $this
             ->hasOne(OrderLine::class)
             ->where('type', OrderLineType::EVENT->value);
+    }
+
+    public function isUserWhoPlacedTheOrder(User $user): bool
+    {
+        return $this->user_id == $user->id;
     }
 }
