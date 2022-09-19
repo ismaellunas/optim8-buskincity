@@ -41,13 +41,6 @@ Route::name('admin.')->prefix('admin/')->middleware([
             Route::resource('space-types', SpaceTypeController::class)
                 ->only(['store', 'update', 'destroy']);
         });
-
-        Route::middleware('can:manageProductManager,Modules\Space\Entities\Space')->group(function () {
-            Route::get('{space}/product-managers/search', 'ProductManagerController@search')
-                ->name('product-managers.search');
-            Route::post('{space}/product-managers/update', 'ProductManagerController@updateManagers')
-                ->name('product-managers.update');
-        });
     });
 
     Route::resource('spaces.pages', PageController::class)

@@ -20,4 +20,12 @@ class ModuleService
     {
         return 10;
     }
+
+    public static function widgets(): array
+    {
+        return [
+            'upcomingEvent',
+            'lastEvent',
+        ];
+    }
 }

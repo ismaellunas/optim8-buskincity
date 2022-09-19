@@ -179,7 +179,7 @@ class FormBuilderService
         unset($inputs['form_id']);
     }
 
-    public function swapTagWithEntryValue(FieldGroupEntry $entry, string $value): string
+    public function swapTagWithEntryValue(FieldGroupEntry $entry, string $value = null): ?string
     {
         $swapLists = [];
         $fields = $entry->fieldGroup->data['fields'];

@@ -96,6 +96,57 @@
                                 </p>
                             </template>
                         </biz-form-number-addons>
+
+                        <biz-form-textarea
+                            v-model="eventForm.location.address"
+                            label="Address"
+                            placeholder="Address"
+                            rows="2"
+                            maxlength="500"
+                            :message="error('location.address', 'eventForm')"
+                        />
+
+                        <div class="columns is-multiline">
+                            <div class="column is-5">
+                                <biz-form-input
+                                    v-model="eventForm.location.latitude"
+                                    label="Latitude"
+                                    :message="error('location.latitude', 'eventForm')"
+                                />
+                            </div>
+                            <div class="column is-5">
+                                <biz-form-input
+                                    v-model="eventForm.location.longitude"
+                                    label="Longitude"
+                                    :message="error('location.longitude', 'eventForm')"
+                                />
+                            </div>
+                            <div class="column is-2">
+                                <div class="field">
+                                    <label class="label">
+                                        Map
+                                    </label>
+                                    <span class="control">
+                                        <biz-button-icon
+                                            type="button"
+                                            class="is-primary"
+                                            :icon="icon.locationMark"
+                                            @click="toggleMap"
+                                        />
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div
+                                v-if="isMapOpen"
+                                class="column is-8"
+                            >
+                                <biz-gmap-marker
+                                    v-model="eventForm.location"
+                                    :init-position="geoLocation"
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     <div class="box">
@@ -289,8 +340,32 @@
                     </div>
                 </form>
             </biz-provide-inject-tab>
-        </biz-provide-inject-tabs>
 
+            <biz-provide-inject-tab
+                title="Manager"
+                :is-rendered="can.productManager.edit"
+            >
+                <form
+                    v-if="can.productManager.edit"
+                    class="box"
+                    @submit.prevent="submitManager"
+                >
+                    <biz-form-assign-user
+                        v-model="productManagers"
+                        label="Choose Product Manager"
+                        :get-users-url="route(baseRouteName+'.managers.search', product.id)"
+                    />
+
+                    <div class="field is-grouped is-grouped-right mt-4">
+                        <div class="control">
+                            <biz-button class="is-link">
+                                Update
+                            </biz-button>
+                        </div>
+                    </div>
+                </form>
+            </biz-provide-inject-tab>
+        </biz-provide-inject-tabs>
 
         <product-edit-modal-date-override
             v-if="isModalOpen"
@@ -310,8 +385,12 @@
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDateTime from '@/Biz/DateTime';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFormAssignUser from '@/Biz/Form/AssignUser';
+    import BizFormInput from '@/Biz/Form/Input';
     import BizFormNumberAddons from '@/Biz/Form/NumberAddons';
     import BizFormSelect from '@/Biz/Form/Select';
+    import BizFormTextarea from '@/Biz/Form/Textarea';
+    import BizGmapMarker from '@/Biz/GmapMarker';
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
     import BizTag from '@/Biz/Tag';
@@ -323,9 +402,9 @@
     import ProductForm from './ProductForm';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
-    import { generateElementId } from '@/Libs/utils';
+    import { cloneDeep, padStart, map } from 'lodash';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { cloneDeep, padStart } from 'lodash';
+    import { generateElementId } from '@/Libs/utils';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -336,8 +415,12 @@
             BizCheckbox,
             BizDateTime,
             BizErrorNotifications,
+            BizFormAssignUser,
+            BizFormInput,
             BizFormNumberAddons,
             BizFormSelect,
+            BizFormTextarea,
+            BizGmapMarker,
             BizProvideInjectTab,
             BizProvideInjectTabs,
             BizTag,
@@ -356,6 +439,7 @@
 
         props: {
             baseRouteName: { type: String, required: true},
+            can: { type: Object, required: true },
             roleOptions: { type: Array, required: true },
             statusOptions: { type: Array, required: true },
             eventDurationOptions: { type: Array, required: true },
@@ -366,6 +450,8 @@
             weekdays: { type: Object, required: true },
             weeklyHours: { type: Object, required: true },
             dateOverrides: { type: Array, required: true },
+            geoLocation: { type: Object, required: true },
+            managers: { type: Array, default: () => [] },
         },
 
         setup(props, { emit }) {
@@ -382,7 +468,7 @@
             };
 
             const eventForm = {
-                location: null,
+                location: props.event.location,
                 duration: props.event.duration,
                 bookable_date_range: props.event.bookable_date_range,
                 timezone: props.event.timezone,
@@ -434,6 +520,8 @@
                     endTime: new Date(0,0,0,17,0),
                 },
                 selectedDateOverride: null,
+                isMapOpen: false,
+                productManagers: this.managers,
             };
         },
 
@@ -542,6 +630,30 @@
                     if (result.isConfirmed) {
                         self.eventForm.date_overrides.splice(index, 1);
                     }
+                });
+            },
+
+            toggleMap() {
+                this.isMapOpen = !this.isMapOpen;
+            },
+
+            submitManager() {
+                const self = this;
+                const form = useForm({managers: map(this.productManagers, 'id')});
+
+                const url = route(
+                    self.baseRouteName+'.managers.update',
+                    self.product.id
+                );
+
+                form.post(url, {
+                    replace: true,
+                    onStart: () => self.onStartLoadingOverlay(),
+                    onSuccess: (page) => {
+                        successAlert(page.props.flash.message);
+                    },
+                    onError: () => { oopsAlert() },
+                    onFinish: () => self.onEndLoadingOverlay()
                 });
             },
         },

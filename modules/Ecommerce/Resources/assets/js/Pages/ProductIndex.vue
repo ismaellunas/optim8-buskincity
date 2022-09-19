@@ -56,7 +56,7 @@
                         <td>
                             <div class="level-right">
                                 <biz-button-link
-                                    v-if="can.edit"
+                                    v-if="product.can.edit"
                                     class="is-ghost has-text-black"
                                     :href="route(baseRouteName+'.edit', product.id)"
                                 >
@@ -67,7 +67,7 @@
                                 </biz-button-link>
 
                                 <biz-button-icon
-                                    v-if="can.delete"
+                                    v-if="product.can.delete"
                                     class="is-ghost has-text-black ml-1"
                                     type="button"
                                     :icon="icon.remove"

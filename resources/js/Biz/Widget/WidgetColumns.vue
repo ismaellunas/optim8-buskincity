@@ -1,17 +1,34 @@
 <template>
-    <div class="columns is-multiline">
-        <template
-            v-for="(widget, order) in widgets"
-            :key="order"
-        >
-            <component
-                :is="widget.componentName"
-                :columns="widget.columns"
-                :data="widget.data"
-                :order="order"
-                :title="widget.title"
-            />
-        </template>
+    <div>
+        <div class="columns is-multiline">
+            <template
+                v-for="(widget, order) in widgets"
+                :key="order"
+            >
+                <component
+                    :is="widget.componentName"
+                    :columns="widget.columns"
+                    :data="widget.data"
+                    :order="order"
+                    :title="widget.title"
+                />
+            </template>
+        </div>
+
+        <div class="columns is-multiline">
+            <template
+                v-for="(widget, order) in moduleWidgets"
+                :key="order"
+            >
+                <component
+                    :is="asyncComponents[ widget.componentName ]"
+                    :columns="widget.columns"
+                    :data="widget.data"
+                    :order="order"
+                    :title="widget.title"
+                />
+            </template>
+        </div>
     </div>
 </template>
 
@@ -23,6 +40,7 @@
     import StripeConnect from '@/Biz/Widget/StripeConnect';
     import UpcomingEvents from '@/Biz/Widget/UpcomingEvents';
     import WantToBecomeAStreetPerformer from '@/Biz/Widget/WantToBecomeAStreetPerformer';
+    import { defineAsyncComponent } from 'vue';
 
     export default {
         name: 'BizWidgetColumns',
@@ -42,6 +60,21 @@
                 type: Array,
                 default:() => [],
             },
-        }
-    }
+            moduleWidgets: { type: Array, default:() => [] },
+        },
+
+        setup(props) {
+            const asyncComponents = {};
+
+            props.moduleWidgets.forEach((widget) => {
+                if (widget.moduleName == 'Ecommerce') {
+                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import('@mod/Ecommerce/Resources/assets/js/Widgets/'+widget.componentName));
+                }
+            });
+
+            return {
+                asyncComponents,
+            };
+        },
+    };
 </script>

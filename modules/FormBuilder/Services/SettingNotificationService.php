@@ -10,6 +10,7 @@ use Modules\FormBuilder\ModuleService;
 class SettingNotificationService
 {
     public function getRecords(
+        string $formBuilderId,
         string $term = null,
         int $perPage = 10
     ): LengthAwarePaginator {
@@ -20,6 +21,7 @@ class SettingNotificationService
                 'is_active'
             ])
             ->orderBy('id', 'DESC')
+            ->where('field_group_id', $formBuilderId)
             ->when($term, function ($query) use ($term) {
                 $query->where('name', 'ILIKE', '%'.$term.'%')
                     ->orWhere('subject', 'ILIKE', '%'.$term.'%');

@@ -15,7 +15,7 @@ class Select
 
     public function value()
     {
-        if ($this->value) {
+        if (!$this->value) {
             return '-';
         }
 

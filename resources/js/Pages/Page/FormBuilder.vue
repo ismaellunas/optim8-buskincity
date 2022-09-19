@@ -30,6 +30,41 @@
                         </template>
                     </draggable>
 
+                    <template
+                        v-if="hasModuleComponent"
+                    >
+                        <hr>
+
+                        <draggable
+                            class="dragArea columns is-multiline"
+                            :disabled="!isEditMode"
+                            :list="availableModuleComponents"
+                            :group="{ name: 'components', pull: 'clone', put: false }"
+                            :clone="cloneComponent"
+                            :sort="false"
+                            item-key="id"
+                            @end="onEnd"
+                            @change="log"
+                        >
+                            <template #item="{ element }">
+                                <div class="column is-half">
+                                    <div
+                                        class="card"
+                                        :class="{'has-text-grey-light': !isEditMode}"
+                                    >
+                                        <div class="card-content is-size-7">
+                                            <div class="content is-center">
+                                                {{ element.title }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </draggable>
+                    </template>
+
+                    <hr>
+
                     <draggable
                         class="dragColumnArea columns is-multiline"
                         :disabled="!isEditMode"
@@ -163,6 +198,11 @@
                     components.push(ComponentStructures[property]);
                 }
 
+                return components;
+            },
+            availableModuleComponents() {
+                let components = [];
+
                 for (const property in ModuleComponentStructures) {
                     if (isModuleActive(pascalCase(property))) {
                         components.push(ModuleComponentStructures[property]);
@@ -190,6 +230,9 @@
             },
             hasBlok() {
                 return isBlank(this.data.structures) ? false : this.data.structures.length > 0;
+            },
+            hasModuleComponent() {
+                return this.availableModuleComponents.length > 0;
             },
             isComponentConfigOpen() {
                 return (
