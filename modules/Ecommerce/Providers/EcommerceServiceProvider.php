@@ -6,12 +6,10 @@ use App\Models\User;
 use App\Services\MediaService;
 use GetCandy\Base\OrderReferenceGenerator;
 use GetCandy\Base\OrderReferenceGeneratorInterface;
-use GetCandy\Models\OrderLine;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
-use Modules\Ecommerce\Entities\Event;
+use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Services\ProductService;
-use Modules\Space\Entities\Space;
 
 class EcommerceServiceProvider extends ServiceProvider
 {
@@ -45,8 +43,8 @@ class EcommerceServiceProvider extends ServiceProvider
             $schedule->command('booking-event:email-reminder')->everyTenMinutes()->runInBackground();
         });
 
-        User::resolveRelationUsing('managedSpaceProducts', function ($userModel) {
-            return $userModel->belongsToMany(Space::class, 'space_product_managers');
+        User::resolveRelationUsing('products', function ($userModel) {
+            return $userModel->belongsToMany(Product::class, 'product_user');
         });
     }
 
