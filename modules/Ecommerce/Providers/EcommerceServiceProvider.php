@@ -42,20 +42,11 @@ class EcommerceServiceProvider extends ServiceProvider
 
             $schedule->command('booking-event:status-to-ongoing')->everyMinute()->runInBackground();
             $schedule->command('booking-event:status-to-passed')->everyMinute()->runInBackground();
+            $schedule->command('booking-event:email-reminder')->everyTenMinutes()->runInBackground();
         });
 
         User::resolveRelationUsing('managedSpaceProducts', function ($userModel) {
             return $userModel->belongsToMany(Space::class, 'space_product_managers');
-        });
-
-        OrderLine::resolveRelationUsing('events', function ($orderLine) {
-            return $orderLine->hasMany(Event::class);
-        });
-
-        OrderLine::resolveRelationUsing('latestEvent', function ($orderLine) {
-            return $orderLine
-                ->hasOne(Event::class)
-                ->latest();
         });
     }
 
@@ -79,6 +70,7 @@ class EcommerceServiceProvider extends ServiceProvider
         });
 
         $this->commands([
+            \Modules\Ecommerce\Console\EventEmailReminder::class,
             \Modules\Ecommerce\Console\SetEventOngoing::class,
             \Modules\Ecommerce\Console\SetEventPassed::class,
         ]);

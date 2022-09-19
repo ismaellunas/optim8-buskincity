@@ -3,7 +3,6 @@
 namespace Modules\Ecommerce\Entities;
 
 use Carbon\Carbon;
-use GetCandy\Models\OrderLine;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
