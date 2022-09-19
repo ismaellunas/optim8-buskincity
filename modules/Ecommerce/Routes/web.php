@@ -31,6 +31,16 @@ Route::
         'ensureLoginFromAdminLoginRoute',
     ])
     ->group(function () {
+
+        Route::prefix('products')->name('products.')->group(function() {
+            Route::middleware('can:manageManager,Modules\Ecommerce\Entities\Product')->group(function () {
+                Route::get('{product}/managers/search', 'ProductManagerController@search')
+                    ->name('managers.search');
+                Route::post('{product}/managers/update', 'ProductManagerController@updateManagers')
+                    ->name('managers.update');
+            });
+        });
+
         Route::resource('/products', ProductController::class)
             ->except(['show']);
 
@@ -70,6 +80,15 @@ Route::
 
         Route::get('/products/{product}/available-times/{date}', [FrontendProductController::class, 'availableTimes'])
             ->name('products.available-times');
+
+        Route::get('/orders/{order}/reschedule', [FrontendOrderController::class, 'reschedule'])
+            ->name('orders.reschedule');
+
+        Route::post('/orders/{order}/reschedule', [FrontendOrderController::class, 'rescheduleUpdate'])
+            ->name('orders.reschedule.update');
+
+        Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])
+            ->name('orders.cancel');
 
         Route::post('/orders/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
             ->name('orders.book-event');
