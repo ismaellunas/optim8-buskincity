@@ -37,11 +37,11 @@ class ModuleService
         return [
             [
                 'id' => true,
-                'value' => 'Activated'
+                'value' => 'Active'
             ],
             [
                 'id' => false,
-                'value' => 'Deactivated'
+                'value' => 'Inactive'
             ]
         ];
     }
