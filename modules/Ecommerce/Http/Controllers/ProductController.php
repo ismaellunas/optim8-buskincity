@@ -17,6 +17,7 @@ use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Ecommerce\Entities\Schedule;
+use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Ecommerce\Http\Requests\ProductCreateRequest;
 use Modules\Ecommerce\Http\Requests\ProductUpdateRequest;
 use Modules\Ecommerce\ModuleService;
@@ -50,11 +51,13 @@ class ProductController extends CrudController
 
         return Inertia::render('Ecommerce::ProductIndex', $this->getData([
             'title' => $this->getIndexTitle(),
-            'pageQueryParams' => array_filter($request->only('term')),
+            'pageQueryParams' => array_filter($request->only('term', 'status')),
             'products' => $this->productService->getRecords(
                 $user,
-                $request->term
+                $request->term,
+                ['inStatus' => $request->status ?? null]
             ),
+            'statusOptions' => ProductStatus::options(),
             'can' => [
                 'add' => $user->can('product.add'),
             ],
