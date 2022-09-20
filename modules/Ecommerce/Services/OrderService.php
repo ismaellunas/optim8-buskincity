@@ -27,45 +27,11 @@ class OrderService
         $this->mediaService = $mediaService;
     }
 
-    public function getRecords(
+    private function recordBuilder(
         string $term = null,
-        int $perPage = 15
-    ): LengthAwarePaginator {
-        $records = Order::orderBy('reference', 'DESC')
-            ->when($term, function ($query) use ($term) {
-                $query
-                    ->where('reference', 'ILIKE', '%'.$term.'%')
-                    ->orWhere('status', 'ILIKE', '%'.$term.'%')
-                    ->orWhereHas('user', function (Builder $query) use ($term) {
-                        $query->search($term);
-                    });
-            })
-            ->paginate($perPage);
-
-        $this->transformRecords($records);
-
-        return $records;
-    }
-
-    public function transformRecords($records)
-    {
-        $records->getCollection()->transform(function ($record) {
-            return (object) [
-                'id' => $record->id,
-                'reference' => $record->reference,
-                'status' => Str::title($record->status),
-                'customer_name' => $record->user->fullName ?? null,
-                'date_placed' => $record->placed_at->toDateString(),
-            ];
-        });
-    }
-
-    public function getFrontendRecords(
-        User $user,
-        string $term = null,
-        int $perPage = 15
-    ): LengthAwarePaginator {
-        $records = Order::orderBy('reference', 'DESC')
+        ?array $scopes = null
+    ): Builder {
+        return Order::orderBy('reference', 'DESC')
             ->when($term, function ($query) use ($term) {
                 $query
                     ->where('reference', 'ILIKE', '%'.$term.'%')
@@ -77,21 +43,68 @@ class OrderService
                         $query->searchWithoutScout($term);
                     });
             })
+            ->when($scopes, function ($query, $scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    $query->when($value, function ($query, $value) use ($scopeName) {
+                        if ($scopeName == 'inStatus') {
+                            $query->whereHas(
+                                'firstEventLine.latestEvent',
+                                function (Builder $query) use ($scopeName, $value) {
+                                    $query->$scopeName($value);
+                                }
+                            );
+                        } else {
+                            $query->$scopeName($value);
+                        }
+                    });
+                }
+            })
             ->with([
                 'firstEventLine.latestEvent.schedule',
                 'firstEventLine.purchasable.product' => function ($query) {
                     $query->select('id', 'product_type_id', 'attribute_data');
                 },
+                'user' => function ($query) {
+                    $query->select('id', 'email', 'first_name', 'last_name');
+                },
             ])
-            ->where('user_id', $user->id)
-            ->paginate($perPage);
+            ->select(
+                'id',
+                'user_id',
+                'status',
+                'placed_at',
+            );
+    }
 
-        $this->transformFrontendRecords($records);
+    public function getRecords(
+        string $term = null,
+        ?array $scopes = null,
+        int $perPage = 15
+    ): LengthAwarePaginator {
+        $records = $this->recordBuilder($term, $scopes)->paginate($perPage);
+
+        $this->transformRecords($records);
 
         return $records;
     }
 
-    public function transformFrontendRecords($records)
+    public function getFrontendRecords(
+        User $user,
+        string $term = null,
+        ?array $scopes = null,
+        int $perPage = 15
+    ): LengthAwarePaginator {
+        $records = $this
+            ->recordBuilder($term, $scopes)
+            ->where('user_id', $user->id)
+            ->paginate($perPage);
+
+        $this->transformRecords($records);
+
+        return $records;
+    }
+
+    public function transformRecords($records)
     {
         $records->getCollection()->transform(function ($record) {
             $event = $record->firstEventLine->latestEvent;
@@ -101,6 +114,7 @@ class OrderService
             return (object) [
                 'id' => $record->id,
                 'product_name' => $product->displayName,
+                'customer_name' => $record->user->fullName ?? null,
                 'reference' => $record->reference,
                 'status' => Str::title($event->status),
                 'start_end_time' => $event->displayStartEndTime,
