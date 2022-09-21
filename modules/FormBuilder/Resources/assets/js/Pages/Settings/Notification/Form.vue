@@ -182,7 +182,7 @@
     import BizFormTextEditor from '@/Biz/Form/TextEditor';
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
-    import NotificationTagOption from './NotificationTagOption';
+    import NotificationTagOption from './TagOption';
     import icon from '@/Libs/icon-class';
     import { useModelWrapper } from '@/Libs/utils';
     import { emailConfig } from '@/Libs/tinymce-configs';
