@@ -1,5 +1,6 @@
 import { usePage } from '@inertiajs/inertia-vue3';
 import { isBlank } from '@/Libs/utils';
+import { isArray } from 'lodash';
 
 export default {
     methods: {
@@ -21,6 +22,13 @@ export default {
             }
 
             if (errorContainer && errorContainer.hasOwnProperty(field)) {
+                if (
+                    isArray(errorContainer[field])
+                    && errorContainer[field].length == 1
+                ) {
+                    return errorContainer[field][0];
+                }
+
                 return errorContainer[field];
             }
 
