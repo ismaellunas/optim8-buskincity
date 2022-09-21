@@ -3,6 +3,7 @@
 namespace Modules\FormBuilder\Forms;
 
 use App\Entities\Forms\Form as AppForm;
+use Modules\FormBuilder\ModuleService;
 
 class Form extends AppForm
 {
@@ -11,7 +12,7 @@ class Form extends AppForm
         $submitText = $this->data['settings']
             ->where('key', 'submit_text')
             ->value('value')
-            ?? 'Submit';
+            ?? ModuleService::defaultSettings()['submit_text'];
 
         return [
             'submit' => [
