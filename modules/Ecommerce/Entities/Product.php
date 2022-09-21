@@ -65,6 +65,11 @@ class Product extends GetCandyProduct
             ->orWhere("attribute_data->short_description->value->{$locale}", 'ILIKE', "%{$term}%");
     }
 
+    public function scopeInStatus($query, array $status)
+    {
+        return $query->whereIn('status', $status);
+    }
+
     /**
      * {@inheritDoc}
      */
