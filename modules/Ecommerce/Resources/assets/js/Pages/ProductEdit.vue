@@ -84,9 +84,11 @@
                         <biz-form-number-addons
                             v-model="eventForm.bookable_date_range"
                             label="Bookable date range (Calendar days into the future)"
+                            max="365"
+                            min="0"
+                            required
                             :is-expanded="false"
                             :message="error('bookable_date_range', 'eventForm')"
-                            required
                         >
                             <template #afterInput>
                                 <p class="control">
@@ -197,24 +199,26 @@
                                                         </biz-checkbox>
                                                     </div>
                                                     <div class="column">
-                                                        <table class="table is-fullwidth">
-                                                            <tr
+                                                        <div class="columns is-multiline">
+                                                            <div
                                                                 v-for="(hour, hourIdx) in eventForm.weekly_hours[index].hours"
                                                                 :key="hour.uid"
+                                                                class="column is-full"
                                                             >
-                                                                <td>
-                                                                    <div class="event-time-range">
-                                                                        <biz-date-time
-                                                                            v-model="eventForm.weekly_hours[index].hours[hourIdx].timeRange"
-                                                                            type="time"
-                                                                            :options="timeRangeOptions"
-                                                                            range
-                                                                            @input="onTimeInput(eventForm.weekly_hours[index].hours[hourIdx], $event)"
-                                                                        />
+                                                                <div class="columns is-multiline">
+                                                                    <div class="column is-9">
+                                                                        <div class="event-time-range">
+                                                                            <biz-date-time
+                                                                                v-model="eventForm.weekly_hours[index].hours[hourIdx].timeRange"
+                                                                                type="time"
+                                                                                class="is-danger"
+                                                                                :options="timeRangeOptions"
+                                                                                range
+                                                                                @input="onTimeInput(eventForm.weekly_hours[index].hours[hourIdx], $event)"
+                                                                            />
+                                                                        </div>
                                                                     </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="buttons is-pulled-right">
+                                                                    <div class="column is-3">
                                                                         <biz-button-icon
                                                                             type="button"
                                                                             class="is-danger"
@@ -222,9 +226,16 @@
                                                                             @click="removeTimeRange(eventForm.weekly_hours[index].hours, hourIdx)"
                                                                         />
                                                                     </div>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
+
+                                                                    <div
+                                                                        v-if="error('weekly_hours.'+index+'.hours.'+hourIdx+'.ended_time', 'updateEvent')"
+                                                                        class="help is-danger mt-0 ml-2"
+                                                                    >
+                                                                        {{ error(`weekly_hours.${index}.hours.${hourIdx}.ended_time`, 'updateEvent') }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="column is-2">
                                                         <biz-button-icon
@@ -279,11 +290,18 @@
                                                             class="columns is-multiline"
                                                         >
                                                             <div
-                                                                v-for="time in dateOverride.times"
+                                                                v-for="time, timeIdx in dateOverride.times"
                                                                 :key="time.uid"
                                                                 class="column is-full"
                                                             >
                                                                 {{ time.started_time.substr(0, 5) }} - {{ time.ended_time.substr(0, 5) }}
+
+                                                                <p
+                                                                    v-if="error(`date_overrides.${dateOverrideIdx}.times.${timeIdx}.ended_time`, 'updateEvent')"
+                                                                    class="help is-danger has-text-left"
+                                                                >
+                                                                    {{ error(`date_overrides.${dateOverrideIdx}.times.${timeIdx}.ended_time`, 'updateEvent') }}
+                                                                </p>
                                                             </div>
                                                         </div>
 
@@ -558,6 +576,7 @@
                 });
 
                 this.eventForm.put(url, {
+                    errorBag: 'updateEvent',
                     onStart: self.onStartLoadingOverlay,
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);

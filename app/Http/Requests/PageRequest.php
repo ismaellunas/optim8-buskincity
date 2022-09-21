@@ -29,7 +29,7 @@ class PageRequest extends BaseFormRequest
         $inputs = $this->findInputByLocale();
 
         return RuleFactory::make([
-            '%title%' => 'sometimes|string',
+            '%title%' => 'sometimes|string|max:255',
             '%slug%' => [
                 'sometimes',
                 'required',
