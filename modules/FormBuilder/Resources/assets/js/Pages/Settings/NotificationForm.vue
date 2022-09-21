@@ -159,7 +159,7 @@
                         class="is-link is-light"
                         :href="route('admin.form-builders.edit', formBuilderId)"
                     >
-                        Cancel
+                        {{ !isEditMode ? 'Cancel' : 'Back' }}
                     </biz-button-link>
                 </div>
                 <div class="control">

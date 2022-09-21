@@ -5,7 +5,7 @@
             class="is-boxed"
         >
             <biz-provide-inject-tab
-                title="Builders"
+                title="Builder"
             >
                 <form-builder
                     v-model="formBuilder"
