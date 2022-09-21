@@ -76,12 +76,4 @@ class SpacePolicy
     {
         return $user->isAdministrator || $user->isSuperAdministrator;
     }
-
-    public function manageProductManager(User $user)
-    {
-        return (
-            app(ModuleService::class)->isModuleActive('Ecommerce')
-            && ($user->isAdministrator || $user->isSuperAdministrator)
-        );
-    }
 }

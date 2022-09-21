@@ -3,6 +3,8 @@
 namespace Modules\Booking;
 
 use Illuminate\Http\Request;
+use Modules\Ecommerce\Entities\Order;
+use Modules\Ecommerce\Entities\Product;
 
 class ModuleService
 {
@@ -19,19 +21,13 @@ class ModuleService
                     'title' => 'Products',
                     'link' => route('admin.ecommerce.products.index'),
                     'isActive' => $request->routeIs('admin.ecommerce.products.index'),
-                    'isEnabled' => (
-                        $user->hasRole(['Administrator', 'Super Administrator'])
-                        || $user->can('product.browse')
-                    ),
+                    'isEnabled' => $user->can('viewAny', Product::class)
                 ],
                 [
                     'title' => 'Orders',
                     'link' => route('admin.ecommerce.orders.index'),
                     'isActive' => $request->routeIs('admin.ecommerce.products.index'),
-                    'isEnabled' => (
-                        $user->hasRole(['Administrator', 'Super Administrator'])
-                        || $user->can('order.browse')
-                    ),
+                    'isEnabled' => $user->can('viewAny', Order::class)
                 ],
                 [
                     'title' => 'Settings',
