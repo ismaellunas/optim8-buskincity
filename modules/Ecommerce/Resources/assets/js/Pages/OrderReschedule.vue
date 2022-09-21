@@ -6,20 +6,7 @@
                     {{ product.name }}
                 </h4>
 
-                <table class="table is-fullwidth">
-                    <tr>
-                        <th><biz-icon :icon="ecommerceIcon.duration" /></th>
-                        <td>{{ firstEvent.duration }}</td>
-                    </tr>
-                    <tr>
-                        <th><biz-icon :icon="ecommerceIcon.calendar" /></th>
-                        <td>{{ firstEvent.start_end_time }}, {{ firstEvent.booked_date }}</td>
-                    </tr>
-                    <tr>
-                        <th><biz-icon :icon="ecommerceIcon.timezone" /></th>
-                        <td>{{ firstEvent.timezone }}</td>
-                    </tr>
-                </table>
+                <table-event-reschedule-detail :event="firstEvent" />
 
                 <div class="buttons">
                     <biz-button-link
@@ -44,38 +31,12 @@
         <modal-time-confirmation
             v-if="isModalOpen"
             title="Reschedule Event"
+            :product-name="product.name"
+            :event="firstEvent"
+            :selected-date="form.date"
+            :selected-time="form.time"
             @close="closeModal()"
         >
-            <template #event>
-                <h5 class="title is-5">
-                    {{ product.name }}
-                </h5>
-
-                <table class="table">
-                    <tr>
-                        <th><biz-icon :icon="ecommerceIcon.duration" /></th>
-                        <td>{{ firstEvent.duration }}</td>
-                    </tr>
-                    <tr>
-                        <th><biz-icon :icon="ecommerceIcon.timezone" /></th>
-                        <td>{{ firstEvent.timezone }}</td>
-                    </tr>
-                    <tr>
-                        <th><biz-icon :icon="ecommerceIcon.calendar" /></th>
-                        <td><b>{{ rescheduleDateTime }}</b></td>
-                    </tr>
-                </table>
-            </template>
-
-            <template #reschedule>
-                <table class="table">
-                    <tr>
-                        <th><s><biz-icon :icon="ecommerceIcon.calendar" /></s></th>
-                        <td><s>{{ firstEvent.start_end_time }}, {{ firstEvent.booked_date }}</s></td>
-                    </tr>
-                </table>
-            </template>
-
             <template #actions>
                 <biz-button
                     class="is-info ml-1"
@@ -93,11 +54,11 @@
     import AppLayout from '@/Layouts/AppLayout';
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
-    import BizIcon from '@/Biz/Icon';
     import BookingTime from './BookingTime';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import ModalTimeConfirmation from './ModalTimeConfirmation';
+    import TableEventRescheduleDetail from './TableEventRescheduleDetail';
     import ecommerceIcon from '../Libs/ecommerce-icon';
     import moment from 'moment';
     import { reactive, ref } from 'vue';
@@ -108,9 +69,9 @@
         components: {
             BizButton,
             BizButtonLink,
-            BizIcon,
             BookingTime,
             ModalTimeConfirmation,
+            TableEventRescheduleDetail,
         },
 
         mixins: [
@@ -147,10 +108,10 @@
 
             return {
                 form: useForm(form),
+                ecommerceIcon,
+                firstEvent: props.order.event,
                 options: reactive(options),
                 scheduleTimezone: ref(props.timezone),
-                firstEvent: props.order.lines[0].event,
-                ecommerceIcon,
             };
         },
 
@@ -158,29 +119,6 @@
             return {
                 availableTimes: [],
             };
-        },
-
-        computed: {
-            rescheduleDateTime() {
-                if (! (this.form.date && this.form.time)) {
-                    return null;
-                }
-
-                const startTime = moment(
-                    moment(this.form.date).format('YYYY-MM-DD') + ' ' + this.form.time
-                );
-
-                const endTime = moment(startTime).add(
-                    this.firstEvent.duration_details.unit,
-                    this.firstEvent.duration_details.duration
-                );
-
-                return (
-                    startTime.format('k:mm')
-                    + ' - ' + endTime.format('k:mm')
-                    + ', ' + startTime.format('D MMMM YYYY')
-                );
-            },
         },
 
         methods: {
