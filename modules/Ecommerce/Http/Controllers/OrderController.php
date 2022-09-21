@@ -4,6 +4,7 @@ namespace Modules\Ecommerce\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Enums\BookingStatus;
@@ -58,9 +59,11 @@ class OrderController extends CrudController
     {
         $user = auth()->user();
 
+        $orderRecord = $this->orderService->getRecord($order);
+
         return Inertia::render('Ecommerce::OrderShow', $this->getData([
-            'title' => $this->title.' #'.$order->reference,
-            'order' => $this->orderService->getRecord($order),
+            'title' => $this->title.': '.Arr::get($orderRecord, 'product.name'),
+            'order' => $orderRecord,
             'can' => [
                 'cancel' => $user->can('cancel', $order),
                 'reschedule' => $user->can('reschedule', $order),
