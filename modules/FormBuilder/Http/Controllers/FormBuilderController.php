@@ -75,7 +75,9 @@ class FormBuilderController extends CrudController
         return Inertia::render('FormBuilder::Edit', $this->getData([
             'baseRouteNameSetting' => $this->baseRouteNameSetting,
             'formBuilder' => $formBuilder,
-            'title' => $this->getEditTitle(),
+            'title' => __('Editing :name Form', [
+                'name' => $formBuilder->name
+            ]),
         ]));
     }
 
