@@ -38,9 +38,9 @@ class EcommerceServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
 
-            $schedule->command('booking-event:status-to-ongoing')->everyMinute()->runInBackground();
-            $schedule->command('booking-event:status-to-passed')->everyMinute()->runInBackground();
-            $schedule->command('booking-event:email-reminder')->everyTenMinutes()->runInBackground();
+            $schedule->command('booking-event:status-to-ongoing')->everyMinute();//->runInBackground();
+            $schedule->command('booking-event:status-to-passed')->everyMinute();//->runInBackground();
+            $schedule->command('booking-event:email-reminder')->everyTenMinutes();//->runInBackground();
         });
 
         User::resolveRelationUsing('products', function ($userModel) {
