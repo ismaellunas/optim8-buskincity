@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="box">
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
@@ -9,6 +9,42 @@
                     />
                 </div>
             </div>
+
+            <div class="column">
+                <biz-dropdown :close-on-click="false">
+                    <template #trigger>
+                        <span>Filter</span>
+
+                        <span class="icon is-small">
+                            <i
+                                :class="icon.angleDown"
+                                aria-hidden="true"
+                            />
+                        </span>
+                    </template>
+
+                    <biz-dropdown-item>
+                        Status
+                    </biz-dropdown-item>
+
+                    <biz-dropdown-item
+                        v-for="status in statusOptions"
+                        :key="status.id"
+                    >
+                        <biz-checkbox
+                            v-model:checked="statuses"
+                            :value="status.id"
+                            @change="onStatusChanged"
+                        >
+                            &nbsp; {{ status.value }}
+                        </biz-checkbox>
+                    </biz-dropdown-item>
+                </biz-dropdown>
+            </div>
+
+            <div class="column">
+                &nbsp;
+            </div>
         </div>
 
         <div class="table-container">
@@ -16,9 +52,9 @@
                 <thead>
                     <tr>
                         <th>Status</th>
-                        <th>Reference</th>
+                        <th>Name</th>
                         <th>Customer Name</th>
-                        <th>Date Placed</th>
+                        <th>Date</th>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -32,9 +68,9 @@
                         :key="record.id"
                     >
                         <td>{{ record.status }}</td>
-                        <td>{{ record.reference }}</td>
+                        <td>{{ record.product_name }}</td>
                         <td>{{ record.customer_name ?? '-' }}</td>
-                        <td>{{ record.date_placed }}</td>
+                        <td>{{ record.date }}</td>
                         <td>
                             <div class="level-right">
                                 <biz-button-link
@@ -64,6 +100,9 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import BizButtonLink from '@/Biz/ButtonLink';
+    import BizCheckbox from '@/Biz/Checkbox';
+    import BizDropdown from '@/Biz/Dropdown';
+    import BizDropdownItem from '@/Biz/DropdownItem';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
     import BizPagination from '@/Biz/Pagination';
@@ -77,6 +116,9 @@
     export default {
         components: {
             BizButtonLink,
+            BizCheckbox,
+            BizDropdown,
+            BizDropdownItem,
             BizFilterSearch,
             BizIcon,
             BizPagination,
@@ -94,6 +136,7 @@
             can: { type: Object, required: true },
             pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, required: true },
+            statusOptions: { type: Object, required: true },
         },
 
         setup(props) {
@@ -106,6 +149,7 @@
                 icon,
                 queryParams: ref(queryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
+                statuses: ref(props.pageQueryParams?.status ?? []),
             };
         },
 
@@ -130,7 +174,11 @@
                         );
                     }
                 })
+            },
 
+            onStatusChanged() {
+                this.queryParams['status'] = this.statuses;
+                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
         },
     };

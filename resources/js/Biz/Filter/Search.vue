@@ -3,24 +3,22 @@
         <template #label>
             Search
         </template>
-        <div class="columns">
-            <div class="column is-three-quarters">
-                <div class="control">
-                    <biz-input
-                        v-model="term"
-                        maxlength="255"
-                        @keyup.prevent="search(term)"
-                    />
-                </div>
+
+        <div class="field has-addons">
+            <div class="control">
+                <biz-input
+                    v-model="term"
+                    maxlength="255"
+                    @keyup.prevent="search(term)"
+                />
             </div>
-            <div class="column">
-                <div class="control">
-                    <biz-button-icon
-                        :icon="icon.clear"
-                        type="button"
-                        @click="reset()"
-                    />
-                </div>
+
+            <div class="control">
+                <biz-button-icon
+                    type="button"
+                    :icon="iconClear"
+                    @click="reset()"
+                />
             </div>
         </div>
     </biz-form-field-horizontal>
@@ -33,7 +31,7 @@
     import { useModelWrapper } from '@/Libs/utils';
     import { debounceTime } from '@/Libs/defaults';
     import { debounce } from 'lodash';
-    import icon from '@/Libs/icon-class';
+    import { clear as iconClear } from '@/Libs/icon-class';
 
     export default {
         name: 'BizFilterSearch',
@@ -45,7 +43,7 @@
         },
 
         props: {
-            modelValue: {required: true},
+            modelValue: { type: String, default: '' },
         },
 
         emits: [
@@ -56,12 +54,7 @@
         setup(props, { emit }) {
             return {
                 term: useModelWrapper(props, emit),
-            };
-        },
-
-        data() {
-            return {
-                icon,
+                iconClear,
             };
         },
 

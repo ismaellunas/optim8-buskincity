@@ -9,6 +9,42 @@
                     />
                 </div>
             </div>
+
+            <div class="column">
+                <biz-dropdown :close-on-click="false">
+                    <template #trigger>
+                        <span>Filter</span>
+
+                        <span class="icon is-small">
+                            <i
+                                :class="icon.angleDown"
+                                aria-hidden="true"
+                            />
+                        </span>
+                    </template>
+
+                    <biz-dropdown-item>
+                        Status
+                    </biz-dropdown-item>
+
+                    <biz-dropdown-item
+                        v-for="status in statusOptions"
+                        :key="status.id"
+                    >
+                        <biz-checkbox
+                            v-model:checked="statuses"
+                            :value="status.id"
+                            @change="onStatusChanged"
+                        >
+                            &nbsp; {{ status.value }}
+                        </biz-checkbox>
+                    </biz-dropdown-item>
+                </biz-dropdown>
+            </div>
+
+            <div class="column">
+                &nbsp;
+            </div>
         </div>
 
         <div class="table-container">
@@ -16,7 +52,7 @@
                 <thead>
                     <tr>
                         <th>Status</th>
-                        <th>Event</th>
+                        <th>Name</th>
                         <th>Time</th>
                         <th>Date</th>
                         <th>
@@ -68,8 +104,11 @@
     import Layout from '@/Layouts/User';
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
-    import BizIcon from '@/Biz/Icon';
+    import BizCheckbox from '@/Biz/Checkbox';
+    import BizDropdown from '@/Biz/Dropdown';
+    import BizDropdownItem from '@/Biz/DropdownItem';
     import BizFilterSearch from '@/Biz/Filter/Search';
+    import BizIcon from '@/Biz/Icon';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
     import BizTag from '@/Biz/Tag';
@@ -82,8 +121,11 @@
     export default {
         components: {
             BizButtonLink,
-            BizIcon,
+            BizCheckbox,
+            BizDropdown,
+            BizDropdownItem,
             BizFilterSearch,
+            BizIcon,
             BizPagination,
             BizTable,
             BizTag,
@@ -99,6 +141,7 @@
             baseRouteName: { type: String, required: true },
             pageQueryParams: { type: Object, default: () => {} },
             orders: { type: Object, required: true },
+            statusOptions: { type: Object, required: true },
         },
 
         setup(props) {
@@ -111,10 +154,15 @@
                 icon,
                 queryParams: ref(queryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
+                statuses: ref(props.pageQueryParams?.status ?? []),
             };
         },
 
         methods: {
+            onStatusChanged() {
+                this.queryParams['status'] = this.statuses;
+                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
+            },
         },
     };
 </script>

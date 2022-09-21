@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Enums\BookingStatus;
 use Modules\Ecommerce\Events\EventBooked;
 use Modules\Ecommerce\Events\EventCanceled;
 use Modules\Ecommerce\Events\EventRescheduled;
@@ -49,9 +50,11 @@ class OrderController extends CrudController
             'title' => $this->getIndexTitle(),
             'orders' => $this->orderService->getFrontendRecords(
                 $user,
-                request()->get('term')
+                request()->get('term'),
+                ['inStatus' => request()->status ?? null],
             ),
-            'pageQueryParams' => array_filter(request()->only('term')),
+            'pageQueryParams' => array_filter(request()->only('term', 'status')),
+            'statusOptions' => BookingStatus::options(),
         ]));
     }
 
