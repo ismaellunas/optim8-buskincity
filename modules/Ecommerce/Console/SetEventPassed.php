@@ -43,7 +43,6 @@ class SetEventPassed extends Command
      */
     public function handle()
     {
-        info(">>> start booking-event:status-to-passed >>>");
         $executionTime = Carbon::parse($this->option('execution-time'), $this->option('timezone'));
 
         $affectedStatus = [
@@ -65,8 +64,6 @@ class SetEventPassed extends Command
             'Affected Number of Events: '.$passedNumber,
             OutputInterface::VERBOSITY_VERBOSE
         );
-
-        info(">>> end booking-event:status-to-passed <<<");
     }
 
     /**
