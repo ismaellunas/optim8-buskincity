@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\FormBuilder\Http\Controllers\{
     FormBuilderController,
+    SettingController,
     SettingNotificationController,
     PageBuilderController,
 };
@@ -33,9 +34,13 @@ Route::name('admin.')->prefix('admin/')->middleware([
         Route::prefix('settings')->name('settings.')->group(function() {
             Route::get('notifications/records', [SettingNotificationController::class, 'records'])
                 ->name('notifications.records');
-
             Route::resource('notifications', SettingNotificationController::class)
                 ->except(['show']);
+
+            Route::get('general/form', [SettingController::class, 'form'])
+                ->name('general.form');
+            Route::put('general/update', [SettingController::class, 'update'])
+                ->name('general.update');
         });
     });
 
