@@ -1,7 +1,7 @@
 <template>
     <div>
         <general-form
-            v-if="isShowed"
+            v-if="isShown"
             v-model="form"
             @on-submit="onSubmit()"
         />
@@ -35,7 +35,7 @@
 
         data() {
             return {
-                isShowed: false,
+                isShown: false,
             };
         },
 
@@ -60,7 +60,7 @@
                         self.form = useForm(response.data);
                     })
                     .then(() => {
-                        self.isShowed = true;
+                        self.isShown = true;
                     });
             },
 
