@@ -32,6 +32,7 @@ export const signIn = iconFormatter('fa-sign-in-alt');
 export const suspend = iconFormatter('fa-ban');
 export const unsuspend = iconFormatter('fa-hands-helping');
 export const upload = iconFormatter('fa-upload');
+export const user = iconFormatter('fa-user');
 
 export function iconFormatter(iconClass) {
     return iconType + ' ' + iconClass;
@@ -70,4 +71,5 @@ export default {
     locationMark,
     unsuspend,
     upload,
+    user,
 }

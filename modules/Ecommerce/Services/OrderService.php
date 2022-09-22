@@ -125,47 +125,11 @@ class OrderService
 
     public function getRecord(Order $order): array
     {
-        $replicatedOrder = $order->replicate();
-        $replicatedOrder->id = $order->id;
+        $record = $this->getFrontendRecord($order);
 
-        $replicatedOrder->load('user', 'lines.purchasable.product');
+        $record['user_full_name'] = $order->user->fullName;
 
-        $orderSubset = $replicatedOrder
-            ->append('user_full_name', 'formatted_placed_at')
-            ->only('id', 'status', 'reference', 'formatted_placed_at', 'lines', 'user_full_name');
-
-        $orderSubset['status'] = Str::title($orderSubset['status']);
-
-        $orderSubset['lines'] = $orderSubset['lines']->map(function ($line) {
-            $lineArray = $line->only('id', 'identifier', 'purchasable', 'latestEvent');
-
-            $purchaseable = $lineArray['purchasable'];
-            $lineArray['purchasable'] = [
-                'name' => $purchaseable->product->translateAttribute('name'),
-                'short_description' => $purchaseable->product->translateAttribute('short_description'),
-                'sku' => $purchaseable->sku,
-            ];
-
-            $event = $lineArray['latestEvent'];
-            $lineArray['event'] = [
-                'booked_at' => $event->formattedBookedAt,
-                'booked_date' => $event->booked_at->format('j F Y'),
-                'timezone' => $event->schedule->timezone,
-                'duration' => $event->displayDuration,
-                'duration_details' => [
-                    'duration' => $event->duration,
-                    'unit' => $event->duration_unit,
-                ],
-                'start_end_time' => $event->displayStartEndTime,
-                'status' => Str::title($event->status),
-            ];
-
-            unset($lineArray['latestEvent']);
-
-            return $lineArray;
-        });
-
-        return $orderSubset;
+        return $record;
     }
 
     public function getFrontendRecord(Order $order): array
@@ -178,19 +142,23 @@ class OrderService
 
         return [
             'id' => $order->id,
-            'event_date' => $event->timezonedBookedAt->format('d F Y'),
-            'event_duration' => $event->displayDuration,
-            'event_duration_details' => [
-                'duration' => $event->duration,
-                'unit' => $event->duration_unit,
+            'product' => [
+                'id' => $product->id,
+                'name' => $product->displayName,
             ],
-            'event_start_end_time' => $event->displayStartEndTime,
-            'event_time' => $event->timezonedBookedAt->format('H:i'),
-            'product_id' => $product->id,
-            'product_name' => $product->displayName,
-            'status' => Str::title($event->status),
-            'timezone' => $event->schedule->timezone,
-            'timezoneOffset' => 'UTC '.$carbonTimeZone->toOffsetName(),
+            'event' => [
+                'date' => $event->timezonedBookedAt->format('d F Y'),
+                'duration' => $event->displayDuration,
+                'duration_details' => [
+                    'duration' => $event->duration,
+                    'unit' => $event->duration_unit,
+                ],
+                'start_end_time' => $event->displayStartEndTime,
+                'time' => $event->timezonedBookedAt->format('H:i'),
+                'status' => Str::title($event->status),
+                'timezone' => $event->schedule->timezone,
+                'timezoneOffset' => 'UTC '.$carbonTimeZone->toOffsetName(),
+            ],
         ];
     }
 
