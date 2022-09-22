@@ -4,7 +4,6 @@ namespace Modules\Ecommerce\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\Ecommerce\Rules\AvailableBookingTime;
-use Modules\Ecommerce\Services\OrderService;
 
 class OrderRescheduleRequest extends FormRequest
 {
@@ -15,6 +14,8 @@ class OrderRescheduleRequest extends FormRequest
      */
     public function rules()
     {
+        $product = ($this->route('order'))->firstProduct;
+
         return [
             'date' => [
                 'required',
@@ -23,6 +24,7 @@ class OrderRescheduleRequest extends FormRequest
             'time' => [
                 'required',
                 'date_format:H:i',
+                new AvailableBookingTime($product->eventSchedule),
             ],
         ];
     }
