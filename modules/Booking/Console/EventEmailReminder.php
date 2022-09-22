@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Ecommerce\Console;
+namespace Modules\Booking\Console;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;

@@ -51,14 +51,15 @@ if (theme) {
             .copy('node_modules/tinymce/skins/content/default/content.css', 'public/js/skins/content/default');
 
         mix.browserSync({
-            host: process.env.MIX_APP_URL ?? '127.0.0.1',
-            proxy: process.env.MIX_APP_URL ?? 'localhost',
+            host: process.env.MIX_APP_URL ?? "127.0.0.1",
+            proxy: process.env.MIX_APP_URL ?? "localhost",
             open: false,
             files: [
-                'app/**/*.php',
-                'resources/views/**/*.php',
+                "app/**/*.php",
+                "modules/**/*.php",
+                "resources/views/**/*.php",
                 `${Config.publicPath || 'public'}/**/*.(js|css)`,
-                'themes/**/*.php',
+                "themes/**/*.php",
             ],
         });
     }
