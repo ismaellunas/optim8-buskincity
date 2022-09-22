@@ -27,45 +27,11 @@ class OrderService
         $this->mediaService = $mediaService;
     }
 
-    public function getRecords(
+    private function recordBuilder(
         string $term = null,
-        int $perPage = 15
-    ): LengthAwarePaginator {
-        $records = Order::orderBy('reference', 'DESC')
-            ->when($term, function ($query) use ($term) {
-                $query
-                    ->where('reference', 'ILIKE', '%'.$term.'%')
-                    ->orWhere('status', 'ILIKE', '%'.$term.'%')
-                    ->orWhereHas('user', function (Builder $query) use ($term) {
-                        $query->search($term);
-                    });
-            })
-            ->paginate($perPage);
-
-        $this->transformRecords($records);
-
-        return $records;
-    }
-
-    public function transformRecords($records)
-    {
-        $records->getCollection()->transform(function ($record) {
-            return (object) [
-                'id' => $record->id,
-                'reference' => $record->reference,
-                'status' => Str::title($record->status),
-                'customer_name' => $record->user->fullName ?? null,
-                'date_placed' => $record->placed_at->toDateString(),
-            ];
-        });
-    }
-
-    public function getFrontendRecords(
-        User $user,
-        string $term = null,
-        int $perPage = 15
-    ): LengthAwarePaginator {
-        $records = Order::orderBy('reference', 'DESC')
+        ?array $scopes = null
+    ): Builder {
+        return Order::orderBy('reference', 'DESC')
             ->when($term, function ($query) use ($term) {
                 $query
                     ->where('reference', 'ILIKE', '%'.$term.'%')
@@ -77,21 +43,68 @@ class OrderService
                         $query->searchWithoutScout($term);
                     });
             })
+            ->when($scopes, function ($query, $scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    $query->when($value, function ($query, $value) use ($scopeName) {
+                        if ($scopeName == 'inStatus') {
+                            $query->whereHas(
+                                'firstEventLine.latestEvent',
+                                function (Builder $query) use ($scopeName, $value) {
+                                    $query->$scopeName($value);
+                                }
+                            );
+                        } else {
+                            $query->$scopeName($value);
+                        }
+                    });
+                }
+            })
             ->with([
                 'firstEventLine.latestEvent.schedule',
                 'firstEventLine.purchasable.product' => function ($query) {
                     $query->select('id', 'product_type_id', 'attribute_data');
                 },
+                'user' => function ($query) {
+                    $query->select('id', 'email', 'first_name', 'last_name');
+                },
             ])
-            ->where('user_id', $user->id)
-            ->paginate($perPage);
+            ->select(
+                'id',
+                'user_id',
+                'status',
+                'placed_at',
+            );
+    }
 
-        $this->transformFrontendRecords($records);
+    public function getRecords(
+        string $term = null,
+        ?array $scopes = null,
+        int $perPage = 15
+    ): LengthAwarePaginator {
+        $records = $this->recordBuilder($term, $scopes)->paginate($perPage);
+
+        $this->transformRecords($records);
 
         return $records;
     }
 
-    public function transformFrontendRecords($records)
+    public function getFrontendRecords(
+        User $user,
+        string $term = null,
+        ?array $scopes = null,
+        int $perPage = 15
+    ): LengthAwarePaginator {
+        $records = $this
+            ->recordBuilder($term, $scopes)
+            ->where('user_id', $user->id)
+            ->paginate($perPage);
+
+        $this->transformRecords($records);
+
+        return $records;
+    }
+
+    public function transformRecords($records)
     {
         $records->getCollection()->transform(function ($record) {
             $event = $record->firstEventLine->latestEvent;
@@ -101,6 +114,7 @@ class OrderService
             return (object) [
                 'id' => $record->id,
                 'product_name' => $product->displayName,
+                'customer_name' => $record->user->fullName ?? null,
                 'reference' => $record->reference,
                 'status' => Str::title($event->status),
                 'start_end_time' => $event->displayStartEndTime,
@@ -111,47 +125,11 @@ class OrderService
 
     public function getRecord(Order $order): array
     {
-        $replicatedOrder = $order->replicate();
-        $replicatedOrder->id = $order->id;
+        $record = $this->getFrontendRecord($order);
 
-        $replicatedOrder->load('user', 'lines.purchasable.product');
+        $record['user_full_name'] = $order->user->fullName;
 
-        $orderSubset = $replicatedOrder
-            ->append('user_full_name', 'formatted_placed_at')
-            ->only('id', 'status', 'reference', 'formatted_placed_at', 'lines', 'user_full_name');
-
-        $orderSubset['status'] = Str::title($orderSubset['status']);
-
-        $orderSubset['lines'] = $orderSubset['lines']->map(function ($line) {
-            $lineArray = $line->only('id', 'identifier', 'purchasable', 'latestEvent');
-
-            $purchaseable = $lineArray['purchasable'];
-            $lineArray['purchasable'] = [
-                'name' => $purchaseable->product->translateAttribute('name'),
-                'short_description' => $purchaseable->product->translateAttribute('short_description'),
-                'sku' => $purchaseable->sku,
-            ];
-
-            $event = $lineArray['latestEvent'];
-            $lineArray['event'] = [
-                'booked_at' => $event->formattedBookedAt,
-                'booked_date' => $event->booked_at->format('j F Y'),
-                'timezone' => $event->schedule->timezone,
-                'duration' => $event->displayDuration,
-                'duration_details' => [
-                    'duration' => $event->duration,
-                    'unit' => $event->duration_unit,
-                ],
-                'start_end_time' => $event->displayStartEndTime,
-                'status' => Str::title($event->status),
-            ];
-
-            unset($lineArray['latestEvent']);
-
-            return $lineArray;
-        });
-
-        return $orderSubset;
+        return $record;
     }
 
     public function getFrontendRecord(Order $order): array
@@ -164,19 +142,23 @@ class OrderService
 
         return [
             'id' => $order->id,
-            'event_date' => $event->timezonedBookedAt->format('d F Y'),
-            'event_duration' => $event->displayDuration,
-            'event_duration_details' => [
-                'duration' => $event->duration,
-                'unit' => $event->duration_unit,
+            'product' => [
+                'id' => $product->id,
+                'name' => $product->displayName,
             ],
-            'event_start_end_time' => $event->displayStartEndTime,
-            'event_time' => $event->timezonedBookedAt->format('H:i'),
-            'product_id' => $product->id,
-            'product_name' => $product->displayName,
-            'status' => Str::title($event->status),
-            'timezone' => $event->schedule->timezone,
-            'timezoneOffset' => 'UTC '.$carbonTimeZone->toOffsetName(),
+            'event' => [
+                'date' => $event->timezonedBookedAt->format('d F Y'),
+                'duration' => $event->displayDuration,
+                'duration_details' => [
+                    'duration' => $event->duration,
+                    'unit' => $event->duration_unit,
+                ],
+                'start_end_time' => $event->displayStartEndTime,
+                'time' => $event->timezonedBookedAt->format('H:i'),
+                'status' => Str::title($event->status),
+                'timezone' => $event->schedule->timezone,
+                'timezoneOffset' => 'UTC '.$carbonTimeZone->toOffsetName(),
+            ],
         ];
     }
 

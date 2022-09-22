@@ -2,8 +2,9 @@
 
 namespace Modules\Booking\Providers;
 
+use App\Services\ModuleService;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Eloquent\Factory;
 
 class BookingServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,32 @@ class BookingServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            $checking = function () {
+                return app(ModuleService::class)->isModuleActive($this->moduleName);
+            };
+
+            $schedule
+                ->command('booking-event:status-to-ongoing')
+                ->everyMinute()
+                ->runInBackground()
+                ->when($checking);
+
+            $schedule
+                ->command('booking-event:status-to-passed')
+                ->everyMinute()
+                ->runInBackground()
+                ->when($checking);
+
+            $schedule
+                ->command('booking-event:email-reminder')
+                ->everyTenMinutes()
+                ->runInBackground()
+                ->when($checking);
+        });
     }
 
     /**
@@ -38,6 +65,12 @@ class BookingServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(RouteServiceProvider::class);
+
+        $this->commands([
+            \Modules\Booking\Console\EventEmailReminder::class,
+            \Modules\Booking\Console\SetEventOngoing::class,
+            \Modules\Booking\Console\SetEventPassed::class,
+        ]);
     }
 
     /**

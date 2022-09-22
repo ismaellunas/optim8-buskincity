@@ -13,16 +13,13 @@
                     </li>
                     <li>
                         <biz-link :href="route(baseRouteName+'.show', order.id)">
-                            {{ order.product_name }}
+                            {{ order.product.name }}
                         </biz-link>
                     </li>
                     <li class="is-active">
-                        <a
-                            href="#"
-                            aria-current="page"
-                        >
+                        <biz-link aria-current="page">
                             Reschedule
-                        </a>
+                        </biz-link>
                     </li>
                 </ul>
             </nav>
@@ -30,20 +27,15 @@
         <div class="column is-11">
             <div class="columns is-multiline mt-3">
                 <div class="column is-4">
-                    <table class="table">
-                        <tr>
-                            <th><biz-icon :icon="ecommerceIcon.duration" /></th>
-                            <td>{{ order.event_duration }}</td>
-                        </tr>
-                        <tr>
-                            <th><biz-icon :icon="ecommerceIcon.calendar" /></th>
-                            <td>{{ order.event_start_end_time }}, {{ order.event_date }}</td>
-                        </tr>
-                        <tr>
-                            <th><biz-icon :icon="ecommerceIcon.timezone" /></th>
-                            <td>{{ order.timezone }}</td>
-                        </tr>
-                    </table>
+                    <table-event-reschedule-detail :event="order.event" />
+
+                    <div class="buttons">
+                        <biz-button-link
+                            :href="route(baseRouteName + '.show', order.id)"
+                        >
+                            Back
+                        </biz-button-link>
+                    </div>
                 </div>
 
                 <div class="column is-8">
@@ -61,38 +53,12 @@
         <modal-time-confirmation
             v-if="isModalOpen"
             title="Reschedule Event"
+            :event="order.event"
+            :product-name="order.product.name"
+            :selected-date="form.date"
+            :selected-time="form.time"
             @close="closeModal()"
         >
-            <template #event>
-                <h5 class="title is-5">
-                    {{ order.product_name }}
-                </h5>
-
-                <table class="table">
-                    <tr>
-                        <th><biz-icon :icon="ecommerceIcon.duration" /></th>
-                        <td>{{ order.event_duration }}</td>
-                    </tr>
-                    <tr>
-                        <th><biz-icon :icon="ecommerceIcon.timezone" /></th>
-                        <td>{{ order.timezone }}</td>
-                    </tr>
-                    <tr>
-                        <th><biz-icon :icon="ecommerceIcon.calendar" /></th>
-                        <td><b>{{ rescheduleDateTime }}</b></td>
-                    </tr>
-                </table>
-            </template>
-
-            <template #reschedule>
-                <table class="table">
-                    <tr>
-                        <th><s><biz-icon :icon="ecommerceIcon.calendar" /></s></th>
-                        <td><s>{{ order.event_start_end_time }}, {{ order.event_date }}</s></td>
-                    </tr>
-                </table>
-            </template>
-
             <template #actions>
                 <biz-button
                     class="is-info ml-1"
@@ -108,6 +74,7 @@
 
 <script>
     import BizButton from '@/Biz/Button';
+    import BizButtonLink from '@/Biz/ButtonLink';
     import BizIcon from '@/Biz/Icon';
     import BizLink from '@/Biz/Link';
     import BookingTime from './BookingTime';
@@ -115,8 +82,8 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import ModalTimeConfirmation from './ModalTimeConfirmation';
+    import TableEventRescheduleDetail from './TableEventRescheduleDetail';
     import moment from 'moment';
-    import ecommerceIcon from '../Libs/ecommerce-icon';
     import { reactive, ref } from 'vue';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
@@ -124,10 +91,11 @@
     export default {
         components: {
             BizButton,
-            BizIcon,
+            BizButtonLink,
             BizLink,
             BookingTime,
             ModalTimeConfirmation,
+            TableEventRescheduleDetail,
         },
 
         mixins: [
@@ -172,31 +140,7 @@
                 availableTimes: ref([]),
                 details: ref([]),
                 productDetail,
-                ecommerceIcon,
             };
-        },
-
-        computed: {
-            rescheduleDateTime() {
-                if (! (this.form.date && this.form.time)) {
-                    return null;
-                }
-
-                const startTime = moment(
-                    moment(this.form.date).format('YYYY-MM-DD') + ' ' + this.form.time
-                );
-
-                const endTime = moment(startTime).add(
-                    this.order.event_duration_details.duration,
-                    this.order.event_duration_details.unit
-                );
-
-                return (
-                    startTime.format('k:mm')
-                    + ' - ' + endTime.format('k:mm')
-                    + ', ' + startTime.format('D MMMM YYYY')
-                );
-            },
         },
 
         methods: {
@@ -212,7 +156,7 @@
 
                 axios.get(
                     route(self.availableTimesRouteName, {
-                        product: this.order.product_id,
+                        product: this.order.product.id,
                         date: date.format('YYYY-MM-DD')
                     }),
                 ).then((response) => {
