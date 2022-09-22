@@ -38,7 +38,7 @@ class SettingNotificationController extends CrudController
 
     public function create(FieldGroup $formBuilder)
     {
-        return Inertia::render('FormBuilder::Settings/NotificationCreate', $this->getData([
+        return Inertia::render('FormBuilder::Settings/Notification/Create', $this->getData([
             'activeOptions' => $this->settingNotificationService->getActiveOptions(),
             'title' => $this->getCreateTitle(),
             'formBuilder' => $formBuilder,
@@ -72,7 +72,7 @@ class SettingNotificationController extends CrudController
         $notification->send_to = $this->convertJsonToString($notification->send_to);
         $notification->bcc = $this->convertJsonToString($notification->bcc);
 
-        return Inertia::render('FormBuilder::Settings/NotificationEdit', $this->getData([
+        return Inertia::render('FormBuilder::Settings/Notification/Edit', $this->getData([
             'activeOptions' => $this->settingNotificationService->getActiveOptions(),
             'title' => $this->getEditTitle(),
             'formBuilder' => $formBuilder,

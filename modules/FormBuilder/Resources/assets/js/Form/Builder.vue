@@ -34,7 +34,9 @@
             <slot name="buttons">
                 <div class="field">
                     <biz-button class="is-medium is-primary">
-                        <span class="has-text-weight-bold">Submit</span>
+                        <span class="has-text-weight-bold">
+                            {{ submitLabel }}
+                        </span>
                     </biz-button>
                 </div>
             </slot>
@@ -98,6 +100,12 @@
                     save: '/form-builders/save',
                 },
             };
+        },
+
+        computed: {
+            submitLabel() {
+                return this.fieldGroup?.buttons?.submit?.label;
+            },
         },
 
         mounted() {

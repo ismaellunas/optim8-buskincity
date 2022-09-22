@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FormBuilderService
 {
-    private $formBasePath = 'App\\Entities\\Forms';
+    private $formBasePath = 'Modules\\FormBuilder\\Forms';
     private $formLocationBasePath = "Modules\\FormBuilder\\Forms\\Locations";
     private $fieldPath = "Modules\\FormBuilder\\Fields";
 
@@ -134,9 +134,9 @@ class FormBuilderService
         return new $className();
     }
 
-    private function getFormClassName(?string $type = null): string
+    private function getFormClassName(): string
     {
-        return $this->formBasePath."\\".$type.'Form';
+        return $this->formBasePath."\\".'Form';
     }
 
     public function getForm(string $formId)
@@ -145,8 +145,10 @@ class FormBuilderService
 
         if ($model) {
             $className = $this->getFormClassName();
+            $data = $model->data;
+            $data['settings'] = $model->settings;
 
-            $form = new $className($model->id, $model->data);
+            $form = new $className($model->id, $data);
 
             if ($form->canBeAccessedByLocation()) {
                 $form->model = $model;
