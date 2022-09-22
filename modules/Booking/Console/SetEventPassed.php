@@ -1,29 +1,30 @@
 <?php
 
-namespace Modules\Ecommerce\Console;
+namespace Modules\Booking\Console;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Modules\Ecommerce\Entities\Event;
 use Modules\Ecommerce\Enums\BookingStatus;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SetEventOngoing extends Command
+class SetEventPassed extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $name = 'booking-event:status-to-ongoing';
+    protected $name = 'booking-event:status-to-passed';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Update the event(s) status from upcoming to ongoing, once they enter the booked time';
+    protected $description = 'Update the event(s) status from upcoming or ongoing to passed, once they pass the time';
 
     /**
      * Create a new command instance.
@@ -43,19 +44,24 @@ class SetEventOngoing extends Command
     public function handle()
     {
         $executionTime = Carbon::parse($this->option('execution-time'), $this->option('timezone'));
-        $executionTime->addMinutes(2);
 
-        $minTime = $executionTime->copy()->subHours(12);
+        $affectedStatus = [
+            BookingStatus::UPCOMING,
+            BookingStatus::ONGOING
+        ];
 
-        $updatedNumber = Event::upcoming()
-            ->where('booked_at', '<=', $executionTime->toDateTimeString())
-            ->where('booked_at', '>', $minTime->toDateTimeString())
+        $passedNumber = Event::whereIn('status', $affectedStatus)
+            ->where(
+                DB::raw("booked_at + (duration || ' ' || duration_unit)::INTERVAL"),
+                '<=',
+                $executionTime->toDateTimeString()
+            )
             ->update([
-                'status' => BookingStatus::ONGOING,
+                'status' => BookingStatus::PASSED,
             ]);
 
         $this->info(
-            "Affected Number of Events: ".$updatedNumber,
+            'Affected Number of Events: '.$passedNumber,
             OutputInterface::VERBOSITY_VERBOSE
         );
     }

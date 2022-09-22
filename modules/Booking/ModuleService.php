@@ -12,30 +12,32 @@ class ModuleService
     {
         $user = $request->user();
 
+        $children = collect([
+            [
+                'title' => 'Products',
+                'link' => route('admin.ecommerce.products.index'),
+                'isActive' => $request->routeIs('admin.ecommerce.products.index'),
+                'isEnabled' => $user->can('viewAny', Product::class)
+            ],
+            [
+                'title' => 'Orders',
+                'link' => route('admin.ecommerce.orders.index'),
+                'isActive' => $request->routeIs('admin.ecommerce.products.index'),
+                'isEnabled' => $user->can('viewAny', Order::class)
+            ],
+            [
+                'title' => 'Settings',
+                'link' => route('admin.booking.settings.edit'),
+                'isActive' => $request->routeIs('admin.booking.settings.edit'),
+                'isEnabled' => $user->hasRole(['Administrator', 'Super Administrator']),
+            ],
+        ]);
+
         return [
             'title' => 'Booking',
             'isActive' => $request->routeIs('admin.booking.*'),
-            'isEnabled' => true,
-            'children' => [
-                [
-                    'title' => 'Products',
-                    'link' => route('admin.ecommerce.products.index'),
-                    'isActive' => $request->routeIs('admin.ecommerce.products.index'),
-                    'isEnabled' => $user->can('viewAny', Product::class)
-                ],
-                [
-                    'title' => 'Orders',
-                    'link' => route('admin.ecommerce.orders.index'),
-                    'isActive' => $request->routeIs('admin.ecommerce.products.index'),
-                    'isEnabled' => $user->can('viewAny', Order::class)
-                ],
-                [
-                    'title' => 'Settings',
-                    'link' => route('admin.booking.settings.edit'),
-                    'isActive' => $request->routeIs('admin.booking.settings.edit'),
-                    'isEnabled' => $user->hasRole(['Administrator', 'Super Administrator']),
-                ],
-            ],
+            'isEnabled' => $children->contains('isEnabled', true),
+            'children' => $children->all(),
         ];
     }
 
