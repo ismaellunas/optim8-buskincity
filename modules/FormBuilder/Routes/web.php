@@ -30,26 +30,38 @@ Route::name('admin.')->prefix('admin/')->middleware([
     Route::resource('form-builders', FormBuilderController::class)
         ->except(['show']);
 
-    Route::prefix('form-builders/{form_builder}')->name('form-builders.')->group(function() {
-        Route::prefix('settings')->name('settings.')->group(function() {
-            Route::get('notifications/records', [SettingNotificationController::class, 'records'])
-                ->name('notifications.records');
-            Route::resource('notifications', SettingNotificationController::class)
-                ->except(['show']);
+    Route::prefix('form-builders/{form_builder}')
+        ->name('form-builders.')
+        ->group(function() {
+            Route::prefix('settings')->name('settings.')->group(function() {
+                Route::get('notifications/records', [SettingNotificationController::class, 'records'])
+                    ->name('notifications.records');
+                Route::resource('notifications', SettingNotificationController::class)
+                    ->except(['show']);
 
-            Route::get('general/form', [SettingController::class, 'form'])
-                ->name('general.form');
-            Route::put('general/update', [SettingController::class, 'update'])
-                ->name('general.update');
+                Route::prefix('general')
+                    ->middleware([
+                        'can:form_builder.edit'
+                    ])
+                    ->name('general.')
+                    ->group(function() {
+                        Route::get('form', [SettingController::class, 'form'])
+                            ->name('form');
+                        Route::put('update', [SettingController::class, 'update'])
+                            ->name('update');
+                    });
+            });
         });
-    });
 
-    Route::prefix('api')->name('api.')->group(function() {
-        Route::prefix('page-builders')->name('page-builders.')->group(function() {
-            Route::get('form-options', [PageBuilderController::class, 'formOptions'])
-                ->name('form-options');
+    Route::prefix('api')
+        ->name('api.')
+        ->group(function() {
+            Route::prefix('page-builders')->name('page-builders.')->group(function() {
+                Route::get('form-options', [PageBuilderController::class, 'formOptions'])
+                    ->name('form-options')
+                    ->middleware(['can:form_builder.browse']);
+            });
         });
-    });
 });
 
 Route::name('form-builders.')->prefix('form-builders')->group(function () {
