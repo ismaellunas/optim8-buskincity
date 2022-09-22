@@ -3,6 +3,8 @@
 namespace Modules\Ecommerce\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\Ecommerce\Rules\AvailableBookingTime;
+use Modules\Ecommerce\Services\OrderService;
 
 class OrderRescheduleRequest extends FormRequest
 {
@@ -32,6 +34,6 @@ class OrderRescheduleRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('reschedule', $this->route('order'));
+        return true;
     }
 }
