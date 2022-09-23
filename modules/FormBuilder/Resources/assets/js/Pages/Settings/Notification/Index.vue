@@ -89,6 +89,7 @@
 
 <script>
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
@@ -113,6 +114,7 @@
 
         mixins: [
             MixinFilterDataHandle,
+            MixinHasLoader,
         ],
 
         setup() {
@@ -146,10 +148,14 @@
                 const self = this;
                 url = url ?? route(self.baseRouteName + '.records', self.formBuilder.id);
 
+                self.onStartLoadingOverlay();
+
                 axios.get(url, {
                     params: self.queryParams,
                 }).then((response) => {
                     self.records = response.data;
+                }).then(() => {
+                    self.onEndLoadingOverlay();
                 });
             },
 
