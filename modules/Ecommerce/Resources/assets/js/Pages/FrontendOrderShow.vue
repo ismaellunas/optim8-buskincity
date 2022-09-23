@@ -12,12 +12,9 @@
                         </biz-link>
                     </li>
                     <li class="is-active">
-                        <a
-                            href="#"
-                            aria-current="page"
-                        >
-                            {{ order.product_name }}
-                        </a>
+                        <biz-link aria-current="page">
+                            {{ order.product.name }}
+                        </biz-link>
                     </li>
                 </ul>
             </nav>
@@ -25,27 +22,24 @@
 
         <div class="column is-11">
             <h1 class="title is-2 mt-5 mb-2">
-                {{ order.product_name }}
+                {{ order.product.name }}
             </h1>
 
             <p class="is-size-7">
                 <biz-tag class="is-medium">
-                    {{ order.status }}
+                    {{ order.event.status }}
                 </biz-tag>
             </p>
 
             <div class="columns is-multiline mt-3">
                 <div class="column is-8">
-                    <biz-table class="is-fullwidth">
-                        <tr>
-                            <th><biz-icon :icon="ecommerceIcon.calendar" /></th>
-                            <td>{{ order.event_start_end_time }}, {{ order.event_date }}</td>
-                        </tr>
-                        <tr>
-                            <th><biz-icon :icon="ecommerceIcon.timezone" /></th>
-                            <td>{{ order.timezone }} ({{ order.timezoneOffset }})</td>
-                        </tr>
-                    </biz-table>
+                    <event-detail-table :event="order.event" />
+
+                    <div class="buttons">
+                        <biz-button-link :href="route(baseRouteName + '.index')">
+                            Back
+                        </biz-button-link>
+                    </div>
                 </div>
 
                 <div class="is-4">
@@ -87,11 +81,10 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizIcon from '@/Biz/Icon';
     import BizLink from '@/Biz/Link';
-    import BizTable from '@/Biz/Table';
     import BizTag from '@/Biz/Tag';
+    import EventDetailTable from './TableEventDetail';
     import Layout from '@/Layouts/User';
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import ecommerceIcon from '../Libs/ecommerce-icon';
     import icon from '@/Libs/icon-class';
     import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
 
@@ -101,8 +94,8 @@
             BizButtonLink,
             BizIcon,
             BizLink,
-            BizTable,
             BizTag,
+            EventDetailTable,
         },
 
         mixins: [
@@ -121,7 +114,6 @@
         setup(props) {
             return {
                 icon,
-                ecommerceIcon,
             };
         },
 
