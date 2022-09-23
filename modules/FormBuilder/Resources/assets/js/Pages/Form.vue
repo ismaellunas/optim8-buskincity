@@ -12,12 +12,16 @@
                     v-model:input-config-id="computedInputConfigId"
                 />
             </biz-provide-inject-tab>
-            <biz-provide-inject-tab
-                v-if="isEditMode"
-                title="Settings"
-            >
-                <setting />
-            </biz-provide-inject-tab>
+
+            <template v-if="isEditMode">
+                <biz-provide-inject-tab title="Notifications">
+                    <notification-setting />
+                </biz-provide-inject-tab>
+
+                <biz-provide-inject-tab title="Settings">
+                    <general-setting />
+                </biz-provide-inject-tab>
+            </template>
         </biz-provide-inject-tabs>
     </div>
 </template>
@@ -26,7 +30,8 @@
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
     import FormBuilder from './FormBuilder';
-    import Setting from './Setting';
+    import NotificationSetting from './Settings/Notification/Index';
+    import GeneralSetting from './Settings/General/Index';
     import { useModelWrapper, getPhoneCountries } from '@/Libs/utils';
 
     export default {
@@ -36,7 +41,8 @@
             BizProvideInjectTab,
             BizProvideInjectTabs,
             FormBuilder,
-            Setting,
+            GeneralSetting,
+            NotificationSetting,
         },
 
         inject: {
