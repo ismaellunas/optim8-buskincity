@@ -19,6 +19,11 @@ class Setting extends BaseModel
         return $query->where('group', $groupName);
     }
 
+    public function scopeGroupPrefix($query, string $groupName)
+    {
+        return $query->where('group', 'ILIKE', $groupName.'%');
+    }
+
     public function scopeKey($query, string $key)
     {
         return $query->where('key', $key);
