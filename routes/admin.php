@@ -11,6 +11,7 @@ use App\Http\Controllers\{
     PasswordResetLinkController,
     PostController,
     RoleController,
+    SettingKeyController,
     StripeController,
     ThemeAdvanceController,
     ThemeColorController,
@@ -101,34 +102,45 @@ Route::middleware([
         Route::post('/fonts', [ThemeFontController::class, 'update'])->name('fonts.update');
     });
 
-    Route::name('settings.')->prefix('settings')->middleware('can:system.language')->group(function () {
-        Route::get('/languages', [LanguageController::class, 'edit'])
-            ->name('languages.edit');
-        Route::post('/languages', [LanguageController::class, 'update'])
-            ->name('languages.update');
+    Route::name('settings.')->prefix('settings')->group(function () {
+        Route::middleware('can:system.language')->group(function () {
+            Route::get('/languages', [LanguageController::class, 'edit'])
+                ->name('languages.edit');
+            Route::post('/languages', [LanguageController::class, 'update'])
+                ->name('languages.update');
+        });
 
-        Route::get('/translation-manager/create', [TranslationManagerController::class, 'create'])
-            ->name('translation-manager.create');
-        Route::post('/translation-manager/create', [TranslationManagerController::class, 'store'])
-            ->name('translation-manager.store');
-        Route::get('/translation-manager', [TranslationManagerController::class, 'edit'])
-            ->name('translation-manager.edit');
-        Route::post('/translation-manager', [TranslationManagerController::class, 'update'])
-            ->name('translation-manager.update');
-        Route::delete('/translation-manager/{translation}', [TranslationManagerController::class, 'destroy'])
-            ->name('translation-manager.destroy');
+        Route::middleware('can:system.translation')->group(function () {
+            Route::get('/translation-manager/create', [TranslationManagerController::class, 'create'])
+                ->name('translation-manager.create');
+            Route::post('/translation-manager/create', [TranslationManagerController::class, 'store'])
+                ->name('translation-manager.store');
+            Route::get('/translation-manager', [TranslationManagerController::class, 'edit'])
+                ->name('translation-manager.edit');
+            Route::post('/translation-manager', [TranslationManagerController::class, 'update'])
+                ->name('translation-manager.update');
+            Route::delete('/translation-manager/{translation}', [TranslationManagerController::class, 'destroy'])
+                ->name('translation-manager.destroy');
 
-        Route::get('/translation-export/{locale}', [TranslationManagerController::class, 'export'])
-            ->name('translation-manager.export');
-        Route::post('/translation-import', [TranslationManagerController::class, 'import'])
-            ->name('translation-manager.import');
-    });
+            Route::get('/translation-export/{locale}', [TranslationManagerController::class, 'export'])
+                ->name('translation-manager.export');
+            Route::post('/translation-import', [TranslationManagerController::class, 'import'])
+                ->name('translation-manager.import');
+        });
 
-    Route::name('settings.')->prefix('settings')->middleware('can:system.payment')->group(function () {
-        Route::get('/stripe', [StripeController::class, 'edit'])
-            ->name('stripe.edit');
-        Route::post('/stripe', [StripeController::class, 'update'])
-            ->name('stripe.update');
+        Route::middleware('can:system.payment')->group(function () {
+            Route::get('/stripe', [StripeController::class, 'edit'])
+                ->name('stripe.edit');
+            Route::post('/stripe', [StripeController::class, 'update'])
+                ->name('stripe.update');
+        });
+
+        Route::middleware('can:manageKeys,App\Models\Setting')->group(function () {
+            Route::get('/keys', [SettingKeyController::class, 'edit'])
+                ->name('keys.edit');
+            Route::post('/keys', [SettingKeyController::class, 'update'])
+                ->name('keys.update');
+        });
     });
 
     Route::name('users.')->prefix('users')->group(function () {

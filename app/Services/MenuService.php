@@ -353,6 +353,15 @@ class MenuService
                             'isActive' => $request->routeIs('admin.settings.stripe.edit'),
                             'isEnabled' => $user->can('system.payment'),
                         ],
+                        [
+                            'title' => 'Keys',
+                            'link' => route('admin.settings.keys.edit'),
+                            'isActive' => $request->routeIs('admin.settings.keys.edit'),
+                            'isEnabled' => (
+                                $user->isSuperAdministrator
+                                || $user->isAdministrator
+                            ),
+                        ],
                     ],
                 ],
                 [

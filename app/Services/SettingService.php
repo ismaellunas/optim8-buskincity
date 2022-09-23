@@ -74,14 +74,22 @@ class SettingService
         });
     }
 
-    private function getSettingsByGroup(string $groupName): Collection
-    {
-        return Setting::group($groupName)
-            ->get([
+    private function getSettingsByGroup(
+        string $groupName,
+        bool $isPrefix = false
+    ): Collection {
+        if ($isPrefix) {
+            $query = Setting::groupPrefix($groupName);
+        } else {
+            $query = Setting::group($groupName);
+        }
+
+        return $query->get([
                 'display_name',
                 'key',
                 'value',
                 'order',
+                'group',
             ]);
     }
 
@@ -93,6 +101,14 @@ class SettingService
     public function getFontSizes(): array
     {
         return $this->getSettingsByGroup('font_size')->keyBy('key')->all();
+    }
+
+    public function getKeys()
+    {
+        return $this->getSettingsByGroup('key.', true)
+            ->sortBy('group')
+            ->groupBy('group')
+            ->all();
     }
 
     public function getHeader(): array
@@ -429,5 +445,14 @@ class SettingService
         $drivers = Setting::key('socialite_drivers')->value('value');
 
         return is_null($drivers) ? null : json_decode($drivers);
+    }
+
+    public function getGoogleApi(): string
+    {
+        return app(SettingCache::class)->remember('google_api_key', function () {
+            $googleApi = Setting::where('key', 'google_api_key')->value('value');
+
+            return $googleApi ?? "";
+        });
     }
 }
