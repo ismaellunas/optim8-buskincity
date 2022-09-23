@@ -1,9 +1,5 @@
 <template>
-    <biz-list-section>
-        <template #title>
-            Notification
-        </template>
-
+    <div>
         <div class="columns">
             <div class="column">
                 <div class="is-pulled-left">
@@ -88,7 +84,7 @@
             :query-params="queryParams"
             @on-clicked-pagination="getSettingNotifications"
         />
-    </biz-list-section>
+    </div>
 </template>
 
 <script>
@@ -96,7 +92,6 @@
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizListSection from '@/Biz/ListSection';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
     import BizTag from '@/Biz/Tag';
@@ -111,7 +106,6 @@
             BizButton,
             BizButtonLink,
             BizFilterSearch,
-            BizListSection,
             BizPagination,
             BizTable,
             BizTag,

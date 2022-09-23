@@ -77,10 +77,7 @@
 @endtask
 
 @task('heroku:clean-after-deploy')
-    heroku run php artisan config:clear
-    heroku run php artisan route:clear
-    heroku run php artisan route:trans:clear
-    heroku run php artisan view:clear
+    heroku run php artisan optimize:clear
     heroku run rm Envoy.blade.php
     heroku maintenance:off
 @endtask

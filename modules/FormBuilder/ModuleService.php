@@ -52,4 +52,11 @@ class ModuleService
             'formOptions' => app(FormBuilderService::class)->getFormOptions(),
         ];
     }
+
+    public static function defaultSettings(): array
+    {
+        return [
+            'submit_text' => 'Submit',
+        ];
+    }
 }

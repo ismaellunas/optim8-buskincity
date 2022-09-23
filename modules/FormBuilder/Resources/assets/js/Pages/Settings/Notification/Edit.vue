@@ -20,7 +20,7 @@
     import AppLayout from '@/Layouts/AppLayout';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import NotificationForm from './NotificationForm';
+    import NotificationForm from './Form';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { provide } from 'vue'
 
