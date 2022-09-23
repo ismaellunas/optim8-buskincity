@@ -3,50 +3,40 @@
 namespace Modules\Ecommerce\Policies;
 
 use App\Models\User;
-use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Policies\BasePermissionPolicy;
+use App\Services\LoginService;
+use Illuminate\Database\Eloquent\Model;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Enums\ProductStatus;
 
-class ProductPolicy
+class ProductPolicy extends BasePermissionPolicy
 {
-    use HandlesAuthorization;
-
-    /**
-     * Create a new policy instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
+    protected $basePermission = 'product';
 
     public function viewAny(User $user)
     {
-        return (
-            $user->can('product.browse')
-            || $user->products->isNotEmpty()
-        );
+        if (LoginService::isAdminHomeUrl()) {
+            return (
+                $user->can('product.browse')
+                || $user->products->isNotEmpty()
+            );
+        }
+
+        return true;
     }
 
-    public function create(User $user)
+    public function update(User $user, Model $product)
     {
         return (
-            $user->can('product.add')
-        );
-    }
-
-    public function update(User $user, Product $product)
-    {
-        return (
-            $user->can('product.edit')
+            parent::update($user, $product)
             || $user->products->contains($product)
         );
     }
 
-    public function delete(User $user, Product $product)
+    public function delete(User $user, Model $product)
     {
         return (
-            $user->can('product.delete')
+            parent::delete($user, $product)
             || $user->products->contains($product)
         );
     }
@@ -54,5 +44,14 @@ class ProductPolicy
     public function manageManager(User $user)
     {
         return ($user->isAdministrator || $user->isSuperAdministrator);
+    }
+
+    public function showFrontendProductEvent(User $user, Product $product)
+    {
+        return (
+            LoginService::isUserHomeUrl()
+            && $product->status == ProductStatus::PUBLISHED->value
+            && $user->hasRole($product->roles)
+        );
     }
 }

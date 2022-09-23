@@ -73,8 +73,6 @@ class OrderController extends CrudController
 
     public function cancel(Order $order)
     {
-        $this->authorize('cancel', $order);
-
         $this->orderService->cancelOrder($order);
 
         $this->orderService->cancelEvent($order->firstEventLine->latestEvent);
@@ -88,8 +86,6 @@ class OrderController extends CrudController
 
     public function reschedule(Order $order)
     {
-        $this->authorize('reschedule', $order);
-
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
         $schedule = $product->eventSchedule;
@@ -112,8 +108,6 @@ class OrderController extends CrudController
 
     public function availableTimes(Order $order, string $date)
     {
-        $this->authorize('reschedule', $order);
-
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
         $schedule = $product->eventSchedule;
@@ -123,7 +117,7 @@ class OrderController extends CrudController
 
     public function rescheduleUpdate(OrderRescheduleRequest $request, Order $order)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
 
         $this->orderService->rescheduleEvent(
             $order->firstEventLine->latestEvent,
