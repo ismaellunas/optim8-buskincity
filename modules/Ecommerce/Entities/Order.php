@@ -24,6 +24,13 @@ class Order extends GetCandyOrder
         return $this->hasMany(OrderLine::class);
     }
 
+    public function firstEventLine()
+    {
+        return $this
+            ->hasOne(OrderLine::class)
+            ->where('type', OrderLineType::EVENT->value);
+    }
+
     public function getUserFullNameAttribute(): ?string
     {
         return $this->user->fullName ?? null;
@@ -44,11 +51,9 @@ class Order extends GetCandyOrder
         ];
     }
 
-    public function firstEventLine()
+    public function getFirstProductAttribute(): ?Product
     {
-        return $this
-            ->hasOne(OrderLine::class)
-            ->where('type', OrderLineType::EVENT->value);
+        return $this->firstEventLine->purchasable->product ?? null;
     }
 
     public function isUserWhoPlacedTheOrder(User $user): bool

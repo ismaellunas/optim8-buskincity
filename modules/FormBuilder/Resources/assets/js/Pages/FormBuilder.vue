@@ -36,6 +36,8 @@
                             :sort="false"
                             item-key="id"
                             @change="log"
+                            @start="onStartedHandler"
+                            @end="onEndedHandler"
                         >
                             <template #item="{ element }">
                                 <div class="column is-half">
@@ -316,6 +318,16 @@
                     this.form.form_id = convertToKey(this.form.name);
                 }
             },
+
+            onStartedHandler(event) {
+                event.item.classList.remove('is-half');
+                event.item.classList.add('is-full');
+            },
+
+            onEndedHandler(event) {
+                event.item.classList.remove('is-full');
+                event.item.classList.add('is-half');
+            }
         },
     }
 </script>

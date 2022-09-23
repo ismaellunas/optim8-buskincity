@@ -4,6 +4,7 @@ namespace Modules\Ecommerce\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Enums\BookingStatus;
@@ -58,9 +59,11 @@ class OrderController extends CrudController
     {
         $user = auth()->user();
 
+        $orderRecord = $this->orderService->getRecord($order);
+
         return Inertia::render('Ecommerce::OrderShow', $this->getData([
-            'title' => $this->title.' #'.$order->reference,
-            'order' => $this->orderService->getRecord($order),
+            'title' => $this->title.': '.Arr::get($orderRecord, 'product.name'),
+            'order' => $orderRecord,
             'can' => [
                 'cancel' => $user->can('cancel', $order),
                 'reschedule' => $user->can('reschedule', $order),
@@ -70,8 +73,6 @@ class OrderController extends CrudController
 
     public function cancel(Order $order)
     {
-        $this->authorize('cancel', $order);
-
         $this->orderService->cancelOrder($order);
 
         $this->orderService->cancelEvent($order->firstEventLine->latestEvent);
@@ -85,8 +86,6 @@ class OrderController extends CrudController
 
     public function reschedule(Order $order)
     {
-        $this->authorize('reschedule', $order);
-
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
         $schedule = $product->eventSchedule;
@@ -109,8 +108,6 @@ class OrderController extends CrudController
 
     public function availableTimes(Order $order, string $date)
     {
-        $this->authorize('reschedule', $order);
-
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
         $schedule = $product->eventSchedule;
@@ -120,7 +117,7 @@ class OrderController extends CrudController
 
     public function rescheduleUpdate(OrderRescheduleRequest $request, Order $order)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
 
         $this->orderService->rescheduleEvent(
             $order->firstEventLine->latestEvent,

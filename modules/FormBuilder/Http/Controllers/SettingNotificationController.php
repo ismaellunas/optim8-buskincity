@@ -21,14 +21,14 @@ class SettingNotificationController extends CrudController
     public function __construct(
         SettingNotificationService $settingNotificationService
     ) {
-        $this->authorizeResource(FieldGroup::class, 'form_builder');
+        $this->authorizeResource(FieldGroupNotificationSetting::class, 'form_builder');
 
         $this->settingNotificationService = $settingNotificationService;
     }
 
     public function records(Request $request, FieldGroup $formBuilder)
     {
-        $this->authorize('notificationRecords', FieldGroup::class);
+        $this->authorize('viewAny', FieldGroupNotificationSetting::class);
         return $this->settingNotificationService->getRecords(
             $formBuilder->id,
             $request->term,
@@ -38,7 +38,7 @@ class SettingNotificationController extends CrudController
 
     public function create(FieldGroup $formBuilder)
     {
-        return Inertia::render('FormBuilder::Settings/NotificationCreate', $this->getData([
+        return Inertia::render('FormBuilder::Settings/Notification/Create', $this->getData([
             'activeOptions' => $this->settingNotificationService->getActiveOptions(),
             'title' => $this->getCreateTitle(),
             'formBuilder' => $formBuilder,
@@ -72,7 +72,7 @@ class SettingNotificationController extends CrudController
         $notification->send_to = $this->convertJsonToString($notification->send_to);
         $notification->bcc = $this->convertJsonToString($notification->bcc);
 
-        return Inertia::render('FormBuilder::Settings/NotificationEdit', $this->getData([
+        return Inertia::render('FormBuilder::Settings/Notification/Edit', $this->getData([
             'activeOptions' => $this->settingNotificationService->getActiveOptions(),
             'title' => $this->getEditTitle(),
             'formBuilder' => $formBuilder,

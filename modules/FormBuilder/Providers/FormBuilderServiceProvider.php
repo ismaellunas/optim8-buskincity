@@ -41,7 +41,10 @@ class FormBuilderServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->register(AuthServiceProvider::class);
+        $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(ShortcodesServiceProvider::class);
     }
 
     /**

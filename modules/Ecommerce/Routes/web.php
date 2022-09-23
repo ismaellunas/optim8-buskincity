@@ -45,22 +45,27 @@ Route::
             ->except(['show']);
 
         Route::put('/product/{product}/event', [ProductEventController::class, 'update'])
-            ->name('products.events.update');
+            ->name('products.events.update')
+            ->can('update', 'product');
 
         Route::resource('/orders', OrderController::class)
             ->only(['index', 'show']);
 
         Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])
-            ->name('orders.cancel');
+            ->name('orders.cancel')
+            ->can('cancel', 'order');
 
         Route::get('/orders/{order}/reschedule', [OrderController::class, 'reschedule'])
-            ->name('orders.reschedule');
+            ->name('orders.reschedule')
+            ->can('reschedule', 'order');
 
         Route::post('/orders/{order}/reschedule', [OrderController::class, 'rescheduleUpdate'])
-            ->name('orders.reschedule.update');
+            ->name('orders.reschedule.update')
+            ->can('reschedule', 'order');
 
         Route::get('/orders/{order}/available-times/{date}', [OrderController::class, 'availableTimes'])
-            ->name('orders.available-times');
+            ->name('orders.available-times')
+            ->can('reschedule', 'order');
     });
 
 Route::
@@ -72,23 +77,31 @@ Route::
         'ensureLoginFromLoginRoute',
     ])
     ->group(function () {
-        Route::resource('/products', Frontend\ProductController::class)
-            ->only(['index', 'show']);
+        Route::get('/products', [FrontendProductController::class, 'index'])
+            ->name('products.index')
+            ->middleware('can:viewAny,Modules\Ecommerce\Entities\Product');
+
+        Route::get('/products/{product}', [FrontendProductController::class, 'show'])
+            ->name('products.show')
+            ->can('showFrontendProductEvent', 'product');
 
         Route::resource('/orders', Frontend\OrderController::class)
             ->only(['index', 'show']);
 
         Route::get('/products/{product}/available-times/{date}', [FrontendProductController::class, 'availableTimes'])
-            ->name('products.available-times');
+            ->name('products.available-times')
+            ->can('showFrontendProductEvent', 'product');
 
         Route::get('/orders/{order}/reschedule', [FrontendOrderController::class, 'reschedule'])
-            ->name('orders.reschedule');
+            ->name('orders.reschedule')
+            ->can('reschedule', 'order');
 
         Route::post('/orders/{order}/reschedule', [FrontendOrderController::class, 'rescheduleUpdate'])
             ->name('orders.reschedule.update');
 
         Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])
-            ->name('orders.cancel');
+            ->name('orders.cancel')
+            ->can('cancel', 'order');
 
         Route::post('/orders/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
             ->name('orders.book-event');
