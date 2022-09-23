@@ -28,7 +28,6 @@ class SettingNotificationController extends CrudController
 
     public function records(Request $request, FieldGroup $formBuilder)
     {
-        $this->authorize('viewAny', FieldGroupNotificationSetting::class);
         return $this->settingNotificationService->getRecords(
             $formBuilder->id,
             $request->term,
