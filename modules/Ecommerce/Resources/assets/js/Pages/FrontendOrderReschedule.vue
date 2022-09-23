@@ -52,6 +52,7 @@
 
         <modal-time-confirmation
             v-if="isModalOpen"
+            v-model="form.message"
             title="Reschedule Event"
             :event="order.event"
             :product-name="order.product.name"
@@ -119,6 +120,7 @@
                 date: null,
                 time: null,
                 timezone: props.order.timezone,
+                message: null,
             };
 
             const options = {
@@ -185,6 +187,10 @@
                             onFinish: self.onEndLoadingOverlay,
                         }
                     );
+            },
+
+            onShownModal() { /* @see MixinHasModal */
+                this.form.message = null;
             },
         },
     };

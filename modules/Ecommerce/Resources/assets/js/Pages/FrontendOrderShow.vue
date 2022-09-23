@@ -64,7 +64,7 @@
                                 class="is-fullwidth"
                                 type="button"
                                 :icon="icon.remove"
-                                @click="cancel"
+                                @click="openModal"
                             >
                                 <span>Cancel</span>
                             </biz-button-icon>
@@ -73,10 +73,30 @@
                 </div>
             </div>
         </div>
+
+        <modal-cancel-event-confirmation
+            v-if="isModalOpen"
+            v-model="form.message"
+            title="Cancel Event"
+            :event="order.event"
+            :product-name="order.product.name"
+            @close="closeModal()"
+        >
+            <template #actions>
+                <biz-button
+                    class="is-danger ml-1"
+                    type="button"
+                    @click="cancel()"
+                >
+                    Yes for sure
+                </biz-button>
+            </template>
+        </modal-cancel-event-confirmation>
     </div>
 </template>
 
 <script>
+    import BizButton from '@/Biz/Button';
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizIcon from '@/Biz/Icon';
@@ -85,21 +105,27 @@
     import EventDetailTable from './TableEventDetail';
     import Layout from '@/Layouts/User';
     import MixinHasLoader from '@/Mixins/HasLoader';
+    import MixinHasModal from '@/Mixins/HasModal';
+    import ModalCancelEventConfirmation from './ModalCancelEventConfirmation';
     import icon from '@/Libs/icon-class';
     import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
+            BizButton,
             BizButtonIcon,
             BizButtonLink,
             BizIcon,
             BizLink,
             BizTag,
             EventDetailTable,
+            ModalCancelEventConfirmation,
         },
 
         mixins: [
             MixinHasLoader,
+            MixinHasModal,
         ],
 
         layout: Layout,
@@ -112,7 +138,12 @@
         },
 
         setup(props) {
+            const form = {
+                message: null,
+            };
+
             return {
+                form: useForm(form),
                 icon,
             };
         },
@@ -121,27 +152,26 @@
             cancel() {
                 const self = this;
 
-                confirmDelete('Are you sure want to cancel this Booking?')
-                    .then(result => {
-                        if (result.isConfirmed) {
-                            self.$inertia.post(
-                                route(self.baseRouteName + '.cancel', self.order.id),
-                                {},
-                                {
-                                    onStart: () => self.onStartLoadingOverlay(),
-                                    onFinish: () => self.onEndLoadingOverlay(),
-                                    onError: (errors) => {
-                                        oopsAlert();
-                                    },
-                                    onSuccess: (page) => {
-                                        successAlert(page.props.flash.message);
-                                    },
-                                }
-                            );
-                        }
-                    });
+                self.form.post(
+                    route(self.baseRouteName + '.cancel', self.order.id),
+                    {
+                        onStart: () => self.onStartLoadingOverlay(),
+                        onFinish: () => self.onEndLoadingOverlay(),
+                        onError: (errors) => {
+                            oopsAlert();
+                        },
+                        onSuccess: (page) => {
+                            self.closeModal();
 
+                            successAlert(page.props.flash.message);
+                        },
+                    }
+                );
             },
+
+            onShownModal() { /* @see MixinHasModal */
+                this.form.reset();
+            }
         },
     };
 </script>
