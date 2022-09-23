@@ -157,6 +157,18 @@ return [
         'meta_title' => 80,
     ],
 
+    'settings' => [
+        'keys' => [
+            [
+                'key' => 'google_api_key',
+                'display_name' => 'Google API',
+                'value' => null,
+                'order' => 1,
+                'group' => 'key.google_api'
+            ],
+        ],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway
