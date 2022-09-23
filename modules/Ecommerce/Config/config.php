@@ -18,4 +18,10 @@ return [
         'order.add',
         'order.delete',
     ],
+
+    'format' => [
+        'date_event_email_title' => 'D, j M Y',
+        'date_event_email_body' => 'H:i - l, j F Y (e)',
+        'date_event_widget_record' => 'H:i - D, j M Y (e)',
+    ],
 ];

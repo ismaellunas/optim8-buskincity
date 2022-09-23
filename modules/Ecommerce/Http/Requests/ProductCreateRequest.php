@@ -4,6 +4,7 @@ namespace Modules\Ecommerce\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Ecommerce\ModuleService;
 use Modules\Ecommerce\Services\ProductService;
 
@@ -26,7 +27,7 @@ class ProductCreateRequest extends FormRequest
             ],
             'status' => [
                 'required',
-                Rule::in(['published', 'draft']),
+                Rule::in(array_column(ProductStatus::cases(), 'value')),
             ],
             'roles' => [
                 'nullable',

@@ -5,19 +5,23 @@
             class="is-boxed"
         >
             <biz-provide-inject-tab
-                title="Builders"
+                title="Builder"
             >
                 <form-builder
                     v-model="formBuilder"
                     v-model:input-config-id="computedInputConfigId"
                 />
             </biz-provide-inject-tab>
-            <biz-provide-inject-tab
-                v-if="isEditMode"
-                title="Settings"
-            >
-                <setting />
-            </biz-provide-inject-tab>
+
+            <template v-if="isEditMode">
+                <biz-provide-inject-tab title="Notifications">
+                    <notification-setting />
+                </biz-provide-inject-tab>
+
+                <biz-provide-inject-tab title="Settings">
+                    <general-setting />
+                </biz-provide-inject-tab>
+            </template>
         </biz-provide-inject-tabs>
     </div>
 </template>
@@ -26,8 +30,9 @@
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
     import FormBuilder from './FormBuilder';
-    import Setting from './Setting';
-    import { useModelWrapper } from '@/Libs/utils';
+    import NotificationSetting from './Settings/Notification/Index';
+    import GeneralSetting from './Settings/General/Index';
+    import { useModelWrapper, getPhoneCountries } from '@/Libs/utils';
 
     export default {
         name: 'Form',
@@ -36,11 +41,18 @@
             BizProvideInjectTab,
             BizProvideInjectTabs,
             FormBuilder,
-            Setting,
+            GeneralSetting,
+            NotificationSetting,
         },
 
         inject: {
             isEditMode: { default: false },
+        },
+
+        provide() {
+            return {
+                countryOptions: () => this.countryOptions
+            };
         },
 
         props: {
@@ -62,7 +74,12 @@
         data() {
             return {
                 activeTab: 0,
+                countryOptions: [],
             };
+        },
+
+        mounted: async function() {
+            this.countryOptions = await getPhoneCountries();
         },
     }
 </script>

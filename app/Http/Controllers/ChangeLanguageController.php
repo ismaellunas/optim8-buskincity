@@ -11,11 +11,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ChangeLanguageController extends Controller
 {
-    /**
-     * Handle the incoming request.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    private $unTranslatedRoutes = [
+        'homepage',
+        'frontend.pages.show',
+    ];
+
     public function __invoke($newLocale)
     {
         $url = url()->previous();
@@ -51,33 +51,21 @@ class ChangeLanguageController extends Controller
                 return redirect('/'.$newLocale);
             };
 
-            $this->transformParams($prevParams, $prevRouteName);
+            if (!in_array($prevRouteName, $this->unTranslatedRoutes)) {
+                $this->transformParams($prevParams, $prevRouteName);
 
-            $url = LaravelLocalization::getURLFromRouteNameTranslated(
-                $newLocale,
-                $prevRouteName,
-                $prevParams
-            );
-            try {
                 $url = LaravelLocalization::getURLFromRouteNameTranslated(
                     $newLocale,
                     $prevRouteName,
                     $prevParams
                 );
-
-                $unTranslatedRoutes = [
-                    'homepage',
-                    'frontend.pages.show',
-                ];
-
-                if (in_array($prevRouteName, $unTranslatedRoutes)) {
-                    app('router')
-                        ->getRoutes($url)
-                        ->match(app('request')->create($url));
-                }
-
-            } catch (NotFoundHttpException $e){
+            } else {
                 $url = route($prevRouteName, $prevParams);
+                $url = LaravelLocalization::getLocalizedURL(
+                    $newLocale,
+                    $url,
+                    $prevParams
+                );
             }
 
             return redirect($url);

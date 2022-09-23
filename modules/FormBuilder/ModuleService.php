@@ -3,6 +3,7 @@
 namespace Modules\FormBuilder;
 
 use Illuminate\Http\Request;
+use Modules\FormBuilder\Services\FormBuilderService;
 
 class ModuleService
 {
@@ -36,12 +37,26 @@ class ModuleService
         return [
             [
                 'id' => true,
-                'value' => 'Activated'
+                'value' => 'Active'
             ],
             [
                 'id' => false,
-                'value' => 'Deactivated'
+                'value' => 'Inactive'
             ]
+        ];
+    }
+
+    public static function getAdminData(): array
+    {
+        return [
+            'formOptions' => app(FormBuilderService::class)->getFormOptions(),
+        ];
+    }
+
+    public static function defaultSettings(): array
+    {
+        return [
+            'submit_text' => 'Submit',
         ];
     }
 }

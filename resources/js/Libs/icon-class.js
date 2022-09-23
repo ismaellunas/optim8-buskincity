@@ -20,16 +20,19 @@ export const grid = iconFormatter('fa-th');
 export const idCard = iconFormatter('fa-id-card');
 export const image = iconFormatter('fa-image');
 export const list = iconFormatter('fa-th-list');
+export const locationMark = iconFormatter('fa-location-dot');
 export const move = iconFormatter('fa-arrows-alt');
 export const plusCircle = iconFormatter('fa-plus-circle');
 export const preview = iconFormatter('fa-arrow-up-right-from-square');
 export const rectangleList = iconFormatter('fa-rectangle-list');
+export const recycle = iconFormatter('fa-recycle');
 export const remove = iconFormatter('fa-trash-can');
 export const show = iconFormatter('fa-eye');
 export const signIn = iconFormatter('fa-sign-in-alt');
 export const suspend = iconFormatter('fa-ban');
 export const unsuspend = iconFormatter('fa-hands-helping');
 export const upload = iconFormatter('fa-upload');
+export const user = iconFormatter('fa-user');
 
 export function iconFormatter(iconClass) {
     return iconType + ' ' + iconClass;
@@ -58,12 +61,15 @@ export default {
     plusCircle,
     preview,
     rectangleList,
+    recycle,
     remove,
     show,
     signIn,
     suspend,
     grid,
     list,
+    locationMark,
     unsuspend,
     upload,
+    user,
 }

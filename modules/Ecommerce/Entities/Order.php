@@ -2,22 +2,46 @@
 
 namespace Modules\Ecommerce\Entities;
 
+use App\Models\User;
 use GetCandy\Models\Order as GetCandyOrder;
-use GetCandy\Models\OrderLine;
 use Modules\Ecommerce\Enums\OrderLineType;
+use Modules\Ecommerce\Database\factories\OrderFactory;
 
 class Order extends GetCandyOrder
 {
-    public function getUserFullNameAttribute(): string|null
+    /**
+     * Return a new factory instance for the model.
+     *
+     * @return \GetCandy\Database\Factories\OrderFactory
+     */
+    protected static function newFactory(): OrderFactory
+    {
+        return OrderFactory::new();
+    }
+
+    public function lines()
+    {
+        return $this->hasMany(OrderLine::class);
+    }
+
+    public function getUserFullNameAttribute(): ?string
     {
         return $this->user->fullName ?? null;
     }
 
-    public function getFormattedPlacedAtAttribute(): string|null
+    public function getFormattedPlacedAtAttribute(): ?string
     {
         return $this->placed_at
             ? $this->placed_at->format(config('constants.format.date_time'))
             : null;
+    }
+
+    public function getEmailRecipientAttribute(): object
+    {
+        return (object) [
+            'name' => $this->user->fullName,
+            'email' => $this->user->email,
+        ];
     }
 
     public function firstEventLine()
@@ -25,5 +49,10 @@ class Order extends GetCandyOrder
         return $this
             ->hasOne(OrderLine::class)
             ->where('type', OrderLineType::EVENT->value);
+    }
+
+    public function isUserWhoPlacedTheOrder(User $user): bool
+    {
+        return $this->user_id == $user->id;
     }
 }

@@ -198,7 +198,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getFullNameAttribute(): string
     {
-        return trim(ucfirst($this->first_name) . ' ' . ucfirst($this->last_name));
+        return trim(ucfirst($this->first_name ?? '') . ' ' . ucfirst($this->last_name ?? ''));
     }
 
     public function getProfilePhotoUrlAttribute(): ?string

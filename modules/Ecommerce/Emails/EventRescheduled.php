@@ -44,18 +44,39 @@ class EventRescheduled extends Mailable
             ->where('status', BookingStatus::UPCOMING->value)
             ->last();
 
+        $schedule = $rescheduledEvent->schedule;
+
+        $inviteeName = $this->order->user->fullName ?? null;
+        $productName = $line->purchasable->product->translateAttribute('name');
+        $upcomingEventDateTime = $upcomingEvent
+            ->booked_at
+            ->setTimezone($schedule->timezone);
+
         return $this
-            ->subject( __('Updated Event: :productName @ :date :startedTime - :endedTime', [
-                'productName' => $line->purchasable->product->translateAttribute('name'),
-                'date' => $upcomingEvent->booked_at->toDateString(),
-                'startedTime' => $upcomingEvent->booked_at->format('H:i'),
-                'endedTime' => $upcomingEvent->ended_time->format('H:i'),
+            ->subject( __('Updated: :inviteeName - :startedTime :date - :productName', [
+                'productName' => $productName,
+                'date' => $upcomingEventDateTime->format(config('ecommerce.format.date_event_email_title')),
+                'startedTime' => $upcomingEventDateTime->format('H:i'),
+                'inviteeName' => $inviteeName,
             ]))
-            ->markdown('ecommerce::emails.orders.rescheduled')
+            ->markdown('ecommerce::emails.event.rescheduled')
             ->with([
-                'line' => $line,
-                'rescheduledEvent' => $rescheduledEvent,
-                'upcomingEvent' => $upcomingEvent,
+                'duration' => $upcomingEvent->displayDuration,
+                'inviteeEmail' => $this->order->user->email,
+                'inviteeName' => $inviteeName,
+                'productName' => $productName,
+                'updated' => [
+                    'event_date_time' => $upcomingEventDateTime
+                        ->format(config('ecommerce.format.date_event_email_body')),
+                ],
+                'former' => [
+                    'event_date_time' => $rescheduledEvent
+                        ->booked_at
+                        ->setTimezone($schedule->timezone)
+                        ->format(config('ecommerce.format.date_event_email_body')),
+                ],
+                'timezone' => $schedule->timezone,
+                'toName' => $this->to[0]['name'] ?? $this->to['address'] ?? "",
             ]);
     }
 }

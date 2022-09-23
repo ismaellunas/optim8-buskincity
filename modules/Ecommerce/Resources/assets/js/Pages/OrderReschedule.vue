@@ -6,25 +6,7 @@
                     {{ product.name }}
                 </h4>
 
-                <table class="table is-fullwidth is-bordered">
-                    <tr>
-                        <th>SKU</th>
-                        <td>{{ order.lines[0].identifier }}</td>
-                    </tr>
-
-                    <tr>
-                        <th>Short Description</th>
-                        <td>{{ product.short_description }}</td>
-                    </tr>
-                    <tr>
-                        <th>Booked At</th>
-                        <td>{{ order.lines[0].event.booked_at }}</td>
-                    </tr>
-                    <tr>
-                        <th>Duration</th>
-                        <td>{{ order.lines[0].event.duration }}</td>
-                    </tr>
-                </table>
+                <table-event-reschedule-detail :event="firstEvent" />
 
                 <div class="buttons">
                     <biz-button-link
@@ -35,69 +17,24 @@
                 </div>
             </div>
 
-            <div class="column is-4">
-                <biz-form-input
-                    v-model="scheduleTimezone"
-                    label="Timezone"
-                    disabled
-                    readonly
-                    :field-class="['mx-4']"
+            <div class="column is-8">
+                <booking-time
+                    v-model="form"
+                    :available-times="availableTimes"
+                    :options="options"
+                    @get-available-times="getAvailableTimes"
+                    @on-time-confirmed="openModal"
                 />
-
-                <div class="field is-grouped is-grouped-centered">
-                    <p class="control">
-                        <biz-date-time
-                            v-model="form.date"
-                            type="date"
-                            inline
-                            :options="options"
-                        />
-                    </p>
-                </div>
-            </div>
-
-            <div
-                id="reschedule-available-time-list-wrapper"
-                class="column is-4"
-            >
-                <div
-                    id="reschedule-available-time-list"
-                    class="columns is-multiline mt-1"
-                >
-                    <div
-                        v-for="(time, index) in availableTimes"
-                        :key="index"
-                        class="column is-full py-1"
-                    >
-                        <div class="buttons">
-                            <biz-button
-                                class="px-5"
-                                :class="{'is-danger': isIndexSelected(index), 'has-text-weight-bold': isIndexSelected(index)}"
-                                type="button"
-                                @click="toggleSelectedIndex(index)"
-                            >
-                                {{ time }}
-                            </biz-button>
-                            <biz-button
-                                v-if="isIndexSelected(index)"
-                                class="button is-link px-5"
-                                type="button"
-                                @click="openTimeConfirmationModal(time)"
-                            >
-                                Confirm
-                            </biz-button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
         <modal-time-confirmation
             v-if="isModalOpen"
             title="Reschedule Event"
-            submit-text="Reschedule"
-            :details="details"
-            :product="productDetail"
+            :product-name="product.name"
+            :event="firstEvent"
+            :selected-date="form.date"
+            :selected-time="form.time"
             @close="closeModal()"
         >
             <template #actions>
@@ -117,11 +54,12 @@
     import AppLayout from '@/Layouts/AppLayout';
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
-    import BizDateTime from '@/Biz/DateTime';
-    import BizFormInput from '@/Biz/Form/Input';
-    import ModalTimeConfirmation from './ModalTimeConfirmation';
+    import BookingTime from './BookingTime';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
+    import ModalTimeConfirmation from './ModalTimeConfirmation';
+    import TableEventRescheduleDetail from './TableEventRescheduleDetail';
+    import ecommerceIcon from '../Libs/ecommerce-icon';
     import moment from 'moment';
     import { reactive, ref } from 'vue';
     import { success as successAlert } from '@/Libs/alert';
@@ -131,9 +69,9 @@
         components: {
             BizButton,
             BizButtonLink,
-            BizDateTime,
-            BizFormInput,
+            BookingTime,
             ModalTimeConfirmation,
+            TableEventRescheduleDetail,
         },
 
         mixins: [
@@ -157,6 +95,7 @@
             const form = {
                 date: null,
                 time: null,
+                timezone: props.timezone,
             };
 
             const options = {
@@ -169,6 +108,8 @@
 
             return {
                 form: useForm(form),
+                ecommerceIcon,
+                firstEvent: props.order.event,
                 options: reactive(options),
                 scheduleTimezone: ref(props.timezone),
             };
@@ -177,61 +118,11 @@
         data() {
             return {
                 availableTimes: [],
-                selectedIndex: null,
             };
         },
 
-        computed: {
-            productDetail() {
-                const line = this.order.lines[0];
-
-                return {
-                    name: line.purchasable.name,
-                    identifier: line.identifier,
-                };
-            },
-
-            details() {
-                const event = this.order.lines[0].event;
-                let rescheduleDateTime = null;
-
-                if (this.form.date && this.form.time) {
-                    const composedDateTime = (
-                        moment(this.form.date).format('YYYY-MM-DD')
-                        + ' '
-                        + this.form.time
-                    );
-
-                    rescheduleDateTime = moment(composedDateTime)
-                        .format('YYYY/MM/DD HH:mm');
-                }
-
-                return [
-                    { field: "Timezone", value: event.timezone },
-                    { field: "Duration", value: event.duration },
-                    { field: "Booked At", value: event.booked_at },
-                    { field: "Reschedule At", value: rescheduleDateTime },
-                ];
-            },
-        },
-
-        watch: {
-            'form.date': function (newVal, oldVal) {
-                this.resetSelectedIndex();
-                this.getAvailableTime();
-            },
-        },
-
         methods: {
-            toggleSelectedIndex(index) {
-                if (this.selectedIndex == index) {
-                    this.resetSelectedIndex();
-                } else {
-                    this.selectedIndex = index
-                }
-            },
-
-            getAvailableTime() {
+            getAvailableTimes() {
                 if (! this.form.date) {
                     this.availableTimes = [];
                 }
@@ -273,19 +164,6 @@
                         }
                     );
             },
-
-            openTimeConfirmationModal(time) {
-                this.form.time = time;
-                this.openModal();
-            },
-
-            isIndexSelected(index) {
-                return this.selectedIndex == index;
-            },
-
-            resetSelectedIndex() {
-                this.selectedIndex = null;
-            }
         },
     };
 </script>

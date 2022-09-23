@@ -4,15 +4,17 @@ namespace Modules\Ecommerce\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Order;
-use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Enums\BookingStatus;
 use Modules\Ecommerce\Events\EventRescheduled;
-use Modules\Ecommerce\Events\OrderCanceled;
+use Modules\Ecommerce\Events\EventCanceled;
 use Modules\Ecommerce\Http\Requests\OrderRescheduleRequest;
 use Modules\Ecommerce\Services\EventService;
 use Modules\Ecommerce\Services\OrderService;
 use Modules\Ecommerce\Services\ProductService;
+use Modules\Ecommerce\Services\ProductEventService;
 
 class OrderController extends CrudController
 {
@@ -21,15 +23,18 @@ class OrderController extends CrudController
 
     private $eventService;
     private $orderService;
+    private $productEventService;
 
     public function __construct(
         EventService $eventService,
-        OrderService $orderService
+        OrderService $orderService,
+        ProductEventService $productEventService
     ) {
         $this->authorizeResource(Order::class, 'order');
 
         $this->eventService = $eventService;
         $this->orderService = $orderService;
+        $this->productEventService = $productEventService;
     }
 
     public function index()
@@ -38,8 +43,12 @@ class OrderController extends CrudController
 
         return Inertia::render('Ecommerce::OrderIndex', $this->getData([
             'title' => $this->getIndexTitle(),
-            'pageQueryParams' => array_filter(request()->only('term')),
-            'records' => $this->orderService->getRecords(request()->get('term')),
+            'pageQueryParams' => array_filter(request()->only('term', 'status')),
+            'records' => $this->orderService->getRecords(
+                request()->get('term'),
+                ['inStatus' => request()->status ?? null],
+            ),
+            'statusOptions' => BookingStatus::options(),
             'can' => [
                 'read' => $user->can('order.read'),
             ],
@@ -50,9 +59,11 @@ class OrderController extends CrudController
     {
         $user = auth()->user();
 
+        $orderRecord = $this->orderService->getRecord($order);
+
         return Inertia::render('Ecommerce::OrderShow', $this->getData([
-            'title' => $this->title.' #'.$order->reference,
-            'order' => $this->orderService->getRecord($order),
+            'title' => $this->title.': '.Arr::get($orderRecord, 'product.name'),
+            'order' => $orderRecord,
             'can' => [
                 'cancel' => $user->can('cancel', $order),
                 'reschedule' => $user->can('reschedule', $order),
@@ -68,7 +79,7 @@ class OrderController extends CrudController
 
         $this->orderService->cancelEvent($order->firstEventLine->latestEvent);
 
-        OrderCanceled::dispatch($order);
+        EventCanceled::dispatch($order);
 
         $this->generateFlashMessage('The Event has been canceled!');
 
@@ -81,10 +92,10 @@ class OrderController extends CrudController
 
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
-        $minDate = today();
-        $maxDate = today()->addDays($product->bookable_date_range);
-
         $schedule = $product->eventSchedule;
+
+        $minDate = $this->productEventService->minBookableDate();
+        $maxDate = $this->productEventService->maxBookableDate($product);
 
         $disabledDates = $this->eventService->disabledDates($schedule, $minDate, $maxDate);
 

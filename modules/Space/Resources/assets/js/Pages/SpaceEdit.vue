@@ -91,26 +91,6 @@
                             </div>
                         </div>
                     </form>
-
-                    <form
-                        v-if="can.productManager.edit"
-                        class="box"
-                        @submit.prevent="submitProductManager"
-                    >
-                        <biz-form-assign-user
-                            v-model="productManagers"
-                            label="Choose Product Manager"
-                            :get-users-url="route('admin.spaces.product-managers.search', space.id)"
-                        />
-
-                        <div class="field is-grouped is-grouped-right mt-4">
-                            <div class="control">
-                                <biz-button class="is-link">
-                                    Update
-                                </biz-button>
-                            </div>
-                        </div>
-                    </form>
                 </biz-provide-inject-tab>
 
                 <biz-provide-inject-tab
@@ -218,7 +198,6 @@
             page: { type: Object, required: true },
             parentOptions: { type: Object, default: () => {} },
             spaceManagers: { type: Array, default: () => [] },
-            spaceProductManagers: { type: Array, default: () => [] },
             spaceRecord: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
             tab: { type: Number, default: 0 },
@@ -318,27 +297,6 @@
                 });
 
                 form.post(route(self.baseRouteName+'.update-managers', self.spaceRecord.id), {
-                    replace: true,
-                    onStart: self.onStartLoadingOverlay,
-                    onSuccess: (page) => {
-                        successAlert(page.props.flash.message);
-                    },
-                    onError: () => { oopsAlert() },
-                    onFinish: self.onEndLoadingOverlay
-                });
-            },
-
-            submitProductManager() {
-                const self = this;
-                const form = useForm({
-                    managers: map(this.productManagers, 'id')
-                });
-                const url = route(
-                    self.baseRouteName+'.product-managers.update',
-                    self.spaceRecord.id
-                );
-
-                form.post(url, {
                     replace: true,
                     onStart: self.onStartLoadingOverlay,
                     onSuccess: (page) => {

@@ -32,4 +32,19 @@ class FieldGroup extends ModelFieldGroup
     {
         return $this->hasMany(FieldGroupEntry::class, 'field_group_id');
     }
+
+    public function notificationSettings()
+    {
+        return $this->hasMany(FieldGroupNotificationSetting::class, 'field_group_id');
+    }
+
+    public function activeNotificationSettings()
+    {
+        return $this->notificationSettings()->where('is_active', true);
+    }
+
+    public function settings()
+    {
+        return $this->hasMany(FieldGroupSetting::class, 'field_group_id');
+    }
 }

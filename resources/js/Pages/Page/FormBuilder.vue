@@ -30,6 +30,41 @@
                         </template>
                     </draggable>
 
+                    <template
+                        v-if="hasModuleComponent"
+                    >
+                        <hr>
+
+                        <draggable
+                            class="dragArea columns is-multiline"
+                            :disabled="!isEditMode"
+                            :list="availableModuleComponents"
+                            :group="{ name: 'components', pull: 'clone', put: false }"
+                            :clone="cloneComponent"
+                            :sort="false"
+                            item-key="id"
+                            @end="onEnd"
+                            @change="log"
+                        >
+                            <template #item="{ element }">
+                                <div class="column is-half">
+                                    <div
+                                        class="card"
+                                        :class="{'has-text-grey-light': !isEditMode}"
+                                    >
+                                        <div class="card-content is-size-7">
+                                            <div class="content is-center">
+                                                {{ element.title }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </draggable>
+                    </template>
+
+                    <hr>
+
                     <draggable
                         class="dragColumnArea columns is-multiline"
                         :disabled="!isEditMode"
@@ -106,10 +141,18 @@
     import BlockColumns from '@/Blocks/Columns'
     import blockColumns from '@/ComponentStructures/columns';
     import ComponentStructures from '@/ComponentStructures';
+    import ModuleComponentStructures from '@/Modules/ComponentStructures';
     import Draggable from "vuedraggable";
     import { cloneDeep } from 'lodash';
     import { createColumn } from '@/Libs/page-builder.js';
-    import { isBlank, generateElementId, useModelWrapper, getResourceFromDataObject } from '@/Libs/utils'
+    import { isModuleActive } from '@/Libs/module';
+    import { pascalCase } from 'change-case';
+    import {
+        isBlank,
+        generateElementId,
+        useModelWrapper,
+        getResourceFromDataObject
+    } from '@/Libs/utils';
 
     export default {
         components: {
@@ -154,6 +197,18 @@
                 for (const property in ComponentStructures) {
                     components.push(ComponentStructures[property]);
                 }
+
+                return components;
+            },
+            availableModuleComponents() {
+                let components = [];
+
+                for (const property in ModuleComponentStructures) {
+                    if (isModuleActive(pascalCase(property))) {
+                        components.push(ModuleComponentStructures[property]);
+                    }
+                }
+
                 return components;
             },
             availableBlocks() {
@@ -175,6 +230,9 @@
             },
             hasBlok() {
                 return isBlank(this.data.structures) ? false : this.data.structures.length > 0;
+            },
+            hasModuleComponent() {
+                return this.availableModuleComponents.length > 0;
             },
             isComponentConfigOpen() {
                 return (

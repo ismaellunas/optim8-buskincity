@@ -3,6 +3,7 @@
 namespace Modules\Ecommerce\Entities;
 
 use App\Models\Media;
+use App\Models\User;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\Product as GetCandyProduct;
 use Illuminate\Support\Arr;
@@ -44,6 +45,11 @@ class Product extends GetCandyProduct
         return $this->morphTo();
     }
 
+    public function managers()
+    {
+        return $this->belongsToMany(User::class, 'product_user');
+    }
+
     public function scopePublished($query)
     {
         return $query->where('status', ProductStatus::PUBLISHED);
@@ -57,6 +63,11 @@ class Product extends GetCandyProduct
             ->where("attribute_data->name->value->{$locale}", 'ILIKE', "%{$term}%")
             ->orWhere("attribute_data->description->value->{$locale}", 'ILIKE', "%{$term}%")
             ->orWhere("attribute_data->short_description->value->{$locale}", 'ILIKE', "%{$term}%");
+    }
+
+    public function scopeInStatus($query, array $status)
+    {
+        return $query->whereIn('status', $status);
     }
 
     /**
@@ -89,5 +100,10 @@ class Product extends GetCandyProduct
     public function getCoverThumbnailUrlAttribute(): ?string
     {
         return $this->cover->thumbnailUrl ?? null;
+    }
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->translateAttribute('name', config('app.locale'));
     }
 }

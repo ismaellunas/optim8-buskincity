@@ -5,7 +5,6 @@ namespace Modules\Ecommerce\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Modules\Ecommerce\Entities\Product;
-use Modules\Space\Entities\Space;
 
 class ProductPolicy
 {
@@ -25,7 +24,7 @@ class ProductPolicy
     {
         return (
             $user->can('product.browse')
-            || $user->managedSpaceProducts->isNotEmpty()
+            || $user->products->isNotEmpty()
         );
     }
 
@@ -33,7 +32,6 @@ class ProductPolicy
     {
         return (
             $user->can('product.add')
-            || $user->managedSpaceProducts->isNotEmpty()
         );
     }
 
@@ -41,7 +39,7 @@ class ProductPolicy
     {
         return (
             $user->can('product.edit')
-            || $this->manageProductFromSpace($user, $product)
+            || $user->products->contains($product)
         );
     }
 
@@ -49,16 +47,12 @@ class ProductPolicy
     {
         return (
             $user->can('product.delete')
-            || $this->manageProductFromSpace($user, $product)
+            || $user->products->contains($product)
         );
     }
 
-    public function manageProductFromSpace(User $user, Product $product)
+    public function manageManager(User $user)
     {
-        return (
-            !is_null($product->productable)
-            && is_a($product->productable, Space::class)
-            && $user->managedSpaceProducts->contains($product->productable)
-        );
+        return ($user->isAdministrator || $user->isSuperAdministrator);
     }
 }

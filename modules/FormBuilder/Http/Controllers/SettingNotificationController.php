@@ -21,14 +21,16 @@ class SettingNotificationController extends CrudController
     public function __construct(
         SettingNotificationService $settingNotificationService
     ) {
-        $this->authorizeResource(FieldGroupNotificationSetting::class, 'notification');
+        $this->authorizeResource(FieldGroupNotificationSetting::class, 'form_builder');
 
         $this->settingNotificationService = $settingNotificationService;
     }
 
-    public function records(Request $request)
+    public function records(Request $request, FieldGroup $formBuilder)
     {
+        $this->authorize('viewAny', FieldGroupNotificationSetting::class);
         return $this->settingNotificationService->getRecords(
+            $formBuilder->id,
             $request->term,
             $this->recordsPerPage,
         );
@@ -36,7 +38,7 @@ class SettingNotificationController extends CrudController
 
     public function create(FieldGroup $formBuilder)
     {
-        return Inertia::render('FormBuilder::Settings/NotificationCreate', $this->getData([
+        return Inertia::render('FormBuilder::Settings/Notification/Create', $this->getData([
             'activeOptions' => $this->settingNotificationService->getActiveOptions(),
             'title' => $this->getCreateTitle(),
             'formBuilder' => $formBuilder,
@@ -55,7 +57,7 @@ class SettingNotificationController extends CrudController
 
         $notificationSetting->saveFromInputs($inputs);
 
-        $this->generateFlashMessage('Form created successfully!');
+        $this->generateFlashMessage('Notification setting created successfully!');
 
         return redirect()->route($this->baseRouteName . '.edit', [
             'form_builder' => $formBuilder->id,
@@ -70,7 +72,7 @@ class SettingNotificationController extends CrudController
         $notification->send_to = $this->convertJsonToString($notification->send_to);
         $notification->bcc = $this->convertJsonToString($notification->bcc);
 
-        return Inertia::render('FormBuilder::Settings/NotificationEdit', $this->getData([
+        return Inertia::render('FormBuilder::Settings/Notification/Edit', $this->getData([
             'activeOptions' => $this->settingNotificationService->getActiveOptions(),
             'title' => $this->getEditTitle(),
             'formBuilder' => $formBuilder,
@@ -91,7 +93,7 @@ class SettingNotificationController extends CrudController
 
         $notification->saveFromInputs($inputs);
 
-        $this->generateFlashMessage('Form updated successfully!');
+        $this->generateFlashMessage('Notification setting updated successfully!');
 
         return redirect()->route($this->baseRouteName . '.edit', [
             'form_builder' => $formBuilder->id,

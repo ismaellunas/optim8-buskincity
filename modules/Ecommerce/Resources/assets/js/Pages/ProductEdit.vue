@@ -84,9 +84,11 @@
                         <biz-form-number-addons
                             v-model="eventForm.bookable_date_range"
                             label="Bookable date range (Calendar days into the future)"
+                            max="365"
+                            min="0"
+                            required
                             :is-expanded="false"
                             :message="error('bookable_date_range', 'eventForm')"
-                            required
                         >
                             <template #afterInput>
                                 <p class="control">
@@ -96,6 +98,57 @@
                                 </p>
                             </template>
                         </biz-form-number-addons>
+
+                        <biz-form-textarea
+                            v-model="eventForm.location.address"
+                            label="Address"
+                            placeholder="Address"
+                            rows="2"
+                            maxlength="500"
+                            :message="error('location.address', 'eventForm')"
+                        />
+
+                        <div class="columns is-multiline">
+                            <div class="column is-5">
+                                <biz-form-input
+                                    v-model="eventForm.location.latitude"
+                                    label="Latitude"
+                                    :message="error('location.latitude', 'eventForm')"
+                                />
+                            </div>
+                            <div class="column is-5">
+                                <biz-form-input
+                                    v-model="eventForm.location.longitude"
+                                    label="Longitude"
+                                    :message="error('location.longitude', 'eventForm')"
+                                />
+                            </div>
+                            <div class="column is-2">
+                                <div class="field">
+                                    <label class="label">
+                                        Map
+                                    </label>
+                                    <span class="control">
+                                        <biz-button-icon
+                                            type="button"
+                                            class="is-primary"
+                                            :icon="icon.locationMark"
+                                            @click="toggleMap"
+                                        />
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div
+                                v-if="isMapOpen"
+                                class="column is-8"
+                            >
+                                <biz-gmap-marker
+                                    v-model="eventForm.location"
+                                    :init-position="geoLocation"
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     <div class="box">
@@ -146,24 +199,26 @@
                                                         </biz-checkbox>
                                                     </div>
                                                     <div class="column">
-                                                        <table class="table is-fullwidth">
-                                                            <tr
+                                                        <div class="columns is-multiline">
+                                                            <div
                                                                 v-for="(hour, hourIdx) in eventForm.weekly_hours[index].hours"
                                                                 :key="hour.uid"
+                                                                class="column is-full"
                                                             >
-                                                                <td>
-                                                                    <div class="event-time-range">
-                                                                        <biz-date-time
-                                                                            v-model="eventForm.weekly_hours[index].hours[hourIdx].timeRange"
-                                                                            type="time"
-                                                                            :options="timeRangeOptions"
-                                                                            range
-                                                                            @input="onTimeInput(eventForm.weekly_hours[index].hours[hourIdx], $event)"
-                                                                        />
+                                                                <div class="columns is-multiline">
+                                                                    <div class="column is-9">
+                                                                        <div class="event-time-range">
+                                                                            <biz-date-time
+                                                                                v-model="eventForm.weekly_hours[index].hours[hourIdx].timeRange"
+                                                                                type="time"
+                                                                                class="is-danger"
+                                                                                :options="timeRangeOptions"
+                                                                                range
+                                                                                @input="onTimeInput(eventForm.weekly_hours[index].hours[hourIdx], $event)"
+                                                                            />
+                                                                        </div>
                                                                     </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="buttons is-pulled-right">
+                                                                    <div class="column is-3">
                                                                         <biz-button-icon
                                                                             type="button"
                                                                             class="is-danger"
@@ -171,9 +226,16 @@
                                                                             @click="removeTimeRange(eventForm.weekly_hours[index].hours, hourIdx)"
                                                                         />
                                                                     </div>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
+
+                                                                    <div
+                                                                        v-if="error('weekly_hours.'+index+'.hours.'+hourIdx+'.ended_time', 'updateEvent')"
+                                                                        class="help is-danger mt-0 ml-2"
+                                                                    >
+                                                                        {{ error(`weekly_hours.${index}.hours.${hourIdx}.ended_time`, 'updateEvent') }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div class="column is-2">
                                                         <biz-button-icon
@@ -228,11 +290,18 @@
                                                             class="columns is-multiline"
                                                         >
                                                             <div
-                                                                v-for="time in dateOverride.times"
+                                                                v-for="time, timeIdx in dateOverride.times"
                                                                 :key="time.uid"
                                                                 class="column is-full"
                                                             >
                                                                 {{ time.started_time.substr(0, 5) }} - {{ time.ended_time.substr(0, 5) }}
+
+                                                                <p
+                                                                    v-if="error(`date_overrides.${dateOverrideIdx}.times.${timeIdx}.ended_time`, 'updateEvent')"
+                                                                    class="help is-danger has-text-left"
+                                                                >
+                                                                    {{ error(`date_overrides.${dateOverrideIdx}.times.${timeIdx}.ended_time`, 'updateEvent') }}
+                                                                </p>
                                                             </div>
                                                         </div>
 
@@ -289,8 +358,32 @@
                     </div>
                 </form>
             </biz-provide-inject-tab>
-        </biz-provide-inject-tabs>
 
+            <biz-provide-inject-tab
+                title="Manager"
+                :is-rendered="can.productManager.edit"
+            >
+                <form
+                    v-if="can.productManager.edit"
+                    class="box"
+                    @submit.prevent="submitManager"
+                >
+                    <biz-form-assign-user
+                        v-model="productManagers"
+                        label="Choose Product Manager"
+                        :get-users-url="route(baseRouteName+'.managers.search', product.id)"
+                    />
+
+                    <div class="field is-grouped is-grouped-right mt-4">
+                        <div class="control">
+                            <biz-button class="is-link">
+                                Update
+                            </biz-button>
+                        </div>
+                    </div>
+                </form>
+            </biz-provide-inject-tab>
+        </biz-provide-inject-tabs>
 
         <product-edit-modal-date-override
             v-if="isModalOpen"
@@ -310,8 +403,12 @@
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDateTime from '@/Biz/DateTime';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import BizFormAssignUser from '@/Biz/Form/AssignUser';
+    import BizFormInput from '@/Biz/Form/Input';
     import BizFormNumberAddons from '@/Biz/Form/NumberAddons';
     import BizFormSelect from '@/Biz/Form/Select';
+    import BizFormTextarea from '@/Biz/Form/Textarea';
+    import BizGmapMarker from '@/Biz/GmapMarker';
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
     import BizTag from '@/Biz/Tag';
@@ -323,9 +420,9 @@
     import ProductForm from './ProductForm';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
-    import { generateElementId } from '@/Libs/utils';
+    import { cloneDeep, padStart, map } from 'lodash';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { cloneDeep, padStart } from 'lodash';
+    import { generateElementId } from '@/Libs/utils';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -336,8 +433,12 @@
             BizCheckbox,
             BizDateTime,
             BizErrorNotifications,
+            BizFormAssignUser,
+            BizFormInput,
             BizFormNumberAddons,
             BizFormSelect,
+            BizFormTextarea,
+            BizGmapMarker,
             BizProvideInjectTab,
             BizProvideInjectTabs,
             BizTag,
@@ -356,6 +457,7 @@
 
         props: {
             baseRouteName: { type: String, required: true},
+            can: { type: Object, required: true },
             roleOptions: { type: Array, required: true },
             statusOptions: { type: Array, required: true },
             eventDurationOptions: { type: Array, required: true },
@@ -366,6 +468,8 @@
             weekdays: { type: Object, required: true },
             weeklyHours: { type: Object, required: true },
             dateOverrides: { type: Array, required: true },
+            geoLocation: { type: Object, required: true },
+            managers: { type: Array, default: () => [] },
         },
 
         setup(props, { emit }) {
@@ -382,7 +486,7 @@
             };
 
             const eventForm = {
-                location: null,
+                location: props.event.location,
                 duration: props.event.duration,
                 bookable_date_range: props.event.bookable_date_range,
                 timezone: props.event.timezone,
@@ -434,6 +538,8 @@
                     endTime: new Date(0,0,0,17,0),
                 },
                 selectedDateOverride: null,
+                isMapOpen: false,
+                productManagers: this.managers,
             };
         },
 
@@ -470,6 +576,7 @@
                 });
 
                 this.eventForm.put(url, {
+                    errorBag: 'updateEvent',
                     onStart: self.onStartLoadingOverlay,
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
@@ -542,6 +649,30 @@
                     if (result.isConfirmed) {
                         self.eventForm.date_overrides.splice(index, 1);
                     }
+                });
+            },
+
+            toggleMap() {
+                this.isMapOpen = !this.isMapOpen;
+            },
+
+            submitManager() {
+                const self = this;
+                const form = useForm({managers: map(this.productManagers, 'id')});
+
+                const url = route(
+                    self.baseRouteName+'.managers.update',
+                    self.product.id
+                );
+
+                form.post(url, {
+                    replace: true,
+                    onStart: () => self.onStartLoadingOverlay(),
+                    onSuccess: (page) => {
+                        successAlert(page.props.flash.message);
+                    },
+                    onError: () => { oopsAlert() },
+                    onFinish: () => self.onEndLoadingOverlay()
                 });
             },
         },

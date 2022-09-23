@@ -6,6 +6,7 @@ use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Http\Controllers\CrudController;
 use App\Models\Media;
 use App\Services\MediaService;
+use App\Services\IPService;
 use GetCandy\FieldTypes\Text;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\ProductType;
@@ -16,6 +17,7 @@ use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Ecommerce\Entities\Schedule;
+use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Ecommerce\Http\Requests\ProductCreateRequest;
 use Modules\Ecommerce\Http\Requests\ProductUpdateRequest;
 use Modules\Ecommerce\ModuleService;
@@ -36,29 +38,28 @@ class ProductController extends CrudController
         MediaService $mediaService,
         ProductEventService $productEventService
     ) {
+        $this->authorizeResource(Product::class, 'product');
+
         $this->productService = $productService;
         $this->mediaService = $mediaService;
         $this->productEventService = $productEventService;
     }
 
-    /**
-     * Display a listing of the resource.
-     * @return Renderable
-     */
     public function index(Request $request)
     {
         $user = auth()->user();
 
         return Inertia::render('Ecommerce::ProductIndex', $this->getData([
             'title' => $this->getIndexTitle(),
-            'pageQueryParams' => array_filter($request->only('term')),
+            'pageQueryParams' => array_filter($request->only('term', 'status')),
             'products' => $this->productService->getRecords(
-                $request->term
+                $user,
+                $request->term,
+                ['inStatus' => $request->status ?? null]
             ),
+            'statusOptions' => ProductStatus::options(),
             'can' => [
-                'edit' => $user->can('product.edit'),
                 'add' => $user->can('product.add'),
-                'delete' => $user->can('product.delete'),
             ],
         ]));
     }
@@ -86,11 +87,6 @@ class ProductController extends CrudController
         ]));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
     public function store(ProductCreateRequest $request)
     {
         $productType = ProductType::where('name', 'Event')->first();
@@ -160,23 +156,10 @@ class ProductController extends CrudController
         return redirect()->route($this->baseRouteName.'.edit', $product->id);
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('ecommerce::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
     public function edit(Product $product)
     {
+        $canManageManager = auth()->user()->can('manageManager', Product::class);
+
         return Inertia::render('Ecommerce::ProductEdit', $this->getData([
             'title' => $this->getEditTitle(),
             'imageMimes' => config('constants.extensions.image'),
@@ -189,6 +172,17 @@ class ProductController extends CrudController
             'weekdays' => $this->productEventService->weekdays()->pluck('value', 'id'),
             'weeklyHours' => $this->productEventService->weeklyHours($product),
             'dateOverrides' => $this->productEventService->dateOverrides($product),
+            'geoLocation' => app(IPService::class)->getGeoLocation(),
+            'managers' => (
+                $canManageManager
+                ? $this->productService->formattedManagers($product)
+                : []
+            ),
+            'can' => [
+                'productManager' => [
+                    'edit' => $canManageManager,
+                ]
+            ],
         ]));
     }
 
@@ -243,17 +237,20 @@ class ProductController extends CrudController
         return redirect()->route($this->baseRouteName.'.edit', $product->id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy(Request $request, Product $product)
+    public function destroy(Product $product)
     {
+        $user = auth()->user();
+
         $product->delete();
 
         $this->generateFlashMessage($this->title.' deleted successfully!');
 
-        return redirect()->route($this->baseRouteName.'.index');
+        $user->load('products');
+
+        return redirect()->route(
+            $user->can('viewAny', Product::class)
+            ? $this->baseRouteName.'.index'
+            : 'admin.dashboard'
+        );
     }
 }

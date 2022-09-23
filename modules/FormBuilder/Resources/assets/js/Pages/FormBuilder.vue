@@ -36,6 +36,8 @@
                             :sort="false"
                             item-key="id"
                             @change="log"
+                            @start="onStartedHandler"
+                            @end="onEndedHandler"
                         >
                             <template #item="{ element }">
                                 <div class="column is-half">
@@ -121,11 +123,12 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormKey from '@/Biz/Form/Key';
-    import FieldStructures from './../FieldStructures';
     import Draggable from "vuedraggable";
     import Email from './../Fields/Inputs/Email';
+    import FieldStructures from './../FieldStructures';
     import InputConfig from './../Fields/InputConfig';
     import Number from './../Fields/Inputs/Number';
+    import Phone from './../Fields/Inputs/Phone';
     import Select from './../Fields/Inputs/Select';
     import Text from './../Fields/Inputs/Text';
     import Textarea from './../Fields/Inputs/Textarea';
@@ -150,6 +153,7 @@
             Email,
             InputConfig,
             Number,
+            Phone,
             Select,
             Text,
             Textarea,
@@ -314,6 +318,16 @@
                     this.form.form_id = convertToKey(this.form.name);
                 }
             },
+
+            onStartedHandler(event) {
+                event.item.classList.remove('is-half');
+                event.item.classList.add('is-full');
+            },
+
+            onEndedHandler(event) {
+                event.item.classList.remove('is-full');
+                event.item.classList.add('is-half');
+            }
         },
     }
 </script>

@@ -4,9 +4,13 @@ namespace Modules\FormBuilder\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory;
+use Modules\FormBuilder\Services\FormBuilderService;
 
 class FormBuilderServiceProvider extends ServiceProvider
 {
+    public $singletons = [
+        FormBuilderService::class => FormBuilderService::class,
+    ];
     /**
      * @var string $moduleName
      */
@@ -37,7 +41,10 @@ class FormBuilderServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->register(AuthServiceProvider::class);
+        $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(ShortcodesServiceProvider::class);
     }
 
     /**

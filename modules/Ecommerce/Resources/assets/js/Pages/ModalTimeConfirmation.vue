@@ -14,27 +14,30 @@
             />
         </template>
 
-        <form @submit.prevent="reschedule">
-            <h5 class="title is-5">
-                {{ product.name }}
-            </h5>
+        <h5 class="title is-5">
+            {{ productName }}
+        </h5>
 
-            <p>
-                <span class="tag">
-                    {{ product.identifier }}
-                </span>
-            </p>
+        <biz-table>
+            <tr>
+                <th><biz-icon :icon="ecommerceIcon.duration" /></th>
+                <td>{{ event.duration }}</td>
+            </tr>
+            <tr>
+                <th><biz-icon :icon="ecommerceIcon.timezone" /></th>
+                <td>{{ event.timezone }}</td>
+            </tr>
+            <tr>
+                <th><biz-icon :icon="ecommerceIcon.calendar" /></th>
+                <td><b>{{ rescheduleDateTime }}</b></td>
+            </tr>
+            <tr>
+                <th><s><biz-icon :icon="ecommerceIcon.calendar" /></s></th>
+                <td><s>{{ event.start_end_time }}, {{ event.date }}</s></td>
+            </tr>
+        </biz-table>
 
-            <table class="table">
-                <tr
-                    v-for="(detail, index) in details"
-                    :key="index"
-                >
-                    <th>{{ detail.field }}</th>
-                    <td>{{ detail.value }}</td>
-                </tr>
-            </table>
-        </form>
+        <slot name="form" />
 
         <template #footer>
             <div
@@ -57,24 +60,46 @@
 
 <script>
     import BizButton from '@/Biz/Button';
+    import BizIcon from '@/Biz/Icon';
     import BizModalCard from '@/Biz/ModalCard';
+    import BizTable from '@/Biz/Table';
+    import ecommerceIcon from '@mod/Ecommerce/Resources/assets/js/Libs/ecommerce-icon';
+    import { computed } from 'vue';
+    import { durationDateTimeText } from '@mod/Ecommerce/Resources/assets/js/Libs/event';
 
     export default {
         components: {
             BizButton,
+            BizIcon,
             BizModalCard,
+            BizTable,
         },
 
         props: {
-            details: { type: Array, required: true },
-            product: { type: Object, required: true },
-            submitText: { type: String, default: "Book" },
             title: { type: String, default: "Reschedule Event Confirmation" },
+            productName: { type: String, required: true },
+            event: { type: Object, required: true },
+            selectedDate: { type: Object, required: true },
+            selectedTime: { type: String, required: true },
         },
 
         emits: [
             'close',
         ],
+
+        setup(props) {
+            const rescheduleDateTime = durationDateTimeText(
+                props.selectedDate,
+                props.selectedTime,
+                props.event.duration_details.duration,
+                props.event.duration_details.unit
+            );
+
+            return {
+                ecommerceIcon,
+                rescheduleDateTime,
+            };
+        },
 
         methods: {
             close() {

@@ -14,7 +14,7 @@ let theme = process.env.npm_config_theme;
 if (theme) {
 
     require(`${__dirname}/themes/${theme}/webpack.mix.js`);
-    
+
 } else {
     const mix = require('laravel-mix');
     const path = require('path');
@@ -29,8 +29,8 @@ if (theme) {
         .css('resources/css/template.css', 'public/css')
         .js(['resources/js/bulma.js'], 'public/js/frontend-misc.js')
         .alias({
+            '@mod': path.join(__dirname, 'modules'),
             '@': path.join(__dirname, 'resources/js'),
-            '@mod': path.join(__dirname, 'modules')
         });
 
     mix.js('resources/js/frontend.js', 'public/js').vue()
@@ -51,14 +51,15 @@ if (theme) {
             .copy('node_modules/tinymce/skins/content/default/content.css', 'public/js/skins/content/default');
 
         mix.browserSync({
-            host: process.env.MIX_APP_URL ?? '127.0.0.1',
-            proxy: process.env.MIX_APP_URL ?? 'localhost',
+            host: process.env.MIX_APP_URL ?? "127.0.0.1",
+            proxy: process.env.MIX_APP_URL ?? "localhost",
             open: false,
             files: [
-                'app/**/*.php',
-                'resources/views/**/*.php',
+                "app/**/*.php",
+                "modules/**/*.php",
+                "resources/views/**/*.php",
                 `${Config.publicPath || 'public'}/**/*.(js|css)`,
-                'themes/**/*.php',
+                "themes/**/*.php",
             ],
         });
     }

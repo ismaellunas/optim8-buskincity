@@ -6,11 +6,9 @@ use App\Models\User;
 use App\Services\MediaService;
 use GetCandy\Base\OrderReferenceGenerator;
 use GetCandy\Base\OrderReferenceGeneratorInterface;
-use GetCandy\Models\OrderLine;
 use Illuminate\Support\ServiceProvider;
-use Modules\Ecommerce\Entities\ScheduleBooking;
+use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Services\ProductService;
-use Modules\Space\Entities\Space;
 
 class EcommerceServiceProvider extends ServiceProvider
 {
@@ -36,22 +34,8 @@ class EcommerceServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
 
-        User::resolveRelationUsing('managedSpaceProducts', function ($userModel) {
-            return $userModel->belongsToMany(Space::class, 'space_product_managers');
-        });
-
-        OrderLine::resolveRelationUsing('scheduleBooking', function ($orderLine) {
-            return $orderLine->hasOne(ScheduleBooking::class);
-        });
-
-        OrderLine::resolveRelationUsing('events', function ($orderLine) {
-            return $orderLine->hasMany(ScheduleBooking::class);
-        });
-
-        OrderLine::resolveRelationUsing('latestEvent', function ($orderLine) {
-            return $orderLine
-                ->hasOne(ScheduleBooking::class)
-                ->latest();
+        User::resolveRelationUsing('products', function ($userModel) {
+            return $userModel->belongsToMany(Product::class, 'product_user');
         });
     }
 
@@ -62,6 +46,8 @@ class EcommerceServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->register(AuthServiceProvider::class);
+        $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
 
         $this->app->singleton(ProductService::class, function ($app) {

@@ -45,6 +45,10 @@ export const debounceTime = 750;
 
 export const appName = process.env.MIX_APP_NAME;
 
+export const recaptchaSiteKey = process.env.MIX_RECAPTCHA_SITE_KEY;
+
+export const googleApiKey = process.env.MIX_GOOGLE_API_KEY;
+
 export const oneMegabyte = 1024;
 
 export const userImage = '/images/profile-picture-default.png';
