@@ -36,17 +36,17 @@ class SettingKeyController extends Controller
     public function update(SettingKeyRequest $request)
     {
         $inputs = $request->validated();
-        $settingKeys = collect(config('constants.settings.keys'));
+        $defaultKeys = collect(config('constants.settings.keys'));
 
         foreach ($inputs as $key => $value) {
-            $setting = $settingKeys->where('key', $key)->first();
+            $defaultKey = $defaultKeys->where('key', $key)->first();
 
-            if ($setting) {
-                $setting['value'] = $value;
+            if ($defaultKey) {
+                $defaultKey['value'] = $value;
 
                 Setting::updateOrCreate([
                     'key' => $key
-                ],$setting);
+                ],$defaultKey);
             }
         }
 
