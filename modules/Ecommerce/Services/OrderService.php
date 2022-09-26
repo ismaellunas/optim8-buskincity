@@ -168,14 +168,18 @@ class OrderService
         $order->save();
     }
 
-    public function cancelEvent(Event $booking)
+    public function cancelEvent(Event $booking, ?string $message = null)
     {
         $booking->status = BookingStatus::CANCELED->value;
+        $booking->message = $message;
         $booking->save();
     }
 
-    public function rescheduleEvent(Event $event, Carbon $dateTime)
-    {
+    public function rescheduleEvent(
+        Event $event,
+        Carbon $dateTime,
+        ?string $message = null
+    ): Event {
         $newEvent = $event->replicate();
 
         $newEvent->booked_at = $dateTime->format('Y-m-d H:i');
@@ -183,10 +187,10 @@ class OrderService
         $newEvent->save();
 
         $event->status = BookingStatus::RESCHEDULED->value;
+        $event->message = $message;
         $event->save();
 
         return $newEvent;
-
     }
 
     public function bookEvent(Product $product, Carbon $dateTime, User $user): Order

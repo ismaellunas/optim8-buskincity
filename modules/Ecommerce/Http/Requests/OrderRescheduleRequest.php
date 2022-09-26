@@ -26,6 +26,10 @@ class OrderRescheduleRequest extends FormRequest
                 'date_format:H:i',
                 new AvailableBookingTime($product->eventSchedule),
             ],
+            'message' => [
+                'nullable',
+                'max:500',
+            ],
         ];
     }
 

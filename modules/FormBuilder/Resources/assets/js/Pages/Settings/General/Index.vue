@@ -11,7 +11,6 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import GeneralForm from './Form';
-    import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -53,6 +52,8 @@
             getSettings() {
                 const self = this;
 
+                self.onStartLoadingOverlay()
+
                 axios.get(
                     route(self.baseRouteName + '.form', self.formBuilder.id)
                 )
@@ -61,6 +62,8 @@
                     })
                     .then(() => {
                         self.isShown = true;
+
+                        self.onEndLoadingOverlay()
                     });
             },
 
