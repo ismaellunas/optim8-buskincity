@@ -42,7 +42,7 @@ class ThemeColorController extends ThemeOptionController
             $setting->save();
         }
 
-        $this->generateNewStyleProcess($this->settingService);
+        $this->generateNewStyleProcess();
 
         $this->generateFlashMessage('Colors updated successfully!');
 
