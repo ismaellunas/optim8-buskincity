@@ -10,6 +10,7 @@ use App\Models\{
     Page,
     Post,
     Role,
+    Setting,
     User
 };
 use App\Policies\{
@@ -20,6 +21,7 @@ use App\Policies\{
     PagePolicy,
     PostPolicy,
     RolePolicy,
+    SettingPolicy,
     UserPolicy
 };
 use App\Services\ResetPasswordService;
@@ -42,6 +44,7 @@ class AuthServiceProvider extends ServiceProvider
         Page::class => PagePolicy::class,
         Post::class => PostPolicy::class,
         Role::class => RolePolicy::class,
+        Setting::class => SettingPolicy::class,
         User::class => UserPolicy::class,
     ];
 

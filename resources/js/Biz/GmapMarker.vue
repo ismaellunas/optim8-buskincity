@@ -20,7 +20,6 @@
 <script>
     import { Loader } from '@googlemaps/js-api-loader';
     import { computed, onMounted, onUnmounted, ref, toRaw } from 'vue';
-    import { googleApiKey } from '@/Libs/defaults';
     import { isFunction } from 'lodash';
     import { useGeolocation } from '@/Libs/map';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
@@ -32,6 +31,7 @@
             searchBoxClass: { type: [String, Array, Object], default: "m-2" },
             mapStyle: { type: [String, Array, Object], default: () => ["width: 100%", "height: 50vh"] },
             initPosition: { type: Object, default: null },
+            apiKey: { type: String, default: null },
         },
 
         setup(props, { emit }) {
@@ -73,7 +73,7 @@
             const searchBox = ref(null);
 
             const loader = new Loader({
-                apiKey: googleApiKey,
+                apiKey: props.apiKey,
                 version: "weekly",
                 libraries: ["geometry", "drawing", "places"],
             });
