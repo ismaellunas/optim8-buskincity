@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Entities\Caches\SettingCache;
 use App\Http\Requests\ThemeFontRequest;
 use App\Models\Setting;
 use App\Services\SettingService;
@@ -74,9 +73,7 @@ class ThemeFontController extends ThemeOptionController
             $font->save();
         }
 
-        $this->generateNewStyleProcess($this->settingService);
-
-        app(SettingCache::class)->flush();
+        $this->generateNewStyleProcess();
 
         $this->generateFlashMessage($this->title.' updated successfully!');
 
