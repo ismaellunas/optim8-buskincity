@@ -450,7 +450,7 @@ class SettingService
     public function getGoogleApi(): string
     {
         return app(SettingCache::class)->remember('google_api_key', function () {
-            $googleApi = Setting::where('key', 'google_api_key')->value('value');
+            $googleApi = Setting::key('google_api_key')->value('value');
 
             return $googleApi ?? "";
         });
