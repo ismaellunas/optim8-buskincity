@@ -77,13 +77,14 @@ class OrderService
     }
 
     public function getRecords(
+        User $user,
         string $term = null,
         ?array $scopes = null,
         int $perPage = 15
     ): LengthAwarePaginator {
         $records = $this->recordBuilder($term, $scopes)->paginate($perPage);
 
-        $this->transformRecords($records);
+        $this->transformRecords($records, $user);
 
         return $records;
     }
@@ -99,14 +100,14 @@ class OrderService
             ->where('user_id', $user->id)
             ->paginate($perPage);
 
-        $this->transformRecords($records);
+        $this->transformRecords($records, $user);
 
         return $records;
     }
 
-    public function transformRecords($records)
+    public function transformRecords($records, $user)
     {
-        $records->getCollection()->transform(function ($record) {
+        $records->getCollection()->transform(function ($record) use ($user) {
             $event = $record->firstEventLine->latestEvent;
 
             $product = $record->firstEventLine->purchasable->product;
@@ -119,6 +120,16 @@ class OrderService
                 'status' => Str::title($event->status),
                 'start_end_time' => $event->displayStartEndTime,
                 'date' => $event->timezonedBookedAt->format('d M Y'),
+                'event' => [
+                    'date' => $event->timezonedBookedAt->format('d F Y'),
+                    'duration' => $event->displayDuration,
+                    'start_end_time' => $event->displayStartEndTime,
+                    'timezone' => $event->schedule->timezone,
+                ],
+                'can' => [
+                    'cancel' => $user->can('cancel', $record),
+                    'reschedule' => $user->can('reschedule', $record),
+                ],
             ];
         });
     }
