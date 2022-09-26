@@ -105,7 +105,13 @@ class SettingService
 
     public function getKeys()
     {
-        return $this->getSettingsByGroup('key.', true)
+        $keys = $this->getSettingsByGroup('key.', true);
+
+        if ($keys->isEmpty()) {
+            $keys = collect(config('constants.settings.keys'));
+        }
+
+        return $keys
             ->sortBy('group')
             ->groupBy('group')
             ->all();

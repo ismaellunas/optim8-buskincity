@@ -9,9 +9,11 @@ class Setting extends BaseModel
     use HasFactory;
 
     protected $fillable = [
-        'key',
-        'value',
+        'display_name',
         'group',
+        'key',
+        'order',
+        'value',
     ];
 
     public function scopeGroup($query, string $groupName)
