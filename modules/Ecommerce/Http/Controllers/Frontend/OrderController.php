@@ -4,7 +4,6 @@ namespace Modules\Ecommerce\Http\Controllers\Frontend;
 
 use App\Http\Controllers\CrudController;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
@@ -77,8 +76,6 @@ class OrderController extends CrudController
 
     public function cancel(Order $order)
     {
-        $this->authorize('cancel', $order);
-
         $this->orderService->cancelOrder($order);
 
         $this->orderService->cancelEvent($order->firstEventLine->latestEvent);
@@ -92,8 +89,6 @@ class OrderController extends CrudController
 
     public function reschedule(Order $order)
     {
-        $this->authorize('cancel', $order);
-
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
         $schedule = $product->eventSchedule;
@@ -130,7 +125,7 @@ class OrderController extends CrudController
 
     public function bookEvent(EventBookRequest $request, Product $product)
     {
-        $inputs = $request->all();
+        $inputs = $request->validated();
 
         $order = $this->orderService->bookEvent(
             $product,
