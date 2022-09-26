@@ -26,7 +26,9 @@ Route::name('admin.')->prefix('admin/')->middleware([
     'ensureLoginFromAdminLoginRoute',
 ])->group(function () {
     Route::get('form-builders/{form_builder}/entries', [FormBuilderController::class, 'entries'])
-        ->name('form-builders.entries');
+        ->name('form-builders.entries')
+        ->can('viewAny', 'form_builder');
+
     Route::resource('form-builders', FormBuilderController::class)
         ->except(['show']);
 
@@ -35,21 +37,19 @@ Route::name('admin.')->prefix('admin/')->middleware([
         ->group(function() {
             Route::prefix('settings')->name('settings.')->group(function() {
                 Route::get('notifications/records', [SettingNotificationController::class, 'records'])
-                    ->name('notifications.records');
+                    ->name('notifications.records')
+                    ->middleware('can:viewAny,Modules\FormBuilder\Entities\FieldGroupNotificationSetting');
+
                 Route::resource('notifications', SettingNotificationController::class)
                     ->except(['show']);
 
-                Route::prefix('general')
-                    ->middleware([
-                        'can:form_builder.edit'
-                    ])
-                    ->name('general.')
-                    ->group(function() {
-                        Route::get('form', [SettingController::class, 'form'])
-                            ->name('form');
-                        Route::put('update', [SettingController::class, 'update'])
-                            ->name('update');
-                    });
+                Route::get('general/form', [SettingController::class, 'form'])
+                    ->name('general.form')
+                    ->can('update', 'form_builder');
+
+                Route::put('general/update', [SettingController::class, 'update'])
+                    ->name('general.update')
+                    ->can('update', 'form_builder');
             });
         });
 
@@ -59,7 +59,7 @@ Route::name('admin.')->prefix('admin/')->middleware([
             Route::prefix('page-builders')->name('page-builders.')->group(function() {
                 Route::get('form-options', [PageBuilderController::class, 'formOptions'])
                     ->name('form-options')
-                    ->middleware(['can:form_builder.browse']);
+                    ->middleware('can:viewAny,Modules\FormBuilder\Entities\FieldGroup');
             });
         });
 });

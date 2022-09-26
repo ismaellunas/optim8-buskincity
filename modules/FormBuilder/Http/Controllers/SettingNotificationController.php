@@ -13,7 +13,7 @@ use Modules\FormBuilder\Http\Requests\SettingNotificationRequest;
 class SettingNotificationController extends CrudController
 {
     protected $baseRouteName = 'admin.form-builders.settings.notifications';
-    protected $recordsPerPage = 5;
+    protected $recordsPerPage = 10;
     protected $title = 'Setting Notification';
 
     private $settingNotificationService;
@@ -28,7 +28,6 @@ class SettingNotificationController extends CrudController
 
     public function records(Request $request, FieldGroup $formBuilder)
     {
-        $this->authorize('viewAny', FieldGroupNotificationSetting::class);
         return $this->settingNotificationService->getRecords(
             $formBuilder->id,
             $request->term,
