@@ -3,7 +3,6 @@
 namespace Modules\Space\Policies;
 
 use App\Models\User;
-use App\Services\ModuleService;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Modules\Space\Entities\Space;
 

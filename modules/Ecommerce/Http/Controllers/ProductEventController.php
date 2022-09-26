@@ -13,12 +13,12 @@ class ProductEventController extends CrudController
 {
     private $productEventService;
 
+    protected $title = 'Product Event';
+
     public function __construct(ProductEventService $productEventService)
     {
         $this->productEventService = $productEventService;
     }
-
-    protected $title = 'Product Event';
 
     public function update(ProductEventRequest $request, Product $product)
     {

@@ -5,8 +5,9 @@ namespace Modules\Ecommerce\Http\Controllers;
 use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Http\Controllers\CrudController;
 use App\Models\Media;
-use App\Services\MediaService;
 use App\Services\IPService;
+use App\Services\MediaService;
+use App\Services\SettingService;
 use GetCandy\FieldTypes\Text;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\ProductType;
@@ -173,6 +174,7 @@ class ProductController extends CrudController
             'weeklyHours' => $this->productEventService->weeklyHours($product),
             'dateOverrides' => $this->productEventService->dateOverrides($product),
             'geoLocation' => app(IPService::class)->getGeoLocation(),
+            'googleApiKey' => app(SettingService::class)->getGoogleApi(),
             'managers' => (
                 $canManageManager
                 ? $this->productService->formattedManagers($product)

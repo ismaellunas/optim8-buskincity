@@ -103,8 +103,6 @@ class FormBuilderController extends CrudController
 
     public function entries(Request $request, FieldGroup $formBuilder)
     {
-        $this->authorize('viewAny', FieldGroup::class);
-
         return Inertia::render('FormBuilder::Entries', $this->getData([
             'title' => $this->title . ' Entries - ' . $formBuilder->name,
             'formBuilder' => $formBuilder,
