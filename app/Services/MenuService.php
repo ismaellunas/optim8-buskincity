@@ -10,6 +10,7 @@ use App\Models\{
     Page,
     Post,
     Role,
+    Setting,
     User,
 };
 use App\Services\{
@@ -333,7 +334,7 @@ class MenuService
                 [
                     'title' => 'Settings',
                     'isActive' => $request->routeIs('admin.setting.*'),
-                    'isEnabled' => $user->can('system.language'),
+                    'isEnabled' => $user->can('system.language') || $user->can('system.translation') || $user->can('system.payment') || $user->can('manageKeys', Setting::class),
                     'children' => [
                         [
                             'title' => 'Languages',
@@ -357,10 +358,7 @@ class MenuService
                             'title' => 'Keys',
                             'link' => route('admin.settings.keys.edit'),
                             'isActive' => $request->routeIs('admin.settings.keys.edit'),
-                            'isEnabled' => (
-                                $user->isSuperAdministrator
-                                || $user->isAdministrator
-                            ),
+                            'isEnabled' => $user->can('manageKeys', Setting::class),
                         ],
                     ],
                 ],
