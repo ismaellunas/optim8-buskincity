@@ -10,6 +10,7 @@ use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Enums\BookingStatus;
 use Modules\Ecommerce\Events\EventRescheduled;
 use Modules\Ecommerce\Events\EventCanceled;
+use Modules\Ecommerce\Http\Requests\OrderCancelRequest;
 use Modules\Ecommerce\Http\Requests\OrderRescheduleRequest;
 use Modules\Ecommerce\Services\EventService;
 use Modules\Ecommerce\Services\OrderService;
@@ -71,11 +72,14 @@ class OrderController extends CrudController
         ]));
     }
 
-    public function cancel(Order $order)
+    public function cancel(OrderCancelRequest $request, Order $order)
     {
         $this->orderService->cancelOrder($order);
 
-        $this->orderService->cancelEvent($order->firstEventLine->latestEvent);
+        $this->orderService->cancelEvent(
+            $order->firstEventLine->latestEvent,
+            $request->message
+        );
 
         EventCanceled::dispatch($order);
 
@@ -121,7 +125,8 @@ class OrderController extends CrudController
 
         $this->orderService->rescheduleEvent(
             $order->firstEventLine->latestEvent,
-            Carbon::parse($inputs['date']. ' '.$inputs['time'])
+            Carbon::parse($inputs['date']. ' '.$inputs['time']),
+            $inputs['message']
         );
 
         EventRescheduled::dispatch($order);

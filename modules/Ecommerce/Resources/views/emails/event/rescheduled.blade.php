@@ -19,7 +19,15 @@
 
 <p style="text-decoration: line-through;"><b>Former:</b> <span>{{ $former['event_date_time'] }}</span></p>
 
-<b>Updated:</b> <span>{{ $updated['event_date_time'] }}</span>
+<b>{{ __('Updated') }}:</b> <span>{{ $updated['event_date_time'] }}</span>
+
+@if ($message)
+<b>{{ __('Message') }}:</b>
+
+@component('mail::panel')
+{{ $message }}
+@endcomponent
+@endif
 
 {{ __('Regards') }},<br/>
 {{ config('app.name') }}
