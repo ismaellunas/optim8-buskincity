@@ -212,6 +212,8 @@ class SettingSeeder extends Seeder
         $this->populateFontSizeSetting();
 
         $this->populateSocialiteSetting();
+
+        $this->populateKeySetting();
     }
 
     private function createSetting($data)
@@ -304,6 +306,15 @@ class SettingSeeder extends Seeder
                 "order" => "1",
             ],
         ];
+
+        foreach ($settings as $setting) {
+            $this->createSetting($setting);
+        }
+    }
+
+    private function populateKeySetting()
+    {
+        $settings = config('constants.settings.keys');
 
         foreach ($settings as $setting) {
             $this->createSetting($setting);

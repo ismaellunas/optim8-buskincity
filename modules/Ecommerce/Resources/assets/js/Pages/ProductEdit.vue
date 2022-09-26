@@ -145,6 +145,7 @@
                             >
                                 <biz-gmap-marker
                                     v-model="eventForm.location"
+                                    :api-key="googleApiKey"
                                     :init-position="geoLocation"
                                 />
                             </div>
@@ -470,6 +471,7 @@
             dateOverrides: { type: Array, required: true },
             geoLocation: { type: Object, required: true },
             managers: { type: Array, default: () => [] },
+            googleApiKey: { type: String, default: null }
         },
 
         setup(props, { emit }) {
