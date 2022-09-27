@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\SettingService;
+use App\Jobs\CompileThemeCss;
 use App\Traits\FlashNotifiable;
-use Illuminate\Support\Facades\App;
 
 abstract class ThemeOptionController
 {
@@ -21,20 +20,8 @@ abstract class ThemeOptionController
         );
     }
 
-    protected function generateNewStyleProcess(SettingService $settingService)
+    protected function generateNewStyleProcess()
     {
-        $settingService->generateVariablesSass();
-
-        $settingService->generateThemeCss();
-
-        $asset = $settingService->uploadThemeCssToCloudStorage(
-            !App::environment('production')
-            ? config('app.env')
-            : null
-        );
-
-        $settingService->saveCssUrl($asset->fileUrl);
-
-        $settingService->clearStorageTheme();
+        CompileThemeCss::dispatch();
     }
 }

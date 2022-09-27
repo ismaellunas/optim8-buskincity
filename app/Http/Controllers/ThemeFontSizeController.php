@@ -42,7 +42,7 @@ class ThemeFontSizeController extends ThemeOptionController
             $setting->save();
         }
 
-        $this->generateNewStyleProcess($this->settingService);
+        $this->generateNewStyleProcess();
 
         $this->generateFlashMessage('Font Sizes updated successfully!');
 
