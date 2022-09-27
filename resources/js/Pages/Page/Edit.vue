@@ -8,6 +8,7 @@
 
         <div class="box mb-6">
             <page-form
+                :key="pageFormKey"
                 v-model="form[selectedLocale]"
                 v-model:content-config-id="contentConfigId"
                 :errors="errors"
@@ -20,17 +21,20 @@
                 :status-options="statusOptions"
                 @on-change-locale="onChangeLocale"
                 @on-submit="onSubmit"
+                @on-delete-translation="onDeleteTranslation"
             />
         </div>
     </div>
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import PageForm from '@/Pages/Page/Form';
-    import { confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
+    import { confirmDelete, confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { find } from 'lodash';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { getTranslation } from '@/Libs/translation';
     import { isBlank } from '@/Libs/utils';
@@ -45,6 +49,10 @@
             BizFlashNotifications,
             PageForm,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         provide() {
             return {
@@ -105,8 +113,15 @@
                 disableInput: false,
                 isEditMode: true,
                 isNew: false,
+                pageFormKey: 0,
                 selectedLocale: this.defaultLocale,
             };
+        },
+
+        computed: {
+            selectedLocaleName() {
+                return find(this.localeOptions, { id: this.selectedLocale }).name ?? '';
+            },
         },
 
         methods: {
@@ -201,17 +216,46 @@
                 this.selectedLocale = locale;
             },
             setTranslationForm(locale) {
-                const translatedPage = getTranslation(this.page, locale);
+                let translatedPage = getTranslation(this.page, locale);
 
-                let translationFrom = { [this.defaultLocale]: {} };
+                let translationForm = { [this.defaultLocale]: {} };
 
-                if (isBlank(translatedPage)) {
-                    translationFrom[locale] = getEmptyPageTranslation();
+                console.log(translatedPage);
+
+                if (isBlank(translatedPage) || typeof translatedPage == 'undefined') {
+                    translationForm[locale] = getEmptyPageTranslation();
                 } else {
-                    translationFrom[locale] = JSON.parse(JSON.stringify(translatedPage));
+                    translationForm[locale] = JSON.parse(JSON.stringify(translatedPage));
                 }
-                this.form = useForm(translationFrom);
-            }
+
+                this.form = useForm(translationForm);
+            },
+            onDeleteTranslation() {
+                const self = this;
+
+                confirmDelete(
+                    'Are you sure want to delete the '+ self.selectedLocaleName + ' translation?',
+                ).then(result => {
+                    if (result.isConfirmed) {
+                        self.$inertia.delete(
+                            route('admin.pages.translations.destroy', self.form[self.selectedLocale]?.id),
+                            {
+                                onStart: self.onStartLoadingOverlay,
+                                onFinish: self.onEndLoadingOverlay,
+                                onError: () => {
+                                    oopsAlert();
+                                },
+                                onSuccess: (page) => {
+                                    successAlert(page.props.flash.message);
+
+                                    self.setTranslationForm(self.selectedLocale);
+                                    self.pageFormKey += 1;
+                                },
+                            }
+                        );
+                    }
+                })
+            },
         },
     }
 </script>
