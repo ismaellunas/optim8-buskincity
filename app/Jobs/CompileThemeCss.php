@@ -9,6 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 
 class CompileThemeCss implements ShouldQueue
 {
@@ -33,18 +34,34 @@ class CompileThemeCss implements ShouldQueue
      */
     public function handle()
     {
-        $this->settingService->generateVariablesSass();
+        try {
+            $this->settingService->generateVariablesSass();
 
-        $this->settingService->generateThemeCss();
+            Log::info('Job - Generate variable Sass (Pass)');
 
-        $asset = $this->settingService->uploadThemeCssToCloudStorage(
-            !App::environment('production')
-            ? config('app.env')
-            : null
-        );
+            $this->settingService->generateThemeCss();
 
-        $this->settingService->saveCssUrl($asset->fileUrl);
+            Log::info('Job - Generate Theme Css (Pass)');
 
-        $this->settingService->clearStorageTheme();
+            $asset = $this->settingService->uploadThemeCssToCloudStorage(
+                !App::environment('production')
+                ? config('app.env')
+                : null
+            );
+
+            Log::info('Job - Upload Theme Css To Cloud Storage (Pass)');
+            Log::debug('asset url: ' . $asset->fileUrl);
+
+            $this->settingService->saveCssUrl($asset->fileUrl);
+
+            Log::info('Job - Save Css Url (Pass)');
+
+            $isCleared = $this->settingService->clearStorageTheme();
+
+            Log::info('Job - Clear Storage Theme (Pass)');
+            Log::debug('Is storage clear? '.$isCleared);
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+        }
     }
 }
