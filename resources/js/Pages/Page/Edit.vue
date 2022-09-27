@@ -185,6 +185,8 @@
                     const submitRoute = route('admin.pages.update', {id: this.page.id});
 
                     this.form.put(submitRoute, {
+                        onStart: this.onStartLoadingOverlay,
+                        onFinish: this.onEndLoadingOverlay,
                         onSuccess: () => {
                             const translatedPage = getTranslation(
                                 this.page,
