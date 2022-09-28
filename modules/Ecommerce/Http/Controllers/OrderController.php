@@ -46,6 +46,7 @@ class OrderController extends CrudController
             'title' => $this->getIndexTitle(),
             'pageQueryParams' => array_filter(request()->only('term', 'status')),
             'records' => $this->orderService->getRecords(
+                $user,
                 request()->get('term'),
                 ['inStatus' => request()->status ?? null],
             ),
