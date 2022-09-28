@@ -6,7 +6,6 @@ use App\Http\Requests\ThemeColorRequest;
 use App\Models\Setting;
 use App\Services\SettingService;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Log;
 
 class ThemeColorController extends ThemeOptionController
 {
@@ -43,15 +42,6 @@ class ThemeColorController extends ThemeOptionController
             $setting->save();
         }
 
-        Log::info('Controller - Before generate new style');
-
-        try {
-            $this->generateNewStyleProcess();
-        } catch (\Throwable $th) {
-            Log::error($th->getMessage());
-        }
-
-        Log::info('Controller - After generate new style');
 
         $this->generateFlashMessage('Colors updated successfully!');
 
