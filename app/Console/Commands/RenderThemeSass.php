@@ -41,11 +41,9 @@ class RenderThemeSass extends Command
     public function handle()
     {
         $theme = $this->argument('theme') ?? Theme::active();
-        $changeDir = $this->option('change_dir');
 
         exec(
             (
-                ($changeDir ? 'cd '.$changeDir.' && ' : '').
                 'npx webpack --config webpack.config.biz.js --env theme='.$theme
             ),
             $outputs,

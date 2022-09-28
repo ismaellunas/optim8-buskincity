@@ -20,7 +20,7 @@ use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Modules\Space\Services\PageService as SpacePageService;
 
-class ThemeHeaderController extends ThemeOptionController
+class ThemeHeaderController extends CrudController
 {
     private $mediaService;
     private $menuService;
