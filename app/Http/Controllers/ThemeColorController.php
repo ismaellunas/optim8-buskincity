@@ -7,7 +7,7 @@ use App\Models\Setting;
 use App\Services\SettingService;
 use Inertia\Inertia;
 
-class ThemeColorController extends ThemeOptionController
+class ThemeColorController extends CrudController
 {
     protected $baseRouteName = 'admin.theme.color';
     protected $title = 'Colors';
