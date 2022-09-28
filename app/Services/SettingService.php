@@ -371,7 +371,7 @@ class SettingService
 
         Artisan::call('webpack:theme-sass', [
             'theme' => $activeTheme,
-            '--change_dir' => '..'
+            // '--change_dir' => '..'
         ]);
     }
 
