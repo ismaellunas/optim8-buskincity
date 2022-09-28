@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ThemeFontSizeRequest;
+use App\Jobs\CompileThemeCss;
 use App\Models\Setting;
 use App\Services\SettingService;
 use Inertia\Inertia;
@@ -42,7 +43,7 @@ class ThemeFontSizeController extends CrudController
             $setting->save();
         }
 
-        $this->generateNewStyleProcess();
+        CompileThemeCss::dispatch();
 
         $this->generateFlashMessage('Font Sizes updated successfully!');
 
