@@ -73,16 +73,41 @@
                         <td>{{ record.date }}</td>
                         <td>
                             <div class="level-right">
-                                <biz-button-link
-                                    v-if="can.read"
-                                    class="is-ghost has-text-black"
-                                    :href="route(baseRouteName+'.show', record.id)"
-                                >
-                                    <biz-icon
-                                        class="is-small"
-                                        :icon="icon.show"
+                                <div class="buttons">
+                                    <biz-button-link
+                                        v-if="can.read"
+                                        class="has-text-black"
+                                        title="Detail"
+                                        :href="route(baseRouteName+'.show', record.id)"
+                                    >
+                                        <biz-icon
+                                            class="is-small"
+                                            :icon="icon.show"
+                                        />
+                                    </biz-button-link>
+
+                                    <biz-button-link
+                                        v-if="record.can.reschedule"
+                                        class="is-ghost is-warning"
+                                        title="Reschedule"
+                                        :href="route(baseRouteName + '.reschedule', record.id)"
+                                    >
+                                        <biz-icon
+                                            class="is-small"
+                                            :icon="icon.recycle"
+                                        />
+                                    </biz-button-link>
+
+                                    <biz-button-icon
+                                        v-if="record.can.cancel"
+                                        class="is-ghost is-danger"
+                                        icon-class="is-small"
+                                        title="Cancel"
+                                        type="button"
+                                        :icon="icon.remove"
+                                        @click="openModal(record)"
                                     />
-                                </biz-button-link>
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -94,11 +119,32 @@
             :links="records.links"
             :query-params="queryParams"
         />
+
+        <modal-cancel-event-confirmation
+            v-if="isModalOpen && selectedOrder"
+            v-model="form.message"
+            title="Cancel Event"
+            :event="selectedOrder.event"
+            :product-name="selectedOrder.product_name"
+            @close="closeModal()"
+        >
+            <template #actions>
+                <biz-button
+                    class="is-danger ml-1"
+                    type="button"
+                    @click="cancel()"
+                >
+                    Yes for sure
+                </biz-button>
+            </template>
+        </modal-cancel-event-confirmation>
     </div>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import BizButton from '@/Biz/Button';
+    import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDropdown from '@/Biz/Dropdown';
@@ -108,13 +154,18 @@
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
+    import MixinHasModal from '@/Mixins/HasModal';
+    import ModalCancelEventConfirmation from './ModalCancelEventConfirmation';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from "vue";
+    import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
+            BizButton,
+            BizButtonIcon,
             BizButtonLink,
             BizCheckbox,
             BizDropdown,
@@ -123,10 +174,12 @@
             BizIcon,
             BizPagination,
             BizTable,
+            ModalCancelEventConfirmation,
         },
 
         mixins: [
             MixinFilterDataHandle,
+            MixinHasModal,
         ],
 
         layout: AppLayout,
@@ -145,11 +198,17 @@
                 props.pageQueryParams
             );
 
+            const form = {
+                message: null,
+            };
+
             return {
-                icon,
                 queryParams: ref(queryParams),
-                term: ref(props.pageQueryParams?.term ?? null),
                 statuses: ref(props.pageQueryParams?.status ?? []),
+                term: ref(props.pageQueryParams?.term ?? null),
+                form: useForm(form),
+                selectedOrder: ref(null),
+                icon,
             };
         },
 
@@ -179,6 +238,34 @@
             onStatusChanged() {
                 this.queryParams['status'] = this.statuses;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
+            },
+
+            cancel() {
+                const self = this;
+
+                self.form.post(
+                    route(self.baseRouteName + '.cancel', self.selectedOrder.id),
+                    {
+                        onStart: () => self.onStartLoadingOverlay(),
+                        onFinish: () => self.onEndLoadingOverlay(),
+                        onError: (errors) => {
+                            oopsAlert();
+                        },
+                        onSuccess: (page) => {
+                            self.closeModal();
+
+                            successAlert(page.props.flash.message);
+                        },
+                    }
+                );
+            },
+
+            openModal(record) { /* @see MixinHasModal */
+                this.selectedOrder = record;
+                this.form.reset();
+
+                this.isModalOpen = true;
+                this.onShownModal();
             },
         },
     };

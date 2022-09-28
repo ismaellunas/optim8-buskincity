@@ -35,7 +35,7 @@
                         class="column is-8"
                     >
                         <biz-button-link
-                            class="is-fullwidth"
+                            class="is-fullwidth is-warning"
                             :href="route(baseRouteName + '.reschedule', order.id)"
                         >
                             <biz-icon :icon="icon.recycle" />
@@ -48,7 +48,7 @@
                         class="column is-8"
                     >
                         <biz-button-icon
-                            class="is-fullwidth"
+                            class="is-fullwidth is-danger"
                             type="button"
                             :icon="icon.remove"
                             @click="openModal"
