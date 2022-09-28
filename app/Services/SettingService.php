@@ -11,6 +11,7 @@ use App\Models\{
     Media,
     Setting,
 };
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\{
     Collection,
@@ -371,7 +372,6 @@ class SettingService
 
         Artisan::call('webpack:theme-sass', [
             'theme' => $activeTheme,
-            '--change_dir' => '..'
         ]);
     }
 
@@ -415,13 +415,9 @@ class SettingService
 
     public function clearStorageTheme(): bool
     {
-        $process = new Process([
-            'rm',
-            '-rf',
-            '..'.DIRECTORY_SEPARATOR.'storage'.DIRECTORY_SEPARATOR.'theme'
-        ]);
-        $process->run();
-        return $process->isSuccessful();
+        $file = new Filesystem;
+
+        return $file->cleanDirectory(storage_path('theme'));
     }
 
     public function getSocialiteDrivers(): ?array
