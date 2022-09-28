@@ -8,7 +8,6 @@
 
         <div class="box mb-6">
             <page-form
-                :key="pageFormKey"
                 v-model="form[selectedLocale]"
                 v-model:content-config-id="contentConfigId"
                 :errors="errors"
@@ -113,7 +112,6 @@
                 disableInput: false,
                 isEditMode: true,
                 isNew: false,
-                pageFormKey: 0,
                 selectedLocale: this.defaultLocale,
             };
         },
@@ -222,8 +220,6 @@
 
                 let translationForm = { [this.defaultLocale]: {} };
 
-                console.log(translatedPage);
-
                 if (isBlank(translatedPage) || typeof translatedPage == 'undefined') {
                     translationForm[locale] = getEmptyPageTranslation();
                 } else {
@@ -250,8 +246,7 @@
                                 onSuccess: (page) => {
                                     successAlert(page.props.flash.message);
 
-                                    self.setTranslationForm(self.selectedLocale);
-                                    self.pageFormKey += 1;
+                                    self.changeLocale(self.defaultLocale);
                                 },
                             }
                         );
