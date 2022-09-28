@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Entities\Caches\SettingCache;
 use App\Http\Requests\ThemeFontRequest;
+use App\Jobs\CompileThemeCss;
 use App\Models\Setting;
 use App\Services\SettingService;
 use Inertia\Inertia;
 
-class ThemeFontController extends ThemeOptionController
+class ThemeFontController extends CrudController
 {
     protected $baseRouteName = 'admin.theme.fonts';
     protected $title = 'Fonts';
@@ -74,9 +74,7 @@ class ThemeFontController extends ThemeOptionController
             $font->save();
         }
 
-        $this->generateNewStyleProcess($this->settingService);
-
-        app(SettingCache::class)->flush();
+        CompileThemeCss::dispatch();
 
         $this->generateFlashMessage($this->title.' updated successfully!');
 

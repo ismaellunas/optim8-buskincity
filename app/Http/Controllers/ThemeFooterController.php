@@ -20,7 +20,7 @@ use App\Services\{
 use Inertia\Inertia;
 use Modules\Space\Services\PageService as SpacePageService;
 
-class ThemeFooterController extends ThemeOptionController
+class ThemeFooterController extends CrudController
 {
     private $menuService;
     private $settingService;
