@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ThemeColorRequest;
+use App\Jobs\CompileThemeCss;
 use App\Models\Setting;
 use App\Services\SettingService;
 use Inertia\Inertia;
@@ -42,6 +43,7 @@ class ThemeColorController extends CrudController
             $setting->save();
         }
 
+        CompileThemeCss::dispatch();
 
         $this->generateFlashMessage('Colors updated successfully!');
 
