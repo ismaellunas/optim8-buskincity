@@ -7,7 +7,7 @@ use App\Models\Setting;
 use App\Services\SettingService;
 use Inertia\Inertia;
 
-class ThemeFontController extends ThemeOptionController
+class ThemeFontController extends CrudController
 {
     protected $baseRouteName = 'admin.theme.fonts';
     protected $title = 'Fonts';

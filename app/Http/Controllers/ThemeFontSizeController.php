@@ -7,7 +7,7 @@ use App\Models\Setting;
 use App\Services\SettingService;
 use Inertia\Inertia;
 
-class ThemeFontSizeController extends ThemeOptionController
+class ThemeFontSizeController extends CrudController
 {
     protected $baseRouteName = 'admin.theme.font-size';
     protected $title = 'Font Size';

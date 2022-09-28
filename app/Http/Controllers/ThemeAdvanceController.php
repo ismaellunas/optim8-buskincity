@@ -15,7 +15,7 @@ use App\Services\{
 };
 use Inertia\Inertia;
 
-class ThemeAdvanceController extends ThemeOptionController
+class ThemeAdvanceController extends CrudController
 {
     protected $baseRouteName = 'admin.theme.advance';
     protected $title = 'Advanced';
