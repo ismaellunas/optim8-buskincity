@@ -57,73 +57,86 @@
 
                         <hr class="mt-0">
 
-                        <biz-form-select
-                            v-model="eventForm.duration"
-                            label="Duration"
-                            :message="error('duration', 'eventForm')"
-                            has-addons
-                            required
-                        >
-                            <option
-                                v-for="durationOption in eventDurationOptions"
-                                :key="durationOption.id"
-                                :value="durationOption.id"
-                            >
-                                {{ durationOption.value }}
-                            </option>
+                        <div class="columns">
+                            <div class="column is-6">
+                                <biz-form-select
+                                    v-model="eventForm.duration"
+                                    label="Duration"
+                                    :message="error('duration', 'eventForm')"
+                                    has-addons
+                                    required
+                                    is-fullwidth
+                                >
+                                    <option
+                                        v-for="durationOption in eventDurationOptions"
+                                        :key="durationOption.id"
+                                        :value="durationOption.id"
+                                    >
+                                        {{ durationOption.value }}
+                                    </option>
 
-                            <template #afterInput>
-                                <p class="control">
-                                    <a class="button is-static">
-                                        minute(s)
-                                    </a>
-                                </p>
-                            </template>
-                        </biz-form-select>
+                                    <template #afterInput>
+                                        <p class="control">
+                                            <a class="button is-static">
+                                                minute(s)
+                                            </a>
+                                        </p>
+                                    </template>
+                                </biz-form-select>
+                            </div>
 
-                        <biz-form-number-addons
-                            v-model="eventForm.bookable_date_range"
-                            label="Bookable date range (Calendar days into the future)"
-                            max="365"
-                            min="0"
-                            required
-                            :is-expanded="false"
-                            :message="error('bookable_date_range', 'eventForm')"
-                        >
-                            <template #afterInput>
-                                <p class="control">
-                                    <a class="button is-static">
-                                        day(s)
-                                    </a>
-                                </p>
-                            </template>
-                        </biz-form-number-addons>
+                            <div class="column is-6">
+                                <biz-form-number-addons
+                                    v-model="eventForm.bookable_date_range"
+                                    label="Bookable date range (Calendar days into the future)"
+                                    max="365"
+                                    min="0"
+                                    required
+                                    :message="error('bookable_date_range', 'eventForm')"
+                                >
+                                    <template #afterInput>
+                                        <p class="control">
+                                            <a class="button is-static">
+                                                day(s)
+                                            </a>
+                                        </p>
+                                    </template>
+                                </biz-form-number-addons>
+                            </div>
+                        </div>
 
-                        <biz-form-textarea
-                            v-model="eventForm.location.address"
-                            label="Address"
-                            placeholder="Address"
-                            rows="2"
-                            maxlength="500"
-                            :message="error('location.address', 'eventForm')"
-                        />
-
-                        <div class="columns is-multiline">
-                            <div class="column is-5">
-                                <biz-form-input
-                                    v-model="eventForm.location.latitude"
-                                    label="Latitude"
-                                    :message="error('location.latitude', 'eventForm')"
+                        <div class="columns">
+                            <div class="column is-6">
+                                <biz-form-textarea
+                                    v-model="eventForm.location.address"
+                                    label="Address"
+                                    placeholder="Address"
+                                    rows="5"
+                                    maxlength="500"
+                                    :message="error('location.address', 'eventForm')"
                                 />
                             </div>
+
                             <div class="column is-5">
-                                <biz-form-input
-                                    v-model="eventForm.location.longitude"
-                                    label="Longitude"
-                                    :message="error('location.longitude', 'eventForm')"
-                                />
+                                <div class="columns is-multiline">
+                                    <div class="column is-12">
+                                        <biz-form-input
+                                            v-model="eventForm.location.latitude"
+                                            label="Latitude"
+                                            :message="error('location.latitude', 'eventForm')"
+                                        />
+                                    </div>
+                                    <div class="column is-12">
+                                        <biz-form-input
+                                            v-model="eventForm.location.longitude"
+                                            label="Longitude"
+                                            :message="error('location.longitude', 'eventForm')"
+                                        />
+                                    </div>
+                                </div>
                             </div>
-                            <div class="column is-2">
+
+                            <div class="column is-1">
                                 <div class="field">
                                     <label class="label">
                                         Map
@@ -138,7 +151,9 @@
                                     </span>
                                 </div>
                             </div>
+                        </div>
 
+                        <div class="columns is-multiline">
                             <div
                                 v-if="isMapOpen"
                                 class="column is-8"
@@ -277,32 +292,29 @@
 
                                             <div class="column is-full">
                                                 <div
-                                                    v-for="dateOverride, dateOverrideIdx in eventForm.date_overrides"
-                                                    :key="dateOverride.uid"
-                                                    class="columns"
+                                                    v-for="(dateOverrideBatch, batch) in dateOverrideBatches"
+                                                    :key="batch"
+                                                    class="columns is-multiline"
                                                 >
                                                     <div class="column is-5">
-                                                        {{ dateOverride.displayDates }}
+                                                        {{ dateOverrideBatch[0].display_dates }}
+
+                                                        <template v-if="dateOverrideBatch.length > 1">
+                                                            {{ ' - ' + dateOverrideBatch[ dateOverrideBatch.length - 1 ].display_dates }}
+                                                        </template>
                                                     </div>
 
                                                     <div class="column is-4 has-text-centered">
                                                         <div
-                                                            v-if="dateOverride.is_available"
+                                                            v-if="dateOverrideBatch[0].is_available"
                                                             class="columns is-multiline"
                                                         >
                                                             <div
-                                                                v-for="time, timeIdx in dateOverride.times"
-                                                                :key="time.uid"
+                                                                v-for="(time, timeIdx) in dateOverrideBatch[0].times"
+                                                                :key="timeIdx"
                                                                 class="column is-full"
                                                             >
                                                                 {{ time.started_time.substr(0, 5) }} - {{ time.ended_time.substr(0, 5) }}
-
-                                                                <p
-                                                                    v-if="error(`date_overrides.${dateOverrideIdx}.times.${timeIdx}.ended_time`, 'updateEvent')"
-                                                                    class="help is-danger has-text-left"
-                                                                >
-                                                                    {{ error(`date_overrides.${dateOverrideIdx}.times.${timeIdx}.ended_time`, 'updateEvent') }}
-                                                                </p>
                                                             </div>
                                                         </div>
 
@@ -312,6 +324,7 @@
                                                             </biz-tag>
                                                         </template>
                                                     </div>
+
                                                     <div class="column is-3 has-text-right">
                                                         <div class="field is-grouped is-grouped-right">
                                                             <div class="control">
@@ -319,17 +332,30 @@
                                                                     type="button"
                                                                     class="is-danger"
                                                                     :icon="icon.remove"
-                                                                    @click="removeDateOverride(dateOverrideIdx)"
+                                                                    @click="removeDateOverride(batch)"
                                                                 />
                                                             </div>
                                                             <div class="control">
                                                                 <biz-button-icon
                                                                     type="button"
                                                                     :icon="icon.edit"
-                                                                    @click="openDateOverrideModal(dateOverride)"
+                                                                    @click="openDateOverrideModal(batch)"
                                                                 />
                                                             </div>
                                                         </div>
+                                                    </div>
+
+                                                    <div
+                                                        v-if="dateOverrideBatchErrors[batch]"
+                                                        class="column is-full"
+                                                    >
+                                                        <p
+                                                            v-for="(error, errorIdx) in dateOverrideBatchErrors[batch]"
+                                                            :key="errorIdx"
+                                                            class="help is-danger has-text-centered"
+                                                        >
+                                                            {{ error }}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -389,7 +415,7 @@
         <product-edit-modal-date-override
             v-if="isModalOpen"
             id="product-event-date-override-modal"
-            v-model="selectedDateOverride"
+            v-model="selectedDateOverrideBatch"
             @close="closeModal()"
             @after-apply="afterApply"
         />
@@ -421,7 +447,7 @@
     import ProductForm from './ProductForm';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
-    import { cloneDeep, padStart, map } from 'lodash';
+    import { cloneDeep, forEach, padStart, map, sortBy, isEqual, groupBy, intersection, remove, uniq } from 'lodash';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { generateElementId } from '@/Libs/utils';
     import { useForm } from '@inertiajs/inertia-vue3';
@@ -493,7 +519,7 @@
                 bookable_date_range: props.event.bookable_date_range,
                 timezone: props.event.timezone,
                 weekly_hours: props.weeklyHours,
-                date_overrides: props.dateOverrides,
+                date_overrides: cloneDeep(props.dateOverrides),
             }
 
             for (const dayNumber in props.weeklyHours) {
@@ -511,14 +537,6 @@
                     dayHours[index].uid = hour.id;
                 });
             }
-
-            eventForm.date_overrides.forEach((dateOverride, index) => {
-                dateOverride.uid = generateElementId();
-
-                dateOverride.times.forEach((time) => {
-                    time.uid = generateElementId();
-                });
-            });
 
             return {
                 form: useForm(form),
@@ -539,10 +557,106 @@
                     startTime: new Date(0,0,0,9,0),
                     endTime: new Date(0,0,0,17,0),
                 },
-                selectedDateOverride: null,
+                selectedDateOverride: null, // TODO: removed
+                selectedDateOverrideBatch: null,
                 isMapOpen: false,
                 productManagers: this.managers,
+                unusedDates: [],
             };
+        },
+
+        computed: {
+            dateOverrideBatches() {
+                const self = this;
+
+                const errorBag = 'updateEvent'
+
+                const dateOverrideBatches = [];
+
+                sortBy(this.eventForm.date_overrides, ['started_date'])
+                    .filter((dateOverride) => !self.unusedDates.includes(dateOverride.started_date))
+                    .forEach((rawDateOverride, index) => {
+
+                        const dateOverride = cloneDeep(rawDateOverride);
+
+                        if (index == 0) {
+                            dateOverride.batch = generateElementId();
+
+                        } else {
+
+                            const latestDateOverrideBatch = dateOverrideBatches[index - 1];
+
+                            const nextDate = moment(latestDateOverrideBatch.started_date).add(1, 'd').format('YYYY-MM-DD');
+
+                            const fnTimeRange = (time) => time.started_time + ' - ' + time.ended_time;
+
+                            let isSimilar = false;
+
+                            if (dateOverride.started_date == nextDate) {
+                                if (
+                                    !latestDateOverrideBatch.is_available
+                                    && !dateOverride.is_available
+                                ) {
+                                    isSimilar = true;
+
+                                } else {
+
+                                    const latestTimes = latestDateOverrideBatch.times
+                                        .map(fnTimeRange)
+                                        .sort();
+
+                                    const dateOverrideTimes = dateOverride.times
+                                        .map(fnTimeRange)
+                                        .sort();
+
+                                    isSimilar = isEqual(latestTimes, dateOverrideTimes);
+                                }
+                            }
+
+                            if (isSimilar) {
+                                dateOverride.batch = latestDateOverrideBatch.batch;
+                            } else {
+                                dateOverride.batch = generateElementId();
+                            }
+                        }
+
+                        const errors = [];
+
+                        errors.push(
+                            self.error(`date_overrides.${index}.started_date`, errorBag),
+                        );
+
+                        dateOverride.times.forEach((time, timeIdx) => {
+                            errors.push(
+                                self.error(`date_overrides.${index}.times.${timeIdx}.started_time`, errorBag),
+                                self.error(`date_overrides.${index}.times.${timeIdx}.ended_time`, errorBag),
+                            )
+                        });
+
+                        dateOverride.errors = errors.filter(Boolean);
+
+                        dateOverrideBatches.push(dateOverride);
+                    });
+
+                return groupBy(dateOverrideBatches, (dateOverride) => dateOverride.batch);
+            },
+
+            dateOverrideBatchErrors() {
+                const errors = {};
+
+                forEach(this.dateOverrideBatches, function (dateOverrideBatch, batch) {
+                    let dateOverrideErrors = [];
+
+                    dateOverrideBatch.forEach(function (dateOverride) {
+                        console.log(dateOverride.errors);
+                        dateOverrideErrors = dateOverrideErrors.concat(dateOverride.errors);
+                    });
+
+                    errors[batch] = uniq(dateOverrideErrors);
+                })
+
+                return errors;
+            },
         },
 
         methods: {
@@ -573,24 +687,25 @@
             },
 
             eventSubmit() {
+                const self = this;
+
                 const url = route(this.baseRouteName + '.events.update', {
-                    'product': this.product.id
+                    product: this.product.id
+                });
+
+                this.eventForm.date_overrides = this.eventForm.date_overrides.filter((dateOverride) => {
+                    return !self.unusedDates.includes(dateOverride.started_date);
                 });
 
                 this.eventForm.put(url, {
                     errorBag: 'updateEvent',
-                    onStart: self.onStartLoadingOverlay,
+                    onStart: self.onStartLoadingOverlay(),
                     onSuccess: (page) => {
+                        self.eventForm.date_overrides = cloneDeep(page.props.dateOverrides);
                         successAlert(page.props.flash.message);
                     },
                     onError: () => { oopsAlert() },
-                    onFinish: self.onEndLoadingOverlay,
-                });
-            },
-
-            scheduleSubmit() {
-                const url = route(this.baseRouteName + '.schedule.update', {
-                    'product': this.product.id
+                    onFinish: self.onEndLoadingOverlay(),
                 });
             },
 
@@ -617,39 +732,105 @@
                 });
             },
 
-            openDateOverrideModal(dateOverride) {
-                if (!dateOverride) {
-                    this.selectedDateOverride = {
-                        started_date: moment().format('YYYY-MM-DD'),
-                        ended_date: moment().format('YYYY-MM-DD'),
-                        is_available: false,
-                        displayDates: null,
-                        uid: generateElementId(),
-                        times: [],
-                    };
-                } else {
-                    this.selectedDateOverride = dateOverride;
+            openDateOverrideModal(batch) {
+                const self = this;
+
+                self.selectedDateOverrideBatch = {
+                    batch: null,
+                    dates: [],
+                    times: [],
+                    isAvailable: false,
+                    unusedDates: [],
+                };
+
+                if (batch) {
+                    const dateOverrideBatch = this.dateOverrideBatches[batch];
+
+                    let dates = [];
+
+                    dateOverrideBatch.forEach((date) => {
+                        dates.push(moment(date.started_date).toDate());
+                    });
+
+                    let times = dateOverrideBatch[0].times.map((time) => {
+                        return {
+                            started_time: time.started_time,
+                            ended_time: time.ended_time,
+                        };
+                    });
+
+                    self.selectedDateOverrideBatch.batch = batch;
+                    self.selectedDateOverrideBatch.dates = dates;
+                    self.selectedDateOverrideBatch.times = times;
+                    self.selectedDateOverrideBatch.isAvailable = dateOverrideBatch[0].is_available;
                 }
 
                 this.openModal();
             },
 
             afterApply() {
-                const hasUid = (dateOverride) => dateOverride.uid == this.selectedDateOverride.uid;
+                const self = this;
 
-                if (! this.eventForm.date_overrides.some(hasUid)) {
-                    this.eventForm.date_overrides.push(
-                        cloneDeep(this.selectedDateOverride)
+                const dateOverrides = this.eventForm.date_overrides;
+
+                self.selectedDateOverrideBatch.dates.forEach((date) => {
+
+                    const startedDate = moment(date);
+                    const formattedDate = startedDate.format('YYYY-MM-DD');
+
+                    const index = dateOverrides.findIndex(function (dateOverride) {
+                        return dateOverride.started_date == formattedDate;
+                    });
+
+                    if (index === -1) {
+                        dateOverrides.push({
+                            started_date: formattedDate,
+                            times: self.selectedDateOverrideBatch.times,
+                            is_available: self.selectedDateOverrideBatch.times.length > 0,
+                            display_dates: startedDate.format('D MMM YYYY'),
+                        });
+
+                    } else {
+                        const dateOverride = dateOverrides[index];
+
+                        dateOverride.started_date = formattedDate;
+                        dateOverride.times = self.selectedDateOverrideBatch.times;
+                        dateOverride.is_available = self.selectedDateOverrideBatch.times.length > 0;
+                    }
+                });
+
+                const usedDates = intersection(
+                    self.selectedDateOverrideBatch.dates.map(
+                        (date) => moment(date).format('YYYY-MM-DD')
+                    ),
+                    self.unusedDates
+                );
+
+                remove(self.unusedDates, (date) => usedDates.includes(date));
+
+                if (self.selectedDateOverrideBatch.unusedDates.length > 0) {
+                    self.unusedDates = self.unusedDates.concat(
+                        self.selectedDateOverrideBatch.unusedDates
                     );
                 }
             },
 
-            removeDateOverride(index) {
+            removeDateOverride(batch) {
                 const self = this;
 
-                confirmDelete().then((result) => {
-                    if (result.isConfirmed) {
-                        self.eventForm.date_overrides.splice(index, 1);
+                self.dateOverrideBatches[ batch ].forEach((dateOverride) => {
+                    let foundedIndex = null;
+
+                    const founded = self.eventForm.date_overrides.find((formDateOverride, index) => {
+                        foundedIndex = index;
+
+                        return (formDateOverride.started_date == dateOverride.started_date);
+                    });
+
+                    if (founded && founded.id) {
+                        self.unusedDates.push(dateOverride.started_date);
+                    } else {
+                        self.eventForm.date_overrides.splice(foundedIndex, 1);
                     }
                 });
             },
