@@ -55,3 +55,31 @@
             right: 10px
             border-radius: 50%
             background-color: red
+
+.b752-profile
+    &-box
+        cursor: pointer
+        transition: .2s background-color ease
+
+        h1, h2, h3, h4, h5, h6, p, span, div
+            transition: .2s color ease
+
+        &:hover
+            background-color: $primary
+
+            h1, h2, h3, h4, h5, h6, p, span, div
+                color: #fff
+
+    &-picture
+        position: relative
+
+        img
+            border: 2px solid $white
+
+        .flag
+            position: absolute
+            height: 34px
+            width: 34px
+            bottom: 3px
+            right: 3px
+            border-radius: 50%

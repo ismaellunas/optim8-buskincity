@@ -9,6 +9,7 @@ use App\Mail\ApplicationPerformer;
 use App\Models\PerformerApplication;
 use App\Models\Setting;
 use App\Services\CountryService;
+use App\Services\GlobalOptionService;
 use App\Services\IPService;
 use App\Traits\FlashNotifiable;
 use Illuminate\Support\Facades\Mail;
@@ -32,7 +33,7 @@ class PerformerApplicationController extends Controller
         return Inertia::render('ApplicationPerformer', [
             'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'defaultCountry' => $defaultCountry,
-            'disciplineOptions' => $this->getDisciplineOptions(),
+            'disciplineOptions' => app(GlobalOptionService::class)->getDisciplineOptions(),
             'email' => $user->email,
             'firstName' => $user->first_name,
             'lastName' => $user->last_name,
@@ -76,19 +77,6 @@ class PerformerApplicationController extends Controller
         $this->generateFlashMessage('Your Application successfully submitted.');
 
         return redirect()->route('dashboard');
-    }
-
-    private function getDisciplineOptions(): array
-    {
-        return collect(config('buskincity.disciplines'))
-            ->values()
-            ->map(function ($discipline) {
-                return [
-                    'id' => $discipline,
-                    'value' => $discipline,
-                ];
-            })
-            ->all();
     }
 
     private function sendEmail(array $data): void

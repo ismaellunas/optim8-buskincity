@@ -5,26 +5,12 @@ namespace App\Services;
 use App\Entities\Caches\CountryCache;
 use App\Models\Country;
 use App\Models\UserMeta;
+use App\Traits\HasCache;
 use Illuminate\Support\Collection;
 
 class CountryService
 {
-    private $caches = [];
-
-    private function hasLoadedKey($key): bool
-    {
-        return array_key_exists($key, $this->caches);
-    }
-
-    private function setLoadedKey($key, $value)
-    {
-        $this->caches[$key] = $value;
-    }
-
-    private function getLoadedKey($key): mixed
-    {
-        return $this->caches[$key];
-    }
+    use HasCache;
 
     public function getPhoneCountryOptions(): Collection
     {
