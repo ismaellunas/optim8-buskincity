@@ -4,10 +4,13 @@ namespace App\Services;
 
 use App\Models\GlobalOption;
 use Illuminate\Database\Eloquent\Collection;
+use App\Traits\HasCache;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class GlobalOptionService
 {
+    use HasCache;
+
     public function getRecords(
         string $term = null,
         array $scopeNames = [],
