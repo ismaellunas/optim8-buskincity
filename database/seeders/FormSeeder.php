@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Services\CountryService;
+use App\Services\GlobalOptionService;
 use App\Models\FieldGroup;
 use Illuminate\Database\Seeder;
 
@@ -53,76 +54,7 @@ class FormSeeder extends Seeder
                     "note" => null,
                     "readonly" => false,
                     "disabled" => false,
-                    "options" => [
-                        [
-                            "id" => "Acrobat",
-                            "value" => "Acrobat",
-                        ],
-                        [
-                            "id" => "BalanceAct",
-                            "value" => "BalanceAct",
-                        ],
-                        [
-                            "id" => "Clown",
-                            "value" => "Clown",
-                        ],
-                        [
-                            "id" => "Acrobatic",
-                            "value" => "Acrobatic",
-                        ],
-                        [
-                            "id" => "Dance/Break/Popping/Locking",
-                            "value" => "Dance/Break/Popping/Locking",
-                        ],
-                        [
-                            "id" => "Escapologist",
-                            "value" => "Escapologist",
-                        ],
-                        [
-                            "id" => "Juggler",
-                            "value" => "Juggler",
-                        ],
-                        [
-                            "id" => "Magician",
-                            "value" => "Magician",
-                        ],
-                        [
-                            "id" => "Multidisciplinary Circus/Variety",
-                            "value" => "Multidisciplinary Circus/Variety",
-                        ],
-                        [
-                            "id" => "Musician/Singer/Band",
-                            "value" => "Musician/Singer/Band",
-                        ],
-                        [
-                            "id" => "Music-Clown",
-                            "value" => "Music-Clown",
-                        ],
-                        [
-                            "id" => "Music-Acrobat",
-                            "value" => "Music-Acrobat",
-                        ],
-                        [
-                            "id" => "Performance",
-                            "value" => "Performance",
-                        ],
-                        [
-                            "id" => "Pupeteer",
-                            "value" => "Pupeteer",
-                        ],
-                        [
-                            "id" => "Stiltwalkers/Animation",
-                            "value" => "Stiltwalkers/Animation",
-                        ],
-                        [
-                            "id" => "Visual Comedy",
-                            "value" => "Visual Comedy",
-                        ],
-                        [
-                            "id" => "Other",
-                            "value" => "Other",
-                        ],
-                    ],
+                    "options" => app(GlobalOptionService::class)->getDisciplineOptions(),
                     "validation" => [
                         "rules" => [
                             "required" => true,
