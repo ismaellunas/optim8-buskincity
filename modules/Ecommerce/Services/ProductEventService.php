@@ -201,15 +201,14 @@ class ProductEventService
                 return [
                     'id' => $rule->id,
                     'started_date' => $rule->formattedStartedDate,
-                    'ended_date' => $rule->formattedEndedDate,
                     'is_available' => $rule->is_available,
-                    'displayDates' => $rule->displayDates,
+                    'display_dates' => $rule->displayDates,
                     'times' => $rule->times->map(function ($time) {
-                        $time->started_time = Str::substr($time->started_time, 0, 5);
-                        if ($time->ended_time) {
-                            $time->ended_time = Str::substr($time->ended_time, 0, 5);
-                        }
-                        return $time;
+                        $timeArray = [];
+                        $timeArray['started_time'] = Str::substr($time->started_time, 0, 5);
+                        $timeArray['ended_time'] = !empty($time->ended_time) ? Str::substr($time->ended_time, 0, 5) : null;
+
+                        return $timeArray;
                     }),
                 ];
             });
@@ -286,8 +285,10 @@ class ProductEventService
         }
     }
 
-    public function saveDateOverrides(Collection $dateOverrideInputs, Schedule $schedule)
-    {
+    public function saveDateOverrides(
+        Collection $dateOverrideInputs,
+        Schedule $schedule
+    ) {
         $dateOverrideRules = $schedule->dateOverrides;
 
         $this->removeUnusedEntities($dateOverrideRules, $dateOverrideInputs);
@@ -302,7 +303,7 @@ class ProductEventService
                 }
 
                 $dateOverrideRule->started_date = $inputRule['started_date'];
-                $dateOverrideRule->ended_date = $inputRule['ended_date'];
+                $dateOverrideRule->ended_date = null;
                 $dateOverrideRule->is_available = !empty($inputRule['times']);
 
             } else {
@@ -310,7 +311,7 @@ class ProductEventService
                     ->state([
                         'schedule_id' => $schedule->id,
                         'started_date' => $inputRule['started_date'],
-                        'ended_date' => $inputRule['ended_date'],
+                        'ended_date' => null,
                         'type' => ScheduleRule::TYPE_DATE_OVERRIDE,
                         'is_available' => !empty($inputRule['times']),
                     ])
@@ -323,31 +324,28 @@ class ProductEventService
 
             $inputTimes = collect($inputRule['times']);
 
-            $this->removeUnusedEntities($scheduleRuleTimes, $inputTimes);
+            $leftovers = $scheduleRuleTimes->count() - $inputTimes->count();
 
-            foreach ($inputTimes as $inputTime) {
+            if ($leftovers > 0) {
+                $chunk = $scheduleRuleTimes->shift($leftovers);
 
-                if (!empty($inputTime['id'])) {
-                    $scheduleRuleTime = $scheduleRuleTimes
-                        ->first(fn ($time) => $time->id == $inputTime['id']);
-
-                    if (is_null($scheduleRuleTime)) {
-                        continue;
-                    }
-
-                    $scheduleRuleTime->started_time = $inputTime['started_time'];
-                    $scheduleRuleTime->ended_time = $inputTime['ended_time'];
-
-                } else {
-                    $scheduleRuleTime = ScheduleRuleTime::factory()
-                        ->state([
-                            'schedule_rule_id' => $dateOverrideRule->id,
-                            'started_time' => $inputTime['started_time'],
-                            'ended_time' => $inputTime['ended_time'],
-                        ])
-                        ->make();
+                if ($chunk instanceof Collection) {
+                    $chunk->each(function ($time) {
+                        $time->delete();
+                    });
+                } elseif ($chunk instanceof ScheduleRuleTime) {
+                    $chunk->delete();
                 }
+            }
 
+            foreach ($inputTimes as $index => $inputTime) {
+                $scheduleRuleTime = $scheduleRuleTimes[ $index ]
+                    ?? ScheduleRuleTime::factory()
+                        ->state(['schedule_rule_id' => $dateOverrideRule->id])
+                        ->make();
+
+                $scheduleRuleTime->started_time = $inputTime['started_time'];
+                $scheduleRuleTime->ended_time = $inputTime['ended_time'];
                 $scheduleRuleTime->save();
             }
         }

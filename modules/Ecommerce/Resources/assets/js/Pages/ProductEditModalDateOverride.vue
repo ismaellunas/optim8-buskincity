@@ -18,13 +18,15 @@
         <form @submit.prevent="apply">
             <div class="field is-grouped is-grouped-centered">
                 <p class="control">
-                    <biz-date-time
-                        v-model="dateRanges"
-                        type="date"
+                    <biz-datepicker
+                        v-model="dates"
+                        auto-apply
                         inline
-                        range
-                        required
-                        :options="{color: 'info', showTodayButton: false}"
+                        month-name-format="long"
+                        multi-dates
+                        no-today
+                        :enable-time-picker="false"
+                        :min-date="minDate"
                     />
                 </p>
             </div>
@@ -126,9 +128,10 @@
     import BizDateTime from '@/Biz/DateTime';
     import BizModalCard from '@/Biz/ModalCard';
     import BizTag from '@/Biz/Tag';
+    import BizDatepicker from '@/Biz/Datepicker';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
-    import { cloneDeep, padStart } from 'lodash';
+    import { clone, cloneDeep, padStart, difference } from 'lodash';
     import { generateElementId, isBlank, useModelWrapper } from '@/Libs/utils';
     import { reactive, ref } from 'vue';
 
@@ -141,6 +144,7 @@
             BizDateTime,
             BizModalCard,
             BizTag,
+            BizDatepicker,
         },
 
         mixins: [
@@ -156,19 +160,9 @@
         ],
 
         setup(props, { emit }) {
-            const dateOverride = useModelWrapper(props, emit);
+            const dateOverrides = useModelWrapper(props, emit);
 
-            let dateRanges = [];
-
-            if (! isBlank(props.modelValue.started_date)) {
-                dateRanges.push(new Date(props.modelValue.started_date));
-
-                if (! isBlank(props.modelValue.ended_date)) {
-                    dateRanges.push(new Date(props.modelValue.ended_date));
-                } else {
-                    dateRanges.push(new Date(props.modelValue.started_date));
-                }
-            }
+            let dates = cloneDeep(props.modelValue.dates);
 
             let timeRanges = [];
 
@@ -195,17 +189,17 @@
                         new Date(0,0,0,9,0),
                         new Date(0,0,0,17,0),
                     ],
-                    uid: generateElementId(),
                 },
-                dateRanges: reactive(dateRanges),
-                timeRanges: reactive(timeRanges),
-                dateOverride,
+                dateOverrides,
+                dates: ref(dates),
+                timeRanges: ref(timeRanges),
+                minDate: moment().toDate(),
             };
         },
 
         computed: {
             hasDateSelected() {
-                return ! (typeof this.dateRanges == undefined || this.dateRanges == null);
+                return ! (typeof this.dates == undefined || this.dates == null);
             }
         },
 
@@ -223,11 +217,15 @@
                     delete time.timeRange;
                 });
 
-                this.dateOverride.times = this.timeRanges;
+                this.dateOverrides.unusedDates = difference(
+                    this.dateOverrides.dates.map((date) => moment(date).format('YYYY-MM-DD')),
+                    this.dates.map((date) => moment(date).format('YYYY-MM-DD'))
+                );
 
-                this.setDateOverrideFromDateRange(this.dateRanges);
+                this.dateOverrides.times = this.timeRanges;
+                this.dateOverrides.dates = this.dates;
 
-                this.dateOverride.is_available = this.timeRanges.length > 0;
+                this.dateOverrides.isAvailable = this.timeRanges.length > 0;
 
                 this.$emit('close');
                 this.$emit('after-apply');
@@ -246,30 +244,6 @@
                     );
                 });
             },
-
-            dateToYmd(date) {
-                return date.getFullYear()
-                    + '-' + padStart((date.getMonth() + 1 ), 2, 0)
-                    + '-' + padStart(date.getDate(), 2, 0);
-            },
-
-            setDateOverrideFromDateRange(dateRanges) {
-                this.dateOverride.started_date = this.dateToYmd(dateRanges[0]);
-                this.dateOverride.displayDates = moment(this.dateOverride.started_date).format('D MMM YYYY');
-
-                if (dateRanges[1]) {
-                    const endedDate = this.dateToYmd(dateRanges[1]);
-
-                    if (this.dateOverride.started_date == endedDate) {
-                        this.dateOverride.ended_date = null;
-                    } else {
-                        this.dateOverride.ended_date = endedDate;
-                        this.dateOverride.displayDates += ' - ' + moment(this.dateOverride.ended_date).format('D MMM YYYY');
-                    }
-                } else {
-                    this.dateOverride.ended_date = null;
-                }
-            }
         },
     };
 </script>

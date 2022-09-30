@@ -33,6 +33,7 @@
         "@fortawesome/fontawesome-free": "^6.1.1",
         "@googlemaps/js-api-loader": "^1.14.3",
         "@tinymce/tinymce-vue": "^4.0.4",
+        "@vuepic/vue-datepicker": "^3.4.8",
         "bulma": "^0.9.3",
         "bulma-calendar": "^6.1.12",
         "change-case": "^4.1.2",
