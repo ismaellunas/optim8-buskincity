@@ -9,10 +9,11 @@ use App\Entities\{
 };
 use App\Entities\Caches\{
     CountryCache,
+    GlobalOptionCache,
     MenuCache,
     SettingCache,
     TranslationCache,
-    WidgetCache
+    WidgetCache,
 };
 use App\Services\{
     CountryService,
@@ -40,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         LifetimeCookie::class => LifetimeCookie::class,
 
         CountryCache::class => CountryCache::class,
+        GlobalOptionCache::class => GlobalOptionCache::class,
         MenuCache::class => MenuCache::class,
         SettingCache::class => SettingCache::class,
         TranslationCache::class => TranslationCache::class,
