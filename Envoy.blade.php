@@ -28,7 +28,6 @@
         //'DB_USERNAME',
         'FACEBOOK_CLIENT_ID',
         'FACEBOOK_CLIENT_SECRET',
-        'GOOGLE_API_KEY',
         'GOOGLE_CLIENT_ID',
         'GOOGLE_CLIENT_SECRET',
         'IPREGISTRY_API_KEY',

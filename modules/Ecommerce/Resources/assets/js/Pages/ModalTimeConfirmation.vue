@@ -18,7 +18,7 @@
             {{ productName }}
         </h5>
 
-        <biz-table>
+        <biz-table class="is-fullwidth">
             <tr>
                 <th><biz-icon :icon="ecommerceIcon.duration" /></th>
                 <td>{{ event.duration }}</td>
@@ -37,7 +37,13 @@
             </tr>
         </biz-table>
 
-        <slot name="form" />
+        <biz-form-textarea
+            v-model="message"
+            label="Message"
+            placeholder="Please enter your reason or message here"
+            rows="4"
+            maxlength="500"
+        />
 
         <template #footer>
             <div
@@ -60,22 +66,26 @@
 
 <script>
     import BizButton from '@/Biz/Button';
+    import BizFormTextarea from '@/Biz/Form/Textarea';
     import BizIcon from '@/Biz/Icon';
     import BizModalCard from '@/Biz/ModalCard';
     import BizTable from '@/Biz/Table';
     import ecommerceIcon from '@mod/Ecommerce/Resources/assets/js/Libs/ecommerce-icon';
     import { computed } from 'vue';
     import { durationDateTimeText } from '@mod/Ecommerce/Resources/assets/js/Libs/event';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         components: {
             BizButton,
+            BizFormTextarea,
             BizIcon,
             BizModalCard,
             BizTable,
         },
 
         props: {
+            modelValue: { type: [String, null], required: true },
             title: { type: String, default: "Reschedule Event Confirmation" },
             productName: { type: String, required: true },
             event: { type: Object, required: true },
@@ -85,9 +95,10 @@
 
         emits: [
             'close',
+            'update:modelValue'
         ],
 
-        setup(props) {
+        setup(props, { emit }) {
             const rescheduleDateTime = durationDateTimeText(
                 props.selectedDate,
                 props.selectedTime,
@@ -98,6 +109,7 @@
             return {
                 ecommerceIcon,
                 rescheduleDateTime,
+                message: useModelWrapper(props, emit),
             };
         },
 

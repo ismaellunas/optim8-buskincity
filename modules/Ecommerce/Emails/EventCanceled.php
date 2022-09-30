@@ -61,6 +61,7 @@ class EventCanceled extends Mailable
                 'template' => $template,
                 'timezone' => $schedule->timezone,
                 'toName' => $this->to[0]['name'] ?? $this->to['address'] ?? "",
+                'message' => $event->message,
             ]);
     }
 }

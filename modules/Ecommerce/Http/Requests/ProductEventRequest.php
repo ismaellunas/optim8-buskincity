@@ -17,7 +17,6 @@ class ProductEventRequest extends FormRequest
             'date_overrides' => ['array'],
             'date_overrides.*.ended_date' => ['nullable', 'date_format:Y-m-d'],
             'date_overrides.*.started_date' => ['date_format:Y-m-d'],
-            'date_overrides.*.is_available' => ['boolean'],
             'date_overrides.*.times' => ['array'],
             'date_overrides.*.times.*.started_time' => ['date_format:H:i'],
             'date_overrides.*.times.*.ended_time' => [
@@ -67,6 +66,7 @@ class ProductEventRequest extends FormRequest
             'weekly_hours.*.hours.*.ended_time' => 'End Time',
             'date_overrides.*.times.*.started_time' => 'Start Time',
             'date_overrides.*.times.*.ended_time' => 'End Time',
+            'date_overrides.*.started_date' => 'Start Date',
         ];
     }
 }

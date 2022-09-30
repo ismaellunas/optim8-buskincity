@@ -191,6 +191,18 @@ class PageController extends CrudController
         return redirect()->route('admin.pages.index');
     }
 
+    public function translationDestroy(
+        Request $request,
+        PageTranslation $pageTranslation
+    ) {
+        $this->authorize('delete', $pageTranslation->page);
+
+        $pageTranslation->delete();
+
+        $request->session()->flash('message', 'Page translation deleted successfully!');
+        return redirect()->back();
+    }
+
     public function isUsedByMenus(Page $page, ?string $locale = null)
     {
         return app(MenuService::class)->isPageUsedByMenu($page->id, $locale);

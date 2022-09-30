@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ThemeFontSizeRequest;
+use App\Jobs\CompileThemeCss;
 use App\Models\Setting;
 use App\Services\SettingService;
 use Inertia\Inertia;
 
-class ThemeFontSizeController extends ThemeOptionController
+class ThemeFontSizeController extends CrudController
 {
     protected $baseRouteName = 'admin.theme.font-size';
     protected $title = 'Font Size';
@@ -42,7 +43,7 @@ class ThemeFontSizeController extends ThemeOptionController
             $setting->save();
         }
 
-        $this->generateNewStyleProcess($this->settingService);
+        CompileThemeCss::dispatch();
 
         $this->generateFlashMessage('Font Sizes updated successfully!');
 

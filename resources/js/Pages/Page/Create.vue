@@ -22,6 +22,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout';
     import PageForm from '@/Pages/Page/Form';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
@@ -36,6 +37,10 @@
             PageForm,
             BizErrorNotifications,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         provide() {
             return {
@@ -96,7 +101,10 @@
         methods: {
             onSubmit() {
                 const submitRoute = route('admin.pages.store');
-                this.form.post(submitRoute);
+                this.form.post(submitRoute, {
+                    onStart: this.onStartLoadingOverlay,
+                    onFinish: this.onEndLoadingOverlay,
+                });
             },
             onChangeLocale() {
                 let locale = {};

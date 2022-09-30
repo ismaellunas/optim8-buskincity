@@ -30,6 +30,7 @@
 
         <modal-time-confirmation
             v-if="isModalOpen"
+            v-model="form.message"
             title="Reschedule Event"
             :product-name="product.name"
             :event="firstEvent"
@@ -96,6 +97,7 @@
                 date: null,
                 time: null,
                 timezone: props.timezone,
+                message: null,
             };
 
             const options = {
@@ -107,17 +109,12 @@
             };
 
             return {
+                availableTimes: ref([]),
                 form: useForm(form),
                 ecommerceIcon,
                 firstEvent: props.order.event,
                 options: reactive(options),
                 scheduleTimezone: ref(props.timezone),
-            };
-        },
-
-        data() {
-            return {
-                availableTimes: [],
             };
         },
 
@@ -164,6 +161,10 @@
                         }
                     );
             },
+
+            onShownModal() { /* @see MixinHasModal */
+                this.form.message = null;
+            }
         },
     };
 </script>
