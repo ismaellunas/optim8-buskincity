@@ -557,7 +557,6 @@
                     startTime: new Date(0,0,0,9,0),
                     endTime: new Date(0,0,0,17,0),
                 },
-                selectedDateOverride: null, // TODO: removed
                 selectedDateOverrideBatch: null,
                 isMapOpen: false,
                 productManagers: this.managers,
@@ -648,7 +647,6 @@
                     let dateOverrideErrors = [];
 
                     dateOverrideBatch.forEach(function (dateOverride) {
-                        console.log(dateOverride.errors);
                         dateOverrideErrors = dateOverrideErrors.concat(dateOverride.errors);
                     });
 
@@ -699,13 +697,13 @@
 
                 this.eventForm.put(url, {
                     errorBag: 'updateEvent',
-                    onStart: self.onStartLoadingOverlay(),
+                    onStart: () => self.onStartLoadingOverlay(),
                     onSuccess: (page) => {
                         self.eventForm.date_overrides = cloneDeep(page.props.dateOverrides);
                         successAlert(page.props.flash.message);
                     },
                     onError: () => { oopsAlert() },
-                    onFinish: self.onEndLoadingOverlay(),
+                    onFinish: () => self.onEndLoadingOverlay(),
                 });
             },
 
