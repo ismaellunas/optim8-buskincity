@@ -48,6 +48,8 @@ Route::middleware([
 
     Route::resource('/pages', PageController::class)
         ->except(['show']);
+    Route::delete('/pages/translations/{page_translation:id}/destroy', [PageController::class, 'translationDestroy'])
+        ->name('pages.translations.destroy');
 
     Route::resource('/media', MediaController::class)
         ->except(['edit', 'show']);

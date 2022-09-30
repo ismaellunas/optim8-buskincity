@@ -6,7 +6,7 @@ use App\Entities\Caches\SettingCache;
 use App\Http\Requests\MenuRequest;
 use App\Models\Menu;
 
-class ThemeFooterMenuController extends ThemeOptionController
+class ThemeFooterMenuController extends CrudController
 {
     protected $baseRouteName = 'admin.theme.footer';
 

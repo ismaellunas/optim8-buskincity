@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ThemeColorRequest;
+use App\Jobs\CompileThemeCss;
 use App\Models\Setting;
 use App\Services\SettingService;
 use Inertia\Inertia;
 
-class ThemeColorController extends ThemeOptionController
+class ThemeColorController extends CrudController
 {
     protected $baseRouteName = 'admin.theme.color';
     protected $title = 'Colors';
@@ -42,7 +43,7 @@ class ThemeColorController extends ThemeOptionController
             $setting->save();
         }
 
-        $this->generateNewStyleProcess($this->settingService);
+        CompileThemeCss::dispatch();
 
         $this->generateFlashMessage('Colors updated successfully!');
 
