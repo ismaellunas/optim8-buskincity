@@ -65,6 +65,7 @@
                 ],
                 sizeOptions: [
                     { value: null, name: "Normal" },
+                    { value: "is-small", name: "Small" },
                     { value: "is-medium", name: "Medium" },
                     { value: "is-large", name: "Large" },
                 ],

@@ -3,6 +3,7 @@
     :countries="{{ Illuminate\Support\Js::from($countries) }}"
     :country-options="{{ Illuminate\Support\Js::from($countryOptions) }}"
     :order-by-options="{{ Illuminate\Support\Js::from($orderByOptions) }}"
+    :type-options="{{ Illuminate\Support\Js::from($typeOptions) }}"
     default-order-by="{{ $defaultOrderBy }}"
     excluded-id="{{ $encryptedExcludedId }}"
     roles="{{ $roles }}"
@@ -10,45 +11,32 @@
 >
     <template v-slot="{ user }">
         <div class="column is-3">
-            <div class="card">
-                <div class="card-content">
-                    <div class="media">
-                        <figure class="image is-128x128">
-                            <img
-                                class="is-rounded"
-                                :src="user.profile_photo_url"
-                                :alt="user.full_name"
-                            >
-                        </figure>
-                    </div>
+            <a
+                :href="user.profile_page_url ?? `#`"
+                class="b752-profile-box box is-shadowless has-text-centered"
+            >
+                <figure class="b752-profile-picture image is-128x128 is-inline-block">
+                    <img
+                        class="is-rounded"
+                        :src="user.profile_photo_url"
+                        :alt="user.full_name"
+                    >
+                    <span class="flag">
+                        <img
+                            :src="`/images/flags/` + user.country.toLowerCase() + `.svg`"
+                            alt="country"
+                            class="is-rounded"
+                        >
+                    </span>
+                </figure>
 
-                    <div class="content">
-                        <p class="title is-4">
-                            <a
-                                v-if="user.profile_page_url"
-                                :href="user.profile_page_url"
-                            >
-                                @{{ user.stage_name ?? '&nbsp;' }}
-                            </a>
-                            <span v-else>
-                                @{{ user.stage_name ?? '&nbsp;' }}
-                            </span>
-                        </p>
-                        <p class="subtitle is-6">
-                            <a
-                                v-if="user.profile_page_url"
-                                :href="user.profile_page_url"
-                            >
-                                @{{ user.full_name }}
-                            </a>
-                            <span v-else>
-                                @{{ user.full_name }}
-                            </span>
-                        </p>
-                        <p class="subtitle is-6">@{{ user.country ?? '&nbsp;' }}</p>
-                    </div>
+                <h2 class="title is-5 mt-4 mb-2">
+                    @{{ user.stage_name ?? user.full_name }}
+                </h2>
+                <div class="content is-size-7">
+                    <p>@{{ user.discipline ?? '&nbsp;' }}</p>
                 </div>
-            </div>
+            </a>
         </div>
     </template>
 </user-list>
