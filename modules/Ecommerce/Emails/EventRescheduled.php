@@ -77,6 +77,7 @@ class EventRescheduled extends Mailable
                 ],
                 'timezone' => $schedule->timezone,
                 'toName' => $this->to[0]['name'] ?? $this->to['address'] ?? "",
+                'message' => $rescheduledEvent->message,
             ]);
     }
 }

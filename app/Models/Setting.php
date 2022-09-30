@@ -9,14 +9,21 @@ class Setting extends BaseModel
     use HasFactory;
 
     protected $fillable = [
-        'key',
-        'value',
+        'display_name',
         'group',
+        'key',
+        'order',
+        'value',
     ];
 
     public function scopeGroup($query, string $groupName)
     {
         return $query->where('group', $groupName);
+    }
+
+    public function scopeGroupPrefix($query, string $groupName)
+    {
+        return $query->where('group', 'ILIKE', $groupName.'%');
     }
 
     public function scopeKey($query, string $key)

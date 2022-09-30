@@ -22,6 +22,7 @@ class ApiPageBuilderComponentUserListController extends Controller
         $excludedId = $request->get('excluded_user');
         $countries = $request->get('countries');
         $orderBy = $request->get('order_by');
+        $type = $request->get('type');
 
         $users = User::when($roles, function ($q, $roles) {
                 $this->inRoles($q, $roles);
@@ -34,6 +35,9 @@ class ApiPageBuilderComponentUserListController extends Controller
             })
             ->when($orderBy, function($q, $orderBy) {
                 $this->orderBy($q, $orderBy);
+            })
+            ->when($type, function($q, $type) {
+                $this->type($q, $type);
             })
             ->hasPermissionNames(['public_page.profile'])
             ->with([
@@ -126,5 +130,13 @@ class ApiPageBuilderComponentUserListController extends Controller
         } elseif ($orderBy == 'created_at-asc') {
             $q->orderBy('created_at', 'ASC');
         }
+    }
+
+    private function type($q, string $type)
+    {
+        $q->whereHas('metas', function ($q) use ($type) {
+            $q->where('key', 'discipline');
+            $q->where('value', $type);
+        });
     }
 }

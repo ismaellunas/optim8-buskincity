@@ -1,79 +1,70 @@
 <template>
     <div class="pb-user-list">
         <div class="columns is-multiline">
-            <div class="column">
-                <biz-dropdown
-                    class="ml-1"
-                    :close-on-click="true"
-                >
-                    <template #trigger>
-                        <span>Order By</span>
-                        <span class="icon is-small">
-                            <i
-                                class="fas fa-angle-down"
-                                aria-hidden="true"
-                            />
-                        </span>
-                    </template>
+            <div class="column is-12">
+                <div class="field is-grouped">
+                    <div class="control">
+                        <p class="has-text-weight-bold is-size-7 is-uppercase pt-1">
+                            Filters
+                        </p>
+                    </div>
 
-                    <biz-dropdown-item
-                        tag="a"
-                        @click.prevent="selectOrderBy()"
-                    >
-                        Default
-                    </biz-dropdown-item>
-
-                    <hr class="dropdown-divider">
-
-                    <biz-dropdown-item
-                        v-for="orderByOption in orderByOptions"
-                        :key="orderByOption"
-                        tag="a"
-                        @click.prevent="selectOrderBy(orderByOption.id)"
-                    >
-                        {{ orderByOption.value }}
-                    </biz-dropdown-item>
-                </biz-dropdown>
-
-                <biz-dropdown
-                    v-if="canFilteredByCountry"
-                    class="ml-1"
-                    :close-on-click="true"
-                >
-                    <template #trigger>
-                        <span>Country</span>
-                        <span class="icon is-small">
-                            <i
-                                class="fas fa-angle-down"
-                                aria-hidden="true"
-                            />
-                        </span>
-                    </template>
-
-                    <biz-dropdown-item>
-                        <a
-                            href="#"
-                            @click.prevent="selectCountry()"
+                    <div class="control">
+                        <biz-select
+                            v-model="filter.order_by"
+                            class="select is-small"
+                            placeholder="Order by"
+                            @change="selectOrderBy()"
                         >
-                            Default
-                        </a>
-                    </biz-dropdown-item>
+                            <option
+                                v-for="orderByOption in orderByOptions"
+                                :key="orderByOption.id"
+                                :value="orderByOption.id"
+                            >
+                                {{ orderByOption.value }}
+                            </option>
+                        </biz-select>
+                    </div>
 
-                    <hr class="dropdown-divider">
+                    <div class="control">
+                        <biz-select
+                            v-model="filter.country"
+                            class="select is-small"
+                            placeholder="Country"
+                            @change="selectCountry()"
+                        >
+                            <option
+                                v-for="countryOption in countryOptions"
+                                :key="countryOption.id"
+                                :value="countryOption.id"
+                            >
+                                {{ countryOption.value }}
+                            </option>
+                        </biz-select>
+                    </div>
 
-                    <biz-dropdown-item
-                        v-for="countryOption in countryOptions"
-                        :key="countryOption"
-                        tag="a"
-                        @click.prevent="selectCountry(countryOption)"
+                    <div
+                        v-if="canFilteredByType"
+                        class="control"
                     >
-                        {{ countryOption.value }}
-                    </biz-dropdown-item>
-                </biz-dropdown>
+                        <biz-select
+                            v-model="filter.type"
+                            class="select is-small"
+                            placeholder="Type"
+                            @change="selectType()"
+                        >
+                            <option
+                                v-for="typeOption in typeOptions"
+                                :key="typeOption.id"
+                                :value="typeOption.id"
+                            >
+                                {{ typeOption.value }}
+                            </option>
+                        </biz-select>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="columns is-multiline">
             <template
                 v-for="user in users"
                 :key="user.unique_key"
@@ -85,20 +76,18 @@
 </template>
 
 <script>
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import { debounce, union, isEmpty } from 'lodash';
-    import { debounceTime } from '@/Libs/defaults';
+    import BizSelect from '@/Biz/Select';
+    import { union, isEmpty } from 'lodash';
 
     export default {
         components: {
-            BizDropdown,
-            BizDropdownItem,
+            BizSelect,
         },
 
         props: {
             countries: { type: Array, default: () => [] },
             countryOptions: { type: Array, default: () => [] },
+            typeOptions: { type: Array, default: () => [] },
             defaultOrderBy: { type: String, default: null },
             excludedId: { type: String, default: "" },
             orderByOptions: { type: Array, default: () => [] },
@@ -118,6 +107,12 @@
                 users: [],
                 country: null,
                 orderBy: this.defaultOrderBy,
+                filter: {
+                    order_by: null,
+                    country: null,
+                    type: null,
+                },
+                type: null,
             };
         },
 
@@ -136,6 +131,10 @@
 
             canFilteredByCountry() {
                 return isEmpty(this.countries);
+            },
+
+            canFilteredByType() {
+                return !isEmpty(this.typeOptions);
             }
         },
 
@@ -154,6 +153,7 @@
                             excluded_user: self.excludedId,
                             order_by: self.orderBy,
                             roles: self.roles,
+                            type: self.type,
                         }
                     })
                     .then(function(response) {
@@ -164,13 +164,18 @@
                     });
             },
 
-            selectOrderBy(option) {
-                this.orderBy = option;
+            selectOrderBy() {
+                this.orderBy = this.filter.order_by;
                 this.load();
             },
 
-            selectCountry(option) {
-                this.country = option?.id ?? null;
+            selectCountry() {
+                this.country = this.filter.country;
+                this.load();
+            },
+
+            selectType() {
+                this.type = this.filter.type;
                 this.load();
             },
         },
