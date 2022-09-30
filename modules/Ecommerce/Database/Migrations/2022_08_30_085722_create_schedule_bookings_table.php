@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('duration')->default(0);
             $table->string('duration_unit', 15)->default('minute');
             $table->string('status', 15);
+            $table->string('message', 500)->nullable();
 
             $table
                 ->foreignId('schedule_id')

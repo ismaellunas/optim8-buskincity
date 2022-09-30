@@ -10,12 +10,16 @@
         <div :class="inputFieldClass">
             <slot name="beforeInput" />
 
-            <div class="control">
+            <div
+                class="control"
+                :class="{'is-expanded': isFullwidth}"
+            >
                 <biz-select
                     v-model="selected"
                     v-bind="$attrs"
                     :disabled="disabled"
                     :placeholder="placeholder"
+                    :class="{'is-fullwidth': isFullwidth}"
                 >
                     <slot />
                 </biz-select>
@@ -79,6 +83,10 @@
                 default: undefined,
             },
             hasAddons: {
+                type: Boolean,
+                default: false
+            },
+            isFullwidth: {
                 type: Boolean,
                 default: false
             },

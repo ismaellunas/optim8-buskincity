@@ -15,6 +15,14 @@
     | Envitee Time Zone | {{ $timezone }} |
 @endcomponent
 
+@if ($message)
+<b>{{ __('Message') }}:</b>
+
+@component('mail::panel')
+{{ $message }}
+@endcomponent
+@endif
+
 {!! $template !!}
 
 {{ __('Regards') }},<br/>

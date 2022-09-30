@@ -29,13 +29,13 @@
             </tr>
             <tr>
                 <th><biz-icon :icon="ecommerceIcon.calendar" /></th>
-                <td><b>{{ rescheduleDateTime }}</b></td>
-            </tr>
-            <tr>
-                <th><s><biz-icon :icon="ecommerceIcon.calendar" /></s></th>
-                <td><s>{{ event.start_end_time }}, {{ event.date }}</s></td>
+                <td>{{ event.start_end_time }}, {{ event.date }}</td>
             </tr>
         </biz-table>
+
+        <h4 class="title is-4">
+            Are you sure you want to cancel this event?
+        </h4>
 
         <biz-form-textarea
             v-model="message"
@@ -53,7 +53,7 @@
                 <div class="column px-0">
                     <div class="is-pulled-right">
                         <biz-button @click="close()">
-                            Cancel
+                            No
                         </biz-button>
 
                         <slot name="actions" />
@@ -89,8 +89,6 @@
             title: { type: String, default: "Reschedule Event Confirmation" },
             productName: { type: String, required: true },
             event: { type: Object, required: true },
-            selectedDate: { type: Object, required: true },
-            selectedTime: { type: String, required: true },
         },
 
         emits: [
@@ -99,16 +97,8 @@
         ],
 
         setup(props, { emit }) {
-            const rescheduleDateTime = durationDateTimeText(
-                props.selectedDate,
-                props.selectedTime,
-                props.event.duration_details.duration,
-                props.event.duration_details.unit
-            );
-
             return {
                 ecommerceIcon,
-                rescheduleDateTime,
                 message: useModelWrapper(props, emit),
             };
         },

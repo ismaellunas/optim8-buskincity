@@ -10,7 +10,7 @@
         <biz-field class="has-addons mb-0">
             <p
                 class="control"
-                :class="{'is-expanded': isExpanded}"
+                :class="{'is-expanded': isFullwidth}"
             >
                 <biz-number
                     ref="input"
@@ -58,7 +58,7 @@
             placeholder: { type: String, default: null },
             required: { type: Boolean, default: false },
             wrapperClass: { type: [String, Array, Object], default: () => [] },
-            isExpanded: { type: Boolean, default: true },
+            isFullwidth: { type: Boolean, default: true },
         },
 
         emits: [
