@@ -24,7 +24,8 @@ class ApiPageBuilderComponentUserListController extends Controller
         $orderBy = $request->get('order_by');
         $type = $request->get('type');
 
-        $users = User::when($roles, function ($q, $roles) {
+        $users = User::available()
+            ->when($roles, function ($q, $roles) {
                 $this->inRoles($q, $roles);
             })
             ->when($excludedId, function ($q, $excludedId) {
