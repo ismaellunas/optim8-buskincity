@@ -34,7 +34,7 @@
                             @change="selectCountry()"
                         >
                             <option
-                                v-for="countryOption in countryOptions"
+                                v-for="countryOption in filteredCountryOptions"
                                 :key="countryOption.id"
                                 :value="countryOption.id"
                             >
@@ -54,7 +54,7 @@
                             @change="selectType()"
                         >
                             <option
-                                v-for="typeOption in typeOptions"
+                                v-for="typeOption in filteredTypeOptions"
                                 :key="typeOption.id"
                                 :value="typeOption.id"
                             >
@@ -77,7 +77,7 @@
 
 <script>
     import BizSelect from '@/Biz/Select';
-    import { union, isEmpty } from 'lodash';
+    import { union, isEmpty, forEach } from 'lodash';
 
     export default {
         components: {
@@ -85,9 +85,8 @@
         },
 
         props: {
-            countries: { type: Array, default: () => [] },
-            countryOptions: { type: Array, default: () => [] },
-            typeOptions: { type: Array, default: () => [] },
+            defaultCountries: { type: Array, default: () => [] },
+            defaultTypes: { type: Array, default: () => [] },
             defaultOrderBy: { type: String, default: null },
             excludedId: { type: String, default: "" },
             orderByOptions: { type: Array, default: () => [] },
@@ -113,6 +112,10 @@
                     type: null,
                 },
                 type: null,
+                options: {
+                    countries: [],
+                    types: [],
+                },
             };
         },
 
@@ -122,20 +125,70 @@
 
                 countries.push(this.country);
 
-                if (this.countries) {
-                    countries = union(countries, this.countries);
+                if (this.defaultCountries) {
+                    countries = union(countries, this.defaultCountries);
                 }
 
                 return countries.filter(Boolean);
             },
 
-            canFilteredByCountry() {
-                return isEmpty(this.countries);
+            selectedTypes() {
+                let types = [];
+
+                types.push(this.type);
+
+                if (this.defaultTypes) {
+                    types = union(types, this.defaultTypes);
+                }
+
+                return types.filter(Boolean);
             },
 
             canFilteredByType() {
-                return !isEmpty(this.typeOptions);
-            }
+                return !isEmpty(this.options.types);
+            },
+
+            isFilteredCountryOnBackend() {
+                return !isEmpty(this.defaultCountries);
+            },
+
+            isFilteredTypeOnBackend() {
+                return !isEmpty(this.defaultTypes);
+            },
+
+            filteredCountryOptions() {
+                let options = [];
+                let countries = this.defaultCountries;
+
+                if (this.isFilteredCountryOnBackend) {
+                    forEach(this.options.countries, function (country) {
+                        if (countries.includes(country.id)) {
+                            options.push(country);
+                        }
+                    })
+
+                    return options;
+                }
+
+                return this.options.countries;
+            },
+
+            filteredTypeOptions() {
+                let options = [];
+                let types = this.defaultTypes;
+
+                if (this.isFilteredTypeOnBackend) {
+                    forEach(this.options.types, function (type) {
+                        if (types.includes(type.id)) {
+                            options.push(type);
+                        }
+                    })
+
+                    return options;
+                }
+
+                return this.options.types;
+            },
         },
 
         mounted() {
@@ -149,7 +202,9 @@
                 return axios
                     .get(this.url, {
                         params: {
-                            countries: self.selectedCountries,
+                            country: self.country,
+                            default_countries: self.defaultCountries,
+                            default_types: self.defaultTypes,
                             excluded_user: self.excludedId,
                             order_by: self.orderBy,
                             roles: self.roles,
@@ -157,10 +212,14 @@
                         }
                     })
                     .then(function(response) {
-                        self.users = response.data;
+                        self.users = response.data.users;
+                        self.options.countries = response.data.options.countries;
+                        self.options.types = response.data.options.types;
                     })
                     .catch(function(error) {
                         self.users = [];
+                        self.options.countries = [];
+                        self.options.types = [];
                     });
             },
 

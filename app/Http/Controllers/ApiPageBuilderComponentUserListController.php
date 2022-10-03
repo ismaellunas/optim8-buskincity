@@ -2,25 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Crypt;
 use App\Http\Requests\PageBuilderComponentUserListRequest;
+use App\Models\User;
+use App\Services\CountryService;
+use App\Services\GlobalOptionService;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Crypt;
 
 class ApiPageBuilderComponentUserListController extends Controller
 {
+    private $metaKeys = ['country'];
+
+    public function __construct()
+    {
+        $this->metaKeys = array_merge(
+            $this->metaKeys,
+            $this->additionalMetaKeys()
+        );
+    }
+
     public function __invoke(PageBuilderComponentUserListRequest $request)
     {
-        $metaKeys = array_merge(
-            ['country'],
-            [
-                'discipline',
-                'stage_name',
-            ]
-        );
+        $metaKeys = $this->metaKeys;
 
         $roles = $request->get('roles');
         $excludedId = $request->get('excluded_user');
-        $countries = $request->get('countries');
+        $defaultCountries = $request->get('default_countries');
+        $defaultTypes = $request->get('default_types');
+        $country = $request->get('country');
         $orderBy = $request->get('order_by');
         $type = $request->get('type');
 
@@ -31,14 +41,14 @@ class ApiPageBuilderComponentUserListController extends Controller
             ->when($excludedId, function ($q, $excludedId) {
                 $this->excludeUser($q, $excludedId);
             })
-            ->when($countries, function ($q, $countries) {
-                $this->inCountries($q, $countries);
-            })
             ->when($orderBy, function($q, $orderBy) {
                 $this->orderBy($q, $orderBy);
             })
-            ->when($type, function($q, $type) {
-                $this->type($q, $type);
+            ->when($defaultCountries, function ($q, $defaultCountries) {
+                $this->inCountries($q, $defaultCountries);
+            })
+            ->when($defaultTypes, function($q, $defaultTypes) {
+                $this->inTypes($q, $defaultTypes);
             })
             ->hasPermissionNames(['public_page.profile'])
             ->with([
@@ -68,7 +78,33 @@ class ApiPageBuilderComponentUserListController extends Controller
                 'profile_photo_media_id',
             ]);
 
-        return $users->map(function ($user) use ($metaKeys) {
+        $this->mapRecords($users, $metaKeys);
+
+        return [
+            'options' => [
+                'countries' => $this->countryOptions($users, [
+                    'type' => $type
+                ]),
+                'types' => $this->typeOptions($users, [
+                    'country' => $country
+                ]),
+            ],
+            'users' => $users
+                ->when($country, function ($collection) use ($country) {
+                    return $collection->where('country', $country);
+                })
+                ->when($type, function ($collection) use ($type) {
+                    return $collection->where('discipline', $type);
+                })
+                ->values(),
+        ];
+    }
+
+    private function mapRecords(EloquentCollection &$users): void
+    {
+        $metaKeys = $this->metaKeys;
+
+        $users = $users->map(function ($user) use ($metaKeys) {
 
             $metas = collect($metaKeys)->mapWithKeys(function ($metaKey) use ($user) {
                 $value = $user->metas->pluck('value', 'key')->get($metaKey);
@@ -100,14 +136,6 @@ class ApiPageBuilderComponentUserListController extends Controller
         $q->inRoles($roleIds);
     }
 
-    private function inCountries($q, array $countries)
-    {
-        $q->whereHas('metas', function ($q) use ($countries) {
-            $q->where('key', 'country');
-            $q->whereIn('value', $countries);
-        });
-    }
-
     private function excludeUser($q, string $excludedId)
     {
         $excludedId = Crypt::decryptString($excludedId);
@@ -133,11 +161,57 @@ class ApiPageBuilderComponentUserListController extends Controller
         }
     }
 
-    private function type($q, string $type)
+    private function inCountries($q, array $countries)
     {
-        $q->whereHas('metas', function ($q) use ($type) {
-            $q->where('key', 'discipline');
-            $q->where('value', $type);
+        $q->whereHas('metas', function ($q) use ($countries) {
+            $q->where('key', 'country');
+            $q->whereIn('value', $countries);
         });
+    }
+
+    private function inTypes($q, array $types)
+    {
+        $q->whereHas('metas', function ($q) use ($types) {
+            $q->where('key', 'discipline');
+            $q->whereIn('value', $types);
+        });
+    }
+
+    private function additionalMetaKeys(): array
+    {
+        return [
+            'discipline',
+            'stage_name',
+        ];
+    }
+
+    private function countryOptions(Collection $users, array $options): array
+    {
+        $countries = app(CountryService::class)->getUserCountryOptions();
+        $availableCountries = $users
+            ->when($options['type'], function ($collection) use ($options) {
+                return $collection->where('discipline', $options['type']);
+            })
+            ->pluck('country')
+            ->all();
+
+        return $countries
+            ->whereIn('id', $availableCountries)
+            ->all();
+    }
+
+    private function typeOptions(Collection $users, array $options): array
+    {
+        $types = app(GlobalOptionService::class)->getUserDisciplineOptions();
+        $availableTypes = $users
+            ->when($options['country'], function ($collection) use ($options) {
+                return $collection->where('country', $options['country']);
+            })
+            ->pluck('discipline')
+            ->all();
+
+        return $types
+            ->whereIn('id', $availableTypes)
+            ->all();
     }
 }
