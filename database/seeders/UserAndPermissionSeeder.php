@@ -3,17 +3,30 @@
 namespace Database\Seeders;
 
 use App\Models\{
+    Country,
     Language,
     Permission,
     Role,
-    User,
     Setting,
+    User,
 };
+use App\Services\GlobalOptionService;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 
 class UserAndPermissionSeeder extends Seeder
 {
+    private $languageId = null;
+    private $countryCode = null;
+    private $domain = null;
+
+    public function __construct()
+    {
+        $this->languageId = Language::where('code', 'en')->value('id');
+        $this->countryCode = Setting::key('default_country')->value('value');
+        $this->domain = config('constants.domain');
+    }
+
     /**
      * Run the database seeds.
      *
@@ -23,18 +36,14 @@ class UserAndPermissionSeeder extends Seeder
     {
         $this->setPermissionToRoles();
 
-        $englishId = Language::where('code', 'en')->value('id');
-        $countryCode = Setting::key('default_country')->value('value');
-        $domain = config('constants.domain');
-
         $superAdminUser = User::factory()->create([
             'first_name' => 'Super',
             'last_name' => 'Administrator',
-            'email' => 'super.administrator@'.$domain,
-            'language_id' => $englishId,
+            'email' => 'super.administrator@'.$this->domain,
+            'language_id' => $this->languageId,
         ]);
 
-        $superAdminUser->setMeta('country', $countryCode);
+        $superAdminUser->setMeta('country', $this->countryCode);
         $superAdminUser->saveMetas();
 
         $superAdminUser->assignRole(config('permission.super_admin_role'));
@@ -43,39 +52,16 @@ class UserAndPermissionSeeder extends Seeder
             ->create([
                 'first_name' => 'Admin',
                 'last_name' => 'Administrator',
-                'email' => 'admin@'.$domain,
-                'language_id' => $englishId,
+                'email' => 'admin@'.$this->domain,
+                'language_id' => $this->languageId,
             ]);
 
-        $adminUser->setMeta('country', $countryCode);
+        $adminUser->setMeta('country', $this->countryCode);
         $adminUser->saveMetas();
 
         $adminUser->assignRole('Administrator');
 
-        $performers = User::factory()
-            ->count(2)
-            ->state(new Sequence(
-                [
-                    'first_name' => 'Dan',
-                    'last_name' => 'Rice',
-                    'email' => 'dan.rice@'.$domain,
-                    'language_id' => $englishId,
-                ],
-                [
-                    'first_name' => 'John',
-                    'last_name' => 'Doe',
-                    'email' => 'john.doe@'.$domain,
-                    'language_id' => $englishId,
-                ],
-            ))
-            ->create();
-
-        foreach ($performers as $performer) {
-            $performer->setMeta('country', $countryCode);
-            $performer->saveMetas();
-
-            $performer->assignRole('Performer');
-        }
+        $this->populateUserPerformer();
     }
 
     private function setPermissionToRoles(): void
@@ -100,5 +86,52 @@ class UserAndPermissionSeeder extends Seeder
             'payment.management',
             'public_page.profile',
         ]);
+    }
+
+    private function populateUserPerformer()
+    {
+        $disciplines = app(GlobalOptionService::class)->getDisciplineOptions();
+        $countries = Country::select('alpha2')->get();
+
+        $performers = User::factory()
+            ->count(2)
+            ->state(new Sequence(
+                [
+                    'first_name' => 'Dan',
+                    'last_name' => 'Rice',
+                    'email' => 'dan.rice@'.$this->domain,
+                    'language_id' => $this->languageId,
+                ],
+                [
+                    'first_name' => 'John',
+                    'last_name' => 'Doe',
+                    'email' => 'john.doe@'.$this->domain,
+                    'language_id' => $this->languageId,
+                ],
+            ))
+            ->create();
+
+        foreach ($performers as $performer) {
+            $performer->setMeta('country', $this->countryCode);
+            $performer->setMeta('discipline', $disciplines->random()['id']);
+            $performer->saveMetas();
+
+            $performer->assignRole('Performer');
+        }
+
+        $anotherPerformer = User::factory()
+            ->count(10)
+            ->state(new Sequence(
+                fn () => ['language_id' => $this->languageId],
+            ))
+            ->create();
+
+        foreach ($anotherPerformer as $performer) {
+            $performer->setMeta('country', $countries->random()->alpha2);
+            $performer->setMeta('discipline', $disciplines->random()['id']);
+            $performer->saveMetas();
+
+            $performer->assignRole('Performer');
+        }
     }
 }
