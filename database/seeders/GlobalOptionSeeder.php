@@ -41,8 +41,8 @@ class GlobalOptionSeeder extends Seeder
                 "type" => "discipline",
             ],
             [
-                "default_value" => "Dance/Break/Popping/Locking",
-                "name" => "Dance/Break/Popping/Locking",
+                "default_value" => "Dance",
+                "name" => "Dance",
                 "type" => "discipline",
             ],
             [
