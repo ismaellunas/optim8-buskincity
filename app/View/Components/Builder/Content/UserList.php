@@ -2,10 +2,10 @@
 
 namespace App\View\Components\Builder\Content;
 
+use App\Models\User;
 use App\Services\CountryService;
 use App\Services\GlobalOptionService;
 use App\Services\PageBuilderService;
-use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 
 class UserList extends BaseContent
@@ -65,8 +65,17 @@ class UserList extends BaseContent
             'country'
         ];
 
+        $excludedIds = $this->getExcludedIds();
         $roleIds = $this->getConfig()['list']['roles'] ?? [];
-        $users = User::select(['id'])->with(['metas'])->inRoles($roleIds)->get();
+
+        $users = User::select(['id'])
+            ->with(['metas'])
+            ->available()
+            ->inRoles($roleIds)
+            ->when($excludedIds, function ($q, $excludedIds) {
+                $q->whereNotIn('id', $excludedIds);
+            })
+            ->get();
 
         foreach ($users as $user) {
             $metas = $user->getMetas($metaKeys);
@@ -91,5 +100,12 @@ class UserList extends BaseContent
                 return in_array($type['id'], $availableType);
             })
             ->values();
+    }
+
+    private function getExcludedIds(): array
+    {
+        $excludedId = preg_replace('/[^0-9,]+/', '', $this->getConfig()['list']['excludedId']);
+
+        return array_filter(explode(',', $excludedId));
     }
 }
