@@ -11,27 +11,17 @@ class AvailableBookingTime implements Rule, DataAwareRule
 {
     private $data;
     private $schedule;
+    private $service;
 
-    /**
-     * Create a new rule instance.
-     *
-     * @return void
-     */
     public function __construct($schedule)
     {
         $this->schedule = $schedule;
+        $this->service = app(EventService::class);
     }
 
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
-        $availableTimes = app(EventService::class)->availableTimes(
+        $availableTimes = $this->service->availableTimes(
             $this->schedule,
             Carbon::parse($this->data['date'])
         );
@@ -39,12 +29,7 @@ class AvailableBookingTime implements Rule, DataAwareRule
         return $availableTimes->contains($value);
     }
 
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
-    public function message()
+    public function message(): string
     {
         return __('The :attribute is invalid.');
     }
