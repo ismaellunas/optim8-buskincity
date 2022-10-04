@@ -2,31 +2,29 @@
 
 namespace App\View\Components\Builder\Content;
 
+use App\Models\User;
 use App\Services\CountryService;
 use App\Services\GlobalOptionService;
 use App\Services\PageBuilderService;
-use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 
 class UserList extends BaseContent
 {
-    public $countries = [];
+    public $defaultCountries = [];
     public $countryOptions = [];
     public $defaultOrderBy = null;
-    public $typeOptions = [];
     public $orderByOptions = [];
+    public $typeOptions = [];
+    public $defaultTypes = [];
 
     public function __construct($entity)
     {
         parent::__construct($entity);
 
-        $this->countries = $this->getConfig()['list']['countries'] ?? [];
-        $this->countryOptions = app(CountryService::class)->getUserCountryOptions();
+        $this->defaultCountries = $this->getConfig()['list']['countries'] ?? [];
         $this->defaultOrderBy = $this->getConfig()['list']['orderBy'] ?? null;
-        $this->typeOptions = app(GlobalOptionService::class)->getUserDisciplineOptions();
         $this->orderByOptions = app(PageBuilderService::class)->userListOrderOptions();
-
-        $this->filterOptions();
+        $this->defaultTypes = $this->getConfig()['list']['types'] ?? [];
     }
 
     public function url(): string
@@ -54,42 +52,5 @@ class UserList extends BaseContent
         }
 
         return null;
-    }
-
-    private function filterOptions(): void
-    {
-        $availableCountries = [];
-        $availableType = [];
-        $metaKeys = [
-            'discipline',
-            'country'
-        ];
-
-        $roleIds = $this->getConfig()['list']['roles'] ?? [];
-        $users = User::select(['id'])->with(['metas'])->inRoles($roleIds)->get();
-
-        foreach ($users as $user) {
-            $metas = $user->getMetas($metaKeys);
-
-            if (isset($metas['country'])) {
-                $availableCountries[] = $metas['country'];
-            }
-
-            if (isset($metas['discipline'])) {
-                $availableType[] = $metas['discipline'];
-            }
-        }
-
-        $this->countryOptions = $this->countryOptions
-            ->filter(function ($country) use ($availableCountries) {
-                return in_array($country['id'], $availableCountries);
-            })
-            ->values();
-
-        $this->typeOptions = $this->typeOptions
-            ->filter(function ($type) use ($availableType) {
-                return in_array($type['id'], $availableType);
-            })
-            ->values();
     }
 }
