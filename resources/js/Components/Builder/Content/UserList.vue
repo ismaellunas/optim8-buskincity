@@ -76,6 +76,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizSelect from '@/Biz/Select';
     import { union, isEmpty, forEach } from 'lodash';
 
@@ -83,6 +84,10 @@
         components: {
             BizSelect,
         },
+
+        mixins: [
+            MixinHasLoader
+        ],
 
         props: {
             defaultCountries: { type: Array, default: () => [] },
@@ -199,6 +204,8 @@
             load() {
                 const self = this;
 
+                self.onStartLoadingOverlay();
+
                 return axios
                     .get(this.url, {
                         params: {
@@ -220,6 +227,9 @@
                         self.users = [];
                         self.options.countries = [];
                         self.options.types = [];
+                    })
+                    .then(function () {
+                        self.onEndLoadingOverlay();
                     });
             },
 
