@@ -36,8 +36,8 @@ class EventService
             if (! $dateOverride->ended_date) {
                 $dates->push($dateOverride->started_date->toDateString());
             } else {
-                $startedDate = $dateOverrides->started_date->copy();
-                $endedDate = $dateOverrides->ended_date->copy();
+                $startedDate = $dateOverride->started_date->copy();
+                $endedDate = $dateOverride->ended_date->copy();
 
                 for ($date = $startedDate; $date->lte($endedDate); $date->addDay()) {
                     $dates->push($date->toDateString());
