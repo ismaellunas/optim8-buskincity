@@ -41,8 +41,8 @@ class GlobalOptionSeeder extends Seeder
                 "type" => "discipline",
             ],
             [
-                "default_value" => "Dance/Break/Popping/Locking",
-                "name" => "Dance/Break/Popping/Locking",
+                "default_value" => "Dance",
+                "name" => "Dance",
                 "type" => "discipline",
             ],
             [
@@ -61,13 +61,13 @@ class GlobalOptionSeeder extends Seeder
                 "type" => "discipline",
             ],
             [
-                "default_value" => "Multidisciplinary Circus/Variety",
-                "name" => "Multidisciplinary Circus/Variety",
+                "default_value" => "Multidisciplinary Circus",
+                "name" => "Multidisciplinary Circus",
                 "type" => "discipline",
             ],
             [
-                "default_value" => "Musician/Singer/Band",
-                "name" => "Musician/Singer/Band",
+                "default_value" => "Musician",
+                "name" => "Musician",
                 "type" => "discipline",
             ],
             [
@@ -91,8 +91,8 @@ class GlobalOptionSeeder extends Seeder
                 "type" => "discipline",
             ],
             [
-                "default_value" => "Stiltwalkers/Animation",
-                "name" => "Stiltwalkers/Animation",
+                "default_value" => "Stiltwalkers",
+                "name" => "Stiltwalkers",
                 "type" => "discipline",
             ],
             [
