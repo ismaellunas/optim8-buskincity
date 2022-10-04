@@ -29,7 +29,7 @@
                 {{ selectedOption.value }}
                 <button
                     type="button"
-                    class="delete is-small"
+                    class="delete is-small component-configurable"
                     @click="deleteOption(selectedOption)"
                 />
             </span>

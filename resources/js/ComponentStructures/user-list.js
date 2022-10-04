@@ -15,6 +15,7 @@ export default {
             excludedId: null,
             orderBy: null,
             countries: [],
+            types: [],
         },
         dimension: {
             'style.padding': {
@@ -67,6 +68,13 @@ export const config = {
                 label: "Country",
                 settings: {
                     optionsRoute: "admin.api.page-builder.country-options",
+                },
+            },
+            types: {
+                component: "SelectMultiple",
+                label: "Types",
+                settings: {
+                    optionsRoute: "admin.api.page-builder.type-options",
                 },
             },
         },
