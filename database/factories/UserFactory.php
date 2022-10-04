@@ -25,14 +25,18 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $firstName = $this->faker->firstName();
+        $lastName = $this->faker->lastName();
+        $email = Str::lower($firstName . '.' . $lastName) . '@' . config('constants.domain');
+
         $isCodeExist = function ($code) {
             return User::where('unique_key', $code)->exists();
         };
 
         return [
-            'first_name' => $this->faker->firstName(),
-            'last_name' => $this->faker->lastName(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'first_name' => $firstName,
+            'last_name' => $lastName,
+            'email' => $email,
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
