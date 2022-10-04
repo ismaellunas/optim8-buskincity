@@ -20,7 +20,7 @@ class PermissionSeeder extends Seeder
     {
         Model::unguard();
 
-        $permissions = collect(ModuleService::permissions());
+        $permissions = ModuleService::permissions();
 
         foreach ($permissions as $permission) {
             Permission::create([
@@ -29,11 +29,11 @@ class PermissionSeeder extends Seeder
             ]);
         }
 
-        $permissions
+        $wildcardPermissions = $permissions
             ->filter(fn ($permission) => Str::endsWith($permission, '.*'))
             ->all();
 
         $role = Role::findByName(config('permission.role_names.admin'));
-        $role->givePermissionTo($permissions);
+        $role->givePermissionTo($wildcardPermissions);
     }
 }
