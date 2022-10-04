@@ -41,9 +41,12 @@
                 <div class="column is-8">
                     <booking-time
                         v-model="form"
-                        :available-times="availableTimes"
-                        :options="options"
-                        @get-available-times="getAvailableTimes"
+                        :allowed-dates-route="allowedDatesRouteName"
+                        :available-times-param="{product: order.product.id}"
+                        :available-times-route="availableTimesRouteName"
+                        :max-date="maxDate"
+                        :min-date="minDate"
+                        :product-id="order.product.id"
                         @on-time-confirmed="openModal"
                     />
                 </div>
@@ -107,9 +110,9 @@
         layout: Layout,
 
         props: {
+            allowedDatesRouteName: { type: String, required: true },
             availableTimesRouteName: { type: String, required: true },
             baseRouteName: { type: String, required: true },
-            disabledDates: { type: Array, default: () => [] },
             maxDate: { type: String, required: true },
             minDate: { type: String, required: true },
             order: { type: Object, required: true },
@@ -123,51 +126,13 @@
                 message: null,
             };
 
-            const options = {
-                minDate: props.minDate,
-                maxDate: props.maxDate,
-                disabledDates: props.disabledDates,
-                color: 'link',
-                showTodayButton: false,
-            };
-
-            const productDetail = {
-                name: props.product_name,
-                identifier: null,
-            };
-
             return {
                 form: useForm(form),
-                options: reactive(options),
-                availableTimes: ref([]),
                 details: ref([]),
-                productDetail,
             };
         },
 
         methods: {
-            getAvailableTimes() {
-                if (! this.form.date) {
-                    this.availableTimes = [];
-                }
-
-                const self = this;
-                const date = moment(this.form.date);
-
-                self.onStartLoadingOverlay();
-
-                axios.get(
-                    route(self.availableTimesRouteName, {
-                        product: this.order.product.id,
-                        date: date.format('YYYY-MM-DD')
-                    }),
-                ).then((response) => {
-                    self.availableTimes = response.data;
-                }).then(() => {
-                    self.onEndLoadingOverlay();
-                });
-            },
-
             reschedule() {
                 const self = this;
 
