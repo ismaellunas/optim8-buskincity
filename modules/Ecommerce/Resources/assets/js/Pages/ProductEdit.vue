@@ -297,11 +297,7 @@
                                                     class="columns is-multiline"
                                                 >
                                                     <div class="column is-5">
-                                                        {{ dateOverrideBatch[0].display_dates }}
-
-                                                        <template v-if="dateOverrideBatch.length > 1">
-                                                            {{ ' - ' + dateOverrideBatch[ dateOverrideBatch.length - 1 ].display_dates }}
-                                                        </template>
+                                                        {{ displayDates(batch) }}
                                                     </div>
 
                                                     <div class="column is-4 has-text-centered">
@@ -497,7 +493,9 @@
             dateOverrides: { type: Array, required: true },
             geoLocation: { type: Object, required: true },
             managers: { type: Array, default: () => [] },
-            googleApiKey: { type: String, default: null }
+            googleApiKey: { type: String, default: null },
+            formatDateIso: { type: String, default: 'YYYY-MM-DD' },
+            formatDateUser: { type: String, default: 'D MM YYYY' },
         },
 
         setup(props, { emit }) {
@@ -585,7 +583,9 @@
 
                             const latestDateOverrideBatch = dateOverrideBatches[index - 1];
 
-                            const nextDate = moment(latestDateOverrideBatch.started_date).add(1, 'd').format('YYYY-MM-DD');
+                            const nextDate = moment(latestDateOverrideBatch.started_date)
+                                .add(1, 'days')
+                                .format(self.formatDateIso);
 
                             const fnTimeRange = (time) => time.started_time + ' - ' + time.ended_time;
 
@@ -774,7 +774,7 @@
                 self.selectedDateOverrideBatch.dates.forEach((date) => {
 
                     const startedDate = moment(date);
-                    const formattedDate = startedDate.format('YYYY-MM-DD');
+                    const formattedDate = startedDate.format(self.formatDateIso);
 
                     const index = dateOverrides.findIndex(function (dateOverride) {
                         return dateOverride.started_date == formattedDate;
@@ -785,7 +785,7 @@
                             started_date: formattedDate,
                             times: self.selectedDateOverrideBatch.times,
                             is_available: self.selectedDateOverrideBatch.times.length > 0,
-                            display_dates: startedDate.format('D MMM YYYY'),
+                            display_dates: startedDate.format(self.formatDateUser),
                         });
 
                     } else {
@@ -799,7 +799,7 @@
 
                 const usedDates = intersection(
                     self.selectedDateOverrideBatch.dates.map(
-                        (date) => moment(date).format('YYYY-MM-DD')
+                        (date) => moment(date).format(self.formatDateIso)
                     ),
                     self.unusedDates
                 );
@@ -813,24 +813,42 @@
                 }
             },
 
+            displayDates(batch) {
+                const dateOverrideBatch = this.dateOverrideBatches[ batch ];
+
+                let displayDates = dateOverrideBatch[ 0 ].display_dates;
+
+                if (dateOverrideBatch.length > 1) {
+                    displayDates += ' - ' + dateOverrideBatch[ dateOverrideBatch.length - 1].display_dates;
+                }
+
+                return displayDates;
+            },
+
             removeDateOverride(batch) {
                 const self = this;
 
-                self.dateOverrideBatches[ batch ].forEach((dateOverride) => {
-                    let foundedIndex = null;
+                confirmDelete(
+                    'Are you sure want to delete the '+ self.displayDates(batch) + '?',
+                ).then(result => {
+                    if (result.isConfirmed) {
+                        self.dateOverrideBatches[ batch ].forEach((dateOverride) => {
+                            let foundedIndex = null;
 
-                    const founded = self.eventForm.date_overrides.find((formDateOverride, index) => {
-                        foundedIndex = index;
+                            const founded = self.eventForm.date_overrides.find((formDateOverride, index) => {
+                                foundedIndex = index;
 
-                        return (formDateOverride.started_date == dateOverride.started_date);
-                    });
+                                return (formDateOverride.started_date == dateOverride.started_date);
+                            });
 
-                    if (founded && founded.id) {
-                        self.unusedDates.push(dateOverride.started_date);
-                    } else {
-                        self.eventForm.date_overrides.splice(foundedIndex, 1);
+                            if (founded && founded.id) {
+                                self.unusedDates.push(dateOverride.started_date);
+                            } else {
+                                self.eventForm.date_overrides.splice(foundedIndex, 1);
+                            }
+                        });
                     }
-                });
+                })
             },
 
             toggleMap() {

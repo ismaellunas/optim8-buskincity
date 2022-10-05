@@ -93,12 +93,9 @@ class OrderController extends CrudController
     {
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
-        $schedule = $product->eventSchedule;
 
         $minDate = $this->productEventService->minBookableDate();
         $maxDate = $this->productEventService->maxBookableDate($product);
-
-        $disabledDates = $this->eventService->disabledDates($schedule, $minDate, $maxDate);
 
         return Inertia::render('Ecommerce::OrderReschedule', $this->getData([
             'title' => 'Reschedule Event',
@@ -106,8 +103,9 @@ class OrderController extends CrudController
             'product' => app(ProductService::class)->formResource($product),
             'minDate' => $minDate->toDateString(),
             'maxDate' => $maxDate->toDateString(),
-            'disabledDates' => $disabledDates,
             'timezone' => $eventLine->latestEvent->schedule->timezone,
+            'allowedDatesRouteName' => 'admin.ecommerce.products.allowed-dates',
+            'availableTimesRouteName' => $this->productEventService->availableTimesOrderRouteName(),
         ]));
     }
 
