@@ -3,7 +3,6 @@
 namespace Modules\Ecommerce\Http\Controllers\Frontend;
 
 use App\Http\Controllers\CrudController;
-use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -86,10 +85,7 @@ class ProductController extends CrudController
     {
         $schedule = $product->eventSchedule;
 
-        return $this->eventService->availableTimes(
-            $schedule,
-            Carbon::parse($dateTime)
-        );
+        return $this->eventService->availableTimes($schedule, $dateTime);
     }
 
     public function allowedDates(Product $product, string $month, string $year)

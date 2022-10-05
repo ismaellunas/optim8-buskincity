@@ -3,6 +3,7 @@
 namespace Modules\Ecommerce\Services;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Modules\Ecommerce\Entities\Schedule;
 use Modules\Ecommerce\Entities\ScheduleRule;
@@ -11,51 +12,39 @@ use Modules\Ecommerce\Helpers\EventTimeHelper;
 
 class EventService
 {
-    public function disabledDates($schedule, Carbon $minDate, Carbon $maxDate): Collection
-    {
-        $dates = collect();
-
-        $dateOverrides = $schedule
+    private function scheduleDateOverrideDates(
+        Schedule $schedule,
+        Carbon $minDate,
+        Carbon $maxDate,
+        bool $availabiltiy = true,
+    ): Collection {
+        return $schedule
             ->dateOverrides()
-            ->where('is_available', false)
+            ->available($availabiltiy)
             ->where(function ($query) use ($minDate, $maxDate) {
                 $query
                     ->whereBetween('started_date', [
                         $minDate->copy()->subDay(),
                         $maxDate->copy()->addDay()
-                    ])
-                    ->orWhereBetween('ended_date', [
-                        $minDate->copy()->subDay(),
-                        $maxDate->copy()->addDay()
                     ]);
             })
             ->orderBy('started_date')
-            ->get();
+            ->get(['id', 'started_date', 'type', 'is_available', 'schedule_id'])
+            ->pluck('started_date')
+            ->map(fn ($date) => $date->toDateString());
+    }
 
-        foreach ($dateOverrides as $dateOverride) {
-            if (! $dateOverride->ended_date) {
-                $dates->push($dateOverride->started_date->toDateString());
-            } else {
-                $startedDate = $dateOverride->started_date->copy();
-                $endedDate = $dateOverride->ended_date->copy();
-
-                for ($date = $startedDate; $date->lte($endedDate); $date->addDay()) {
-                    $dates->push($date->toDateString());
-                }
-            }
-        }
-
-        $today = today();
-
-        if ($today->gte($minDate) && $today->lte($maxDate)) {
-            $todayDateString = today()->toDateString();
-
-            if (!$dates->contains($todayDateString)) {
-                $dates->push($todayDateString);
-            }
-        }
-
-        return $dates;
+    private function disabledDateOverrides(
+        Schedule $schedule,
+        Carbon $minDate,
+        Carbon $maxDate
+    ): Collection {
+        return $this->scheduleDateOverrideDates(
+            $schedule,
+            $minDate,
+            $maxDate,
+            false
+        );
     }
 
     private function availableDateOverrides(
@@ -63,24 +52,11 @@ class EventService
         Carbon $minDate,
         Carbon $maxDate
     ): Collection {
-        return $schedule
-            ->dateOverrides()
-            ->available()
-            ->where(function ($query) use ($minDate, $maxDate) {
-                $query
-                    ->whereBetween('started_date', [
-                        $minDate->copy()->subDay(),
-                        $maxDate->copy()->addDay()
-                    ])
-                    ->orWhereBetween('ended_date', [
-                        $minDate->copy()->subDay(),
-                        $maxDate->copy()->addDay()
-                    ]);
-            })
-            ->orderBy('started_date')
-            ->get()
-            ->pluck('started_date')
-            ->map(fn ($date) => $date->toDateString());
+        return $this->scheduleDateOverrideDates(
+            $schedule,
+            $minDate,
+            $maxDate
+        );
     }
 
     private function listDates(Carbon $minDate, Carbon $maxDate): Collection
@@ -120,7 +96,7 @@ class EventService
         Carbon $minDate,
         Carbon $maxDate
     ): Collection {
-        $disabledDates = $this->disabledDates($schedule, $minDate, $maxDate);
+        $disabledDates = $this->disabledDateOverrides($schedule, $minDate, $maxDate);
 
         $dates = $this->listDates($minDate, $maxDate);
 
@@ -214,9 +190,15 @@ class EventService
             ->first();
     }
 
-    public function availableTimes(Schedule $schedule, Carbon $date): Collection
+    public function availableTimes(Schedule $schedule, string $date): Collection
     {
         $times = collect();
+
+        $timezone = $schedule->timezone;
+
+        $date = Carbon::parse($date, $timezone);
+
+        $todayTime = null;
 
         $rule = $this->getScheduleRuleOnDate($schedule, $date);
 
@@ -226,36 +208,53 @@ class EventService
 
         $bookedTimes = $this->bookedTimes($schedule, $date);
 
-        foreach ($rule->times as $scheduleTime) {
-            $startedTime = Carbon::parse($scheduleTime->started_time);
-            $endedTime = Carbon::parse($scheduleTime->ended_time);
+        $product = $schedule->schedulable;
+        $duration = $product->duration;
+        $method = EventTimeHelper::calculateDurationMethodName($product->duration_unit);
 
-            $product = $schedule->schedulable;
-            $duration = $product->duration;
-            $method = EventTimeHelper::calculateDurationMethodName($product->duration_unit);
+        if (today($schedule->timezone)->equalTo($date)) {
+            $todayTime = Carbon::now($schedule->timezone)->$method($duration);
+        }
+
+        foreach ($rule->times as $scheduleTime) {
+
+            $latestTime = null;
+
+            if ($times->isNotEmpty()) {
+                $latestTime = Carbon::createFromTimeString((string) $times->last(), $timezone);
+            }
+
+            $startedTime = Carbon::createFromTimeString($scheduleTime->started_time, $timezone);
+
+            if ($latestTime && $latestTime->isAfter($startedTime)) {
+                $startedTime = $latestTime;
+            }
+
+            $endedTime = Carbon::createFromTimeString($scheduleTime->ended_time, $timezone);
 
             for ($i = $startedTime; $i->lte($endedTime); $i->$method($duration)) {
+                if ($todayTime && $startedTime->isBefore($todayTime)) {
+                    continue;
+                }
+
                 $currentEndTime = $i->copy();
                 $currentEndTime->$method($duration);
 
                 $isTimeBooked = $bookedTimes->contains(function ($booked) use ($i, $currentEndTime) {
                     return (
-                        $i->eq($booked->startTime)
+                        $i->equalTo($booked->startTime)
                         || (
                             $i->gte($booked->startTime)
                             && $i->isBefore($booked->endTime)
                         )
                         || (
-                            $currentEndTime->gt($booked->startTime)
-                            && $currentEndTime->lt($booked->endTime)
+                            $currentEndTime->isAfter($booked->startTime)
+                            && $currentEndTime->isBefore($booked->endTime)
                         )
                     );
                 });
 
-                if (
-                    !$isTimeBooked
-                    && $currentEndTime->lte($endedTime)
-                ) {
+                if (!$isTimeBooked && $currentEndTime->lte($endedTime)) {
                     $times->push($i->format('H:i'));
                 }
             }
