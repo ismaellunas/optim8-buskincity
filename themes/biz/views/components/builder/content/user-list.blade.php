@@ -1,6 +1,7 @@
 <user-list
     @class($uniqueClass)
-    :countries="{{ Illuminate\Support\Js::from($countries) }}"
+    :default-countries="{{ Illuminate\Support\Js::from($defaultCountries) }}"
+    :default-types="{{ Illuminate\Support\Js::from($defaultTypes) }}"
     :country-options="{{ Illuminate\Support\Js::from($countryOptions) }}"
     :order-by-options="{{ Illuminate\Support\Js::from($orderByOptions) }}"
     :type-options="{{ Illuminate\Support\Js::from($typeOptions) }}"

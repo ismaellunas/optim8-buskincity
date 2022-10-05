@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Services\CountryService;
+use App\Services\GlobalOptionService;
 
 class ApiPageBuilderController extends Controller
 {
     public function countryOptions()
     {
         return app(CountryService::class)->getCountryOptions();
+    }
+
+    public function typeOptions()
+    {
+        return app(GlobalOptionService::class)->getDisciplineOptions();
     }
 
     public function userListRoleOptions()

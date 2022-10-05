@@ -56,7 +56,8 @@ class GlobalOptionService
                                     'id' => $discipline->default_value,
                                     'value' => $discipline->name,
                                 ];
-                            });
+                            })
+                            ->values();
                     })
             );
         }
