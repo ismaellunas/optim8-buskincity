@@ -173,7 +173,7 @@ class Post extends BaseModel implements PublishableInterface
         return $this->save();
     }
 
-    public function syncCategories(array $categoryIds, string $primaryCategoryId)
+    public function syncCategories(array $categoryIds, string $primaryCategoryId = null)
     {
         $categories = [];
 
