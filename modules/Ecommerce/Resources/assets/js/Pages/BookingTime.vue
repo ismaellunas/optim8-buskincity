@@ -1,37 +1,45 @@
 <template>
     <div class="booking-time columns">
         <div class="column is-half">
-            <div class="field is-grouped is-grouped-centered">
+            <biz-field class="is-grouped is-grouped-centered">
                 <p class="control">
-                    <biz-date-time
+                    <biz-datepicker
                         v-model="form.date"
-                        type="date"
+                        auto-apply
+                        hide-offset-dates
                         inline
-                        :options="options"
+                        month-name-format="long"
+                        no-today
+                        prevent-min-max-navigation
+                        :allowed-dates="allowedDates"
+                        :disabled="isCalendarDisabled"
+                        :enable-time-picker="false"
+                        :max-date="maxDate"
+                        :min-date="minDate"
+                        :month-change-on-scroll="false"
+                        :year-range="yearRange"
+                        @update-month-year="handleMonthYear"
                     />
                 </p>
-            </div>
+            </biz-field>
 
-            <div class="field is-grouped is-grouped-centered">
-                <div class="field is-horizontal">
-                    <div class="field-label is-normal">
-                        <label class="label">Timezone</label>
-                    </div>
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control is-expanded">
-                                <input
-                                    class="input"
-                                    type="text"
-                                    :value="form.timezone"
-                                    readonly
-                                    disabled
-                                >
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <biz-field class="is-grouped is-grouped-centered">
+                <biz-form-field-horizontal>
+                    <template #label>
+                        Timezone
+                    </template>
+
+                    <p class="control is-expanded">
+                        <input
+                            class="input"
+                            type="text"
+                            :value="form.timezone"
+                            readonly
+                            disabled
+                        >
+                    </p>
+                </biz-form-field-horizontal>
+            </biz-field>
         </div>
 
         <div
@@ -74,49 +82,90 @@
 
 <script>
     import BizButton from '@/Biz/Button';
-    import BizDateTime from '@/Biz/DateTime';
+    import BizDatepicker from '@/Biz/Datepicker';
+    import BizField from '@/Biz/Field';
+    import BizFormFieldHorizontal from '@/Biz/Form/FieldHorizontal';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import moment from 'moment';
+    import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         components: {
             BizButton,
-            BizDateTime,
+            BizDatepicker,
+            BizField,
+            BizFormFieldHorizontal,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         props: {
             modelValue: { type: Object, required: true },
-            options: { type: Object, required: true },
-            availableTimes: { type: Array, default: () => [] },
+            allowedDatesRoute: { type: String, required: true },
+            availableTimesRoute: { type: String, required: true },
+            availableTimesParam: { type: Object, required: true },
+            minDate: { type: String, required: true },
+            maxDate: { type: String, required: true },
+            productId: { type: Number, required: true },
         },
 
         emits: [
-            'get-available-times',
             'on-time-confirmed'
         ],
 
         setup(props, { emit }) {
             return {
+                allowedDates: ref([]),
+                availableTimes: ref([]),
                 form: useModelWrapper(props, emit),
-            };
-        },
-
-        data() {
-            return {
-                selectedIndex: null,
+                isCalendarDisabled: ref(false),
+                selectedIndex: ref(null),
+                yearRange: [
+                    moment(props.minDate).year(),
+                    moment(props.maxDate).year(),
+                ],
             };
         },
 
         watch: {
             'form.date': function (newVal, oldVal) {
                 this.resetSelectedIndex();
-                this.getAvailableTime();
+                this.getAvailableTimes();
             },
         },
 
+        async mounted() {
+            const minDate = moment(this.minDate);
+
+            this.allowedDates = await this.getAllowedDates(minDate.month() + 1, minDate.year());
+        },
+
         methods: {
-            getAvailableTime() {
-                this.$emit('get-available-times');
+            getAvailableTimes() {
+                if (! this.form.date) {
+                    this.availableTimes = [];
+                }
+
+                const self = this;
+                const params = {
+                    ...this.availableTimesParam,
+                    ...{date: moment(this.form.date).format('YYYY-MM-DD')}
+                };
+
+                self.onStartLoadingOverlay();
+                self.isCalendarDisabled = true;
+
+                axios.get(
+                    route(self.availableTimesRoute, params),
+                ).then((response) => {
+                    self.availableTimes = response.data;
+                }).then(() => {
+                    self.onEndLoadingOverlay();
+                    self.isCalendarDisabled = false;
+                });
             },
 
             isIndexSelected(index) {
@@ -131,7 +180,7 @@
                 if (this.selectedIndex == index) {
                     this.resetSelectedIndex();
                 } else {
-                    this.selectedIndex = index
+                    this.selectedIndex = index;
                 }
             },
 
@@ -145,6 +194,28 @@
             confirmTime(time) {
                 this.form.time = time;
                 this.$emit('on-time-confirmed');
+            },
+
+            async getAllowedDates(month, year) {
+                const self = this;
+
+                const url = route(this.allowedDatesRoute, {
+                    product: this.productId,
+                    month: month,
+                    year: year,
+                });
+
+                self.isCalendarDisabled = true;
+
+                const response =  await axios.get(url);
+
+                self.isCalendarDisabled = false;
+
+                return response.data;
+            },
+
+            async handleMonthYear({instance, month, year}) {
+                this.allowedDates = await this.getAllowedDates((month + 1), year);
             },
         },
     };

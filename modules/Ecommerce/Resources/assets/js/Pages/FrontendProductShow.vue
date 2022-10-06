@@ -136,9 +136,12 @@
                 <div class="column is-8">
                     <booking-time
                         v-model="form"
-                        :available-times="availableTimes"
-                        :options="options"
-                        @get-available-times="getAvailableTimes"
+                        :allowed-dates-route="allowedDatesRouteName"
+                        :available-times-param="{product: product.id}"
+                        :available-times-route="availableTimesRouteName"
+                        :max-date="maxDate"
+                        :min-date="minDate"
+                        :product-id="product.id"
                         @on-time-confirmed="openModal"
                     />
                 </div>
@@ -205,9 +208,11 @@
     import Layout from '@/Layouts/User';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import moment from 'moment';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
+    import { ref } from 'vue';
 
     export default {
         components: {
@@ -223,18 +228,20 @@
         mixins: [
             MixinHasLoader,
             MixinHasModal,
+            MixinHasPageErrors,
         ],
 
         layout: Layout,
 
         props: {
+            allowedDatesRouteName: { type: String, required: true },
+            availableTimesRouteName: { type: String, required: true },
             baseRouteName: { type: String, required: true },
-            product: { type: Object, required: true },
             event: { type: Object, required: true },
             maxDate: { type: String, required: true },
             minDate: { type: String, required: true },
+            product: { type: Object, required: true },
             timezone: { type: String, required: true },
-            disabledDates: { type: Array, default: () => [] },
         },
 
         setup(props) {
@@ -244,25 +251,10 @@
                 timezone: props.timezone,
             };
 
-            const options = {
-                minDate: props.minDate,
-                maxDate: props.maxDate,
-                disabledDates: props.disabledDates,
-                color: 'link',
-                showTodayButton: false,
-            };
-
             return {
                 form: useForm(form),
-                options,
-            };
-        },
-
-        data() {
-            return {
-                availableTimes: [],
-                isShortDescription: true,
-                selectedImageId: null,
+                isShortDescription: ref(true),
+                selectedImageId: ref(null),
             };
         },
 
@@ -295,28 +287,6 @@
         },
 
         methods: {
-            getAvailableTimes() {
-                if (! this.form.date) {
-                    this.availableTimes = [];
-                }
-
-                const self = this;
-                const date = moment(this.form.date);
-
-                self.onStartLoadingOverlay();
-
-                axios.get(
-                    route(this.baseRouteName + '.available-times', {
-                        product: this.product.id,
-                        date: date.format('YYYY-MM-DD')
-                    }),
-                ).then((response) => {
-                    self.availableTimes = response.data;
-                }).then(() => {
-                    self.onEndLoadingOverlay();
-                });
-            },
-
             toggleDescription() {
                 this.isShortDescription = !this.isShortDescription;
             },
@@ -338,7 +308,12 @@
                                 successAlert(page.props.flash.message);
                             },
                             onError: (errors) => {
-                                oopsAlert();
+                                const validationMessages = [
+                                    self.error('date', 'default', errors),
+                                    self.error('time', 'default', errors),
+                                ].filter(Boolean);
+
+                                oopsAlert({html: validationMessages.join('<br>')});
                             },
                             onFinish: () => {
                                 self.onEndLoadingOverlay();

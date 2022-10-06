@@ -3,16 +3,19 @@
 namespace Modules\Ecommerce\Rules;
 
 use Carbon\Carbon;
-use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\Rule;
 use Modules\Ecommerce\Services\EventService;
 
-class AvailableBookingTime implements Rule, DataAwareRule
+class AvailableBookingDate implements Rule
 {
-    private $data;
     private $schedule;
     private $service;
 
+    /**
+     * Create a new rule instance.
+     *
+     * @return void
+     */
     public function __construct($schedule)
     {
         $this->schedule = $schedule;
@@ -21,23 +24,22 @@ class AvailableBookingTime implements Rule, DataAwareRule
 
     public function passes($attribute, $value): bool
     {
-        $availableTimes = $this->service->availableTimes(
+        $allowedDates = $this->service->allowedDatesBetween(
             $this->schedule,
-            Carbon::parse($this->data['date'])
+            Carbon::parse($value),
+            Carbon::parse($value)
         );
 
-        return $availableTimes->contains($value);
+        return $allowedDates->contains($value);
     }
 
+    /**
+     * Get the validation error message.
+     *
+     * @return string
+     */
     public function message(): string
     {
         return __('The :attribute is invalid.');
-    }
-
-    public function setData($data)
-    {
-        $this->data = $data;
-
-        return $this;
     }
 }

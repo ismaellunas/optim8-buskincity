@@ -15,7 +15,7 @@
         },
 
         props: {
-            modelValue: { type: [String, Array, null], required: true },
+            modelValue: { type: [String, Array, Date, null], required: true },
         },
 
         setup(props, { emit }) {
