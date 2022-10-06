@@ -54,11 +54,6 @@ class PostController extends CrudController
         ]));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $user = auth()->user();
@@ -90,12 +85,6 @@ class PostController extends CrudController
         ));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(PostRequest $request)
     {
         $post = new Post();
@@ -122,12 +111,6 @@ class PostController extends CrudController
         return redirect()->route($this->baseRouteName.'.edit', $post->id);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Post $post)
     {
         $user = auth()->user();
@@ -160,13 +143,6 @@ class PostController extends CrudController
         ));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
     public function update(PostRequest $request, Post $post)
     {
         $post->saveFromInputs($request->only([
@@ -191,12 +167,6 @@ class PostController extends CrudController
         return redirect()->route($this->baseRouteName.'.edit', $post->id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Post $post)
     {
         $post->delete();
