@@ -47,6 +47,16 @@ class Post extends BaseModel implements PublishableInterface
         return $this->belongsToMany(Category::class)
             ->withPivot('is_primary');
     }
+
+    public function primaryCategories()
+    {
+        return $this->belongsToMany(Category::class)
+            ->wherePivot('is_primary', true);
+    }
+
+    public function category()
+    {
+        return $this->primaryCategories->first() ?? null;
     }
 
     public function coverImage()
@@ -111,6 +121,11 @@ class Post extends BaseModel implements PublishableInterface
             $this->isScheduled
             && ($this->isDirty('scheduled_at') || $this->isDirty('status'))
         );
+    }
+
+    public function getCoverImageUrlAttribute(): ?string
+    {
+        return $this->coverImage->file_url ?? null;
     }
 
     public static function getStatusOptions(): array
