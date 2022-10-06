@@ -135,6 +135,8 @@ class PostService
                 return $category;
             });
 
+            $record->category_names = $record->getCategoryNames();
+
             return $record;
         });
     }

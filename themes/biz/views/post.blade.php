@@ -119,9 +119,6 @@
                     </div>
 
                     @foreach ($relatedArticles as $article)
-                        @php
-                            $categories = implode(", ", $article->categories->pluck('name')->toArray());
-                        @endphp
                         <div class="column is-4">
                             <article class="b752-blog-item box is-shadowless is-clipped p-0">
                                 <figure>
@@ -134,7 +131,7 @@
                                         <a href="{{ route('blog.show', $article->slug) }}">{{ $article->title }}</a>
                                     </h2>
                                     <div class="content is-size-7">
-                                        <p>{{ $categories }}</p>
+                                        <p>{{ $article->getCategoryNames() }}</p>
                                     </div>
                                 </div>
                             </article>
