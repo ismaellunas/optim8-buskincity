@@ -1,4 +1,4 @@
-import { isEmpty, head } from 'lodash';
+import { isEmpty } from 'lodash';
 
 export default {
     props: {
@@ -13,12 +13,6 @@ export default {
                 return this.record.categories.length > 0;
             }
             return false;
-        },
-        firstCategoryName() {
-            if (this.hasCategory) {
-                return head(this.record.categories).name;
-            }
-            return '';
         },
     }
 };
