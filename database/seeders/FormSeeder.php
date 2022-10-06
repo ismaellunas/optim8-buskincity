@@ -22,10 +22,57 @@ class FormSeeder extends Seeder
             config('constants.extensions.video'),
         ));
 
+        $about = [
+            "name" => "about",
+            "title" => "About",
+            "order" => 1,
+            "visibility" => [],
+            "locations" => [
+                [
+                    "name" => 'admin.profile.show',
+                    "visibility" => [
+                        'not_in_roles' => [
+                            'Performer'
+                        ]
+                    ]
+                ],
+                [
+                    "name" => 'admin.users.edit',
+                    "visibility" => [
+                        'not_in_roles' => [
+                            'Performer'
+                        ]
+                    ]
+                ],
+            ],
+            "fields" => [
+                [
+                    "type" => "Textarea",
+                    "name" => "short_description",
+                    "label" => "Short Description",
+                    "placeholder" => "Short description about yourself",
+                    "note" => null,
+                    "default_value" => [],
+                    "readonly" => false,
+                    "disabled" => false,
+                    "maxlength" => "",
+                    "rows" => "",
+                    "validation" => [
+                        "rules" => [
+                            "max" => 1000
+                        ],
+                        "messages" => []
+                    ],
+                    "visibility" => [],
+                    "translated" => true,
+                ],
+            ]
+        ];
+
         $aboutYou = [
             "name" => "about_you",
             "title" => "About you",
-            "order" => 1,
+            "order" => 2,
             "visibility" => [],
             "locations" => [
                 [
@@ -61,9 +108,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "visibility" => [
-                        "roles" => ["Performer"]
-                    ],
+                    "visibility" => [],
                     "translated" => false,
                 ],
                 [
@@ -82,9 +127,7 @@ class FormSeeder extends Seeder
                         ],
                         "messages" => []
                     ],
-                    "visibility" => [
-                        "roles" => ["Performer"]
-                    ],
+                    "visibility" => [],
                     "translated" => false,
                 ],
                 [
@@ -135,7 +178,7 @@ class FormSeeder extends Seeder
         $address = [
             "name" => "address",
             "title" => "Address & contact information",
-            "order" => 2,
+            "order" => 3,
             "visibility" => [],
             "locations" => [
                 [
@@ -242,7 +285,7 @@ class FormSeeder extends Seeder
         $promotional = [
             "name" => "social_media",
             "title" => "Social media",
-            "order" => 3,
+            "order" => 4,
             "visibility" => [],
             "locations" => [
                 [
@@ -467,6 +510,11 @@ class FormSeeder extends Seeder
                 ],
             ]
         ];
+
+        FieldGroup::updateOrCreate(
+            ['title' => $about['name']],
+            ['data' =>  $about]
+        );
 
         FieldGroup::updateOrCreate(
             ['title' => $aboutYou['name']],
