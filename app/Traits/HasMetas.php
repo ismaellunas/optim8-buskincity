@@ -54,4 +54,19 @@ trait HasMetas
 
         return $metas;
     }
+
+    public function getMeta(string $key, string $locale = null): mixed
+    {
+        $meta = $this->metas->firstWhere('key', $key);
+
+        if (is_null($meta)) {
+            return null;
+        }
+
+        if (!is_null($locale)) {
+            return $meta->value[$locale] ?? null;
+        }
+
+        return $meta->value;
+    }
 }
