@@ -36,8 +36,8 @@ class EventService
             if (! $dateOverride->ended_date) {
                 $dates->push($dateOverride->started_date->toDateString());
             } else {
-                $startedDate = $dateOverrides->started_date->copy();
-                $endedDate = $dateOverrides->ended_date->copy();
+                $startedDate = $dateOverride->started_date->copy();
+                $endedDate = $dateOverride->ended_date->copy();
 
                 for ($date = $startedDate; $date->lte($endedDate); $date->addDay()) {
                     $dates->push($date->toDateString());
@@ -45,13 +45,105 @@ class EventService
             }
         }
 
-        $todayDateString = today()->toDateString();
+        $today = today();
 
-        if (!$dates->contains($todayDateString)) {
-            $dates->push($todayDateString);
+        if ($today->gte($minDate) && $today->lte($maxDate)) {
+            $todayDateString = today()->toDateString();
+
+            if (!$dates->contains($todayDateString)) {
+                $dates->push($todayDateString);
+            }
         }
 
         return $dates;
+    }
+
+    private function availableDateOverrides(
+        Schedule $schedule,
+        Carbon $minDate,
+        Carbon $maxDate
+    ): Collection {
+        return $schedule
+            ->dateOverrides()
+            ->available()
+            ->where(function ($query) use ($minDate, $maxDate) {
+                $query
+                    ->whereBetween('started_date', [
+                        $minDate->copy()->subDay(),
+                        $maxDate->copy()->addDay()
+                    ])
+                    ->orWhereBetween('ended_date', [
+                        $minDate->copy()->subDay(),
+                        $maxDate->copy()->addDay()
+                    ]);
+            })
+            ->orderBy('started_date')
+            ->get()
+            ->pluck('started_date')
+            ->map(fn ($date) => $date->toDateString());
+    }
+
+    private function listDates(Carbon $minDate, Carbon $maxDate): Collection
+    {
+        $dates = collect();
+
+        for ($date = $minDate->copy(); $date->lte($maxDate); $date->addDay()) {
+            $dates->put($date->toDateString(), $date->copy());
+        }
+
+        return $dates;
+    }
+
+    private function disabledWeekDays(Schedule $schedule): Collection
+    {
+        return $schedule->weeklyHours->where('is_available', false)->pluck('day');
+    }
+
+    private function disabledWeekDates(
+        Schedule $schedule,
+        Carbon $minDate,
+        Carbon $maxDate
+    ): Collection {
+        $dates = $this->listDates($minDate, $maxDate);
+
+        $disabledWeekDays = $this->disabledWeekDays($schedule);
+
+        return $dates
+            ->filter(function ($date) use ($disabledWeekDays) {
+                return $disabledWeekDays->contains($date->dayOfWeekIso);
+            })
+            ->keys();
+    }
+
+    public function allowedDatesBetween(
+        Schedule $schedule,
+        Carbon $minDate,
+        Carbon $maxDate
+    ): Collection {
+        $disabledDates = $this->disabledDates($schedule, $minDate, $maxDate);
+
+        $dates = $this->listDates($minDate, $maxDate);
+
+        $dates = $dates->except($disabledDates);
+
+        $disabledWeekDates = $this->disabledWeekDates($schedule, $minDate, $maxDate);
+
+        $availableDateOverrides = $this->availableDateOverrides($schedule, $minDate, $maxDate);
+
+        $dates = $dates->except($disabledWeekDates->diff($availableDateOverrides));
+
+        return $dates->keys();
+    }
+
+    public function allowedDates(
+        Schedule $schedule,
+        string $month,
+        string $year
+    ): Collection {
+        $minDate = Carbon::parse(implode('-', [$year, $month, "01"]));
+        $maxDate = $minDate->copy()->endOfMonth();
+
+        return $this->allowedDatesBetween($schedule, $minDate, $maxDate);
     }
 
     private function bookedTimes(Schedule $schedule, Carbon $date): Collection
