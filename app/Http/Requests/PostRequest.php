@@ -58,6 +58,9 @@ class PostRequest extends BaseFormRequest
                 'nullable',
                 'integer'
             ],
+            'primary_category' => [
+                'required_with:categories'
+            ]
         ];
     }
 

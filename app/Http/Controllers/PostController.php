@@ -103,7 +103,10 @@ class PostController extends CrudController
         ]));
 
         if ($request->has('categories')) {
-            $post->syncCategories($request->input('categories'));
+            $post->syncCategories(
+                $request->input('categories'),
+                $request->input('primary_category')
+            );
         }
 
         $this->generateFlashMessage('Post created successfully!');
@@ -159,7 +162,10 @@ class PostController extends CrudController
         ]));
 
         if ($request->has('categories')) {
-            $post->syncCategories($request->input('categories'));
+            $post->syncCategories(
+                $request->input('categories'),
+                $request->input('primary_category')
+            );
         }
 
         $this->generateFlashMessage('Post updated successfully!');
