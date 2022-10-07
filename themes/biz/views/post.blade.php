@@ -27,10 +27,10 @@
                                             {{ __('Blog') }}
                                         </a>
                                     </li>
-                                    @if ($post->category())
+                                    @if ($post->category)
                                         <li class="is-active">
                                             <a href="#">
-                                                {{ $post->category()->name }}
+                                                {{ $post->category->name }}
                                             </a>
                                         </li>
                                     @endif
