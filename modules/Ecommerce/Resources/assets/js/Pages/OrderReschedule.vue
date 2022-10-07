@@ -20,9 +20,12 @@
             <div class="column is-8">
                 <booking-time
                     v-model="form"
-                    :available-times="availableTimes"
-                    :options="options"
-                    @get-available-times="getAvailableTimes"
+                    :allowed-dates-route="allowedDatesRouteName"
+                    :available-times-param="{order: order.id}"
+                    :available-times-route="availableTimesRouteName"
+                    :max-date="maxDate"
+                    :min-date="minDate"
+                    :product-id="product.id"
                     @on-time-confirmed="openModal"
                 />
             </div>
@@ -83,12 +86,14 @@
         layout: AppLayout,
 
         props: {
+            allowedDatesRouteName: { type: String, default: "ecommerce.products.allowed-dates" },
+            availableTimesRouteName: { type: String, required: true },
             baseRouteName: { type: String, required: true },
+            formatDateIso: { type: String, default: 'YYYY-MM-DD' },
+            maxDate: { type: String, required: true },
+            minDate: { type: String, required: true },
             order: { type: Object, required: true },
             product: { type: Object, required: true },
-            minDate: { type: String, required: true },
-            maxDate: { type: String, required: true },
-            disabledDates: { type: Array, default: () => [] },
             timezone: { type: String, required: true },
         },
 
@@ -100,53 +105,21 @@
                 message: null,
             };
 
-            const options = {
-                minDate: props.minDate,
-                maxDate: props.maxDate,
-                disabledDates: props.disabledDates,
-                color: 'link',
-                showTodayButton: false,
-            };
-
             return {
-                availableTimes: ref([]),
                 form: useForm(form),
                 ecommerceIcon,
                 firstEvent: props.order.event,
-                options: reactive(options),
                 scheduleTimezone: ref(props.timezone),
             };
         },
 
         methods: {
-            getAvailableTimes() {
-                if (! this.form.date) {
-                    this.availableTimes = [];
-                }
-
-                const self = this;
-                const date = moment(this.form.date);
-
-                self.onStartLoadingOverlay();
-
-                axios.get(
-                    route(this.baseRouteName + '.available-times', {
-                        order: this.order.id,
-                        date: date.format('YYYY-MM-DD')
-                    }),
-                ).then((response) => {
-                    self.availableTimes = response.data;
-                }).then(() => {
-                    self.onEndLoadingOverlay();
-                });
-            },
-
             reschedule() {
                 const self = this;
 
                 self.form
                     .transform((data) => {
-                        data.date = moment(data.date).format('YYYY-MM-DD');
+                        data.date = moment(data.date).format(self.formatDateIso);
 
                         return data;
                     })
@@ -164,7 +137,7 @@
 
             onShownModal() { /* @see MixinHasModal */
                 this.form.message = null;
-            }
+            },
         },
     };
 </script>
