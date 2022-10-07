@@ -55,7 +55,7 @@ trait HasMetas
         return $metas;
     }
 
-    public function getMeta(string $key, string $locale = null): mixed
+    public function getTranslatableMeta(string $key, string $locale = null): mixed
     {
         $meta = $this->metas->firstWhere('key', $key);
 
