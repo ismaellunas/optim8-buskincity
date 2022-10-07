@@ -54,9 +54,9 @@ class Post extends BaseModel implements PublishableInterface
             ->wherePivot('is_primary', true);
     }
 
-    public function category()
+    public function getCategoryAttribute(): ?Category
     {
-        return $this->primaryCategories->first() ?? null;
+        return $this->primaryCategories->first();
     }
 
     public function coverImage()

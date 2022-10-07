@@ -266,7 +266,7 @@ class PostService
 
     public function getRelatedArticles(Post $post): mixed
     {
-        $categoryId = $post->category()->id ?? null;
+        $categoryId = $post->category->id ?? null;
 
         if ($categoryId) {
             return Post::select([
