@@ -26,6 +26,7 @@ class Post extends BaseModel implements PublishableInterface
         'meta_description',
         'meta_title',
         'scheduled_at',
+        'published_at',
         'slug',
         'status',
         'title',
@@ -34,6 +35,7 @@ class Post extends BaseModel implements PublishableInterface
 
     protected $casts = [
         'scheduled_at' => 'datetime',
+        'published_at' => 'datetime',
     ];
 
     /* Relationship: */
