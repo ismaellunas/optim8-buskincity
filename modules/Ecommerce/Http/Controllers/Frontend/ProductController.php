@@ -3,7 +3,6 @@
 namespace Modules\Ecommerce\Http\Controllers\Frontend;
 
 use App\Http\Controllers\CrudController;
-use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -70,12 +69,10 @@ class ProductController extends CrudController
         $minDate = $this->productEventService->minBookableDate();
         $maxDate = $this->productEventService->maxBookableDate($product);
 
-        $disabledDates = $this->eventService->disabledDates($schedule, $minDate, $maxDate);
-
         return Inertia::render('Ecommerce::FrontendProductShow', $this->getData([
             'title' => $product->translateAttribute('name', config('app.locale')),
-            'description' => $product->sku,
-            'disabledDates' => $disabledDates,
+            'allowedDatesRouteName' => $this->productEventService->allowedDatesRouteName(),
+            'availableTimesRouteName' => $this->productEventService->availableTimesRouteName(),
             'event' => $this->productEventService->detailResource($product),
             'maxDate' => $maxDate->toDateString(),
             'minDate' => $minDate->toDateString(),
@@ -88,9 +85,17 @@ class ProductController extends CrudController
     {
         $schedule = $product->eventSchedule;
 
-        return $this->eventService->availableTimes(
+        return $this->eventService->availableTimes($schedule, $dateTime);
+    }
+
+    public function allowedDates(Product $product, string $month, string $year)
+    {
+        $schedule = $product->eventSchedule;
+
+        return $this->eventService->allowedDates(
             $schedule,
-            Carbon::parse($dateTime)
+            $month,
+            $year
         );
     }
 }

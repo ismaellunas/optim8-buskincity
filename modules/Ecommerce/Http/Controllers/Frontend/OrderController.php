@@ -14,7 +14,6 @@ use Modules\Ecommerce\Events\EventRescheduled;
 use Modules\Ecommerce\Http\Requests\EventBookRequest;
 use Modules\Ecommerce\Http\Requests\OrderCancelRequest;
 use Modules\Ecommerce\Http\Requests\OrderRescheduleRequest;
-use Modules\Ecommerce\Services\EventService;
 use Modules\Ecommerce\Services\OrderService;
 use Modules\Ecommerce\Services\ProductEventService;
 
@@ -23,23 +22,15 @@ class OrderController extends CrudController
     protected $title = "Order";
     protected $baseRouteName = "ecommerce.orders";
 
-    private $eventService;
     private $orderService;
     private $productEventService;
 
     public function __construct(
-        EventService $eventService,
         OrderService $orderService,
         ProductEventService $productEventService
     ) {
-        $this->eventService = $eventService;
         $this->orderService = $orderService;
         $this->productEventService = $productEventService;
-    }
-
-    private function availableTimesRouteName(): string
-    {
-        return "ecommerce.products.available-times";
     }
 
     public function index()
@@ -95,21 +86,18 @@ class OrderController extends CrudController
     {
         $eventLine = $order->firstEventLine;
         $product = $eventLine->purchasable->product;
-        $schedule = $product->eventSchedule;
 
         $minDate = $this->productEventService->minBookableDate();
         $maxDate = $this->productEventService->maxBookableDate($product);
-
-        $disabledDates = $this->eventService->disabledDates($schedule, $minDate, $maxDate);
 
         return Inertia::render('Ecommerce::FrontendOrderReschedule', $this->getData([
             'title' => 'Reschedule Event',
             'order' => $this->orderService->getFrontendRecord($order),
             'minDate' => $minDate->toDateString(),
             'maxDate' => $maxDate->toDateString(),
-            'disabledDates' => $disabledDates,
             'timezone' => $eventLine->latestEvent->schedule->timezone,
-            'availableTimesRouteName' => $this->availableTimesRouteName(),
+            'allowedDatesRouteName' => $this->productEventService->allowedDatesRouteName(),
+            'availableTimesRouteName' => $this->productEventService->availableTimesRouteName(),
         ]));
     }
 

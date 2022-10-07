@@ -48,6 +48,10 @@ Route::
             ->name('products.events.update')
             ->can('update', 'product');
 
+        Route::get('/products/{product}/allowed-dates/{month}/{year}', [FrontendProductController::class, 'allowedDates'])
+            ->name('products.allowed-dates')
+            ->can('update', 'product');
+
         Route::resource('/orders', OrderController::class)
             ->only(['index', 'show']);
 
@@ -90,6 +94,10 @@ Route::
 
         Route::get('/products/{product}/available-times/{date}', [FrontendProductController::class, 'availableTimes'])
             ->name('products.available-times')
+            ->can('showFrontendProductEvent', 'product');
+
+        Route::get('/products/{product}/allowed-dates/{month}/{year}', [FrontendProductController::class, 'allowedDates'])
+            ->name('products.allowed-dates')
             ->can('showFrontendProductEvent', 'product');
 
         Route::get('/orders/{order}/reschedule', [FrontendOrderController::class, 'reschedule'])
