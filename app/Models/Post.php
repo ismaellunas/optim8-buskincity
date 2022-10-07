@@ -188,10 +188,6 @@ class Post extends BaseModel implements PublishableInterface
 
     public function getCategoryNames(): string
     {
-        if (!$this->categories->isEmpty()) {
-            return implode(", ", $this->categories->pluck('name')->toArray());
-        }
-
-        return '';
+        return $this->categories->implode('name', ', ');
     }
 }
