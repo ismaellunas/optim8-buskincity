@@ -69,7 +69,7 @@ class PostController extends Controller
             'readingTime' => $this->postService->readingTime($post->plain_text_content),
             'tableOfContents' => $this->postService->tableOfContents($post->content),
             'publishedOn' => __('Published on :date', [
-                'date' => $post->created_at->format(config('constants.format.date_post')),
+                'date' => $post->published_at->format(config('constants.format.date_post')),
             ]),
             'lastUpdatedOn' => __('Last updated on :date', [
                 'date' => $post->updated_at->format(config('constants.format.date_post')),
