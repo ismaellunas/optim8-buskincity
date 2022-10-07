@@ -274,7 +274,9 @@ class PostService
                     'cover_image_id'
                 ])
                 ->with([
-                    'categories',
+                    'categories.translations' => function ($q) {
+                        $q->select(['id', 'name']);
+                    },
                     'coverImage',
                 ])
                 ->published()
