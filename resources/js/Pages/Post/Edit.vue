@@ -24,7 +24,7 @@
     import AppLayout from '@/Layouts/AppLayout';
     import PostForm from '@/Pages/Post/Form';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import { map } from 'lodash';
+    import { map, find } from 'lodash';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
     import { success as successAlert } from '@/Libs/alert';
 
@@ -47,8 +47,12 @@
         },
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
+            const primaryCategory = find(props.post.categories, function (category) {
+                return category.pivot.is_primary;
+            });
             const postForm = {
                 categories: map(props.post.categories, 'id'),
+                primary_category: primaryCategory?.id ?? null,
                 content: props.post.content,
                 cover_image_id: props.post.cover_image_id,
                 excerpt: props.post.excerpt,

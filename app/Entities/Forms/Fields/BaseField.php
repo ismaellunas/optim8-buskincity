@@ -124,7 +124,10 @@ abstract class BaseField
                 return false;
             }
 
-            if (!$author->hasRole(config('permission.super_admin_role'))) {
+            if (
+                !($author->hasRole(config('permission.role_names.super_admin'))
+                || $author->hasRole(config('permission.role_names.admin')))
+            ) {
                 return $author->hasRole($this->roles);
             }
         }

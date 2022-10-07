@@ -45,12 +45,22 @@ class PostSeeder extends Seeder
         Post::factory()
             ->count(3)
             ->for($adminUser, 'author')
+            ->state(new Sequence(...$posts))
+            ->hasAttached($category, [
+                'is_primary' => true
+            ])
+            ->fakeContent()
+            ->create();
+
+        Post::factory()
+            ->count(10)
+            ->for($adminUser, 'author')
             ->state(new Sequence(
-                $posts[0],
-                $posts[1],
-                $posts[2],
+                fn () => ['status' => Post::STATUS_PUBLISHED],
             ))
-            ->hasAttached($category)
+            ->hasAttached($category, [
+                'is_primary' => true
+            ])
             ->fakeContent()
             ->create();
     }

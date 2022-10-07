@@ -16,6 +16,21 @@ class ProductEventService
 {
     private $timezones;
 
+    public function availableTimesRouteName(): string
+    {
+        return "ecommerce.products.available-times";
+    }
+
+    public function availableTimesOrderRouteName(): string
+    {
+        return "admin.ecommerce.orders.available-times";
+    }
+
+    public function allowedDatesRouteName(): string
+    {
+        return "ecommerce.products.allowed-dates";
+    }
+
     public function durationOptions(): Collection
     {
         return collect([

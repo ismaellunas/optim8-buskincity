@@ -72,6 +72,26 @@
                                     {{ category.value }}
                                 </biz-button>
                             </div>
+
+                            <p>Select The Primary Category</p>
+                            <biz-form-select
+                                v-model="form.primary_category"
+                                class="is-fullwidth"
+                                placeholder="- Select -"
+                                :message="error('primary_category')"
+                            >
+                                <template
+                                    v-for="category in sortedCategoryOptions"
+                                    :key="category.id"
+                                >
+                                    <option
+                                        v-if="form.categories.includes(category.id)"
+                                        :value="category.id"
+                                    >
+                                        {{ category.value }}
+                                    </option>
+                                </template>
+                            </biz-form-select>
                         </div>
 
                         <div class="field">
@@ -378,6 +398,10 @@
                     pull(this.form.categories, category.id);
                 } else {
                     this.form.categories.push(category.id);
+                }
+
+                if (isEmpty(this.form.categories)) {
+                    this.form.primary_category = null;
                 }
             },
             onShownModal() { /* @override */
