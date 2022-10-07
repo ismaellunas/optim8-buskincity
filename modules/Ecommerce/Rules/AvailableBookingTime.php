@@ -2,7 +2,6 @@
 
 namespace Modules\Ecommerce\Rules;
 
-use Carbon\Carbon;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\Rule;
 use Modules\Ecommerce\Services\EventService;
@@ -23,7 +22,7 @@ class AvailableBookingTime implements Rule, DataAwareRule
     {
         $availableTimes = $this->service->availableTimes(
             $this->schedule,
-            Carbon::parse($this->data['date'])
+            $this->data['date']
         );
 
         return $availableTimes->contains($value);
