@@ -47,6 +47,7 @@
 
             const postForm = {
                 categories: [],
+                primary_category: null,
                 content: null,
                 cover_image_id: null,
                 excerpt: null,

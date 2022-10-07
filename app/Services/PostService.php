@@ -9,6 +9,8 @@ use App\Models\{
 };
 use App\Services\TranslationService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class PostService
 {
@@ -176,6 +178,10 @@ class PostService
         string $locale = null
     ): ?Post {
         return Post::where('slug', $slug)
+            ->with([
+                'author',
+                'coverImage',
+            ])
             ->when($locale, function ($query) use ($locale) {
                 $query->where('locale', $locale);
             })
@@ -213,5 +219,76 @@ class PostService
             ->first();
 
         return $language ?? [];
+    }
+
+    public function readingTime(string $text = ""): float
+    {
+        $totalWords = str_word_count($text);
+
+        $minutes = ceil($totalWords / config('constants.reading_time_per_minute'));
+        $minutes = max(1, $minutes);
+
+        return $minutes;
+    }
+
+    public function tableOfContents(string $content = null): Collection
+    {
+        $tables = collect([]);
+
+        preg_match_all('#<h2.*?>(.*?)</h2>#i',$content, $found);
+
+        if (!empty($found[1])) {
+            foreach ($found[1] as $headingText) {
+                $tables->push([
+                    'tag' => '#' . Str::slug($headingText),
+                    'text' => $headingText
+                ]);
+            }
+        }
+
+        return $tables;
+    }
+
+    public function transformContent(string $content = null): ?string
+    {
+        $tableOfContents = $this->tableOfContents($content);
+
+        $i = 0;
+        while (strpos($content, '<h2>') !== false) {
+            $headerId = Str::slug($tableOfContents[$i++]['text']);
+            $content = preg_replace('/<h2>/', '<h2 id="' . $headerId . '">', $content, 1);
+        }
+
+        return $content;
+    }
+
+    public function getRelatedArticles(Post $post): mixed
+    {
+        $categoryId = $post->category->id ?? null;
+
+        if ($categoryId) {
+            return Post::select([
+                    'id',
+                    'title',
+                    'slug',
+                    'cover_image_id'
+                ])
+                ->with([
+                    'categories.translations' => function ($q) {
+                        $q->select(['id', 'name']);
+                    },
+                    'coverImage',
+                ])
+                ->published()
+                ->whereHas('primaryCategories', function ($q) use ($categoryId) {
+                    $q->where('category_id', $categoryId);
+                })
+                ->whereNotIn('id', [$post->id])
+                ->orderBy('id', 'DESC')
+                ->limit(3)
+                ->get();
+        }
+
+        return collect([]);
     }
 }

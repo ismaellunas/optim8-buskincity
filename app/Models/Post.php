@@ -44,7 +44,19 @@ class Post extends BaseModel implements PublishableInterface
 
     public function categories()
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(Category::class)
+            ->withPivot('is_primary');
+    }
+
+    public function primaryCategories()
+    {
+        return $this->belongsToMany(Category::class)
+            ->wherePivot('is_primary', true);
+    }
+
+    public function getCategoryAttribute(): ?Category
+    {
+        return $this->primaryCategories->first();
     }
 
     public function coverImage()
@@ -111,6 +123,11 @@ class Post extends BaseModel implements PublishableInterface
         );
     }
 
+    public function getCoverImageUrlAttribute(): ?string
+    {
+        return $this->coverImage->file_url ?? null;
+    }
+
     public static function getStatusOptions(): array
     {
         return [
@@ -156,8 +173,16 @@ class Post extends BaseModel implements PublishableInterface
         return $this->save();
     }
 
-    public function syncCategories(array $categoryIds)
+    public function syncCategories(array $categoryIds, string $primaryCategoryId = null)
     {
-        return $this->categories()->sync($categoryIds);
+        $categories = [];
+
+        foreach ($categoryIds as $categoryId) {
+            $categories[$categoryId] = [
+                'is_primary' => $categoryId == $primaryCategoryId
+            ];
+        }
+
+        return $this->categories()->sync($categories);
     }
 }
