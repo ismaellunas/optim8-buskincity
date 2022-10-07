@@ -25,6 +25,7 @@ class CreateCategoryPostTable extends Migration
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->boolean('is_primary')->default(false);
             $table->unique(['category_id', 'post_id']);
         });
     }

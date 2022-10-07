@@ -49,12 +49,8 @@ class PostListItem extends Component
         return !$this->post->categories->isEmpty();
     }
 
-    public function firstCategoryName(): string
+    public function categoryNames(): string
     {
-        if ($this->hasCategory) {
-            return $this->post->categories->first()->name;
-        }
-
-        return '';
+        return $this->post->getCategoryNames();
     }
 }

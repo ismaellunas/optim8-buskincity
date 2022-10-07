@@ -12,6 +12,8 @@ class UserProfileLocation
     protected $entity;
     private $savedResults;
 
+    protected $location = 'admin.profile.show';
+
     public function __construct($userId = null)
     {
         $this->entityId = $userId;
@@ -55,8 +57,22 @@ class UserProfileLocation
 
     public function canBeAccessedByEntity(array $locations = []): bool
     {
-        if (!$this->entity) {
+        if (is_null($this->entity)) {
             return false;
+        }
+
+        $location = collect($locations)->where('name', $this->location)->first();
+
+        if ($location) {
+            if (!empty($location['visibility']['not_in_roles'])) {
+                if ($this->entity->hasRole($location['visibility']['not_in_roles'])) {
+                    return false;
+                }
+            }
+
+            if (!empty($location['visibility']['roles'])) {
+                return $this->entity->hasRole($location['visibility']['roles']);
+            }
         }
 
         return true;
