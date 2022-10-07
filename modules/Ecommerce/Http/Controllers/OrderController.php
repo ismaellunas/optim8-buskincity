@@ -115,7 +115,7 @@ class OrderController extends CrudController
         $product = $eventLine->purchasable->product;
         $schedule = $product->eventSchedule;
 
-        return $this->eventService->availableTimes($schedule, Carbon::parse($date));
+        return $this->eventService->availableTimes($schedule, $date);
     }
 
     public function rescheduleUpdate(OrderRescheduleRequest $request, Order $order)
