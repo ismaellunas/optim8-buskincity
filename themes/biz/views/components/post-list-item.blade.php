@@ -15,7 +15,7 @@
                 <div class="content">
                     <p>
                         <span @class(['mr-2'=> $hasCategory])>
-                            {{ $firstCategoryName }}
+                            {{ $categoryNames }}
                         </span>
 
                         <x-tag class="is-info">

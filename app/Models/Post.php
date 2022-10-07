@@ -185,4 +185,9 @@ class Post extends BaseModel implements PublishableInterface
 
         return $this->categories()->sync($categories);
     }
+
+    public function getCategoryNames(): string
+    {
+        return $this->categories->implode('name', ', ');
+    }
 }

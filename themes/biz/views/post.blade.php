@@ -131,7 +131,7 @@
                                         <a href="{{ route('blog.show', $article->slug) }}">{{ $article->title }}</a>
                                     </h2>
                                     <div class="content is-size-7">
-                                        <p>{{ $article->categories->implode('name', ', ') }}</p>
+                                        <p>{{ $article->getCategoryNames() }}</p>
                                     </div>
                                 </div>
                             </article>
