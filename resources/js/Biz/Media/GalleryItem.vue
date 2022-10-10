@@ -3,7 +3,7 @@
         <div class="card-image px-2 pt-2 has-text-centered">
             <biz-image
                 v-if="isImage"
-                :alt="medium.file_name_without_extension"
+                :alt="medium.display_file_name"
                 :src="medium.thumbnail_url"
             />
             <span
@@ -21,7 +21,7 @@
                 class="content"
                 style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
             >
-                <p>{{ medium.file_name_without_extension }}</p>
+                <p>{{ medium.display_file_name }}</p>
             </div>
         </div>
 
@@ -58,7 +58,10 @@
                 :url="medium.file_url"
             />
 
-            <slot name="actions" :medium="medium" />
+            <slot
+                name="itemActions"
+                :medium-item="medium"
+            />
         </footer>
     </div>
 </template>
@@ -80,11 +83,11 @@
             MixinMediaItem,
         ],
         props: {
-            isDeleteEnabled: {type: Boolean, default: true},
-            isDownloadEnabled: {type: Boolean, default: true},
-            isEditEnabled: {type: Boolean, default: true},
-            isPreviewEnabled: {type: Boolean, default: true},
-            medium: Object,
+            isDeleteEnabled: { type: Boolean, default: true },
+            isDownloadEnabled: { type: Boolean, default: true },
+            isEditEnabled: { type: Boolean, default: true },
+            isPreviewEnabled: { type: Boolean, default: true },
+            medium: { type: Object, default: () => {}},
         },
         emits: [
             'on-delete-clicked',

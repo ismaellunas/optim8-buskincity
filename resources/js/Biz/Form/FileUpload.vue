@@ -6,19 +6,13 @@
             {{ label }}
         </template>
 
-        <div
-            v-for="medium in listMedia"
-            :key="medium.id"
-            class="columns mb-0"
-        >
-            <div class="column is-full">
-                <component
-                    :is="mediaComponent"
-                    :medium="medium"
-                    @on-delete-clicked="deleteMedium($event)"
-                />
-            </div>
-        </div>
+        <component
+            :is="mediaComponent"
+            :media="listMedia"
+            :is-edit-enabled="false"
+            :is-scrolled="true"
+            @on-delete-clicked="onDeleteMedium"
+        />
 
         <div class="control">
             <file-pond
@@ -66,6 +60,7 @@
     import BizFormField from '@/Biz/Form/Field';
     import BizInputError from '@/Biz/InputError';
     import BizMediaTextItem from '@/Biz/Media/TextItem';
+    import BizMediaGallery from '@/Biz/Media/Gallery';
     import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
     import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
     import FilePondPluginImagePreview from "filepond-plugin-image-preview";
@@ -89,6 +84,7 @@
             BizFormField,
             BizInputError,
             BizMediaTextItem,
+            BizMediaGallery,
             FilePond,
         },
 
@@ -121,7 +117,7 @@
             },
             mediaComponent: {
                 type: String,
-                default: 'BizMediaTextItem',
+                default: 'BizMediaGallery',
             },
             disabled: {
                 type: Boolean,
@@ -224,7 +220,7 @@
                 this.fileUploadField.files = tmpFiles;
             },
 
-            deleteMedium(medium) {
+            onDeleteMedium(medium) {
                 const self = this;
 
                 confirmDelete().then((result) => {
