@@ -59,8 +59,8 @@
 <script>
     import BizFormField from '@/Biz/Form/Field';
     import BizInputError from '@/Biz/InputError';
-    import BizMediaTextItem from '@/Biz/Media/TextItem';
     import BizMediaGallery from '@/Biz/Media/Gallery';
+    import BizMediaText from '@/Biz/Media/Text';
     import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
     import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
     import FilePondPluginImagePreview from "filepond-plugin-image-preview";
@@ -83,8 +83,8 @@
         components: {
             BizFormField,
             BizInputError,
-            BizMediaTextItem,
             BizMediaGallery,
+            BizMediaText,
             FilePond,
         },
 
