@@ -291,7 +291,7 @@ class PostService
                     $q->where('category_id', $categoryId);
                 })
                 ->whereNotIn('id', [$post->id])
-                ->orderBy('id', 'DESC')
+                ->inRandomOrder()
                 ->limit(3)
                 ->get();
         }
