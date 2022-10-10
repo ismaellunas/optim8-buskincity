@@ -277,7 +277,12 @@ class PostService
                 ])
                 ->with([
                     'categories.translations' => function ($q) {
-                        $q->select(['id', 'name']);
+                        $q->select([
+                            'id',
+                            'name',
+                            'locale',
+                            'category_id'
+                        ]);
                     },
                     'coverImage',
                 ])
