@@ -13,20 +13,22 @@
                     v-else
                     class="media-left"
                     style="width: 64px;"
-                >
-                </div>
+                />
 
                 <div class="media-content">
                     <div class="content">
                         <p>
                             <span :class="{ 'mr-2': hasCategory }">
-                                {{ firstCategoryName }}
+                                {{ record.category_names }}
                             </span>
                             <biz-tag class="is-info">
                                 {{ record.locale.toUpperCase() }}
                             </biz-tag>
                             <br>
-                            <a :href="previewLink" target="_blank">
+                            <a
+                                :href="previewLink"
+                                target="_blank"
+                            >
                                 <strong>{{ record.title }}</strong>
                             </a>
                             <br>
@@ -86,11 +88,11 @@
             MixinPostItem,
         ],
         props: {
-            editLink: String,
-            previewLink: String,
+            editLink: { type: String, default: null },
             isDeleteEnabled: {type: Boolean, default: true},
             isEditEnabled: {type: Boolean, default: true},
-            record: Object,
+            previewLink: { type: String, default: null },
+            record: { type: Object, required: true },
         },
         emits: [
             'on-delete-clicked',

@@ -20,7 +20,7 @@
                 <div class="media-content">
                     <p class="subtitle is-6">
                         <span :class="{ 'mr-2': hasCategory }">
-                            {{ firstCategoryName }}
+                            {{ record.category_names }}
                         </span>
                         <biz-tag class="is-info">
                             {{ record.locale.toUpperCase() }}
@@ -94,11 +94,11 @@
             MixinPostItem,
         ],
         props: {
-            editLink: String,
-            previewLink: String,
+            editLink: { type: String, default: null },
             isDeleteEnabled: {type: Boolean, default: true},
             isEditEnabled: {type: Boolean, default: true},
-            record: Object,
+            previewLink: { type: String, default: null },
+            record: { type: Object, required: true },
         },
         emits: [
             'on-delete-clicked',
