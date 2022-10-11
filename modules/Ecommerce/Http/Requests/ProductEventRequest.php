@@ -5,6 +5,7 @@ namespace Modules\Ecommerce\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Modules\Ecommerce\Services\ProductEventService;
+use Modules\Ecommerce\Rules\NoOverlappingTime;
 
 class ProductEventRequest extends FormRequest
 {
@@ -23,6 +24,7 @@ class ProductEventRequest extends FormRequest
                 'date_format:H:i',
                 'after:date_overrides.*.times.*.started_time'
             ],
+            'date_overrides.*.times.*' => [new NoOverlappingTime()],
             'duration' => [
                 'required',
                 Rule::in(
@@ -48,6 +50,7 @@ class ProductEventRequest extends FormRequest
                 'after:weekly_hours.*.hours.*.started_time',
             ],
             'weekly_hours.*.is_available' => ['boolean'],
+            'weekly_hours.*.hours.*' => [new NoOverlappingTime()],
             'location.address' => ['nullable', 'max:500'],
             'location.latitude' => ['nullable', 'numeric'],
             'location.longitude' => ['nullable', 'numeric'],
