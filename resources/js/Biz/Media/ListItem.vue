@@ -54,8 +54,8 @@
                 />
 
                 <slot
-                    name="actions"
-                    :medium="medium"
+                    name="itemActions"
+                    :medium-item="medium"
                 />
             </div>
         </td>
