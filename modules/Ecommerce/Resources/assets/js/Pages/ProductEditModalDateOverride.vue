@@ -39,56 +39,25 @@
                 </div>
 
                 <div class="columns">
-                    <div
-                        v-if="timeRanges.length > 0"
-                        class="column"
-                    >
-                        <div
-                            v-for="(timeRange, index) in timeRanges"
-                            :key="timeRange.uid"
-                            class="columns"
+                    <div class="column">
+                        <schedule-rule-times
+                            ref="scheduleRuleTime"
+                            v-model="timeRanges"
                         >
-                            <div class="column is-narrow">
-                                <div class="event-time-range">
-                                    <biz-date-time
-                                        v-model="timeRanges[index].timeRange"
-                                        type="time"
-                                        dialog
-                                        range
-                                        :options="{color: 'info'}"
-                                        @input="onTimeInput(timeRanges[index], $event)"
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="column is-narrow">
-                                <div class="buttons is-pulled-left">
-                                    <biz-button-icon
-                                        type="button"
-                                        class="is-danger"
-                                        :icon="icon.remove"
-                                        @click="removeTimeRange(timeRanges, index)"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div
-                        v-else
-                        class="column"
-                    >
-                        <biz-tag class="is-warning is-medium is-italic">
-                            Unavailable
-                        </biz-tag>
+                            <template #emptyTimeRange>
+                                <biz-tag class="is-warning is-medium is-italic">
+                                    Unavailable
+                                </biz-tag>
+                            </template>
+                        </schedule-rule-times>
                     </div>
 
                     <div class="column is-2">
                         <biz-button-icon
                             class="is-info"
                             type="button"
-                            :icon="icon.add"
-                            @click="addTime(timeRanges)"
+                            :icon="iconAdd"
+                            @click="addTime()"
                         />
                     </div>
                 </div>
@@ -125,15 +94,15 @@
 <script>
     import BizButton from '@/Biz/Button';
     import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizDateTime from '@/Biz/DateTime';
+    import BizDatepicker from '@/Biz/Datepicker';
     import BizModalCard from '@/Biz/ModalCard';
     import BizTag from '@/Biz/Tag';
-    import BizDatepicker from '@/Biz/Datepicker';
-    import icon from '@/Libs/icon-class';
+    import ScheduleRuleTimes from './ScheduleRuleTimes';
     import moment from 'moment';
-    import { clone, cloneDeep, padStart, difference } from 'lodash';
-    import { generateElementId, isBlank, useModelWrapper } from '@/Libs/utils';
-    import { reactive, ref } from 'vue';
+    import { add as iconAdd } from '@/Libs/icon-class';
+    import { cloneDeep, difference } from 'lodash';
+    import { ref } from 'vue';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'ProductEditModalDateOverride',
@@ -141,17 +110,15 @@
         components: {
             BizButton,
             BizButtonIcon,
-            BizDateTime,
             BizModalCard,
             BizTag,
             BizDatepicker,
+            ScheduleRuleTimes,
         },
-
-        mixins: [
-        ],
 
         props: {
             modelValue: { type: Object, required: true },
+            formatDateIso: { type: String, default: 'YYYY-MM-DD' },
         },
 
         emits: [
@@ -162,64 +129,38 @@
         setup(props, { emit }) {
             const dateOverrides = useModelWrapper(props, emit);
 
-            let dates = cloneDeep(props.modelValue.dates);
+            const dates = cloneDeep(props.modelValue.dates);
 
-            let timeRanges = [];
-
-            if (! isBlank(props.modelValue.times)) {
-                timeRanges = cloneDeep(props.modelValue.times);
-
-                timeRanges.forEach((time) => {
-                    let startTimeText = time.started_time.split(':');
-                    let endTimeText = time.ended_time.split(':');
-
-                    time.timeRange = [
-                        new Date(0,0,0,startTimeText[0],startTimeText[1]),
-                        new Date(0,0,0,endTimeText[0],endTimeText[1]),
-                    ];
-                });
-            }
+            const timeRanges = cloneDeep(props.modelValue.times);
 
             return {
-                icon,
-                defaultTime: {
-                    started_time: "09:00",
-                    ended_time: "17:00",
-                    timeRange: [
-                        new Date(0,0,0,9,0),
-                        new Date(0,0,0,17,0),
-                    ],
-                },
                 dateOverrides,
                 dates: ref(dates),
-                timeRanges: ref(timeRanges),
+                iconAdd,
                 minDate: moment().toDate(),
+                timeRanges: ref(timeRanges),
             };
         },
 
         computed: {
             hasDateSelected() {
-                return ! (typeof this.dates == undefined || this.dates == null);
-            }
+                return this.dates && this.dates.length > 0;
+            },
         },
 
         methods: {
-            addTime(times) {
-                times.push(cloneDeep(this.defaultTime));
+            dateToIso(date) {
+                return moment(date).format(this.formatDateIso)
             },
 
-            removeTimeRange(hours, index) {
-                hours.splice(index, 1);
+            addTime() {
+                this.$refs.scheduleRuleTime.addTimeRange();
             },
 
             apply() {
-                this.timeRanges.forEach((time) => {
-                    delete time.timeRange;
-                });
-
                 this.dateOverrides.unusedDates = difference(
-                    this.dateOverrides.dates.map((date) => moment(date).format('YYYY-MM-DD')),
-                    this.dates.map((date) => moment(date).format('YYYY-MM-DD'))
+                    this.dateOverrides.dates.map(this.dateToIso),
+                    this.dates.map(this.dateToIso)
                 );
 
                 this.dateOverrides.times = this.timeRanges;
@@ -233,16 +174,6 @@
 
             close() {
                 this.$emit('close');
-            },
-
-            onTimeInput(hour, times) {
-                ['started_time', 'ended_time'].forEach((timeKey, index) => {
-                    hour[timeKey] = (
-                        padStart(times[index].getHours(), 2 , '0')
-                        + ':'
-                        + padStart(times[index].getMinutes(), 2, '0')
-                    );
-                });
             },
         },
     };

@@ -1,6 +1,9 @@
 <template>
     <div>
-        <biz-error-notifications :errors="$page.props.errors" />
+        <biz-error-notifications
+            :errors="$page.props.errors"
+            :bags="['default']"
+        />
 
         <biz-provide-inject-tabs
             v-model="activeTab"
@@ -210,54 +213,25 @@
                                                     <div class="column is-2">
                                                         <biz-checkbox
                                                             v-model:checked="eventForm.weekly_hours[index].is_available"
+                                                            @change="checkTimes(index)"
                                                         >
                                                             &nbsp;{{ weekday }}
                                                         </biz-checkbox>
                                                     </div>
                                                     <div class="column">
-                                                        <div class="columns is-multiline">
-                                                            <div
-                                                                v-for="(hour, hourIdx) in eventForm.weekly_hours[index].hours"
-                                                                :key="hour.uid"
-                                                                class="column is-full"
-                                                            >
-                                                                <div class="columns is-multiline">
-                                                                    <div class="column is-9">
-                                                                        <div class="event-time-range">
-                                                                            <biz-date-time
-                                                                                v-model="eventForm.weekly_hours[index].hours[hourIdx].timeRange"
-                                                                                type="time"
-                                                                                class="is-danger"
-                                                                                :options="timeRangeOptions"
-                                                                                range
-                                                                                @input="onTimeInput(eventForm.weekly_hours[index].hours[hourIdx], $event)"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="column is-3">
-                                                                        <biz-button-icon
-                                                                            type="button"
-                                                                            class="is-danger"
-                                                                            :icon="icon.remove"
-                                                                            @click="removeTimeRange(eventForm.weekly_hours[index].hours, hourIdx)"
-                                                                        />
-                                                                    </div>
-
-                                                                    <div
-                                                                        v-if="error('weekly_hours.'+index+'.hours.'+hourIdx+'.ended_time', 'updateEvent')"
-                                                                        class="help is-danger mt-0 ml-2"
-                                                                    >
-                                                                        {{ error(`weekly_hours.${index}.hours.${hourIdx}.ended_time`, 'updateEvent') }}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                        <schedule-rule-times
+                                                            :ref="'scheduleRuleTime_'+index"
+                                                            v-model="eventForm.weekly_hours[index].hours"
+                                                            :errors="eventErrors"
+                                                            :error-key-prefix="`weekly_hours.${index}.hours`"
+                                                            @time-range-removed="timeRangeRemoved(index)"
+                                                        />
                                                     </div>
                                                     <div class="column is-2">
                                                         <biz-button-icon
                                                             type="button"
                                                             :icon="icon.add"
-                                                            @click="addTimeRange(eventForm.weekly_hours[index].hours)"
+                                                            @click="addTimeRange(index)"
                                                         />
                                                     </div>
                                                 </div>
@@ -424,7 +398,6 @@
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizCheckbox from '@/Biz/Checkbox';
-    import BizDateTime from '@/Biz/DateTime';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormAssignUser from '@/Biz/Form/AssignUser';
     import BizFormInput from '@/Biz/Form/Input';
@@ -441,11 +414,13 @@
     import MixinHasTab from '@/Mixins/HasTab';
     import ProductEditModalDateOverride from './ProductEditModalDateOverride';
     import ProductForm from './ProductForm';
+    import ScheduleRuleTimes from './ScheduleRuleTimes';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
-    import { cloneDeep, forEach, padStart, map, sortBy, isEqual, groupBy, intersection, remove, uniq } from 'lodash';
+    import { cloneDeep, forEach, map, sortBy, isEqual, groupBy, intersection, remove, uniq } from 'lodash';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { generateElementId } from '@/Libs/utils';
+    import { ref } from 'vue';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -454,7 +429,6 @@
             BizButtonIcon,
             BizButtonLink,
             BizCheckbox,
-            BizDateTime,
             BizErrorNotifications,
             BizFormAssignUser,
             BizFormInput,
@@ -467,6 +441,7 @@
             BizTag,
             ProductEditModalDateOverride,
             ProductForm,
+            ScheduleRuleTimes,
         },
 
         mixins: [
@@ -495,7 +470,7 @@
             managers: { type: Array, default: () => [] },
             googleApiKey: { type: String, default: null },
             formatDateIso: { type: String, default: 'YYYY-MM-DD' },
-            formatDateUser: { type: String, default: 'D MM YYYY' },
+            formatDateUser: { type: String, default: 'D MMM YYYY' },
         },
 
         setup(props, { emit }) {
@@ -520,41 +495,17 @@
                 date_overrides: cloneDeep(props.dateOverrides),
             }
 
-            for (const dayNumber in props.weeklyHours) {
-                let dayHours = eventForm.weekly_hours[dayNumber].hours;
-
-                props.weeklyHours[dayNumber]['hours'].forEach((hour, index) => {
-                    let startTimeText = hour.started_time.split(':');
-                    let endTimeText = hour.ended_time.split(':');
-
-                    dayHours[index].timeRange = [
-                        new Date(0,0,0,startTimeText[0],startTimeText[1]),
-                        new Date(0,0,0,endTimeText[0],endTimeText[1]),
-                    ];
-
-                    dayHours[index].uid = hour.id;
-                });
-            }
-
             return {
                 form: useForm(form),
                 eventForm: useForm(eventForm),
                 icon,
+                eventErrors: ref({}),
             };
         },
 
         data() {
             return {
                 activeTab: 0,
-                defaultTimeRange: [
-                    new Date(0,0,0,9,0),
-                    new Date(0,0,0,17,0),
-                ],
-                timeRangeOptions: {
-                    color: 'link',
-                    startTime: new Date(0,0,0,9,0),
-                    endTime: new Date(0,0,0,17,0),
-                },
                 selectedDateOverrideBatch: null,
                 isMapOpen: false,
                 productManagers: this.managers,
@@ -570,7 +521,27 @@
 
                 const dateOverrideBatches = [];
 
-                sortBy(this.eventForm.date_overrides, ['started_date'])
+                const dateOverrides = this.eventForm.date_overrides.map((dateOverride, index) => {
+                    const errors = [];
+
+                    errors.push(
+                        self.error(`date_overrides.${index}.started_date`, errorBag),
+                    );
+
+                    dateOverride.times.forEach((time, timeIdx) => {
+                        errors.push(
+                            self.error(`date_overrides.${index}.times.${timeIdx}.started_time`, errorBag),
+                            self.error(`date_overrides.${index}.times.${timeIdx}.ended_time`, errorBag),
+                            self.error(`date_overrides.${index}.times.${timeIdx}`, errorBag),
+                        );
+                    });
+
+                    dateOverride.errors = errors.filter(Boolean);
+
+                    return dateOverride;
+                });
+
+                sortBy(dateOverrides, ['started_date'])
                     .filter((dateOverride) => !self.unusedDates.includes(dateOverride.started_date))
                     .forEach((rawDateOverride, index) => {
 
@@ -618,21 +589,6 @@
                                 dateOverride.batch = generateElementId();
                             }
                         }
-
-                        const errors = [];
-
-                        errors.push(
-                            self.error(`date_overrides.${index}.started_date`, errorBag),
-                        );
-
-                        dateOverride.times.forEach((time, timeIdx) => {
-                            errors.push(
-                                self.error(`date_overrides.${index}.times.${timeIdx}.started_time`, errorBag),
-                                self.error(`date_overrides.${index}.times.${timeIdx}.ended_time`, errorBag),
-                            )
-                        });
-
-                        dateOverride.errors = errors.filter(Boolean);
 
                         dateOverrideBatches.push(dateOverride);
                     });
@@ -700,34 +656,28 @@
                     onStart: () => self.onStartLoadingOverlay(),
                     onSuccess: (page) => {
                         self.eventForm.date_overrides = cloneDeep(page.props.dateOverrides);
+                        self.eventErrors = {};
+
                         successAlert(page.props.flash.message);
                     },
-                    onError: () => { oopsAlert() },
+                    onError: (errors) => {
+                        self.eventErrors = errors;
+
+                        oopsAlert();
+                    },
                     onFinish: () => self.onEndLoadingOverlay(),
                 });
             },
 
-            addTimeRange(hours) {
-                hours.push({
-                    started_time: "09:00",
-                    ended_time: "17:00",
-                    timeRange: cloneDeep(this.defaultTimeRange),
-                    uid: generateElementId(),
-                });
-            },
+            addTimeRange(index) {
+                const scheduleRuleTime = this.$refs['scheduleRuleTime_' + index];
+                scheduleRuleTime.addTimeRange();
 
-            removeTimeRange(hours, index) {
-                hours.splice(index, 1);
-            },
+                if (this.eventForm.weekly_hours[index].hours.length > 0) {
+                    this.eventForm.weekly_hours[index].is_available = true;
+                }
 
-            onTimeInput(hour, times) {
-                ['started_time', 'ended_time'].forEach((timeKey, index) => {
-                    hour[timeKey] = (
-                        padStart(times[index].getHours(), 2 , '0')
-                        + ':'
-                        + padStart(times[index].getMinutes(), 2, '0')
-                    );
-                });
+                this.eventErrors = {};
             },
 
             openDateOverrideModal(batch) {
@@ -873,6 +823,26 @@
                     onError: () => { oopsAlert() },
                     onFinish: () => self.onEndLoadingOverlay()
                 });
+            },
+
+            timeRangeRemoved(index) {
+                const day = this.eventForm.weekly_hours[index];
+
+                if (day.hours.length == 0) {
+                    day.is_available = false;
+                }
+
+                this.eventErrors = {};
+            },
+
+            checkTimes(index) {
+                const day = this.eventForm.weekly_hours[index];
+
+                if (! day.is_available) {
+                    day.hours = [];
+                } else if (day.hours.length == 0) {
+                    this.addTimeRange(index);
+                }
             },
         },
     };
