@@ -35,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('event_translations');
+        Schema::dropIfExists('space_event_translations');
     }
 };
