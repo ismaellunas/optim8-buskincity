@@ -78,7 +78,7 @@ class Space extends Model implements TranslatableContract
 
     public function events()
     {
-        return $this->morphMany(Event::class, 'eventable');
+        return $this->morphMany(SpaceEvent::class, 'eventable');
     }
 
     public function product()
