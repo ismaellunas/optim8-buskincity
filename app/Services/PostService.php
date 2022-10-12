@@ -277,7 +277,12 @@ class PostService
                 ])
                 ->with([
                     'categories.translations' => function ($q) {
-                        $q->select(['id', 'name']);
+                        $q->select([
+                            'id',
+                            'name',
+                            'locale',
+                            'category_id'
+                        ]);
                     },
                     'coverImage',
                 ])
@@ -286,7 +291,7 @@ class PostService
                     $q->where('category_id', $categoryId);
                 })
                 ->whereNotIn('id', [$post->id])
-                ->orderBy('id', 'DESC')
+                ->inRandomOrder()
                 ->limit(3)
                 ->get();
         }
