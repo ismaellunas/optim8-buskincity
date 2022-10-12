@@ -66,7 +66,7 @@
 
             props.moduleWidgets.forEach((widget) => {
                 if (widget.moduleName == 'Ecommerce') {
-                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import('@mod/Ecommerce/Resources/assets/js/Widgets/'+widget.componentName));
+                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import('@booking/Widgets/'+widget.componentName));
                 }
             });
 

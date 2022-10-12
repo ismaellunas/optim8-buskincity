@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Ecommerce\Emails;
+namespace Modules\Booking\Emails;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

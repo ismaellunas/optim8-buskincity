@@ -1,11 +1,10 @@
 <?php
 
-namespace Modules\Ecommerce\Http\Controllers\Frontend;
+namespace Modules\Booking\Http\Controllers\Frontend;
 
 use App\Http\Controllers\CrudController;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Services\EventService;
@@ -15,7 +14,7 @@ use Modules\Ecommerce\Services\ProductService;
 class ProductController extends CrudController
 {
     protected $title = "Product";
-    protected $baseRouteName = "ecommerce.products";
+    protected $baseRouteName = "booking.products";
 
     private $eventService;
     private $productEventService;
@@ -39,7 +38,7 @@ class ProductController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Ecommerce::FrontendProductIndex', $this->getData([
+        return Inertia::render('Booking::FrontendProductIndex', $this->getData([
             'title' => $this->getIndexTitle(),
             'pageQueryParams' => array_filter($request->only('term')),
             'products' => $this->productService->getFrontendRecords(
@@ -56,20 +55,11 @@ class ProductController extends CrudController
      */
     public function show(Product $product)
     {
-        $typeName = Str::title($product->productType->name);
-
-        $method = "product{$typeName}Show";
-
-        return $this->$method($product);
-    }
-
-    private function productEventShow(Product $product)
-    {
         $schedule = $product->eventSchedule;
         $minDate = $this->productEventService->minBookableDate();
         $maxDate = $this->productEventService->maxBookableDate($product);
 
-        return Inertia::render('Ecommerce::FrontendProductShow', $this->getData([
+        return Inertia::render('Booking::FrontendProductShow', $this->getData([
             'title' => $product->translateAttribute('name', config('app.locale')),
             'allowedDatesRouteName' => $this->productEventService->allowedDatesRouteName(),
             'availableTimesRouteName' => $this->productEventService->availableTimesRouteName(),

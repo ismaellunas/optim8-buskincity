@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Ecommerce\Emails;
+namespace Modules\Booking\Emails;
 
-use App\Models\Setting;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Ecommerce\Entities\Order;
+use Modules\Ecommerce\Enums\BookingStatus;
 
-class EventCanceled extends Mailable
+class EventReminder extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -33,35 +33,37 @@ class EventCanceled extends Mailable
     public function build()
     {
         $line = $this->order->firstEventLine;
-        $event = $line->latestEvent;
-        $schedule = $event->schedule;
+        $user = $this->order->user;
 
-        $eventDateTime = $event
+        $upcomingEvent = $line
+            ->events
+            ->where('status', BookingStatus::UPCOMING->value)
+            ->last();
+
+        $schedule = $upcomingEvent->schedule;
+
+        $eventDateTime = $upcomingEvent
             ->booked_at
             ->setTimezone($schedule->timezone);
 
-        $inviteeName = $this->order->user->fullName ?? null;
-        $productName = $line->purchasable->product->translateAttribute('name');
-        $template = Setting::key('booking_email_cancellation')->value('value');
+        $inviteeName = $user->fullName ?? null;
+        $productName = $line->purchasable->product->displayName;
 
         return $this
-            ->subject(__('Canceled: :productName with :inviteeName on :date', [
+            ->subject( __('Reminder: :inviteeName - :startedTime :date - :productName', [
+                'date' => $eventDateTime->format(config('ecommerce.format.date_event_email_title')),
+                'inviteeName' => $inviteeName,
                 'productName' => $productName,
-                'date' => $eventDateTime->format('j F Y'),
                 'startedTime' => $eventDateTime->format('H:i'),
-                'inviteeName' => $inviteeName,
             ]))
-            ->markdown('ecommerce::emails.event.canceled')
+            ->markdown('ecommerce::emails.event.reminder')
             ->with([
-                'duration' => $event->displayDuration,
+                'duration' => $upcomingEvent->displayDuration,
                 'eventDateTime' => $eventDateTime->format(config('ecommerce.format.date_event_email_body')),
-                'inviteeEmail' => $this->order->user->email,
-                'inviteeName' => $inviteeName,
                 'productName' => $productName,
-                'template' => $template,
+                'startedTime' => $eventDateTime->format('H:i'),
                 'timezone' => $schedule->timezone,
                 'toName' => $this->to[0]['name'] ?? $this->to['address'] ?? "",
-                'message' => $event->message,
             ]);
     }
 }

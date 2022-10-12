@@ -1,15 +1,15 @@
 <?php
 
-namespace Modules\Ecommerce\Listeners;
+namespace Modules\Booking\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
-use Modules\Ecommerce\Emails\EventRescheduled as EventRescheduledEmail;
-use Modules\Ecommerce\Events\EventRescheduled;
+use Modules\Booking\Emails\EventCanceled as EventCanceledEmail;
+use Modules\Booking\Events\EventCanceled;
 use Modules\Ecommerce\Services\OrderService;
 
-class SendRescheduledEventNotification implements ShouldQueue
+class SendCanceledEventNotification implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -23,10 +23,10 @@ class SendRescheduledEventNotification implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param EventRescheduled $event
+     * @param EventCanceled $event
      * @return void
      */
-    public function handle(EventRescheduled $event)
+    public function handle(EventCanceled $event)
     {
         $order = $event->order;
 
@@ -34,7 +34,7 @@ class SendRescheduledEventNotification implements ShouldQueue
 
         foreach ($recipients as $recipient) {
             Mail::to($recipient)
-                ->queue(new EventRescheduledEmail($order));
+                ->queue(new EventCanceledEmail($order));
         }
     }
 }

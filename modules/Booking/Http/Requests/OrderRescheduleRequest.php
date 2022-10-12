@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Ecommerce\Http\Requests;
+namespace Modules\Booking\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Modules\Ecommerce\Rules\AvailableBookingDate;

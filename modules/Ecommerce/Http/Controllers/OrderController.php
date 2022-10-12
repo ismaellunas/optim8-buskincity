@@ -6,16 +6,14 @@ use App\Http\Controllers\CrudController;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
+use Modules\Booking\Events\EventRescheduled;
+use Modules\Booking\Http\Requests\OrderRescheduleRequest;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Enums\BookingStatus;
-use Modules\Ecommerce\Events\EventRescheduled;
-use Modules\Ecommerce\Events\EventCanceled;
-use Modules\Ecommerce\Http\Requests\OrderCancelRequest;
-use Modules\Ecommerce\Http\Requests\OrderRescheduleRequest;
 use Modules\Ecommerce\Services\EventService;
 use Modules\Ecommerce\Services\OrderService;
-use Modules\Ecommerce\Services\ProductService;
 use Modules\Ecommerce\Services\ProductEventService;
+use Modules\Ecommerce\Services\ProductService;
 
 class OrderController extends CrudController
 {
@@ -71,22 +69,6 @@ class OrderController extends CrudController
                 'reschedule' => $user->can('reschedule', $order),
             ],
         ]));
-    }
-
-    public function cancel(OrderCancelRequest $request, Order $order)
-    {
-        $this->orderService->cancelOrder($order);
-
-        $this->orderService->cancelEvent(
-            $order->firstEventLine->latestEvent,
-            $request->message
-        );
-
-        EventCanceled::dispatch($order);
-
-        $this->generateFlashMessage('The Event has been canceled!');
-
-        return back();
     }
 
     public function reschedule(Order $order)

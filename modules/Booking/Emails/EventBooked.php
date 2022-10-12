@@ -1,15 +1,16 @@
 <?php
 
-namespace Modules\Ecommerce\Emails;
+namespace Modules\Booking\Emails;
 
+use App\Models\Setting;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Enums\BookingStatus;
 
-class EventReminder extends Mailable
+class EventBooked extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -49,19 +50,23 @@ class EventReminder extends Mailable
         $inviteeName = $user->fullName ?? null;
         $productName = $line->purchasable->product->displayName;
 
+        $template = Setting::key('booking_email_new_booking')->value('value');
+
         return $this
-            ->subject( __('Reminder: :inviteeName - :startedTime :date - :productName', [
+            ->subject( __('New Event: :inviteeName - :startedTime :date - :productName', [
                 'date' => $eventDateTime->format(config('ecommerce.format.date_event_email_title')),
                 'inviteeName' => $inviteeName,
                 'productName' => $productName,
                 'startedTime' => $eventDateTime->format('H:i'),
             ]))
-            ->markdown('ecommerce::emails.event.reminder')
+            ->markdown('ecommerce::emails.event.booked')
             ->with([
                 'duration' => $upcomingEvent->displayDuration,
                 'eventDateTime' => $eventDateTime->format(config('ecommerce.format.date_event_email_body')),
+                'inviteeEmail' => $user->email,
+                'inviteeName' => $inviteeName,
                 'productName' => $productName,
-                'startedTime' => $eventDateTime->format('H:i'),
+                'template' => $template,
                 'timezone' => $schedule->timezone,
                 'toName' => $this->to[0]['name'] ?? $this->to['address'] ?? "",
             ]);

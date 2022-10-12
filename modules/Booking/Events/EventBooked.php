@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Ecommerce\Events;
+namespace Modules\Booking\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;

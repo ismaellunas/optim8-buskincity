@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Ecommerce\Widgets;
+namespace Modules\Booking\Widgets;
 
 use App\Contracts\WidgetInterface;
 use Illuminate\Support\Collection;
@@ -65,7 +65,7 @@ class LastEventWidget implements WidgetInterface
                 'name' => Str::limit($event->orderLine->purchasable->product->displayName, 35, '...'),
                 'booked_at' => $event->booked_at->format(config('ecommerce.format.date_event_widget_record')),
                 'timezone' => $event->schedule->timezone,
-                'url' => route('ecommerce.orders.show', $event->orderLine->order_id),
+                'url' => route('booking.orders.show', $event->orderLine->order_id),
             ];
         });
 

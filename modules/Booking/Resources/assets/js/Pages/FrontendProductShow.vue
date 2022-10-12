@@ -215,7 +215,7 @@
     import BizModalCard from '@/Biz/ModalCard';
     import BizTable from '@/Biz/Table';
     import BizTag from '@/Biz/Tag';
-    import BookingTime from './BookingTime';
+    import BookingTime from '@ecommerce/Pages/BookingTime';
     import Layout from '@/Layouts/User';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
@@ -315,7 +315,7 @@
                         return data;
                     })
                     .post(
-                        route('ecommerce.orders.book-event', self.product.id),
+                        route('booking.orders.book-event', self.product.id),
                         {
                             onStart: () => self.onStartLoadingOverlay(),
                             onSuccess: (page) => {

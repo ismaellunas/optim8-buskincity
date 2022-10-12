@@ -38,7 +38,7 @@
                     <p class="has-text-right">
                         <biz-button-link
                             class="is-small is-light"
-                            :href="route('ecommerce.orders.index')"
+                            :href="route('booking.orders.index')"
                         >
                             <span>More ...</span>
                         </biz-button-link>

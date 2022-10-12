@@ -23,7 +23,7 @@
 <script>
     import BizIcon from '@/Biz/Icon';
     import BizTable from '@/Biz/Table';
-    import ecommerceIcon from '../Libs/ecommerce-icon';
+    import ecommerceIcon from '@ecommerce/Libs/ecommerce-icon';
 
     export default {
         components: {

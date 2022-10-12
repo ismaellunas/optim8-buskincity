@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Ecommerce\Http\Controllers\Frontend\OrderController as FrontendOrderController;
-use Modules\Ecommerce\Http\Controllers\Frontend\ProductController as FrontendProductController;
 use Modules\Ecommerce\Http\Controllers\OrderController;
 use Modules\Ecommerce\Http\Controllers\ProductEventController;
 
@@ -16,11 +14,6 @@ use Modules\Ecommerce\Http\Controllers\ProductEventController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-//Route::prefix('ecommerce')->group(function() {
-//    Route::get('/', 'EcommerceController@index');
-//});
-
 Route::
     prefix('admin/ecommerce')
     ->name('admin.ecommerce.')
@@ -48,9 +41,9 @@ Route::
             ->name('products.events.update')
             ->can('update', 'product');
 
-        Route::get('/products/{product}/allowed-dates/{month}/{year}', [FrontendProductController::class, 'allowedDates'])
-            ->name('products.allowed-dates')
-            ->can('update', 'product');
+        //Route::get('/products/{product}/allowed-dates/{month}/{year}', [FrontendProductController::class, 'allowedDates'])
+        //    ->name('products.allowed-dates')
+        //    ->can('update', 'product');
 
         Route::resource('/orders', OrderController::class)
             ->only(['index', 'show']);
@@ -70,47 +63,4 @@ Route::
         Route::get('/orders/{order}/available-times/{date}', [OrderController::class, 'availableTimes'])
             ->name('orders.available-times')
             ->can('reschedule', 'order');
-    });
-
-Route::
-    prefix('ecommerce')
-    ->name('ecommerce.')
-    ->middleware([
-        'auth:sanctum',
-        'verified',
-        'ensureLoginFromLoginRoute',
-    ])
-    ->group(function () {
-        Route::get('/products', [FrontendProductController::class, 'index'])
-            ->name('products.index')
-            ->middleware('can:viewAny,Modules\Ecommerce\Entities\Product');
-
-        Route::get('/products/{product}', [FrontendProductController::class, 'show'])
-            ->name('products.show')
-            ->can('showFrontendProductEvent', 'product');
-
-        Route::resource('/orders', Frontend\OrderController::class)
-            ->only(['index', 'show']);
-
-        Route::get('/products/{product}/available-times/{date}', [FrontendProductController::class, 'availableTimes'])
-            ->name('products.available-times')
-            ->can('showFrontendProductEvent', 'product');
-
-        Route::get('/products/{product}/allowed-dates/{month}/{year}', [FrontendProductController::class, 'allowedDates'])
-            ->name('products.allowed-dates')
-            ->can('showFrontendProductEvent', 'product');
-
-        Route::get('/orders/{order}/reschedule', [FrontendOrderController::class, 'reschedule'])
-            ->name('orders.reschedule')
-            ->can('reschedule', 'order');
-
-        Route::post('/orders/{order}/reschedule', [FrontendOrderController::class, 'rescheduleUpdate'])
-            ->name('orders.reschedule.update');
-
-        Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])
-            ->name('orders.cancel')
-            ->can('cancel', 'order');
-
-        Route::post('/orders/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
-            ->name('orders.book-event');
     });

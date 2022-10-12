@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Ecommerce\Events;
+namespace Modules\Booking\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Modules\Ecommerce\Entities\Order;
 
-class EventRescheduled
+class EventCanceled
 {
     use Dispatchable, SerializesModels;
 

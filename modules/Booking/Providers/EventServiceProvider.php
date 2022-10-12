@@ -1,14 +1,14 @@
 <?php
 
-namespace Modules\Ecommerce\Providers;
+namespace Modules\Booking\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Modules\Ecommerce\Events\EventBooked;
-use Modules\Ecommerce\Events\EventCanceled;
-use Modules\Ecommerce\Events\EventRescheduled;
-use Modules\Ecommerce\Listeners\SendBookedEventNotification;
-use Modules\Ecommerce\Listeners\SendCanceledEventNotification;
-use Modules\Ecommerce\Listeners\SendRescheduledEventNotification;
+use Modules\Booking\Events\EventBooked;
+use Modules\Booking\Events\EventCanceled;
+use Modules\Booking\Events\EventRescheduled;
+use Modules\Booking\Listeners\SendBookedEventNotification;
+use Modules\Booking\Listeners\SendCanceledEventNotification;
+use Modules\Booking\Listeners\SendRescheduledEventNotification;
 
 class EventServiceProvider extends ServiceProvider
 {

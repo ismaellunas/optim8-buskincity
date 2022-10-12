@@ -46,16 +46,25 @@ class ModuleService
         return [
             [
                 'title' => 'Products',
-                'link' => route('ecommerce.products.index'),
-                'isActive' => $request->routeIs('ecommerce.products.index'),
+                'link' => route('booking.products.index'),
+                'isActive' => $request->routeIs('booking.products.index'),
                 'isEnabled' => true,
             ],
             [
-                'title' => 'Orders',
-                'link' => route('ecommerce.orders.index'),
-                'isActive' => $request->routeIs('ecommerce.products.index'),
+                'title' => 'Bookings',
+                'link' => route('booking.orders.index'),
+                'isActive' => $request->routeIs('booking.products.index'),
                 'isEnabled' => true,
             ],
+        ];
+    }
+
+
+    public static function widgets(): array
+    {
+        return [
+            'upcomingEvent',
+            'lastEvent',
         ];
     }
 }

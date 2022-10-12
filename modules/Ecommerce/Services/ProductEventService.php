@@ -18,7 +18,7 @@ class ProductEventService
 
     public function availableTimesRouteName(): string
     {
-        return "ecommerce.products.available-times";
+        return "booking.products.available-times";
     }
 
     public function availableTimesOrderRouteName(): string
@@ -28,7 +28,7 @@ class ProductEventService
 
     public function allowedDatesRouteName(): string
     {
-        return "ecommerce.products.allowed-dates";
+        return "booking.products.allowed-dates";
     }
 
     public function durationOptions(): Collection

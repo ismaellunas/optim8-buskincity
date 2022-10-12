@@ -1,29 +1,28 @@
 <?php
 
-namespace Modules\Ecommerce\Http\Controllers\Frontend;
+namespace Modules\Booking\Http\Controllers\Frontend;
 
 use App\Http\Controllers\CrudController;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Modules\Booking\Events\EventBooked;
+use Modules\Booking\Events\EventRescheduled;
+use Modules\Booking\Http\Requests\EventBookRequest;
+use Modules\Booking\Http\Requests\OrderRescheduleRequest;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Enums\BookingStatus;
-use Modules\Ecommerce\Events\EventBooked;
-use Modules\Ecommerce\Events\EventCanceled;
-use Modules\Ecommerce\Events\EventRescheduled;
-use Modules\Ecommerce\Http\Requests\EventBookRequest;
-use Modules\Ecommerce\Http\Requests\OrderCancelRequest;
-use Modules\Ecommerce\Http\Requests\OrderRescheduleRequest;
 use Modules\Ecommerce\Services\OrderService;
 use Modules\Ecommerce\Services\ProductEventService;
 
 class OrderController extends CrudController
 {
-    protected $title = "Order";
-    protected $baseRouteName = "ecommerce.orders";
-
     private $orderService;
     private $productEventService;
+
+    protected $title = "Booking";
+    protected $baseRouteName = "booking.orders";
 
     public function __construct(
         OrderService $orderService,
@@ -37,7 +36,7 @@ class OrderController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Ecommerce::FrontendOrderIndex', $this->getData([
+        return Inertia::render('Booking::FrontendOrderIndex', $this->getData([
             'title' => $this->getIndexTitle(),
             'orders' => $this->orderService->getFrontendRecords(
                 $user,
@@ -55,7 +54,7 @@ class OrderController extends CrudController
         $event = $order->firstEventLine->latestEvent;
         $user = auth()->user();
 
-        return Inertia::render('Ecommerce::FrontendOrderShow', $this->getData([
+        return Inertia::render('Booking::FrontendOrderShow', $this->getData([
             'title' => $product->displayName,
             'description' => $event->timezonedBookedAt->format(config('ecommerce.format.date_event_email_title')),
             'order' => $this->orderService->getFrontendRecord($order),
@@ -63,23 +62,14 @@ class OrderController extends CrudController
                 'cancel' => $user->can('cancel', $order),
                 'reschedule' => $user->can('reschedule', $order),
             ],
+            'breadcrumbs' => [
+                [
+                    'title' => Str::plural($this->title),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                ['title' => $product->displayName],
+            ],
         ]));
-    }
-
-    public function cancel(OrderCancelRequest $request, Order $order)
-    {
-        $this->orderService->cancelOrder($order);
-
-        $this->orderService->cancelEvent(
-            $order->firstEventLine->latestEvent,
-            $request->message
-        );
-
-        EventCanceled::dispatch($order);
-
-        $this->generateFlashMessage('The Event has been canceled!');
-
-        return back();
     }
 
     public function reschedule(Order $order)
@@ -90,7 +80,7 @@ class OrderController extends CrudController
         $minDate = $this->productEventService->minBookableDate();
         $maxDate = $this->productEventService->maxBookableDate($product);
 
-        return Inertia::render('Ecommerce::FrontendOrderReschedule', $this->getData([
+        return Inertia::render('Booking::FrontendOrderReschedule', $this->getData([
             'title' => 'Reschedule Event',
             'order' => $this->orderService->getFrontendRecord($order),
             'minDate' => $minDate->toDateString(),

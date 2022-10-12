@@ -1,23 +1,9 @@
 <template>
     <div class="columns is-multiline is-centered box">
         <div class="column is-11">
-            <nav
-                class="breadcrumb"
-                aria-label="breadcrumbs"
-            >
-                <ul>
-                    <li>
-                        <biz-link :href="route(baseRouteName+'.index')">
-                            Events
-                        </biz-link>
-                    </li>
-                    <li class="is-active">
-                        <biz-link aria-current="page">
-                            {{ order.product.name }}
-                        </biz-link>
-                    </li>
-                </ul>
-            </nav>
+            <biz-breadcrumbs
+                :breadcrumbs="breadcrumbs"
+            />
         </div>
 
         <div class="column is-11">
@@ -96,28 +82,28 @@
 </template>
 
 <script>
+    import BizBreadcrumbs from '@/Biz/Breadcrumbs';
     import BizButton from '@/Biz/Button';
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizIcon from '@/Biz/Icon';
-    import BizLink from '@/Biz/Link';
     import BizTag from '@/Biz/Tag';
-    import EventDetailTable from './TableEventDetail';
+    import EventDetailTable from '@mod/Ecommerce/Resources/assets/js/Pages/TableEventDetail';
     import Layout from '@/Layouts/User';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
-    import ModalCancelEventConfirmation from './ModalCancelEventConfirmation';
+    import ModalCancelEventConfirmation from '@mod/Ecommerce/Resources/assets/js/Pages/ModalCancelEventConfirmation';
     import icon from '@/Libs/icon-class';
     import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
+            BizBreadcrumbs,
             BizButton,
             BizButtonIcon,
             BizButtonLink,
             BizIcon,
-            BizLink,
             BizTag,
             EventDetailTable,
             ModalCancelEventConfirmation,
@@ -131,6 +117,7 @@
         layout: Layout,
 
         props: {
+            breadcrumbs: { type: Array, default: () => [] },
             baseRouteName: { type: String, required: true },
             can: { type: Object, required: true },
             description: { type: String, required: true },
