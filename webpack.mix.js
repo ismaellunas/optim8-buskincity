@@ -31,6 +31,8 @@ if (theme) {
         .alias({
             '@mod': path.join(__dirname, 'modules'),
             '@': path.join(__dirname, 'resources/js'),
+            '@ecommerce': path.join(__dirname, 'modules/Ecommerce/Resources/assets/js'),
+            '@booking': path.join(__dirname, 'modules/Booking/Resources/assets/js')
         });
 
     mix.js('resources/js/frontend.js', 'public/js').vue()
