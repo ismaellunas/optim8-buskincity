@@ -298,4 +298,36 @@ class PostService
 
         return collect([]);
     }
+
+    public function getLatestPost(int $limit = 3, array $categoryIds = [])
+    {
+        $limit = $limit > 9 ? 9 : $limit;
+
+        return Post::select([
+                'id',
+                'title',
+                'slug',
+                'cover_image_id'
+            ])
+            ->with([
+                'categories.translations' => function ($q) {
+                    $q->select([
+                        'id',
+                        'name',
+                        'locale',
+                        'category_id'
+                    ]);
+                },
+                'coverImage',
+            ])
+            ->published()
+            ->when($categoryIds, function ($q) use ($categoryIds) {
+                $q->whereHas('categories', function ($q) use ($categoryIds) {
+                    $q->whereIn('category_id', $categoryIds);
+                });
+            })
+            ->orderBy('published_at', 'DESC')
+            ->limit($limit)
+            ->get();
+    }
 }
