@@ -11,7 +11,7 @@ export default {
     config: {
         wrapper: {
             isFullwidth: false,
-            backgroundColor: '',
+            backgroundColor: null,
         },
         dimension: {
             'style.padding': {
