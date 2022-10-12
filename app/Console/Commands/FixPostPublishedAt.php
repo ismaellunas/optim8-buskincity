@@ -28,7 +28,9 @@ class FixPostPublishedAt extends Command
      */
     public function handle()
     {
-        $posts = Post::where('status', Post::STATUS_PUBLISHED)->get();
+        $posts = Post::where('status', Post::STATUS_PUBLISHED)
+            ->whereNull('published_at')
+            ->get();
 
         foreach ($posts as $post) {
             $post->published_at = $post->updated_at;
