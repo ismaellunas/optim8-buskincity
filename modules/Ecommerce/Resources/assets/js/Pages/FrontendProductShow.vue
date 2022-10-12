@@ -28,7 +28,7 @@
             </h1>
 
             <p class="is-size-7">
-                <biz-tag>{{ product.sku }} </biz-tag>
+                <biz-tag>{{ product.sku }}</biz-tag>
             </p>
 
             <div class="columns is-multiline mt-3">
@@ -153,24 +153,34 @@
             @close="closeModal"
         >
             <template #header>
-                Booking Event Confirmation
+                <p class="modal-card-title has-text-weight-bold">
+                    Booking Event Confirmation
+                </p>
+
+                <button
+                    aria-label="close"
+                    class="delete"
+                    @click="closeModal"
+                />
             </template>
 
-            <biz-table>
-                <tbody>
-                    <tr>
-                        <th>Name</th>
-                        <td>{{ product.name }}</td>
-                    </tr>
-                    <tr>
-                        <th>Duration</th>
-                        <td>{{ event.duration }}</td>
-                    </tr>
-                    <tr>
-                        <th>Booked At</th>
-                        <td>{{ bookedAt }}</td>
-                    </tr>
-                </tbody>
+            <h5 class="title is-5">
+                {{ product.name }}
+            </h5>
+
+            <biz-table class="is-fullwidth">
+                <tr>
+                    <th><biz-icon :icon="ecommerceIcon.duration" /></th>
+                    <td>{{ event.duration }}</td>
+                </tr>
+                <tr>
+                    <th><biz-icon :icon="ecommerceIcon.timezone" /></th>
+                    <td>{{ event.timezone }}</td>
+                </tr>
+                <tr>
+                    <th><biz-icon :icon="ecommerceIcon.calendar" /></th>
+                    <td><b>{{ bookedAt }}</b></td>
+                </tr>
             </biz-table>
 
             <template #footer>
@@ -199,6 +209,7 @@
 
 <script>
     import BizButton from '@/Biz/Button';
+    import BizIcon from '@/Biz/Icon';
     import BizImage from '@/Biz/Image';
     import BizLink from '@/Biz/Link';
     import BizModalCard from '@/Biz/ModalCard';
@@ -209,6 +220,7 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import ecommerceIcon from '@mod/Ecommerce/Resources/assets/js/Libs/ecommerce-icon';
     import moment from 'moment';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
@@ -217,6 +229,7 @@
     export default {
         components: {
             BizButton,
+            BizIcon,
             BizImage,
             BizLink,
             BizModalCard,
@@ -252,6 +265,7 @@
             };
 
             return {
+                ecommerceIcon,
                 form: useForm(form),
                 isShortDescription: ref(true),
                 selectedImageId: ref(null),
