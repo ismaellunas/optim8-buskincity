@@ -36,7 +36,7 @@ class ApiPageBuilderController extends Controller
             [
                 [
                     'value' => null,
-                    'name' => 'Random',
+                    'name' => 'All',
                 ]
             ],
             app(CategoryService::class)->getCategoryOptions()->all()
