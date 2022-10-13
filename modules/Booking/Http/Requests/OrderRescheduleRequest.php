@@ -3,8 +3,8 @@
 namespace Modules\Booking\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Modules\Ecommerce\Rules\AvailableBookingDate;
-use Modules\Ecommerce\Rules\AvailableBookingTime;
+use Modules\Booking\Rules\AvailableBookingDate;
+use Modules\Booking\Rules\AvailableBookingTime;
 
 class OrderRescheduleRequest extends FormRequest
 {

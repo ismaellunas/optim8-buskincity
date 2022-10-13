@@ -1,11 +1,11 @@
 <?php
 
-namespace Modules\Ecommerce\Http\Requests;
+namespace Modules\Booking\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Modules\Booking\Rules\NoOverlappingTime;
 use Modules\Ecommerce\Services\ProductEventService;
-use Modules\Ecommerce\Rules\NoOverlappingTime;
 
 class ProductEventRequest extends FormRequest
 {

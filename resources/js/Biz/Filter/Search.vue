@@ -60,7 +60,7 @@
 
         methods: {
             search: debounce(function(term = '') {
-                if (term && (term.length > 2 || term.length == 0)) {
+                if (term.length > 2 || term.length == 0) {
                     this.$emit('search', term);
                 }
             }, debounceTime),

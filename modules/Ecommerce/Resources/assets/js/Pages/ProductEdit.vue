@@ -368,7 +368,7 @@
                     <biz-form-assign-user
                         v-model="productManagers"
                         label="Choose Product Manager"
-                        :get-users-url="route(baseRouteName+'.managers.search', product.id)"
+                        :get-users-url="route(productManagerBaseRoute+'.search', product.id)"
                     />
 
                     <div class="field is-grouped is-grouped-right mt-4">
@@ -471,6 +471,7 @@
             googleApiKey: { type: String, default: null },
             formatDateIso: { type: String, default: 'YYYY-MM-DD' },
             formatDateUser: { type: String, default: 'D MMM YYYY' },
+            productManagerBaseRoute: { type: String, required: true },
         },
 
         setup(props, { emit }) {
@@ -810,7 +811,7 @@
                 const form = useForm({managers: map(this.productManagers, 'id')});
 
                 const url = route(
-                    self.baseRouteName+'.managers.update',
+                    self.productManagerBaseRoute+'.update',
                     self.product.id
                 );
 

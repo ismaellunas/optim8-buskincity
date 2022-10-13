@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Ecommerce\Rules;
+namespace Modules\Booking\Rules;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\DataAwareRule;

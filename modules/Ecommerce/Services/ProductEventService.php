@@ -23,7 +23,7 @@ class ProductEventService
 
     public function availableTimesOrderRouteName(): string
     {
-        return "admin.ecommerce.orders.available-times";
+        return "admin.booking.orders.available-times";
     }
 
     public function allowedDatesRouteName(): string

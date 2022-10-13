@@ -15,14 +15,14 @@ class ModuleService
         $children = collect([
             [
                 'title' => 'Products',
-                'link' => route('admin.ecommerce.products.index'),
-                'isActive' => $request->routeIs('admin.ecommerce.products.index'),
+                'link' => route('admin.booking.products.index'),
+                'isActive' => $request->routeIs('admin.booking.products.index'),
                 'isEnabled' => $user->can('viewAny', Product::class)
             ],
             [
-                'title' => 'Orders',
-                'link' => route('admin.ecommerce.orders.index'),
-                'isActive' => $request->routeIs('admin.ecommerce.products.index'),
+                'title' => 'Bookings',
+                'link' => route('admin.booking.orders.index'),
+                'isActive' => $request->routeIs('admin.booking.products.index'),
                 'isEnabled' => $user->can('viewAny', Order::class)
             ],
             [

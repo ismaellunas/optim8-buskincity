@@ -1,12 +1,11 @@
 <?php
 
-namespace Modules\Ecommerce\Http\Controllers;
+namespace Modules\Booking\Http\Controllers;
 
-//use Illuminate\Http\Request;
 use App\Http\Controllers\CrudController;
+use Modules\Booking\Http\Requests\ProductEventRequest;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Entities\Schedule;
-use Modules\Ecommerce\Http\Requests\ProductEventRequest;
 use Modules\Ecommerce\Services\ProductEventService;
 
 class ProductEventController extends CrudController

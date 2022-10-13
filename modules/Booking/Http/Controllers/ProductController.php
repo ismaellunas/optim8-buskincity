@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Ecommerce\Http\Controllers;
+namespace Modules\Booking\Http\Controllers;
 
 use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Http\Controllers\CrudController;
@@ -28,7 +28,7 @@ use Modules\Ecommerce\Services\ProductService;
 class ProductController extends CrudController
 {
     protected $title = "Product";
-    protected $baseRouteName = "admin.ecommerce.products";
+    protected $baseRouteName = "admin.booking.products";
 
     private $productService;
     private $mediaService;
@@ -65,10 +65,6 @@ class ProductController extends CrudController
         ]));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
     public function create()
     {
         return Inertia::render('Ecommerce::ProductCreate', $this->getData([
@@ -175,6 +171,7 @@ class ProductController extends CrudController
             'dateOverrides' => $this->productEventService->dateOverrides($product),
             'geoLocation' => app(IPService::class)->getGeoLocation(),
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),
+            'productManagerBaseRoute' => 'admin.ecommerce.products.managers',
             'managers' => (
                 $canManageManager
                 ? $this->productService->formattedManagers($product)
