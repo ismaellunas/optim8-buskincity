@@ -70,7 +70,8 @@ class Post extends BaseModel implements PublishableInterface
     /* Scope: */
     public function scopePublished($query)
     {
-        return $query->where('status', self::STATUS_PUBLISHED);
+        return $query->where('status', self::STATUS_PUBLISHED)
+            ->whereNotNull('published_at');
     }
 
     public function scopeScheduled($query)

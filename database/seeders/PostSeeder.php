@@ -32,7 +32,8 @@ class PostSeeder extends Seeder
             [
                 'title' => 'Good News',
                 'slug' => Str::slug('Good News'),
-                'status' => Post::STATUS_PUBLISHED
+                'status' => Post::STATUS_PUBLISHED,
+                'published_at' => Carbon::now(),
             ],
             [
                 'title' => 'Scheduled News',
@@ -56,7 +57,10 @@ class PostSeeder extends Seeder
             ->count(10)
             ->for($adminUser, 'author')
             ->state(new Sequence(
-                fn () => ['status' => Post::STATUS_PUBLISHED],
+                fn () => [
+                    'status' => Post::STATUS_PUBLISHED,
+                    'published_at' => Carbon::now(),
+                ],
             ))
             ->hasAttached($category, [
                 'is_primary' => true
