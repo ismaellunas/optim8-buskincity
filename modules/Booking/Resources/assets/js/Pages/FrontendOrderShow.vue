@@ -88,11 +88,11 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizIcon from '@/Biz/Icon';
     import BizTag from '@/Biz/Tag';
-    import EventDetailTable from '@mod/Ecommerce/Resources/assets/js/Pages/TableEventDetail';
+    import EventDetailTable from '@booking/Pages/TableEventDetail';
     import Layout from '@/Layouts/User';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
-    import ModalCancelEventConfirmation from '@mod/Ecommerce/Resources/assets/js/Pages/ModalCancelEventConfirmation';
+    import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation';
     import icon from '@/Libs/icon-class';
     import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';

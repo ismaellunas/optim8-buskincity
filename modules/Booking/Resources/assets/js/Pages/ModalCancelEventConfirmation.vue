@@ -20,22 +20,22 @@
 
         <biz-table class="is-fullwidth">
             <tr>
-                <th><biz-icon :icon="ecommerceIcon.duration" /></th>
+                <th><biz-icon :icon="bookingIcon.duration" /></th>
                 <td>{{ event.duration }}</td>
             </tr>
             <tr>
-                <th><biz-icon :icon="ecommerceIcon.timezone" /></th>
+                <th><biz-icon :icon="bookingIcon.timezone" /></th>
                 <td>{{ event.timezone }}</td>
             </tr>
             <tr>
-                <th><biz-icon :icon="ecommerceIcon.calendar" /></th>
-                <td><b>{{ rescheduleDateTime }}</b></td>
-            </tr>
-            <tr>
-                <th><s><biz-icon :icon="ecommerceIcon.calendar" /></s></th>
-                <td><s>{{ event.start_end_time }}, {{ event.date }}</s></td>
+                <th><biz-icon :icon="bookingIcon.calendar" /></th>
+                <td>{{ event.start_end_time }}, {{ event.date }}</td>
             </tr>
         </biz-table>
+
+        <h4 class="title is-4">
+            Are you sure you want to cancel this event?
+        </h4>
 
         <biz-form-textarea
             v-model="message"
@@ -53,7 +53,7 @@
                 <div class="column px-0">
                     <div class="is-pulled-right">
                         <biz-button @click="close()">
-                            Cancel
+                            No
                         </biz-button>
 
                         <slot name="actions" />
@@ -70,9 +70,8 @@
     import BizIcon from '@/Biz/Icon';
     import BizModalCard from '@/Biz/ModalCard';
     import BizTable from '@/Biz/Table';
-    import ecommerceIcon from '@mod/Ecommerce/Resources/assets/js/Libs/ecommerce-icon';
+    import bookingIcon from '@booking/Libs/booking-icon';
     import { computed } from 'vue';
-    import { durationDateTimeText } from '@mod/Ecommerce/Resources/assets/js/Libs/event';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -89,8 +88,6 @@
             title: { type: String, default: "Reschedule Event Confirmation" },
             productName: { type: String, required: true },
             event: { type: Object, required: true },
-            selectedDate: { type: Object, required: true },
-            selectedTime: { type: String, required: true },
         },
 
         emits: [
@@ -99,16 +96,8 @@
         ],
 
         setup(props, { emit }) {
-            const rescheduleDateTime = durationDateTimeText(
-                props.selectedDate,
-                props.selectedTime,
-                props.event.duration_details.duration,
-                props.event.duration_details.unit
-            );
-
             return {
-                ecommerceIcon,
-                rescheduleDateTime,
+                bookingIcon,
                 message: useModelWrapper(props, emit),
             };
         },

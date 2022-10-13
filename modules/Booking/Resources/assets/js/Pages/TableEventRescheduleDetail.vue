@@ -1,15 +1,15 @@
 <template>
     <biz-table :class="{'is-fullwidth': isFullwidth}">
         <tr>
-            <th><biz-icon :icon="ecommerceIcon.duration" /></th>
+            <th><biz-icon :icon="bookingIcon.duration" /></th>
             <td>{{ event.duration }}</td>
         </tr>
         <tr>
-            <th><biz-icon :icon="ecommerceIcon.calendar" /></th>
+            <th><biz-icon :icon="bookingIcon.calendar" /></th>
             <td>{{ event.start_end_time }}, {{ event.date }}</td>
         </tr>
         <tr>
-            <th><biz-icon :icon="ecommerceIcon.timezone" /></th>
+            <th><biz-icon :icon="bookingIcon.timezone" /></th>
             <td>{{ event.timezone }}</td>
         </tr>
     </biz-table>
@@ -18,7 +18,7 @@
 <script>
     import BizIcon from '@/Biz/Icon';
     import BizTable from '@/Biz/Table';
-    import ecommerceIcon from '@mod/Ecommerce/Resources/assets/js/Libs/ecommerce-icon';
+    import bookingIcon from '@booking/Libs/booking-icon';
 
     export default {
         components: {
@@ -33,7 +33,7 @@
 
         setup() {
             return {
-                ecommerceIcon,
+                bookingIcon,
             };
         },
     };

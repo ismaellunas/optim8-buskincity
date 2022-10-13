@@ -49,7 +49,7 @@
 
 <script>
     import BizButtonIcon from '@/Biz/ButtonIcon';
-    import ScheduleRuleTime from './ScheduleRuleTime';
+    import ScheduleRuleTime from '@booking/Pages/ScheduleRuleTime';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import { isEmpty, last } from 'lodash';

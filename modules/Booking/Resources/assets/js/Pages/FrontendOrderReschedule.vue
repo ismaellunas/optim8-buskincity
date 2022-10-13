@@ -81,12 +81,12 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizIcon from '@/Biz/Icon';
     import BizLink from '@/Biz/Link';
-    import BookingTime from '@ecommerce/Pages/BookingTime';
+    import BookingTime from '@booking/Pages/BookingTime';
     import Layout from '@/Layouts/User';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
-    import ModalTimeConfirmation from '@ecommerce/Pages/ModalTimeConfirmation';
-    import TableEventRescheduleDetail from '@ecommerce/Pages/TableEventRescheduleDetail';
+    import ModalTimeConfirmation from '@booking/Pages/ModalTimeConfirmation';
+    import TableEventRescheduleDetail from '@booking/Pages/TableEventRescheduleDetail';
     import moment from 'moment';
     import { reactive, ref } from 'vue';
     import { success as successAlert } from '@/Libs/alert';

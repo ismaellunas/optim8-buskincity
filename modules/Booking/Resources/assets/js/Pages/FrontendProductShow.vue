@@ -170,15 +170,15 @@
 
             <biz-table class="is-fullwidth">
                 <tr>
-                    <th><biz-icon :icon="ecommerceIcon.duration" /></th>
+                    <th><biz-icon :icon="bookingIcon.duration" /></th>
                     <td>{{ event.duration }}</td>
                 </tr>
                 <tr>
-                    <th><biz-icon :icon="ecommerceIcon.timezone" /></th>
+                    <th><biz-icon :icon="bookingIcon.timezone" /></th>
                     <td>{{ event.timezone }}</td>
                 </tr>
                 <tr>
-                    <th><biz-icon :icon="ecommerceIcon.calendar" /></th>
+                    <th><biz-icon :icon="bookingIcon.calendar" /></th>
                     <td><b>{{ bookedAt }}</b></td>
                 </tr>
             </biz-table>
@@ -215,12 +215,12 @@
     import BizModalCard from '@/Biz/ModalCard';
     import BizTable from '@/Biz/Table';
     import BizTag from '@/Biz/Tag';
-    import BookingTime from '@ecommerce/Pages/BookingTime';
+    import BookingTime from '@booking/Pages/BookingTime';
     import Layout from '@/Layouts/User';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import ecommerceIcon from '@mod/Ecommerce/Resources/assets/js/Libs/ecommerce-icon';
+    import bookingIcon from '@booking/Libs/booking-icon';
     import moment from 'moment';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
@@ -265,7 +265,7 @@
             };
 
             return {
-                ecommerceIcon,
+                bookingIcon,
                 form: useForm(form),
                 isShortDescription: ref(true),
                 selectedImageId: ref(null),

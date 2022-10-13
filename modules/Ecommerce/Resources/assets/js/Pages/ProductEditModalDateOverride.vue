@@ -97,7 +97,7 @@
     import BizDatepicker from '@/Biz/Datepicker';
     import BizModalCard from '@/Biz/ModalCard';
     import BizTag from '@/Biz/Tag';
-    import ScheduleRuleTimes from './ScheduleRuleTimes';
+    import ScheduleRuleTimes from '@booking/Pages/ScheduleRuleTimes';
     import moment from 'moment';
     import { add as iconAdd } from '@/Libs/icon-class';
     import { cloneDeep, difference } from 'lodash';

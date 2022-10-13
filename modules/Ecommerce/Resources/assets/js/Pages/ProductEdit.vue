@@ -414,7 +414,7 @@
     import MixinHasTab from '@/Mixins/HasTab';
     import ProductEditModalDateOverride from './ProductEditModalDateOverride';
     import ProductForm from './ProductForm';
-    import ScheduleRuleTimes from './ScheduleRuleTimes';
+    import ScheduleRuleTimes from '@booking/Pages/ScheduleRuleTimes';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import { cloneDeep, forEach, map, sortBy, isEqual, groupBy, intersection, remove, uniq } from 'lodash';

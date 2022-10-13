@@ -155,7 +155,7 @@
     import BizTable from '@/Biz/Table';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
-    import ModalCancelEventConfirmation from './ModalCancelEventConfirmation';
+    import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';

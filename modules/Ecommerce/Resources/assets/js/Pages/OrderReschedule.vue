@@ -58,12 +58,11 @@
     import AppLayout from '@/Layouts/AppLayout';
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
-    import BookingTime from './BookingTime';
+    import BookingTime from '@booking/Pages/BookingTime';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
-    import ModalTimeConfirmation from './ModalTimeConfirmation';
-    import TableEventRescheduleDetail from './TableEventRescheduleDetail';
-    import ecommerceIcon from '../Libs/ecommerce-icon';
+    import ModalTimeConfirmation from '@booking/Pages/ModalTimeConfirmation';
+    import TableEventRescheduleDetail from '@booking/Pages/TableEventRescheduleDetail';
     import moment from 'moment';
     import { reactive, ref } from 'vue';
     import { success as successAlert } from '@/Libs/alert';
@@ -107,7 +106,6 @@
 
             return {
                 form: useForm(form),
-                ecommerceIcon,
                 firstEvent: props.order.event,
                 scheduleTimezone: ref(props.timezone),
             };
