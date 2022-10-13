@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('schedule_bookings', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->dateTime('booked_at');
             $table->string('timezone', 32)->default('UTC');
@@ -46,6 +46,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('schedule_bookings');
+        Schema::dropIfExists('events');
     }
 };

@@ -1,17 +1,18 @@
 <?php
-namespace Modules\Event\Database\factories;
+
+namespace Modules\Space\Database\factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Arr;
 
-class EventTranslationFactory extends Factory
+class SpaceEventTranslationFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = \Modules\Event\Entities\EventTranslation::class;
+    protected $model = \Modules\Space\Entities\SpaceEventTranslation::class;
 
     /**
      * Define the model's default state.

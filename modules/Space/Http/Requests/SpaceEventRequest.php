@@ -5,9 +5,9 @@ namespace Modules\Space\Http\Requests;
 use App\Helpers\StringManipulator;
 use App\Http\Requests\BaseFormRequest;
 use Astrotomic\Translatable\Validation\RuleFactory;
-use Modules\Event\Entities\EventTranslation;
+use Modules\Space\Entities\SpaceEventTranslation;
 
-class EventRequest extends BaseFormRequest
+class SpaceEventRequest extends BaseFormRequest
 {
     protected $errorBag = 'eventValidation';
 
@@ -50,7 +50,7 @@ class EventRequest extends BaseFormRequest
         $translatedAttributes = [];
         $locales = array_keys($this->translations);
 
-        $attributes = (new EventTranslation())->getFillable();
+        $attributes = (new SpaceEventTranslation())->getFillable();
 
         foreach ($locales as $locale) {
             foreach ($attributes as $attribute) {

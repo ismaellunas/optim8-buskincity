@@ -13,7 +13,7 @@ class Event extends Model
 {
     use HasFactory;
 
-    protected $table = 'schedule_bookings';
+    protected $table = 'events';
 
     protected $fillable = [];
 

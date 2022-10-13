@@ -1,13 +1,15 @@
 <?php
 
-namespace Modules\Event\Entities;
+namespace Modules\Space\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class EventTranslation extends Model
+class SpaceEventTranslation extends Model
 {
     use HasFactory;
+
+    protected $table = 'space_event_translations';
 
     protected $fillable = [
         'description',
@@ -17,6 +19,6 @@ class EventTranslation extends Model
 
     protected static function newFactory()
     {
-        return \Modules\Event\Database\factories\EventTranslationFactory::new();
+        return \Modules\Space\Database\factories\EventTranslationFactory::new();
     }
 }
