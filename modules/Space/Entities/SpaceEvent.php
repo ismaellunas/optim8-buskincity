@@ -1,16 +1,23 @@
 <?php
 
-namespace Modules\Event\Entities;
+namespace Modules\Space\Entities;
 
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Space\Entities\SpaceEventTranslation;
 
-class Event extends Model implements TranslatableContract
+class SpaceEvent extends Model implements TranslatableContract
 {
     use HasFactory;
     use Translatable;
+
+    protected $translationModel = SpaceEventTranslation::class;
+
+    protected $table = 'space_events';
+
+    protected $translationForeignKey = 'space_event_id';
 
     protected $dates = [
         'started_at',
@@ -31,7 +38,7 @@ class Event extends Model implements TranslatableContract
 
     protected static function newFactory()
     {
-        return \Modules\Event\Database\factories\EventFactory::new();
+        return \Modules\Space\Database\factories\EventFactory::new();
     }
 
     public function eventable()
@@ -42,5 +49,16 @@ class Event extends Model implements TranslatableContract
     public function scopeSearch($query, string $term)
     {
         $query->where('title', 'ILIKE', '%'.$term.'%');
+    }
+
+    public function scopeHasSpace($query, int $spaceId)
+    {
+        $query->whereHasMorph(
+            'eventable',
+            Space::class,
+            function ($query) use ($spaceId) {
+                $query->where('id', $spaceId);
+            }
+        );
     }
 }

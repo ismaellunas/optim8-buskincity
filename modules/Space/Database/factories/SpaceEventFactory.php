@@ -1,17 +1,18 @@
 <?php
-namespace Modules\Event\Database\factories;
+
+namespace Modules\Space\Database\factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Event\Entities\EventTranslation;
+use Modules\Space\Entities\SpaceEventTranslation;
 
-class EventFactory extends Factory
+class SpaceEventFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = \Modules\Event\Entities\Event::class;
+    protected $model = \Modules\Space\Entities\SpaceEvent::class;
 
     /**
      * Define the model's default state.
@@ -29,6 +30,6 @@ class EventFactory extends Factory
 
     public function hasDefaultTranslation()
     {
-        return $this->has(EventTranslation::factory()->fallbackLocale(), 'translations');
+        return $this->has(SpaceEventTranslation::factory()->fallbackLocale(), 'translations');
     }
 }
