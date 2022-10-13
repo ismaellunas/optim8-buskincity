@@ -7,9 +7,9 @@
         <div class="box is-shadowless">
             <div class="columns is-multiline">
                 <div class="column is-full">
-                    <table
+                    <biz-table
                         v-if="data.records.length > 0"
-                        class="table is-fullwidth"
+                        is-fullwidth
                     >
                         <tr
                             v-for="record in data.records"
@@ -26,7 +26,7 @@
                                 </biz-button-link>
                             </td>
                         </tr>
-                    </table>
+                    </biz-table>
                     <p
                         v-else
                         class="has-text-centered"
@@ -52,6 +52,7 @@
 <script>
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizIcon from '@/Biz/Icon';
+    import BizTable from '@/Biz/Table';
     import icon from '@/Libs/icon-class';
 
     export default {
@@ -60,6 +61,7 @@
         components: {
             BizButtonLink,
             BizIcon,
+            BizTable,
         },
 
         props: {

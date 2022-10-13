@@ -1,11 +1,18 @@
 <template>
-    <table class="table">
+    <table
+        class="table"
+        :class="{ 'is-fullwidth': isFullwidth }"
+    >
         <slot />
     </table>
 </template>
 
 <script>
     export default {
-        name: 'BizTable'
+        name: 'BizTable',
+
+        props: {
+            isFullwidth: { type: Boolean, default: false },
+        },
     };
 </script>

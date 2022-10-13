@@ -56,7 +56,7 @@ class EventReminder extends Mailable
                 'productName' => $productName,
                 'startedTime' => $eventDateTime->format('H:i'),
             ]))
-            ->markdown('ecommerce::emails.event.reminder')
+            ->markdown('booking::emails.event.reminder')
             ->with([
                 'duration' => $upcomingEvent->displayDuration,
                 'eventDateTime' => $eventDateTime->format(config('ecommerce.format.date_event_email_body')),

@@ -51,7 +51,7 @@ class EventCanceled extends Mailable
                 'startedTime' => $eventDateTime->format('H:i'),
                 'inviteeName' => $inviteeName,
             ]))
-            ->markdown('ecommerce::emails.event.canceled')
+            ->markdown('booking::emails.event.canceled')
             ->with([
                 'duration' => $event->displayDuration,
                 'eventDateTime' => $eventDateTime->format(config('ecommerce.format.date_event_email_body')),

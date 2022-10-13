@@ -18,7 +18,7 @@
             {{ productName }}
         </h5>
 
-        <biz-table class="is-fullwidth">
+        <biz-table is-fullwidth>
             <tr>
                 <th><biz-icon :icon="bookingIcon.duration" /></th>
                 <td>{{ event.duration }}</td>

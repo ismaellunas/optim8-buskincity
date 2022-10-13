@@ -58,7 +58,7 @@ class OrderController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Ecommerce::OrderIndex', $this->getData([
+        return Inertia::render('Booking::OrderIndex', $this->getData([
             'title' => $this->getIndexTitle(),
             'pageQueryParams' => array_filter(request()->only('term', 'status')),
             'records' => $this->orderService->getRecords(
@@ -79,7 +79,7 @@ class OrderController extends CrudController
 
         $orderRecord = $this->orderService->getRecord($order);
 
-        return Inertia::render('Ecommerce::OrderShow', $this->getData([
+        return Inertia::render('Booking::OrderShow', $this->getData([
             'title' => $this->title.': '.Arr::get($orderRecord, 'product.name'),
             'order' => $orderRecord,
             'can' => [
@@ -97,7 +97,7 @@ class OrderController extends CrudController
         $minDate = $this->productEventService->minBookableDate();
         $maxDate = $this->productEventService->maxBookableDate($product);
 
-        return Inertia::render('Ecommerce::OrderReschedule', $this->getData([
+        return Inertia::render('Booking::OrderReschedule', $this->getData([
             'title' => 'Reschedule Event',
             'order' => $this->orderService->getRecord($order),
             'product' => app(ProductService::class)->formResource($product),

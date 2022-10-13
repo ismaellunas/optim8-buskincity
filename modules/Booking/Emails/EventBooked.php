@@ -59,7 +59,7 @@ class EventBooked extends Mailable
                 'productName' => $productName,
                 'startedTime' => $eventDateTime->format('H:i'),
             ]))
-            ->markdown('ecommerce::emails.event.booked')
+            ->markdown('booking::emails.event.booked')
             ->with([
                 'duration' => $upcomingEvent->displayDuration,
                 'eventDateTime' => $eventDateTime->format(config('ecommerce.format.date_event_email_body')),

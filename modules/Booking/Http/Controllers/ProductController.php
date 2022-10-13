@@ -49,7 +49,7 @@ class ProductController extends CrudController
     {
         $user = auth()->user();
 
-        return Inertia::render('Ecommerce::ProductIndex', $this->getData([
+        return Inertia::render('Booking::ProductIndex', $this->getData([
             'title' => $this->getIndexTitle(),
             'pageQueryParams' => array_filter($request->only('term', 'status')),
             'products' => $this->productService->getRecords(
@@ -66,7 +66,7 @@ class ProductController extends CrudController
 
     public function create()
     {
-        return Inertia::render('Ecommerce::ProductCreate', $this->getData([
+        return Inertia::render('Booking::ProductCreate', $this->getData([
             'title' => $this->getCreateTitle(),
             'statusOptions' => [
                 [
@@ -156,7 +156,7 @@ class ProductController extends CrudController
     {
         $canManageManager = auth()->user()->can('manageManager', Product::class);
 
-        return Inertia::render('Ecommerce::ProductEdit', $this->getData([
+        return Inertia::render('Booking::ProductEdit', $this->getData([
             'title' => $this->getEditTitle(),
             'imageMimes' => config('constants.extensions.image'),
             'roleOptions' => $this->productService->roleOptions(),

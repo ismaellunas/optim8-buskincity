@@ -59,7 +59,7 @@ class EventRescheduled extends Mailable
                 'startedTime' => $upcomingEventDateTime->format('H:i'),
                 'inviteeName' => $inviteeName,
             ]))
-            ->markdown('ecommerce::emails.event.rescheduled')
+            ->markdown('booking::emails.event.rescheduled')
             ->with([
                 'duration' => $upcomingEvent->displayDuration,
                 'inviteeEmail' => $this->order->user->email,

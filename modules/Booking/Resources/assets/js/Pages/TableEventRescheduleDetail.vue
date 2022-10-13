@@ -1,5 +1,5 @@
 <template>
-    <biz-table :class="{'is-fullwidth': isFullwidth}">
+    <biz-table is-fullwidth>
         <tr>
             <th><biz-icon :icon="bookingIcon.duration" /></th>
             <td>{{ event.duration }}</td>
