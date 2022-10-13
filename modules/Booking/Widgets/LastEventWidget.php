@@ -24,7 +24,7 @@ class LastEventWidget implements WidgetInterface
         return [
             'title' => $this->title,
             'componentName' => $this->componentName,
-            'moduleName' => config('ecommerce.name'),
+            'moduleName' => config('booking.name'),
             'data' => [
                 'records' => $this->getRecords(),
             ],
