@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Ecommerce\Enums;
+namespace Modules\Booking\Enums;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;

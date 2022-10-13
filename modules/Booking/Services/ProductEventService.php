@@ -1,16 +1,16 @@
 <?php
 
-namespace Modules\Ecommerce\Services;
+namespace Modules\Booking\Services;
 
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Modules\Booking\Entities\Schedule;
+use Modules\Booking\Entities\ScheduleRule;
+use Modules\Booking\Entities\ScheduleRuleTime;
 use Modules\Ecommerce\Entities\Product;
-use Modules\Ecommerce\Entities\Schedule;
-use Modules\Ecommerce\Entities\ScheduleRule;
-use Modules\Ecommerce\Entities\ScheduleRuleTime;
 
 class ProductEventService
 {
@@ -43,11 +43,6 @@ class ProductEventService
             ['id' => '180', 'value' => '180'],
             ['id' => '240', 'value' => '240'],
         ]);
-    }
-
-    public function startTimeIncrementOptions(): Collection
-    {
-        return collect([]);
     }
 
     public function formResource(Product $product): array

@@ -5,6 +5,8 @@ namespace Modules\Booking\Providers;
 use App\Services\ModuleService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
+use Modules\Booking\Entities\Event;
+use Modules\Ecommerce\Entities\OrderLine;
 
 class BookingServiceProvider extends ServiceProvider
 {
@@ -29,6 +31,14 @@ class BookingServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+
+        OrderLine::resolveRelationUsing('events', function ($orderLineModel) {
+            return $orderLineModel->hasMany(Event::class);
+        });
+
+        OrderLine::resolveRelationUsing('latestEvent', function ($orderLineModel) {
+            return $orderLineModel->hasOne(Event::class)->latest();
+        });
 
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);

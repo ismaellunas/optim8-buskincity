@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Ecommerce\Helpers;
+namespace Modules\Booking\Helpers;
 
 use Illuminate\Support\Str;
 

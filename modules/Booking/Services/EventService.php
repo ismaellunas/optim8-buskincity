@@ -1,14 +1,13 @@
 <?php
 
-namespace Modules\Ecommerce\Services;
+namespace Modules\Booking\Services;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Modules\Ecommerce\Entities\Schedule;
-use Modules\Ecommerce\Entities\ScheduleRule;
-use Modules\Ecommerce\Enums\BookingStatus;
-use Modules\Ecommerce\Helpers\EventTimeHelper;
+use Modules\Booking\Entities\Schedule;
+use Modules\Booking\Entities\ScheduleRule;
+use Modules\Booking\Enums\BookingStatus;
+use Modules\Booking\Helpers\EventTimeHelper;
 
 class EventService
 {
@@ -153,7 +152,7 @@ class EventService
             });
     }
 
-    public function getScheduleRuleOnDate($schedule, Carbon $date): ?ScheduleRule
+    private function scheduleRuleOnDate($schedule, Carbon $date): ?ScheduleRule
     {
         $dateOverrides = $schedule
             ->dateOverrides()
@@ -200,7 +199,7 @@ class EventService
 
         $todayTime = null;
 
-        $rule = $this->getScheduleRuleOnDate($schedule, $date);
+        $rule = $this->scheduleRuleOnDate($schedule, $date);
 
         if (!$rule) {
             return $times;

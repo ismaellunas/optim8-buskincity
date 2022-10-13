@@ -4,7 +4,7 @@ namespace Modules\Booking\Rules;
 
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\Rule;
-use Modules\Ecommerce\Services\EventService;
+use Modules\Booking\Services\EventService;
 
 class AvailableBookingTime implements Rule, DataAwareRule
 {

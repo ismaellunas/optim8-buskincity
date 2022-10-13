@@ -4,7 +4,7 @@ namespace Modules\Booking\Rules;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
-use Modules\Ecommerce\Services\EventService;
+use Modules\Booking\Services\EventService;
 
 class AvailableBookingDate implements Rule
 {

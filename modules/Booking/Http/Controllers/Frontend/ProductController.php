@@ -6,9 +6,9 @@ use App\Http\Controllers\CrudController;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Booking\Services\EventService;
+use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Product;
-use Modules\Ecommerce\Services\EventService;
-use Modules\Ecommerce\Services\ProductEventService;
 use Modules\Ecommerce\Services\ProductService;
 
 class ProductController extends CrudController

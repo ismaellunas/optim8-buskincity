@@ -6,15 +6,15 @@ use App\Http\Controllers\CrudController;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Events\EventBooked;
 use Modules\Booking\Events\EventRescheduled;
 use Modules\Booking\Http\Requests\EventBookRequest;
 use Modules\Booking\Http\Requests\OrderRescheduleRequest;
+use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
-use Modules\Ecommerce\Enums\BookingStatus;
 use Modules\Ecommerce\Services\OrderService;
-use Modules\Ecommerce\Services\ProductEventService;
 
 class OrderController extends CrudController
 {

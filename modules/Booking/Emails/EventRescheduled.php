@@ -6,8 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Modules\Booking\Enums\BookingStatus;
 use Modules\Ecommerce\Entities\Order;
-use Modules\Ecommerce\Enums\BookingStatus;
 
 class EventRescheduled extends Mailable
 {

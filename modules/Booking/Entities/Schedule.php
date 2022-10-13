@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Ecommerce\Entities;
+namespace Modules\Booking\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Modules\Ecommerce\Entities\ScheduleRule;
+use Modules\Booking\Entities\ScheduleRule;
 
 class Schedule extends Model
 {
@@ -14,7 +14,7 @@ class Schedule extends Model
 
     protected static function newFactory()
     {
-        return \Modules\Ecommerce\Database\factories\ScheduleFactory::new();
+        return \Modules\Booking\Database\factories\ScheduleFactory::new();
     }
 
     public function rules()

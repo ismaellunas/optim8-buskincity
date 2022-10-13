@@ -5,8 +5,8 @@ namespace Modules\Booking\Http\Controllers;
 use App\Http\Controllers\CrudController;
 use Modules\Booking\Http\Requests\ProductEventRequest;
 use Modules\Ecommerce\Entities\Product;
-use Modules\Ecommerce\Entities\Schedule;
-use Modules\Ecommerce\Services\ProductEventService;
+use Modules\Booking\Entities\Schedule;
+use Modules\Booking\Services\ProductEventService;
 
 class ProductEventController extends CrudController
 {

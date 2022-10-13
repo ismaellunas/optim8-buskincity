@@ -8,7 +8,7 @@ use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\Product as GetCandyProduct;
 use Illuminate\Support\Arr;
 use Kodeine\Metable\Metable;
-use Modules\Ecommerce\Entities\Schedule;
+use Modules\Booking\Entities\Schedule;
 use Modules\Ecommerce\Enums\ProductStatus;
 
 class Product extends GetCandyProduct

@@ -1,14 +1,14 @@
 <?php
 
-namespace Modules\Ecommerce\Database\factories;
+namespace Modules\Booking\Database\factories;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Ecommerce\Entities\Schedule;
+use Modules\Booking\Entities\Schedule;
 
 class ScheduleRuleFactory extends Factory
 {
-    protected $model = \Modules\Ecommerce\Entities\ScheduleRule::class;
+    protected $model = \Modules\Booking\Entities\ScheduleRule::class;
 
     public function definition()
     {

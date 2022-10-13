@@ -1,10 +1,10 @@
 <?php
 
-namespace Modules\Ecommerce\Database\factories;
+namespace Modules\Booking\Database\factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Modules\Ecommerce\Entities\Schedule;
-use Modules\Ecommerce\Enums\BookingStatus;
+use Modules\Booking\Entities\Schedule;
+use Modules\Booking\Enums\BookingStatus;
 
 class EventFactory extends Factory
 {
@@ -13,7 +13,7 @@ class EventFactory extends Factory
      *
      * @var string
      */
-    protected $model = \Modules\Ecommerce\Entities\Event::class;
+    protected $model = \Modules\Booking\Entities\Event::class;
 
     /**
      * Define the model's default state.

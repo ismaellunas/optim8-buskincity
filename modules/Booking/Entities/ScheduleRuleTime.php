@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Ecommerce\Entities;
+namespace Modules\Booking\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +13,7 @@ class ScheduleRuleTime extends Model
 
     protected static function newFactory()
     {
-        return \Modules\Ecommerce\Database\factories\ScheduleRuleTimeFactory::new();
+        return \Modules\Booking\Database\factories\ScheduleRuleTimeFactory::new();
     }
 
     public function scheduleRule()

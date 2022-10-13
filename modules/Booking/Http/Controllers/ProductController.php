@@ -12,17 +12,16 @@ use GetCandy\FieldTypes\Text;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\ProductType;
 use GetCandy\Models\TaxClass;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Booking\Entities\Schedule;
+use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Entities\ProductVariant;
-use Modules\Ecommerce\Entities\Schedule;
 use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Ecommerce\Http\Requests\ProductCreateRequest;
 use Modules\Ecommerce\Http\Requests\ProductUpdateRequest;
 use Modules\Ecommerce\ModuleService;
-use Modules\Ecommerce\Services\ProductEventService;
 use Modules\Ecommerce\Services\ProductService;
 
 class ProductController extends CrudController

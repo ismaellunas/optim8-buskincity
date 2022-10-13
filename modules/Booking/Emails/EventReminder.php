@@ -6,8 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Modules\Booking\Enums\BookingStatus;
 use Modules\Ecommerce\Entities\Order;
-use Modules\Ecommerce\Enums\BookingStatus;
 
 class EventReminder extends Mailable
 {

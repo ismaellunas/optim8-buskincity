@@ -5,7 +5,7 @@ namespace Modules\Booking\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Modules\Booking\Rules\NoOverlappingTime;
-use Modules\Ecommerce\Services\ProductEventService;
+use Modules\Booking\Services\ProductEventService;
 
 class ProductEventRequest extends FormRequest
 {

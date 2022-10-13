@@ -1,13 +1,14 @@
 <?php
 
-namespace Modules\Ecommerce\Entities;
+namespace Modules\Booking\Entities;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Modules\Ecommerce\Enums\BookingStatus;
-use Modules\Ecommerce\Helpers\EventTimeHelper;
+use Modules\Booking\Enums\BookingStatus;
+use Modules\Booking\Helpers\EventTimeHelper;
+use Modules\Ecommerce\Entities\OrderLine;
 
 class Event extends Model
 {
@@ -23,7 +24,7 @@ class Event extends Model
 
     protected static function newFactory()
     {
-        return \Modules\Ecommerce\Database\factories\EventFactory::new();
+        return \Modules\Booking\Database\factories\EventFactory::new();
     }
 
     public function schedule()
