@@ -301,8 +301,6 @@ class PostService
 
     public function getLatestPost(int $limit = 3, array $categoryIds = [])
     {
-        $limit = $limit > 9 ? 9 : $limit;
-
         return Post::select([
                 'id',
                 'title',
