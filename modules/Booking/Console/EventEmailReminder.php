@@ -5,8 +5,8 @@ namespace Modules\Booking\Console;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
-use Modules\Ecommerce\Entities\Event;
-use Modules\Ecommerce\Emails\EventReminder as EventReminderEmail;
+use Modules\Booking\Emails\EventReminder as EventReminderEmail;
+use Modules\Booking\Entities\Event;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 

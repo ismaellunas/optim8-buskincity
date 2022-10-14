@@ -4,8 +4,8 @@ namespace Modules\Ecommerce\Policies;
 
 use App\Models\User;
 use App\Policies\BasePermissionPolicy;
+use Modules\Booking\Enums\BookingStatus;
 use Modules\Ecommerce\Entities\Order;
-use Modules\Ecommerce\Enums\BookingStatus;
 use Modules\Ecommerce\Enums\OrderStatus;
 
 class OrderPolicy extends BasePermissionPolicy

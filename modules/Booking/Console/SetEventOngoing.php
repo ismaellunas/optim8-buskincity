@@ -4,8 +4,8 @@ namespace Modules\Booking\Console;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Modules\Ecommerce\Entities\Event;
-use Modules\Ecommerce\Enums\BookingStatus;
+use Modules\Booking\Entities\Event;
+use Modules\Booking\Enums\BookingStatus;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
