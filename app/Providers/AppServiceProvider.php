@@ -17,6 +17,7 @@ use App\Entities\Caches\{
 };
 use App\Services\{
     CountryService,
+    CategoryService,
     FormService,
     GlobalOptionService,
     IPService,
@@ -48,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
         WidgetCache::class => WidgetCache::class,
 
         CountryService::class => CountryService::class,
+        CategoryService::class => CategoryService::class,
         FormService::class => FormService::class,
         GlobalOptionService::class => GlobalOptionService::class,
         IPService::class => IPService::class,
