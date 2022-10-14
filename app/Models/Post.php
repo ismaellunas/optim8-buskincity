@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Media;
 use App\Services\PostService;
 use App\Traits\HasLocale;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 
@@ -26,6 +27,7 @@ class Post extends BaseModel implements PublishableInterface
         'meta_description',
         'meta_title',
         'scheduled_at',
+        'published_at',
         'slug',
         'status',
         'title',
@@ -34,6 +36,7 @@ class Post extends BaseModel implements PublishableInterface
 
     protected $casts = [
         'scheduled_at' => 'datetime',
+        'published_at' => 'datetime',
     ];
 
     /* Relationship: */
@@ -67,7 +70,8 @@ class Post extends BaseModel implements PublishableInterface
     /* Scope: */
     public function scopePublished($query)
     {
-        return $query->where('status', self::STATUS_PUBLISHED);
+        return $query->where('status', self::STATUS_PUBLISHED)
+            ->whereNotNull('published_at');
     }
 
     public function scopeScheduled($query)
@@ -150,6 +154,11 @@ class Post extends BaseModel implements PublishableInterface
     {
         $this->status = Post::STATUS_PUBLISHED;
         $this->scheduled_at = null;
+
+        if (!$this->published_at) {
+            $this->published_at = Carbon::now();
+        }
+
         $this->save();
     }
 
@@ -164,10 +173,17 @@ class Post extends BaseModel implements PublishableInterface
             ($this->id ? [$this->id] : null)
         );
 
-        if ($inputs['status'] == Post::STATUS_SCHEDULED) {
+        if ($inputs['status'] == self::STATUS_SCHEDULED) {
             $this->scheduled_at = $inputs['scheduled_at'];
         } else {
             $this->scheduled_at = null;
+        }
+
+        if (
+            !$this->published_at
+            && $inputs['status'] == self::STATUS_PUBLISHED
+        ) {
+            $this->published_at = Carbon::now();
         }
 
         return $this->save();

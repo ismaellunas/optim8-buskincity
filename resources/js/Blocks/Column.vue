@@ -54,6 +54,7 @@
     import Heading from '@/Blocks/Contents/Heading';
     import Icon from '@/Blocks/Contents/Icon';
     import Image from '@/Blocks/Contents/Image';
+    import LatestPost from '@/Blocks/Contents/LatestPost';
     import Tabs from '@/Blocks/Contents/Tabs';
     import Text from '@/Blocks/Contents/Text';
     import UserList from '@/Blocks/Contents/UserList';
@@ -67,12 +68,13 @@
             Card,
             CardText,
             Carousel,
+            Draggable,
             Faq,
             FormBuilder,
-            Draggable,
             Heading,
             Icon,
             Image,
+            LatestPost,
             Tabs,
             Text,
             UserList,

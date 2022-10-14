@@ -64,11 +64,12 @@
         },
 
         setup(props) {
+
             const asyncComponents = {};
 
             props.moduleWidgets.forEach((widget) => {
-                if (widget.moduleName == 'Ecommerce') {
-                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import('@mod/Ecommerce/Resources/assets/js/Widgets/'+widget.componentName));
+                if (widget.moduleName == 'Booking') {
+                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import('@booking/Widgets/'+widget.componentName));
                 }
             });
 
