@@ -4,8 +4,8 @@ namespace Modules\Space\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\AbstractPaginator;
-use Modules\Space\Entities\Event;
 use Modules\Space\Entities\Space;
+use Modules\Space\Entities\SpaceEvent;
 use App\Helpers\HumanReadable;
 
 class EventService
@@ -15,7 +15,7 @@ class EventService
         ?string $term = null,
         int $perPage = 10
     ): LengthAwarePaginator {
-        return Event::orderBy('started_at', 'ASC')
+        return SpaceEvent::orderBy('started_at', 'ASC')
             ->hasSpace($space->id)
             ->when($term, function ($query, $term) {
                 $query->search($term);
@@ -25,9 +25,9 @@ class EventService
 
     public function transformRecords(AbstractPaginator $records)
     {
-        $records->getCollection()->transform(function ($event) {
-            $dateFormat = config('constants.format.date_time_event');
+        $dateFormat = config('constants.format.date_time_event');
 
+        $records->getCollection()->transform(function ($event) use ($dateFormat) {
             return [
                 'id' => $event->id,
                 'title' => $event->title,
@@ -45,7 +45,7 @@ class EventService
 
     public function getEditableRecord($space, $event)
     {
-        $event = Event::
+        $event = SpaceEvent::
             whereHasMorph(
                 'eventable',
                 Space::class,
@@ -68,7 +68,7 @@ class EventService
 
     public function createEvent($space, $inputs)
     {
-        $event = new Event();
+        $event = new SpaceEvent();
 
         $this->updateEvent($event, $inputs);
 

@@ -179,6 +179,8 @@ class ProductService
                 'id' => $media->id,
                 'display_file_name' => $media->displayFileName,
                 'file_url' => $media->file_url,
+                'is_image' => $media->isImage,
+                'thumbnail_url' => $media->thumbnailUrl,
             ]),
         ];
     }

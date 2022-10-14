@@ -13,10 +13,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Modules\Booking\Entities\Event;
+use Modules\Booking\Enums\BookingStatus;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
-use Modules\Ecommerce\Entities\Event;
-use Modules\Ecommerce\Enums\BookingStatus;
 use Modules\Ecommerce\Enums\OrderLineType;
 use Modules\Ecommerce\Enums\OrderStatus;
 

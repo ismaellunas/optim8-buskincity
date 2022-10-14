@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Services\CountryService;
+use App\Services\CategoryService;
 use App\Services\GlobalOptionService;
+use Illuminate\Support\Collection;
 
 class ApiPageBuilderController extends Controller
 {
@@ -26,5 +28,18 @@ class ApiPageBuilderController extends Controller
             })
             ->get(['id', 'name'])
             ->asOptions('id', 'name');
+    }
+
+    public function postCategoryOptions(): array
+    {
+        return array_merge(
+            [
+                [
+                    'value' => null,
+                    'name' => 'All',
+                ]
+            ],
+            app(CategoryService::class)->getCategoryOptions()->all()
+        );
     }
 }

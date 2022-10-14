@@ -24,4 +24,26 @@ class CategoryService
             ])
             ->paginate($perPage);
     }
+
+    public function getCategoryOptions()
+    {
+        return Category::with([
+                'translations' => function ($q) {
+                    $q->select([
+                        'id',
+                        'name',
+                        'locale',
+                        'category_id'
+                    ]);
+                }
+            ])
+            ->get()
+            ->sortBy('name')
+            ->map(function ($category) {
+                return [
+                    'value' => $category->id,
+                    'name' => $category->name,
+                ];
+            });
+    }
 }
