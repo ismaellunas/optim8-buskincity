@@ -10,7 +10,7 @@ use GetCandy\Models\Currency;
 use GetCandy\Models\Order;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
-use Modules\Ecommerce\Entities\Event;
+use Modules\Booking\Entities\Event;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Enums\OrderLineType;
 use Modules\Ecommerce\Enums\OrderStatus;

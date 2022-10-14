@@ -29,14 +29,4 @@ class OrderLine extends GetCandyOrderLine
             'currency_code'
         );
     }
-
-    public function events()
-    {
-        return $this->hasMany(Event::class);
-    }
-
-    public function latestEvent()
-    {
-        return $this->hasOne(Event::class)->latest();
-    }
 }

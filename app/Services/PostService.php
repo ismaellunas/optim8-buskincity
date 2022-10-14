@@ -277,7 +277,12 @@ class PostService
                 ])
                 ->with([
                     'categories.translations' => function ($q) {
-                        $q->select(['id', 'name']);
+                        $q->select([
+                            'id',
+                            'name',
+                            'locale',
+                            'category_id'
+                        ]);
                     },
                     'coverImage',
                 ])
@@ -286,11 +291,41 @@ class PostService
                     $q->where('category_id', $categoryId);
                 })
                 ->whereNotIn('id', [$post->id])
-                ->orderBy('id', 'DESC')
+                ->inRandomOrder()
                 ->limit(3)
                 ->get();
         }
 
         return collect([]);
+    }
+
+    public function getLatestPost(int $limit = 3, array $categoryIds = [])
+    {
+        return Post::select([
+                'id',
+                'title',
+                'slug',
+                'cover_image_id'
+            ])
+            ->with([
+                'categories.translations' => function ($q) {
+                    $q->select([
+                        'id',
+                        'name',
+                        'locale',
+                        'category_id'
+                    ]);
+                },
+                'coverImage',
+            ])
+            ->published()
+            ->when($categoryIds, function ($q) use ($categoryIds) {
+                $q->whereHas('categories', function ($q) use ($categoryIds) {
+                    $q->whereIn('category_id', $categoryIds);
+                });
+            })
+            ->orderBy('published_at', 'DESC')
+            ->limit($limit)
+            ->get();
     }
 }
