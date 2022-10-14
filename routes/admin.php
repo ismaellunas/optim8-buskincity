@@ -180,6 +180,9 @@ Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->gr
 
     Route::get('/options/phone-countries', [ApiOptionController::class, 'phoneCountryOptions'])
         ->name('options.phone-countries');
+
+    Route::get('/page-builder/post/category-options', [ApiPageBuilderController::class, 'postCategoryOptions'])
+        ->name('page-builder.post.category-options');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
