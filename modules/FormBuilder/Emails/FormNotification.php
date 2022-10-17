@@ -5,6 +5,7 @@ namespace Modules\FormBuilder\Emails;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Mews\Purifier\Facades\Purifier;
 use Modules\FormBuilder\Entities\FieldGroupEntry;
 use Modules\FormBuilder\Entities\FieldGroupNotificationSetting;
 use Modules\FormBuilder\Services\FormBuilderService;
@@ -70,7 +71,7 @@ class FormNotification extends Mailable
             ->subject($subject)
             ->markdown('formbuilder::emails.forms.notification')
             ->with([
-                'message' => $message
+                'message' => Purifier::clean($message, 'email'),
             ]);
     }
 }
