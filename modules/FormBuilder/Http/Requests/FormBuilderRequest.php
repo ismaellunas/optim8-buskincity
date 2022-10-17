@@ -3,6 +3,7 @@
 namespace Modules\FormBuilder\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Modules\FormBuilder\Rules\FieldNameRequired;
 
 class FormBuilderRequest extends FormRequest
 {
@@ -28,6 +29,7 @@ class FormBuilderRequest extends FormRequest
             ],
             'builders' => [
                 'nullable',
+                new FieldNameRequired(),
             ]
         ];
     }
