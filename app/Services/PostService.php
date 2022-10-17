@@ -241,9 +241,11 @@ class PostService
 
         if (!empty($found[1])) {
             foreach ($found[1] as $headingText) {
+                $strippedHeading = trim((strip_tags($headingText)));
+
                 $tables->push([
-                    'tag' => '#' . Str::slug($headingText),
-                    'text' => $headingText
+                    'tag' => '#' . Str::slug($strippedHeading),
+                    'text' => $strippedHeading,
                 ]);
             }
         }
