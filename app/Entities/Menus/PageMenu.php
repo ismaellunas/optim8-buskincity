@@ -60,7 +60,9 @@ class PageMenu extends BaseMenu implements MenuInterface
     public function getUrl(): string
     {
         try {
-            $pageTranslation = $this->getModel()->page->translateOrDefault($this->locale);
+            $pageTranslation = $this->getModel()
+                ->page
+                ->translateOrDefault($this->getLocaleTranslation());
 
             if (!$this->isDefaultPage()) {
                 return $this->getAdditionalUrl($pageTranslation);
@@ -93,9 +95,11 @@ class PageMenu extends BaseMenu implements MenuInterface
             $this->isSpaceModuleActive
             && $pageTranslation->page->type == SpacePage::TYPE
         ) {
-            return route('frontend.spaces.show', [
-                'page_translation' => $pageTranslation->slug,
-            ]);
+            return $this->getTranslatedUrl(
+                    route('frontend.spaces.show', [
+                    'page_translation' => $pageTranslation->slug,
+                ])
+            );
         }
 
         return $this->fallbackUrl();

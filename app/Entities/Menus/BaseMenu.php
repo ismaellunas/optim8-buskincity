@@ -3,6 +3,9 @@
 namespace App\Entities\Menus;
 
 use App\Models\MenuItem;
+use App\Services\TranslationService;
+use App\Services\LoginService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -23,12 +26,14 @@ abstract class BaseMenu
     public $children;
 
     protected $locale;
+    protected $currentLocale;
     protected $menuItem = null;
     protected $modelName = MenuItem::class;
 
     public function __construct($menuItem, $locale)
     {
         $this->locale = $locale;
+        $this->currentLocale = TranslationService::currentLanguage();
         $this->menuItem = $menuItem;
 
         foreach ($menuItem->getAttributes() as $attribute => $value) {
@@ -63,7 +68,7 @@ abstract class BaseMenu
 
     protected function getTranslatedUrl(string $url): string
     {
-        return LaravelLocalization::localizeURL($url, $this->locale);
+        return LaravelLocalization::localizeURL($url, $this->getLocaleTranslation());
     }
 
     public function getTarget(): ?string
@@ -79,5 +84,17 @@ abstract class BaseMenu
     public function isActive(string $url): bool
     {
         return $this->getUrl() == $url;
+    }
+
+    protected function getLocaleTranslation()
+    {
+        if (
+            Auth::check()
+            && LoginService::isUserHomeUrl()
+        ) {
+            return Auth::user()->originLanguageCode ?? $this->locale;
+        }
+
+        return $this->currentLocale;
     }
 }
