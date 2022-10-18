@@ -3,6 +3,7 @@
 namespace App\Entities\Menus;
 
 use App\Contracts\MenuInterface;
+use Illuminate\Support\Str;
 
 class UrlMenu extends BaseMenu implements MenuInterface
 {
@@ -15,6 +16,12 @@ class UrlMenu extends BaseMenu implements MenuInterface
 
     public function getUrl(): string
     {
-        return $this->getModel()->url ?? "";
+        $url = $this->getModel()->url;
+
+        if (Str::startsWith($url, config('app.url'))) {
+            $url = $this->getTranslatedUrl($url);
+        }
+
+        return $url ?? "";
     }
 }

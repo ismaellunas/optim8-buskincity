@@ -49,7 +49,7 @@ class SpaceController extends Controller
                     return $this->showPreview($page);
                 }
 
-                return $this->showGuest($page);
+                return $this->showGuest($pageTranslation);
 
             } catch (PageNotFoundException $exception) {
 
@@ -84,28 +84,42 @@ class SpaceController extends Controller
         return $this->showPage($pageTranslation);
     }
 
-    private function showGuest(Page $page)
+    private function showGuest(PageTranslation $pageTranslation)
     {
-        $pageTranslation = $page->translate($this->locale);
+        $page = $pageTranslation->page;
+        $newPageTranslation = $page->translate($this->locale);
 
         if (
-            $pageTranslation
-            && $pageTranslation->status !== PageTranslation::STATUS_DRAFT
+            $newPageTranslation
+            && $newPageTranslation->status !== PageTranslation::STATUS_DRAFT
         ) {
-            return $this->showPage($pageTranslation);
+            return $this->redirectOrShowPage($newPageTranslation, $pageTranslation->slug);
         }
 
         $defaultLocale = app(TranslationService::class)->getDefaultLocale();
-        $pageTranslation = $page->translate($defaultLocale);
+        $newPageTranslation = $page->translate($defaultLocale);
 
         if (
-            $pageTranslation
-            && $pageTranslation->status !== PageTranslation::STATUS_DRAFT
+            $newPageTranslation
+            && $newPageTranslation->status !== PageTranslation::STATUS_DRAFT
         ) {
-            return $this->showPage($pageTranslation);
+            return $this->redirectOrShowPage($newPageTranslation, $pageTranslation->slug);
         }
 
         throw new PageNotFoundException();
+    }
+
+    private function redirectOrShowPage(
+        PageTranslation $pageTranslation,
+        string $oldSlug
+    ) {
+        if ($pageTranslation->slug === $oldSlug) {
+            return $this->showPage($pageTranslation);
+        }
+
+        return redirect()->route('frontend.spaces.show', [
+            $pageTranslation->slug
+        ]);
     }
 
     private function showPage(PageTranslation $pageTranslation)
