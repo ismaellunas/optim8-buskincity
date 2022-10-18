@@ -100,8 +100,8 @@
                     menubar: false,
                     plugins: [
                         'advlist autolink lists link image charmap print preview ' +
-                        'anchor searchreplace visualblocks code fullscreen',
-                        'insertdatetime media table paste code wordcount hr code'
+                        'anchor searchreplace visualblocks fullscreen',
+                        'insertdatetime media table paste wordcount hr'
                     ],
                     block_formats: (
                         'Paragraph=p; '+
@@ -118,7 +118,7 @@
                     toolbar2: (
                         'alignleft aligncenter alignright alignjustify | ' +
                         'bullist numlist outdent indent hr | ' +
-                        'anchor link table charmap code | '
+                        'link table charmap'
                     ),
                     contextmenu: 'link image',
                     file_picker_types: 'image media', //'file image media'

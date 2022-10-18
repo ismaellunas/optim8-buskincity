@@ -2,6 +2,8 @@
 
 namespace App\View\Components\Builder\Content;
 
+use Mews\Purifier\Facades\Purifier;
+
 class Heading extends BaseContent
 {
     public $headingClasses = [];
@@ -42,6 +44,12 @@ class Heading extends BaseContent
 
     public function contentHtml(): string
     {
-        return $this->entity['content']['heading']['html'] ?? '';
+        $dirtyHtml = $this->entity['content']['heading']['html'] ?? '';
+
+        if (!empty($dirtyHtml)) {
+            return Purifier::clean($dirtyHtml, 'tinymce');
+        }
+
+        return '';
     }
 }
