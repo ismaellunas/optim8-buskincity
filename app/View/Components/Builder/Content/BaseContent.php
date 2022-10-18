@@ -5,6 +5,7 @@ namespace App\View\Components\Builder\Content;
 use App\Services\PageBuilderService;
 use Illuminate\Support\Str;
 use Illuminate\View\Component;
+use Mews\Purifier\Facades\Purifier;
 
 abstract class BaseContent extends Component
 {
@@ -29,6 +30,17 @@ abstract class BaseContent extends Component
         $this->wrapperClasses = $this->getWrapperClasses();
 
         $this->uniqueClass = $this->getUniqueClass();
+    }
+
+    public function entityContentHtml(): string
+    {
+        $dirtyHtml = $this->entity['content']['html'] ?? '';
+
+        if (!empty($dirtyHtml)) {
+            return Purifier::clean($dirtyHtml, 'tinymce');
+        }
+
+        return '';
     }
 
     /**

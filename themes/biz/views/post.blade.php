@@ -98,7 +98,7 @@
                                 @foreach ($tableOfContents as $content)
                                     <li>
                                         <a href="{{ $content['tag'] }}">
-                                            {{ $content['text'] }}
+                                            {!! $content['text'] !!}
                                         </a>
                                     </li>
                                 @endforeach

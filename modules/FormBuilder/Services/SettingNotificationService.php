@@ -3,6 +3,7 @@
 namespace Modules\FormBuilder\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
 use Modules\FormBuilder\Entities\FieldGroup;
 use Modules\FormBuilder\Entities\FieldGroupNotificationSetting;
 use Modules\FormBuilder\ModuleService;
@@ -54,7 +55,7 @@ class SettingNotificationService
             ) {
                 $fieldNames[] = [
                     'id' => $field['name'],
-                    'value' => $field['label']
+                    'value' => $field['label'] ?? Str::of($field['name'])->replace('_', ' ')->title(),
                 ];
             }
         }
