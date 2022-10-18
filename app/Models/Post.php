@@ -11,6 +11,7 @@ use App\Traits\HasLocale;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
+use Mews\Purifier\Facades\Purifier;
 
 class Post extends BaseModel implements PublishableInterface
 {
@@ -205,5 +206,10 @@ class Post extends BaseModel implements PublishableInterface
     public function getCategoryNames(): string
     {
         return $this->categories->implode('name', ', ');
+    }
+
+    public function getPurifiedContentAttribute(): string
+    {
+        return Purifier::clean($this->content, 'tinymce');
     }
 }

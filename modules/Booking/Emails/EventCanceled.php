@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Mews\Purifier\Facades\Purifier;
 use Modules\Ecommerce\Entities\Order;
 
 class EventCanceled extends Mailable
@@ -58,7 +59,7 @@ class EventCanceled extends Mailable
                 'inviteeEmail' => $this->order->user->email,
                 'inviteeName' => $inviteeName,
                 'productName' => $productName,
-                'template' => $template,
+                'template' => Purifier::clean($template, 'email'),
                 'timezone' => $schedule->timezone,
                 'toName' => $this->to[0]['name'] ?? $this->to['address'] ?? "",
                 'message' => $event->message,

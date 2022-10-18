@@ -3,6 +3,7 @@
 namespace App\View\Components\Builder\Content;
 
 use App\View\Components\Builder\Content\Heading;
+use Mews\Purifier\Facades\Purifier;
 
 class Faq extends Heading
 {
@@ -24,6 +25,16 @@ class Faq extends Heading
 
     private function getFaqContents(): array
     {
-        return $this->entity['content']['faqContent']['contents'] ?? [];
+        $faqContents = [];
+        $contents = $this->entity['content']['faqContent']['contents'] ?? [];
+
+        foreach ($contents as $content) {
+            $faqContents[] = [
+                'question' => $content['question'],
+                'answer' => Purifier::clean($content['answer'], 'tinymce'),
+            ];
+        }
+
+        return $faqContents;
     }
 }

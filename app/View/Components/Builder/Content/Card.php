@@ -4,6 +4,7 @@ namespace App\View\Components\Builder\Content;
 
 use Illuminate\Support\Collection;
 use App\Models\Media;
+use Mews\Purifier\Facades\Purifier;
 
 class Card extends BaseContent
 {
@@ -34,7 +35,13 @@ class Card extends BaseContent
 
     public function contentHtml(): string
     {
-        return $this->entity['content']['cardContent']['content']['html'] ?? '';
+        $dirtyHtml = $this->entity['content']['cardContent']['content']['html'] ?? '';
+
+        if (!empty($dirtyHtml)) {
+            return Purifier::clean($dirtyHtml, 'tinymce');
+        }
+
+        return '';
     }
 
     public function ratio(): string

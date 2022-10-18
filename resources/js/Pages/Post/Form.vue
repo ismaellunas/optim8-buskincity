@@ -329,7 +329,7 @@
                 toolbar2: (
                     'alignleft aligncenter alignright alignjustify | ' +
                     'bullist numlist outdent indent hr | ' +
-                    'anchor link table charmap code | formLists'
+                    'link table charmap | formLists'
                 ),
                 setup: (editor) => {
                     if (props.modules?.form_builder) {
