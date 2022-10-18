@@ -41,7 +41,12 @@
 
         watch: {
             entityGenerated(newValue, oldValue) {
-                this.computedValue = convertToKey(newValue);
+                let value = newValue;
+                if (!value) {
+                    value = this.entity.type ?? "";
+                }
+
+                this.computedValue = convertToKey(value);
             },
         },
     }

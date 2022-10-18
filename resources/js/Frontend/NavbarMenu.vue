@@ -37,7 +37,7 @@
                         v-for="(menu, index) in navMenus"
                         :key="index"
                     >
-                        <template v-if="menu.children && menu.isEnabled">
+                        <template v-if="menu.children.length > 0">
                             <div
                                 class="navbar-item has-dropdown is-hoverable navbar-item-dropdown"
                             >
@@ -53,7 +53,6 @@
                                         :key="childIndex"
                                     >
                                         <a
-                                            v-if="childMenu.isEnabled"
                                             class="navbar-item"
                                             :href="childMenu.link"
                                             :class="{'is-active': menu.isActive}"
