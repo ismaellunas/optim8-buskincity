@@ -111,7 +111,7 @@ class StripeSettingService
                     return [
                         'id' => $currency,
                         'value' => $currency,
-                        'symbol' => config('constants.currency_symbols')[$currency] ?? null,
+                        'symbol' => strip_tags(config('constants.currency_symbols')[$currency] ?? null),
                     ];
                 },
                 $paymentCurrencies
