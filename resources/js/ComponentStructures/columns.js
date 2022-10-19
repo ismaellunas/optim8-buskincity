@@ -12,6 +12,7 @@ export default {
         wrapper: {
             isFullwidth: false,
             backgroundColor: null,
+            backgroundImage: null,
         },
         dimension: {
             'style.padding': {
@@ -53,6 +54,10 @@ export const config = {
                 type: "select",
                 label: "Background Color",
                 options: defaultOption.concat(backgroundColors),
+            },
+            backgroundImage: {
+                component: "ImageBrowser",
+                label: "Background Image",
             },
         }
     },
