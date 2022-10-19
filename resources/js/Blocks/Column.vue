@@ -58,6 +58,7 @@
     import Tabs from '@/Blocks/Contents/Tabs';
     import Text from '@/Blocks/Contents/Text';
     import UserList from '@/Blocks/Contents/UserList';
+    import Video from '@/Blocks/Contents/Video';
     import { isBlank, useModelWrapper, generateElementId } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { cloneDeep } from 'lodash';
@@ -78,6 +79,7 @@
             Tabs,
             Text,
             UserList,
+            Video,
         },
         props: {
             id: { type: String, required: true },

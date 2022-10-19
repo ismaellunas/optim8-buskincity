@@ -10,6 +10,7 @@ import latestPost from './latest-post';
 import tabs from './tabs';
 import text from './text';
 import userList from './user-list';
+import video from './video';
 
 export default {
     button: button,
@@ -24,4 +25,5 @@ export default {
     tabs: tabs,
     text: text,
     userList: userList,
+    video: video,
 }
