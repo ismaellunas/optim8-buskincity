@@ -41,7 +41,18 @@
                         v-else-if="config.type === 'input'"
                         v-model="entity.config[ groupName ][ key ]"
                         :label="config.label"
-                    />
+                        :placeholder="config.placeholder"
+                        :note="config.note"
+                    >
+                        <template
+                            v-if="config.note"
+                            #note
+                        >
+                            <p class="help">
+                                {{ config.note }}
+                            </p>
+                        </template>
+                    </biz-form-input>
 
                     <biz-checkbox
                         v-else-if="config.type === 'checkbox'"
