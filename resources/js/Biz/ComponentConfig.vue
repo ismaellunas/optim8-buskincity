@@ -77,6 +77,7 @@
     import Checkboxes from '@/Blocks/Configs/Checkboxes';
     import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
     import configs from '@/ComponentStructures/configs';
+    import ImageBrowser from '@/Blocks/Configs/ImageBrowser';
     import InputIcon from '@/Blocks/Configs/InputIcon';
     import moduleConfigs from '@/Modules/ComponentStructures/configs';
     import NumberAddons from '@/Blocks/Configs/NumberAddons';
@@ -97,6 +98,7 @@
             Card,
             Checkboxes,
             ConfigRowSection,
+            ImageBrowser,
             InputIcon,
             NumberAddons,
             Select,
