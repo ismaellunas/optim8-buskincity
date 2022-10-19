@@ -172,6 +172,10 @@ return [
 
     'reading_time_per_minute' => 200,
 
+    'regex' => [
+        'youtube_vimeo_url' => '^(http:\/\/|https:\/\/)(vimeo\.com|youtu\.be|www\.youtube\.com|player\.vimeo\.com)\/((video\/|embed\/|watch\?v=|v\/)|[\w\/\S]+)([\?]\S*)?$',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway
