@@ -50,7 +50,8 @@
             contentClass() {
                 return concat(
                     (this.config.text?.alignment ?? ''),
-                    (this.config.text?.size ?? '')
+                    (this.config.text?.size ?? ''),
+                    (this.config.text?.color ?? '')
                 ).filter(Boolean);
             },
             editorClass() {
