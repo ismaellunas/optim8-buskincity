@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Mews\Purifier\Facades\Purifier;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Ecommerce\Entities\Order;
 
@@ -66,7 +67,7 @@ class EventBooked extends Mailable
                 'inviteeEmail' => $user->email,
                 'inviteeName' => $inviteeName,
                 'productName' => $productName,
-                'template' => $template,
+                'template' => Purifier::clean($template, 'email'),
                 'timezone' => $schedule->timezone,
                 'toName' => $this->to[0]['name'] ?? $this->to['address'] ?? "",
             ]);
