@@ -1,4 +1,4 @@
-import { defaultOption, imageRatios, fixedSquares } from './style-options';
+import { defaultOption, imageRatios, fixedSquares, roundedSizes } from './style-options';
 
 export default {
     title: 'Image',
@@ -16,7 +16,7 @@ export default {
             fixedSquare: null,
             ratio: "is-4by3",
             // img
-            rounded: "",
+            rounded: null,
         },
         dimension: {
             'style.padding': {
@@ -53,12 +53,9 @@ export const config = {
             },
             rounded: {
                 type: "select",
-                label: "Rounded",
-                options: [
-                    { value: "", name: "No"},
-                    { value: "is-rounded", name: "Yes"},
-                ],
-            }
+                label: "Rounded Size",
+                options: defaultOption.concat(roundedSizes),
+            },
         }
     },
     dimension: {
