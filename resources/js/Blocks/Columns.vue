@@ -169,7 +169,8 @@
                 const configWrapper = this.entity?.config?.wrapper ?? null;
 
                 return wrapperClass.concat(
-                    (configWrapper['backgroundColor'] ?? '')
+                    (configWrapper['backgroundColor'] ?? ''),
+                    (configWrapper['rounded'] ?? ''),
                 ).filter(Boolean);
             },
 

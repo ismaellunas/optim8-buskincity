@@ -1,8 +1,9 @@
 @aware([
     'backgroundColor' => '',
-    'isSectionIncluded',
-    'uniqueClass',
     'hasBackgroundImage',
+    'isSectionIncluded',
+    'rounded',
+    'uniqueClass',
 ])
 
 <div @class([
@@ -10,7 +11,8 @@
         'pb-background-image' => ($hasBackgroundImage && !$isSectionIncluded),
         $uniqueClass,
         $uniqueClass.'-background' => ($hasBackgroundImage && !$isSectionIncluded),
-        $backgroundColor => !$isSectionIncluded
+        $backgroundColor => !$isSectionIncluded,
+        $rounded
     ])>
     @foreach ($columns as $column)
         <x-builder.column
