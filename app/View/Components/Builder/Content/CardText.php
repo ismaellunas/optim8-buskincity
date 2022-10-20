@@ -36,4 +36,9 @@ class CardText extends BaseContent
 
         return '';
     }
+
+    public function cardRounded(): string
+    {
+        return $this->getConfig()['card']['rounded'] ?? '';
+    }
 }

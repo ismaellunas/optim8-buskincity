@@ -1,4 +1,4 @@
-import { contentSizes, defaultOption } from './style-options';
+import { contentSizes, defaultOption, roundedSizes } from './style-options';
 
 export default {
     title: 'Card Text',
@@ -12,6 +12,9 @@ export default {
         }
     },
     config: {
+        card: {
+            rounded: null,
+        },
         content: {
             size: null,
         },
@@ -35,6 +38,16 @@ export default {
 }
 
 export const config = {
+    card: {
+        label: "Card",
+        config: {
+            rounded: {
+                type: "select",
+                label: "Rounded Size",
+                options: defaultOption.concat(roundedSizes),
+            },
+        },
+    },
     content: {
         label: "Content",
         config: {
