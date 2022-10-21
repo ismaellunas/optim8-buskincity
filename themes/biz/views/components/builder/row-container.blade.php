@@ -12,16 +12,17 @@
 ])
 
 @php
-    $isBackgroundClassShown = ($hasBackgroundImage && !$isSectionIncluded && $isFullwidth)
+    $isBackgroundColorShown = (!$isSectionIncluded && $isFullwidth);
+    $isBackgroundImageShown = ($hasBackgroundImage && !$isSectionIncluded && $isFullwidth);
 @endphp
 
 <div @class([
     'container',
     'is-fluid' => $isFullwidth,
-    'pb-background-image' => $isBackgroundClassShown,
+    'pb-background-image' => $isBackgroundImageShown,
     'theme-font',
-    $backgroundColor => (!$isSectionIncluded && $isFullwidth),
-    $uniqueClass.'-background' => $isBackgroundClassShown,
+    $backgroundColor => $isBackgroundColorShown,
+    $uniqueClass.'-background' => $isBackgroundImageShown,
 
 ])>
     <x-builder.columns
