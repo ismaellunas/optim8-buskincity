@@ -1,17 +1,22 @@
 @aware([
     'backgroundColor' => '',
     'hasBackgroundImage',
+    'isFullwidth',
     'isSectionIncluded',
     'rounded',
     'uniqueClass',
 ])
 
+@php
+    $isBackgroundClassShown = ($hasBackgroundImage && !$isSectionIncluded && !$isFullwidth)
+@endphp
+
 <div @class([
         'columns',
-        'pb-background-image' => ($hasBackgroundImage && !$isSectionIncluded),
+        'pb-background-image' => $isBackgroundClassShown,
         $uniqueClass,
-        $uniqueClass.'-background' => ($hasBackgroundImage && !$isSectionIncluded),
-        $backgroundColor => !$isSectionIncluded,
+        $uniqueClass.'-background' => $isBackgroundClassShown,
+        $backgroundColor => (!$isSectionIncluded && !$isFullwidth),
         $rounded
     ])>
     @foreach ($columns as $column)
