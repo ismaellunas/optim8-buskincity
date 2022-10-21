@@ -118,3 +118,8 @@ export const roundedSizes = [
     { value: "is-rounded-medium", name: "Medium" },
     { value: "is-rounded-large", name: "Large" },
 ];
+
+export const contentPositions = [
+    { value: "is-pulled-left", name: "Left" },
+    { value: "is-pulled-right", name: "Right" },
+];
