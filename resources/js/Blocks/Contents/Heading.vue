@@ -58,6 +58,7 @@
                     this.config.heading?.type ?? "title",
                     'is-' + last(this.headingTag),
                     this.config.heading?.alignment ?? "",
+                    this.config.heading?.color ?? "",
                 ).filter(Boolean);
             }
         },

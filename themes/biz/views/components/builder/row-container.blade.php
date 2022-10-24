@@ -2,17 +2,28 @@
     'backgroundColor' => '',
     'columns' => [],
     'entities' => [],
+    'hasBackgroundImage',
     'images' => [],
     'isFullwidth' => false,
+    'isSectionIncluded',
     'locale' => '',
     'uid' => '',
+    'uniqueClass',
 ])
+
+@php
+    $isBackgroundColorShown = (!$isSectionIncluded && $isFullwidth);
+    $isBackgroundImageShown = ($hasBackgroundImage && !$isSectionIncluded && $isFullwidth);
+@endphp
 
 <div @class([
     'container',
-    'theme-font',
     'is-fluid' => $isFullwidth,
-    $backgroundColor,
+    'pb-background-image' => $isBackgroundImageShown,
+    'theme-font',
+    $backgroundColor => $isBackgroundColorShown,
+    $uniqueClass.'-background' => $isBackgroundImageShown,
+
 ])>
     <x-builder.columns
         :uid="$uid"

@@ -1,22 +1,10 @@
-import { contentSizes, defaultOption, roundedSizes } from './style-options';
-
 export default {
-    title: 'Card Text',
-    componentName: 'CardText',
-    content: {
-        cardContent: {
-            content: {
-                html: "",
-            },
-            media: {},
-        }
-    },
+    title: 'Video',
+    componentName: 'Video',
+    content: {},
     config: {
-        card: {
-            rounded: null,
-        },
-        content: {
-            size: null,
+        video: {
+            url: null,
         },
         dimension: {
             'style.padding': {
@@ -35,27 +23,18 @@ export default {
             },
         }
     }
-}
+};
 
 export const config = {
-    card: {
-        label: "Card",
+    video: {
+        label: "Video",
         config: {
-            rounded: {
-                type: "select",
-                label: "Rounded Size",
-                options: defaultOption.concat(roundedSizes),
+            url: {
+                type: "input",
+                label: "URL",
+                note: "E.g: https://vimeo.com/553766867",
+                placeholder: "Youtube/Vimeo Video URL",
             },
-        },
-    },
-    content: {
-        label: "Content",
-        config: {
-            size: {
-                type: "select",
-                label: "Size",
-                options: defaultOption.concat(contentSizes),
-            }
         }
     },
     dimension: {

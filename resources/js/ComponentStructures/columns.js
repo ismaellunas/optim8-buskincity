@@ -1,6 +1,7 @@
 import {
     backgroundColors,
     defaultOption,
+    roundedSizes,
 } from './style-options';
 
 export default {
@@ -12,6 +13,8 @@ export default {
         wrapper: {
             isFullwidth: false,
             backgroundColor: null,
+            backgroundImage: null,
+            rounded: null,
         },
         dimension: {
             'style.padding': {
@@ -53,6 +56,15 @@ export const config = {
                 type: "select",
                 label: "Background Color",
                 options: defaultOption.concat(backgroundColors),
+            },
+            backgroundImage: {
+                component: "ImageBrowser",
+                label: "Background Image",
+            },
+            rounded: {
+                type: "select",
+                label: "Rounded Size",
+                options: defaultOption.concat(roundedSizes),
             },
         }
     },

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\{
     Page,
     PageTranslation,
+    Setting,
     User,
 };
 use Illuminate\Database\Seeder;
@@ -20,494 +21,934 @@ class PageSeeder extends Seeder
     public function run()
     {
         $adminUser = User::find(1);
-        $pages = [
-            [
-                'title' => 'Dummy Page',
-                'data' => [
-                    "structures" => [
-                        [
-                            "componentName" => "Columns",
-                            "type" => "columns",
-                            "columns" => [
-                                [
-                                    "id" => "IDL4PBMGR07X",
-                                    "components" => [
-                                        [
-                                            "id" => "IDL0GDCQ2FNJ",
-                                            "componentName" => "Heading"
-                                        ]
-                                    ]
-                                ]
-                            ],
-                            "id" => "IDL4PBMJ6GPF"
-                        ],
-                        [
-                            "componentName" => "Columns",
-                            "type" => "columns",
-                            "columns" => [
-                                [
-                                    "id" => "IDL4PBMGR03Q",
-                                    "components" => [
-                                        [
-                                            "id" => "IDL0GDEM20UE",
-                                            "componentName" => "Text"
-                                        ],
-                                        [
-                                            "id" => "IDL0GDML4ZC9",
-                                            "componentName" => "Button"
-                                        ]
-                                    ]
+
+        $page = [
+            'title' => 'Homepage',
+            'data' => [
+                "structures" => [
+                    [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "columns" => [
+                            [
+                                "id" => "IDL9F23V8OOA",
+                                "components" => [
+                                    ["id" => "IDL9F24B2SAM", "componentName" => "Heading"],
+                                    ["id" => "IDL9F24PV5HK", "componentName" => "Text"],
+                                    ["id" => "IDL9HWUW6SXA", "componentName" => "Button"],
                                 ],
-                                [
-                                    "id" => "IDL4PBMGR0Y8",
-                                    "components" => [
-                                        [
-                                            "id" => "IDL0GDDBD53P",
-                                            "componentName" => "CardText"
-                                        ]
-                                    ]
-                                ]
                             ],
-                            "id" => "IDL4PBMRSZW5"
+                            ["id" => "IDL9F246F7CX", "components" => []],
                         ],
-                        [
-                            "componentName" => "Columns",
-                            "type" => "columns",
-                            "columns" => [
-                                [
-                                    "id" => "IDL4PBMGR07X",
-                                    "components" => [
-                                        [
-                                            "id" => "IDL0GDFNUXL8",
-                                            "componentName" => "Tabs"
-                                        ]
-                                    ]
-                                ]
-                            ],
-                            "id" => "IDL4PBN90XUP"
-                        ]
+                        "id" => "IDL9F23Z6L9M",
                     ],
-                    "entities" => [
-                        "IDL0GDCQ2FNJ" => [
-                            "title" => "Heading",
-                            "componentName" => "Heading",
-                            "content" => [
-                                "heading" => [
-                                    "html" => "Dummy Page"
-                                ]
-                            ],
-                            "config" => [
-                                "heading" => [
-                                    "tag" => "h1",
-                                    "type" => "title",
-                                    "alignment" => null
+                    [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "columns" => [
+                            ["id" => "IDL9F2P3CNR9", "components" => []],
+                            [
+                                "id" => "IDL9F2SBNYXM",
+                                "components" => [
+                                    ["id" => "IDL9F2SH9C7D", "componentName" => "Heading"],
+                                    ["id" => "IDL9F2SZZSVP", "componentName" => "Text"],
                                 ],
-                                "dimension" => [
-                                    "style.padding" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ],
-                                    "style.margin" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ]
-                                ]
                             ],
-                            "id" => "IDL0GDCQ2FNJ"
+                            ["id" => "IDL9F2SCMF48", "components" => []],
                         ],
-                        "IDL0GDDBD53P" => [
-                            "title" => "Card Text",
-                            "componentName" => "CardText",
-                            "content" => [
-                                "cardContent" => [
-                                    "content" => [
-                                        "html" => "<p><strong>Lorem ipsum</strong> dolor sit amet consectetur, adipisicing elit. Ad, quidem iure qui, dignissimos necessitatibus commodi laborum nisi atque quo quos libero pariatur deleniti natus laboriosam fuga, nemo non sequi tempore!</p>"
-                                    ],
-                                    "media" => [
-                                    ]
-                                ]
-                            ],
-                            "config" => [
-                                "content" => [
-                                    "size" => null
-                                ],
-                                "dimension" => [
-                                    "style.padding" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ],
-                                    "style.margin" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ]
-                                ]
-                            ],
-                            "id" => "IDL0GDDBD53P"
-                        ],
-                        "IDL0GDEM20UE" => [
-                            "title" => "Text",
-                            "componentName" => "Text",
-                            "content" => [
-                                "html" => "<h3><strong>What is Lorem Ipsum?</strong></h3><p><strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Aenean aliquet risus eu risus finibus, ac accumsan ex aliquam. Duis et libero elementum, commodo mauris maximus, fringilla massa. Integer pellentesque neque at mauris sodales fringilla. Nunc sit amet nunc arcu. Pellentesque viverra quam a congue consequat. Nullam eget dui tempus mauris congue vulputate at et elit. Pellentesque efficitur eleifend ornare. Aliquam sollicitudin, mauris ut commodo volutpat, lacus risus condimentum turpis, at egestas orci diam et mauris. Donec malesuada facilisis ex et vulputate. Aenean in est eget odio rhoncus egestas non id ante. Nam ligula sem, aliquam nec aliquet eget, aliquam in odio. Pellentesque habitant morbi tristique senectus et netuRead Mores et malesuada fames ac turpis egestas.</p>"
-                            ],
-                            "config" => [
-                                "text" => [
-                                    "size" => null,
-                                    "alignment" => null
-                                ],
-                                "dimension" => [
-                                    "style.padding" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ],
-                                    "style.margin" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ]
-                                ]
-                            ],
-                            "id" => "IDL0GDEM20UE"
-                        ],
-                        "IDL0GDFNUXL8" => [
-                            "title" => "Tabs",
-                            "componentName" => "Tabs",
-                            "content" => [
-                                "tabs" => [
-                                    [
-                                        "name" => "Dummy Text",
-                                        "icon" => "fas fa-text",
-                                        "html" => "<p><strong>Lorem ipsum</strong> dolor sit amet, consectetur adipiscing elit. Aenean aliquet risus eu risus finibus, ac accumsan ex aliquam. Duis et libero elementum, commodo mauris maximus, fringilla massa. Integer pellentesque neque at mauris sodales fringilla. Nunc sit amet nunc arcu. Pellentesque viverra quam a congue consequat. Nullam eget dui tempus mauris congue vulputate at et elit. Pellentesque efficitur eleifend ornare. Aliquam sollicitudin, mauris ut commodo volutpat, lacus risus condimentum turpis, at egestas orci diam et mauris. Donec malesuada facilisis ex et vulputate. Aenean in est eget odio rhoncus egestas non id ante. Nam ligula sem, aliquam nec aliquet eget, aliquam in odio. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>"
-                                    ],
-                                    [
-                                        "name" => "Table",
-                                        "icon" => "fas fa-table",
-                                        "html" => '<table style="border-collapse: collapse; width: 100%;" border="1"><tbody><tr><td style="width: 99.8762%;"><strong>Category</strong></td></tr><tr><td style="width: 99.8762%;">News</td></tr><tr><td style="width: 99.8762%;">Sport</td></tr></tbody></table>'
-                                    ],
-                                    [
-                                        "name" => "Category Lists",
-                                        "icon" => "fas fa-list",
-                                        "html" => '<h3>Category Lists:</h3><ul><li>News</li><li>Sport</li><li>Technology</li></ul>'
-                                    ]
-                                ],
-                                "template" => [
-                                    "name" => null,
-                                    "icon" => null,
-                                    "html" => null
-                                ]
-                            ],
-                            "config" => [
-                                "tabs" => [
-                                    "alignment" => null,
-                                    "size" => null,
-                                    "style" => "is-boxed",
-                                    "width" => null
-                                ],
-                                "dimension" => [
-                                    "style.padding" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ],
-                                    "style.margin" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ]
-                                ]
-                            ],
-                            "id" => "IDL0GDFNUXL8"
-                        ],
-                        "IDL0GDML4ZC9" => [
-                            "title" => "Button",
-                            "componentName" => "Button",
-                            "content" => [
-                                "button" => [
-                                    "text" => "Read More",
-                                    "icon" => null
-                                ]
-                            ],
-                            "config" => [
-                                "button" => [
-                                    "link" => "https://www.lipsum.com/",
-                                    "target" => "_blank",
-                                    "color" => "is-link",
-                                    "isLight" => true,
-                                    "size" => null,
-                                    "width" => "is-fullwidth",
-                                    "style" => "is-rounded",
-                                    "iconPosition" => null
-                                ],
-                                "dimension" => [
-                                    "style.padding" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ],
-                                    "style.margin" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ]
-                                ]
-                            ],
-                            "id" => "IDL0GDML4ZC9"
-                        ],
-                        "IDL4PBMJ6GPF" => [
-                            "componentName" => "Columns",
-                            "type" => "columns",
-                            "config" => [
-                                "wrapper" => [
-                                    "isFullwidth" => false,
-                                    "backgroundColor" => "",
-                                ],
-                                "dimension" => [
-                                    "style.padding" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ],
-                                    "style.margin" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ]
-                                ],
-                                'section' => [
-                                    'isIncluded' => false,
-                                    'size' => null,
-                                ]
-                            ],
-                            "id" => "IDL4PBMJ6GPF"
-                        ],
-                        "IDL4PBMRSZW5" => [
-                            "componentName" => "Columns",
-                            "type" => "columns",
-                            "config" => [
-                                "wrapper" => [
-                                    "isFullwidth" => false,
-                                    "backgroundColor" => "",
-                                ],
-                                "dimension" => [
-                                    "style.padding" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ],
-                                    "style.margin" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ]
-                                ],
-                                'section' => [
-                                    'isIncluded' => false,
-                                    'size' => null,
-                                ]
-                            ],
-                            "id" => "IDL4PBMRSZW5"
-                        ],
-                        "IDL4PBN90XUP" => [
-                            "componentName" => "Columns",
-                            "type" => "columns",
-                            "config" => [
-                                "wrapper" => [
-                                    "isFullwidth" => false,
-                                    "backgroundColor" => "",
-                                ],
-                                "dimension" => [
-                                    "style.padding" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ],
-                                    "style.margin" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ]
-                                ],
-                                'section' => [
-                                    'isIncluded' => false,
-                                    'size' => null,
-                                ]
-                            ],
-                            "id" => "IDL4PBN90XUP"
-                        ]
+                        "id" => "IDL9F2S7CG86",
                     ],
-                    "media" => []
+                    [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "columns" => [
+                            [
+                                "id" => "IDL9F3H4532S",
+                                "components" => [
+                                    ["id" => "IDL9FB86ONQ2", "componentName" => "Video"],
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9F3M9BWOJ",
+                    ],
+                    [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "columns" => [
+                            [
+                                "id" => "IDL9GHKP2NWS",
+                                "components" => [
+                                    ["id" => "IDL9GHKP2N8C", "componentName" => "Heading"],
+                                ],
+                            ],
+                            [
+                                "id" => "IDL9GHKYQ7ZI",
+                                "components" => [
+                                    ["id" => "IDL9GU0FUF81", "componentName" => "Button"],
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHKP2NXW",
+                    ],
+                    [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "columns" => [
+                            [
+                                "id" => "IDL9GHL1MGJF",
+                                "components" => [
+                                    [
+                                        "id" => "IDL9GHLEVHKM",
+                                        "componentName" => "LatestPost",
+                                    ],
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHL1MGNF",
+                    ],
+                    [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "columns" => [
+                            [
+                                "id" => "IDL9GHO4U7WI",
+                                "components" => [
+                                    ["id" => "IDL9GHO4U76N", "componentName" => "Heading"],
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHO4U7O6",
+                    ],
+                    [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "columns" => [
+                            ["id" => "IDL9GHOEZREZ", "components" => []],
+                            [
+                                "id" => "IDL9GHOQXSBK",
+                                "components" => [
+                                    ["id" => "IDL9GHOZB81R", "componentName" => "Heading"],
+                                    ["id" => "IDL9GHP8X7V1", "componentName" => "Text"],
+                                    ["id" => "IDL9GHPP6VYD", "componentName" => "Button"],
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHOEZRDV",
+                    ],
+                    [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "columns" => [
+                            [
+                                "id" => "IDL9GHZWOEP1",
+                                "components" => [
+                                    ["id" => "IDL9GHZWOEZF", "componentName" => "Heading"],
+                                    ["id" => "IDL9GHZWOF7S", "componentName" => "Text"],
+                                    ["id" => "IDL9GHZWOFPM", "componentName" => "Button"],
+                                ],
+                            ],
+                            ["id" => "IDL9GHZWOEJL", "components" => []],
+                        ],
+                        "id" => "IDL9GHZWOERZ",
+                    ],
                 ],
+                "entities" => [
+                    "IDL9F23XH7AW" => [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "config" => [
+                            "wrapper" => [
+                                "isFullwidth" => false,
+                                "backgroundColor" => null,
+                                "backgroundImage" => null,
+                                "rounded" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                            "section" => ["isIncluded" => false, "size" => null],
+                        ],
+                        "id" => "IDL9F23XH7AW",
+                    ],
+                    "IDL9F23Z6L9M" => [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "config" => [
+                            "wrapper" => [
+                                "isFullwidth" => false,
+                                "backgroundColor" => "has-background-light",
+                                "backgroundImage" => null,
+                                "rounded" => "is-rounded-small",
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => "100",
+                                    "right" => "50",
+                                    "bottom" => "100",
+                                    "left" => "50",
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                            "section" => ["isIncluded" => false, "size" => "is-medium"],
+                        ],
+                        "id" => "IDL9F23Z6L9M",
+                    ],
+                    "IDL9F24B2SAM" => [
+                        "title" => "Heading",
+                        "componentName" => "Heading",
+                        "content" => ["heading" => ["html" => "Lorem Ipsum"]],
+                        "config" => [
+                            "heading" => [
+                                "tag" => "h1",
+                                "type" => "title",
+                                "alignment" => null,
+                                "color" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9F24B2SAM",
+                    ],
+                    "IDL9F24PV5HK" => [
+                        "title" => "Text",
+                        "componentName" => "Text",
+                        "content" => [
+                            "html" =>
+                                "<p><b>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</b></p>",
+                        ],
+                        "config" => [
+                            "text" => [
+                                "size" => null,
+                                "alignment" => null,
+                                "color" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => "20",
+                                    "right" => null,
+                                    "bottom" => "20",
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9F24PV5HK",
+                    ],
+                    "IDL9F2S7CG86" => [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "config" => [
+                            "wrapper" => [
+                                "isFullwidth" => false,
+                                "backgroundColor" => null,
+                                "backgroundImage" => null,
+                                "rounded" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                            "section" => ["isIncluded" => true, "size" => "is-medium"],
+                        ],
+                        "id" => "IDL9F2S7CG86",
+                    ],
+                    "IDL9F2SH9C7D" => [
+                        "title" => "Heading",
+                        "componentName" => "Heading",
+                        "content" => ["heading" => ["html" => "Lorem Ipsum"]],
+                        "config" => [
+                            "heading" => [
+                                "tag" => "h2",
+                                "type" => "title",
+                                "alignment" => "has-text-centered",
+                                "color" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9F2SH9C7D",
+                    ],
+                    "IDL9F2SZZSVP" => [
+                        "title" => "Text",
+                        "componentName" => "Text",
+                        "content" => [
+                            "html" =>
+                                "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
+                        ],
+                        "config" => [
+                            "text" => [
+                                "size" => null,
+                                "alignment" => "has-text-centered",
+                                "color" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => "30",
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9F2SZZSVP",
+                    ],
+                    "IDL9F3M9BWOJ" => [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "config" => [
+                            "wrapper" => [
+                                "isFullwidth" => false,
+                                "backgroundColor" => null,
+                                "backgroundImage" => null,
+                                "rounded" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => "50",
+                                    "bottom" => null,
+                                    "left" => "50",
+                                    "unit" => "px",
+                                ],
+                            ],
+                            "section" => ["isIncluded" => false, "size" => null],
+                        ],
+                        "id" => "IDL9F3M9BWOJ",
+                    ],
+                    "IDL9FB86ONQ2" => [
+                        "title" => "Video",
+                        "componentName" => "Video",
+                        "content" => [],
+                        "config" => [
+                            "video" => [
+                                "url" => "https://www.youtube.com/watch?v=BHACKCNDMW8",
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => "20",
+                                    "bottom" => null,
+                                    "left" => "20",
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9FB86ONQ2",
+                    ],
+                    "IDL9GHKP2N8C" => [
+                        "title" => "Heading",
+                        "componentName" => "Heading",
+                        "content" => ["heading" => ["html" => "Latest Articles"]],
+                        "config" => [
+                            "heading" => [
+                                "tag" => "h2",
+                                "type" => "title",
+                                "alignment" => null,
+                                "color" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHKP2N8C",
+                    ],
+                    "IDL9GHKP2NXW" => [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "config" => [
+                            "wrapper" => [
+                                "isFullwidth" => false,
+                                "backgroundColor" => null,
+                                "backgroundImage" => null,
+                                "rounded" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => "100",
+                                    "right" => "50",
+                                    "bottom" => null,
+                                    "left" => "50",
+                                    "unit" => "px",
+                                ],
+                            ],
+                            "section" => ["isIncluded" => false, "size" => null],
+                        ],
+                        "id" => "IDL9GHKP2NXW",
+                    ],
+                    "IDL9GHL1MGNF" => [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "config" => [
+                            "wrapper" => [
+                                "isFullwidth" => false,
+                                "backgroundColor" => null,
+                                "backgroundImage" => null,
+                                "rounded" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => "20",
+                                    "right" => "50",
+                                    "bottom" => null,
+                                    "left" => "50",
+                                    "unit" => "px",
+                                ],
+                            ],
+                            "section" => ["isIncluded" => false, "size" => null],
+                        ],
+                        "id" => "IDL9GHL1MGNF",
+                    ],
+                    "IDL9GHLEVHKM" => [
+                        "title" => "Latest Post",
+                        "componentName" => "LatestPost",
+                        "content" => [],
+                        "config" => [
+                            "post" => ["categoryId" => null, "limit" => 3],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHLEVHKM",
+                    ],
+                    "IDL9GHO4U76N" => [
+                        "title" => "Heading",
+                        "componentName" => "Heading",
+                        "content" => ["heading" => ["html" => "Lorem Ipsum"]],
+                        "config" => [
+                            "heading" => [
+                                "tag" => "h2",
+                                "type" => "title",
+                                "alignment" => null,
+                                "color" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHO4U76N",
+                    ],
+                    "IDL9GHO4U7O6" => [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "config" => [
+                            "wrapper" => [
+                                "isFullwidth" => false,
+                                "backgroundColor" => null,
+                                "backgroundImage" => null,
+                                "rounded" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => "100",
+                                    "right" => "50",
+                                    "bottom" => null,
+                                    "left" => "50",
+                                    "unit" => "px",
+                                ],
+                            ],
+                            "section" => ["isIncluded" => false, "size" => null],
+                        ],
+                        "id" => "IDL9GHO4U7O6",
+                    ],
+                    "IDL9GHOEZRDV" => [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "config" => [
+                            "wrapper" => [
+                                "isFullwidth" => false,
+                                "backgroundColor" => "has-background-light",
+                                "backgroundImage" => null,
+                                "rounded" => "is-rounded-small",
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => "30",
+                                    "right" => "30",
+                                    "bottom" => "30",
+                                    "left" => "30",
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => "50",
+                                    "right" => "50",
+                                    "bottom" => null,
+                                    "left" => "50",
+                                    "unit" => "px",
+                                ],
+                            ],
+                            "section" => ["isIncluded" => false, "size" => null],
+                        ],
+                        "id" => "IDL9GHOEZRDV",
+                    ],
+                    "IDL9GHOZB81R" => [
+                        "title" => "Heading",
+                        "componentName" => "Heading",
+                        "content" => ["heading" => ["html" => "Lorem Ipsum"]],
+                        "config" => [
+                            "heading" => [
+                                "tag" => "h3",
+                                "type" => "title",
+                                "alignment" => null,
+                                "color" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => "75",
+                                    "bottom" => null,
+                                    "left" => "25",
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHOZB81R",
+                    ],
+                    "IDL9GHP8X7V1" => [
+                        "title" => "Text",
+                        "componentName" => "Text",
+                        "content" => [
+                            "html" =>
+                                "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
+                        ],
+                        "config" => [
+                            "text" => [
+                                "size" => null,
+                                "alignment" => null,
+                                "color" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => "75",
+                                    "bottom" => null,
+                                    "left" => "25",
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => "30",
+                                    "right" => null,
+                                    "bottom" => "30",
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHP8X7V1",
+                    ],
+                    "IDL9GHPP6VYD" => [
+                        "title" => "Button",
+                        "componentName" => "Button",
+                        "content" => ["button" => ["text" => "Apply Now", "icon" => null]],
+                        "config" => [
+                            "button" => [
+                                "link" => "#",
+                                "target" => null,
+                                "color" => "is-primary",
+                                "isLight" => false,
+                                "size" => null,
+                                "width" => null,
+                                "style" => "is-rounded",
+                                "position" => null,
+                                "iconPosition" => "left",
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => "25",
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHPP6VYD",
+                    ],
+                    "IDL9GHZWOEZF" => [
+                        "title" => "Heading",
+                        "componentName" => "Heading",
+                        "content" => ["heading" => ["html" => "Lorem Ipsum"]],
+                        "config" => [
+                            "heading" => [
+                                "tag" => "h3",
+                                "type" => "title",
+                                "alignment" => null,
+                                "color" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => "25",
+                                    "bottom" => null,
+                                    "left" => "75",
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHZWOEZF",
+                    ],
+                    "IDL9GHZWOF7S" => [
+                        "title" => "Text",
+                        "componentName" => "Text",
+                        "content" => [
+                            "html" =>
+                                "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>",
+                        ],
+                        "config" => [
+                            "text" => [
+                                "size" => null,
+                                "alignment" => null,
+                                "color" => null,
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => "25",
+                                    "bottom" => null,
+                                    "left" => "75",
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => "30",
+                                    "right" => null,
+                                    "bottom" => "30",
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHZWOF7S",
+                    ],
+                    "IDL9GHZWOFPM" => [
+                        "title" => "Button",
+                        "componentName" => "Button",
+                        "content" => ["button" => ["text" => "Sign Up", "icon" => null]],
+                        "config" => [
+                            "button" => [
+                                "link" => "http://localhost:8000/login",
+                                "target" => null,
+                                "color" => "is-primary",
+                                "isLight" => false,
+                                "size" => null,
+                                "width" => null,
+                                "style" => "is-rounded",
+                                "position" => null,
+                                "iconPosition" => "left",
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => "75",
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GHZWOFPM",
+                    ],
+                    "IDL9GHZWOERZ" => [
+                        "componentName" => "Columns",
+                        "type" => "columns",
+                        "config" => [
+                            "wrapper" => [
+                                "isFullwidth" => false,
+                                "backgroundColor" => "has-background-light",
+                                "backgroundImage" => null,
+                                "rounded" => "is-rounded-small",
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => "30",
+                                    "right" => "30",
+                                    "bottom" => "30",
+                                    "left" => "30",
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => "50",
+                                    "right" => "50",
+                                    "bottom" => null,
+                                    "left" => "50",
+                                    "unit" => "px",
+                                ],
+                            ],
+                            "section" => ["isIncluded" => false, "size" => null],
+                        ],
+                        "id" => "IDL9GHZWOERZ",
+                    ],
+                    "IDL9GU0FUF81" => [
+                        "title" => "Button",
+                        "componentName" => "Button",
+                        "content" => [
+                            "button" => ["text" => "View All Articles", "icon" => null],
+                        ],
+                        "config" => [
+                            "button" => [
+                                "link" => "http://localhost:8000/blog",
+                                "target" => null,
+                                "color" => "is-primary",
+                                "isLight" => false,
+                                "size" => null,
+                                "width" => null,
+                                "style" => "is-rounded is-outlined",
+                                "position" => "is-pulled-right",
+                                "iconPosition" => "left",
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9GU0FUF81",
+                    ],
+                    "IDL9HWUW6SXA" => [
+                        "title" => "Button",
+                        "componentName" => "Button",
+                        "content" => ["button" => ["text" => "Learn More", "icon" => null]],
+                        "config" => [
+                            "button" => [
+                                "link" => null,
+                                "target" => null,
+                                "color" => "is-primary",
+                                "isLight" => false,
+                                "size" => null,
+                                "width" => null,
+                                "style" => "is-rounded",
+                                "position" => null,
+                                "iconPosition" => "left",
+                            ],
+                            "dimension" => [
+                                "style.padding" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                                "style.margin" => [
+                                    "top" => null,
+                                    "right" => null,
+                                    "bottom" => null,
+                                    "left" => null,
+                                    "unit" => "px",
+                                ],
+                            ],
+                        ],
+                        "id" => "IDL9HWUW6SXA",
+                    ],
+                ],
+                "media" => [],
             ],
-            [
-                'title' => 'FAQ',
-                'data' => [
-                    "structures" => [
-                        [
-                            "componentName" => "Columns",
-                            "type" => "columns",
-                            "columns" => [
-                                [
-                                    "id" => "IDL4PBL5QMK8",
-                                    "components" => [
-                                        [
-                                            "id" => "IDL0GDUPE90F",
-                                            "componentName" => "Faq"
-                                        ]
-                                    ]
-                                ]
-                            ],
-                            "id" => "IDL4PBLOSY0U"
-                        ]
-                    ],
-                    "entities" => [
-                        "IDL0GDUPE90F" => [
-                            "title" => "FAQ",
-                            "componentName" => "Faq",
-                            "content" => [
-                                "heading" => [
-                                    "html" => "FAQ"
-                                ],
-                                "faqContent" => [
-                                    "contents" => [
-                                        [
-                                            "id" => "IDL0GDUQZQ0S",
-                                            "question" => "What is Lorem Ipsum?",
-                                            "answer" => "<p><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>"
-                                        ],
-                                        [
-                                            "id" => "IDL0GDV1VMEH",
-                                            "question" => "Why do we use it?",
-                                            "answer" => "<p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>"
-                                        ],
-                                        [
-                                            "id" => "IDL0GDVA02ZW",
-                                            "question" => "Where does it come from?",
-                                            "answer" => '<p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>'
-                                        ],
-                                        [
-                                            "id" => "IDL0GDVK0YSX",
-                                            "question" => "Where can I get some?",
-                                            "answer" => "<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isnt anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc.</p>"
-                                        ]
-                                    ],
-                                    "template" => [
-                                        "question" => [
-                                            "id" => "IDL0GDVK0YSX",
-                                            "question" => null,
-                                            "answer" => null
-                                        ]
-                                    ]
-                                ]
-                            ],
-                            "config" => [
-                                "heading" => [
-                                    "tag" => "h1",
-                                    "type" => "title",
-                                    "alignment" => null
-                                ],
-                                "dimension" => [
-                                    "style.padding" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ],
-                                    "style.margin" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ]
-                                ]
-                            ],
-                            "id" => "IDL0GDUPE90F"
-                        ],
-                        "IDL4PBLOSY0U" => [
-                            "componentName" => "Columns",
-                            "type" => "columns",
-                            "config" => [
-                                "wrapper" => [
-                                    "isFullwidth" => false,
-                                    "backgroundColor" => "",
-                                ],
-                                "dimension" => [
-                                    "style.padding" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ],
-                                    "style.margin" => [
-                                        "top" => null,
-                                        "right" => null,
-                                        "bottom" => null,
-                                        "left" => null,
-                                        "unit" => "px"
-                                    ]
-                                ],
-                                'section' => [
-                                    'isIncluded' => false,
-                                    'size' => null,
-                                ]
-                            ],
-                            "id" => "IDL4PBLOSY0U"
-                        ]
-                    ],
-                    "media" => []
-                ],
-            ]
         ];
 
-        foreach ($pages as $page) {
-            Page::factory()
-                ->hasTranslations(1, [
-                    'title' => $page['title'],
-                    'slug' => Str::slug($page['title']),
-                    'status' => PageTranslation::STATUS_PUBLISHED,
-                    'data' => $page['data'],
-                ])
-                ->for($adminUser, 'author')
-                ->create();
-        }
+        $homepage = Page::factory()
+            ->hasTranslations(1, [
+                'title' => $page['title'],
+                'slug' => Str::slug($page['title']),
+                'status' => PageTranslation::STATUS_PUBLISHED,
+                'data' => $page['data'],
+            ])
+            ->for($adminUser, 'author')
+            ->create();
+
+        $this->setPageToHomepage($homepage->id);
+    }
+
+    public function setPageToHomepage(int $pageId): void
+    {
+        $setting = Setting::firstOrNew(['key' => 'home_page']);
+
+        $setting->value = $pageId;
+
+        $setting->save();
     }
 }

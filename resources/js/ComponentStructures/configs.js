@@ -11,6 +11,7 @@ import { config as latestPost } from './latest-post';
 import { config as tabs } from './tabs';
 import { config as text } from './text';
 import { config as userList } from './user-list';
+import { config as video } from './video';
 
 export default {
     button: button,
@@ -26,4 +27,5 @@ export default {
     tabs: tabs,
     text: text,
     userList: userList,
+    video: video,
 };
