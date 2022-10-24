@@ -8,15 +8,16 @@
 ])
 
 @php
-    $isBackgroundClassShown = ($hasBackgroundImage && !$isSectionIncluded && !$isFullwidth)
+    $isBackgroundColorShown = (!$isSectionIncluded && !$isFullwidth);
+    $isBackgroundImageShown = ($hasBackgroundImage && !$isSectionIncluded && !$isFullwidth);
 @endphp
 
 <div @class([
         'columns',
-        'pb-background-image' => $isBackgroundClassShown,
+        'pb-background-image' => $isBackgroundImageShown,
         $uniqueClass,
-        $uniqueClass.'-background' => $isBackgroundClassShown,
-        $backgroundColor => (!$isSectionIncluded && !$isFullwidth),
+        $uniqueClass.'-background' => $isBackgroundImageShown,
+        $backgroundColor => $isBackgroundColorShown,
         $rounded
     ])>
     @foreach ($columns as $column)
