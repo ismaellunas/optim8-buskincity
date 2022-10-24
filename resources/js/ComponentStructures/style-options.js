@@ -112,3 +112,14 @@ export const columnFieldSizes = [
     { value: "is-half", name: "2 Column" },
     { value: "is-one-third", name: "3 Column" },
 ];
+
+export const roundedSizes = [
+    { value: "is-rounded-small", name: "Small" },
+    { value: "is-rounded-medium", name: "Medium" },
+    { value: "is-rounded-large", name: "Large" },
+];
+
+export const contentPositions = [
+    { value: "is-pulled-left", name: "Left" },
+    { value: "is-pulled-right", name: "Right" },
+];

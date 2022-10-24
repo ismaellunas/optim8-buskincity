@@ -102,6 +102,7 @@
                     (this.config.button.size ?? ''),
                     (this.config.button.width ?? ''),
                     (this.config.button.style ?? ''),
+                    (this.config.button.position ?? ''),
                 ).filter(Boolean);
             },
         },

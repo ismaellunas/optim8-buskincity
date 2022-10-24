@@ -41,7 +41,18 @@
                         v-else-if="config.type === 'input'"
                         v-model="entity.config[ groupName ][ key ]"
                         :label="config.label"
-                    />
+                        :placeholder="config.placeholder"
+                        :note="config.note"
+                    >
+                        <template
+                            v-if="config.note"
+                            #note
+                        >
+                            <p class="help">
+                                {{ config.note }}
+                            </p>
+                        </template>
+                    </biz-form-input>
 
                     <biz-checkbox
                         v-else-if="config.type === 'checkbox'"
@@ -77,6 +88,7 @@
     import Checkboxes from '@/Blocks/Configs/Checkboxes';
     import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
     import configs from '@/ComponentStructures/configs';
+    import ImageBrowser from '@/Blocks/Configs/ImageBrowser';
     import InputIcon from '@/Blocks/Configs/InputIcon';
     import moduleConfigs from '@/Modules/ComponentStructures/configs';
     import NumberAddons from '@/Blocks/Configs/NumberAddons';
@@ -97,6 +109,7 @@
             Card,
             Checkboxes,
             ConfigRowSection,
+            ImageBrowser,
             InputIcon,
             NumberAddons,
             Select,

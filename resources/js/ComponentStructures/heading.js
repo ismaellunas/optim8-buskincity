@@ -1,4 +1,4 @@
-import { alignments, defaultOption } from './style-options';
+import { alignments, defaultOption, textColors } from './style-options';
 
 export default {
     title: "Heading",
@@ -13,6 +13,7 @@ export default {
             tag: "h1",
             type: "title",
             alignment: null,
+            color: null,
         },
         dimension: {
             'style.padding': {
@@ -61,6 +62,11 @@ export const config = {
                 type: "select",
                 label: "Alignment",
                 options: defaultOption.concat(alignments),
+            },
+            color: {
+                type: "select",
+                label: "Text Color",
+                options: defaultOption.concat(textColors),
             },
         },
     },

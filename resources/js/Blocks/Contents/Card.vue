@@ -5,7 +5,10 @@
             @duplicate-content="duplicateContent"
         />
 
-        <div class="card">
+        <div
+            class="card"
+            :class="configCard.rounded"
+        >
             <div
                 class="card-image"
                 :class="cardImageClass"
@@ -140,11 +143,22 @@
             isFormDisplayed() {
                 return !this.hasImage || (this.hasImage && this.isFormOpen);
             },
+            configCard() {
+                return this.config.card;
+            },
+            configImage() {
+                return this.config.image;
+            },
+            configContent() {
+                return this.config.content;
+            },
             cardImageClass() {
                 let classes = [];
+
                 const suffix = {top: 't', right: 'r', bottom: 'b', left: 'l'};
-                if (this.config?.image?.padding) {
-                    for (const [key, value] of Object.entries(this.config.image.padding)) {
+
+                if (this.configImage.padding) {
+                    for (const [key, value] of Object.entries(this.configImage.padding)) {
                         classes.push( 'p'+suffix[key]+'-'+value );
                     }
                 }
@@ -152,8 +166,8 @@
             },
             cardContentClass() {
                 return concat(
-                    this.config.content?.size,
-                    this.config.content?.alignment
+                    this.configContent?.size,
+                    this.configContent?.alignment
                 ).filter(Boolean);
             },
         },

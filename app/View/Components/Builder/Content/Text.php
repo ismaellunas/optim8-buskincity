@@ -25,6 +25,7 @@ class Text extends BaseContent
 
         $classes->push($textConfig['size'] ?? null);
         $classes->push($textConfig['alignment'] ?? null);
+        $classes->push($textConfig['color'] ?? null);
 
         return $classes->filter()->all();
     }

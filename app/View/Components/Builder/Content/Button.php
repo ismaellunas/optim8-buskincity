@@ -45,6 +45,7 @@ class Button extends BaseContent
         $classes->push($this->config['size'] ?? null);
         $classes->push($this->config['width'] ?? null);
         $classes->push($this->config['style'] ?? null);
+        $classes->push($this->config['position'] ?? null);
 
         return $classes->filter()->values()->all();
     }
