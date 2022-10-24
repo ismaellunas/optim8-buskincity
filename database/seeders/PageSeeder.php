@@ -704,6 +704,7 @@ class PageSeeder extends Seeder
                                 "size" => null,
                                 "width" => null,
                                 "style" => "is-rounded",
+                                "position" => null,
                                 "iconPosition" => "left",
                             ],
                             "dimension" => [
@@ -800,6 +801,7 @@ class PageSeeder extends Seeder
                                 "size" => null,
                                 "width" => null,
                                 "style" => "is-rounded",
+                                "position" => null,
                                 "iconPosition" => "left",
                             ],
                             "dimension" => [
