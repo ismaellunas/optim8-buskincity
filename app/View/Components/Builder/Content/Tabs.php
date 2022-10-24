@@ -2,6 +2,8 @@
 
 namespace App\View\Components\Builder\Content;
 
+use Mews\Purifier\Facades\Purifier;
+
 class Tabs extends BaseContent
 {
     public $classes = [];
@@ -35,6 +37,14 @@ class Tabs extends BaseContent
 
     private function getTabsContent(): array
     {
-        return $this->entity['content']['tabs'] ?? [];
+        $tabContents = $this->entity['content']['tabs'] ?? [];
+
+        foreach ($tabContents as $tabContent) {
+            if ($tabContent['html']) {
+                $tabContent['html'] = Purifier::clean($tabContent['html'], 'tinymce');
+            }
+        }
+
+        return $tabContents;
     }
 }

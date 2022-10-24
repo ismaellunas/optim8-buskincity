@@ -1,7 +1,10 @@
 @aware(['locale' => null])
 
 <div @class($uniqueClass)>
-    <div class="card">
+    <div @class([
+        'card',
+        $cardRounded,
+    ])>
         @if ($hasImage)
             <div @class(array_merge(['card-image'], $cardImageClasses))>
                 <x-image

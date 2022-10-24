@@ -164,6 +164,7 @@
         provide() {
             return {
                 dataMedia: this.data.media,
+                selectedLocale: this.selectedLocale,
             };
         },
 
