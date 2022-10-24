@@ -19,8 +19,6 @@ class Video extends Text
 
         $rules[$this->name][] = "url";
 
-        // @see https://www.regextester.com/96461
-        // @see https://stackoverflow.com/questions/5612602/improving-regex-for-parsing-youtube-vimeo-urls
         $regex = config('constants.regex.youtube_vimeo_url');
 
         $rules[$this->name][] = 'regex:/'.$regex.'/i';

@@ -31,7 +31,7 @@ class Columns extends BaseComponent implements
 
     private function doesWrapperHaveBackgroundImage(): bool
     {
-        return !!$this->getConfig()['wrapper']['backgroundImage'] ?? false;
+        return !!($this->getConfig()['wrapper']['backgroundImage'] ?? false);
     }
 
     private function getBackgroundStyleBlock(string $rootSelector): StyleBlock

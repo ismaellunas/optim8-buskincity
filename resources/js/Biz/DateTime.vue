@@ -18,7 +18,11 @@
         },
 
         props: {
-            modelValue: Date|Array|null,
+            modelValue: {
+                type: [Date, Array, null],
+                required: true,
+                default: null,
+            },
             options: {
                 type: Object,
                 default: () => {}
