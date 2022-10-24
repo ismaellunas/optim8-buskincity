@@ -42,6 +42,7 @@
             modelValue: {
                 type: [Date, Array, null],
                 required: true,
+                default: null,
             },
             disabled: {
                 type: Boolean,

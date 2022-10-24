@@ -2,7 +2,7 @@
     <div
         class="columns"
         :class="wrapperClass"
-        :style="dimensionStyle"
+        :style="wrapperStyle"
     >
         <div
             v-if="isEditMode"
@@ -88,15 +88,16 @@
 </template>
 
 <script>
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
+    import MixinContentHasImage from '@/Mixins/ContentHasImage';
+    import MixinEditModeComponent from '@/Mixins/EditModeComponent';
+    import MixinMediaImage from '@/Mixins/MediaImage';
     import BizButton from '@/Biz/Button';
     import BizSelect from '@/Biz/Select';
     import BlockColumn from '@/Blocks/Column';
-    import EditModeComponentMixin from '@/Mixins/EditModeComponent';
-    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
-    import MixinMediaImage from '@/Mixins/MediaImage';
     import { confirm, confirmDelete } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
-    import { useModelWrapper, isEmpty, getResourceFromDataObject } from '@/Libs/utils';
+    import { useModelWrapper, isEmpty, getResourceFromDataObject, isBlank } from '@/Libs/utils';
     import { inject } from "vue";
     import icon from '@/Libs/icon-class';
 
@@ -108,8 +109,9 @@
         },
 
         mixins: [
-            EditModeComponentMixin,
             MixinContentHasDimension,
+            MixinContentHasImage,
+            MixinEditModeComponent,
             MixinMediaImage,
         ],
 
@@ -129,6 +131,7 @@
         setup(props, { emit }) {
             return {
                 block: useModelWrapper(props, emit),
+                dataImages: inject('dataImages'),
                 entities: useModelWrapper(props, emit, 'dataEntities'),
                 media: inject('dataMedia'),
             };
@@ -138,6 +141,7 @@
             return {
                 columnOptions: [1,2,3,4,5,6],
                 icon,
+                images: this.dataImages,
                 numberOfColumns: this.block.columns.length,
             };
         },
@@ -156,19 +160,48 @@
                     );
                 }
 
-                const configWrapper = this.dataEntity?.config?.wrapper ?? null;
+                if (this.hasImage) {
+                    wrapperClass = wrapperClass.concat(
+                        'pb-background-image'
+                    );
+                }
+
+                const configWrapper = this.entity?.config?.wrapper ?? null;
 
                 return wrapperClass.concat(
-                    (configWrapper['backgroundColor'] ?? '')
+                    (configWrapper['backgroundColor'] ?? ''),
+                    (configWrapper['rounded'] ?? ''),
                 ).filter(Boolean);
             },
 
-            dataEntity() {
-                return this.dataEntities[ this.block.id ] ?? null;
+            wrapperStyle() {
+                let wrapperStyle = [];
+
+                if (this.hasImage) {
+                    wrapperStyle.push({
+                        'background-image': 'url(' + this.imageSrc + ')',
+                    });
+                }
+
+                return wrapperStyle.concat(this.dimensionStyle);
+            },
+
+            entity() {
+                return this.entities[ this.block.id ] ?? null;
             },
 
             configDimension() {
-                return this.dataEntity?.config?.dimension ?? null;
+                return this.entity?.config?.dimension ?? null;
+            },
+        },
+
+        watch: {
+            'entity.config.wrapper.backgroundImage': {
+                handler(newValue, oldValue) {
+                    this.entityImage.mediaId = newValue;
+                },
+                deep: true,
+                immediate: true
             },
         },
 
@@ -259,7 +292,12 @@
                             'mediaId'
                         );
 
-                        allMediaIds = allMediaIds.concat(mediaIds);
+                        const backgroundImages = getResourceFromDataObject(
+                            self.entities[blockId],
+                            'backgroundImage'
+                        );
+
+                        allMediaIds = allMediaIds.concat(mediaIds, backgroundImages);
                     }
                 });
 

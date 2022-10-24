@@ -1,4 +1,11 @@
-import { alignments, contentSizes, defaultOption, fixedSquares, imageRatios } from './style-options';
+import {
+    alignments,
+    contentSizes,
+    defaultOption,
+    fixedSquares,
+    imageRatios,
+    roundedSizes,
+} from './style-options';
 
 export default {
     title: "Card",
@@ -22,10 +29,15 @@ export default {
         },
     },
     config: {
+        card: {
+            link: null,
+            rounded: null,
+        },
         image: {
             // figure
             fixedSquare: null, // is-16x16, etc..
             ratio: "is-4by3", // is-square
+            rounded: null,
             padding: {
                 top: null,
                 right: null,
@@ -57,6 +69,21 @@ export default {
 }
 
 export const config = {
+    card: {
+        label: "Card",
+        config: {
+            link: {
+                type: "input",
+                label: "Link",
+                note: "E.g: https://www.google.com",
+            },
+            rounded: {
+                type: "select",
+                label: "Rounded Size",
+                options: defaultOption.concat(roundedSizes),
+            },
+        },
+    },
     image: {
         label: "Image",
         config: {
@@ -69,6 +96,11 @@ export const config = {
                 type: "select",
                 label: "Fixed Square",
                 options: defaultOption.concat(fixedSquares)
+            },
+            rounded: {
+                type: "select",
+                label: "Rounded Size",
+                options: defaultOption.concat(roundedSizes),
             },
             padding: {
                 label: "Padding",

@@ -4,7 +4,7 @@
     </x-slot>
 
     <x-slot name="metaDescription">
-        {{ trim($page->meta_description) }}
+        {{ trim($page->meta_description ?? "") }}
     </x-slot>
 
     <div class="page-wrapper py-6">

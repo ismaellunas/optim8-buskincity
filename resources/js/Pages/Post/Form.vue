@@ -277,6 +277,7 @@
     import icon from '@/Libs/icon-class';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { convertToSlug } from '@/Libs/utils';
+    import { fullConfig } from '@/Libs/tinymce-configs';
     import { head, isEmpty, keys, pull, sortBy } from 'lodash';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
@@ -326,11 +327,7 @@
 
         setup(props, { emit }) {
             const editorConfig = {
-                toolbar2: (
-                    'alignleft aligncenter alignright alignjustify | ' +
-                    'bullist numlist outdent indent hr | ' +
-                    'link table charmap | formLists'
-                ),
+                toolbar2: fullConfig.toolbar2 + ' | formLists',
                 setup: (editor) => {
                     if (props.modules?.form_builder) {
                         editor.ui.registry.addMenuButton('formLists', {

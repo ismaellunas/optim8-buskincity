@@ -32,6 +32,7 @@ class Heading extends BaseContent
         $classes = collect();
         $classes->push($configHeading['type'] ?? null);
         $classes->push($configHeading['alignment'] ?? null);
+        $classes->push($configHeading['color'] ?? null);
         $classes->push('is-'.substr($this->headingTag(), -1));
 
         return $classes->filter()->all();

@@ -172,6 +172,12 @@ return [
 
     'reading_time_per_minute' => 200,
 
+    'regex' => [
+        // @see https://www.regextester.com/96461
+        // @see https://stackoverflow.com/questions/5612602/improving-regex-for-parsing-youtube-vimeo-urls
+        'youtube_vimeo_url' => '^(http:\/\/|https:\/\/)(vimeo\.com|youtu\.be|www\.youtube\.com|player\.vimeo\.com)\/((video\/|embed\/|watch\?v=|v\/)|[\w\/\S]+)([\?]\S*)?$',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway
