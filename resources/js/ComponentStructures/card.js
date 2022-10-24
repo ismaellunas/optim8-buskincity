@@ -30,6 +30,7 @@ export default {
     },
     config: {
         card: {
+            link: null,
             rounded: null,
         },
         image: {
@@ -71,6 +72,11 @@ export const config = {
     card: {
         label: "Card",
         config: {
+            link: {
+                type: "input",
+                label: "Link",
+                note: "E.g: https://www.google.com",
+            },
             rounded: {
                 type: "select",
                 label: "Rounded Size",
