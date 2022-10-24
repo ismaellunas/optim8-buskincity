@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Builder;
 
+use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
 class Row extends Component
@@ -15,6 +16,8 @@ class Row extends Component
     public $backgroundColor;
     public $isSectionIncluded;
     public $sectionSize;
+    public $uniqueClass;
+    public $hasBackgroundImage;
 
     private $config;
 
@@ -25,9 +28,11 @@ class Row extends Component
         $this->entities = $entities;
         $this->locale = $locale;
         $this->images = $images;
+        $this->uniqueClass = $this->getUniqueClass();
 
         $this->config = $entities[$this->uid]['config'];
         $this->isSectionIncluded = $this->isSectionUsed();
+        $this->hasBackgroundImage = $this->hasBackgroundImage();
 
         $configWrapper = $this->config['wrapper'] ?? null;
         if ($configWrapper) {
@@ -43,6 +48,16 @@ class Row extends Component
     private function isSectionUsed(): bool
     {
         return $this->config['section']['isIncluded'] ?? false;
+    }
+
+    private function hasBackgroundImage(): bool
+    {
+        return !empty($this->config['wrapper']['backgroundImage']) ?? false;
+    }
+
+    private function getUniqueClass(): string
+    {
+        return 'pb-'.Str::lower($this->uid);
     }
 
     public function render()

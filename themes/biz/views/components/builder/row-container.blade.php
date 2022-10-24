@@ -1,5 +1,4 @@
 @aware([
-    'backgroundColor' => '',
     'columns' => [],
     'entities' => [],
     'images' => [],
@@ -12,7 +11,6 @@
     'container',
     'theme-font',
     'is-fluid' => $isFullwidth,
-    $backgroundColor,
 ])>
     <x-builder.columns
         :uid="$uid"
