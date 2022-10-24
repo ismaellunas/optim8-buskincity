@@ -1,8 +1,9 @@
 import {
     colors,
+    contentPositions,
     contentSizes,
     defaultOption,
-    otherColors
+    otherColors,
 } from './style-options';
 
 export default {
@@ -23,6 +24,7 @@ export default {
             size: null,
             width: null,
             style: null,
+            position: null,
             iconPosition: 'left',
         },
         dimension: {
@@ -96,6 +98,11 @@ export const config = {
                         { value: "is-rounded is-outlined", name: "Rounded & Outlined"},
                     ]
                 ),
+            },
+            position: {
+                type: "select",
+                label: "Button Position",
+                options: defaultOption.concat(contentPositions),
             },
             iconPosition: {
                 type: "select",

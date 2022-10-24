@@ -16,7 +16,7 @@ class UrlMenu extends BaseMenu implements MenuInterface
 
     public function getUrl(): string
     {
-        $url = $this->getModel()->url;
+        $url = $this->getModel()->url ?? "";
 
         if (Str::startsWith($url, config('app.url'))) {
             $url = $this->getTranslatedUrl($url);
