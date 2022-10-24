@@ -8,16 +8,17 @@ use Illuminate\View\Component;
 class Row extends Component
 {
     public $uid;
+    public $backgroundColor;
     public $columns;
     public $entities;
-    public $locale;
+    public $hasBackgroundImage;
     public $images;
     public $isFullwidth;
-    public $backgroundColor;
     public $isSectionIncluded;
+    public $locale;
+    public $rounded;
     public $sectionSize;
     public $uniqueClass;
-    public $hasBackgroundImage;
 
     private $config;
 
@@ -38,6 +39,7 @@ class Row extends Component
         if ($configWrapper) {
             $this->backgroundColor = $this->config['wrapper']['backgroundColor'] ?? '';
             $this->isFullwidth = $this->config['wrapper']['isFullwidth'] ?? false;
+            $this->rounded = $this->config['wrapper']['rounded'] ?? null;
         }
 
         if ($this->isSectionIncluded) {

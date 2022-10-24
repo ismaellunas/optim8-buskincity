@@ -5,7 +5,10 @@
             @duplicate-content="duplicateContent"
         />
 
-        <div class="card biz-card-text">
+        <div
+            class="card biz-card-text"
+            :class="configCard.rounded"
+        >
             <div class="card-content">
                 <div
                     class="content"
@@ -48,6 +51,9 @@
             };
         },
         computed: {
+            configCard() {
+                return this.config.card;
+            },
             cardContentClass() {
                 let classes = [];
                 classes.push(this.config.content?.size ?? 'is-normal');

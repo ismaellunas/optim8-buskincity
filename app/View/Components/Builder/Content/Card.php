@@ -59,6 +59,11 @@ class Card extends BaseContent
         return $this->getConfig()['image']['fixedSquare'] ?? '';
     }
 
+    public function cardRounded(): string
+    {
+        return $this->getConfig()['card']['rounded'] ?? '';
+    }
+
     private function getImageMedia(): ?Media
     {
         if (!is_null($this->imageMedia)) {
