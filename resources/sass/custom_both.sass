@@ -1,12 +1,27 @@
 /* general */
 .is-rounded-small
   border-radius: 15px
+  .card-image
+    .image
+      img
+        border-top-left-radius: 15px
+        border-top-right-radius: 15px
 
 .is-rounded-medium
   border-radius: 30px
+  .card-image
+    .image
+      img
+        border-top-left-radius: 30px
+        border-top-right-radius: 30px
 
 .is-rounded-large
   border-radius: 45px
+  .card-image
+    .image
+      img
+        border-top-left-radius: 45px
+        border-top-right-radius: 45px
 
 /* media thumbnail icon */
 .card-image
@@ -19,14 +34,15 @@
       width: 100%
       height: 100%
 
-  .is-rounded-small
-    border-radius: 15px !important
+  .image
+    .is-rounded-small
+      border-radius: 15px
 
-  .is-rounded-medium
-    border-radius: 30px !important
+    .is-rounded-medium
+      border-radius: 30px
 
-  .is-rounded-large
-    border-radius: 45px !important
+    .is-rounded-large
+      border-radius: 45px
 
 .card-equal-height
   display: flex
