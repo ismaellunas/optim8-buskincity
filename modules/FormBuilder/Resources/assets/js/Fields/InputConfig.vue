@@ -49,8 +49,8 @@
 </template>
 
 <script>
-    import AddOption from '@/Blocks/Configs/AddOption';
     import Card from '@/Biz/Card';
+    import ConfigAddOption from '@/Blocks/Configs/AddOption';
     import ConfigAutoGenerateKey from '@/Blocks/Configs/AutoGenerateKey';
     import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
     import ConfigInput from '@/Blocks/Configs/Input';
@@ -68,8 +68,8 @@
         name: 'InputConfig',
 
         components: {
-            AddOption,
             Card,
+            ConfigAddOption,
             ConfigAutoGenerateKey,
             ConfigCheckbox,
             ConfigInput,
