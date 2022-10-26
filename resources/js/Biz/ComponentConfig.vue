@@ -73,7 +73,9 @@
             TRBLInput,
         },
 
-        props: ['modelValue'],
+        props: {
+            modelValue: { type: Object, required: true },
+        },
 
         setup(props, { emit }) {
             const entity = useModelWrapper(props, emit);
