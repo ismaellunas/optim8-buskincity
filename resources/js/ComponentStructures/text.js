@@ -1,4 +1,13 @@
-import { contentSizes, defaultOption, alignments, textColors } from './style-options';
+import {
+    contentSizes,
+    defaultOption,
+    alignments,
+    textColors
+} from './style-options';
+
+import {
+    dimension
+} from './global-configs.js';
 
 export default {
     title: 'Text',
@@ -12,22 +21,7 @@ export default {
             alignment: null,
             color: null,
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 };
 
@@ -36,34 +30,27 @@ export const config = {
         label: "Text",
         config: {
             size: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Size",
-                options: defaultOption.concat(contentSizes)
+                settings: {
+                    options: defaultOption.concat(contentSizes)
+                },
             },
             alignment: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Alignment",
-                options: defaultOption.concat(alignments)
+                settings: {
+                    options: defaultOption.concat(alignments)
+                },
             },
             color: {
-                type: "select",
-                label: "Text Color",
-                options: defaultOption.concat(textColors),
+                component: "ConfigSelect",
+                label: "Alignment",
+                settings: {
+                    options: defaultOption.concat(textColors),
+                },
             },
         }
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };

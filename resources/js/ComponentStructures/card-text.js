@@ -1,5 +1,9 @@
 import { contentSizes, defaultOption, roundedSizes } from './style-options';
 
+import {
+    dimension
+} from './global-configs.js';
+
 export default {
     title: 'Card Text',
     componentName: 'CardText',
@@ -18,22 +22,7 @@ export default {
         content: {
             size: null,
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 }
 
@@ -42,9 +31,11 @@ export const config = {
         label: "Card",
         config: {
             rounded: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Rounded Size",
-                options: defaultOption.concat(roundedSizes),
+                settings: {
+                    options: defaultOption.concat(roundedSizes),
+                },
             },
         },
     },
@@ -52,24 +43,13 @@ export const config = {
         label: "Content",
         config: {
             size: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Size",
-                options: defaultOption.concat(contentSizes),
+                settings: {
+                    options: defaultOption.concat(contentSizes),
+                },
             }
         }
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };

@@ -1,5 +1,9 @@
 import { defaultOption } from './style-options';
 
+import {
+    dimension
+} from './global-configs.js';
+
 export default {
     title: "User List",
     componentName: "UserList",
@@ -17,22 +21,7 @@ export default {
             countries: [],
             types: [],
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 };
 
@@ -41,37 +30,39 @@ export const config = {
         label: "User List",
         config: {
             roles: {
-                component: "Checkboxes",
+                component: "ConfigCheckboxes",
                 label: "Role",
                 settings: {
                     optionsRoute: "admin.api.page-builder.user-list.role-options",
                 },
             },
             excludedId: {
-                type: "input",
+                component: "ConfigInput",
                 label: "Exclude User ID",
             },
             orderBy: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Order By",
-                options: defaultOption.concat(
-                    [
-                        { value: "first_name-asc", name: "A-Z"},
-                        { value: "first_name-desc", name: "Z-A"},
-                        { value: "random", name: "Random"},
-                        { value: "created_at-asc", name: "Date"},
-                    ]
-                ),
+                settings: {
+                    options: defaultOption.concat(
+                        [
+                            { value: "first_name-asc", name: "A-Z"},
+                            { value: "first_name-desc", name: "Z-A"},
+                            { value: "random", name: "Random"},
+                            { value: "created_at-asc", name: "Date"},
+                        ]
+                    ),
+                },
             },
             countries: {
-                component: "SelectMultiple",
+                component: "ConfigSelectMultiple",
                 label: "Country",
                 settings: {
                     optionsRoute: "admin.api.page-builder.country-options",
                 },
             },
             types: {
-                component: "SelectMultiple",
+                component: "ConfigSelectMultiple",
                 label: "Types",
                 settings: {
                     optionsRoute: "admin.api.page-builder.type-options",
@@ -79,18 +70,5 @@ export const config = {
             },
         },
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };
