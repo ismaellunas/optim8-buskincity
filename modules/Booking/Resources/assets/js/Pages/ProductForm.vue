@@ -40,6 +40,12 @@
             </option>
         </biz-form-select>
 
+        <biz-form-checkbox-toggle
+            v-model="form.is_check_in_required"
+            text="Is a check-in required?"
+            :value="form.is_check_in_required"
+        />
+
         <h5 class="title is-5 mt-5 mb-3">
             Visibility
         </h5>
@@ -81,6 +87,7 @@
 </template>
 
 <script>
+    import BizFormCheckboxToggle from '@/Biz/Form/CheckboxToggle';
     import BizFormFileUpload from '@/Biz/Form/FileUpload';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormSelect from '@/Biz/Form/Select';
@@ -90,6 +97,7 @@
 
     export default {
         components: {
+            BizFormCheckboxToggle,
             BizFormFileUpload,
             BizFormInput,
             BizFormSelect,
