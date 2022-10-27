@@ -1,3 +1,7 @@
+import {
+    dimension
+} from './global-configs.js';
+
 export default {
     title: 'Video',
     componentName: 'Video',
@@ -6,22 +10,7 @@ export default {
         video: {
             url: null,
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 };
 
@@ -30,25 +19,14 @@ export const config = {
         label: "Video",
         config: {
             url: {
-                type: "input",
+                component: "ConfigInput",
                 label: "URL",
-                note: "E.g: https://vimeo.com/553766867",
-                placeholder: "Youtube/Vimeo Video URL",
+                settings: {
+                    note: "E.g: https://vimeo.com/553766867",
+                    placeholder: "Youtube/Vimeo Video URL",
+                },
             },
         }
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };

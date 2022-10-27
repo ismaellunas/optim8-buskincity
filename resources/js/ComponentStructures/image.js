@@ -1,4 +1,13 @@
-import { defaultOption, imageRatios, fixedSquares, roundedSizes } from './style-options';
+import {
+    defaultOption,
+    imageRatios,
+    fixedSquares,
+    roundedSizes
+} from './style-options';
+
+import {
+    dimension
+} from './global-configs.js';
 
 export default {
     title: 'Image',
@@ -18,22 +27,7 @@ export default {
             // img
             rounded: null,
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 }
 
@@ -42,34 +36,27 @@ export const config = {
         label: "Image",
         config: {
             fixedSquare: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "FixedSquare",
-                options: defaultOption.concat(fixedSquares)
+                settings: {
+                    options: defaultOption.concat(fixedSquares)
+                },
             },
             ratio: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Ratio",
-                options: defaultOption.concat(imageRatios)
+                settings: {
+                    options: defaultOption.concat(imageRatios)
+                },
             },
             rounded: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Rounded Size",
-                options: defaultOption.concat(roundedSizes),
+                settings: {
+                    options: defaultOption.concat(roundedSizes),
+                },
             },
         }
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };
