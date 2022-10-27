@@ -53,7 +53,9 @@ class FormBuilderService
         $entries = $formBuilder
             ->entries()
             ->whereHas('metas', function ($query) use ($term) {
-                $query->where('value', 'ILIKE', '%'.$term.'%');
+                $query->when($term, function ($q) use ($term) {
+                    $q->where('value', 'ILIKE', '%'.$term.'%');
+                });
             })
             ->orderBy('id', 'DESC')
             ->get();
