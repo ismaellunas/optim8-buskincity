@@ -64,7 +64,7 @@ export const config = {
                 label: "Default Value",
             },
             options: {
-                component: "AddOption",
+                component: "ConfigAddOption",
                 label: "Options",
             }
         },
