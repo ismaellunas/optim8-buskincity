@@ -1,4 +1,6 @@
-import { contentSizes, defaultOption, alignments } from './style-options';
+import {
+    dimension
+} from './global-configs.js';
 
 export default {
     title: 'Latest Post',
@@ -9,22 +11,7 @@ export default {
             categoryId: null,
             limit: 3,
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 };
 
@@ -33,7 +20,7 @@ export const config = {
         label: "Latest Post",
         config: {
             categoryId: {
-                component: "Select",
+                component: "ConfigSelect",
                 label: "Category",
                 settings: {
                     optionsRoute: "admin.api.page-builder.post.category-options",
@@ -41,18 +28,5 @@ export const config = {
             },
         }
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };

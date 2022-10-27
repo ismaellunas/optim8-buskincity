@@ -49,18 +49,15 @@
 </template>
 
 <script>
-    import AddOption from '@/Blocks/Configs/AddOption';
     import Card from '@/Biz/Card';
+    import ConfigAddOption from '@/Blocks/Configs/AddOption';
     import ConfigAutoGenerateKey from '@/Blocks/Configs/AutoGenerateKey';
     import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
     import ConfigInput from '@/Blocks/Configs/Input';
     import ConfigNumber from '@/Blocks/Configs/Number';
     import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
-    import ConfigSelect from '@/Blocks/Configs/Select';
     import configs from './../FieldStructures/configs';
-    import InputIcon from '@/Blocks/Configs/InputIcon';
-    import NumberAddons from '@/Blocks/Configs/NumberAddons';
-    import SelectMultiple from '@/Blocks/Configs/SelectMultiple';
+    import ConfigSelect from '@/Blocks/Configs/Select';
     import TRBL from '@/Blocks/Configs/TRBL';
     import TRBLInput from '@/Blocks/Configs/TRBLInput';
     import { camelCase } from "lodash";
@@ -71,22 +68,21 @@
         name: 'InputConfig',
 
         components: {
-            AddOption,
             Card,
+            ConfigAddOption,
             ConfigAutoGenerateKey,
             ConfigCheckbox,
             ConfigInput,
             ConfigNumber,
             ConfigRowSection,
             ConfigSelect,
-            InputIcon,
-            NumberAddons,
-            SelectMultiple,
             TRBL,
             TRBLInput,
         },
 
-        props: ['modelValue'],
+        props: {
+            modelValue: { type: Object, required: true },
+        },
 
         setup(props, { emit }) {
             let entity = useModelWrapper(props, emit);
