@@ -15,7 +15,11 @@ class SettingController extends CrudController
             'booking_email_new_booking',
             'booking_email_reminder',
             'booking_email_cancellation',
-        ])->get()->pluck('value', 'key');
+            'allowed_early_check_in',
+            'check_in_radius',
+        ])->get()->pluck('value', 'key')->all();
+
+        $settings['check_in_radius'] = json_decode($settings['check_in_radius']);
 
         return Inertia::render('Booking::Settings', $this->getData([
             'title' => 'Booking Settings',
@@ -40,6 +44,22 @@ class SettingController extends CrudController
         Setting::updateOrCreate(
             ['key' => 'booking_email_cancellation'],
             ['value' => $inputs['email_cancellation']]
+        );
+
+        Setting::updateOrCreate(
+            [
+                'key' => 'allowed_early_check_in',
+                'group' => 'booking'
+            ],
+            ['value' => $inputs['allowed_early_check_in']]
+        );
+
+        Setting::updateOrCreate(
+            [
+                'key' => 'check_in_radius',
+                'group' => 'booking'
+            ],
+            ['value' => $inputs['check_in_radius']]
         );
 
         $this->generateFlashMessage('Setting has been updated');
