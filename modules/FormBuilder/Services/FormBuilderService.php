@@ -66,7 +66,7 @@ class FormBuilderService
 
                 $record[$fieldName] = $this->getDisplayValue(
                     $field,
-                    $entry[$fieldName] ?? null
+                    $entry[$fieldName] ?? '-'
                 );
             }
 
@@ -90,6 +90,21 @@ class FormBuilderService
         }
 
         return $data;
+    }
+
+    public function getFieldLabels(array $fields): array
+    {
+        $labels = $this->getDataFromFields($fields, 'label');
+
+        if (!$labels) {
+            $labels = collect($this->getDataFromFields($fields, 'name'))
+                ->transform(function ($label) {
+                    return Str::of($label)->replace('_', ' ')->title();
+                })
+                ->all();
+        }
+
+        return $labels;
     }
 
     public function getFormOptions(): array
