@@ -6,6 +6,6 @@ trait FlashNotifiable
 {
     protected function generateFlashMessage($message): void
     {
-        session()->flash('message', $message);
+        session()->flash('message', __($message));
     }
 }
