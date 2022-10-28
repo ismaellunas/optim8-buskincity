@@ -10,7 +10,6 @@
                 v-model:content-config-id="contentConfigId"
                 :errors="errors"
                 :is-new="isNew"
-                :is-edit-mode="isEditMode"
                 :status-options="statusOptions"
                 :locale-options="localeOptions"
                 :selected-locale="selectedLocale"
@@ -92,7 +91,6 @@
         data() {
             return {
                 disableInput: false,
-                isEditMode: true,
                 isNew: true,
                 selectedLocale: this.defaultLocale,
             };
