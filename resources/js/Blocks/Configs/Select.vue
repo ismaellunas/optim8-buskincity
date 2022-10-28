@@ -29,7 +29,7 @@
 
         props: {
             label: { type: String, default: '' },
-            modelValue: { type: [String, Number, null], required: true },
+            modelValue: { type: [String, Number, null, Boolean], required: true },
             settings: { type: Object, default: () => {} },
         },
 
@@ -41,7 +41,7 @@
 
         data() {
             return {
-                options: this.settings.options,
+                options: this.settings?.options,
             };
         },
 
@@ -54,7 +54,7 @@
         methods: {
             getOptions() {
                 const self = this;
-                const optionsRoute = self.settings.optionsRoute;
+                const optionsRoute = self.settings?.optionsRoute;
 
                 if (optionsRoute) {
                     axios.get(route(optionsRoute))

@@ -17,9 +17,14 @@ class Columns extends BaseComponent implements
         $styleBlock = null;
 
         if ($this->doesConfigHaveDimension()) {
-            $this->styleBlocks[] = $this->getDimensionStyleBlock(
+            $styleBlock = $this->getDimensionStyleBlock(
                 $this->getSelector()
             );
+
+            $this->transformDimensionStyleBlock($styleBlock);
+
+            $this->styleBlocks[] = $styleBlock;
+
         }
 
         if ($this->doesWrapperHaveBackgroundImage()) {
@@ -27,6 +32,17 @@ class Columns extends BaseComponent implements
                 $this->getSelector().'-background'
             );
         }
+    }
+
+    private function transformDimensionStyleBlock(StyleBlock &$styleBlock): void
+    {
+        $styleBlock->styles->transform(function ($style, $key) {
+            if ($key == 'margin-bottom') {
+                return $style.' !important';
+            }
+
+            return $style;
+        });
     }
 
     private function doesWrapperHaveBackgroundImage(): bool

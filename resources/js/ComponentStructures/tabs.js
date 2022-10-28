@@ -1,5 +1,9 @@
 import { contentSizes, defaultOption } from './style-options';
 
+import {
+    dimension
+} from './global-configs.js';
+
 const dummyText = "<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ad, quidem iure qui, dignissimos necessitatibus commodi laborum nisi atque quo quos libero pariatur deleniti natus laboriosam fuga, nemo non sequi tempore!</p>";
 
 export default {
@@ -36,22 +40,7 @@ export default {
             style: null,
             width: null,
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 };
 
@@ -60,54 +49,49 @@ export const config = {
         label: "Tabs",
         config: {
             alignment: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Alignment",
-                options: defaultOption.concat(
-                    [
-                        { value: "is-centered", name: "Centered"},
-                        { value: "is-right", name: "Right"},
-                    ]
-                )
+                settings: {
+                    options: defaultOption.concat(
+                        [
+                            { value: "is-centered", name: "Centered"},
+                            { value: "is-right", name: "Right"},
+                        ]
+                    ),
+                },
             },
             size: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Size",
-                options: defaultOption.concat(contentSizes)
+                settings: {
+                    options: defaultOption.concat(contentSizes),
+                },
             },
             style: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Style",
-                options: defaultOption.concat(
-                    [
-                        { value: "is-boxed", name: "Boxed"},
-                        { value: "is-toggle", name: "Toggle"},
-                        { value: "is-toggle is-toggle-rounded", name: "Toggle Rounded"},
-                    ]
-                )
+                settings: {
+                    options: defaultOption.concat(
+                        [
+                            { value: "is-boxed", name: "Boxed"},
+                            { value: "is-toggle", name: "Toggle"},
+                            { value: "is-toggle is-toggle-rounded", name: "Toggle Rounded"},
+                        ]
+                    )
+                },
             },
             width: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Width",
-                options: defaultOption.concat(
-                    [
-                        { value: "is-fullwidth", name: "Fullwidth"},
-                    ]
-                )
+                settings: {
+                    options: defaultOption.concat(
+                        [
+                            { value: "is-fullwidth", name: "Fullwidth"},
+                        ]
+                    )
+                },
             },
         }
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };

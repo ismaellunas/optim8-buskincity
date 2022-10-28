@@ -4,6 +4,10 @@ import {
     roundedSizes,
 } from './style-options';
 
+import {
+    dimension
+} from './global-configs.js';
+
 export default {
     title: 'Columns',
     componentName: 'Columns',
@@ -16,22 +20,7 @@ export default {
             backgroundImage: null,
             rounded: null,
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        },
+        dimension: dimension.config,
         section: {
             isIncluded: false,
             size: null,
@@ -45,43 +34,36 @@ export const config = {
         isOpen: false,
         config: {
             isFullwidth: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Fullwidth",
-                options: [
-                    { value: false, name: "No"},
-                    { value: true, name: "Yes"},
-                ],
+                settings: {
+                    options: [
+                        { value: false, name: "No"},
+                        { value: true, name: "Yes"},
+                    ],
+                },
             },
             backgroundColor: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Background Color",
-                options: defaultOption.concat(backgroundColors),
+                settings: {
+                    options: defaultOption.concat(backgroundColors),
+                },
             },
             backgroundImage: {
-                component: "ImageBrowser",
+                component: "ConfigImageBrowser",
                 label: "Background Image",
             },
             rounded: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Rounded Size",
-                options: defaultOption.concat(roundedSizes),
+                settings: {
+                    options: defaultOption.concat(roundedSizes),
+                },
             },
         }
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    },
+    dimension: dimension.component,
     section: {
         label: "Section",
         component: "ConfigRowSection",

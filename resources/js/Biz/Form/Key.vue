@@ -33,7 +33,7 @@
 <script>
     import BizFormInputAddons from '@/Biz/Form/InputAddons';
     import BizButtonIcon from '@/Biz/ButtonIcon';
-    import { useModelWrapper, regexSlug } from '@/Libs/utils';
+    import { useModelWrapper } from '@/Libs/utils';
     import icon from '@/Libs/icon-class';
 
     export default {
@@ -47,7 +47,7 @@
         props: {
             disabled: {type: Boolean, default: false},
             label: {type: String, default: null},
-            message: {type: Object, default:() => {}},
+            message: {type: [Array, Object, String], default: undefined},
             modelValue: {type: [String, null], required: true},
             required: {type: Boolean, default: true},
             placeholder: {type: String, default: 'e.g. a_good_news'},
