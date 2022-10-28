@@ -80,7 +80,9 @@
                                 @endif
 
                                 @can ('receiveDonation', $user)
-                                <a href="#" class="button is-primary" onclick="openModal('donation')">Donate</a>
+                                    <a href="#" class="button is-primary" onclick="openModal('donation')">
+                                        {{ __('Donate') }}
+                                    </a>
                                 @endcan
                             </div>
                         </div>
@@ -88,7 +90,9 @@
 
                     <div class="columns is-multiline mt-5">
                         <div class="column is-12">
-                            <h2 class="title is-3">Gallery</h2>
+                            <h2 class="title is-3">
+                                {{ __('Gallery') }}
+                            </h2>
                         </div>
                         <div class="column is-5">
                             @if (
