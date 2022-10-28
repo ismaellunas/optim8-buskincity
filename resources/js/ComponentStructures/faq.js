@@ -1,5 +1,9 @@
 import { defaultOption, alignments } from './style-options';
 
+import {
+    dimension
+} from './global-configs.js';
+
 export default {
     title: 'FAQ',
     componentName: 'Faq',
@@ -24,22 +28,7 @@ export default {
             type: "title",
             alignment: null,
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 };
 
@@ -48,44 +37,37 @@ export const config = {
         label: "Heading",
         config: {
             tag: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Heading",
-                options: [
-                    { value: "h1", name: "H1" },
-                    { value: "h2", name: "H2" },
-                    { value: "h3", name: "H3" },
-                    { value: "h4", name: "H4" },
-                    { value: "h5", name: "H5" },
-                    { value: "h6", name: "H6" },
-                ],
+                settings: {
+                    options: [
+                        { value: "h1", name: "H1" },
+                        { value: "h2", name: "H2" },
+                        { value: "h3", name: "H3" },
+                        { value: "h4", name: "H4" },
+                        { value: "h5", name: "H5" },
+                        { value: "h6", name: "H6" },
+                    ],
+                },
             },
             type: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Type",
-                options: [
-                    { value: "title", name: "Title"},
-                    { value: "subtitle", name: "Subtitle"},
-                ],
+                settings: {
+                    options: [
+                        { value: "title", name: "Title"},
+                        { value: "subtitle", name: "Subtitle"},
+                    ],
+                },
             },
             alignment: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Alignment",
-                options: defaultOption.concat(alignments),
+                settings: {
+                    options: defaultOption.concat(alignments),
+                },
             },
         },
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };

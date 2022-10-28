@@ -3,7 +3,17 @@
         <biz-form-input
             v-model="computedValue"
             :label="label"
-        />
+            :placeholder="settings?.placeholder"
+        >
+            <template
+                v-if="settings?.note"
+                #note
+            >
+                <p class="help">
+                    {{ settings?.note }}
+                </p>
+            </template>
+        </biz-form-input>
     </div>
 </template>
 
@@ -21,6 +31,7 @@
         props: {
             label: { type: String, default: '' },
             modelValue: { type: [String, null], required: true },
+            settings: { type: Object, default: () => {} },
         },
 
         setup(props, { emit }) {

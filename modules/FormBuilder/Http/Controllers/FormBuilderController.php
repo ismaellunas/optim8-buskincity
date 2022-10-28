@@ -111,9 +111,8 @@ class FormBuilderController extends CrudController
                 $request->term,
                 $this->recordsPerPage,
             ),
-            'fieldLabels' => $this->formBuilderService->getDataFromFields(
-                $formBuilder->data['fields'],
-                'label'
+            'fieldLabels' => $this->formBuilderService->getFieldLabels(
+                $formBuilder->data['fields']
             ),
             'fieldNames' => $this->formBuilderService->getDataFromFields(
                 $formBuilder->data['fields'],

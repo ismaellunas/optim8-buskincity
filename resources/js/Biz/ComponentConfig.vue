@@ -23,51 +23,8 @@
                     v-for="(config, key) in group.config"
                     :key="key"
                 >
-                    <biz-form-select
-                        v-if="config.type === 'select'"
-                        v-model="entity.config[ groupName ][ key ]"
-                        :label="config.label"
-                    >
-                        <option
-                            v-for="(option, index) in config.options"
-                            :key="index"
-                            :value="option.value"
-                        >
-                            {{ option.name }}
-                        </option>
-                    </biz-form-select>
-
-                    <biz-form-input
-                        v-else-if="config.type === 'input'"
-                        v-model="entity.config[ groupName ][ key ]"
-                        :label="config.label"
-                        :placeholder="config.placeholder"
-                        :note="config.note"
-                    >
-                        <template
-                            v-if="config.note"
-                            #note
-                        >
-                            <p class="help">
-                                {{ config.note }}
-                            </p>
-                        </template>
-                    </biz-form-input>
-
-                    <biz-checkbox
-                        v-else-if="config.type === 'checkbox'"
-                        v-model:checked="entity.config[ groupName ][ key ]"
-                        :value="true"
-                        class="mb-2"
-                    >
-                        <span class="ml-2">
-                            {{ config.label }}
-                        </span>
-                    </biz-checkbox>
-
                     <component
                         :is="config.component"
-                        v-else-if="config.component"
                         v-model="entity.config[ groupName ][ key ]"
                         :label="config.label"
                         :settings="config.settings"
@@ -81,19 +38,18 @@
 </template>
 
 <script>
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormSelect from '@/Biz/Form/Select';
     import Card from '@/Biz/Card';
-    import Checkboxes from '@/Blocks/Configs/Checkboxes';
+    import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
+    import ConfigCheckboxes from '@/Blocks/Configs/Checkboxes';
+    import ConfigImageBrowser from '@/Blocks/Configs/ImageBrowser';
+    import ConfigInput from '@/Blocks/Configs/Input';
+    import ConfigInputIcon from '@/Blocks/Configs/InputIcon';
+    import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons';
     import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
     import configs from '@/ComponentStructures/configs';
-    import ImageBrowser from '@/Blocks/Configs/ImageBrowser';
-    import InputIcon from '@/Blocks/Configs/InputIcon';
+    import ConfigSelect from '@/Blocks/Configs/Select';
+    import ConfigSelectMultiple from '@/Blocks/Configs/SelectMultiple';
     import moduleConfigs from '@/Modules/ComponentStructures/configs';
-    import NumberAddons from '@/Blocks/Configs/NumberAddons';
-    import Select from '@/Blocks/Configs/Select';
-    import SelectMultiple from '@/Blocks/Configs/SelectMultiple';
     import TRBL from '@/Blocks/Configs/TRBL';
     import TRBLInput from '@/Blocks/Configs/TRBLInput';
     import { camelCase, merge } from "lodash";
@@ -103,22 +59,23 @@
     export default {
 
         components: {
-            BizCheckbox,
-            BizFormInput,
-            BizFormSelect,
             Card,
-            Checkboxes,
+            ConfigCheckbox,
+            ConfigCheckboxes,
+            ConfigImageBrowser,
+            ConfigInput,
+            ConfigInputIcon,
+            ConfigNumberAddons,
             ConfigRowSection,
-            ImageBrowser,
-            InputIcon,
-            NumberAddons,
-            Select,
-            SelectMultiple,
+            ConfigSelect,
+            ConfigSelectMultiple,
             TRBL,
             TRBLInput,
         },
 
-        props: ['modelValue'],
+        props: {
+            modelValue: { type: Object, required: true },
+        },
 
         setup(props, { emit }) {
             const entity = useModelWrapper(props, emit);

@@ -6,6 +6,10 @@ import {
     otherColors,
 } from './style-options';
 
+import {
+    dimension
+} from './global-configs.js';
+
 export default {
     title: 'Button',
     componentName: 'Button',
@@ -27,22 +31,7 @@ export default {
             position: null,
             iconPosition: 'left',
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 };
 
@@ -51,83 +40,87 @@ export const config = {
         label: "Button",
         config: {
             link: {
-                type: "input",
+                component: "ConfigInput",
                 label: "Link",
+                settings: {
+                    note: "E.g: https://www.google.com",
+                },
             },
             target: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Target",
-                options: defaultOption.concat(
-                    [
-                        { value: "_blank", name: "New window"},
-                        { value: "download", name: "Download"},
-                    ]
-                ),
+                settings: {
+                    options: defaultOption.concat(
+                        [
+                            { value: "_blank", name: "New window"},
+                            { value: "download", name: "Download"},
+                        ]
+                    ),
+                },
             },
             color: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Color",
-                options: defaultOption.concat(otherColors, colors),
+                settings: {
+                    options: defaultOption.concat(otherColors, colors),
+                },
             },
             isLight: {
-                type: "checkbox",
+                component: "checkbox",
                 label: "Light Button?",
             },
             size: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Size",
-                options: defaultOption.concat(contentSizes),
+                settings: {
+                    options: defaultOption.concat(contentSizes),
+                },
             },
             width: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Width",
-                options: defaultOption.concat(
-                    [
-                        { value: "is-fullwidth", name: "Fullwidth"},
-                    ]
-                ),
+                settings: {
+                    options: defaultOption.concat(
+                        [
+                            { value: "is-fullwidth", name: "Fullwidth"},
+                        ]
+                    ),
+                },
             },
             style: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Style",
-                options: defaultOption.concat(
-                    [
-                        { value: "is-rounded", name: "Rounded"},
-                        { value: "is-outlined", name: "Outlined"},
-                        { value: "is-inverted", name: "Inverted"},
-                        { value: "is-rounded is-outlined", name: "Rounded & Outlined"},
-                    ]
-                ),
+                settings: {
+                    options: defaultOption.concat(
+                        [
+                            { value: "is-rounded", name: "Rounded"},
+                            { value: "is-outlined", name: "Outlined"},
+                            { value: "is-inverted", name: "Inverted"},
+                            { value: "is-rounded is-outlined", name: "Rounded & Outlined"},
+                        ]
+                    ),
+                },
             },
             position: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Button Position",
-                options: defaultOption.concat(contentPositions),
+                settings: {
+                    options: defaultOption.concat(contentPositions),
+                },
             },
             iconPosition: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Icon Position",
-                options: defaultOption.concat(
-                    [
-                        { value: "left", name: "Left"},
-                        { value: "right", name: "Right"},
-                    ]
-                ),
+                settings: {
+                    options: defaultOption.concat(
+                        [
+                            { value: "left", name: "Left"},
+                            { value: "right", name: "Right"},
+                        ]
+                    ),
+                },
             },
         }
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };
