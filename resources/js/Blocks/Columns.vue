@@ -4,10 +4,7 @@
         :class="wrapperClass"
         :style="wrapperStyle"
     >
-        <div
-            v-if="isEditMode"
-            class="column is-3 p-1"
-        >
+        <div class="column is-3 p-1">
             <div class="field has-addons">
                 <div class="control is-expanded">
                     <biz-select
@@ -33,10 +30,7 @@
                 </div>
             </div>
         </div>
-        <div
-            v-if="isEditMode"
-            class="column is-9 p-1"
-        >
+        <div class="column is-9 p-1">
             <div class="field has-addons is-pulled-right">
                 <p class="control">
                     <biz-button
@@ -80,7 +74,6 @@
                 :id="column.id"
                 :components="block.columns[index].components"
                 :data-entities="entities"
-                :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
             />
         </template>
@@ -118,7 +111,6 @@
         props: {
             dataEntities: { type: Object, default: () => {} },
             id: { type: String, required: true },
-            isEditMode: { type: Boolean, default: false },
             modelValue: { type: Object, required: true },
             selectedLocale: { type: String, required: true },
         },
@@ -150,15 +142,13 @@
             wrapperClass() {
                 let wrapperClass = [];
 
-                if (this.isEditMode) {
-                    wrapperClass = wrapperClass.concat(
-                        'edit-mode-columns',
-                        'is-multiline',
-                        'box',
-                        'p-1',
-                        'my-1'
-                    );
-                }
+                wrapperClass = wrapperClass.concat(
+                    'edit-mode-columns',
+                    'is-multiline',
+                    'box',
+                    'p-1',
+                    'my-1'
+                );
 
                 if (this.hasImage) {
                     wrapperClass = wrapperClass.concat(

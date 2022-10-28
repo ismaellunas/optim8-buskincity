@@ -24,37 +24,49 @@
                 </div>
             </div>
 
-            <div class="table-container">
-                <table class="table is-striped is-hoverable is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th
-                                v-for="(label, index) in fieldLabels"
+            <template
+                v-if="!isDataEmpty"
+            >
+                <div class="table-container">
+                    <table class="table is-striped is-hoverable is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th
+                                    v-for="(label, index) in fieldLabels"
+                                    :key="index"
+                                >
+                                    {{ label }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="(entry, index) in records.data"
                                 :key="index"
                             >
-                                {{ label }}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="(entry, index) in records.data"
-                            :key="index"
-                        >
-                            <td
-                                v-for="(name, nameIndex) in fieldNames"
-                                :key="nameIndex"
-                            >
-                                {{ entry[name] }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <biz-pagination
-                :links="records.links"
-                :query-params="queryParams"
-            />
+                                <td
+                                    v-for="(name, nameIndex) in fieldNames"
+                                    :key="nameIndex"
+                                >
+                                    {{ entry[name] }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <biz-pagination
+                    :links="records.links"
+                    :query-params="queryParams"
+                />
+            </template>
+
+            <template
+                v-else
+            >
+                <p class="has-text-centered">
+                    Data is empty
+                </p>
+            </template>
         </div>
     </div>
 </template>
@@ -66,7 +78,7 @@
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizPagination from '@/Biz/Pagination';
     import icon from '@/Libs/icon-class';
-    import { merge } from 'lodash';
+    import { merge, isEmpty } from 'lodash';
     import { ref } from 'vue';
 
     export default {
@@ -104,6 +116,12 @@
             return {
                 icon
             };
+        },
+
+        computed: {
+            isDataEmpty() {
+                return isEmpty(this.records.data);
+            },
         },
 
         methods: {

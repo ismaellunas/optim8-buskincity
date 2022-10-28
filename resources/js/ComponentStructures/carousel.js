@@ -1,4 +1,8 @@
-import { defaultOption, imageRatios } from './style-options';
+import { imageRatios } from './style-options';
+
+import {
+    dimension
+} from './global-configs.js';
 
 export default {
     title: 'Carousel',
@@ -22,22 +26,7 @@ export default {
             // figure
             ratio: "is-16by9",
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 }
 
@@ -46,44 +35,37 @@ export const config = {
         label: "Carousel",
         config: {
             numberOfSliders: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Number of Sliders",
-                options: [
-                    { value: 1, name: "1"},
-                    { value: 2, name: "2"},
-                    { value: 3, name: "3"},
-                    { value: 4, name: "4"},
-                    { value: 5, name: "5"},
-                    { value: 6, name: "6"},
-                ],
+                settings: {
+                    options: [
+                        { value: 1, name: "1"},
+                        { value: 2, name: "2"},
+                        { value: 3, name: "3"},
+                        { value: 4, name: "4"},
+                        { value: 5, name: "5"},
+                        { value: 6, name: "6"},
+                    ],
+                },
             },
             autoPlay: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Auto Play",
-                options: [
-                    { value: false, name: "No"},
-                    { value: true, name: "Yes"},
-                ],
+                settings: {
+                    options: [
+                        { value: false, name: "No"},
+                        { value: true, name: "Yes"},
+                    ],
+                },
             },
             ratio: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Ratio",
-                options: imageRatios
+                settings: {
+                    options: imageRatios
+                },
             },
         }
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };

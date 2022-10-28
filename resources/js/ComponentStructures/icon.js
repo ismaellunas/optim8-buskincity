@@ -1,9 +1,12 @@
 import {
-    alignments,
     defaultOption,
     textColors,
 
 } from './style-options';
+
+import {
+    dimension
+} from './global-configs.js';
 
 export default {
     title: 'Icon',
@@ -18,22 +21,7 @@ export default {
         style: {
             size: null,
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 };
 
@@ -43,17 +31,27 @@ export const config = {
         config: {
             class: {
                 label: "Class",
-                component: "InputIcon",
+                component: "ConfigInputIcon",
             },
             alignment: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Alignment",
-                options: defaultOption.concat(alignments),
+                settings: {
+                    options: defaultOption.concat(
+                        [
+                            { value: "has-text-centered", name: "Centered"},
+                            { value: "has-text-left", name: "Left"},
+                            { value: "has-text-right", name: "Right"},
+                        ]
+                    ),
+                },
             },
             color: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Color",
-                options: defaultOption.concat(textColors),
+                settings: {
+                    options: defaultOption.concat(textColors),
+                },
             },
         }
     },
@@ -62,25 +60,12 @@ export const config = {
         config: {
             size: {
                 label: "Size",
-                component: "NumberAddons",
+                component: "ConfigNumberAddons",
                 settings: {
                     addons: 'px',
                 },
             },
         }
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };

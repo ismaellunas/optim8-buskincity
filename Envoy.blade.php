@@ -131,3 +131,11 @@
 @task('heroku:route-list')
     heroku run php artisan route:list --path="admin"
 @endtask
+
+@task('nwatch')
+    npm run watch-poll
+@endtask
+
+@task('nwatch-theme')
+    npm run watch-poll --theme={{ $theme }}
+@endtask

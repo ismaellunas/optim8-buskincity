@@ -59,7 +59,6 @@
                             id="page-form-builder"
                             v-model="form.data"
                             v-model:content-config-id="computedContentConfigId"
-                            :is-edit-mode="isEditMode"
                             :selected-locale="selectedLocale"
                         />
                     </biz-provide-inject-tab>
@@ -134,7 +133,6 @@
             contentConfigId: { type: String, required: true },
             errors: { type: Object, default:() => {} },
             isDirty: { type: Boolean, default: false },
-            isEditMode: { type: Boolean, default: true },
             isNew: { type: Boolean, required: true },
             isPageBuilderRendered: { type: Boolean, default: true },
             localeOptions: { type: Array, default:() => [] },
