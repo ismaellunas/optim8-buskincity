@@ -1,3 +1,7 @@
+import {
+    dimension
+} from '@/ComponentStructures/global-configs.js';
+
 export default {
     title: 'Form Builder',
     componentName: 'FormBuilder',
@@ -6,22 +10,7 @@ export default {
         form: {
             id: null
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 };
 
@@ -30,7 +19,7 @@ export const config = {
         label: "Form Option",
         config: {
             id: {
-                component: "Select",
+                component: "ConfigSelect",
                 label: "Select Form",
                 settings: {
                     optionsRoute: "admin.api.page-builders.form-options",
@@ -38,18 +27,5 @@ export const config = {
             },
         }
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };

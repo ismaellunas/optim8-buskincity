@@ -6,7 +6,7 @@
             :message="errorMessage"
         />
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="onSubmit">
             <field-group
                 ref="field_group"
                 v-model="form"
@@ -16,8 +16,8 @@
 
             <vue-recaptcha
                 ref="vueRecaptcha"
-                :sitekey="recaptchaSiteKey"
                 size="invisible"
+                :sitekey="recaptchaSiteKey"
                 theme="light"
                 @expired="recaptchaExpired"
                 @error="recaptchaFailed"
@@ -93,7 +93,6 @@
                 formErrors: {},
                 isShown: false,
                 isRecaptchaError: false,
-                recaptchaResponse: null,
                 recaptchaSiteKey,
                 urls: {
                     getSchema: '/form-builders/schema',
@@ -114,14 +113,11 @@
 
         methods: {
             recaptchaExecute() {
-                setTimeout(() => {
-                    this.$refs.vueRecaptcha.execute();
-                }, 500);
+                this.$refs.vueRecaptcha.execute();
             },
 
             recaptchaExpired() {
                 this.$refs.vueRecaptcha.reset();
-                this.recaptchaExecute();
             },
 
             recaptchaFailed() {
@@ -129,7 +125,7 @@
             },
 
             recaptchaVerify(response) {
-                this.recaptchaResponse = response;
+                this.submit(response);
             },
 
             getSchema() {
@@ -149,8 +145,6 @@
                     self.form = self.createForm(self.fieldGroup);
 
                     self.isShown = true;
-
-                    self.recaptchaExecute();
 
                     if (isEmpty(this.fieldGroup)) {
                         self.isShown = false;
@@ -194,12 +188,16 @@
                 return reactive(form);
             },
 
-            submit() {
+            onSubmit() {
+                this.recaptchaExecute();
+            },
+
+            submit(recaptchaResponse) {
                 const self = this;
 
                 self.onStartLoadingOverlay();
 
-                self.form['g-recaptcha-response'] = self.recaptchaResponse;
+                self.form['g-recaptcha-response'] = recaptchaResponse;
 
                 axios.post(
                     self.urls.save,
@@ -228,7 +226,7 @@
                         self.onEndLoadingOverlay();
 
                         self.recaptchaExpired();
-                    })
+                    });
             },
         },
     };
