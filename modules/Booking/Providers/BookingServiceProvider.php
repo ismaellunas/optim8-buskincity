@@ -6,7 +6,9 @@ use App\Services\ModuleService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 use Modules\Booking\Entities\Event;
+use Modules\Booking\Entities\OrderCheckIn;
 use Modules\Booking\Policies\OrderPolicyMixin;
+use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\OrderLine;
 use Modules\Ecommerce\Policies\OrderPolicy;
 
@@ -33,6 +35,14 @@ class BookingServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
+
+        Order::resolveRelationUsing('allowedCheckIn', function ($order) {
+            return $order->hasOne(OrderCheckIn::class)->where('is_allowed', true);
+        });
+
+        Order::macro('hasAllowedCheckIn', function () {
+            return !is_null($this->allowedCheckIn);
+        });
 
         OrderLine::resolveRelationUsing('events', function ($orderLineModel) {
             return $orderLineModel->hasMany(Event::class);
