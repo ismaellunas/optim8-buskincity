@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Contracts\PageBuilderSearchableTextInterface;
 use App\Models\Media;
 use App\Models\Page;
+use App\Models\PageTranslation;
 use App\Services\{
     SettingService,
 };
@@ -117,5 +118,10 @@ class PageService
         }
 
         return $images;
+    }
+
+    private static function isSlugExists(string $slug): bool
+    {
+        return PageTranslation::where('slug', $slug)->exists();
     }
 }
