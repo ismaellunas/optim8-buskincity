@@ -207,4 +207,17 @@ class PageController extends CrudController
     {
         return app(MenuService::class)->isPageUsedByMenu($page->id, $locale);
     }
+
+    public function duplicatePage(Page $page)
+    {
+        $duplicatePage = new $this->model;
+
+        $duplicatePage->duplicatePage($page);
+
+        $duplicatePage->saveAuthorId(Auth::id());
+
+        $this->generateFlashMessage('Page duplicated successfully!');
+
+        return redirect()->back();
+    }
 }
