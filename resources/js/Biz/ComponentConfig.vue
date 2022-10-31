@@ -9,11 +9,14 @@
                 v-if="group.component && !isBlank(entity.config[ groupName ])"
                 v-model="entity.config[ groupName ]"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
+                :open-collapse-on-load="indexConfig == 0"
             />
 
-            <card
+            <biz-card
                 v-else-if="!isBlank(entity.config[ groupName ])"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
+                :is-collapses="true"
+                :open-collapse-on-load="indexConfig == 0"
             >
                 <template #headerTitle>
                     {{ group.label }}
@@ -32,13 +35,15 @@
 
                     <hr>
                 </template>
-            </card>
+            </biz-card>
         </template>
     </div>
 </template>
 
 <script>
-    import Card from '@/Biz/Card';
+    import icon from '@/Libs/icon-class';
+    import BizCard from '@/Biz/Card';
+    import BizIcon from '@/Biz/Icon';
     import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
     import ConfigCheckboxes from '@/Blocks/Configs/Checkboxes';
     import ConfigImageBrowser from '@/Blocks/Configs/ImageBrowser';
@@ -59,7 +64,8 @@
     export default {
 
         components: {
-            Card,
+            BizCard,
+            BizIcon,
             ConfigCheckbox,
             ConfigCheckboxes,
             ConfigImageBrowser,
@@ -93,6 +99,12 @@
 
             return {
                 entity,
+            };
+        },
+
+        data() {
+            return {
+                icon,
             };
         },
 

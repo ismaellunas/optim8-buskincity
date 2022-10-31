@@ -3,33 +3,47 @@
         <div class="column is-3 is-narrow">
             <div id="side-menu-page-builder">
                 <template v-if="!isComponentConfigOpen">
-                    <draggable
-                        class="dragArea columns is-multiline"
-                        :list="availableComponents"
-                        :group="{ name: 'components', pull: 'clone', put: false }"
-                        :clone="cloneComponent"
-                        :sort="false"
-                        item-key="id"
-                        @end="onEnd"
-                        @change="log"
+                    <biz-card
+                        class="mb-1"
+                        :is-collapses="true"
+                        :open-collapse-on-load="true"
                     >
-                        <template #item="{ element }">
-                            <div class="column is-half">
-                                <div class="card">
-                                    <div class="card-content is-size-7">
-                                        <div class="content is-center">
-                                            {{ element.title }}
+                        <template #headerTitle>
+                            General
+                        </template>
+
+                        <draggable
+                            class="dragArea columns is-multiline"
+                            :list="availableComponents"
+                            :group="{ name: 'components', pull: 'clone', put: false }"
+                            :clone="cloneComponent"
+                            :sort="false"
+                            item-key="id"
+                            @end="onEnd"
+                            @change="log"
+                        >
+                            <template #item="{ element }">
+                                <div class="column is-half p-2">
+                                    <div class="card">
+                                        <div class="card-content is-size-7">
+                                            <div class="content is-center">
+                                                {{ element.title }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </template>
-                    </draggable>
+                            </template>
+                        </draggable>
+                    </biz-card>
 
-                    <template
+                    <biz-card
                         v-if="hasModuleComponent"
+                        class="mb-1"
+                        :is-collapses="true"
                     >
-                        <hr>
+                        <template #headerTitle>
+                            Modules
+                        </template>
 
                         <draggable
                             class="dragArea columns is-multiline"
@@ -42,7 +56,7 @@
                             @change="log"
                         >
                             <template #item="{ element }">
-                                <div class="column is-half">
+                                <div class="column is-half p-2">
                                     <div class="card">
                                         <div class="card-content is-size-7">
                                             <div class="content is-center">
@@ -53,31 +67,38 @@
                                 </div>
                             </template>
                         </draggable>
-                    </template>
+                    </biz-card>
 
-                    <hr>
-
-                    <draggable
-                        class="dragColumnArea columns is-multiline"
-                        :list="availableBlocks"
-                        :group="{ name: 'columns', pull: 'clone', put: false }"
-                        :clone="cloneBlock"
-                        :sort="false"
-                        item-key="name"
-                        @change="log"
+                    <biz-card
+                        class="mb-1"
+                        :is-collapses="true"
                     >
-                        <template #item="{ element }">
-                            <div class="column is-half">
-                                <div class="card">
-                                    <div class="card-content is-size-7">
-                                        <div class="content">
-                                            {{ element.title }}
+                        <template #headerTitle>
+                            Columns
+                        </template>
+
+                        <draggable
+                            class="dragColumnArea columns is-multiline"
+                            :list="availableBlocks"
+                            :group="{ name: 'columns', pull: 'clone', put: false }"
+                            :clone="cloneBlock"
+                            :sort="false"
+                            item-key="name"
+                            @change="log"
+                        >
+                            <template #item="{ element }">
+                                <div class="column is-half p-2">
+                                    <div class="card">
+                                        <div class="card-content is-size-7">
+                                            <div class="content">
+                                                {{ element.title }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </template>
-                    </draggable>
+                            </template>
+                        </draggable>
+                    </biz-card>
                 </template>
 
                 <template v-else>
@@ -124,6 +145,7 @@
 </template>
 
 <script>
+    import BizCard from '@/Biz/Card';
     import BizComponentConfig from '@/Biz/ComponentConfig';
     import BlockColumns from '@/Blocks/Columns'
     import blockColumns from '@/ComponentStructures/columns';
@@ -143,6 +165,7 @@
 
     export default {
         components: {
+            BizCard,
             BizComponentConfig,
             BlockColumns,
             Draggable,
