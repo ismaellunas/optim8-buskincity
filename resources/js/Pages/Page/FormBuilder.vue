@@ -3,42 +3,18 @@
         <div class="column is-3 is-narrow">
             <div id="side-menu-page-builder">
                 <template v-if="!isComponentConfigOpen">
-                    <draggable
-                        class="dragArea columns is-multiline"
-                        :disabled="!isEditMode"
-                        :list="availableComponents"
-                        :group="{ name: 'components', pull: 'clone', put: false }"
-                        :clone="cloneComponent"
-                        :sort="false"
-                        item-key="id"
-                        @end="onEnd"
-                        @change="log"
+                    <biz-card
+                        class="mb-1"
+                        :is-collapses="true"
+                        :open-collapse-on-load="true"
                     >
-                        <template #item="{ element }">
-                            <div class="column is-half">
-                                <div
-                                    class="card"
-                                    :class="{'has-text-grey-light': !isEditMode}"
-                                >
-                                    <div class="card-content is-size-7">
-                                        <div class="content is-center">
-                                            {{ element.title }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <template #headerTitle>
+                            General
                         </template>
-                    </draggable>
-
-                    <template
-                        v-if="hasModuleComponent"
-                    >
-                        <hr>
 
                         <draggable
                             class="dragArea columns is-multiline"
-                            :disabled="!isEditMode"
-                            :list="availableModuleComponents"
+                            :list="availableComponents"
                             :group="{ name: 'components', pull: 'clone', put: false }"
                             :clone="cloneComponent"
                             :sort="false"
@@ -47,11 +23,8 @@
                             @change="log"
                         >
                             <template #item="{ element }">
-                                <div class="column is-half">
-                                    <div
-                                        class="card"
-                                        :class="{'has-text-grey-light': !isEditMode}"
-                                    >
+                                <div class="column is-half p-2">
+                                    <div class="card">
                                         <div class="card-content is-size-7">
                                             <div class="content is-center">
                                                 {{ element.title }}
@@ -61,35 +34,71 @@
                                 </div>
                             </template>
                         </draggable>
-                    </template>
+                    </biz-card>
 
-                    <hr>
-
-                    <draggable
-                        class="dragColumnArea columns is-multiline"
-                        :disabled="!isEditMode"
-                        :list="availableBlocks"
-                        :group="{ name: 'columns', pull: 'clone', put: false }"
-                        :clone="cloneBlock"
-                        :sort="false"
-                        item-key="name"
-                        @change="log"
+                    <biz-card
+                        v-if="hasModuleComponent"
+                        class="mb-1"
+                        :is-collapses="true"
                     >
-                        <template #item="{ element }">
-                            <div class="column is-half">
-                                <div
-                                    class="card"
-                                    :class="{'has-text-grey-light': !isEditMode}"
-                                >
-                                    <div class="card-content is-size-7">
-                                        <div class="content">
-                                            {{ element.title }}
+                        <template #headerTitle>
+                            Modules
+                        </template>
+
+                        <draggable
+                            class="dragArea columns is-multiline"
+                            :list="availableModuleComponents"
+                            :group="{ name: 'components', pull: 'clone', put: false }"
+                            :clone="cloneComponent"
+                            :sort="false"
+                            item-key="id"
+                            @end="onEnd"
+                            @change="log"
+                        >
+                            <template #item="{ element }">
+                                <div class="column is-half p-2">
+                                    <div class="card">
+                                        <div class="card-content is-size-7">
+                                            <div class="content is-center">
+                                                {{ element.title }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </template>
+                        </draggable>
+                    </biz-card>
+
+                    <biz-card
+                        class="mb-1"
+                        :is-collapses="true"
+                    >
+                        <template #headerTitle>
+                            Columns
                         </template>
-                    </draggable>
+
+                        <draggable
+                            class="dragColumnArea columns is-multiline"
+                            :list="availableBlocks"
+                            :group="{ name: 'columns', pull: 'clone', put: false }"
+                            :clone="cloneBlock"
+                            :sort="false"
+                            item-key="name"
+                            @change="log"
+                        >
+                            <template #item="{ element }">
+                                <div class="column is-half p-2">
+                                    <div class="card">
+                                        <div class="card-content is-size-7">
+                                            <div class="content">
+                                                {{ element.title }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </draggable>
+                    </biz-card>
                 </template>
 
                 <template v-else>
@@ -123,7 +132,6 @@
                         v-model:data-entities="data.entities"
                         class="component-configurable"
                         :data-id="element.id"
-                        :is-edit-mode="isEditMode"
                         :selected-locale="selectedLocale"
                         @click="settingContent"
                         @delete-block="deleteBlock"
@@ -137,6 +145,7 @@
 </template>
 
 <script>
+    import BizCard from '@/Biz/Card';
     import BizComponentConfig from '@/Biz/ComponentConfig';
     import BlockColumns from '@/Blocks/Columns'
     import blockColumns from '@/ComponentStructures/columns';
@@ -156,6 +165,7 @@
 
     export default {
         components: {
+            BizCard,
             BizComponentConfig,
             BlockColumns,
             Draggable,
@@ -170,7 +180,6 @@
 
         props: {
             contentConfigId: { type: String, default: "" },
-            isEditMode: { type: Boolean, default: false },
             modelValue: { type: Object, required: true },
             selectedLocale: { type: String, required: true },
         },

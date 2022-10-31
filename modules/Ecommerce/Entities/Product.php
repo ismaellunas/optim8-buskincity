@@ -106,4 +106,9 @@ class Product extends GetCandyProduct
     {
         return $this->translateAttribute('name', config('app.locale'));
     }
+
+    public function getDisplayShortDescriptionAttribute(): string
+    {
+        return $this->translateAttribute('short_description', config('app.locale'));
+    }
 }
