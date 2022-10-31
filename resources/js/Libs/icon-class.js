@@ -6,6 +6,7 @@ export const angleUp = iconFormatter('fa-angle-up');
 export const back = iconFormatter('fa-arrow-left');
 export const bracketCurly = iconFormatter('fa-bracket-curly');
 export const bracketCurlyRight = iconFormatter('fa-bracket-curly-right');
+export const buildingCheck = iconFormatter('fa-building-circle-check');
 export const checkCircle = iconFormatter('fa-check-circle');
 export const clear = iconFormatter('fa-times');
 export const close = iconFormatter('fa-xmark');
@@ -46,6 +47,7 @@ export default {
     back,
     bracketCurly,
     bracketCurlyRight,
+    buildingCheck,
     checkCircle,
     clear,
     close,
@@ -57,8 +59,11 @@ export default {
     expand,
     eye,
     eyeSlash,
+    grid,
     idCard,
     image,
+    list,
+    locationMark,
     move,
     plusCircle,
     preview,
@@ -68,9 +73,6 @@ export default {
     show,
     signIn,
     suspend,
-    grid,
-    list,
-    locationMark,
     unsuspend,
     upload,
     user,
