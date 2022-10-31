@@ -48,7 +48,7 @@
                         <div class="column is-4">
                             <div class="buttons is-right">
                                 @if ($userProfile->getMeta('tiktok'))
-                                <a href="{{ $userProfile->getMeta('tiktok') }}" class="button">
+                                <a href="{{ $userProfile->getMeta('tiktok') }}" target="_blank" class="button">
                                     <span class="icon is-small">
                                         <i class="fa-brands fa-tiktok"></i>
                                     </span>
@@ -56,7 +56,7 @@
                                 @endif
 
                                 @if ($userProfile->getMeta('youtube'))
-                                <a href="{{ $userProfile->getMeta('youtube') }}" class="button">
+                                <a href="{{ $userProfile->getMeta('youtube') }}" target="_blank" class="button">
                                     <span class="icon is-small">
                                         <i class="fa-brands fa-youtube"></i>
                                     </span>
@@ -64,7 +64,7 @@
                                 @endif
 
                                 @if ($userProfile->getMeta('instagram'))
-                                <a href="{{ $userProfile->getMeta('instagram') }}" class="button">
+                                <a href="{{ $userProfile->getMeta('instagram') }}" target="_blank" class="button">
                                     <span class="icon is-small">
                                         <i class="fa-brands fa-instagram"></i>
                                     </span>
@@ -72,7 +72,7 @@
                                 @endif
 
                                 @if ($userProfile->getMeta('facebook'))
-                                <a href="{{ $userProfile->getMeta('facebook') }}" class="button">
+                                <a href="{{ $userProfile->getMeta('facebook') }}" target="_blank" class="button">
                                     <span class="icon is-small">
                                         <i class="fa-brands fa-facebook"></i>
                                     </span>
