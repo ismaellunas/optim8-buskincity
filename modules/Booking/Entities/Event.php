@@ -67,7 +67,7 @@ class Event extends Model
 
     public function getTimezonedBookedAtAttribute(): Carbon
     {
-        return $this->booked_at->setTimezone($this->schedule->timezone);
+        return $this->booked_at->shiftTimezone($this->schedule->timezone);
     }
 
     public function getEndedTimeAttribute(): Carbon
