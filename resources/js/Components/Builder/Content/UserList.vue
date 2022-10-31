@@ -1,79 +1,70 @@
 <template>
     <div class="pb-user-list">
         <div class="columns is-multiline">
-            <div class="column">
-                <biz-dropdown
-                    class="ml-1"
-                    :close-on-click="true"
-                >
-                    <template #trigger>
-                        <span>Order By</span>
-                        <span class="icon is-small">
-                            <i
-                                class="fas fa-angle-down"
-                                aria-hidden="true"
-                            />
-                        </span>
-                    </template>
+            <div class="column is-12">
+                <div class="field is-grouped">
+                    <div class="control">
+                        <p class="has-text-weight-bold is-size-7 is-uppercase pt-1">
+                            Filters
+                        </p>
+                    </div>
 
-                    <biz-dropdown-item
-                        tag="a"
-                        @click.prevent="selectOrderBy()"
-                    >
-                        Default
-                    </biz-dropdown-item>
-
-                    <hr class="dropdown-divider">
-
-                    <biz-dropdown-item
-                        v-for="orderByOption in orderByOptions"
-                        :key="orderByOption"
-                        tag="a"
-                        @click.prevent="selectOrderBy(orderByOption.id)"
-                    >
-                        {{ orderByOption.value }}
-                    </biz-dropdown-item>
-                </biz-dropdown>
-
-                <biz-dropdown
-                    v-if="canFilteredByCountry"
-                    class="ml-1"
-                    :close-on-click="true"
-                >
-                    <template #trigger>
-                        <span>Country</span>
-                        <span class="icon is-small">
-                            <i
-                                class="fas fa-angle-down"
-                                aria-hidden="true"
-                            />
-                        </span>
-                    </template>
-
-                    <biz-dropdown-item>
-                        <a
-                            href="#"
-                            @click.prevent="selectCountry()"
+                    <div class="control">
+                        <biz-select
+                            v-model="filter.order_by"
+                            class="select is-small"
+                            placeholder="Order by"
+                            @change="selectOrderBy()"
                         >
-                            Default
-                        </a>
-                    </biz-dropdown-item>
+                            <option
+                                v-for="orderByOption in orderByOptions"
+                                :key="orderByOption.id"
+                                :value="orderByOption.id"
+                            >
+                                {{ orderByOption.value }}
+                            </option>
+                        </biz-select>
+                    </div>
 
-                    <hr class="dropdown-divider">
+                    <div class="control">
+                        <biz-select
+                            v-model="filter.country"
+                            class="select is-small"
+                            placeholder="Country"
+                            @change="selectCountry()"
+                        >
+                            <option
+                                v-for="countryOption in filteredCountryOptions"
+                                :key="countryOption.id"
+                                :value="countryOption.id"
+                            >
+                                {{ countryOption.value }}
+                            </option>
+                        </biz-select>
+                    </div>
 
-                    <biz-dropdown-item
-                        v-for="countryOption in countryOptions"
-                        :key="countryOption"
-                        tag="a"
-                        @click.prevent="selectCountry(countryOption)"
+                    <div
+                        v-if="canFilteredByType"
+                        class="control"
                     >
-                        {{ countryOption.value }}
-                    </biz-dropdown-item>
-                </biz-dropdown>
+                        <biz-select
+                            v-model="filter.type"
+                            class="select is-small"
+                            placeholder="Type"
+                            @change="selectType()"
+                        >
+                            <option
+                                v-for="typeOption in filteredTypeOptions"
+                                :key="typeOption.id"
+                                :value="typeOption.id"
+                            >
+                                {{ typeOption.value }}
+                            </option>
+                        </biz-select>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="columns is-multiline">
             <template
                 v-for="user in users"
                 :key="user.unique_key"
@@ -85,20 +76,22 @@
 </template>
 
 <script>
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import { debounce, union, isEmpty } from 'lodash';
-    import { debounceTime } from '@/Libs/defaults';
+    import MixinHasLoader from '@/Mixins/HasLoader';
+    import BizSelect from '@/Biz/Select';
+    import { union, isEmpty, forEach } from 'lodash';
 
     export default {
         components: {
-            BizDropdown,
-            BizDropdownItem,
+            BizSelect,
         },
 
+        mixins: [
+            MixinHasLoader
+        ],
+
         props: {
-            countries: { type: Array, default: () => [] },
-            countryOptions: { type: Array, default: () => [] },
+            defaultCountries: { type: Array, default: () => [] },
+            defaultTypes: { type: Array, default: () => [] },
             defaultOrderBy: { type: String, default: null },
             excludedId: { type: String, default: "" },
             orderByOptions: { type: Array, default: () => [] },
@@ -118,6 +111,16 @@
                 users: [],
                 country: null,
                 orderBy: this.defaultOrderBy,
+                filter: {
+                    order_by: null,
+                    country: null,
+                    type: null,
+                },
+                type: null,
+                options: {
+                    countries: [],
+                    types: [],
+                },
             };
         },
 
@@ -127,16 +130,70 @@
 
                 countries.push(this.country);
 
-                if (this.countries) {
-                    countries = union(countries, this.countries);
+                if (this.defaultCountries) {
+                    countries = union(countries, this.defaultCountries);
                 }
 
                 return countries.filter(Boolean);
             },
 
-            canFilteredByCountry() {
-                return isEmpty(this.countries);
-            }
+            selectedTypes() {
+                let types = [];
+
+                types.push(this.type);
+
+                if (this.defaultTypes) {
+                    types = union(types, this.defaultTypes);
+                }
+
+                return types.filter(Boolean);
+            },
+
+            canFilteredByType() {
+                return !isEmpty(this.options.types);
+            },
+
+            isFilteredCountryOnBackend() {
+                return !isEmpty(this.defaultCountries);
+            },
+
+            isFilteredTypeOnBackend() {
+                return !isEmpty(this.defaultTypes);
+            },
+
+            filteredCountryOptions() {
+                let options = [];
+                let countries = this.defaultCountries;
+
+                if (this.isFilteredCountryOnBackend) {
+                    forEach(this.options.countries, function (country) {
+                        if (countries.includes(country.id)) {
+                            options.push(country);
+                        }
+                    })
+
+                    return options;
+                }
+
+                return this.options.countries;
+            },
+
+            filteredTypeOptions() {
+                let options = [];
+                let types = this.defaultTypes;
+
+                if (this.isFilteredTypeOnBackend) {
+                    forEach(this.options.types, function (type) {
+                        if (types.includes(type.id)) {
+                            options.push(type);
+                        }
+                    })
+
+                    return options;
+                }
+
+                return this.options.types;
+            },
         },
 
         mounted() {
@@ -147,30 +204,47 @@
             load() {
                 const self = this;
 
+                self.onStartLoadingOverlay();
+
                 return axios
                     .get(this.url, {
                         params: {
-                            countries: self.selectedCountries,
+                            country: self.country,
+                            default_countries: self.defaultCountries,
+                            default_types: self.defaultTypes,
                             excluded_user: self.excludedId,
                             order_by: self.orderBy,
                             roles: self.roles,
+                            type: self.type,
                         }
                     })
                     .then(function(response) {
-                        self.users = response.data;
+                        self.users = response.data.users;
+                        self.options.countries = response.data.options.countries;
+                        self.options.types = response.data.options.types;
                     })
                     .catch(function(error) {
                         self.users = [];
+                        self.options.countries = [];
+                        self.options.types = [];
+                    })
+                    .then(function () {
+                        self.onEndLoadingOverlay();
                     });
             },
 
-            selectOrderBy(option) {
-                this.orderBy = option;
+            selectOrderBy() {
+                this.orderBy = this.filter.order_by;
                 this.load();
             },
 
-            selectCountry(option) {
-                this.country = option?.id ?? null;
+            selectCountry() {
+                this.country = this.filter.country;
+                this.load();
+            },
+
+            selectType() {
+                this.type = this.filter.type;
                 this.load();
             },
         },

@@ -4,8 +4,8 @@ namespace Modules\Ecommerce\Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\Ecommerce\Entities\Product;
-use Modules\Ecommerce\Entities\ScheduleRule;
-use Modules\Ecommerce\Entities\ScheduleRuleTime;
+use Modules\Booking\Entities\ScheduleRule;
+use Modules\Booking\Entities\ScheduleRuleTime;
 use Modules\Ecommerce\Enums\ProductStatus;
 
 class ScheduleSeeder extends Seeder

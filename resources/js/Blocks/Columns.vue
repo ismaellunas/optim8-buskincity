@@ -2,12 +2,9 @@
     <div
         class="columns"
         :class="wrapperClass"
-        :style="dimensionStyle"
+        :style="wrapperStyle"
     >
-        <div
-            v-if="isEditMode"
-            class="column is-3 p-1"
-        >
+        <div class="column is-3 p-1">
             <div class="field has-addons">
                 <div class="control is-expanded">
                     <biz-select
@@ -33,10 +30,7 @@
                 </div>
             </div>
         </div>
-        <div
-            v-if="isEditMode"
-            class="column is-9 p-1"
-        >
+        <div class="column is-9 p-1">
             <div class="field has-addons is-pulled-right">
                 <p class="control">
                     <biz-button
@@ -80,7 +74,6 @@
                 :id="column.id"
                 :components="block.columns[index].components"
                 :data-entities="entities"
-                :is-edit-mode="isEditMode"
                 :selected-locale="selectedLocale"
             />
         </template>
@@ -88,15 +81,16 @@
 </template>
 
 <script>
+    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
+    import MixinContentHasImage from '@/Mixins/ContentHasImage';
+    import MixinEditModeComponent from '@/Mixins/EditModeComponent';
+    import MixinMediaImage from '@/Mixins/MediaImage';
     import BizButton from '@/Biz/Button';
     import BizSelect from '@/Biz/Select';
     import BlockColumn from '@/Blocks/Column';
-    import EditModeComponentMixin from '@/Mixins/EditModeComponent';
-    import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
-    import MixinMediaImage from '@/Mixins/MediaImage';
     import { confirm, confirmDelete } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
-    import { useModelWrapper, isEmpty, getResourceFromDataObject } from '@/Libs/utils';
+    import { useModelWrapper, isEmpty, getResourceFromDataObject, isBlank } from '@/Libs/utils';
     import { inject } from "vue";
     import icon from '@/Libs/icon-class';
 
@@ -108,15 +102,15 @@
         },
 
         mixins: [
-            EditModeComponentMixin,
             MixinContentHasDimension,
+            MixinContentHasImage,
+            MixinEditModeComponent,
             MixinMediaImage,
         ],
 
         props: {
             dataEntities: { type: Object, default: () => {} },
             id: { type: String, required: true },
-            isEditMode: { type: Boolean, default: false },
             modelValue: { type: Object, required: true },
             selectedLocale: { type: String, required: true },
         },
@@ -129,6 +123,7 @@
         setup(props, { emit }) {
             return {
                 block: useModelWrapper(props, emit),
+                dataImages: inject('dataImages'),
                 entities: useModelWrapper(props, emit, 'dataEntities'),
                 media: inject('dataMedia'),
             };
@@ -138,6 +133,7 @@
             return {
                 columnOptions: [1,2,3,4,5,6],
                 icon,
+                images: this.dataImages,
                 numberOfColumns: this.block.columns.length,
             };
         },
@@ -146,29 +142,56 @@
             wrapperClass() {
                 let wrapperClass = [];
 
-                if (this.isEditMode) {
+                wrapperClass = wrapperClass.concat(
+                    'edit-mode-columns',
+                    'is-multiline',
+                    'box',
+                    'p-1',
+                    'my-1'
+                );
+
+                if (this.hasImage) {
                     wrapperClass = wrapperClass.concat(
-                        'edit-mode-columns',
-                        'is-multiline',
-                        'box',
-                        'p-1',
-                        'my-1'
+                        'pb-background-image'
                     );
                 }
 
-                const configWrapper = this.dataEntity?.config?.wrapper ?? null;
+                const configWrapper = this.entity?.config?.wrapper ?? null;
 
                 return wrapperClass.concat(
-                    (configWrapper['backgroundColor'] ?? '')
+                    (configWrapper['backgroundColor'] ?? ''),
+                    (configWrapper['rounded'] ?? ''),
                 ).filter(Boolean);
             },
 
-            dataEntity() {
-                return this.dataEntities[ this.block.id ] ?? null;
+            wrapperStyle() {
+                let wrapperStyle = [];
+
+                if (this.hasImage) {
+                    wrapperStyle.push({
+                        'background-image': 'url(' + this.imageSrc + ')',
+                    });
+                }
+
+                return wrapperStyle.concat(this.dimensionStyle);
+            },
+
+            entity() {
+                return this.entities[ this.block.id ] ?? null;
             },
 
             configDimension() {
-                return this.dataEntity?.config?.dimension ?? null;
+                return this.entity?.config?.dimension ?? null;
+            },
+        },
+
+        watch: {
+            'entity.config.wrapper.backgroundImage': {
+                handler(newValue, oldValue) {
+                    this.entityImage.mediaId = newValue;
+                },
+                deep: true,
+                immediate: true
             },
         },
 
@@ -259,7 +282,12 @@
                             'mediaId'
                         );
 
-                        allMediaIds = allMediaIds.concat(mediaIds);
+                        const backgroundImages = getResourceFromDataObject(
+                            self.entities[blockId],
+                            'backgroundImage'
+                        );
+
+                        allMediaIds = allMediaIds.concat(mediaIds, backgroundImages);
                     }
                 });
 

@@ -42,6 +42,7 @@
     import BizLabel from '@/Biz/Label';
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
     import BizTextEditor from '@/Biz/EditorTinymce';
+    import { fullConfig } from '@/Libs/tinymce-configs';
     import { useModelWrapper, isEmpty } from '@/Libs/utils';
 
     export default {
@@ -96,38 +97,18 @@
         computed: {
             editorConfig() {
                 const editorConfig = {
-                    height: this.height,
-                    menubar: false,
-                    plugins: [
-                        'advlist autolink lists link image charmap print preview ' +
-                        'anchor searchreplace visualblocks code fullscreen',
-                        'insertdatetime media table paste code wordcount hr code'
-                    ],
-                    block_formats: (
-                        'Paragraph=p; '+
-                        'Header 1=h1; '+
-                        'Header 2=h2; '+
-                        'Header 3=h3'
-                    ),
-                    toolbar1: (
-                        'fullscreen | formatselect | ' +
-                        'bold italic underline strikethrough blockquote | ' +
-                        'forecolor backcolor | ' +
-                        'removeformat image media'
-                    ),
-                    toolbar2: (
-                        'alignleft aligncenter alignright alignjustify | ' +
-                        'bullist numlist outdent indent hr | ' +
-                        'anchor link table charmap code | '
-                    ),
-                    contextmenu: 'link image',
-                    file_picker_types: 'image media', //'file image media'
-                    file_picker_callback: (
-                        this.isMediaEnabled
-                            ? this.filePickerCallback
-                            : false
-                    ),
-                    media_live_embeds: true,
+                    ...fullConfig,
+                    ...{
+                        height: this.height,
+                        contextmenu: 'link image',
+                        file_picker_types: 'image media', //'file image media'
+                        file_picker_callback: (
+                            this.isMediaEnabled
+                                ? this.filePickerCallback
+                                : false
+                        ),
+                        media_live_embeds: true,
+                    }
                 };
 
                 if (this.isConfigCombined) {

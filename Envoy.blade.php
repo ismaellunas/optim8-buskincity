@@ -57,6 +57,7 @@
     heroku:push
     heroku:migration
     heroku:route-list
+    heroku:restart
     heroku:clean-after-deploy
 @endstory
 
@@ -68,6 +69,7 @@
     heroku:push
     heroku:migration
     heroku:route-list
+    heroku:restart
     heroku:clean-after-deploy
 @endstory
 
@@ -79,6 +81,10 @@
     heroku run php artisan optimize:clear
     heroku run rm Envoy.blade.php
     heroku maintenance:off
+@endtask
+
+@task('heroku:restart')
+    heroku restart worker
 @endtask
 
 @task('install-dependencies')
@@ -124,4 +130,12 @@
 
 @task('heroku:route-list')
     heroku run php artisan route:list --path="admin"
+@endtask
+
+@task('nwatch')
+    npm run watch-poll
+@endtask
+
+@task('nwatch-theme')
+    npm run watch-poll --theme={{ $theme }}
 @endtask

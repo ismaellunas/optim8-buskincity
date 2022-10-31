@@ -2,6 +2,8 @@
 
 namespace App\View\Components\Builder\Content;
 
+use Mews\Purifier\Facades\Purifier;
+
 class CardText extends BaseContent
 {
     public $cardContentClasses = [];
@@ -26,6 +28,17 @@ class CardText extends BaseContent
 
     public function contentHtml(): string
     {
-        return $this->entity['content']['cardContent']['content']['html'] ?? '';
+        $dirtyHtml = $this->entity['content']['cardContent']['content']['html'] ?? '';
+
+        if (!empty($dirtyHtml)) {
+            return Purifier::clean($dirtyHtml, 'tinymce');
+        }
+
+        return '';
+    }
+
+    public function cardRounded(): string
+    {
+        return $this->getConfig()['card']['rounded'] ?? '';
     }
 }

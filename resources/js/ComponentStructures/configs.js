@@ -7,9 +7,11 @@ import { config as faq } from './faq';
 import { config as heading } from './heading';
 import { config as icon } from './icon';
 import { config as image } from './image';
+import { config as latestPost } from './latest-post';
 import { config as tabs } from './tabs';
 import { config as text } from './text';
 import { config as userList } from './user-list';
+import { config as video } from './video';
 
 export default {
     button: button,
@@ -21,7 +23,9 @@ export default {
     heading: heading,
     icon: icon,
     image: image,
+    latestPost: latestPost,
     tabs: tabs,
     text: text,
     userList: userList,
+    video: video,
 };

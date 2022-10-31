@@ -38,13 +38,15 @@
             @on-media-submitted="$emit('on-media-submitted', $event)"
             @on-view-changed="$emit('on-view-changed', $event)"
         >
-            <template #actions="slotProps">
+            <template
+                #itemActions="{ mediumItem }"
+            >
                 <biz-button-icon
                     icon="fas fa-check"
                     title="Select"
                     type="button"
                     :class="{'is-borderless is-shadowless is-inverted is-primary': true, 'card-footer-item  p-2': queryParams.view !== 'list'}"
-                    @click="$emit('on-media-selected', slotProps.media, $event)"
+                    @click="$emit('on-media-selected', mediumItem, $event)"
                 >
                     <span>Select</span>
                 </biz-button-icon>
@@ -62,6 +64,8 @@
     import { acceptedImageTypes } from '@/Libs/defaults';
 
     export default {
+        name: 'BizMediaBrowser',
+
         components: {
             BizButton,
             BizButtonIcon,
@@ -69,18 +73,17 @@
             BizModalCard,
             BizPagination,
         },
+
         props: {
-            acceptedFileType: {
-                type: Array,
-                default: null,
-            },
-            data: {},
-            isDownloadEnabled: {type: Boolean, default: true},
-            isUploadEnabled: {type: Boolean, default: true},
-            queryParams: Object,
-            search: Function,
-            title: {type: String, default: 'Images'},
+            acceptedFileType: { type: Array, default: null },
+            data: { type: Object, required: true },
+            isDownloadEnabled: { type: Boolean, default: true },
+            isUploadEnabled: { type: Boolean, default: true },
+            queryParams: { type: Object, default: () => {} },
+            search: { type: Function, required: true },
+            title: { type: String, default: 'Images' },
         },
+
         emits: [
             'close',
             'on-clicked-pagination',
@@ -88,6 +91,7 @@
             'on-media-submitted',
             'on-view-changed',
         ],
+
         setup(props) {
             return {
                 acceptedTypes: props.acceptedFileType ?? acceptedImageTypes,

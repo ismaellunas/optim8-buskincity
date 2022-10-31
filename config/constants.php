@@ -141,6 +141,7 @@ return [
         'date_time' => 'Y/m/d H:i:s',
         'date_time_minute' => 'Y/m/d H:i',
         'date_time_event' => 'Y/m/d H:i (\G\M\T P)',
+        'date_post' => 'd F Y',
     ],
 
     'currency_symbols' => [
@@ -167,6 +168,14 @@ return [
                 'group' => 'key.google_api'
             ],
         ],
+    ],
+
+    'reading_time_per_minute' => 200,
+
+    'regex' => [
+        // @see https://www.regextester.com/96461
+        // @see https://stackoverflow.com/questions/5612602/improving-regex-for-parsing-youtube-vimeo-urls
+        'youtube_vimeo_url' => '^(http:\/\/|https:\/\/)(vimeo\.com|youtu\.be|www\.youtube\.com|player\.vimeo\.com)\/((video\/|embed\/|watch\?v=|v\/)|[\w\/\S]+)([\?]\S*)?$',
     ],
 
     /*

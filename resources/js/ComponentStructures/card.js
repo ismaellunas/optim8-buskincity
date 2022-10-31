@@ -1,4 +1,15 @@
-import { alignments, contentSizes, defaultOption, fixedSquares, imageRatios } from './style-options';
+import {
+    alignments,
+    contentSizes,
+    defaultOption,
+    fixedSquares,
+    imageRatios,
+    roundedSizes,
+} from './style-options';
+
+import {
+    dimension
+} from './global-configs.js';
 
 export default {
     title: "Card",
@@ -22,10 +33,15 @@ export default {
         },
     },
     config: {
+        card: {
+            link: null,
+            rounded: null,
+        },
         image: {
             // figure
             fixedSquare: null, // is-16x16, etc..
             ratio: "is-4by3", // is-square
+            rounded: null,
             padding: {
                 top: null,
                 right: null,
@@ -37,38 +53,53 @@ export default {
             alignment: null,
             size: null,
         },
-        dimension: {
-            'style.padding': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-            'style.margin': {
-                top: null,
-                right: null,
-                bottom: null,
-                left: null,
-                unit: 'px',
-            },
-        }
+        dimension: dimension.config
     }
 }
 
 export const config = {
+    card: {
+        label: "Card",
+        config: {
+            link: {
+                component: "ConfigInput",
+                label: "Link",
+                settings: {
+                    note: "E.g: https://www.google.com",
+                },
+            },
+            rounded: {
+                component: "ConfigSelect",
+                label: "Rounded Size",
+                settings: {
+                    options: defaultOption.concat(roundedSizes),
+                },
+            },
+        },
+    },
     image: {
         label: "Image",
         config: {
             ratio: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Ratio",
-                options: defaultOption.concat(imageRatios)
+                settings: {
+                    options: defaultOption.concat(imageRatios)
+                },
             },
             fixedSquare: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Fixed Square",
-                options: defaultOption.concat(fixedSquares)
+                settings: {
+                    options: defaultOption.concat(fixedSquares)
+                },
+            },
+            rounded: {
+                component: "ConfigSelect",
+                label: "Rounded Size",
+                settings: {
+                    options: defaultOption.concat(roundedSizes),
+                },
             },
             padding: {
                 label: "Padding",
@@ -80,29 +111,20 @@ export const config = {
         label: "Content",
         config: {
             size: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Size",
-                options: defaultOption.concat(contentSizes)
+                settings: {
+                    options: defaultOption.concat(contentSizes)
+                },
             },
             alignment: {
-                type: "select",
+                component: "ConfigSelect",
                 label: "Alignment",
-                options: defaultOption.concat(alignments)
+                settings: {
+                    options: defaultOption.concat(alignments)
+                },
             },
         }
     },
-    dimension: {
-        label: "Dimension",
-        isOpen: false,
-        config: {
-            'style.margin': {
-                component: "TRBLInput",
-                label: "Margin",
-            },
-            'style.padding': {
-                component: "TRBLInput",
-                label: "Padding",
-            },
-        }
-    }
+    dimension: dimension.component
 };

@@ -32,12 +32,18 @@
         inheritAttrs: false,
         props: {
             label: {
-                type: String
+                type: String,
+                default: ''
             },
             message: {
-                type: Object,
+                type: [Array, Object, String],
+                default: undefined
             },
-            modelValue: Date|Array|null,
+            modelValue: {
+                type: [Date, Array, null],
+                required: true,
+                default: null,
+            },
             disabled: {
                 type: Boolean,
                 default: false

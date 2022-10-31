@@ -2,25 +2,29 @@
 
 namespace App\View\Components\Builder\Content;
 
+use App\Models\User;
 use App\Services\CountryService;
+use App\Services\GlobalOptionService;
 use App\Services\PageBuilderService;
 use Illuminate\Support\Facades\Crypt;
 
 class UserList extends BaseContent
 {
-    public $countries = [];
+    public $defaultCountries = [];
     public $countryOptions = [];
     public $defaultOrderBy = null;
     public $orderByOptions = [];
+    public $typeOptions = [];
+    public $defaultTypes = [];
 
     public function __construct($entity)
     {
         parent::__construct($entity);
 
-        $this->countries = $this->getConfig()['list']['countries'] ?? [];
-        $this->countryOptions = app(CountryService::class)->getUserCountryOptions();
+        $this->defaultCountries = $this->getConfig()['list']['countries'] ?? [];
         $this->defaultOrderBy = $this->getConfig()['list']['orderBy'] ?? null;
         $this->orderByOptions = app(PageBuilderService::class)->userListOrderOptions();
+        $this->defaultTypes = $this->getConfig()['list']['types'] ?? [];
     }
 
     public function url(): string

@@ -18,7 +18,7 @@ use App\Services\{
 use Inertia\Inertia;
 use App\Entities\Menus\Options\SegmentOption;
 
-class ThemeFooterController extends ThemeOptionController
+class ThemeFooterController extends CrudController
 {
     private $menuService;
     private $settingService;

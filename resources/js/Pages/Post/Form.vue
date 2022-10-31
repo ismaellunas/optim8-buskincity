@@ -72,6 +72,26 @@
                                     {{ category.value }}
                                 </biz-button>
                             </div>
+
+                            <p>Select The Primary Category</p>
+                            <biz-form-select
+                                v-model="form.primary_category"
+                                class="is-fullwidth"
+                                placeholder="- Select -"
+                                :message="error('primary_category')"
+                            >
+                                <template
+                                    v-for="category in sortedCategoryOptions"
+                                    :key="category.id"
+                                >
+                                    <option
+                                        v-if="form.categories.includes(category.id)"
+                                        :value="category.id"
+                                    >
+                                        {{ category.value }}
+                                    </option>
+                                </template>
+                            </biz-form-select>
                         </div>
 
                         <div class="field">
@@ -257,6 +277,7 @@
     import icon from '@/Libs/icon-class';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { convertToSlug } from '@/Libs/utils';
+    import { fullConfig } from '@/Libs/tinymce-configs';
     import { head, isEmpty, keys, pull, sortBy } from 'lodash';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
@@ -306,11 +327,7 @@
 
         setup(props, { emit }) {
             const editorConfig = {
-                toolbar2: (
-                    'alignleft aligncenter alignright alignjustify | ' +
-                    'bullist numlist outdent indent hr | ' +
-                    'anchor link table charmap code | formLists'
-                ),
+                toolbar2: fullConfig.toolbar2 + ' | formLists',
                 setup: (editor) => {
                     if (props.modules?.form_builder) {
                         editor.ui.registry.addMenuButton('formLists', {
@@ -378,6 +395,10 @@
                     pull(this.form.categories, category.id);
                 } else {
                     this.form.categories.push(category.id);
+                }
+
+                if (isEmpty(this.form.categories)) {
+                    this.form.primary_category = null;
                 }
             },
             onShownModal() { /* @override */

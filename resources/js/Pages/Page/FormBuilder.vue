@@ -5,7 +5,6 @@
                 <template v-if="!isComponentConfigOpen">
                     <draggable
                         class="dragArea columns is-multiline"
-                        :disabled="!isEditMode"
                         :list="availableComponents"
                         :group="{ name: 'components', pull: 'clone', put: false }"
                         :clone="cloneComponent"
@@ -16,10 +15,7 @@
                     >
                         <template #item="{ element }">
                             <div class="column is-half">
-                                <div
-                                    class="card"
-                                    :class="{'has-text-grey-light': !isEditMode}"
-                                >
+                                <div class="card">
                                     <div class="card-content is-size-7">
                                         <div class="content is-center">
                                             {{ element.title }}
@@ -37,7 +33,6 @@
 
                         <draggable
                             class="dragArea columns is-multiline"
-                            :disabled="!isEditMode"
                             :list="availableModuleComponents"
                             :group="{ name: 'components', pull: 'clone', put: false }"
                             :clone="cloneComponent"
@@ -48,10 +43,7 @@
                         >
                             <template #item="{ element }">
                                 <div class="column is-half">
-                                    <div
-                                        class="card"
-                                        :class="{'has-text-grey-light': !isEditMode}"
-                                    >
+                                    <div class="card">
                                         <div class="card-content is-size-7">
                                             <div class="content is-center">
                                                 {{ element.title }}
@@ -67,7 +59,6 @@
 
                     <draggable
                         class="dragColumnArea columns is-multiline"
-                        :disabled="!isEditMode"
                         :list="availableBlocks"
                         :group="{ name: 'columns', pull: 'clone', put: false }"
                         :clone="cloneBlock"
@@ -77,10 +68,7 @@
                     >
                         <template #item="{ element }">
                             <div class="column is-half">
-                                <div
-                                    class="card"
-                                    :class="{'has-text-grey-light': !isEditMode}"
-                                >
+                                <div class="card">
                                     <div class="card-content is-size-7">
                                         <div class="content">
                                             {{ element.title }}
@@ -123,7 +111,6 @@
                         v-model:data-entities="data.entities"
                         class="component-configurable"
                         :data-id="element.id"
-                        :is-edit-mode="isEditMode"
                         :selected-locale="selectedLocale"
                         @click="settingContent"
                         @delete-block="deleteBlock"
@@ -164,12 +151,12 @@
         provide() {
             return {
                 dataMedia: this.data.media,
+                selectedLocale: this.selectedLocale,
             };
         },
 
         props: {
             contentConfigId: { type: String, default: "" },
-            isEditMode: { type: Boolean, default: false },
             modelValue: { type: Object, required: true },
             selectedLocale: { type: String, required: true },
         },

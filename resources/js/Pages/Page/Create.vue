@@ -10,7 +10,6 @@
                 v-model:content-config-id="contentConfigId"
                 :errors="errors"
                 :is-new="isNew"
-                :is-edit-mode="isEditMode"
                 :status-options="statusOptions"
                 :locale-options="localeOptions"
                 :selected-locale="selectedLocale"
@@ -22,6 +21,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout';
     import PageForm from '@/Pages/Page/Form';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
@@ -36,6 +36,10 @@
             PageForm,
             BizErrorNotifications,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         provide() {
             return {
@@ -87,7 +91,6 @@
         data() {
             return {
                 disableInput: false,
-                isEditMode: true,
                 isNew: true,
                 selectedLocale: this.defaultLocale,
             };
@@ -96,7 +99,10 @@
         methods: {
             onSubmit() {
                 const submitRoute = route('admin.pages.store');
-                this.form.post(submitRoute);
+                this.form.post(submitRoute, {
+                    onStart: this.onStartLoadingOverlay,
+                    onFinish: this.onEndLoadingOverlay,
+                });
             },
             onChangeLocale() {
                 let locale = {};

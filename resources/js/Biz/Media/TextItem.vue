@@ -9,6 +9,18 @@
                 :value="medium.display_file_name"
             >
         </div>
+
+        <div class="control">
+            <biz-button-icon
+                v-if="isImage"
+                icon="fas fa-expand"
+                title="Preview"
+                type="button"
+                :class="['is-info']"
+                @click="$emit('on-preview-clicked', medium)"
+            />
+        </div>
+
         <div class="control">
             <biz-button-download
                 v-if="isDownloadEnabled"
@@ -18,6 +30,7 @@
                 :url="medium.file_url"
             />
         </div>
+
         <div class="control">
             <biz-button-icon
                 v-if="isDeleteEnabled"
@@ -32,9 +45,9 @@
 </template>
 
 <script>
+    import MixinMediaItem from '@/Mixins/MediaItem';
     import BizButtonDownload from '@/Biz/ButtonDownload';
     import BizButtonIcon from '@/Biz/ButtonIcon';
-    import MixinMediaItem from '@/Mixins/MediaItem';
 
     export default {
         name: 'BizMediaTextItem',
@@ -49,13 +62,15 @@
         ],
 
         props: {
-            medium: { type: Object, required: true },
             isDeleteEnabled: {type: Boolean, default: true},
             isDownloadEnabled: {type: Boolean, default: true},
+            isPreviewEnabled: { type: Boolean, default: true },
+            medium: { type: Object, required: true },
         },
 
         emits: [
             'on-delete-clicked',
+            'on-preview-clicked',
         ],
     };
 </script>

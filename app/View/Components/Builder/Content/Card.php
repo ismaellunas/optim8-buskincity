@@ -4,11 +4,13 @@ namespace App\View\Components\Builder\Content;
 
 use Illuminate\Support\Collection;
 use App\Models\Media;
+use Mews\Purifier\Facades\Purifier;
 
 class Card extends BaseContent
 {
     public $locale;
     public $images;
+    public $cardLink;
 
     public $imageMedia = null;
     public $hasImage = false;
@@ -25,6 +27,7 @@ class Card extends BaseContent
 
         $this->images = $images;
         $this->locale = $locale;
+        $this->cardLink = $this->getCardLink();
 
         $this->cardContentClasses = $this->getCardContentClasses();
         $this->cardImageClasses = $this->getCardImageClasses();
@@ -34,7 +37,13 @@ class Card extends BaseContent
 
     public function contentHtml(): string
     {
-        return $this->entity['content']['cardContent']['content']['html'] ?? '';
+        $dirtyHtml = $this->entity['content']['cardContent']['content']['html'] ?? '';
+
+        if (!empty($dirtyHtml)) {
+            return Purifier::clean($dirtyHtml, 'tinymce');
+        }
+
+        return '';
     }
 
     public function ratio(): string
@@ -50,6 +59,16 @@ class Card extends BaseContent
     public function fixedSquare(): string
     {
         return $this->getConfig()['image']['fixedSquare'] ?? '';
+    }
+
+    public function cardRounded(): string
+    {
+        return $this->getConfig()['card']['rounded'] ?? '';
+    }
+
+    private function getCardLink(): ?string
+    {
+        return $this->getConfig()['card']['link'] ?? null;
     }
 
     private function getImageMedia(): ?Media

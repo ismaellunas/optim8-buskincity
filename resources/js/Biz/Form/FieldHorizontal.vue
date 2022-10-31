@@ -1,6 +1,9 @@
 <template>
     <div class="field is-horizontal">
-        <div class="field-label" :class="fieldLabelClasses">
+        <div
+            class="field-label"
+            :class="fieldLabelClasses"
+        >
             <label class="label">
                 <slot name="label" />
             </label>
@@ -18,8 +21,9 @@
 
     export default {
         props: {
-            fieldLabelClass: {}
+            fieldLabelClass: { type: [String, Array, Object], default: '' },
         },
+
         computed: {
             fieldLabelClasses() {
                 if (!isEmpty(this.fieldLabelClass)) {
@@ -31,6 +35,6 @@
                 }
                 return ['is-normal'];
             }
-        }
-    }
+        },
+    };
 </script>

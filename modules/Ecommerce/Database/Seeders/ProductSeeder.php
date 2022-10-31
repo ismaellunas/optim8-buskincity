@@ -12,8 +12,8 @@ use GetCandy\Models\TaxClass;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
+use Modules\Booking\Entities\Schedule;
 use Modules\Ecommerce\Entities\Product;
-use Modules\Ecommerce\Entities\Schedule;
 use Modules\Ecommerce\Enums\ProductStatus;
 
 class ProductSeeder extends Seeder

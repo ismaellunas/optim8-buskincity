@@ -12,7 +12,6 @@
                 v-model:content-config-id="contentConfigId"
                 :errors="errors"
                 :is-dirty="form.isDirty"
-                :is-edit-mode="isEditMode"
                 :is-new="isNew"
                 :locale-options="localeOptions"
                 :page-preview="true"
@@ -20,17 +19,20 @@
                 :status-options="statusOptions"
                 @on-change-locale="onChangeLocale"
                 @on-submit="onSubmit"
+                @on-delete-translation="onDeleteTranslation"
             />
         </div>
     </div>
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import PageForm from '@/Pages/Page/Form';
-    import { confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
+    import { confirmDelete, confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { find } from 'lodash';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { getTranslation } from '@/Libs/translation';
     import { isBlank } from '@/Libs/utils';
@@ -45,6 +47,10 @@
             BizFlashNotifications,
             PageForm,
         },
+
+        mixins: [
+            MixinHasLoader,
+        ],
 
         provide() {
             return {
@@ -103,10 +109,15 @@
         data() {
             return {
                 disableInput: false,
-                isEditMode: true,
                 isNew: false,
                 selectedLocale: this.defaultLocale,
             };
+        },
+
+        computed: {
+            selectedLocaleName() {
+                return find(this.localeOptions, { id: this.selectedLocale }).name ?? '';
+            },
         },
 
         methods: {
@@ -170,6 +181,8 @@
                     const submitRoute = route('admin.pages.update', {id: this.page.id});
 
                     this.form.put(submitRoute, {
+                        onStart: this.onStartLoadingOverlay,
+                        onFinish: this.onEndLoadingOverlay,
                         onSuccess: () => {
                             const translatedPage = getTranslation(
                                 this.page,
@@ -201,17 +214,43 @@
                 this.selectedLocale = locale;
             },
             setTranslationForm(locale) {
-                const translatedPage = getTranslation(this.page, locale);
+                let translatedPage = getTranslation(this.page, locale);
 
-                let translationFrom = { [this.defaultLocale]: {} };
+                let translationForm = { [this.defaultLocale]: {} };
 
-                if (isBlank(translatedPage)) {
-                    translationFrom[locale] = getEmptyPageTranslation();
+                if (isBlank(translatedPage) || typeof translatedPage == 'undefined') {
+                    translationForm[locale] = getEmptyPageTranslation();
                 } else {
-                    translationFrom[locale] = JSON.parse(JSON.stringify(translatedPage));
+                    translationForm[locale] = JSON.parse(JSON.stringify(translatedPage));
                 }
-                this.form = useForm(translationFrom);
-            }
+
+                this.form = useForm(translationForm);
+            },
+            onDeleteTranslation() {
+                const self = this;
+
+                confirmDelete(
+                    'Are you sure want to delete the '+ self.selectedLocaleName + ' translation?',
+                ).then(result => {
+                    if (result.isConfirmed) {
+                        self.$inertia.delete(
+                            route('admin.pages.translations.destroy', self.form[self.selectedLocale]?.id),
+                            {
+                                onStart: self.onStartLoadingOverlay,
+                                onFinish: self.onEndLoadingOverlay,
+                                onError: () => {
+                                    oopsAlert();
+                                },
+                                onSuccess: (page) => {
+                                    successAlert(page.props.flash.message);
+
+                                    self.changeLocale(self.defaultLocale);
+                                },
+                            }
+                        );
+                    }
+                })
+            },
         },
     }
 </script>

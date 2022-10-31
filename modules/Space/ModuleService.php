@@ -4,6 +4,7 @@ namespace Modules\Space;
 
 use App\Models\GlobalOption;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Modules\Space\Entities\Space;
 
 class ModuleService
@@ -37,16 +38,16 @@ class ModuleService
         ];
     }
 
-    public static function permissions(): array
+    public static function permissions(): Collection
     {
-        return [
+        return collect([
             'space.*',
             'space.browse',
             'space.read',
             'space.edit',
             'space.add',
             'space.delete',
-        ];
+        ]);
     }
 
     public static function mediaFolder(): string

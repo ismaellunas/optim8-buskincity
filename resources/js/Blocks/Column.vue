@@ -1,10 +1,6 @@
 <template>
-    <div
-        class="column break-long-text"
-        :class="columnClass"
-    >
+    <div class="column break-long-text edit-mode-column">
         <draggable
-            v-if="isEditMode"
             class="dragArea list-group"
             group="components"
             handle=".handle-content"
@@ -21,25 +17,12 @@
                     v-model="computedDataEntities[element.id]"
                     class="component-configurable"
                     :data-id="element.id"
-                    :is-edit-mode="isEditMode"
                     :selected-locale="selectedLocale"
                     @delete-content="deleteContent"
                     @duplicate-content="duplicateContent"
                 />
             </template>
         </draggable>
-
-        <template v-else>
-            <component
-                :is="element.componentName"
-                v-for="element in computedComponents"
-                :id="element.id"
-                :key="element.id"
-                v-model="computedDataEntities[element.id]"
-                :is-edit-mode="isEditMode"
-                :selected-locale="selectedLocale"
-            />
-        </template>
     </div>
 </template>
 
@@ -54,9 +37,11 @@
     import Heading from '@/Blocks/Contents/Heading';
     import Icon from '@/Blocks/Contents/Icon';
     import Image from '@/Blocks/Contents/Image';
+    import LatestPost from '@/Blocks/Contents/LatestPost';
     import Tabs from '@/Blocks/Contents/Tabs';
     import Text from '@/Blocks/Contents/Text';
     import UserList from '@/Blocks/Contents/UserList';
+    import Video from '@/Blocks/Contents/Video';
     import { isBlank, useModelWrapper, generateElementId } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { cloneDeep } from 'lodash';
@@ -67,19 +52,20 @@
             Card,
             CardText,
             Carousel,
+            Draggable,
             Faq,
             FormBuilder,
-            Draggable,
             Heading,
             Icon,
             Image,
+            LatestPost,
             Tabs,
             Text,
             UserList,
+            Video,
         },
         props: {
             id: { type: String, required: true },
-            isEditMode: { type: Boolean, default: false },
             isDebugMode: { type: Boolean, default: false },
             components: { type: Array, default: () => [] },
             dataEntities: { type: Object, default: () => {} },
@@ -97,18 +83,11 @@
                 return !Array.isArray(this.computedComponents) || !this.computedComponents.length;
             },
             isDraggableEmpty() {
-                return this.isEditMode && this.isEmptyComponents;
+                return this.isEmptyComponents;
             },
             emptyInsertThreshold() {
                 return this.isDraggableEmpty ? 50 : 5;
             },
-            columnClass() {
-                let classes = [];
-                if (this.isEditMode) {
-                    classes.push("edit-mode-column");
-                }
-                return classes;
-            }
         },
         methods: {
             log: function(evt) {

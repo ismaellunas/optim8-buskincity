@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
-class ThemeHeaderController extends ThemeOptionController
+class ThemeHeaderController extends CrudController
 {
     private $mediaService;
     private $menuService;

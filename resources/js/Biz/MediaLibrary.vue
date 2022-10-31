@@ -22,14 +22,13 @@
         </div>
 
         <div class="columns is-multiline">
-
             <div class="column is-full">
                 <div class="columns">
                     <div class="column">
                         <biz-filter-search
                             v-model="term"
                             @search="search"
-                        ></biz-filter-search>
+                        />
                     </div>
 
                     <div
@@ -39,7 +38,7 @@
                         <biz-dropdown
                             :close-on-click="false"
                         >
-                            <template v-slot:trigger>
+                            <template #trigger>
                                 <span>Filter</span>
                                 <span
                                     v-if="types.length > 0"
@@ -48,13 +47,17 @@
                                     ({{types.length}})
                                 </span>
                                 <span class="icon is-small">
-                                    <i :class="icon.angleDown" aria-hidden="true"></i>
+                                    <i
+                                        :class="icon.angleDown"
+                                        aria-hidden="true"
+                                    />
                                 </span>
                             </template>
 
                             <biz-dropdown-item
                                 v-for="(type, typeIndex) in typeOptions"
-                                >
+                                :key="typeIndex"
+                            >
                                 <biz-checkbox
                                     v-model:checked="types"
                                     :value="typeIndex"
@@ -76,30 +79,32 @@
                 </div>
             </div>
 
-            <component
-                :is="isGalleryView ? 'BizMediaGallery' : 'BizMediaList'"
-                :media="records.data"
-            >
-                <template v-slot:default="{ medium }">
-                    <component
-                        :is="isGalleryView ? 'BizMediaGalleryItem' : 'BizMediaListItem'"
-                        :is-delete-enabled="isDeleteEnabled"
-                        :is-download-enabled="isDownloadEnabled"
-                        :is-edit-enabled="isEditEnabled"
-                        :medium="medium"
-                        @on-delete-clicked="deleteRecord"
-                        @on-edit-clicked="openEditModal"
-                        @on-preview-clicked="previewImage"
+            <div class="column is-full">
+                <component
+                    :is="isGalleryView ? 'BizMediaGallery' : 'BizMediaList'"
+                    :media="records.data"
+                    :is-delete-enabled="isDeleteEnabled"
+                    :is-download-enabled="isDownloadEnabled"
+                    :is-edit-enabled="isEditEnabled"
+                    :is-select-enabled="isSelectEnabled"
+                    @on-delete-clicked="deleteRecord"
+                    @on-edit-clicked="openEditModal"
+                >
+                    <template
+                        #itemActions="{ mediumItem }"
                     >
+                        <slot
+                            name="itemActions"
+                            :medium-item="mediumItem"
+                        />
+                    </template>
+                </component>
+            </div>
 
-                        <template v-slot:actions="{medium}">
-                            <slot name="actions" :media="medium"></slot>
-                        </template>
-                    </component>
-                </template>
-            </component>
-
-            <div v-if="isPaginationDisplayed" class="column is-full">
+            <div
+                v-if="isPaginationDisplayed"
+                class="column is-full"
+            >
                 <biz-pagination
                     :is-ajax="isAjax"
                     :links="records?.links ?? []"
@@ -108,23 +113,16 @@
             </div>
         </div>
 
-        <biz-modal
-            v-show="isModalOpen"
-            @close="closeModal()"
-        >
-            <p class="image">
-                <img :src="previewImageSrc" alt="">
-            </p>
-        </biz-modal>
-
         <biz-modal-card
             v-if="isEditing"
             :content-class="{'is-huge': isImage(formMedia)}"
             :is-close-hidden="true"
             @close="closeEditModal"
         >
-            <template v-slot:header>
-                <p class="modal-card-title">Media Detail</p>
+            <template #header>
+                <p class="modal-card-title">
+                    Media Detail
+                </p>
                 <biz-button
                     aria-label="close"
                     class="delete is-primary"
@@ -160,10 +158,16 @@
                         class="card"
                         style="height: 90%"
                     >
-                        <div class="card-image" style="height: inherit">
-                            <span class="icon is-large" style="width: 100%">
+                        <div
+                            class="card-image"
+                            style="height: inherit"
+                        >
+                            <span
+                                class="icon is-large"
+                                style="width: 100%"
+                            >
                                 <span class="fa-stack fa-lg">
-                                    <i :class="[mediaIconThumbnail(formMedia), 'fa-6x']"></i>
+                                    <i :class="[mediaIconThumbnail(formMedia), 'fa-6x']" />
                                 </span>
                             </span>
                         </div>
@@ -172,7 +176,7 @@
                 <div class="column">
                     <media-form
                         :media="formMedia"
-                        :isAjax="isAjax"
+                        :is-ajax="isAjax"
                         @on-success-submit="onSuccessSubmit"
                         @on-error-submit="onErrorSubmit"
                         @cancel="closeEditModal"
@@ -189,7 +193,7 @@
             :is-processing="isProcessing"
             @close="closeImageEditorModal"
         >
-            <template v-slot:actions="slotProps">
+            <template #actions="slotProps">
                 <template v-if="formMedia.id">
                     <biz-button
                         type="button"
@@ -270,6 +274,7 @@
 
     export default {
         name: 'MediaLibrary',
+
         components: {
             MediaForm,
             BizButton,
@@ -290,37 +295,44 @@
             BizModalImageEditor,
             BizPagination,
         },
+
         mixins: [
             HasPageErrors,
             HasModalMixin,
         ],
+
+        props: {
+            acceptedTypes: {type: Array, default: acceptedFileTypes},
+            baseRouteName: {type: String, default: 'admin.media'},
+            isAjax: {type: Boolean, default: false},
+            isDeleteEnabled: {type: Boolean, default: true},
+            isDownloadEnabled: {type: Boolean, default: true},
+            isEditEnabled: {type: Boolean, default: true},
+            isSelectEnabled: {type: Boolean, default: false},
+            isFilterEnabled: {type: Boolean, default: false},
+            isPaginationDisplayed: {type: Boolean, default: true},
+            isUploadEnabled: {type: Boolean, default: true},
+            queryParams: {type: Object, default: () => {}},
+            records: {type: Object, required: true},
+            search: {type: Function, required: true},
+            typeOptions: {type: Object, default() {
+                return {
+                    'image': "Image",
+                    'video': "Video",
+                    'document': "Document",
+                    'spreadsheet': "Spreadsheet",
+                    'presentation': "Presentation",
+                    'presentation': "Presentation",
+                };
+            }},
+        },
+
         emits: [
             'on-media-submitted',
             'on-type-changed',
             'on-view-changed',
         ],
-        props: {
-            acceptedTypes: {type: Array, default: acceptedFileTypes},
-            baseRouteName: {default: 'admin.media'},
-            isAjax: {type: Boolean, default: false},
-            isDeleteEnabled: {type: Boolean, default: true},
-            isDownloadEnabled: {type: Boolean, default: true},
-            isEditEnabled: {type: Boolean, default: true},
-            isFilterEnabled: {type: Boolean, default: false},
-            isPaginationDisplayed: {type: Boolean, default: true},
-            isUploadEnabled: {type: Boolean, default: true},
-            queryParams: { type: Object },
-            records: {},
-            search: Function,
-            typeOptions: {type: Object, default: {
-                'image': "Image",
-                'video': "Video",
-                'document': "Document",
-                'spreadsheet': "Spreadsheet",
-                'presentation': "Presentation",
-                'presentation': "Presentation",
-            }},
-        },
+
         setup(props) {
             return {
                 view: ref(props.queryParams.view ?? 'gallery'),
@@ -328,6 +340,7 @@
                 types: ref(props.queryParams?.types ?? []),
             };
         },
+
         data() {
             return {
                 cropper: null,
@@ -347,6 +360,7 @@
                 icon,
             };
         },
+
         computed: {
             previewFileSrc() {
                 return this.formMedia?.file_url ?? this.formMedia?.file ?? '';
@@ -358,6 +372,7 @@
                 return this.view === 'gallery';
             },
         },
+
         methods: {
             isImage(media) {
                 return (

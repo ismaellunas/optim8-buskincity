@@ -59,7 +59,6 @@
                             id="page-form-builder"
                             v-model="form.data"
                             v-model:content-config-id="computedContentConfigId"
-                            :is-edit-mode="isEditMode"
                             :selected-locale="selectedLocale"
                         />
                     </biz-provide-inject-tab>
@@ -70,19 +69,31 @@
                 name="action"
                 :is-new="isNew"
             >
-                <div class="field is-grouped is-grouped-right">
-                    <div class="control">
-                        <biz-button-link
-                            class="is-link is-light"
-                            :href="route('admin.pages.index')"
+                <div class="columns">
+                    <div class="column">
+                        <biz-button
+                            v-if="deleteTranslationIsShowed"
+                            type="button"
+                            class="is-danger"
+                            @click="$emit('on-delete-translation')"
                         >
-                            Cancel
-                        </biz-button-link>
-                    </div>
-                    <div class="control">
-                        <biz-button class="is-link">
-                            {{ isNew ? 'Create' : 'Update' }}
+                            Remove
                         </biz-button>
+                    </div>
+
+                    <div class="column">
+                        <div class="buttons is-pulled-right">
+                            <biz-button-link
+                                class="is-link is-light"
+                                :href="route('admin.pages.index')"
+                            >
+                                Cancel
+                            </biz-button-link>
+
+                            <biz-button class="is-link">
+                                {{ isNew ? 'Create' : 'Update' }}
+                            </biz-button>
+                        </div>
                     </div>
                 </div>
             </slot>
@@ -122,7 +133,6 @@
             contentConfigId: { type: String, required: true },
             errors: { type: Object, default:() => {} },
             isDirty: { type: Boolean, default: false },
-            isEditMode: { type: Boolean, default: true },
             isNew: { type: Boolean, required: true },
             isPageBuilderRendered: { type: Boolean, default: true },
             localeOptions: { type: Array, default:() => [] },
@@ -136,6 +146,7 @@
 
         emits: [
             'on-change-locale',
+            'on-delete-translation',
             'on-submit',
             'update:contentConfigId',
         ],
@@ -179,6 +190,11 @@
 
                 return this.isDirty;
             },
+
+            deleteTranslationIsShowed() {
+                return (this.defaultLocale !== this.selectedLocale)
+                    && this.form?.id;
+            }
         },
 
         methods: {

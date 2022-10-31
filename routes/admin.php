@@ -48,6 +48,8 @@ Route::middleware([
 
     Route::resource('/pages', PageController::class)
         ->except(['show']);
+    Route::delete('/pages/translations/{page_translation:id}/destroy', [PageController::class, 'translationDestroy'])
+        ->name('pages.translations.destroy');
 
     Route::resource('/media', MediaController::class)
         ->except(['edit', 'show']);
@@ -170,11 +172,17 @@ Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->gr
     Route::get('/page-builder/country-options', [ApiPageBuilderController::class, 'countryOptions'])
         ->name('page-builder.country-options');
 
+    Route::get('/page-builder/type-options', [ApiPageBuilderController::class, 'typeOptions'])
+        ->name('page-builder.type-options');
+
     Route::get('/page-builder/user-list/role-options', [ApiPageBuilderController::class, 'userListRoleOptions'])
         ->name('page-builder.user-list.role-options');
 
     Route::get('/options/phone-countries', [ApiOptionController::class, 'phoneCountryOptions'])
         ->name('options.phone-countries');
+
+    Route::get('/page-builder/post/category-options', [ApiPageBuilderController::class, 'postCategoryOptions'])
+        ->name('page-builder.post.category-options');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {

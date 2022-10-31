@@ -1,3 +1,28 @@
+/* general */
+.is-rounded-small
+  border-radius: 15px
+  .card-image
+    .image
+      img
+        border-top-left-radius: 15px
+        border-top-right-radius: 15px
+
+.is-rounded-medium
+  border-radius: 30px
+  .card-image
+    .image
+      img
+        border-top-left-radius: 30px
+        border-top-right-radius: 30px
+
+.is-rounded-large
+  border-radius: 45px
+  .card-image
+    .image
+      img
+        border-top-left-radius: 45px
+        border-top-right-radius: 45px
+
 /* media thumbnail icon */
 .card-image
   .icon
@@ -8,6 +33,16 @@
       align-items: center
       width: 100%
       height: 100%
+
+  .image
+    .is-rounded-small
+      border-radius: 15px
+
+    .is-rounded-medium
+      border-radius: 30px
+
+    .is-rounded-large
+      border-radius: 45px
 
 .card-equal-height
   display: flex
@@ -20,3 +55,9 @@
 
 .break-long-text
   word-break: break-word
+
+/* page builder background image*/
+.pb-background-image
+  background-size: cover
+  background-position: center center
+  background-repeat: no-repeat

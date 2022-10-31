@@ -5,62 +5,56 @@
             @duplicate-content="duplicateContent"
         />
 
-        <div class="field">
-            <label class="label">First Name</label>
-            <div class="control">
-                <input
-                    class="input"
-                    type="text"
-                    placeholder="Text input"
-                    disabled
-                >
+        <div class="box is-shadowless">
+            <div class="field">
+                <label class="label">First Name</label>
+                <div class="control">
+                    <input
+                        class="input"
+                        type="text"
+                        placeholder="Text input"
+                        disabled
+                    >
+                </div>
             </div>
-        </div>
 
-        <div class="field">
-            <label class="label">Last Name</label>
-            <div class="control">
-                <input
-                    class="input"
-                    type="text"
-                    placeholder="Text input"
-                    disabled
-                >
+            <div class="field">
+                <label class="label">Last Name</label>
+                <div class="control">
+                    <input
+                        class="input"
+                        type="text"
+                        placeholder="Text input"
+                        disabled
+                    >
+                </div>
             </div>
-        </div>
 
-        <div class="field">
-            <label class="label">Email</label>
-            <div class="control has-icons-left">
-                <input
-                    class="input"
-                    type="email"
-                    placeholder="Email input"
-                    value="hello@"
-                    disabled
-                >
-                <span class="icon is-small is-left">
-                    <i class="fas fa-envelope" />
-                </span>
+            <div class="field">
+                <label class="label">Email</label>
+                <div class="control has-icons-left">
+                    <input
+                        class="input"
+                        type="email"
+                        placeholder="Email input"
+                        value="hello@"
+                        disabled
+                    >
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-envelope" />
+                    </span>
+                </div>
             </div>
-        </div>
 
-        <div class="field is-grouped">
-            <div class="control">
-                <button
-                    class="button is-link"
-                    disabled
-                >
-                    Submit
-                </button>
-            </div>
-            <div class="control">
-                <button
-                    class="button is-link is-light"
-                    disabled
-                >
-                    Cancel
-                </button>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button
+                        class="button is-link"
+                        disabled
+                    >
+                        Submit
+                    </button>
+                </div>
             </div>
         </div>
     </div>

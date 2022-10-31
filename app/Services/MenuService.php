@@ -18,7 +18,6 @@ use App\Services\{
     LoginService,
     ModuleService,
     TranslationService,
-    ModuleService,
 };
 use Illuminate\Http\Request;
 use App\Entities\Caches\{
@@ -119,7 +118,15 @@ class MenuService
         return app(MenuCache::class)->rememberForLocale(
             'header_menu',
             function () use ($locale) {
-                return $this->getStructuredHeaderMenu($locale);
+                $menus = $this->getStructuredHeaderMenu($locale);
+
+                if ($menus->isEmpty()) {
+                    $menus = $this->getStructuredHeaderMenu(
+                        TranslationService::getDefaultLocale()
+                    );
+                }
+
+                return $menus;
             },
             $locale
         );
@@ -212,7 +219,15 @@ class MenuService
         return app(MenuCache::class)->rememberForLocale(
             'footer_menu',
             function () use ($locale) {
-                return $this->getStructuredFooterMenu($locale);
+                $menus = $this->getStructuredFooterMenu($locale);
+
+                if ($menus->isEmpty()) {
+                    $menus = $this->getStructuredFooterMenu(
+                        TranslationService::getDefaultLocale()
+                    );
+                }
+
+                return $menus;
             },
             $locale
         );
@@ -499,12 +514,6 @@ class MenuService
 
         $headerMenu = $this->getHeaderMenu($language);
 
-        if ($headerMenu->isEmpty()) {
-            $headerMenu = $this->getHeaderMenu(
-                app(TranslationService::class)->getDefaultLocale()
-            );
-        }
-
         return [
             'nav' => $this->frontendMenuArrayFormater($headerMenu),
             'navLogo' => $menuLogo,
@@ -523,12 +532,6 @@ class MenuService
         }
 
         $footerMenu = $this->getFooterMenu($language);
-
-        if ($footerMenu->isEmpty()) {
-            $footerMenu = $this->getFooterMenu(
-                app(TranslationService::class)->getDefaultLocale()
-            );
-        }
 
         return [
             'nav' => $this->frontendMenuArrayFormater($footerMenu),

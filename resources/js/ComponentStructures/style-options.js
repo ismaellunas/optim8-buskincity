@@ -91,6 +91,7 @@ export const backgroundColors = [
     { value: "has-background-success", name: "Success" },
     { value: "has-background-warning", name: "Warning" },
     { value: "has-background-danger", name: "Danger" },
+    { value: "has-background-light", name: "Light" },
 ];
 
 export const textColors = [
@@ -110,4 +111,15 @@ export const columnFieldSizes = [
     { value: "is-full", name: "1 Column" },
     { value: "is-half", name: "2 Column" },
     { value: "is-one-third", name: "3 Column" },
+];
+
+export const roundedSizes = [
+    { value: "is-rounded-small", name: "Small" },
+    { value: "is-rounded-medium", name: "Medium" },
+    { value: "is-rounded-large", name: "Large" },
+];
+
+export const contentPositions = [
+    { value: "is-pulled-left", name: "Left" },
+    { value: "is-pulled-right", name: "Right" },
 ];
