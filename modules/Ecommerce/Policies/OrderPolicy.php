@@ -19,6 +19,7 @@ class OrderPolicy extends BasePermissionPolicy
     {
         return (
             $order->status != OrderStatus::CANCELED->value
+            && !$order->hasAllowedCheckIn()
             && $order->firstEventline->latestEvent->status == BookingStatus::UPCOMING->value
             && (
                 $user->can('order.edit')
