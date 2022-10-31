@@ -124,7 +124,7 @@
                                             @endforeach
                                         @else
                                         <tr>
-                                            <td colspan="2" class="has-text-centered">
+                                            <td colspan="3" class="has-text-centered">
                                                 {{ __('Empty') }}
                                             </td>
                                         </tr>
