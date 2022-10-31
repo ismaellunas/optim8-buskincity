@@ -3,7 +3,9 @@
 namespace Modules\Booking\Services;
 
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Modules\Booking\Entities\Event;
 use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Entities\ScheduleRule;
 use Modules\Booking\Enums\BookingStatus;
@@ -260,5 +262,41 @@ class EventService
         }
 
         return $times;
+    }
+
+    public function getUpcomingEventsByUser(
+        int $userId,
+        $perPage = 5
+    ): LengthAwarePaginator {
+        $events = Event::upcoming()
+            ->with([
+                'orderLine' => function ($query) {
+                    $query->select('id', 'order_id', 'purchasable_id', 'purchasable_type');
+                    $query->with('purchasable', function ($query) {
+                        $query->with('product', function ($query) {
+                            $query->select('id', 'attribute_data');
+                        });
+                    });
+                },
+                'schedule' => function ($query) {
+                    $query->select('id', 'timezone');
+                },
+            ])
+            ->whereHas('orderLine.order', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->orderBy('booked_at', 'DESC')
+            ->paginate($perPage);
+
+        $events->transform(function ($event) {
+            return [
+                'booked_at' => $event->displayStartEndTime . ', '. $event->timezonedBookedAt->format('d M Y') . ' (' . $event->timezone . ')',
+                'location' => $event->orderLine->purchasable->product->locations[0] ?? [],
+                'name' => $event->orderLine->purchasable->product->displayName,
+                'short_description' => $event->orderLine->purchasable->product->displayShortDescription,
+            ];
+        });
+
+        return $events;
     }
 }
