@@ -120,6 +120,17 @@ class PageService
         return $images;
     }
 
+    public static function getUniqueSlug(string $slug): string
+    {
+        if (self::isSlugExists($slug)) {
+            $slug = self::getUniqueSlug(
+                $slug.'-'.date('ymdHis')
+            );
+        }
+
+        return $slug;
+    }
+
     private static function isSlugExists(string $slug): bool
     {
         return PageTranslation::where('slug', $slug)->exists();
