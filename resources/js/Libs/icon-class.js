@@ -2,6 +2,7 @@ export const iconType = 'fa-light';
 
 export const add = iconFormatter('fa-plus');
 export const angleDown = iconFormatter('fa-angle-down');
+export const angleUp = iconFormatter('fa-angle-up');
 export const back = iconFormatter('fa-arrow-left');
 export const bracketCurly = iconFormatter('fa-bracket-curly');
 export const bracketCurlyRight = iconFormatter('fa-bracket-curly-right');
@@ -41,6 +42,7 @@ export function iconFormatter(iconClass) {
 export default {
     add,
     angleDown,
+    angleUp,
     back,
     bracketCurly,
     bracketCurlyRight,
