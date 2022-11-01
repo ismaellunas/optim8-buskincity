@@ -5,8 +5,8 @@
                 <template v-if="!isComponentConfigOpen">
                     <biz-card
                         class="mb-1"
-                        :is-collapses="true"
-                        :open-collapse-on-load="true"
+                        :is-collapsed="true"
+                        :is-expanding-on-load="true"
                     >
                         <template #headerTitle>
                             General
@@ -39,7 +39,7 @@
                     <biz-card
                         v-if="hasModuleComponent"
                         class="mb-1"
-                        :is-collapses="true"
+                        :is-collapsed="true"
                     >
                         <template #headerTitle>
                             Modules
@@ -71,7 +71,7 @@
 
                     <biz-card
                         class="mb-1"
-                        :is-collapses="true"
+                        :is-collapsed="true"
                     >
                         <template #headerTitle>
                             Columns

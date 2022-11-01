@@ -87,6 +87,16 @@
                             </td>
                             <td>
                                 <div class="level-right">
+                                    <biz-button
+                                        v-if="can.add"
+                                        class="is-ghost has-text-black"
+                                        @click="duplicateRow(page)"
+                                    >
+                                        <span class="icon is-small">
+                                            <i :class="icon.copy" />
+                                        </span>
+                                    </biz-button>
+
                                     <biz-button-link
                                         v-if="can.edit"
                                         class="is-ghost has-text-black"
@@ -96,6 +106,7 @@
                                             <i :class="icon.edit" />
                                         </span>
                                     </biz-button-link>
+
                                     <biz-button
                                         v-if="can.delete"
                                         class="is-ghost has-text-black ml-1"
@@ -129,7 +140,7 @@
     import BizPagination from '@/Biz/Pagination';
     import BizTag from '@/Biz/Tag';
     import icon from '@/Libs/icon-class';
-    import { confirmDelete } from '@/Libs/alert';
+    import { confirmDelete, confirm } from '@/Libs/alert';
     import { merge, filter } from 'lodash';
     import { ref } from 'vue';
 
@@ -262,6 +273,22 @@
 
                     self.$inertia.delete(deleteRoute);
                 }
+            },
+
+            duplicateRow(page) {
+                const self = this;
+
+                confirm(
+                    'Duplicate Page',
+                    'Are you sure want to duplicate this page?'
+                )
+                    .then(result => {
+                        if (result.isConfirmed) {
+                            self.$inertia.post(
+                                route('admin.pages.duplicate', {id: page.id})
+                            );
+                        }
+                    });
             },
         },
     }

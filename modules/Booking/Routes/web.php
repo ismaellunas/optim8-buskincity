@@ -96,6 +96,9 @@ Route::prefix('booking')->name('booking.')->middleware([
             ->name('cancel')
             ->can('cancel', 'order');
 
+        Route::post('/{order}/check-in', Modules\Booking\Http\Controllers\Frontend\CheckInController::class)
+            ->name('check-in');
+
         Route::post('/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
             ->name('book-event');
     });
