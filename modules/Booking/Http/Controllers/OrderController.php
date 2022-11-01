@@ -78,14 +78,14 @@ class OrderController extends CrudController
         $user = auth()->user();
 
         $event = $order->firstEventLine->latestEvent;
-        $allowedCheckIn = $order->allowedCheckIn;
+        $checkIn = $order->checkIn;
         $orderRecord = $this->orderService->getRecord($order);
 
         return Inertia::render('Booking::OrderShow', $this->getData([
             'title' => $this->title.': '.Arr::get($orderRecord, 'product.name'),
             'order' => $orderRecord,
-            'checkInDateTime' => $allowedCheckIn
-                ? $allowedCheckIn
+            'checkInDateTime' => $checkIn
+                ? $checkIn
                     ->checked_in_at
                     ->setTimezone($event->schedule->timezone)
                     ->format(config('ecommerce.format.date_event_widget_record'))

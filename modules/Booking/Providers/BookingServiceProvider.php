@@ -36,12 +36,12 @@ class BookingServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
 
-        Order::resolveRelationUsing('allowedCheckIn', function ($order) {
+        Order::resolveRelationUsing('checkIn', function ($order) {
             return $order->hasOne(OrderCheckIn::class);
         });
 
         Order::macro('hasCheckIn', function () {
-            return !is_null($this->allowedCheckIn);
+            return !is_null($this->checkIn);
         });
 
         OrderLine::resolveRelationUsing('events', function ($orderLineModel) {

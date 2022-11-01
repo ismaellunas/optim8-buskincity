@@ -75,7 +75,7 @@ class OrderService
                 'user' => function ($query) {
                     $query->select('id', 'email', 'first_name', 'last_name');
                 },
-                'allowedCheckIn' => function ($query) {
+                'checkIn' => function ($query) {
                     $query->select('id', 'checked_in_at', 'order_id', 'user_id');
                 },
             ])
@@ -138,7 +138,7 @@ class OrderService
                     'timezone' => $event->schedule->timezone,
                 ],
                 'check_in_time' => $record->hasCheckIn()
-                    ? $record->allowedCheckIn
+                    ? $record->checkIn
                         ->checked_in_at
                         ->setTimezone($event->schedule->timezone)
                         ->format('H:i')
