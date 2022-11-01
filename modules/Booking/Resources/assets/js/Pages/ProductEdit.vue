@@ -480,7 +480,8 @@
                 status: props.product.status,
                 description: props.product.description,
                 short_description: props.product.short_description,
-                roles: props.product.roles ?? null,
+                roles: props.product.roles,
+                is_check_in_required: props.product.is_check_in_required,
                 gallery: {
                     deleted_media: [],
                     files: [],
