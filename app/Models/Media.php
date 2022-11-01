@@ -6,7 +6,9 @@ use App\Helpers\HumanReadable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use CloudinaryLabs\CloudinaryLaravel\Model\Media as CloudinaryMedia;
+use Cloudinary\Transformation\Delivery;
 use Cloudinary\Transformation\Resize;
+use Cloudinary\Transformation\Quality;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -124,6 +126,24 @@ class Media extends CloudinaryMedia implements TranslatableContract
                         ->height(self::THUMBNAIL_HEIGHT)
                         ->width(self::THUMBNAIL_WIDTH)
                 )
+                ->serializeAttributes();
+        }
+
+        return strval(str_replace(['src=', '"'], ['', ''], $result));
+    }
+
+    public function getOptimizedImageUrlAttribute(): string
+    {
+        $result = "";
+
+        if ($this->isImage) {
+            $result = cloudinary()
+                ->getImageTag(
+                    empty($this->version)
+                    ? $this->file_name
+                    : 'v'.$this->version.'/'.$this->file_name
+                )
+                ->delivery(Delivery::quality(Quality::auto()))
                 ->serializeAttributes();
         }
 
