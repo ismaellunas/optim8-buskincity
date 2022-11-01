@@ -98,7 +98,7 @@ class PageController extends CrudController
         $page->saveFromInputs($request->all());
         $page->saveAuthorId(Auth::id());
 
-        $request->session()->flash('message', 'Page created successfully!');
+        $this->generateFlashMessage('Page created successfully!');
 
         return redirect()->route('admin.pages.edit', $page->id);
     }
@@ -187,7 +187,7 @@ class PageController extends CrudController
     {
         $page->delete();
 
-        $request->session()->flash('message', 'Page deleted successfully!');
+        $this->generateFlashMessage('Page deleted successfully!');
         return redirect()->route('admin.pages.index');
     }
 
@@ -199,12 +199,25 @@ class PageController extends CrudController
 
         $pageTranslation->delete();
 
-        $request->session()->flash('message', 'Page translation deleted successfully!');
+        $this->generateFlashMessage('Page translation deleted successfully!');
         return redirect()->back();
     }
 
     public function isUsedByMenus(Page $page, ?string $locale = null)
     {
         return app(MenuService::class)->isPageUsedByMenu($page->id, $locale);
+    }
+
+    public function duplicatePage(Page $page)
+    {
+        $duplicatePage = new $this->model;
+
+        $duplicatePage->duplicatePage($page);
+
+        $duplicatePage->saveAuthorId(Auth::id());
+
+        $this->generateFlashMessage('Page duplicated successfully!');
+
+        return redirect()->back();
     }
 }

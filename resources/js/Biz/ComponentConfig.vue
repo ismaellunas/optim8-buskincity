@@ -9,14 +9,14 @@
                 v-if="group.component && !isBlank(entity.config[ groupName ])"
                 v-model="entity.config[ groupName ]"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
-                :open-collapse-on-load="indexConfig == 0"
+                :is-expanding-on-load="indexConfig == 0"
             />
 
             <biz-card
                 v-else-if="!isBlank(entity.config[ groupName ])"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
-                :is-collapses="true"
-                :open-collapse-on-load="indexConfig == 0"
+                :is-collapsed="true"
+                :is-expanding-on-load="indexConfig == 0"
             >
                 <template #headerTitle>
                     {{ group.label }}

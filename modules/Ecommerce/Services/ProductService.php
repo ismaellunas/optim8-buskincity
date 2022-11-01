@@ -87,9 +87,15 @@ class ProductService
             $builder->whereHas('metas', function ($query) use ($user) {
                 $roleIds = $user->roles->pluck('id');
 
-                $query
-                    ->where('key', 'roles')
-                    ->whereJsonContains('value', $roleIds);
+                if ($roleIds->isNotEmpty()) {
+                    $query
+                        ->where('key', 'roles')
+                        ->whereJsonContains('value', $roleIds);
+                } else {
+                    $query
+                        ->where('key', 'roles')
+                        ->whereJsonLength('value', 0);
+                }
             });
         }
 
@@ -175,6 +181,7 @@ class ProductService
             'short_description' => $product->translateAttribute('short_description', $locale),
             'status' => $product->status,
             'roles' => $product->roles[0] ?? null,
+            'is_check_in_required' => (bool) $product->is_check_in_required ?? false,
             'gallery' => $product->gallery->map(fn ($media) => [
                 'id' => $media->id,
                 'display_file_name' => $media->displayFileName,

@@ -20,7 +20,6 @@ use Illuminate\Support\{
     Str,
 };
 use Qirolab\Theme\Theme;
-use Symfony\Component\Process\Process;
 use \finfo;
 
 class SettingService
