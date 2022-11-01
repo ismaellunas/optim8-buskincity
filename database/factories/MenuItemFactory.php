@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Entities\Menus\UrlMenuBuilder;
+use App\Entities\Menus\Options\UrlOption;
 use App\Models\{
     Menu,
     MenuItem,
@@ -25,7 +25,7 @@ class MenuItemFactory extends Factory
      */
     public function definition()
     {
-        $typeUrl = (new UrlMenuBuilder())->getKey();
+        $typeUrl = (new UrlOption())->getKey();
 
         return [
             'title' => "Dummy Menu",

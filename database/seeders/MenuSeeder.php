@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Entities\Caches\MenuCache;
-use App\Entities\Menus\SegmentMenuBuilder;
-use App\Entities\Menus\UrlMenuBuilder;
+use App\Entities\Menus\Options\SegmentOption;
+use App\Entities\Menus\Options\UrlOption;
 use App\Models\{
     Menu,
     MenuItem,
@@ -21,8 +21,8 @@ class MenuSeeder extends Seeder
      */
     public function run()
     {
-        $typeUrl = (new UrlMenuBuilder())->getKey();
-        $typeSegment = (new SegmentMenuBuilder())->getKey();
+        $typeUrl = (new UrlOption())->getKey();
+        $typeSegment = (new SegmentOption())->getKey();
 
         $headerMenus = [
             [
