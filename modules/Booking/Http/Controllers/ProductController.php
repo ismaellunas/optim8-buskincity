@@ -123,6 +123,7 @@ class ProductController extends CrudController
             'duration_unit' => 'minute',
             'bookable_date_range_type' => 'calendar_days_into_the_future',
             'bookable_date_range' => 60,
+            'is_check_in_required' => (bool) $inputs['is_check_in_required'],
         ];
 
         $product->setMeta($meta);
@@ -204,6 +205,7 @@ class ProductController extends CrudController
 
         $product->setMeta([
             'roles' => empty($inputs['roles']) ? [] : [(int) $inputs['roles']],
+            'is_check_in_required' => (bool) $inputs['is_check_in_required'],
         ]);
 
         $product->save();

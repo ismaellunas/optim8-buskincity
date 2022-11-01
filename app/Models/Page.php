@@ -95,6 +95,31 @@ class Page extends Model implements TranslatableContract
         $this->save();
     }
 
+    public function duplicatePage(Page $page)
+    {
+        $inputs = [];
+        foreach ($page->translations as $translation) {
+            $inputs[$translation->locale] = collect($translation->toArray())
+                ->only([
+                    'locale',
+                    'title',
+                    'excerpt',
+                    'data',
+                    'slug',
+                    'meta_title',
+                    'meta_description',
+                    'status',
+                ])
+                ->all();
+
+            $inputs[$translation->locale]['title'] = $inputs[$translation->locale]['title'] . '-copy';
+            $inputs[$translation->locale]['status'] = PageTranslation::STATUS_DRAFT;
+            $inputs[$translation->locale]['slug'] = PageService::getUniqueSlug($inputs[$translation->locale]['slug']);
+        }
+
+        $this->saveFromInputs($inputs);
+    }
+
     // Scopes:
     public function scopeSearch($query, string $term)
     {

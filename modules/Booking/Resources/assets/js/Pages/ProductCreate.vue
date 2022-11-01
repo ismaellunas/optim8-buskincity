@@ -77,6 +77,7 @@
                 description: null,
                 short_description: null,
                 roles: null,
+                is_check_in_required: false,
                 gallery: {
                     deleted_media: [],
                     files: [],

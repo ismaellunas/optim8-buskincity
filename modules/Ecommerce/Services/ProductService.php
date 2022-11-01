@@ -175,6 +175,7 @@ class ProductService
             'short_description' => $product->translateAttribute('short_description', $locale),
             'status' => $product->status,
             'roles' => $product->roles[0] ?? null,
+            'is_check_in_required' => (bool) $product->is_check_in_required ?? false,
             'gallery' => $product->gallery->map(fn ($media) => [
                 'id' => $media->id,
                 'display_file_name' => $media->displayFileName,
