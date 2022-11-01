@@ -1,7 +1,7 @@
 <template>
     <card
-        :is-collapses="true"
-        :open-collapse-on-load="openCollapseOnLoad"
+        :is-collapsed="true"
+        :is-expanding-on-load="isExpandingOnLoad"
     >
         <template #headerTitle>
             Section
@@ -52,7 +52,7 @@
 
         props: {
             modelValue: {type: [Object, Array], default: () => {}},
-            openCollapseOnLoad: { type: Boolean, default: false },
+            isExpandingOnLoad: { type: Boolean, default: false },
         },
 
         setup(props, {emit}) {
