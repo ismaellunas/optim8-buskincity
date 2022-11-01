@@ -54,7 +54,7 @@
                         <th>Status</th>
                         <th>Name</th>
                         <th>Time</th>
-                        <th>Date Time</th>
+                        <th>Date</th>
                         <th>Check-In</th>
                         <th>
                             <div class="level-right">
@@ -75,7 +75,7 @@
                         </td>
                         <td>{{ order.product_name }}</td>
                         <td>{{ order.start_end_time }}</td>
-                        <td>{{ order.date_time }}</td>
+                        <td>{{ order.date }}</td>
                         <td>{{ order.check_in_time }}</td>
                         <td>
                             <div class="level-right">

@@ -130,14 +130,14 @@ class OrderService
                 'reference' => $record->reference,
                 'status' => Str::title($event->status),
                 'start_end_time' => $event->displayStartEndTime,
-                'date_time' => $event->timezonedBookedAt->format('d M Y, H:i'),
+                'date' => $event->timezonedBookedAt->format('d M Y'),
                 'event' => [
                     'date' => $event->timezonedBookedAt->format('d F Y'),
                     'duration' => $event->displayDuration,
                     'start_end_time' => $event->displayStartEndTime,
                     'timezone' => $event->schedule->timezone,
                 ],
-                'check_in_time' => $record->hasAllowedCheckIn()
+                'check_in_time' => $record->hasCheckIn()
                     ? $record->allowedCheckIn
                         ->checked_in_at
                         ->setTimezone($event->schedule->timezone)

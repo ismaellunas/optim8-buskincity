@@ -16,7 +16,9 @@ class OrderPolicyMixin
             $event = $order->firstEventLine->latestEvent;
             $product = $order->firstProduct;
 
-            $productLocation = collect($product->locations[0])->only(['latitude', 'longitude']);
+            $productLocation = !empty($product->locations[0])
+                ? collect($product->locations[0])
+                : collect();
 
             $allowedStatues = [
                 BookingStatus::UPCOMING->value,
@@ -32,7 +34,7 @@ class OrderPolicyMixin
             }
 
             if ($order->user_id == $user->id) {
-                $isValid = ($product->is_check_in_required && $order->hasAllowedCheckIn());
+                $isValid = ($product->is_check_in_required && !$order->hasCheckIn());
 
                 if ($isValid) {
 
