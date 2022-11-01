@@ -33,6 +33,10 @@ class ProductCreateRequest extends FormRequest
                 'nullable',
                 Rule::in(app(ProductService::class)->roleOptions()->pluck('id'))
             ],
+            'is_check_in_required' => [
+                'required',
+                'boolean',
+            ],
             'gallery.files.*' => [
                 'max:500',
                 'mimes:png,jpg,jpeg',

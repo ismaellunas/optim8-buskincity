@@ -21,6 +21,22 @@ class SettingRequest extends FormRequest
             'email_new_booking' => $emailRules,
             'email_reminder' => $emailRules,
             'email_cancellation' => $emailRules,
+            'allowed_early_check_in' => [
+                'numeric',
+                'between:0,60',
+            ],
+            'check_in_radius'=> [
+                'array:value,unit'
+            ],
+            'check_in_radius.value' => [
+                'nullable',
+                'numeric',
+                'between:0,1000',
+            ],
+            'check_in_radius.unit' => [
+                'required',
+                'in:m,km',
+            ],
         ];
     }
 

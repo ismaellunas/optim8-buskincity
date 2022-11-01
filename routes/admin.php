@@ -48,6 +48,8 @@ Route::middleware([
 
     Route::resource('/pages', PageController::class)
         ->except(['show']);
+    Route::post('/pages/duplicate/{page}', [PageController::class, 'duplicatePage'])
+        ->name('pages.duplicate');
     Route::delete('/pages/translations/{page_translation:id}/destroy', [PageController::class, 'translationDestroy'])
         ->name('pages.translations.destroy');
 
