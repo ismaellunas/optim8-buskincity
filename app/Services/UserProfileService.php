@@ -6,7 +6,10 @@ use App\Models\{
     Media,
     User
 };
+use App\Services\ModuleService;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Modules\Booking\Services\EventService;
 
 class UserProfileService
 {
@@ -69,5 +72,15 @@ class UserProfileService
     private function getUser(string $uniqueKey): ?User
     {
         return User::where('unique_key', $uniqueKey)->first();
+    }
+
+    public function isModuleBookingActivated(): bool
+    {
+        return app(ModuleService::class)->isModuleActive('Booking');
+    }
+
+    public function getUpcomingBookings(): LengthAwarePaginator
+    {
+        return app(EventService::class)->getUpcomingEventsByUser($this->user->id);
     }
 }
