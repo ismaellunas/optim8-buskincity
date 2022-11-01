@@ -118,7 +118,7 @@ class ProductController extends CrudController
         ]);
 
         $meta = [
-            'roles' => empty($inputs['roles']) ? [] : [$inputs['roles']],
+            'roles' => empty($inputs['roles']) ? [] : [(int) $inputs['roles']],
             'duration' => 30,
             'duration_unit' => 'minute',
             'bookable_date_range_type' => 'calendar_days_into_the_future',

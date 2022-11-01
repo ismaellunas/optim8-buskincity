@@ -87,9 +87,15 @@ class ProductService
             $builder->whereHas('metas', function ($query) use ($user) {
                 $roleIds = $user->roles->pluck('id');
 
-                $query
-                    ->where('key', 'roles')
-                    ->whereJsonContains('value', $roleIds);
+                if ($roleIds->isNotEmpty()) {
+                    $query
+                        ->where('key', 'roles')
+                        ->whereJsonContains('value', $roleIds);
+                } else {
+                    $query
+                        ->where('key', 'roles')
+                        ->whereJsonLength('value', 0);
+                }
             });
         }
 
