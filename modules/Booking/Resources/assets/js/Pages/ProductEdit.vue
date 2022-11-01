@@ -672,7 +672,7 @@
             },
 
             addTimeRange(index) {
-                const scheduleRuleTime = this.$refs['scheduleRuleTime_' + index];
+                const scheduleRuleTime = this.$refs['scheduleRuleTime_' + index][0];
                 scheduleRuleTime.addTimeRange();
 
                 if (this.eventForm.weekly_hours[index].hours.length > 0) {
