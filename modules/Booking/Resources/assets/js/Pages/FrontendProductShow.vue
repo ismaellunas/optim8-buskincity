@@ -133,6 +133,20 @@
                     </h2>
                 </div>
 
+                <div
+                    v-if="mapPosition.latitude && mapPosition.longitude"
+                    class="column is-4"
+                >
+                    <biz-gmap-marker
+                        v-model="mapPosition"
+                        :api-key="googleApiKey"
+                        :init-position="mapPosition"
+                        :map-style="['width: 100%', 'height: 34vh']"
+                        :enable-search-box="false"
+                        :enable-marker-move="false"
+                    />
+                </div>
+
                 <div class="column is-8">
                     <booking-time
                         v-model="form"
@@ -225,6 +239,7 @@
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { ref } from 'vue';
+    import BizGmapMarker from '@/Biz/GmapMarker';
 
     export default {
         components: {
@@ -236,6 +251,7 @@
             BizTable,
             BizTag,
             BookingTime,
+            BizGmapMarker,
         },
 
         mixins: [
@@ -255,6 +271,7 @@
             minDate: { type: String, required: true },
             product: { type: Object, required: true },
             timezone: { type: String, required: true },
+            googleApiKey: { type: String, default: null },
         },
 
         setup(props) {
@@ -269,6 +286,10 @@
                 form: useForm(form),
                 isShortDescription: ref(true),
                 selectedImageId: ref(null),
+                mapPosition: {
+                    latitude: props.event.location.latitude,
+                    longitude: props.event.location.longitude
+                },
             };
         },
 

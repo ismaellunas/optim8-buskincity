@@ -1,6 +1,7 @@
 <template>
     <div>
         <input
+            v-if="enableSearchBox"
             id="pac-input"
             ref="searchInput"
             type="text"
@@ -32,6 +33,9 @@
             mapStyle: { type: [String, Array, Object], default: () => ["width: 100%", "height: 50vh"] },
             initPosition: { type: Object, default: null },
             apiKey: { type: String, default: null },
+            enableSearchBox: { type: Boolean, default: true },
+            enableMarkerMove: { type: Boolean, default: true },
+            isDraggable: { type: Boolean, default: true },
         },
 
         setup(props, { emit }) {
@@ -120,6 +124,7 @@
                 map.value = new google.maps.Map(mapDiv.value, {
                     center: currPos.value,
                     zoom: 12,
+                    draggable: props.isDraggable,
                 });
 
                 searchBox.value = new google.maps.places.SearchBox(searchInput.value);
@@ -169,6 +174,10 @@
                 });
 
                 clickListener = map.value.addListener('click', (event) => {
+                    if (! props.enableMarkerMove) {
+                        return false;
+                    }
+
                     deleteMarkers();
                     addMarker(event.latLng);
                     showMarkers();

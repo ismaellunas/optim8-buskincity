@@ -84,11 +84,11 @@ class OrderController extends CrudController
         return Inertia::render('Booking::OrderShow', $this->getData([
             'title' => $this->title.': '.Arr::get($orderRecord, 'product.name'),
             'order' => $orderRecord,
-            'checkInDateTime' => $checkIn
+            'checkInTime' => $checkIn
                 ? $checkIn
                     ->checked_in_at
                     ->setTimezone($event->schedule->timezone)
-                    ->format(config('ecommerce.format.date_event_widget_record'))
+                    ->format('H:i (\G\M\T P)')
                 : null,
             'can' => [
                 'cancel' => $user->can('cancel', $order),

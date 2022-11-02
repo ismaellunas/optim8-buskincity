@@ -20,9 +20,9 @@
             <div class="columns is-multiline mt-3">
                 <div class="column is-8">
                     <event-detail-table :event="order.event">
-                        <tr v-if="checkInDateTime">
+                        <tr v-if="checkInTime">
                             <th><biz-icon :icon="icon.buildingCheck" /></th>
-                            <td>{{ checkInDateTime }}</td>
+                            <td>{{ checkInTime }}</td>
                         </tr>
                     </event-detail-table>
 
@@ -144,7 +144,7 @@
             can: { type: Object, required: true },
             description: { type: String, required: true },
             order: { type: Object, required: true },
-            checkInDateTime: { type: [String, null], required: true },
+            checkInTime: { type: [String, null], required: true },
         },
 
         setup(props) {
