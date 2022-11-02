@@ -19,16 +19,22 @@
 
             <div class="columns is-multiline mt-3">
                 <div class="column is-8">
-                    <event-detail-table :event="order.event" />
+                    <event-detail-table :event="order.event">
+                        <tr v-if="checkInDateTime">
+                            <th><biz-icon :icon="icon.buildingCheck" /></th>
+                            <td>{{ checkInDateTime }}</td>
+                        </tr>
+                    </event-detail-table>
 
                     <div class="buttons">
                         <biz-button-link :href="route(baseRouteName + '.index')">
-                            Back
+                            <biz-icon :icon="icon.back" />
+                            <span>Back</span>
                         </biz-button-link>
                     </div>
                 </div>
 
-                <div class="is-4">
+                <div class="column is-4">
                     <div class="columns is-multiline is-centered">
                         <div
                             v-if="can.reschedule"
@@ -47,12 +53,25 @@
                             class="column is-8"
                         >
                             <biz-button-icon
-                                class="is-fullwidth"
+                                class="is-fullwidth is-danger"
                                 type="button"
                                 :icon="icon.remove"
                                 @click="openModal"
                             >
                                 <span>Cancel</span>
+                            </biz-button-icon>
+                        </div>
+                        <div
+                            v-if="can.checkIn"
+                            class="column is-8"
+                        >
+                            <biz-button-icon
+                                class="is-fullwidth"
+                                type="button"
+                                :icon="icon.buildingCheck"
+                                @click="checkIn"
+                            >
+                                <span>Check-in</span>
                             </biz-button-icon>
                         </div>
                     </div>
@@ -92,9 +111,11 @@
     import Layout from '@/Layouts/User';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation';
     import icon from '@/Libs/icon-class';
-    import { oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
+    import { confirm as confirmAlert, oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
+    import { has } from 'lodash';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -112,6 +133,7 @@
         mixins: [
             MixinHasLoader,
             MixinHasModal,
+            MixinHasPageErrors,
         ],
 
         layout: Layout,
@@ -122,6 +144,7 @@
             can: { type: Object, required: true },
             description: { type: String, required: true },
             order: { type: Object, required: true },
+            checkInDateTime: { type: [String, null], required: true },
         },
 
         setup(props) {
@@ -158,7 +181,63 @@
 
             onShownModal() { /* @see MixinHasModal */
                 this.form.reset();
-            }
+            },
+
+            submitCheckIn(position) {
+                const self = this;
+                const url = route(self.baseRouteName + '.check-in', self.order.id);
+
+                const data = {
+                    geolocation: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    },
+                };
+
+                this.$inertia.post(
+                    url,
+                    data,
+                    {
+                        onStart: () => self.onStartLoadingOverlay(),
+                        onFinish: () => self.onEndLoadingOverlay(),
+                        onError: (errors) => {
+                            const options = {};
+
+                            if (has(errors, 'default.geolocation')) {
+                                options.html = self.error('geolocation');
+                            }
+
+                            oopsAlert(options);
+                        },
+                        onSuccess: (page) => {
+                            successAlert(page.props.flash.message);
+                        },
+                    }
+                );
+            },
+
+            checkIn() {
+                const self = this;
+
+                confirmAlert(
+                    "Check-in Location",
+                    "Are you sure you want to check-in your current location?",
+                    "Continue"
+                )
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            const successCallback = (position) => {
+                                self.submitCheckIn(position);
+                            };
+
+                            const errorCallback = (error) => {
+                                oopsAlert({text: "Please enable location permission to check-in."});
+                            };
+
+                            navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+                        }
+                    });
+            },
         },
     };
 </script>

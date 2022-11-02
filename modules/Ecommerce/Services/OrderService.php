@@ -60,12 +60,23 @@ class OrderService
                 }
             })
             ->with([
-                'firstEventLine.latestEvent.schedule',
-                'firstEventLine.purchasable.product' => function ($query) {
-                    $query->select('id', 'product_type_id', 'attribute_data');
+                'firstEventLine' => function ($query) {
+                    $query->with([
+                        'latestEvent' => function ($query) {
+                            $query->with('schedule');
+                        },
+                        'purchasable' => function ($query) {
+                            $query->with('product', function ($query) {
+                                $query->select('id', 'product_type_id', 'attribute_data');
+                            });
+                        },
+                    ]);
                 },
                 'user' => function ($query) {
                     $query->select('id', 'email', 'first_name', 'last_name');
+                },
+                'checkIn' => function ($query) {
+                    $query->select('id', 'checked_in_at', 'order_id', 'user_id');
                 },
             ])
             ->select(
@@ -126,6 +137,12 @@ class OrderService
                     'start_end_time' => $event->displayStartEndTime,
                     'timezone' => $event->schedule->timezone,
                 ],
+                'check_in_time' => $record->hasCheckIn()
+                    ? $record->checkIn
+                        ->checked_in_at
+                        ->setTimezone($event->schedule->timezone)
+                        ->format('H:i')
+                    : null,
                 'can' => [
                     'cancel' => $user->can('cancel', $record),
                     'reschedule' => $user->can('reschedule', $record),

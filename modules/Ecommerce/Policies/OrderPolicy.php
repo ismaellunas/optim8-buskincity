@@ -7,15 +7,19 @@ use App\Policies\BasePermissionPolicy;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Enums\OrderStatus;
+use Illuminate\Support\Traits\Macroable;
 
 class OrderPolicy extends BasePermissionPolicy
 {
+    use Macroable;
+
     protected $basePermission = 'order';
 
     public function cancel(User $user, Order $order)
     {
         return (
             $order->status != OrderStatus::CANCELED->value
+            && !$order->hasCheckIn()
             && $order->firstEventline->latestEvent->status == BookingStatus::UPCOMING->value
             && (
                 $user->can('order.edit')

@@ -50,17 +50,27 @@ class OrderController extends CrudController
 
     public function show(Order $order)
     {
-        $product = $order->firstEventLine->purchasable->product;
+        $order->load('firstEventline.latestEvent');
+
+        $product = $order->firstProduct;
         $event = $order->firstEventLine->latestEvent;
+        $checkIn = $order->checkIn;
         $user = auth()->user();
 
         return Inertia::render('Booking::FrontendOrderShow', $this->getData([
             'title' => $product->displayName,
             'description' => $event->timezonedBookedAt->format(config('ecommerce.format.date_event_email_title')),
             'order' => $this->orderService->getFrontendRecord($order),
+            'checkInDateTime' => $checkIn
+                ? $checkIn
+                    ->checked_in_at
+                    ->setTimezone($event->schedule->timezone)
+                    ->format(config('ecommerce.format.date_event_widget_record'))
+                : null,
             'can' => [
                 'cancel' => $user->can('cancel', $order),
                 'reschedule' => $user->can('reschedule', $order),
+                'checkIn' => $user->can('checkIn', $order),
             ],
             'breadcrumbs' => [
                 [
