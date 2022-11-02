@@ -54,7 +54,9 @@
                         <th>Status</th>
                         <th>Name</th>
                         <th>Customer Name</th>
+                        <th>Time</th>
                         <th>Date</th>
+                        <th>Check-In</th>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -70,7 +72,9 @@
                         <td>{{ record.status }}</td>
                         <td>{{ record.product_name }}</td>
                         <td>{{ record.customer_name ?? '-' }}</td>
+                        <td>{{ record.start_end_time }}</td>
                         <td>{{ record.date }}</td>
+                        <td>{{ record.check_in_time }}</td>
                         <td>
                             <div class="level-right">
                                 <div class="buttons">
