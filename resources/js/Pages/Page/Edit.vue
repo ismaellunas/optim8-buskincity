@@ -55,6 +55,7 @@
         provide() {
             return {
                 can: this.can,
+                media: this.media,
             }
         },
 
@@ -68,6 +69,7 @@
             page: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
             title: { type: String, required: true },
+            media: { type: Object, default: () => {} },
         },
 
         setup(props) {
