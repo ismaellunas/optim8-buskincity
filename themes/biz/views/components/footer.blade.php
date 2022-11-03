@@ -3,7 +3,7 @@
         <div class="columns is-multiline">
             <div class="column is-3">
                 <img
-                    src="{{ $logoUrl ?? 'https://dummyimage.com/150x100/e5e5e5/000000.png&text=B+752' }}"
+                    src="{{ $logoUrl }}"
                     style="max-width:160px"
                 >
             </div>

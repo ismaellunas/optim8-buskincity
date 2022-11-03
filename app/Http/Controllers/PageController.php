@@ -10,6 +10,7 @@ use App\Models\{
 use App\Services\{
     MenuService,
     PageService,
+    StorageService,
     TranslationService,
 };
 use Illuminate\Http\Request;
@@ -82,6 +83,14 @@ class PageController extends CrudController
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
             'title' => $this->getCreateTitle(),
+            'media' => [
+                'default_latest_post' => StorageService::getImageUrl(
+                    config('constants.default_images.pb_latest_post')
+                ),
+                'default_video' => StorageService::getImageUrl(
+                    config('constants.default_images.pb_video')
+                )
+            ]
         ]));
     }
 
@@ -140,6 +149,14 @@ class PageController extends CrudController
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
             'title' => $this->getEditTitle(),
+            'media' => [
+                'default_latest_post' => StorageService::getImageUrl(
+                    config('constants.default_images.pb_latest_post')
+                ),
+                'default_video' => StorageService::getImageUrl(
+                    config('constants.default_images.pb_video')
+                )
+            ]
         ]));
     }
 

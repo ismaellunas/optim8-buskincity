@@ -178,6 +178,17 @@ return [
         'youtube_vimeo_url' => '^(http:\/\/|https:\/\/)(vimeo\.com|youtu\.be|www\.youtube\.com|player\.vimeo\.com)\/((video\/|embed\/|watch\?v=|v\/)|[\w\/\S]+)([\?]\S*)?$',
     ],
 
+    'default_images' => [
+        'logo' => 'default-logo.png',
+        'logo_space' => 'default-square.png',
+        'widget_post_thumbnail' => 'default-square.png',
+        'pb_latest_post' => 'default-square.png',
+        'pb_video' => 'default-video.png',
+        'admin_auth_card' => 'default-auth-card.png',
+        'user_auth_card' => 'default-auth-card.png',
+        'article_thumbnail' => 'default-square.png',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway

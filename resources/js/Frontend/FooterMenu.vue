@@ -55,12 +55,7 @@
         name: 'FrontendFooterMenu',
 
         setup() {
-            const appLogoImageUrl = computed(() => {
-                return (
-                    usePage().props.value.appLogoUrl
-                    ?? "https://dummyimage.com/48x28/e5e5e5/000000.png&text=Logo"
-                );
-            });
+            const appLogoImageUrl = computed(() => usePage().props.value.appLogoUrl);
 
             return {
                 appName: appName,

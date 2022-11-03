@@ -1,3 +1,5 @@
+@inject('storageService', 'App\Services\StorageService')
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -78,7 +80,7 @@
                                 <div class="card">
                                     <div class="card-image">
                                         <figure class="image is-3by4">
-                                            <img src="https://dummyimage.com/550x715/e5e5e5/ffffff.jpg">
+                                            <img src="{{ $storageService::getImageUrl(config('constants.default_images.user_auth_card')) }}">
                                         </figure>
                                     </div>
                                 </div>
