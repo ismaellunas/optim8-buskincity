@@ -127,51 +127,53 @@
                     draggable: props.isDraggable,
                 });
 
-                searchBox.value = new google.maps.places.SearchBox(searchInput.value);
+                if (props.enableSearchBox) {
+                    searchBox.value = new google.maps.places.SearchBox(searchInput.value);
 
-                map.value.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput.value);
+                    map.value.controls[google.maps.ControlPosition.TOP_LEFT].push(searchInput.value);
 
-                map.value.addListener("bounds_changed", () => {
-                    searchBox.value.setBounds(map.value.getBounds());
-                });
+                    map.value.addListener("bounds_changed", () => {
+                        searchBox.value.setBounds(map.value.getBounds());
+                    });
 
-                searchListener = searchBox.value.addListener("places_changed", () => {
-                    const places = searchBox.value.getPlaces();
+                    searchListener = searchBox.value.addListener("places_changed", () => {
+                        const places = searchBox.value.getPlaces();
 
-                    if (places.length == 0) {
-                        return;
-                    }
-
-                    deleteMarkers();
-
-                    const bounds = new google.maps.LatLngBounds();
-
-                    places.forEach((place) => {
-                        if (!place.geometry || !place.geometry.location) {
-                            console.log("Returned place contains no geometry");
+                        if (places.length == 0) {
                             return;
                         }
 
-                        const icon = {
-                            url: place.icon,
-                            size: new google.maps.Size(71, 71),
-                            origin: new google.maps.Point(0, 0),
-                            anchor: new google.maps.Point(17, 34),
-                            scaledSize: new google.maps.Size(25, 25),
-                        };
+                        deleteMarkers();
 
-                        addMarker(place.geometry.location);
+                        const bounds = new google.maps.LatLngBounds();
 
-                        if (place.geometry.viewport) {
-                            // Only geocodes have viewport.
-                            bounds.union(place.geometry.viewport);
-                        } else {
-                            bounds.extend(place.geometry.location);
-                        }
+                        places.forEach((place) => {
+                            if (!place.geometry || !place.geometry.location) {
+                                console.log("Returned place contains no geometry");
+                                return;
+                            }
+
+                            const icon = {
+                                url: place.icon,
+                                size: new google.maps.Size(71, 71),
+                                origin: new google.maps.Point(0, 0),
+                                anchor: new google.maps.Point(17, 34),
+                                scaledSize: new google.maps.Size(25, 25),
+                            };
+
+                            addMarker(place.geometry.location);
+
+                            if (place.geometry.viewport) {
+                                // Only geocodes have viewport.
+                                bounds.union(place.geometry.viewport);
+                            } else {
+                                bounds.extend(place.geometry.location);
+                            }
+                        });
+
+                        map.value.fitBounds(bounds);
                     });
-
-                    map.value.fitBounds(bounds);
-                });
+                }
 
                 clickListener = map.value.addListener('click', (event) => {
                     if (! props.enableMarkerMove) {
