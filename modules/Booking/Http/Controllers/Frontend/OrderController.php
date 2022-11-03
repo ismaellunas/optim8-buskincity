@@ -65,7 +65,7 @@ class OrderController extends CrudController
                 ? $checkIn
                     ->checked_in_at
                     ->setTimezone($event->schedule->timezone)
-                    ->format('H:i (\G\M\T P)')
+                    ->format(config('constants.format.time_checkin'))
                 : null,
             'can' => [
                 'cancel' => $user->can('cancel', $order),

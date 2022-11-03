@@ -142,6 +142,7 @@ return [
         'date_time_minute' => 'Y/m/d H:i',
         'date_time_event' => 'Y/m/d H:i (\G\M\T P)',
         'date_post' => 'd F Y',
+        'time_checkin' => 'H:i (\G\M\T P)',
     ],
 
     'currency_symbols' => [
