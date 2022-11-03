@@ -26,7 +26,7 @@
                             <div class="card">
                                 <div class="card-image">
                                     <figure class="image is-3by4">
-                                        <img src="https://dummyimage.com/550x715/e5e5e5/ffffff.jpg">
+                                        <img src="/storage/images/default-admin-auth-card.png">
                                     </figure>
                                 </div>
                             </div>
