@@ -2,18 +2,13 @@
     <div>
         <template
             v-for="(group, groupName, indexConfig) in configOptions"
-            :key="groupName"
+            :key="indexConfig"
         >
-            <component
-                :is="group.component"
-                v-if="group.component && !isBlank(entity)"
-                v-model="entity"
+            <biz-card
+                v-if="!isBlank(entity)"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
-            />
-
-            <card
-                v-else-if="!isBlank(entity)"
-                :class="{'mb-1': indexConfig != numberOfOptions - 1}"
+                :is-collapsed="true"
+                :is-expanding-on-load="indexConfig == 0"
             >
                 <template #headerTitle>
                     {{ group.label }}
@@ -43,13 +38,13 @@
 
                     <hr>
                 </template>
-            </card>
+            </biz-card>
         </template>
     </div>
 </template>
 
 <script>
-    import Card from '@/Biz/Card';
+    import BizCard from '@/Biz/Card';
     import ConfigAddOption from '@/Blocks/Configs/AddOption';
     import ConfigAutoGenerateKey from '@/Blocks/Configs/AutoGenerateKey';
     import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
@@ -68,7 +63,7 @@
         name: 'InputConfig',
 
         components: {
-            Card,
+            BizCard,
             ConfigAddOption,
             ConfigAutoGenerateKey,
             ConfigCheckbox,
