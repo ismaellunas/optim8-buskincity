@@ -163,7 +163,7 @@ return [
             [
                 'key' => 'google_api_key',
                 'display_name' => 'Google API',
-                'value' => null,
+                'value' => env('GOOGLE_API_KEY', null),
                 'order' => 1,
                 'group' => 'key.google_api'
             ],
