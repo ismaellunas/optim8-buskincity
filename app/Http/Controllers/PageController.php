@@ -128,6 +128,7 @@ class PageController extends CrudController
                 ],
                 'page' => [
                     'read' => $user->can('page.read'),
+                    'delete' => $user->can('page.delete'),
                 ],
             ],
             'page' => $page,
