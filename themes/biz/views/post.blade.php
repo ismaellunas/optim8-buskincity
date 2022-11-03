@@ -1,3 +1,5 @@
+@inject('storageService', 'App\Services\StorageService')
+
 <x-layouts.master>
     <x-slot name="title">
         {{ trim($post->meta_title ?? $post->title). ' | ' .config('app.name') }}
@@ -121,9 +123,9 @@
                     @foreach ($relatedArticles as $article)
                         <div class="column is-4">
                             <article class="b752-blog-item box is-shadowless is-clipped p-0">
-                                <figure>
+                                <figure class="image is-4by3">
                                     <a href="{{ route('blog.show', $article->slug) }}">
-                                        <img src="{{ $article->coverImageUrl ?? url('https://dummyimage.com/600x400/ccc/fff.png&text=+') }}">
+                                        <img src="{{ $article->coverImageUrl ?? $storageService::getImageUrl(config('constants.default_images.article_thumbnail')) }}">
                                     </a>
                                 </figure>
                                 <div class="p-5">

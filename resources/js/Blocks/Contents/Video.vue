@@ -6,7 +6,7 @@
         />
         <biz-image
             ratio="is-16by9"
-            src="https://dummyimage.com/640x360/ccc/fff.png&text=Video"
+            :src="media?.default_video"
         />
     </div>
 </template>
@@ -31,5 +31,7 @@
             MixinDeletableContent,
             MixinDuplicableContent
         ],
+
+        inject: ['media'],
     }
 </script>

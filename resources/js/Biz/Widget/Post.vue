@@ -32,17 +32,9 @@
                             style="width: 100%"
                         >
                             <biz-image
-                                v-if="record.thumbnail_url"
                                 class="media-left"
                                 ratio="is-64x64"
                                 :src="record.thumbnail_url"
-                            />
-
-                            <biz-image
-                                v-else
-                                class="media-left"
-                                ratio="is-64x64"
-                                src="https://dummyimage.com/64x64/e5e5e5/000000.png&text=Thumbnail"
                             />
 
                             <div class="media-content">
