@@ -11,6 +11,7 @@ use App\Models\{
     Media,
     Setting,
 };
+use App\Services\StorageService;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\{
@@ -144,7 +145,10 @@ class SettingService
         return app(SettingCache::class)->remember('logo_url', function () {
             $media = $this->getLogoMedia();
 
-            return !empty($media) ? $media->file_url : "";
+            return $media->file_url
+                ?? StorageService::getImageUrl(
+                    config('constants.default_images.logo')
+                );
         });
     }
 

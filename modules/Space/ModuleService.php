@@ -3,6 +3,7 @@
 namespace Modules\Space;
 
 use App\Models\GlobalOption;
+use App\Services\StorageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Modules\Space\Entities\Space;
@@ -75,6 +76,8 @@ class ModuleService
 
     public static function defaultLogoUrl(): string
     {
-        return 'https://dummyimage.com/600x600/ccc/fff.png&text=+';
+        return StorageService::getImageUrl(
+            config('constants.default_images.logo_space')
+        );
     }
 }
