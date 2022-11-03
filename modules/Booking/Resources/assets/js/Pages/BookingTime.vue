@@ -24,7 +24,7 @@
             </biz-field>
 
             <biz-field class="is-grouped is-grouped-centered">
-                <biz-form-field-horizontal>
+                <biz-form-field-horizontal class="timezone-info">
                     <template #label>
                         Timezone
                     </template>
