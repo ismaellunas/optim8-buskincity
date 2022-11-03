@@ -137,27 +137,35 @@
                     v-if="mapPosition.latitude && mapPosition.longitude"
                     class="column is-4"
                 >
-                    <biz-gmap-marker
-                        v-model="mapPosition"
-                        :api-key="googleApiKey"
-                        :init-position="mapPosition"
-                        :map-style="['width: 100%', 'height: 34vh']"
-                        :enable-search-box="false"
-                        :enable-marker-move="false"
-                    />
+                    <div class="card">
+                        <biz-gmap-marker
+                            v-model="mapPosition"
+                            :api-key="googleApiKey"
+                            :init-position="mapPosition"
+                            :map-style="['width: 100%', 'height: 378px']"
+                            :enable-search-box="false"
+                            :enable-marker-move="false"
+                        />
+                    </div>
                 </div>
 
                 <div class="column is-8">
-                    <booking-time
-                        v-model="form"
-                        :allowed-dates-route="allowedDatesRouteName"
-                        :available-times-param="{product: product.id}"
-                        :available-times-route="availableTimesRouteName"
-                        :max-date="maxDate"
-                        :min-date="minDate"
-                        :product-id="product.id"
-                        @on-time-confirmed="openModal"
-                    />
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="content">
+                                <booking-time
+                                    v-model="form"
+                                    :allowed-dates-route="allowedDatesRouteName"
+                                    :available-times-param="{product: product.id}"
+                                    :available-times-route="availableTimesRouteName"
+                                    :max-date="maxDate"
+                                    :min-date="minDate"
+                                    :product-id="product.id"
+                                    @on-time-confirmed="openModal"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -287,8 +295,8 @@
                 isShortDescription: ref(true),
                 selectedImageId: ref(null),
                 mapPosition: {
-                    latitude: props.event.location.latitude,
-                    longitude: props.event.location.longitude
+                    latitude: props.event.location?.latitude,
+                    longitude: props.event.location?.longitude,
                 },
             };
         },
