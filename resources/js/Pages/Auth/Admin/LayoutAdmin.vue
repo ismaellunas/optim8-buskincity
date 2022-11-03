@@ -26,7 +26,7 @@
                             <div class="card">
                                 <div class="card-image">
                                     <figure class="image is-3by4">
-                                        <img src="/storage/images/default-admin-auth-card.png">
+                                        <img src="/storage/images/default-auth-card.png">
                                     </figure>
                                 </div>
                             </div>
