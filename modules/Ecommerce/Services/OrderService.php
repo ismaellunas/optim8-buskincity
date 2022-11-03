@@ -145,8 +145,8 @@ class OrderService
                         ->format('H:i')
                     : null,
                 'can' => [
-                    'cancel' => $user->can('cancel', $record),
-                    'reschedule' => $user->can('reschedule', $record),
+                    'cancel' => $user->can('cancelBooking', $record),
+                    'reschedule' => $user->can('rescheduleBooking', $record),
                 ],
             ];
         });

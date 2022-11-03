@@ -77,7 +77,6 @@ class OrderController extends CrudController
     {
         $user = auth()->user();
 
-        $event = $order->firstEventLine->latestEvent;
         $checkIn = $order->checkIn;
         $orderRecord = $this->orderService->getRecord($order);
 
@@ -87,12 +86,12 @@ class OrderController extends CrudController
             'checkInTime' => $checkIn
                 ? $checkIn
                     ->checked_in_at
-                    ->setTimezone($event->schedule->timezone)
+                    ->setTimezone($orderRecord['event']['timezone'])
                     ->format(config('constants.format.time_checkin'))
                 : null,
             'can' => [
-                'cancel' => $user->can('cancel', $order),
-                'reschedule' => $user->can('reschedule', $order),
+                'cancel' => $user->can('cancelBooking', $order),
+                'reschedule' => $user->can('rescheduleBooking', $order),
             ],
         ]));
     }

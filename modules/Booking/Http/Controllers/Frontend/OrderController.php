@@ -68,8 +68,8 @@ class OrderController extends CrudController
                     ->format(config('constants.format.time_checkin'))
                 : null,
             'can' => [
-                'cancel' => $user->can('cancel', $order),
-                'reschedule' => $user->can('reschedule', $order),
+                'cancel' => $user->can('cancelBooking', $order),
+                'reschedule' => $user->can('rescheduleBooking', $order),
                 'checkIn' => $user->can('checkIn', $order),
             ],
             'breadcrumbs' => [

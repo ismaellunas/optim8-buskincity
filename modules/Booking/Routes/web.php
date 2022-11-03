@@ -40,19 +40,19 @@ Route::prefix('admin/booking')->name('admin.booking.')->middleware([
 
     Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])
         ->name('orders.cancel')
-        ->can('cancel', 'order');
+        ->can('cancelBooking', 'order');
 
     Route::get('/orders/{order}/reschedule', [OrderController::class, 'reschedule'])
         ->name('orders.reschedule')
-        ->can('reschedule', 'order');
+        ->can('rescheduleBooking', 'order');
 
     Route::post('/orders/{order}/reschedule', [OrderController::class, 'rescheduleUpdate'])
         ->name('orders.reschedule.update')
-        ->can('reschedule', 'order');
+        ->can('rescheduleBooking', 'order');
 
     Route::get('/orders/{order}/available-times/{date}', [OrderController::class, 'availableTimes'])
         ->name('orders.available-times')
-        ->can('reschedule', 'order');
+        ->can('rescheduleBooking', 'order');
 });
 
 Route::prefix('booking')->name('booking.')->middleware([
@@ -87,14 +87,14 @@ Route::prefix('booking')->name('booking.')->middleware([
 
         Route::get('/{order}/reschedule', [FrontendOrderController::class, 'reschedule'])
             ->name('reschedule')
-            ->can('reschedule', 'order');
+            ->can('rescheduleBooking', 'order');
 
         Route::post('/{order}/reschedule', [FrontendOrderController::class, 'rescheduleUpdate'])
             ->name('reschedule.update');
 
         Route::post('/{order}/cancel', [OrderController::class, 'cancel'])
             ->name('cancel')
-            ->can('cancel', 'order');
+            ->can('cancelBooking', 'order');
 
         Route::post('/{order}/check-in', Modules\Booking\Http\Controllers\Frontend\CheckInController::class)
             ->name('check-in');
