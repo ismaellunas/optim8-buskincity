@@ -51,7 +51,7 @@
     import BizInputColor from '@/Biz/InputColor';
     import BizInputError from '@/Biz/InputError';
     import { forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
-    import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
+    import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {

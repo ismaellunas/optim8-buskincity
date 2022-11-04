@@ -12,8 +12,8 @@
                 class="column is-4"
             >
                 <article class="box is-clipped p-0">
-                    <figure>
-                        <img src="https://dummyimage.com/600x400/ccc/fff.png&text=+">
+                    <figure class="image is-3by2">
+                        <img :src="media?.default_latest_post">
                     </figure>
                     <div class="p-5">
                         <h2 class="title is-5 mb-2">
@@ -47,6 +47,8 @@
             MixinDeletableContent,
             MixinDuplicableContent
         ],
+
+        inject: ['media'],
 
         props: {
             modelValue: { type: Object, required: true },

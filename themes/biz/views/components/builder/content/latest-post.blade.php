@@ -1,11 +1,13 @@
+@inject('storageService', 'App\Services\StorageService')
+
 <div @class([$uniqueClass, 'columns is-multiline'])>
     @if (!$posts->isEmpty())
         @foreach ($posts as $post)
             <div class="column is-4">
                 <article class="b752-blog-item box is-clipped p-0">
-                    <figure>
+                    <figure class="image is-4by3">
                         <a href="{{ route('blog.show', $post->slug) }}">
-                            <img src="{{ $post->coverImageUrl ?? url('https://dummyimage.com/600x400/ccc/fff.png&text=+') }}">
+                            <img src="{{ $post->coverImageUrl ?? $storageService::getImageUrl(config('constants.default_images.article_thumbnail')) }}">
                         </a>
                     </figure>
                     <div class="p-5">
