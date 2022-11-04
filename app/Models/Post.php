@@ -130,7 +130,7 @@ class Post extends BaseModel implements PublishableInterface
 
     public function getCoverImageUrlAttribute(): ?string
     {
-        return $this->coverImage->file_url ?? null;
+        return $this->coverImage->optimizedImageUrl ?? null;
     }
 
     public static function getStatusOptions(): array

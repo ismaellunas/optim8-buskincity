@@ -142,6 +142,7 @@ return [
         'date_time_minute' => 'Y/m/d H:i',
         'date_time_event' => 'Y/m/d H:i (\G\M\T P)',
         'date_post' => 'd F Y',
+        'time_checkin' => 'H:i (\G\M\T P)',
     ],
 
     'currency_symbols' => [
@@ -163,7 +164,7 @@ return [
             [
                 'key' => 'google_api_key',
                 'display_name' => 'Google API',
-                'value' => null,
+                'value' => env('GOOGLE_API_KEY', null),
                 'order' => 1,
                 'group' => 'key.google_api'
             ],
@@ -176,6 +177,17 @@ return [
         // @see https://www.regextester.com/96461
         // @see https://stackoverflow.com/questions/5612602/improving-regex-for-parsing-youtube-vimeo-urls
         'youtube_vimeo_url' => '^(http:\/\/|https:\/\/)(vimeo\.com|youtu\.be|www\.youtube\.com|player\.vimeo\.com)\/((video\/|embed\/|watch\?v=|v\/)|[\w\/\S]+)([\?]\S*)?$',
+    ],
+
+    'default_images' => [
+        'logo' => 'default-logo.png',
+        'logo_space' => 'default-square.png',
+        'widget_post_thumbnail' => 'default-square.png',
+        'pb_latest_post' => 'default-square.png',
+        'pb_video' => 'default-video.png',
+        'admin_auth_card' => 'default-auth-card.png',
+        'user_auth_card' => 'default-auth-card.png',
+        'article_thumbnail' => 'default-square.png',
     ],
 
     /*

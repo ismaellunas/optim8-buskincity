@@ -60,12 +60,23 @@ class OrderService
                 }
             })
             ->with([
-                'firstEventLine.latestEvent.schedule',
-                'firstEventLine.purchasable.product' => function ($query) {
-                    $query->select('id', 'product_type_id', 'attribute_data');
+                'firstEventLine' => function ($query) {
+                    $query->with([
+                        'latestEvent' => function ($query) {
+                            $query->with('schedule');
+                        },
+                        'purchasable' => function ($query) {
+                            $query->with('product', function ($query) {
+                                $query->select('id', 'product_type_id', 'attribute_data');
+                            });
+                        },
+                    ]);
                 },
                 'user' => function ($query) {
                     $query->select('id', 'email', 'first_name', 'last_name');
+                },
+                'checkIn' => function ($query) {
+                    $query->select('id', 'checked_in_at', 'order_id', 'user_id');
                 },
             ])
             ->select(
@@ -120,15 +131,22 @@ class OrderService
                 'status' => Str::title($event->status),
                 'start_end_time' => $event->displayStartEndTime,
                 'date' => $event->timezonedBookedAt->format('d M Y'),
+                'timezone' => $event->timezonedBookedAt->format('P'),
                 'event' => [
                     'date' => $event->timezonedBookedAt->format('d F Y'),
                     'duration' => $event->displayDuration,
                     'start_end_time' => $event->displayStartEndTime,
                     'timezone' => $event->schedule->timezone,
                 ],
+                'check_in_time' => $record->hasCheckIn()
+                    ? $record->checkIn
+                        ->checked_in_at
+                        ->setTimezone($event->schedule->timezone)
+                        ->format('H:i')
+                    : null,
                 'can' => [
-                    'cancel' => $user->can('cancel', $record),
-                    'reschedule' => $user->can('reschedule', $record),
+                    'cancel' => $user->can('cancelBooking', $record),
+                    'reschedule' => $user->can('rescheduleBooking', $record),
                 ],
             ];
         });
@@ -168,7 +186,7 @@ class OrderService
                 'time' => $event->timezonedBookedAt->format('H:i'),
                 'status' => Str::title($event->status),
                 'timezone' => $event->schedule->timezone,
-                'timezoneOffset' => 'UTC '.$carbonTimeZone->toOffsetName(),
+                'timezoneOffset' => 'GMT '.$carbonTimeZone->toOffsetName(),
             ],
         ];
     }
