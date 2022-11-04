@@ -61,11 +61,11 @@ class OrderController extends CrudController
             'title' => $product->displayName,
             'description' => $event->timezonedBookedAt->format(config('ecommerce.format.date_event_email_title')),
             'order' => $this->orderService->getFrontendRecord($order),
-            'checkInDateTime' => $checkIn
+            'checkInTime' => $checkIn
                 ? $checkIn
                     ->checked_in_at
                     ->setTimezone($event->schedule->timezone)
-                    ->format(config('ecommerce.format.date_event_widget_record'))
+                    ->format(config('constants.format.time_checkin'))
                 : null,
             'can' => [
                 'cancel' => $user->can('cancel', $order),

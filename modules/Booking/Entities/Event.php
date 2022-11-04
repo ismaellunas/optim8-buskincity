@@ -2,21 +2,19 @@
 
 namespace Modules\Booking\Entities;
 
+use App\Models\BaseModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Helpers\EventTimeHelper;
 use Modules\Ecommerce\Entities\OrderLine;
 
-class Event extends Model
+class Event extends BaseModel
 {
     use HasFactory;
 
     protected $table = 'events';
-
-    protected $fillable = [];
 
     protected $dates = [
         'booked_at',
