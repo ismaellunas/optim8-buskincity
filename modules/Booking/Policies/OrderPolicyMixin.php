@@ -7,9 +7,32 @@ use App\Models\User;
 use Carbon\Carbon;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Ecommerce\Entities\Order;
+use Modules\Ecommerce\Enums\OrderStatus;
 
 class OrderPolicyMixin
 {
+    public function cancelBooking()
+    {
+        return function (User $user, Order $order) {
+            return (
+                $order->status != OrderStatus::CANCELED->value
+                && !$order->hasCheckIn()
+                && $order->firstEventLine->latestEvent->status == BookingStatus::UPCOMING->value
+                && (
+                    $user->can('order.edit')
+                    || $order->isUserWhoPlacedTheOrder($user)
+                )
+            );
+        };
+    }
+
+    public function rescheduleBooking()
+    {
+        return function(User $user, Order $order) {
+            return $this->cancelBooking($user, $order);
+        };
+    }
+
     public function checkIn()
     {
         return function (User $user, Order $order, Carbon $currentTime = null): bool {

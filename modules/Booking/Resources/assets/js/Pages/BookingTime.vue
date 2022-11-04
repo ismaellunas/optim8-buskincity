@@ -1,6 +1,6 @@
 <template>
     <div class="booking-time columns">
-        <div class="column is-half">
+        <div class="column is-7">
             <biz-field class="is-grouped is-grouped-centered">
                 <p class="control">
                     <biz-datepicker
@@ -44,7 +44,7 @@
 
         <div
             id="reschedule-available-time-list-wrapper"
-            class="column is-half"
+            class="column is-5"
         >
             <div
                 id="reschedule-available-time-list"
