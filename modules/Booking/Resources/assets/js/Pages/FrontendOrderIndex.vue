@@ -53,8 +53,10 @@
                     <tr>
                         <th>Status</th>
                         <th>Name</th>
-                        <th>Time</th>
                         <th>Date</th>
+                        <th>Timezone</th>
+                        <th>Time</th>
+                        <th>Check-In</th>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -73,8 +75,10 @@
                             </biz-tag>
                         </td>
                         <td>{{ order.product_name }}</td>
-                        <td>{{ order.start_end_time }}</td>
                         <td>{{ order.date }}</td>
+                        <td>{{ order.timezone }}</td>
+                        <td>{{ order.start_end_time }}</td>
+                        <td>{{ order.check_in_time }}</td>
                         <td>
                             <div class="level-right">
                                 <biz-button-link

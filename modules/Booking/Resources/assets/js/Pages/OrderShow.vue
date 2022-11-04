@@ -19,11 +19,16 @@
                         <th><biz-icon :icon="icon.user" /></th>
                         <td>{{ order.user_full_name }}</td>
                     </tr>
+                    <tr>
+                        <th><biz-icon :icon="icon.buildingCheck" /></th>
+                        <td>{{ checkInTime }}</td>
+                    </tr>
                 </event-detail-table>
 
                 <div class="buttons">
                     <biz-button-link :href="route(baseRouteName + '.index')">
-                        Back
+                        <biz-icon :icon="icon.back" />
+                        <span>Back</span>
                     </biz-button-link>
                 </div>
             </div>
@@ -118,6 +123,7 @@
             can: { type: Object, required: true },
             baseRouteName: { type: String, required: true },
             order: { type: Object, required: true },
+            checkInTime: { type: [String, null], required: true },
         },
 
         setup(props) {

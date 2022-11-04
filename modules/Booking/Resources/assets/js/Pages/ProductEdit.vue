@@ -161,11 +161,15 @@
                                 v-if="isMapOpen"
                                 class="column is-8"
                             >
-                                <biz-gmap-marker
-                                    v-model="eventForm.location"
-                                    :api-key="googleApiKey"
-                                    :init-position="geoLocation"
-                                />
+                                <div class="card">
+                                    <div class="card-content p-2">
+                                        <biz-gmap-marker
+                                            v-model="eventForm.location"
+                                            :api-key="googleApiKey"
+                                            :init-position="geoLocation"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
