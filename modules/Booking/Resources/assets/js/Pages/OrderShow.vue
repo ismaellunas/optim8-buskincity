@@ -21,7 +21,7 @@
                     </tr>
                     <tr>
                         <th><biz-icon :icon="icon.buildingCheck" /></th>
-                        <td>{{ checkInDateTime }}</td>
+                        <td>{{ checkInTime }}</td>
                     </tr>
                 </event-detail-table>
 
@@ -123,7 +123,7 @@
             can: { type: Object, required: true },
             baseRouteName: { type: String, required: true },
             order: { type: Object, required: true },
-            checkInDateTime: { type: [String, null], required: true },
+            checkInTime: { type: [String, null], required: true },
         },
 
         setup(props) {

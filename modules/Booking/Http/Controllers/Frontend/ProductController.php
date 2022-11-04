@@ -3,6 +3,7 @@
 namespace Modules\Booking\Http\Controllers\Frontend;
 
 use App\Http\Controllers\CrudController;
+use App\Services\SettingService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -68,6 +69,7 @@ class ProductController extends CrudController
             'minDate' => $minDate->toDateString(),
             'product' => $this->productService->productDetailResource($product),
             'timezone' => $schedule->timezone,
+            'googleApiKey' => app(SettingService::class)->getGoogleApi(),
         ]));
     }
 

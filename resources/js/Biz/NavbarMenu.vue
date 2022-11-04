@@ -147,12 +147,7 @@
             const navMenus = computed(() => usePage().props.value.menus.nav);
             const navLogo = computed(() => usePage().props.value.menus.navLogo);
             const navProfile = computed(() => usePage().props.value.menus.navProfile);
-            const appLogoImageUrl = computed(() => {
-                return (
-                    usePage().props.value.appLogoUrl
-                    ?? "https://dummyimage.com/48x28/e5e5e5/000000.png&text=Logo"
-                );
-            });
+            const appLogoImageUrl = computed(() => usePage().props.value.appLogoUrl);
 
             const navbarDropdown = document.getElementsByClassName('navbar-item-dropdown');
 

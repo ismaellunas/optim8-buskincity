@@ -193,8 +193,9 @@
 
             deleteTranslationIsShowed() {
                 return (this.defaultLocale !== this.selectedLocale)
-                    && this.form?.id;
-            }
+                    && this.form?.id
+                    && this.can?.page?.delete;
+            },
         },
 
         methods: {

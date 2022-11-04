@@ -26,29 +26,37 @@
         </div>
         <div class="column is-11">
             <div class="columns is-multiline mt-3">
-                <div class="column is-4">
-                    <table-event-reschedule-detail :event="order.event" />
+                <div class="column is-5">
+                    <div class="card">
+                        <div class="card-content">
+                            <table-event-reschedule-detail :event="order.event" />
 
-                    <div class="buttons">
-                        <biz-button-link
-                            :href="route(baseRouteName + '.show', order.id)"
-                        >
-                            Back
-                        </biz-button-link>
+                            <div class="buttons">
+                                <biz-button-link
+                                    :href="route(baseRouteName + '.show', order.id)"
+                                >
+                                    Back
+                                </biz-button-link>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="column is-8">
-                    <booking-time
-                        v-model="form"
-                        :allowed-dates-route="allowedDatesRouteName"
-                        :available-times-param="{product: order.product.id}"
-                        :available-times-route="availableTimesRouteName"
-                        :max-date="maxDate"
-                        :min-date="minDate"
-                        :product-id="order.product.id"
-                        @on-time-confirmed="openModal"
-                    />
+                <div class="column is-7">
+                    <div class="card">
+                        <div class="card-content">
+                            <booking-time
+                                v-model="form"
+                                :allowed-dates-route="allowedDatesRouteName"
+                                :available-times-param="{product: order.product.id}"
+                                :available-times-route="availableTimesRouteName"
+                                :max-date="maxDate"
+                                :min-date="minDate"
+                                :product-id="order.product.id"
+                                @on-time-confirmed="openModal"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -69,7 +69,7 @@ class ProductEventService
             'duration' => $this->displayDuration($product),
             'bookable_date_range_type' => $product->bookable_date_range_type,
             'bookable_date_range' => $product->bookable_date_range,
-            'location' => null,
+            'location' => $product->locations[0] ?? null,
             'timezone' => $schedule->timezone ?? null,
         ];
     }

@@ -5,6 +5,7 @@ namespace App\Entities\Widgets;
 use App\Contracts\WidgetInterface;
 use App\Entities\Caches\WidgetCache;
 use App\Models\Post;
+use App\Services\StorageService;
 use App\Services\WidgetService;
 
 class PostWidget implements WidgetInterface
@@ -95,11 +96,10 @@ class PostWidget implements WidgetInterface
                 }),
                 'locale' => $record->locale,
                 'title' => $record->title,
-                'thumbnail_url' => (
-                    $record->coverImage
-                    ? $record->coverImage->thumbnailUrl
-                    : null
-                ),
+                'thumbnail_url' => $record->coverImage->thumbnailUrl
+                    ?? StorageService::getImageUrl(
+                        config('constants.default_images.widget_post_thumbnail')
+                    ),
             ];
         });
     }
