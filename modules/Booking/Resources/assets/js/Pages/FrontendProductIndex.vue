@@ -8,12 +8,12 @@
                         @search="search"
                     />
                 </div>
-            </div>
 
-            <div class="column" />
+                <div class="is-clearfix" />
+            </div>
         </div>
 
-        <div class="table-container">
+        <div class="table-container column is-12">
             <biz-table class="is-striped is-hoverable is-fullwidth">
                 <thead>
                     <tr>
