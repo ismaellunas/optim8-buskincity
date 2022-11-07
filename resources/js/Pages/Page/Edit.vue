@@ -20,6 +20,7 @@
                 @on-change-locale="onChangeLocale"
                 @on-submit="onSubmit"
                 @on-delete-translation="onDeleteTranslation"
+                @on-duplicate-translation="onDuplicateTranslation"
             />
         </div>
     </div>
@@ -252,6 +253,32 @@
                         );
                     }
                 })
+            },
+            onDuplicateTranslation(data) {
+                if (this.form.isDirty) {
+
+                    confirmLeaveProgress().then((result) => {
+                        if (result.isDismissed) {
+                            return false;
+                        } else if(result.isConfirmed) {
+                            this.duplicateTranslation(data);
+                        }
+                    })
+                } else {
+                    this.duplicateTranslation(data);
+                }
+            },
+            duplicateTranslation(data) {
+                this.changeLocale(data.locale);
+
+                this.form[this.selectedLocale].id = null;
+                this.form[this.selectedLocale].title = data.form.title;
+                this.form[this.selectedLocale].slug = data.form.slug;
+                this.form[this.selectedLocale].excerpt = data.form.excerpt;
+                this.form[this.selectedLocale].data = data.form.data;
+                this.form[this.selectedLocale].meta_description = data.form.meta_description;
+                this.form[this.selectedLocale].meta_title = data.form.meta_title;
+                this.form[this.selectedLocale].status = data.form.status;
             },
         },
     }
