@@ -1,7 +1,9 @@
 <template>
     <card
+        ref="card"
         :is-collapsed="true"
         :is-expanding-on-load="isExpandingOnLoad"
+        @on-click-header-card="onClickHeaderCard"
     >
         <template #headerTitle>
             Section
@@ -55,6 +57,10 @@
             isExpandingOnLoad: { type: Boolean, default: false },
         },
 
+        emits: [
+            'on-click-header-card',
+        ],
+
         setup(props, {emit}) {
             return {
                 computedValue: useModelWrapper(props, emit),
@@ -82,6 +88,12 @@
                     return false;
                 }
                 return true;
+            },
+        },
+
+        methods: {
+            onClickHeaderCard(isContentShown) {
+                this.$emit('on-click-header-card', isContentShown);
             },
         },
     };
