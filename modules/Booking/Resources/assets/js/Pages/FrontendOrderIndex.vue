@@ -8,6 +8,8 @@
                         @search="search"
                     />
                 </div>
+
+                <div class="is-clearfix" />
             </div>
 
             <div class="column">
