@@ -132,7 +132,7 @@
                 :is-fullwidth="true"
             >
                 <option :value="null">
-                    - Select Translation-
+                    - Select Translation -
                 </option>
                 <option
                     v-for="locale in emptyPageLocaleOptions"
