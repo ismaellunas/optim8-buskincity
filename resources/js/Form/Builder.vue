@@ -8,6 +8,7 @@
                     :selected-locale="selectedLocale"
                     @on-change-locale="onChangeLocale"
                 />
+                <div class="is-clearfix" />
             </div>
         </div>
 
