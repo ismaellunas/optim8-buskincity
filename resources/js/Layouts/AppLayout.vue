@@ -1,6 +1,6 @@
 <template>
     <div id="main-container-wrapper">
-        <Head :title="title ?? titleChild" />
+        <HeadTag :title="title ?? titleChild" />
 
         <biz-navbar-menu />
 
@@ -28,7 +28,7 @@
 <script>
     import BizNavbarMenu from '@/Biz/NavbarMenu';
     import BizFlashExpired from '@/Biz/FlashExpired';
-    import { Head } from '@inertiajs/inertia-vue3';
+    import { Head as HeadTag } from '@inertiajs/inertia-vue3';
     import { head } from 'lodash';
 
     export default {
@@ -37,7 +37,7 @@
         components: {
             BizNavbarMenu,
             BizFlashExpired,
-            Head,
+            HeadTag,
         },
 
         props: {
