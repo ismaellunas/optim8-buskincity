@@ -7,16 +7,20 @@
             <component
                 :is="group.component"
                 v-if="group.component && !isBlank(entity.config[ groupName ])"
+                :ref="`config-${indexConfig}`"
                 v-model="entity.config[ groupName ]"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
                 :is-expanding-on-load="indexConfig == 0"
+                @on-click-header-card="onClickHeaderCard($event, indexConfig)"
             />
 
             <biz-card
                 v-else-if="!isBlank(entity.config[ groupName ])"
+                :ref="`config-${indexConfig}`"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
                 :is-collapsed="true"
                 :is-expanding-on-load="indexConfig == 0"
+                @on-click-header-card="onClickHeaderCard($event, indexConfig)"
             >
                 <template #headerTitle>
                     {{ group.label }}
@@ -57,7 +61,7 @@
     import moduleConfigs from '@/Modules/ComponentStructures/configs';
     import TRBL from '@/Blocks/Configs/TRBL';
     import TRBLInput from '@/Blocks/Configs/TRBLInput';
-    import { camelCase, merge } from "lodash";
+    import { camelCase, merge, forEach } from "lodash";
     import { isBlank } from '@/Libs/utils';
     import { useModelWrapper } from '@/Libs/utils'
 
@@ -121,6 +125,26 @@
 
         methods: {
             isBlank: isBlank,
+
+            onClickHeaderCard(isContentShown, index) {
+                const self = this;
+
+                if (isContentShown) {
+                    let i = 0;
+
+                    forEach(self.configOptions, function (group) {
+                        if (i != index) {
+                            if (!group.component) {
+                                self.$refs[`config-${i}`][0].isContentShown = false;
+                            } else {
+                                self.$refs[`config-${i}`][0].$refs['card'].isContentShown = false;
+                            }
+                        }
+
+                        i++;
+                    });
+                }
+            },
         }
     };
 </script>
