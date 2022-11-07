@@ -68,6 +68,10 @@
             isExpandingOnLoad: { type: Boolean, default: false },
         },
 
+        emits: [
+            'on-click-header-card',
+        ],
+
         setup(props) {
             let isContentShown = props.isCollapsed ? false : true;
 
@@ -106,6 +110,8 @@
             onClickHeaderButton() {
                 if (this.isCollapsed) {
                     this.isContentShown = !this.isContentShown
+
+                    this.$emit('on-click-header-card', this.isContentShown);
                 }
             },
         },
