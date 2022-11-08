@@ -16,48 +16,56 @@
         >
             <div class="columns is-multiline mt-3">
                 @foreach ($spaces as $space)
-                    @if ($loop->iteration % 2 == 0)
-                        <div class="column is-12 pt-6 pb-6">
-                            <div class="columns">
+                    <div class="column is-12 pt-6 pb-6">
+                        <div class="columns is-hidden-tablet">
+                            <div class="column is-12 has-text-centered">
+                                <figure class="image is-250x250 is-inline-block">
+                                    <img src="{{ $space->logoUrl ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
+                                </figure>
+                            </div>
+                            <div class="column is-12">
+                                <h4 class="title is-4 has-text-primary">
+                                    {{ ucwords($space->name) }}
+                                </h4>
+
+                                <p>
+                                    {{ $space->description ?? '-' }}
+                                </p>
+                                <a href="{{ $space->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                            </div>
+                        </div>
+
+                        <div class="columns is-hidden-mobile">
+                            @if ($loop->iteration % 2 == 0)
                                 <div class="column">
                                     <figure class="image is-250x250 is-pulled-left">
                                         <img src="{{ $space->logoUrl ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
                                     </figure>
                                 </div>
-                                <div class="column">
-                                    <h4 class="title is-4 has-text-primary">
-                                        {{ ucwords($space->name) }}
-                                    </h4>
+                            @endif
 
-                                    <p>
-                                        {{ $space->description ?? '-' }}
-                                    </p>
-                                    <a href="{{ $space->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                            <div class="column">
+                                <h4 class="title is-4 has-text-primary">
+                                    {{ ucwords($space->name) }}
+                                </h4>
 
-                                </div>
+                                <p>
+                                    {{ $space->description ?? '-' }}
+                                </p>
+                                <a href="{{ $space->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
                             </div>
-                        </div>
-                    @else
-                        <div class="column is-12 pt-6 pb-6">
-                            <div class="columns">
-                                <div class="column">
-                                    <h4 class="title is-4 has-text-primary">
-                                        {{ ucwords($space->name) }}
-                                    </h4>
 
-                                    <p>
-                                        {{ $space->description ?? '-' }}
-                                    </p>
-                                    <a href="{{ $space->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
-                                </div>
+                            @if ($loop->iteration % 2 != 0)
                                 <div class="column">
                                     <figure class="image is-250x250 is-pulled-right">
                                         <img src="{{ $space->logoUrl ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
                                     </figure>
                                 </div>
-                            </div>
+                            @endif
+
+                            <div class="is-clearfix" />
                         </div>
-                    @endif
+                    </div>
                 @endforeach
             </div>
         </div>

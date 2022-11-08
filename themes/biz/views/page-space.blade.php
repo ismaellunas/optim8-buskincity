@@ -95,67 +95,78 @@
 
                     <div class="columns is-multiline mt-3">
                         @foreach ($pageSpace->getChildren() as $spaceChild)
-                            @if ($loop->iteration % 2 == 0)
-                                <div class="column is-12 pt-6 pb-6">
-                                    <div class="columns">
+                            <div class="column is-12 pt-6 pb-6">
+                                <div class="columns is-hidden-tablet">
+                                    <div class="column has-text-centered">
+                                        <figure class="image is-250x250 is-inline-block">
+                                            <img src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}" alt="{{ $spaceChild->name }}" class="is-rounded">
+                                        </figure>
+                                    </div>
+                                    <div class="column">
+                                        <h4 class="title is-4 has-text-primary">
+                                            {{ ucwords($spaceChild->name) }}
+                                        </h4>
+                                        <b>Address: </b>{{ $spaceChild->address ?? '-' }}<br>
+                                        <b>Surface: </b>{{ $spaceChild->surface ?? '-' }}<br>
+                                        <b>Condition: </b>{{ $spaceChild->condition ?? '-' }}<br>
+
+                                        <h6 class="title is-6 mt-4 mb-1 has-text-primary">
+                                            Description
+                                        </h6>
+                                        <p>
+                                            {{ $spaceChild->description ?? '-' }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="columns is-hidden-mobile">
+                                    @if ($loop->iteration % 2 == 0)
                                         <div class="column">
                                             <figure class="image is-250x250 is-pulled-left">
                                                 <img src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}" alt="{{ $spaceChild->name }}" class="is-rounded">
                                             </figure>
                                         </div>
-                                        <div class="column">
-                                            <h4 class="title is-4 has-text-primary">
-                                                {{ ucwords($spaceChild->name) }}
-                                            </h4>
-                                            <b>Address: </b>{{ $spaceChild->address ?? '-' }}<br>
-                                            <b>Surface: </b>{{ $spaceChild->surface ?? '-' }}<br>
-                                            <b>Condition: </b>{{ $spaceChild->condition ?? '-' }}<br>
+                                    @endif
 
-                                            <h6 class="title is-6 mt-4 mb-1 has-text-primary">
-                                                Description
-                                            </h6>
-                                            <p>
-                                                {{ $spaceChild->description ?? '-' }}
-                                            </p>
-                                        </div>
+                                    <div class="column">
+                                        <h4 class="title is-4 has-text-primary">
+                                            {{ ucwords($spaceChild->name) }}
+                                        </h4>
+                                        <b>Address: </b>{{ $spaceChild->address ?? '-' }}<br>
+                                        <b>Surface: </b>{{ $spaceChild->surface ?? '-' }}<br>
+                                        <b>Condition: </b>{{ $spaceChild->condition ?? '-' }}<br>
+
+                                        <h6 class="title is-6 mt-4 mb-1 has-text-primary">
+                                            Description
+                                        </h6>
+                                        <p>
+                                            {{ $spaceChild->description ?? '-' }}
+                                        </p>
                                     </div>
-                                </div>
-                            @else
-                                <div class="column is-12 pt-6 pb-6">
-                                    <div class="columns">
-                                        <div class="column">
-                                            <h4 class="title is-4 has-text-primary">
-                                                {{ ucwords($spaceChild->name) }}
-                                            </h4>
-                                            <b>Address: </b>{{ $spaceChild->address ?? '-' }}<br>
-                                            <b>Surface: </b>{{ $spaceChild->surface ?? '-' }}<br>
-                                            <b>Condition: </b>{{ $spaceChild->condition ?? '-' }}<br>
 
-                                            <h6 class="title is-6 mt-4 mb-1 has-text-primary">
-                                                Description
-                                            </h6>
-                                            <p>
-                                                {{ $spaceChild->description ?? '-' }}
-                                            </p>
-                                        </div>
+                                    @if ($loop->iteration % 2 == 0)
                                         <div class="column">
                                             <figure class="image is-250x250 is-pulled-right">
                                                 <img src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}" alt="{{ $spaceChild->name }}" class="is-rounded">
                                             </figure>
                                         </div>
-                                    </div>
+                                    @endif
+
+                                    <div class="is-clearfix" />
                                 </div>
-                            @endif
+                            </div>
                         @endforeach
                     </div>
 
-                    <div class="columns">
-                        <div class="column has-text-centered">
-                            <p class="is-size-7">
-                                Theme name: <b>{{ $themeName ?? 'Fallback' }}</b>
-                            </p>
+                    @if (config('app.debug'))
+                        <div class="columns">
+                            <div class="column has-text-centered">
+                                <p class="is-size-7">
+                                    Theme name: <b>{{ $themeName ?? 'Fallback' }}</b>
+                                </p>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             </div>
         </div>

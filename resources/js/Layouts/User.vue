@@ -3,7 +3,7 @@
         id="main-container-wrapper"
         class="pb-4 mb-4"
     >
-        <Head :title="title ?? titleChild" />
+        <HeadTag :title="title ?? titleChild" />
 
         <frontend-navbar-menu />
 
@@ -38,7 +38,7 @@
 <script>
     import FrontendFooterMenu from '@/Frontend/FooterMenu';
     import FrontendNavbarMenu from '@/Frontend/NavbarMenu';
-    import { Head } from '@inertiajs/inertia-vue3';
+    import { Head as HeadTag } from '@inertiajs/inertia-vue3';
     import { head } from 'lodash';
 
     export default {
@@ -47,7 +47,7 @@
         components: {
             FrontendFooterMenu,
             FrontendNavbarMenu,
-            Head,
+            HeadTag,
         },
 
         props: {
