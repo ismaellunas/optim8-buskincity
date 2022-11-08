@@ -12,7 +12,19 @@
                 v-model="form"
                 :group="fieldGroup"
                 :errors="formErrors"
-            />
+            >
+                <template #note>
+                    <div class="columns">
+                        <div class="column">
+                            <p class="help">
+                                This form is protected by reCAPTCHA and the Google
+                                <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+                                <a href="https://policies.google.com/terms">Terms of Service</a> apply.
+                            </p>
+                        </div>
+                    </div>
+                </template>
+            </field-group>
 
             <vue-recaptcha
                 ref="vueRecaptcha"
