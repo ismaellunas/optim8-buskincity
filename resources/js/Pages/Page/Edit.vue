@@ -271,14 +271,11 @@
             duplicateTranslation(data) {
                 this.changeLocale(data.locale);
 
-                this.form[this.selectedLocale].id = null;
-                this.form[this.selectedLocale].title = data.form.title;
-                this.form[this.selectedLocale].slug = data.form.slug;
-                this.form[this.selectedLocale].excerpt = data.form.excerpt;
-                this.form[this.selectedLocale].data = data.form.data;
-                this.form[this.selectedLocale].meta_description = data.form.meta_description;
-                this.form[this.selectedLocale].meta_title = data.form.meta_title;
-                this.form[this.selectedLocale].status = data.form.status;
+                const form = this.form[this.selectedLocale];
+
+                Object.keys(data.form).forEach(attribute => {
+                    form[attribute] = data.form[attribute];
+                });
             },
         },
     }
