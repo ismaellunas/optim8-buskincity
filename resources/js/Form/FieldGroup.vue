@@ -45,8 +45,6 @@
                     </div>
                 </template>
             </div>
-
-            <slot name="note" />
         </div>
     </div>
 </template>
