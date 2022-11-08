@@ -53,7 +53,7 @@ class ModuleService
             [
                 'title' => 'Bookings',
                 'link' => route('booking.orders.index'),
-                'isActive' => $request->routeIs('booking.products.index'),
+                'isActive' => $request->routeIs('booking.orders.index'),
                 'isEnabled' => true,
             ],
         ];
