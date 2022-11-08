@@ -8,7 +8,7 @@
             </div>
             <div class="column">
                 <biz-language-tab
-                    class="is-pulled-right"
+                    class="is-right"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
                     @on-change-locale="onChangeLocale"
