@@ -158,6 +158,7 @@ class PageSeeder extends Seeder
                         "type" => "columns",
                         "config" => [
                             "wrapper" => [
+                                "customId" => null,
                                 "isFullwidth" => false,
                                 "backgroundColor" => null,
                                 "backgroundImage" => null,
@@ -188,6 +189,7 @@ class PageSeeder extends Seeder
                         "type" => "columns",
                         "config" => [
                             "wrapper" => [
+                                "customId" => null,
                                 "isFullwidth" => false,
                                 "backgroundColor" => "has-background-light",
                                 "backgroundImage" => null,
@@ -280,6 +282,7 @@ class PageSeeder extends Seeder
                         "type" => "columns",
                         "config" => [
                             "wrapper" => [
+                                "customId" => null,
                                 "isFullwidth" => false,
                                 "backgroundColor" => null,
                                 "backgroundImage" => null,
@@ -372,6 +375,7 @@ class PageSeeder extends Seeder
                         "type" => "columns",
                         "config" => [
                             "wrapper" => [
+                                "customId" => null,
                                 "isFullwidth" => false,
                                 "backgroundColor" => null,
                                 "backgroundImage" => null,
@@ -459,6 +463,7 @@ class PageSeeder extends Seeder
                         "type" => "columns",
                         "config" => [
                             "wrapper" => [
+                                "customId" => null,
                                 "isFullwidth" => false,
                                 "backgroundColor" => null,
                                 "backgroundImage" => null,
@@ -489,6 +494,7 @@ class PageSeeder extends Seeder
                         "type" => "columns",
                         "config" => [
                             "wrapper" => [
+                                "customId" => null,
                                 "isFullwidth" => false,
                                 "backgroundColor" => null,
                                 "backgroundImage" => null,
@@ -574,6 +580,7 @@ class PageSeeder extends Seeder
                         "type" => "columns",
                         "config" => [
                             "wrapper" => [
+                                "customId" => null,
                                 "isFullwidth" => false,
                                 "backgroundColor" => null,
                                 "backgroundImage" => null,
@@ -604,6 +611,7 @@ class PageSeeder extends Seeder
                         "type" => "columns",
                         "config" => [
                             "wrapper" => [
+                                "customId" => null,
                                 "isFullwidth" => false,
                                 "backgroundColor" => "has-background-light",
                                 "backgroundImage" => null,
@@ -828,6 +836,7 @@ class PageSeeder extends Seeder
                         "type" => "columns",
                         "config" => [
                             "wrapper" => [
+                                "customId" => null,
                                 "isFullwidth" => false,
                                 "backgroundColor" => "has-background-light",
                                 "backgroundImage" => null,
