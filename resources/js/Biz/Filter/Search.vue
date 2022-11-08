@@ -5,7 +5,7 @@
         </template>
 
         <div class="field has-addons">
-            <div class="control">
+            <div class="control is-expanded">
                 <biz-input
                     v-model="term"
                     maxlength="255"
