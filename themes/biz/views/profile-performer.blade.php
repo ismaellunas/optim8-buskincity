@@ -92,7 +92,7 @@
                         <div class="columns is-multiline mt-5">
                             <div class="column is-12">
                                 <h2 class="title is-3">
-                                    {{ __('Upcomming Bookings') }}
+                                    {{ __('Upcoming Bookings') }}
                                 </h2>
                             </div>
                             <div class="column is-12">
