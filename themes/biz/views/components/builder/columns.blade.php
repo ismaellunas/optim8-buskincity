@@ -1,4 +1,5 @@
 @aware([
+    'customId' => '',
     'backgroundColor' => '',
     'hasBackgroundImage',
     'isFullwidth',
@@ -12,7 +13,7 @@
     $isBackgroundImageShown = ($hasBackgroundImage && !$isSectionIncluded && !$isFullwidth);
 @endphp
 
-<div @class([
+<div id="{{ $customId }}" @class([
         'columns',
         'pb-background-image' => $isBackgroundImageShown,
         $uniqueClass,
