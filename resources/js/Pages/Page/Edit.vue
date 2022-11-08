@@ -20,6 +20,7 @@
                 @on-change-locale="onChangeLocale"
                 @on-submit="onSubmit"
                 @on-delete-translation="onDeleteTranslation"
+                @on-duplicate-translation="onDuplicateTranslation"
             />
         </div>
     </div>
@@ -252,6 +253,29 @@
                         );
                     }
                 })
+            },
+            onDuplicateTranslation(data) {
+                if (this.form.isDirty) {
+
+                    confirmLeaveProgress().then((result) => {
+                        if (result.isDismissed) {
+                            return false;
+                        } else if(result.isConfirmed) {
+                            this.duplicateTranslation(data);
+                        }
+                    })
+                } else {
+                    this.duplicateTranslation(data);
+                }
+            },
+            duplicateTranslation(data) {
+                this.changeLocale(data.locale);
+
+                const form = this.form[this.selectedLocale];
+
+                Object.keys(data.form).forEach(attribute => {
+                    form[attribute] = data.form[attribute];
+                });
             },
         },
     }
