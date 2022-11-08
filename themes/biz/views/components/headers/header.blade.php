@@ -8,11 +8,12 @@
 
 @push('bottom_scripts')
 <script>
-    const burgerMenu = document.querySelector('.burger');
+    const burgerMenu = document.querySelector('.navbar-burger');
     const navbarMenu = document.querySelector('.navbar-menu');
 
     burgerMenu.addEventListener('click', function () {
         navbarMenu.classList.toggle('is-active');
+        burgerMenu.classList.toggle('is-active');
     });
 
     const navbarDropdown = document.getElementsByClassName('navbar-item-dropdown');

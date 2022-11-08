@@ -15,6 +15,7 @@ export default {
     columns: [],
     config: {
         wrapper: {
+            customId: null,
             isFullwidth: false,
             backgroundColor: null,
             backgroundImage: null,
@@ -33,6 +34,14 @@ export const config = {
         label: "Wrapper",
         isOpen: false,
         config: {
+            customId: {
+                component: "ConfigInput",
+                label: "Custom ID",
+                settings: {
+                    placeholder: "custom-id",
+                    note: "Custom ID must be unique.",
+                },
+            },
             isFullwidth: {
                 component: "ConfigSelect",
                 label: "Fullwidth",
