@@ -4,9 +4,11 @@
             <div id="side-menu-page-builder">
                 <template v-if="!isComponentConfigOpen">
                     <biz-card
+                        ref="component-0"
                         class="mb-1"
                         :is-collapsed="true"
                         :is-expanding-on-load="true"
+                        @on-click-header-card="onClickHeaderCard($event, 0)"
                     >
                         <template #headerTitle>
                             General
@@ -38,8 +40,10 @@
 
                     <biz-card
                         v-if="hasModuleComponent"
+                        ref="component-1"
                         class="mb-1"
                         :is-collapsed="true"
+                        @on-click-header-card="onClickHeaderCard($event, 1)"
                     >
                         <template #headerTitle>
                             Modules
@@ -70,8 +74,10 @@
                     </biz-card>
 
                     <biz-card
+                        ref="component-2"
                         class="mb-1"
                         :is-collapsed="true"
+                        @on-click-header-card="onClickHeaderCard($event, 2)"
                     >
                         <template #headerTitle>
                             Columns
@@ -354,6 +360,15 @@
                 duplicateEntity.id = newId;
 
                 this.data.entities[newId] = duplicateEntity;
+            },
+            onClickHeaderCard(isContentShown, index) {
+                if (isContentShown) {
+                    for (let i = 0; i < 3; i++) {
+                        if (i != index) {
+                            this.$refs[`component-${i}`].isContentShown = false;
+                        }
+                    }
+                }
             },
         },
     }
