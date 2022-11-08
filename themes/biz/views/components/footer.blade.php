@@ -32,6 +32,9 @@
             </div>
             <div class="column is-12">
                 <p class="is-size-7 has-text-centered mt-5">
+                    This site is protected by reCAPTCHA and the Google
+                    <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+                    <a href="https://policies.google.com/terms">Terms of Service</a> apply.<br>
                     © Copyright 2022, {{ config('app.name') }}
                 </p>
             </div>
