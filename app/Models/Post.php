@@ -133,10 +133,10 @@ class Post extends BaseModel implements PublishableInterface
         return $this->coverImage->optimizedImageUrl ?? null;
     }
 
-    public function getThumbnailImageUrlAttribute(): ?string
+    public function getCroppedCoverImageUrl(int $width, int $height): ?string
     {
         if ($this->coverImage) {
-            return $this->coverImage->getCroppedImageUrl(600, 400);
+            return $this->coverImage->getCroppedImageUrl($width, $height);
         }
 
         return  null;
