@@ -24,6 +24,8 @@
             </span>
         @endif
     </a>
+
+    <div class="is-clearfix"></div>
 </div>
 
 @if ($isDownload)
