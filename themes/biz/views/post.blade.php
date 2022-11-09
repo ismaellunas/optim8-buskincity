@@ -123,9 +123,9 @@
                     @foreach ($relatedArticles as $article)
                         <div class="column is-4">
                             <article class="b752-blog-item box is-shadowless is-clipped p-0">
-                                <figure class="image is-4by3">
+                                <figure>
                                     <a href="{{ route('blog.show', $article->slug) }}">
-                                        <img src="{{ $article->coverImageUrl ?? $storageService::getImageUrl(config('constants.default_images.article_thumbnail')) }}">
+                                        <img src="{{ $article->getCroppedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}">
                                     </a>
                                 </figure>
                                 <div class="p-5">
