@@ -61,7 +61,7 @@
                 <div class="columns">
                     <div class="column">
                         <biz-language-tab
-                            class="is-pulled-right"
+                            class="is-right"
                             :locale-options="selectableLocales"
                             :selected-locale="selectedLocale"
                             @on-change-locale="onChangeLocale"

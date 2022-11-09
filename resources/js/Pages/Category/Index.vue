@@ -2,30 +2,22 @@
     <div>
         <div class="box">
             <div class="columns">
-                <div class="column is-offset-10">
-                    <div
-                        v-if="can.add"
-                        class="is-pulled-right"
-                    >
-                        <biz-button-link
-                            :href="route(baseRouteName+'.create')"
-                            class="is-primary"
-                        >
-                            <span class="icon is-small">
-                                <i :class="icon.add" />
-                            </span>
-                            <span>Add New</span>
-                        </biz-button-link>
-                    </div>
-                </div>
-            </div>
-
-            <div class="columns">
-                <div class="column">
+                <div class="column is-4">
                     <biz-filter-search
                         v-model="term"
                         @search="search"
                     />
+                </div>
+
+                <div class="column is-4 is-offset-4 has-text-right">
+                    <biz-button-link
+                        v-if="can.add"
+                        class="is-primary"
+                        :href="route(baseRouteName+'.create')"
+                    >
+                        <biz-icon :icon="icon.add" />
+                        <span>Create New</span>
+                    </biz-button-link>
                 </div>
             </div>
 
@@ -66,19 +58,14 @@
                                         class="is-ghost has-text-black"
                                         :href="route(baseRouteName + '.edit', record.id)"
                                     >
-                                        <span class="icon is-small">
-                                            <i :class="icon.edit" />
-                                        </span>
+                                        <biz-icon :icon="icon.edit" />
                                     </biz-button-link>
-                                    <biz-button
+                                    <biz-button-icon
                                         v-if="can.delete"
                                         class="is-ghost has-text-black ml-1"
+                                        :icon="icon.remove"
                                         @click.prevent="deleteRow(record)"
-                                    >
-                                        <span class="icon is-small">
-                                            <i :class="icon.remove" />
-                                        </span>
-                                    </biz-button>
+                                    />
                                 </div>
                             </td>
                         </tr>
@@ -96,22 +83,24 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import BizButton from '@/Biz/Button';
+    import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
+    import BizIcon from '@/Biz/Icon';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
+    import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
-    import icon from '@/Libs/icon-class';
 
     export default {
         components: {
-            BizButton,
+            BizButtonIcon,
             BizButtonLink,
             BizFilterSearch,
+            BizIcon,
             BizPagination,
             BizTable,
         },
