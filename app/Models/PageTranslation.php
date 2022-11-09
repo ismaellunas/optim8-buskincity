@@ -96,14 +96,36 @@ class PageTranslation extends Model implements PublishableInterface
             $this->data->get('entities')
         );
 
+        $css .= $this->getCssStyleBlocks($styledComponents['desktop']);
+
+        $css .= $this->getMobileCssStyleBlocks($styledComponents['mobile']);
+
+        $this->generated_style = MinifyCss::minify($css);
+        $this->save();
+    }
+
+    private function getCssStyleBlocks(array $styledComponents): string
+    {
+        $css = "";
+
         foreach ($styledComponents as $styleBlocks) {
             foreach ($styleBlocks as $styleBlock) {
                 $css .= $styleBlock->toText();
             }
         }
 
-        $this->generated_style = MinifyCss::minify($css);
-        $this->save();
+        return $css;
+    }
+
+    private function getMobileCssStyleBlocks(array $styledComponents): string
+    {
+        $template = "@media screen and (max-width: 1023px) {:css}";
+
+        return preg_replace_array(
+            '/:[a-z_]+/',
+            [$this->getCssStyleBlocks($styledComponents)],
+            $template
+        );
     }
 
     public function getStyleUrlAttribute()
@@ -115,7 +137,7 @@ class PageTranslation extends Model implements PublishableInterface
 
     private function getStyledComponents($entities): array
     {
-        return collect($entities)
+        $entities = collect($entities)
             ->filter(function ($entity) {
                 $className = PageService::getEntityClassName($entity['componentName']);
 
@@ -127,13 +149,28 @@ class PageTranslation extends Model implements PublishableInterface
                 }
 
                 return false;
-            })
-            ->map(function ($entity) {
+            });
+
+        return [
+            'desktop' => $this->getStyleBlocks($entities),
+            'mobile' => $this->getStyleBlocks($entities, true),
+        ];
+    }
+
+    private function getStyleBlocks($entities, $isMobile = false): array
+    {
+        return $entities->map(function ($entity) use ($isMobile) {
                 $className = PageService::getEntityClassName($entity['componentName']);
 
                 $entity = new $className($entity);
 
-                return collect($entity->getStyleBlocks())
+                $styleBlocks = $entity->getStyleBlocks();
+
+                if ($isMobile) {
+                    $styleBlocks = $entity->getMobileStyleBlocks();
+                }
+
+                return collect($styleBlocks)
                     ->filter(function ($styleBlock) {
                         return !$styleBlock->isEmpty();
                     });
