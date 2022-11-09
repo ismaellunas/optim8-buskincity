@@ -33,4 +33,14 @@ class Faq extends BaseComponent implements
             );
         }
     }
+
+    protected function composeMobileStyleBlocks(): void
+    {
+        if ($this->doesConfigHaveDimension()) {
+            $this->mobileStyleBlocks[] = $this->getDimensionStyleBlock(
+                $this->getSelector(),
+                true
+            );
+        }
+    }
 }

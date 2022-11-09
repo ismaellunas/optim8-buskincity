@@ -17,4 +17,14 @@ class Image extends BaseComponent implements PageBuilderDimensionInterface
             );
         }
     }
+
+    protected function composeMobileStyleBlocks(): void
+    {
+        if ($this->doesConfigHaveDimension()) {
+            $this->mobileStyleBlocks[] = $this->getDimensionStyleBlock(
+                $this->getSelector(),
+                true
+            );
+        }
+    }
 }

@@ -24,13 +24,28 @@ class Columns extends BaseComponent implements
             $this->transformDimensionStyleBlock($styleBlock);
 
             $this->styleBlocks[] = $styleBlock;
-
         }
 
         if ($this->doesWrapperHaveBackgroundImage()) {
             $this->styleBlocks[] = $this->getBackgroundStyleBlock(
                 $this->getSelector().'-background'
             );
+        }
+    }
+
+    protected function composeMobileStyleBlocks(): void
+    {
+        $mobileStyleBlock = null;
+
+        if ($this->doesConfigHaveDimension()) {
+            $mobileStyleBlock = $this->getDimensionStyleBlock(
+                $this->getSelector(),
+                true
+            );
+
+            $this->transformDimensionStyleBlock($mobileStyleBlock);
+
+            $this->mobileStyleBlocks[] = $mobileStyleBlock;
         }
     }
 

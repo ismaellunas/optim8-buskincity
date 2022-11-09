@@ -10,6 +10,7 @@ abstract class BaseComponent implements HasStyleInterface
     protected $data;
     protected $selector;
     protected $styleBlocks = [];
+    protected $mobileStyleBlocks = [];
 
     public function __construct($data)
     {
@@ -34,10 +35,20 @@ abstract class BaseComponent implements HasStyleInterface
     protected function composeStyleBlocks(): void
     {}
 
+    protected function composeMobileStyleBlocks(): void
+    {}
+
     public function getStyleBlocks(): array
     {
         $this->composeStyleBlocks();
 
         return $this->styleBlocks;
+    }
+
+    public function getMobileStyleBlocks(): array
+    {
+        $this->composeMobileStyleBlocks();
+
+        return $this->mobileStyleBlocks;
     }
 }
