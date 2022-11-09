@@ -2,12 +2,10 @@
     <div class="box">
         <div class="columns">
             <div class="column">
-                <div class="is-pulled-left">
-                    <biz-filter-search
-                        v-model="term"
-                        @search="search"
-                    />
-                </div>
+                <biz-filter-search
+                    v-model="term"
+                    @search="search"
+                />
             </div>
 
             <div class="column">
@@ -15,12 +13,7 @@
                     <template #trigger>
                         <span>Filter</span>
 
-                        <span class="icon is-small">
-                            <i
-                                :class="icon.angleDown"
-                                aria-hidden="true"
-                            />
-                        </span>
+                        <biz-icon :icon="icon.angleDown" />
                     </template>
 
                     <biz-dropdown-item>
@@ -42,23 +35,15 @@
                 </biz-dropdown>
             </div>
 
-            <div class="column">
-                <div
+            <div class="column has-text-right">
+                <biz-button-link
                     v-if="can.add"
-                    class="is-pulled-right"
+                    :href="route(baseRouteName+'.create')"
+                    class="is-primary"
                 >
-                    <biz-button-link
-                        :href="route(baseRouteName+'.create')"
-                        class="is-primary"
-                    >
-                        <biz-icon
-                            class="is-small"
-                            :icon="icon.add"
-                        />
-
-                        <span>Create New</span>
-                    </biz-button-link>
-                </div>
+                    <biz-icon :icon="icon.add" />
+                    <span>Create New</span>
+                </biz-button-link>
             </div>
         </div>
 

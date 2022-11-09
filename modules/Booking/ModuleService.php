@@ -22,7 +22,7 @@ class ModuleService
             [
                 'title' => 'Bookings',
                 'link' => route('admin.booking.orders.index'),
-                'isActive' => $request->routeIs('admin.booking.products.index'),
+                'isActive' => $request->routeIs('admin.booking.orders.index'),
                 'isEnabled' => $user->can('viewAny', Order::class)
             ],
             [
