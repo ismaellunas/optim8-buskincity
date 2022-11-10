@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="table-container">
         <biz-table class="is-striped is-hoverable is-fullwidth">
             <thead>
                 <tr>
