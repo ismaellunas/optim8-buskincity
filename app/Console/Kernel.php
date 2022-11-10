@@ -29,13 +29,6 @@ class Kernel extends ConsoleKernel
         if (config('telescope.enabled')) {
             $schedule->command('telescope:prune --hours=48')->daily();
         }
-
-        if (config('queue.default') == 'database') {
-            $schedule
-                ->command('queue:work --max-jobs=10 --stop-when-empty')
-                ->everyMinute()
-                ->runInBackground();;
-        }
     }
 
     /**
