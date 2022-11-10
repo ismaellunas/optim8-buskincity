@@ -6,6 +6,7 @@
     'isSectionIncluded',
     'rounded',
     'uniqueClass',
+    'sizeColumns',
 ])
 
 @php
@@ -25,6 +26,7 @@
         <x-builder.column
             :uid="$column['id']"
             :components="$column['components']"
+            :size="$getSize($sizeColumns, $loop->index)"
         />
     @endforeach
 </div>
