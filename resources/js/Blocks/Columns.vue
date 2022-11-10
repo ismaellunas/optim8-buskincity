@@ -49,6 +49,7 @@
                 :components="block.columns[index].components"
                 :data-entities="entities"
                 :selected-locale="selectedLocale"
+                :class="sizeClass(configColumns[index]?.size ?? null)"
             />
         </template>
     </div>
@@ -152,6 +153,10 @@
             configDimension() {
                 return this.entity?.config?.dimension ?? null;
             },
+
+            configColumns() {
+                return this.entity?.config?.columns ?? [];
+            },
         },
 
         watch: {
@@ -236,6 +241,14 @@
 
                 return allMediaIds.filter(Boolean);
             },
+
+            sizeClass(size = null) {
+                if (!size || size == "auto") {
+                    return null;
+                }
+
+                return `is-${size}`;
+            }
         },
     };
 </script>
