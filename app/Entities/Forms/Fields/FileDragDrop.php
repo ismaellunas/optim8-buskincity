@@ -2,7 +2,7 @@
 
 namespace App\Entities\Forms\Fields;
 
-use Symfony\Component\Mime\MimeTypes;
+use App\Helpers\MimeType;
 
 class FileDragDrop extends File
 {
@@ -27,18 +27,8 @@ class FileDragDrop extends File
         return array_merge(parent::schema(), $schema);
     }
 
-    private function getMimeTypes()
+    private function getMimeTypes(): array
     {
-        $mimeTypes = [];
-        $mimes = new MimeTypes();
-
-        foreach ($this->getFileExtensions() as $extension) {
-            $mimeTypes = array_merge(
-                $mimeTypes,
-                $mimes->getMimeTypes($extension)
-            );
-        }
-
-        return $mimeTypes;
+        return MimeType::getMimeTypes($this->getFileExtensions())->all();
     }
 }
