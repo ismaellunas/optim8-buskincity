@@ -286,7 +286,6 @@ class OrderService
             'duration' => $product->duration,
             'duration_unit' => $product->duration_unit,
             'status' => BookingStatus::UPCOMING,
-            'timezone' => $schedule->timezone,
         ])->create();
 
         return $orderModel;

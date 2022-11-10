@@ -5,6 +5,7 @@ namespace Modules\Booking\Console;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Modules\Booking\Entities\Event;
+use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Enums\BookingStatus;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,13 +44,33 @@ class SetEventOngoing extends Command
     public function handle()
     {
         $executionTime = Carbon::parse($this->option('execution-time'), $this->option('timezone'));
+
+        if ($this->option('timezone') != 'UTC') {
+            $executionTime->setTimezone('UTC');
+        }
+
         $executionTime->addMinutes(2);
 
         $minTime = $executionTime->copy()->subHours(12);
 
+        $eventTable = Event::getTableName();
+        $scheduleTable = Schedule::getTableName();
+
+        $timezoneSubQuery = (
+            "SELECT {$scheduleTable}.timezone ".
+            "FROM {$scheduleTable} ".
+            "WHERE {$scheduleTable}.id = {$eventTable}.schedule_id"
+        );
+
         $updatedNumber = Event::upcoming()
-            ->where('booked_at', '<=', $executionTime->toDateTimeString())
-            ->where('booked_at', '>', $minTime->toDateTimeString())
+            ->whereRaw(
+                "(({$eventTable}.booked_at AT TIME ZONE ($timezoneSubQuery)) AT TIME ZONE 'UTC') <= ?",
+                [$executionTime->toDateTimeString()]
+            )
+            ->whereRaw(
+                "(({$eventTable}.booked_at AT TIME ZONE ($timezoneSubQuery)) AT TIME ZONE 'UTC') > ?",
+                [$minTime->toDateTimeString()]
+            )
             ->update([
                 'status' => BookingStatus::ONGOING,
             ]);
