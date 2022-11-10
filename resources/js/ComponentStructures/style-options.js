@@ -120,6 +120,7 @@ export const roundedSizes = [
 ];
 
 export const contentPositions = [
-    { value: "is-pulled-left", name: "Left" },
-    { value: "is-pulled-right", name: "Right" },
+    { value: "has-text-left", name: "Left" },
+    { value: "has-text-right", name: "Right" },
+    { value: "has-text-centered", name: "Center" },
 ];
