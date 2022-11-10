@@ -5,7 +5,7 @@
             class="columns"
         >
             <div class="column">
-                <p class="buttons is-pulled-right">
+                <p class="buttons is-right">
                     <biz-button-icon
                         :icon="icon.preview"
                         :disabled="pagePreviewIsDisabled"
@@ -20,7 +20,7 @@
         <div class="columns my-0">
             <div class="column py-0">
                 <biz-language-tab
-                    class="is-pulled-right"
+                    class="is-right"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
                     @on-change-locale="onChangeLocale"
