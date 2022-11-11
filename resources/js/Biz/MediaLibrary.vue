@@ -44,7 +44,7 @@
                                     v-if="types.length > 0"
                                     class="ml-1"
                                 >
-                                    ({{types.length}})
+                                    ({{ types.length }})
                                 </span>
                                 <span class="icon is-small">
                                     <i
@@ -63,7 +63,7 @@
                                     :value="typeIndex"
                                     @change="$emit('on-type-changed', types)"
                                 >
-                                    &nbsp;{{type}}
+                                    &nbsp;{{ type }}
                                 </biz-checkbox>
                             </biz-dropdown-item>
                         </biz-dropdown>
@@ -72,7 +72,7 @@
                     <div class="column is-one-fifth">
                         <biz-buttons-display-view
                             v-model="view"
-                            class="buttons is-pulled-right"
+                            class="buttons is-right"
                             @on-view-changed="$emit('on-view-changed', $event)"
                         />
                     </div>

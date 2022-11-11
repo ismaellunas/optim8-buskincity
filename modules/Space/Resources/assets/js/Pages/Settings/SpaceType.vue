@@ -6,27 +6,24 @@
             </template>
 
             <div class="columns">
-                <div class="column">
-                    <div class="is-pulled-left">
-                        <biz-filter-search
-                            v-model="term"
-                            @search="search"
-                        />
-                    </div>
+                <div class="column is-4">
+                    <biz-filter-search
+                        v-model="term"
+                        @search="search"
+                    />
                 </div>
-                <div class="column">
-                    <div class="is-pulled-right">
-                        <biz-button
-                            type="button"
-                            class="is-primary"
-                            @click="openModalCreate()"
-                        >
-                            <span class="icon is-small">
-                                <i :class="icon.add" />
-                            </span>
-                            <span>Add New</span>
-                        </biz-button>
-                    </div>
+
+                <div class="column has-text-right">
+                    <biz-button
+                        type="button"
+                        class="is-primary"
+                        @click="openModalCreate()"
+                    >
+                        <span class="icon is-small">
+                            <i :class="icon.add" />
+                        </span>
+                        <span>Add New</span>
+                    </biz-button>
                 </div>
             </div>
 

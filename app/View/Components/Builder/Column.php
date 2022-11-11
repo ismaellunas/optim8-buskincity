@@ -8,6 +8,7 @@ class Column extends Component
 {
     public $uid;
     public $components;
+    public $size;
     public $componentPrefix = 'builder.content.';
 
     /**
@@ -15,10 +16,11 @@ class Column extends Component
      *
      * @return void
      */
-    public function __construct($uid, $components)
+    public function __construct($uid, $components, $size)
     {
         $this->uid = $uid;
         $this->components = $components;
+        $this->size = ($size == "auto") ? null : 'is-'.$size;
     }
 
     /**

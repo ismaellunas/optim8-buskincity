@@ -3,12 +3,10 @@
         <div class="box">
             <div class="columns">
                 <div class="column">
-                    <div class="is-pulled-left">
-                        <biz-filter-search
-                            v-model="term"
-                            @search="search"
-                        />
-                    </div>
+                    <biz-filter-search
+                        v-model="term"
+                        @search="search"
+                    />
                 </div>
 
                 <div class="column">
@@ -23,12 +21,7 @@
                             >
                                 ({{ roles.length }})
                             </span>
-                            <span class="icon is-small">
-                                <i
-                                    :class="icon.angleDown"
-                                    aria-hidden="true"
-                                />
-                            </span>
+                            <biz-icon :icon="icon.angleDown" />
                         </template>
 
                         <biz-dropdown-item>
@@ -50,21 +43,15 @@
                     </biz-dropdown>
                 </div>
 
-                <div class="column">
-                    <div
+                <div class="column has-text-right">
+                    <biz-button-link
                         v-if="can.add"
-                        class="is-pulled-right"
+                        class="is-primary"
+                        :href="route(baseRouteName+'.create')"
                     >
-                        <biz-button-link
-                            class="is-primary"
-                            :href="route(baseRouteName+'.create')"
-                        >
-                            <span class="icon is-small">
-                                <i :class="icon.add" />
-                            </span>
-                            <span>Add New</span>
-                        </biz-button-link>
-                    </div>
+                        <biz-icon :icon="icon.add" />
+                        <span>Create New</span>
+                    </biz-button-link>
                 </div>
             </div>
 
@@ -174,6 +161,7 @@
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizFilterSearch from '@/Biz/Filter/Search';
+    import BizIcon from '@/Biz/Icon';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
     import UserListItem from '@/Pages/User/ListItem';
@@ -191,6 +179,7 @@
             BizDropdown,
             BizDropdownItem,
             BizFilterSearch,
+            BizIcon,
             BizPagination,
             BizTable,
             UserListItem,

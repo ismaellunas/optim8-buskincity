@@ -1,16 +1,14 @@
 <template>
     <div class="box">
         <div class="columns">
-            <div class="column">
-                <div class="is-pulled-left">
-                    <biz-filter-search
-                        v-model="term"
-                        @search="search"
-                    />
-                </div>
+            <div class="column is-4">
+                <biz-filter-search
+                    v-model="term"
+                    @search="search"
+                />
             </div>
 
-            <div class="column">
+            <div class="column is-4">
                 <biz-dropdown :close-on-click="false">
                     <template #trigger>
                         <span>Filter</span>
@@ -40,10 +38,6 @@
                         </biz-checkbox>
                     </biz-dropdown-item>
                 </biz-dropdown>
-            </div>
-
-            <div class="column">
-                &nbsp;
             </div>
         </div>
 

@@ -83,7 +83,7 @@ class PageController extends Controller
                         $q->select(['id', 'locale', 'alt', 'media_id']);
                     },
                 ])
-                ->get(['id', 'file_url'])
+                ->get(['id', 'version', 'file_name', 'extension'])
                 ->transform(function ($media) {
                     $media->alt = $media->alt ?? $media->translations[0]->alt;
 

@@ -4,9 +4,11 @@
             <div id="side-menu-page-builder">
                 <template v-if="!isComponentConfigOpen">
                     <biz-card
+                        ref="component-0"
                         class="mb-1"
                         :is-collapsed="true"
                         :is-expanding-on-load="true"
+                        @on-click-header-card="onClickHeaderCard($event, 0)"
                     >
                         <template #headerTitle>
                             General
@@ -38,8 +40,10 @@
 
                     <biz-card
                         v-if="hasModuleComponent"
+                        ref="component-1"
                         class="mb-1"
                         :is-collapsed="true"
+                        @on-click-header-card="onClickHeaderCard($event, 1)"
                     >
                         <template #headerTitle>
                             Modules
@@ -70,8 +74,10 @@
                     </biz-card>
 
                     <biz-card
+                        ref="component-2"
                         class="mb-1"
                         :is-collapsed="true"
+                        @on-click-header-card="onClickHeaderCard($event, 2)"
                     >
                         <template #headerTitle>
                             Columns
@@ -104,6 +110,7 @@
                 <template v-else>
                     <biz-component-config
                         v-model="data.entities[contentConfigId]"
+                        :structure="dataStructure"
                         class="page-builder-content-config"
                     />
                 </template>
@@ -233,6 +240,14 @@
                     }
                     block.id = '';
                     block.title = i+' Column'+((i>1) ? 's' : '');
+
+                    let configColumns = [];
+
+                    for (let columnIndex = 1; columnIndex <= i; columnIndex++) {
+                        configColumns.push(cloneDeep(block.config.columns[0]));
+                    }
+
+                    block.config.columns = configColumns;
                     blocks.push(block);
                 }
 
@@ -249,6 +264,13 @@
                     !isBlank(this.contentConfigId)
                     && this.data.entities[this.contentConfigId]
                 );
+            },
+            dataStructure() {
+                let index = this.data.structures.findIndex(
+                    structures => structures.id == this.contentConfigId
+                );
+
+                return this.data.structures[index] ?? {};
             },
         },
         created() {
@@ -354,6 +376,15 @@
                 duplicateEntity.id = newId;
 
                 this.data.entities[newId] = duplicateEntity;
+            },
+            onClickHeaderCard(isContentShown, index) {
+                if (isContentShown) {
+                    for (let i = 0; i < 3; i++) {
+                        if (i != index) {
+                            this.$refs[`component-${i}`].isContentShown = false;
+                        }
+                    }
+                }
             },
         },
     }

@@ -81,7 +81,7 @@
                 @endguest
 
                 @auth
-                    <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
                         <a class="navbar-link">
                             {{ auth()->user()->full_name }}
                         </a>

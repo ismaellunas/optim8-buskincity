@@ -12,6 +12,7 @@
     $heroku_vars = [
         'APP_DEBUG',
         'APP_ENV',
+        'APP_HTTPS_IS_ON',
         'APP_ID',
         'APP_KEY',
         'APP_NAME',
@@ -139,3 +140,42 @@
 @task('nwatch-theme')
     npm run watch-poll --theme={{ $theme }}
 @endtask
+
+@task('sail:fresh')
+    sail artisan db:wipe
+    sail artisan migrate
+    sail artisan db:seed
+    sail artisan module:seed Space
+    sail artisan module:seed Ecommerce
+    sail artisan module:seed Booking
+@endtask
+
+@task('sail:watch')
+    sail npm run watch-poll
+@endtask
+
+@task('sail:watch-theme')
+    sail npm run watch-poll --theme={{ $theme }}
+@endtask
+
+@task('sail:dev')
+    sail npm run dev
+    sail npm run dev --theme={{ $theme }}
+@endtask
+
+@task('sail:queue')
+    sail artisan queue:work
+@endtask
+
+@task('sail:schedule')
+    sail artisan schedule:work
+@endtask
+
+@task('sail:init-npm')
+    sail yarn
+@endtask
+
+@story('sail:init')
+    sail:init-npm
+    sail:fresh
+@endstory
