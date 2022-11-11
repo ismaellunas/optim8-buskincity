@@ -1,10 +1,12 @@
 @aware([
+    'customId' => '',
     'backgroundColor' => '',
     'hasBackgroundImage',
     'isFullwidth',
     'isSectionIncluded',
     'rounded',
     'uniqueClass',
+    'sizeColumns',
 ])
 
 @php
@@ -12,7 +14,7 @@
     $isBackgroundImageShown = ($hasBackgroundImage && !$isSectionIncluded && !$isFullwidth);
 @endphp
 
-<div @class([
+<div id="{{ $customId }}" @class([
         'columns',
         'pb-background-image' => $isBackgroundImageShown,
         $uniqueClass,
@@ -24,6 +26,7 @@
         <x-builder.column
             :uid="$column['id']"
             :components="$column['components']"
+            :size="$getSize($sizeColumns, $loop->index)"
         />
     @endforeach
 </div>

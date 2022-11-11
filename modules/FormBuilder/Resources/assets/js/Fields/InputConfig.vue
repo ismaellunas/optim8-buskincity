@@ -6,9 +6,11 @@
         >
             <biz-card
                 v-if="!isBlank(entity)"
+                :ref="`config-${indexConfig}`"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
                 :is-collapsed="true"
                 :is-expanding-on-load="indexConfig == 0"
+                @on-click-header-card="onClickHeaderCard($event, indexConfig)"
             >
                 <template #headerTitle>
                     {{ group.label }}
@@ -55,7 +57,7 @@
     import ConfigSelect from '@/Blocks/Configs/Select';
     import TRBL from '@/Blocks/Configs/TRBL';
     import TRBLInput from '@/Blocks/Configs/TRBLInput';
-    import { camelCase } from "lodash";
+    import { camelCase, forEach } from "lodash";
     import { isBlank } from '@/Libs/utils';
     import { useModelWrapper } from '@/Libs/utils'
 
@@ -113,6 +115,22 @@
 
         methods: {
             isBlank: isBlank,
+
+            onClickHeaderCard(isContentShown, index) {
+                const self = this;
+
+                if (isContentShown) {
+                    let i = 0;
+
+                    forEach(self.configOptions, function (group) {
+                        if (i != index) {
+                            self.$refs[`config-${i}`][0].isContentShown = false;
+                        }
+
+                        i++;
+                    });
+                }
+            },
         }
     };
 </script>

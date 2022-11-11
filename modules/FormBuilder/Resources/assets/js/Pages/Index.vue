@@ -4,30 +4,24 @@
 
         <div class="box">
             <div class="columns">
-                <div class="column">
-                    <div class="is-pulled-left">
-                        <biz-filter-search
-                            v-model="term"
-                            @search="search"
-                        />
-                    </div>
+                <div class="column is-4">
+                    <biz-filter-search
+                        v-model="term"
+                        @search="search"
+                    />
                 </div>
 
-                <div class="column">
-                    <div
+                <div class="column has-text-right">
+                    <biz-button-link
                         v-if="can.add"
-                        class="is-pulled-right"
+                        :href="route(baseRouteName+'.create')"
+                        class="is-primary"
                     >
-                        <biz-button-link
-                            :href="route(baseRouteName+'.create')"
-                            class="is-primary"
-                        >
-                            <span class="icon is-small">
-                                <i :class="icon.add" />
-                            </span>
-                            <span>Add New</span>
-                        </biz-button-link>
-                    </div>
+                        <span class="icon is-small">
+                            <i :class="icon.add" />
+                        </span>
+                        <span>Create New</span>
+                    </biz-button-link>
                 </div>
             </div>
 

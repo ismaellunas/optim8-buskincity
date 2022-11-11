@@ -53,7 +53,7 @@ class Translation extends Model implements TranslationLoader
                 $group
             );
         } catch (QueryException $e) {
-            if ($e->getCode() == "42P01") {
+            if (in_array($e->getCode(), ["42P01", "2002"])) {
                 return [];
             }
         }

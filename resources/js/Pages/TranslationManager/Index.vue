@@ -1,6 +1,7 @@
 <template>
     <div>
         <biz-flash-notifications :flash="$page.props.flash" />
+
         <biz-error-notifications
             :bags="['default']"
             :errors="$page.props.errors"
@@ -9,7 +10,7 @@
         <div class="box">
             <div class="columns">
                 <div class="column">
-                    <div class="is-pulled-right">
+                    <div class="buttons is-right">
                         <biz-button-download
                             :url="route(baseRouteName + '.export', {locale: locale, groups: groups})"
                             class="mr-2"
@@ -28,24 +29,23 @@
                             :href="route(baseRouteName + '.create')"
                             class="is-primary mr-2"
                         >
-                            <span class="icon is-small">
-                                <i :class="icon.add" />
-                            </span>
+                            <biz-icon :icon="icon.add" />
                             <span>Add New</span>
                         </biz-button-link>
 
-                        <biz-button
+                        <biz-button-icon
                             class="is-link"
+                            :icon="icon.edit"
                             @click="onSubmit"
                         >
-                            Update
-                        </biz-button>
+                            <span>Update</span>
+                        </biz-button-icon>
                     </div>
                 </div>
             </div>
 
             <div class="columns">
-                <div class="column is-one-quarter">
+                <div class="column is-8">
                     <biz-dropdown
                         :close-on-click="true"
                     >
@@ -117,13 +117,11 @@
                     </biz-dropdown>
                 </div>
 
-                <div class="column">
-                    <div class="is-pulled-left">
-                        <biz-filter-search
-                            v-model="term"
-                            @search="filterTerm"
-                        />
-                    </div>
+                <div class="column is-4">
+                    <biz-filter-search
+                        v-model="term"
+                        @search="filterTerm"
+                    />
                 </div>
             </div>
 
@@ -191,27 +189,21 @@
                                 </td>
                                 <td>
                                     <div class="level-right">
-                                        <biz-button
+                                        <biz-button-icon
                                             v-if="page.value"
                                             type="button"
                                             class="is-ghost has-text-black ml-1"
+                                            :icon="icon.eraser"
                                             @click.prevent="onClear(index)"
-                                        >
-                                            <span class="icon is-small">
-                                                <i :class="icon.eraser" />
-                                            </span>
-                                        </biz-button>
+                                        />
 
-                                        <biz-button
+                                        <biz-button-icon
                                             v-if="!page.group && referenceLocale == page.locale"
                                             type="button"
                                             class="is-ghost has-text-black ml-1"
+                                            :icon="icon.remove"
                                             @click.prevent="onDelete(page)"
-                                        >
-                                            <span class="icon is-small">
-                                                <i :class="icon.remove" />
-                                            </span>
-                                        </biz-button>
+                                        />
                                     </div>
                                 </td>
                             </tr>
@@ -303,6 +295,7 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button';
     import BizButtonDownload from '@/Biz/ButtonDownload';
+    import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDropdown from '@/Biz/Dropdown';
@@ -313,6 +306,7 @@
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import BizFormFile from '@/Biz/Form/File';
+    import BizIcon from '@/Biz/Icon';
     import BizInput from '@/Biz/Input';
     import BizModalCard from '@/Biz/ModalCard';
     import BizPagination from '@/Biz/Pagination';
@@ -327,8 +321,9 @@
     export default {
         components: {
             BizButton,
-            BizButtonLink,
             BizButtonDownload,
+            BizButtonIcon,
+            BizButtonLink,
             BizCheckbox,
             BizDropdown,
             BizDropdownItem,
@@ -338,6 +333,7 @@
             BizFilterSearch,
             BizFlashNotifications,
             BizFormFile,
+            BizIcon,
             BizInput,
             BizModalCard,
             BizPagination,

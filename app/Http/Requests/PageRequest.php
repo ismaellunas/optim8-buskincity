@@ -6,6 +6,7 @@ use App\Helpers\StringManipulator;
 use App\Models\PageTranslation;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Validation\Rule;
+use App\Rules\CustomIdUnique;
 
 class PageRequest extends BaseFormRequest
 {
@@ -49,6 +50,9 @@ class PageRequest extends BaseFormRequest
                 'sometimes',
                 'max:'.config('constants.max_length.meta_description'),
             ],
+            '%data%' => [
+                new CustomIdUnique(),
+            ]
         ]);
     }
 
