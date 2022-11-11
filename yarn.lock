@@ -6386,6 +6386,11 @@ vue-recaptcha@^2.0.1:
   dependencies:
     vue-demi "^0.13.11"
 
+vue-slider-component@^4.1.0-beta.6:
+  version "4.1.0-beta.6"
+  resolved "https://registry.yarnpkg.com/vue-slider-component/-/vue-slider-component-4.1.0-beta.6.tgz#682f37a720e774f781e743bcd37ffa696e4386f0"
+  integrity sha512-7lxWWUrSIvxs4D6j0G9ypZeMoUjzpecC2nm5jLesre7BpZ9f+AHdniXI/ZdUYE2R1mNlPyVAnMtHf/DYL9cY5Q==
+
 vue-social-sharing@^4.0.0-alpha4:
   version "4.0.0-alpha4"
   resolved "https://registry.yarnpkg.com/vue-social-sharing/-/vue-social-sharing-4.0.0-alpha4.tgz#48d17f4ff2828c60689f2a065df86588af2bd1fb"
