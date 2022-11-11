@@ -6,9 +6,10 @@ use App\Helpers\HumanReadable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use CloudinaryLabs\CloudinaryLaravel\Model\Media as CloudinaryMedia;
+use Cloudinary\Tag\ImageTag;
 use Cloudinary\Transformation\Delivery;
-use Cloudinary\Transformation\Resize;
 use Cloudinary\Transformation\Quality;
+use Cloudinary\Transformation\Resize;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -137,13 +138,23 @@ class Media extends CloudinaryMedia implements TranslatableContract
         $result = "";
 
         if ($this->isImage) {
-            $result = cloudinary()
-                ->getImageTag(
-                    empty($this->version)
-                    ? $this->file_name
-                    : 'v'.$this->version.'/'.$this->file_name
+            $result = $this->optimizeImage()->serializeAttributes();
+        }
+
+        return strval(str_replace(['src=', '"'], ['', ''], $result));
+    }
+
+    public function getCroppedImageUrl(int $width, int $height): string
+    {
+        $result = "";
+
+        if ($this->isImage) {
+            $result = $this->optimizeImage()
+                ->resize(
+                    Resize::crop()
+                        ->width($width)
+                        ->height($height)
                 )
-                ->delivery(Delivery::quality(Quality::auto()))
                 ->serializeAttributes();
         }
 
@@ -169,5 +180,16 @@ class Media extends CloudinaryMedia implements TranslatableContract
         }
 
         return $slice;
+    }
+
+    private function optimizeImage(): ImageTag
+    {
+        return cloudinary()
+                ->getImageTag(
+                    empty($this->version)
+                    ? $this->file_name
+                    : 'v'.$this->version.'/'.$this->file_name
+                )
+                ->delivery(Delivery::quality(Quality::auto()));
     }
 }

@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->dateTime('booked_at');
-            $table->string('timezone', 32)->default('UTC');
             $table->unsignedSmallInteger('duration')->default(0);
             $table->string('duration_unit', 15)->default('minute');
             $table->string('status', 15);

@@ -2,11 +2,11 @@
 
 namespace Modules\Booking\Entities;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Modules\Booking\Entities\ScheduleRule;
 
-class Schedule extends Model
+class Schedule extends BaseModel
 {
     use HasFactory;
 

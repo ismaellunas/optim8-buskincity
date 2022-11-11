@@ -4,8 +4,8 @@ namespace Modules\Booking\Console;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Modules\Booking\Entities\Event;
+use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Enums\BookingStatus;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -45,16 +45,28 @@ class SetEventPassed extends Command
     {
         $executionTime = Carbon::parse($this->option('execution-time'), $this->option('timezone'));
 
+        if ($this->option('timezone') != 'UTC') {
+            $executionTime->setTimezone('UTC');
+        }
+
         $affectedStatus = [
             BookingStatus::UPCOMING,
             BookingStatus::ONGOING
         ];
 
+        $eventTable = Event::getTableName();
+        $scheduleTable = Schedule::getTableName();
+
+        $timezoneSubQuery = (
+            "SELECT {$scheduleTable}.timezone ".
+            "FROM {$scheduleTable} ".
+            "WHERE {$scheduleTable}.id = {$eventTable}.schedule_id"
+        );
+
         $passedNumber = Event::whereIn('status', $affectedStatus)
-            ->where(
-                DB::raw("booked_at + (duration || ' ' || duration_unit)::INTERVAL"),
-                '<=',
-                $executionTime->toDateTimeString()
+            ->whereRaw(
+                "((({$eventTable}.booked_at + ({$eventTable}.duration || ' ' || {$eventTable}.duration_unit)::INTERVAL) AT TIME ZONE ($timezoneSubQuery)) AT TIME ZONE 'UTC') <= ?",
+                [$executionTime->toDateTimeString()]
             )
             ->update([
                 'status' => BookingStatus::PASSED,
