@@ -69,6 +69,39 @@ class UserProfileService
         return collect([]);
     }
 
+    public function getMediaWithThumbnails(
+        string $key,
+        int $width,
+        int $height
+    ): Collection {
+        $mediaIds = $this->getMeta($key);
+
+        if (!empty($mediaIds)) {
+            $media = Media::select([
+                    'extension',
+                    'file_name',
+                    'file_type',
+                    'file_url',
+                    'version',
+                ])
+                ->whereIn('id', $mediaIds)
+                ->get();
+
+            return $media->map(function ($medium) use ($width, $height) {
+                $mappedMedium = $medium->only('file_url', 'file_type');
+
+                $mappedMedium['thumbnail_url'] = $medium->getThumbnailUrl(
+                    $width,
+                    $height
+                );
+
+                return $mappedMedium;
+            });
+        }
+
+        return collect();
+    }
+
     private function getUser(string $uniqueKey): ?User
     {
         return User::where('unique_key', $uniqueKey)->first();
