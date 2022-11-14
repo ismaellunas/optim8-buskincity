@@ -74,8 +74,8 @@
             label="Upload"
             :accepted-types="['image/jpeg', 'image/png']"
             :allow-multiple="true"
-            :max-file-size="500"
-            :max-files="10"
+            :max-file-size="rules.maxProductFileSize"
+            :max-files="rules.maxProductFileNumber"
             :media="gallery"
             :message="error('gallery')"
         >
@@ -113,6 +113,8 @@
             statusOptions: { type: Array, required: true },
             roleOptions: { type: Array, required: true },
             gallery: { type: Array, default: () => [] },
+            rules: { type: Object, required: true },
+            imageMimes: { type: Array, required: true },
         },
 
         setup(props, { emit }) {
