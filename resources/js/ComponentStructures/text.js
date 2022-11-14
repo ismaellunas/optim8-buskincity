@@ -45,7 +45,7 @@ export const config = {
             },
             color: {
                 component: "ConfigSelect",
-                label: "Alignment",
+                label: "Color",
                 settings: {
                     options: defaultOption.concat(textColors),
                 },
