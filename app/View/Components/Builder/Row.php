@@ -20,6 +20,7 @@ class Row extends Component
     public $rounded;
     public $sectionSize;
     public $uniqueClass;
+    public $sizeColumns;
 
     private $config;
 
@@ -43,6 +44,8 @@ class Row extends Component
             $this->isFullwidth = $configWrapper['isFullwidth'] ?? false;
             $this->rounded = $configWrapper['rounded'] ?? null;
         }
+
+        $this->sizeColumns = $this->config['columns'] ?? [];
 
         if ($this->isSectionIncluded) {
             $this->sectionSize = $this->config['section']['size'] ?? null;

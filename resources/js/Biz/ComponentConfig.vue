@@ -11,6 +11,7 @@
                 v-model="entity.config[ groupName ]"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
                 :is-expanding-on-load="indexConfig == 0"
+                :structure="computedStructure"
                 @on-click-header-card="onClickHeaderCard($event, indexConfig)"
             />
 
@@ -55,6 +56,7 @@
     import ConfigInputIcon from '@/Blocks/Configs/InputIcon';
     import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons';
     import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
+    import ConfigColumns from '@/Blocks/Configs/ConfigColumns';
     import configs from '@/ComponentStructures/configs';
     import ConfigSelect from '@/Blocks/Configs/Select';
     import ConfigSelectMultiple from '@/Blocks/Configs/SelectMultiple';
@@ -77,6 +79,7 @@
             ConfigInputIcon,
             ConfigNumberAddons,
             ConfigRowSection,
+            ConfigColumns,
             ConfigSelect,
             ConfigSelectMultiple,
             TRBL,
@@ -85,6 +88,7 @@
 
         props: {
             modelValue: { type: Object, required: true },
+            structure: { type: Object, default: () => {} },
         },
 
         setup(props, { emit }) {
@@ -103,6 +107,7 @@
 
             return {
                 entity,
+                computedStructure: useModelWrapper(props, emit, 'structure'),
             };
         },
 

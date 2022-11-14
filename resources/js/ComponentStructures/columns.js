@@ -21,11 +21,16 @@ export default {
             backgroundImage: null,
             rounded: null,
         },
-        dimension: dimension.config,
         section: {
             isIncluded: false,
             size: null,
-        }
+        },
+        columns: [
+            {
+                size: "auto",
+            }
+        ],
+        dimension: dimension.config,
     },
 };
 
@@ -72,9 +77,13 @@ export const config = {
             },
         }
     },
-    dimension: dimension.component,
     section: {
         label: "Section",
         component: "ConfigRowSection",
-    }
+    },
+    columns: {
+        label: "Columns",
+        component: "ConfigColumns",
+    },
+    dimension: dimension.component,
 };
