@@ -86,7 +86,6 @@ abstract class BaseComponent implements
         $styleBlock = new StyleBlock($rootSelector);
 
         $this->getSpaceDimensionConfig('margin')
-            ->filter(fn($value) => ($value == "0" || !empty($value)))
             ->each(function ($value, $key) use ($styleBlock) {
                 $unit = $this->getUnitSpaceDimension('margin');
 
@@ -94,7 +93,6 @@ abstract class BaseComponent implements
             });
 
         $this->getSpaceDimensionConfig('padding')
-            ->filter(fn($value) => ($value == "0" || !empty($value)))
             ->each(function ($value, $key) use ($styleBlock) {
                 $unit = $this->getUnitSpaceDimension('padding');
 
@@ -109,7 +107,7 @@ abstract class BaseComponent implements
     ): StyleBlock {
         $styleBlock = new StyleBlock($rootSelector);
 
-        $this->getSpaceDimensionConfig('margin')
+        $this->getSpaceDimensionConfig('margin', false)
             ->each(function ($value, $key) use ($styleBlock) {
                 $value = $this->calculateDimensionValue($key, $value);
                 $unit = ($value != "auto")
@@ -120,7 +118,6 @@ abstract class BaseComponent implements
             });
 
         $this->getSpaceDimensionConfig('padding')
-            ->filter(fn($value) => ($value == "0" || !empty($value)))
             ->each(function ($value, $key) use ($styleBlock) {
                 $value = $this->calculateDimensionValue($key, $value);
                 $unit = ($value != "auto")
@@ -152,14 +149,20 @@ abstract class BaseComponent implements
         return $this->defaultDimensionValue;
     }
 
-    private function getSpaceDimensionConfig(string $spaceType): Collection
-    {
+    private function getSpaceDimensionConfig(
+        string $spaceType,
+        bool $isFiltered = true,
+    ): Collection {
         $styleConfig = $this->getDimensionConfig();
 
         if (!empty($styleConfig['style.'.$spaceType])) {
 
             return collect($styleConfig['style.'.$spaceType])
-                ->except(['unit']);
+                ->except(['unit'])
+                ->when($isFiltered, function ($collection) {
+                    return $collection
+                        ->filter(fn($value) => ($value == "0" || !empty($value)));
+                });
         }
 
         return collect();
