@@ -10,7 +10,9 @@
                 <div class="box">
                     <product-form
                         v-model="form"
+                        :image-mimes="imageMimes"
                         :role-options="roleOptions"
+                        :rules="rules"
                         :status-options="statusOptions"
                     />
 
@@ -68,6 +70,7 @@
             roleOptions: { type: Array, required: true },
             statusOptions: { type: Array, required: true },
             imageMimes: {type: Array, required: true },
+            rules: { type: Object, required: true },
         },
 
         setup(props, { emit }) {
