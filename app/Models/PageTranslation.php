@@ -153,22 +153,35 @@ class PageTranslation extends Model implements PublishableInterface
 
         return [
             'desktop' => $this->getStyleBlocks($entities),
-            'mobile' => $this->getStyleBlocks($entities, true),
+            'mobile' => $this->getMobileStyleBlocks($entities),
         ];
     }
 
-    private function getStyleBlocks($entities, $isMobile = false): array
+    private function getStyleBlocks($entities): array
     {
-        return $entities->map(function ($entity) use ($isMobile) {
+        return $entities->map(function ($entity) {
                 $className = PageService::getEntityClassName($entity['componentName']);
 
                 $entity = new $className($entity);
 
                 $styleBlocks = $entity->getStyleBlocks();
 
-                if ($isMobile) {
-                    $styleBlocks = $entity->getMobileStyleBlocks();
-                }
+                return collect($styleBlocks)
+                    ->filter(function ($styleBlock) {
+                        return !$styleBlock->isEmpty();
+                    });
+            })
+            ->all();
+    }
+
+    private function getMobileStyleBlocks($entities): array
+    {
+        return $entities->map(function ($entity) {
+                $className = PageService::getEntityClassName($entity['componentName']);
+
+                $entity = new $className($entity);
+
+                $styleBlocks = $entity->getMobileStyleBlocks();
 
                 return collect($styleBlocks)
                     ->filter(function ($styleBlock) {
