@@ -86,6 +86,7 @@ abstract class BaseComponent implements
         $styleBlock = new StyleBlock($rootSelector);
 
         $this->getSpaceDimensionConfig('margin')
+            ->filter(fn($value) => ($value == "0" || !empty($value)))
             ->each(function ($value, $key) use ($styleBlock) {
                 $unit = $this->getUnitSpaceDimension('margin');
 
@@ -93,10 +94,11 @@ abstract class BaseComponent implements
             });
 
         $this->getSpaceDimensionConfig('padding')
+            ->filter(fn($value) => ($value == "0" || !empty($value)))
             ->each(function ($value, $key) use ($styleBlock) {
                 $unit = $this->getUnitSpaceDimension('padding');
 
-                $styleBlock->addStyle('margin-'.$key, $value.$unit);
+                $styleBlock->addStyle('padding-'.$key, $value.$unit);
             });
 
         return $styleBlock;
@@ -109,18 +111,23 @@ abstract class BaseComponent implements
 
         $this->getSpaceDimensionConfig('margin')
             ->each(function ($value, $key) use ($styleBlock) {
-                $unit = $this->getUnitSpaceDimension('margin');
                 $value = $this->calculateDimensionValue($key, $value);
+                $unit = ($value != "auto")
+                    ? $this->getUnitSpaceDimension('margin')
+                    : null;
 
                 $styleBlock->addStyle('margin-'.$key, $value.$unit);
             });
 
         $this->getSpaceDimensionConfig('padding')
+            ->filter(fn($value) => ($value == "0" || !empty($value)))
             ->each(function ($value, $key) use ($styleBlock) {
-                $unit = $this->getUnitSpaceDimension('padding');
                 $value = $this->calculateDimensionValue($key, $value);
+                $unit = ($value != "auto")
+                    ? $this->getUnitSpaceDimension('padding')
+                    : null;
 
-                $styleBlock->addStyle('margin-'.$key, $value.$unit);
+                $styleBlock->addStyle('padding-'.$key, $value.$unit);
             });
 
         return $styleBlock;
@@ -128,10 +135,18 @@ abstract class BaseComponent implements
 
     protected function calculateDimensionValue(string $key, mixed $value = null)
     {
-        if (($key == 'top' || $key == 'bottom') && $value) {
+        if (
+            $value
+            && ($key == 'top' || $key == 'bottom')
+        ) {
             $value = (int)$value / 2;
 
             return ($value >= 12) ? $value : $this->defaultDimensionValue;
+        } else if (
+            !$value
+            && ($key == 'top' || $key == 'bottom')
+        ) {
+            return 'auto';
         }
 
         return $this->defaultDimensionValue;
@@ -144,8 +159,7 @@ abstract class BaseComponent implements
         if (!empty($styleConfig['style.'.$spaceType])) {
 
             return collect($styleConfig['style.'.$spaceType])
-                ->except(['unit'])
-                ->filter(fn($value) => ($value == "0" || !empty($value)));
+                ->except(['unit']);
         }
 
         return collect();
