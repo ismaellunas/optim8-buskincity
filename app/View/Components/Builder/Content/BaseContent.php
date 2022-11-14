@@ -27,8 +27,6 @@ abstract class BaseContent extends Component
 
         $this->entity = $entity;
 
-        $this->wrapperClasses = $this->getWrapperClasses();
-
         $this->uniqueClass = $this->getUniqueClass();
     }
 
@@ -64,31 +62,6 @@ abstract class BaseContent extends Component
             '-$0',
             (new \ReflectionClass($this))->getShortName()
         ));
-    }
-
-    private function getWrapperClasses(): array
-    {
-        $classes = collect();
-
-        $configWrapper = $this->entity['config']['wrapper'] ?? null;
-
-        if (!empty($configWrapper['margin'])) {
-            $classes->push(
-                $this
-                    ->pageBuilderService
-                    ->createMarginClasses($configWrapper['margin'])
-            );
-        }
-
-        if (!empty($configWrapper['padding'])) {
-            $classes->push(
-                $this
-                    ->pageBuilderService
-                    ->createPaddingClasses($configWrapper['padding'])
-            );
-        }
-
-        return $classes->flatten()->all();
     }
 
     protected function getUniqueClass(): string

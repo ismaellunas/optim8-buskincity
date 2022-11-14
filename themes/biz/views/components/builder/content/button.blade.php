@@ -1,4 +1,4 @@
-<div @class($uniqueClass)>
+<div @class(array_merge([$uniqueClass], $wrapperClasses))>
     <a
         id="{{ 'button-'.$entity['id'] }}"
         href="{{ $link }}"

@@ -22,4 +22,9 @@ class ModuleService
     {
         return 10;
     }
+
+    public static function maxProductFileSize(): int
+    {
+        return 5 * config('constants.one_megabyte');
+    }
 }
