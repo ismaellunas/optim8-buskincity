@@ -2,38 +2,13 @@
 
 namespace App\Entities\PageBuilderComponents;
 
-use App\Contracts\PageBuilderDimensionInterface;
 use App\Contracts\PageBuilderSearchableTextInterface;
 use App\Helpers\HtmlToText;
-use App\Traits\PageBuilderDimension;
 
-class Heading extends BaseComponent implements
-    PageBuilderDimensionInterface,
-    PageBuilderSearchableTextInterface
+class Heading extends BaseComponent implements PageBuilderSearchableTextInterface
 {
-    use PageBuilderDimension;
-
     public function getText(): string
     {
         return HtmlToText::convert($this->data['content']['heading']['html']);
-    }
-
-    protected function composeStyleBlocks(): void
-    {
-        if ($this->doesConfigHaveDimension()) {
-            $this->styleBlocks[] = $this->getDimensionStyleBlock(
-                $this->getSelector()
-            );
-        }
-    }
-
-    protected function composeMobileStyleBlocks(): void
-    {
-        if ($this->doesConfigHaveDimension()) {
-            $this->mobileStyleBlocks[] = $this->getDimensionStyleBlock(
-                $this->getSelector(),
-                true
-            );
-        }
     }
 }
