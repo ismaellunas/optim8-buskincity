@@ -1,5 +1,5 @@
 <template>
-    <card
+    <biz-card
         ref="card"
         :is-collapsed="true"
         :is-expanding-on-load="isExpandingOnLoad"
@@ -38,18 +38,18 @@
                 </option>
             </biz-form-select>
         </fieldset>
-    </card>
+    </biz-card>
 </template>
 
 <script>
     import BizFormSelect from '@/Biz/Form/Select';
-    import Card from '@/Biz/Card';
+    import BizCard from '@/Biz/Card';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         components: {
             BizFormSelect,
-            Card,
+            BizCard,
         },
 
         props: {

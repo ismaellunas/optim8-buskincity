@@ -110,6 +110,7 @@
                 <template v-else>
                     <biz-component-config
                         v-model="data.entities[contentConfigId]"
+                        :structure="dataStructure"
                         class="page-builder-content-config"
                     />
                 </template>
@@ -239,6 +240,14 @@
                     }
                     block.id = '';
                     block.title = i+' Column'+((i>1) ? 's' : '');
+
+                    let configColumns = [];
+
+                    for (let columnIndex = 1; columnIndex <= i; columnIndex++) {
+                        configColumns.push(cloneDeep(block.config.columns[0]));
+                    }
+
+                    block.config.columns = configColumns;
                     blocks.push(block);
                 }
 
@@ -255,6 +264,13 @@
                     !isBlank(this.contentConfigId)
                     && this.data.entities[this.contentConfigId]
                 );
+            },
+            dataStructure() {
+                let index = this.data.structures.findIndex(
+                    structures => structures.id == this.contentConfigId
+                );
+
+                return this.data.structures[index] ?? {};
             },
         },
         created() {
