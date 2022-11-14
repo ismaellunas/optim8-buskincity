@@ -5,7 +5,7 @@ namespace Modules\Ecommerce\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Modules\Ecommerce\Enums\ProductStatus;
-use Modules\Ecommerce\ModuleService;
+use Modules\Ecommerce\ModuleService as EcommerceModuleService;
 use Modules\Ecommerce\Services\ProductService;
 
 class ProductCreateRequest extends FormRequest
@@ -38,11 +38,11 @@ class ProductCreateRequest extends FormRequest
                 'boolean',
             ],
             'gallery.files.*' => [
-                'max:500',
-                'mimes:png,jpg,jpeg',
+                'max:'.EcommerceModuleService::maxProductFileSize(),
+                'mimes:'.implode(',', config('constants.extensions.image')),
             ],
             'gallery' => [
-                'max:'.ModuleService::maxProductMediaNumber(),
+                'max:'.EcommerceModuleService::maxProductMediaNumber(),
             ],
         ];
     }
