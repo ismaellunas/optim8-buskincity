@@ -112,7 +112,12 @@ class Media extends CloudinaryMedia implements TranslatableContract
         return in_array($this->extension, config('constants.extensions.image'));
     }
 
-    public function getThumbnailUrlAttribute(): string
+    public function getIsVideoAttribute(): bool
+    {
+        return $this->file_type === 'video';
+    }
+
+    public function getThumbnailUrl($width, $height): string
     {
         $result = '';
         if ($this->isImage) {
@@ -122,15 +127,31 @@ class Media extends CloudinaryMedia implements TranslatableContract
                     ? $this->file_name
                     : 'v'.$this->version.'/'.$this->file_name
                 )
-                ->resize(
-                    Resize::thumbnail()
-                        ->height(self::THUMBNAIL_HEIGHT)
-                        ->width(self::THUMBNAIL_WIDTH)
-                )
+                ->resize(Resize::thumbnail()->height($height)->width($width))
                 ->serializeAttributes();
+
+            $result = strval(str_replace(['src=', '"'], ['', ''], $result));
         }
 
-        return strval(str_replace(['src=', '"'], ['', ''], $result));
+        if ($this->isVideo) {
+            $result = cloudinary()
+                ->getVideoTag(
+                    empty($this->version)
+                    ? $this->file_name
+                    : 'v'.$this->version.'/'.$this->file_name
+                )
+                ->resize(Resize::thumbnail()->height($height)->width($width))
+                ->serializeAttributes();
+
+            $result = strval(str_replace(['poster=', '"'], ['', ''], $result));
+        }
+
+        return $result;
+    }
+
+    public function getThumbnailUrlAttribute(): string
+    {
+        return $this->getThumbnailUrl(self::THUMBNAIL_HEIGHT, self::THUMBNAIL_WIDTH);
     }
 
     public function getOptimizedImageUrlAttribute(): string
