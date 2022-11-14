@@ -2,16 +2,11 @@
 
 namespace App\Entities\PageBuilderComponents;
 
-use App\Contracts\PageBuilderDimensionInterface;
 use App\Entities\StyleBlock;
 use App\Models\Media;
-use App\Traits\PageBuilderDimension;
 
-class Columns extends BaseComponent implements
-    PageBuilderDimensionInterface
+class Columns extends BaseComponent
 {
-    use PageBuilderDimension;
-
     protected function composeStyleBlocks(): void
     {
         $styleBlock = null;
@@ -24,13 +19,27 @@ class Columns extends BaseComponent implements
             $this->transformDimensionStyleBlock($styleBlock);
 
             $this->styleBlocks[] = $styleBlock;
-
         }
 
         if ($this->doesWrapperHaveBackgroundImage()) {
             $this->styleBlocks[] = $this->getBackgroundStyleBlock(
                 $this->getSelector().'-background'
             );
+        }
+    }
+
+    protected function composeMobileStyleBlocks(): void
+    {
+        $mobileStyleBlock = null;
+
+        if ($this->doesConfigHaveDimension()) {
+            $mobileStyleBlock = $this->getMobileDimensionStyleBlock(
+                $this->getSelector()
+            );
+
+            $this->transformDimensionStyleBlock($mobileStyleBlock);
+
+            $this->mobileStyleBlocks[] = $mobileStyleBlock;
         }
     }
 

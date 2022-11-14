@@ -52,7 +52,7 @@
 
             <div class="navbar-end">
                 @guest
-                <div class="navbar-item has-dropdown is-hoverable">
+                <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
                     <a href="#" class="navbar-link">{{ strtoupper($currentLanguage) }}</a>
                     <div class="navbar-dropdown">
                         @foreach ($languageOptions as $language)
