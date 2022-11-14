@@ -82,6 +82,6 @@ class Columns extends BaseComponent implements
 
     private function getMediaUrl(int $mediaId): ?string
     {
-        return Media::find($mediaId)->file_url ?? null;
+        return Media::find($mediaId)->optimizedImageUrl ?? null;
     }
 }
