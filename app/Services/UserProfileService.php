@@ -95,8 +95,10 @@ class UserProfileService
         return collect();
     }
 
-    public function getCoverBackgroundUrl($width, $height): string
-    {
+    public function getCoverBackgroundUrl(
+        ?int $width = null,
+        ?int $height = null
+    ): string {
         $media = $this->getMedias('cover_background_photo');
 
         if ($media->isNotEmpty()) {
