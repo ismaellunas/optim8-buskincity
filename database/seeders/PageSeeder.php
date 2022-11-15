@@ -153,37 +153,6 @@ class PageSeeder extends Seeder
                     ],
                 ],
                 "entities" => [
-                    "IDL9F23XH7AW" => [
-                        "componentName" => "Columns",
-                        "type" => "columns",
-                        "config" => [
-                            "wrapper" => [
-                                "customId" => null,
-                                "isFullwidth" => false,
-                                "backgroundColor" => null,
-                                "backgroundImage" => null,
-                                "rounded" => null,
-                            ],
-                            "dimension" => [
-                                "style.padding" => [
-                                    "top" => null,
-                                    "right" => null,
-                                    "bottom" => null,
-                                    "left" => null,
-                                    "unit" => "px",
-                                ],
-                                "style.margin" => [
-                                    "top" => null,
-                                    "right" => null,
-                                    "bottom" => null,
-                                    "left" => null,
-                                    "unit" => "px",
-                                ],
-                            ],
-                            "section" => ["isIncluded" => false, "size" => null],
-                        ],
-                        "id" => "IDL9F23XH7AW",
-                    ],
                     "IDL9F23Z6L9M" => [
                         "componentName" => "Columns",
                         "type" => "columns",
@@ -212,6 +181,10 @@ class PageSeeder extends Seeder
                                 ],
                             ],
                             "section" => ["isIncluded" => false, "size" => "is-medium"],
+                            "columns" => [
+                                ["size" => "auto"],
+                                ["size" => "auto"],
+                            ],
                         ],
                         "id" => "IDL9F23Z6L9M",
                     ],
@@ -305,6 +278,11 @@ class PageSeeder extends Seeder
                                 ],
                             ],
                             "section" => ["isIncluded" => true, "size" => "is-medium"],
+                            "columns" => [
+                                ["size" => "auto"],
+                                ["size" => "auto"],
+                                ["size" => "auto"],
+                            ],
                         ],
                         "id" => "IDL9F2S7CG86",
                     ],
@@ -398,6 +376,9 @@ class PageSeeder extends Seeder
                                 ],
                             ],
                             "section" => ["isIncluded" => false, "size" => null],
+                            "columns" => [
+                                ["size" => "auto"],
+                            ],
                         ],
                         "id" => "IDL9F3M9BWOJ",
                     ],
@@ -486,6 +467,10 @@ class PageSeeder extends Seeder
                                 ],
                             ],
                             "section" => ["isIncluded" => false, "size" => null],
+                            "columns" => [
+                                ["size" => "auto"],
+                                ["size" => "auto"],
+                            ],
                         ],
                         "id" => "IDL9GHKP2NXW",
                     ],
@@ -517,6 +502,9 @@ class PageSeeder extends Seeder
                                 ],
                             ],
                             "section" => ["isIncluded" => false, "size" => null],
+                            "columns" => [
+                                ["size" => "auto"],
+                            ],
                         ],
                         "id" => "IDL9GHL1MGNF",
                     ],
@@ -603,6 +591,9 @@ class PageSeeder extends Seeder
                                 ],
                             ],
                             "section" => ["isIncluded" => false, "size" => null],
+                            "columns" => [
+                                ["size" => "auto"],
+                            ],
                         ],
                         "id" => "IDL9GHO4U7O6",
                     ],
@@ -634,6 +625,10 @@ class PageSeeder extends Seeder
                                 ],
                             ],
                             "section" => ["isIncluded" => false, "size" => null],
+                            "columns" => [
+                                ["size" => "auto"],
+                                ["size" => "auto"],
+                            ],
                         ],
                         "id" => "IDL9GHOEZRDV",
                     ],
@@ -859,6 +854,10 @@ class PageSeeder extends Seeder
                                 ],
                             ],
                             "section" => ["isIncluded" => false, "size" => null],
+                            "columns" => [
+                                ["size" => "auto"],
+                                ["size" => "auto"],
+                            ],
                         ],
                         "id" => "IDL9GHZWOERZ",
                     ],
