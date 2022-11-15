@@ -2,7 +2,7 @@
     <div class="pb-user-list">
         <div class="columns is-multiline">
             <div class="column is-12">
-                <div class="field is-grouped">
+                <div class="field is-grouped is-grouped-multiline">
                     <div class="control">
                         <p class="has-text-weight-bold is-size-7 is-uppercase pt-1">
                             Filters
