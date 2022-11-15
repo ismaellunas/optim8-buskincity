@@ -91,7 +91,7 @@ class SpaceController extends Controller
 
         if (
             $newPageTranslation
-            && $newPageTranslation->status !== PageTranslation::STATUS_DRAFT
+            && !$newPageTranslation->isDraft
         ) {
             return $this->redirectOrShowPage($newPageTranslation, $pageTranslation->slug);
         }
@@ -101,7 +101,7 @@ class SpaceController extends Controller
 
         if (
             $newPageTranslation
-            && $newPageTranslation->status !== PageTranslation::STATUS_DRAFT
+            && !$newPageTranslation->isDraft
         ) {
             return $this->redirectOrShowPage($newPageTranslation, $pageTranslation->slug);
         }
