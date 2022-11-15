@@ -124,3 +124,11 @@ export const contentPositions = [
     { value: "has-text-right", name: "Right" },
     { value: "has-text-centered", name: "Center" },
 ];
+
+export const visibilityDevices = [
+    { value: "is-hidden-tablet", name: "Mobile" },
+    { value: "is-hidden-mobile is-hidden-desktop", name: "Tablet" },
+    { value: "is-hidden-touch is-hidden-widescreen", name: "Desktop" },
+    { value: "is-hidden-fullhd is-hidden-touch is-hidden-desktop-only", name: "Widescreen" },
+    { value: "is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only", name: "Full HD" },
+];
