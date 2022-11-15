@@ -35,6 +35,16 @@
             </template>
         </biz-form-select>
 
+        <biz-checkbox
+            v-model:checked="computedValue.isCentered"
+            class="mb-2"
+            :value="true"
+        >
+            <span class="ml-2">
+                Is Centered?
+            </span>
+        </biz-checkbox>
+
         <hr>
 
         <template
@@ -56,8 +66,9 @@
 <script>
     import BizButton from '@/Biz/Button';
     import BizCard from '@/Biz/Card';
-    import BizFormSlider from '@/Biz/Form/Slider';
+    import BizCheckbox from '@/Biz/Checkbox';
     import BizFormSelect from '@/Biz/Form/Select';
+    import BizFormSlider from '@/Biz/Form/Slider';
     import { useModelWrapper } from '@/Libs/utils';
     import { confirm } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
@@ -68,8 +79,9 @@
         components: {
             BizButton,
             BizCard,
-            BizFormSlider,
+            BizCheckbox,
             BizFormSelect,
+            BizFormSlider,
         },
 
         props: {
@@ -84,8 +96,6 @@
         ],
 
         setup(props, {emit}) {
-            let computedStructure = useModelWrapper(props, emit, 'structure');
-
             return {
                 computedValue: useModelWrapper(props, emit),
                 computedStructure: useModelWrapper(props, emit, 'structure'),
