@@ -25,11 +25,14 @@ export default {
             isIncluded: false,
             size: null,
         },
-        columns: [
-            {
-                size: "auto",
-            }
-        ],
+        columns: {
+            isCentered: false,
+            column: [
+                {
+                    size: "auto",
+                }
+            ],
+        },
         dimension: dimension.config,
     },
 };

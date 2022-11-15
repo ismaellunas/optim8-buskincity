@@ -49,7 +49,7 @@
                 :components="block.columns[index].components"
                 :data-entities="entities"
                 :selected-locale="selectedLocale"
-                :class="sizeClass(configColumns[index]?.size ?? null)"
+                :class="sizeClass(configColumns?.column[index]?.size ?? null)"
             />
         </template>
     </div>

@@ -38,7 +38,7 @@
         <hr>
 
         <template
-            v-for="(column, index) in computedValue"
+            v-for="(column, index) in computedValue.column"
             :key="index"
         >
             <biz-form-slider
@@ -73,7 +73,7 @@
         },
 
         props: {
-            modelValue: { type: Array, required: true },
+            modelValue: { type: Object, required: true },
             isExpandingOnLoad: { type: Boolean, default: false },
             structure: { type: Object, default: () => {} },
         },
@@ -101,7 +101,7 @@
         },
 
         watch: {
-            computedValue: {
+            'computedValue.column': {
                 handler(newValue, oldValue) {
                     let maxColumns = 12;
                     let totalColumn = newValue.length;
@@ -196,7 +196,7 @@
                     })
                 }
 
-                this.computedValue = columns;
+                this.computedValue.column = columns;
             },
         },
     }
