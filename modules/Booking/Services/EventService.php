@@ -290,7 +290,7 @@ class EventService
 
         $events->transform(function ($event) {
             return [
-                'booked_at' => $event->displayStartEndTime . ', '. $event->timezonedBookedAt->format('d M Y') . ' (' . $event->timezone . ')',
+                'booked_at' => $event->displayStartEndTime . ', '. $event->timezonedBookedAt->format('d M Y') . ' (' . $event->schedule->timezone . ')',
                 'location' => $event->orderLine->purchasable->product->locations[0] ?? [],
                 'name' => $event->orderLine->purchasable->product->displayName,
                 'short_description' => $event->orderLine->purchasable->product->displayShortDescription,
