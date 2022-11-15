@@ -12,6 +12,7 @@ class Button extends BaseContent
     public $isDownload = false;
 
     private $config = [];
+    private $visibility = [];
 
     /**
      * Create a new component instance.
@@ -23,6 +24,7 @@ class Button extends BaseContent
         parent::__construct($entity);
 
         $this->config = $this->getButtonConfig();
+        $this->visibility = $this->getButtonVisibility();
         $this->buttonClasses = $this->getButtonClasses();
         $this->buttonContent = $this->getButtonContent();
         $this->iconPosition = $this->config['iconPosition'] ?? null;
@@ -37,6 +39,11 @@ class Button extends BaseContent
         return $this->getConfig()['button'] ?? [];
     }
 
+    private function getButtonVisibility(): array
+    {
+        return $this->getConfig()['visibility'] ?? [];
+    }
+
     private function getButtonClasses(): array
     {
         $classes = collect();
@@ -46,6 +53,7 @@ class Button extends BaseContent
         $classes->push($this->config['size'] ?? null);
         $classes->push($this->config['width'] ?? null);
         $classes->push($this->config['style'] ?? null);
+        $classes->push($this->visibility['device'] ?? null);
 
         return $classes->filter()->values()->all();
     }
