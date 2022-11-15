@@ -73,8 +73,7 @@
         },
 
         props: {
-            //urls: {type: Array, default: () => [] },
-            media: {type: Array, default: () => [] },
+            media: { type: Array, default: () => [] },
         },
 
         data() {
