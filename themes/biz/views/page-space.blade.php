@@ -15,7 +15,7 @@
                 <div class="column is-12">
                     <div
                         class="profile-background hero is-medium is-primary is-radius"
-                        @if ($space->coverUrl) style="background-image: url({{ $space->coverUrl }});" @endif
+                        @if ($space->coverUrl) style="background-image: url({{ $space->getOptimizedCoverImageUrl(1280, 398) }});" @endif
                     >
                         <div class="hero-body"></div>
                     </div>
