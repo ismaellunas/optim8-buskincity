@@ -29,11 +29,7 @@ class Columns extends Component
 
     public function getSize(array $sizeColumns, int $index)
     {
-        if (empty($sizeColumns)) {
-            return null;
-        }
-
-        return $sizeColumns[$index]['size'];
+        return $sizeColumns[$index]['size'] ?? null;
     }
 
     /**
