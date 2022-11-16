@@ -163,14 +163,14 @@
                         <div class="column is-7">
                             @if ($userProfile->getMeta('gallery'))
                                 <gallery
-                                    :urls="{{ Illuminate\Support\Js::from($userProfile->getMedias('gallery')->pluck('file_url')) }}"
+                                    :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}"
                                 >
-                                    <template v-slot="{ url, openModal }">
+                                    <template v-slot="{ index, thumbnailUrl, openModal }">
                                         <div class="column is-one-third-desktop is-half-tablet">
-                                            <div class="card" @click.prevent="openModal(url)">
+                                            <div class="card" @click.prevent="openModal(index)">
                                                 <div class="card-image">
                                                     <figure class="image is-3by2">
-                                                        <img :src="url" alt="">
+                                                        <img :src="thumbnailUrl" alt="" >
                                                     </figure>
                                                 </div>
                                             </div>
