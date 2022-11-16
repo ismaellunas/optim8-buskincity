@@ -204,23 +204,6 @@ class Media extends CloudinaryMedia implements TranslatableContract
         return $this->getOptimizedImageUrl();
     }
 
-    public function getCroppedImageUrl(int $width, int $height): string
-    {
-        $result = "";
-
-        if ($this->isImage) {
-            $result = $this->optimizeImage()
-                ->resize(
-                    Resize::crop()
-                        ->width($width)
-                        ->height($height)
-                )
-                ->serializeAttributes();
-        }
-
-        return $this->getImageUrlFromAttributeTag($result);
-    }
-
     public function getReadableSizeAttribute(): string
     {
         return HumanReadable::bytesToHuman($this->size);
