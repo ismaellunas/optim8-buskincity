@@ -13,7 +13,10 @@
         <div class="container">
             <div class="columns is-multiline is-centered">
                 <div class="column is-12">
-                    <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $space->coverUrl }});">
+                    <div
+                        class="profile-background hero is-medium is-primary is-radius"
+                        @if ($space->coverUrl) style="background-image: url({{ $space->coverUrl }});" @endif
+                    >
                         <div class="hero-body"></div>
                     </div>
                 </div>

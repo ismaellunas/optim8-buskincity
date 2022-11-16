@@ -217,4 +217,9 @@ class PageTranslation extends Model implements PublishableInterface
             $query->type();
         });
     }
+
+    public function getIsDraftAttribute(): bool
+    {
+        return $this->status == PageTranslation::STATUS_DRAFT;
+    }
 }
