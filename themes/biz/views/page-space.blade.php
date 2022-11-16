@@ -13,7 +13,10 @@
         <div class="container">
             <div class="columns is-multiline is-centered">
                 <div class="column is-12">
-                    <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $space->coverUrl }});">
+                    <div
+                        class="profile-background hero is-medium is-primary is-radius"
+                        @if ($space->coverUrl) style="background-image: url({{ $space->getOptimizedCoverImageUrl(1280, 398) }});" @endif
+                    >
                         <div class="hero-body"></div>
                     </div>
                 </div>
@@ -144,7 +147,7 @@
                                         </p>
                                     </div>
 
-                                    @if ($loop->iteration % 2 == 0)
+                                    @if ($loop->iteration % 2 != 0)
                                         <div class="column">
                                             <figure class="image is-250x250 is-pulled-right">
                                                 <img src="{{ $spaceChild->logoUrl ?? $pageSpace->defaultLogoUrl() }}" alt="{{ $spaceChild->name }}" class="is-rounded">

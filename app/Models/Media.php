@@ -7,6 +7,7 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use CloudinaryLabs\CloudinaryLaravel\Model\Media as CloudinaryMedia;
 use Cloudinary\Tag\ImageTag;
+use Cloudinary\Tag\VideoTag;
 use Cloudinary\Transformation\Delivery;
 use Cloudinary\Transformation\Quality;
 use Cloudinary\Transformation\Resize;
@@ -117,33 +118,52 @@ class Media extends CloudinaryMedia implements TranslatableContract
         return $this->file_type === 'video';
     }
 
+    private function getImageTag(): ImageTag
+    {
+        return cloudinary()->getImageTag(
+            empty($this->version)
+            ? $this->file_name
+            : 'v'.$this->version.'/'.$this->file_name
+        );
+    }
+
+    private function getVideoTag(): VideoTag
+    {
+        return cloudinary()->getVideoTag(
+            empty($this->version)
+            ? $this->file_name
+            : 'v'.$this->version.'/'.$this->file_name
+        );
+    }
+
+    private function getImageUrlFromAttributeTag(string $attributeTag)
+    {
+        return strval(str_replace(['src=', '"'], ['', ''], $attributeTag));
+    }
+
+    private function getVideoUrlFromAttributeTag(string $attributeTag)
+    {
+        return strval(str_replace(['poster=', '"'], ['', ''], $attributeTag));
+    }
+
     public function getThumbnailUrl($width, $height): string
     {
         $result = '';
+
         if ($this->isImage) {
-            $result = cloudinary()
-                ->getImageTag(
-                    empty($this->version)
-                    ? $this->file_name
-                    : 'v'.$this->version.'/'.$this->file_name
-                )
+            $result = $this->getImageTag()
                 ->resize(Resize::thumbnail()->height($height)->width($width))
                 ->serializeAttributes();
 
-            $result = strval(str_replace(['src=', '"'], ['', ''], $result));
+            $result = $this->getImageUrlFromAttributeTag($result);
         }
 
         if ($this->isVideo) {
-            $result = cloudinary()
-                ->getVideoTag(
-                    empty($this->version)
-                    ? $this->file_name
-                    : 'v'.$this->version.'/'.$this->file_name
-                )
+            $result = $this->getVideoTag()
                 ->resize(Resize::thumbnail()->height($height)->width($width))
                 ->serializeAttributes();
 
-            $result = strval(str_replace(['poster=', '"'], ['', ''], $result));
+            $result = $this->getVideoUrlFromAttributeTag($result);
         }
 
         return $result;
@@ -154,32 +174,34 @@ class Media extends CloudinaryMedia implements TranslatableContract
         return $this->getThumbnailUrl(self::THUMBNAIL_HEIGHT, self::THUMBNAIL_WIDTH);
     }
 
-    public function getOptimizedImageUrlAttribute(): string
-    {
-        $result = "";
+    private function optimizeImage(
+        ?int $width = null,
+        ?int $height = null,
+        string $resizeMode = 'fill'
+    ): ImageTag {
+        $imageTag = $this->getImageTag();
 
-        if ($this->isImage) {
-            $result = $this->optimizeImage()->serializeAttributes();
+        if ($width || $height) {
+            $imageTag->resize(Resize::$resizeMode($width, $height));
         }
 
-        return strval(str_replace(['src=', '"'], ['', ''], $result));
+        return $imageTag->delivery(Delivery::quality(Quality::auto()));
     }
 
-    public function getCroppedImageUrl(int $width, int $height): string
+    public function getOptimizedImageUrl(?int $width = null, ?int $height = null): string
     {
         $result = "";
 
         if ($this->isImage) {
-            $result = $this->optimizeImage()
-                ->resize(
-                    Resize::crop()
-                        ->width($width)
-                        ->height($height)
-                )
-                ->serializeAttributes();
+            $result = $this->optimizeImage($width, $height)->serializeAttributes();
         }
 
-        return strval(str_replace(['src=', '"'], ['', ''], $result));
+        return $this->getImageUrlFromAttributeTag($result);
+    }
+
+    public function getOptimizedImageUrlAttribute(): string
+    {
+        return $this->getOptimizedImageUrl();
     }
 
     public function getReadableSizeAttribute(): string
@@ -201,16 +223,5 @@ class Media extends CloudinaryMedia implements TranslatableContract
         }
 
         return $slice;
-    }
-
-    private function optimizeImage(): ImageTag
-    {
-        return cloudinary()
-                ->getImageTag(
-                    empty($this->version)
-                    ? $this->file_name
-                    : 'v'.$this->version.'/'.$this->file_name
-                )
-                ->delivery(Delivery::quality(Quality::auto()));
     }
 }

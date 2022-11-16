@@ -91,7 +91,7 @@ class SpaceController extends Controller
 
         if (
             $newPageTranslation
-            && $newPageTranslation->status !== PageTranslation::STATUS_DRAFT
+            && !$newPageTranslation->isDraft
         ) {
             return $this->redirectOrShowPage($newPageTranslation, $pageTranslation->slug);
         }
@@ -101,7 +101,7 @@ class SpaceController extends Controller
 
         if (
             $newPageTranslation
-            && $newPageTranslation->status !== PageTranslation::STATUS_DRAFT
+            && !$newPageTranslation->isDraft
         ) {
             return $this->redirectOrShowPage($newPageTranslation, $pageTranslation->slug);
         }
@@ -127,14 +127,10 @@ class SpaceController extends Controller
         $renderResponse = $this->getViewName($pageTranslation);
 
         if (!$renderResponse) {
-            $renderResponse = $this->getBuilder($pageTranslation);
-        }
-
-        if (!$renderResponse) {
             $renderResponse = $this->getFallbackSpace($pageTranslation);
         }
 
-         return $renderResponse;
+        return $renderResponse;
     }
 
     private function getViewName(PageTranslation $pageTranslation)
@@ -159,20 +155,6 @@ class SpaceController extends Controller
             if (view()->exists($viewName)) {
                 return view($viewName, $this->getLandingPageData($pageTranslation));
             };
-        }
-
-        return null;
-    }
-
-    private function getBuilder(PageTranslation $pageTranslation)
-    {
-        $data = json_decode($pageTranslation->data, true);
-
-        if (
-            $data['structures']
-            && $data['entities']
-        ) {
-            // page builder code
         }
 
         return null;
