@@ -126,9 +126,15 @@ export const contentPositions = [
 ];
 
 export const visibilityDevices = [
-    { value: "is-hidden-tablet", name: "Mobile" },
-    { value: "is-hidden-mobile is-hidden-desktop", name: "Tablet" },
-    { value: "is-hidden-touch is-hidden-widescreen", name: "Desktop" },
-    { value: "is-hidden-fullhd is-hidden-touch is-hidden-desktop-only", name: "Widescreen" },
-    { value: "is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only", name: "Full HD" },
+    { value: "is-hidden-tablet", name: "Mobile only" },
+    { value: "is-hidden-mobile is-hidden-desktop", name: "Tablet only" },
+    { value: "is-hidden-touch is-hidden-widescreen", name: "Desktop only" },
+    { value: "is-hidden-fullhd is-hidden-touch is-hidden-desktop-only", name: "Widescreen only" },
+    { value: "is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only", name: "Full HD only" },
+    { value: "is-hidden-mobile", name: "Tablet and above" },
+    { value: "is-hidden-touch", name: "Desktop and above" },
+    { value: "is-hidden-desktop-only is-hidden-touch", name: "Widescreen and above" },
+    { value: "is-hidden-desktop", name: "Tablet and below" },
+    { value: "is-hidden-widescreen", name: "Desktop and below" },
+    { value: "is-hidden-fullhd", name: "Widescreen and below" },
 ];
