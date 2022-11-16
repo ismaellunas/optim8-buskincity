@@ -24,6 +24,8 @@
                             :role-options="roleOptions"
                             :status-options="statusOptions"
                             :gallery="product.gallery"
+                            :rules="rules"
+                            :image-mimes="imageMimes"
                         />
 
                         <hr>
@@ -476,6 +478,7 @@
             formatDateIso: { type: String, default: 'YYYY-MM-DD' },
             formatDateUser: { type: String, default: 'D MMM YYYY' },
             productManagerBaseRoute: { type: String, required: true },
+            rules: { type: Object, required: true },
         },
 
         setup(props, { emit }) {

@@ -152,7 +152,7 @@
                                         </div>
                                     @endif
 
-                                    <div class="is-clearfix" />
+                                    <div class="is-clearfix"></div>
                                 </div>
                             </div>
                         @endforeach

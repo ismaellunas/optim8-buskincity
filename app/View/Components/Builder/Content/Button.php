@@ -29,6 +29,7 @@ class Button extends BaseContent
         $this->link = $this->config['link'] ?? null;
         $this->target = $this->setTarget();
         $this->isDownload = $this->config['target'] === 'download';
+        $this->wrapperClasses[] = $this->config['position'] ?? null;
     }
 
     private function getButtonConfig(): array
@@ -45,7 +46,6 @@ class Button extends BaseContent
         $classes->push($this->config['size'] ?? null);
         $classes->push($this->config['width'] ?? null);
         $classes->push($this->config['style'] ?? null);
-        $classes->push($this->config['position'] ?? null);
 
         return $classes->filter()->values()->all();
     }
