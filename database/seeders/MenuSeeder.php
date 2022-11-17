@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Entities\Caches\MenuCache;
 use App\Models\{
+    PageTranslation,
     Menu,
     MenuItem,
 };
@@ -19,6 +20,14 @@ class MenuSeeder extends Seeder
      */
     public function run()
     {
+        $pageIds = PageTranslation::select([
+                'slug',
+                'page_id'
+            ])
+            ->get()
+            ->pluck('page_id', 'slug')
+            ->toArray();
+
         $headerMenus = [
             [
                 'title' => 'Home',
@@ -28,9 +37,9 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Street Performers',
-                'type' => MenuItem::TYPE_URL,
-                'url' => '#',
+                'type' => MenuItem::TYPE_PAGE,
                 'order' => 2,
+                'page_id' => $pageIds['street-performers'],
             ],
             [
                 'title' => 'Blog',
@@ -40,9 +49,9 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'About',
-                'type' => MenuItem::TYPE_URL,
-                'url' => '#',
+                'type' => MenuItem::TYPE_PAGE,
                 'order' => 4,
+                'page_id' => $pageIds['about'],
             ],
         ];
 
@@ -103,10 +112,10 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'About',
-                'type' => MenuItem::TYPE_URL,
-                'url' => '#',
+                'type' => MenuItem::TYPE_PAGE,
                 'order' => 2,
                 'parent_id' => $menu->menuItems[0]->id,
+                'page_id' => $pageIds['about'],
                 'menu_id' => $menu->id,
             ],
             [
@@ -118,11 +127,11 @@ class MenuSeeder extends Seeder
                 'menu_id' => $menu->id,
             ],
             [
-                'title' => 'Street Performer',
-                'type' => MenuItem::TYPE_URL,
-                'url' => '#',
+                'title' => 'Street Performers',
+                'type' => MenuItem::TYPE_PAGE,
                 'order' => 1,
                 'parent_id' => $menu->menuItems[1]->id,
+                'page_id' => $pageIds['street-performers'],
                 'menu_id' => $menu->id,
             ],
             [

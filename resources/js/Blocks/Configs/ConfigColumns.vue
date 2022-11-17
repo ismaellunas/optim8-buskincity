@@ -35,10 +35,20 @@
             </template>
         </biz-form-select>
 
+        <biz-checkbox
+            v-model:checked="computedValue.isCentered"
+            class="mb-2"
+            :value="true"
+        >
+            <span class="ml-2">
+                Is Centered?
+            </span>
+        </biz-checkbox>
+
         <hr>
 
         <template
-            v-for="(column, index) in computedValue"
+            v-for="(column, index) in computedValue.column"
             :key="index"
         >
             <biz-form-slider
@@ -56,8 +66,9 @@
 <script>
     import BizButton from '@/Biz/Button';
     import BizCard from '@/Biz/Card';
-    import BizFormSlider from '@/Biz/Form/Slider';
+    import BizCheckbox from '@/Biz/Checkbox';
     import BizFormSelect from '@/Biz/Form/Select';
+    import BizFormSlider from '@/Biz/Form/Slider';
     import { useModelWrapper } from '@/Libs/utils';
     import { confirm } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';
@@ -68,12 +79,13 @@
         components: {
             BizButton,
             BizCard,
-            BizFormSlider,
+            BizCheckbox,
             BizFormSelect,
+            BizFormSlider,
         },
 
         props: {
-            modelValue: { type: Array, required: true },
+            modelValue: { type: Object, required: true },
             isExpandingOnLoad: { type: Boolean, default: false },
             structure: { type: Object, default: () => {} },
         },
@@ -84,8 +96,6 @@
         ],
 
         setup(props, {emit}) {
-            let computedStructure = useModelWrapper(props, emit, 'structure');
-
             return {
                 computedValue: useModelWrapper(props, emit),
                 computedStructure: useModelWrapper(props, emit, 'structure'),
@@ -101,7 +111,7 @@
         },
 
         watch: {
-            computedValue: {
+            'computedValue.column': {
                 handler(newValue, oldValue) {
                     let maxColumns = 12;
                     let totalColumn = newValue.length;
@@ -196,7 +206,7 @@
                     })
                 }
 
-                this.computedValue = columns;
+                this.computedValue.column = columns;
             },
         },
     }

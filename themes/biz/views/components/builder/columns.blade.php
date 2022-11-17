@@ -6,7 +6,7 @@
     'isSectionIncluded',
     'rounded',
     'uniqueClass',
-    'sizeColumns',
+    'configColumns',
 ])
 
 @php
@@ -20,13 +20,14 @@
         $uniqueClass,
         $uniqueClass.'-background' => $isBackgroundImageShown,
         $backgroundColor => $isBackgroundColorShown,
-        $rounded
+        $rounded,
+        'is-centered' => $configColumns['isCentered'],
     ])>
     @foreach ($columns as $column)
         <x-builder.column
             :uid="$column['id']"
             :components="$column['components']"
-            :size="$getSize($sizeColumns, $loop->index)"
+            :size="$getSize($configColumns['column'], $loop->index)"
         />
     @endforeach
 </div>

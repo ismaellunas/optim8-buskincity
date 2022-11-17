@@ -124,3 +124,17 @@ export const contentPositions = [
     { value: "has-text-right", name: "Right" },
     { value: "has-text-centered", name: "Center" },
 ];
+
+export const visibilityDevices = [
+    { value: "is-hidden-tablet", name: "Mobile only" },
+    { value: "is-hidden-mobile is-hidden-desktop", name: "Tablet only" },
+    { value: "is-hidden-touch is-hidden-widescreen", name: "Desktop only" },
+    { value: "is-hidden-fullhd is-hidden-touch is-hidden-desktop-only", name: "Widescreen only" },
+    { value: "is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only", name: "Full HD only" },
+    { value: "is-hidden-mobile", name: "Tablet and above" },
+    { value: "is-hidden-touch", name: "Desktop and above" },
+    { value: "is-hidden-desktop-only is-hidden-touch", name: "Widescreen and above" },
+    { value: "is-hidden-desktop", name: "Tablet and below" },
+    { value: "is-hidden-widescreen", name: "Desktop and below" },
+    { value: "is-hidden-fullhd", name: "Widescreen and below" },
+];
