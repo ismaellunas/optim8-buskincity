@@ -108,7 +108,7 @@
                                 <div class="card-image">
                                     <biz-image
                                         ratio="is-3by2"
-                                        :src="image.file_url"
+                                        :src="image.thumbnail_url"
                                         alt=""
                                         @click="selectedImageId = imageIndex"
                                     />

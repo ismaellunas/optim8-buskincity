@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use App\Models\PageTranslation;
 use Illuminate\Console\Command;
 
-class FixColumnSize extends Command
+class FixPagecolumnConfig extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'fix:column-size';
+    protected $signature = 'fix:page-column-config';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Fix structure on column component to add column size.';
+    protected $description = 'Fix column config structure on column component.';
 
     /**
      * Execute the console command.
@@ -48,13 +48,16 @@ class FixColumnSize extends Command
                             $columns = [];
 
                             if (isset($structures[$entity['id']])) {
+                                $data[$id]['config']['columns'] = [];
+
                                 for ($i = 0; $i < $structures[$entity['id']]['totalColumn']; $i++) {
                                     $columns[] = [
                                         'size' => "auto",
                                     ];
                                 }
 
-                                $data[$id]['config']['columns'] = $columns;
+                                $data[$id]['config']['columns']['column'] = $columns;
+                                $data[$id]['config']['columns']['isCentered'] = false;
                             }
                         }
                     }

@@ -49,7 +49,7 @@
                 :components="block.columns[index].components"
                 :data-entities="entities"
                 :selected-locale="selectedLocale"
-                :class="sizeClass(configColumns[index]?.size ?? null)"
+                :class="sizeClass(configColumns?.column[index]?.size ?? null)"
             />
         </template>
     </div>
@@ -63,7 +63,7 @@
     import BizButton from '@/Biz/Button';
     import BlockColumn from '@/Blocks/Column';
     import { confirm, confirmDelete } from '@/Libs/alert';
-    import { useModelWrapper, isEmpty, getResourceFromDataObject, isBlank } from '@/Libs/utils';
+    import { useModelWrapper, isEmpty, getResourceFromDataObject } from '@/Libs/utils';
     import { inject } from "vue";
     import icon from '@/Libs/icon-class';
 
@@ -127,10 +127,14 @@
                 }
 
                 const configWrapper = this.entity?.config?.wrapper ?? null;
+                const isCenteredClass = this.configColumns?.isCentered
+                    ? 'is-centered'
+                    : '';
 
                 return wrapperClass.concat(
                     (configWrapper['backgroundColor'] ?? ''),
                     (configWrapper['rounded'] ?? ''),
+                    (isCenteredClass)
                 ).filter(Boolean);
             },
 
