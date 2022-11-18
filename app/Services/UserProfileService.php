@@ -53,31 +53,12 @@ class UserProfileService
         return $meta->value;
     }
 
-    public function getMedias(string $key): Collection
+    private function getMedias(string $key): Collection
     {
         $mediaIds = $this->getMeta($key);
 
         if (!empty($mediaIds)) {
             return Media::select([
-                    'file_url',
-                    'file_type'
-                ])
-                ->whereIn('id', $mediaIds)
-                ->get();
-        }
-
-        return collect([]);
-    }
-
-    public function getMediaWithThumbnails(
-        string $key,
-        int $width,
-        int $height
-    ): Collection {
-        $mediaIds = $this->getMeta($key);
-
-        if (!empty($mediaIds)) {
-            $media = Media::select([
                     'extension',
                     'file_name',
                     'file_type',
@@ -86,7 +67,19 @@ class UserProfileService
                 ])
                 ->whereIn('id', $mediaIds)
                 ->get();
+        }
 
+        return collect();
+    }
+
+    public function getMediaWithThumbnails(
+        string $key,
+        int $width,
+        int $height
+    ): Collection {
+        $media = $this->getMedias($key);
+
+        if ($media->isNotEmpty()) {
             return $media->map(function ($medium) use ($width, $height) {
                 $mappedMedium = $medium->only('file_url', 'file_type');
 
@@ -100,6 +93,21 @@ class UserProfileService
         }
 
         return collect();
+    }
+
+    public function getCoverBackgroundUrl(
+        ?int $width = null,
+        ?int $height = null
+    ): string {
+        $media = $this->getMedias('cover_background_photo');
+
+        if ($media->isNotEmpty()) {
+            $medium = $media->first();
+
+            return $medium->getOptimizedImageUrl($width, $height);
+        }
+
+        return "";
     }
 
     private function getUser(string $uniqueKey): ?User

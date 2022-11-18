@@ -19,7 +19,7 @@
     import { get } from 'lodash';
 
     export default {
-        name: 'Checkbox',
+        name: 'ConfigCheckbox',
 
         components: {
             BizCheckbox,

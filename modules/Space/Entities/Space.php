@@ -120,6 +120,18 @@ class Space extends Model implements TranslatableContract
             : null;
     }
 
+    public function getOptimizedCoverImageUrl(
+        ?int $width = null,
+        ?int $height = null
+    ): ?string {
+        if ($this->cover) {
+            return $this->cover->getOptimizedImageUrl($width, $height);
+        }
+
+        return null;
+    }
+
+
     public function saveFromInputs(array $inputs)
     {
         $this->name = $inputs['name'];
