@@ -125,7 +125,7 @@
                             <article class="b752-blog-item box is-shadowless is-clipped p-0">
                                 <figure>
                                     <a href="{{ route('blog.show', $article->slug) }}">
-                                        <img src="{{ $article->getCroppedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}">
+                                        <img src="{{ $article->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}">
                                     </a>
                                 </figure>
                                 <div class="p-5">

@@ -7,7 +7,7 @@
                 <article class="b752-blog-item box is-clipped p-0">
                     <figure>
                         <a href="{{ route('blog.show', $post->slug) }}">
-                            <img src="{{ $post->getCroppedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}">
+                            <img src="{{ $post->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}">
                         </a>
                     </figure>
                     <div class="p-5">

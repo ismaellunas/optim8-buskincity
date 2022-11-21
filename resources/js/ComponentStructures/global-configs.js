@@ -1,3 +1,7 @@
+import {
+    visibilityDevices,
+} from './style-options';
+
 export const dimension = {
     config: {
         'style.padding': {
@@ -31,6 +35,27 @@ export const dimension = {
     }
 };
 
+export const visibility = {
+    config: {
+        device: null,
+    },
+    component: {
+        label: "Visibility",
+        config: {
+            device: {
+                component: "ConfigSelect",
+                label: "Show On Device",
+                settings: {
+                    options: [
+                        { value: null, name: "(All Devices)"},
+                    ].concat(visibilityDevices),
+                },
+            }
+        },
+    },
+};
+
 export default {
     dimension,
+    visibility,
 }
