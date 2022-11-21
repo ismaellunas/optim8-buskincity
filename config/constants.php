@@ -191,7 +191,7 @@ return [
     ],
 
     'file_size' => [
-        'profile_picture' => 3 * 1000,
+        'profile_picture' => 3 * 1024,
     ],
 
     /*
