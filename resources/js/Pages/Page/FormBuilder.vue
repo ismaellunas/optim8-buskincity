@@ -244,10 +244,10 @@
                     let configColumns = [];
 
                     for (let columnIndex = 1; columnIndex <= i; columnIndex++) {
-                        configColumns.push(cloneDeep(block.config.columns[0]));
+                        configColumns.push(cloneDeep(block.config.columns.column[0]));
                     }
 
-                    block.config.columns = configColumns;
+                    block.config.columns.column = configColumns;
                     blocks.push(block);
                 }
 
