@@ -53,6 +53,13 @@ class OrderService
                                     $query->$scopeName($value);
                                 }
                             );
+                        } elseif ($scopeName = 'dateRange') {
+                            $query->whereHas(
+                                'firstEventLine.latestEvent',
+                                function (Builder $query) use ($scopeName, $value) {
+                                    $query->$scopeName($value);
+                                }
+                            );
                         } else {
                             $query->$scopeName($value);
                         }
