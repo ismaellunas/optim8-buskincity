@@ -58,7 +58,10 @@ class ApiPageBuilderComponentUserListController extends Controller
                 'profilePhoto' => function ($q) {
                     $q->select([
                         'id',
+                        'extension',
+                        'file_name',
                         'file_url',
+                        'version',
                     ]);
                 },
                 'roles' => function ($q) {
@@ -115,7 +118,7 @@ class ApiPageBuilderComponentUserListController extends Controller
                 [
                     'full_name' => $user->fullName,
                     'profile_photo_url' => (
-                        $user->profilePhotoUrl
+                        $user->optimizedProfilePhotoUrl
                         ?? config('constants.profile_photo_path')
                     ),
                     'profile_page_url' => (
