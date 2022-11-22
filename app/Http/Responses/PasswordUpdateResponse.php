@@ -2,6 +2,7 @@
 
 namespace App\Http\Responses;
 
+use App\Services\LoginService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Fortify;
@@ -15,19 +16,16 @@ class PasswordUpdateResponse extends FortifyPasswordUpdateResponse
         if ($request->wantsJson()) {
             return parent::toResponse($request);
         } else {
+            $home = 'login';
+
+            if (LoginService::isAdminHomeUrl()) {
+                $home = 'admin_login';
+            }
+
             Auth::logout();
 
             $request->session()->invalidate();
             $request->session()->regenerateToken();
-
-            $home = 'login';
-
-            if (Str::startsWith(
-                str_replace(url('/'), '', url()->previous()),
-                '/admin'
-            )) {
-                $home = 'admin_login';
-            }
 
             session()->flash('message', __('The password is updated, please do login to continue with a new password.'));
 
