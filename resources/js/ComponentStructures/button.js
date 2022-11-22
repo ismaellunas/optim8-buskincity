@@ -7,7 +7,8 @@ import {
 } from './style-options';
 
 import {
-    dimension
+    dimension,
+    visibility
 } from './global-configs.js';
 
 export default {
@@ -31,6 +32,7 @@ export default {
             position: null,
             iconPosition: 'left',
         },
+        visibility: visibility.config,
         dimension: dimension.config
     }
 };
@@ -122,5 +124,6 @@ export const config = {
             },
         }
     },
+    visibility: visibility.component,
     dimension: dimension.component
 };
