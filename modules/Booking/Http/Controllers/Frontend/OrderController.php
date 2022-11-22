@@ -28,6 +28,8 @@ class OrderController extends CrudController
         OrderService $orderService,
         ProductEventService $productEventService
     ) {
+        $this->authorizeResource(Order::class, 'order');
+
         $this->orderService = $orderService;
         $this->productEventService = $productEventService;
     }
