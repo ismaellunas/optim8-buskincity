@@ -26,7 +26,7 @@
             </span>
 
             <span
-                class="input-area"
+                :class="inputAreaClass"
                 contenteditable
                 @blur="onEditText($event)"
                 v-text="entity.content.button.text"
@@ -112,7 +112,14 @@
                 return concat(
                     (this.config.button.position ?? '')
                 ).filter(Boolean);
-            }
+            },
+
+            inputAreaClass() {
+                return concat(
+                    'input-area',
+                    (this.config.button.textWeight)
+                ).filter(Boolean);
+            },
         },
 
         methods: {
