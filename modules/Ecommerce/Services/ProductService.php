@@ -113,7 +113,7 @@ class ProductService
                 'id' => $record->id,
                 'name' => $record->translateAttribute('name', config('app.locale')),
                 'status' => Str::title($record->status),
-                'coverUrl' => $record->coverThumbnailUrl,
+                'coverUrl' => $record->getCoverThumbnailUrl(),
             ];
         });
     }

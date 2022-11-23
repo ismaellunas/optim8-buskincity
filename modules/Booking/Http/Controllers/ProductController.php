@@ -168,6 +168,8 @@ class ProductController extends CrudController
     {
         $canManageManager = auth()->user()->can('manageManager', Product::class);
 
+        $product->load('eventSchedule.weeklyHours.times');
+
         return Inertia::render('Booking::ProductEdit', $this->getData([
             'title' => $this->getEditTitle(),
             'imageMimes' => $this->getImageMimeTypes(),

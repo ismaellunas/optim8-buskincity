@@ -19,7 +19,7 @@
                 </div>
                 <div class="column is-11">
                     <figure class="profile-picture image is-250x250">
-                        <img src="{{ $user->profilePhotoUrl ?? url('/images/profile-picture-default.png') }}" alt="{{ $user->fullName }}" class="is-rounded">
+                        <img src="{{ $user->optimizedProfilePhotoUrl ?? url('/images/profile-picture-default.png') }}" alt="{{ $user->fullName }}" class="is-rounded">
 
                         @php
                             $countryCode = $userProfile->getMeta('country');
