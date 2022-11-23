@@ -56,7 +56,7 @@ class Order extends GetCandyOrder
         return $this->firstEventLine->purchasable->product ?? null;
     }
 
-    public function isUserWhoPlacedTheOrder(User $user): bool
+    public function isPlacedByUser(User $user): bool
     {
         return $this->user_id == $user->id;
     }
