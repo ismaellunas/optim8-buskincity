@@ -4,6 +4,7 @@ namespace Modules\Ecommerce\Policies;
 
 use App\Models\User;
 use App\Policies\BasePermissionPolicy;
+use App\Services\LoginService;
 use App\Services\ModuleService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Traits\Macroable;
@@ -27,10 +28,11 @@ class OrderPolicy extends BasePermissionPolicy
             return false;
         }
 
-        return (
-            parent::viewAny($user)
-            || auth()->check()
-        );
+        if (LoginService::isAdminHomeUrl()) {
+            return parent::viewAny($user);
+        }
+
+        return auth()->check();
     }
 
     public function view(User $user, Model $order)
