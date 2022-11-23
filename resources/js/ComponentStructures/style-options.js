@@ -138,3 +138,11 @@ export const visibilityDevices = [
     { value: "is-hidden-widescreen", name: "Desktop and below" },
     { value: "is-hidden-fullhd", name: "Widescreen and below" },
 ];
+
+export const textWeights = [
+    { value: "has-text-weight-light", name: "Light" },
+    { value: "has-text-weight-normal", name: "Normal" },
+    { value: "has-text-weight-medium", name: "Medium" },
+    { value: "has-text-weight-semibold", name: "Semi-bold" },
+    { value: "has-text-weight-bold", name: "Bold" },
+];

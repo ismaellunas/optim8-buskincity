@@ -14,7 +14,7 @@
             </span>
         @endif
 
-        <span>
+        <span @class($textClasses)>
             {{ $buttonContent['text'] }}
         </span>
 
