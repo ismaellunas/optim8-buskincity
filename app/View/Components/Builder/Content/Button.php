@@ -10,6 +10,7 @@ class Button extends BaseContent
     public $link = null;
     public $target = null;
     public $isDownload = false;
+    public $textClasses = [];
 
     private $config = [];
     private $visibility = [];
@@ -27,6 +28,7 @@ class Button extends BaseContent
         $this->visibility = $this->getButtonVisibility();
         $this->buttonClasses = $this->getButtonClasses();
         $this->buttonContent = $this->getButtonContent();
+        $this->textClasses = $this->getTextClasses();
         $this->iconPosition = $this->config['iconPosition'] ?? null;
         $this->link = $this->config['link'] ?? null;
         $this->target = $this->setTarget();
@@ -54,6 +56,15 @@ class Button extends BaseContent
         $classes->push($this->config['width'] ?? null);
         $classes->push($this->config['style'] ?? null);
         $classes->push($this->visibility['device'] ?? null);
+
+        return $classes->filter()->values()->all();
+    }
+
+    private function getTextClasses(): array
+    {
+        $classes = collect();
+
+        $classes->push($this->config['textWeight'] ?? null);
 
         return $classes->filter()->values()->all();
     }
