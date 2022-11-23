@@ -50,6 +50,21 @@ class Event extends BaseModel
         return $query->whereIn('status', $status);
     }
 
+    public function scopeDateRange($query, array $dates)
+    {
+        $dates = array_filter($dates);
+
+        sort($dates);
+
+        if (count($dates) == 1) {
+            return $query->whereDate('booked_at', $dates[0]);
+        }
+
+        return $query
+            ->whereDate('booked_at', '>=', $dates[0])
+            ->whereDate('booked_at', '<=', $dates[1]);
+    }
+
     public function getFormattedBookedAtAttribute(): string
     {
         return $this->booked_at->format(config('constants.format.date_time_minute'));
