@@ -1,12 +1,12 @@
 <template>
     <biz-form-input-addons
         v-model="computedValue"
-        :class="{'is-small': isSmall}"
         :disabled="isKeyDisabled || disabled"
         :label="label"
         :message="message"
         :required="required"
         :placeholder="placeholder"
+        :is-small="isSmall"
         @input="$emit('update:modelValue', $event.target.value)"
         @on-keypress="onKeypress"
     >
