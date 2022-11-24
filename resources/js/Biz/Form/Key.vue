@@ -1,6 +1,7 @@
 <template>
     <biz-form-input-addons
         v-model="computedValue"
+        :class="{'is-small': isSmall}"
         :disabled="isKeyDisabled || disabled"
         :label="label"
         :message="message"
@@ -15,6 +16,7 @@
                     v-show="isKeyDisabled"
                     :icon="icon.edit"
                     type="button"
+                    :class="{'is-small': isSmall}"
                     tabindex="-1"
                     @click="isKeyDisabled = false"
                 />
@@ -22,6 +24,7 @@
                     v-show="!isKeyDisabled"
                     :icon="icon.suspend"
                     type="button"
+                    :class="{'is-small': isSmall}"
                     tabindex="-1"
                     @click="isKeyDisabled = true"
                 />
@@ -51,6 +54,7 @@
             modelValue: {type: [String, null], required: true},
             required: {type: Boolean, default: true},
             placeholder: {type: String, default: 'e.g. a_good_news'},
+            isSmall: {type: Boolean, default: false},
         },
 
         emits: [

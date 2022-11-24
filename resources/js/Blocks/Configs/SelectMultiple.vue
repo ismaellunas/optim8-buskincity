@@ -3,10 +3,15 @@
         <biz-form-dropdown-search
             :label="label"
             :close-on-click="true"
+            :is-small="true"
+            :is-fullwidth="true"
             @search="searchOption($event)"
         >
             <template #trigger>
-                <span :style="{'min-width': '4rem'}">
+                <span
+                    class="has-text-left"
+                    :style="{'min-width': '10rem'}"
+                >
                     Select
                 </span>
             </template>
@@ -24,7 +29,7 @@
             <span
                 v-for="(selectedOption) in selectedOptions"
                 :key="selectedOption"
-                class="tag is-medium m-1"
+                class="tag is-small m-1"
             >
                 {{ selectedOption.value }}
                 <button
