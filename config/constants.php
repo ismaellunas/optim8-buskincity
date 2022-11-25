@@ -155,10 +155,94 @@ return [
         'keys' => [
             [
                 'key' => 'google_api_key',
-                'display_name' => 'Google API',
-                'value' => env('GOOGLE_API_KEY', null),
+                'display_name' => 'Google Map API',
+                'value' => null,
                 'order' => 1,
                 'group' => 'key.google_api'
+            ],
+            [
+                'key' => 'recaptcha_site_key',
+                'display_name' => 'Google Recaptcha Site',
+                'value' => null,
+                'order' => 2,
+                'group' => 'key.google_recaptcha'
+            ],
+            [
+                'key' => 'recaptcha_secret_key',
+                'display_name' => 'Google Recaptcha Secret',
+                'value' => null,
+                'order' => 3,
+                'group' => 'key.google_recaptcha'
+            ],
+            [
+                'key' => 'google_client_id',
+                'display_name' => 'OAuth Google Client ID',
+                'value' => null,
+                'order' => 4,
+                'group' => 'key.oauth_google'
+            ],
+            [
+                'key' => 'google_client_secret',
+                'display_name' => 'OAuth Google Client Secret',
+                'value' => null,
+                'order' => 5,
+                'group' => 'key.oauth_google'
+            ],
+            [
+                'key' => 'facebook_client_id',
+                'display_name' => 'OAuth Facebook Client ID',
+                'value' => null,
+                'order' => 6,
+                'group' => 'key.oauth_facebook'
+            ],
+            [
+                'key' => 'facebook_client_secret',
+                'display_name' => 'OAuth Facebook Client Secret',
+                'value' => null,
+                'order' => 7,
+                'group' => 'key.oauth_facebook'
+            ],
+            [
+                'key' => 'twitter_client_id',
+                'display_name' => 'OAuth Twitter Client ID',
+                'value' => null,
+                'order' => 8,
+                'group' => 'key.oauth_twitter'
+            ],
+            [
+                'key' => 'twitter_client_secret',
+                'display_name' => 'OAuth Twitter Client Secret',
+                'value' => null,
+                'order' => 9,
+                'group' => 'key.oauth_twitter'
+            ],
+            [
+                'key' => 'ipregistry_api_key',
+                'display_name' => 'IPRegistry API',
+                'value' => null,
+                'order' => 10,
+                'group' => 'key.ipregistry_api'
+            ],
+            [
+                'key' => 'stripe_pk',
+                'display_name' => 'Stripe PK',
+                'value' => null,
+                'order' => 11,
+                'group' => 'key.stripe'
+            ],
+            [
+                'key' => 'stripe_sk',
+                'display_name' => 'Stripe SK',
+                'value' => null,
+                'order' => 12,
+                'group' => 'key.stripe'
+            ],
+            [
+                'key' => 'stripe_endpoint_secret',
+                'display_name' => 'Stripe Endpoint Secret',
+                'value' => null,
+                'order' => 13,
+                'group' => 'key.stripe'
             ],
         ],
     ],
