@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\SettingService;
 use Closure;
 use ReCaptcha\ReCaptcha as GoogleRecaptcha;
 
@@ -16,7 +17,11 @@ class Recaptcha
      */
     public function handle($request, Closure $next)
     {
-        $response = (new GoogleRecaptcha(env('RECAPTCHA_SECRET_KEY')))
+        $recaptchaKeys = app(SettingService::class)->getRecaptchaKeys();
+
+        $response = (new GoogleRecaptcha(
+                $recaptchaKeys['recaptcha_secret_key'] ?? null)
+            )
             ->verify($request->input('g-recaptcha-response'), $request->ip());
 
         if (!$response->isSuccess()) {

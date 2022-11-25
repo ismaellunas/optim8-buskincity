@@ -482,4 +482,59 @@ class SettingService
             return $googleApi ?? "";
         });
     }
+
+    public function getRecaptchaKeys(): array
+    {
+        return app(SettingCache::class)->remember('google_recaptcha_keys', function () {
+            return $this->getKeysByGroup('key.google_recaptcha');
+        });
+    }
+
+    public function getIpRegistryApi(): string
+    {
+        return app(SettingCache::class)->remember('ipregistry_api_key', function () {
+            $ipRegistryApi = Setting::key('ipregistry_api_key')->value('value');
+
+            return $ipRegistryApi ?? "";
+        });
+    }
+
+    public function getOAuthFacebookKeys(): array
+    {
+        return app(SettingCache::class)->remember('oauth_facebook_keys', function () {
+            return $this->getKeysByGroup('key.oauth_facebook');
+        });
+    }
+
+    public function getOAuthGoogleKeys(): array
+    {
+        return app(SettingCache::class)->remember('oauth_google_keys', function () {
+            return $this->getKeysByGroup('key.oauth_google');
+        });
+    }
+
+    public function getOAuthTwitterKeys(): array
+    {
+        return app(SettingCache::class)->remember('oauth_twitter_keys', function () {
+            return $this->getKeysByGroup('key.oauth_twitter');
+        });
+    }
+
+    public function getStripeKeys(): array
+    {
+        return app(SettingCache::class)->remember('stripe_keys', function () {
+            return $this->getKeysByGroup('key.stripe');
+        });
+    }
+
+    private function getKeysByGroup(string $group): array
+    {
+        return Setting::select([
+                'key',
+                'value'
+            ])
+            ->group($group)
+            ->pluck('value', 'key')
+            ->toArray();
+    }
 }

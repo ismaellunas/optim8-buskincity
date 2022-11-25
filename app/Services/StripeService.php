@@ -13,6 +13,7 @@ use App\Models\{
     User,
     UserMeta,
 };
+use App\Services\SettingService;
 use Cloudinary\Transformation\Resize;
 use Illuminate\Support\{
     Collection,
@@ -38,13 +39,19 @@ class StripeService
 {
     private $stripeClient = null;
     private $perPage = 10;
+    private $keys = [];
 
     const BRAND_HEIGHT = 128;
     const BRAND_WIDTH = 128;
 
-    private function secretKey(): string
+    public function __construct()
     {
-        return config('constants.stripe_sk');
+        $this->keys = app(SettingService::class)->getStripeKeys();
+    }
+
+    private function secretKey(): ?string
+    {
+        return $this->keys['stripe_sk'] ?? null;
     }
 
     private function refreshUrl(User $user): string
@@ -460,7 +467,7 @@ class StripeService
     {
         $event = null;
 
-        $endpointSecret = config('constants.stripe_endpoint_secret');
+        $endpointSecret = $this->keys['stripe_endpoint_secret'] ?? null;
 
         Stripe::setApiKey($this->secretKey());
 
