@@ -40,15 +40,22 @@
                         <span>Please login to continue</span>
                     </h2>
                     <div class="has-text-centered">
-                        @foreach ($loginService->getAvailableSocialiteDrivers() as $driver)
-                            <a href="{{ route('oauth.redirect', $driver) }}" class="box">
-                                <i class="fab fa-{{ $driver }}"></i> Continue with <b>{{ Str::title($driver) }}</b>
-                            </a>
-                        @endforeach
+                        @php
+                            $availableSocialiteDrivers = $loginService->getAvailableSocialiteDrivers();
+                        @endphp
 
-                        <div class="h-line-wrapper">
-                            <span class="h-line-words">or</span>
-                        </div>
+                        @if (!empty($availableSocialiteDrivers))
+                            @foreach ($loginService->getAvailableSocialiteDrivers() as $driver)
+                                <a href="{{ route('oauth.redirect', $driver) }}" class="box">
+                                    <i class="fab fa-{{ $driver }}"></i> Continue with <b>{{ Str::title($driver) }}</b>
+                                </a>
+                            @endforeach
+
+                            <div class="h-line-wrapper">
+                                <span class="h-line-words">or</span>
+                            </div>
+                        @endif
+
                         <a class="box" onclick="showForm()">
                             <i class="fas fa-envelope"></i> Continue with <b>Email</b>
                         </a>

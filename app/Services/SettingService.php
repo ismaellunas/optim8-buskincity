@@ -452,9 +452,26 @@ class SettingService
 
     public function getSocialiteDrivers(): ?array
     {
-        $drivers = Setting::key('socialite_drivers')->value('value');
+        return app(SettingCache::class)
+            ->remember('socialite_drivers', function () {
+                $drivers = Setting::key('socialite_drivers')->value('value');
+                $drivers = is_null($drivers) ? [] : json_decode($drivers);
 
-        return is_null($drivers) ? null : json_decode($drivers);
+                foreach ($drivers as $key => $driver) {
+                    $oAuth = Setting::group('key.oauth_' . $driver)
+                        ->get();
+
+                    if (
+                        $oAuth->isEmpty()
+                        || $oAuth[0]->value === null
+                        || $oAuth[1]->value === null
+                    ) {
+                        unset($drivers[$key]);
+                    }
+                }
+
+                return $drivers;
+            });
     }
 
     public function getGoogleApi(): string
