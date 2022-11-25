@@ -45,7 +45,7 @@
                         @endphp
 
                         @if (!empty($availableSocialiteDrivers))
-                            @foreach ($loginService->getAvailableSocialiteDrivers() as $driver)
+                            @foreach ($availableSocialiteDrivers as $driver)
                                 <a href="{{ route('oauth.redirect', $driver) }}" class="box">
                                     <i class="fab fa-{{ $driver }}"></i> Continue with <b>{{ Str::title($driver) }}</b>
                                 </a>
