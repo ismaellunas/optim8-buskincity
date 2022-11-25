@@ -107,10 +107,15 @@ class SettingService
     public function getKeys()
     {
         $keys = $this->getSettingsByGroup('key.', true);
+        $defaultKeys = collect(config('constants.settings.keys'));
 
-        if ($keys->isEmpty()) {
-            $keys = collect(config('constants.settings.keys'));
-        }
+        $defaultKeys->each(function ($defaultKey) use ($keys) {
+            $isKeyNotExists = $keys->where('key', $defaultKey['key'])->isEmpty();
+
+            if ($isKeyNotExists) {
+                $keys->push($defaultKey);
+            }
+        });
 
         return $keys
             ->sortBy('group')
