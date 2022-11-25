@@ -6,6 +6,7 @@ use App\Contracts\MediaStorageInterface;
 use App\Entities\{
     CloudinaryStorage,
     LifetimeCookie,
+    SocialiteManager,
 };
 use App\Entities\Caches\{
     CountryCache,
@@ -36,6 +37,7 @@ use App\Services\{
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -84,6 +86,8 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
         }
+
+        $this->customRegister();
     }
 
     /**
@@ -108,5 +112,12 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_HTTPS_IS_ON', false)) {
             URL::forceScheme('https');
         }
+    }
+
+    private function customRegister(): void
+    {
+        $this->app->extend(SocialiteFactory::class, function ($command, $app) {
+            return new SocialiteManager($app);
+        });
     }
 }
