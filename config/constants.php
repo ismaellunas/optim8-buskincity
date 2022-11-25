@@ -3,15 +3,7 @@
 return [
     'domain' => env('APP_DOMAIN', 'biz752.com'),
 
-    'google_api_key' => env('GOOGLE_API_KEY'),
-
     'fontawesome_local' => env('FONTAWESOME_LOCAL', false),
-
-    'stripe_pk' => env('STRIPE_PK'),
-    'stripe_sk' => env('STRIPE_SK'),
-    'stripe_endpoint_secret' => env('STRIPE_ENDPOINT_SECRET'),
-
-    'recaptcha_site_key' => env('RECAPTCHA_SITE_KEY'),
 
     'one_megabyte' => 1024,
     'extensions' => [
