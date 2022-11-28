@@ -3,6 +3,7 @@
         <biz-form-number
             v-model="computedValue"
             :label="label"
+            :is-small="true"
         />
     </div>
 </template>
@@ -12,7 +13,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'Number',
+        name: 'ConfigNumber',
 
         components: {
             BizFormNumber,

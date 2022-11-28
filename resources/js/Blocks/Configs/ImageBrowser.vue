@@ -1,6 +1,8 @@
 <template>
     <div>
-        <biz-form-field>
+        <biz-form-field
+            label-class="is-size-7"
+        >
             <template #label>
                 {{ label }}
             </template>
@@ -8,6 +10,7 @@
             <biz-button
                 v-if="!hasImage"
                 type="button"
+                class="is-small"
                 :disabled="!can.media.browse"
                 @click="openModal()"
             >
@@ -20,7 +23,7 @@
             <biz-button
                 v-else
                 type="button"
-                class="is-danger component-configurable"
+                class="is-danger is-small component-configurable"
                 :disabled="!can.media.browse"
                 @click="deleteImage()"
             >

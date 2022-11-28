@@ -4,12 +4,15 @@
             v-model="computedValue"
             :label="label"
             :placeholder="settings?.placeholder"
+            :is-small="true"
         >
             <template
                 v-if="settings?.note"
                 #note
             >
-                <p class="help">
+                <p
+                    class="help"
+                >
                     {{ settings?.note }}
                 </p>
             </template>
@@ -22,7 +25,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'Input',
+        name: 'ConfigInput',
 
         components: {
             BizFormInput,

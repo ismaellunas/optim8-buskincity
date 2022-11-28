@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label class="label">{{ label }}</label>
+        <label class="label is-size-7">{{ label }}</label>
 
         <template
             v-for="(option, index) in computedValue"
@@ -10,10 +10,12 @@
                 <div class="field-body">
                     <form-input
                         v-model="option.id"
+                        class="is-small"
                         placeholder="id"
                     />
                     <form-input
                         v-model="option.value"
+                        class="is-small"
                         placeholder="value"
                     />
                     <div
@@ -23,7 +25,7 @@
                         <p class="control">
                             <button
                                 type="button"
-                                class="button is-danger component-configurable"
+                                class="button is-small is-danger component-configurable"
                                 @click="onDelete(index)"
                             >
                                 <i :class="icon.remove" />
@@ -36,7 +38,7 @@
 
         <button
             type="button"
-            class="button is-success"
+            class="button is-success is-small"
             @click="onAdd"
         >
             <i :class="icon.add" />
