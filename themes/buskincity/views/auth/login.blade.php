@@ -30,6 +30,16 @@
                 </div>
             </nav>
 
+            @if (session('message'))
+                <div class="columns is-vcentered is-flex-grow-1">
+                    <div class="column is-8 is-offset-2">
+                        <div class="notification is-info">
+                            {{ session('message') }}
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="columns is-vcentered is-flex-grow-1">
                 <div id="socialMediaForm" class="column is-8 is-offset-2">
                     <h1 class="title is-2 mb-4">Log In</h1>
