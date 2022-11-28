@@ -6,7 +6,7 @@
             :value="true"
             :disabled="isDisabled"
         >
-            <span class="ml-2">
+            <span class="ml-2 is-size-7">
                 {{ label }}
             </span>
         </biz-checkbox>

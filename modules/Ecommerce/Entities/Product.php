@@ -92,14 +92,13 @@ class Product extends GetCandyProduct
         return $data;
     }
 
-    public function getCoverAttribute()
+    public function getCoverThumbnailUrl(): ?string
     {
-        return $this->gallery->first();
-    }
+        if ($this->gallery->isNotEmpty()) {
+            return $this->gallery->first()->thumbnailUrl;
+        }
 
-    public function getCoverThumbnailUrlAttribute(): ?string
-    {
-        return $this->cover->thumbnailUrl ?? null;
+        return null;
     }
 
     public function getDisplayNameAttribute(): string

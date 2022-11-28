@@ -191,6 +191,10 @@ return [
         'post_thumbnail' => 'default-post-thumbnail.png',
     ],
 
+    'file_size' => [
+        'profile_picture' => 3 * 1024,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway

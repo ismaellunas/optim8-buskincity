@@ -13,6 +13,8 @@
             v-if="computedValue.hasOwnProperty('isIncluded')"
             v-model="computedValue.isIncluded"
             label="Is Section Included?"
+            :is-small="true"
+            :is-fullwidth="true"
         >
             <option
                 v-for="(option, index) in toggleOptions"
@@ -23,11 +25,15 @@
             </option>
         </biz-form-select>
 
+        <hr>
+
         <fieldset :disabled="isSectionDisabled">
             <biz-form-select
                 v-if="computedValue.hasOwnProperty('size')"
                 v-model="computedValue.size"
                 label="Size"
+                :is-small="true"
+                :is-fullwidth="true"
             >
                 <option
                     v-for="(option, index) in sizeOptions"
