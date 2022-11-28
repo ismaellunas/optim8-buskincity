@@ -20,7 +20,7 @@ class OrderPolicyMixin
                 && $order->firstEventLine->latestEvent->status == BookingStatus::UPCOMING->value
                 && (
                     $user->can('order.edit')
-                    || $order->isUserWhoPlacedTheOrder($user)
+                    || $order->isPlacedByUser($user)
                 )
             );
         };
@@ -56,7 +56,7 @@ class OrderPolicyMixin
                 return false;
             }
 
-            if ($order->user_id == $user->id) {
+            if ($order->isPlacedByUser($user)) {
                 $isValid = ($product->is_check_in_required && !$order->hasCheckIn());
 
                 if ($isValid) {

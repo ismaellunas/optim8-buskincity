@@ -5,7 +5,7 @@
             class="columns"
         >
             <div class="column">
-                <p class="buttons is-pulled-right">
+                <p class="buttons is-right">
                     <biz-button-icon
                         :icon="icon.preview"
                         :disabled="pagePreviewIsDisabled"
@@ -20,7 +20,7 @@
         <div class="columns my-0">
             <div class="column py-0">
                 <biz-language-tab
-                    class="is-pulled-right"
+                    class="is-right"
                     :locale-options="localeOptions"
                     :selected-locale="selectedLocale"
                     @on-change-locale="onChangeLocale"
@@ -71,14 +71,25 @@
             >
                 <div class="columns">
                     <div class="column">
-                        <biz-button
-                            v-if="deleteTranslationIsShowed"
-                            type="button"
-                            class="is-danger"
-                            @click="$emit('on-delete-translation')"
-                        >
-                            Remove
-                        </biz-button>
+                        <div class="buttons">
+                            <biz-button
+                                v-if="duplicateTranslationIsShowed"
+                                type="button"
+                                class="is-link"
+                                @click="openModal()"
+                            >
+                                Duplicate
+                            </biz-button>
+
+                            <biz-button
+                                v-if="deleteTranslationIsShowed"
+                                type="button"
+                                class="is-danger"
+                                @click="$emit('on-delete-translation')"
+                            >
+                                Remove
+                            </biz-button>
+                        </div>
                     </div>
 
                     <div class="column">
@@ -98,14 +109,73 @@
                 </div>
             </slot>
         </form>
+
+        <biz-modal-card
+            v-if="isModalOpen"
+            @close="closeModal()"
+        >
+            <template #header>
+                <p class="modal-card-title has-text-weight-bold">
+                    Duplicate Translation
+                </p>
+
+                <button
+                    aria-label="close"
+                    class="delete"
+                    @click="closeModal()"
+                />
+            </template>
+
+            <biz-form-select
+                v-model="formDuplicate.to"
+                label="To"
+                :is-fullwidth="true"
+            >
+                <option :value="null">
+                    - Select Translation -
+                </option>
+                <option
+                    v-for="locale in emptyPageLocaleOptions"
+                    :key="locale.id"
+                    :value="locale.id"
+                >
+                    {{ locale.name }}
+                </option>
+            </biz-form-select>
+
+            <template #footer>
+                <div
+                    class="columns mx-0"
+                    style="width: 100%"
+                >
+                    <div class="column px-0">
+                        <div class="is-pulled-right">
+                            <biz-button @click="closeModal()">
+                                Cancel
+                            </biz-button>
+                            <biz-button
+                                class="is-link"
+                                :disabled="!formDuplicate.to"
+                                @click="onDuplicateTranslation()"
+                            >
+                                Duplicate
+                            </biz-button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </biz-modal-card>
     </div>
 </template>
 
 <script>
+    import MixinHasModal from '@/Mixins/HasModal';
     import BizButton from '@/Biz/Button';
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizLanguageTab from '@/Biz/LanguageTab';
+    import BizFormSelect from '@/Biz/Form/Select';
+    import BizModalCard from '@/Biz/ModalCard';
     import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
     import FormBuilder from './FormBuilder';
@@ -114,6 +184,7 @@
     import { provide, ref } from "vue";
     import { usePage } from '@inertiajs/inertia-vue3';
     import icon from '@/Libs/icon-class';
+    import { getTranslation } from '@/Libs/translation';
 
     export default {
         components: {
@@ -121,11 +192,17 @@
             BizButtonIcon,
             BizButtonLink,
             BizLanguageTab,
+            BizFormSelect,
+            BizModalCard,
             BizProvideInjectTab,
             BizProvideInjectTabs,
             FormBuilder,
             FormDetail,
         },
+
+        mixins: [
+            MixinHasModal,
+        ],
 
         inject: ['can'],
 
@@ -147,6 +224,7 @@
         emits: [
             'on-change-locale',
             'on-delete-translation',
+            'on-duplicate-translation',
             'on-submit',
             'update:contentConfigId',
         ],
@@ -172,6 +250,7 @@
                 form: useModelWrapper(props, emit),
                 computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
                 defaultLocale: usePage().props.value.defaultLanguage,
+                page: usePage().props.value.page,
             };
         },
 
@@ -179,6 +258,9 @@
             return {
                 disableInput: false,
                 icon,
+                formDuplicate: {
+                    to: null,
+                },
             };
         },
 
@@ -195,6 +277,22 @@
                 return (this.defaultLocale !== this.selectedLocale)
                     && this.form?.id
                     && this.can?.page?.delete;
+            },
+
+            duplicateTranslationIsShowed() {
+                return !!this.form?.id;
+            },
+
+            emptyPageLocaleOptions() {
+                let page = this.page;
+
+                return this.localeOptions.map(function(locale) {
+                    if (!getTranslation(page, locale.id)) {
+                        return locale;
+                    }
+
+                    return null;
+                }).filter(Boolean);
             },
         },
 
@@ -228,7 +326,33 @@
 
             onChangeLocale(localeId) {
                 this.$emit('on-change-locale', localeId);
-            }
+            },
+
+            onDuplicateTranslation() {
+                if (!!this.formDuplicate.to) {
+                    this.$emit('on-duplicate-translation', {
+                        locale: this.formDuplicate.to,
+                        form: {
+                            id: null,
+                            title: this.form.title,
+                            slug: this.form.slug,
+                            excerpt: this.form.excerpt,
+                            data: this.form.data,
+                            meta_description: this.form.meta_description,
+                            meta_title: this.form.meta_title,
+                            status: 0,
+                        },
+                    });
+
+                    this.closeModal();
+
+                    this.formDuplicate.to = null;
+                }
+            },
+
+            onCloseModal() {
+                this.formDuplicate.to = null;
+            },
         },
     };
 </script>

@@ -2,18 +2,19 @@
     <div>
         <div class="columns is-multiline">
             <template
-                v-for="url in urls"
-                :key="url"
+                v-for="(medium, index) in media"
+                :key="index"
             >
                 <slot
-                    :url="url"
+                    :index="index"
+                    :thumbnail-url="medium.thumbnail_url ?? medium.file_url"
                     :open-modal="openModal"
                 />
             </template>
         </div>
 
         <biz-modal
-            v-if="isActive"
+            v-if="isActive && activeMedium"
             @close="isActive = false"
         >
             <div class="modal-content">
@@ -21,15 +22,23 @@
                     <div class="card-image">
                         <figure class="image is-3by2">
                             <img
+                                v-if="activeMedium.file_type == 'image'"
                                 class="image-source"
-                                :src="activeUrl"
+                                :src="activeMedium.file_url"
                             >
+                            <iframe
+                                v-if="activeMedium.file_type == 'video'"
+                                class="has-ratio"
+                                frameborder="0"
+                                :src="activeMedium.file_url"
+                                allowfullscreen
+                            />
                         </figure>
                     </div>
                     <footer class="card-footer">
                         <div class="column">
                             <div class="is-pulled-left">
-                                <a @click.prevent="prev">
+                                <a @click.prevent="prev()">
                                     <biz-icon
                                         class="is-medium"
                                         icon="fas fa-lg fa-chevron-circle-left"
@@ -37,7 +46,7 @@
                                 </a>
                             </div>
                             <div class="is-pulled-right has-text-primary">
-                                <a @click.prevent="next">
+                                <a @click.prevent="next()">
                                     <biz-icon
                                         class="is-medium"
                                         icon="fas fa-lg fa-chevron-circle-right"
@@ -64,50 +73,54 @@
         },
 
         props: {
-            urls: {type: Array, default: () => [] },
+            media: { type: Array, default: () => [] },
         },
 
         data() {
             return {
-                activeUrl: null,
                 isActive: false,
+                currentIndex: null,
             };
         },
 
         computed: {
-            currentIndex() {
-                return this.urls.indexOf(this.activeUrl);
+            activeMedium() {
+                return nth(this.media, this.currentIndex);
             },
 
             maxIndex() {
-                const length = this.urls.length;
+                const length = this.media.length;
                 if (length > 0) {
                     return length - 1;
                 }
                 return null;
+            },
+
+            minIndex() {
+                return (this.maxIndex != null) ? 0 : null;
             }
         },
 
         methods: {
-            openModal(url) {
-                this.activeUrl = url;
+            openModal(index) {
                 this.isActive = true;
+                this.currentIndex = index;
             },
 
             prev() {
-                let previousIndex = this.currentIndex - 1;
+                const previousIndex = this.currentIndex - 1;
 
-                if (previousIndex >= 0) {
-                    this.activeUrl = nth(this.urls, previousIndex);
-                }
+                this.currentIndex = (previousIndex >= 0)
+                    ? previousIndex
+                    : this.maxIndex;
             },
 
             next() {
-                let nextIndex = this.currentIndex + 1;
+                const nextIndex = this.currentIndex + 1;
 
-                if (nextIndex <= this.maxIndex) {
-                    this.activeUrl = nth(this.urls, nextIndex);
-                }
+                this.currentIndex = (nextIndex <= this.maxIndex)
+                    ? nextIndex
+                    : this.minIndex;
             },
         },
     };

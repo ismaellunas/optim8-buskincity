@@ -1,4 +1,4 @@
-<div @class($uniqueClass)>
+<div @class(array_merge([$uniqueClass], $wrapperClasses))>
     <a
         id="{{ 'button-'.$entity['id'] }}"
         href="{{ $link }}"
@@ -14,7 +14,7 @@
             </span>
         @endif
 
-        <span>
+        <span @class($textClasses)>
             {{ $buttonContent['text'] }}
         </span>
 
@@ -24,6 +24,8 @@
             </span>
         @endif
     </a>
+
+    <div class="is-clearfix"></div>
 </div>
 
 @if ($isDownload)

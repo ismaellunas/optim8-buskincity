@@ -211,6 +211,15 @@ class User extends Authenticatable implements MustVerifyEmail
         return $url;
     }
 
+    public function getOptimizedProfilePhotoUrlAttribute(): ?string
+    {
+        if ($this->profilePhoto) {
+            return $this->profilePhoto->getOptimizedImageUrl(300, 300);
+        }
+
+        return null;
+    }
+
     public function getRegisteredAtAttribute()
     {
         return Carbon::parse($this->created_at)->format("Y-m-d H:i:s");

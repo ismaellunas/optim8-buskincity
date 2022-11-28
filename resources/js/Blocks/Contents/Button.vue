@@ -1,5 +1,8 @@
 <template>
-    <div :style="dimensionStyle">
+    <div
+        :style="dimensionStyle"
+        :class="wrapperClass"
+    >
         <biz-toolbar-content
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
@@ -23,7 +26,7 @@
             </span>
 
             <span
-                class="input-area"
+                :class="inputAreaClass"
                 contenteditable
                 @blur="onEditText($event)"
                 v-text="entity.content.button.text"
@@ -67,7 +70,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: "Button",
+        name: "ContentButton",
 
         components: {
             BizIconBrowser,
@@ -102,7 +105,19 @@
                     (this.config.button.size ?? ''),
                     (this.config.button.width ?? ''),
                     (this.config.button.style ?? ''),
-                    (this.config.button.position ?? ''),
+                ).filter(Boolean);
+            },
+
+            wrapperClass() {
+                return concat(
+                    (this.config.button.position ?? '')
+                ).filter(Boolean);
+            },
+
+            inputAreaClass() {
+                return concat(
+                    'input-area',
+                    (this.config.button.textWeight)
                 ).filter(Boolean);
             },
         },

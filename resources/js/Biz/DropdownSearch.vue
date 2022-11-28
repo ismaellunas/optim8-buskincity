@@ -1,6 +1,8 @@
 <template>
     <biz-dropdown
+        :class-button="{'is-small': isSmall, 'is-fullwidth': isFullwidth}"
         :is-trigger-button="isTriggerButton"
+        :is-fullwidth="isFullwidth"
     >
         <template #trigger>
             <slot name="trigger" />
@@ -21,6 +23,7 @@
                 <biz-input
                     ref="input"
                     v-model="term"
+                    :class="{'is-small': isSmall}"
                     :placeholder="placeholder"
                     @keyup.prevent="$emit('search', term)"
                 />
@@ -30,7 +33,7 @@
             </p>
             <div class="control">
                 <a
-                    class="button"
+                    :class="{'button': true, 'is-small': isSmall}"
                     @click="clearTerm"
                 >
                     <span class="icon is-small">
@@ -65,6 +68,16 @@
             isTriggerButton: {
                 type: Boolean,
                 default: true
+            },
+
+            isSmall: {
+                type: Boolean,
+                default: false
+            },
+
+            isFullwidth: {
+                type: Boolean,
+                default: false
             },
         },
 

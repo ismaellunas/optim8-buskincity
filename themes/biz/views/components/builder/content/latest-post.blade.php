@@ -5,9 +5,9 @@
         @foreach ($posts as $post)
             <div class="column is-4">
                 <article class="b752-blog-item box is-clipped p-0">
-                    <figure class="image is-4by3">
+                    <figure>
                         <a href="{{ route('blog.show', $post->slug) }}">
-                            <img src="{{ $post->coverImageUrl ?? $storageService::getImageUrl(config('constants.default_images.article_thumbnail')) }}">
+                            <img src="{{ $post->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}">
                         </a>
                     </figure>
                     <div class="p-5">

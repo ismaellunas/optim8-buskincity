@@ -1,16 +1,14 @@
 <template>
     <div class="box">
         <div class="columns">
-            <div class="column">
-                <div class="is-pulled-left">
-                    <biz-filter-search
-                        v-model="term"
-                        @search="search"
-                    />
-                </div>
+            <div class="column is-4 is-3-fullhd">
+                <biz-filter-search
+                    v-model="term"
+                    @search="search"
+                />
             </div>
 
-            <div class="column">
+            <div class="column is-2 is-1-fullhd">
                 <biz-dropdown :close-on-click="false">
                     <template #trigger>
                         <span>Filter</span>
@@ -42,8 +40,11 @@
                 </biz-dropdown>
             </div>
 
-            <div class="column">
-                &nbsp;
+            <div class="column is-4 is-3-fullhd">
+                <biz-filter-date-range
+                    v-model="dates"
+                    @update:model-value="onDateRangeChanged"
+                />
             </div>
         </div>
 
@@ -172,6 +173,7 @@
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizFilterDateRange from '@/Biz/Filter/DateRange';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
     import BizLink from '@/Biz/Link';
@@ -193,6 +195,7 @@
             BizCheckbox,
             BizDropdown,
             BizDropdownItem,
+            BizFilterDateRange,
             BizFilterSearch,
             BizIcon,
             BizLink,
@@ -228,6 +231,7 @@
 
             return {
                 queryParams: ref(queryParams),
+                dates: ref(props.pageQueryParams?.dates?? []),
                 statuses: ref(props.pageQueryParams?.status ?? []),
                 term: ref(props.pageQueryParams?.term ?? null),
                 form: useForm(form),
@@ -261,6 +265,11 @@
 
             onStatusChanged() {
                 this.queryParams['status'] = this.statuses;
+                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
+            },
+
+            onDateRangeChanged() {
+                this.queryParams['dates'] = this.dates;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
 

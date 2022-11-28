@@ -3,6 +3,7 @@
         <div class="control">
             <biz-button
                 type="button"
+                :class="{'is-small': isSmall}"
             >
                 <span
                     v-if="isDisplayIcon"
@@ -23,7 +24,7 @@
                 v-bind="$attrs"
                 class="input"
                 type="text"
-                :class="{'is-danger' : hasError}"
+                :class="{'is-danger' : hasError, 'is-small': isSmall}"
                 :value="modelValue"
                 @input="$emit('update:modelValue', $event.target.value)"
             >
@@ -32,6 +33,7 @@
         <div class="control">
             <biz-button
                 type="button"
+                :class="{'is-small': isSmall}"
                 @click="$emit('show-modal')"
             >
                 Find Icon
@@ -60,6 +62,10 @@
             modelValue: {
                 type: [String, null],
                 required: true,
+            },
+            isSmall: {
+                type: Boolean,
+                required: false,
             },
         },
 

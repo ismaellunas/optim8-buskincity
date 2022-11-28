@@ -187,7 +187,11 @@ return [
         'pb_video' => 'default-video.png',
         'admin_auth_card' => 'default-auth-card.png',
         'user_auth_card' => 'default-auth-card.png',
-        'article_thumbnail' => 'default-square.png',
+        'post_thumbnail' => 'default-post-thumbnail.png',
+    ],
+
+    'file_size' => [
+        'profile_picture' => 3 * 1024,
     ],
 
     /*

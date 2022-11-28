@@ -1,7 +1,9 @@
 <template>
-    <card
+    <biz-card
+        ref="card"
         :is-collapsed="true"
         :is-expanding-on-load="isExpandingOnLoad"
+        @on-click-header-card="onClickHeaderCard"
     >
         <template #headerTitle>
             Section
@@ -11,6 +13,8 @@
             v-if="computedValue.hasOwnProperty('isIncluded')"
             v-model="computedValue.isIncluded"
             label="Is Section Included?"
+            :is-small="true"
+            :is-fullwidth="true"
         >
             <option
                 v-for="(option, index) in toggleOptions"
@@ -21,11 +25,15 @@
             </option>
         </biz-form-select>
 
+        <hr>
+
         <fieldset :disabled="isSectionDisabled">
             <biz-form-select
                 v-if="computedValue.hasOwnProperty('size')"
                 v-model="computedValue.size"
                 label="Size"
+                :is-small="true"
+                :is-fullwidth="true"
             >
                 <option
                     v-for="(option, index) in sizeOptions"
@@ -36,24 +44,28 @@
                 </option>
             </biz-form-select>
         </fieldset>
-    </card>
+    </biz-card>
 </template>
 
 <script>
     import BizFormSelect from '@/Biz/Form/Select';
-    import Card from '@/Biz/Card';
+    import BizCard from '@/Biz/Card';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         components: {
             BizFormSelect,
-            Card,
+            BizCard,
         },
 
         props: {
             modelValue: {type: [Object, Array], default: () => {}},
             isExpandingOnLoad: { type: Boolean, default: false },
         },
+
+        emits: [
+            'on-click-header-card',
+        ],
 
         setup(props, {emit}) {
             return {
@@ -82,6 +94,12 @@
                     return false;
                 }
                 return true;
+            },
+        },
+
+        methods: {
+            onClickHeaderCard(isContentShown) {
+                this.$emit('on-click-header-card', isContentShown);
             },
         },
     };

@@ -52,8 +52,8 @@ if (theme) {
             .copy('node_modules/tinymce/skins/content/default/content.css', 'public/js/skins/content/default');
 
         mix.browserSync({
-            host: process.env.MIX_APP_URL ?? "127.0.0.1",
-            proxy: process.env.MIX_APP_URL ?? "localhost",
+            host: "127.0.0.1",
+            proxy: "localhost",
             open: false,
             files: [
                 "app/**/*.php",

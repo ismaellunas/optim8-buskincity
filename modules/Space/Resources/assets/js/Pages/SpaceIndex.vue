@@ -3,15 +3,6 @@
         <div class="box">
             <div class="columns">
                 <div class="column">
-                    <div class="is-pulled-left">
-                        <!--
-                        <biz-filter-search
-                            v-model="term"
-                            @search="search"
-                        />
-                        -->
-                    </div>
-
                     <biz-dropdown
                         :close-on-click="false"
                     >
@@ -20,12 +11,7 @@
                                 {{ selectedParent ? selectedParent.value : 'Select Space' }}
                             </span>
 
-                            <span class="icon is-small">
-                                <i
-                                    :class="icon.angleDown"
-                                    aria-hidden="true"
-                                />
-                            </span>
+                            <biz-icon :icon="icon.angleDown" />
                         </template>
 
                         <biz-dropdown-scroll
@@ -42,18 +28,14 @@
                     </biz-dropdown>
                 </div>
 
-                <div class="column">
-                    <div class="is-pulled-right">
-                        <biz-button-link
-                            :href="route('admin.spaces.create')"
-                            class="is-primary"
-                        >
-                            <span class="icon is-small">
-                                <i :class="icon.add" />
-                            </span>
-                            <span>Create New</span>
-                        </biz-button-link>
-                    </div>
+                <div class="column has-text-right">
+                    <biz-button-link
+                        class="is-primary"
+                        :href="route('admin.spaces.create')"
+                    >
+                        <biz-icon :icon="icon.add" />
+                        <span>Create New</span>
+                    </biz-button-link>
                 </div>
             </div>
 
@@ -76,6 +58,7 @@
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizDropdownScroll from '@/Biz/DropdownScroll';
+    import BizIcon from '@/Biz/Icon';
     import icon from '@/Libs/icon-class';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import NestedDraggable from './NestedDraggable';
@@ -88,6 +71,7 @@
             BizDropdown,
             BizDropdownItem,
             BizDropdownScroll,
+            BizIcon,
             NestedDraggable,
         },
 
