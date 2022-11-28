@@ -2,7 +2,6 @@
 
 use App\Facades\Localization;
 use App\Http\Middleware\HandleInertiaRequests;
-use App\Services\ModuleService;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Space\Http\Controllers\ContactController;
@@ -35,7 +34,9 @@ Route::name('admin.')->prefix('admin/')->middleware([
         Route::get('/search-managers', 'SpaceController@searchManagers')->name('search-managers');
 
         Route::prefix('settings')->name('settings.')->group(function() {
-            Route::get('/', 'SettingController@index')->name('index');
+            Route::get('/', 'SettingController@index')
+                ->name('index')
+                ->middleware('role:'.config('permission.admin_or_super_admin'));
 
             Route::get('space-types/records', 'SpaceTypeController@records')->name('space-types.records');
             Route::resource('space-types', SpaceTypeController::class)
