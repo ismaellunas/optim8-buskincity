@@ -3,11 +3,12 @@
         <biz-form-number-addons
             v-model="value"
             :label="label"
+            :is-small="true"
         >
             <template #afterInput>
                 <p class="control">
                     <button
-                        class="button"
+                        class="button is-small"
                         tabindex="-1"
                         type="button"
                     >
@@ -24,7 +25,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'NumberAddons',
+        name: 'ConfigNumberAddons',
 
         components: {
             BizFormNumberAddons,

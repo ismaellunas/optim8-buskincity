@@ -1,16 +1,20 @@
 <template>
     <div>
-        <biz-label>{{ label }}</biz-label>
+        <biz-label class="is-size-7">{{ label }}</biz-label>
 
         <biz-field-horizontal
             v-for="(value, key) in trbl"
             :key="key"
+            field-label-class="is-size-7"
         >
             <template #label>
                 {{ capitalize(key) }}
             </template>
 
-            <biz-select v-model="trbl[key]">
+            <biz-select
+                v-model="trbl[key]"
+                class="is-small is-fullwidth"
+            >
                 <option
                     v-for="option in options"
                     :key="option.name"

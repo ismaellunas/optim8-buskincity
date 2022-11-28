@@ -2,6 +2,7 @@
     <biz-form-field
         :class="fieldClass"
         :is-required="required"
+        :label-class="{'is-size-7': isSmall}"
     >
         <template
             v-if="label"
@@ -19,7 +20,7 @@
             <biz-input
                 ref="input"
                 v-bind="$attrs"
-                :class="{'is-danger': message}"
+                :class="{'is-danger': message, 'is-small': isSmall}"
                 :disabled="disabled"
                 :required="required"
                 :value="modelValue"
@@ -75,6 +76,10 @@
                 default: false
             },
             required: {
+                type: Boolean,
+                default: false
+            },
+            isSmall: {
                 type: Boolean,
                 default: false
             },

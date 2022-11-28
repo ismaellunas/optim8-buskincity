@@ -1,7 +1,10 @@
 <template>
     <div class="columns">
         <div class="column is-3 is-narrow">
-            <div id="side-menu-page-builder">
+            <div
+                id="side-menu-page-builder"
+                class="p-1"
+            >
                 <template v-if="!isComponentConfigOpen">
                     <biz-card
                         ref="component-0"

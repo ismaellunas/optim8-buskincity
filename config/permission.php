@@ -154,6 +154,8 @@ return [
 
     'super_admin_role' => 'Super Administrator',
 
+    'admin_or_super_admin' => 'Administrator|Super Administrator',
+
     'role_names' => [
         'admin' => 'Administrator',
         'performer' => 'Performer',

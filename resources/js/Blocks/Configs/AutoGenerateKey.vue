@@ -5,6 +5,7 @@
             :label="label"
             :placeholder="settings.placeholder"
             :required="false"
+            :is-small="true"
         />
     </div>
 </template>

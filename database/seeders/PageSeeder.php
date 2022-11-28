@@ -729,6 +729,7 @@ class PageSeeder extends Seeder
                                     "style" => "is-rounded",
                                     "position" => null,
                                     "iconPosition" => "left",
+                                    "textWeight" => null,
                                 ],
                                 "visibility" => [
                                     "device" => null,
@@ -829,6 +830,7 @@ class PageSeeder extends Seeder
                                     "style" => "is-rounded",
                                     "position" => null,
                                     "iconPosition" => "left",
+                                    "textWeight" => null,
                                 ],
                                 "visibility" => [
                                     "device" => null,
@@ -907,6 +909,7 @@ class PageSeeder extends Seeder
                                     "style" => "is-rounded is-outlined",
                                     "position" => "is-pulled-right",
                                     "iconPosition" => "left",
+                                    "textWeight" => null,
                                 ],
                                 "visibility" => [
                                     "device" => null,
@@ -945,6 +948,7 @@ class PageSeeder extends Seeder
                                     "style" => "is-rounded",
                                     "position" => null,
                                     "iconPosition" => "left",
+                                    "textWeight" => null,
                                 ],
                                 "visibility" => [
                                     "device" => null,

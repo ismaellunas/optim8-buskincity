@@ -3,6 +3,8 @@
         <biz-form-select
             v-model="computedValue"
             :label="label"
+            :is-small="true"
+            :is-fullwidth="true"
         >
             <template
                 v-for="(option, index) in options"
@@ -21,7 +23,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'Select',
+        name: 'ConfigSelect',
 
         components: {
             BizFormSelect,

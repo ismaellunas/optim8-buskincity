@@ -8,6 +8,7 @@ use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use App\Http\Responses\{
     PasswordResetResponse,
+    PasswordUpdateResponse,
     SuccessfulPasswordResetLinkRequestResponse,
     VerifyEmailResponse,
 };
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\PasswordResetResponse as PasswordResetResponseContract;
+use Laravel\Fortify\Contracts\PasswordUpdateResponse as PasswordUpdateResponseContract;
 use Laravel\Fortify\Contracts\VerifyEmailResponse as VerifyEmailResponseContract;
 use Laravel\Fortify\Contracts\SuccessfulPasswordResetLinkRequestResponse as SuccessfulPasswordResetLinkRequestResponseContract;
 
@@ -34,6 +36,11 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->bind(
             PasswordResetResponseContract::class,
             PasswordResetResponse::class,
+        );
+
+        $this->app->bind(
+            PasswordUpdateResponseContract::class,
+            PasswordUpdateResponse::class,
         );
 
         $this->app->singleton(

@@ -28,7 +28,7 @@
                 </template>
 
                 <template
-                    v-for="(config, key) in group.config"
+                    v-for="(config, key, index) in group.config"
                     :key="key"
                 >
                     <component
@@ -38,7 +38,9 @@
                         :settings="config.settings"
                     />
 
-                    <hr>
+                    <hr
+                        v-if="index != (Object.keys(group.config).length - 1)"
+                    >
                 </template>
             </biz-card>
         </template>

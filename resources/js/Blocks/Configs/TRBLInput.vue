@@ -1,10 +1,11 @@
 <template>
     <div>
-        <biz-label>{{ label }}</biz-label>
+        <biz-label class="is-size-7">{{ label }}</biz-label>
 
         <biz-field-horizontal
             v-for="(name, key) in inputs"
             :key="key"
+            field-label-class="is-small"
         >
             <template #label>
                 {{ capitalize(name) }}
@@ -15,10 +16,11 @@
                     <biz-number
                         ref="input"
                         v-model="trbl[name]"
+                        class="is-small"
                     />
                 </p>
                 <p class="control">
-                    <a class="button is-static">
+                    <a class="button is-static is-small">
                         {{ trbl.unit }}
                     </a>
                 </p>
