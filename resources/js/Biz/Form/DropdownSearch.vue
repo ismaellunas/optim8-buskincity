@@ -1,6 +1,7 @@
 <template>
     <biz-form-field
         :is-required="required"
+        :label-class="{'is-size-7': isSmall}"
     >
         <template
             v-if="label"
@@ -14,6 +15,8 @@
             :disabled="disabled"
             :placeholder="placeholder"
             :is-trigger-button="isTriggerButton"
+            :is-small="isSmall"
+            :is-fullwidth="isFullwidth"
         >
             <template #trigger>
                 <slot name="trigger" />
@@ -68,7 +71,15 @@
             isTriggerButton: {
                 type: Boolean,
                 default: true
-            }
+            },
+            isSmall: {
+                type: Boolean,
+                default: false
+            },
+            isFullwidth: {
+                type: Boolean,
+                default: false
+            },
         },
     };
 </script>

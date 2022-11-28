@@ -89,7 +89,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'photo' => [
                     'nullable',
                     'mimes:jpg,jpeg,png',
-                    'max:'.config('constants.one_megabyte') * 1,
+                    'max:'.config('constants.file_size.profile_picture'),
                 ],
                 'language_id' => ['required', 'exists:App\Models\Language,id'],
             ],

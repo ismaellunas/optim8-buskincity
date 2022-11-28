@@ -10,6 +10,7 @@ use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Events\EventBooked;
 use Modules\Booking\Events\EventRescheduled;
 use Modules\Booking\Http\Requests\EventBookRequest;
+use Modules\Booking\Http\Requests\OrderIndexRequest;
 use Modules\Booking\Http\Requests\OrderRescheduleRequest;
 use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Order;
@@ -28,11 +29,13 @@ class OrderController extends CrudController
         OrderService $orderService,
         ProductEventService $productEventService
     ) {
+        $this->authorizeResource(Order::class, 'order');
+
         $this->orderService = $orderService;
         $this->productEventService = $productEventService;
     }
 
-    public function index()
+    public function index(OrderIndexRequest $request)
     {
         $user = auth()->user();
 
@@ -40,10 +43,13 @@ class OrderController extends CrudController
             'title' => $this->getIndexTitle(),
             'orders' => $this->orderService->getFrontendRecords(
                 $user,
-                request()->get('term'),
-                ['inStatus' => request()->status ?? null],
+                $request->get('term'),
+                [
+                    'inStatus' => $request->status ?? null,
+                    'dateRange' => $request->dates ?? []
+                ],
             ),
-            'pageQueryParams' => array_filter(request()->only('term', 'status')),
+            'pageQueryParams' => array_filter($request->only('term', 'status', 'dates')),
             'statusOptions' => BookingStatus::options(),
         ]));
     }

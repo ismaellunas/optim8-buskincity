@@ -4,6 +4,7 @@ import {
     contentSizes,
     defaultOption,
     otherColors,
+    textWeights,
 } from './style-options';
 
 import {
@@ -31,6 +32,7 @@ export default {
             style: null,
             position: null,
             iconPosition: 'left',
+            textWeight: null,
         },
         visibility: visibility.config,
         dimension: dimension.config
@@ -68,7 +70,7 @@ export const config = {
                 },
             },
             isLight: {
-                component: "checkbox",
+                component: "ConfigCheckbox",
                 label: "Light Button?",
             },
             size: {
@@ -120,6 +122,13 @@ export const config = {
                             { value: "right", name: "Right"},
                         ]
                     ),
+                },
+            },
+            textWeight: {
+                component: "ConfigSelect",
+                label: "Text Weight",
+                settings: {
+                    options: defaultOption.concat(textWeights),
                 },
             },
         }

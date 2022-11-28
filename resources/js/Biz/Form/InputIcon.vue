@@ -1,6 +1,7 @@
 <template>
     <biz-form-field
         :is-required="required"
+        :label-class="{'is-size-7': isSmall}"
     >
         <template #label>
             {{ label }}
@@ -14,6 +15,7 @@
             :has-error="hasError"
             :placeholder="placeholder"
             :required="required"
+            :is-small="isSmall"
             @input="$emit('update:modelValue', $event.target.value)"
             @keypress="$emit('on-keypress', $event)"
             @show-modal="openModal()"
@@ -87,6 +89,10 @@
                 default: false
             },
             hasType: {
+                type: Boolean,
+                default: false
+            },
+            isSmall: {
                 type: Boolean,
                 default: false
             }
