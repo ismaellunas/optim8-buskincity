@@ -1,17 +1,19 @@
 <template>
     <div>
-        <biz-label>{{ label }}</biz-label>
+        <biz-label class="is-size-7">
+            {{ label }}
+        </biz-label>
         <div
             v-for="(option, index) in options"
             :key="index"
         >
             <biz-checkbox
                 v-model:checked="computedValue"
-                label-class="mr-4"
+                label-class="mr-4 is-size-7"
                 :value="option.id"
             >
                 &nbsp;
-                <span> {{ option.value }} </span>
+                <span class="is-small-7"> {{ option.value }} </span>
             </biz-checkbox>
         </div>
     </div>

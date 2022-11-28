@@ -25,34 +25,45 @@
         <hr>
 
         <div class="columns">
-            <div class="column is-3 is-narrow">
-                <div id="side-menu-form-builder">
+            <div class="column is-3 is-narrow pt-0">
+                <div
+                    id="side-menu-form-builder"
+                    class="p-1"
+                >
                     <template v-if="!isComponentConfigOpen">
-                        <draggable
-                            class="dragArea columns is-multiline"
-                            :list="availableFields"
-                            :group="{ name: 'fields', pull: 'clone', put: false }"
-                            :clone="cloneComponent"
-                            :sort="false"
-                            item-key="id"
-                            @change="log"
-                            @start="onStartedHandler"
-                            @end="onEndedHandler"
+                        <biz-card
+                            class="mb-1"
+                            :is-collapsed="true"
+                            :is-expanding-on-load="true"
                         >
-                            <template #item="{ element }">
-                                <div class="column is-half">
-                                    <div
-                                        class="card"
-                                    >
-                                        <div class="card-content is-size-7">
-                                            <div class="content is-center">
-                                                {{ element.title }}
+                            <template #headerTitle>
+                                General
+                            </template>
+
+                            <draggable
+                                class="dragArea columns is-multiline"
+                                :list="availableFields"
+                                :group="{ name: 'fields', pull: 'clone', put: false }"
+                                :clone="cloneComponent"
+                                :sort="false"
+                                item-key="id"
+                                @change="log"
+                                @start="onStartedHandler"
+                                @end="onEndedHandler"
+                            >
+                                <template #item="{ element }">
+                                    <div class="column is-half p-2">
+                                        <div class="card">
+                                            <div class="card-content is-size-7">
+                                                <div class="content is-center">
+                                                    {{ element.title }}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </template>
-                        </draggable>
+                                </template>
+                            </draggable>
+                        </biz-card>
                     </template>
 
                     <template v-else>
@@ -121,6 +132,7 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
+    import BizCard from '@/Biz/Card';
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormKey from '@/Biz/Form/Key';
     import Draggable from "vuedraggable";
@@ -147,6 +159,7 @@
         components: {
             BizButton,
             BizButtonLink,
+            BizCard,
             BizFormInput,
             BizFormKey,
             Draggable,

@@ -17,11 +17,14 @@ body
   border: 1px #D3D3D3 dashed
 
 #side-menu-page-builder
+  position: -webkit-sticky
   position: sticky
-  min-height: 100vh
+  max-height: 100vh
   top: 0
   bottom: 0
   z-index: 35
+  overflow-x: unset
+  overflow-y: scroll
 
 #page-form-builder
     .empty-icon
@@ -36,6 +39,11 @@ body
         border: 1px #D3D3D3 dashed
     .edit-mode-columns
         position: relative
+
+.dropdown.is-fullwidth
+  width: 100%
+  .dropdown-trigger
+    width: 100%
 
 /* sweetalert */
 .swal2-container-custom
