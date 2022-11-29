@@ -113,7 +113,13 @@ class PageService
                         },
                     ])
                     ->default()
-                    ->get(['id', 'file_url']);
+                    ->get(['id', 'version', 'file_name', 'extension'])
+                    ->transform(function ($image) {
+                        $image->file_url = $image->optimizedImageUrl;
+
+                        return $image;
+                    })
+                    ->all();
             }
         }
 

@@ -85,7 +85,6 @@ class OrderSeeder extends Seeder
             Event::factory()->state([
                 'schedule_id' => $product->eventSchedule->id,
                 'order_line_id' => $orderLine->id,
-                'timezone' => 'UTC',
             ])->create();
         }
     }

@@ -4,10 +4,12 @@ import {
     contentSizes,
     defaultOption,
     otherColors,
+    textWeights,
 } from './style-options';
 
 import {
-    dimension
+    dimension,
+    visibility
 } from './global-configs.js';
 
 export default {
@@ -30,7 +32,9 @@ export default {
             style: null,
             position: null,
             iconPosition: 'left',
+            textWeight: null,
         },
+        visibility: visibility.config,
         dimension: dimension.config
     }
 };
@@ -66,7 +70,7 @@ export const config = {
                 },
             },
             isLight: {
-                component: "checkbox",
+                component: "ConfigCheckbox",
                 label: "Light Button?",
             },
             size: {
@@ -120,7 +124,15 @@ export const config = {
                     ),
                 },
             },
+            textWeight: {
+                component: "ConfigSelect",
+                label: "Text Weight",
+                settings: {
+                    options: defaultOption.concat(textWeights),
+                },
+            },
         }
     },
+    visibility: visibility.component,
     dimension: dimension.component
 };

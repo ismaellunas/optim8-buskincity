@@ -10,8 +10,10 @@ class Button extends BaseContent
     public $link = null;
     public $target = null;
     public $isDownload = false;
+    public $textClasses = [];
 
     private $config = [];
+    private $visibility = [];
 
     /**
      * Create a new component instance.
@@ -23,17 +25,25 @@ class Button extends BaseContent
         parent::__construct($entity);
 
         $this->config = $this->getButtonConfig();
+        $this->visibility = $this->getButtonVisibility();
         $this->buttonClasses = $this->getButtonClasses();
         $this->buttonContent = $this->getButtonContent();
+        $this->textClasses = $this->getTextClasses();
         $this->iconPosition = $this->config['iconPosition'] ?? null;
         $this->link = $this->config['link'] ?? null;
         $this->target = $this->setTarget();
         $this->isDownload = $this->config['target'] === 'download';
+        $this->wrapperClasses[] = $this->config['position'] ?? null;
     }
 
     private function getButtonConfig(): array
     {
         return $this->getConfig()['button'] ?? [];
+    }
+
+    private function getButtonVisibility(): array
+    {
+        return $this->getConfig()['visibility'] ?? [];
     }
 
     private function getButtonClasses(): array
@@ -45,7 +55,16 @@ class Button extends BaseContent
         $classes->push($this->config['size'] ?? null);
         $classes->push($this->config['width'] ?? null);
         $classes->push($this->config['style'] ?? null);
-        $classes->push($this->config['position'] ?? null);
+        $classes->push($this->visibility['device'] ?? null);
+
+        return $classes->filter()->values()->all();
+    }
+
+    private function getTextClasses(): array
+    {
+        $classes = collect();
+
+        $classes->push($this->config['textWeight'] ?? null);
 
         return $classes->filter()->values()->all();
     }

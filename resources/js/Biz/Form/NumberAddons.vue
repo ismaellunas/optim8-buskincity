@@ -2,6 +2,7 @@
     <biz-field :class="wrapperClass">
         <biz-label
             v-if="label"
+            :class="{'is-size-7': isSmall}"
             :is-required="required"
         >
             {{ label }}
@@ -15,6 +16,7 @@
                 <biz-number
                     ref="input"
                     v-bind="$attrs"
+                    :class="{'is-small': isSmall}"
                     :disabled="disabled"
                     :placeholder="placeholder"
                     :required="required"
@@ -59,6 +61,7 @@
             required: { type: Boolean, default: false },
             wrapperClass: { type: [String, Array, Object], default: () => [] },
             isFullwidth: { type: Boolean, default: true },
+            isSmall: { type: Boolean, default: false },
         },
 
         emits: [

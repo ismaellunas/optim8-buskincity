@@ -3,6 +3,7 @@
 namespace Modules\Booking\Http\Controllers;
 
 use App\Contracts\MediaStorageInterface as MediaStorage;
+use App\Helpers\MimeType;
 use App\Http\Controllers\CrudController;
 use App\Models\Media;
 use App\Services\IPService;
@@ -13,6 +14,7 @@ use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\ProductType;
 use GetCandy\Models\TaxClass;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Services\ProductEventService;
@@ -21,7 +23,7 @@ use Modules\Ecommerce\Entities\ProductVariant;
 use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Ecommerce\Http\Requests\ProductCreateRequest;
 use Modules\Ecommerce\Http\Requests\ProductUpdateRequest;
-use Modules\Ecommerce\ModuleService;
+use Modules\Ecommerce\ModuleService as EcommerceModuleService;
 use Modules\Ecommerce\Services\ProductService;
 
 class ProductController extends CrudController
@@ -43,6 +45,11 @@ class ProductController extends CrudController
         $this->productService = $productService;
         $this->mediaService = $mediaService;
         $this->productEventService = $productEventService;
+    }
+
+    private function getImageMimeTypes(): Collection
+    {
+        return MimeType::getMimeTypes(config('constants.extensions.image'));
     }
 
     public function index(Request $request)
@@ -80,6 +87,10 @@ class ProductController extends CrudController
             ],
             'roleOptions' => $this->productService->roleOptions(),
             'imageMimes' => config('constants.extensions.image'),
+            'rules' => [
+                'maxProductFileSize' => EcommerceModuleService::maxProductFileSize(),
+                'maxProductFileNumber' => EcommerceModuleService::maxProductMediaNumber(),
+            ],
         ]));
     }
 
@@ -118,7 +129,7 @@ class ProductController extends CrudController
         ]);
 
         $meta = [
-            'roles' => empty($inputs['roles']) ? [] : [$inputs['roles']],
+            'roles' => empty($inputs['roles']) ? [] : [(int) $inputs['roles']],
             'duration' => 30,
             'duration_unit' => 'minute',
             'bookable_date_range_type' => 'calendar_days_into_the_future',
@@ -143,7 +154,7 @@ class ProductController extends CrudController
                 $media[] = $this->productService->upload(
                     $product,
                     $file,
-                    ModuleService::MEDIA_TYPE_PRODUCT
+                    EcommerceModuleService::MEDIA_TYPE_PRODUCT
                 );
             }
         }
@@ -157,9 +168,11 @@ class ProductController extends CrudController
     {
         $canManageManager = auth()->user()->can('manageManager', Product::class);
 
+        $product->load('eventSchedule.weeklyHours.times');
+
         return Inertia::render('Booking::ProductEdit', $this->getData([
             'title' => $this->getEditTitle(),
-            'imageMimes' => config('constants.extensions.image'),
+            'imageMimes' => $this->getImageMimeTypes(),
             'roleOptions' => $this->productService->roleOptions(),
             'statusOptions' => $this->productService->statusOptions(),
             'product' => $this->productService->formResource($product),
@@ -172,6 +185,10 @@ class ProductController extends CrudController
             'geoLocation' => app(IPService::class)->getGeoLocation(),
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),
             'productManagerBaseRoute' => 'admin.ecommerce.products.managers',
+            'rules' => [
+                'maxProductFileSize' => EcommerceModuleService::maxProductFileSize(),
+                'maxProductFileNumber' => EcommerceModuleService::maxProductMediaNumber(),
+            ],
             'managers' => (
                 $canManageManager
                 ? $this->productService->formattedManagers($product)
@@ -219,7 +236,7 @@ class ProductController extends CrudController
                 $media[] = $this->productService->upload(
                     $product,
                     $file,
-                    ModuleService::MEDIA_TYPE_PRODUCT
+                    EcommerceModuleService::MEDIA_TYPE_PRODUCT
                 );
             }
         }

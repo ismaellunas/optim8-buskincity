@@ -34,6 +34,7 @@ use App\Services\{
     WidgetService,
 };
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -103,5 +104,9 @@ class AppServiceProvider extends ServiceProvider
                 });
             }
         );
+
+        if (env('APP_HTTPS_IS_ON', false)) {
+            URL::forceScheme('https');
+        }
     }
 }

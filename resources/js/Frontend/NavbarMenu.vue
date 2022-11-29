@@ -16,6 +16,7 @@
                 <a
                     role="button"
                     class="navbar-burger"
+                    :class="{'is-active': isMenuDisplay}"
                     aria-label="menu"
                     aria-expanded="false"
                     data-target="navbarBasicExample"
@@ -78,7 +79,7 @@
                 </div>
 
                 <div class="navbar-end">
-                    <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-item has-dropdown is-hoverable navbar-item-dropdown">
                         <a class="navbar-link">
                             {{ $page.props.user.full_name }}
                         </a>
@@ -88,13 +89,15 @@
                                 v-for="(dropdownMenu, index) in $page.props.menus.dropdownRightMenus"
                                 :key="index"
                             >
-                                <biz-link
+                                <biz-navbar-item
                                     v-if="dropdownMenu.isEnabled"
-                                    :href="dropdownMenu.link"
-                                    class="navbar-item"
+                                    :class="{'has-text-primary': dropdownMenu.isActive}"
+                                    :is-internal-link="dropdownMenu.isInternalLink"
+                                    :url="dropdownMenu.link"
+                                    @after-click="closeMenu()"
                                 >
                                     {{ dropdownMenu.title }}
-                                </biz-link>
+                                </biz-navbar-item>
                             </template>
 
                             <biz-link
@@ -135,23 +138,21 @@
 
 <script>
     import BizLink from '@/Biz/Link';
+    import BizNavbarItem from '@/Biz/NavbarItem';
     import { computed, onMounted, onUnmounted } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
+    import { ref } from 'vue';
 
     export default {
         components: {
             BizLink,
+            BizNavbarItem,
         },
 
         setup() {
             const navLogo = computed(() => usePage().props.value.menus.navLogo);
 
-            const appLogoImageUrl = computed(() => {
-                return (
-                    usePage().props.value.appLogoUrl
-                    ?? "https://dummyimage.com/48x28/e5e5e5/000000.png&text=Logo"
-                );
-            });
+            const appLogoImageUrl = computed(() => usePage().props.value.appLogoUrl);
 
             const navbarDropdown = document.getElementsByClassName('navbar-item-dropdown');
 
@@ -222,6 +223,10 @@
             },
             showMenu() {
                 this.isMenuDisplay = !this.isMenuDisplay;
+            },
+
+            closeMenu() {
+                this.isMenuDisplay = false;
             },
         }
     }

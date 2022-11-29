@@ -56,6 +56,12 @@
             BizButton,
         },
 
+        provide() {
+            return {
+                selectItem: this.selectItem,
+            };
+        },
+
         props: {
             active: {
                 type: Boolean,
@@ -85,6 +91,10 @@
                 type: Boolean,
                 default: true
             },
+            isFullwidth: {
+                type: Boolean,
+                default: false
+            },
         },
 
         emits: [
@@ -99,10 +109,28 @@
             };
         },
 
-        provide() {
-            return {
-                selectItem: this.selectItem,
-            };
+        computed: {
+            rootClasses() {
+                return {
+                    'is-active': this.isActive,
+                    'is-hoverable': this.isHoverable,
+                    'is-fullwidth': this.isFullwidth,
+                };
+            },
+        },
+
+        created() {
+            if (typeof window !== 'undefined') {
+                document.addEventListener('click', this.clickedOutside);
+                document.addEventListener('keyup', this.keyPress);
+            }
+        },
+
+        beforeUnmount() {
+            if (typeof window !== 'undefined') {
+                document.removeEventListener('click', this.clickedOutside);
+                document.removeEventListener('keyup', this.keyPress);
+            }
         },
 
         methods: {
@@ -165,28 +193,5 @@
                 }
             },
         },
-
-        computed: {
-            rootClasses() {
-                return {
-                    'is-active': this.isActive,
-                    'is-hoverable': this.isHoverable,
-                };
-            },
-        },
-
-        created() {
-            if (typeof window !== 'undefined') {
-                document.addEventListener('click', this.clickedOutside);
-                document.addEventListener('keyup', this.keyPress);
-            }
-        },
-
-        beforeDestroy() {
-            if (typeof window !== 'undefined') {
-                document.removeEventListener('click', this.clickedOutside);
-                document.removeEventListener('keyup', this.keyPress);
-            }
-        }
     };
 </script>

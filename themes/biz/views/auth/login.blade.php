@@ -23,6 +23,16 @@
             </div>
         </div>
         <section class="section">
+            @if (session('message'))
+                <div class="columns">
+                    <div class="column is-9 is-offset-1">
+                        <div class="notification is-info">
+                            {{ session('message') }}
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="columns" id="socialMediaForm">
                 <div class="column is-9 is-offset-1">
                     <h1 class="title">Log In</h1>

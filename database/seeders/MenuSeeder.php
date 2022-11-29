@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use App\Entities\Caches\MenuCache;
 use App\Entities\Menus\Options\SegmentOption;
 use App\Entities\Menus\Options\UrlOption;
+use App\Entities\Menus\Options\PageOption;
 use App\Models\{
+    PageTranslation,
     Menu,
     MenuItem,
 };
@@ -21,33 +23,44 @@ class MenuSeeder extends Seeder
      */
     public function run()
     {
-        $typeUrl = (new UrlOption())->getKey();
-        $typeSegment = (new SegmentOption())->getKey();
+        $urlOption = new UrlOption();
+        $pageOption = new PageOption();
+        $segmentOption = new SegmentOption();
+
+        $pageIds = PageTranslation::select([
+                'slug',
+                'page_id'
+            ])
+            ->get()
+            ->pluck('page_id', 'slug')
+            ->toArray();
 
         $headerMenus = [
             [
                 'title' => 'Home',
-                'type' => $typeUrl,
+                'type' => $urlOption->getKey(),
                 'url' => route('homepage'),
                 'order' => 1,
             ],
             [
                 'title' => 'Street Performers',
-                'type' => $typeUrl,
-                'url' => '#',
+                'type' => $pageOption->getKey(),
                 'order' => 2,
+                'menu_itemable_id' => $pageIds['street-performers'],
+                'menu_itemable_type' => $pageOption->getTypeOptions()['model'],
             ],
             [
                 'title' => 'Blog',
-                'type' => $typeUrl,
+                'type' => $urlOption->getKey(),
                 'url' => route('blog.index'),
                 'order' => 3,
             ],
             [
                 'title' => 'About',
-                'type' => $typeUrl,
-                'url' => '#',
+                'type' => $pageOption->getKey(),
                 'order' => 4,
+                'menu_itemable_id' => $pageIds['about'],
+                'menu_itemable_type' => $pageOption->getTypeOptions()['model'],
             ],
         ];
 
@@ -68,17 +81,17 @@ class MenuSeeder extends Seeder
         $footerMenus = [
             [
                 'title' => 'About',
-                'type' => $typeSegment,
+                'type' => $segmentOption->getKey(),
                 'order' => 1,
             ],
             [
                 'title' => 'Performers',
-                'type' => $typeSegment,
+                'type' => $segmentOption->getKey(),
                 'order' => 2,
             ],
             [
                 'title' => 'General',
-                'type' => $typeSegment,
+                'type' => $segmentOption->getKey(),
                 'order' => 3,
             ],
         ];
@@ -100,7 +113,7 @@ class MenuSeeder extends Seeder
         $footerMenus = [
             [
                 'title' => 'Blog',
-                'type' => $typeUrl,
+                'type' => $urlOption->getKey(),
                 'url' => route('blog.index'),
                 'order' => 1,
                 'parent_id' => $menu->menuItems[0]->id,
@@ -108,15 +121,17 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'About',
-                'type' => $typeUrl,
+                'type' => $pageOption->getKey(),
                 'url' => '#',
                 'order' => 2,
                 'parent_id' => $menu->menuItems[0]->id,
                 'menu_id' => $menu->id,
+                'menu_itemable_id' => $pageIds['about'],
+                'menu_itemable_type' => $pageOption->getTypeOptions()['model'],
             ],
             [
                 'title' => 'Contact us',
-                'type' => $typeUrl,
+                'type' => $urlOption->getKey(),
                 'url' => '#',
                 'order' => 3,
                 'parent_id' => $menu->menuItems[0]->id,
@@ -124,15 +139,17 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Street Performer',
-                'type' => $typeUrl,
+                'type' => $pageOption->getKey(),
                 'url' => '#',
                 'order' => 1,
                 'parent_id' => $menu->menuItems[1]->id,
                 'menu_id' => $menu->id,
+                'menu_itemable_id' => $pageIds['street-performers'],
+                'menu_itemable_type' => $pageOption->getTypeOptions()['model'],
             ],
             [
                 'title' => 'Become a Performer',
-                'type' => $typeUrl,
+                'type' => $urlOption->getKey(),
                 'url' => '#',
                 'order' => 2,
                 'parent_id' => $menu->menuItems[1]->id,
@@ -140,7 +157,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Terms & Conditions',
-                'type' => $typeUrl,
+                'type' => $urlOption->getKey(),
                 'url' => '#',
                 'order' => 1,
                 'parent_id' => $menu->menuItems[2]->id,
@@ -148,7 +165,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Privacy Policy',
-                'type' => $typeUrl,
+                'type' => $urlOption->getKey(),
                 'url' => '#',
                 'order' => 2,
                 'parent_id' => $menu->menuItems[2]->id,
@@ -156,7 +173,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Cookie Policy',
-                'type' => $typeUrl,
+                'type' => $urlOption->getKey(),
                 'url' => '#',
                 'order' => 3,
                 'parent_id' => $menu->menuItems[2]->id,
@@ -173,7 +190,7 @@ class MenuSeeder extends Seeder
         $socialMedias = [
             [
                 'title' => 'Facebook',
-                'type' => $typeUrl,
+                'type' => $urlOption->getKey(),
                 'order' => 1,
                 'url' => 'https://www.facebook.com/',
                 'is_blank' => true,
@@ -181,7 +198,7 @@ class MenuSeeder extends Seeder
             ],
             [
                 'title' => 'Twitter',
-                'type' => $typeUrl,
+                'type' => $urlOption->getKey(),
                 'order' => 2,
                 'url' => 'https://twitter.com/',
                 'is_blank' => true,

@@ -13,13 +13,13 @@
         <div class="container">
             <div class="columns is-multiline is-centered">
                 <div class="column is-12">
-                    <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $userProfile->getMedias('cover_background_photo')->first()->file_url ?? null }});">
+                    <div class="profile-background hero is-medium is-primary is-radius" style="background-image: url({{ $userProfile->getCoverBackgroundUrl(1280, 398) }});">
                         <div class="hero-body"></div>
                     </div>
                 </div>
                 <div class="column is-11">
                     <figure class="profile-picture image is-250x250">
-                        <img src="{{ $user->profilePhotoUrl ?? url('/images/profile-picture-default.png') }}" alt="{{ $user->fullName }}" class="is-rounded">
+                        <img src="{{ $user->optimizedProfilePhotoUrl ?? url('/images/profile-picture-default.png') }}" alt="{{ $user->fullName }}" class="is-rounded">
 
                         @php
                             $countryCode = $userProfile->getMeta('country');
@@ -92,7 +92,7 @@
                         <div class="columns is-multiline mt-5">
                             <div class="column is-12">
                                 <h2 class="title is-3">
-                                    {{ __('Upcomming Bookings') }}
+                                    {{ __('Upcoming Bookings') }}
                                 </h2>
                             </div>
                             <div class="column is-12">
@@ -124,7 +124,7 @@
                                             @endforeach
                                         @else
                                         <tr>
-                                            <td colspan="2" class="has-text-centered">
+                                            <td colspan="3" class="has-text-centered">
                                                 {{ __('Empty') }}
                                             </td>
                                         </tr>
@@ -163,14 +163,14 @@
                         <div class="column is-7">
                             @if ($userProfile->getMeta('gallery'))
                                 <gallery
-                                    :urls="{{ Illuminate\Support\Js::from($userProfile->getMedias('gallery')->pluck('file_url')) }}"
+                                    :media="{{ Illuminate\Support\Js::from($userProfile->getMediaWithThumbnails('gallery', 600, 400)) }}"
                                 >
-                                    <template v-slot="{ url, openModal }">
+                                    <template v-slot="{ index, thumbnailUrl, openModal }">
                                         <div class="column is-one-third-desktop is-half-tablet">
-                                            <div class="card" @click.prevent="openModal(url)">
+                                            <div class="card" @click.prevent="openModal(index)">
                                                 <div class="card-image">
                                                     <figure class="image is-3by2">
-                                                        <img :src="url" alt="">
+                                                        <img :src="thumbnailUrl" alt="" >
                                                     </figure>
                                                 </div>
                                             </div>

@@ -87,9 +87,15 @@ class ProductService
             $builder->whereHas('metas', function ($query) use ($user) {
                 $roleIds = $user->roles->pluck('id');
 
-                $query
-                    ->where('key', 'roles')
-                    ->whereJsonContains('value', $roleIds);
+                if ($roleIds->isNotEmpty()) {
+                    $query
+                        ->where('key', 'roles')
+                        ->whereJsonContains('value', $roleIds);
+                } else {
+                    $query
+                        ->where('key', 'roles')
+                        ->whereJsonLength('value', 0);
+                }
             });
         }
 
@@ -107,7 +113,7 @@ class ProductService
                 'id' => $record->id,
                 'name' => $record->translateAttribute('name', config('app.locale')),
                 'status' => Str::title($record->status),
-                'coverUrl' => $record->coverThumbnailUrl,
+                'coverUrl' => $record->getCoverThumbnailUrl(),
             ];
         });
     }
@@ -199,7 +205,8 @@ class ProductService
             'gallery' => $product->gallery->map(fn ($media) => [
                 'id' => $media->id,
                 'display_file_name' => $media->displayFileName,
-                'file_url' => $media->file_url,
+                'file_url' => $media->getOptimizedImageUrl(900, 600),
+                'thumbnail_url' => $media->getThumbnailUrl(300, 200),
             ]),
         ];
 

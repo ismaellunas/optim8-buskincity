@@ -1,21 +1,20 @@
 <template>
     <div>
         <div class="columns">
-            <div class="column">
-                <div class="is-pulled-right">
-                    <biz-button
-                        type="button"
-                        class="is-primary"
-                        @click="openModalCreate()"
-                    >
-                        <span class="icon is-small">
-                            <i :class="icon.add" />
-                        </span>
-                        <span>Add New</span>
-                    </biz-button>
-                </div>
+            <div class="column has-text-right">
+                <biz-button
+                    type="button"
+                    class="is-primary"
+                    @click="openModalCreate()"
+                >
+                    <span class="icon is-small">
+                        <i :class="icon.add" />
+                    </span>
+                    <span>Add New</span>
+                </biz-button>
             </div>
         </div>
+
         <div class="table-container">
             <biz-table class="is-fullwidth">
                 <thead>

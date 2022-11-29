@@ -15,16 +15,25 @@ export default {
     columns: [],
     config: {
         wrapper: {
+            customId: null,
             isFullwidth: false,
             backgroundColor: null,
             backgroundImage: null,
             rounded: null,
         },
-        dimension: dimension.config,
         section: {
             isIncluded: false,
             size: null,
-        }
+        },
+        columns: {
+            isCentered: false,
+            column: [
+                {
+                    size: "auto",
+                }
+            ],
+        },
+        dimension: dimension.config,
     },
 };
 
@@ -33,6 +42,14 @@ export const config = {
         label: "Wrapper",
         isOpen: false,
         config: {
+            customId: {
+                component: "ConfigInput",
+                label: "Custom ID",
+                settings: {
+                    placeholder: "custom-id",
+                    note: "Custom ID must be unique.",
+                },
+            },
             isFullwidth: {
                 component: "ConfigSelect",
                 label: "Fullwidth",
@@ -63,9 +80,13 @@ export const config = {
             },
         }
     },
-    dimension: dimension.component,
     section: {
         label: "Section",
         component: "ConfigRowSection",
-    }
+    },
+    columns: {
+        label: "Columns",
+        component: "ConfigColumns",
+    },
+    dimension: dimension.component,
 };

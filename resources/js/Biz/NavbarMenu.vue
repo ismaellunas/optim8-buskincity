@@ -20,6 +20,7 @@
                 <a
                     role="button"
                     class="navbar-burger"
+                    :class="{'is-active': isMenuDisplay}"
                     aria-label="menu"
                     aria-expanded="false"
                     data-target="navbarBasicExample"
@@ -56,14 +57,15 @@
                                         v-for="(childMenu, childIndex) in menu.children"
                                         :key="childIndex"
                                     >
-                                        <biz-link
+                                        <biz-navbar-item
                                             v-if="childMenu.isEnabled"
-                                            class="navbar-item"
-                                            :href="childMenu.link"
-                                            :class="{'is-active': menu.isActive}"
+                                            :is-internal-link="true"
+                                            :class="{'has-text-primary': childMenu.isActive}"
+                                            :url="childMenu.link"
+                                            @after-click="closeMenu()"
                                         >
                                             {{ childMenu.title }}
-                                        </biz-link>
+                                        </biz-navbar-item>
                                     </template>
                                 </div>
                             </div>
@@ -74,6 +76,7 @@
                                 class="navbar-item"
                                 :active="menu.isActive"
                                 :href="menu.link"
+                                @click="closeMenu()"
                             >
                                 {{ menu.title }}
                             </biz-link>
@@ -89,13 +92,14 @@
                             </a>
 
                             <div class="navbar-dropdown is-boxed">
-                                <biz-link
+                                <biz-navbar-item
                                     v-if="navProfile"
-                                    :href="navProfile.link"
-                                    class="navbar-item"
+                                    is-internal-link
+                                    :url="navProfile.link"
+                                    @after-click="closeMenu()"
                                 >
                                     {{ navProfile.title }}
-                                </biz-link>
+                                </biz-navbar-item>
 
                                 <biz-link
                                     v-if="$page.props.jetstream.hasApiFeatures"
@@ -106,23 +110,14 @@
                                 </biz-link>
 
                                 <hr class="navbar-divider">
-                                <form
+
+                                <biz-navbar-item
                                     ref="logout"
-                                    method="POST"
-                                    :action="route('logout')"
-                                    @submit.prevent="logout"
+                                    url=""
+                                    @click.prevent="logout"
                                 >
-                                    <input
-                                        type="hidden"
-                                        name="_token"
-                                        :value="csrfToken"
-                                    >
-                                    <biz-button
-                                        class="navbar-item ml-2 is-ghost"
-                                    >
-                                        Logout
-                                    </biz-button>
-                                </form>
+                                    Logout
+                                </biz-navbar-item>
                             </div>
                         </div>
                     </div>
@@ -133,26 +128,21 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
     import BizLink from '@/Biz/Link';
+    import BizNavbarItem from '@/Biz/NavbarItem';
     import { computed, onMounted, onUnmounted } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
-            BizButton,
             BizLink,
+            BizNavbarItem,
         },
         setup() {
             const navMenus = computed(() => usePage().props.value.menus.nav);
             const navLogo = computed(() => usePage().props.value.menus.navLogo);
             const navProfile = computed(() => usePage().props.value.menus.navProfile);
-            const appLogoImageUrl = computed(() => {
-                return (
-                    usePage().props.value.appLogoUrl
-                    ?? "https://dummyimage.com/48x28/e5e5e5/000000.png&text=Logo"
-                );
-            });
+            const appLogoImageUrl = computed(() => usePage().props.value.appLogoUrl);
 
             const navbarDropdown = document.getElementsByClassName('navbar-item-dropdown');
 
@@ -208,15 +198,17 @@
                     preserveState: false
                 });
             },
+
             logout() {
-                if (route().current('admin*')) {
-                    this.$inertia.post(route('logout'));
-                } else {
-                    this.$refs.logout.submit();
-                }
+                this.$inertia.post(route('logout'));
             },
+
             showMenu() {
                 this.isMenuDisplay = !this.isMenuDisplay;
+            },
+
+            closeMenu() {
+                this.isMenuDisplay = false;
             },
         }
     }

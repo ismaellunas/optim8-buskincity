@@ -4,33 +4,7 @@
         :class="wrapperClass"
         :style="wrapperStyle"
     >
-        <div class="column is-3 p-1">
-            <div class="field has-addons">
-                <div class="control is-expanded">
-                    <biz-select
-                        v-model="numberOfColumns"
-                        class="is-fullwidth is-small"
-                        @change="onColumnChange"
-                    >
-                        <option
-                            v-for="(columnNumber, index) in columnOptions"
-                            :key="index"
-                        >
-                            {{ columnNumber }}
-                        </option>
-                    </biz-select>
-                </div>
-                <div class="control">
-                    <biz-button
-                        type="button"
-                        class="is-static is-small"
-                    >
-                        Column(s)
-                    </biz-button>
-                </div>
-            </div>
-        </div>
-        <div class="column is-9 p-1">
+        <div class="column is-12 p-1">
             <div class="field has-addons is-pulled-right">
                 <p class="control">
                     <biz-button
@@ -75,6 +49,7 @@
                 :components="block.columns[index].components"
                 :data-entities="entities"
                 :selected-locale="selectedLocale"
+                :class="sizeClass(configColumns?.column[index]?.size ?? null)"
             />
         </template>
     </div>
@@ -86,18 +61,15 @@
     import MixinEditModeComponent from '@/Mixins/EditModeComponent';
     import MixinMediaImage from '@/Mixins/MediaImage';
     import BizButton from '@/Biz/Button';
-    import BizSelect from '@/Biz/Select';
     import BlockColumn from '@/Blocks/Column';
     import { confirm, confirmDelete } from '@/Libs/alert';
-    import { createColumn } from '@/Libs/page-builder.js';
-    import { useModelWrapper, isEmpty, getResourceFromDataObject, isBlank } from '@/Libs/utils';
+    import { useModelWrapper, isEmpty, getResourceFromDataObject } from '@/Libs/utils';
     import { inject } from "vue";
     import icon from '@/Libs/icon-class';
 
     export default {
         components: {
             BizButton,
-            BizSelect,
             BlockColumn,
         },
 
@@ -131,10 +103,8 @@
 
         data() {
             return {
-                columnOptions: [1,2,3,4,5,6],
                 icon,
                 images: this.dataImages,
-                numberOfColumns: this.block.columns.length,
             };
         },
 
@@ -157,10 +127,14 @@
                 }
 
                 const configWrapper = this.entity?.config?.wrapper ?? null;
+                const isCenteredClass = this.configColumns?.isCentered
+                    ? 'is-centered'
+                    : '';
 
                 return wrapperClass.concat(
                     (configWrapper['backgroundColor'] ?? ''),
                     (configWrapper['rounded'] ?? ''),
+                    (isCenteredClass)
                 ).filter(Boolean);
             },
 
@@ -182,6 +156,10 @@
 
             configDimension() {
                 return this.entity?.config?.dimension ?? null;
+            },
+
+            configColumns() {
+                return this.entity?.config?.columns ?? [];
             },
         },
 
@@ -206,32 +184,6 @@
                         self.$emit('delete-block', self.id)
                     }
                 })
-            },
-
-            onColumnChange(event) {
-                const numberOfColumns = parseInt(event.target.value);
-                const originalNumberOfColumns = this.block.columns.length;
-
-                if (numberOfColumns < originalNumberOfColumns) {
-                    const confirmText = 'Are you sure you want to decrease the number of column?';
-                    if (confirm(confirmText) === false) {
-                        const previousIndex = this.columnOptions.indexOf(originalNumberOfColumns);
-                        event.target.selectedIndex = previousIndex;
-                        this.numberOfColumns = originalNumberOfColumns;
-                        return;
-                    }
-
-                    const decreaseNumber = originalNumberOfColumns - numberOfColumns;
-                    for (let i = 0; i < decreaseNumber; i++) {
-                        this.block.columns.pop();
-                    }
-                } else {
-                    const increaseNumber = numberOfColumns - originalNumberOfColumns;
-                    for (let i = 0; i < increaseNumber; i++) {
-                        this.block.columns.push(createColumn());
-                    }
-                }
-                this.numberOfColumns = numberOfColumns;
             },
 
             duplicateBlock() {
@@ -293,6 +245,14 @@
 
                 return allMediaIds.filter(Boolean);
             },
+
+            sizeClass(size = null) {
+                if (!size || size == "auto") {
+                    return null;
+                }
+
+                return `is-${size}`;
+            }
         },
     };
 </script>

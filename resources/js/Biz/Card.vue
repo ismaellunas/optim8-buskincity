@@ -23,13 +23,13 @@
             </button>
 
             <button
-                v-else-if="isCollapses"
+                v-else-if="isCollapsed"
                 class="card-header-icon"
                 aria-label="more options"
                 type="button"
                 @click="onClickHeaderButton()"
             >
-                <biz-icon :icon="iconCollapse" />
+                <biz-icon :icon="iconCollapseOrExpand" />
             </button>
         </header>
 
@@ -62,16 +62,20 @@
         },
 
         props: {
-            iconCloseCollapse: { type: String, default: null },
-            iconOpenCollapse: { type: String, default: null },
-            isCollapses: { type: Boolean, default: false },
-            openCollapseOnLoad: { type: Boolean, default: false },
+            iconExpand: { type: String, default: null },
+            iconCollapse: { type: String, default: null },
+            isCollapsed: { type: Boolean, default: false },
+            isExpandingOnLoad: { type: Boolean, default: false },
         },
 
-        setup(props) {
-            let isContentShown = props.isCollapses ? false : true;
+        emits: [
+            'on-click-header-card',
+        ],
 
-            if (!isContentShown && props.openCollapseOnLoad) {
+        setup(props) {
+            let isContentShown = props.isCollapsed ? false : true;
+
+            if (!isContentShown && props.isExpandingOnLoad) {
                 isContentShown = true;
             }
 
@@ -87,25 +91,27 @@
         },
 
         computed: {
-            iconCollapse() {
+            iconCollapseOrExpand() {
                 if (!this.isContentShown) {
-                    return this.iconOpenCollapse ?? icon.angleDown;
+                    return this.iconCollapse ?? icon.angleDown;
                 }
 
-                return this.iconCloseCollapse ?? icon.angleUp;
+                return this.iconExpand ?? icon.angleUp;
             },
 
             cardHeaderStyle() {
                 return {
-                    cursor: this.isCollapses ? 'pointer' : 'auto',
+                    cursor: this.isCollapsed ? 'pointer' : 'auto',
                 };
             },
         },
 
         methods: {
             onClickHeaderButton() {
-                if (this.isCollapses) {
+                if (this.isCollapsed) {
                     this.isContentShown = !this.isContentShown
+
+                    this.$emit('on-click-header-card', this.isContentShown);
                 }
             },
         },

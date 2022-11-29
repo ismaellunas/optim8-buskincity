@@ -120,6 +120,29 @@ export const roundedSizes = [
 ];
 
 export const contentPositions = [
-    { value: "is-pulled-left", name: "Left" },
-    { value: "is-pulled-right", name: "Right" },
+    { value: "has-text-left", name: "Left" },
+    { value: "has-text-right", name: "Right" },
+    { value: "has-text-centered", name: "Center" },
+];
+
+export const visibilityDevices = [
+    { value: "is-hidden-tablet", name: "Mobile only" },
+    { value: "is-hidden-mobile is-hidden-desktop", name: "Tablet only" },
+    { value: "is-hidden-touch is-hidden-widescreen", name: "Desktop only" },
+    { value: "is-hidden-fullhd is-hidden-touch is-hidden-desktop-only", name: "Widescreen only" },
+    { value: "is-hidden-touch is-hidden-desktop-only is-hidden-widescreen-only", name: "Full HD only" },
+    { value: "is-hidden-mobile", name: "Tablet and above" },
+    { value: "is-hidden-touch", name: "Desktop and above" },
+    { value: "is-hidden-desktop-only is-hidden-touch", name: "Widescreen and above" },
+    { value: "is-hidden-desktop", name: "Tablet and below" },
+    { value: "is-hidden-widescreen", name: "Desktop and below" },
+    { value: "is-hidden-fullhd", name: "Widescreen and below" },
+];
+
+export const textWeights = [
+    { value: "has-text-weight-light", name: "Light" },
+    { value: "has-text-weight-normal", name: "Normal" },
+    { value: "has-text-weight-medium", name: "Medium" },
+    { value: "has-text-weight-semibold", name: "Semi-bold" },
+    { value: "has-text-weight-bold", name: "Bold" },
 ];

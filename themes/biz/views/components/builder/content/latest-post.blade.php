@@ -1,3 +1,5 @@
+@inject('storageService', 'App\Services\StorageService')
+
 <div @class([$uniqueClass, 'columns is-multiline'])>
     @if (!$posts->isEmpty())
         @foreach ($posts as $post)
@@ -5,7 +7,7 @@
                 <article class="b752-blog-item box is-clipped p-0">
                     <figure>
                         <a href="{{ route('blog.show', $post->slug) }}">
-                            <img src="{{ $post->coverImageUrl ?? url('https://dummyimage.com/600x400/ccc/fff.png&text=+') }}">
+                            <img src="{{ $post->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}">
                         </a>
                     </figure>
                     <div class="p-5">

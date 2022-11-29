@@ -1,3 +1,5 @@
+@inject('storageService', 'App\Services\StorageService')
+
 <x-layouts.master>
     <x-slot name="title">
         {{ trim($post->meta_title ?? $post->title). ' | ' .config('app.name') }}
@@ -123,7 +125,7 @@
                             <article class="b752-blog-item box is-shadowless is-clipped p-0">
                                 <figure>
                                     <a href="{{ route('blog.show', $article->slug) }}">
-                                        <img src="{{ $article->coverImageUrl ?? url('https://dummyimage.com/600x400/ccc/fff.png&text=+') }}">
+                                        <img src="{{ $article->getOptimizedCoverImageUrl(600, 400) ?? $storageService::getImageUrl(config('constants.default_images.post_thumbnail')) }}">
                                     </a>
                                 </figure>
                                 <div class="p-5">

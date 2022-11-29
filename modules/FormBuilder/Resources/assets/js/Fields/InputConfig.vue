@@ -2,25 +2,22 @@
     <div>
         <template
             v-for="(group, groupName, indexConfig) in configOptions"
-            :key="groupName"
+            :key="indexConfig"
         >
-            <component
-                :is="group.component"
-                v-if="group.component && !isBlank(entity)"
-                v-model="entity"
+            <biz-card
+                v-if="!isBlank(entity)"
+                :ref="`config-${indexConfig}`"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
-            />
-
-            <card
-                v-else-if="!isBlank(entity)"
-                :class="{'mb-1': indexConfig != numberOfOptions - 1}"
+                :is-collapsed="true"
+                :is-expanding-on-load="indexConfig == 0"
+                @on-click-header-card="onClickHeaderCard($event, indexConfig)"
             >
                 <template #headerTitle>
                     {{ group.label }}
                 </template>
 
                 <template
-                    v-for="(config, key) in group.config"
+                    v-for="(config, key, index) in group.config"
                     :key="key"
                 >
                     <component
@@ -41,15 +38,17 @@
                         :settings="config.settings"
                     />
 
-                    <hr>
+                    <hr
+                        v-if="index != (Object.keys(group.config).length - 1)"
+                    >
                 </template>
-            </card>
+            </biz-card>
         </template>
     </div>
 </template>
 
 <script>
-    import Card from '@/Biz/Card';
+    import BizCard from '@/Biz/Card';
     import ConfigAddOption from '@/Blocks/Configs/AddOption';
     import ConfigAutoGenerateKey from '@/Blocks/Configs/AutoGenerateKey';
     import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
@@ -60,7 +59,7 @@
     import ConfigSelect from '@/Blocks/Configs/Select';
     import TRBL from '@/Blocks/Configs/TRBL';
     import TRBLInput from '@/Blocks/Configs/TRBLInput';
-    import { camelCase } from "lodash";
+    import { camelCase, forEach } from "lodash";
     import { isBlank } from '@/Libs/utils';
     import { useModelWrapper } from '@/Libs/utils'
 
@@ -68,7 +67,7 @@
         name: 'InputConfig',
 
         components: {
-            Card,
+            BizCard,
             ConfigAddOption,
             ConfigAutoGenerateKey,
             ConfigCheckbox,
@@ -118,6 +117,22 @@
 
         methods: {
             isBlank: isBlank,
+
+            onClickHeaderCard(isContentShown, index) {
+                const self = this;
+
+                if (isContentShown) {
+                    let i = 0;
+
+                    forEach(self.configOptions, function (group) {
+                        if (i != index) {
+                            self.$refs[`config-${i}`][0].isContentShown = false;
+                        }
+
+                        i++;
+                    });
+                }
+            },
         }
     };
 </script>

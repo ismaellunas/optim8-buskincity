@@ -5,7 +5,7 @@
         </template>
 
         <biz-date-time
-            v-model="modelValue"
+            v-model="dateValue"
             v-bind="$attrs"
             :disabled="disabled"
             @input="$emit('update:modelValue', $event)"
@@ -21,6 +21,7 @@
     import BizDateTime from '@/Biz/DateTime';
     import BizFormField from '@/Biz/Form/Field';
     import BizInputError from '@/Biz/InputError';
+    import { ref } from 'vue';
 
     export default {
         name: 'BizFormDateTime',
@@ -56,5 +57,10 @@
         emits: [
             'update:modelValue',
         ],
+        setup(props) {
+            return {
+                dateValue: ref(props.modelValue),
+            };
+        },
     };
 </script>

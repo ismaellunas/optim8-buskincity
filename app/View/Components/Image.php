@@ -83,7 +83,7 @@ class Image extends Component
         if ($this->_src) {
             return $this->_src;
         } elseif ($this->media) {
-            return $this->media->file_url;
+            return $this->media->optimizedImageUrl;
         }
         return null;
     }

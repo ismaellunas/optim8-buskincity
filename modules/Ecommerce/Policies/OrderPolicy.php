@@ -4,28 +4,46 @@ namespace Modules\Ecommerce\Policies;
 
 use App\Models\User;
 use App\Policies\BasePermissionPolicy;
-use Modules\Booking\Enums\BookingStatus;
-use Modules\Ecommerce\Entities\Order;
-use Modules\Ecommerce\Enums\OrderStatus;
+use App\Services\LoginService;
+use App\Services\ModuleService;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Traits\Macroable;
 
 class OrderPolicy extends BasePermissionPolicy
 {
+    use Macroable;
+
+    private bool $isModuleSpaceActive;
+
     protected $basePermission = 'order';
 
-    public function cancel(User $user, Order $order)
+    public function __construct()
     {
-        return (
-            $order->status != OrderStatus::CANCELED->value
-            && $order->firstEventline->latestEvent->status == BookingStatus::UPCOMING->value
-            && (
-                $user->can('order.edit')
-                || $order->isUserWhoPlacedTheOrder($user)
-            )
-        );
+        $this->isEcommerceModuleActive = app(ModuleService::class)->isModuleActive('ecommerce');
     }
 
-    public function reschedule(User $user, Order $order)
+    public function viewAny(User $user)
     {
-        return $this->cancel($user, $order);
+        if (!$this->isEcommerceModuleActive) {
+            return false;
+        }
+
+        if (LoginService::isAdminHomeUrl()) {
+            return parent::viewAny($user);
+        }
+
+        return auth()->check();
+    }
+
+    public function view(User $user, Model $order)
+    {
+        if (!$this->isEcommerceModuleActive) {
+            return false;
+        }
+
+        return (
+            parent::view($user, $order)
+            || $order->isPlacedByUser($user)
+        );
     }
 }

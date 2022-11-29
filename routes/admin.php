@@ -49,9 +49,11 @@ Route::middleware([
     Route::resource('/pages', PageController::class)
         ->except(['show']);
     Route::post('/pages/duplicate/{page}', [PageController::class, 'duplicatePage'])
-        ->name('pages.duplicate');
+        ->name('pages.duplicate')
+        ->can('page.add');
     Route::delete('/pages/translations/{page_translation:id}/destroy', [PageController::class, 'translationDestroy'])
-        ->name('pages.translations.destroy');
+        ->name('pages.translations.destroy')
+        ->can('page.delete');
 
     Route::resource('/media', MediaController::class)
         ->except(['edit', 'show']);

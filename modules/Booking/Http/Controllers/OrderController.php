@@ -10,6 +10,7 @@ use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Events\EventCanceled;
 use Modules\Booking\Events\EventRescheduled;
 use Modules\Booking\Http\Requests\OrderCancelRequest;
+use Modules\Booking\Http\Requests\OrderIndexRequest;
 use Modules\Booking\Http\Requests\OrderRescheduleRequest;
 use Modules\Booking\Services\EventService;
 use Modules\Booking\Services\ProductEventService;
@@ -54,17 +55,20 @@ class OrderController extends CrudController
         return back();
     }
 
-    public function index()
+    public function index(OrderIndexRequest $request)
     {
         $user = auth()->user();
 
         return Inertia::render('Booking::OrderIndex', $this->getData([
             'title' => $this->getIndexTitle(),
-            'pageQueryParams' => array_filter(request()->only('term', 'status')),
+            'pageQueryParams' => array_filter(request()->only('term', 'status', 'dates')),
             'records' => $this->orderService->getRecords(
                 $user,
                 request()->get('term'),
-                ['inStatus' => request()->status ?? null],
+                [
+                    'inStatus' => request()->status ?? null,
+                    'dateRange' => $request->dates ?? []
+                ],
             ),
             'statusOptions' => BookingStatus::options(),
             'can' => [
@@ -77,14 +81,21 @@ class OrderController extends CrudController
     {
         $user = auth()->user();
 
+        $checkIn = $order->checkIn;
         $orderRecord = $this->orderService->getRecord($order);
 
         return Inertia::render('Booking::OrderShow', $this->getData([
             'title' => $this->title.': '.Arr::get($orderRecord, 'product.name'),
             'order' => $orderRecord,
+            'checkInTime' => $checkIn
+                ? $checkIn
+                    ->checked_in_at
+                    ->setTimezone($orderRecord['event']['timezone'])
+                    ->format(config('constants.format.time_checkin'))
+                : null,
             'can' => [
-                'cancel' => $user->can('cancel', $order),
-                'reschedule' => $user->can('reschedule', $order),
+                'cancel' => $user->can('cancelBooking', $order),
+                'reschedule' => $user->can('rescheduleBooking', $order),
             ],
         ]));
     }

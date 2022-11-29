@@ -6,7 +6,7 @@
             :value="true"
             :disabled="isDisabled"
         >
-            <span class="ml-2">
+            <span class="ml-2 is-size-7">
                 {{ label }}
             </span>
         </biz-checkbox>
@@ -19,7 +19,7 @@
     import { get } from 'lodash';
 
     export default {
-        name: 'Checkbox',
+        name: 'ConfigCheckbox',
 
         components: {
             BizCheckbox,

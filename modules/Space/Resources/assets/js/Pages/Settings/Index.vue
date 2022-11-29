@@ -11,6 +11,8 @@
     import SpaceType from './SpaceType';
 
     export default {
+        name: 'SettingIndex',
+
         components: {
             SpaceType,
         },

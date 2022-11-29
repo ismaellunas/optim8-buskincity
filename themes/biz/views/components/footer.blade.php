@@ -3,7 +3,7 @@
         <div class="columns is-multiline">
             <div class="column is-3">
                 <img
-                    src="{{ $logoUrl ?? 'https://dummyimage.com/150x100/e5e5e5/000000.png&text=B+752' }}"
+                    src="{{ $logoUrl }}"
                     style="max-width:160px"
                 >
             </div>
@@ -32,6 +32,9 @@
             </div>
             <div class="column is-12">
                 <p class="is-size-7 has-text-centered mt-5">
+                    This site is protected by reCAPTCHA and the Google
+                    <a href="https://policies.google.com/privacy">Privacy Policy</a> and
+                    <a href="https://policies.google.com/terms">Terms of Service</a> apply.<br>
                     © Copyright 2022, {{ config('app.name') }}
                 </p>
             </div>

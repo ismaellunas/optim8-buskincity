@@ -53,20 +53,61 @@ class UserProfileService
         return $meta->value;
     }
 
-    public function getMedias(string $key): Collection
+    private function getMedias(string $key): Collection
     {
         $mediaIds = $this->getMeta($key);
 
         if (!empty($mediaIds)) {
             return Media::select([
+                    'extension',
+                    'file_name',
+                    'file_type',
                     'file_url',
-                    'file_type'
+                    'version',
                 ])
                 ->whereIn('id', $mediaIds)
                 ->get();
         }
 
-        return collect([]);
+        return collect();
+    }
+
+    public function getMediaWithThumbnails(
+        string $key,
+        int $width,
+        int $height
+    ): Collection {
+        $media = $this->getMedias($key);
+
+        if ($media->isNotEmpty()) {
+            return $media->map(function ($medium) use ($width, $height) {
+                $mappedMedium = $medium->only('file_url', 'file_type');
+
+                $mappedMedium['thumbnail_url'] = $medium->getThumbnailUrl(
+                    $width,
+                    $height
+                );
+
+                return $mappedMedium;
+            });
+        }
+
+        return collect();
+    }
+
+    public function getCoverBackgroundUrl(
+        ?int $width = null,
+        ?int $height = null
+    ): string {
+        $media = $this->getMedias('cover_background_photo');
+
+        if ($media->isNotEmpty()) {
+            $medium = $media->first();
+
+            return $medium->getOptimizedImageUrl($width, $height);
+        }
+
+        return "";
     }
 
     private function getUser(string $uniqueKey): ?User

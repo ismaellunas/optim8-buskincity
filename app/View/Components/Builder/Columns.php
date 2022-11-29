@@ -27,6 +27,11 @@ class Columns extends Component
         $this->images = $images;
     }
 
+    public function getSize(array $sizeColumns, int $index)
+    {
+        return $sizeColumns[$index]['size'] ?? null;
+    }
+
     /**
      * Get the view / contents that represent the component.
      *

@@ -1,16 +1,14 @@
 <template>
     <div class="box">
         <div class="columns">
-            <div class="column">
-                <div class="is-pulled-left">
-                    <biz-filter-search
-                        v-model="term"
-                        @search="search"
-                    />
-                </div>
+            <div class="column is-4 is-3-fullhd">
+                <biz-filter-search
+                    v-model="term"
+                    @search="search"
+                />
             </div>
 
-            <div class="column">
+            <div class="column is-2 is-1-fullhd">
                 <biz-dropdown :close-on-click="false">
                     <template #trigger>
                         <span>Filter</span>
@@ -42,12 +40,15 @@
                 </biz-dropdown>
             </div>
 
-            <div class="column">
-                &nbsp;
+            <div class="column is-4 is-3-fullhd">
+                <biz-filter-date-range
+                    v-model="dates"
+                    @update:model-value="onDateRangeChanged"
+                />
             </div>
         </div>
 
-        <div class="table-container">
+        <div class="table-container pb-6">
             <biz-table class="is-striped is-hoverable is-fullwidth">
                 <thead>
                     <tr>
@@ -55,6 +56,9 @@
                         <th>Name</th>
                         <th>Customer Name</th>
                         <th>Date</th>
+                        <th>Timezone</th>
+                        <th>Time</th>
+                        <th>Check-In</th>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -64,13 +68,16 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="record in records.data"
+                        v-for="(record, index) in records.data"
                         :key="record.id"
                     >
                         <td>{{ record.status }}</td>
                         <td>{{ record.product_name }}</td>
                         <td>{{ record.customer_name ?? '-' }}</td>
                         <td>{{ record.date }}</td>
+                        <td>{{ record.timezone }}</td>
+                        <td>{{ record.start_end_time }}</td>
+                        <td>{{ record.check_in_time }}</td>
                         <td>
                             <div class="level-right">
                                 <div class="buttons">
@@ -86,27 +93,45 @@
                                         />
                                     </biz-button-link>
 
-                                    <biz-button-link
-                                        v-if="record.can.reschedule"
-                                        class="is-ghost is-warning"
-                                        title="Reschedule"
-                                        :href="route(baseRouteName + '.reschedule', record.id)"
+                                    <biz-dropdown
+                                        v-if="hasMoreAction(record)"
+                                        class="is-right"
+                                        :class="{'is-up': index > records.data.length - 3}"
+                                        :close-on-click="false"
                                     >
-                                        <biz-icon
-                                            class="is-small"
-                                            :icon="icon.recycle"
-                                        />
-                                    </biz-button-link>
+                                        <template #trigger>
+                                            <span class="icon is-small">
+                                                <i
+                                                    :class="icon.ellipsis"
+                                                    aria-hidden="true"
+                                                />
+                                            </span>
+                                        </template>
 
-                                    <biz-button-icon
-                                        v-if="record.can.cancel"
-                                        class="is-ghost is-danger"
-                                        icon-class="is-small"
-                                        title="Cancel"
-                                        type="button"
-                                        :icon="icon.remove"
-                                        @click="openModal(record)"
-                                    />
+                                        <biz-link
+                                            v-if="record.can.reschedule"
+                                            class="dropdown-item"
+                                            :href="route(baseRouteName + '.reschedule', record.id)"
+                                        >
+                                            <biz-icon
+                                                class="is-small"
+                                                :icon="icon.recycle"
+                                            />
+                                            &nbsp;<span>Reschedule</span>
+                                        </biz-link>
+
+                                        <biz-dropdown-item
+                                            v-if="record.can.cancel"
+                                            tag="a"
+                                            @click.prevent="openModal(record)"
+                                        >
+                                            <biz-icon
+                                                class="is-small"
+                                                :icon="icon.remove"
+                                            />
+                                            &nbsp;<span>Cancel</span>
+                                        </biz-dropdown-item>
+                                    </biz-dropdown>
                                 </div>
                             </div>
                         </td>
@@ -144,13 +169,14 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizFilterDateRange from '@/Biz/Filter/DateRange';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
+    import BizLink from '@/Biz/Link';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
@@ -165,13 +191,14 @@
     export default {
         components: {
             BizButton,
-            BizButtonIcon,
             BizButtonLink,
             BizCheckbox,
             BizDropdown,
             BizDropdownItem,
+            BizFilterDateRange,
             BizFilterSearch,
             BizIcon,
+            BizLink,
             BizPagination,
             BizTable,
             ModalCancelEventConfirmation,
@@ -204,6 +231,7 @@
 
             return {
                 queryParams: ref(queryParams),
+                dates: ref(props.pageQueryParams?.dates?? []),
                 statuses: ref(props.pageQueryParams?.status ?? []),
                 term: ref(props.pageQueryParams?.term ?? null),
                 form: useForm(form),
@@ -240,6 +268,11 @@
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
 
+            onDateRangeChanged() {
+                this.queryParams['dates'] = this.dates;
+                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
+            },
+
             cancel() {
                 const self = this;
 
@@ -266,6 +299,10 @@
 
                 this.isModalOpen = true;
                 this.onShownModal();
+            },
+
+            hasMoreAction(record) {
+                return (record.can.reschedule || record.can.cancel);
             },
         },
     };

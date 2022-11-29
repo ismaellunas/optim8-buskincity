@@ -2,6 +2,7 @@
     <biz-form-field
         :is-required="required"
         :class="fieldClass"
+        :label-class="{'is-size-7': isSmall}"
     >
         <template #label>
             {{ label }}
@@ -19,7 +20,7 @@
                     v-bind="$attrs"
                     :disabled="disabled"
                     :placeholder="placeholder"
-                    :class="{'is-fullwidth': isFullwidth}"
+                    :class="{'is-fullwidth': isFullwidth, 'is-small': isSmall}"
                 >
                     <slot />
                 </biz-select>
@@ -87,6 +88,10 @@
                 default: false
             },
             isFullwidth: {
+                type: Boolean,
+                default: false
+            },
+            isSmall: {
                 type: Boolean,
                 default: false
             },

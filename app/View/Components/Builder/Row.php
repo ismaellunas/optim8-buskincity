@@ -10,6 +10,8 @@ class Row extends Component
     public $uid;
     public $backgroundColor;
     public $columns;
+    public $configColumns;
+    public $customId;
     public $entities;
     public $hasBackgroundImage;
     public $images;
@@ -37,10 +39,13 @@ class Row extends Component
 
         $configWrapper = $this->config['wrapper'] ?? null;
         if ($configWrapper) {
-            $this->backgroundColor = $this->config['wrapper']['backgroundColor'] ?? '';
-            $this->isFullwidth = $this->config['wrapper']['isFullwidth'] ?? false;
-            $this->rounded = $this->config['wrapper']['rounded'] ?? null;
+            $this->customId = $configWrapper['customId'] ?? null;
+            $this->backgroundColor = $configWrapper['backgroundColor'] ?? '';
+            $this->isFullwidth = $configWrapper['isFullwidth'] ?? false;
+            $this->rounded = $configWrapper['rounded'] ?? null;
         }
+
+        $this->configColumns = $this->config['columns'] ?? [];
 
         if ($this->isSectionIncluded) {
             $this->sectionSize = $this->config['section']['size'] ?? null;

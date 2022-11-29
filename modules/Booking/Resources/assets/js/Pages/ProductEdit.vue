@@ -24,6 +24,8 @@
                             :role-options="roleOptions"
                             :status-options="statusOptions"
                             :gallery="product.gallery"
+                            :rules="rules"
+                            :image-mimes="imageMimes"
                         />
 
                         <hr>
@@ -161,11 +163,15 @@
                                 v-if="isMapOpen"
                                 class="column is-8"
                             >
-                                <biz-gmap-marker
-                                    v-model="eventForm.location"
-                                    :api-key="googleApiKey"
-                                    :init-position="geoLocation"
-                                />
+                                <div class="card">
+                                    <div class="card-content p-2">
+                                        <biz-gmap-marker
+                                            v-model="eventForm.location"
+                                            :api-key="googleApiKey"
+                                            :init-position="geoLocation"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -472,6 +478,7 @@
             formatDateIso: { type: String, default: 'YYYY-MM-DD' },
             formatDateUser: { type: String, default: 'D MMM YYYY' },
             productManagerBaseRoute: { type: String, required: true },
+            rules: { type: Object, required: true },
         },
 
         setup(props, { emit }) {
@@ -672,7 +679,7 @@
             },
 
             addTimeRange(index) {
-                const scheduleRuleTime = this.$refs['scheduleRuleTime_' + index];
+                const scheduleRuleTime = this.$refs['scheduleRuleTime_' + index][0];
                 scheduleRuleTime.addTimeRange();
 
                 if (this.eventForm.weekly_hours[index].hours.length > 0) {

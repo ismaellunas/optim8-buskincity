@@ -3,6 +3,7 @@
         v-if="isInternalLink"
         class="navbar-item"
         :href="url"
+        @click="$emit('after-click')"
     >
         <slot />
     </biz-link>
@@ -35,5 +36,7 @@
                 required: true
             },
         },
+
+        emits: ['after-click'],
     };
 </script>

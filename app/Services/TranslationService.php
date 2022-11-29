@@ -32,7 +32,7 @@ class TranslationService
                     config('app.fallback_locale')
                 );
             } catch (QueryException $e) {
-                if ($e->getCode() == "42P01") {
+                if (in_array($e->getCode(), ["42P01", "2002"])) {
                     return config('app.fallback_locale');
                 }
             }
