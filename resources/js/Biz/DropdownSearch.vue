@@ -1,6 +1,6 @@
 <template>
     <biz-dropdown
-        :class-button="{'is-small': isSmall, 'is-fullwidth': isFullwidth}"
+        :class-button="{'is-small': isSmall}"
         :is-trigger-button="isTriggerButton"
         :is-fullwidth="isFullwidth"
     >
