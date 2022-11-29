@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Models\PageTranslation;
 use Illuminate\Console\Command;
 
-class FixPagecolumnConfig extends Command
+class FixPageColumnConfig extends Command
 {
     /**
      * The name and signature of the console command.
