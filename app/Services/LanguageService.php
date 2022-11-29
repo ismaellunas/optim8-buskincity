@@ -107,7 +107,7 @@ class LanguageService
             });
     }
 
-    public function getOriginFromIP(): Language
+    public function getOriginFromIP(): ?Language
     {
         $locale = app(IPService::class)->getLanguageCode();
 
