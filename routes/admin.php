@@ -134,7 +134,7 @@ Route::middleware([
                 ->name('translation-manager.import');
         });
 
-        Route::middleware('can:system.payment')->group(function () {
+        Route::middleware('can:manageStripeSetting,App\Models\User')->group(function () {
             Route::get('/stripe', [StripeController::class, 'edit'])
                 ->name('stripe.edit');
             Route::post('/stripe', [StripeController::class, 'update'])

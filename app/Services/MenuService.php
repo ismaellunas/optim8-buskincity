@@ -369,7 +369,7 @@ class MenuService
                             'title' => 'Stripe',
                             'link' => route('admin.settings.stripe.edit'),
                             'isActive' => $request->routeIs('admin.settings.stripe.edit'),
-                            'isEnabled' => $user->can('system.payment'),
+                            'isEnabled' => Gate::check('manageStripeSetting', $user),
                         ],
                         [
                             'title' => 'Keys',
