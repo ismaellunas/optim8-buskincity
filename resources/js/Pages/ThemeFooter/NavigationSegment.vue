@@ -122,7 +122,6 @@
         emits: [
             'duplicate-menu-item',
             'edit-row',
-            'menu-items',
             'open-duplicate-modal',
             'open-form-modal',
         ],
@@ -196,13 +195,12 @@
                 const self = this;
                 let menuItems = self.menuItems;
 
-                menuItems[self.selectedIndex].children.push(
-                    cloneDeep(menuItem)
-                );
-
                 axios.post(self.validationRoute, menuItem)
                     .then(() => {
-                        self.$emit('menu-items', menuItems);
+                        menuItems[self.selectedIndex].children.push(
+                            cloneDeep(menuItem)
+                        );
+
                         self.selectedIndex = null;
 
                         self.closeModal();
