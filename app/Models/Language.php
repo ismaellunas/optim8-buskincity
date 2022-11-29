@@ -18,4 +18,9 @@ class Language extends Model
     {
         return $query->where('is_shown', true);
     }
+
+    public function scopeCode($query, string $code)
+    {
+        return $query->where('code', $code);
+    }
 }
