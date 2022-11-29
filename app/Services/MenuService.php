@@ -24,8 +24,9 @@ use App\Entities\Caches\{
     MenuCache,
     SettingCache,
 };
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class MenuService
@@ -465,7 +466,7 @@ class MenuService
                     [
                         'title' => 'Payments',
                         'link' => route('payments.index'),
-                        'isEnabled' => $user->can('payment.management'),
+                        'isEnabled' => Gate::check('manageStripeConnectedAccount', $user),
                     ],
                 ];
 
