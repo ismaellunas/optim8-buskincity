@@ -87,7 +87,9 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(TelescopeServiceProvider::class);
         }
 
-        $this->customRegister();
+        $this->app->extend(SocialiteFactory::class, function ($command, $app) {
+            return new SocialiteManager($app);
+        });
     }
 
     /**
@@ -112,12 +114,5 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_HTTPS_IS_ON', false)) {
             URL::forceScheme('https');
         }
-    }
-
-    private function customRegister(): void
-    {
-        $this->app->extend(SocialiteFactory::class, function ($command, $app) {
-            return new SocialiteManager($app);
-        });
     }
 }
