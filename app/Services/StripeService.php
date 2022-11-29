@@ -526,4 +526,21 @@ class StripeService
             strtoupper($currency)
         ));
     }
+
+    public function isStripeKeyExists(): bool
+    {
+        $keys = $this->keys;
+
+        if (empty($keys)) {
+            return false;
+        }
+
+        foreach ($keys as $key) {
+            if ($key === null || $key === '') {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
