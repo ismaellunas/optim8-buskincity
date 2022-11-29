@@ -2,6 +2,7 @@
     <biz-form-field
         :class="fieldClass"
         :is-required="required"
+        :label-class="{'is-size-7': isSmall}"
     >
         <template
             v-if="label"
@@ -65,6 +66,10 @@
                 default: false
             },
             required: {
+                type: Boolean,
+                default: false
+            },
+            isSmall: {
                 type: Boolean,
                 default: false
             },

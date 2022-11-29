@@ -7,6 +7,7 @@
             :has-type="true"
             :icon-classes="iconClasses"
             :label="label"
+            :is-small="true"
         />
     </div>
 </template>
@@ -17,7 +18,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'InputIcon',
+        name: 'ConfigInputIcon',
 
         components: {
             BizFormInputIcon,

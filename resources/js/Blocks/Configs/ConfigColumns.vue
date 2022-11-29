@@ -14,6 +14,7 @@
             v-model="numberOfColumns"
             :is-fullwidth="true"
             :has-addons="true"
+            :is-small="true"
             @change="onColumnChange"
         >
             <option
@@ -27,7 +28,7 @@
                 <div class="control">
                     <biz-button
                         type="button"
-                        class="is-static"
+                        class="is-static is-small"
                     >
                         Column(s)
                     </biz-button>
@@ -40,7 +41,7 @@
             class="mb-2"
             :value="true"
         >
-            <span class="ml-2">
+            <span class="ml-2 is-size-7">
                 Is Centered?
             </span>
         </biz-checkbox>
@@ -58,6 +59,7 @@
                 :adsorb="true"
                 :marks="true"
                 :data="sliderData[index]"
+                :is-small="true"
             />
         </template>
     </biz-card>
