@@ -7,6 +7,7 @@ export const back = iconFormatter('fa-arrow-left');
 export const bracketCurly = iconFormatter('fa-bracket-curly');
 export const bracketCurlyRight = iconFormatter('fa-bracket-curly-right');
 export const buildingCheck = iconFormatter('fa-building-circle-check');
+export const calendarCirclePlus = iconFormatter('fa-calendar-circle-plus');
 export const checkCircle = iconFormatter('fa-check-circle');
 export const clear = iconFormatter('fa-times');
 export const close = iconFormatter('fa-xmark');
@@ -48,6 +49,7 @@ export default {
     bracketCurly,
     bracketCurlyRight,
     buildingCheck,
+    calendarCirclePlus,
     checkCircle,
     clear,
     close,
