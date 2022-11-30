@@ -977,7 +977,7 @@ class PageSeeder extends Seeder
                 ],
             ],
             'about' => [
-                'title' => 'about',
+                'title' => 'About',
                 'data' => [
                     "structures" => [
                         [
@@ -1434,6 +1434,7 @@ class PageSeeder extends Seeder
                                     "style" => "is-rounded",
                                     "position" => null,
                                     "iconPosition" => "left",
+                                    "textWeight" => null,
                                 ],
                                 "visibility" => ["device" => null],
                                 "dimension" => [
