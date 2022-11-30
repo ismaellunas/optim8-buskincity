@@ -65,6 +65,27 @@ class Product extends GetCandyProduct
             ->orWhere("attribute_data->short_description->value->{$locale}", 'ILIKE', "%{$term}%");
     }
 
+    public function scopeOrderByColumn($query, array $orderConfig)
+    {
+        switch ($orderConfig['column']) {
+            case 'name':
+                return $query->orderByName($orderConfig['order']);
+                break;
+
+            default:
+                return $query->orderBy('id', 'DESC');
+                break;
+        }
+    }
+
+    public function scopeOrderByName($query, string $order = 'asc')
+    {
+        $locale = config('app.locale');
+
+        return $query
+            ->orderBy("attribute_data->name->value->{$locale}", $order);
+    }
+
     public function scopeInStatus($query, array $status)
     {
         return $query->whereIn('status', $status);
