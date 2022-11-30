@@ -6,7 +6,6 @@ use App\Helpers\HumanReadable;
 use App\Http\Controllers\CrudController;
 use App\Services\CountryService;
 use App\Services\IPService;
-use App\Services\ModuleService as AppModuleService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Space\Entities\Page;
