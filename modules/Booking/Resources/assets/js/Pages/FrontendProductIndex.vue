@@ -17,7 +17,13 @@
             <biz-table class="is-striped is-hoverable is-fullwidth">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <biz-table-column-sort
+                            :order="order"
+                            :is-sorted="column == 'name'"
+                            @click="orderColumn('name')"
+                        >
+                            Name
+                        </biz-table-column-sort>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -63,6 +69,7 @@
     import BizIcon from '@/Biz/Icon';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
+    import BizTableColumnSort from '@/Biz/TableColumnSort';
     import icon from '@/Libs/icon-class';
     import Layout from '@/Layouts/User';
     import { merge } from 'lodash';
@@ -75,6 +82,7 @@
             BizIcon,
             BizPagination,
             BizTable,
+            BizTableColumnSort,
         },
 
         mixins: [
@@ -106,8 +114,24 @@
                 icon
             };
         },
+
+        computed: {
+            order() {
+                return this.pageQueryParams?.order;
+            },
+            column() {
+                return this.pageQueryParams?.column;
+            },
+        },
+
         methods: {
-            iconFormatter: iconFormatter,
+            orderColumn(column) {
+                const order = this.order == 'desc' || typeof this.order === 'undefined' ? 'asc' : 'desc';
+
+                this.queryParams['column'] = column;
+                this.queryParams['order'] = order;
+                this.refreshWithQueryParams();
+            },
         },
     };
 </script>

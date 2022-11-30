@@ -32,6 +32,9 @@ export const recycle = iconFormatter('fa-recycle');
 export const remove = iconFormatter('fa-trash-can');
 export const show = iconFormatter('fa-eye');
 export const signIn = iconFormatter('fa-sign-in-alt');
+export const sort = iconFormatter('fa-sort');
+export const sortDown = iconFormatter('fa-sort-down');
+export const sortUp = iconFormatter('fa-sort-up');
 export const suspend = iconFormatter('fa-ban');
 export const unsuspend = iconFormatter('fa-hands-helping');
 export const upload = iconFormatter('fa-upload');
@@ -74,6 +77,9 @@ export default {
     remove,
     show,
     signIn,
+    sort,
+    sortDown,
+    sortUp,
     suspend,
     unsuspend,
     upload,

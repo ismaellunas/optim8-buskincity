@@ -41,10 +41,16 @@ class ProductController extends CrudController
 
         return Inertia::render('Booking::FrontendProductIndex', $this->getData([
             'title' => $this->getIndexTitle(),
-            'pageQueryParams' => array_filter($request->only('term')),
+            'pageQueryParams' => array_filter($request->only('term', 'column', 'order')),
             'products' => $this->productService->getFrontendRecords(
                 $user,
-                $request->term
+                $request->term,
+                [
+                    'orderByColumn' => [
+                        'column' => $request->column,
+                        'order' => $request->order,
+                    ]
+                ]
             ),
         ]));
     }
