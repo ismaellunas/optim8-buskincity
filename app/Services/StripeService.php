@@ -44,9 +44,11 @@ class StripeService
     const BRAND_HEIGHT = 128;
     const BRAND_WIDTH = 128;
 
-    public function __construct()
+    private function getStripeKeys(): void
     {
-        $this->keys = app(SettingService::class)->getStripeKeys();
+        if (empty($this->keys)) {
+            $this->keys = app(SettingService::class)->getStripeKeys();
+        }
     }
 
     private function secretKey(): ?string
@@ -66,6 +68,8 @@ class StripeService
 
     private function getStripeClient(): StripeClient
     {
+        $this->getStripeKeys();
+
         if (is_null($this->stripeClient)) {
             $this->stripeClient = new StripeClient($this->secretKey());
         }
@@ -113,6 +117,8 @@ class StripeService
 
     public function createLoginLink(string $connectedAccountId): LoginLink
     {
+        $this->getStripeKeys();
+
         Stripe::setApiKey($this->secretKey());
 
         return Account::createLoginLink($connectedAccountId);
@@ -120,6 +126,8 @@ class StripeService
 
     public function accountBalance(User $user): Balance
     {
+        $this->getStripeKeys();
+
         Stripe::setApiKey($this->secretKey());
 
         $stripeAccountId = $this->getConnectedAccountId($user);
@@ -134,6 +142,8 @@ class StripeService
         string $startingAfter = null,
         string $endingBefore = null,
     ) {
+        $this->getStripeKeys();
+
         Stripe::setApiKey($this->secretKey());
 
         $connectedAccountId = $this->getConnectedAccountId($user);
@@ -214,6 +224,8 @@ class StripeService
 
     public function checkout(User $user, float $amount, string $currency): Session
     {
+        $this->getStripeKeys();
+
         Stripe::setApiKey($this->secretKey());
 
         $stripeAccount = $this->getConnectedAccountId($user);
@@ -465,6 +477,8 @@ class StripeService
 
     public function webhook($payload, $stripeSignature): Response
     {
+        $this->getStripeKeys();
+
         $event = null;
 
         $endpointSecret = $this->keys['stripe_endpoint_secret'] ?? null;
@@ -529,6 +543,8 @@ class StripeService
 
     public function isStripeKeyExists(): bool
     {
+        $this->getStripeKeys();
+
         $keys = $this->keys;
 
         if (empty($keys)) {
