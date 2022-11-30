@@ -131,6 +131,14 @@ class Space extends Model implements TranslatableContract
         return null;
     }
 
+    public function getOptimizedLogoImageUrl(
+        ?int $width = null,
+        ?int $height = null
+    ): ?string {
+        return $this->logo
+            ? $this->logo->getOptimizedImageUrl($width, $height)
+            : null;
+    }
 
     public function saveFromInputs(array $inputs)
     {
