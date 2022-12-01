@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\{
+    Category,
     GlobalOption,
     Page,
     Post,
@@ -11,6 +12,7 @@ use App\Models\{
     User,
 };
 use App\Observers\{
+    CategoryObserver,
     GlobalOptionObserver,
     PageObserver,
     PostObserver,
@@ -43,6 +45,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Category::observe(CategoryObserver::class);
         GlobalOption::observe(GlobalOptionObserver::class);
         Page::observe(PageObserver::class);
         Post::observe(PostObserver::class);
