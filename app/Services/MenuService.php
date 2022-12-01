@@ -686,9 +686,9 @@ class MenuService
         return $options;
     }
 
-    public function removePageFromMenus(int $pageId, ?string $locale = null)
+    public function removeModelFromMenus(Model $model, ?string $locale = null)
     {
-        $menuItems = $this->getQueryBuilderMenuItem($pageId, $locale)->get();
+        $menuItems = $this->getCollectionMenuItem($model, $locale);
 
         $menuItems->each(function ($menuItem) {
             $menuItem->delete();
@@ -697,19 +697,18 @@ class MenuService
         app(MenuCache::class)->flush();
     }
 
-    public function isPageUsedByMenu(int $pageId, ?string $locale = null): bool
+    public function isModelUsedByMenu(Model $model, ?string $locale = null): bool
     {
-        return $this->getQueryBuilderMenuItem($pageId, $locale)->exists();
+        return $this->getCollectionMenuItem($model, $locale)->isNotEmpty();
     }
 
-    private function getQueryBuilderMenuItem(int $pageId, ?string $locale): Builder
+    private function getCollectionMenuItem(Model $model, ?string $locale): Collection
     {
-        return MenuItem::where('page_id', $pageId)
-            ->whereHas('menu', function ($q) use ($locale) {
-                $q->when($locale, function ($q) use ($locale) {
-                    $q->where('locale', $locale);
-                });
+        return $model->menuItems->when($locale, function ($collection) use ($locale) {
+            return $collection->filter(function ($menuItem) use ($locale) {
+                return $menuItem->menu->locale == $locale;
             });
+        });
     }
 
     private function moduleMenus(Request $request, $method = 'admin'): array
