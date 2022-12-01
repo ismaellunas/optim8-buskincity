@@ -16,7 +16,7 @@ class PostMenu extends BaseMenu implements MenuInterface
     protected function getEagerLoads(): array
     {
         return [
-            'post' => function ($query) {
+            'menuItemable' => function ($query) {
                 $query->select('id', 'locale', 'slug');
             },
             'menu',
@@ -27,7 +27,7 @@ class PostMenu extends BaseMenu implements MenuInterface
     {
         return $this->getTranslatedUrl(
             route('blog.show', [
-                'slug' => $this->getModel()->post->slug,
+                'slug' => $this->getModel()->menuItemable->slug,
             ])
         );
     }
