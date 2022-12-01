@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Entities\Menus;
+namespace Modules\Space\Menus;
 
 use App\Contracts\MenuInterface;
+use App\Entities\Menus\BaseMenu;
 use App\Models\MenuItem;
 
-class PageMenu extends BaseMenu implements MenuInterface
+class MenuUrl extends BaseMenu implements MenuInterface
 {
+    protected $modelName = MenuItem::class;
+
     public function __construct($menuItem, $locale)
     {
         parent::__construct($menuItem, $locale);
@@ -50,16 +53,14 @@ class PageMenu extends BaseMenu implements MenuInterface
     public function getUrl(): string
     {
         try {
-            $pageTranslation = $this->getModel()->menuItemable->translateOrDefault($this->locale);
+            $pageTranslation = $this->getModel()->menuItemable->page->translateOrDefault($this->locale);
         } catch (\Throwable $th) {
             return $this->fallbackUrl();
         }
 
-        return $this->getTranslatedUrl(
-            route('frontend.pages.show', [
-                'page_translation' => $pageTranslation->slug,
-            ])
-        );
+        return route('frontend.spaces.show', [
+            'page_translation' => $pageTranslation->slug,
+        ]);
     }
 
     private function fallbackUrl()
