@@ -8,17 +8,15 @@ use App\Http\Requests\{
 };
 use App\Models\{
     Menu,
-    MenuItem,
     Setting,
 };
 use App\Services\{
     MenuService,
-    ModuleService,
     SettingService,
     TranslationService,
 };
 use Inertia\Inertia;
-use Modules\Space\Services\PageService as SpacePageService;
+use App\Entities\Menus\Options\SegmentOption;
 
 class ThemeFooterController extends CrudController
 {
@@ -40,30 +38,18 @@ class ThemeFooterController extends CrudController
 
     public function edit()
     {
-        $additionalPageOptions = [];
-        $isModuleSpaceActive = app(ModuleService::class)->isModuleActive('space');
-
-        if ($isModuleSpaceActive) {
-            $additionalPageOptions = app(SpacePageService::class)->getPageOptions();
-        }
-
         return Inertia::render(
             $this->componentName.'Edit',
             $this->getData([
-                'categoryOptions' => $this->menuService->getCategoryOptions(),
                 'menu' => $this->modelMenu::footer()->first(),
                 'footerMenus' => $this->menuService->getFooterMenus(
                     app(TranslationService::class)->getLocales()
                 ),
-                'pageOptions' => array_merge(
-                    $this->menuService->getPageOptions(),
-                    $additionalPageOptions
-                ),
-                'postOptions' => $this->menuService->getPostOptions(),
                 'settings' => $this->settingService->getFooter(),
                 'socialMediaMenus' => $this->menuService->getSocialMediaMenus(),
                 'typeOptions' => $this->menuService->getMenuItemTypeOptions(),
-                'typeSegment' => MenuItem::TYPE_SEGMENT,
+                'menuOptions' => $this->menuService->getMenuOptions(),
+                'typeSegment' => (new SegmentOption)->getKey(),
             ]),
         );
     }
