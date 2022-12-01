@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
-use Exception;
 use App\Entities\GeoIP\HttpClient;
+use App\Services\SettingService;
+use Exception;
 use Torann\GeoIP\Services\AbstractService;
 
 class IPRegistryService extends AbstractService
@@ -15,7 +16,7 @@ class IPRegistryService extends AbstractService
         $this->client = new HttpClient([
             'base_uri' => 'https://api.ipregistry.co/',
             'query' => [
-                'key' => $this->config('key'),
+                'key' => $this->getIpRegistryApi(),
             ],
         ]);
     }
@@ -34,5 +35,10 @@ class IPRegistryService extends AbstractService
         $json = json_decode($data[0], true);
 
         return $this->hydrate($json);
+    }
+
+    private function getIpRegistryApi(): ?string
+    {
+        return app(SettingService::class)->getIpRegistryApi();
     }
 }

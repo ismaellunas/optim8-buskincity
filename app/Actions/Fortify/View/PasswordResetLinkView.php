@@ -3,6 +3,7 @@
 namespace App\Actions\Fortify\View;
 
 use App\Helpers\Url;
+use App\Services\SettingService;
 use Inertia\Inertia;
 
 class PasswordResetLinkView
@@ -12,16 +13,21 @@ class PasswordResetLinkView
         $url = url()->current();
         $route = Url::getRoute($url);
 
+        $recaptchaKeys = app(SettingService::class)->getRecaptchaKeys();
+        $recaptchaSiteKey = $recaptchaKeys['recaptcha_site_key'] ?? null;
+
         if ($route->getName() == config('fortify.routes.admin_forgot_password')) {
 
             return Inertia::render('Auth/Admin/ForgotPassword', [
-                'recaptchaSiteKey' => env('RECAPTCHA_SITE_KEY'),
                 'failed' => request()->session()->get('failed'),
                 'status' => request()->session()->get('status'),
+                'recaptchaSiteKey' => $recaptchaSiteKey,
             ]);
 
         }
 
-        return view('auth.forgot_password');
+        return view('auth.forgot_password', [
+            'recaptchaSiteKey' => $recaptchaSiteKey
+        ]);
     }
 }

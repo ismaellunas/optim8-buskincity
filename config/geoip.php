@@ -96,7 +96,7 @@ return [
 
         'ipregistry' => [
             'class'  => \App\Services\IPRegistryService::class,
-            'key'    => env('IPREGISTRY_API_KEY'),
+            'key'    => null,
         ],
 
     ],

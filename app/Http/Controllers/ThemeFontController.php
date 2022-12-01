@@ -22,6 +22,8 @@ class ThemeFontController extends CrudController
 
     public function edit()
     {
+        $googleApiKey = $this->settingService->getGoogleApi();
+
         return Inertia::render(
             'ThemeFonts',
             $this->getData([
@@ -31,7 +33,7 @@ class ThemeFontController extends CrudController
                 'headingsFont' => $this->settingService->getFont('headings_font'),
                 'mainTextFont' => $this->settingService->getFont('main_text_font'),
                 'buttonsFont' => $this->settingService->getFont('buttons_font'),
-                'webfontsUrl' => 'https://www.googleapis.com/webfonts/v1/webfonts?sort=popularity&key='.config('constants.google_api_key'),
+                'webfontsUrl' => 'https://www.googleapis.com/webfonts/v1/webfonts?sort=popularity&key='.$googleApiKey,
                 'baseUrlGoogleFont' => 'https://fonts.googleapis.com/css2',
             ])
         );
