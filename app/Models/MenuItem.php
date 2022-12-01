@@ -36,4 +36,9 @@ class MenuItem extends BaseModel
     {
         return $this->morphTo();
     }
+
+    public function getIsPolymorphicExistsAttribute(): bool
+    {
+        return !is_null($this->menuItemable);
+    }
 }
