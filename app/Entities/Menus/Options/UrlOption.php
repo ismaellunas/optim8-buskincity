@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 class UrlOption implements MenuBuilderInterface
 {
-    protected $key = 'page';
+    protected $key = 'url';
 
     public function getKey(): string
     {
