@@ -7,6 +7,7 @@ use App\Models\Media;
 use App\Models\User;
 use App\Services\GlobalOptionService;
 use App\Services\MediaService;
+use App\Services\MenuService;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
@@ -328,6 +329,13 @@ class SpaceService
             if ($space->page) {
                 $space->page->delete();
             }
+        }
+    }
+
+    public function removeAllMenus(array $spaces): void
+    {
+        foreach ($spaces as $space) {
+            app(MenuService::class)->removeModelFromMenus($space);
         }
     }
 
