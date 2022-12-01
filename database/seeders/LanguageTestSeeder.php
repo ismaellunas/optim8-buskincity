@@ -32,13 +32,5 @@ class LanguageTestSeeder extends Seeder
             },
             $languages
         ));
-
-        //foreach ($languages as $language) {
-        //    Language::create([
-        //        'name' => $language[0],
-        //        'code' => $language[1],
-        //        'locale' => $language[2],
-        //    ]);
-        //}
     }
 }
