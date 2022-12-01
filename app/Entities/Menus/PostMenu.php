@@ -27,10 +27,10 @@ class PostMenu extends BaseMenu implements MenuInterface
     {
         $model = $this->getModel();
 
-        if ($this->getModel()->isPolymorphicExists) {
+        if ($model->isPolymorphicExists) {
             return $this->getTranslatedUrl(
                 route('blog.show', [
-                    'slug' => $this->getModel()->menuItemable->slug,
+                    'slug' => $model->menuItemable->slug,
                 ])
             );
         }
