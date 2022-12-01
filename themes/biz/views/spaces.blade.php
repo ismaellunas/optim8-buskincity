@@ -28,10 +28,11 @@
                                     {{ ucwords($space->name) }}
                                 </h4>
 
-                                <p>
-                                    {{ $space->description ?? '-' }}
-                                </p>
-                                <a href="{{ $space->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                                <p>{{ $space->description ?? '-' }}</p>
+
+                                @if ($space->hasEnabledPage())
+                                    <a href="{{ $space->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                                @endif
                             </div>
                         </div>
 
@@ -49,10 +50,11 @@
                                     {{ ucwords($space->name) }}
                                 </h4>
 
-                                <p>
-                                    {{ $space->description ?? '-' }}
-                                </p>
-                                <a href="{{ $space->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                                <p>{{ $space->description ?? '-' }}</p>
+
+                                @if ($space->hasEnabledPage())
+                                    <a href="{{ $space->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                                @endif
                             </div>
 
                             @if ($loop->iteration % 2 != 0)

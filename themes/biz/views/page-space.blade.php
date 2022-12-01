@@ -119,6 +119,10 @@
                                         <p>
                                             {{ $spaceChild->description ?? '-' }}
                                         </p>
+
+                                        @if ($spaceChild->hasEnabledPage())
+                                            <a href="{{ $spaceChild->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                                        @endif
                                     </div>
                                 </div>
 
@@ -145,6 +149,10 @@
                                         <p>
                                             {{ $spaceChild->description ?? '-' }}
                                         </p>
+
+                                        @if ($spaceChild->hasEnabledPage())
+                                            <a href="{{ $spaceChild->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                                        @endif
                                     </div>
 
                                     @if ($loop->iteration % 2 != 0)
