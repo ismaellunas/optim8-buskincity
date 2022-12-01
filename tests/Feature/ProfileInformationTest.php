@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Models\Language;
+use Database\Seeders\LanguageTestSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,13 @@ class ProfileInformationTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(LanguageTestSeeder::class);
+    }
 
     public function test_name_and_email_cannot_be_updated()
     {

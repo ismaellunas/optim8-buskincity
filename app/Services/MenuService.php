@@ -25,9 +25,10 @@ use App\Entities\Caches\{
     MenuCache,
     SettingCache,
 };
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Illuminate\Database\Eloquent\Model;
 
@@ -391,7 +392,7 @@ class MenuService
                             'title' => 'Stripe',
                             'link' => route('admin.settings.stripe.edit'),
                             'isActive' => $request->routeIs('admin.settings.stripe.edit'),
-                            'isEnabled' => $user->can('system.payment'),
+                            'isEnabled' => Gate::check('manageStripeSetting', $user),
                         ],
                         [
                             'title' => 'Keys',
@@ -488,7 +489,7 @@ class MenuService
                     [
                         'title' => 'Payments',
                         'link' => route('payments.index'),
-                        'isEnabled' => $user->can('payment.management'),
+                        'isEnabled' => Gate::check('manageStripeConnectedAccount', $user),
                     ],
                 ];
 

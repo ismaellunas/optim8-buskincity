@@ -46,7 +46,7 @@
 
                         <div
                             class="g-recaptcha"
-                            data-sitekey="{{ config('constants.recaptcha_site_key') }}"
+                            data-sitekey="{{ $recaptchaSiteKey }}"
                             data-size="invisible"
                         ></div>
 
