@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
+use App\Services\MenuService;
 use App\Services\PostService;
 use App\Traits\HasModuleViewData;
 use Illuminate\Http\Request;
@@ -148,7 +149,7 @@ class PostController extends CrudController
 
     public function update(PostRequest $request, Post $post)
     {
-        $post->saveFromInputs($request->only([
+        $inputs = $request->only([
             'content',
             'cover_image_id',
             'excerpt',
@@ -159,7 +160,21 @@ class PostController extends CrudController
             'status',
             'title',
             'scheduled_at',
-        ]));
+        ]);
+
+        $oldStatus = $post->status;
+
+        if (
+            $oldStatus === Post::STATUS_PUBLISHED
+            && (
+                $inputs['status'] === Post::STATUS_DRAFT
+                || $inputs['status'] === Post::STATUS_SCHEDULED
+            )
+        ) {
+            app(MenuService::class)->removeModelFromMenus($post);
+        }
+
+        $post->saveFromInputs($inputs);
 
         if ($request->has('categories')) {
             $post->syncCategories(
