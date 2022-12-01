@@ -68,6 +68,11 @@ class Post extends BaseModel implements PublishableInterface
         return $this->hasOne(Media::class, 'id', 'cover_image_id');
     }
 
+    public function menuItems()
+    {
+        return $this->morphMany(MenuItem::class, 'menu_itemable');
+    }
+
     /* Scope: */
     public function scopePublished($query)
     {
