@@ -4,6 +4,7 @@ namespace Modules\Space\Entities;
 
 use App\Models\GlobalOption;
 use App\Models\Media;
+use App\Models\MenuItem;
 use App\Models\PageTranslation;
 use App\Models\User;
 use App\Services\TranslationService;
@@ -85,6 +86,11 @@ class Space extends Model implements TranslatableContract
     public function product()
     {
         return $this->morphOne(Product::class, 'productable');
+    }
+
+    public function menuItems()
+    {
+        return $this->morphMany(MenuItem::class, 'menu_itemable');
     }
 
     public function getLogoUrlAttribute(): ?string

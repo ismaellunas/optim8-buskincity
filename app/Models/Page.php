@@ -142,6 +142,11 @@ class Page extends Model implements TranslatableContract
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    public function menuItems()
+    {
+        return $this->morphMany(MenuItem::class, 'menu_itemable');
+    }
+
     // Accessors
     public function getHasMetaDescriptionAttribute(): bool
     {

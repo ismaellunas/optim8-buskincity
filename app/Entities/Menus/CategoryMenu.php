@@ -33,8 +33,14 @@ class CategoryMenu extends BaseMenu implements MenuInterface
 
     public function getUrl(): string
     {
-        return $this->getTranslatedUrl(
-            $this->getModel()->menuItemable->blogTranslatedUrl($this->locale)
-        );
+        $model = $this->getModel();
+
+        if ($model->isPolymorphicExists) {
+            return $this->getTranslatedUrl(
+                $model->menuItemable->blogTranslatedUrl($this->locale)
+            );
+        }
+
+        return $this->fallbackUrl();
     }
 }

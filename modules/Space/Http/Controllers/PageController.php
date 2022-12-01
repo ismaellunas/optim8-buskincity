@@ -46,8 +46,8 @@ class PageController extends Controller
             && $oldStatus == PageTranslation::STATUS_PUBLISHED
             && $pageTranslation['status'] == PageTranslation::STATUS_DRAFT
         ) {
-            app(MenuService::class)->removePageFromMenus(
-                $pageTranslation['page_id'],
+            app(MenuService::class)->removeModelFromMenus(
+                $page,
                 $pageTranslation['locale']
             );
         }

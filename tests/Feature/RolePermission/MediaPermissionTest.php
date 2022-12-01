@@ -14,6 +14,18 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
     protected $basePermissionName = 'media';
     protected $baseRouteName = 'admin.media';
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->givePermissionToRole('dashboard', 'system');
+
+        $this->withoutMiddleware([
+            \App\Http\Middleware\EnsureLoginFromAdminLoginRoute::class,
+            \App\Http\Middleware\UserEmailIsVerified::class,
+        ]);
+    }
+
     private function mockMediaService(string $methodName, Media $media): void
     {
         $this->instance(
@@ -137,7 +149,26 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
      */
     public function storeCanBeAccessedByUserWithMediaAddPermission()
     {
-        $this->mockMediaService('upload', Media::factory()->create());
+        // Arrange
+        $fileName = 'photo1.jpg';
+
+        $this->instance(
+            MediaService::class,
+            Mockery::mock(
+                MediaService::class,
+                function (MockInterface $mock) use ($fileName) {
+                    $mock
+                        ->shouldReceive('upload')
+                        ->once()
+                        ->andReturn(Media::factory()->create());
+
+                    $mock
+                        ->shouldReceive('sanitizeFileName')
+                        ->once()
+                        ->andReturn($fileName);
+                }
+            )
+        );
 
         // Act
         $this->givePermissionToRole('add');
@@ -146,7 +177,7 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
             route($this->baseRouteName.'.store'),
             [
                 'file_name' => Str::slug($this->faker->sentence()),
-                'file' => UploadedFile::fake()->image('photo1.jpg'),
+                'file' => UploadedFile::fake()->image($fileName),
             ]
         );
 
@@ -178,6 +209,8 @@ class MediaPermissionTest extends BaseRolePermissionTestCase
         $this->givePermissionToRole('delete');
 
         $media = Media::factory()->create();
+
+        $this->mockMediaService('destroy', $media);
 
         // Act
         $response = $this->delete(route($this->baseRouteName.'.destroy', [$media->id]));

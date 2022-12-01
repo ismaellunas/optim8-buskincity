@@ -68,6 +68,11 @@ class Post extends BaseModel implements PublishableInterface
         return $this->hasOne(Media::class, 'id', 'cover_image_id');
     }
 
+    public function menuItems()
+    {
+        return $this->morphMany(MenuItem::class, 'menu_itemable');
+    }
+
     /* Scope: */
     public function scopePublished($query)
     {
@@ -120,11 +125,24 @@ class Post extends BaseModel implements PublishableInterface
         return $this->status == self::STATUS_SCHEDULED;
     }
 
+    public function getIsUnpublishedAttribute(): bool
+    {
+        return $this->status !== self::STATUS_PUBLISHED;
+    }
+
     public function getIsChangedToScheduledAttribute(): bool
     {
         return (
             $this->isScheduled
             && ($this->isDirty('scheduled_at') || $this->isDirty('status'))
+        );
+    }
+
+    public function getIsChangedToUnpublishedAttribute(): bool
+    {
+        return (
+            $this->isUnpublished
+            && $this->isDirty('status')
         );
     }
 

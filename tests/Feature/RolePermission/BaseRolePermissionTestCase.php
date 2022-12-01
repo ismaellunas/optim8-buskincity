@@ -4,7 +4,9 @@ namespace Tests\Feature\RolePermission;
 
 use App\Models\Role;
 use App\Models\User;
-use Database\Seeders\DatabaseSeeder;
+use Database\Seeders\PermissionSeeder;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\SettingSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -22,14 +24,17 @@ class BaseRolePermissionTestCase extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(DatabaseSeeder::class);
+        $this->seed(RoleSeeder::class);
+        $this->seed(PermissionSeeder::class);
+        $this->seed(SettingSeeder::class);
 
         // Arrange
         $this->user = User::factory()->create();
-        $this->actingAs($this->user);
 
         $this->role = Role::factory()->create();
         $this->user->assignRole($this->role);
+
+        $this->actingAs($this->user);
     }
 
     protected function givePermissionToRole(string $permission, string $basePermission = null)

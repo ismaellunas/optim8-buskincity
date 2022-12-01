@@ -61,9 +61,4 @@ class PageMenu extends BaseMenu implements MenuInterface
             ])
         );
     }
-
-    private function fallbackUrl()
-    {
-        return '';
-    }
 }

@@ -25,10 +25,16 @@ class PostMenu extends BaseMenu implements MenuInterface
 
     public function getUrl(): string
     {
-        return $this->getTranslatedUrl(
-            route('blog.show', [
-                'slug' => $this->getModel()->menuItemable->slug,
-            ])
-        );
+        $model = $this->getModel();
+
+        if ($model->isPolymorphicExists) {
+            return $this->getTranslatedUrl(
+                route('blog.show', [
+                    'slug' => $model->menuItemable->slug,
+                ])
+            );
+        }
+
+        return $this->fallbackUrl();
     }
 }
