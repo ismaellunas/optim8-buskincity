@@ -5,6 +5,7 @@ namespace Modules\Space\Entities;
 use App\Models\GlobalOption;
 use App\Models\Media;
 use App\Models\MenuItem;
+use App\Models\PageTranslation;
 use App\Models\User;
 use App\Services\TranslationService;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
@@ -106,13 +107,6 @@ class Space extends Model implements TranslatableContract
     {
         $page = $this->page;
 
-        if (
-            !$page
-            && !$this->is_page_enabled
-        ) {
-            return null;
-        }
-
         $locale = TranslationService::currentLanguage();
 
         if (!$page->hasTranslation($locale)) {
@@ -137,6 +131,14 @@ class Space extends Model implements TranslatableContract
         return null;
     }
 
+    public function getOptimizedLogoImageUrl(
+        ?int $width = null,
+        ?int $height = null
+    ): ?string {
+        return $this->logo
+            ? $this->logo->getOptimizedImageUrl($width, $height)
+            : null;
+    }
 
     public function saveFromInputs(array $inputs)
     {
@@ -165,5 +167,14 @@ class Space extends Model implements TranslatableContract
     public function scopeTopParent($query)
     {
         return $query->whereNull('parent_id');
+    }
+
+    public function hasEnabledPage(): bool
+    {
+        return (
+            $this->is_page_enabled
+            && !empty($this->page)
+            && $this->page->translations->contains('status', PageTranslation::STATUS_PUBLISHED)
+        );
     }
 }

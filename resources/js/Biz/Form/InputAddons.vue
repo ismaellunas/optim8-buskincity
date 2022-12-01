@@ -54,7 +54,7 @@
                 default: false
             },
             label: String,
-            message: Object|null,
+            message: { type: [String, Array], default: undefined },
             modelValue: {},
             placeholder: String,
             required: {

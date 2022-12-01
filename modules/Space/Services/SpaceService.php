@@ -349,6 +349,7 @@ class SpaceService
                 'cover_media_id',
                 'page_id',
                 'parent_id',
+                'is_page_enabled',
             ])
             ->orderBy('name', 'asc')
             ->get();
