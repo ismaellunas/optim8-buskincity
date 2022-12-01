@@ -28,7 +28,7 @@ class Master extends Component
 
         $this->appCssUrl = $settingService->getFrontendCssUrl();
         $this->faviconUrl = $settingService->getFaviconUrl();
-        $this->logoUrl = $settingService->getLogoUrl();
+        $this->logoUrl = $settingService->getLogoOrDefaultUrl();
         $this->trackingCodeAfterBody =  $settingService->getTrackingCodeAfterBody();
         $this->trackingCodeBeforeBody = $settingService->getTrackingCodeBeforeBody();
         $this->trackingCodeInsideHead = $settingService->getTrackingCodeInsideHead();
