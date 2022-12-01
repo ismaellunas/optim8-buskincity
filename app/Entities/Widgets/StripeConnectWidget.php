@@ -19,13 +19,19 @@ class StripeConnectWidget implements WidgetInterface
 
     private $stripeService;
     private $userMetaStripe;
+    private $isStripeKeyExists = false;
 
     public function __construct()
     {
         $this->stripeService = new StripeService();
 
         $this->user = auth()->user();
-        $this->data = $this->getWidgetData();
+
+        $this->isStripeKeyExists = app(StripeService::class)->isStripeKeyExists();
+
+        if ($this->isStripeKeyExists) {
+            $this->data = $this->getWidgetData();
+        }
     }
 
     public function data(): array
@@ -76,6 +82,7 @@ class StripeConnectWidget implements WidgetInterface
 
     public function canBeAccessed(): bool
     {
-        return $this->user->can('manageStripeConnectedAccount', $this->user);
+        return $this->user->can('manageStripeConnectedAccount', $this->user)
+            && $this->isStripeKeyExists;
     }
 }

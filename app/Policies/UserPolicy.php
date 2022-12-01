@@ -69,6 +69,7 @@ class UserPolicy extends BasePermissionPolicy
     {
         return (
             app(StripeSettingService::class)->isEnabled()
+            && app(StripeService::class)->isStripeKeyExists()
             && $user->can('payment.management')
         );
     }
@@ -77,6 +78,7 @@ class UserPolicy extends BasePermissionPolicy
     {
         return (
             app(StripeSettingService::class)->isEnabled()
+            && app(StripeService::class)->isStripeKeyExists()
             && app(StripeService::class)->isStripeConnectEnabled($selectedUser)
         );
     }
@@ -87,5 +89,11 @@ class UserPolicy extends BasePermissionPolicy
             !$selectedUser->isConnectedAccount
             && ($selectedUser->id == $user->id || $this->update($user, $selectedUser))
         );
+    }
+
+    public function manageStripeSetting(User $user)
+    {
+        return app(StripeService::class)->isStripeKeyExists()
+            && $user->can('system.payment');
     }
 }
