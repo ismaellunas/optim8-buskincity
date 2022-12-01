@@ -150,10 +150,12 @@ class SettingService
         return app(SettingCache::class)->remember('logo_url', function () {
             $media = $this->getLogoMedia();
 
-            return $media->file_url
-                ?? StorageService::getImageUrl(
+            return ($media
+                ? $media->getOptimizedImageUrl(600, 600, 'limitFit')
+                : StorageService::getImageUrl(
                     config('constants.default_images.logo')
-                );
+                )
+            );
         });
     }
 
