@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entities\Menus\Options\UrlOption;
 use App\Models\{
     Category,
     Media,
@@ -28,6 +29,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Illuminate\Database\Eloquent\Model;
 
 class MenuService
 {
@@ -240,6 +242,8 @@ class MenuService
             function () {
                 $menu = Menu::with([
                     'menuItems' => function ($query) {
+                            $type = (new UrlOption)->getKey();
+
                             $query->select([
                                     'id',
                                     'url',
@@ -247,7 +251,7 @@ class MenuService
                                     'is_blank',
                                     'menu_id',
                                 ]);
-                            $query->where('type', 'url');
+                            $query->where('type', $type);
                         }
                     ])
                     ->socialMedia()
