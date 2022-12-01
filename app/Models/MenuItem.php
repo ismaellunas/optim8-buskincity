@@ -17,39 +17,14 @@ class MenuItem extends BaseModel
         'is_blank',
         'parent_id',
         'menu_id',
-        'page_id',
-        'post_id',
-        'category_id',
+        'menu_itemable_id',
+        'menu_itemable_type',
     ];
 
     protected $attributes = [
-        'category_id' => null,
-        'page_id' => null,
-        'parent_id' => null,
-        'post_id' => null,
-        'url' => null,
+        'menu_itemable_id' => null,
+        'menu_itemable_type' => null,
     ];
-
-    const TYPE_URL = 1;
-    const TYPE_PAGE = 2;
-    const TYPE_POST = 3;
-    const TYPE_CATEGORY = 4;
-    const TYPE_SEGMENT = 5;
-    const TYPE_VALUES = [
-        self::TYPE_URL => 'Url',
-        self::TYPE_PAGE => 'Page',
-        self::TYPE_POST => 'Post',
-        self::TYPE_CATEGORY => 'Category',
-    ];
-
-    public static function getAllTypeValues(): array
-    {
-        $typeValues = self::TYPE_VALUES;
-
-        $typeValues[self::TYPE_SEGMENT] = 'Segment';
-
-        return $typeValues;
-    }
 
     // Relation
     public function menu()
@@ -57,18 +32,8 @@ class MenuItem extends BaseModel
         return $this->belongsTo(Menu::class, 'menu_id');
     }
 
-    public function page()
+    public function menuItemable()
     {
-        return $this->belongsTo(Page::class, 'page_id');
-    }
-
-    public function post()
-    {
-        return $this->belongsTo(Post::class, 'post_id');
-    }
-
-    public function category()
-    {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->morphTo();
     }
 }
