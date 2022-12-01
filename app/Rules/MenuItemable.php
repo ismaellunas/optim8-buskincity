@@ -29,7 +29,7 @@ class MenuItemable implements Rule
         $model = $type['model'] ?? null;
 
         if (class_exists($model)) {
-            return $model::find($value)->exists();
+            return !is_null($model::find($value));
         }
 
         return true;
