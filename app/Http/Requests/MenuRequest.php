@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Models\MenuItem;
 use App\Rules\ValidUrl;
+use App\Services\MenuService;
 use App\Services\TranslationService;
 use Illuminate\Validation\Rule;
 
@@ -16,6 +16,12 @@ class MenuRequest extends BaseFormRequest
 
     public function rules()
     {
+        $types = collect(app(MenuService::class)->getMenuItemTypeOptions(true))
+            ->map(function ($type) {
+                return $type['id'];
+            })
+            ->all();
+
         return [
             'locale' => [
                 'required',
@@ -29,8 +35,8 @@ class MenuRequest extends BaseFormRequest
             'menu_items.*.type' => [
                 'sometimes',
                 'required',
-                'integer',
-                Rule::in(array_keys(MenuItem::getAllTypeValues())),
+                'max:18',
+                Rule::in($types),
             ],
             'menu_items.*.url' => [
                 'nullable',
@@ -39,20 +45,9 @@ class MenuRequest extends BaseFormRequest
             'menu_items.*.is_blank' => [
                 'boolean',
             ],
-            'menu_items.*.page_id' => [
+            'menu_items.*.menu_itemable_id' => [
                 'nullable',
                 'integer',
-                'exists:pages,id'
-            ],
-            'menu_items.*.post_id' => [
-                'nullable',
-                'integer',
-                'exists:posts,id'
-            ],
-            'menu_items.*.category_id' => [
-                'nullable',
-                'integer',
-                'exists:categories,id'
             ],
             'menu_items.*.menu_id' => [
                 'required',
@@ -70,9 +65,7 @@ class MenuRequest extends BaseFormRequest
             'title',
             'type',
             'is_blank',
-            'page_id',
-            'post_id',
-            'category_id',
+            'menu_itemable_id',
             'menu_id',
             'url',
         ];

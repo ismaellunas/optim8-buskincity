@@ -15,14 +15,17 @@
                 <div class="column is-12">
                     <div
                         class="profile-background hero is-medium is-primary is-radius"
-                        @if ($space->coverUrl) style="background-image: url({{ $space->getOptimizedCoverImageUrl(1280, 398) }});" @endif
+                        @if ($space->coverUrl) style="background-image: url({{ $space->getOptimizedCoverImageUrl(1280, 720) }});" @endif
                     >
                         <div class="hero-body"></div>
                     </div>
                 </div>
                 <div class="column is-11">
                     <figure class="profile-picture image is-250x250">
-                        <img src="{{ $space->logoUrl ?? $pageSpace->defaultLogoUrl() }}" alt="{{ $space->name }}" class="is-rounded">
+                        <img
+                            src="{{ $space->getOptimizedLogoImageUrl(300, 300) ?? $pageSpace->defaultLogoUrl() }}"
+                            alt="{{ $space->name }}"
+                            class="is-rounded">
                     </figure>
 
                     <h1 class="title is-2 mt-5 mb-2">{{ ucwords($space->name) }}</h1>
@@ -119,6 +122,10 @@
                                         <p>
                                             {{ $spaceChild->description ?? '-' }}
                                         </p>
+
+                                        @if ($spaceChild->hasEnabledPage())
+                                            <a href="{{ $spaceChild->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                                        @endif
                                     </div>
                                 </div>
 
@@ -145,6 +152,10 @@
                                         <p>
                                             {{ $spaceChild->description ?? '-' }}
                                         </p>
+
+                                        @if ($spaceChild->hasEnabledPage())
+                                            <a href="{{ $spaceChild->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                                        @endif
                                     </div>
 
                                     @if ($loop->iteration % 2 != 0)
