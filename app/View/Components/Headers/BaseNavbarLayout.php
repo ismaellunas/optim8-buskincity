@@ -4,7 +4,6 @@ namespace App\View\Components\Headers;
 
 use App\Services\LoginService;
 use App\Services\StorageService;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Component;
 
 abstract class BaseNavbarLayout extends Component
@@ -21,14 +20,6 @@ abstract class BaseNavbarLayout extends Component
         $this->menus = $menus ?? [];
         $this->logoUrl = $logoUrl;
         $this->languageOptions = $languageOptions;
-    }
-
-    public function logo(): string
-    {
-        return $this->logoUrl
-            ?? StorageService::getImageUrl(
-                config('constants.default_images.logo')
-            );
     }
 
     public function dashboardUrl(): string
