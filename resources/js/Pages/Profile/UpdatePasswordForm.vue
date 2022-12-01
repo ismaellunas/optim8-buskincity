@@ -46,7 +46,7 @@
     import BizFormPassword from '@/Biz/Form/Password';
     import FormSection from '@/Frontend/FormSection';
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { oops as oopsAlert } from '@/Libs/alert';
 
     export default {
         components: {
@@ -77,8 +77,6 @@
                     preserveScroll: true,
                     onSuccess: () => {
                         this.form.reset();
-
-                        successAlert('Saved');
                     },
                     onError: () => {
                         if (this.form.errors.password) {

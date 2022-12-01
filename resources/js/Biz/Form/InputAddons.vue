@@ -2,6 +2,7 @@
     <biz-field :class="wrapperClass">
         <biz-label
             v-if="label"
+            :class="{'is-size-7': isSmall}"
             :is-required="required"
         >
             {{ label }}
@@ -12,6 +13,7 @@
                 <biz-input
                     ref="input"
                     v-bind="$attrs"
+                    :class="{'is-small': isSmall}"
                     :disabled="disabled"
                     :placeholder="placeholder"
                     :required="required"
@@ -46,11 +48,6 @@
             BizLabel,
         },
         inheritAttrs: false,
-        emits: [
-            'on-blur',
-            'on-keypress',
-            'update:modelValue',
-        ],
         props: {
             disabled: {
                 type: Boolean,
@@ -67,7 +64,16 @@
             wrapperClass: {
                 type: [String, Array, Object],
                 default: () => [],
-            }
+            },
+            isSmall: {
+                type: Boolean,
+                default: false
+            },
         },
+        emits: [
+            'on-blur',
+            'on-keypress',
+            'update:modelValue',
+        ],
     };
 </script>
