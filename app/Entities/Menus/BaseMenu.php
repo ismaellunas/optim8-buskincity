@@ -97,4 +97,9 @@ abstract class BaseMenu
 
         return $this->currentLocale;
     }
+
+    protected function fallbackUrl()
+    {
+        return '';
+    }
 }
