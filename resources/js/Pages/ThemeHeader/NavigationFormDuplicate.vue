@@ -64,15 +64,15 @@
                 />
 
                 <biz-form-select
-                    v-if="isTypePage"
-                    v-model="form.page_id"
-                    label="Page"
+                    v-else
+                    v-model="form.menu_itemable_id"
+                    label="Menu"
                     class="is-fullwidth"
-                    :message="error('page_id', null, errors)"
+                    :message="error('menu_itemable_id', null, errors)"
                     :required="true"
                 >
                     <option
-                        v-for="option in pageOptions"
+                        v-for="option in menuOptions[form.type]"
                         :key="option.id"
                         :value="option.id"
                     >
@@ -86,45 +86,6 @@
                     </option>
                 </biz-form-select>
 
-                <biz-form-select
-                    v-if="isTypePost"
-                    v-model="form.post_id"
-                    label="Post"
-                    class="is-fullwidth"
-                    :message="error('post_id', null, errors)"
-                    :required="true"
-                >
-                    <option
-                        v-for="option in postOptions"
-                        :key="option.id"
-                        :value="option.id"
-                    >
-                        {{ option.value }} [{{ option.locale.toUpperCase() }}]
-                    </option>
-                </biz-form-select>
-
-                <biz-form-select
-                    v-if="isTypeCategory"
-                    v-model="form.category_id"
-                    label="Category"
-                    class="is-fullwidth"
-                    :message="error('category_id', null, errors)"
-                    :required="true"
-                >
-                    <option
-                        v-for="option in categoryOptions"
-                        :key="option.id"
-                        :value="option.id"
-                    >
-                        {{ option.value }}
-                        <span
-                            v-for="locale, index in option.locales"
-                            :key="index"
-                        >
-                            [{{ locale.toUpperCase() }}]
-                        </span>
-                    </option>
-                </biz-form-select>
                 <biz-checkbox
                     v-model:checked="form.is_blank"
                     :value="true"
@@ -165,7 +126,7 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormSelect from '@/Biz/Form/Select';
     import BizModalCard from '@/Biz/ModalCard';
-    import { cloneDeep, sortBy } from 'lodash';
+    import { cloneDeep } from 'lodash';
     import { reactive } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
 
@@ -206,10 +167,8 @@
 
         setup(props) {
             return {
-                categoryOptions: sortBy(usePage().props.value.categoryOptions, [(option) => option.value]),
                 form: reactive(cloneDeep(props.menuItem)),
-                pageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
-                postOptions: sortBy(usePage().props.value.postOptions, [(option) => option.value]),
+                menuOptions: usePage().props.value.menuOptions,
                 typeOptions: usePage().props.value.typeOptions,
             };
         },
@@ -222,19 +181,7 @@
 
         computed: {
             isTypeUrl() {
-                return this.form.type == '1';
-            },
-
-            isTypePage() {
-                return this.form.type == '2';
-            },
-
-            isTypePost() {
-                return this.form.type == '3';
-            },
-
-            isTypeCategory() {
-                return this.form.type == '4'
+                return this.form.type == 'url';
             },
         },
 
@@ -247,9 +194,7 @@
 
             onChangedType() {
                 this.form.url = null;
-                this.form.page_id = null;
-                this.form.post_id = null;
-                this.form.category_id = null;
+                this.form.menu_itemable_id = null;
             }
         },
     };
