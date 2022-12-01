@@ -20,7 +20,7 @@
                         <div class="columns is-hidden-tablet">
                             <div class="column is-12 has-text-centered">
                                 <figure class="image is-250x250 is-inline-block">
-                                    <img src="{{ $space->logoUrl ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
+                                    <img src="{{ $space->getOptimizedLogoImageUrl(300, 300) ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
                                 </figure>
                             </div>
                             <div class="column is-12">
@@ -39,7 +39,7 @@
                             @if ($loop->iteration % 2 == 0)
                                 <div class="column">
                                     <figure class="image is-250x250 is-pulled-left">
-                                        <img src="{{ $space->logoUrl ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
+                                        <img src="{{ $space->getOptimizedLogoImageUrl(300, 300) ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
                                     </figure>
                                 </div>
                             @endif
@@ -58,7 +58,7 @@
                             @if ($loop->iteration % 2 != 0)
                                 <div class="column">
                                     <figure class="image is-250x250 is-pulled-right">
-                                        <img src="{{ $space->logoUrl ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
+                                        <img src="{{ $space->getOptimizedLogoImageUrl(300, 300) ?? $defaultLogoUrl }}" alt="{{ $space->name }}" class="is-rounded">
                                     </figure>
                                 </div>
                             @endif
