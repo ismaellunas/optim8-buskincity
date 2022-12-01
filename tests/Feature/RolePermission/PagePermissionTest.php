@@ -4,12 +4,27 @@ namespace Tests\Feature\RolePermission;
 
 use App\Models\Page;
 use App\Models\PageTranslation;
+use Database\Seeders\LanguageTestSeeder;
 use Illuminate\Support\Str;
 
 class PagePermissionTest extends BaseRolePermissionTestCase
 {
     protected $basePermissionName = 'page';
     protected $baseRouteName = 'admin.pages';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(LanguageTestSeeder::class);
+
+        $this->givePermissionToRole('dashboard', 'system');
+
+        $this->withoutMiddleware([
+            \App\Http\Middleware\EnsureLoginFromAdminLoginRoute::class,
+            \App\Http\Middleware\UserEmailIsVerified::class,
+        ]);
+    }
 
     private function generateInputs($pageTranslation = null): array
     {
