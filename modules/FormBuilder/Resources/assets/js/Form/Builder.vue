@@ -53,7 +53,6 @@
     import { VueRecaptcha } from 'vue-recaptcha';
     import { isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { recaptchaSiteKey } from '@/Libs/defaults';
     import { reactive } from 'vue';
 
     export default {
@@ -80,6 +79,7 @@
         props: {
             bagName: { type: String, default: null },
             formId: { type: [String, null], required: true },
+            recaptchaSiteKey: { type: [String, null], default: null }
         },
 
         data() {
@@ -93,7 +93,6 @@
                 formErrors: {},
                 isShown: false,
                 isRecaptchaError: false,
-                recaptchaSiteKey,
                 urls: {
                     getSchema: '/form-builders/schema',
                     save: '/form-builders/save',
