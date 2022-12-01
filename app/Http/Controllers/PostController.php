@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
-use App\Services\MenuService;
 use App\Services\PostService;
 use App\Traits\HasModuleViewData;
 use Illuminate\Http\Request;
@@ -161,18 +160,6 @@ class PostController extends CrudController
             'title',
             'scheduled_at',
         ]);
-
-        $oldStatus = $post->status;
-
-        if (
-            $oldStatus === Post::STATUS_PUBLISHED
-            && (
-                $inputs['status'] === Post::STATUS_DRAFT
-                || $inputs['status'] === Post::STATUS_SCHEDULED
-            )
-        ) {
-            app(MenuService::class)->removeModelFromMenus($post);
-        }
 
         $post->saveFromInputs($inputs);
 

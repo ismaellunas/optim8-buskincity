@@ -26,6 +26,13 @@ class PostObserver
         app(WidgetService::class)->flushWidget("post");
     }
 
+    public function updated(Post $post)
+    {
+        if ($post->isChangedToUnpublished) {
+            app(MenuService::class)->removeModelFromMenus($post);
+        }
+    }
+
     public function deleted(Post $post)
     {
         app(MenuService::class)->removeModelFromMenus($post);

@@ -125,11 +125,24 @@ class Post extends BaseModel implements PublishableInterface
         return $this->status == self::STATUS_SCHEDULED;
     }
 
+    public function getIsUnpublishedAttribute(): bool
+    {
+        return $this->status !== self::STATUS_PUBLISHED;
+    }
+
     public function getIsChangedToScheduledAttribute(): bool
     {
         return (
             $this->isScheduled
             && ($this->isDirty('scheduled_at') || $this->isDirty('status'))
+        );
+    }
+
+    public function getIsChangedToUnpublishedAttribute(): bool
+    {
+        return (
+            $this->isUnpublished
+            && $this->isDirty('status')
         );
     }
 
