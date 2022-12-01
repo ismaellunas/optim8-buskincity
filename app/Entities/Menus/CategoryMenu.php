@@ -35,9 +35,9 @@ class CategoryMenu extends BaseMenu implements MenuInterface
     {
         $model = $this->getModel();
 
-        if ($this->getModel()->isPolymorphicExists) {
+        if ($model->isPolymorphicExists) {
             return $this->getTranslatedUrl(
-                $this->getModel()->menuItemable->blogTranslatedUrl($this->locale)
+                $model->menuItemable->blogTranslatedUrl($this->locale)
             );
         }
 
