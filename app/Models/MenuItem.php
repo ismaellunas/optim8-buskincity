@@ -39,6 +39,9 @@ class MenuItem extends BaseModel
 
     public function getIsPolymorphicExistsAttribute(): bool
     {
-        return !is_null($this->menuItemable);
+        return (
+            !is_null($this->menu_itemable_id)
+            && !is_null($this->menu_itemable_type)
+        );
     }
 }
