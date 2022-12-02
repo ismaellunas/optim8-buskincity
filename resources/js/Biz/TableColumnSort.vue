@@ -26,7 +26,13 @@
         props: {
             tag: { type: String, default: 'th' },
             isSorted: { type: Boolean, default: false },
-            order: { type: String, default: 'asc' },
+            order: {
+                type: [String, null],
+                default: 'asc',
+                validator(value) {
+                    return ['asc', 'desc'].includes(value);
+                }
+            },
         },
 
         data() {
