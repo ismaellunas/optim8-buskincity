@@ -10,7 +10,7 @@
             <template #trigger>
                 <span
                     class="has-text-left"
-                    :style="{'min-width': '10rem'}"
+                    :style="{'width': '100%'}"
                 >
                     Select
                 </span>

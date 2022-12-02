@@ -2,6 +2,7 @@
 
 namespace Modules\Space\Database\Seeders;
 
+use App\Entities\Menus\Options\UrlOption;
 use App\Entities\Caches\MenuCache;
 use App\Models\{
     Menu,
@@ -24,7 +25,7 @@ class MenuSeeder extends Seeder
         $headerMenus = [
             [
                 'title' => 'Country',
-                'type' => MenuItem::TYPE_URL,
+                'type' => (new UrlOption())->getKey(),
                 'url' => route('frontend.spaces.index'),
                 'order' => 99,
                 'menu_id' => $menu->id

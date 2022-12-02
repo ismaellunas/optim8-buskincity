@@ -9,6 +9,6 @@ class PageObserver
 {
     public function deleted(Page $page)
     {
-        app(MenuService::class)->removePageFromMenus($page->id);
+        app(MenuService::class)->removeModelFromMenus($page);
     }
 }

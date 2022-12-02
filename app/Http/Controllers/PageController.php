@@ -184,8 +184,8 @@ class PageController extends CrudController
             && $oldStatus == PageTranslation::STATUS_PUBLISHED
             && $pageTranslation['status'] == PageTranslation::STATUS_DRAFT
         ) {
-            app(MenuService::class)->removePageFromMenus(
-                $pageTranslation['page_id'],
+            app(MenuService::class)->removeModelFromMenus(
+                $page,
                 $pageTranslation['locale']
             );
         }
@@ -223,7 +223,7 @@ class PageController extends CrudController
 
     public function isUsedByMenus(Page $page, ?string $locale = null)
     {
-        return app(MenuService::class)->isPageUsedByMenu($page->id, $locale);
+        return app(MenuService::class)->isModelUsedByMenu($page, $locale);
     }
 
     public function duplicatePage(Page $page)

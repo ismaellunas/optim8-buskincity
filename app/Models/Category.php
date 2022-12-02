@@ -23,6 +23,11 @@ class Category extends BaseModel implements TranslatableContract
         return $this->belongsToMany(Post::class);
     }
 
+    public function menuItems()
+    {
+        return $this->morphMany(MenuItem::class, 'menu_itemable');
+    }
+
     public function saveFromInputs(array $inputs): bool
     {
         $this->fill($inputs);

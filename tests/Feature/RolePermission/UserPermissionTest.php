@@ -2,12 +2,28 @@
 
 namespace Tests\Feature\RolePermission;
 
+use App\Models\Language;
 use App\Models\User;
+use Database\Seeders\LanguageTestSeeder;
 
 class UserPermissionTest extends BaseRolePermissionTestCase
 {
     protected $basePermissionName = 'user';
     protected $baseRouteName = 'admin.users';
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(LanguageTestSeeder::class);
+
+        $this->givePermissionToRole('dashboard', 'system');
+
+        $this->withoutMiddleware([
+            \App\Http\Middleware\EnsureLoginFromAdminLoginRoute::class,
+            \App\Http\Middleware\UserEmailIsVerified::class,
+        ]);
+    }
 
     private function generateUpdateInputs(): array
     {
@@ -15,6 +31,7 @@ class UserPermissionTest extends BaseRolePermissionTestCase
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'email' => $this->faker->email(),
+            'language_id' => Language::code(config('app.locale'))->value('id'),
         ];
     }
 

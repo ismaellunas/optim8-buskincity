@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Models\MenuItem;
+use App\Rules\MenuItemable;
 use App\Rules\ValidUrl;
+use App\Services\MenuService;
 use App\Services\TranslationService;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class MenuItemRequest extends BaseFormRequest
@@ -16,6 +18,19 @@ class MenuItemRequest extends BaseFormRequest
 
     public function rules()
     {
+        $menuItemableRules = [];
+        $types = collect(app(MenuService::class)->getMenuItemTypeOptions())
+            ->map(function ($type) {
+                return $type['id'];
+            })
+            ->all();
+
+        foreach ($types as $type) {
+            if ($type != 'url') {
+                $menuItemableRules[] = 'required_if:type,' . $type;
+            }
+        }
+
         return [
             'locale' => [
                 'sometimes',
@@ -29,8 +44,8 @@ class MenuItemRequest extends BaseFormRequest
             ],
             'type' => [
                 'required',
-                'integer',
-                Rule::in(array_keys(MenuItem::getAllTypeValues())),
+                'max:18',
+                Rule::in($types),
             ],
             'url' => [
                 'nullable',
@@ -39,24 +54,14 @@ class MenuItemRequest extends BaseFormRequest
             'is_blank' => [
                 'boolean',
             ],
-            'page_id' => [
-                'required_if:type,'.MenuItem::TYPE_PAGE,
-                'nullable',
-                'integer',
-                'exists:pages,id'
-            ],
-            'post_id' => [
-                'required_if:type,'.MenuItem::TYPE_POST,
-                'nullable',
-                'integer',
-                'exists:posts,id'
-            ],
-            'category_id' => [
-                'required_if:type,'.MenuItem::TYPE_CATEGORY,
-                'nullable',
-                'integer',
-                'exists:categories,id'
-            ],
+            'menu_itemable_id' => array_merge(
+                $menuItemableRules,
+                [
+                    'nullable',
+                    'integer',
+                    new MenuItemable($this->get('type'))
+                ]
+            ),
             'menu_id' => [
                 'required',
                 'integer',
@@ -67,25 +72,14 @@ class MenuItemRequest extends BaseFormRequest
 
     public function messages()
     {
-        $typeValue = __(MenuItem::TYPE_VALUES[$this->get('type')] ?? "");
-        $otherAttribute = __('Type');
-
         return [
-            'page_id.required_if' => __('validation.required_if', [
-                'attribute' => __('Page'),
-                'other' => $otherAttribute,
-                'value' => $typeValue,
+            'menu_itemable_id.required_if' => __('validation.required_if', [
+                'attribute' => __('Menu'),
+                'other' => __('Type'),
+                'value' => Str::of($this->get('type'))
+                    ->title()
+                    ->replace('_', ' '),
             ]),
-            'post_id.required_if' => __('validation.required_if', [
-                'attribute' => __('Post'),
-                'other' => $otherAttribute,
-                'value' => $typeValue,
-            ]),
-            'category_id.required_if' => __('validation.required_if', [
-                'attribute' => __('Category'),
-                'other' => $otherAttribute,
-                'value' => $typeValue,
-            ])
         ];
     }
 }

@@ -5,9 +5,24 @@ namespace Tests\Feature\RolePermission;
 use App\Contracts\PublishableInterface;
 use App\Models\Post;
 use App\Models\Role;
+use Database\Seeders\LanguageTestSeeder;
 
 class PostPermissionTest extends BaseRolePermissionTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(LanguageTestSeeder::class);
+
+        $this->givePermissionToRole('dashboard', 'system');
+
+        $this->withoutMiddleware([
+            \App\Http\Middleware\EnsureLoginFromAdminLoginRoute::class,
+            \App\Http\Middleware\UserEmailIsVerified::class,
+        ]);
+    }
+
     /**
      * @test
      */
