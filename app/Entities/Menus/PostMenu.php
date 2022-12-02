@@ -16,7 +16,7 @@ class PostMenu extends BaseMenu implements MenuInterface
     protected function getEagerLoads(): array
     {
         return [
-            'post' => function ($query) {
+            'menuItemable' => function ($query) {
                 $query->select('id', 'locale', 'slug');
             },
             'menu',
@@ -25,10 +25,16 @@ class PostMenu extends BaseMenu implements MenuInterface
 
     public function getUrl(): string
     {
-        return $this->getTranslatedUrl(
-            route('blog.show', [
-                'slug' => $this->getModel()->post->slug,
-            ])
-        );
+        $model = $this->getModel();
+
+        if ($model->isPolymorphicExists) {
+            return $this->getTranslatedUrl(
+                route('blog.show', [
+                    'slug' => $model->menuItemable->slug,
+                ])
+            );
+        }
+
+        return $this->fallbackUrl();
     }
 }

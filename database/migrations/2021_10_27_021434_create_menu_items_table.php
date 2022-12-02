@@ -16,7 +16,7 @@ class CreateMenuItemsTable extends Migration
         Schema::create('menu_items', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->tinyInteger('type')->default(1);
+            $table->string('type', 18)->default('url');
             $table->string('url')->nullable();
             $table->integer('order')->default(1);
             $table->string('icon', 100)->nullable();
@@ -26,21 +26,9 @@ class CreateMenuItemsTable extends Migration
                 ->constrained('menus')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->foreignId('page_id')
-                ->nullable()
-                ->constrained('pages')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-            $table->foreignId('post_id')
-                ->nullable()
-                ->constrained('posts')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
-            $table->foreignId('category_id')
-                ->nullable()
-                ->constrained('categories')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+
+            $table->bigInteger('menu_itemable_id')->unsigned()->nullable();
+            $table->string('menu_itemable_type')->nullable();
             $table->timestamps();
         });
     }

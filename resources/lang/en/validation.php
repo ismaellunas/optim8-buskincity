@@ -128,6 +128,7 @@ return [
     'group_and_key_combination' => 'The combination between group and key is invalid.',
     'current_password' => 'The provided password does not match your current password.',
     'postal_code' => 'The :attribute is invalid.',
+    'menu_itemable' => 'The menu is invalid.',
 
     /*
     |--------------------------------------------------------------------------

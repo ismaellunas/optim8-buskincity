@@ -7,6 +7,7 @@ use App\Models\Media;
 use App\Models\User;
 use App\Services\GlobalOptionService;
 use App\Services\MediaService;
+use App\Services\MenuService;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
@@ -331,6 +332,13 @@ class SpaceService
         }
     }
 
+    public function removeAllMenus(array $spaces): void
+    {
+        foreach ($spaces as $space) {
+            app(MenuService::class)->removeModelFromMenus($space);
+        }
+    }
+
     public function getTopParents(): NestedSetCollection
     {
         return Space::topParent()
@@ -341,6 +349,7 @@ class SpaceService
                 'cover_media_id',
                 'page_id',
                 'parent_id',
+                'is_page_enabled',
             ])
             ->orderBy('name', 'asc')
             ->get();

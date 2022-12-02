@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Setting;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class SettingSeeder extends Seeder
 {
@@ -317,6 +318,8 @@ class SettingSeeder extends Seeder
         $settings = config('constants.settings.keys');
 
         foreach ($settings as $setting) {
+            $setting['value'] = env(Str::upper($setting['key']), null);
+
             $this->createSetting($setting);
         }
     }

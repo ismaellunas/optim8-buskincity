@@ -13,11 +13,11 @@
             <biz-button
                 v-if="isTriggerButton"
                 :aria-controls="menuId"
+                :class="classButton"
                 :style="styleButton"
                 aria-haspopup="true"
                 class="button"
                 type="button"
-                :class="classButton"
             >
                 <slot name="trigger" />
             </biz-button>

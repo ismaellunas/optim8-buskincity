@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entities\Menus\Options\UrlOption;
 use App\Models\{
     Category,
     Media,
@@ -16,17 +17,20 @@ use App\Models\{
 use App\Services\{
     LanguageService,
     LoginService,
-    TranslationService,
     ModuleService,
+    TranslationService,
 };
 use Illuminate\Http\Request;
 use App\Entities\Caches\{
     MenuCache,
     SettingCache,
 };
-use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Illuminate\Database\Eloquent\Model;
 
 class MenuService
 {
@@ -45,11 +49,26 @@ class MenuService
         return $menus;
     }
 
-    private function getTypeMenuClass(string $type)
+    private function getTypeMenuClass(string $type): ?string
     {
-        $typeValues = MenuItem::getAllTypeValues();
+        $className = "\\App\\Entities\\Menus\\".Str::studly($type)."Menu";
 
-        return "\\App\\Entities\\Menus\\".$typeValues[$type]."Menu";
+        if (class_exists($className)) {
+            return $className;
+        }
+
+        return $this->getModuleTypeMenuClass($type);
+    }
+
+    private function getModuleTypeMenuClass(string $type): ?string
+    {
+        $className = '\\Modules\\'. Str::studly($type) .'\\Menus\\MenuUrl';
+
+        if (class_exists($className)) {
+            return $className;
+        }
+
+        return null;
     }
 
     private function createStructuredMenus(
@@ -64,17 +83,20 @@ class MenuService
             ->sortBy('order')
             ->each(function ($menuItem) use ($menus, $menuItems, $locale) {
                 $className = $this->getTypeMenuClass($menuItem->type);
-                $menu = new $className($menuItem, $locale);
 
-                if ($menuItems->contains('parent_id', $menuItem->id)) {
-                    $menu->children = $this->createStructuredMenus(
-                        $menuItems,
-                        $locale,
-                        $menuItem->id
-                    );
+                if ($className) {
+                    $menu = new $className($menuItem, $locale);
+
+                    if ($menuItems->contains('parent_id', $menuItem->id)) {
+                        $menu->children = $this->createStructuredMenus(
+                            $menuItems,
+                            $locale,
+                            $menuItem->id
+                        );
+                    }
+
+                    $menus->push($menu);
                 }
-
-                $menus->push($menu);
             });
 
         return $menus;
@@ -221,6 +243,8 @@ class MenuService
             function () {
                 $menu = Menu::with([
                     'menuItems' => function ($query) {
+                            $type = (new UrlOption)->getKey();
+
                             $query->select([
                                     'id',
                                     'url',
@@ -228,7 +252,7 @@ class MenuService
                                     'is_blank',
                                     'menu_id',
                                 ]);
-                            $query->where('type', MenuItem::TYPE_URL);
+                            $query->where('type', $type);
                         }
                     ])
                     ->socialMedia()
@@ -368,7 +392,7 @@ class MenuService
                             'title' => 'Stripe',
                             'link' => route('admin.settings.stripe.edit'),
                             'isActive' => $request->routeIs('admin.settings.stripe.edit'),
-                            'isEnabled' => $user->can('system.payment'),
+                            'isEnabled' => Gate::check('manageStripeSetting', $user),
                         ],
                         [
                             'title' => 'Keys',
@@ -465,7 +489,7 @@ class MenuService
                     [
                         'title' => 'Payments',
                         'link' => route('payments.index'),
-                        'isEnabled' => $user->can('payment.management'),
+                        'isEnabled' => Gate::check('manageStripeConnectedAccount', $user),
                     ],
                 ];
 
@@ -601,21 +625,71 @@ class MenuService
             ->all();
     }
 
-    public function getMenuItemTypeOptions(): array
+    private function menuBuilderClasses(): array
     {
-        return collect(MenuItem::TYPE_VALUES)
-            ->map(function ($item, $key) {
-                return [
-                    'id' => $key,
-                    'value' => $item,
-                ];
-            })
+        return array_merge([
+            \App\Entities\Menus\Options\UrlOption::class,
+            \App\Entities\Menus\Options\PageOption::class,
+            \App\Entities\Menus\Options\PostOption::class,
+            \App\Entities\Menus\Options\CategoryOption::class,
+            \App\Entities\Menus\Options\SegmentOption::class,
+        ], $this->moduleMenuBuilderClasses());
+    }
+
+    private function moduleMenuBuilderClasses(): array
+    {
+        $classes = [];
+        $activeModules = app(ModuleService::class)->getModuleListByStatus();
+
+        foreach ($activeModules as $activeModule) {
+            $classes[] = '\\Modules\\'. $activeModule->getName() .'\\Menus\\MenuOption';
+        }
+
+        return $classes;
+    }
+
+    public function getMenuItemTypeOptions(bool $isDisplayAllOption = false): array
+    {
+        $options = [];
+
+        foreach ($this->menuBuilderClasses() as $menuBuilderClass) {
+            if (class_exists($menuBuilderClass)) {
+                $menuBuilder = new $menuBuilderClass;
+
+                if (!$isDisplayAllOption) {
+                    if ($menuBuilder->isOptionDisplayed()) {
+                        $options[] = $menuBuilder->getTypeOptions();
+                    }
+                } else {
+                    $options[] = $menuBuilder->getTypeOptions();
+                }
+            }
+        }
+
+        return collect($options)
+            ->sortBy('value')
+            ->values()
             ->all();
     }
 
-    public function removePageFromMenus(int $pageId, ?string $locale = null)
+    public function getMenuOptions(): array
     {
-        $menuItems = $this->getQueryBuilderMenuItem($pageId, $locale)->get();
+        $options = [];
+
+        foreach ($this->menuBuilderClasses() as $menuBuilderClass) {
+            if (class_exists($menuBuilderClass)) {
+                $menuBuilder = new $menuBuilderClass;
+
+                $options[$menuBuilder->getKey()] = $menuBuilder->getMenuOptions();
+            }
+        }
+
+        return $options;
+    }
+
+    public function removeModelFromMenus(Model $model, ?string $locale = null)
+    {
+        $menuItems = $this->getCollectionMenuItem($model, $locale);
 
         $menuItems->each(function ($menuItem) {
             $menuItem->delete();
@@ -624,19 +698,18 @@ class MenuService
         app(MenuCache::class)->flush();
     }
 
-    public function isPageUsedByMenu(int $pageId, ?string $locale = null): bool
+    public function isModelUsedByMenu(Model $model, ?string $locale = null): bool
     {
-        return $this->getQueryBuilderMenuItem($pageId, $locale)->exists();
+        return $this->getCollectionMenuItem($model, $locale)->isNotEmpty();
     }
 
-    private function getQueryBuilderMenuItem(int $pageId, ?string $locale): Builder
+    private function getCollectionMenuItem(Model $model, ?string $locale): Collection
     {
-        return MenuItem::where('page_id', $pageId)
-            ->whereHas('menu', function ($q) use ($locale) {
-                $q->when($locale, function ($q) use ($locale) {
-                    $q->where('locale', $locale);
-                });
+        return $model->menuItems->when($locale, function ($collection) use ($locale) {
+            return $collection->filter(function ($menuItem) use ($locale) {
+                return $menuItem->menu->locale == $locale;
             });
+        });
     }
 
     private function moduleMenus(Request $request, $method = 'admin'): array
