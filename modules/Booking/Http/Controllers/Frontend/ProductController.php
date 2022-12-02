@@ -7,6 +7,7 @@ use App\Services\SettingService;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Modules\Booking\Http\Requests\ProductIndexRequest;
 use Modules\Booking\Services\EventService;
 use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Product;
@@ -35,7 +36,7 @@ class ProductController extends CrudController
      * Display a listing of the resource.
      * @return Renderable
      */
-    public function index(Request $request)
+    public function index(ProductIndexRequest $request)
     {
         $user = auth()->user();
 
