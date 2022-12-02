@@ -4,13 +4,14 @@ namespace Modules\FormBuilder\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\FieldGroup;
 use Modules\FormBuilder\Entities\FieldGroupEntry;
+use Modules\FormBuilder\Events\FormSubmitted;
 use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
 use Modules\FormBuilder\Services\FormBuilderService;
-use Modules\FormBuilder\Events\FormSubmitted;
 
 class FormBuilderController extends CrudController
 {
@@ -123,7 +124,15 @@ class FormBuilderController extends CrudController
 
     public function getSchema(Request $request)
     {
-        return $this->formBuilderService->getSchema($request->form_id);
+        $form = $this->formBuilderService->getForm($request->form_id);
+
+        Gate::allowIf(
+            !empty($form)
+            && $form->canBeAccessed()
+            && $this->formBuilderService->getFormLocation()->canBeAccessedBy()
+        );
+
+        return $form->schema();
     }
 
     public function submit(FormBuilderFrontendRequest $request)

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Modules\FormBuilder\Entities\FieldGroup;
 use Modules\FormBuilder\Entities\FieldGroupEntry;
+use Modules\FormBuilder\Forms\Form;
 use Symfony\Component\HttpFoundation\Response;
 
 class FormBuilderService
@@ -126,24 +127,6 @@ class FormBuilderService
             ->all();
     }
 
-    public function getSchema(
-        string $formId,
-    ):array {
-        $formLocation = $this->getFormLocation();
-
-        $form = $this->getForm($formId);
-
-        if (!$formLocation->canBeAccessedBy()) {
-            $this->abortAction();
-        }
-
-        if ($form->canBeAccessed()) {
-            return $form->schema();
-        }
-
-        return null;
-    }
-
     public function getFormLocation()
     {
         $className = $this->formLocationBasePath.'\\'.'GuestLocation';
@@ -156,9 +139,9 @@ class FormBuilderService
         return $this->formBasePath."\\".'Form';
     }
 
-    public function getForm(string $formId)
+    public function getForm(?string $formId): ?Form
     {
-        $model = FieldGroup::where('title', $formId)->first();
+        $model = FieldGroup::formId($formId)->first();
 
         if ($model) {
             $className = $this->getFormClassName();
