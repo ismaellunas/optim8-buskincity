@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Database\Seeders\LanguageTestSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Jetstream\Features;
 use Tests\TestCase;
@@ -10,6 +11,13 @@ use Tests\TestCase;
 class PasswordConfirmationTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(LanguageTestSeeder::class);
+    }
 
     public function test_confirm_password_screen_can_be_rendered()
     {

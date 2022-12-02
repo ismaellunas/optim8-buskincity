@@ -148,7 +148,7 @@ class PostController extends CrudController
 
     public function update(PostRequest $request, Post $post)
     {
-        $post->saveFromInputs($request->only([
+        $inputs = $request->only([
             'content',
             'cover_image_id',
             'excerpt',
@@ -159,7 +159,9 @@ class PostController extends CrudController
             'status',
             'title',
             'scheduled_at',
-        ]));
+        ]);
+
+        $post->saveFromInputs($inputs);
 
         if ($request->has('categories')) {
             $post->syncCategories(

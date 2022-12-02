@@ -62,9 +62,4 @@ class MenuUrl extends BaseMenu implements MenuInterface
             'page_translation' => $pageTranslation->slug,
         ]);
     }
-
-    private function fallbackUrl()
-    {
-        return '';
-    }
 }

@@ -35,6 +35,9 @@ class MenuSeeder extends Seeder
             ->pluck('page_id', 'slug')
             ->toArray();
 
+        $streetPerformerPageId = $pageIds['street-performers'] ?? null;
+        $aboutPageId = $pageIds['about'] ?? null;
+
         $headerMenus = [
             [
                 'title' => 'Home',
@@ -46,7 +49,7 @@ class MenuSeeder extends Seeder
                 'title' => 'Street Performers',
                 'type' => $pageOption->getKey(),
                 'order' => 2,
-                'menu_itemable_id' => $pageIds['street-performers'],
+                'menu_itemable_id' => $streetPerformerPageId,
                 'menu_itemable_type' => $pageOption->getTypeOptions()['model'],
             ],
             [
@@ -59,7 +62,7 @@ class MenuSeeder extends Seeder
                 'title' => 'About',
                 'type' => $pageOption->getKey(),
                 'order' => 4,
-                'menu_itemable_id' => $pageIds['about'],
+                'menu_itemable_id' => $aboutPageId,
                 'menu_itemable_type' => $pageOption->getTypeOptions()['model'],
             ],
         ];
@@ -126,7 +129,7 @@ class MenuSeeder extends Seeder
                 'order' => 2,
                 'parent_id' => $menu->menuItems[0]->id,
                 'menu_id' => $menu->id,
-                'menu_itemable_id' => $pageIds['about'],
+                'menu_itemable_id' => $aboutPageId,
                 'menu_itemable_type' => $pageOption->getTypeOptions()['model'],
             ],
             [
@@ -144,7 +147,7 @@ class MenuSeeder extends Seeder
                 'order' => 1,
                 'parent_id' => $menu->menuItems[1]->id,
                 'menu_id' => $menu->id,
-                'menu_itemable_id' => $pageIds['street-performers'],
+                'menu_itemable_id' => $streetPerformerPageId,
                 'menu_itemable_type' => $pageOption->getTypeOptions()['model'],
             ],
             [
