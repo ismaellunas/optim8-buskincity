@@ -125,7 +125,7 @@
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { merge } from 'lodash';
+    import { isArray, merge } from 'lodash';
     import { ref } from "vue";
 
     export default {
@@ -163,7 +163,10 @@
 
             return {
                 icon,
-                dates: ref(props.pageQueryParams?.dates?? []),
+                dates: ref(isArray(props.pageQueryParams?.dates)
+                    ? props.pageQueryParams?.dates.filter(Boolean)
+                    : []
+                ),
                 statuses: ref(props.pageQueryParams?.status ?? []),
                 term: ref(props.pageQueryParams?.term ?? null),
                 queryParams: ref(queryParams),
