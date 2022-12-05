@@ -68,7 +68,7 @@ class Order extends GetCandyOrder
     public function scopeOrderByColumn($query, array $orderConfig)
     {
         $column = $orderConfig['column'] ?? null;
-        $order = $orderConfig ?? 'asc';
+        $order = $orderConfig['order'] ?? 'asc';
 
         switch ($column) {
             case 'status':
