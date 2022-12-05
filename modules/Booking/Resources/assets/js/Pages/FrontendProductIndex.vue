@@ -63,7 +63,7 @@
 </template>
 
 <script>
-    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
+    import MixinHasColumnSorted from '@/Mixins/HasColumnSorted';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
@@ -86,7 +86,7 @@
         },
 
         mixins: [
-            MixinFilterDataHandle,
+            MixinHasColumnSorted,
         ],
 
         layout: Layout,
@@ -113,25 +113,6 @@
             return {
                 icon
             };
-        },
-
-        computed: {
-            order() {
-                return this.pageQueryParams?.order;
-            },
-            column() {
-                return this.pageQueryParams?.column;
-            },
-        },
-
-        methods: {
-            orderColumn(column) {
-                const order = this.order == 'desc' || typeof this.order === 'undefined' ? 'asc' : 'desc';
-
-                this.queryParams['column'] = column;
-                this.queryParams['order'] = order;
-                this.refreshWithQueryParams();
-            },
         },
     };
 </script>
