@@ -1,5 +1,6 @@
 <template>
     <Editor
+        v-if="isShowed"
         v-model="content"
         :api-key="apiKey"
         :init="editorConfig"
@@ -9,30 +10,57 @@
 
 <script>
     import Editor from '@tinymce/tinymce-vue';
-    import { textComponent as editorConfig, apiKey } from '@/Libs/tinymce-configs';
+    import { textComponent as editorConfig } from '@/Libs/tinymce-configs';
     import { useModelWrapper } from '@/Libs/utils'
 
     export default {
         name: 'BizEditorTinymce',
+
         components: {
             Editor
         },
+
         props: {
             modelValue: {},
-            config: {
-                type: Object
-            },
+            config: { type: Object, default: () => {} },
             disabled: {
                 type: Boolean,
                 default: false
             },
         },
+
         setup(props, { emit }) {
             return {
-                apiKey: apiKey,
                 content: useModelWrapper(props, emit),
                 editorConfig: props.config ?? editorConfig,
             };
+        },
+
+        data() {
+            return {
+                apiKey: null,
+            };
+        },
+
+        computed: {
+            isShowed() {
+                return !!this.apiKey;
+            },
+        },
+
+        mounted() {
+            this.getApiKey();
+        },
+
+        methods: {
+            getApiKey() {
+                const self = this;
+
+                axios.get(route('admin.api.tinymce.key'))
+                    .then(function (response) {
+                        self.apiKey = response.data;
+                    })
+            },
         },
     };
 </script>
