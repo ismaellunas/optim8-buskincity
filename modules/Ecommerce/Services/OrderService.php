@@ -31,8 +31,7 @@ class OrderService
         string $term = null,
         ?array $scopes = null
     ): Builder {
-        return Order::orderBy('reference', 'DESC')
-            ->when($term, function ($query) use ($term) {
+        return Order::when($term, function ($query) use ($term) {
                 $query
                     ->where('reference', 'ILIKE', '%'.$term.'%')
                     ->orWhere('status', 'ILIKE', '%'.$term.'%')
