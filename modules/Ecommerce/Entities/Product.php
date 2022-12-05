@@ -67,9 +67,12 @@ class Product extends GetCandyProduct
 
     public function scopeOrderByColumn($query, array $orderConfig)
     {
-        switch ($orderConfig['column']) {
+        $column = $orderConfig['column'] ?? null;
+        $order = $orderConfig['order'] ?? 'asc';
+
+        switch ($column) {
             case 'name':
-                return $query->orderByName($orderConfig['order']);
+                return $query->orderByName($order);
                 break;
 
             default:
@@ -78,7 +81,7 @@ class Product extends GetCandyProduct
         }
     }
 
-    public function scopeOrderByName($query, string $order = 'asc')
+    public function scopeOrderByName($query, string $order)
     {
         $locale = config('app.locale');
 
