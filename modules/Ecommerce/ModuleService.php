@@ -27,4 +27,9 @@ class ModuleService
     {
         return 5 * config('constants.one_megabyte');
     }
+
+    public static function tablePrefix()
+    {
+        return config('constants.e_commerce_table_prefix');
+    }
 }
