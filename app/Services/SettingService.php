@@ -145,17 +145,24 @@ class SettingService
             ->all();
     }
 
-    public function getLogoUrl(): string
+    public function getLogoUrl(): ?string
     {
         return app(SettingCache::class)->remember('logo_url', function () {
             $media = $this->getLogoMedia();
 
-            return $media->file_url
-                ?? StorageService::getImageUrl(
-                    config('constants.default_images.logo')
-                );
+            return ($media
+                ? $media->getOptimizedImageUrl(600, 600, 'limitFit')
+                : null
+            );
         });
     }
+
+    public function getLogoOrDefaultUrl(): string
+    {
+        return $this->getLogoUrl()
+            ?? StorageService::getImageUrl(config('constants.default_images.logo'));
+    }
+
 
     public function getLogoMedia(): ?Media
     {
