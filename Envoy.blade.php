@@ -70,6 +70,7 @@
     heroku:restart
     heroku:clean-after-deploy
     heroku:maintenance-off
+    git-push
 @endstory
 
 @story('heroku:deploy-full')
@@ -84,6 +85,7 @@
     heroku:restart
     heroku:clean-after-deploy
     heroku:maintenance-off
+    git-push
 @endstory
 
 @task('heroku:migration')
@@ -117,6 +119,10 @@
 
 @task('git-commit-deployment')
     git add . && git diff --staged --quiet || git commit -m "Deploy on {{date("Y-m-d H:i:s")}}"
+@endtask
+
+@task('git-push')
+    git push origin master
 @endtask
 
 @task('heroku:maintenance-on')
