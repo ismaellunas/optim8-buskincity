@@ -8,6 +8,11 @@ class ModuleService
 {
     const MEDIA_TYPE_PRODUCT = 16;
 
+    public static function getName()
+    {
+        return config('ecommerce.name');
+    }
+
     public static function permissions(): Collection
     {
         return collect(config('ecommerce.permissions'));
