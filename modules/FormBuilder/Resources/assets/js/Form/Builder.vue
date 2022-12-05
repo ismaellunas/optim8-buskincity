@@ -51,7 +51,7 @@
     import BizNotifications from '@/Biz/Notifications';
     import FieldGroup from '@/Form/FieldGroup';
     import { VueRecaptcha } from 'vue-recaptcha';
-    import { isEmpty, forOwn } from 'lodash';
+    import { inRange, isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { reactive } from 'vue';
 
@@ -151,7 +151,7 @@
 
                 }).catch((error) => {
                     if (error.response) {
-                        if (error.response.status == 403) {
+                        if (inRange(error.response.status, 399, 600)) {
                             self.isShown = false;
                         }
                     }

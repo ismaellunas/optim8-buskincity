@@ -2,7 +2,7 @@
     <div class="container">
         <div class="navbar-brand">
             <a class="navbar-item" href="{{ $menus['navLogo']['link'] }}">
-                <img src="{{ $logo }}">
+                <img src="{{ $logoUrl }}">
             </a>
 
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarExampleTransparentExample">
