@@ -52,7 +52,7 @@ class OrderService
                                     $query->$scopeName($value);
                                 }
                             );
-                        } elseif ($scopeName = 'dateRange') {
+                        } elseif ($scopeName == 'dateRange') {
                             $query->whereHas(
                                 'firstEventLine.latestEvent',
                                 function (Builder $query) use ($scopeName, $value) {
