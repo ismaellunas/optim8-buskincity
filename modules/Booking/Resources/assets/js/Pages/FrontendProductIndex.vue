@@ -17,7 +17,13 @@
             <biz-table class="is-striped is-hoverable is-fullwidth">
                 <thead>
                     <tr>
-                        <th>Name</th>
+                        <biz-table-column-sort
+                            :order="order"
+                            :is-sorted="column == 'name'"
+                            @click="orderColumn('name')"
+                        >
+                            Name
+                        </biz-table-column-sort>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -39,7 +45,7 @@
                                 >
                                     <biz-icon
                                         class="is-small"
-                                        :icon="iconFormatter('fa-calendar-circle-plus')"
+                                        :icon="icon.calendarCirclePlus"
                                     />
                                 </biz-button-link>
                             </div>
@@ -57,16 +63,15 @@
 </template>
 
 <script>
-    import BizButtonIcon from '@/Biz/ButtonIcon';
+    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
+    import BizTableColumnSort from '@/Biz/TableColumnSort';
+    import icon from '@/Libs/icon-class';
     import Layout from '@/Layouts/User';
-    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import { iconFormatter } from '@/Libs/icon-class';
-    import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from "vue";
 
@@ -77,6 +82,7 @@
             BizIcon,
             BizPagination,
             BizTable,
+            BizTableColumnSort,
         },
 
         mixins: [
@@ -103,8 +109,29 @@
             };
         },
 
+        data() {
+            return {
+                icon
+            };
+        },
+
+        computed: {
+            order() {
+                return this.pageQueryParams?.order;
+            },
+            column() {
+                return this.pageQueryParams?.column;
+            },
+        },
+
         methods: {
-            iconFormatter: iconFormatter,
+            orderColumn(column) {
+                const order = this.order == 'desc' || typeof this.order === 'undefined' ? 'asc' : 'desc';
+
+                this.queryParams['column'] = column;
+                this.queryParams['order'] = order;
+                this.refreshWithQueryParams();
+            },
         },
     };
 </script>
