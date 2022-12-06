@@ -62,12 +62,11 @@
     import BizInput from '@/Biz/Input';
     import BizInputError from '@/Biz/InputError';
     import { success as successAlert } from '@/Libs/alert';
-    import { debounceTime } from '@/Libs/defaults';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { forEach } from 'lodash';
 
     export default {
-        name: 'Language',
+        name: 'SettingKey',
 
         components: {
             BizButton,
@@ -127,6 +126,10 @@
                         onFinish: () => {
                             self.isProcessing = false;
                             self.onEndLoadingOverlay();
+
+                            setTimeout(() => {
+                                location.reload();
+                            }, 200);
                         },
                     }
                 )

@@ -46,10 +46,22 @@ class OrderController extends CrudController
                 $request->get('term'),
                 [
                     'inStatus' => $request->status ?? null,
-                    'dateRange' => $request->dates ?? []
+                    'dateRange' => $request->dates ?? [],
+                    'orderByColumn' => [
+                        'column' => $request->column,
+                        'order' => $request->order,
+                    ],
                 ],
             ),
-            'pageQueryParams' => array_filter($request->only('term', 'status', 'dates')),
+            'pageQueryParams' => array_filter(
+                $request->only(
+                    'term',
+                    'status',
+                    'dates',
+                    'column',
+                    'order',
+                )
+            ),
             'statusOptions' => BookingStatus::options(),
         ]));
     }

@@ -56,4 +56,9 @@ class SettingKeyController extends Controller
 
         return redirect()->route($this->baseRouteName.'.edit');
     }
+
+    public function getTinyMCEKey(): ?string
+    {
+        return $this->settingService->getTinyMCEKey();
+    }
 }

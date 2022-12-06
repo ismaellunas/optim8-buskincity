@@ -187,6 +187,9 @@ Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->gr
 
     Route::get('/page-builder/post/category-options', [ApiPageBuilderController::class, 'postCategoryOptions'])
         ->name('page-builder.post.category-options');
+
+    Route::get('/tinymce/key', [SettingKeyController::class, 'getTinyMCEKey'])
+        ->name('tinymce.key');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
