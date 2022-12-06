@@ -35,6 +35,6 @@ class ModuleService
 
     public static function tablePrefix()
     {
-        return config('constants.e_commerce_table_prefix');
+        return config('getcandy.database.table_prefix');
     }
 }
