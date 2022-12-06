@@ -43,13 +43,7 @@
             };
         },
 
-        computed: {
-            isShowed() {
-                return !!this.apiKey;
-            },
-        },
-
-        mounted() {
+        beforeMount() {
             this.getApiKey();
         },
 
