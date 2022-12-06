@@ -534,6 +534,15 @@ class SettingService
         });
     }
 
+    public function getTinyMCEKey(): string
+    {
+        return app(SettingCache::class)->remember('tinymce_api_key', function () {
+            $ipRegistryApi = Setting::key('tinymce_api_key')->value('value');
+
+            return $ipRegistryApi ?? "";
+        });
+    }
+
     private function getKeysByGroup(string $group): array
     {
         return Setting::select([
