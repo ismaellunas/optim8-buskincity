@@ -62,19 +62,17 @@
                     </div>
 
                     <div class="column">
-                        <biz-image
-                            v-if="hasFavicon"
-                            class="mb-2"
-                            style="width: 200px; border: 1px solid #000"
-                            :src="faviconImageUrl"
-                        />
-                        <biz-form-file
+                        <biz-form-image-square
                             v-model="form.favicon"
-                            :accepted-types="imageTypes"
-                            :is-name-displayed="false"
+                            v-model:photo-url="faviconImageUrl"
+                            modal-title="Favicon"
+                            wrapper-class="field-body is-align-items-center"
                             :message="error('favicon')"
                             :notes="instructions.favicon"
-                            @on-file-picked="onFilePickedFavicon"
+                            :original-image="faviconUrl"
+                            :show-delete-button="true"
+                            @on-cropped-image="onCroppedImage(form, 'favicon')"
+                            @on-delete-image="onDeleteImage(form, 'favicon')"
                         />
                     </div>
                 </div>
@@ -197,6 +195,7 @@
     import BizImage from '@/Biz/Image';
     import BizInputError from '@/Biz/InputError';
     import BizTextarea from '@/Biz/Textarea';
+    import BizFormImageSquare from '@/Biz/Form/ImageSquare';
     import { assign, mapValues, sortBy, isEmpty } from 'lodash';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { success as successAlert } from '@/Libs/alert';
@@ -209,6 +208,7 @@
             BizButton,
             BizErrorNotifications,
             BizFormFile,
+            BizFormImageSquare,
             BizFormSelect,
             BizImage,
             BizInputError,
@@ -264,7 +264,10 @@
 
             const homePageForm = { home_page: props.homePageId };
 
-            const favicon = { favicon: null };
+            const favicon = {
+                favicon: null,
+                is_favicon_deleted: false
+            };
 
             return {
                 form: useForm(assign(
@@ -342,6 +345,17 @@
             onFilePickedFavicon(event) {
                 this.faviconImageUrl = event.target.result;
             },
+
+            onCroppedImage(form, name) {
+                form[`is_${name}_deleted`] = false;
+            },
+
+            onDeleteImage(form, name) {
+                form[name] = null;
+                form[`${name}_url`] = null;
+                form[`is_${name}_deleted`] = true;
+            },
+
         },
     };
 </script>
