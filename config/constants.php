@@ -270,8 +270,6 @@ return [
         'profile_picture' => 3 * 1024,
     ],
 
-    'e_commerce_table_prefix' => 'getcandy_',
-
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway
