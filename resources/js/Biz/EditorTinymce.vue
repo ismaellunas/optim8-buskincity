@@ -39,6 +39,7 @@
         data() {
             return {
                 apiKey: null,
+                isShowed: false,
             };
         },
 
@@ -60,6 +61,7 @@
                     .then(function (response) {
                         self.apiKey = response.data;
                     })
+                    .then(() => self.isShowed = true)
             },
         },
     };
