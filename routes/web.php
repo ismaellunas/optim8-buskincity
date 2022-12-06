@@ -29,6 +29,7 @@ use App\Http\Middleware\HandleInertiaRequests;
 use App\Services\SitemapService;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
@@ -113,6 +114,15 @@ Route::get('/user/remove-facebook', function() {
 });
 
 Route::group(['middleware' => config('fortify.middleware', ['web'])], function () {
+    $loginLimiter = config('fortify.limiters.login');
+
+    Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+        ->middleware(array_filter([
+            'guest:'.config('fortify.guard'),
+            $loginLimiter ? 'throttle:'.$loginLimiter : null,
+            'recaptcha',
+        ]));
+
     if (Features::enabled(Features::resetPasswords())) {
         Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
             ->middleware([
@@ -128,7 +138,10 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
 
     if (Features::enabled(Features::registration())) {
         Route::post('/register', [RegisteredUserController::class, 'store'])
-            ->middleware(['guest:'.config('fortify.guard')]);
+            ->middleware([
+                'guest:'.config('fortify.guard'),
+                'recaptcha',
+            ]);
     }
 
     if (Features::enabled(Features::twoFactorAuthentication())) {
@@ -138,6 +151,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
             ->middleware(array_filter([
                 'guest:'.config('fortify.guard'),
                 $twoFactorLimiter ? 'throttle:'.$twoFactorLimiter : null,
+                'recaptcha',
             ]));
     }
 });

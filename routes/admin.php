@@ -199,6 +199,7 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])
         ->middleware(array_filter([
             $limiter ? 'throttle:'.$limiter : null,
+            'recaptcha',
         ]))
         ->name('login.attempt');
 
@@ -231,6 +232,7 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
             ->middleware(array_filter([
                 'guest:'.config('fortify.guard'),
                 $twoFactorLimiter ? 'throttle:'.$twoFactorLimiter : null,
+                'recaptcha',
             ]))
             ->name('two-factor.login.attempt');
     }
