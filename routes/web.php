@@ -115,7 +115,11 @@ Route::get('/user/remove-facebook', function() {
 Route::group(['middleware' => config('fortify.middleware', ['web'])], function () {
     if (Features::enabled(Features::resetPasswords())) {
         Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-            ->middleware(['guest:'.config('fortify.guard'), 'recaptcha'])
+            ->middleware([
+                'guest:'.config('fortify.guard'),
+                'recaptcha',
+                'throttle:defaultRequest'
+            ])
             ->name('password.email');
         Route::post('/reset-password', [NewPasswordController::class, 'store'])
             ->middleware(['guest:'.config('fortify.guard')])
