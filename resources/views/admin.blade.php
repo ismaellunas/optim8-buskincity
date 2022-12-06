@@ -10,7 +10,9 @@
         {{-- <title>{{ config('app.name', 'Laravel') }}</title> --}}
 
         @if (!empty($setting->getFaviconUrl()))
-            <link rel="icon" type="image/x-icon" href="{{ $setting->getFaviconUrl() }}">
+            <link rel="icon" size="32x32" href="{{ $setting->getFaviconUrl(32) }}">
+            <link rel="icon" size="192x192" href="{{ $setting->getFaviconUrl(192) }}">
+            <link rel="apple-touch-icon" href="{{ $setting->getFaviconUrl(180) }}">
         @endif
 
         <!-- Fonts -->

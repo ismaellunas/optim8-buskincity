@@ -163,7 +163,6 @@ class SettingService
             ?? StorageService::getImageUrl(config('constants.default_images.logo'));
     }
 
-
     public function getLogoMedia(): ?Media
     {
         return $this->getMediaFromSetting(
@@ -374,15 +373,19 @@ class SettingService
         return $this->getMediaFromSetting('qrcode_public_page_logo_media_id');
     }
 
-    public function getFaviconUrl(): string
+    public function getFaviconUrl(int $width = null): string
     {
         return app(SettingCache::class)->remember(
-            'favicon_url',
-            function () {
+            'favicon_url'.($width ? '_'.$width : null),
+            function () use ($width) {
                 $media = $this->getFaviconMedia();
 
                 if ($media) {
-                    return $media->file_url;
+                    if (is_null($width)) {
+                        return $media->file_url;
+                    } else {
+                        return $media->getThumbnailUrl($width, $width);
+                    }
                 }
 
                 return "";
