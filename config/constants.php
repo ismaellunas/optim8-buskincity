@@ -126,6 +126,7 @@ return [
     ],
 
     'throttle' => [
+        'default' => 5,
         'checkout' => 100,
     ],
 
