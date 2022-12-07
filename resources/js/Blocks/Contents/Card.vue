@@ -20,6 +20,8 @@
                     :ratio="this.config?.image?.ratio"
                     :rounded="this.config?.image?.rounded"
                     :square="this.config?.image?.fixedSquare"
+                    :position="this.config?.image?.position"
+                    :img-style="imageStyles"
                 />
 
                 <biz-button
@@ -175,6 +177,32 @@
                     this.configCard.rounded,
                     (this.configCard.isShadowless ? 'is-shadowless' : ''),
                 ).filter(Boolean);
+            },
+            imageWidth() {
+                return this.configImage.width;
+            },
+            imageHeight() {
+                return this.configImage.height;
+            },
+            imageStyles() {
+                let styles = {
+                    'width': this.imageWidth && this.imageWidth != ""
+                        ? this.imageWidth + 'px'
+                        : null,
+                    'height': this.imageHeight && this.imageHeight != ""
+                        ? this.imageHeight + 'px'
+                        : null,
+                };
+
+                Object.keys(styles).forEach(key => {
+                    if (
+                        !styles[key]
+                    ) {
+                        delete styles[key];
+                    }
+                });
+
+                return styles;
             },
         },
         methods: {

@@ -12,6 +12,8 @@
                             :ratio="$ratio"
                             :rounded="$rounded"
                             :square="$fixedSquare"
+                            :position="$position"
+                            :style="$imageStyles"
                         />
                     </a>
                 @else
@@ -21,6 +23,8 @@
                         :ratio="$ratio"
                         :rounded="$rounded"
                         :square="$fixedSquare"
+                        :position="$position"
+                        :style="$imageStyles"
                     />
                 @endif
             </div>
