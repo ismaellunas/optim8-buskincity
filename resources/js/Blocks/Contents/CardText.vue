@@ -27,6 +27,7 @@
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizEditor from '@/Biz/EditorTinymce';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
