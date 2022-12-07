@@ -116,7 +116,7 @@ class MenuService
         }
     }
 
-    public function getHeaderMenu(string $locale): Collection
+    private function getThemeHeaderMenu(string $locale): array
     {
         return app(MenuCache::class)->rememberForLocale(
             'header_menu',
@@ -129,7 +129,7 @@ class MenuService
                     );
                 }
 
-                return $menus;
+                return $this->frontendMenuArrayFormater($menus);
             },
             $locale
         );
@@ -217,7 +217,7 @@ class MenuService
         }
     }
 
-    public function getFooterMenu(string $locale): Collection
+    private function getThemeFooterMenu(string $locale): array
     {
         return app(MenuCache::class)->rememberForLocale(
             'footer_menu',
@@ -230,7 +230,7 @@ class MenuService
                     );
                 }
 
-                return $menus;
+                return $this->frontendMenuArrayFormater($menus);
             },
             $locale
         );
@@ -517,10 +517,8 @@ class MenuService
             ),
         ];
 
-        $headerMenu = $this->getHeaderMenu($language);
-
         return [
-            'nav' => $this->frontendMenuArrayFormater($headerMenu),
+            'nav' => $this->getThemeHeaderMenu($language),
             'navLogo' => $menuLogo,
             'dropdownRightMenus' => $dropdownRightMenus,
         ];
@@ -536,10 +534,8 @@ class MenuService
             $language =  $user->languageCode;
         }
 
-        $footerMenu = $this->getFooterMenu($language);
-
         return [
-            'nav' => $this->frontendMenuArrayFormater($footerMenu),
+            'nav' => $this->getThemeFooterMenu($language),
         ];
     }
 
