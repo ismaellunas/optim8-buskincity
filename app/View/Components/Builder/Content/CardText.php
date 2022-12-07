@@ -6,12 +6,14 @@ use Mews\Purifier\Facades\Purifier;
 
 class CardText extends BaseContent
 {
+    public $cardClasses = [];
     public $cardContentClasses = [];
 
     public function __construct($entity)
     {
         parent::__construct($entity);
 
+        $this->cardClasses = $this->getCardClasses();
         $this->cardContentClasses = $this->getCardContentClasses();
     }
 
@@ -37,8 +39,15 @@ class CardText extends BaseContent
         return '';
     }
 
-    public function cardRounded(): string
+    public function getCardClasses(): array
     {
-        return $this->getConfig()['card']['rounded'] ?? '';
+        $configCard = $this->getConfig()['card'] ?? [];
+        $classes = collect();
+
+        $classes->push('card');
+        $classes->push($configCard['rounded'] ?? null);
+        $classes->push($configCard['isShadowless'] ? 'is-shadowless' : '');
+
+        return $classes->filter()->all();
     }
 }

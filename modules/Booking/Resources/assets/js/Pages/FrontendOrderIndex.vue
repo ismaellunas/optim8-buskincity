@@ -56,12 +56,42 @@
             <biz-table class="is-striped is-hoverable is-fullwidth">
                 <thead>
                     <tr>
-                        <th>Status</th>
-                        <th>Name</th>
-                        <th>Date</th>
+                        <biz-table-column-sort
+                            :order="order"
+                            :is-sorted="column == 'status'"
+                            @click="orderColumn('status')"
+                        >
+                            Status
+                        </biz-table-column-sort>
+                        <biz-table-column-sort
+                            :order="order"
+                            :is-sorted="column == 'name'"
+                            @click="orderColumn('name')"
+                        >
+                            Name
+                        </biz-table-column-sort>
+                        <biz-table-column-sort
+                            :order="order"
+                            :is-sorted="column == 'date'"
+                            @click="orderColumn('date')"
+                        >
+                            Date
+                        </biz-table-column-sort>
                         <th>Timezone</th>
-                        <th>Time</th>
-                        <th>Check-In</th>
+                        <biz-table-column-sort
+                            :order="order"
+                            :is-sorted="column == 'time'"
+                            @click="orderColumn('time')"
+                        >
+                            Time
+                        </biz-table-column-sort>
+                        <biz-table-column-sort
+                            :order="order"
+                            :is-sorted="column == 'checkin'"
+                            @click="orderColumn('checkin')"
+                        >
+                            Check-In
+                        </biz-table-column-sort>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -110,8 +140,8 @@
 </template>
 
 <script>
+    import MixinHasColumnSorted from '@/Mixins/HasColumnSorted';
     import Layout from '@/Layouts/User';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDropdown from '@/Biz/Dropdown';
@@ -121,8 +151,8 @@
     import BizIcon from '@/Biz/Icon';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
+    import BizTableColumnSort from '@/Biz/TableColumnSort';
     import BizTag from '@/Biz/Tag';
-    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { isArray, merge } from 'lodash';
@@ -139,11 +169,12 @@
             BizIcon,
             BizPagination,
             BizTable,
+            BizTableColumnSort,
             BizTag,
         },
 
         mixins: [
-            MixinFilterDataHandle,
+            MixinHasColumnSorted,
         ],
 
         layout: Layout,

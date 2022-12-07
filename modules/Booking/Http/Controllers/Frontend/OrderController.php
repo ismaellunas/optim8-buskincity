@@ -39,7 +39,13 @@ class OrderController extends CrudController
     {
         $user = auth()->user();
 
-        $scopes = ['inStatus' => $request->status ?? null];
+        $scopes = [
+            'inStatus' => $request->status ?? null,
+            'orderByColumn' => [
+                'column' => $request->column,
+                'order' => $request->order,
+            ],
+        ];
 
         if (is_array($request->dates) && !empty(array_filter($request->dates))) {
             $scopes['dateRange'] = $request->dates;
@@ -52,7 +58,15 @@ class OrderController extends CrudController
                 $request->get('term'),
                 $scopes
             ),
-            'pageQueryParams' => array_filter($request->only('term', 'status', 'dates')),
+            'pageQueryParams' => array_filter(
+                $request->only(
+                    'term',
+                    'status',
+                    'dates',
+                    'column',
+                    'order',
+                )
+            ),
             'statusOptions' => BookingStatus::options(),
         ]));
     }

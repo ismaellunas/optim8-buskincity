@@ -62,5 +62,3 @@ export const fullConfig = {
         'link table charmap'
     ),
 };
-
-export const apiKey = process.env.MIX_TINYMCE_API_KEY;
