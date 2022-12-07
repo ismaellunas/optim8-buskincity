@@ -7,7 +7,7 @@
 
         <div
             class="card biz-card-text"
-            :class="configCard.rounded"
+            :class="cardClasses"
         >
             <div class="card-content">
                 <div
@@ -58,6 +58,12 @@
                 let classes = [];
                 classes.push(this.config.content?.size ?? 'is-normal');
                 return classes;
+            },
+            cardClasses() {
+                return concat(
+                    this.configCard.rounded,
+                    (this.configCard.isShadowless ? 'is-shadowless' : ''),
+                ).filter(Boolean);
             },
         }
     }
