@@ -66,6 +66,8 @@ class Page extends Model implements TranslatableContract
 
     public function saveFromInputs(array $inputs)
     {
+        $settings = [];
+
         foreach ($inputs as $locale => $input) {
             if (!empty($inputs[$locale])) {
                 $inputs[$locale]['plain_text_content'] = PageService::transformComponentToText($input['data']);
@@ -73,11 +75,18 @@ class Page extends Model implements TranslatableContract
                 if (!$this->translate($locale)) {
                     $inputs[$locale]['unique_key'] = Url::randomDigitSegment([PageTranslation::class, 'isUniqueKeyExist']);
                 }
+
+                $settings = $input['settings'];
             }
         }
 
         $this->fill($inputs);
         $this->save();
+
+        $this->saveSettingTranslations(
+            $settings,
+            $this->translate($locale)->id ?? null
+        );
 
         $this->generateStylePageTranslation();
     }
@@ -86,6 +95,19 @@ class Page extends Model implements TranslatableContract
     {
         foreach ($this->translations as $pageTranslation) {
             $pageTranslation->generatePageStyle();
+        }
+    }
+
+    public function saveSettingTranslations($inputs, $pageTranslationId)
+    {
+        foreach ($inputs as $key => $value) {
+            PageTranslationSetting::updateOrCreate(
+                [
+                    'key' => $key,
+                    'value' => $value,
+                    'page_translation_id' => $pageTranslationId
+                ]
+            );
         }
     }
 

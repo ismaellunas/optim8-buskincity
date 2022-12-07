@@ -52,6 +52,9 @@ class PageRequest extends BaseFormRequest
             ],
             '%data%' => [
                 new CustomIdUnique(),
+            ],
+            '%settings%' => [
+                'nullable',
             ]
         ]);
     }

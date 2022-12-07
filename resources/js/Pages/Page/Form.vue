@@ -62,6 +62,11 @@
                             :selected-locale="selectedLocale"
                         />
                     </biz-provide-inject-tab>
+                    <biz-provide-inject-tab title="Settings">
+                        <form-setting
+                            v-model="form.settings"
+                        />
+                    </biz-provide-inject-tab>
                 </biz-provide-inject-tabs>
             </div>
 
@@ -180,6 +185,7 @@
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
     import FormBuilder from './FormBuilder';
     import FormDetail from './FormDetail';
+    import FormSetting from './FormSetting';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { provide, ref } from "vue";
     import { usePage } from '@inertiajs/inertia-vue3';
@@ -198,6 +204,7 @@
             BizProvideInjectTabs,
             FormBuilder,
             FormDetail,
+            FormSetting,
         },
 
         mixins: [
@@ -341,6 +348,7 @@
                             meta_description: this.form.meta_description,
                             meta_title: this.form.meta_title,
                             status: 0,
+                            settings: this.form.settings,
                         },
                     });
 

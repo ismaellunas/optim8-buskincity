@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PageRequest;
+use App\Entities\Enums\PageSettingTemplate;
 use App\Models\{
     Page,
     PageTranslation,
@@ -90,7 +91,10 @@ class PageController extends CrudController
                 'default_video' => StorageService::getImageUrl(
                     config('constants.default_images.pb_video')
                 )
-            ]
+            ],
+            'settingOptions' => [
+                'templates' => PageSettingTemplate::options(),
+            ],
         ]));
     }
 
@@ -121,6 +125,7 @@ class PageController extends CrudController
     public function edit(Page $page)
     {
         $page->load('translations');
+        $this->transformPage($page);
 
         $images = $this->pageService->getImagesFromPage($page);
 
@@ -156,7 +161,10 @@ class PageController extends CrudController
                 'default_video' => StorageService::getImageUrl(
                     config('constants.default_images.pb_video')
                 )
-            ]
+            ],
+            'settingOptions' => [
+                'templates' => PageSettingTemplate::options(),
+            ],
         ]));
     }
 
@@ -237,5 +245,14 @@ class PageController extends CrudController
         $this->generateFlashMessage('Page duplicated successfully!');
 
         return redirect()->back();
+    }
+
+    public function transformPage(Page &$page)
+    {
+        $page->translations->transform(function ($translation) {
+            $translation->load('pageTranslationSettings');
+
+            return $translation;
+        });
     }
 }
