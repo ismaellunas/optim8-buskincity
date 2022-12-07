@@ -5,6 +5,25 @@
             @duplicate-content="duplicateContent"
         />
 
+        <biz-button
+            class="is-small is-fullwidth"
+            type="button"
+            @click="toggleEdit"
+        >
+            <span
+                v-if="isFormDisplayed"
+                class="icon"
+            >
+                <i class="fas fa-times-circle" />
+            </span>
+            <span
+                v-else
+                class="icon"
+            >
+                <i class="fas fa-pen" />
+            </span>
+        </biz-button>
+
         <biz-image
             v-if="hasImage"
             :src="imageSrc"
@@ -12,27 +31,9 @@
             :ratio="config?.image?.ratio"
             :rounded="config?.image?.rounded"
             :square="config?.image?.fixedSquare"
-        >
-            <biz-button
-                class="is-small is-overlay"
-                style="z-index: 1"
-                type="button"
-                @click="toggleEdit"
-            >
-                <span
-                    v-if="isFormDisplayed"
-                    class="icon"
-                >
-                    <i class="fas fa-times-circle" />
-                </span>
-                <span
-                    v-else
-                    class="icon"
-                >
-                    <i class="fas fa-pen" />
-                </span>
-            </biz-button>
-        </biz-image>
+            :position="config?.image?.position"
+            :img-style="imageStyles"
+        />
 
         <div
             v-if="isFormDisplayed"
@@ -125,6 +126,32 @@
             },
             isFormDisplayed() {
                 return !this.hasImage || this.isFormOpen;
+            },
+            imageWidth() {
+                return this.config.image.width;
+            },
+            imageHeight() {
+                return this.config.image.height;
+            },
+            imageStyles() {
+                let styles = {
+                    'width': this.imageWidth && this.imageWidth != ""
+                        ? this.imageWidth + 'px'
+                        : null,
+                    'height': this.imageHeight && this.imageHeight != ""
+                        ? this.imageHeight + 'px'
+                        : null,
+                };
+
+                Object.keys(styles).forEach(key => {
+                    if (
+                        !styles[key]
+                    ) {
+                        delete styles[key];
+                    }
+                });
+
+                return styles;
             },
         },
         methods: {

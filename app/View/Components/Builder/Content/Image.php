@@ -12,6 +12,7 @@ class Image extends BaseContent
     public $imageMedia = null;
     public $hasImage = false;
     public $imageClasses = [];
+    public $imageStyles = [];
 
     /**
      * Create a new component instance.
@@ -30,6 +31,7 @@ class Image extends BaseContent
         $this->locale = $locale;
 
         $this->imageMedia = $this->getImageMedia();
+        $this->imageStyles = $this->getImageStyles();
     }
 
     public function ratio(): string
@@ -47,6 +49,11 @@ class Image extends BaseContent
         return $this->getConfig()['image']['fixedSquare'] ?? '';
     }
 
+    public function position(): string
+    {
+        return $this->getConfig()['image']['position'] ?? '';
+    }
+
     private function getImageMedia(): ?Media
     {
         if (!is_null($this->imageMedia)) {
@@ -60,5 +67,24 @@ class Image extends BaseContent
         }
 
         return $this->imageMedia;
+    }
+
+    private function getImageStyles(): array
+    {
+        $configImage = $this->getConfig()['image'];
+
+        $width = !!$configImage['width'] && $configImage['width'] != ""
+            ? 'width: '.$configImage['width'].'px'
+            : null;
+        $height = !!$configImage['height'] && $configImage['height'] != ""
+            ? 'height: '.$configImage['height'].'px'
+            : null;
+
+        $classes = collect();
+
+        $classes->push($width);
+        $classes->push($height);
+
+        return $classes->filter()->all();
     }
 }

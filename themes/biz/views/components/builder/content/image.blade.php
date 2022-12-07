@@ -7,5 +7,7 @@
         :ratio="$ratio"
         :rounded="$rounded"
         :square="$fixedSquare"
+        :position="$position"
+        :style="$imageStyles"
     />
 </div>
