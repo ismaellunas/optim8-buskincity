@@ -94,6 +94,12 @@ class RouteServiceProvider extends ServiceProvider
 
             return Limit::perMinute($max)->by($request->session()->getId());
         });
+
+        RateLimiter::for('defaultRequest', function (Request $request) {
+            $max = config('constants.throttle.default');
+
+            return Limit::perMinute($max)->by($request->session()->getId());
+        });
     }
 
     private function fileRouteName(string $name): string

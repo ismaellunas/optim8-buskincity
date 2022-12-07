@@ -202,6 +202,7 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])
         ->middleware(array_filter([
             $limiter ? 'throttle:'.$limiter : null,
+            'recaptcha',
         ]))
         ->name('login.attempt');
 
@@ -216,7 +217,10 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
 
         Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
             ->middleware(['guest:'.config('fortify.guard')])
-            ->name('password.email')->middleware('recaptcha');
+            ->name('password.email')->middleware([
+                'recaptcha',
+                'throttle:defaultRequest',
+            ]);
 
         Route::post('/reset-password', [NewPasswordController::class, 'store'])
             ->middleware(['guest:'.config('fortify.guard')])
@@ -231,6 +235,7 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
             ->middleware(array_filter([
                 'guest:'.config('fortify.guard'),
                 $twoFactorLimiter ? 'throttle:'.$twoFactorLimiter : null,
+                'recaptcha',
             ]))
             ->name('two-factor.login.attempt');
     }
