@@ -125,7 +125,6 @@
                 dragMode: "move",
                 initialAspectRatio: 1,
                 minContainerHeight: 400,
-                viewMode: 2,
             };
 
             return {

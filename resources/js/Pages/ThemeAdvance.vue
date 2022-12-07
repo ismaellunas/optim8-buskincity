@@ -67,6 +67,7 @@
                             v-model:photo-url="faviconImageUrl"
                             modal-title="Favicon"
                             wrapper-class="field-body is-align-items-center"
+                            cropped-image-type="image/png"
                             :message="error('favicon')"
                             :notes="instructions.favicon"
                             :original-image="faviconUrl"

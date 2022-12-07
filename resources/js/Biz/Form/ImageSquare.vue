@@ -139,6 +139,10 @@
                 type: Array,
                 default: acceptedImageTypes,
             },
+            croppedImageType: {
+                type: String,
+                default: 'image/jpeg',
+            },
             isRoundedPreview: {
                 type: Boolean,
                 default: false
@@ -265,7 +269,11 @@
                 const self = this;
 
                 getCanvasBlob(
-                    self.getCropper().getCroppedCanvas()
+                    self.getCropper().getCroppedCanvas({
+                        maxWidth: 4096,
+                        maxHeight: 4096,
+                    }),
+                    self.croppedImageType
                 ).then((blob) => {
                     self.computedPhoto = blob;
                     self.computedPhotoUrl = URL.createObjectURL(blob);
