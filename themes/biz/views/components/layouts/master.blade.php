@@ -1,5 +1,3 @@
-@inject('setting', 'App\Services\SettingService')
-
 <!DOCTYPE html>
 <html
     lang="{{ str_replace('_', '-', app()->getLocale()) }}"
@@ -18,11 +16,7 @@
 
         @stack('metas')
 
-        @if (!empty($setting->getFaviconUrl()))
-            <link rel="icon" size="32x32" href="{{ $setting->getFaviconUrl(32) }}">
-            <link rel="icon" size="192x192" href="{{ $setting->getFaviconUrl(192) }}">
-            <link rel="apple-touch-icon" href="{{ $setting->getFaviconUrl(180) }}">
-        @endif
+        @include('favicon')
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
