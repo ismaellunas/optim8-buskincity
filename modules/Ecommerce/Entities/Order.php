@@ -4,8 +4,12 @@ namespace Modules\Ecommerce\Entities;
 
 use App\Models\User;
 use GetCandy\Models\Order as GetCandyOrder;
-use Modules\Ecommerce\Enums\OrderLineType;
+use Illuminate\Database\Eloquent\Builder;
+use Modules\Booking\Entities\Event as BookingEvent;
+use Modules\Booking\Entities\OrderCheckIn;
 use Modules\Ecommerce\Database\factories\OrderFactory;
+use Modules\Ecommerce\Enums\OrderLineType;
+use Modules\Ecommerce\ModuleService;
 
 class Order extends GetCandyOrder
 {
@@ -59,5 +63,96 @@ class Order extends GetCandyOrder
     public function isPlacedByUser(User $user): bool
     {
         return $this->user_id == $user->id;
+    }
+
+    public function scopeOrderByColumn($query, array $orderConfig)
+    {
+        $column = $orderConfig['column'] ?? null;
+        $order = $orderConfig['order'] ?? 'asc';
+
+        switch ($column) {
+            case 'status':
+                return $query->orderByStatus($order);
+                break;
+
+            case 'name':
+                return $query->orderByName($order);
+                break;
+
+            case 'date':
+                return $query->orderByDate($order);
+                break;
+
+            case 'time':
+                return $query->orderByTime($order);
+                break;
+
+            case 'checkin':
+                return $query->orderByCheckIn($order);
+                break;
+
+            default:
+                return $query->orderBy('reference', 'DESC');
+                break;
+        }
+    }
+
+    public function scopeOrderByStatus($query, string $order)
+    {
+        return $query->orderBy(
+            $this->getBuilderJoinEventToOrder('status')
+        , $order);
+    }
+
+    public function scopeOrderByName($query, string $order)
+    {
+        $locale = config('app.locale');
+        $tablePrefix = ModuleService::tablePrefix();
+        $moduleName = ModuleService::getName();
+
+        return $query->orderBy(
+            Product::select("{$tablePrefix}products.attribute_data->name->value->{$locale}")
+                ->join("{$tablePrefix}product_variants", "{$tablePrefix}product_variants.product_id", "=", "{$tablePrefix}products.id")
+                ->join("{$tablePrefix}order_lines", function ($join) use ($tablePrefix, $moduleName) {
+                    $purchasableType = "Modules\\{$moduleName}\\Entities\\ProductVariant";
+
+                    $join->on("{$tablePrefix}order_lines.purchasable_id", "=", "{$tablePrefix}product_variants.product_id")
+                        ->where("purchasable_type", $purchasableType);
+                })
+                ->whereColumn("{$tablePrefix}order_lines.order_id", "{$tablePrefix}orders.id")
+        , $order);
+    }
+
+    public function scopeOrderByDate($query, string $order)
+    {
+        return $query->orderBy(
+            $this->getBuilderJoinEventToOrder("to_char(events.booked_at, 'YYMMDD')")
+        , $order);
+    }
+
+    public function scopeOrderByTime($query, string $order)
+    {
+        return $query->orderBy(
+            $this->getBuilderJoinEventToOrder("to_char(events.booked_at, 'HHMI')")
+        , $order);
+    }
+
+    public function scopeOrderByCheckIn($query, string $order)
+    {
+        $tablePrefix = ModuleService::tablePrefix();
+
+        return $query->orderBy(
+            OrderCheckIn::selectRaw("to_char(order_check_ins.checked_in_at, 'HHMI')")
+                ->whereColumn('order_check_ins.order_id', "{$tablePrefix}orders.id")
+        , $order);
+    }
+
+    private function getBuilderJoinEventToOrder(string $selectRaw): Builder
+    {
+        $tablePrefix = ModuleService::tablePrefix();
+
+        return BookingEvent::selectRaw($selectRaw)
+            ->join("{$tablePrefix}order_lines", "{$tablePrefix}order_lines.id", "=", "events.id")
+            ->whereColumn("{$tablePrefix}order_lines.order_id", "{$tablePrefix}orders.id");
     }
 }

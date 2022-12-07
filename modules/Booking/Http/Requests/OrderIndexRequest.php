@@ -30,6 +30,14 @@ class OrderIndexRequest extends FormRequest
                 'nullable',
                 'max:1024',
             ],
+            'column' => [
+                'nullable',
+                'max:128'
+            ],
+            'order' => [
+                'nullable',
+                Rule::in(['asc', 'desc'])
+            ],
         ];
     }
 
