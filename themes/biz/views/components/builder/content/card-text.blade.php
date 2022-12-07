@@ -1,8 +1,5 @@
 <div @class($uniqueClass)>
-    <div @class([
-        'card',
-        $cardRounded,
-    ])>
+    <div @class($cardClasses)>
         <div class="card-content">
             <div @class(array_merge(['content'], $cardContentClasses)) >
                 {!! $contentHtml !!}

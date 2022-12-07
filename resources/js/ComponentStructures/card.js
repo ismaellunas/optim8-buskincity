@@ -36,6 +36,7 @@ export default {
         card: {
             link: null,
             rounded: null,
+            isShadowless: false,
         },
         image: {
             // figure
@@ -74,6 +75,10 @@ export const config = {
                 settings: {
                     options: defaultOption.concat(roundedSizes),
                 },
+            },
+            isShadowless: {
+                component: "ConfigCheckbox",
+                label: "Is Shadowless?",
             },
         },
     },

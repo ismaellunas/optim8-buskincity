@@ -7,7 +7,7 @@
 
         <div
             class="card"
-            :class="configCard.rounded"
+            :class="cardClasses"
         >
             <div
                 class="card-image"
@@ -168,6 +168,12 @@
                 return concat(
                     this.configContent?.size,
                     this.configContent?.alignment
+                ).filter(Boolean);
+            },
+            cardClasses() {
+                return concat(
+                    this.configCard.rounded,
+                    (this.configCard.isShadowless ? 'is-shadowless' : ''),
                 ).filter(Boolean);
             },
         },
