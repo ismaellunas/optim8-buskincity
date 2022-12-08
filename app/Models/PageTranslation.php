@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Casts\AsPageTranslationDataCollection;
 use App\Contracts\HasStyleInterface;
 use App\Contracts\PublishableInterface;
+use App\Entities\Enums\PageSettingTemplate;
 use App\Helpers\MinifyCss;
 use App\Helpers\Url;
 use App\Models\Page;
@@ -226,5 +227,14 @@ class PageTranslation extends Model implements PublishableInterface
     public function getIsDraftAttribute(): bool
     {
         return $this->status == PageTranslation::STATUS_DRAFT;
+    }
+
+    public function getIsNoMenuTemplateAttribute(): bool
+    {
+        $settings = $this->pageTranslationSettings;
+
+        $template = $settings->where('key', 'template')->value('value') ?? null;
+
+        return $template == PageSettingTemplate::NO_MENU->value;
     }
 }
