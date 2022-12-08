@@ -104,8 +104,10 @@ class Page extends Model implements TranslatableContract
             PageTranslationSetting::updateOrCreate(
                 [
                     'key' => $key,
-                    'value' => $value,
                     'page_translation_id' => $pageTranslationId
+                ],
+                [
+                    'value' => $value,
                 ]
             );
         }
