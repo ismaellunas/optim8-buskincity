@@ -37,6 +37,12 @@
                         </div>
                     @endif
 
+                    @if (session('failed'))
+                        <div class="notification is-danger mt-4">
+                            {{ session('failed') }}
+                        </div>
+                    @endif
+
                     <form action="{{ route('two-factor.login') }}" onsubmit="setLoader()" method="post" class="mt-6">
                         @csrf
                         <div id="code" class="field mb-5 recovery">
@@ -58,6 +64,12 @@
                                 <p class="help is-danger">{{ $message }}</p>
                             @enderror
                         </div>
+
+                        <div
+                            class="g-recaptcha"
+                            data-sitekey="{{ $recaptchaSiteKey }}"
+                            data-size="invisible"
+                        ></div>
 
                         <div class="buttons">
                             <button type="button" class="button is-medium recovery" data-target="recovery-code" onclick="toggleRecovery(this)">
@@ -109,6 +121,11 @@
 
                 inputCode.classList.remove('is-hidden');
             }
+
+            var onloadCallback = function() {
+                grecaptcha.execute();
+            };
         </script>
+        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
     @endpush
 </x-layouts.auth>
