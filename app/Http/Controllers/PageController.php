@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PageRequest;
-use App\Entities\Enums\PageSettingTemplate;
+use App\Entities\Enums\PageSettingLayout;
 use App\Models\{
     Page,
     PageTranslation,
@@ -93,7 +93,7 @@ class PageController extends CrudController
                 )
             ],
             'settingOptions' => [
-                'templates' => PageSettingTemplate::options(),
+                'templates' => PageSettingLayout::options(),
             ],
         ]));
     }
@@ -163,7 +163,7 @@ class PageController extends CrudController
                 )
             ],
             'settingOptions' => [
-                'templates' => PageSettingTemplate::options(),
+                'templates' => PageSettingLayout::options(),
             ],
         ]));
     }

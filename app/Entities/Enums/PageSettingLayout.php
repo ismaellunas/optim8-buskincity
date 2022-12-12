@@ -5,9 +5,9 @@ namespace App\Entities\Enums;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
-enum PageSettingTemplate: string
+enum PageSettingLayout: string
 {
-    case NO_MENU = 'no_header_and_footer';
+    case NO_HEADER_AND_FOOTER = 'no_header_and_footer';
 
     public static function options(): Collection
     {
