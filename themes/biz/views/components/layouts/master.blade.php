@@ -16,9 +16,7 @@
 
         @stack('metas')
 
-        @if (!empty($faviconUrl))
-            <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
-        @endif
+        @include('favicon')
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">

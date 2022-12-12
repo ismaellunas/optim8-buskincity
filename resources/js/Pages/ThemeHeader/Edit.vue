@@ -54,6 +54,8 @@
     import { confirmLeaveProgress } from '@/Libs/alert';
 
     export default {
+        name: "ThemeHeaderEdit",
+
         components: {
             Layout,
             Navigation,
