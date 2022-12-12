@@ -32,6 +32,7 @@ class PageTranslation extends Model implements PublishableInterface
         'meta_description',
         'meta_title',
         'plain_text_content',
+        'settings',
         'slug',
         'status',
         'title',
@@ -40,6 +41,7 @@ class PageTranslation extends Model implements PublishableInterface
 
     protected $casts = [
         'data' => AsPageTranslationDataCollection::class,
+        'settings' => 'array',
     ];
 
     public function getRouteKeyName()
