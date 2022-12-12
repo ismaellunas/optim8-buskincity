@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Entities\Telescope\DatabaseEntriesRepository;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeApplicationServiceProvider;
+use Laravel\Telescope\Contracts\EntriesRepository;
 
 class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 {
@@ -18,6 +20,18 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     public function register()
     {
         // Telescope::night();
+
+        $this->app->singleton(
+            EntriesRepository::class, DatabaseEntriesRepository::class
+        );
+
+        $this->app->when(DatabaseEntriesRepository::class)
+            ->needs('$connection')
+            ->give(config('telescope.storage.database.connection'));
+
+        $this->app->when(DatabaseEntriesRepository::class)
+            ->needs('$chunkSize')
+            ->give(config('telescope.storage.database.chunk'));
 
         $this->hideSensitiveRequestDetails();
 
