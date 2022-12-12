@@ -12,7 +12,7 @@ class Image extends BaseContent
     public $imageMedia = null;
     public $hasImage = false;
     public $imageClasses = [];
-    public $styles = [];
+    public $imageStyles = [];
     public $position = null;
 
     /**
@@ -32,7 +32,7 @@ class Image extends BaseContent
         $this->locale = $locale;
 
         $this->imageMedia = $this->getImageMedia();
-        $this->styles = $this->getStyles();
+        $this->imageStyles = $this->getImageStyles();
 
         $this->position = $this->getPosition();
     }
@@ -77,7 +77,7 @@ class Image extends BaseContent
         return $this->imageMedia;
     }
 
-    private function getStyles(): array
+    private function getImageStyles(): array
     {
         $configImage = $this->getConfig()['image'];
 
