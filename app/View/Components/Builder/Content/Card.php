@@ -19,6 +19,7 @@ class Card extends BaseContent
     public $cardContentClasses = [];
     public $cardImageClasses = [];
     public $imageStyles = [];
+    public $position = null;
 
     public function __construct(
         $entity,
@@ -37,6 +38,8 @@ class Card extends BaseContent
         $this->imageMedia = $this->getImageMedia();
         $this->imageStyles = $this->getImageStyles();
         $this->hasImage = !empty($this->imageMedia);
+
+        $this->position = $this->getPosition();
     }
 
     public function contentHtml(): string
@@ -65,9 +68,14 @@ class Card extends BaseContent
         return $this->getConfig()['image']['fixedSquare'] ?? '';
     }
 
-    public function position(): string
+    private function getPosition(): string
     {
         return $this->getConfig()['image']['position'] ?? '';
+    }
+
+    public function hasPosition(): bool
+    {
+        return !empty($this->position);
     }
 
     public function getCardClasses(): array
