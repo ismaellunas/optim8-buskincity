@@ -45,6 +45,7 @@ class ThemeAdvanceRequest extends BaseFormRequest
             'tracking_code_inside_head' => ['nullable', 'string'],
             'tracking_code_after_body' => ['nullable', 'string'],
             'tracking_code_before_body' => ['nullable', 'string'],
+            'is_favicon_deleted' => ['nullable', 'boolean'],
         ];
     }
 

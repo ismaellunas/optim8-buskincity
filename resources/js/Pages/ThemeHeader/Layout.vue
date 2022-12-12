@@ -21,7 +21,7 @@
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
-        name: 'Layout',
+        name: 'ThemeHeaderLayoutTab',
 
         components: {
             HeaderLayout,

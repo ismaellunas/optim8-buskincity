@@ -12,9 +12,7 @@
         {{-- <title>{{ config('app.name', 'Laravel') }}</title> --}}
         <link rel="stylesheet" href="{{ $setting->getFrontendCssUrl() }}" defer>
 
-        @if (!empty($setting->getFaviconUrl()))
-            <link rel="icon" type="image/x-icon" href="{{ $setting->getFaviconUrl() }}">
-        @endif
+        @include('favicon')
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
