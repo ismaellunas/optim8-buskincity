@@ -184,7 +184,7 @@
     import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { merge } from 'lodash';
+    import { isArray, merge } from 'lodash';
     import { ref } from "vue";
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -231,7 +231,11 @@
 
             return {
                 queryParams: ref(queryParams),
-                dates: ref(props.pageQueryParams?.dates?? []),
+                //dates: ref(props.pageQueryParams?.dates?? []),
+                dates: ref(isArray(props.pageQueryParams?.dates)
+                    ? props.pageQueryParams?.dates.filter(Boolean)
+                    : []
+                ),
                 statuses: ref(props.pageQueryParams?.status ?? []),
                 term: ref(props.pageQueryParams?.term ?? null),
                 form: useForm(form),
