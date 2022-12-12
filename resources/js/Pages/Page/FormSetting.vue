@@ -1,17 +1,17 @@
 <template>
-    <form @submit.prevent="$emit('on-submit')">
+    <div>
         <div class="columns">
             <div class="column">
                 <h2>
-                    <b>Template</b>
+                    <b>Layout</b>
                 </h2>
             </div>
 
             <div class="column">
                 <biz-form-select
-                    v-model="form.template"
+                    v-model="form.layout"
                     :is-fullwidth="true"
-                    :message="error('template')"
+                    :message="error(selectedLocale+'.settings.layout')"
                 >
                     <option :value="null">
                         (Default)
@@ -30,15 +30,15 @@
         <div class="columns">
             <div class="column">
                 <h2>
-                    <b>Background Color</b>
+                    <b>Main Background Color</b>
                 </h2>
             </div>
 
             <div class="column">
                 <biz-form-select
-                    v-model="form.background_color"
+                    v-model="form.main_background_color"
                     :is-fullwidth="true"
-                    :message="error('background_color')"
+                    :message="error(selectedLocale+'.settings.main_background_color')"
                 >
                     <option :value="null">
                         (Default)
@@ -63,8 +63,8 @@
 
             <div class="column">
                 <biz-form-number-addons
-                    v-model="form.page_height"
-                    :message="error('page_height')"
+                    v-model="form.height"
+                    :message="error(selectedLocale+'.settings.height')"
                 >
                     <template #afterInput>
                         <p class="control">
@@ -76,7 +76,7 @@
                 </biz-form-number-addons>
             </div>
         </div>
-    </form>
+    </div>
 </template>
 
 <script>
@@ -101,7 +101,9 @@
         inject: ['settingOptions'],
 
         props: {
+            errors: { type: Object, default:() => {} },
             modelValue: { type: Object, required: true },
+            selectedLocale: { type: String, required: true },
         },
 
         setup(props, {emit}) {

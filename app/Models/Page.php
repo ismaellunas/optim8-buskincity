@@ -76,18 +76,11 @@ class Page extends Model implements TranslatableContract
                 if (!$this->translate($locale)) {
                     $inputs[$locale]['unique_key'] = Url::randomDigitSegment([PageTranslation::class, 'isUniqueKeyExist']);
                 }
-
-                $settings = $input['settings'];
             }
         }
 
         $this->fill($inputs);
         $this->save();
-
-        $this->saveSettingTranslations(
-            $settings,
-            $this->translate($locale)->id ?? null
-        );
 
         $this->generateStylePageTranslation();
     }
@@ -96,21 +89,6 @@ class Page extends Model implements TranslatableContract
     {
         foreach ($this->translations as $pageTranslation) {
             $pageTranslation->generatePageStyle();
-        }
-    }
-
-    public function saveSettingTranslations($inputs, $pageTranslationId)
-    {
-        foreach ($inputs as $key => $value) {
-            PageTranslationSetting::updateOrCreate(
-                [
-                    'key' => $key,
-                    'page_translation_id' => $pageTranslationId
-                ],
-                [
-                    'value' => $value,
-                ]
-            );
         }
     }
 
@@ -126,14 +104,15 @@ class Page extends Model implements TranslatableContract
         foreach ($page->translations as $translation) {
             $inputs[$translation->locale] = collect($translation->toArray())
                 ->only([
-                    'locale',
-                    'title',
-                    'excerpt',
                     'data',
-                    'slug',
-                    'meta_title',
+                    'excerpt',
+                    'locale',
                     'meta_description',
+                    'meta_title',
+                    'settings',
+                    'slug',
                     'status',
+                    'title',
                 ])
                 ->all();
 

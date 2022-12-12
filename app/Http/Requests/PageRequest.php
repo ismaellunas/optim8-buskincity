@@ -6,7 +6,6 @@ use App\Entities\Enums\PageSettingLayout;
 use App\Helpers\StringManipulator;
 use App\Models\PageTranslation;
 use App\Rules\CustomIdUnique;
-use App\Rules\PageTranslationSetting;
 use App\Services\PageBuilderService;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Validation\Rule;

@@ -8,10 +8,14 @@ export function getEmptyPageTranslation() {
         meta_description: null,
         meta_title: null,
         status: 0,
-        settings: {
-            template: null,
-            background_color: null,
-            page_height: null,
-        }
+        settings: getEmptyPageTranslationSetting(),
+    };
+}
+
+export function getEmptyPageTranslationSetting() {
+    return {
+        layout: null,
+        main_background_color: null,
+        height: null,
     };
 }

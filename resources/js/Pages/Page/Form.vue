@@ -65,6 +65,8 @@
                     <biz-provide-inject-tab title="Settings">
                         <form-setting
                             v-model="form.settings"
+                            :errors="errors"
+                            :selected-locale="selectedLocale"
                         />
                     </biz-provide-inject-tab>
                 </biz-provide-inject-tabs>
