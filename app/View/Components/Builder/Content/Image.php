@@ -73,10 +73,10 @@ class Image extends BaseContent
     {
         $configImage = $this->getConfig()['image'];
 
-        $width = !!$configImage['width'] && $configImage['width'] != ""
+        $width = !empty($configImage['width']) && $configImage['width'] != ""
             ? 'width: '.$configImage['width'].'px'
             : null;
-        $height = !!$configImage['height'] && $configImage['height'] != ""
+        $height = !empty($configImage['height']) && $configImage['height'] != ""
             ? 'height: '.$configImage['height'].'px'
             : null;
 
