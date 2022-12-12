@@ -18,6 +18,7 @@ export default {
     config: {
         card: {
             rounded: null,
+            isShadowless: false,
         },
         content: {
             size: null,
@@ -36,6 +37,10 @@ export const config = {
                 settings: {
                     options: defaultOption.concat(roundedSizes),
                 },
+            },
+            isShadowless: {
+                component: "ConfigCheckbox",
+                label: "Is Shadowless?",
             },
         },
     },
