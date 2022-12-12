@@ -52,11 +52,6 @@ class PageTranslation extends Model implements PublishableInterface
         return $this->belongsTo(Page::class);
     }
 
-    public function pageTranslationSettings()
-    {
-        return $this->hasMany(PageTranslationSetting::class);
-    }
-
     public function scopePublished($query)
     {
         return $query->where('status', self::STATUS_PUBLISHED);
