@@ -3,7 +3,9 @@
 <div @class($uniqueClass)>
     <div @class($cardClasses)>
         @if ($hasImage)
-            <div @class(array_merge(['card-image'], $cardImageClasses))>
+            <div
+                @class(array_merge(['card-image', $position], $cardImageClasses))
+            >
                 @if ($cardLink)
                     <a href="{{ $cardLink }}">
                         <x-image
@@ -12,7 +14,7 @@
                             :ratio="$ratio"
                             :rounded="$rounded"
                             :square="$fixedSquare"
-                            :position="$position"
+                            :has-position="$hasPosition"
                             :style="$imageStyles"
                         />
                     </a>
@@ -23,7 +25,7 @@
                         :ratio="$ratio"
                         :rounded="$rounded"
                         :square="$fixedSquare"
-                        :position="$position"
+                        :has-position="$hasPosition"
                         :style="$imageStyles"
                     />
                 @endif

@@ -1,13 +1,13 @@
 @aware(['images' => [], 'locale' => null])
 
-<div @class($uniqueClass)>
+<div @class([$uniqueClass, $position])>
     <x-image
         :media="$imageMedia"
         :locale="$locale"
         :ratio="$ratio"
         :rounded="$rounded"
         :square="$fixedSquare"
-        :position="$position"
-        :style="$imageStyles"
+        :has-position="$hasPosition"
+        :style="$styles"
     />
 </div>

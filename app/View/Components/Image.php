@@ -10,7 +10,6 @@ class Image extends Component
     public $ratio;
     public $rounded;
     public $square;
-    public $position;
     public $style;
     public $locale;
 
@@ -20,6 +19,7 @@ class Image extends Component
     private $_alt;
     private $_src;
     private $media;
+    private $hasPosition;
 
     /**
      * Create a new component instance.
@@ -32,7 +32,7 @@ class Image extends Component
         string $ratio = null,
         string $rounded = null,
         string $square = null,
-        string $position = null,
+        string $hasPosition = null,
         string $src = null,
         string $locale = null,
         $media = null
@@ -44,7 +44,7 @@ class Image extends Component
         $this->ratio = $ratio;
         $this->rounded = $rounded;
         $this->square = $square;
-        $this->position = $position;
+        $this->hasPosition = $hasPosition;
         $this->media = $media;
         $this->locale = $locale;
 
@@ -105,10 +105,6 @@ class Image extends Component
 
         $classes->push($this->rounded);
 
-        if ($this->position) {
-            $classes->push('is-inline-block');
-        }
-
         return $classes->filter()->all();
     }
 
@@ -118,7 +114,10 @@ class Image extends Component
 
         $classes->push($this->ratio);
         $classes->push($this->square);
-        $classes->push($this->position);
+
+        if ($this->hasPosition) {
+            $classes->push('is-inline-block');
+        }
 
         return $classes->filter()->all();
     }

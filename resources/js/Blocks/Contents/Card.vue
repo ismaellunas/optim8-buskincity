@@ -13,16 +13,20 @@
                 class="card-image"
                 :class="cardImageClass"
             >
-                <biz-image
-                    v-if="hasImage"
-                    :src="imageSrc"
-                    :alt="altText"
-                    :ratio="this.config?.image?.ratio"
-                    :rounded="this.config?.image?.rounded"
-                    :square="this.config?.image?.fixedSquare"
-                    :position="this.config?.image?.position"
-                    :img-style="imageStyles"
-                />
+                <div
+                    :class="this.config?.image?.position"
+                >
+                    <biz-image
+                        v-if="hasImage"
+                        :src="imageSrc"
+                        :alt="altText"
+                        :ratio="this.config?.image?.ratio"
+                        :rounded="this.config?.image?.rounded"
+                        :square="this.config?.image?.fixedSquare"
+                        :img-style="imageStyles"
+                        :has-position="hasPosition"
+                    />
+                </div>
 
                 <biz-button
                     v-if="hasImage"
@@ -203,6 +207,9 @@
                 });
 
                 return styles;
+            },
+            hasPosition() {
+                return !!this.config?.image?.position;
             },
         },
         methods: {

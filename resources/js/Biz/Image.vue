@@ -25,16 +25,13 @@
             rounded: String,
             square: String,
             src: String,
-            position: { type: [String, null], default: null },
+            hasPosition: { type: Boolean, default: false },
         },
         computed: {
             composedImgClass() {
                 const classes = [];
                 if (this.rounded) {
                     classes.push(this.rounded);
-                }
-                if (this.position) {
-                    classes.push('is-inline-block');
                 }
                 return classes;
             },
@@ -46,8 +43,8 @@
                 if (this.square) {
                     classes.push(this.square);
                 }
-                if (this.position) {
-                    classes.push(this.position);
+                if (this.hasPosition) {
+                    classes.push('is-inline-block');
                 }
                 return classes;
             },
