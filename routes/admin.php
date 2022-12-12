@@ -13,6 +13,7 @@ use App\Http\Controllers\{
     RoleController,
     SettingKeyController,
     StripeController,
+    SystemLogController,
     ThemeAdvanceController,
     ThemeColorController,
     ThemeFontController,
@@ -156,6 +157,13 @@ Route::middleware([
             ->name('suspend');
         Route::post('/unsuspend/{user}', [UserController::class, 'unsuspend'])
             ->name('unsuspend');
+    });
+
+    Route::name('system-log.')->prefix('system-log')->middleware(['can:system.log'])->group(function () {
+        Route::get('/', [SystemLogController::class, 'index'])
+            ->name('index');
+        Route::get('/search-users', [SystemLogController::class, 'searchUsers'])
+            ->name('search-users');
     });
 });
 
