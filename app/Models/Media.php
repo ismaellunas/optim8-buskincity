@@ -138,7 +138,10 @@ class Media extends CloudinaryMedia implements TranslatableContract
 
     private function getImageUrlFromAttributeTag(string $attributeTag)
     {
-        return strval(str_replace(['src=', '"'], ['', ''], $attributeTag));
+        return Str::before(
+            strval(str_replace(['src=', '"'], ['', ''], $attributeTag)),
+            '?_a='
+        );
     }
 
     private function getVideoUrlFromAttributeTag(string $attributeTag)

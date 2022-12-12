@@ -1,6 +1,6 @@
 <template>
     <figure
-        class="image"
+        class="image is-clipped"
         :class="composedFigureClass"
     >
         <img
@@ -43,7 +43,7 @@
                 if (this.square) {
                     classes.push(this.square);
                 }
-                if (this.hasPosition) {
+                if (this.hasPosition && !this.ratio) {
                     classes.push('is-inline-block');
                 }
                 return classes;

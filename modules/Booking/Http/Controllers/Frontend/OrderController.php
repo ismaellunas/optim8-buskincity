@@ -39,19 +39,24 @@ class OrderController extends CrudController
     {
         $user = auth()->user();
 
+        $scopes = [
+            'inStatus' => $request->status ?? null,
+            'orderByColumn' => [
+                'column' => $request->column,
+                'order' => $request->order,
+            ],
+        ];
+
+        if (is_array($request->dates) && !empty(array_filter($request->dates))) {
+            $scopes['dateRange'] = $request->dates;
+        }
+
         return Inertia::render('Booking::FrontendOrderIndex', $this->getData([
             'title' => $this->getIndexTitle(),
             'orders' => $this->orderService->getFrontendRecords(
                 $user,
                 $request->get('term'),
-                [
-                    'inStatus' => $request->status ?? null,
-                    'dateRange' => $request->dates ?? [],
-                    'orderByColumn' => [
-                        'column' => $request->column,
-                        'order' => $request->order,
-                    ],
-                ],
+                $scopes
             ),
             'pageQueryParams' => array_filter(
                 $request->only(
