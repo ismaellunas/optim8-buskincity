@@ -94,7 +94,7 @@ class Image extends Component
     public function getStyle($style): ?string
     {
         if (is_array($style)) {
-            return implode(' ', $style);
+            return implode(';', $style);
         }
         return $style ?? null;
     }
@@ -115,7 +115,7 @@ class Image extends Component
         $classes->push($this->ratio);
         $classes->push($this->square);
 
-        if ($this->hasPosition) {
+        if ($this->hasPosition && !$this->ratio) {
             $classes->push('is-inline-block');
         }
 

@@ -8,6 +8,6 @@
         :rounded="$rounded"
         :square="$fixedSquare"
         :has-position="$hasPosition"
-        :style="$styles"
+        :style="$imageStyles"
     />
 </div>

@@ -1,5 +1,5 @@
 <figure
-    {{ $attributes->merge(['class' => "image ".implode(' ', $figureClasses)]) }}
+    {{ $attributes->merge(['class' => "image is-clipped ".implode(' ', $figureClasses)]) }}
 >
     <img
         @class($imageClasses)
