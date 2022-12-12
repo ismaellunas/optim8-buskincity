@@ -80,7 +80,7 @@ class HandleInertiaRequests extends Middleware
                 }
                 return (object)[];
             },
-            'appLogoUrl' => $this->settingService->getLogoUrl(),
+            'appLogoUrl' => $this->settingService->getLogoOrDefaultUrl(),
             'menus' => $this->getHeaderMenus($request),
             'footerMenus' => $this->getFooterMenus($request),
             'currentLanguage' => TranslationSv::currentLanguage(),

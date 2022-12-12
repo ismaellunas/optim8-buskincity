@@ -127,6 +127,7 @@ return [
     ],
 
     'throttle' => [
+        'default' => 5,
         'checkout' => 100,
     ],
 
@@ -244,6 +245,13 @@ return [
                 'value' => null,
                 'order' => 13,
                 'group' => 'key.stripe'
+            ],
+            [
+                'key' => 'tinymce_api_key',
+                'display_name' => 'TinyMCE API',
+                'value' => null,
+                'order' => 14,
+                'group' => 'key.tinymce'
             ],
         ],
     ],

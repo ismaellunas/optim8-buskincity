@@ -21,7 +21,7 @@
     import { cloneDeep } from 'lodash';
 
     export default {
-        name: 'Layout',
+        name: 'ThemeFooterLayoutTab',
 
         components: {
             FooterLayout,

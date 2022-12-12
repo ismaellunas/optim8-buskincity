@@ -10,15 +10,16 @@
                     v-model="form.photo"
                     v-model:photo-url="photoUrl"
                     label="Profile picture"
+                    is-rounded-preview
                     modal-title="Profile picture"
                     wrapper-class="field-body is-align-items-center"
-                    :show-delete-button="isDeleteButtonShown"
                     :message="error('photo')"
+                    :original-image="user.profile_photo_url"
+                    :show-delete-button="isDeleteButtonShown"
                     @on-cropped-image="onCroppedImage()"
                     @on-delete-image="onDeleteImage()"
-                    @on-reset-preview="resetPreview()"
                 >
-                    <template #default-image-view>
+                    <template #defaultImageView>
                         <biz-image
                             ratio="is-128x128"
                             rounded="is-rounded"
@@ -218,10 +219,6 @@
 
             resetImageForm() {
                 this.form.reset('photo', 'is_photo_deleted');
-            },
-
-            resetPreview() {
-                this.photoUrl = this.user.profile_photo_url;
             },
 
             onDeleteImage() {
