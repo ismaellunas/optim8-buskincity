@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Casts\AsPageTranslationDataCollection;
 use App\Contracts\HasStyleInterface;
 use App\Contracts\PublishableInterface;
-use App\Entities\Enums\PageSettingTemplate;
+use App\Entities\Enums\PageSettingLayout;
 use App\Helpers\MinifyCss;
 use App\Helpers\Url;
 use App\Models\Page;
@@ -226,12 +226,15 @@ class PageTranslation extends Model implements PublishableInterface
         return $this->status == PageTranslation::STATUS_DRAFT;
     }
 
-    public function getIsNoMenuTemplateAttribute(): bool
+    public function getIsLayoutNoHeaderAndFooterAttribute(): string
     {
-        $settings = $this->pageTranslationSettings;
+        $layout = $this->getSettingValueByKey('layout');
 
-        $template = $settings->where('key', 'template')->value('value') ?? null;
+        return PageSettingLayout::NO_HEADER_AND_FOOTER->value == $layout;
+    }
 
-        return $template == PageSettingTemplate::NO_MENU->value;
+    public function getSettingValueByKey(string $key): ?string
+    {
+        return $this->settings[$key] ?? null;
     }
 }

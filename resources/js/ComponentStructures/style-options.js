@@ -91,7 +91,6 @@ export const backgroundColors = [
     { value: "has-background-success", name: "Success" },
     { value: "has-background-warning", name: "Warning" },
     { value: "has-background-danger", name: "Danger" },
-    { value: "has-background-light", name: "Light" },
 ];
 
 export const textColors = [

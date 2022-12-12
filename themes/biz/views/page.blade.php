@@ -1,14 +1,10 @@
-@php
-    $layout = 'layouts.master';
+@inject('pageBuilderService', 'App\Services\PageBuilderService')
 
-    if ($page->isNoMenuTemplate) {
-        $layout = 'layouts.no-menu';
-    }
-@endphp
-
-<x-dynamic-component
-    :component="$layout"
-    :page="$page"
+<x-layouts.master
+    :has-header="!$page->isLayoutNoHeaderAndFooter"
+    :has-footer="!$page->isLayoutNoHeaderAndFooter"
+    :body-classes="$pageBuilderService->bodyClasses($page)"
+    :body-styles="$pageBuilderService->bodyStyles($page)"
 >
     <x-slot name="title">
         {{ trim($page->meta_title ?? $page->title).' | '.config('app.name') }}
@@ -20,7 +16,7 @@
 
     <div @class([
         'page-wrapper' => true,
-        'py-6' => !$page->isNoMenuTemplate,
+        'py-6' => !$page->isLayoutNoHeaderAndFooter,
     ])>
         @foreach ($page->data->get('structures') as $key => $structure)
             <x-builder.row
@@ -36,4 +32,4 @@
     @push('bottom_styles')
         <link rel="stylesheet" href="{{ $page->styleUrl }}">
     @endpush
-</x-dynamic-component>
+</x-layouts.master>
