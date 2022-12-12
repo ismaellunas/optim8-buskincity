@@ -24,16 +24,20 @@
             </span>
         </biz-button>
 
-        <biz-image
-            v-if="hasImage"
-            :src="imageSrc"
-            :alt="altText"
-            :ratio="config?.image?.ratio"
-            :rounded="config?.image?.rounded"
-            :square="config?.image?.fixedSquare"
-            :position="config?.image?.position"
-            :img-style="imageStyles"
-        />
+        <div
+            :class="config?.image?.position"
+        >
+            <biz-image
+                v-if="hasImage"
+                :src="imageSrc"
+                :alt="altText"
+                :ratio="config?.image?.ratio"
+                :rounded="config?.image?.rounded"
+                :square="config?.image?.fixedSquare"
+                :img-style="imageStyles"
+                :has-position="hasPosition"
+            />
+        </div>
 
         <div
             v-if="isFormDisplayed"
@@ -152,6 +156,9 @@
                 });
 
                 return styles;
+            },
+            hasPosition() {
+                return !!this.config?.image?.position;
             },
         },
         methods: {
