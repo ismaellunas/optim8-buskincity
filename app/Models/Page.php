@@ -27,13 +27,14 @@ class Page extends Model implements TranslatableContract
     public $translatedAttributes = [
         'data',
         'excerpt',
+        'locale',
         'meta_description',
         'meta_title',
+        'plain_text_content',
+        'settings',
         'slug',
         'status',
         'title',
-        'locale',
-        'plain_text_content',
     ];
 
     protected $translationModel = PageTranslation::class;
