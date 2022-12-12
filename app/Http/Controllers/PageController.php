@@ -125,7 +125,6 @@ class PageController extends CrudController
     public function edit(Page $page)
     {
         $page->load('translations');
-        $this->transformPage($page);
 
         $images = $this->pageService->getImagesFromPage($page);
 
@@ -245,14 +244,5 @@ class PageController extends CrudController
         $this->generateFlashMessage('Page duplicated successfully!');
 
         return redirect()->back();
-    }
-
-    public function transformPage(Page &$page)
-    {
-        $page->translations->transform(function ($translation) {
-            $translation->load('pageTranslationSettings');
-
-            return $translation;
-        });
     }
 }
