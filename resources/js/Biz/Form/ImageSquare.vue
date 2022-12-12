@@ -1,16 +1,19 @@
 <template>
     <div :class="wrapperClass">
-        <div class="field is-narrow">
+        <div
+            v-if="computedPhotoUrl || $slots.defaultImageView"
+            class="field is-narrow"
+        >
             <biz-image
                 v-if="computedPhotoUrl"
                 ratio="is-128x128"
-                rounded="is-rounded"
+                :rounded="isRoundedPreview ? 'is-rounded' : ''"
                 :src="computedPhotoUrl"
             />
 
             <slot
                 v-else
-                name="default-image-view"
+                name="defaultImageView"
             />
         </div>
 
@@ -37,13 +40,13 @@
             />
 
             <biz-button-icon
-                v-if="showDeleteButton"
+                v-if="isDeleteButtonShown"
                 class="is-danger is-small mt-3 mr-2"
                 icon="fa-solid fa-trash-can"
                 icon-class="is-small"
                 type="button"
                 :disabled="disabled"
-                @click.prevent="$emit('on-delete-image', $event)"
+                @click.prevent="deleteImage($event)"
             >
                 <span class="has-text-weight-bold">{{ labelDelete }}</span>
             </biz-button-icon>
@@ -59,6 +62,22 @@
             >
                 <span class="has-text-weight-bold">{{ labelReset }}</span>
             </biz-button-icon>
+
+            <slot name="note">
+                <p
+                    v-if="notes"
+                    class="help is-info"
+                >
+                    <ul>
+                        <li
+                            v-for="note, index in notes"
+                            :key="index"
+                        >
+                            {{ note }}
+                        </li>
+                    </ul>
+                </p>
+            </slot>
 
             <template #error>
                 <biz-input-error :message="message" />
@@ -96,9 +115,9 @@
     import BizInputFile from '@/Biz/InputFile';
     import BizModalImageEditorSquare from '@/Biz/Modal/ImageEditorSquare';
     import { acceptedImageTypes } from '@/Libs/defaults';
+    import { confirmDelete, oops as oopsAlert } from '@/Libs/alert';
+    import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
     import { includes, last, pull } from 'lodash';
-    import { oops as oopsAlert } from '@/Libs/alert';
-    import { useModelWrapper, getCanvasBlob } from '@/Libs/utils';
 
     export default {
         name: 'BizFormImageSquare',
@@ -119,6 +138,14 @@
             acceptedTypes: {
                 type: Array,
                 default: acceptedImageTypes,
+            },
+            croppedImageType: {
+                type: String,
+                default: 'image/jpeg',
+            },
+            isRoundedPreview: {
+                type: Boolean,
+                default: false
             },
             label: {
                 type: String,
@@ -148,6 +175,10 @@
                 type: Boolean,
                 default: false
             },
+            originalImage: {
+                type: [String, null],
+                default: null
+            },
             required: {
                 type: Boolean,
                 default: null
@@ -159,6 +190,10 @@
             modalTitle: {
                 type: String,
                 default: 'Image',
+            },
+            notes: {
+                type: Array,
+                default: () => [],
             },
             wrapperClass: {
                 type: [Array, Object, String],
@@ -198,6 +233,10 @@
                 }
                 return null;
             },
+
+            isDeleteButtonShown() {
+                return this.originalImage && this.computedPhotoUrl && this.showDeleteButton;
+            },
         },
 
         methods: {
@@ -230,7 +269,11 @@
                 const self = this;
 
                 getCanvasBlob(
-                    self.getCropper().getCroppedCanvas()
+                    self.getCropper().getCroppedCanvas({
+                        maxWidth: 4096,
+                        maxHeight: 4096,
+                    }),
+                    self.croppedImageType
                 ).then((blob) => {
                     self.computedPhoto = blob;
                     self.computedPhotoUrl = URL.createObjectURL(blob);
@@ -266,8 +309,22 @@
 
                 this.computedPhoto = null;
 
+                this.computedPhotoUrl = this.originalImage;
+
                 this.$emit('on-reset-preview');
-            }
+            },
+
+            deleteImage(event) {
+                const self = this;
+
+                confirmDelete().then((result) => {
+                    if (result.isConfirmed) {
+                        self.computedPhotoUrl = null;
+
+                        self.$emit('on-delete-image', event);
+                    }
+                });
+            },
         },
     };
 </script>

@@ -145,16 +145,22 @@ class SettingService
             ->all();
     }
 
-    public function getLogoUrl(): string
+    public function getLogoUrl(): ?string
     {
         return app(SettingCache::class)->remember('logo_url', function () {
             $media = $this->getLogoMedia();
 
-            return $media->file_url
-                ?? StorageService::getImageUrl(
-                    config('constants.default_images.logo')
-                );
+            return ($media
+                ? $media->getOptimizedImageUrl(600, 600, 'limitFit')
+                : null
+            );
         });
+    }
+
+    public function getLogoOrDefaultUrl(): string
+    {
+        return $this->getLogoUrl()
+            ?? StorageService::getImageUrl(config('constants.default_images.logo'));
     }
 
     public function getLogoMedia(): ?Media
@@ -367,15 +373,19 @@ class SettingService
         return $this->getMediaFromSetting('qrcode_public_page_logo_media_id');
     }
 
-    public function getFaviconUrl(): string
+    public function getFaviconUrl(int $width = null): string
     {
         return app(SettingCache::class)->remember(
-            'favicon_url',
-            function () {
+            'favicon_url'.($width ? '_'.$width : null),
+            function () use ($width) {
                 $media = $this->getFaviconMedia();
 
                 if ($media) {
-                    return $media->file_url;
+                    if (is_null($width)) {
+                        return $media->file_url;
+                    } else {
+                        return $media->getThumbnailUrl($width, $width);
+                    }
                 }
 
                 return "";
@@ -524,6 +534,15 @@ class SettingService
     {
         return app(SettingCache::class)->remember('stripe_keys', function () {
             return $this->getKeysByGroup('key.stripe');
+        });
+    }
+
+    public function getTinyMCEKey(): string
+    {
+        return app(SettingCache::class)->remember('tinymce_api_key', function () {
+            $ipRegistryApi = Setting::key('tinymce_api_key')->value('value');
+
+            return $ipRegistryApi ?? "";
         });
     }
 

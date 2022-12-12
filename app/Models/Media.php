@@ -138,7 +138,10 @@ class Media extends CloudinaryMedia implements TranslatableContract
 
     private function getImageUrlFromAttributeTag(string $attributeTag)
     {
-        return strval(str_replace(['src=', '"'], ['', ''], $attributeTag));
+        return Str::before(
+            strval(str_replace(['src=', '"'], ['', ''], $attributeTag)),
+            '?_a='
+        );
     }
 
     private function getVideoUrlFromAttributeTag(string $attributeTag)
@@ -188,12 +191,15 @@ class Media extends CloudinaryMedia implements TranslatableContract
         return $imageTag->delivery(Delivery::quality(Quality::auto()));
     }
 
-    public function getOptimizedImageUrl(?int $width = null, ?int $height = null): string
-    {
+    public function getOptimizedImageUrl(
+        ?int $width = null,
+        ?int $height = null,
+        string $resizeMode = 'fill'
+    ): string {
         $result = "";
 
         if ($this->isImage) {
-            $result = $this->optimizeImage($width, $height)->serializeAttributes();
+            $result = $this->optimizeImage($width, $height, $resizeMode)->serializeAttributes();
         }
 
         return $this->getImageUrlFromAttributeTag($result);

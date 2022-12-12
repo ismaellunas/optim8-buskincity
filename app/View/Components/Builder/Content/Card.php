@@ -15,6 +15,7 @@ class Card extends BaseContent
     public $imageMedia = null;
     public $hasImage = false;
 
+    public $cardClasses = [];
     public $cardContentClasses = [];
     public $cardImageClasses = [];
 
@@ -29,6 +30,7 @@ class Card extends BaseContent
         $this->locale = $locale;
         $this->cardLink = $this->getCardLink();
 
+        $this->cardClasses = $this->getCardClasses();
         $this->cardContentClasses = $this->getCardContentClasses();
         $this->cardImageClasses = $this->getCardImageClasses();
         $this->imageMedia = $this->getImageMedia();
@@ -61,9 +63,16 @@ class Card extends BaseContent
         return $this->getConfig()['image']['fixedSquare'] ?? '';
     }
 
-    public function cardRounded(): string
+    public function getCardClasses(): array
     {
-        return $this->getConfig()['card']['rounded'] ?? '';
+        $configCard = $this->getConfig()['card'] ?? [];
+        $classes = collect();
+
+        $classes->push('card');
+        $classes->push($configCard['rounded'] ?? null);
+        $classes->push($configCard['isShadowless'] ? 'is-shadowless' : '');
+
+        return $classes->filter()->all();
     }
 
     private function getCardLink(): ?string

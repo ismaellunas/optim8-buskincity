@@ -23,6 +23,16 @@
             </div>
         </div>
         <section class="section">
+            @if (session('failed'))
+                <div class="columns">
+                    <div class="column is-9 is-offset-1">
+                        <div class="notification is-danger">
+                            {{ session('failed') }}
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <div class="columns" id="socialMediaForm">
                 <div class="column is-9 is-offset-1">
                     <h1 class="title">Sign Up</h1>
@@ -115,6 +125,12 @@
                                 @enderror
                             </div>
 
+                            <div
+                                class="g-recaptcha"
+                                data-sitekey="{{ $recaptchaSiteKey }}"
+                                data-size="invisible"
+                            ></div>
+
                             <div class="flex mt-4">
                                 <div class="columns is-gapless">
                                     <div class="column is-two-thirds">
@@ -143,5 +159,12 @@
                 showForm();
             </script>
         @endif
+
+        <script>
+            var onloadCallback = function() {
+                grecaptcha.execute();
+            };
+        </script>
+        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
     @endpush
 </x-layouts.auth>
