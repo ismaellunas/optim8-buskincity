@@ -1,5 +1,3 @@
-@inject('setting', 'App\Services\SettingService')
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -9,9 +7,7 @@
 
         {{-- <title>{{ config('app.name', 'Laravel') }}</title> --}}
 
-        @if (!empty($setting->getFaviconUrl()))
-            <link rel="icon" type="image/x-icon" href="{{ $setting->getFaviconUrl() }}">
-        @endif
+        @include('favicon')
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap">
