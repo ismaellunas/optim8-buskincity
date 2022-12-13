@@ -17,6 +17,7 @@
                 :page-preview="true"
                 :selected-locale="selectedLocale"
                 :status-options="statusOptions"
+                :empty-page-locale-options="emptyPageLocaleOptions"
                 @on-change-locale="onChangeLocale"
                 @on-submit="onSubmit"
                 @on-delete-translation="onDeleteTranslation"
@@ -122,6 +123,18 @@
         computed: {
             selectedLocaleName() {
                 return find(this.localeOptions, { id: this.selectedLocale }).name ?? '';
+            },
+
+            emptyPageLocaleOptions() {
+                const self = this;
+
+                return self.localeOptions.map(function(locale) {
+                    if (!getTranslation(self.page, locale.id)) {
+                        return locale;
+                    }
+
+                    return null;
+                }).filter(Boolean);
             },
         },
 

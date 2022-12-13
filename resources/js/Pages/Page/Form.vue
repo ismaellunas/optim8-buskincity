@@ -193,7 +193,6 @@
     import { usePage } from '@inertiajs/inertia-vue3';
     import { cloneDeep } from 'lodash';
     import icon from '@/Libs/icon-class';
-    import { getTranslation } from '@/Libs/translation';
 
     export default {
         components: {
@@ -224,6 +223,7 @@
 
         props: {
             contentConfigId: { type: String, required: true },
+            emptyPageLocaleOptions: { type: Array, default: () => [] },
             errors: { type: Object, default:() => {} },
             isDirty: { type: Boolean, default: false },
             isNew: { type: Boolean, required: true },
@@ -294,18 +294,6 @@
 
             duplicateTranslationIsShowed() {
                 return !!this.form?.id;
-            },
-
-            emptyPageLocaleOptions() {
-                let page = this.page;
-
-                return this.localeOptions.map(function(locale) {
-                    if (!getTranslation(page, locale.id)) {
-                        return locale;
-                    }
-
-                    return null;
-                }).filter(Boolean);
             },
         },
 
