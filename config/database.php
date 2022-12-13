@@ -145,10 +145,10 @@ return [
                     'verify_peer_name' => false,
                 ]
             ],
-            'ssl' => ['verify_peer' => false, 'verify_peer_name' => false],
         ],
 
         'default' => [
+            'scheme' => 'tls',
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
             'password' => env('REDIS_PASSWORD', null),
