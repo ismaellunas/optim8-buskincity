@@ -231,7 +231,6 @@
 
             return {
                 queryParams: ref(queryParams),
-                //dates: ref(props.pageQueryParams?.dates?? []),
                 dates: ref(isArray(props.pageQueryParams?.dates)
                     ? props.pageQueryParams?.dates.filter(Boolean)
                     : []
