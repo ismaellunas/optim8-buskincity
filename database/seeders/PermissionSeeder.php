@@ -55,6 +55,7 @@ class PermissionSeeder extends Seeder
             'system.translation',
             'system.theme',
             'system.payment',
+            'system.log',
 
             'payment.management',
 
