@@ -141,10 +141,11 @@ return [
             'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
             'context' => [
                 'stream' => [
-                    'verify_peer' => 0,
-                    'verify_peer_name' => 0,
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
                 ]
-            ]
+            ],
+            'ssl' => ['verify_peer' => false, 'verify_peer_name' => false],
         ],
 
         'default' => [
