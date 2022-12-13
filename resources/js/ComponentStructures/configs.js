@@ -6,6 +6,7 @@ import { config as columns } from './columns';
 import { config as faq } from './faq';
 import { config as heading } from './heading';
 import { config as icon } from './icon';
+import { config as iconText } from './icon-text';
 import { config as image } from './image';
 import { config as latestPost } from './latest-post';
 import { config as tabs } from './tabs';
@@ -22,6 +23,7 @@ export default {
     faq: faq,
     heading: heading,
     icon: icon,
+    iconText: iconText,
     image: image,
     latestPost: latestPost,
     tabs: tabs,

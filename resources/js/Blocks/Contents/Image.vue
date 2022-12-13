@@ -5,34 +5,39 @@
             @duplicate-content="duplicateContent"
         />
 
-        <biz-image
-            v-if="hasImage"
-            :src="imageSrc"
-            :alt="altText"
-            :ratio="config?.image?.ratio"
-            :rounded="config?.image?.rounded"
-            :square="config?.image?.fixedSquare"
+        <biz-button
+            class="is-small is-fullwidth"
+            type="button"
+            @click="toggleEdit"
         >
-            <biz-button
-                class="is-small is-overlay"
-                style="z-index: 1"
-                type="button"
-                @click="toggleEdit"
+            <span
+                v-if="isFormDisplayed"
+                class="icon"
             >
-                <span
-                    v-if="isFormDisplayed"
-                    class="icon"
-                >
-                    <i class="fas fa-times-circle" />
-                </span>
-                <span
-                    v-else
-                    class="icon"
-                >
-                    <i class="fas fa-pen" />
-                </span>
-            </biz-button>
-        </biz-image>
+                <i class="fas fa-times-circle" />
+            </span>
+            <span
+                v-else
+                class="icon"
+            >
+                <i class="fas fa-pen" />
+            </span>
+        </biz-button>
+
+        <div
+            :class="config?.image?.position"
+        >
+            <biz-image
+                v-if="hasImage"
+                :src="imageSrc"
+                :alt="altText"
+                :ratio="config?.image?.ratio"
+                :rounded="config?.image?.rounded"
+                :square="config?.image?.fixedSquare"
+                :img-style="imageStyles"
+                :has-position="hasPosition"
+            />
+        </div>
 
         <div
             v-if="isFormDisplayed"
@@ -125,6 +130,35 @@
             },
             isFormDisplayed() {
                 return !this.hasImage || this.isFormOpen;
+            },
+            imageWidth() {
+                return this.config.image.width;
+            },
+            imageHeight() {
+                return this.config.image.height;
+            },
+            imageStyles() {
+                let styles = {
+                    'width': this.imageWidth && this.imageWidth != ""
+                        ? this.imageWidth + 'px'
+                        : null,
+                    'height': this.imageHeight && this.imageHeight != ""
+                        ? this.imageHeight + 'px'
+                        : null,
+                };
+
+                Object.keys(styles).forEach(key => {
+                    if (
+                        !styles[key]
+                    ) {
+                        delete styles[key];
+                    }
+                });
+
+                return styles;
+            },
+            hasPosition() {
+                return !!this.config?.image?.position;
             },
         },
         methods: {
