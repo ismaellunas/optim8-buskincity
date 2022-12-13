@@ -153,7 +153,6 @@
                         onFinish: () => {
                             this.form.reset('password');
                             this.onEndLoadingOverlay();
-                            this.recaptchaExpired();
                         },
                     })
             },
