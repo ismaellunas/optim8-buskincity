@@ -189,8 +189,9 @@
     import FormDetail from './FormDetail';
     import FormSetting from './FormSetting';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
-    import { provide, ref } from "vue";
+    import { ref } from "vue";
     import { usePage } from '@inertiajs/inertia-vue3';
+    import { cloneDeep } from 'lodash';
     import icon from '@/Libs/icon-class';
     import { getTranslation } from '@/Libs/translation';
 
@@ -214,6 +215,12 @@
         ],
 
         inject: ['can'],
+
+        provide() {
+            return {
+                dataImages: this.images,
+            }
+        },
 
         props: {
             contentConfigId: { type: String, required: true },
@@ -249,10 +256,6 @@
 
             // Set provide and inject of images data
             const images = usePage().props.value.images;
-            provide(
-                'dataImages',
-                !isBlank(images) ? images : {}
-            );
 
             return {
                 activeTab,
@@ -260,6 +263,7 @@
                 computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
                 defaultLocale: usePage().props.value.defaultLanguage,
                 page: usePage().props.value.page,
+                images: !isBlank(images) ? images : {},
             };
         },
 
@@ -339,6 +343,10 @@
 
             onDuplicateTranslation() {
                 if (!!this.formDuplicate.to) {
+                    this.images[this.formDuplicate.to] = cloneDeep(
+                        this.images[this.selectedLocale]
+                    );
+
                     this.$emit('on-duplicate-translation', {
                         locale: this.formDuplicate.to,
                         form: {
