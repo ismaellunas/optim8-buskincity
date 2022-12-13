@@ -5,6 +5,7 @@ namespace App\Console;
 //use App\Models\Cron;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\App;
 
 class Kernel extends ConsoleKernel
 {
@@ -27,7 +28,11 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         if (config('telescope.enabled')) {
-            $schedule->command('telescope:prune --hours=48')->daily();
+            if (App::environment('local')) {
+                $schedule->command('telescope:prune --hours=48')->daily();
+            } else {
+                $schedule->command('telescope:prune --hours=336')->daily();
+            }
         }
     }
 
