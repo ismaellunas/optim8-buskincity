@@ -262,7 +262,6 @@
                 form: useModelWrapper(props, emit),
                 computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
                 defaultLocale: usePage().props.value.defaultLanguage,
-                page: usePage().props.value.page,
                 images: !isBlank(images) ? images : {},
             };
         },
