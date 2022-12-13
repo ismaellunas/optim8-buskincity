@@ -1,7 +1,8 @@
 import {
+    contentPositions,
     defaultOption,
-    imageRatios,
     fixedSquares,
+    imageRatios,
     roundedSizes
 } from './style-options';
 
@@ -21,11 +22,14 @@ export default {
     },
     config: {
         image: {
+            width: null,
+            height: null,
             // figure
             fixedSquare: null,
-            ratio: "is-4by3",
+            ratio: null,
             // img
             rounded: null,
+            position: null,
         },
         dimension: dimension.config
     }
@@ -35,6 +39,20 @@ export const config = {
     image: {
         label: "Image",
         config: {
+            width: {
+                component: "ConfigNumberAddons",
+                label: "Width",
+                settings: {
+                    addons: "px",
+                },
+            },
+            height: {
+                component: "ConfigNumberAddons",
+                label: "Height",
+                settings: {
+                    addons: "px",
+                },
+            },
             fixedSquare: {
                 component: "ConfigSelect",
                 label: "FixedSquare",
@@ -54,6 +72,13 @@ export const config = {
                 label: "Rounded Size",
                 settings: {
                     options: defaultOption.concat(roundedSizes),
+                },
+            },
+            position: {
+                component: "ConfigSelect",
+                label: "Position",
+                settings: {
+                    options: defaultOption.concat(contentPositions),
                 },
             },
         }

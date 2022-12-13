@@ -18,6 +18,8 @@ class Card extends BaseContent
     public $cardClasses = [];
     public $cardContentClasses = [];
     public $cardImageClasses = [];
+    public $imageStyles = [];
+    public $position = null;
 
     public function __construct(
         $entity,
@@ -34,7 +36,10 @@ class Card extends BaseContent
         $this->cardContentClasses = $this->getCardContentClasses();
         $this->cardImageClasses = $this->getCardImageClasses();
         $this->imageMedia = $this->getImageMedia();
+        $this->imageStyles = $this->getImageStyles();
         $this->hasImage = !empty($this->imageMedia);
+
+        $this->position = $this->getPosition();
     }
 
     public function contentHtml(): string
@@ -61,6 +66,16 @@ class Card extends BaseContent
     public function fixedSquare(): string
     {
         return $this->getConfig()['image']['fixedSquare'] ?? '';
+    }
+
+    private function getPosition(): string
+    {
+        return $this->getConfig()['image']['position'] ?? '';
+    }
+
+    public function hasPosition(): bool
+    {
+        return !empty($this->position);
     }
 
     public function getCardClasses(): array
@@ -119,5 +134,24 @@ class Card extends BaseContent
         }
 
         return $classes->flatten()->all();
+    }
+
+    private function getImageStyles(): array
+    {
+        $configImage = $this->getConfig()['image'];
+
+        $width = !empty($configImage['width']) && $configImage['width'] != ""
+            ? 'width: '.$configImage['width'].'px'
+            : null;
+        $height = !empty($configImage['height']) && $configImage['height'] != ""
+            ? 'height: '.$configImage['height'].'px'
+            : null;
+
+        $classes = collect();
+
+        $classes->push($width);
+        $classes->push($height);
+
+        return $classes->filter()->all();
     }
 }
