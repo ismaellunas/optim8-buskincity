@@ -183,7 +183,6 @@ class MenuService
         $menuItem['title'] = $menu->title;
         $menuItem['link'] = $menu->getUrl();
         $menuItem['target'] = $menu->getTarget();
-        $menuItem['isActive'] = $menu->isActive(request()->url());
         $menuItem['isInternalLink'] = $menu->isInternalLink($menuItem['link']);
         $menuItem['children'] = $children;
     }
