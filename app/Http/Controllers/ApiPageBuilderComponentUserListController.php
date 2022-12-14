@@ -60,7 +60,7 @@ class ApiPageBuilderComponentUserListController extends Controller
                 $this->inTypes($q, $defaultTypes);
             })
             ->when($term, function($q, $term) {
-                $this->inSearch($q, $term);
+                $this->searchName($q, $term);
             })
             ->hasPermissionNames(['public_page.profile'])
             ->with([
@@ -186,7 +186,7 @@ class ApiPageBuilderComponentUserListController extends Controller
         });
     }
 
-    private function inSearch($q, string $term)
+    private function searchName($q, string $term)
     {
         $q->where(function ($q) use ($term) {
                 $q->where(DB::raw("CONCAT(first_name,' ',last_name)"), 'ILIKE', '%'.$term.'%');
