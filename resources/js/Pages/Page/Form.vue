@@ -62,6 +62,13 @@
                             :selected-locale="selectedLocale"
                         />
                     </biz-provide-inject-tab>
+                    <biz-provide-inject-tab title="Settings">
+                        <form-setting
+                            v-model="form.settings"
+                            :errors="errors"
+                            :selected-locale="selectedLocale"
+                        />
+                    </biz-provide-inject-tab>
                 </biz-provide-inject-tabs>
             </div>
 
@@ -180,11 +187,12 @@
     import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
     import FormBuilder from './FormBuilder';
     import FormDetail from './FormDetail';
+    import FormSetting from './FormSetting';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
-    import { provide, ref } from "vue";
+    import { ref } from "vue";
     import { usePage } from '@inertiajs/inertia-vue3';
+    import { cloneDeep } from 'lodash';
     import icon from '@/Libs/icon-class';
-    import { getTranslation } from '@/Libs/translation';
 
     export default {
         components: {
@@ -198,6 +206,7 @@
             BizProvideInjectTabs,
             FormBuilder,
             FormDetail,
+            FormSetting,
         },
 
         mixins: [
@@ -206,8 +215,15 @@
 
         inject: ['can'],
 
+        provide() {
+            return {
+                dataImages: this.images,
+            }
+        },
+
         props: {
             contentConfigId: { type: String, required: true },
+            emptyPageLocaleOptions: { type: Array, default: () => [] },
             errors: { type: Object, default:() => {} },
             isDirty: { type: Boolean, default: false },
             isNew: { type: Boolean, required: true },
@@ -240,17 +256,13 @@
 
             // Set provide and inject of images data
             const images = usePage().props.value.images;
-            provide(
-                'dataImages',
-                !isBlank(images) ? images : {}
-            );
 
             return {
                 activeTab,
                 form: useModelWrapper(props, emit),
                 computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
                 defaultLocale: usePage().props.value.defaultLanguage,
-                page: usePage().props.value.page,
+                images: !isBlank(images) ? images : {},
             };
         },
 
@@ -281,18 +293,6 @@
 
             duplicateTranslationIsShowed() {
                 return !!this.form?.id;
-            },
-
-            emptyPageLocaleOptions() {
-                let page = this.page;
-
-                return this.localeOptions.map(function(locale) {
-                    if (!getTranslation(page, locale.id)) {
-                        return locale;
-                    }
-
-                    return null;
-                }).filter(Boolean);
             },
         },
 
@@ -330,6 +330,10 @@
 
             onDuplicateTranslation() {
                 if (!!this.formDuplicate.to) {
+                    this.images[this.formDuplicate.to] = cloneDeep(
+                        this.images[this.selectedLocale]
+                    );
+
                     this.$emit('on-duplicate-translation', {
                         locale: this.formDuplicate.to,
                         form: {
@@ -341,6 +345,7 @@
                             meta_description: this.form.meta_description,
                             meta_title: this.form.meta_title,
                             status: 0,
+                            settings: this.form.settings,
                         },
                     });
 

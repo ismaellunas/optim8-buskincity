@@ -15,14 +15,22 @@ class Master extends Component
     public $additionalJavascript;
     public $additionalCss;
     public $fontUrls;
+    public $hasHeader = true;
+    public $hasFooter = true;
+    public $bodyClasses = [];
+    public $bodyStyles = null;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(
+        bool $hasHeader = true,
+        bool $hasFooter = true,
+        array $bodyClasses = [],
+        mixed $bodyStyles = null,
+    ) {
         $settingService = app(SettingService::class);
 
         $this->appCssUrl = $settingService->getFrontendCssUrl();
@@ -34,6 +42,10 @@ class Master extends Component
         $this->additionalJavascript = $settingService->getAdditionalJavascript();
         $this->additionalCss = $settingService->getAdditionalCss();
         $this->fontUrls = $settingService->getFontUrls();
+        $this->hasHeader = $hasHeader;
+        $this->hasFooter = $hasFooter;
+        $this->bodyClasses = $bodyClasses;
+        $this->bodyStyles = $this->getStyle($bodyStyles);
     }
 
     /**
@@ -44,5 +56,13 @@ class Master extends Component
     public function render()
     {
         return view('components.layouts.master');
+    }
+
+    private function getStyle($style): ?string
+    {
+        if (is_array($style)) {
+            return implode(' ', $style);
+        }
+        return $style ?? null;
     }
 }
