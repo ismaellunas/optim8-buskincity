@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PageRequest;
+use App\Entities\Enums\PageSettingLayout;
 use App\Models\{
     Page,
     PageTranslation,
@@ -90,7 +91,10 @@ class PageController extends CrudController
                 'default_video' => StorageService::getImageUrl(
                     config('constants.default_images.pb_video')
                 )
-            ]
+            ],
+            'settingOptions' => [
+                'templates' => PageSettingLayout::options(),
+            ],
         ]));
     }
 
@@ -156,7 +160,10 @@ class PageController extends CrudController
                 'default_video' => StorageService::getImageUrl(
                     config('constants.default_images.pb_video')
                 )
-            ]
+            ],
+            'settingOptions' => [
+                'templates' => PageSettingLayout::options(),
+            ],
         ]));
     }
 
