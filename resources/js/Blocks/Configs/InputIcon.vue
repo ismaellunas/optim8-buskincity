@@ -15,6 +15,7 @@
 <script>
     import BizFormInputIcon from '@/Biz/Form/InputIcon';
     import fontawesomeAllClasses from '@/Json/fontawesome-all-classes';
+    import fontawesomeBrandClasses from '@/Json/fontawesome-brand-classes';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -31,7 +32,7 @@
 
         setup(props, { emit }) {
             return {
-                iconClasses: fontawesomeAllClasses,
+                iconClasses: fontawesomeAllClasses.concat(fontawesomeBrandClasses),
                 icon: useModelWrapper(props, emit),
             };
         },

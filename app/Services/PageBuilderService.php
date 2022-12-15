@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\PageTranslation;
 use Illuminate\Support\Collection;
 
 class PageBuilderService
@@ -44,5 +45,40 @@ class PageBuilderService
             ['id' => "random", 'value' => "Random"],
             ['id' => "created_at-asc", 'value' => "Date"],
         ]);
+    }
+
+    public static function backgroundColors(): array
+    {
+        return [
+            'has-background-white',
+            'has-background-black',
+            'has-background-light',
+            'has-background-dark',
+            'has-background-primary',
+            'has-background-link',
+            'has-background-info',
+            'has-background-success',
+            'has-background-warning',
+            'has-background-danger',
+        ];
+    }
+
+    public function bodyClasses(PageTranslation $pageTranslation): array
+    {
+        return [
+            $pageTranslation->getSettingValueByKey('main_background_color')
+        ];
+    }
+
+    public function bodyStyles(PageTranslation $pageTranslation): string
+    {
+        $styles = '';
+        $pageHeight = $pageTranslation->getSettingValueByKey('height');
+
+        if ($pageHeight) {
+            $styles = 'height: '.$pageHeight.'vh;';
+        }
+
+        return $styles;
     }
 }
