@@ -18,10 +18,26 @@ class UrlMenu extends BaseMenu implements MenuInterface
     {
         $url = $this->getModel()->url ?? "";
 
-        if (Str::startsWith($url, config('app.url'))) {
+        if (
+            Str::startsWith($url, config('app.url'))
+            && !$this->isUrlUntranslated($url)
+        ) {
             $url = $this->getTranslatedUrl($url);
         }
 
         return $url ?? "";
+    }
+
+    private function isUrlUntranslated($url): bool
+    {
+        $routes = config('constants.untranslated_routes');
+
+        foreach ($routes as $routeName) {
+            if ($url == route($routeName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
