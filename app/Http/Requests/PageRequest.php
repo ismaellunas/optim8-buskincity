@@ -2,11 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Entities\Enums\PageSettingLayout;
 use App\Helpers\StringManipulator;
 use App\Models\PageTranslation;
+use App\Rules\CustomIdUnique;
+use App\Services\PageBuilderService;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Illuminate\Validation\Rule;
-use App\Rules\CustomIdUnique;
 
 class PageRequest extends BaseFormRequest
 {
@@ -28,6 +30,7 @@ class PageRequest extends BaseFormRequest
     public function rules()
     {
         $inputs = $this->findInputByLocale();
+        $layoutLists = PageSettingLayout::options()->pluck('id')->toArray();
 
         return RuleFactory::make([
             '%title%' => 'sometimes|string|max:255',
@@ -52,7 +55,19 @@ class PageRequest extends BaseFormRequest
             ],
             '%data%' => [
                 new CustomIdUnique(),
-            ]
+            ],
+            '%settings%.layout' => [
+                'nullable',
+                Rule::in($layoutLists),
+            ],
+            '%settings%.main_background_color' => [
+                'nullable',
+                Rule::in(PageBuilderService::backgroundColors())
+            ],
+            '%settings%.height' => [
+                'nullable',
+                'numeric',
+            ],
         ]);
     }
 
@@ -67,6 +82,10 @@ class PageRequest extends BaseFormRequest
             foreach ($attributes as $attribute) {
                 $attributeKey = $locale.'.'.$attribute;
                 $translatedAttributes[$attributeKey] = StringManipulator::snakeToTitle($attribute);
+
+                if ($attribute == 'settings') {
+                    $this->setSettingAttributes($translatedAttributes, $attribute, $locale);
+                }
             }
         }
 
@@ -86,5 +105,22 @@ class PageRequest extends BaseFormRequest
         }
 
         return $inputs;
+    }
+
+    private function setSettingAttributes(
+        array &$translatedAttributes,
+        string $attribute,
+        string $locale,
+    ): void {
+        $settings = [
+            'layout',
+            'main_background_color',
+            'height',
+        ];
+
+        foreach ($settings as $setting) {
+            $attributeKey = $locale.'.'.$attribute.'.'.$setting;
+            $translatedAttributes[$attributeKey] = StringManipulator::snakeToTitle($attribute.'_'.$setting);
+        }
     }
 }

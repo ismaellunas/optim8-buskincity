@@ -54,6 +54,7 @@
         'SCOUT_DRIVER',
         'STRIPE_PK',
         'STRIPE_SK',
+        'TELESCOPE_ENABLED',
         // 'REDIS_CLIENT',
         // 'REDIS_URL',
     ];

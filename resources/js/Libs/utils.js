@@ -1,4 +1,5 @@
 import { computed } from 'vue';
+import { inRange} from 'lodash';
 
 export const regexFileName = "a-z0-9\-";
 export const regexSlug = regexFileName;
@@ -147,5 +148,19 @@ export function getPhoneCountries(url = null) {
 
     return axios.get(url)
         .then((response) => {return response.data; })
-        .catch((error) => { throw error; })
+        .catch((error) => { throw error; });
+}
+
+export function statusCodeColor(code) {
+    if (inRange(code, 0, 300)) {
+        return "is-light";
+    } else if (inRange(code, 300, 400)) {
+        return "is-info";
+    } else if (inRange(code, 400, 500)) {
+        return "is-warning";
+    } else if (inRange(code, 500, 600)) {
+        return "is-danger";
+    }
+
+    return "";
 }

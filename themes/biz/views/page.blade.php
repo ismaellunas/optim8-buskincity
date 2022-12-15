@@ -1,4 +1,11 @@
-<x-layouts.master>
+@inject('pageBuilderService', 'App\Services\PageBuilderService')
+
+<x-layouts.master
+    :has-header="!$page->isLayoutNoHeaderAndFooter"
+    :has-footer="!$page->isLayoutNoHeaderAndFooter"
+    :body-classes="$pageBuilderService->bodyClasses($page)"
+    :body-styles="$pageBuilderService->bodyStyles($page)"
+>
     <x-slot name="title">
         {{ trim($page->meta_title ?? $page->title).' | '.config('app.name') }}
     </x-slot>
@@ -7,7 +14,10 @@
         {{ trim($page->meta_description ?? "") }}
     </x-slot>
 
-    <div class="page-wrapper py-6">
+    <div @class([
+        'page-wrapper' => true,
+        'py-6' => !$page->isLayoutNoHeaderAndFooter,
+    ])>
         @foreach ($page->data->get('structures') as $key => $structure)
             <x-builder.row
                 :uid="$structure['id']"

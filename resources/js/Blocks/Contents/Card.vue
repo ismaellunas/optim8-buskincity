@@ -13,14 +13,20 @@
                 class="card-image"
                 :class="cardImageClass"
             >
-                <biz-image
-                    v-if="hasImage"
-                    :src="imageSrc"
-                    :alt="altText"
-                    :ratio="this.config?.image?.ratio"
-                    :rounded="this.config?.image?.rounded"
-                    :square="this.config?.image?.fixedSquare"
-                />
+                <div
+                    :class="this.config?.image?.position"
+                >
+                    <biz-image
+                        v-if="hasImage"
+                        :src="imageSrc"
+                        :alt="altText"
+                        :ratio="this.config?.image?.ratio"
+                        :rounded="this.config?.image?.rounded"
+                        :square="this.config?.image?.fixedSquare"
+                        :img-style="imageStyles"
+                        :has-position="hasPosition"
+                    />
+                </div>
 
                 <biz-button
                     v-if="hasImage"
@@ -175,6 +181,35 @@
                     this.configCard.rounded,
                     (this.configCard.isShadowless ? 'is-shadowless' : ''),
                 ).filter(Boolean);
+            },
+            imageWidth() {
+                return this.configImage.width;
+            },
+            imageHeight() {
+                return this.configImage.height;
+            },
+            imageStyles() {
+                let styles = {
+                    'width': this.imageWidth && this.imageWidth != ""
+                        ? this.imageWidth + 'px'
+                        : null,
+                    'height': this.imageHeight && this.imageHeight != ""
+                        ? this.imageHeight + 'px'
+                        : null,
+                };
+
+                Object.keys(styles).forEach(key => {
+                    if (
+                        !styles[key]
+                    ) {
+                        delete styles[key];
+                    }
+                });
+
+                return styles;
+            },
+            hasPosition() {
+                return !!this.config?.image?.position;
             },
         },
         methods: {

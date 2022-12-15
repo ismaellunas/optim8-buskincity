@@ -9,6 +9,7 @@ use App\Services\GlobalOptionService;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 
 class ApiPageBuilderComponentUserListController extends Controller
 {
@@ -33,8 +34,16 @@ class ApiPageBuilderComponentUserListController extends Controller
         $country = $request->get('country');
         $orderBy = $request->get('order_by');
         $type = $request->get('type');
+        $term = $request->get('term');
 
-        $users = User::available()
+        $users = User::select([
+                'id',
+                'unique_key',
+                'first_name',
+                'last_name',
+                'profile_photo_media_id',
+            ])
+            ->available()
             ->when($roles, function ($q, $roles) {
                 $this->inRoles($q, $roles);
             })
@@ -49,6 +58,9 @@ class ApiPageBuilderComponentUserListController extends Controller
             })
             ->when($defaultTypes, function($q, $defaultTypes) {
                 $this->inTypes($q, $defaultTypes);
+            })
+            ->when($term, function($q, $term) {
+                $this->searchName($q, $term);
             })
             ->hasPermissionNames(['public_page.profile'])
             ->with([
@@ -73,13 +85,7 @@ class ApiPageBuilderComponentUserListController extends Controller
                     ]);
                 },
             ])
-            ->get([
-                'id',
-                'unique_key',
-                'first_name',
-                'last_name',
-                'profile_photo_media_id',
-            ]);
+            ->get();
 
         $this->mapRecords($users, $metaKeys);
 
@@ -178,6 +184,19 @@ class ApiPageBuilderComponentUserListController extends Controller
             $q->where('key', 'discipline');
             $q->whereIn('value', $types);
         });
+    }
+
+    private function searchName($q, string $term)
+    {
+        $q->where(function ($q) use ($term) {
+                $q->where(DB::raw("CONCAT(first_name,' ',last_name)"), 'ILIKE', '%'.$term.'%');
+            })
+            ->orWhere(function ($q) use ($term) {
+                $q->whereHas('metas', function ($q) use ($term) {
+                    $q->where('key', 'stage_name');
+                    $q->where('value', 'ILIKE', '%'.$term.'%');
+                });
+            });
     }
 
     private function additionalMetaKeys(): array

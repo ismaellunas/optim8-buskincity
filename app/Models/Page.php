@@ -27,13 +27,14 @@ class Page extends Model implements TranslatableContract
     public $translatedAttributes = [
         'data',
         'excerpt',
+        'locale',
         'meta_description',
         'meta_title',
+        'plain_text_content',
+        'settings',
         'slug',
         'status',
         'title',
-        'locale',
-        'plain_text_content',
     ];
 
     protected $translationModel = PageTranslation::class;
@@ -66,6 +67,8 @@ class Page extends Model implements TranslatableContract
 
     public function saveFromInputs(array $inputs)
     {
+        $settings = [];
+
         foreach ($inputs as $locale => $input) {
             if (!empty($inputs[$locale])) {
                 $inputs[$locale]['plain_text_content'] = PageService::transformComponentToText($input['data']);
@@ -101,14 +104,15 @@ class Page extends Model implements TranslatableContract
         foreach ($page->translations as $translation) {
             $inputs[$translation->locale] = collect($translation->toArray())
                 ->only([
-                    'locale',
-                    'title',
-                    'excerpt',
                     'data',
-                    'slug',
-                    'meta_title',
+                    'excerpt',
+                    'locale',
                     'meta_description',
+                    'meta_title',
+                    'settings',
+                    'slug',
                     'status',
+                    'title',
                 ])
                 ->all();
 

@@ -1,6 +1,6 @@
 <template>
     <figure
-        class="image"
+        class="image is-clipped"
         :class="composedFigureClass"
     >
         <img
@@ -25,6 +25,7 @@
             rounded: String,
             square: String,
             src: String,
+            hasPosition: { type: Boolean, default: false },
         },
         computed: {
             composedImgClass() {
@@ -41,6 +42,9 @@
                 }
                 if (this.square) {
                     classes.push(this.square);
+                }
+                if (this.hasPosition && !this.ratio) {
+                    classes.push('is-inline-block');
                 }
                 return classes;
             },

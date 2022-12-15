@@ -97,10 +97,10 @@
                             :key="index"
                         >
                             <biz-button-icon
-                                :icon="hasType ? selectedType + ' ' + icon.class : icon.class"
+                                :icon="iconFormatter(icon.class)"
                                 class="mr-1 mb-1"
                                 type="button"
-                                @click="onSelectedIcon(hasType ? selectedType + ' ' + icon.class : icon.class)"
+                                @click="onSelectedIcon(iconFormatter(icon.class))"
                             />
                         </template>
                     </div>
@@ -235,6 +235,10 @@
                     return icons.slice(0, 52);
 
                 }
+            },
+
+            iconFormatter(iconClass) {
+                return this.hasType ? this.selectedType + ' ' + iconClass : iconClass
             },
         },
     }
