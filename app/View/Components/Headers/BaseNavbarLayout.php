@@ -4,7 +4,7 @@ namespace App\View\Components\Headers;
 
 use App\Services\LoginService;
 use App\Services\StorageService;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\View\Component;
 
 abstract class BaseNavbarLayout extends Component
@@ -23,20 +23,29 @@ abstract class BaseNavbarLayout extends Component
         $this->languageOptions = $languageOptions;
     }
 
-    public function logo(): string
-    {
-        return $this->logoUrl
-            ?? StorageService::getImageUrl(
-                config('constants.default_images.logo')
-            );
-    }
-
     public function dashboardUrl(): string
     {
         if (LoginService::isAdminHomeUrl()) {
             return route('admin.dashboard');
         }
         return route('dashboard');
+    }
+
+    public function isActive(string $url = null): bool
+    {
+        return request()->url() == $this->transformUrl($url);
+    }
+
+    private function transformUrl(string $url): string
+    {
+        if (
+            Str::startsWith($url, config('app.url'))
+            && Str::endsWith($url, '/')
+        ) {
+            return Str::substr($url, 0, -1);
+        }
+
+        return $url;
     }
 
     /**

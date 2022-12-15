@@ -7,15 +7,11 @@
         <template #trigger>
             <slot name="trigger" />
 
-            <span
+            <biz-icon
                 v-if="isTriggerButton"
-                class="icon is-small"
-            >
-                <i
-                    class="fas fa-angle-down"
-                    aria-hidden="true"
-                />
-            </span>
+                class="is-small"
+                :icon="iconAngleDown"
+            />
         </template>
 
         <div class="field has-addons mb-0">
@@ -50,6 +46,8 @@
 <script>
     import BizDropdown from '@/Biz/Dropdown';
     import BizInput from '@/Biz/Input';
+    import BizIcon from '@/Biz/Icon';
+    import { angleDown as iconAngleDown, clear as iconClear } from '@/Libs/icon-class';
 
     export default {
         name: 'BizDropdownSearch',
@@ -57,12 +55,18 @@
         components: {
             BizDropdown,
             BizInput,
+            BizIcon,
         },
 
         props: {
             placeholder: {
                 type: String,
                 default: 'Search ...'
+            },
+
+            isClearable: {
+                type: Boolean,
+                default: false,
             },
 
             isTriggerButton: {
@@ -85,9 +89,12 @@
             'search',
         ],
 
+
         data() {
             return {
                 term: null,
+                iconAngleDown,
+                iconClear,
             };
         },
 

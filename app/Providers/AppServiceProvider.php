@@ -82,11 +82,6 @@ class AppServiceProvider extends ServiceProvider
             return new \App\Services\UserProfileService();
         });
 
-        if ($this->app->environment('local')) {
-            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
-            $this->app->register(TelescopeServiceProvider::class);
-        }
-
         $this->app->extend(SocialiteFactory::class, function ($command, $app) {
             return new SocialiteManager($app);
         });

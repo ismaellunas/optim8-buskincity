@@ -24,7 +24,7 @@
                     :errors="$page.props.errors"
                 />
 
-                <form @submit.prevent="submit">
+                <form @submit.prevent="onSubmit()">
                     <div v-if="! recovery">
                         <biz-form-input
                             ref="code"
@@ -50,6 +50,24 @@
                             :message="error('recovery_code')"
                         />
                     </div>
+
+                    <vue-recaptcha
+                        ref="vueRecaptcha"
+                        :sitekey="recaptchaSiteKey"
+                        size="invisible"
+                        theme="light"
+                        @expired="recaptchaExpired"
+                        @error="recaptchaFailed"
+                        @verify="recaptchaVerify"
+                    />
+
+                    <span
+                        v-if="isRecaptchaError"
+                        class="has-text-danger"
+                    >
+                        Please check the captcha!
+                    </span>
+
                     <div class="mt-4">
                         <biz-button
                             type="button"
@@ -85,6 +103,7 @@
     import BizFormInput from '@/Biz/Form/Input';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
     import icon from '@/Libs/icon-class';
+    import { VueRecaptcha } from 'vue-recaptcha';
 
     export default {
         components: {
@@ -92,11 +111,16 @@
             BizErrorNotifications,
             BizFormInput,
             LayoutAdmin,
+            VueRecaptcha,
         },
 
         mixins: [
             MixinHasPageErrors,
         ],
+
+        props: {
+            recaptchaSiteKey: { type: [String, null], default: null },
+        },
 
         data() {
             return {
@@ -106,6 +130,7 @@
                     recovery_code: '',
                 }),
                 icon,
+                isRecaptchaError: false,
             }
         },
 
@@ -124,13 +149,38 @@
                 })
             },
 
-            submit() {
-                this.form.post(this.route('admin.two-factor.login.attempt'));
+            onSubmit() {
+                this.recaptchaExecute();
+            },
+
+            submit(recaptchaResponse) {
+                this.form
+                    .transform(data => ({
+                        ... data,
+                        'g-recaptcha-response': recaptchaResponse,
+                    }))
+                    .post(this.route('admin.two-factor.login.attempt'));
             },
 
             redirectBack() {
                 window.history.back();
-            }
+            },
+
+            recaptchaExecute() {
+                this.$refs.vueRecaptcha.execute();
+            },
+
+            recaptchaExpired() {
+                this.$refs.vueRecaptcha.reset();
+            },
+
+            recaptchaFailed() {
+                this.isRecaptchaError = true;
+            },
+
+            recaptchaVerify(response) {
+                this.submit(response);
+            },
         }
     }
 </script>

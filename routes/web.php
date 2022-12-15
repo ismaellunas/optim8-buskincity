@@ -20,6 +20,7 @@ use App\Http\Controllers\{
     PasswordResetLinkController,
     RegisteredUserController,
     SitemapController,
+    SystemLogController,
     TwoFactorAuthenticatedSessionController,
     UserPasswordController,
     UserProfileController,
@@ -27,8 +28,10 @@ use App\Http\Controllers\{
 };
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Services\SitemapService;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /*
@@ -113,9 +116,22 @@ Route::get('/user/remove-facebook', function() {
 });
 
 Route::group(['middleware' => config('fortify.middleware', ['web'])], function () {
+    $loginLimiter = config('fortify.limiters.login');
+
+    Route::post('/login', [AuthenticatedSessionController::class, 'store'])
+        ->middleware(array_filter([
+            'guest:'.config('fortify.guard'),
+            $loginLimiter ? 'throttle:'.$loginLimiter : null,
+            'recaptcha',
+        ]));
+
     if (Features::enabled(Features::resetPasswords())) {
         Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-            ->middleware(['guest:'.config('fortify.guard'), 'recaptcha'])
+            ->middleware([
+                'guest:'.config('fortify.guard'),
+                'recaptcha',
+                'throttle:defaultRequest'
+            ])
             ->name('password.email');
         Route::post('/reset-password', [NewPasswordController::class, 'store'])
             ->middleware(['guest:'.config('fortify.guard')])
@@ -124,7 +140,10 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
 
     if (Features::enabled(Features::registration())) {
         Route::post('/register', [RegisteredUserController::class, 'store'])
-            ->middleware(['guest:'.config('fortify.guard')]);
+            ->middleware([
+                'guest:'.config('fortify.guard'),
+                'recaptcha',
+            ]);
     }
 
     if (Features::enabled(Features::twoFactorAuthentication())) {
@@ -134,6 +153,7 @@ Route::group(['middleware' => config('fortify.middleware', ['web'])], function (
             ->middleware(array_filter([
                 'guest:'.config('fortify.guard'),
                 $twoFactorLimiter ? 'throttle:'.$twoFactorLimiter : null,
+                'recaptcha',
             ]));
     }
 });
@@ -161,6 +181,17 @@ Route::get('css/pb-{uid_page_builder}.css', StylePageBuilderController::class)
     ->name('page.css')
     ->withoutMiddleware(HandleInertiaRequests::class);
 
+if (App::environment('production')) {
+    Route::group(
+        [
+            'domain' => config('telescope.domain', null),
+            'prefix' => config('telescope.path'),
+        ],
+        function () {
+            Route::redirect('/{view?}', '/admin/system-log');
+        }
+    );
+}
 
 Route::prefix(Localization::setLocale())
     ->middleware(['localizationRedirect'])

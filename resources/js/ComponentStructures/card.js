@@ -1,5 +1,6 @@
 import {
     alignments,
+    contentPositions,
     contentSizes,
     defaultOption,
     fixedSquares,
@@ -36,12 +37,15 @@ export default {
         card: {
             link: null,
             rounded: null,
+            isShadowless: false,
         },
         image: {
-            // figure
-            fixedSquare: null, // is-16x16, etc..
-            ratio: "is-4by3", // is-square
+            width: null,
+            height: null,
+            fixedSquare: null,
+            ratio: null,
             rounded: null,
+            position: null,
             padding: {
                 top: null,
                 right: null,
@@ -75,11 +79,29 @@ export const config = {
                     options: defaultOption.concat(roundedSizes),
                 },
             },
+            isShadowless: {
+                component: "ConfigCheckbox",
+                label: "Is Shadowless?",
+            },
         },
     },
     image: {
         label: "Image",
         config: {
+            width: {
+                component: "ConfigNumberAddons",
+                label: "Width",
+                settings: {
+                    addons: "px",
+                },
+            },
+            height: {
+                component: "ConfigNumberAddons",
+                label: "Height",
+                settings: {
+                    addons: "px",
+                },
+            },
             ratio: {
                 component: "ConfigSelect",
                 label: "Ratio",
@@ -99,6 +121,13 @@ export const config = {
                 label: "Rounded Size",
                 settings: {
                     options: defaultOption.concat(roundedSizes),
+                },
+            },
+            position: {
+                component: "ConfigSelect",
+                label: "Position",
+                settings: {
+                    options: defaultOption.concat(contentPositions),
                 },
             },
             padding: {

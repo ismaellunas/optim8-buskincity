@@ -13,6 +13,7 @@ use App\Http\Controllers\{
     RoleController,
     SettingKeyController,
     StripeController,
+    SystemLogController,
     ThemeAdvanceController,
     ThemeColorController,
     ThemeFontController,
@@ -157,6 +158,13 @@ Route::middleware([
         Route::post('/unsuspend/{user}', [UserController::class, 'unsuspend'])
             ->name('unsuspend');
     });
+
+    Route::name('system-log.')->prefix('system-log')->middleware(['can:system.log'])->group(function () {
+        Route::get('/', [SystemLogController::class, 'index'])
+            ->name('index');
+        Route::get('/search-users', [SystemLogController::class, 'searchUsers'])
+            ->name('search-users');
+    });
 });
 
 Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -187,6 +195,9 @@ Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->gr
 
     Route::get('/page-builder/post/category-options', [ApiPageBuilderController::class, 'postCategoryOptions'])
         ->name('page-builder.post.category-options');
+
+    Route::get('/tinymce/key', [SettingKeyController::class, 'getTinyMCEKey'])
+        ->name('tinymce.key');
 });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
@@ -199,6 +210,7 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])
         ->middleware(array_filter([
             $limiter ? 'throttle:'.$limiter : null,
+            'recaptcha',
         ]))
         ->name('login.attempt');
 
@@ -213,7 +225,10 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
 
         Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
             ->middleware(['guest:'.config('fortify.guard')])
-            ->name('password.email')->middleware('recaptcha');
+            ->name('password.email')->middleware([
+                'recaptcha',
+                'throttle:defaultRequest',
+            ]);
 
         Route::post('/reset-password', [NewPasswordController::class, 'store'])
             ->middleware(['guest:'.config('fortify.guard')])
@@ -228,6 +243,7 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
             ->middleware(array_filter([
                 'guest:'.config('fortify.guard'),
                 $twoFactorLimiter ? 'throttle:'.$twoFactorLimiter : null,
+                'recaptcha',
             ]))
             ->name('two-factor.login.attempt');
     }

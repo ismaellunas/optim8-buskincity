@@ -7,6 +7,7 @@ export const back = iconFormatter('fa-arrow-left');
 export const bracketCurly = iconFormatter('fa-bracket-curly');
 export const bracketCurlyRight = iconFormatter('fa-bracket-curly-right');
 export const buildingCheck = iconFormatter('fa-building-circle-check');
+export const calendarCirclePlus = iconFormatter('fa-calendar-circle-plus');
 export const checkCircle = iconFormatter('fa-check-circle');
 export const clear = iconFormatter('fa-times');
 export const close = iconFormatter('fa-xmark');
@@ -31,6 +32,9 @@ export const recycle = iconFormatter('fa-recycle');
 export const remove = iconFormatter('fa-trash-can');
 export const show = iconFormatter('fa-eye');
 export const signIn = iconFormatter('fa-sign-in-alt');
+export const sort = iconFormatter('fa-sort');
+export const sortDown = iconFormatter('fa-sort-down');
+export const sortUp = iconFormatter('fa-sort-up');
 export const suspend = iconFormatter('fa-ban');
 export const unsuspend = iconFormatter('fa-hands-helping');
 export const upload = iconFormatter('fa-upload');
@@ -48,6 +52,7 @@ export default {
     bracketCurly,
     bracketCurlyRight,
     buildingCheck,
+    calendarCirclePlus,
     checkCircle,
     clear,
     close,
@@ -72,6 +77,9 @@ export default {
     remove,
     show,
     signIn,
+    sort,
+    sortDown,
+    sortUp,
     suspend,
     unsuspend,
     upload,

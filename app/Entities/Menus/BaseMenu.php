@@ -81,11 +81,6 @@ abstract class BaseMenu
         return Str::startsWith($this->getUrl(), config('app.url'));
     }
 
-    public function isActive(string $url): bool
-    {
-        return $this->getUrl() == $url;
-    }
-
     protected function getLocaleTranslation()
     {
         if (

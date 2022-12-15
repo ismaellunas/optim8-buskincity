@@ -116,7 +116,7 @@ class MenuService
         }
     }
 
-    public function getHeaderMenu(string $locale): Collection
+    private function getThemeHeaderMenu(string $locale): array
     {
         return app(MenuCache::class)->rememberForLocale(
             'header_menu',
@@ -129,7 +129,7 @@ class MenuService
                     );
                 }
 
-                return $menus;
+                return $this->frontendMenuArrayFormater($menus);
             },
             $locale
         );
@@ -183,7 +183,6 @@ class MenuService
         $menuItem['title'] = $menu->title;
         $menuItem['link'] = $menu->getUrl();
         $menuItem['target'] = $menu->getTarget();
-        $menuItem['isActive'] = $menu->isActive(request()->url());
         $menuItem['isInternalLink'] = $menu->isInternalLink($menuItem['link']);
         $menuItem['children'] = $children;
     }
@@ -217,7 +216,7 @@ class MenuService
         }
     }
 
-    public function getFooterMenu(string $locale): Collection
+    private function getThemeFooterMenu(string $locale): array
     {
         return app(MenuCache::class)->rememberForLocale(
             'footer_menu',
@@ -230,7 +229,7 @@ class MenuService
                     );
                 }
 
-                return $menus;
+                return $this->frontendMenuArrayFormater($menus);
             },
             $locale
         );
@@ -374,7 +373,13 @@ class MenuService
                 [
                     'title' => 'Settings',
                     'isActive' => $request->routeIs('admin.setting.*'),
-                    'isEnabled' => $user->can('system.language') || $user->can('system.translation') || $user->can('system.payment') || $user->can('manageKeys', Setting::class),
+                    'isEnabled' => (
+                        $user->can('system.language')
+                        || $user->can('system.translation')
+                        || $user->can('system.payment')
+                        || $user->can('system.log')
+                        || $user->can('manageKeys', Setting::class)
+                    ),
                     'children' => [
                         [
                             'title' => 'Languages',
@@ -399,6 +404,12 @@ class MenuService
                             'link' => route('admin.settings.keys.edit'),
                             'isActive' => $request->routeIs('admin.settings.keys.edit'),
                             'isEnabled' => $user->can('manageKeys', Setting::class),
+                        ],
+                        [
+                            'title' => 'System Log',
+                            'link' => route('admin.system-log.index'),
+                            'isActive' => $request->routeIs('admin.system-log.*'),
+                            'isEnabled' => $user->can('system.log'),
                         ],
                     ],
                 ],
@@ -517,10 +528,8 @@ class MenuService
             ),
         ];
 
-        $headerMenu = $this->getHeaderMenu($language);
-
         return [
-            'nav' => $this->frontendMenuArrayFormater($headerMenu),
+            'nav' => $this->getThemeHeaderMenu($language),
             'navLogo' => $menuLogo,
             'dropdownRightMenus' => $dropdownRightMenus,
         ];
@@ -536,10 +545,8 @@ class MenuService
             $language =  $user->languageCode;
         }
 
-        $footerMenu = $this->getFooterMenu($language);
-
         return [
-            'nav' => $this->frontendMenuArrayFormater($footerMenu),
+            'nav' => $this->getThemeFooterMenu($language),
         ];
     }
 

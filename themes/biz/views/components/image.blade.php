@@ -1,4 +1,6 @@
-<figure {{ $attributes->merge(['class' => "image ".implode(' ', $figureClasses)]) }}>
+<figure
+    {{ $attributes->merge(['class' => "image is-clipped ".implode(' ', $figureClasses)]) }}
+>
     <img
         @class($imageClasses)
         @if ($alt) alt="{{ $alt }}" @endif

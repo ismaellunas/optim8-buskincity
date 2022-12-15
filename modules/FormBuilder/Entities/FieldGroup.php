@@ -19,6 +19,11 @@ class FieldGroup extends ModelFieldGroup
         return \Modules\FormBuilder\Database\factories\FieldGroupFactory::new();
     }
 
+    public function scopeFormId($query, $formId)
+    {
+        return $query->where('title', $formId);
+    }
+
     public function saveFromInputs(array $inputs): void
     {
         $this->name = $inputs['name'];

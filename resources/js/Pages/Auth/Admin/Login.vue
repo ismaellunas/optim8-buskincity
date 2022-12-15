@@ -21,7 +21,7 @@
 
                 <biz-flash-notifications :flash="$page.props.flash" />
 
-                <form @submit.prevent="submit">
+                <form @submit.prevent="onSubmit()">
                     <biz-form-input
                         v-model="form.email"
                         label="Email"
@@ -58,6 +58,23 @@
                         </div>
                     </div>
 
+                    <vue-recaptcha
+                        ref="vueRecaptcha"
+                        :sitekey="recaptchaSiteKey"
+                        size="invisible"
+                        theme="light"
+                        @expired="recaptchaExpired"
+                        @error="recaptchaFailed"
+                        @verify="recaptchaVerify"
+                    />
+
+                    <span
+                        v-if="isRecaptchaError"
+                        class="has-text-danger"
+                    >
+                        Please check the captcha!
+                    </span>
+
                     <biz-button
                         class="is-block is-info is-fullwidth"
                     >
@@ -80,6 +97,7 @@
     import BizLink from '@/Biz/Link';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
     import icon from '@/Libs/icon-class';
+    import { VueRecaptcha } from 'vue-recaptcha';
 
     export default {
         components: {
@@ -91,6 +109,7 @@
             BizFormPassword,
             BizLink,
             LayoutAdmin,
+            VueRecaptcha,
         },
 
         mixins: [
@@ -100,6 +119,7 @@
         props: {
             canResetPassword: Boolean,
             status: {type: String, default: ""},
+            recaptchaSiteKey: { type: [String, null], default: null },
         },
 
         data() {
@@ -112,26 +132,49 @@
                     remember: false
                 }),
                 icon,
+                isRecaptchaError: false,
             }
         },
 
         methods: {
-            submit() {
+            onSubmit() {
+                this.recaptchaExecute();
+            },
+
+            submit(recaptchaResponse) {
                 this.form
                     .transform(data => ({
                         ... data,
-                        remember: this.form.remember ? 'on' : ''
+                        remember: this.form.remember ? 'on' : '',
+                        'g-recaptcha-response': recaptchaResponse,
                     }))
                     .post(this.route('admin.login'), {
                         onStart: () => this.onStartLoadingOverlay(),
                         onFinish: () => {
                             this.form.reset('password');
-                            this.onEndLoadingOverlay()
+                            this.onEndLoadingOverlay();
                         },
                     })
             },
+
             back() {
                 window.location = "/";
+            },
+
+            recaptchaExecute() {
+                this.$refs.vueRecaptcha.execute();
+            },
+
+            recaptchaExpired() {
+                this.$refs.vueRecaptcha.reset();
+            },
+
+            recaptchaFailed() {
+                this.isRecaptchaError = true;
+            },
+
+            recaptchaVerify(response) {
+                this.submit(response);
             },
         }
     }

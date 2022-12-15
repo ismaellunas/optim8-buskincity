@@ -2,7 +2,7 @@
     <div class="container">
         <div class="navbar-brand">
             <a class="navbar-item" href="{{ $menus['navLogo']['link'] }}">
-                <img src="{{ $logo }}">
+                <img src="{{ $logoUrl }}">
             </a>
 
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarExampleTransparentExample">
@@ -25,7 +25,7 @@
                                     <a
                                         @class([
                                             'navbar-item',
-                                            'has-text-primary' => $childMenu['isActive'],
+                                            'has-text-primary' => $isActive($childMenu['link']),
                                         ])
                                         href="{{ $childMenu['link'] }}"
                                         target="{{ $childMenu['target'] }}"
@@ -39,7 +39,7 @@
                         <a
                             @class([
                                 'navbar-item',
-                                'has-text-primary' => $menu['isActive'],
+                                'has-text-primary' => $isActive($menu['link']),
                             ])
                             href="{{ $menu['link'] }}"
                             target="{{ $menu['target'] }}"

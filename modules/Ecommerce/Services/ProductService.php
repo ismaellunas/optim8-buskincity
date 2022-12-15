@@ -73,12 +73,23 @@ class ProductService
     public function getFrontendRecords(
         User $user,
         string $term = null,
+        ?array $scopes = null,
         int $perPage = 15
     ) {
-        $builder = Product::orderBy('id', 'DESC')
-            ->select(['id', 'status', 'attribute_data'])
+        $builder = Product::select([
+                'id',
+                'status',
+                'attribute_data'
+            ])
             ->when($term, function ($query) use ($term) {
                 $query->searchWithoutScout($term);
+            })
+            ->when($scopes, function ($query, $scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    $query->when($value, function ($query, $value) use ($scopeName) {
+                        $query->$scopeName($value);
+                    });
+                }
             })
             ->with(['gallery'])
             ->published();

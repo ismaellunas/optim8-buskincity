@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html
     lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-    class="has-navbar-fixed-top"
+    @class([
+        'has-navbar-fixed-top' => $hasHeader
+    ])
 >
     <head>
         <meta charset="utf-8">
@@ -16,9 +18,7 @@
 
         @stack('metas')
 
-        @if (!empty($faviconUrl))
-            <link rel="icon" type="image/x-icon" href="{{ $faviconUrl }}">
-        @endif
+        @include('favicon')
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,18 +72,33 @@
         {!! $trackingCodeInsideHead !!}
     </head>
 
-    <body class="font-sans antialiased">
+    <body
+        @class(array_merge(
+            [
+                'font-sans',
+                'antialiased',
+            ],
+            $bodyClasses,
+        ))
+        style="{{ $bodyStyles }}"
+    >
         {!! $trackingCodeAfterBody !!}
 
-        <x-headers.header :logoUrl="$logoUrl" />
+        @if ($hasHeader)
+            <x-headers.header
+                :logoUrl="$logoUrl"
+            />
+        @endif
 
         <div id="app">
             {{ $slot }}
         </div>
 
-        <x-footer
-            :logoUrl="$logoUrl"
-        />
+        @if ($hasFooter)
+            <x-footer
+                :logoUrl="$logoUrl"
+            />
+        @endif
 
         @env ('local')
             <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>

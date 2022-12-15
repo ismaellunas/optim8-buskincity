@@ -6,10 +6,12 @@ use App\Actions\{
     UploadFavicon,
     UploadQrCodeLogo
 };
+use App\Entities\CloudinaryStorage;
 use App\Helpers\HumanReadable;
 use App\Http\Requests\ThemeAdvanceRequest;
 use App\Models\Setting;
 use App\Services\{
+    MediaService,
     MenuService,
     SettingService,
 };
@@ -25,9 +27,11 @@ class ThemeAdvanceController extends CrudController
 
     public function __construct(
         SettingService $settingService,
+        MediaService $mediaService,
         MenuService $menuService
     ) {
         $this->settingService = $settingService;
+        $this->mediaService = $mediaService;
         $this->menuService = $menuService;
     }
 
@@ -79,6 +83,8 @@ class ThemeAdvanceController extends CrudController
     public function update(ThemeAdvanceRequest $request)
     {
         $inputs = $request->validated();
+
+
         foreach ($inputs as $key => $code) {
 
             switch ($key) {
@@ -96,15 +102,23 @@ class ThemeAdvanceController extends CrudController
                 break;
 
                 case 'favicon':
+                    $oldFaviconMedia = $this->settingService->getFaviconMedia();
+
                     if ($request->hasFile('favicon')) {
                         $uploadFavicon = new UploadFavicon();
 
                         $media = $uploadFavicon->handle($inputs, $key);
 
-                        $this->syncSetting(
-                            'favicon_media_id',
-                            $media->id
+                        $this->syncSetting('favicon_media_id', $media->id);
+
+                    } elseif ($inputs['is_favicon_deleted'] && $oldFaviconMedia) {
+
+                        $this->mediaService->destroy(
+                            $oldFaviconMedia,
+                            new CloudinaryStorage()
                         );
+
+                        $this->syncSetting('favicon_media_id', null);
                     }
                 break;
 

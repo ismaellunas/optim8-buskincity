@@ -7,7 +7,7 @@
 
         <div
             class="card biz-card-text"
-            :class="configCard.rounded"
+            :class="cardClasses"
         >
             <div class="card-content">
                 <div
@@ -27,6 +27,7 @@
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizEditor from '@/Biz/EditorTinymce';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -58,6 +59,12 @@
                 let classes = [];
                 classes.push(this.config.content?.size ?? 'is-normal');
                 return classes;
+            },
+            cardClasses() {
+                return concat(
+                    this.configCard.rounded,
+                    (this.configCard.isShadowless ? 'is-shadowless' : ''),
+                ).filter(Boolean);
             },
         }
     }
