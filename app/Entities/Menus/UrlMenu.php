@@ -20,7 +20,7 @@ class UrlMenu extends BaseMenu implements MenuInterface
 
         if (
             Str::startsWith($url, config('app.url'))
-            && !$this->isUrlUntranslated($url)
+            && !$this->isUntranslatedUrl($url)
         ) {
             $url = $this->getTranslatedUrl($url);
         }
@@ -28,7 +28,7 @@ class UrlMenu extends BaseMenu implements MenuInterface
         return $url ?? "";
     }
 
-    private function isUrlUntranslated($url): bool
+    private function isUntranslatedUrl($url): bool
     {
         $routes = config('constants.untranslated_routes');
 
