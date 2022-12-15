@@ -36,6 +36,7 @@
     import FormBuilder from '@mod/FormBuilder/Resources/assets/js/Blocks/Contents/FormBuilder';
     import Heading from '@/Blocks/Contents/Heading';
     import Icon from '@/Blocks/Contents/Icon';
+    import IconText from '@/Blocks/Contents/IconText';
     import Image from '@/Blocks/Contents/Image';
     import LatestPost from '@/Blocks/Contents/LatestPost';
     import Tabs from '@/Blocks/Contents/Tabs';
@@ -57,6 +58,7 @@
             FormBuilder,
             Heading,
             Icon,
+            IconText,
             Image,
             LatestPost,
             Tabs,

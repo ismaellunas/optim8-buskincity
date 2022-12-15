@@ -17,6 +17,7 @@
                 :page-preview="true"
                 :selected-locale="selectedLocale"
                 :status-options="statusOptions"
+                :empty-page-locale-options="emptyPageLocaleOptions"
                 @on-change-locale="onChangeLocale"
                 @on-submit="onSubmit"
                 @on-delete-translation="onDeleteTranslation"
@@ -57,6 +58,7 @@
             return {
                 can: this.can,
                 media: this.media,
+                settingOptions: this.settingOptions,
             }
         },
 
@@ -69,6 +71,7 @@
             errors: { type: Object, default:() => {} },
             page: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
+            settingOptions: { type: Object, default:() => {} },
             title: { type: String, required: true },
             media: { type: Object, default: () => {} },
         },
@@ -120,6 +123,18 @@
         computed: {
             selectedLocaleName() {
                 return find(this.localeOptions, { id: this.selectedLocale }).name ?? '';
+            },
+
+            emptyPageLocaleOptions() {
+                const self = this;
+
+                return self.localeOptions.map(function(locale) {
+                    if (!getTranslation(self.page, locale.id)) {
+                        return locale;
+                    }
+
+                    return null;
+                }).filter(Boolean);
             },
         },
 

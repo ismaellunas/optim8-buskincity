@@ -5,6 +5,7 @@ import carousel from './carousel';
 import faq from './faq';
 import heading from './heading';
 import icon from './icon';
+import iconText from './icon-text';
 import image from './image';
 import latestPost from './latest-post';
 import tabs from './tabs';
@@ -20,6 +21,7 @@ export default {
     faq: faq,
     heading: heading,
     icon: icon,
+    iconText: iconText,
     image: image,
     latestPost: latestPost,
     tabs: tabs,

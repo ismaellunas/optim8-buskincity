@@ -20,6 +20,7 @@ use App\Http\Controllers\{
     PasswordResetLinkController,
     RegisteredUserController,
     SitemapController,
+    SystemLogController,
     TwoFactorAuthenticatedSessionController,
     UserPasswordController,
     UserProfileController,
@@ -27,6 +28,7 @@ use App\Http\Controllers\{
 };
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Services\SitemapService;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
@@ -179,6 +181,17 @@ Route::get('css/pb-{uid_page_builder}.css', StylePageBuilderController::class)
     ->name('page.css')
     ->withoutMiddleware(HandleInertiaRequests::class);
 
+if (App::environment('production')) {
+    Route::group(
+        [
+            'domain' => config('telescope.domain', null),
+            'prefix' => config('telescope.path'),
+        ],
+        function () {
+            Route::redirect('/{view?}', '/admin/system-log');
+        }
+    );
+}
 
 Route::prefix(Localization::setLocale())
     ->middleware(['localizationRedirect'])

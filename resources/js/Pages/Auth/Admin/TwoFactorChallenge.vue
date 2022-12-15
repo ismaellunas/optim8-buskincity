@@ -159,9 +159,7 @@
                         ... data,
                         'g-recaptcha-response': recaptchaResponse,
                     }))
-                    .post(this.route('admin.two-factor.login.attempt'), {
-                        onFinish: () => this.recaptchaExpired(),
-                    });
+                    .post(this.route('admin.two-factor.login.attempt'));
             },
 
             redirectBack() {

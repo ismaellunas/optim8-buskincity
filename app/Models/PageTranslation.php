@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Casts\AsPageTranslationDataCollection;
 use App\Contracts\HasStyleInterface;
 use App\Contracts\PublishableInterface;
+use App\Entities\Enums\PageSettingLayout;
 use App\Helpers\MinifyCss;
 use App\Helpers\Url;
 use App\Models\Page;
@@ -31,6 +32,7 @@ class PageTranslation extends Model implements PublishableInterface
         'meta_description',
         'meta_title',
         'plain_text_content',
+        'settings',
         'slug',
         'status',
         'title',
@@ -39,6 +41,7 @@ class PageTranslation extends Model implements PublishableInterface
 
     protected $casts = [
         'data' => AsPageTranslationDataCollection::class,
+        'settings' => 'array',
     ];
 
     public function getRouteKeyName()
@@ -221,5 +224,17 @@ class PageTranslation extends Model implements PublishableInterface
     public function getIsDraftAttribute(): bool
     {
         return $this->status == PageTranslation::STATUS_DRAFT;
+    }
+
+    public function getIsLayoutNoHeaderAndFooterAttribute(): string
+    {
+        $layout = $this->getSettingValueByKey('layout');
+
+        return PageSettingLayout::NO_HEADER_AND_FOOTER->value == $layout;
+    }
+
+    public function getSettingValueByKey(string $key): ?string
+    {
+        return $this->settings[$key] ?? null;
     }
 }
