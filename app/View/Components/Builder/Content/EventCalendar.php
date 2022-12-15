@@ -23,7 +23,7 @@ class EventCalendar extends BaseContent
         parent::__construct($entity);
 
         if (!$this->isModuleActive()) {
-            throw new Exception(__('Form Builder module is not activated!'));
+            throw new Exception(__("{$this->moduleName} module is not activated!"));
         }
 
         $this->googleApiKey = app(SettingService::class)->getGoogleApi();
