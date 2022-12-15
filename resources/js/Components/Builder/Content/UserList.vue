@@ -62,6 +62,15 @@
                             </option>
                         </biz-select>
                     </div>
+
+                    <div class="control">
+                        <biz-input
+                            v-model="filter.term"
+                            class="is-small"
+                            placeholder="Search by name"
+                            @keyup.prevent="search()"
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -78,11 +87,14 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import BizSelect from '@/Biz/Select';
-    import { union, isEmpty, forEach } from 'lodash';
+    import BizInput from '@/Biz/Input';
+    import { union, isEmpty, forEach, debounce } from 'lodash';
+    import { debounceTime } from '@/Libs/defaults';
 
     export default {
         components: {
             BizSelect,
+            BizInput,
         },
 
         mixins: [
@@ -115,11 +127,12 @@
                     order_by: null,
                     country: null,
                     type: null,
+                    term: null,
                 },
                 type: null,
+                term: null,
                 options: {
                     countries: [],
-                    types: [],
                 },
             };
         },
@@ -150,7 +163,7 @@
             },
 
             canFilteredByType() {
-                return !isEmpty(this.options.types);
+                return ("types" in this.options);
             },
 
             isFilteredCountryOnBackend() {
@@ -216,6 +229,7 @@
                             order_by: self.orderBy,
                             roles: self.roles,
                             type: self.type,
+                            term: self.term,
                         }
                     })
                     .then(function(response) {
@@ -247,6 +261,13 @@
                 this.type = this.filter.type;
                 this.load();
             },
+
+            search: debounce(function(term = '') {
+                if (term.length > 2 || term.length == 0) {
+                    this.term = this.filter.term;
+                    this.load();
+                }
+            }, debounceTime),
         },
     }
 
