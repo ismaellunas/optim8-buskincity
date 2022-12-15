@@ -3,7 +3,10 @@
         <div class="container">
             <div class="columns is-multiline">
                 <div class="column is-3">
-                    <img :src="appLogoImageUrl" style="max-width:160px">
+                    <img
+                        :src="appLogoImageUrl"
+                        style="max-width:160px"
+                    >
                 </div>
                 <div class="column is-9">
                     <div class="columns is-multiline">
@@ -21,7 +24,7 @@
                                             v-for="(childMenu, childIndex) in menu.children"
                                             :key="childIndex"
                                         >
-                                            <li :class="{'is-active': menu.isActive}">
+                                            <li>
                                                 <a
                                                     :href="childMenu.link"
                                                     :target="childMenu.target"

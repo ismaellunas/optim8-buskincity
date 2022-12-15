@@ -25,7 +25,7 @@
                                     <a
                                         @class([
                                             'navbar-item',
-                                            'has-text-primary' => $childMenu['isActive'],
+                                            'has-text-primary' => $isActive($childMenu['link']),
                                         ])
                                         href="{{ $childMenu['link'] }}"
                                         target="{{ $childMenu['target'] }}"
@@ -39,7 +39,7 @@
                         <a
                             @class([
                                 'navbar-item',
-                                'has-text-primary' => $menu['isActive'],
+                                'has-text-primary' => $isActive($menu['link']),
                             ])
                             href="{{ $menu['link'] }}"
                             target="{{ $menu['target'] }}"

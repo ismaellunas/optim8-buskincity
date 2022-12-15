@@ -32,10 +32,12 @@
     import CardText from '@/Blocks/Contents/CardText';
     import Carousel from '@/Blocks/Contents/Carousel';
     import Draggable from 'vuedraggable';
+    import EventCalendar from '@mod/Booking/Resources/assets/js/Blocks/Contents/EventCalendar';
     import Faq from '@/Blocks/Contents/Faq';
     import FormBuilder from '@mod/FormBuilder/Resources/assets/js/Blocks/Contents/FormBuilder';
     import Heading from '@/Blocks/Contents/Heading';
     import Icon from '@/Blocks/Contents/Icon';
+    import IconText from '@/Blocks/Contents/IconText';
     import Image from '@/Blocks/Contents/Image';
     import LatestPost from '@/Blocks/Contents/LatestPost';
     import Tabs from '@/Blocks/Contents/Tabs';
@@ -53,10 +55,12 @@
             CardText,
             Carousel,
             Draggable,
+            EventCalendar,
             Faq,
             FormBuilder,
             Heading,
             Icon,
+            IconText,
             Image,
             LatestPost,
             Tabs,

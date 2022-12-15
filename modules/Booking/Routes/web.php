@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Booking\Http\Controllers\Frontend\OrderController as FrontendOrderController;
 use Modules\Booking\Http\Controllers\Frontend\ProductController as FrontendProductController;
+use Modules\Booking\Http\Controllers\Frontend\SearchEventController;
 use Modules\Booking\Http\Controllers\OrderController;
 use Modules\Booking\Http\Controllers\ProductEventController;
 
@@ -102,4 +103,8 @@ Route::prefix('booking')->name('booking.')->middleware([
         Route::post('/{product}/book-event', [FrontendOrderController::class, 'bookEvent'])
             ->name('book-event');
     });
+});
+
+Route::prefix('booking')->name('booking.')->group(function () {
+    Route::get('search-events', SearchEventController::class)->name('search-events');
 });

@@ -45,6 +45,7 @@
             return {
                 can: this.can,
                 media: this.media,
+                settingOptions: this.settingOptions,
             }
         },
 
@@ -55,6 +56,7 @@
             errors: { type: Object, default:() => {} },
             page: { type: Object, required: true },
             statusOptions: { type: Array, default:() => [] },
+            settingOptions: { type: Object, default:() => {} },
             title: { type: String, required: true },
             media: { type: Object, default: () => {} },
         },

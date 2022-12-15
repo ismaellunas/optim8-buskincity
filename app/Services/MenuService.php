@@ -183,7 +183,6 @@ class MenuService
         $menuItem['title'] = $menu->title;
         $menuItem['link'] = $menu->getUrl();
         $menuItem['target'] = $menu->getTarget();
-        $menuItem['isActive'] = $menu->isActive(request()->url());
         $menuItem['isInternalLink'] = $menu->isInternalLink($menuItem['link']);
         $menuItem['children'] = $children;
     }
@@ -374,7 +373,13 @@ class MenuService
                 [
                     'title' => 'Settings',
                     'isActive' => $request->routeIs('admin.setting.*'),
-                    'isEnabled' => $user->can('system.language') || $user->can('system.translation') || $user->can('system.payment') || $user->can('manageKeys', Setting::class),
+                    'isEnabled' => (
+                        $user->can('system.language')
+                        || $user->can('system.translation')
+                        || $user->can('system.payment')
+                        || $user->can('system.log')
+                        || $user->can('manageKeys', Setting::class)
+                    ),
                     'children' => [
                         [
                             'title' => 'Languages',
@@ -399,6 +404,12 @@ class MenuService
                             'link' => route('admin.settings.keys.edit'),
                             'isActive' => $request->routeIs('admin.settings.keys.edit'),
                             'isEnabled' => $user->can('manageKeys', Setting::class),
+                        ],
+                        [
+                            'title' => 'System Log',
+                            'link' => route('admin.system-log.index'),
+                            'isActive' => $request->routeIs('admin.system-log.*'),
+                            'isEnabled' => $user->can('system.log'),
                         ],
                     ],
                 ],
