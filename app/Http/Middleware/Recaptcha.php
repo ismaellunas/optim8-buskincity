@@ -17,24 +17,28 @@ class Recaptcha
      */
     public function handle($request, Closure $next)
     {
-        $recaptchaKeys = app(SettingService::class)->getRecaptchaKeys();
+        $settingService = app(SettingService::class);
 
-        $response = (new GoogleRecaptcha(
-                $recaptchaKeys['recaptcha_secret_key'] ?? null)
-            )
-            ->verify($request->input('g-recaptcha-response'), $request->ip());
+        if ($settingService->isRecaptchaKeyExists()) {
+            $recaptchaKeys = $settingService->getRecaptchaKeys();
 
-        if (!$response->isSuccess()) {
-            if (!$request->expectsJson()) {
-                return redirect()
-                    ->back()
-                    ->with('failed', 'Recaptcha failed. Please try again.');
+            $response = (new GoogleRecaptcha(
+                    $recaptchaKeys['recaptcha_secret_key'] ?? null)
+                )
+                ->verify($request->input('g-recaptcha-response'), $request->ip());
+
+            if (!$response->isSuccess()) {
+                if (!$request->expectsJson()) {
+                    return redirect()
+                        ->back()
+                        ->with('failed', 'Recaptcha failed. Please try again.');
+                }
+
+                return response([
+                    'success' => false,
+                    'message' => __('Recaptcha failed. Please try again.'),
+                ]);
             }
-
-            return response([
-                'success' => false,
-                'message' => __('Recaptcha failed. Please try again.'),
-            ]);
         }
 
         return $next($request);
