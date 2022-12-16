@@ -278,6 +278,12 @@ return [
         'profile_picture' => 3 * 1024,
     ],
 
+    'untranslated_routes' => [
+        'login',
+        'register',
+        'admin.login',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Stripe Payment Gateway
