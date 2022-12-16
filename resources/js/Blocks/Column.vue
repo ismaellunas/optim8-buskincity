@@ -32,6 +32,7 @@
     import CardText from '@/Blocks/Contents/CardText';
     import Carousel from '@/Blocks/Contents/Carousel';
     import Draggable from 'vuedraggable';
+    import EventCalendar from '@mod/Booking/Resources/assets/js/Blocks/Contents/EventCalendar';
     import Faq from '@/Blocks/Contents/Faq';
     import FormBuilder from '@mod/FormBuilder/Resources/assets/js/Blocks/Contents/FormBuilder';
     import Heading from '@/Blocks/Contents/Heading';
@@ -54,6 +55,7 @@
             CardText,
             Carousel,
             Draggable,
+            EventCalendar,
             Faq,
             FormBuilder,
             Heading,
