@@ -51,22 +51,27 @@
                         />
                     </div>
 
-                    <vue-recaptcha
-                        ref="vueRecaptcha"
-                        :sitekey="recaptchaSiteKey"
-                        size="invisible"
-                        theme="light"
-                        @expired="recaptchaExpired"
-                        @error="recaptchaFailed"
-                        @verify="recaptchaVerify"
-                    />
-
-                    <span
-                        v-if="isRecaptchaError"
-                        class="has-text-danger"
+                    <template
+                        v-if="isRecaptchaAvailable"
                     >
-                        Please check the captcha!
-                    </span>
+                        <vue-recaptcha
+                            ref="vueRecaptcha"
+                            :sitekey="recaptchaSiteKey"
+                            size="invisible"
+                            theme="light"
+                            @expired="recaptchaExpired"
+                            @error="recaptchaFailed"
+                            @verify="recaptchaVerify"
+                        />
+
+                        <span
+                            v-if="isRecaptchaError"
+                            class="has-text-danger"
+                        >
+                            Please check the captcha!
+                        </span>
+                    </template>
+
 
                     <div class="mt-4">
                         <biz-button
@@ -134,6 +139,12 @@
             }
         },
 
+        computed: {
+            isRecaptchaAvailable() {
+                return !!this.recaptchaSiteKey;
+            },
+        },
+
         methods: {
             toggleRecovery() {
                 this.recovery ^= true
@@ -150,10 +161,14 @@
             },
 
             onSubmit() {
-                this.recaptchaExecute();
+                if (this.isRecaptchaAvailable) {
+                    this.recaptchaExecute();
+                } else {
+                    this.submit();
+                }
             },
 
-            submit(recaptchaResponse) {
+            submit(recaptchaResponse = null) {
                 this.form
                     .transform(data => ({
                         ... data,
