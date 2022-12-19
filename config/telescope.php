@@ -175,5 +175,7 @@ return [
 
         Watchers\ScheduleWatcher::class => env('TELESCOPE_SCHEDULE_WATCHER', true),
         Watchers\ViewWatcher::class => env('TELESCOPE_VIEW_WATCHER', true),
+
     ],
+    'all_requests_enabled' => env('TELESCOPE_ALL_REQUESTS_ENABLED', false),
 ];
