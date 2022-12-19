@@ -74,7 +74,7 @@
                                     {{ record.content.method }}
                                 </biz-tag>
                             </th>
-                            <td>{{ record.content.uri }}</td>
+                            <td>{{ truncate(record.content.uri, {length: 50}) }}</td>
                             <td>
                                 <biz-tag :class="statusCodeColor(record.content.response_status)">
                                     {{ record.content.response_status }}
@@ -276,6 +276,8 @@
         },
 
         methods: {
+            truncate: _.truncate,
+
             requestPromise(queryParams = {}, params = null) {
                 const url = this.basePath + '/telescope-api/' + this.resource;
 
