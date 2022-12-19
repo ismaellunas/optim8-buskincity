@@ -57,11 +57,13 @@
                             @enderror
                         </div>
 
-                        <div
-                            class="g-recaptcha"
-                            data-sitekey="{{ $recaptchaSiteKey }}"
-                            data-size="invisible"
-                        ></div>
+                        @if (!empty($recaptchaSiteKey))
+                            <div
+                                class="g-recaptcha"
+                                data-sitekey="{{ $recaptchaSiteKey }}"
+                                data-size="invisible"
+                            ></div>
+                        @endif
 
                         <div class="buttons">
                             <button type="button" class="button recovery" data-target="recovery-code" onclick="toggleRecovery(this)">
@@ -112,6 +114,9 @@
                 grecaptcha.execute();
             };
         </script>
-        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
+
+        @if (!empty($recaptchaSiteKey))
+            <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
+        @endif
     @endpush
 </x-layouts.auth>
