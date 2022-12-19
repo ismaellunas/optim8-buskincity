@@ -86,6 +86,23 @@
 
                 <div id="formFields" class="column is-8 is-offset-2 is-hidden">
                     <h1 class="title is-2 mb-4">Welcome Back</h1>
+
+                    @if ($errors->any())
+                        <div class="notification is-danger mb-4">
+                            <button
+                                class="delete"
+                                type="button"
+                                onclick="removeErrorMessage(this)"
+                            ></button>
+
+                            <ul class="alert alert-danger">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <p>Fill in your email and password to login.</p>
 
                     <form action="{{ route('login') }}" method="post" class="mt-6" onsubmit="setLoader()">
@@ -173,5 +190,8 @@
             </script>
             <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
         @endif
+        <script>
+            function removeErrorMessage(element) { element.parentElement.remove(); }
+        </script>
     @endpush
 </x-layouts.auth>
