@@ -132,11 +132,13 @@
                             @enderror
                         </div>
 
-                        <div
-                            class="g-recaptcha"
-                            data-sitekey="{{ $recaptchaSiteKey }}"
-                            data-size="invisible"
-                        ></div>
+                        @if (!empty($recaptchaSiteKey))
+                            <div
+                                class="g-recaptcha"
+                                data-sitekey="{{ $recaptchaSiteKey }}"
+                                data-size="invisible"
+                            ></div>
+                        @endif
 
                         <div class="field is-horizontal mb-5">
                             <div class="field-body">
@@ -166,11 +168,13 @@
             </script>
         @endif
 
-        <script>
-            var onloadCallback = function() {
-                grecaptcha.execute();
-            };
-        </script>
-        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
+        @if (!empty($recaptchaSiteKey))
+            <script>
+                var onloadCallback = function() {
+                    grecaptcha.execute();
+                };
+            </script>
+            <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
+        @endif
     @endpush
 </x-layouts.auth>
