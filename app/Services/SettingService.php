@@ -561,6 +561,10 @@ class SettingService
     {
         $recaptchaKeys = $this->getRecaptchaKeys();
 
+        if (empty($recaptchaKeys)) {
+            return false;
+        }
+
         foreach ($recaptchaKeys as $key) {
             if (empty($key)) {
                 return false;
