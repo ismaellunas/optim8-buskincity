@@ -556,4 +556,17 @@ class SettingService
             ->pluck('value', 'key')
             ->toArray();
     }
+
+    public function isRecaptchaKeyExists(): bool
+    {
+        $recaptchaKeys = $this->getRecaptchaKeys();
+
+        foreach ($recaptchaKeys as $key) {
+            if (empty($key)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

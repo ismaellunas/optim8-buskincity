@@ -14,22 +14,26 @@
                 :errors="formErrors"
             />
 
-            <vue-recaptcha
-                ref="vueRecaptcha"
-                size="invisible"
-                :sitekey="recaptchaSiteKey"
-                theme="light"
-                @expired="recaptchaExpired"
-                @error="recaptchaFailed"
-                @verify="recaptchaVerify"
-            />
-
-            <span
-                v-if="isRecaptchaError"
-                class="has-text-danger"
+            <template
+                v-if="isRecaptchaAvailable"
             >
-                Please check the captcha!
-            </span>
+                <vue-recaptcha
+                    ref="vueRecaptcha"
+                    size="invisible"
+                    :sitekey="recaptchaSiteKey"
+                    theme="light"
+                    @expired="recaptchaExpired"
+                    @error="recaptchaFailed"
+                    @verify="recaptchaVerify"
+                />
+
+                <span
+                    v-if="isRecaptchaError"
+                    class="has-text-danger"
+                >
+                    Please check the captcha!
+                </span>
+            </template>
 
             <slot name="buttons">
                 <div class="field">
@@ -103,6 +107,10 @@
         computed: {
             submitLabel() {
                 return this.fieldGroup?.buttons?.submit?.label;
+            },
+
+            isRecaptchaAvailable() {
+                return !!this.recaptchaSiteKey;
             },
         },
 
@@ -188,10 +196,14 @@
             },
 
             onSubmit() {
-                this.recaptchaExecute();
+                if (this.isRecaptchaAvailable) {
+                    this.recaptchaExecute();
+                } else {
+                    this.submit();
+                }
             },
 
-            submit(recaptchaResponse) {
+            submit(recaptchaResponse = null) {
                 const self = this;
 
                 self.onStartLoadingOverlay();
@@ -223,8 +235,6 @@
                     })
                     .then(() => {
                         self.onEndLoadingOverlay();
-
-                        self.recaptchaExpired();
                     });
             },
         },

@@ -58,22 +58,26 @@
                         </div>
                     </div>
 
-                    <vue-recaptcha
-                        ref="vueRecaptcha"
-                        :sitekey="recaptchaSiteKey"
-                        size="invisible"
-                        theme="light"
-                        @expired="recaptchaExpired"
-                        @error="recaptchaFailed"
-                        @verify="recaptchaVerify"
-                    />
-
-                    <span
-                        v-if="isRecaptchaError"
-                        class="has-text-danger"
+                    <template
+                        v-if="isRecaptchaAvailable"
                     >
-                        Please check the captcha!
-                    </span>
+                        <vue-recaptcha
+                            ref="vueRecaptcha"
+                            :sitekey="recaptchaSiteKey"
+                            size="invisible"
+                            theme="light"
+                            @expired="recaptchaExpired"
+                            @error="recaptchaFailed"
+                            @verify="recaptchaVerify"
+                        />
+
+                        <span
+                            v-if="isRecaptchaError"
+                            class="has-text-danger"
+                        >
+                            Please check the captcha!
+                        </span>
+                    </template>
 
                     <biz-button
                         class="is-block is-info is-fullwidth"
@@ -136,12 +140,22 @@
             }
         },
 
+        computed: {
+            isRecaptchaAvailable() {
+                return !!this.recaptchaSiteKey;
+            },
+        },
+
         methods: {
             onSubmit() {
-                this.recaptchaExecute();
+                if (this.isRecaptchaAvailable) {
+                    this.recaptchaExecute();
+                } else {
+                    this.submit();
+                }
             },
 
-            submit(recaptchaResponse) {
+            submit(recaptchaResponse = null) {
                 this.form
                     .transform(data => ({
                         ... data,
@@ -150,6 +164,7 @@
                     }))
                     .post(this.route('admin.login'), {
                         onStart: () => this.onStartLoadingOverlay(),
+                        onError: () => this.recaptchaExpired(),
                         onFinish: () => {
                             this.form.reset('password');
                             this.onEndLoadingOverlay();
