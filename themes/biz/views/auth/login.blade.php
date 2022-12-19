@@ -80,8 +80,24 @@
                     <h2 class="subtitle">
                         <span>Lorem ipsum dolor sit amet.</span>
                     </h2>
-                    <div class="has-text-left">
 
+                    @if ($errors->any())
+                        <div class="notification is-danger mb-4">
+                            <button
+                                class="delete"
+                                type="button"
+                                onclick="removeErrorMessage(this)"
+                            ></button>
+
+                            <ul class="alert alert-danger">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <div class="has-text-left">
                         <form action="{{ route('login') }}" method="post" onsubmit="setLoader()">
                             @csrf
                             <div class="field">
@@ -167,5 +183,8 @@
             </script>
             <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
         @endif
+        <script>
+            function removeErrorMessage(element) { element.parentElement.remove() };
+        </script>
     @endpush
 </x-layouts.auth>
