@@ -164,6 +164,7 @@
                     }))
                     .post(this.route('admin.login'), {
                         onStart: () => this.onStartLoadingOverlay(),
+                        onError: () => this.recaptchaExpired(),
                         onFinish: () => {
                             this.form.reset('password');
                             this.onEndLoadingOverlay();

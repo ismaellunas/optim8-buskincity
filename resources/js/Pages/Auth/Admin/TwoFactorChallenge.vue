@@ -102,6 +102,7 @@
 </template>
 
 <script>
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
@@ -120,6 +121,7 @@
         },
 
         mixins: [
+            MixinHasLoader,
             MixinHasPageErrors,
         ],
 
@@ -174,7 +176,11 @@
                         ... data,
                         'g-recaptcha-response': recaptchaResponse,
                     }))
-                    .post(this.route('admin.two-factor.login.attempt'));
+                    .post(this.route('admin.two-factor.login.attempt'), {
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onError: () => this.recaptchaExpired(),
+                        onFinish: () => this.onEndLoadingOverlay(),
+                    });
             },
 
             redirectBack() {
