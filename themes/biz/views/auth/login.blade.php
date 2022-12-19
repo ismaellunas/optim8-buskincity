@@ -134,11 +134,13 @@
                                 </div>
                             </div>
 
-                            <div
-                                class="g-recaptcha"
-                                data-sitekey="{{ $recaptchaSiteKey }}"
-                                data-size="invisible"
-                            ></div>
+                            @if (!empty($recaptchaSiteKey))
+                                <div
+                                    class="g-recaptcha"
+                                    data-sitekey="{{ $recaptchaSiteKey }}"
+                                    data-size="invisible"
+                                ></div>
+                            @endif
 
                             <button type="submit" class="button is-block is-info is-fullwidth">
                                 Log In <i class="fas fa-sign-in-alt"></i>
@@ -157,11 +159,13 @@
             </script>
         @endif
 
-        <script>
-            var onloadCallback = function() {
-                grecaptcha.execute();
-            };
-        </script>
-        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
+        @if (!empty($recaptchaSiteKey))
+            <script>
+                var onloadCallback = function() {
+                    grecaptcha.execute();
+                };
+            </script>
+            <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
+        @endif
     @endpush
 </x-layouts.auth>

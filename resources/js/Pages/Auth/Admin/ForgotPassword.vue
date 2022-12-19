@@ -53,21 +53,25 @@
                     />
                 </div>
 
-                <vue-recaptcha
-                    ref="vueRecaptcha"
-                    :sitekey="$page.props.recaptchaSiteKey"
-                    size="invisible"
-                    theme="light"
-                    @expired="recaptchaExpired"
-                    @error="recaptchaFailed"
-                />
-
-                <span
-                    v-if="isRecaptchaError"
-                    class="has-text-danger"
+                <template
+                    v-if="isRecaptchaAvailable"
                 >
-                    Please check the captcha!
-                </span>
+                    <vue-recaptcha
+                        ref="vueRecaptcha"
+                        :sitekey="recaptchaSiteKey"
+                        size="invisible"
+                        theme="light"
+                        @expired="recaptchaExpired"
+                        @error="recaptchaFailed"
+                    />
+
+                    <span
+                        v-if="isRecaptchaError"
+                        class="has-text-danger"
+                    >
+                        Please check the captcha!
+                    </span>
+                </template>
 
                 <div class="mt-4">
                     <biz-button
@@ -115,7 +119,8 @@
             status: {
                 type: String,
                 default: '',
-            }
+            },
+            recaptchaSiteKey: { type: [String, null], default: null },
         },
 
         data() {
@@ -129,10 +134,18 @@
             }
         },
 
+        computed: {
+            isRecaptchaAvailable() {
+                return !!this.recaptchaSiteKey;
+            },
+        },
+
         mounted() {
-            setTimeout(() => {
-                this.$refs.vueRecaptcha.execute();
-            }, 500);
+            if (this.isRecaptchaAvailable) {
+                setTimeout(() => {
+                    this.$refs.vueRecaptcha.execute();
+                }, 500);
+            }
         },
 
         methods: {
