@@ -43,14 +43,20 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
             return $entry->isReportableException() ||
                    $entry->isFailedRequest() ||
                    $entry->isFailedJob() ||
-                   $this->isBackendRequest($entry);
+                   $this->isFilteredRequest($entry);
         });
     }
 
-    private function isBackendRequest(IncomingEntry $entry): bool
+    private function isFilteredRequest(IncomingEntry $entry): bool
     {
+        $isRequest = $entry->type == 'request';
+
+        if (config('telescope.all_requests_enabled')) {
+            return $isRequest;
+        }
+
         return (
-            $entry->type == 'request' &&
+            $isRequest &&
             Str::startsWith($entry->content['uri'], '/admin/') &&
             !Str::endsWith($entry->content['uri'], '.js.map') &&
             !Str::startsWith($entry->content['uri'], '/admin/system-log')
