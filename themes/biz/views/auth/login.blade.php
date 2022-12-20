@@ -155,8 +155,16 @@
                                     class="g-recaptcha"
                                     data-sitekey="{{ $recaptchaSiteKey }}"
                                     data-size="invisible"
+                                    data-error-callback="recaptchaError"
                                 ></div>
                             @endif
+
+                            <span
+                                id="recaptcha-error-message"
+                                class="help has-text-danger is-hidden"
+                            >
+                                Please check the reCAPTCHA!
+                            </span>
 
                             <button type="submit" class="button is-block is-info is-fullwidth">
                                 Log In <i class="fas fa-sign-in-alt"></i>
