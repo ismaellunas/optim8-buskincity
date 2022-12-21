@@ -34,12 +34,13 @@ class Carousel extends BaseContent
         $carouselImages = [];
         foreach ($mediaIds as $mediaId) {
             if ($mediaId && $this->images) {
-                $carouselImages[] = $this->images->firstWhere('id', $mediaId);
+                $image = $this->images->firstWhere('id', $mediaId);
+                $image->append('optimizedImageUrl');
+
+                $carouselImages[] = $image;
             }
         }
 
-        $this->carouselImages = $carouselImages;
-
-        return $this->carouselImages;
+        return $carouselImages;
     }
 }
