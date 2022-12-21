@@ -62,8 +62,16 @@
                                 class="g-recaptcha"
                                 data-sitekey="{{ $recaptchaSiteKey }}"
                                 data-size="invisible"
+                                data-error-callback="recaptchaError"
                             ></div>
                         @endif
+
+                        <span
+                            id="recaptcha-error-message"
+                            class="help has-text-danger is-hidden"
+                        >
+                            Please check the reCAPTCHA!
+                        </span>
 
                         <div class="buttons">
                             <button type="button" class="button recovery" data-target="recovery-code" onclick="toggleRecovery(this)">
