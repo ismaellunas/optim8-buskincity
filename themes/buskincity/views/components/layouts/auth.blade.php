@@ -56,6 +56,12 @@
 
         @stack('scripts')
 
+        <script>
+            function recaptchaError() {
+                document.getElementById('recaptcha-error-message').classList.remove('is-hidden');
+            }
+        </script>
+
         @if ($additionalCss)
             <style type="text/css">
                 {!! $additionalCss !!}
