@@ -159,7 +159,7 @@
             baseRouteName: { type: String, required: true },
             can: { type: Object, required: true },
             defaultLocale: { type: String, required: true },
-            pageQueryParams: { type: Array, default: () => [] },
+            pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, required: true },
             title: { type: String, required: true },
         },

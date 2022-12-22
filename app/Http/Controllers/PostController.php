@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostIndexRequest;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use App\Services\PostService;
@@ -23,7 +24,7 @@ class PostController extends CrudController
         $this->authorizeResource(Post::class, 'post');
     }
 
-    public function index(Request $request)
+    public function index(PostIndexRequest $request)
     {
         $user = auth()->user();
 

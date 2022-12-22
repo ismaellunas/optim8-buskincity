@@ -322,7 +322,6 @@
                     'document': "Document",
                     'spreadsheet': "Spreadsheet",
                     'presentation': "Presentation",
-                    'presentation': "Presentation",
                 };
             }},
         },
