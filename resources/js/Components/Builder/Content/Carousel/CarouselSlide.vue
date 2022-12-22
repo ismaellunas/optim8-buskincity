@@ -10,7 +10,7 @@
             <biz-image
                 :alt="entityImage.alt"
                 :ratio="config?.ratio"
-                :src="entityImage.file_url"
+                :src="entityImage.optimizedImageUrl"
             />
         </div>
     </transition>
