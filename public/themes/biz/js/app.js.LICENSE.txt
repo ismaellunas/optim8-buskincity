@@ -5,7 +5,7 @@
  */
 
 /*!
- * FilePondPluginFileValidateSize 2.2.7
+ * FilePondPluginFileValidateSize 2.2.8
  * Licensed under MIT, https://opensource.org/licenses/MIT/
  * Please visit https://pqina.nl/filepond/ for details.
  */
@@ -56,6 +56,8 @@
 /*! no static exports found */
 
 /*! regenerator-runtime */
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
 
 /*!**********************!*\
   !*** ./src/index.js ***!
