@@ -18,7 +18,10 @@ class PublicPageIsAvailable
     {
         $user = $request->route('user');
 
-        if ($user->can('public_page.'.$permission)) {
+        if (
+            $user->can('public_page.'.$permission)
+            && !$user->is_suspended
+        ) {
             return $next($request);
         }
 
