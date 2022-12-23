@@ -26,8 +26,6 @@ class PasswordResetLinkView
 
         }
 
-        return view('auth.forgot_password', [
-            'recaptchaSiteKey' => $recaptchaSiteKey
-        ]);
+        return view('auth.forgot_password');
     }
 }

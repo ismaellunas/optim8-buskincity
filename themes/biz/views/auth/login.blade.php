@@ -150,21 +150,7 @@
                                 </div>
                             </div>
 
-                            @if (!empty($recaptchaSiteKey))
-                                <div
-                                    class="g-recaptcha"
-                                    data-sitekey="{{ $recaptchaSiteKey }}"
-                                    data-size="invisible"
-                                    data-error-callback="recaptchaError"
-                                ></div>
-                            @endif
-
-                            <span
-                                id="recaptcha-error-message"
-                                class="help has-text-danger is-hidden"
-                            >
-                                Please check the reCAPTCHA!
-                            </span>
+                            <x-recaptcha></x-recaptcha>
 
                             <button type="submit" class="button is-block is-info is-fullwidth">
                                 Log In <i class="fas fa-sign-in-alt"></i>
@@ -183,14 +169,6 @@
             </script>
         @endif
 
-        @if (!empty($recaptchaSiteKey))
-            <script>
-                var onloadCallback = function() {
-                    grecaptcha.execute();
-                };
-            </script>
-            <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
-        @endif
         <script>
             function removeErrorMessage(element) { element.parentElement.remove() };
         </script>
