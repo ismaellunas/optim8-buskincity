@@ -821,7 +821,7 @@ class PageSeeder extends Seeder
                             "content" => ["button" => ["text" => "Sign Up", "icon" => null]],
                             "config" => [
                                 "button" => [
-                                    "link" => "http://localhost:8000/login",
+                                    "link" => route('register'),
                                     "target" => null,
                                     "color" => "is-primary",
                                     "isLight" => false,
@@ -900,7 +900,7 @@ class PageSeeder extends Seeder
                             ],
                             "config" => [
                                 "button" => [
-                                    "link" => "http://localhost:8000/blog",
+                                    "link" => route('blog.index'),
                                     "target" => null,
                                     "color" => "is-primary",
                                     "isLight" => false,

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\RecaptchaService;
 use App\Services\SettingService;
 use Closure;
 use ReCaptcha\ReCaptcha as GoogleRecaptcha;
@@ -21,13 +22,34 @@ class Recaptcha
 
         if ($settingService->isRecaptchaKeyExists()) {
             $recaptchaKeys = $settingService->getRecaptchaKeys();
+            $secretKey = $recaptchaKeys['recaptcha_secret_key'] ?? null;
 
-            $response = (new GoogleRecaptcha(
-                    $recaptchaKeys['recaptcha_secret_key'] ?? null)
-                )
+            $response = (new GoogleRecaptcha($secretKey))
                 ->verify($request->input('g-recaptcha-response'), $request->ip());
 
             if (!$response->isSuccess()) {
+                if (
+                    in_array(
+                        GoogleRecaptcha::E_MISSING_INPUT_RESPONSE,
+                        $response->getErrorCodes()
+                    )
+                ) {
+                    RecaptchaService::sendEmailSiteKeyError();
+
+                    return $next($request);
+                }
+
+                if (
+                    in_array(
+                        'invalid-input-secret',
+                        $response->getErrorCodes()
+                    )
+                ) {
+                    RecaptchaService::sendEmailSecretKeyError();
+
+                    return $next($request);
+                }
+
                 if (!$request->expectsJson()) {
                     return redirect()
                         ->back()

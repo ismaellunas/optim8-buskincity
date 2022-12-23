@@ -5,9 +5,10 @@ namespace App\Http\Controllers;
 use App\Actions\Jetstream\DeleteUser;
 use App\Http\Requests\{
     UserDestroyRequest,
+    UserIndexRequest,
     UserPasswordRequest,
     UserStoreRequest,
-    UserUpdateRequest
+    UserUpdateRequest,
 };
 use App\Models\User;
 use App\Services\{
@@ -39,7 +40,7 @@ class UserController extends CrudController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(UserIndexRequest $request)
     {
         $user = auth()->user();
 
@@ -66,7 +67,7 @@ class UserController extends CrudController
                 'edit' => $user->can('user.edit'),
             ],
             'pageNumber' => $request->page,
-            'pageQueryParams' => array_filter($request->only('term', 'view', 'roles')),
+            'pageQueryParams' => array_filter($request->only('term', 'roles')),
             'records' => $records,
             'roleOptions' => $this->userService->getRoleOptions(),
             'title' => $this->getIndexTitle(),
