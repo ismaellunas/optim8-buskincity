@@ -65,21 +65,7 @@
                             @enderror
                         </div>
 
-                        @if (!empty($recaptchaSiteKey))
-                            <div
-                                class="g-recaptcha"
-                                data-sitekey="{{ $recaptchaSiteKey }}"
-                                data-size="invisible"
-                                data-error-callback="recaptchaError"
-                            ></div>
-                        @endif
-
-                        <span
-                            id="recaptcha-error-message"
-                            class="help has-text-danger is-hidden"
-                        >
-                            Please check the reCAPTCHA!
-                        </span>
+                        <x-recaptcha></x-recaptcha>
 
                         <div class="buttons">
                             <button type="button" class="button is-medium recovery" data-target="recovery-code" onclick="toggleRecovery(this)">
@@ -131,14 +117,6 @@
 
                 inputCode.classList.remove('is-hidden');
             }
-
-            var onloadCallback = function() {
-                grecaptcha.execute();
-            };
         </script>
-
-        @if (!empty($recaptchaSiteKey))
-            <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
-        @endif
     @endpush
 </x-layouts.auth>
