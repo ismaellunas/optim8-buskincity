@@ -11,9 +11,6 @@ class SettingPolicy
 
     public function manageKeys(User $user)
     {
-        return (
-            $user->isSuperAdministrator
-            || $user->isAdministrator
-        );
+        return $user->isSuperAdministrator;
     }
 }

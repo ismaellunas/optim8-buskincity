@@ -70,14 +70,14 @@
                             @error="recaptchaFailed"
                             @verify="recaptchaVerify"
                         />
-
-                        <span
-                            v-if="isRecaptchaError"
-                            class="has-text-danger"
-                        >
-                            Please check the captcha!
-                        </span>
                     </template>
+
+                    <span
+                        v-if="isRecaptchaError"
+                        class="help has-text-danger"
+                    >
+                        Please check the reCAPTCHA!
+                    </span>
 
                     <biz-button
                         class="is-block is-info is-fullwidth"
@@ -92,6 +92,7 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
+    import MixinHasRecaptcha from '@/Mixins/HasRecaptcha';
     import BizButton from '@/Biz/Button';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
@@ -118,12 +119,12 @@
 
         mixins: [
             MixinHasLoader,
+            MixinHasRecaptcha,
         ],
 
         props: {
             canResetPassword: Boolean,
             status: {type: String, default: ""},
-            recaptchaSiteKey: { type: [String, null], default: null },
         },
 
         data() {
@@ -136,14 +137,7 @@
                     remember: false
                 }),
                 icon,
-                isRecaptchaError: false,
             }
-        },
-
-        computed: {
-            isRecaptchaAvailable() {
-                return !!this.recaptchaSiteKey;
-            },
         },
 
         methods: {
@@ -176,18 +170,7 @@
                 window.location = "/";
             },
 
-            recaptchaExecute() {
-                this.$refs.vueRecaptcha.execute();
-            },
-
-            recaptchaExpired() {
-                this.$refs.vueRecaptcha.reset();
-            },
-
-            recaptchaFailed() {
-                this.isRecaptchaError = true;
-            },
-
+            // @Override from MixinHasRecaptcha
             recaptchaVerify(response) {
                 this.submit(response);
             },

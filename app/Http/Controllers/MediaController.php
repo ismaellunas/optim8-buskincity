@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Entities\CloudinaryStorage;
 use App\Http\Requests\{
+    MediaIndexRequest,
     MediaSaveAsImageRequest,
     MediaStoreRequest,
     MediaUpdateImageRequest,
-    MediaUpdateRequest
+    MediaUpdateRequest,
 };
 use App\Models\Media;
 use App\Services\{
@@ -38,7 +39,7 @@ class MediaController extends CrudController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index(MediaIndexRequest $request)
     {
         $user = auth()->user();
 
