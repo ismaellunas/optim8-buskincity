@@ -30,6 +30,7 @@
                 ref="layout"
                 :logo-url="logoUrl"
                 :settings="settings"
+                :instructions="instructions"
             />
 
             <navigation
@@ -64,38 +65,29 @@
             BizTab,
             BizTabList,
         },
+
         mixins: [
             MixinHasTab,
         ],
-        layout: AppLayout,
-        props: {
-            baseRouteName: {
-                type: String,
-                required: true
-            },
-            menu: {
-                type: Object,
-                required: true,
-            },
-            headerMenus: {
-                type: Object,
-                default() {
-                    return {};
-                },
-            },
-            logoUrl: {
-                type: String,
-                default: "",
-            },
-            settings: {
-                type: Object,
-                required: true
-            },
-            title: {
-                type: String,
-                default: "-"
-            },
+
+        provide() {
+            return {
+                instructions: this.instructions,
+            };
         },
+
+        layout: AppLayout,
+
+        props: {
+            baseRouteName: { type: String, required: true },
+            headerMenus: { type: Object, default: () => {} },
+            instructions: { type: Object, default: () => {} },
+            logoUrl: { type: String, default: "" },
+            menu: { type: Object, required: true },
+            settings: { type: Object, required: true },
+            title: { type: String, default: "-" },
+        },
+
         setup() {
             return {
                 tabs: {
@@ -104,11 +96,13 @@
                 },
             }
         },
+
         data() {
             return {
                 activeTab: 'layout',
             };
         },
+
         methods: {
             setActiveTab(tab) {
                 if (tab === this.activeTab) {
