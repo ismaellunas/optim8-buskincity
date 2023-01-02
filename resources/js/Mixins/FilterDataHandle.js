@@ -17,9 +17,14 @@ export default {
                     replace: true,
                     preserveState: true,
                     onStart: () => this.onStartLoadingOverlay(),
-                    onFinish: () => this.onEndLoadingOverlay(),
+                    onFinish: () => {
+                        this.onEndLoadingOverlay();
+
+                        this.onFinishRefreshWithQueryParams();
+                    },
                 }
             );
         },
+        onFinishRefreshWithQueryParams() {},
     },
 };
