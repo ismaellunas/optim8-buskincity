@@ -52,12 +52,11 @@
                         >
                             <thead>
                                 <tr>
-                                    <th
-                                        v-for="(traceTitle, index) in traceTitles"
-                                        :key="index"
-                                    >
-                                        {{ upperFirst(traceTitle) }}
-                                    </th>
+                                    <th>File</th>
+                                    <th>Line</th>
+                                    <th>Function</th>
+                                    <th>Class</th>
+                                    <th>Type</th>
                                 </tr>
                             </thead>
 
@@ -126,14 +125,6 @@
         computed: {
             isTraceExists() {
                 return !isEmpty(this.entry.trace);
-            },
-
-            traceTitles() {
-                if (this.isTraceExists) {
-                    return Object.keys(this.entry.trace[0]);
-                }
-
-                return [];
             },
         },
 
