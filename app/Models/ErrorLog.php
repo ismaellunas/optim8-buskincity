@@ -40,7 +40,7 @@ class ErrorLog extends Model
             ->where('file', $inputs['file'] ?? null)
             ->where('line', $inputs['line'] ?? null)
             ->where('message', $inputs['message'] ?? null)
-            ->where('created_at', 'ILIKE', now()->format('Y-m-d').'%')
+            ->whereDate('created_at', now()->format('Y-m-d'))
             ->first();
     }
 
