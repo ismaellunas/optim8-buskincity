@@ -49,11 +49,12 @@ class Handler extends ExceptionHandler
         $isValid = true;
 
         $excepts = [
-            \Illuminate\Validation\ValidationException::class,
-            \Illuminate\Session\TokenMismatchException::class,
+            \Illuminate\Auth\Access\AuthorizationException::class,
             \Illuminate\Auth\AuthenticationException::class,
-            \Illuminate\Queue\MaxAttemptsExceededException::class,
             \Illuminate\Database\Eloquent\ModelNotFoundException::class,
+            \Illuminate\Queue\MaxAttemptsExceededException::class,
+            \Illuminate\Session\TokenMismatchException::class,
+            \Illuminate\Validation\ValidationException::class,
         ];
 
         foreach ($excepts as $except) {
