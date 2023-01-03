@@ -30,11 +30,7 @@ class ErrorLogService
             ->when($scopes, function ($query, $scopes) {
                 foreach ($scopes as $scopeName => $value) {
                     $query->when($value, function ($query, $value) use ($scopeName) {
-                        if ($scopeName == 'dateRange') {
-                            $query->$scopeName($value);
-                        } else {
-                            $query->$scopeName($value);
-                        }
+                        $query->$scopeName($value);
                     });
                 }
             })

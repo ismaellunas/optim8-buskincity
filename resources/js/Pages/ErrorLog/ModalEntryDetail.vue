@@ -16,7 +16,7 @@
             />
         </template>
 
-        <biz-table class="is-striped is-hoverable is-fullwidth">
+        <biz-table class="is-striped is-fullwidth">
             <tbody>
                 <tr>
                     <td width="30%">Created At</td>
@@ -44,7 +44,40 @@
                 </tr>
                 <tr>
                     <td>Trace</td>
-                    <td>{{ entry.trace ?? '-' }}</td>
+                    <td v-if="isTraceExists">
+                        <biz-table
+                            id="trace"
+                            class="is-bordered is-fullwidth"
+                            style="word-break: break-word;"
+                        >
+                            <thead>
+                                <tr>
+                                    <th
+                                        v-for="(traceTitle, index) in traceTitles"
+                                        :key="index"
+                                    >
+                                        {{ upperFirst(traceTitle) }}
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr
+                                    v-for="(trace, index) in entry.trace"
+                                    :key="index"
+                                >
+                                    <td>{{ trace.file ?? '-' }}</td>
+                                    <td>{{ trace.line ?? '-' }}</td>
+                                    <td>{{ trace.function ?? '-' }}</td>
+                                    <td>{{ trace.class ?? '-' }}</td>
+                                    <td>{{ trace.type ?? '-' }}</td>
+                                </tr>
+                            </tbody>
+                        </biz-table>
+                    </td>
+                    <td v-else>
+                        -
+                    </td>
                 </tr>
             </tbody>
         </biz-table>
@@ -70,6 +103,7 @@
     import BizButton from '@/Biz/Button';
     import BizModalCard from '@/Biz/ModalCard';
     import BizTable from '@/Biz/Table';
+    import { isEmpty, upperFirst } from 'lodash';
 
     export default {
         name: 'ModalEntryDetail',
@@ -88,5 +122,33 @@
             'open-modal',
             'close-modal',
         ],
+
+        computed: {
+            isTraceExists() {
+                return !isEmpty(this.entry.trace);
+            },
+
+            traceTitles() {
+                if (this.isTraceExists) {
+                    return Object.keys(this.entry.trace[0]);
+                }
+
+                return [];
+            },
+        },
+
+        methods: {
+            upperFirst,
+        },
     };
 </script>
+
+<style scoped>
+    #trace > thead > tr > th:nth-child(1) {
+        width: 30%;
+    }
+
+    #trace > thead > tr > th:nth-child(2),th:nth-child(5) {
+        width: 10%;
+    }
+</style>

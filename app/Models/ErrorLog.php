@@ -18,6 +18,10 @@ class ErrorLog extends Model
         'total_hit',
     ];
 
+    protected $casts = [
+        'trace' => 'array',
+    ];
+
     public function syncErrorLog(array $inputs): void
     {
         $errorLog = $this->getExistsErrorLog($inputs);
@@ -36,7 +40,7 @@ class ErrorLog extends Model
             ->where('file', $inputs['file'] ?? null)
             ->where('line', $inputs['line'] ?? null)
             ->where('message', $inputs['message'] ?? null)
-            ->where('created_at', 'ILIKE', now()->format('Y-m-d').'%')
+            ->whereDate('created_at', now()->format('Y-m-d'))
             ->first();
     }
 
@@ -56,7 +60,7 @@ class ErrorLog extends Model
             $this->message = $inputs['message'];
         }
 
-        if (isset($inputs['trace'])) {
+        if (!empty($inputs['trace'])) {
             $this->trace = $inputs['trace'];
         }
 
