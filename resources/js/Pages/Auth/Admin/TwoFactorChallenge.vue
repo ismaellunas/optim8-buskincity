@@ -51,26 +51,11 @@
                         />
                     </div>
 
-                    <template
-                        v-if="isRecaptchaAvailable"
-                    >
-                        <vue-recaptcha
-                            ref="vueRecaptcha"
-                            :sitekey="recaptchaSiteKey"
-                            size="invisible"
-                            theme="light"
-                            @expired="recaptchaExpired"
-                            @error="recaptchaFailed"
-                            @verify="recaptchaVerify"
-                        />
-                    </template>
-
-                    <span
-                        v-if="isRecaptchaError"
-                        class="help has-text-danger"
-                    >
-                        Please check the reCAPTCHA!
-                    </span>
+                    <biz-recaptcha
+                        ref="recaptcha"
+                        :site-key="recaptchaSiteKey"
+                        @on-verify="recaptchaVerify"
+                    />
 
                     <div class="mt-4">
                         <biz-button
@@ -103,28 +88,30 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import MixinHasRecaptcha from '@/Mixins/HasRecaptcha';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormInput from '@/Biz/Form/Input';
+    import BizRecaptcha from '@/Biz/Recaptcha';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
     import icon from '@/Libs/icon-class';
-    import { VueRecaptcha } from 'vue-recaptcha';
 
     export default {
         components: {
             BizButton,
             BizErrorNotifications,
             BizFormInput,
+            BizRecaptcha,
             LayoutAdmin,
-            VueRecaptcha,
         },
 
         mixins: [
             MixinHasLoader,
             MixinHasPageErrors,
-            MixinHasRecaptcha,
         ],
+
+        props: {
+            recaptchaSiteKey: { type: [String, null], default: null },
+        },
 
         data() {
             return {
@@ -153,33 +140,24 @@
             },
 
             onSubmit() {
-                if (this.isRecaptchaAvailable) {
-                    this.recaptchaExecute();
-                } else {
-                    this.submit();
-                }
-            },
-
-            submit(recaptchaResponse = null) {
-                this.form
-                    .transform(data => ({
-                        ... data,
-                        'g-recaptcha-response': recaptchaResponse,
-                    }))
-                    .post(this.route('admin.two-factor.login.attempt'), {
-                        onStart: () => this.onStartLoadingOverlay(),
-                        onError: () => this.recaptchaExpired(),
-                        onFinish: () => this.onEndLoadingOverlay(),
-                    });
+                this.$refs.recaptcha.execute();
             },
 
             redirectBack() {
                 window.history.back();
             },
 
-            // @Override from MixinHasRecaptcha
-            recaptchaVerify(response) {
-                this.submit(response);
+            recaptchaVerify(response = null) {
+                this.form
+                    .transform(data => ({
+                        ... data,
+                        'g-recaptcha-response': response,
+                    }))
+                    .post(this.route('admin.two-factor.login.attempt'), {
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onError: () => this.$refs.recaptcha.onExpired(),
+                        onFinish: () => this.onEndLoadingOverlay(),
+                    });
             },
         }
     }
