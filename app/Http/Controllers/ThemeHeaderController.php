@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entities\CloudinaryStorage;
+use App\Helpers\HumanReadable;
 use App\Http\Requests\ThemeHeaderLayoutRequest;
 use App\Models\{
     Menu,
@@ -52,6 +53,18 @@ class ThemeHeaderController extends CrudController
                 'menuOptions' => $this->menuService->getMenuOptions(),
                 'settings' => $this->settingService->getHeader(),
                 'typeOptions' => $this->menuService->getMenuItemTypeOptions(),
+                'instructions' => [
+                    'logo' => [
+                        __('Accepted file extensions: :extensions.', [
+                            'extensions' => implode(', ', config('constants.extensions.image'))
+                        ]),
+                        __('Max file size: :filesize.', [
+                            'filesize' => HumanReadable::bytesToHuman(
+                                (50 * config('constants.one_megabyte')) * 1024
+                            )
+                        ]),
+                    ]
+                ]
             ]),
         );
     }
