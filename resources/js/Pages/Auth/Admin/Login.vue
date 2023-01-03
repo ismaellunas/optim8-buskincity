@@ -58,26 +58,11 @@
                         </div>
                     </div>
 
-                    <template
-                        v-if="isRecaptchaAvailable"
-                    >
-                        <vue-recaptcha
-                            ref="vueRecaptcha"
-                            :sitekey="recaptchaSiteKey"
-                            size="invisible"
-                            theme="light"
-                            @expired="recaptchaExpired"
-                            @error="recaptchaFailed"
-                            @verify="recaptchaVerify"
-                        />
-                    </template>
-
-                    <span
-                        v-if="isRecaptchaError"
-                        class="help has-text-danger"
-                    >
-                        Please check the reCAPTCHA!
-                    </span>
+                    <biz-recaptcha
+                        ref="recaptcha"
+                        :site-key="recaptchaSiteKey"
+                        @on-verify="recaptchaVerify"
+                    />
 
                     <biz-button
                         class="is-block is-info is-fullwidth"
@@ -92,7 +77,6 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import MixinHasRecaptcha from '@/Mixins/HasRecaptcha';
     import BizButton from '@/Biz/Button';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
@@ -100,9 +84,9 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormPassword from '@/Biz/Form/Password';
     import BizLink from '@/Biz/Link';
+    import BizRecaptcha from '@/Biz/Recaptcha';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
     import icon from '@/Libs/icon-class';
-    import { VueRecaptcha } from 'vue-recaptcha';
 
     export default {
         components: {
@@ -113,17 +97,17 @@
             BizFormInput,
             BizFormPassword,
             BizLink,
+            BizRecaptcha,
             LayoutAdmin,
-            VueRecaptcha,
         },
 
         mixins: [
             MixinHasLoader,
-            MixinHasRecaptcha,
         ],
 
         props: {
             canResetPassword: Boolean,
+            recaptchaSiteKey: { type: [String, null], default: null },
             status: {type: String, default: ""},
         },
 
@@ -134,7 +118,7 @@
                 form: this.$inertia.form({
                     email: '',
                     password: '',
-                    remember: false
+                    remember: false,
                 }),
                 icon,
             }
@@ -142,37 +126,28 @@
 
         methods: {
             onSubmit() {
-                if (this.isRecaptchaAvailable) {
-                    this.recaptchaExecute();
-                } else {
-                    this.submit();
-                }
-            },
-
-            submit(recaptchaResponse = null) {
-                this.form
-                    .transform(data => ({
-                        ... data,
-                        remember: this.form.remember ? 'on' : '',
-                        'g-recaptcha-response': recaptchaResponse,
-                    }))
-                    .post(this.route('admin.login'), {
-                        onStart: () => this.onStartLoadingOverlay(),
-                        onError: () => this.recaptchaExpired(),
-                        onFinish: () => {
-                            this.form.reset('password');
-                            this.onEndLoadingOverlay();
-                        },
-                    })
+                this.$refs.recaptcha.execute();
             },
 
             back() {
                 window.location = "/";
             },
 
-            // @Override from MixinHasRecaptcha
-            recaptchaVerify(response) {
-                this.submit(response);
+            recaptchaVerify(response = null) {
+                this.form
+                    .transform(data => ({
+                        ... data,
+                        remember: this.form.remember ? 'on' : '',
+                        'g-recaptcha-response': response,
+                    }))
+                    .post(this.route('admin.login'), {
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onError: () => this.$refs.recaptcha.onExpired(),
+                        onFinish: () => {
+                            this.form.reset('password');
+                            this.onEndLoadingOverlay();
+                        },
+                    })
             },
         }
     }

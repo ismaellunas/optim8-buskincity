@@ -33,8 +33,9 @@
             />
 
             <form
+                ref="formForgotPassword"
                 method="post"
-                @submit="setLoader()"
+                @submit.prevent="onSubmit()"
             >
                 <div class="mb-4">
                     <input
@@ -53,25 +54,11 @@
                     />
                 </div>
 
-                <template
-                    v-if="isRecaptchaAvailable"
-                >
-                    <vue-recaptcha
-                        ref="vueRecaptcha"
-                        :sitekey="recaptchaSiteKey"
-                        size="invisible"
-                        theme="light"
-                        @expired="recaptchaExpired"
-                        @error="recaptchaFailed"
-                    />
-                </template>
-
-                <span
-                    v-if="isRecaptchaError"
-                    class="help has-text-danger"
-                >
-                    Please check the reCAPTCHA!
-                </span>
+                <biz-recaptcha
+                    ref="recaptcha"
+                    :site-key="recaptchaSiteKey"
+                    @on-verify="recaptchaVerify"
+                />
 
                 <div class="mt-4">
                     <biz-button
@@ -89,13 +76,12 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import MixinHasRecaptcha from '@/Mixins/HasRecaptcha';
     import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizFormInput from '@/Biz/Form/Input';
     import BizLink from '@/Biz/Link';
+    import BizRecaptcha from '@/Biz/Recaptcha';
     import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
-    import { VueRecaptcha } from 'vue-recaptcha';
     import icon from '@/Libs/icon-class';
 
     export default {
@@ -104,24 +90,18 @@
             BizErrorNotifications,
             BizFormInput,
             BizLink,
+            BizRecaptcha,
             LayoutAdmin,
-            VueRecaptcha,
         },
 
         mixins: [
             MixinHasLoader,
-            MixinHasRecaptcha,
         ],
 
         props: {
-            failed: {
-                type: String,
-                default: '',
-            },
-            status: {
-                type: String,
-                default: '',
-            },
+            failed: { type: String, default: '' },
+            recaptchaSiteKey: { type: [String, null], default: null },
+            status: { type: String, default: '' },
         },
 
         data() {
@@ -134,23 +114,15 @@
             }
         },
 
-        computed: {
-            isRecaptchaAvailable() {
-                return !!this.recaptchaSiteKey;
-            },
-        },
-
-        mounted() {
-            if (this.isRecaptchaAvailable) {
-                setTimeout(() => {
-                    this.$refs.vueRecaptcha.execute();
-                }, 500);
-            }
-        },
-
         methods: {
-            setLoader() {
+            onSubmit() {
                 this.onStartLoadingOverlay();
+
+                this.$refs.recaptcha.execute();
+            },
+
+            recaptchaVerify() {
+                this.$refs.formForgotPassword.submit();
             },
         }
     }

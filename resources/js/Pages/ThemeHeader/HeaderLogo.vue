@@ -15,10 +15,11 @@
                     style="width: 200px; border: 1px solid #000"
                     :src="logoImgUrl"
                 />
-                <biz-input-file
+                <biz-form-file
                     v-model="formMedia"
                     :accept="acceptedTypes"
                     :is-name-displayed="false"
+                    :notes="instructions.logo"
                     @on-file-picked="onFilePicked"
                 />
             </div>
@@ -27,8 +28,8 @@
 </template>
 
 <script>
+    import BizFormFile from '@/Biz/Form/File';
     import BizImage from '@/Biz/Image';
-    import BizInputFile from '@/Biz/InputFile';
     import { useModelWrapper } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
 
@@ -36,9 +37,11 @@
         name: 'HeaderLogo',
 
         components: {
+            BizFormFile,
             BizImage,
-            BizInputFile,
         },
+
+        inject: ['instructions'],
 
         props: {
             logoUrl: {

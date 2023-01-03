@@ -14,26 +14,11 @@
                 :errors="formErrors"
             />
 
-            <template
-                v-if="isRecaptchaAvailable"
-            >
-                <vue-recaptcha
-                    ref="vueRecaptcha"
-                    size="invisible"
-                    :sitekey="recaptchaSiteKey"
-                    theme="light"
-                    @expired="recaptchaExpired"
-                    @error="recaptchaFailed"
-                    @verify="recaptchaVerify"
-                />
-
-                <span
-                    v-if="isRecaptchaError"
-                    class="has-text-danger"
-                >
-                    Please check the captcha!
-                </span>
-            </template>
+            <biz-recaptcha
+                ref="recaptcha"
+                :site-key="recaptchaSiteKey"
+                @on-verify="recaptchaVerify"
+            />
 
             <slot name="buttons">
                 <div class="field">
@@ -53,8 +38,8 @@
     import BizButton from '@/Biz/Button';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import BizNotifications from '@/Biz/Notifications';
+    import BizRecaptcha from '@/Biz/Recaptcha';
     import FieldGroup from '@/Form/FieldGroup';
-    import { VueRecaptcha } from 'vue-recaptcha';
     import { inRange, isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { reactive } from 'vue';
@@ -66,8 +51,8 @@
             BizButton,
             BizFlashNotifications,
             BizNotifications,
+            BizRecaptcha,
             FieldGroup,
-            VueRecaptcha,
         },
 
         mixins: [
@@ -96,7 +81,6 @@
                 form: reactive({}),
                 formErrors: {},
                 isShown: false,
-                isRecaptchaError: false,
                 urls: {
                     getSchema: '/form-builders/schema',
                     save: '/form-builders/save',
@@ -119,22 +103,6 @@
         },
 
         methods: {
-            recaptchaExecute() {
-                this.$refs.vueRecaptcha.execute();
-            },
-
-            recaptchaExpired() {
-                this.$refs.vueRecaptcha.reset();
-            },
-
-            recaptchaFailed() {
-                this.isRecaptchaError = true;
-            },
-
-            recaptchaVerify(response) {
-                this.submit(response);
-            },
-
             getSchema() {
                 const self = this;
 
@@ -196,19 +164,15 @@
             },
 
             onSubmit() {
-                if (this.isRecaptchaAvailable) {
-                    this.recaptchaExecute();
-                } else {
-                    this.submit();
-                }
+                this.$refs.recaptcha.execute();
             },
 
-            submit(recaptchaResponse = null) {
+            recaptchaVerify(response = null) {
                 const self = this;
 
                 self.onStartLoadingOverlay();
 
-                self.form['g-recaptcha-response'] = recaptchaResponse;
+                self.form['g-recaptcha-response'] = response;
 
                 axios.post(
                     self.urls.save,

@@ -29,14 +29,8 @@
         },
 
         props: {
-            logoUrl: {
-                type: String,
-                default: "",
-            },
-            settings: {
-                type: Object,
-                required: true,
-            },
+            logoUrl: { type: String, default: "" },
+            settings: { type: Object, required: true },
         },
 
         setup() {
