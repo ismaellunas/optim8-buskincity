@@ -72,7 +72,7 @@ class Handler extends ExceptionHandler
                 'file' => $exception->getFile(),
                 'line' => $exception->getLine(),
                 'message' => $exception->getMessage() . '; ' . $userAgent,
-                'trace' => $exception->getTraceAsString(),
+                'trace' => $exception->getTrace(),
             ];
 
             if (

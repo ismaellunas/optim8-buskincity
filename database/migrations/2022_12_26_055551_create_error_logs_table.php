@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('file')->nullable();
             $table->integer('line')->nullable();
             $table->text('message')->nullable();
-            $table->text('trace')->nullable();
+            $table->json('trace')->nullable();
             $table->integer('total_hit')->default(1);
             $table->timestamps();
         });

@@ -18,6 +18,10 @@ class ErrorLog extends Model
         'total_hit',
     ];
 
+    protected $casts = [
+        'trace' => 'array',
+    ];
+
     public function syncErrorLog(array $inputs): void
     {
         $errorLog = $this->getExistsErrorLog($inputs);
@@ -56,7 +60,7 @@ class ErrorLog extends Model
             $this->message = $inputs['message'];
         }
 
-        if (isset($inputs['trace'])) {
+        if (!empty($inputs['trace'])) {
             $this->trace = $inputs['trace'];
         }
 
