@@ -18,7 +18,7 @@
 
                 <div class="column is-4 has-text-right">
                     <biz-button-icon
-                        v-if="hasCheckedRecords"
+                        v-if="canDeleteCheckedRecords"
                         class="is-danger"
                         type="button"
                         :icon="icon.remove"
@@ -28,6 +28,7 @@
                     </biz-button-icon>
 
                     <biz-button-icon
+                        v-if="can.delete"
                         class="is-danger ml-2"
                         type="button"
                         :icon="icon.remove"
@@ -71,6 +72,7 @@
                             </td>
                             <td>
                                 <biz-button-icon
+                                    v-if="can.read"
                                     class="is-ghost has-text-black ml-1"
                                     icon-class="is-small"
                                     title="View"
@@ -80,6 +82,7 @@
                                 />
 
                                 <biz-button-icon
+                                    v-if="can.delete"
                                     class="is-ghost has-text-black ml-1"
                                     icon-class="is-small"
                                     title="Delete"
@@ -146,6 +149,7 @@
 
         props: {
             baseRouteName: { type: String, required: true },
+            can: { type: Object, required: true },
             pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, required: true },
         },
@@ -179,8 +183,9 @@
                 return this.records.data.length > 0;
             },
 
-            hasCheckedRecords() {
-                return this.checkedRecords.length > 0;
+            canDeleteCheckedRecords() {
+                return this.checkedRecords.length > 0
+                    && this.can.delete;
             },
         },
 

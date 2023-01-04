@@ -169,12 +169,19 @@ Route::middleware([
 
     Route::name('error-log.')
         ->prefix('error-log')
-        ->middleware(['can:system.log'])
         ->group(function () {
-            Route::get('/', [ErrorLogController::class, 'index'])->name('index');
-            Route::delete('/all', [ErrorLogController::class, 'destroyAll'])->name('destroy.all');
-            Route::delete('/{errorLog}', [ErrorLogController::class, 'destroy'])->name('destroy');
-            Route::post('/delete-checked', [ErrorLogController::class, 'destroyChecked'])->name('destroy.checked');
+            Route::get('/', [ErrorLogController::class, 'index'])
+                ->name('index')
+                ->middleware('can:viewAny,App\Models\ErrorLog');
+            Route::delete('/all', [ErrorLogController::class, 'destroyAll'])
+                ->name('destroy.all')
+                ->middleware('can:multipleDelete,App\Models\ErrorLog');
+            Route::delete('/{errorLog}', [ErrorLogController::class, 'destroy'])
+                ->name('destroy')
+                ->can('delete', 'errorLog');
+            Route::post('/delete-checked', [ErrorLogController::class, 'destroyChecked'])
+                ->name('destroy.checked')
+                ->middleware('can:multipleDelete,App\Models\ErrorLog');
         });
 });
 

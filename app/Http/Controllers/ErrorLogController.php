@@ -20,6 +20,7 @@ class ErrorLogController extends Controller
 
     public function index(ErrorLogIndexRequest $request)
     {
+        $user = auth()->user();
         $scopes = [];
 
         if (is_array($request->dates) && !empty(array_filter($request->dates))) {
@@ -34,6 +35,10 @@ class ErrorLogController extends Controller
             ),
             'pageQueryParams' => array_filter($request->only('term', 'dates')),
             'title' => __('Error Log'),
+            'can' => [
+                'read' => $user->can('error_log.read'),
+                'delete' => $user->can('error_log.delete'),
+            ]
         ]);
     }
 
