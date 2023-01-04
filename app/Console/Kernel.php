@@ -3,6 +3,7 @@
 namespace App\Console;
 
 //use App\Models\Cron;
+use App\Events\ErrorReport;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\App;
@@ -33,6 +34,12 @@ class Kernel extends ConsoleKernel
             } else {
                 $schedule->command('telescope:prune --hours=336')->daily();
             }
+        }
+
+        if (config('constants.error_reporting')) {
+            $schedule->call(function () {
+                ErrorReport::dispatch();
+            })->dailyAt('23:59');
         }
     }
 

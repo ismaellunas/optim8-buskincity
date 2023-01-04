@@ -411,6 +411,12 @@ class MenuService
                             'isActive' => $request->routeIs('admin.system-log.*'),
                             'isEnabled' => $user->can('system.log'),
                         ],
+                        [
+                            'title' => 'Error Log',
+                            'link' => route('admin.error-log.index'),
+                            'isActive' => $request->routeIs('admin.error-log.*'),
+                            'isEnabled' => $user->can('system.log'),
+                        ],
                     ],
                 ],
                 [
