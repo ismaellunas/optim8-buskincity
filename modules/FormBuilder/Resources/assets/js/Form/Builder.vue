@@ -9,6 +9,7 @@
         <form @submit.prevent="onSubmit">
             <field-group
                 ref="field_group"
+                :key="fieldGroupKey"
                 v-model="form"
                 :group="fieldGroup"
                 :errors="formErrors"
@@ -43,6 +44,7 @@
     import { inRange, isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { reactive } from 'vue';
+    import { forEach } from 'lodash';
 
     export default {
         name: 'FormBuilder',
@@ -85,6 +87,7 @@
                     getSchema: '/form-builders/schema',
                     save: '/form-builders/save',
                 },
+                fieldGroupKey: 0,
             };
         },
 
@@ -170,13 +173,39 @@
             recaptchaVerify(response = null) {
                 const self = this;
 
-                self.onStartLoadingOverlay();
+                let formData = new FormData();
 
-                self.form['g-recaptcha-response'] = response;
+                forEach(self.form, function (value, key) {
+                    if (self.isValueHasFiles(value)) {
+                        if (value.files.length > 0) {
+                            for (let i = 0; i < value.files.length; i++) {
+                                formData.append(`${key}[files][]`, value.files[i]);
+                            }
+                        }
+                    } else if (self.isValueHasPhone(value)) {
+                        if (value.number) {
+                            formData.append(`${key}[country]`, value.country);
+                            formData.append(`${key}[number]`, value.number);
+                        }
+                    } else {
+                        formData.append(key, value);
+                    }
+                });
+
+                formData.append('g-recaptcha-response', response);
+
+                const config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                };
+
+                self.onStartLoadingOverlay();
 
                 axios.post(
                     self.urls.save,
-                    self.form,
+                    formData,
+                    config
                 )
                     .then((response) => {
                         let data = response.data;
@@ -199,7 +228,22 @@
                     })
                     .then(() => {
                         self.onEndLoadingOverlay();
+
+                        self.fieldGroupKey += 1;
                     });
+            },
+
+            isValueHasFiles(value = null) {
+                return typeof value === 'object'
+                    && value !== null
+                    && value.hasOwnProperty('files')
+            },
+
+            isValueHasPhone(value = null) {
+                return typeof value === 'object'
+                    && value !== null
+                    && value.hasOwnProperty('country')
+                    && value.hasOwnProperty('number')
             },
         },
     };

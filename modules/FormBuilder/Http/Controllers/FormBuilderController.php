@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\FieldGroup;
-use Modules\FormBuilder\Entities\FieldGroupEntry;
 use Modules\FormBuilder\Events\FormSubmitted;
 use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
@@ -139,11 +138,7 @@ class FormBuilderController extends CrudController
     {
         $inputs = $request->validated();
 
-        $this->formBuilderService->transformInputs($inputs);
-
-        $fieldGroupEntry = new FieldGroupEntry();
-
-        $fieldGroupEntry->saveFromInputs($inputs);
+        $fieldGroupEntry = $this->formBuilderService->saveValues($inputs);
 
         FormSubmitted::dispatch($fieldGroupEntry);
 
