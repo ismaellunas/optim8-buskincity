@@ -11,4 +11,9 @@ class ProductVariant extends GetCandyProductVariant
     {
         return $this->belongsTo(Product::class)->withTrashed();
     }
+
+    public function orderLine()
+    {
+        return $this->morphOne(OrderLine::class, 'purchasable');
+    }
 }
