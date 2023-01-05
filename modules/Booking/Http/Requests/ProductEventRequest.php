@@ -2,6 +2,7 @@
 
 namespace Modules\Booking\Http\Requests;
 
+use App\Services\CountryService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Modules\Booking\Rules\NoOverlappingTime;
@@ -54,6 +55,15 @@ class ProductEventRequest extends FormRequest
             'location.address' => ['nullable', 'max:500'],
             'location.latitude' => ['nullable', 'numeric'],
             'location.longitude' => ['nullable', 'numeric'],
+            'location.city' => ['required', 'max:64'],
+            'location.country_code' => [
+                'required',
+                Rule::in(
+                    app(CountryService::class)
+                        ->getCountryOptions()
+                        ->pluck('id')
+                )
+            ],
         ];
     }
 

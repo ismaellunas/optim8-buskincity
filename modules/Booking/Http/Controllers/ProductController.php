@@ -6,6 +6,7 @@ use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Helpers\MimeType;
 use App\Http\Controllers\CrudController;
 use App\Models\Media;
+use App\Services\CountryService;
 use App\Services\IPService;
 use App\Services\MediaService;
 use App\Services\SettingService;
@@ -173,6 +174,7 @@ class ProductController extends CrudController
         return Inertia::render('Booking::ProductEdit', $this->getData([
             'title' => $this->getEditTitle(),
             'imageMimes' => $this->getImageMimeTypes(),
+            'countryOptions' => app(CountryService::class)->getCountryOptions(),
             'roleOptions' => $this->productService->roleOptions(),
             'statusOptions' => $this->productService->statusOptions(),
             'product' => $this->productService->formResource($product),
@@ -183,6 +185,7 @@ class ProductController extends CrudController
             'weeklyHours' => $this->productEventService->weeklyHours($product),
             'dateOverrides' => $this->productEventService->dateOverrides($product),
             'geoLocation' => app(IPService::class)->getGeoLocation(),
+            'defaultCountryCode' => app(IPService::class)->getCountryCode("US"),
             'googleApiKey' => app(SettingService::class)->getGoogleApi(),
             'productManagerBaseRoute' => 'admin.ecommerce.products.managers',
             'rules' => [

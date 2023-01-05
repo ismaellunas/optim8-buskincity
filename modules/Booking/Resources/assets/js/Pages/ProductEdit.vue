@@ -120,6 +120,28 @@
                                     maxlength="500"
                                     :message="error('location.address', 'eventForm')"
                                 />
+
+                                <biz-form-input
+                                    v-model="eventForm.location.city"
+                                    label="City"
+                                    maxlength="64"
+                                    required
+                                    :message="error('location.city', 'eventForm')"
+                                />
+
+                                <biz-form-select
+                                    v-model="eventForm.location.country_code"
+                                    label="Country"
+                                    required
+                                >
+                                    <option
+                                        v-for="countryOption in countryOptions"
+                                        :key="countryOption.id"
+                                        :value="countryOption.id"
+                                    >
+                                        {{ countryOption.value }}
+                                    </option>
+                                </biz-form-select>
                             </div>
 
                             <div class="column is-5">
@@ -463,6 +485,8 @@
             baseRouteName: { type: String, required: true},
             can: { type: Object, required: true },
             roleOptions: { type: Array, required: true },
+            defaultCountryCode: { type: String, required: true },
+            countryOptions: { type: Array, required: true },
             statusOptions: { type: Array, required: true },
             eventDurationOptions: { type: Array, required: true },
             imageMimes: { type: Array, required: true },
