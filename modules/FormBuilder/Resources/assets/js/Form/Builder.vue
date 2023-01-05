@@ -45,6 +45,7 @@
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { reactive } from 'vue';
     import { forEach } from 'lodash';
+    import { serialize } from 'object-to-formdata';
 
     export default {
         name: 'FormBuilder',
@@ -173,26 +174,9 @@
             recaptchaVerify(response = null) {
                 const self = this;
 
-                let formData = new FormData();
+                self.form['g-recaptcha-response'] = response;
 
-                forEach(self.form, function (value, key) {
-                    if (self.isValueHasFiles(value)) {
-                        if (value.files.length > 0) {
-                            for (let i = 0; i < value.files.length; i++) {
-                                formData.append(`${key}[files][]`, value.files[i]);
-                            }
-                        }
-                    } else if (self.isValueHasPhone(value)) {
-                        if (value.number) {
-                            formData.append(`${key}[country]`, value.country);
-                            formData.append(`${key}[number]`, value.number);
-                        }
-                    } else {
-                        formData.append(key, value);
-                    }
-                });
-
-                formData.append('g-recaptcha-response', response);
+                let formData = serialize(self.form);
 
                 const config = {
                     headers: {
