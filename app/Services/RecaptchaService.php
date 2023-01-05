@@ -2,21 +2,31 @@
 
 namespace App\Services;
 
-use App\Events\RecaptchaError;
+use App\Models\ErrorLog;
 
 class RecaptchaService
 {
-    public static function sendEmailSiteKeyError(): void
+    public static function siteKeyError(): void
     {
-        $message = __('Our **reCAPTCHA site key** failed. Please make sure the **reCAPTCHA site key** is valid.');
+        $message = __('reCAPTCHA site key failed. Please make sure the reCAPTCHA site key is valid.');
 
-        RecaptchaError::dispatch($message);
+        $errorLog = new ErrorLog();
+
+        $errorLog->syncErrorLog([
+            'url' => url()->full(),
+            'message' => $message,
+        ]);
     }
 
-    public static function sendEmailSecretKeyError(): void
+    public static function secretKeyError(): void
     {
-        $message = __('Our **reCAPTCHA secret key** failed. Please make sure the **reCAPTCHA secret key** is valid.');
+        $message = __('reCAPTCHA secret key failed. Please make sure the reCAPTCHA secret key is valid.');
 
-        RecaptchaError::dispatch($message);
+        $errorLog = new ErrorLog();
+
+        $errorLog->syncErrorLog([
+            'url' => url()->full(),
+            'message' => $message,
+        ]);
     }
 }
