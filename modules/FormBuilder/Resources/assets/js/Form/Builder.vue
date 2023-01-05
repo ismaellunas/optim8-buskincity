@@ -218,19 +218,6 @@
                         self.fieldGroupKey += 1;
                     });
             },
-
-            isValueHasFiles(value = null) {
-                return typeof value === 'object'
-                    && value !== null
-                    && value.hasOwnProperty('files')
-            },
-
-            isValueHasPhone(value = null) {
-                return typeof value === 'object'
-                    && value !== null
-                    && value.hasOwnProperty('country')
-                    && value.hasOwnProperty('number')
-            },
         },
     };
 </script>
