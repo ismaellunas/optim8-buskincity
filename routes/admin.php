@@ -5,6 +5,7 @@ use App\Http\Controllers\{
     ApiPageBuilderController,
     CategoryController,
     DashboardController,
+    ErrorLogController,
     LanguageController,
     MediaController,
     PageController,
@@ -165,6 +166,23 @@ Route::middleware([
         Route::get('/search-users', [SystemLogController::class, 'searchUsers'])
             ->name('search-users');
     });
+
+    Route::name('error-log.')
+        ->prefix('error-log')
+        ->group(function () {
+            Route::get('/', [ErrorLogController::class, 'index'])
+                ->name('index')
+                ->middleware('can:viewAny,App\Models\ErrorLog');
+            Route::delete('/all', [ErrorLogController::class, 'destroyAll'])
+                ->name('destroy.all')
+                ->middleware('can:multipleDelete,App\Models\ErrorLog');
+            Route::delete('/{errorLog}', [ErrorLogController::class, 'destroy'])
+                ->name('destroy')
+                ->can('delete', 'errorLog');
+            Route::post('/delete-checked', [ErrorLogController::class, 'destroyChecked'])
+                ->name('destroy.checked')
+                ->middleware('can:multipleDelete,App\Models\ErrorLog');
+        });
 });
 
 Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->group(function () {
