@@ -179,6 +179,8 @@ abstract class BaseField
                     if ($validationValue) {
                         $newRules[] = $validationName;
                     }
+                } else if (is_array($validationValue)) {
+                    $newRules[] = $validationName.':'.implode(',', $validationValue);
                 } else {
                     if ($validationValue) {
                         $newRules[] = $validationName.':'.$validationValue;
