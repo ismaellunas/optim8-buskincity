@@ -126,7 +126,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'EventCalendar',
+        name: 'EventsCalendar',
 
         components: {
             BizToolbarContent,
