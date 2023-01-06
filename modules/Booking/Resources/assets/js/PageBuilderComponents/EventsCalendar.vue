@@ -337,8 +337,8 @@
                         this.map.setZoom(response.data.map.zoom);
 
                         this.map.setCenter({
-                            lat: parseFloat(response.data.map.center.lat),
-                            lng: parseFloat(response.data.map.center.long),
+                            lat: parseFloat(response.data.map.center.latitude),
+                            lng: parseFloat(response.data.map.center.longitude),
                         })
 
                         this.markers = response.data.pagination.data.map((event) => {
