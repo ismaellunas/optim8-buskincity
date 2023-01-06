@@ -3,10 +3,13 @@
 namespace Modules\Booking\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
-use Modules\Booking\Http\Requests\ProductEventRequest;
-use Modules\Ecommerce\Entities\Product;
+use App\Services\SettingService;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
 use Modules\Booking\Entities\Schedule;
+use Modules\Booking\Http\Requests\ProductEventRequest;
 use Modules\Booking\Services\ProductEventService;
+use Modules\Ecommerce\Entities\Product;
 
 class ProductEventController extends CrudController
 {
@@ -25,7 +28,21 @@ class ProductEventController extends CrudController
 
         $product->duration = $inputs['duration'];
         $product->bookable_date_range = $inputs['bookable_date_range'];
-        $product->locations = [$inputs['location']];
+
+        $location = $inputs['location'];
+
+        if ($location['latitude'] && $location['longitude']) {
+            $response = $this->getReversedGeocoding(
+                $location['latitude'],
+                $location['longitude']
+            );
+
+            if ($response->ok()) {
+                $location['geocode'] = $response->json()['results'][0];
+            }
+        }
+
+        $product->locations = [$location];
         $product->save();
 
         $schedule = $product->eventSchedule ?? Schedule::factory()->state([
@@ -43,5 +60,16 @@ class ProductEventController extends CrudController
         $this->generateFlashMessage('Successfully updating '.$this->title.'!');
 
         return back();
+    }
+
+    private function getReversedGeocoding($latitude, $longitude): Response
+    {
+        $url = 'https://maps.googleapis.com/maps/api/geocode/json';
+        $key = app(SettingService::class)->getGoogleApi();
+
+        return Http::get($url, [
+            'latlng' => $latitude.','.$longitude,
+            'key' => $key,
+        ]);
     }
 }
