@@ -29,8 +29,6 @@ class TwoFactorChallengeView
             ]);
         }
 
-        return view('auth.two_factor_challenge', [
-            'recaptchaSiteKey' => $recaptchaSiteKey,
-        ]);
+        return view('auth.two_factor_challenge');
     }
 }

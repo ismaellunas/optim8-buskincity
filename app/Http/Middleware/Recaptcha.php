@@ -34,7 +34,7 @@ class Recaptcha
                         $response->getErrorCodes()
                     )
                 ) {
-                    RecaptchaService::sendEmailSiteKeyError();
+                    RecaptchaService::siteKeyError();
 
                     return $next($request);
                 }
@@ -45,7 +45,7 @@ class Recaptcha
                         $response->getErrorCodes()
                     )
                 ) {
-                    RecaptchaService::sendEmailSecretKeyError();
+                    RecaptchaService::secretKeyError();
 
                     return $next($request);
                 }

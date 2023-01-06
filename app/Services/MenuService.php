@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entities\Menus\Options\UrlOption;
 use App\Models\{
     Category,
+    ErrorLog,
     Media,
     Menu,
     MenuItem,
@@ -410,6 +411,12 @@ class MenuService
                             'link' => route('admin.system-log.index'),
                             'isActive' => $request->routeIs('admin.system-log.*'),
                             'isEnabled' => $user->can('system.log'),
+                        ],
+                        [
+                            'title' => 'Error Log',
+                            'link' => route('admin.error-log.index'),
+                            'isActive' => $request->routeIs('admin.error-log.*'),
+                            'isEnabled' => $user->can('viewAny', ErrorLog::class),
                         ],
                     ],
                 ],
