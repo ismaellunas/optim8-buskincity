@@ -144,7 +144,7 @@ class PageTranslation extends Model implements PublishableInterface
             ->filter(function ($entity) {
                 $className = PageService::getEntityClassName($entity['componentName']);
 
-                if (class_exists($className)) {
+                if ($className) {
                     return in_array(
                         HasStyleInterface::class,
                         class_implements($className)
@@ -162,35 +162,47 @@ class PageTranslation extends Model implements PublishableInterface
 
     private function getStyleBlocks($entities): array
     {
-        return $entities->map(function ($entity) {
+        return $entities
+            ->map(function ($entity) {
                 $className = PageService::getEntityClassName($entity['componentName']);
 
-                $entity = new $className($entity);
+                if ($className) {
+                    $entity = new $className($entity);
 
-                $styleBlocks = $entity->getStyleBlocks();
+                    $styleBlocks = $entity->getStyleBlocks();
 
-                return collect($styleBlocks)
-                    ->filter(function ($styleBlock) {
-                        return !$styleBlock->isEmpty();
-                    });
+                    return collect($styleBlocks)
+                        ->filter(function ($styleBlock) {
+                            return !$styleBlock->isEmpty();
+                        });
+                }
+
+                return null;
             })
+            ->filter()
             ->all();
     }
 
     private function getMobileStyleBlocks($entities): array
     {
-        return $entities->map(function ($entity) {
+        return $entities
+            ->map(function ($entity) {
                 $className = PageService::getEntityClassName($entity['componentName']);
 
-                $entity = new $className($entity);
+                if ($className) {
+                    $entity = new $className($entity);
 
-                $styleBlocks = $entity->getMobileStyleBlocks();
+                    $styleBlocks = $entity->getMobileStyleBlocks();
 
-                return collect($styleBlocks)
-                    ->filter(function ($styleBlock) {
-                        return !$styleBlock->isEmpty();
-                    });
+                    return collect($styleBlocks)
+                        ->filter(function ($styleBlock) {
+                            return !$styleBlock->isEmpty();
+                        });
+                }
+
+                return null;
             })
+            ->filter()
             ->all();
     }
 

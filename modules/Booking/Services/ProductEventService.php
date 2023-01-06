@@ -51,12 +51,13 @@ class ProductEventService
             'duration' => $product->duration,
             'bookable_date_range_type' => $product->bookable_date_range_type,
             'bookable_date_range' => $product->bookable_date_range,
-            'location' => null,
             'timezone' => $product->eventSchedule->timezone ?? null,
             'location' => $product->locations[0] ?? [
                 'address' => null,
                 'latitude' => null,
                 'longitude' => null,
+                'city' => null,
+                'country_code' => null,
             ],
         ];
     }
@@ -369,5 +370,29 @@ class ProductEventService
     public function maxBookableDate(Product $product): ?Carbon
     {
         return today()->addDays($product->bookable_date_range);
+    }
+
+    public function getGoogleMapDirectionUrl(Product $product, ?array $origin = null): ?string
+    {
+        $location = $product->locations[0] ?? null;
+
+        if (
+            !$location
+            || empty($location['latitude'])
+            || empty($location['longitude'])
+        ) {
+            return null;
+        }
+
+        $urlParts = [
+            "https://www.google.com/maps/dir/?api=1",
+            "&destination=".urlencode($location['latitude']).','.urlencode($location['longitude']),
+        ];
+
+        if ($origin) {
+            $urlParts[] = "&origin=".urlencode($origin['latitude']).','.urlencode($origin['longitude']);
+        }
+
+        return implode("", $urlParts);
     }
 }

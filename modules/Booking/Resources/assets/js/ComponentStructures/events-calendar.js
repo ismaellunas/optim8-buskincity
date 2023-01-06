@@ -3,8 +3,8 @@ import {
 } from '@/ComponentStructures/global-configs.js';
 
 export default {
-    title: 'Event Calendar',
-    componentName: 'EventCalendar',
+    title: "Events Calendar",
+    componentName: "EventsCalendar",
     content: {},
     config: {
         dimension: dimension.config
