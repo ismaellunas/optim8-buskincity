@@ -44,7 +44,6 @@
     import { inRange, isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { reactive } from 'vue';
-    import { forEach } from 'lodash';
     import { serialize } from 'object-to-formdata';
 
     export default {
