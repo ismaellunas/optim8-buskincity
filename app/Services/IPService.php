@@ -78,7 +78,7 @@ class IPService
         ];
     }
 
-    public function getCity(string $default = null): string
+    public function getCity(string $default = null): ?string
     {
         return data_get($this->getClientData(), 'location.city') ?? $default;
     }
