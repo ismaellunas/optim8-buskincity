@@ -140,7 +140,7 @@
     import moment from 'moment';
     import { Loader } from '@googlemaps/js-api-loader';
     import { MarkerClusterer } from "@googlemaps/markerclusterer";
-    import { clone, each, find, keys, get, merge } from 'lodash';
+    import { clone, each, find, keys, get, groupBy, merge, map } from 'lodash';
     import { computed, onMounted, onUnmounted, reactive, ref, toRaw } from 'vue';
     import { useGeolocation, mapStyle as drawMapStyle } from '@/Libs/map';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
@@ -220,6 +220,7 @@
                 queryParams: ref(queryParams),
                 selectedLocation,
                 userImage,
+                infoWindow: ref(null),
             };
         },
 
@@ -295,7 +296,12 @@
                 minZoom: 3,
             });
 
-            this.markerClusterer= new MarkerClusterer({
+            this.infoWindow = new google.maps.InfoWindow({
+                content: "",
+                disableAutoPan: true,
+            });
+
+            this.markerClusterer = new MarkerClusterer({
                 map: this.map,
             });
 
@@ -336,19 +342,43 @@
 
                         this.map.setZoom(response.data.map.zoom);
 
-                        this.map.setCenter({
+                        this.map.panTo({
                             lat: parseFloat(response.data.map.center.latitude),
                             lng: parseFloat(response.data.map.center.longitude),
-                        })
-
-                        this.markers = response.data.pagination.data.map((event) => {
-                            return new google.maps.Marker({
-                                position: {
-                                    lat: event.location.latitude,
-                                    lng: event.location.longitude
-                                },
-                            });
                         });
+
+                        const filteredRecords = response.data.pagination.data.filter((record) => {
+                            return (
+                                get(record, 'location')
+                                && !isBlank(get(record, 'location.latitude'))
+                                && !isBlank(get(record, 'location.longitude'))
+                            );
+                        });
+
+                        const coordinateGroups = groupBy(filteredRecords, (record) => {
+                            return record.location.latitude+';'+record.location.longitude;
+                        });
+
+                        this.markers = map(coordinateGroups, (records, key) => {
+                            const record = records[0];
+                            const label = "" + records.length;
+
+                            const marker = new google.maps.Marker({
+                                position: {
+                                    lat: record.location.latitude,
+                                    lng: record.location.longitude
+                                },
+                                label,
+                            });
+
+                            marker.addListener("click", () => {
+                                this.map.panTo(marker.getPosition());
+                                this.infoWindow.setContent(this.infoWindowContent(records));
+                                this.infoWindow.open(this.map, marker);
+                            });
+
+                            return marker;
+                        })
 
                         this.markerClusterer.addMarkers(this.markers, true);
                     })
@@ -367,6 +397,33 @@
                             after(this.availableLocations);
                         }
                     });
+            },
+
+            infoWindowContent(records) {
+                const record = records[0];
+
+                let content = (
+                    '<div class="content">'+
+                    '<h2>'+record.product_name+'</h2>'+
+                    '<h4>'+record.location.address+'</h4>'+
+                    '<ul>'
+                );
+                records.forEach((record) => {
+                    content += (
+                        '<li>'+
+                        '<b>'+(record.user.stage_name ?? record.user.name)+'</b>'+
+                        ', '+record.event.date+
+                        ', '+record.event.start_end_time+
+                        ' ('+record.event.timezone+')'+
+                        '</li>'
+                    );
+                });
+                content += (
+                    '</ul>'+
+                    '</div>'
+                );
+
+                return content;
             },
         },
     };
