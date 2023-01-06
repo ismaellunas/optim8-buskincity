@@ -343,9 +343,9 @@
                         this.map.setZoom(response.data.map.zoom);
 
                         this.map.panTo({
-                            lat: parseFloat(response.data.map.center.lat),
-                            lng: parseFloat(response.data.map.center.long),
-                        })
+                            lat: parseFloat(response.data.map.center.latitude),
+                            lng: parseFloat(response.data.map.center.longitude),
+                        });
 
                         const filteredRecords = response.data.pagination.data.filter((record) => {
                             return (

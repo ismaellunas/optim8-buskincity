@@ -3,12 +3,13 @@
 namespace Modules\Booking\Http\Requests;
 
 use App\Services\CountryService;
-use Illuminate\Foundation\Http\FormRequest;
+//use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Modules\Booking\Rules\NoOverlappingTime;
 use Modules\Booking\Services\ProductEventService;
+use App\Http\Requests\BaseFormRequest;
 
-class ProductEventRequest extends FormRequest
+class ProductEventRequest extends BaseFormRequest
 {
     protected $errorBag = 'updateEvent';
 
@@ -72,7 +73,7 @@ class ProductEventRequest extends FormRequest
         return true;
     }
 
-    public function attributes()
+    protected function customAttributes(): array
     {
         return [
             'weekly_hours.*.hours.*.started_time' => 'Start Time',
@@ -80,6 +81,10 @@ class ProductEventRequest extends FormRequest
             'date_overrides.*.times.*.started_time' => 'Start Time',
             'date_overrides.*.times.*.ended_time' => 'End Time',
             'date_overrides.*.started_date' => 'Start Date',
+            'location.latitude' => 'Latitude',
+            'location.longitude' => 'Longitude',
+            'location.city' => 'City',
+            'location.country_code' => 'Country',
         ];
     }
 }

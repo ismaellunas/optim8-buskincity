@@ -118,7 +118,7 @@
                                     placeholder="Address"
                                     rows="5"
                                     maxlength="500"
-                                    :message="error('location.address', 'eventForm')"
+                                    :message="error('location.address', errorBag)"
                                 />
 
                                 <biz-form-input
@@ -126,7 +126,7 @@
                                     label="City"
                                     maxlength="64"
                                     required
-                                    :message="error('location.city', 'eventForm')"
+                                    :message="error('location.city', errorBag)"
                                 />
 
                                 <biz-form-select
@@ -150,14 +150,14 @@
                                         <biz-form-input
                                             v-model="eventForm.location.latitude"
                                             label="Latitude"
-                                            :message="error('location.latitude', 'eventForm')"
+                                            :message="error('location.latitude', errorBag)"
                                         />
                                     </div>
                                     <div class="column is-12">
                                         <biz-form-input
                                             v-model="eventForm.location.longitude"
                                             label="Longitude"
-                                            :message="error('location.longitude', 'eventForm')"
+                                            :message="error('location.longitude', errorBag)"
                                         />
                                     </div>
                                 </div>
