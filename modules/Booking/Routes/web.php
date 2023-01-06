@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Support\Facades\Route;
+use Modules\Booking\Http\Controllers\ApiPageBuilderComponent\EventsCalendarController;
 use Modules\Booking\Http\Controllers\Frontend\OrderController as FrontendOrderController;
 use Modules\Booking\Http\Controllers\Frontend\ProductController as FrontendProductController;
-use Modules\Booking\Http\Controllers\Frontend\SearchEventController;
 use Modules\Booking\Http\Controllers\OrderController;
 use Modules\Booking\Http\Controllers\ProductEventController;
 
@@ -105,6 +106,15 @@ Route::prefix('booking')->name('booking.')->middleware([
     });
 });
 
-Route::prefix('booking')->name('booking.')->group(function () {
-    Route::get('search-events', SearchEventController::class)->name('search-events');
+Route::prefix('api/booking')
+    ->name('api.booking.')
+    ->withoutMiddleware(HandleInertiaRequests::class)
+    ->middleware('throttle:api')
+    ->group(function () {
+        Route::prefix('events-calendar')->name('events-calendar.')->group(function () {
+            Route::get('/', [EventsCalendarController::class, 'index'])
+                ->name('index');
+            Route::get('location-options', [EventsCalendarController::class, 'getLocationOptions'])
+                ->name('location-options');
+        });
 });

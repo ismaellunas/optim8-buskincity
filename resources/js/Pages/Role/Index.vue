@@ -71,7 +71,6 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import BizButton from '@/Biz/Button';
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
@@ -85,7 +84,6 @@
 
     export default {
         components: {
-            BizButton,
             BizButtonIcon,
             BizButtonLink,
             BizFilterSearch,

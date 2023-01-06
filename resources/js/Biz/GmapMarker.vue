@@ -123,8 +123,9 @@
 
                 map.value = new google.maps.Map(mapDiv.value, {
                     center: currPos.value,
-                    zoom: 12,
+                    zoom: 11,
                     draggable: props.isDraggable,
+                    streetViewControl: false,
                 });
 
                 if (props.enableSearchBox) {

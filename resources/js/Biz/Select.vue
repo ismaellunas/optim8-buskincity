@@ -1,5 +1,5 @@
 <template>
-    <div class="select" :class="class">
+    <div class="select">
         <select
             v-model="selected"
             :disabled="disabled"
@@ -23,7 +23,7 @@
 
     export default {
         name: 'BizSelect',
-        props: ['modelValue', 'class', 'disabled', 'placeholder', 'name'],
+        props: ['modelValue', 'disabled', 'placeholder', 'name'],
         emits: ['change', 'update:modelValue'],
 
         setup(props, { emit }) {
