@@ -36,6 +36,11 @@ class EventsCalendarController extends Controller
 
         $coordinates = $this->eventsCalendarService->getCoordinates($pagination);
 
+        $center = $this->eventsCalendarService->getCenterCoordinate(
+            $coordinates,
+            BookingModuleService::centerCoordinate()
+        );
+
         $distance = 0;
 
         if (count($coordinates) > 0) {
@@ -55,10 +60,7 @@ class EventsCalendarController extends Controller
         return response()->json([
             'pagination' => $pagination,
             'map' => [
-                'center' => $this->eventsCalendarService->getCenterCoordinate(
-                    $coordinates,
-                    BookingModuleService::centerCoordinate()
-                ),
+                'center' => $center,
                 'farthest_distance' => $distance,
                 'zoom' => $this->eventsCalendarService->zoom($distance),
             ],
