@@ -80,8 +80,11 @@ export const config = {
                 },
             },
             max: {
-                component: "ConfigNumber",
+                component: "ConfigNumberAddons",
                 label: "Maximal File Size",
+                settings: {
+                    addons: 'KiB',
+                }
             },
         },
 

@@ -66,6 +66,7 @@
     import ConfigFileUploadAttribute from './Configs/FileUploadAttribute';
     import ConfigInput from '@/Blocks/Configs/Input';
     import ConfigNumber from '@/Blocks/Configs/Number';
+    import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons';
     import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
     import configs from './../FieldStructures/configs';
     import ConfigSelect from '@/Blocks/Configs/Select';
@@ -87,6 +88,7 @@
             ConfigFileUploadAttribute,
             ConfigInput,
             ConfigNumber,
+            ConfigNumberAddons,
             ConfigRowSection,
             ConfigSelect,
             TRBL,
