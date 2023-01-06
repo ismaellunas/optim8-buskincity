@@ -132,21 +132,7 @@
                             @enderror
                         </div>
 
-                        @if (!empty($recaptchaSiteKey))
-                            <div
-                                class="g-recaptcha"
-                                data-sitekey="{{ $recaptchaSiteKey }}"
-                                data-size="invisible"
-                                data-error-callback="recaptchaError"
-                            ></div>
-                        @endif
-
-                        <span
-                            id="recaptcha-error-message"
-                            class="help has-text-danger is-hidden"
-                        >
-                            Please check the reCAPTCHA!
-                        </span>
+                        <x-recaptcha></x-recaptcha>
 
                         <div class="field is-horizontal mb-5">
                             <div class="field-body">
@@ -174,15 +160,6 @@
             <script>
                 showForm();
             </script>
-        @endif
-
-        @if (!empty($recaptchaSiteKey))
-            <script>
-                var onloadCallback = function() {
-                    grecaptcha.execute();
-                };
-            </script>
-            <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback" defer></script>
         @endif
     @endpush
 </x-layouts.auth>
