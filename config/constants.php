@@ -5,6 +5,8 @@ return [
 
     'fontawesome_local' => env('FONTAWESOME_LOCAL', false),
 
+    'error_reporting' => env('ERROR_REPORTING', false),
+
     'one_megabyte' => 1024,
     'extensions' => [
         'image' => [

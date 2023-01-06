@@ -50,6 +50,11 @@ class PermissionSeeder extends Seeder
             'user.add',
             'user.delete',
 
+            'error_log.*',
+            'error_log.browse',
+            'error_log.read',
+            'error_log.delete',
+
             'system.dashboard',
             'system.language',
             'system.translation',
