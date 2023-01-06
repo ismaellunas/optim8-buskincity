@@ -34,9 +34,28 @@ class PageService
         return $records;
     }
 
-    public static function getEntityClassName(string $componentName): string
+    private static function getModuleEntityClassName(string $componentName): ?string
     {
-        return '\\App\\Entities\\PageBuilderComponents\\' . $componentName;
+        foreach (app(ModuleService::class)->getAllEnabledNames() as $moduleName) {
+            $className = '\\Modules\\'.$moduleName.'\\Entities\\PageBuilderComponents\\' . $componentName;
+
+            if (class_exists($className)) {
+                return $className;
+            }
+        }
+
+        return null;
+    }
+
+    public static function getEntityClassName(string $componentName): ?string
+    {
+        $className = '\\App\\Entities\\PageBuilderComponents\\' . $componentName;
+
+        if (class_exists($className)) {
+            return $className;
+        }
+
+        return self::getModuleEntityClassName($componentName);
     }
 
     public static function transformComponentToText($data): string
@@ -47,8 +66,7 @@ class PageService
 
             $className = self::getEntityClassName($entity['componentName']);
 
-            if (class_exists($className)) {
-
+            if ($className) {
                 $class = new $className($entity);
 
                 if ($class instanceof PageBuilderSearchableTextInterface) {
