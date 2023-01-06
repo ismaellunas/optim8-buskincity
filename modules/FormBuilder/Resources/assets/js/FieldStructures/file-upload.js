@@ -1,5 +1,4 @@
 import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
-import { acceptedMimes } from '@mod/FormBuilder/Resources/assets/js/Libs/form-builder'
 
 export default {
     type: "FileDragDrop",
@@ -12,7 +11,6 @@ export default {
     default_value: [],
     max_file_number: 1,
     min_file_number: 0,
-    max_file_size: null,
     validation: {
         rules: {
             required: false,
@@ -71,11 +69,11 @@ export const config = {
                 label: "Accepted Type",
                 settings: {
                     options: [
-                        { id: acceptedMimes.image.toString(), value: 'Image' },
-                        { id: acceptedMimes.video.toString(), value: 'Video' },
-                        { id: acceptedMimes.document.toString(), value: 'Document' },
-                        { id: acceptedMimes.spreadsheet.toString(), value: 'Spreadsheet' },
-                        { id: acceptedMimes.presentation.toString(), value: 'Presentation' },
+                        { id: 'image', value: 'Image' },
+                        { id: 'video', value: 'Video' },
+                        { id: 'document', value: 'Document' },
+                        { id: 'spreadsheet', value: 'Spreadsheet' },
+                        { id: 'presentation', value: 'Presentation' },
                     ]
                 },
             },
