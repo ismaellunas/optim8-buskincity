@@ -22,9 +22,7 @@ class AuthenticateLoginView
             ]);
         }
 
-        return view('auth.login', [
-            'recaptchaSiteKey' => $recaptchaSiteKey,
-        ]);
+        return view('auth.login');
 
     }
 }

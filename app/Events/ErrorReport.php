@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\ErrorLog;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,20 +11,22 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class RecaptchaError
+class ErrorReport
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $message = null;
+    public $errorLogs = [];
+    public $timeLog = null;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(string $message)
+    public function __construct()
     {
-        $this->message = $message;
+        $this->timeLog = now()->format('d F Y');
+        $this->errorLogs = $this->getErrorLogs();
     }
 
     /**
@@ -34,5 +37,19 @@ class RecaptchaError
     public function broadcastOn()
     {
         return [];
+    }
+
+    private function getErrorLogs(): array
+    {
+        return ErrorLog::select([
+                'url',
+                'file',
+                'line',
+                'message',
+                'total_hit',
+            ])
+            ->whereDate('created_at', now()->format('Y-m-d'))
+            ->get()
+            ->toArray();
     }
 }

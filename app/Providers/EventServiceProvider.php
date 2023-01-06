@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Events\RecaptchaError;
-use App\Listeners\SendRecaptchaErrorNotification;
+use App\Events\ErrorReport;
+use App\Listeners\SendErrorReportNotification;
 use App\Models\{
     Category,
     GlobalOption,
@@ -38,8 +38,8 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        RecaptchaError::class => [
-            SendRecaptchaErrorNotification::class,
+        ErrorReport::class => [
+            SendErrorReportNotification::class,
         ],
     ];
 
