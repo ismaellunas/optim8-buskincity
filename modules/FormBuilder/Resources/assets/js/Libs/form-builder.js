@@ -1,5 +1,3 @@
-import { generateElementId } from '@/Libs/utils';
-
 export function onFormEditorClicked(event, inputConfigId) {
     if (! (
         event.target.closest('.component-configurable')

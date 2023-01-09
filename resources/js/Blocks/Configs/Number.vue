@@ -4,7 +4,18 @@
             v-model="computedValue"
             :label="label"
             :is-small="true"
-        />
+        >
+            <template
+                v-if="settings?.note"
+                #note
+            >
+                <p
+                    class="help"
+                >
+                    {{ settings?.note }}
+                </p>
+            </template>
+        </biz-form-number>
     </div>
 </template>
 
@@ -22,6 +33,7 @@
         props: {
             label: { type: String, default: '' },
             modelValue: { type: [String, Number, null], required: true },
+            settings: { type: Object, default: () => {} },
         },
 
         setup(props, { emit }) {

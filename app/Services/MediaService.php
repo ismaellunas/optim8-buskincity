@@ -132,7 +132,7 @@ class MediaService
         $media->version = $asset->version;
     }
 
-    private function isOriginalExtensionNeeded(UploadedFile $file): bool
+    protected function isOriginalExtensionNeeded(UploadedFile $file): bool
     {
         $mimeType = $file->getMimeType();
 

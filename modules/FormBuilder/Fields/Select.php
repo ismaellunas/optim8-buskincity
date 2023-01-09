@@ -2,18 +2,11 @@
 
 namespace Modules\FormBuilder\Fields;
 
-class Select
+use Mews\Purifier\Facades\Purifier;
+
+class Select extends BaseField
 {
-    protected $field;
-    protected $value;
-
-    public function __construct(array $field, ?string $value = null)
-    {
-        $this->field = $field;
-        $this->value = $value;
-    }
-
-    public function value()
+    public function value(): mixed
     {
         if (!$this->value) {
             return '-';
@@ -24,7 +17,7 @@ class Select
             ->first();
 
         if ($option) {
-            return $option['value'];
+            return Purifier::clean($option['value']);
         }
 
         return '-';

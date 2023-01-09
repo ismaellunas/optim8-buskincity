@@ -14,7 +14,9 @@ class FileDragDrop extends File
     {
         parent::__construct($name, $data);
 
-        $this->maxFileSize = $data['max_file_size'] ?? null;
+        $this->maxFileSize = $data['validation']['rules']['max'] ?? null;
+
+        $this->convertMimesOnValidation();
     }
 
     public function schema(): array
@@ -27,8 +29,33 @@ class FileDragDrop extends File
         return array_merge(parent::schema(), $schema);
     }
 
+    private function convertMimesToAcceptedExtensions(array $mimes): array
+    {
+        $extensions = config('constants.extensions');
+        $acceptedExtensions = [];
+
+        foreach ($mimes as $type) {
+            $acceptedExtensions = [
+                ...$acceptedExtensions,
+                ...$extensions[$type] ?? []
+            ];
+        }
+
+        return $acceptedExtensions;
+    }
+
     private function getMimeTypes(): array
     {
         return MimeType::getMimeTypes($this->getFileExtensions())->all();
+    }
+
+    private function convertMimesOnValidation(): void
+    {
+        $mimes = $this->validation['rules']['mimes'] ?? [];
+
+        $this->validation['rules']['mimes'] = implode(
+            ",",
+            $this->convertMimesToAcceptedExtensions($mimes)
+        );
     }
 }
