@@ -185,7 +185,7 @@ class File extends BaseField
 
         $extensions = [];
 
-        $mimes = $rules['mimes'] ?? [];
+        $mimes = $rules['mimes'] ?? "";
 
         if ($mimes) {
             $mimes = preg_replace('/\s+/', '', $mimes);
@@ -228,6 +228,8 @@ class File extends BaseField
         $rules[$this->name.'.files.*'] = $definedRules;
 
         $this->transformToFlatten($rules);
+
+        $rules[$this->name.'.files.*'][] = 'file';
 
         return $rules;
     }

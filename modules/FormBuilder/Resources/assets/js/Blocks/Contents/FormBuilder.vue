@@ -65,7 +65,6 @@
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

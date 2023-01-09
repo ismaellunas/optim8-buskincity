@@ -16,6 +16,17 @@
                     </button>
                 </p>
             </template>
+
+            <template
+                v-if="settings?.note"
+                #note
+            >
+                <p
+                    class="help"
+                >
+                    {{ settings.note }}
+                </p>
+            </template>
         </biz-form-number-addons>
     </div>
 </template>
