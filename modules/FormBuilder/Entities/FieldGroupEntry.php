@@ -16,7 +16,7 @@ class FieldGroupEntry extends Model
         return \Modules\FormBuilder\Database\factories\FieldGroupEntryFactory::new();
     }
 
-    public function saveFromInputs($inputs): void
+    public function saveFromInputs(array $inputs): void
     {
         foreach ($inputs as $key => $value) {
             $this->$key = $value;
@@ -28,5 +28,17 @@ class FieldGroupEntry extends Model
     public function fieldGroup()
     {
         return $this->belongsTo(FieldGroup::class, 'field_group_id');
+    }
+
+    private function isFileUpload(mixed $value): bool
+    {
+        if (
+            is_array($value)
+            && isset($value['files'])
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

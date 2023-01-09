@@ -4,8 +4,18 @@
             v-for="(group, groupName, indexConfig) in configOptions"
             :key="indexConfig"
         >
+            <component
+                :is="group.component"
+                v-if="group.component && !isBlank(entity)"
+                :ref="`config-${indexConfig}`"
+                v-model="entity"
+                :class="{'mb-1': indexConfig != numberOfOptions - 1}"
+                :is-expanding-on-load="indexConfig == 0"
+                @on-click-header-card="onClickHeaderCard($event, indexConfig)"
+            />
+
             <biz-card
-                v-if="!isBlank(entity)"
+                v-else-if="!isBlank(entity)"
                 :ref="`config-${indexConfig}`"
                 :class="{'mb-1': indexConfig != numberOfOptions - 1}"
                 :is-collapsed="true"
@@ -52,6 +62,8 @@
     import ConfigAddOption from '@/Blocks/Configs/AddOption';
     import ConfigAutoGenerateKey from '@/Blocks/Configs/AutoGenerateKey';
     import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
+    import ConfigCheckboxes from '@/Blocks/Configs/Checkboxes';
+    import ConfigFileUploadAttribute from './Configs/FileUploadAttribute';
     import ConfigInput from '@/Blocks/Configs/Input';
     import ConfigNumber from '@/Blocks/Configs/Number';
     import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
@@ -71,6 +83,8 @@
             ConfigAddOption,
             ConfigAutoGenerateKey,
             ConfigCheckbox,
+            ConfigCheckboxes,
+            ConfigFileUploadAttribute,
             ConfigInput,
             ConfigNumber,
             ConfigRowSection,
@@ -126,7 +140,18 @@
 
                     forEach(self.configOptions, function (group) {
                         if (i != index) {
-                            self.$refs[`config-${i}`][0].isContentShown = false;
+                            if (!group.component) {
+                                self.$refs[`config-${i}`][0].isContentShown = false;
+                            } else {
+                                let componentCard = self.$refs[`config-${i}`][0].$refs['card'];
+
+                                if (
+                                    typeof componentCard !== 'undefined'
+                                    && componentCard !== null
+                                ) {
+                                    componentCard.isContentShown = false;
+                                }
+                            }
                         }
 
                         i++;

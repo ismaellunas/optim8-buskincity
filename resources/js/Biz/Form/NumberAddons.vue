@@ -30,6 +30,8 @@
             <slot name="afterInput" />
         </biz-field>
 
+        <slot name="note" />
+
         <biz-input-error :message="message" />
     </biz-field>
 </template>

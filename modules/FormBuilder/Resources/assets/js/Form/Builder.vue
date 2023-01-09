@@ -9,6 +9,7 @@
         <form @submit.prevent="onSubmit">
             <field-group
                 ref="field_group"
+                :key="fieldGroupKey"
                 v-model="form"
                 :group="fieldGroup"
                 :errors="formErrors"
@@ -43,6 +44,8 @@
     import { inRange, isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { reactive } from 'vue';
+    import { forEach } from 'lodash';
+    import { serialize } from 'object-to-formdata';
 
     export default {
         name: 'FormBuilder',
@@ -85,6 +88,7 @@
                     getSchema: '/form-builders/schema',
                     save: '/form-builders/save',
                 },
+                fieldGroupKey: 0,
             };
         },
 
@@ -170,13 +174,22 @@
             recaptchaVerify(response = null) {
                 const self = this;
 
-                self.onStartLoadingOverlay();
-
                 self.form['g-recaptcha-response'] = response;
+
+                let formData = serialize(self.form);
+
+                const config = {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                };
+
+                self.onStartLoadingOverlay();
 
                 axios.post(
                     self.urls.save,
-                    self.form,
+                    formData,
+                    config
                 )
                     .then((response) => {
                         let data = response.data;
@@ -196,9 +209,13 @@
                         oopsAlert();
 
                         self.formErrors = error.response.data.errors;
+
+                        self.$refs.recaptcha.onExpired()
                     })
                     .then(() => {
                         self.onEndLoadingOverlay();
+
+                        self.fieldGroupKey += 1;
                     });
             },
         },

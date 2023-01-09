@@ -138,6 +138,7 @@
     import Draggable from "vuedraggable";
     import Email from './../Fields/Inputs/Email';
     import FieldStructures from './../FieldStructures';
+    import FileDragDrop from './../Fields/Inputs/FileDragDrop';
     import InputConfig from './../Fields/InputConfig';
     import Number from './../Fields/Inputs/Number';
     import Phone from './../Fields/Inputs/Phone';
@@ -164,6 +165,7 @@
             BizFormKey,
             Draggable,
             Email,
+            FileDragDrop,
             InputConfig,
             Number,
             Phone,

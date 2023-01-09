@@ -1,4 +1,5 @@
 import email from './email';
+import fileUpload from './file-upload';
 import number from './number';
 import phone from './phone';
 import select from './select';
@@ -7,6 +8,7 @@ import textarea from './textarea';
 
 export default {
     email: email,
+    fileUpload: fileUpload,
     number: number,
     phone: phone,
     select: select,
