@@ -118,7 +118,7 @@
                                     placeholder="Address"
                                     rows="5"
                                     maxlength="500"
-                                    :message="error('location.address', errorBag)"
+                                    :message="error('location.address', eventErrorBag)"
                                 />
 
                                 <biz-form-input
@@ -126,7 +126,7 @@
                                     label="City"
                                     maxlength="64"
                                     required
-                                    :message="error('location.city', errorBag)"
+                                    :message="error('location.city', eventErrorBag)"
                                 />
 
                                 <biz-form-select
@@ -150,14 +150,14 @@
                                         <biz-form-input
                                             v-model="eventForm.location.latitude"
                                             label="Latitude"
-                                            :message="error('location.latitude', errorBag)"
+                                            :message="error('location.latitude', eventErrorBag)"
                                         />
                                     </div>
                                     <div class="column is-12">
                                         <biz-form-input
                                             v-model="eventForm.location.longitude"
                                             label="Longitude"
-                                            :message="error('location.longitude', errorBag)"
+                                            :message="error('location.longitude', eventErrorBag)"
                                         />
                                     </div>
                                 </div>
@@ -533,6 +533,7 @@
                 eventForm: useForm(eventForm),
                 icon,
                 eventErrors: ref({}),
+                eventErrorBag: 'updateEvent',
             };
         },
 
@@ -550,7 +551,7 @@
             dateOverrideBatches() {
                 const self = this;
 
-                const errorBag = 'updateEvent'
+                const errorBag = this.eventErrorBag;
 
                 const dateOverrideBatches = [];
 
@@ -685,7 +686,7 @@
                 });
 
                 this.eventForm.put(url, {
-                    errorBag: 'updateEvent',
+                    errorBag: self.eventErrorBag,
                     onStart: () => self.onStartLoadingOverlay(),
                     onSuccess: (page) => {
                         self.eventForm.date_overrides = cloneDeep(page.props.dateOverrides);
