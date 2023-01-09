@@ -3,7 +3,6 @@
 namespace Modules\Ecommerce\Services;
 
 use App\Models\User;
-use App\Services\MediaService;
 use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
 use GetCandy\Base\OrderReferenceGeneratorInterface;
@@ -22,11 +21,6 @@ use Modules\Ecommerce\Enums\OrderStatus;
 
 class OrderService
 {
-    public function __construct(MediaService $mediaService)
-    {
-        $this->mediaService = $mediaService;
-    }
-
     private function recordBuilder(
         string $term = null,
         ?array $scopes = null

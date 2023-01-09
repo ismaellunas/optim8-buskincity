@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
+
 class IPService
 {
     private $clientData;
@@ -32,6 +34,11 @@ class IPService
         return $ipaddress;
     }
 
+    private function isLocalhost(): bool
+    {
+        return $this->getClientIp() == '127.0.0.1';
+    }
+
     public function getClientData(): mixed
     {
         if (is_null($this->clientData)) {
@@ -58,7 +65,7 @@ class IPService
 
     public function getGeoLocation(): ?array
     {
-        if ($this->getClientIp() == '127.0.0.1') {
+        if ($this->isLocalhost()) {
             return [
                 'latitude' => 51.507351,
                 'longitude' => -0.127758,
@@ -69,5 +76,17 @@ class IPService
             'latitude' => $this->getClientData()['location']['longitude'],
             'longitude' => $this->getClientData()['location']['latitude'],
         ];
+    }
+
+    public function getCity(string $default = null): ?string
+    {
+        return data_get($this->getClientData(), 'location.city') ?? $default;
+    }
+
+    public function getDateTime(): Carbon
+    {
+        $currentTime = data_get($this->getClientData(), 'time_zone.current_time') ?? null;
+
+        return new Carbon($currentTime);
     }
 }

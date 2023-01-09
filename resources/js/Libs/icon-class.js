@@ -19,6 +19,7 @@ export const eraser = iconFormatter('fa-eraser');
 export const expand = iconFormatter('fa-expand');
 export const eye = iconFormatter('fa-eye');
 export const eyeSlash = iconFormatter('fa-eye-slash');
+export const globe = iconFormatter('fa-globe');
 export const grid = iconFormatter('fa-th');
 export const idCard = iconFormatter('fa-id-card');
 export const image = iconFormatter('fa-image');
@@ -64,6 +65,7 @@ export default {
     expand,
     eye,
     eyeSlash,
+    globe,
     grid,
     idCard,
     image,
