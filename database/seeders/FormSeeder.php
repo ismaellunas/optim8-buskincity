@@ -16,11 +16,8 @@ class FormSeeder extends Seeder
      */
     public function run()
     {
-        $imageMimes = implode(',', config('constants.extensions.image'));
-        $imageAndVideoMimes = implode(',', array_merge(
-            config('constants.extensions.image'),
-            config('constants.extensions.video'),
-        ));
+        $imageMimes = ['image'];
+        $imageAndVideoMimes = ['image', 'video'];
 
         $about = [
             "name" => "about",
@@ -473,7 +470,6 @@ class FormSeeder extends Seeder
                     "disabled" => false,
                     "max_file_number" => 1,
                     "min_file_number" => 0,
-                    "max_file_size" => config('constants.one_megabyte') * 50,
                     "validation" => [
                         "rules" => [
                             "mimes" => $imageMimes,
@@ -495,7 +491,6 @@ class FormSeeder extends Seeder
                     "disabled" => false,
                     "max_file_number" => 5,
                     "min_file_number" => 0,
-                    "max_file_size" => config('constants.one_megabyte') * 50,
                     "validation" => [
                         "rules" => [
                             "mimes" => $imageAndVideoMimes,

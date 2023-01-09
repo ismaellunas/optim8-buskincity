@@ -15,9 +15,9 @@
             label="Is Multiple File Upload?"
         />
 
-        <hr>
-
         <template v-if="isMultipleUpload">
+            <hr>
+
             <config-number
                 v-if="computedValue.hasOwnProperty('max_file_number')"
                 v-model="computedValue.max_file_number"
@@ -31,16 +31,7 @@
                 v-model="computedValue.min_file_number"
                 label="Minimal File Number"
             />
-
-            <hr>
         </template>
-
-        <config-number-addons
-            v-if="computedValue.hasOwnProperty('max_file_size')"
-            v-model="computedValue.max_file_size"
-            label="Maximal File Size"
-            :settings="{ addons: 'MiB', note: 'This is validation when dropping the file on frontend' }"
-        />
     </biz-card>
 </template>
 
@@ -48,7 +39,6 @@
     import BizCard from '@/Biz/Card';
     import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
     import ConfigNumber from '@/Blocks/Configs/Number';
-    import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
@@ -58,7 +48,6 @@
             BizCard,
             ConfigCheckbox,
             ConfigNumber,
-            ConfigNumberAddons,
         },
 
         props: {
@@ -81,7 +70,6 @@
                 oldData: {
                     max_file_number: this.computedValue.max_file_number,
                     min_file_number: this.computedValue.min_file_number,
-                    max_file_size: this.computedValue.max_file_size,
                 }
             };
         },
@@ -97,7 +85,6 @@
                 if (!newData) {
                     this.computedValue.max_file_number = this.oldData.max_file_number;
                     this.computedValue.min_file_number = this.oldData.min_file_number;
-                    this.computedValue.max_file_size = this.oldData.max_file_size;
                 }
             }
         },

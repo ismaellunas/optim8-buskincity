@@ -24,7 +24,7 @@
                 <p
                     class="help"
                 >
-                    {{ settings?.note }}
+                    {{ settings.note }}
                 </p>
             </template>
         </biz-form-number-addons>

@@ -185,11 +185,7 @@ class File extends BaseField
 
         $extensions = [];
 
-        $mimes = $rules['mimes'] ?? [];
-
-        if (is_array($mimes)) {
-            $mimes = implode(",", $mimes);
-        }
+        $mimes = $rules['mimes'] ?? "";
 
         if ($mimes) {
             $mimes = preg_replace('/\s+/', '', $mimes);
