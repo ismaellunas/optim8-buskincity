@@ -47,9 +47,9 @@
                                 <td
                                     v-for="(name, nameIndex) in fieldNames"
                                     :key="nameIndex"
-                                >
-                                    {{ entry[name] }}
-                                </td>
+                                    class="content"
+                                    v-html="entry[name]"
+                                />
                             </tr>
                         </tbody>
                     </table>

@@ -136,15 +136,15 @@
                 default: false,
             },
             maxFiles: {
-                type: Number,
+                type: [Number, String],
                 default: 1
             },
             maxFileSize: {
-                type: [Number, null],
+                type: [Number, String, null],
                 default: null
             },
             maxTotalFileSize: {
-                type: [Number, null],
+                type: [Number, String, null],
                 default: null
             },
         },

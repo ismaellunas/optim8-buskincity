@@ -165,20 +165,54 @@ class FormBuilderService
         abort(Response::HTTP_FORBIDDEN);
     }
 
-    public function transformInputs(&$inputs): void
+    protected function getFieldClassName($type): string
     {
-        $fieldGroupId = FieldGroup::where('title', $inputs['form_id'])->value('id');
+        return $this->fieldPath.'\\'.Str::studly($type);
+    }
 
-        if (!$fieldGroupId) {
-            $this->formBuilderService->abortAction();
+    public function saveValues($inputs): FieldGroupEntry
+    {
+        $values = $this->getSavedValues($inputs);
+
+        $fieldGroupEntry = new FieldGroupEntry();
+
+        $fieldGroupEntry->saveFromInputs($values);
+
+        return $fieldGroupEntry;
+    }
+
+    public function getSavedValues(array $inputs): array
+    {
+        $values = [];
+
+        $fieldGroup = FieldGroup::where('title', $inputs['form_id'])->first();
+
+        if (!$fieldGroup) {
+            $this->abortAction();
         }
+
+        $fields = collect($fieldGroup->data['fields']);
+
+        foreach($inputs as $key => $value) {
+            $fieldType = $fields->where('name', $key)->value('type');
+
+            $fieldClassName = $this->getFieldClassName($fieldType);
+
+            if (class_exists($fieldClassName)) {
+                $fieldClass = new $fieldClassName();
+
+                $values[$key] = $fieldClass->getSavedData($value);
+            }
+        }
+
 
         if (Auth::check()) {
-            $inputs['user_id'] = Auth::user()->id;
+            $values['user_id'] = Auth::user()->id;
         }
 
-        $inputs['field_group_id'] = $fieldGroupId;
-        unset($inputs['form_id']);
+        $values['field_group_id'] = $fieldGroup->id;
+
+        return $values;
     }
 
     public function swapTagWithEntryValue(FieldGroupEntry $entry, string $value = null): ?string
@@ -214,7 +248,7 @@ class FormBuilderService
 
     public function getDisplayValue($field, $value): mixed
     {
-        $className = $this->fieldPath.'\\'.Str::studly($field['type']);
+        $className = $this->getFieldClassName($field['type']);
 
         if (class_exists($className)) {
             $fieldClass = new $className($field, $value);
