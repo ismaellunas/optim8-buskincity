@@ -67,4 +67,12 @@ class ModuleService
             'lastEvent',
         ];
     }
+
+    public static function centerCoordinate(): array
+    {
+        return [
+            'latitude' => 59.3260668,
+            'longitude' => 17.8419716
+        ];
+    }
 }
