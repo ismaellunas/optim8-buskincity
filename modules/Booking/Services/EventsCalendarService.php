@@ -221,7 +221,18 @@ class EventsCalendarService
         array $defaultCoordinate = []
     ): array {
         if (!empty($coordinates)) {
-            return $this->getCenter($coordinates);
+            $center = $this->getCenter($coordinates);
+
+            if (
+                !empty($center)
+                && array_key_exists('lat', $center)
+                && array_key_exists('long', $center)
+            ) {
+                return [
+                    'latitude' => $center['lat'],
+                    'longitude' => $center['long'],
+                ];
+            }
         }
 
         return $defaultCoordinate;
@@ -239,7 +250,7 @@ class EventsCalendarService
     {
         return (array) collect(
             $this->getGeo()
-                ->setMainPoint([$mainPoint['lat'], $mainPoint['long']])
+                ->setMainPoint([$mainPoint['latitude'], $mainPoint['longitude']])
                 ->setPoints($points)
                 ->getFarthest()
         )->first();
@@ -250,7 +261,7 @@ class EventsCalendarService
         $distance = collect(
             $this->getGeo()
                 ->setOptions(['units' => ['km']])
-                ->setPoint([$mainPoint['lat'], $mainPoint['long']])
+                ->setPoint([$mainPoint['latitude'], $mainPoint['longitude']])
                 ->setPoint([$farthestPoint[0], $farthestPoint[1]] )
                 ->getDistance()
         )->first();
