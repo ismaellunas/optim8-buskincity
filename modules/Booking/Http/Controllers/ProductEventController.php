@@ -29,7 +29,17 @@ class ProductEventController extends CrudController
         $product->duration = $inputs['duration'];
         $product->bookable_date_range = $inputs['bookable_date_range'];
 
-        $location = $inputs['location'];
+        $location = collect($inputs['location'])->only([
+            'address',
+            'city',
+            'country_code',
+        ])->all();
+
+        $latitude = data_get($inputs, 'location.latitude', null);
+        $longitude = data_get($inputs, 'location.longitude', null);
+
+        $location['latitude'] = !is_null($latitude) ? (float) $latitude : null;
+        $location['longitude'] = !is_null($longitude) ? (float) $longitude : null;
 
         if ($location['latitude'] && $location['longitude']) {
             $response = $this->getReversedGeocoding(
