@@ -29,6 +29,10 @@ Route::name('admin.')->prefix('admin/')->middleware([
         ->name('form-builders.entries')
         ->can('viewAny', 'form_builder');
 
+    Route::get('form-builders/{form_builder}/entries/{entry}', [FormBuilderController::class, 'entryShow'])
+        ->name('form-builders.entries.show')
+        ->can('view', 'form_builder');
+
     Route::resource('form-builders', FormBuilderController::class)
         ->except(['show']);
 

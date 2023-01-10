@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\FieldGroup;
+use Modules\FormBuilder\Entities\FieldGroupEntry;
 use Modules\FormBuilder\Events\FormSubmitted;
 use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
@@ -117,6 +118,22 @@ class FormBuilderController extends CrudController
             'fieldNames' => $this->formBuilderService->getDataFromFields(
                 $formBuilder->data['fields'],
                 'name'
+            ),
+        ]));
+    }
+
+    public function entryShow(FieldGroup $formBuilder, FieldGroupEntry $entry)
+    {
+        return Inertia::render('FormBuilder::EntryDetail', $this->getData([
+            'title' => $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $entry->id,
+            'formBuilder' => $formBuilder,
+            'entry' => $this->formBuilderService->transformEntry($entry),
+            'entryDisplay' => $this->formBuilderService->getDisplayValues(
+                $formBuilder->data['fields'],
+                $entry,
+            ),
+            'fieldLabels' => $this->formBuilderService->getFieldLabelAndNames(
+                $entry->fieldGroup->data['fields']
             ),
         ]));
     }

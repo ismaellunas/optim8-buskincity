@@ -2,9 +2,11 @@
 
 namespace Modules\FormBuilder\Services;
 
+use App\Services\IPService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Jenssegers\Agent\Agent;
 use Modules\FormBuilder\Entities\FieldGroup;
 use Modules\FormBuilder\Entities\FieldGroupEntry;
 use Modules\FormBuilder\Forms\Form;
@@ -259,7 +261,15 @@ class FormBuilderService
             $values['user_id'] = Auth::user()->id;
         }
 
+        $ipService = app(IPService::class);
+        $agent = new Agent();
+
         $values['field_group_id'] = $fieldGroup->id;
+        $values['page_url'] = url()->previous() ?? null;
+        $values['ip_address'] = $ipService->getClientIp();
+        $values['timezone'] = $ipService->getTimezone();
+        $values['browser'] = $agent->browser();
+        $values['device'] = $agent->device();
 
         return $values;
     }
@@ -289,7 +299,11 @@ class FormBuilderService
             $value = $entryValue;
             $field = $fields->where('name', $key)->first();
 
-            $displayValues[$key] = $this->getDisplayValue($field, $value);
+            if ($field) {
+                $value = $this->getDisplayValue($field, $value);
+            }
+
+            $displayValues[$key] = $value;
         }
 
         return $displayValues;
@@ -306,5 +320,15 @@ class FormBuilderService
         }
 
         return $value;
+    }
+
+    public function transformEntry($entry)
+    {
+        if (!empty($entry['user_id'])) {
+            $entry->load('user');
+            $entry->user->append('isSuperAdministrator');
+        }
+
+        return $entry->toArray();
     }
 }
