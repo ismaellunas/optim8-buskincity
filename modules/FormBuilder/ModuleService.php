@@ -59,4 +59,11 @@ class ModuleService
             'submit_text' => 'Submit',
         ];
     }
+
+    public static function widgets(): array
+    {
+        return [
+            'entry',
+        ];
+    }
 }

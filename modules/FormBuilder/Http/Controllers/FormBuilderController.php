@@ -147,4 +147,32 @@ class FormBuilderController extends CrudController
             'message' => __('Thank you for filling out the form.'),
         ];
     }
+
+    public function getEntries(FieldGroup $formBuilder)
+    {
+        $fieldLabels = collect(
+                $this->formBuilderService->getFieldLabels(
+                    $formBuilder->data['fields'],
+                )
+            )
+            ->slice(0, 3)
+            ->all();
+
+        $fieldNames = collect(
+                $this->formBuilderService->getDataFromFields(
+                    $formBuilder->data['fields'],
+                    'name'
+                )
+            )
+            ->slice(0, 3)
+            ->all();
+
+        return [
+            'fieldLabels' => $fieldLabels,
+            'fieldNames' => $fieldNames,
+            'records' => $this->formBuilderService->getWidgetEntryRecords(
+                $formBuilder
+            ),
+        ];
+    }
 }

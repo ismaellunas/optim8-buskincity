@@ -64,6 +64,43 @@ class FormBuilderService
         foreach ($entries as $entry) {
             $record = [];
 
+            $record['id'] = $entry->id;
+
+            foreach ($fieldNames as $fieldName) {
+                $field = collect($fields)->where('name', $fieldName)->first();
+
+                $record[$fieldName] = $this->getDisplayValue(
+                    $field,
+                    $entry[$fieldName] ?? '-'
+                );
+            }
+
+            $records->push($record);
+        }
+
+        return $records->paginate($perPage);
+    }
+
+    public function getWidgetEntryRecords(
+        FieldGroup $formBuilder,
+        int $perPage = 10
+    ): LengthAwarePaginator {
+        $records = collect();
+        $fields = $formBuilder->data['fields'];
+        $fieldNames = collect($this->getDataFromFields($fields, 'name'))
+            ->slice(0, 3)
+            ->all();
+
+        $entries = $formBuilder
+            ->entries()
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        foreach ($entries as $entry) {
+            $record = [];
+
+            $record['id'] = $entry->id;
+
             foreach ($fieldNames as $fieldName) {
                 $field = collect($fields)->where('name', $fieldName)->first();
 
@@ -108,6 +145,18 @@ class FormBuilderService
         }
 
         return $labels;
+    }
+
+    public function getFieldLabelAndNames(array $fields): array
+    {
+        $fieldAndNames = [];
+
+        foreach ($fields as $field) {
+            $fieldAndNames[$field['name']] = $field['label']
+                ?? Str::of($field['name'])->replace('_', ' ')->title();
+        }
+
+        return $fieldAndNames;
     }
 
     public function getFormOptions(): array

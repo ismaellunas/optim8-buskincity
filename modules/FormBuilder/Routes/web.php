@@ -61,6 +61,9 @@ Route::name('admin.')->prefix('admin/')->middleware([
                     ->name('form-options')
                     ->middleware('can:viewAny,Modules\FormBuilder\Entities\FieldGroup');
             });
+
+            Route::get('form-builders/{formBuilder}/entries', [FormBuilderController::class, 'getEntries'])
+                    ->name('form-builders.entries');
         });
 });
 
