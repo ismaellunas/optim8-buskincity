@@ -4,7 +4,6 @@ namespace Modules\Space\Http\Controllers;
 
 use App\Helpers\HumanReadable;
 use App\Http\Controllers\CrudController;
-use App\Services\CountryService;
 use App\Services\IPService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -24,12 +23,10 @@ class SpaceController extends CrudController
     private $spaceService;
 
     public function __construct(
-        CountryService $countryService,
         SpaceService $spaceService
     ) {
         $this->authorizeResource(Space::class, 'space');
 
-        $this->countryService = $countryService;
         $this->spaceService = $spaceService;
     }
 
@@ -101,6 +98,12 @@ class SpaceController extends CrudController
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
             'instructions' => $this->instructions(),
+            'breadcrumbs' => [
+                [
+                    'url' => route('admin.spaces.index'),
+                    'title' => 'Spaces',
+                ],
+            ],
         ]));
     }
 
@@ -196,6 +199,15 @@ class SpaceController extends CrudController
                 ModuleService::maxLengths(),
             ),
             'instructions' => $this->instructions(),
+            'breadcrumbs' => [
+                [
+                    'url' => route('admin.spaces.index'),
+                    'title' => 'Spaces',
+                ],
+                [
+                    'title' => $space->name,
+                ],
+            ],
         ]));
     }
 
