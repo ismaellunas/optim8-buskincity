@@ -67,8 +67,6 @@ class Page extends Model implements TranslatableContract
 
     public function saveFromInputs(array $inputs)
     {
-        $settings = [];
-
         foreach ($inputs as $locale => $input) {
             if (!empty($inputs[$locale])) {
                 $inputs[$locale]['plain_text_content'] = PageService::transformComponentToText($input['data']);
