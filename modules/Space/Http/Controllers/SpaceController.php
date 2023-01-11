@@ -113,7 +113,10 @@ class SpaceController extends CrudController
 
         $inputs = $request->validated();
 
-        $space->saveFromInputs($inputs);
+        $space->saveFromInputs([
+            ...$inputs,
+            ...['is_page_enabled' => true],
+        ]);
 
         if ($request->hasFile('logo')) {
             $this->spaceService->replaceLogo($space, $request->file('logo'));
@@ -122,6 +125,11 @@ class SpaceController extends CrudController
         if ($request->hasFile('cover')) {
             $this->spaceService->replaceCover($space, $request->file('cover'));
         }
+
+        $page = Page::createBasedOnSpace($inputs['name'], auth()->id());
+
+        $space->page_id = $page->id;
+        $space->save();
 
         $this->generateFlashMessage('Successfully creating '.$this->title.'!');
 
