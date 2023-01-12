@@ -1,5 +1,5 @@
 <template>
-    <div class="column is-6">
+    <div class="column is-full">
         <biz-panel class="is-white is-relative">
             <template #heading>
                 <div class="columns">
