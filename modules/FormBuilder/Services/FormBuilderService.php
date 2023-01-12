@@ -264,12 +264,15 @@ class FormBuilderService
         $ipService = app(IPService::class);
         $agent = new Agent();
 
+        $agentBrowser = $agent->browser();
+        $agentBrowserVersion = $agent->version($agentBrowser);
+
         $values['field_group_id'] = $fieldGroup->id;
         $values['page_url'] = url()->previous() ?? null;
         $values['ip_address'] = $ipService->getClientIp();
         $values['timezone'] = $ipService->getTimezone();
-        $values['browser'] = $agent->browser();
-        $values['device'] = $agent->device();
+        $values['browser'] = $agentBrowser . ($agentBrowserVersion ? ' version ' . $agentBrowserVersion : '');
+        $values['device'] = $agent->device() . '; ' . $agent->platform();
 
         return $values;
     }
