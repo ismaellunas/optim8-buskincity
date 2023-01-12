@@ -68,6 +68,13 @@ class ModuleService
         ];
     }
 
+    public static function widgets(): array
+    {
+        return [
+            'latestBooking',
+        ];
+    }
+
     public static function centerCoordinate(): array
     {
         return [
