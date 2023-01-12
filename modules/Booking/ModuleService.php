@@ -60,7 +60,7 @@ class ModuleService
     }
 
 
-    public static function widgets(): array
+    public static function frontendWidgets(): array
     {
         return [
             'upcomingEvent',
