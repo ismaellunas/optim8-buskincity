@@ -59,6 +59,8 @@ Route::name('admin.')->prefix('admin/')->middleware([
 
     Route::prefix('api')
         ->name('api.')
+        ->withoutMiddleware(HandleInertiaRequests::class)
+        ->middleware('throttle:api')
         ->group(function() {
             Route::prefix('page-builders')->name('page-builders.')->group(function() {
                 Route::get('form-options', [PageBuilderController::class, 'formOptions'])
