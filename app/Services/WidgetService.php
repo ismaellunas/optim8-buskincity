@@ -12,7 +12,7 @@ class WidgetService
     {
         return [
             'post',
-            'user',
+            'latestRegistration',
         ];
     }
 
