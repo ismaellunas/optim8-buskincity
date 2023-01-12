@@ -109,15 +109,11 @@
 
                             <div class="media-right">
                                 <biz-button-link
-                                    class="has-text-black"
-                                    title="Detail"
+                                    class="is-primary is-outlined is-small"
                                     :href="route(data.baseRouteName+'.edit', record.id)"
                                     :disabled="!data.permissions.edit"
                                 >
-                                    <biz-icon
-                                        class="is-small"
-                                        :icon="icon.show"
-                                    />
+                                    View Detail
                                 </biz-button-link>
                             </div>
                         </div>
@@ -152,27 +148,25 @@
 </template>
 
 <script>
+    import BizButtonLink from '@/Biz/ButtonLink';
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizImage from '@/Biz/Image';
     import BizInput from '@/Biz/Input';
     import BizLoader from '@/Biz/Loader';
-    import BizIcon from '@/Biz/Icon';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizImage from '@/Biz/Image';
     import BizPanel from '@/Biz/Panel';
     import BizPanelBlock from '@/Biz/PanelBlock';
-    import { userImage } from '@/Libs/defaults';
     import icon from '@/Libs/icon-class';
-    import { debounceTime } from '@/Libs/defaults';
     import { debounce } from 'lodash';
+    import { debounceTime } from '@/Libs/defaults';
+    import { userImage } from '@/Libs/defaults';
 
     export default {
         name: 'LatestRegistration',
 
         components: {
             BizLoader,
-            BizIcon,
             BizButtonLink,
             BizImage,
             BizPanel,
