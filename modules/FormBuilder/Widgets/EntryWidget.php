@@ -13,7 +13,7 @@ class EntryWidget implements WidgetInterface
     private $componentName = "Entry";
     private $title = "Form Entries";
 
-    protected $baseRouteName = "admin.form-builders";
+    private $baseRouteName = "admin.form-builders";
 
     public function __construct($request)
     {
