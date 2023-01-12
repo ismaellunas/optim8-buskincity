@@ -13,9 +13,7 @@
                     :title="widget.title"
                 />
             </template>
-        </div>
 
-        <div class="columns is-multiline">
             <template
                 v-for="(widget, order) in moduleWidgets"
                 :key="order"

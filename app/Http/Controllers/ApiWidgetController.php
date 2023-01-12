@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\UserService;
-use App\Entities\Caches\WidgetCache;
 use App\Models\User;
-use App\Services\WidgetService;
 use Illuminate\Http\Request;
 
 class ApiWidgetController extends Controller

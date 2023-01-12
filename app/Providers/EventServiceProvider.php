@@ -9,18 +9,14 @@ use App\Models\{
     GlobalOption,
     Page,
     Post,
-    Role,
     Setting,
-    User,
 };
 use App\Observers\{
     CategoryObserver,
     GlobalOptionObserver,
     PageObserver,
     PostObserver,
-    RoleObserver,
     SettingObserver,
-    UserObserver,
 };
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -54,8 +50,6 @@ class EventServiceProvider extends ServiceProvider
         GlobalOption::observe(GlobalOptionObserver::class);
         Page::observe(PageObserver::class);
         Post::observe(PostObserver::class);
-        Role::observe(RoleObserver::class);
         Setting::observe(SettingObserver::class);
-        User::observe(UserObserver::class);
     }
 }
