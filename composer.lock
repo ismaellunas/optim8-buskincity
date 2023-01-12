@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c747a36de5d64d42b2d45f1c6d1dfe31",
+    "content-hash": "704c75d3678fb565ccf9d6110b492419",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5276,16 +5276,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bayubiz752/Purifier.git",
-                "reference": "78d9cc1c36a502eeb26f4eeb348276a0eb217a0f"
+                "reference": "0f2dac36893198dd00ea5efda28f974366c6cdfe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bayubiz752/Purifier/zipball/78d9cc1c36a502eeb26f4eeb348276a0eb217a0f",
-                "reference": "78d9cc1c36a502eeb26f4eeb348276a0eb217a0f",
+                "url": "https://api.github.com/repos/bayubiz752/Purifier/zipball/0f2dac36893198dd00ea5efda28f974366c6cdfe",
+                "reference": "0f2dac36893198dd00ea5efda28f974366c6cdfe",
                 "shasum": ""
             },
             "require": {
-                "ezyang/htmlpurifier": "^4.13",
+                "ezyang/htmlpurifier": "^4.16",
                 "illuminate/config": "^5.8|^6.0|^7.0|^8.0|^9.0",
                 "illuminate/filesystem": "^5.8|^6.0|^7.0|^8.0|^9.0",
                 "illuminate/support": "^5.8|^6.0|^7.0|^8.0|^9.0",
@@ -5336,24 +5336,21 @@
                     "role": "Developer"
                 }
             ],
-            "description": "Laravel 5/6/7 HtmlPurifier Package",
+            "description": "Laravel 5/6/7/8/9 HtmlPurifier Package",
             "homepage": "https://github.com/mewebstudio/purifier",
             "keywords": [
                 "HtmlPurifier",
+                "Laravel HtmlPurifier",
+                "Laravel Purifier",
+                "Laravel Security",
                 "Purifier",
-                "laravel5 HtmlPurifier",
-                "laravel5 Purifier",
-                "laravel5 Security",
-                "laravel6 HtmlPurifier",
-                "laravel6 Purifier",
-                "laravel6 Security",
                 "security",
                 "xss"
             ],
             "support": {
                 "source": "https://github.com/bayubiz752/Purifier/tree/master"
             },
-            "time": "2022-10-17T05:58:11+00:00"
+            "time": "2023-01-12T04:56:30+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
