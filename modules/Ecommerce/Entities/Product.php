@@ -94,6 +94,14 @@ class Product extends GetCandyProduct
         return $query->whereIn('status', $status);
     }
 
+    public function scopeCity($query, ?string $city = null)
+    {
+        return $query->whereHas('metas', function ($q) use ($city) {
+            $q->where('key', 'locations')
+                ->where('value', 'ILIKE', '%"city":"'.$city.'"%');
+        });
+    }
+
     /**
      * {@inheritDoc}
      */

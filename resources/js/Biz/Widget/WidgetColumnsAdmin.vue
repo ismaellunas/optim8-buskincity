@@ -58,6 +58,10 @@
                 if (widget.moduleName == 'FormBuilder') {
                     asyncComponents[widget.componentName] = defineAsyncComponent(() => import('@formbuilder/Widgets/'+widget.componentName));
                 }
+
+                if (widget.moduleName == 'Booking') {
+                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import('@booking/Widgets/'+widget.componentName));
+                }
             });
 
             return {
