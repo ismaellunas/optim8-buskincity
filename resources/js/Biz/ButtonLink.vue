@@ -1,7 +1,12 @@
 <template>
-    <biz-link class="button">
+    <component
+        :is="!disabled ? `biz-link` : `button`"
+        ref="link"
+        class="button"
+        :disabled="disabled"
+    >
         <slot />
-    </biz-link>
+    </component>
 </template>
 
 <script>
@@ -10,6 +15,16 @@
     export default {
         components: {
             BizLink,
-        }
+        },
+
+        props: {
+            disabled: { type: Boolean, default: false, }
+        },
+
+        mounted() {
+            if (!this.disabled) {
+                this.$refs.link.$el.removeAttribute('disabled');
+            }
+        },
     }
 </script>
