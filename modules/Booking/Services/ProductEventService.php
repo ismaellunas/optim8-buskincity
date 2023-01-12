@@ -395,4 +395,31 @@ class ProductEventService
 
         return implode("", $urlParts);
     }
+
+    public function getCityOptions(): array
+    {
+        $products = Product::with(['metas'])
+            ->whereHas('productType', function ($query) {
+                $query->where('name', 'Event');
+            })
+            ->whereHas('variants', function ($query) {
+                $query->whereHas('orderLine.order');
+                $query->whereHas('orderLine.latestEvent');
+            })
+            ->whereHas('metas', function ($query) {
+                $query->where('key', 'locations');
+            })
+            ->get(['id', 'product_type_id']);
+
+        $cities = $products
+            ->filter(fn ($product) => !empty($product->locations) && is_array($product->locations))
+            ->map(function ($product) {
+                return $product->locations[0]['city'];
+            })
+            ->unique()
+            ->values()
+            ->all();
+
+        return $cities;
+    }
 }
