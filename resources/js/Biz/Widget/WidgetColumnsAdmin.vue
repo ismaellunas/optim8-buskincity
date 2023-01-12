@@ -34,7 +34,6 @@
 
 <script>
     import LatestRegistration from '@/Biz/Widget/LatestRegistration';
-    import Post from '@/Biz/Widget/Post';
     import { defineAsyncComponent } from 'vue';
 
     export default {
@@ -42,7 +41,6 @@
 
         components: {
             LatestRegistration,
-            Post,
         },
 
         props: {

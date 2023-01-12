@@ -11,7 +11,6 @@ class WidgetService
     protected function getWidgetLists(): array
     {
         return [
-            'post',
             'latestRegistration',
         ];
     }
