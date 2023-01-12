@@ -1,6 +1,6 @@
 <template>
     <div class="column is-6">
-        <biz-panel class="is-white">
+        <biz-panel class="is-white is-relative">
             <template #heading>
                 <div class="columns">
                     <div class="column">
@@ -25,6 +25,11 @@
             </template>
 
             <template #default>
+                <biz-loader
+                    v-model="isLoading"
+                    :is-full-page="false"
+                />
+
                 <biz-panel-block>
                     <div
                         class="table-container"
@@ -117,6 +122,7 @@
 <script>
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
+    import BizLoader from '@/Biz/Loader';
     import BizPagination from '@/Biz/Pagination';
     import BizPanel from '@/Biz/Panel';
     import BizPanelBlock from '@/Biz/PanelBlock';
@@ -131,6 +137,7 @@
         components: {
             BizButton,
             BizButtonLink,
+            BizLoader,
             BizPagination,
             BizPanel,
             BizPanelBlock,
@@ -145,11 +152,12 @@
 
         data() {
             return {
-                icon,
-                selectedForm: null,
                 fieldLabels: [],
                 fieldNames: [],
+                icon,
+                isLoading: false,
                 records: [],
+                selectedForm: null,
             };
         },
 
@@ -171,12 +179,17 @@
 
                 url = url ? url : route('admin.api.form-builders.entries', self.selectedForm);
 
+                self.isLoading = true,
+
                 axios.get(url)
                     .then((response) => {
                         self.fieldLabels = response.data.fieldLabels;
                         self.fieldNames = response.data.fieldNames;
                         self.records = response.data.records;
                     })
+                    .then(() => {
+                        self.isLoading = false;
+                    });
             },
 
             onSelectedFormChange() {
