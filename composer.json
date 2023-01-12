@@ -101,7 +101,7 @@
     "repositories": {
         "purifier": {
             "type": "vcs",
-            "url": "https://github.com/bayubiz752/Purifier"
+            "url": "https://github.com/bayubiz752/Purifier.git"
         }
     }
 }
