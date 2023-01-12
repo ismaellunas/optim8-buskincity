@@ -151,20 +151,4 @@ class OrderController extends CrudController
 
         return $this->eventService->availableTimes($schedule, $date);
     }
-
-    public function getWidgetLatestBookings(Request $request)
-    {
-        $scopes = [
-            'inStatus' => $request->status ?? null,
-            'city' => $request->city ?? null,
-        ];
-
-        return [
-            'records' => $this->orderService->getWidgetRecords(
-                auth()->user(),
-                $request->term,
-                $scopes,
-            ),
-        ];
-    }
 }
