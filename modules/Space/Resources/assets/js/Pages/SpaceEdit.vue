@@ -1,4 +1,24 @@
 <template>
+    <div class="columns mb-0">
+        <div class="column">
+            <biz-breadcrumbs
+                :breadcrumbs="breadcrumbs"
+                class="is-medium"
+            />
+        </div>
+        <div class="column">
+            <p class="buttons is-right">
+                <biz-button-icon
+                    :disabled="!canPreviewPage"
+                    :icon="iconPreview"
+                    @click="previewPage"
+                >
+                    <span>Page Preview</span>
+                </biz-button-icon>
+            </p>
+        </div>
+    </div>
+
     <div>
         <div class="box mb-6">
             <biz-provide-inject-tabs
@@ -105,8 +125,6 @@
                         :is-new="isPageNew"
                         :is-page-builder-rendered="false"
                         :locale-options="localeOptions"
-                        :page-preview="true"
-                        :page-preview-url="pagePreviewUrl"
                         :selected-locale="selectedLocale"
                         :status-options="statusOptions"
                         @on-change-locale="onChangeLocale"
@@ -140,7 +158,9 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import BizBreadcrumbs from '@/Biz/Breadcrumbs';
     import BizButton from '@/Biz/Button';
+    import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFormAssignUser from '@/Biz/Form/AssignUser';
     import BizFormSelect from '@/Biz/Form/Select';
@@ -157,13 +177,16 @@
     import { getTranslation } from '@/Libs/translation';
     import { isBlank } from '@/Libs/utils';
     import { pick, map } from 'lodash';
+    import { preview as iconPreview } from '@/Libs/icon-class';
     import { ref } from "vue";
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
             BizButton,
+            BizButtonIcon,
             BizButtonLink,
+            BizBreadcrumbs,
             BizFormAssignUser,
             BizFormSelect,
             BizProvideInjectTab,
@@ -188,6 +211,7 @@
         layout: AppLayout,
 
         props: {
+            breadcrumbs: { type: Object, required: true },
             baseRouteName: { type: String, default: '' },
             can: { type: Object, required: true },
             coverUrl: { type: String, default: '' },
@@ -225,6 +249,7 @@
                 defaultLocale,
                 localeOptions: usePage().props.value.languageOptions,
                 pageForm: useForm(translationForm),
+                iconPreview,
             };
         },
 
@@ -253,6 +278,14 @@
 
             isEventRendered() {
                 return this.can.manager.edit;
+            },
+
+            currentTranslatedPage() {
+                return getTranslation(this.page, this.selectedLocale);
+            },
+
+            canPreviewPage() {
+                return (this.currentTranslatedPage && this.pagePreviewUrl);
             },
         },
 
@@ -398,12 +431,7 @@
                     replace: true,
                     onStart: this.onStartLoadingOverlay,
                     onSuccess: (page) => {
-                        const translatedPage = getTranslation(
-                            this.page,
-                            this.selectedLocale
-                        );
-
-                        this.pageForm[this.selectedLocale]['id'] = translatedPage.id;
+                        this.pageForm[this.selectedLocale]['id'] = this.currentTranslatedPage.id;
 
                         successAlert(page.props.flash.message);
                     },
@@ -419,6 +447,10 @@
 
             setPagePreviewUrl(page) {
                 this.pagePreviewUrl = page.landingPageSpaceUrl + `?&preview`;
+            },
+
+            previewPage() {
+                window.open(this.pagePreviewUrl, "_blank");
             },
         },
     };
