@@ -1,0 +1,46 @@
+<?php
+
+namespace Modules\Booking\Widgets;
+
+use App\Contracts\WidgetInterface;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Modules\Booking\Entities\Event;
+use Modules\Booking\Enums\BookingStatus;
+use Modules\Booking\Services\ProductEventService;
+
+class LatestBookingWidget implements WidgetInterface
+{
+    private $user;
+
+    private $componentName = "LatestBooking";
+    private $title = "Latest Bookings";
+    private $baseRouteName = "admin.booking.orders";
+    private $productEventService;
+
+    public function __construct($request)
+    {
+        $this->user = $request->user();
+
+        $this->productEventService = new ProductEventService();
+    }
+
+    public function data(): array
+    {
+        return [
+            'title' => $this->title,
+            'componentName' => $this->componentName,
+            'moduleName' => config('booking.name'),
+            'data' => [
+                'baseRouteName' => $this->baseRouteName,
+                'statusOptions' => BookingStatus::options(),
+                'cityOptions' => $this->productEventService->getCityOptions(),
+            ],
+        ];
+    }
+
+    public function canBeAccessed(): bool
+    {
+        return $this->user->can('order.browse');
+    }
+}

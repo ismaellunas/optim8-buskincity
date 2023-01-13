@@ -90,9 +90,8 @@ class SpaceService
         });
     }
 
-    public function parentOptions(
-        Authenticatable $user,
-        bool $isEmptyAllowed = true
+    private function parentOptionsBasedOnUser(
+        Authenticatable $user
     ): Collection {
         $spaceIds = null;
 
@@ -100,13 +99,48 @@ class SpaceService
             $spaceIds = $user->spaces->pluck('id')->all();
         }
 
+        return $this->spaceRoots($spaceIds);
+    }
+
+    public function parentOptions(
+        Authenticatable $user,
+        bool $isEmptyAllowed = true
+    ): Collection {
+        $roots = $this->parentOptionsBasedOnUser($user);
+
         $options = collect();
 
+        $roots->each(function ($root) use ($options) {
+            foreach ($root as $space) {
+                if ($space->depth <= 1) {
+                    $options->push([
+                        'id' => $space->id,
+                        'value' => $space->name,
+                        'depth' => $space->depth,
+                    ]);
+                }
+            }
+        });
+
+        $options = $options->sortBy([
+            ['depth', 'asc'],
+            ['value', 'asc']
+        ])->values();
+
         if ($isEmptyAllowed) {
-            $options->push(['id' => null, 'value' => __('None')]);
+            $options->prepend(['id' => null, 'value' => __('None')]);
         }
 
-        $roots = $this->spaceRoots($spaceIds);
+        return $options;
+    }
+
+    public function spaceFilterOptions(
+        Authenticatable $user,
+        bool $isEmptyAllowed = true
+    ): Collection {
+        $roots = $this->parentOptionsBasedOnUser($user);
+
+        $options = collect();
 
         $roots->each(function ($root) use ($options) {
             foreach ($root as $space) {
@@ -121,6 +155,12 @@ class SpaceService
                 }
             }
         });
+
+        $options = $options->sortBy('value')->values();
+
+        if ($isEmptyAllowed) {
+            $options->prepend(['id' => null, 'value' => __('Select Parent')]);
+        }
 
         return $options;
     }

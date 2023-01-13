@@ -53,6 +53,13 @@ class OrderService
                                     $query->$scopeName($value);
                                 }
                             );
+                        } elseif ($scopeName == 'city') {
+                            $query->whereHas(
+                                'firstEventLine.purchasable.product',
+                                function (Builder $query) use ($scopeName, $value) {
+                                    $query->$scopeName($value);
+                                }
+                            );
                         } else {
                             $query->$scopeName($value);
                         }
@@ -116,6 +123,22 @@ class OrderService
         return $records;
     }
 
+    public function getWidgetRecords(
+        User $user,
+        string $term = null,
+        ?array $scopes = null,
+        int $limit = 10,
+    ): Collection {
+        $records = $this->recordBuilder($term, $scopes)
+            ->latest()
+            ->limit($limit)
+            ->get();
+
+        $this->transformWidgetRecords($records, $user);
+
+        return $records;
+    }
+
     public function transformRecords($records, $user)
     {
         $records->getCollection()->transform(function ($record) use ($user) {
@@ -147,6 +170,28 @@ class OrderService
                 'can' => [
                     'cancel' => $user->can('cancelBooking', $record),
                     'reschedule' => $user->can('rescheduleBooking', $record),
+                ],
+            ];
+        });
+    }
+
+    public function transformWidgetRecords($records, $user)
+    {
+        $records->transform(function ($record) use ($user) {
+            $event = $record->firstEventLine->latestEvent;
+
+            $product = $record->firstEventLine->purchasable->product;
+
+            return (object) [
+                'id' => $record->id,
+                'product_name' => $product->displayName,
+                'city' => $product->locations[0]['city'] ?? null,
+                'customer_name' => $record->user->fullName ?? null,
+                'status' => Str::title($event->status),
+                'start_end_time' => $event->displayStartEndTime,
+                'date' => $event->timezonedBookedAt->format('d M Y'),
+                'can' => [
+                    'read' => $user->can('order.read'),
                 ],
             ];
         });

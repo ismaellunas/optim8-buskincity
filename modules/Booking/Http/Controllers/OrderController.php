@@ -17,6 +17,7 @@ use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Services\OrderService;
 use Modules\Ecommerce\Services\ProductService;
+use Illuminate\Http\Request;
 
 class OrderController extends CrudController
 {
@@ -149,5 +150,21 @@ class OrderController extends CrudController
         $schedule = $product->eventSchedule;
 
         return $this->eventService->availableTimes($schedule, $date);
+    }
+
+    public function getWidgetLatestBookings(Request $request)
+    {
+        $scopes = [
+            'inStatus' => $request->status ?? null,
+            'city' => $request->city ?? null,
+        ];
+
+        return [
+            'records' => $this->orderService->getWidgetRecords(
+                auth()->user(),
+                $request->term,
+                $scopes,
+            ),
+        ];
     }
 }

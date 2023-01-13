@@ -8,7 +8,7 @@
                 <p class="buttons is-right">
                     <biz-button-icon
                         :icon="icon.preview"
-                        :disabled="pagePreviewIsDisabled"
+                        :disabled="!canPreview"
                         @click="openShow(modelValue)"
                     >
                         <span>Page Preview</span>
@@ -277,12 +277,12 @@
         },
 
         computed: {
-            pagePreviewIsDisabled() {
-                if (!this.form?.id) {
-                    return true;
-                }
-
-                return this.isDirty;
+            canPreview() {
+                return (
+                    this.can.page.read
+                    && this.form.id
+                    && !this.isDirty
+                )
             },
 
             deleteTranslationIsShowed() {
@@ -298,14 +298,9 @@
 
         methods: {
             openShow(page) {
-                if (
-                    this.can.page.read
-                    && !this.pagePreviewIsDisabled
-                ) {
-                    let showUrl = this.pagePreviewUrl ?? this.getShowUrl(this.selectedLocale, page);
+                let showUrl = this.pagePreviewUrl ?? this.getShowUrl(this.selectedLocale, page);
 
-                    window.open(showUrl, "_blank");
-                }
+                window.open(showUrl, "_blank");
             },
 
             getShowUrl(locale, page) {

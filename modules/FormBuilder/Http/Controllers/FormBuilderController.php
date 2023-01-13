@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\FieldGroup;
+use Modules\FormBuilder\Entities\FieldGroupEntry;
 use Modules\FormBuilder\Events\FormSubmitted;
 use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
@@ -121,6 +122,22 @@ class FormBuilderController extends CrudController
         ]));
     }
 
+    public function entryShow(FieldGroup $formBuilder, FieldGroupEntry $entry)
+    {
+        return Inertia::render('FormBuilder::EntryDetail', $this->getData([
+            'title' => $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $entry->id,
+            'formBuilder' => $formBuilder,
+            'entry' => $this->formBuilderService->transformEntry($entry),
+            'entryDisplay' => $this->formBuilderService->getDisplayValues(
+                $formBuilder->data['fields'],
+                $entry,
+            ),
+            'fieldLabels' => $this->formBuilderService->getFieldLabelAndNames(
+                $entry->fieldGroup->data['fields']
+            ),
+        ]));
+    }
+
     public function getSchema(Request $request)
     {
         $form = $this->formBuilderService->getForm($request->form_id);
@@ -145,6 +162,34 @@ class FormBuilderController extends CrudController
         return [
             'success' => true,
             'message' => __('Thank you for filling out the form.'),
+        ];
+    }
+
+    public function getEntries(FieldGroup $formBuilder)
+    {
+        $fieldLabels = collect(
+                $this->formBuilderService->getFieldLabels(
+                    $formBuilder->data['fields'],
+                )
+            )
+            ->slice(0, 3)
+            ->all();
+
+        $fieldNames = collect(
+                $this->formBuilderService->getDataFromFields(
+                    $formBuilder->data['fields'],
+                    'name'
+                )
+            )
+            ->slice(0, 3)
+            ->all();
+
+        return [
+            'fieldLabels' => $fieldLabels,
+            'fieldNames' => $fieldNames,
+            'records' => $this->formBuilderService->getWidgetEntryRecords(
+                $formBuilder
+            ),
         ];
     }
 }
