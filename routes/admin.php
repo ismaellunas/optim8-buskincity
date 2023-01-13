@@ -223,7 +223,7 @@ Route::name('api.')
         Route::get('/tinymce/key', [SettingKeyController::class, 'getTinyMCEKey'])
             ->name('tinymce.key');
 
-        Route::get('widget/latest-registrations', [ApiWidgetController::class, 'getLatestBookings'])
+        Route::get('widget/latest-registrations', [ApiWidgetController::class, 'getLatestRegistrations'])
             ->name('widget.latest-registrations');
     });
 

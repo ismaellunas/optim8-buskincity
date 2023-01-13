@@ -61,7 +61,7 @@ class UserService
             ->paginate($perPage);
     }
 
-    public function getWidgetRecords(
+    public function getLatestRegistrations(
         User $user,
         string $term = null,
         ?array $scopes = null,
