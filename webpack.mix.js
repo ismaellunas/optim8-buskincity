@@ -30,6 +30,7 @@ if (theme) {
         .js(['resources/js/bulma.js'], 'public/js/frontend-misc.js')
         .alias({
             '@booking': path.join(__dirname, 'modules/Booking/Resources/assets/js'),
+            '@formbuilder': path.join(__dirname, 'modules/FormBuilder/Resources/assets/js'),
             '@mod': path.join(__dirname, 'modules'),
             '@': path.join(__dirname, 'resources/js')
         });

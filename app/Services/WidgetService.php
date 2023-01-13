@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Entities\Caches\WidgetCache;
+use App\Services\ModuleService;
 use Illuminate\Support\Str;
 
 class WidgetService
@@ -54,5 +55,48 @@ class WidgetService
         foreach ($this->getWidgetLists() as $widgetName) {
             app(WidgetCache::class)->flushWidget($this->getWidgetName($widgetName));
         }
+    }
+
+    protected function moduleWidgets(): array
+    {
+        $modules = app(ModuleService::class)->getAllEnabledNames();
+
+        $widgets = [];
+
+        foreach ($modules as $module) {
+            $moduleService = '\\Modules\\'.$module.'\\ModuleService';
+
+            $methodName = 'widgets';
+
+            if (
+                class_exists($moduleService)
+                && method_exists($moduleService, $methodName)
+            ) {
+                $widgets[$module] = $moduleService::$methodName();
+            }
+        }
+
+        return $widgets;
+    }
+
+    public function generateModuleWidgets($request): array
+    {
+        $widgets = collect();
+
+        foreach ($this->moduleWidgets() as $module => $moduleWidgets) {
+            foreach ($moduleWidgets as $widgetName) {
+                $className = "\\Modules\\{$module}\\Widgets\\".Str::of($widgetName)->studly()."Widget";
+
+                if (class_exists($className)) {
+                    $widgetObject = new $className($request);
+
+                    if ($widgetObject->canBeAccessed()) {
+                        $widgets->push($widgetObject->data());
+                    }
+                }
+            }
+        }
+
+        return $widgets->all();
     }
 }
