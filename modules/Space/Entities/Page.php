@@ -2,8 +2,10 @@
 
 namespace Modules\Space\Entities;
 
+use App\Contracts\PublishableInterface;
 use App\Models\Page as ModelPage;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
 
@@ -30,5 +32,27 @@ class Page extends ModelPage
     public function space()
     {
         return $this->hasOne(Space::class);
+    }
+
+    public static function createBasedOnSpace(string $title, int $authorId): Page
+    {
+        $page = new Page();
+
+        $page->saveFromInputs([
+            'en' => [
+                'title' => $title,
+                'slug' => Str::slug($title),
+                'data' => [
+                    "structures"=> [],
+                    "entities"=> [],
+                    "media"=> []
+                ],
+                'status' => PublishableInterface::STATUS_PUBLISHED,
+            ],
+        ]);
+
+        $page->saveAuthorId($authorId);
+
+        return $page;
     }
 }

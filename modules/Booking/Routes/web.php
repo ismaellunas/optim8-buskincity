@@ -117,4 +117,7 @@ Route::prefix('api/booking')
             Route::get('location-options', [EventsCalendarController::class, 'getLocationOptions'])
                 ->name('location-options');
         });
+
+        Route::get('widget/latest-bookings', [OrderController::class, 'getWidgetLatestBookings'])
+            ->name('widget.latest-bookings');
 });

@@ -2,6 +2,7 @@
 
 namespace Modules\FormBuilder\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Kodeine\Metable\Metable;
@@ -28,6 +29,11 @@ class FieldGroupEntry extends Model
     public function fieldGroup()
     {
         return $this->belongsTo(FieldGroup::class, 'field_group_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     private function isFileUpload(mixed $value): bool
