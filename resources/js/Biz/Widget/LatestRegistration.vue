@@ -109,9 +109,9 @@
 
                             <div class="media-right">
                                 <biz-button-link
+                                    v-if="data.permissions.edit"
                                     class="is-primary is-outlined is-small"
                                     :href="route(data.baseRouteName+'.edit', record.id)"
-                                    :disabled="!data.permissions.edit"
                                 >
                                     View Detail
                                 </biz-button-link>

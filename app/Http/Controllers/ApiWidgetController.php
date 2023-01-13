@@ -15,14 +15,14 @@ class ApiWidgetController extends Controller
         $this->userService = $userService;
     }
 
-    public function getLatestBookings(Request $request)
+    public function getLatestRegistrations(Request $request)
     {
         $scopes = [
             'inRoles' => $request->roles ?? null,
         ];
 
         return [
-            'records' => $this->userService->getWidgetRecords(
+            'records' => $this->userService->getLatestRegistrations(
                 auth()->user(),
                 $request->term,
                 $scopes,

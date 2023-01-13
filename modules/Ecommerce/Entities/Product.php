@@ -7,6 +7,7 @@ use App\Models\User;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\Product as GetCandyProduct;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Kodeine\Metable\Metable;
 use Modules\Booking\Entities\Schedule;
 use Modules\Ecommerce\Enums\ProductStatus;
@@ -97,8 +98,8 @@ class Product extends GetCandyProduct
     public function scopeCity($query, ?string $city = null)
     {
         return $query->whereHas('metas', function ($q) use ($city) {
-            $q->where('key', 'locations')
-                ->where('value', 'ILIKE', '%"city":"'.$city.'"%');
+            $q->where('key', 'locations');
+            $q->where(DB::raw("value::json->0->>'city'"), $city);
         });
     }
 
