@@ -34,6 +34,8 @@
     import BizLink from '@/Biz/Link';
 
     export default {
+        name: "BizBreadcrumbs",
+
         components: {
             BizLink,
         },

@@ -4,7 +4,6 @@ namespace Modules\Space\Http\Controllers;
 
 use App\Helpers\HumanReadable;
 use App\Http\Controllers\CrudController;
-use App\Services\CountryService;
 use App\Services\IPService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -24,12 +23,10 @@ class SpaceController extends CrudController
     private $spaceService;
 
     public function __construct(
-        CountryService $countryService,
         SpaceService $spaceService
     ) {
         $this->authorizeResource(Space::class, 'space');
 
-        $this->countryService = $countryService;
         $this->spaceService = $spaceService;
     }
 
@@ -101,6 +98,12 @@ class SpaceController extends CrudController
                 'meta_description' => config('constants.max_length.meta_description'),
             ],
             'instructions' => $this->instructions(),
+            'breadcrumbs' => [
+                [
+                    'url' => route('admin.spaces.index'),
+                    'title' => 'Spaces',
+                ],
+            ],
         ]));
     }
 
@@ -110,7 +113,10 @@ class SpaceController extends CrudController
 
         $inputs = $request->validated();
 
-        $space->saveFromInputs($inputs);
+        $space->saveFromInputs([
+            ...$inputs,
+            ...['is_page_enabled' => true],
+        ]);
 
         if ($request->hasFile('logo')) {
             $this->spaceService->replaceLogo($space, $request->file('logo'));
@@ -119,6 +125,11 @@ class SpaceController extends CrudController
         if ($request->hasFile('cover')) {
             $this->spaceService->replaceCover($space, $request->file('cover'));
         }
+
+        $page = Page::createBasedOnSpace($inputs['name'], auth()->id());
+
+        $space->page_id = $page->id;
+        $space->save();
 
         $this->generateFlashMessage('Successfully creating '.$this->title.'!');
 
@@ -196,6 +207,15 @@ class SpaceController extends CrudController
                 ModuleService::maxLengths(),
             ),
             'instructions' => $this->instructions(),
+            'breadcrumbs' => [
+                [
+                    'url' => route('admin.spaces.index'),
+                    'title' => 'Spaces',
+                ],
+                [
+                    'title' => $space->name,
+                ],
+            ],
         ]));
     }
 

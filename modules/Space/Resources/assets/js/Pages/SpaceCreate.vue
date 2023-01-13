@@ -1,5 +1,14 @@
 <template>
     <div>
+        <div class="columns mb-0">
+            <div class="column">
+                <biz-breadcrumbs
+                    :breadcrumbs="breadcrumbs"
+                    class="is-medium"
+                />
+            </div>
+        </div>
+
         <div class="box mb-6">
             <form
                 action=""
@@ -34,6 +43,7 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import BizBreadcrumbs from '@/Biz/Breadcrumbs';
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
     import MixinHasLoader from '@/Mixins/HasLoader';
@@ -43,6 +53,7 @@
 
     export default {
         components: {
+            BizBreadcrumbs,
             BizButton,
             BizButtonLink,
             SpaceForm,
@@ -55,6 +66,7 @@
         layout: AppLayout,
 
         props: {
+            breadcrumbs: { type: Object, required: true },
             baseRouteName: { type: String, default: '' },
             defaultCountry: { type: String, required: true },
             instructions: { type: Object, required: true },
