@@ -36,7 +36,7 @@ class SpaceController extends CrudController
 
         $spaces = $this->spaceService->spaceTree($user, $request->parent);
 
-        $spaceOptions = $this->spaceService->parentOptions($user);
+        $spaceOptions = $this->spaceService->spaceFilterOptions($user);
 
         return Inertia::render('Space::SpaceIndex', $this->getData([
             'isSortableEnabled' => $user->can('changeParent', Space::class),
