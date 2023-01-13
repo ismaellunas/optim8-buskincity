@@ -120,7 +120,6 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizLoader from '@/Biz/Loader';
     import BizPagination from '@/Biz/Pagination';
@@ -135,7 +134,6 @@
         name: 'FormBuilderEntryWidget',
 
         components: {
-            BizButton,
             BizButtonLink,
             BizLoader,
             BizPagination,

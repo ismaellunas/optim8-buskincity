@@ -28,7 +28,7 @@ class WidgetFrontendService extends WidgetService
         foreach ($modules as $module) {
             $moduleService = '\\Modules\\'.$module.'\\ModuleService';
 
-            $methodName = 'widgets';
+            $methodName = 'frontendWidgets';
 
             if (
                 class_exists($moduleService)
