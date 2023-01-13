@@ -87,7 +87,7 @@ class UserService
                     }
                 }
             })
-            ->limit(10)
+            ->limit($limit)
             ->whereDoesntHave('roles', function ($query) {
                 $query->where('name', config('permission.super_admin_role'));
             })
