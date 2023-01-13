@@ -398,7 +398,11 @@ class ProductEventService
 
     public function getCityOptions(): array
     {
-        $products = Product::with(['metas'])
+        $products = Product::with([
+                'metas' => function ($q){
+                    $q->whereIn('key', ['locations']);
+                },
+            ])
             ->whereHas('productType', function ($query) {
                 $query->where('name', 'Event');
             })
