@@ -29,6 +29,10 @@ Route::name('admin.')->prefix('admin/')->middleware([
         ->name('form-builders.entries')
         ->can('viewAny', 'form_builder');
 
+    Route::get('form-builders/{form_builder}/entries/{entry}', [FormBuilderController::class, 'entryShow'])
+        ->name('form-builders.entries.show')
+        ->can('view', 'form_builder');
+
     Route::resource('form-builders', FormBuilderController::class)
         ->except(['show']);
 
@@ -55,12 +59,17 @@ Route::name('admin.')->prefix('admin/')->middleware([
 
     Route::prefix('api')
         ->name('api.')
+        ->withoutMiddleware(HandleInertiaRequests::class)
+        ->middleware('throttle:api')
         ->group(function() {
             Route::prefix('page-builders')->name('page-builders.')->group(function() {
                 Route::get('form-options', [PageBuilderController::class, 'formOptions'])
                     ->name('form-options')
                     ->middleware('can:viewAny,Modules\FormBuilder\Entities\FieldGroup');
             });
+
+            Route::get('form-builders/{formBuilder}/entries', [FormBuilderController::class, 'getEntries'])
+                    ->name('form-builders.entries');
         });
 });
 

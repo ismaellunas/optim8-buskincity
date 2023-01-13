@@ -1,14 +1,14 @@
 <template>
-    <Link>
+    <inertia-link>
         <slot />
-    </Link>
+    </inertia-link>
 </template>
 
 <script>
-    import { Link } from '@inertiajs/inertia-vue3';
+    import { Link as InertiaLink } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'BizLink',
-        components: { Link }
+        components: { InertiaLink }
     };
 </script>

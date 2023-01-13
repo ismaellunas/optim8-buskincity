@@ -8,7 +8,7 @@ class IPService
 {
     private $clientData;
 
-    private function getClientIp()
+    public function getClientIp()
     {
         $ipaddress = '';
 

@@ -31,6 +31,7 @@ export const preview = iconFormatter('fa-arrow-up-right-from-square');
 export const rectangleList = iconFormatter('fa-rectangle-list');
 export const recycle = iconFormatter('fa-recycle');
 export const remove = iconFormatter('fa-trash-can');
+export const search = iconFormatter('fa-magnifying-glass');
 export const show = iconFormatter('fa-eye');
 export const signIn = iconFormatter('fa-sign-in-alt');
 export const sort = iconFormatter('fa-sort');
@@ -77,6 +78,7 @@ export default {
     rectangleList,
     recycle,
     remove,
+    search,
     show,
     signIn,
     sort,

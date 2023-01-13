@@ -31,12 +31,14 @@
                     <table class="table is-striped is-hoverable is-fullwidth">
                         <thead>
                             <tr>
+                                <th>#</th>
                                 <th
                                     v-for="(label, index) in fieldLabels"
                                     :key="index"
                                 >
                                     {{ label }}
                                 </th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,12 +46,23 @@
                                 v-for="(entry, index) in records.data"
                                 :key="index"
                             >
+                                <td>{{ entry.id }}</td>
                                 <td
                                     v-for="(name, nameIndex) in fieldNames"
                                     :key="nameIndex"
-                                    class="content"
                                     v-html="entry[name]"
                                 />
+                                <td>
+                                    <biz-button-link
+                                        class="is-ghost has-text-black"
+                                        title="View"
+                                        :href="route(baseRouteName + '.entries.show', {form_builder: formBuilder.id, entry: entry.id})"
+                                    >
+                                        <span class="icon is-small">
+                                            <i :class="icon.eye" />
+                                        </span>
+                                    </biz-button-link>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

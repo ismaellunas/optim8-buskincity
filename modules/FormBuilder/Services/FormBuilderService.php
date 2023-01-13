@@ -2,9 +2,11 @@
 
 namespace Modules\FormBuilder\Services;
 
+use App\Services\IPService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Jenssegers\Agent\Agent;
 use Modules\FormBuilder\Entities\FieldGroup;
 use Modules\FormBuilder\Entities\FieldGroupEntry;
 use Modules\FormBuilder\Forms\Form;
@@ -64,6 +66,43 @@ class FormBuilderService
         foreach ($entries as $entry) {
             $record = [];
 
+            $record['id'] = $entry->id;
+
+            foreach ($fieldNames as $fieldName) {
+                $field = collect($fields)->where('name', $fieldName)->first();
+
+                $record[$fieldName] = $this->getDisplayValue(
+                    $field,
+                    $entry[$fieldName] ?? '-'
+                );
+            }
+
+            $records->push($record);
+        }
+
+        return $records->paginate($perPage);
+    }
+
+    public function getWidgetEntryRecords(
+        FieldGroup $formBuilder,
+        int $perPage = 10
+    ): LengthAwarePaginator {
+        $records = collect();
+        $fields = $formBuilder->data['fields'];
+        $fieldNames = collect($this->getDataFromFields($fields, 'name'))
+            ->slice(0, 3)
+            ->all();
+
+        $entries = $formBuilder
+            ->entries()
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        foreach ($entries as $entry) {
+            $record = [];
+
+            $record['id'] = $entry->id;
+
             foreach ($fieldNames as $fieldName) {
                 $field = collect($fields)->where('name', $fieldName)->first();
 
@@ -108,6 +147,18 @@ class FormBuilderService
         }
 
         return $labels;
+    }
+
+    public function getFieldLabelAndNames(array $fields): array
+    {
+        $fieldAndNames = [];
+
+        foreach ($fields as $field) {
+            $fieldAndNames[$field['name']] = $field['label']
+                ?? Str::of($field['name'])->replace('_', ' ')->title();
+        }
+
+        return $fieldAndNames;
     }
 
     public function getFormOptions(): array
@@ -210,7 +261,18 @@ class FormBuilderService
             $values['user_id'] = Auth::user()->id;
         }
 
+        $ipService = app(IPService::class);
+        $agent = new Agent();
+
+        $agentBrowser = $agent->browser();
+        $agentBrowserVersion = $agent->version($agentBrowser);
+
         $values['field_group_id'] = $fieldGroup->id;
+        $values['page_url'] = url()->previous() ?? null;
+        $values['ip_address'] = $ipService->getClientIp();
+        $values['timezone'] = $ipService->getTimezone();
+        $values['browser'] = $agentBrowser . ($agentBrowserVersion ? ' version ' . $agentBrowserVersion : '');
+        $values['device'] = $agent->device() . '; ' . $agent->platform();
 
         return $values;
     }
@@ -240,7 +302,11 @@ class FormBuilderService
             $value = $entryValue;
             $field = $fields->where('name', $key)->first();
 
-            $displayValues[$key] = $this->getDisplayValue($field, $value);
+            if ($field) {
+                $value = $this->getDisplayValue($field, $value);
+            }
+
+            $displayValues[$key] = $value;
         }
 
         return $displayValues;
@@ -257,5 +323,15 @@ class FormBuilderService
         }
 
         return $value;
+    }
+
+    public function transformEntry($entry)
+    {
+        if (!empty($entry['user_id'])) {
+            $entry->load('user');
+            $entry->user->append('isSuperAdministrator');
+        }
+
+        return $entry->toArray();
     }
 }
