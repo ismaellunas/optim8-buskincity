@@ -134,10 +134,10 @@
                                         <td>{{ record.city ?? '-' }}</td>
                                         <td>
                                             <biz-button-link
+                                                v-if="record.can.read"
                                                 class="has-text-black"
                                                 title="Detail"
                                                 :href="route(data.baseRouteName+'.show', record.id)"
-                                                :disabled="!record.can.read"
                                             >
                                                 <biz-icon
                                                     class="is-small"
