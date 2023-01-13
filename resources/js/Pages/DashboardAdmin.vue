@@ -2,7 +2,10 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <biz-widget-columns-admin :widgets="widgets" />
+                <biz-widget-columns-admin
+                    :widgets="widgets"
+                    :module-widgets="moduleWidgets"
+                />
             </div>
         </div>
     </div>
@@ -22,6 +25,7 @@
         layout: AppLayout,
 
         props: {
+            moduleWidgets: { type: Array, default:() => [] },
             title: { type: String, required: true },
             widgets: { type: Array, default:() => [] },
         },
