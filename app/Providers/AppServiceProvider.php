@@ -13,8 +13,7 @@ use App\Entities\Caches\{
     GlobalOptionCache,
     MenuCache,
     SettingCache,
-    TranslationCache,
-    WidgetCache,
+    TranslationCache
 };
 use App\Services\{
     CountryService,
@@ -49,7 +48,6 @@ class AppServiceProvider extends ServiceProvider
         MenuCache::class => MenuCache::class,
         SettingCache::class => SettingCache::class,
         TranslationCache::class => TranslationCache::class,
-        WidgetCache::class => WidgetCache::class,
 
         CountryService::class => CountryService::class,
         CategoryService::class => CategoryService::class,
