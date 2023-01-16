@@ -124,6 +124,8 @@ class FormBuilderController extends CrudController
 
     public function entryShow(FieldGroup $formBuilder, FieldGroupEntry $entry)
     {
+        $user = auth()->user();
+
         return Inertia::render('FormBuilder::EntryDetail', $this->getData([
             'title' => $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $entry->id,
             'formBuilder' => $formBuilder,
@@ -135,6 +137,11 @@ class FormBuilderController extends CrudController
             'fieldLabels' => $this->formBuilderService->getFieldLabelAndNames(
                 $entry->fieldGroup->data['fields']
             ),
+            'can' => [
+                'user' => [
+                    'edit' => $user->can('user.edit'),
+                ]
+            ]
         ]));
     }
 
@@ -162,34 +169,6 @@ class FormBuilderController extends CrudController
         return [
             'success' => true,
             'message' => __('Thank you for filling out the form.'),
-        ];
-    }
-
-    public function getEntries(FieldGroup $formBuilder)
-    {
-        $fieldLabels = collect(
-                $this->formBuilderService->getFieldLabels(
-                    $formBuilder->data['fields'],
-                )
-            )
-            ->slice(0, 3)
-            ->all();
-
-        $fieldNames = collect(
-                $this->formBuilderService->getDataFromFields(
-                    $formBuilder->data['fields'],
-                    'name'
-                )
-            )
-            ->slice(0, 3)
-            ->all();
-
-        return [
-            'fieldLabels' => $fieldLabels,
-            'fieldNames' => $fieldNames,
-            'records' => $this->formBuilderService->getWidgetEntryRecords(
-                $formBuilder
-            ),
         ];
     }
 }

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Booking\Http\Controllers\ApiPageBuilderComponent\EventsCalendarController;
 use Modules\Booking\Http\Controllers\Frontend\OrderController as FrontendOrderController;
 use Modules\Booking\Http\Controllers\Frontend\ProductController as FrontendProductController;
+use Modules\Booking\Http\Controllers\ApiWidgetController;
 use Modules\Booking\Http\Controllers\OrderController;
 use Modules\Booking\Http\Controllers\ProductEventController;
 
@@ -118,6 +119,6 @@ Route::prefix('api/booking')
                 ->name('location-options');
         });
 
-        Route::get('widget/latest-bookings', [OrderController::class, 'getWidgetLatestBookings'])
+        Route::get('widget/latest-bookings', [ApiWidgetController::class, 'getLatestBookings'])
             ->name('widget.latest-bookings');
 });

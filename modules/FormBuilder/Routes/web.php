@@ -3,6 +3,7 @@
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Support\Facades\Route;
 use Modules\FormBuilder\Http\Controllers\{
+    ApiWidgetController,
     FormBuilderController,
     SettingController,
     SettingNotificationController,
@@ -69,8 +70,8 @@ Route::name('admin.')->prefix('admin/')->middleware([
                     ->middleware('can:viewAny,Modules\FormBuilder\Entities\FieldGroup');
             });
 
-            Route::get('form-builders/{formBuilder}/entries', [FormBuilderController::class, 'getEntries'])
-                    ->name('form-builders.entries');
+            Route::get('widget/form-builder/{formBuilder}/entries', [ApiWidgetController::class, 'getEntries'])
+                ->name('widget.form-builder.entries');
         });
 });
 
