@@ -8,6 +8,7 @@ use App\Models\{
     Category,
     GlobalOption,
     Page,
+    PageTranslation,
     Post,
     Role,
     Setting,
@@ -17,6 +18,7 @@ use App\Observers\{
     CategoryObserver,
     GlobalOptionObserver,
     PageObserver,
+    PageTranslationObserver,
     PostObserver,
     RoleObserver,
     SettingObserver,
@@ -53,6 +55,7 @@ class EventServiceProvider extends ServiceProvider
         Category::observe(CategoryObserver::class);
         GlobalOption::observe(GlobalOptionObserver::class);
         Page::observe(PageObserver::class);
+        PageTranslation::observe(PageTranslationObserver::class);
         Post::observe(PostObserver::class);
         Role::observe(RoleObserver::class);
         Setting::observe(SettingObserver::class);
