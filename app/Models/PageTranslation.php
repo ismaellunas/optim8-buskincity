@@ -221,11 +221,6 @@ class PageTranslation extends Model implements PublishableInterface
         $this->unique_key = Url::randomDigitSegment([$this, 'isUniqueKeyExist']);
     }
 
-    public function hasGeneratedStyle(): bool
-    {
-        return $this->generated_style != null;
-    }
-
     protected static function booted()
     {
         static::addGlobalScope('pageTranslation', function (Builder $query) {
