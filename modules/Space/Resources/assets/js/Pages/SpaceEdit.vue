@@ -231,15 +231,6 @@
 
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
-            const translationForm = { [defaultLocale]: {} };
-
-            let translatedPage = getTranslation(props.page, defaultLocale);
-
-            if (isBlank(translatedPage)) {
-                translatedPage = getEmptyPageTranslation();
-            }
-
-            translationForm[defaultLocale] = JSON.parse(JSON.stringify(translatedPage));
 
             return {
                 activeTab: ref(props.tab),
@@ -248,7 +239,7 @@
                 contentConfigId: ref(''),
                 defaultLocale,
                 localeOptions: usePage().props.value.languageOptions,
-                pageForm: useForm(translationForm),
+                pageForm: ref(null),
                 iconPreview,
             };
         },
@@ -259,7 +250,6 @@
                 productManagers: this.spaceProductManagers,
                 space: {},
                 selectedLocale: this.defaultLocale,
-                pagePreviewUrl: null,
             };
         },
 
@@ -284,6 +274,14 @@
                 return getTranslation(this.page, this.selectedLocale);
             },
 
+            pagePreviewUrl() {
+                if (!isBlank(this.currentTranslatedPage.landingPageSpaceUrl)) {
+                    return this.currentTranslatedPage.landingPageSpaceUrl + `?&preview`;
+                }
+
+                return null;
+            },
+
             canPreviewPage() {
                 return (this.currentTranslatedPage && this.pagePreviewUrl);
             },
@@ -294,7 +292,17 @@
         },
 
         mounted() {
-            this.setPagePreviewUrl(this.pageForm[this.defaultLocale]);
+            const translationForm = { [this.defaultLocale]: {} };
+
+            let translatedPage = getTranslation(this.page, this.defaultLocale);
+
+            if (isBlank(translatedPage)) {
+                translatedPage = getEmptyPageTranslation();
+            }
+
+            translationForm[this.defaultLocale] = JSON.parse(JSON.stringify(translatedPage));
+
+            this.pageForm = useForm(translationForm);
         },
 
         methods: {
@@ -398,16 +406,15 @@
             setTranslationForm(locale) {
                 const translatedPage = getTranslation(this.page, locale);
 
-                let translationFrom = { [this.defaultLocale]: {} };
+                let translationForm = { [this.defaultLocale]: {} };
 
                 if (isBlank(translatedPage)) {
-                    translationFrom[locale] = getEmptyPageTranslation();
+                    translationForm[locale] = getEmptyPageTranslation();
                 } else {
-                    translationFrom[locale] = JSON.parse(JSON.stringify(translatedPage));
+                    translationForm[locale] = JSON.parse(JSON.stringify(translatedPage));
                 }
 
-                this.pageForm = useForm(translationFrom);
-                this.setPagePreviewUrl(translationFrom[locale]);
+                this.pageForm = useForm(translationForm);
             },
 
             submitPage() {
@@ -443,10 +450,6 @@
                 };
 
                 this.pageForm.submit(method, url, options);
-            },
-
-            setPagePreviewUrl(page) {
-                this.pagePreviewUrl = page.landingPageSpaceUrl + `?&preview`;
             },
 
             previewPage() {

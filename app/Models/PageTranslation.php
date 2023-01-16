@@ -249,4 +249,19 @@ class PageTranslation extends Model implements PublishableInterface
     {
         return $this->settings[$key] ?? null;
     }
+
+    public function isClearingMenuCacheRequired(): bool
+    {
+        if ($this->page->menuItems->isNotEmpty()) {
+            return collect($this->getChanges())
+                ->keys()
+                ->contains(fn ($attribute) => in_array($attribute, [
+                    'title',
+                    'slug',
+                    'status',
+                ]));
+        }
+
+        return false;
+    }
 }

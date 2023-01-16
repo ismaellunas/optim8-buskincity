@@ -167,17 +167,9 @@ class SpaceController extends CrudController
             : null
         );
 
-        $page = $space->page;
-
-        if (! $page) {
-            $page = $this->makePage();
-        } else {
-            $page->load('translations');
-
-            $page->translations->transform(function ($translation) {
-                return $translation->append('landingPageSpaceUrl');
-            });
-        }
+        $page = $space->page_id
+            ? $this->spaceService->pageFormRecord($space)
+            : $this->makePage();
 
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => 'Edit Space',
