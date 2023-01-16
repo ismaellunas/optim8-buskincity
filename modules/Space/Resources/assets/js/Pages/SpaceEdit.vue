@@ -124,6 +124,7 @@
                         :is-dirty="pageForm.isDirty"
                         :is-new="isPageNew"
                         :is-page-builder-rendered="false"
+                        :is-page-setting-rendered="false"
                         :locale-options="localeOptions"
                         :selected-locale="selectedLocale"
                         :status-options="statusOptions"
@@ -211,8 +212,8 @@
         layout: AppLayout,
 
         props: {
-            breadcrumbs: { type: Object, required: true },
             baseRouteName: { type: String, default: '' },
+            breadcrumbs: { type: Object, required: true },
             can: { type: Object, required: true },
             coverUrl: { type: String, default: '' },
             defaultCountry: { type: String, required: true },
