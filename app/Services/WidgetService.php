@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Entities\Caches\WidgetCache;
 use App\Services\ModuleService;
 use Illuminate\Support\Str;
 
@@ -11,8 +10,7 @@ class WidgetService
     protected function getWidgetLists(): array
     {
         return [
-            'post',
-            'user',
+            'latestRegistration',
         ];
     }
 
@@ -40,21 +38,9 @@ class WidgetService
         return $widgets->all();
     }
 
-    public function getWidgetName(string $widgetName): string
+    public function getWidgetName(string $widgetName): ?string
     {
         return config("constants.widget_cache.{$widgetName}");
-    }
-
-    public function flushWidget(string $widgetName): void
-    {
-        app(WidgetCache::class)->flushWidget($this->getWidgetName($widgetName));
-    }
-
-    public function flushAllWidgets(): void
-    {
-        foreach ($this->getWidgetLists() as $widgetName) {
-            app(WidgetCache::class)->flushWidget($this->getWidgetName($widgetName));
-        }
     }
 
     protected function moduleWidgets(): array
@@ -97,6 +83,9 @@ class WidgetService
             }
         }
 
-        return $widgets->all();
+        return $widgets
+            ->sortBy('title')
+            ->values()
+            ->all();
     }
 }

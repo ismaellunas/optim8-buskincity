@@ -10,9 +10,7 @@ use App\Models\{
     Page,
     PageTranslation,
     Post,
-    Role,
     Setting,
-    User,
 };
 use App\Observers\{
     CategoryObserver,
@@ -20,9 +18,7 @@ use App\Observers\{
     PageObserver,
     PageTranslationObserver,
     PostObserver,
-    RoleObserver,
     SettingObserver,
-    UserObserver,
 };
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -57,8 +53,6 @@ class EventServiceProvider extends ServiceProvider
         Page::observe(PageObserver::class);
         PageTranslation::observe(PageTranslationObserver::class);
         Post::observe(PostObserver::class);
-        Role::observe(RoleObserver::class);
         Setting::observe(SettingObserver::class);
-        User::observe(UserObserver::class);
     }
 }

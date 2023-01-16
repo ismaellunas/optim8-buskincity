@@ -13,9 +13,7 @@
                     :title="widget.title"
                 />
             </template>
-        </div>
 
-        <div class="columns is-multiline">
             <template
                 v-for="(widget, order) in moduleWidgets"
                 :key="order"
@@ -33,16 +31,14 @@
 </template>
 
 <script>
-    import Post from '@/Biz/Widget/Post';
-    import User from '@/Biz/Widget/User';
+    import LatestRegistration from '@/Biz/Widget/LatestRegistration';
     import { defineAsyncComponent } from 'vue';
 
     export default {
         name: 'BizWidgetColumnsAdmin',
 
         components: {
-            Post,
-            User,
+            LatestRegistration,
         },
 
         props: {
