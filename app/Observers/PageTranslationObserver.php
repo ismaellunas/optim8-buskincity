@@ -13,6 +13,13 @@ class PageTranslationObserver
         }
     }
 
+    public function saving($pageTranslation)
+    {
+        if ($pageTranslation->isDirty('data')) {
+            $pageTranslation->updatePageStyle();
+        }
+    }
+
     public function deleted($pageTranslation)
     {
         app(MenuCache::class)->flush();

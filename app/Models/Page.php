@@ -81,15 +81,6 @@ class Page extends Model implements TranslatableContract
 
         $this->fill($inputs);
         $this->save();
-
-        $this->generateStylePageTranslation();
-    }
-
-    public function generateStylePageTranslation(): void
-    {
-        foreach ($this->translations as $pageTranslation) {
-            $pageTranslation->generatePageStyle();
-        }
     }
 
     public function saveAuthorId(int $authorId)
