@@ -33,16 +33,16 @@
 </template>
 
 <script>
+    import LatestRegistration from '@/Biz/Widget/LatestRegistration';
     import Post from '@/Biz/Widget/Post';
-    import User from '@/Biz/Widget/User';
     import { defineAsyncComponent } from 'vue';
 
     export default {
         name: 'BizWidgetColumnsAdmin',
 
         components: {
+            LatestRegistration,
             Post,
-            User,
         },
 
         props: {

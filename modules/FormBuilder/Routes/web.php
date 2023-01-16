@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Support\Facades\Route;
 use Modules\FormBuilder\Http\Controllers\{
     FormBuilderController,
