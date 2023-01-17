@@ -174,10 +174,11 @@
     import SpaceForm from './SpaceForm';
     import SpaceFormTranslatable from './SpaceFormTranslatable';
     import { cloneDeep, pick, map } from 'lodash';
-    import { confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { confirmDelete, confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { getTranslation } from '@/Libs/translation';
     import { isBlank } from '@/Libs/utils';
+    import { pageStatus } from '@/Libs/defaults';
     import { preview as iconPreview } from '@/Libs/icon-class';
     import { ref } from "vue";
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
@@ -416,39 +417,89 @@
                 this.pageForm = useForm(translationForm);
             },
 
-            submitPage() {
-                let method = null;
-                let url = null;
+            isUsedByMenu() {
+                const self = this;
 
-                if (! this.page?.id) {
-                    method = 'post';
-                    url = route('admin.spaces.pages.store', this.spaceRecord.id);
+                return new Promise((resolve, reject) => {
+                    const url = route('admin.api.spaces.is-used-by-menu', {
+                        space: self.spaceRecord.id,
+                        locale: self.selectedLocale,
+                    });
 
-                } else {
+                    axios.get(url)
+                        .then(response => {
+                            resolve(response.data == true);
+                        })
+                        .catch(error => {
+                            reject(error);
+                        })
+                });
+            },
 
-                    method = 'put';
-                    url = route(
-                        'admin.spaces.pages.update',
-                        [this.spaceRecord.id, this.page.id]
-                    );
-                }
+            async canSavePage() {
+                try {
+                    const pageTranslationStatus = this.pageForm[this.selectedLocale]['status'];
 
-                const options = {
-                    replace: true,
-                    onStart: this.onStartLoadingOverlay,
-                    onSuccess: (page) => {
-                        this.pageForm[this.selectedLocale]['id'] = this.currentTranslatedPage.id;
+                    if (
+                        this.currentTranslatedPage
+                        && this.currentTranslatedPage.status == pageStatus.published
+                        && pageTranslationStatus == pageStatus.draft
+                    ) {
+                        if (await this.isUsedByMenu()) {
+                            const confirmResult = await confirmDelete(
+                                'Are You Sure?',
+                                'This action will also remove the page on the navigation menu.',
+                                'Yes'
+                            );
 
-                        successAlert(page.props.flash.message);
-                    },
-                    onError: () => { oopsAlert() },
-                    onFinish: () => {
-                        this.setTranslationForm(this.selectedLocale);
-                        this.onEndLoadingOverlay();
+                            return !!confirmResult.value;
+                        }
                     }
-                };
 
-                this.pageForm.submit(method, url, options);
+                    return true;
+
+                } catch (error) {
+                    console.error(error);
+
+                    return true;
+                }
+            },
+
+            async submitPage() {
+                if (await this.canSavePage()) {
+                    let method = null;
+                    let url = null;
+
+                    if (! this.page?.id) {
+                        method = 'post';
+                        url = route('admin.spaces.pages.store', this.spaceRecord.id);
+
+                    } else {
+
+                        method = 'put';
+                        url = route(
+                            'admin.spaces.pages.update',
+                            [this.spaceRecord.id, this.page.id]
+                        );
+                    }
+
+                    const options = {
+                        replace: true,
+                        onStart: this.onStartLoadingOverlay,
+                        onSuccess: (page) => {
+                            this.pageForm[this.selectedLocale]['id'] = this.currentTranslatedPage.id;
+
+                            successAlert(page.props.flash.message);
+                        },
+                        onError: () => { oopsAlert() },
+                        onFinish: () => {
+                            this.setTranslationForm(this.selectedLocale);
+                            this.onEndLoadingOverlay();
+                        }
+                    };
+
+                    this.pageForm.submit(method, url, options);
+                }
             },
 
             previewPage() {

@@ -55,12 +55,21 @@ Route::name('admin.')->prefix('admin/')->middleware([
             ->name('spaces.events.records');
     });
 
-    Route::name('api.')->prefix('api')->group(function () {
-        Route::post('/spaces/contact', [ContactController::class, 'apiValidateContact'])
-            ->name('spaces.contact.validate');
-        Route::post('/spaces/settings/space-types', 'SpaceTypeController@apiValidateSpaceType')
-            ->name('spaces.settings.space-types.validate');
-    });
+    Route::name('api.')
+        ->prefix('api')
+        ->withoutMiddleware(HandleInertiaRequests::class)
+        ->middleware('throttle:api')
+        ->group(function () {
+            Route::post('/spaces/contact', [ContactController::class, 'apiValidateContact'])
+                ->name('spaces.contact.validate');
+
+            Route::post('/spaces/settings/space-types', 'SpaceTypeController@apiValidateSpaceType')
+                ->name('spaces.settings.space-types.validate');
+
+            Route::get('/spaces/{space}/is-used-by-menu/{locale?}', 'SpaceController@isUsedByMenus')
+                ->can('update', 'space')
+                ->name('spaces.is-used-by-menu');
+        });
 });
 
 Route::prefix(Localization::setLocale())

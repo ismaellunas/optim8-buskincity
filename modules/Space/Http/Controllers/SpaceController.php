@@ -5,6 +5,7 @@ namespace Modules\Space\Http\Controllers;
 use App\Helpers\HumanReadable;
 use App\Http\Controllers\CrudController;
 use App\Services\IPService;
+use App\Services\MenuService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Space\Entities\Page;
@@ -22,9 +23,8 @@ class SpaceController extends CrudController
 
     private $spaceService;
 
-    public function __construct(
-        SpaceService $spaceService
-    ) {
+    public function __construct(SpaceService $spaceService)
+    {
         $this->authorizeResource(Space::class, 'space');
 
         $this->spaceService = $spaceService;
@@ -280,5 +280,10 @@ class SpaceController extends CrudController
         $this->generateFlashMessage('Manager updated successfully!');
 
         return back();
+    }
+
+    public function isUsedByMenus(Space $space, ?string $locale = null)
+    {
+        return app(MenuService::class)->isModelUsedByMenu($space, $locale);
     }
 }
