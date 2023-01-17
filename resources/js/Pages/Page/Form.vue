@@ -62,7 +62,10 @@
                             :selected-locale="selectedLocale"
                         />
                     </biz-provide-inject-tab>
-                    <biz-provide-inject-tab title="Settings">
+                    <biz-provide-inject-tab
+                        title="Settings"
+                        :is-rendered="isPageSettingRendered"
+                    >
                         <form-setting
                             v-model="form.settings"
                             :errors="errors"
@@ -228,6 +231,7 @@
             isDirty: { type: Boolean, default: false },
             isNew: { type: Boolean, required: true },
             isPageBuilderRendered: { type: Boolean, default: true },
+            isPageSettingRendered: { type: Boolean, default: true },
             localeOptions: { type: Array, default:() => [] },
             modelValue: { type: Object, required: true },
             pagePreview: { type: Boolean, default: false },

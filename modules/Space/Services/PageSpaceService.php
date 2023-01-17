@@ -3,9 +3,10 @@
 namespace Modules\Space\Services;
 
 use App\Helpers\HumanReadable;
+use Illuminate\Support\Carbon;
+use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
 use Modules\Space\ModuleService;
-use Illuminate\Support\Carbon;
 
 class PageSpaceService
 {
@@ -13,17 +14,20 @@ class PageSpaceService
 
     public function __construct()
     {
-        $pageTranslation = null;
+        $pageTranslation = $this->getPageTranslationFromRequest(request());
 
-        if (request()->route()) {
-            $pageTranslation = request()->route()->parameter('page_translation');
+        $this->space = $pageTranslation->page->space ?? null;
+    }
+
+    private function getPageTranslationFromRequest($request): ?PageTranslation
+    {
+        $slugs = collect(explode('/', $request->slugs));
+
+        if ($slugs->isNotEmpty()) {
+            return PageTranslation::whereSlug($slugs->last())->first();
         }
 
-        $space = $pageTranslation->page->space ?? null;
-
-        if ($space) {
-            $this->space = $space;
-        }
+        return null;
     }
 
     public function getPhoneNumberFormat(array $phone): string

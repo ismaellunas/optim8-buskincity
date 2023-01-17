@@ -31,7 +31,10 @@ class GeneratePageStyle extends Command
         $pages = Page::all();
 
         foreach ($pages as $page) {
-            $page->generateStylePageTranslation();
+            foreach ($page->translations as $pageTranslation) {
+                $pageTranslation->updatePageStyle();
+                $pageTranslation->save();
+            }
         }
 
         return Command::SUCCESS;

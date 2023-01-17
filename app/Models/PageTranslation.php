@@ -91,7 +91,7 @@ class PageTranslation extends Model implements PublishableInterface
         ];
     }
 
-    public function generatePageStyle(): void
+    private function generatePageStyle(): string
     {
         $css = "";
 
@@ -103,8 +103,12 @@ class PageTranslation extends Model implements PublishableInterface
 
         $css .= $this->getMobileCssStyleBlocks($styledComponents['mobile']);
 
-        $this->generated_style = MinifyCss::minify($css);
-        $this->save();
+        return MinifyCss::minify($css);
+    }
+
+    public function updatePageStyle(): void
+    {
+        $this->generated_style = $this->generatePageStyle();
     }
 
     private function getCssStyleBlocks(array $styledComponents): string
@@ -221,11 +225,6 @@ class PageTranslation extends Model implements PublishableInterface
         $this->unique_key = Url::randomDigitSegment([$this, 'isUniqueKeyExist']);
     }
 
-    public function hasGeneratedStyle(): bool
-    {
-        return $this->generated_style != null;
-    }
-
     protected static function booted()
     {
         static::addGlobalScope('pageTranslation', function (Builder $query) {
@@ -248,5 +247,20 @@ class PageTranslation extends Model implements PublishableInterface
     public function getSettingValueByKey(string $key): ?string
     {
         return $this->settings[$key] ?? null;
+    }
+
+    public function isClearingMenuCacheRequired(): bool
+    {
+        if ($this->page->menuItems->isNotEmpty()) {
+            return collect($this->getChanges())
+                ->keys()
+                ->contains(fn ($attribute) => in_array($attribute, [
+                    'title',
+                    'slug',
+                    'status',
+                ]));
+        }
+
+        return false;
     }
 }
