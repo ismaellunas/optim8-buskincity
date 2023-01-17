@@ -5,7 +5,6 @@ namespace Modules\Space\Entities;
 use App\Models\PageTranslation as AppPageTranslation;
 use App\Services\TranslationService;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Space\Entities\Page;
 

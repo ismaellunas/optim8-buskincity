@@ -22,10 +22,6 @@ class StylePageBuilderController extends Controller
             ->first();
 
         if ($pageTranslation) {
-            if (!$pageTranslation->hasGeneratedStyle()) {
-                $pageTranslation->generatePageStyle();
-            }
-
             $response = Response::make($pageTranslation->generated_style);
             $response->header('Content-Type', 'text/css');
             $response->header('Last-Modified', $pageTranslation->updated_at->toRfc7231String());
