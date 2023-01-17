@@ -21,7 +21,12 @@ class CreateMenuItemsTable extends Migration
             $table->integer('order')->default(1);
             $table->string('icon', 100)->nullable();
             $table->boolean('is_blank')->default(false);
-            $table->bigInteger('parent_id')->nullable();
+            $table->foreignId('parent_id')
+                ->nullable()
+                ->constrained('menu_items')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->foreignId('menu_id')
                 ->constrained('menus')
                 ->onUpdate('cascade')
