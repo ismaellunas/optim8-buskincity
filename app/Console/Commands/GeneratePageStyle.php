@@ -32,7 +32,7 @@ class GeneratePageStyle extends Command
 
         foreach ($pages as $page) {
             foreach ($page->translations as $pageTranslation) {
-                $pageTranslation->updatePageStyle();
+                $pageTranslation->setGeneratedStyle();
                 $pageTranslation->save();
             }
         }

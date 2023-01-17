@@ -5,6 +5,7 @@ namespace Modules\Space\Http\Controllers;
 use App\Helpers\HumanReadable;
 use App\Http\Controllers\CrudController;
 use App\Services\IPService;
+use App\Services\MenuService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\Space\Entities\Page;
@@ -22,9 +23,8 @@ class SpaceController extends CrudController
 
     private $spaceService;
 
-    public function __construct(
-        SpaceService $spaceService
-    ) {
+    public function __construct(SpaceService $spaceService)
+    {
         $this->authorizeResource(Space::class, 'space');
 
         $this->spaceService = $spaceService;
@@ -113,10 +113,7 @@ class SpaceController extends CrudController
 
         $inputs = $request->validated();
 
-        $space->saveFromInputs([
-            ...$inputs,
-            ...['is_page_enabled' => true],
-        ]);
+        $space->saveFromInputs($inputs);
 
         if ($request->hasFile('logo')) {
             $this->spaceService->replaceLogo($space, $request->file('logo'));
@@ -125,11 +122,6 @@ class SpaceController extends CrudController
         if ($request->hasFile('cover')) {
             $this->spaceService->replaceCover($space, $request->file('cover'));
         }
-
-        $page = Page::createBasedOnSpace($inputs['name'], auth()->id());
-
-        $space->page_id = $page->id;
-        $space->save();
 
         $this->generateFlashMessage('Successfully creating '.$this->title.'!');
 
@@ -288,5 +280,10 @@ class SpaceController extends CrudController
         $this->generateFlashMessage('Manager updated successfully!');
 
         return back();
+    }
+
+    public function isUsedByMenus(Space $space, ?string $locale = null)
+    {
+        return app(MenuService::class)->isModelUsedByMenu($space, $locale);
     }
 }

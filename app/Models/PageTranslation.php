@@ -106,7 +106,7 @@ class PageTranslation extends Model implements PublishableInterface
         return MinifyCss::minify($css);
     }
 
-    public function updatePageStyle(): void
+    public function setGeneratedStyle(): void
     {
         $this->generated_style = $this->generatePageStyle();
     }
