@@ -83,9 +83,6 @@ class WidgetService
             }
         }
 
-        return $widgets
-            ->sortBy('title')
-            ->values()
-            ->all();
+        return $widgets->all();
     }
 }
