@@ -5,6 +5,7 @@ namespace Modules\Space\Entities;
 use App\Models\PageTranslation as AppPageTranslation;
 use App\Services\TranslationService;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Space\Entities\Page;
 
@@ -36,12 +37,7 @@ class PageTranslation extends AppPageTranslation
             $space = $this->page->space;
         }
 
-        $ancestors = Space::whereAncestorOrSelf($space->id)
-            ->select(['id', 'page_id','_lft','_rgt'])
-            ->withDepth()
-            ->with('page.translations:id,page_id,locale,slug,unique_key')
-            ->defaultOrder()
-            ->get();
+        $ancestors = $space->ancestors->toFlatTree();
 
         $defaultLocale = app(TranslationService::class)->getDefaultLocale();
 
@@ -49,8 +45,9 @@ class PageTranslation extends AppPageTranslation
             ->pluck('page.translations')
             ->filter();
 
-        if ($pageTranslations->isNotEmpty()) {
+        $pageTranslations->push($space->page->translations);
 
+        if ($pageTranslations->isNotEmpty()) {
             return $pageTranslations
                 ->map(function ($translations) use ($defaultLocale) {
                     $localeTranslation = $translations

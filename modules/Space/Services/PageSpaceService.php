@@ -3,7 +3,9 @@
 namespace Modules\Space\Services;
 
 use App\Helpers\HumanReadable;
+use App\Services\TranslationService;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
 use Modules\Space\ModuleService;
@@ -39,17 +41,29 @@ class PageSpaceService
         return HumanReadable::phoneNumberFormat($phone['number'], $phone['country']);
     }
 
-    public function getChildren(): array
+    public function getLeaves(): Collection
     {
-        $allChildren = [];
+        $locales = collect([
+            app(TranslationService::class)->getDefaultLocale(),
+            app(TranslationService::class)->currentLanguage(),
+        ])->unique();
 
-        foreach ($this->space->descendants->all() as $child) {
-            if (!$child->children()->exists()) {
-                $allChildren[] = $child;
-            }
-        }
-
-        return $allChildren;
+        return Space::whereDescendantOf($this->space)
+            ->whereIsLeaf()
+            ->with([
+                'page.translations' => function ($query) use ($locales) {
+                    $query->select('id', 'page_id', 'locale', 'status');
+                    $query->where('locale', $locales->all());
+                    $query->with('page.space.ancestors', function ($query) use ($locales) {
+                        $query->select(['id', 'page_id','_lft','_rgt', 'parent_id', 'is_page_enabled', 'type_id']);
+                        $query->with('page.translations', function ($query) use ($locales) {
+                            $query->select('id', 'page_id', 'locale', 'status', 'slug','unique_key');
+                            $query->where('locale', $locales->all());
+                        });
+                    });
+                },
+            ])
+            ->get();
     }
 
     public function defaultLogoUrl(): string
