@@ -116,7 +116,7 @@ class Space extends Model implements TranslatableContract
         $pageTranslation = $page->translate($locale);
 
         return $pageTranslation
-            ? route('frontend.spaces.show', $pageTranslation->slug)
+            ? $pageTranslation->landingPageSpaceUrl
             : null;
     }
 
