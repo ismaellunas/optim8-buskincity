@@ -2,29 +2,32 @@
     <div>
         <div class="columns is-multiline">
             <template
-                v-for="(widget, order) in widgets"
+                v-for="(widget, order) in allWidgets"
                 :key="order"
             >
-                <component
-                    :is="widget.componentName"
-                    :columns="widget.columns"
-                    :data="widget.data"
-                    :order="order"
-                    :title="widget.title"
-                />
-            </template>
+                <template
+                    v-if="isAsyncComponentExists(widget.componentName)"
+                >
+                    <component
+                        :is="asyncComponents[ widget.componentName ]"
+                        :columns="widget.columns"
+                        :data="widget.data"
+                        :order="order"
+                        :title="widget.title"
+                    />
+                </template>
 
-            <template
-                v-for="(widget, order) in moduleWidgets"
-                :key="order"
-            >
-                <component
-                    :is="asyncComponents[ widget.componentName ]"
-                    :columns="widget.columns"
-                    :data="widget.data"
-                    :order="order"
-                    :title="widget.title"
-                />
+                <template
+                    v-else
+                >
+                    <component
+                        :is="widget.componentName"
+                        :columns="widget.columns"
+                        :data="widget.data"
+                        :order="order"
+                        :title="widget.title"
+                    />
+                </template>
             </template>
         </div>
     </div>
@@ -33,6 +36,7 @@
 <script>
     import LatestRegistration from '@/Biz/Widget/LatestRegistration';
     import { defineAsyncComponent } from 'vue';
+    import { sortBy } from 'lodash';
 
     export default {
         name: 'BizWidgetColumnsAdmin',
@@ -63,6 +67,21 @@
             return {
                 asyncComponents,
             };
+        },
+
+        computed: {
+            allWidgets() {
+                return sortBy([
+                    ...this.widgets,
+                    ...this.moduleWidgets,
+                ], ['order']);
+            },
+        },
+
+        methods: {
+            isAsyncComponentExists(componentName) {
+                return !!this.asyncComponents[componentName];
+            },
         },
     }
 </script>

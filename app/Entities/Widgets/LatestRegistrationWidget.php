@@ -30,6 +30,7 @@ class LatestRegistrationWidget implements WidgetInterface
             'title' => $this->title,
             'componentName' => $this->componentName,
             'data' => $this->data,
+            'order' => 2,
         ];
     }
 
