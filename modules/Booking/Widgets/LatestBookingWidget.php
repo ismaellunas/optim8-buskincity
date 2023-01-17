@@ -36,6 +36,7 @@ class LatestBookingWidget implements WidgetInterface
                 'statusOptions' => BookingStatus::options(),
                 'cityOptions' => $this->productEventService->getCityOptions(),
             ],
+            'order' => 1,
         ];
     }
 
