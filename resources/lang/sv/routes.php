@@ -5,6 +5,6 @@ return [
     'blog.index' => 'blogg',
     'blog.show' => 'blogg/{slug}',
     'frontend.profile' => 'profil/{user:unique_key}/{firstname_lastname?}',
-    'frontend.spaces.show' => 'utrymmen/{page_translation}',
+    'frontend.spaces.show' => 'utrymmen/{slugs}',
     'frontend.spaces.index' => 'utrymmen',
 ];

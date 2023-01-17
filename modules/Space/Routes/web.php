@@ -70,5 +70,6 @@ Route::prefix(Localization::setLocale())
         Route::get(LaravelLocalization::transRoute('frontend.spaces.index'), [FrontendSpaceController::class, 'index'])
             ->name('frontend.spaces.index');
         Route::get(LaravelLocalization::transRoute('frontend.spaces.show'), [FrontendSpaceController::class, 'show'])
-            ->name('frontend.spaces.show');
+            ->name('frontend.spaces.show')
+            ->where('slugs', '.+');
 });

@@ -69,7 +69,9 @@ class Page extends Model implements TranslatableContract
     {
         foreach ($inputs as $locale => $input) {
             if (!empty($inputs[$locale])) {
-                $inputs[$locale]['plain_text_content'] = PageService::transformComponentToText($input['data']);
+                if (array_key_exists('data', $input)) {
+                    $inputs[$locale]['plain_text_content'] = PageService::transformComponentToText($input['data']);
+                }
 
                 if (!$this->translate($locale)) {
                     $inputs[$locale]['unique_key'] = Url::randomDigitSegment([PageTranslation::class, 'isUniqueKeyExist']);
