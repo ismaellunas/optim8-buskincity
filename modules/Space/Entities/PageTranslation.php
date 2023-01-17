@@ -88,7 +88,9 @@ class PageTranslation extends AppPageTranslation
 
     public function isClearingMenuCacheRequired(): bool
     {
-        if ($this->page->space->menuItems->isNotEmpty()) {
+        $space = $this->page->space;
+
+        if ($space && $space->menuItems->isNotEmpty()) {
             return collect($this->getChanges())
                 ->keys()
                 ->contains(fn ($attribute) => in_array($attribute, [
