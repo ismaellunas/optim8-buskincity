@@ -1,3 +1,5 @@
+@inject('translationService', 'App\Services\TranslationService')
+
 <x-layouts.master>
     <x-slot name="title">
         {{ $metaTitle }}
@@ -31,7 +33,7 @@
                                 <p>{{ $space->description ?? '-' }}</p>
 
                                 @if ($space->hasEnabledPage())
-                                    <a href="{{ $space->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                                    <a href="{{ $space->pageLocalizeURL($translationService->currentLanguage()) }}" class="button is-primary mt-4">Read More</a>
                                 @endif
                             </div>
                         </div>
@@ -53,7 +55,7 @@
                                 <p>{{ $space->description ?? '-' }}</p>
 
                                 @if ($space->hasEnabledPage())
-                                    <a href="{{ $space->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                                    <a href="{{ $space->pageLocalizeURL($translationService->currentLanguage()) }}" class="button is-primary mt-4">Read More</a>
                                 @endif
                             </div>
 
