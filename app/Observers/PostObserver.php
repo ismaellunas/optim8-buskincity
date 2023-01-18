@@ -5,7 +5,6 @@ namespace App\Observers;
 use App\Jobs\ProcessPublishScheduledPost;
 use App\Models\Post;
 use App\Services\MenuService;
-use App\Services\WidgetService;
 
 class PostObserver
 {
@@ -22,8 +21,6 @@ class PostObserver
             ProcessPublishScheduledPost::dispatch($post)
                 ->delay($post->scheduled_at);
         }
-
-        app(WidgetService::class)->flushWidget("post");
     }
 
     public function updated(Post $post)
@@ -36,6 +33,5 @@ class PostObserver
     public function deleted(Post $post)
     {
         app(MenuService::class)->removeModelFromMenus($post);
-        app(WidgetService::class)->flushWidget("post");
     }
 }

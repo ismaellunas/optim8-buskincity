@@ -26,6 +26,19 @@ class SpaceController extends Controller
         $this->locale = app(TranslationService::class)->currentLanguage();
     }
 
+    public function show(Request $request, $slugs)
+    {
+        $slugs = collect(explode('/', $slugs));
+
+        $pageTranslation = PageTranslation::whereSlug($slugs->last())->first();
+
+        if (! $pageTranslation) {
+            return $this->notFoundHandler();
+        }
+
+        return $this->showDetail($request, $pageTranslation);
+    }
+
     public function index()
     {
         return view('spaces', [
@@ -36,7 +49,7 @@ class SpaceController extends Controller
         ]);
     }
 
-    public function show(Request $request, PageTranslation $pageTranslation)
+    private function showDetail(Request $request, PageTranslation $pageTranslation)
     {
         $page = $pageTranslation->page;
 

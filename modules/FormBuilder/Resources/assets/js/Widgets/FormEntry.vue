@@ -175,7 +175,7 @@
             getRecords(url = null) {
                 const self = this;
 
-                url = url ? url : route('admin.api.form-builders.entries', self.selectedForm);
+                url = url ? url : route('admin.api.widget.form-builder.entries', self.selectedForm);
 
                 self.isLoading = true,
 
