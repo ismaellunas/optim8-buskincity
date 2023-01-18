@@ -1,4 +1,5 @@
 @inject('pageSpace', 'Modules\Space\Services\PageSpaceService')
+@inject('translationService', 'App\Services\TranslationService')
 
 <x-layouts.master>
     <x-slot name="title">
@@ -124,7 +125,7 @@
                                         </p>
 
                                         @if ($spaceChild->hasEnabledPage())
-                                            <a href="{{ $spaceChild->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                                            <a href="{{ $spaceChild->pageLocalizeURL($translationService->currentLanguage()) }}" class="button is-primary mt-4">Read More</a>
                                         @endif
                                     </div>
                                 </div>
@@ -154,7 +155,7 @@
                                         </p>
 
                                         @if ($spaceChild->hasEnabledPage())
-                                            <a href="{{ $spaceChild->landingPageUrl }}" class="button is-primary mt-4">Read More</a>
+                                            <a href="{{ $spaceChild->pageLocalizeURL($translationService->currentLanguage()) }}" class="button is-primary mt-4">Read More</a>
                                         @endif
                                     </div>
 
