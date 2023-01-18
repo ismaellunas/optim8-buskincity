@@ -16,7 +16,7 @@ class PageTranslationObserver
     public function saving($pageTranslation)
     {
         if ($pageTranslation->isDirty('data')) {
-            $pageTranslation->updatePageStyle();
+            $pageTranslation->setGeneratedStyle();
         }
     }
 

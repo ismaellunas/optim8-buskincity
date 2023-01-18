@@ -34,7 +34,7 @@ class Page extends ModelPage
         return $this->hasOne(Space::class);
     }
 
-    public static function createBasedOnSpace(string $title, int $authorId): Page
+    public static function createBasedOnSpace(string $title, ?int $authorId = null): Page
     {
         $page = new Page();
 
@@ -51,7 +51,9 @@ class Page extends ModelPage
             ],
         ]);
 
-        $page->saveAuthorId($authorId);
+        if ($authorId) {
+            $page->saveAuthorId($authorId);
+        }
 
         return $page;
     }
