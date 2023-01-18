@@ -105,10 +105,6 @@ class ProductSeeder extends Seeder
 
             end($explodedAddress);
 
-            $city = collect(explode(' ', prev($explodedAddress)))
-                ->filter(fn ($str) => !is_numeric($str))
-                ->implode(' ');
-
             $meta = [
                 'locations' => [
                     [
@@ -116,7 +112,7 @@ class ProductSeeder extends Seeder
                         'longitude' => Arr::get($data, 'latlng.1'),
                         'address' => Arr::get($data, 'address'),
                         'country_code' => Arr::get($data, 'country_code'),
-                        'city' => $city,
+                        'city' => Arr::get($data, 'city'),
                     ],
                 ],
             ];
