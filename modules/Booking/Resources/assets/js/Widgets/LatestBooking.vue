@@ -1,5 +1,5 @@
 <template>
-    <div class="column is-6">
+    <div class="column is-full">
         <biz-panel class="is-white is-relative">
             <template #heading>
                 <div class="columns">
@@ -135,14 +135,11 @@
                                         <td>
                                             <biz-button-link
                                                 v-if="record.can.read"
-                                                class="has-text-black"
+                                                class="is-primary is-outlined is-small"
                                                 title="Detail"
                                                 :href="route(data.baseRouteName+'.show', record.id)"
                                             >
-                                                <biz-icon
-                                                    class="is-small"
-                                                    :icon="icon.show"
-                                                />
+                                                View Detail
                                             </biz-button-link>
                                         </td>
                                     </tr>
@@ -179,7 +176,6 @@
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizDropdownSearch from '@/Biz/DropdownSearch';
-    import BizIcon from '@/Biz/Icon';
     import BizInput from '@/Biz/Input';
     import BizLoader from '@/Biz/Loader';
     import BizPanel from '@/Biz/Panel';
@@ -198,7 +194,6 @@
             BizDropdown,
             BizDropdownItem,
             BizDropdownSearch,
-            BizIcon,
             BizInput,
             BizLoader,
             BizPanel,

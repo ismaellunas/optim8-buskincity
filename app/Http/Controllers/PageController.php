@@ -178,24 +178,7 @@ class PageController extends CrudController
     {
         $inputs = $request->all();
 
-        $locale = (string) collect($inputs)->pluck('locale')->filter()->first();
-
-        $oldStatus = $page->translate($locale)->status ?? null;
-
-        $pageTranslation = $inputs[$locale] ?? [];
-
         $page->saveFromInputs($inputs);
-
-        if (
-            !empty($pageTranslation['page_id'])
-            && $oldStatus == PageTranslation::STATUS_PUBLISHED
-            && $pageTranslation['status'] == PageTranslation::STATUS_DRAFT
-        ) {
-            app(MenuService::class)->removeModelFromMenus(
-                $page,
-                $pageTranslation['locale']
-            );
-        }
 
         $this->generateFlashMessage('Page updated successfully!');
 

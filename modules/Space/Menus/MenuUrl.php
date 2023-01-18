@@ -59,7 +59,7 @@ class MenuUrl extends BaseMenu implements MenuInterface
         }
 
         return route('frontend.spaces.show', [
-            'page_translation' => $pageTranslation->slug,
+            'slugs' => $pageTranslation->getSlugs(),
         ]);
     }
 }

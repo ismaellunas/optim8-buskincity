@@ -28,75 +28,47 @@ class ProductSeeder extends Seeder
     private $taxClass;
 
     private $publishedData = [
-        [ // ----- Sweden
-            'title'   => 'Ångbåtsmuseum',
-            'latlng'  => [62.95209940865782, 14.502892558054729],
-            'address' => 'Kyrkvägen 11 B, 845 94 Hackås, Sweden',
-            'country_code' => 'SE',
-        ], [
-            'title'   => 'Rickards Traktormuseum',
-            'latlng'  => '63.29232066995999, 16.807274854705817',
-            'address' => 'Helgumsbyn 155, 882 93 Helgum, Sweden',
-            'country_code' => 'SE',
-            'phone'   => '+46702590537',
-        ], [
-            'title'   => 'Missionsladan',
-            'latlng'  => [ 63.36136537145666, 13.34108846987545 ],
-            'address' => 'Hålland 753, 830 10 Undersåker, Sweden',
-            'country_code' => 'SE',
-            'phone'   => '+4664731010',
-        ], [
-            'title'   => 'ArveMuseet',
-            'latlng'  => [ 63.30712990833497, 14.060692933287143 ],
-            'address' => 'Södra Arvesund 516, 830 02 Mattmar, Sweden',
-            'country_code' => 'SE',
-            'phone'   => '+4664044168',
-        ], [
-            'title'   => 'Dunderklumpen',
-            'latlng'  => [ 63.87515608821116, 15.543847170853226 ],
-            'address' => 'HEMBYGDSGÅRDEN 1003, 833 35 Strömsund, Sweden',
-            'country_code' => 'SE',
-        ], [ //----- Norway,
-            'title'   => 'Levanger Museum',
-            'latlng'  => [ 63.75031163512022, 11.304497840490294 ],
-            'address' => 'Gimlevegen 1, 7600 Levanger, Norway',
-            'country_code' => 'NO',
-            'phone'   => '+4799125333',
-        ], [
-            'title'   => 'Stiklestad Cultural History Museum',
-            'latlng'  => [ 63.81037873779975, 11.576409450710743 ],
-            'address' => '7650 Verdal, Norway',
-            'country_code' => 'NO',
-        ], [
-            'title'   => 'Mosvik museum og historielag',
-            'latlng'  => [ 63.83478510580997, 11.005005241437246 ],
-            'address' => 'Vimpelivegen 2, 7690 Mosvik, Norway',
-            'country_code' => 'NO',
-            'phone'   => '+4741517633',
-        ], [ //----- Denmark,
-            'title'   => 'Museum of Danish Resistance',
-            'latlng'  => [ 55.69949359665636, 12.600613532128182 ],
-            'address' => 'Esplanaden 13, 1263 København, Denmark',
-            'country_code' => 'DK',
-            'phone'   => '+4541206080',
-        ], [
-            'title'   => 'Barbie Museum',
-            'latlng'  => [ 55.70571403154807, 12.524343033412054 ],
-            'address' => 'Vibevej 52, 2400 København, Denmark',
-            'country_code' => 'DK',
-            'phone'   => '+4521481827',
-        ], [ //----- Germany,
-            'title'   => 'Altonaer Museum',
-            'latlng'  => [ 53.58622158941728, 9.941411206151681 ],
-            'address' => 'Museumstraße 23, 22765 Hamburg, Germany',
+        [ // ----- Germany
+            'title' => "Pergamonmuseum",
+            'address' => "Bodestraße 1-3, 10178 Berlin, Germany",
+            'latlng' => [ 52.52119252486984, 13.396902451332059 ],
             'country_code' => 'DE',
-            'phone'   => '+49404281350',
         ], [
-            'title'   => 'Museum Lüneburg',
-            'latlng'  => [ 53.281251947664416, 10.38316076099741 ],
-            'address' => 'Willy-Brandt-Straße 1, 21335 Lüneburg, Germany',
+            'title' => "Brandenburg Gate",
+            'address' => "Pariser Platz, 10117, G98H+G3",
+            'latitude' => [ 52.51733698723363, 13.377799115385956 ],
             'country_code' => 'DE',
-            'phone'   => '+4941317206580',
+        ], [
+            'title' => "Glyptothek",
+            'address' => "Königsplatz 3, 80333",
+            'latlng' => [ 48.14661473948528, 11.56567738041144 ],
+            'country_code' => 'DE',
+        ], [
+            'title' => "Deutsches Museum",
+            'address' => "Museumsinsel 1, 80538 4HHM+W9",
+            'latitude' => [ 48.13495937007051, 11.5840630265014 ],
+            'country_code' => 'DE',
+        ], [ // ----- Sweden
+            'title' => "Vasa Museum",
+            'address' => "Galärvarvsvägen 14, 115 21 83HR+6H",
+            'latlng' => [ 59.3286437970886, 18.0915704926579 ],
+            'country_code' => 'SE',
+        ],
+        [
+            'title' => "Nobel Prize Museum",
+            'address' => "Stortorget 2, 103 16 83GC+48",
+            'latlng' => [ 59.3262018218294, 18.071118483826 ],
+            'country_code' => 'SE',
+        ], [ //----- Netherlands,
+            'title' => "Stedelijk Museum Amsterdam",
+            'address' => "Museumplein 10, 1071 DJ, 9V5H+6W",
+            'latlng' => [ 52.3584304500091, 4.87989154112885 ],
+            'country_code' => 'NL',
+        ], [
+            'title' => "Rijksmuseum",
+            'address' => "Museumstraat 1, 1071 XX 9V5P+X3",
+            'latlng' => [ 52.3607373575951, 4.88530846000091 ],
+            'country_code' => 'NL',
         ],
     ];
 
@@ -104,7 +76,7 @@ class ProductSeeder extends Seeder
     {
         Model::unguard();
 
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             $product = $this->createProduct(ProductStatus::DRAFT->value);
 
             $this->createProductVariant($product);

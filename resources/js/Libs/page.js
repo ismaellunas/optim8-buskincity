@@ -1,5 +1,10 @@
-export function getEmptyPageTranslation() {
-    return {
+export function getEmptyPageTranslation(options) {
+    options = {
+        ...{ isDefaultSettingsProvided: true },
+        ...options
+    };
+
+    const pageTranslation = {
         id: null,
         title: null,
         slug: null,
@@ -8,8 +13,13 @@ export function getEmptyPageTranslation() {
         meta_description: null,
         meta_title: null,
         status: 0,
-        settings: getEmptyPageTranslationSetting(),
     };
+
+    if (options.isDefaultSettingsProvided) {
+        pageTranslation.settings = getEmptyPageTranslationSetting();
+    }
+
+    return pageTranslation;
 }
 
 export function getEmptyPageTranslationSetting() {

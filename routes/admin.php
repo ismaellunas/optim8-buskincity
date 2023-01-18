@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Controllers\{
     ApiOptionController,
     ApiPageBuilderController,
+    ApiWidgetController,
     CategoryController,
     DashboardController,
     ErrorLogController,
@@ -185,38 +187,45 @@ Route::middleware([
         });
 });
 
-Route::name('api.')->prefix('api')->middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::post('/media', [MediaController::class, 'apiStore'])
-        ->name('media.store');
+Route::name('api.')
+    ->prefix('api')
+    ->middleware(['auth:sanctum', 'verified', 'throttle:api'])
+    ->withoutMiddleware(HandleInertiaRequests::class)
+    ->group(function () {
+        Route::post('/media', [MediaController::class, 'apiStore'])
+            ->name('media.store');
 
-    Route::post('/theme/header/menu-item', [ThemeHeaderMenuController::class, 'apiValidateMenuItem'])
-        ->name('theme.header.menu-item.validate');
+        Route::post('/theme/header/menu-item', [ThemeHeaderMenuController::class, 'apiValidateMenuItem'])
+            ->name('theme.header.menu-item.validate');
 
-    Route::post('/theme/footer/social-media', [ThemeFooterController::class, 'apiValidateSocialMedia'])
-        ->name('theme.footer.social-media.validate');
+        Route::post('/theme/footer/social-media', [ThemeFooterController::class, 'apiValidateSocialMedia'])
+            ->name('theme.footer.social-media.validate');
 
-    Route::get('/pages/{page}/is-used-by-menu/{locale?}', [PageController::class, 'isUsedByMenus'])
-        ->middleware('can:page.edit')
-        ->name('pages.is-used-by-menu');
+        Route::get('/pages/{page}/is-used-by-menu/{locale?}', [PageController::class, 'isUsedByMenus'])
+            ->middleware('can:page.edit')
+            ->name('pages.is-used-by-menu');
 
-    Route::get('/page-builder/country-options', [ApiPageBuilderController::class, 'countryOptions'])
-        ->name('page-builder.country-options');
+        Route::get('/page-builder/country-options', [ApiPageBuilderController::class, 'countryOptions'])
+            ->name('page-builder.country-options');
 
-    Route::get('/page-builder/type-options', [ApiPageBuilderController::class, 'typeOptions'])
-        ->name('page-builder.type-options');
+        Route::get('/page-builder/type-options', [ApiPageBuilderController::class, 'typeOptions'])
+            ->name('page-builder.type-options');
 
-    Route::get('/page-builder/user-list/role-options', [ApiPageBuilderController::class, 'userListRoleOptions'])
-        ->name('page-builder.user-list.role-options');
+        Route::get('/page-builder/user-list/role-options', [ApiPageBuilderController::class, 'userListRoleOptions'])
+            ->name('page-builder.user-list.role-options');
 
-    Route::get('/options/phone-countries', [ApiOptionController::class, 'phoneCountryOptions'])
-        ->name('options.phone-countries');
+        Route::get('/options/phone-countries', [ApiOptionController::class, 'phoneCountryOptions'])
+            ->name('options.phone-countries');
 
-    Route::get('/page-builder/post/category-options', [ApiPageBuilderController::class, 'postCategoryOptions'])
-        ->name('page-builder.post.category-options');
+        Route::get('/page-builder/post/category-options', [ApiPageBuilderController::class, 'postCategoryOptions'])
+            ->name('page-builder.post.category-options');
 
-    Route::get('/tinymce/key', [SettingKeyController::class, 'getTinyMCEKey'])
-        ->name('tinymce.key');
-});
+        Route::get('/tinymce/key', [SettingKeyController::class, 'getTinyMCEKey'])
+            ->name('tinymce.key');
+
+        Route::get('widget/latest-registrations', [ApiWidgetController::class, 'getLatestRegistrations'])
+            ->name('widget.latest-registrations');
+    });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
     $limiter = config('fortify.limiters.login');

@@ -124,6 +124,7 @@
                         :is-dirty="pageForm.isDirty"
                         :is-new="isPageNew"
                         :is-page-builder-rendered="false"
+                        :is-page-setting-rendered="false"
                         :locale-options="localeOptions"
                         :selected-locale="selectedLocale"
                         :status-options="statusOptions"
@@ -172,11 +173,12 @@
     import SpaceEvent from './SpaceEvent';
     import SpaceForm from './SpaceForm';
     import SpaceFormTranslatable from './SpaceFormTranslatable';
-    import { confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { cloneDeep, pick, map } from 'lodash';
+    import { confirmDelete, confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { getTranslation } from '@/Libs/translation';
     import { isBlank } from '@/Libs/utils';
-    import { pick, map } from 'lodash';
+    import { pageStatus } from '@/Libs/defaults';
     import { preview as iconPreview } from '@/Libs/icon-class';
     import { ref } from "vue";
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
@@ -211,8 +213,8 @@
         layout: AppLayout,
 
         props: {
-            breadcrumbs: { type: Object, required: true },
             baseRouteName: { type: String, default: '' },
+            breadcrumbs: { type: Object, required: true },
             can: { type: Object, required: true },
             coverUrl: { type: String, default: '' },
             defaultCountry: { type: String, required: true },
@@ -231,25 +233,22 @@
 
         setup(props) {
             const defaultLocale = usePage().props.value.defaultLanguage;
-            const translationForm = { [defaultLocale]: {} };
 
-            let translatedPage = getTranslation(props.page, defaultLocale);
-
-            if (isBlank(translatedPage)) {
-                translatedPage = getEmptyPageTranslation();
-            }
-
-            translationForm[defaultLocale] = JSON.parse(JSON.stringify(translatedPage));
+            const emptyTranslatedPage = getEmptyPageTranslation({
+                isDefaultSettingsProvided: false
+            });
 
             return {
                 activeTab: ref(props.tab),
-                routeIndex: route(props.baseRouteName+'.index'),
-                pageEnabledOptions: { No: false, Yes: true },
                 contentConfigId: ref(''),
                 defaultLocale,
-                localeOptions: usePage().props.value.languageOptions,
-                pageForm: useForm(translationForm),
+                emptyTranslatedPage,
                 iconPreview,
+                localeOptions: usePage().props.value.languageOptions,
+                pageEnabledOptions: { No: false, Yes: true },
+                pageForm: ref(null),
+                routeIndex: route(props.baseRouteName+'.index'),
+                selectedLocale: ref(null),
             };
         },
 
@@ -258,8 +257,6 @@
                 managers: this.spaceManagers,
                 productManagers: this.spaceProductManagers,
                 space: {},
-                selectedLocale: this.defaultLocale,
-                pagePreviewUrl: null,
             };
         },
 
@@ -281,7 +278,18 @@
             },
 
             currentTranslatedPage() {
-                return getTranslation(this.page, this.selectedLocale);
+                return getTranslation(
+                    this.page,
+                    this.selectedLocale,
+                    { isDefaultSettingsProvided: false }
+                );
+            },
+
+            pagePreviewUrl() {
+                return (!isBlank(this.currentTranslatedPage.landingPageSpaceUrl)
+                    ? this.currentTranslatedPage.landingPageSpaceUrl + `?&preview`
+                    : null
+                );
             },
 
             canPreviewPage() {
@@ -294,7 +302,7 @@
         },
 
         mounted() {
-            this.setPagePreviewUrl(this.pageForm[this.defaultLocale]);
+            this.changeLocale(this.defaultLocale);
         },
 
         methods: {
@@ -391,62 +399,107 @@
             },
 
             changeLocale(locale) {
-                this.setTranslationForm(locale);
                 this.selectedLocale = locale;
+                this.setTranslationForm(locale);
             },
 
             setTranslationForm(locale) {
-                const translatedPage = getTranslation(this.page, locale);
+                let translationForm = { [this.defaultLocale]: {} };
 
-                let translationFrom = { [this.defaultLocale]: {} };
+                const translatedPage = this.currentTranslatedPage;
 
                 if (isBlank(translatedPage)) {
-                    translationFrom[locale] = getEmptyPageTranslation();
+                    translationForm[locale] = cloneDeep(this.emptyTranslatedPage);
                 } else {
-                    translationFrom[locale] = JSON.parse(JSON.stringify(translatedPage));
+                    translationForm[locale] = cloneDeep(translatedPage);
                 }
 
-                this.pageForm = useForm(translationFrom);
-                this.setPagePreviewUrl(translationFrom[locale]);
+                this.pageForm = useForm(translationForm);
             },
 
-            submitPage() {
-                let method = null;
-                let url = null;
+            isUsedByMenu() {
+                const self = this;
 
-                if (! this.page?.id) {
-                    method = 'post';
-                    url = route('admin.spaces.pages.store', this.spaceRecord.id);
+                return new Promise((resolve, reject) => {
+                    const url = route('admin.api.spaces.is-used-by-menu', {
+                        space: self.spaceRecord.id,
+                        locale: self.selectedLocale,
+                    });
 
-                } else {
+                    axios.get(url)
+                        .then(response => {
+                            resolve(response.data == true);
+                        })
+                        .catch(error => {
+                            reject(error);
+                        })
+                });
+            },
 
-                    method = 'put';
-                    url = route(
-                        'admin.spaces.pages.update',
-                        [this.spaceRecord.id, this.page.id]
-                    );
-                }
+            async canSavePage() {
+                try {
+                    const pageTranslationStatus = this.pageForm[this.selectedLocale]['status'];
 
-                const options = {
-                    replace: true,
-                    onStart: this.onStartLoadingOverlay,
-                    onSuccess: (page) => {
-                        this.pageForm[this.selectedLocale]['id'] = this.currentTranslatedPage.id;
+                    if (
+                        this.currentTranslatedPage
+                        && this.currentTranslatedPage.status == pageStatus.published
+                        && pageTranslationStatus == pageStatus.draft
+                    ) {
+                        if (await this.isUsedByMenu()) {
+                            const confirmResult = await confirmDelete(
+                                'Are You Sure?',
+                                'This action will also remove the page on the navigation menu.',
+                                'Yes'
+                            );
 
-                        successAlert(page.props.flash.message);
-                    },
-                    onError: () => { oopsAlert() },
-                    onFinish: () => {
-                        this.setTranslationForm(this.selectedLocale);
-                        this.onEndLoadingOverlay();
+                            return !!confirmResult.value;
+                        }
                     }
-                };
 
-                this.pageForm.submit(method, url, options);
+                    return true;
+
+                } catch (error) {
+                    console.error(error);
+
+                    return true;
+                }
             },
 
-            setPagePreviewUrl(page) {
-                this.pagePreviewUrl = page.landingPageSpaceUrl + `?&preview`;
+            async submitPage() {
+                if (await this.canSavePage()) {
+                    let method = null;
+                    let url = null;
+
+                    if (! this.page?.id) {
+                        method = 'post';
+                        url = route('admin.spaces.pages.store', this.spaceRecord.id);
+
+                    } else {
+
+                        method = 'put';
+                        url = route(
+                            'admin.spaces.pages.update',
+                            [this.spaceRecord.id, this.page.id]
+                        );
+                    }
+
+                    const options = {
+                        replace: true,
+                        onStart: this.onStartLoadingOverlay,
+                        onSuccess: (page) => {
+                            this.pageForm[this.selectedLocale]['id'] = this.currentTranslatedPage.id;
+
+                            successAlert(page.props.flash.message);
+                        },
+                        onError: () => { oopsAlert() },
+                        onFinish: () => {
+                            this.setTranslationForm(this.selectedLocale);
+                            this.onEndLoadingOverlay();
+                        }
+                    };
+
+                    this.pageForm.submit(method, url, options);
+                }
             },
 
             previewPage() {

@@ -23,6 +23,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use JoelButcher\Socialstream\HasConnectedAccounts;
 use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
@@ -134,8 +135,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $query->where(function ($query) use ($term) {
             $query
-                ->where('first_name', 'ILIKE', '%'.$term.'%')
-                ->where('last_name', 'ILIKE', '%'.$term.'%')
+                ->where(DB::raw("CONCAT(first_name,' ',last_name)"), 'ILIKE', '%'.$term.'%')
                 ->orWhere('email', 'ILIKE', '%'.$term.'%');
         });
     }

@@ -13,6 +13,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\Collection as NestedSetCollection;
+use Modules\Space\Entities\Page;
 use Modules\Space\Entities\Space;
 use Modules\Space\ModuleService;
 
@@ -393,5 +394,31 @@ class SpaceService
             ])
             ->orderBy('name', 'asc')
             ->get();
+    }
+
+    public function pageFormRecord(Space $space): Page
+    {
+        $page = $space->page;
+
+        $page->translations->transform(function ($translation) {
+
+            $translation->append('landingPageSpaceUrl');
+
+            $translation->setVisible([
+                'id',
+                'locale',
+                'title',
+                'excerpt',
+                'slug',
+                'meta_title',
+                'meta_description',
+                'status',
+                'landingPageSpaceUrl',
+            ]);
+
+            return $translation;
+        });
+
+        return $page;
     }
 }

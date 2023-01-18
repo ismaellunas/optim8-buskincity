@@ -60,6 +60,28 @@
                         <td>{{ entry?.meta_data?.ip_address ?? '-' }}</td>
                     </tr>
                     <tr>
+                        <th>User</th>
+                        <td v-if="isUserExists">
+                            <template
+                                v-if="canRedirectUser"
+                            >
+                                <biz-link :href="route('admin.users.edit', entry.user.id)">
+                                    {{ entry.user.full_name }}
+                                </biz-link>
+                            </template>
+
+                            <template
+                                v-else
+                            >
+                                {{ entry.user.full_name }}
+                            </template>
+                        </td>
+
+                        <td v-else>
+                            -
+                        </td>
+                    </tr>
+                    <tr>
                         <th>Submitted on</th>
                         <td>{{ moment(entry.created_at).format('YYYY-MM-DD [at] h:mm a') }}</td>
                     </tr>
@@ -91,36 +113,6 @@
                     </tr>
                 </biz-table>
             </biz-card>
-
-            <biz-card
-                v-if="isUserExists"
-                class="mt-2"
-            >
-                <template #headerTitle>
-                    User
-                </template>
-
-                <biz-table is-fullwidth>
-                    <tr>
-                        <th>Name</th>
-                        <td>
-                            <template
-                                v-if="entry.user.isSuperAdministrator"
-                            >
-                                {{ entry.user.full_name }}
-                            </template>
-
-                            <template
-                                v-else
-                            >
-                                <biz-link :href="route('admin.users.edit', entry.user.id)">
-                                    {{ entry.user.full_name }}
-                                </biz-link>
-                            </template>
-                        </td>
-                    </tr>
-                </biz-table>
-            </biz-card>
         </div>
     </div>
 </template>
@@ -148,6 +140,7 @@
 
         props: {
             baseRouteName: { type: String, required: true },
+            can: { type: Object, default: () => {} },
             entry: { type: Object, default: () => {} },
             entryDisplay: { type: Object, default: () => {} },
             fieldLabels: { type: Object, default: () => {} },
@@ -174,6 +167,19 @@
             isUserExists() {
                 return !!this.entry?.user;
             },
+
+            canRedirectUser() {
+                if (this.isUserExists) {
+                    if (
+                        !this.entry.user.isSuperAdministrator
+                        && this.can.user.edit
+                    ) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
         },
 
         methods: {
