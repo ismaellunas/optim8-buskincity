@@ -3,7 +3,7 @@
         <div class="columns">
             <div class="column">
                 <div class="columns is-multiline">
-                    <div class="column">
+                    <div class="column is-4">
                         <div class="control has-icons-left">
                             <biz-select
                                 v-model="selectedLocation"
@@ -140,7 +140,7 @@
     import moment from 'moment';
     import { Loader } from '@googlemaps/js-api-loader';
     import { MarkerClusterer } from "@googlemaps/markerclusterer";
-    import { clone, each, find, keys, get, groupBy, merge, map } from 'lodash';
+    import { clone, each, find, keys, get, groupBy, merge, map, transform } from 'lodash';
     import { computed, onMounted, onUnmounted, reactive, ref, toRaw } from 'vue';
     import { useGeolocation, mapStyle as drawMapStyle } from '@/Libs/map';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
@@ -329,6 +329,7 @@
 
                 this.queryParams.country = this.locationParts.country;
                 this.queryParams.city = this.locationParts.city;
+                this.queryParams.dates = this.queryParams.dates.filter(Boolean);
 
                 this.onStartLoadingOverlay();
 
@@ -381,6 +382,9 @@
                         })
 
                         this.markerClusterer.addMarkers(this.markers, true);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
                     })
                     .then(() => {
                         this.onEndLoadingOverlay();
