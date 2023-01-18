@@ -10,7 +10,7 @@ use Modules\FormBuilder\Entities\FieldGroup;
 class EntryWidget implements WidgetInterface
 {
     private $user;
-    private $componentName = "Entry";
+    private $componentName = "FormEntry";
     private $title = "Form Entries";
 
     private $baseRouteName = "admin.form-builders";
@@ -30,6 +30,7 @@ class EntryWidget implements WidgetInterface
                 'formLists' => $this->getFormLists(),
                 'baseRouteName' => $this->baseRouteName,
             ],
+            'order' => 3,
         ];
     }
 

@@ -23,7 +23,6 @@ class Sitemap extends BaseSitemap implements SitemapInterface
     public function urls(): array|Collection
     {
         $urls = $this->getEloquentBuilder()
-            ->orderBy('slug')
             ->get()
             ->map(function ($pageTranslation) {
                 return $this->createUrlTag($pageTranslation);
@@ -56,10 +55,15 @@ class Sitemap extends BaseSitemap implements SitemapInterface
     {
         return PageTranslation::select([
                 'slug',
+                'unique_key',
                 'updated_at',
                 'page_id',
+                'locale',
             ])
             ->with(['page'])
+            ->whereHas('page.space', function ($query) {
+                $query->where('is_page_enabled', true);
+            })
             ->inLanguages([$this->locale])
             ->published();
     }
@@ -67,7 +71,7 @@ class Sitemap extends BaseSitemap implements SitemapInterface
     private function createUrlTag(PageTranslation $pageTranslation): UrlTag
     {
         return new UrlTag(
-            $this->locationUrl(route('frontend.spaces.show', [$pageTranslation->slug])),
+            $this->locationUrl($pageTranslation->landingPageSpaceUrl),
             ['lastmod' => $pageTranslation->updated_at]
         );
     }

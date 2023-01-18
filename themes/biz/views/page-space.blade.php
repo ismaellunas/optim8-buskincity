@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="columns is-multiline mt-3">
-                        @foreach ($pageSpace->getChildren() as $spaceChild)
+                        @foreach ($pageSpace->getLeaves() as $spaceChild)
                             <div class="column is-12 pt-6 pb-6">
                                 <div class="columns is-hidden-tablet">
                                     <div class="column has-text-centered">

@@ -11,6 +11,7 @@ use App\Models\{
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\AbstractPaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -58,6 +59,41 @@ class UserService
         return $this
             ->getBuilderRecords($term, $scopes)
             ->paginate($perPage);
+    }
+
+    public function getLatestRegistrations(
+        User $user,
+        string $term = null,
+        ?array $scopes = null,
+        int $limit = 10,
+    ): array {
+        return User::latest()
+            ->select([
+                'id',
+                'first_name',
+                'last_name',
+                'email',
+                'is_suspended',
+                'profile_photo_media_id',
+                'created_at',
+            ])
+            ->when($term, function ($query) use ($term) {
+                $query->search($term);
+            })
+            ->when($scopes, function ($query) use ($scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    if (!is_null($value)) {
+                        $query->$scopeName($value);
+                    }
+                }
+            })
+            ->limit($limit)
+            ->whereDoesntHave('roles', function ($query) {
+                $query->where('name', config('permission.super_admin_role'));
+            })
+            ->get()
+            ->append('registered_at')
+            ->toArray();
     }
 
     public function getNoSuperAdministratorRecords(
