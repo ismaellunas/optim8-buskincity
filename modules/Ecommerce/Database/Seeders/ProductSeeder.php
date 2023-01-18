@@ -32,42 +32,49 @@ class ProductSeeder extends Seeder
             'title' => "Pergamonmuseum",
             'address' => "Bodestraße 1-3, 10178 Berlin, Germany",
             'latlng' => [ 52.52119252486984, 13.396902451332059 ],
+            'city' => 'Berlin',
             'country_code' => 'DE',
         ], [
             'title' => "Brandenburg Gate",
             'address' => "Pariser Platz, 10117, G98H+G3",
             'latitude' => [ 52.51733698723363, 13.377799115385956 ],
+            'city' => 'Berlin',
             'country_code' => 'DE',
         ], [
             'title' => "Glyptothek",
             'address' => "Königsplatz 3, 80333",
             'latlng' => [ 48.14661473948528, 11.56567738041144 ],
+            'city' => 'Munich',
             'country_code' => 'DE',
         ], [
             'title' => "Deutsches Museum",
             'address' => "Museumsinsel 1, 80538 4HHM+W9",
             'latitude' => [ 48.13495937007051, 11.5840630265014 ],
+            'city' => 'Munich',
             'country_code' => 'DE',
         ], [ // ----- Sweden
             'title' => "Vasa Museum",
             'address' => "Galärvarvsvägen 14, 115 21 83HR+6H",
             'latlng' => [ 59.3286437970886, 18.0915704926579 ],
+            'city' => 'Stockholm',
             'country_code' => 'SE',
-        ],
-        [
+        ], [
             'title' => "Nobel Prize Museum",
             'address' => "Stortorget 2, 103 16 83GC+48",
             'latlng' => [ 59.3262018218294, 18.071118483826 ],
+            'city' => 'Stockholm',
             'country_code' => 'SE',
         ], [ //----- Netherlands,
             'title' => "Stedelijk Museum Amsterdam",
             'address' => "Museumplein 10, 1071 DJ, 9V5H+6W",
             'latlng' => [ 52.3584304500091, 4.87989154112885 ],
+            'city' => 'Amsterdam',
             'country_code' => 'NL',
         ], [
             'title' => "Rijksmuseum",
             'address' => "Museumstraat 1, 1071 XX 9V5P+X3",
             'latlng' => [ 52.3607373575951, 4.88530846000091 ],
+            'city' => 'Amsterdam',
             'country_code' => 'NL',
         ],
     ];
@@ -98,10 +105,6 @@ class ProductSeeder extends Seeder
 
             end($explodedAddress);
 
-            $city = collect(explode(' ', prev($explodedAddress)))
-                ->filter(fn ($str) => !is_numeric($str))
-                ->implode(' ');
-
             $meta = [
                 'locations' => [
                     [
@@ -109,7 +112,7 @@ class ProductSeeder extends Seeder
                         'longitude' => Arr::get($data, 'latlng.1'),
                         'address' => Arr::get($data, 'address'),
                         'country_code' => Arr::get($data, 'country_code'),
-                        'city' => $city,
+                        'city' => Arr::get($data, 'city'),
                     ],
                 ],
             ];
