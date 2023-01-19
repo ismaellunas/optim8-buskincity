@@ -13,6 +13,7 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Ecommerce\Entities\Product;
 
 class Space extends Model implements TranslatableContract
@@ -103,21 +104,14 @@ class Space extends Model implements TranslatableContract
         return $this->cover ? $this->cover->file_url : null;
     }
 
-    public function getLandingPageUrlAttribute(): ?string
+    public function pageLocalizeURL(string $locale): string
     {
-        $page = $this->page;
+        $pageTranslation = $this->page->translate($locale, true);
 
-        $locale = TranslationService::currentLanguage();
-
-        if (!$page->hasTranslation($locale)) {
-            $locale = TranslationService::getDefaultLocale();
-        }
-
-        $pageTranslation = $page->translate($locale);
-
-        return $pageTranslation
-            ? $pageTranslation->landingPageSpaceUrl
-            : null;
+        return LaravelLocalization::localizeURL(
+            route('frontend.spaces.show', ['slugs' => $pageTranslation->getSlugs()]),
+            $locale
+        );
     }
 
     public function getOptimizedCoverImageUrl(
