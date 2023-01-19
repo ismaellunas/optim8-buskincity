@@ -59,7 +59,10 @@
                     >
                         <figure class="media-left">
                             <p class="image is-64x64">
-                                <img :src="record.user?.profile_photo_url ?? userImage">
+                                <img
+                                    class="is-rounded"
+                                    :src="record.user?.profile_photo_url ?? userImage"
+                                >
                             </p>
                         </figure>
                         <div class="media-content">
