@@ -3,7 +3,7 @@
         <div class="columns">
             <div class="column">
                 <div class="columns is-multiline">
-                    <div class="column">
+                    <div class="column is-4">
                         <div class="control has-icons-left">
                             <biz-select
                                 v-model="selectedLocation"
@@ -329,6 +329,7 @@
 
                 this.queryParams.country = this.locationParts.country;
                 this.queryParams.city = this.locationParts.city;
+                this.queryParams.dates = this.queryParams.dates.filter(Boolean);
 
                 this.onStartLoadingOverlay();
 
@@ -381,6 +382,9 @@
                         })
 
                         this.markerClusterer.addMarkers(this.markers, true);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
                     })
                     .then(() => {
                         this.onEndLoadingOverlay();
