@@ -5,7 +5,7 @@ namespace Modules\FormBuilder\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class FieldGroupNotificationSetting extends Model
+class FormNotificationSetting extends Model
 {
     use HasFactory;
 
@@ -20,7 +20,7 @@ class FieldGroupNotificationSetting extends Model
         $this->subject = $inputs['subject'];
         $this->message = $inputs['message'];
         $this->is_active = $inputs['is_active'];
-        $this->field_group_id = $inputs['field_group_id'];
+        $this->form_id = $inputs['form_id'];
         $this->save();
     }
 }

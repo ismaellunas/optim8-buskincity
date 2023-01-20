@@ -17,6 +17,6 @@ class FormBuilderDatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->call("Modules\FormBuilder\Database\Seeders\PermissionSeeder");
-        $this->call("Modules\FormBuilder\Database\Seeders\FieldGroupSeeder");
+        $this->call("Modules\FormBuilder\Database\Seeders\FormSeeder");
     }
 }
