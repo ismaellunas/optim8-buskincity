@@ -13,23 +13,29 @@ use Modules\Space\ModuleService;
 class PageSpaceService
 {
     private Space $space;
+    private $pageTranslation;
 
     public function __construct()
     {
-        $pageTranslation = $this->getPageTranslationFromRequest(request());
+        $pageTranslation = $this->getPageTranslationFromRequest();
 
         $this->space = $pageTranslation->page->space ?? null;
     }
 
-    private function getPageTranslationFromRequest($request): ?PageTranslation
+    public function getPageTranslationFromRequest(): ?PageTranslation
     {
-        $slugs = collect(explode('/', $request->slugs));
+        if (is_null($this->pageTranslation)) {
 
-        if ($slugs->isNotEmpty()) {
-            return PageTranslation::whereSlug($slugs->last())->first();
+            $slugs = collect(explode('/', request()->slugs));
+
+            if ($slugs->isNotEmpty()) {
+                $this->pageTranslation = PageTranslation::whereSlug($slugs->last())->first();
+            } else {
+                $this->pageTranslation = null;
+            }
         }
 
-        return null;
+        return $this->pageTranslation;
     }
 
     public function getPhoneNumberFormat(array $phone): string
@@ -46,19 +52,19 @@ class PageSpaceService
         $locales = collect([
             app(TranslationService::class)->getDefaultLocale(),
             app(TranslationService::class)->currentLanguage(),
-        ])->unique();
+        ])->unique()->all();
 
         return Space::whereDescendantOf($this->space)
             ->whereIsLeaf()
             ->with([
                 'page.translations' => function ($query) use ($locales) {
                     $query->select('id', 'page_id', 'locale', 'status');
-                    $query->where('locale', $locales->all());
+                    $query->where('locale', $locales);
                     $query->with('page.space.ancestors', function ($query) use ($locales) {
                         $query->select(['id', 'page_id','_lft','_rgt', 'parent_id', 'is_page_enabled', 'type_id']);
                         $query->with('page.translations', function ($query) use ($locales) {
                             $query->select('id', 'page_id', 'locale', 'status', 'slug','unique_key');
-                            $query->where('locale', $locales->all());
+                            $query->where('locale', $locales);
                         });
                     });
                 },
