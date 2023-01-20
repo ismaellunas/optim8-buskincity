@@ -3,7 +3,7 @@
 namespace Modules\Booking\Http\Controllers\ApiPageBuilderComponent;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Modules\Booking\Http\Requests\EventsCalendarRequest;
 use Modules\Booking\ModuleService as BookingModuleService;
 use Modules\Booking\Services\EventsCalendarService;
 
@@ -16,7 +16,7 @@ class EventsCalendarController extends Controller
         $this->eventsCalendarService = $eventsCalendarService;
     }
 
-    public function index(Request $request)
+    public function index(EventsCalendarRequest $request)
     {
         $scopes = [
             'dateRange' => $request->dates ?? []

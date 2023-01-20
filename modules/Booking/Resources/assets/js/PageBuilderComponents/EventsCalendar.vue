@@ -3,7 +3,7 @@
         <div class="columns">
             <div class="column">
                 <div class="columns is-multiline">
-                    <div class="column">
+                    <div class="column is-4">
                         <div class="control has-icons-left">
                             <biz-select
                                 v-model="selectedLocation"
@@ -59,18 +59,26 @@
                     >
                         <figure class="media-left">
                             <p class="image is-64x64">
-                                <img :src="record.user?.profile_photo_url ?? userImage">
+                                <img
+                                    class="is-rounded"
+                                    :src="record.user?.profile_photo_url ?? userImage"
+                                >
                             </p>
                         </figure>
                         <div class="media-content">
                             <div class="content">
                                 <p class="has-text-justified">
-                                    <template v-if="record.user.stage_name">
-                                        <strong>{{ record.user.stage_name }}</strong> - <small>{{ record.user.name }}</small>
-                                    </template>
-                                    <template v-else>
-                                        <strong>{{ record.user.name }}</strong>
-                                    </template>
+                                    <a
+                                        target="_blank"
+                                        :href="record.user.profile_page_url ?? '#'"
+                                    >
+                                        <template v-if="record.user.stage_name">
+                                            <strong>{{ record.user.stage_name }}</strong> - <small>{{ record.user.name }}</small>
+                                        </template>
+                                        <template v-else>
+                                            <strong>{{ record.user.name }}</strong>
+                                        </template>
+                                    </a>
                                     <br>
                                     <biz-icon :icon="icon.locationMark" />
                                     {{ record.location.address }}
@@ -329,6 +337,7 @@
 
                 this.queryParams.country = this.locationParts.country;
                 this.queryParams.city = this.locationParts.city;
+                this.queryParams.dates = this.queryParams.dates.filter(Boolean);
 
                 this.onStartLoadingOverlay();
 
@@ -381,6 +390,9 @@
                         })
 
                         this.markerClusterer.addMarkers(this.markers, true);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
                     })
                     .then(() => {
                         this.onEndLoadingOverlay();
