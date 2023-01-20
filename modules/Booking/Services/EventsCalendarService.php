@@ -89,7 +89,7 @@ class EventsCalendarService
                     ]);
                 },
                 'user' => function ($query) {
-                    $query->select('id', 'email', 'first_name', 'last_name', 'unique_key');
+                    $query->select('id', 'email', 'first_name', 'last_name', 'unique_key', 'profile_photo_media_id');
                     $query->with([
                         'metas' => function ($query) {
                             $query->whereIn('key', ['stage_name']);
