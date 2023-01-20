@@ -9,8 +9,8 @@
 
             <div class="column">
                 <biz-form-input
-                    v-model="form.submit_text"
-                    :message="error('submit_text')"
+                    v-model="form.button.text"
+                    :message="error('button.text')"
                 />
             </div>
         </div>
