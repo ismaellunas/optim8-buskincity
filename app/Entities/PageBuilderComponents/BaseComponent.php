@@ -89,14 +89,14 @@ abstract class BaseComponent implements
             ->each(function ($value, $key) use ($styleBlock) {
                 $unit = $this->getUnitSpaceDimension('margin');
 
-                $styleBlock->addStyle('margin-'.$key, $value.$unit);
+                $styleBlock->addStyle('margin-'.$key, $value.$unit.' !important');
             });
 
         $this->getSpaceDimensionConfig('padding')
             ->each(function ($value, $key) use ($styleBlock) {
                 $unit = $this->getUnitSpaceDimension('padding');
 
-                $styleBlock->addStyle('padding-'.$key, $value.$unit);
+                $styleBlock->addStyle('padding-'.$key, $value.$unit.' !important');
             });
 
         return $styleBlock;
