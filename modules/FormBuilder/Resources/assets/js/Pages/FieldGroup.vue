@@ -52,6 +52,7 @@
     } from '@/Libs/utils';
 
     // Form Builder Fields
+    import Country from './../Fields/Inputs/Country';
     import Email from './../Fields/Inputs/Email';
     import FileDragDrop from './../Fields/Inputs/FileDragDrop';
     import Number from './../Fields/Inputs/Number';
@@ -70,6 +71,7 @@
             Draggable,
 
             // Form Builder Fields
+            Country,
             Email,
             FileDragDrop,
             Number,
