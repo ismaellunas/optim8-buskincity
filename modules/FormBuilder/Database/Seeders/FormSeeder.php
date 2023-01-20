@@ -22,7 +22,6 @@ class FormSeeder extends Seeder
 
         Form::factory()
             ->hasFieldGroups(1, [
-                'title' => 'Contact Us',
                 'order' => 1,
                 'fields' => $this->getDummyFields()
             ])
