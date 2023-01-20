@@ -6,8 +6,8 @@ use App\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Modules\FormBuilder\Services\SettingNotificationService;
-use Modules\FormBuilder\Entities\FieldGroup;
-use Modules\FormBuilder\Entities\FieldGroupNotificationSetting;
+use Modules\FormBuilder\Entities\Form;
+use Modules\FormBuilder\Entities\FormNotificationSetting;
 use Modules\FormBuilder\Http\Requests\SettingNotificationRequest;
 
 class SettingNotificationController extends CrudController
@@ -21,12 +21,12 @@ class SettingNotificationController extends CrudController
     public function __construct(
         SettingNotificationService $settingNotificationService
     ) {
-        $this->authorizeResource(FieldGroupNotificationSetting::class, 'form_builder');
+        $this->authorizeResource(FormNotificationSetting::class, 'form_builder');
 
         $this->settingNotificationService = $settingNotificationService;
     }
 
-    public function records(Request $request, FieldGroup $formBuilder)
+    public function records(Request $request, Form $formBuilder)
     {
         return $this->settingNotificationService->getRecords(
             $formBuilder->id,
@@ -35,7 +35,7 @@ class SettingNotificationController extends CrudController
         );
     }
 
-    public function create(FieldGroup $formBuilder)
+    public function create(Form $formBuilder)
     {
         return Inertia::render('FormBuilder::Settings/Notification/Create', $this->getData([
             'activeOptions' => $this->settingNotificationService->getActiveOptions(),
@@ -47,12 +47,12 @@ class SettingNotificationController extends CrudController
         ]));
     }
 
-    public function store(SettingNotificationRequest $request, FieldGroup $formBuilder)
+    public function store(SettingNotificationRequest $request, Form $formBuilder)
     {
         $inputs = $request->validated();
-        $inputs['field_group_id'] = $formBuilder->id;
+        $inputs['form_id'] = $formBuilder->id;
 
-        $notificationSetting = new FieldGroupNotificationSetting();
+        $notificationSetting = new FormNotificationSetting();
 
         $notificationSetting->saveFromInputs($inputs);
 
@@ -65,8 +65,8 @@ class SettingNotificationController extends CrudController
     }
 
     public function edit(
-        FieldGroup $formBuilder,
-        FieldGroupNotificationSetting $notification
+        Form $formBuilder,
+        FormNotificationSetting $notification
     ) {
         $notification->send_to = $this->convertJsonToString($notification->send_to);
         $notification->bcc = $this->convertJsonToString($notification->bcc);
@@ -84,11 +84,11 @@ class SettingNotificationController extends CrudController
 
     public function update(
         SettingNotificationRequest $request,
-        FieldGroup $formBuilder,
-        FieldGroupNotificationSetting $notification
+        Form $formBuilder,
+        FormNotificationSetting $notification
     ) {
         $inputs = $request->validated();
-        $inputs['field_group_id'] = $formBuilder->id;
+        $inputs['form_id'] = $formBuilder->id;
 
         $notification->saveFromInputs($inputs);
 
@@ -101,8 +101,8 @@ class SettingNotificationController extends CrudController
     }
 
     public function destroy(
-        FieldGroup $formBuilder,
-        FieldGroupNotificationSetting $notification
+        Form $formBuilder,
+        FormNotificationSetting $notification
     ) {
         $notification->delete();
 

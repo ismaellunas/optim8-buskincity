@@ -4,11 +4,12 @@ namespace Modules\FormBuilder\Services;
 
 use App\Services\IPService;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
-use Modules\FormBuilder\Entities\FieldGroup;
-use Modules\FormBuilder\Entities\FieldGroupEntry;
+use Modules\FormBuilder\Entities\Form as FormModel;
+use Modules\FormBuilder\Entities\FormEntry;
 use Modules\FormBuilder\Forms\Form;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,10 +23,9 @@ class FormBuilderService
         string $term = null,
         int $perPage = 15
     ): LengthAwarePaginator {
-        $records = FieldGroup::orderBy('id', 'DESC')
+        $records = FormModel::orderBy('id', 'DESC')
             ->when($term, function ($query) use ($term) {
-                $query->where('name', 'ILIKE', '%'.$term.'%')
-                    ->orWhere('title', 'ILIKE', '%'.$term.'%');
+                $query->where('name', 'ILIKE', '%'.$term.'%');
             })
             ->with(['entries.metas'])
             ->paginate($perPage);
@@ -45,13 +45,15 @@ class FormBuilderService
     }
 
     public function getEntryRecords(
-        FieldGroup $formBuilder,
+        FormModel $formBuilder,
         string $term = null,
         int $perPage = 15
     ): LengthAwarePaginator {
         $records = collect();
-        $fields = $formBuilder->data['fields'];
-        $fieldNames = $this->getDataFromFields($fields, 'name');
+
+        $allFields = $this->getAllFields($formBuilder->fieldGroups);
+
+        $fieldNames = $this->getDataFromFields($allFields, 'name');
 
         $entries = $formBuilder
             ->entries()
@@ -69,7 +71,7 @@ class FormBuilderService
             $record['id'] = $entry->id;
 
             foreach ($fieldNames as $fieldName) {
-                $field = collect($fields)->where('name', $fieldName)->first();
+                $field = collect($allFields)->where('name', $fieldName)->first();
 
                 $record[$fieldName] = $this->getDisplayValue(
                     $field,
@@ -84,12 +86,14 @@ class FormBuilderService
     }
 
     public function getWidgetEntryRecords(
-        FieldGroup $formBuilder,
+        FormModel $formBuilder,
         int $perPage = 10
     ): LengthAwarePaginator {
         $records = collect();
-        $fields = $formBuilder->data['fields'];
-        $fieldNames = collect($this->getDataFromFields($fields, 'name'))
+
+        $allFields = $this->getAllFields($formBuilder->fieldGroups);
+
+        $fieldNames = collect($this->getDataFromFields($allFields, 'name'))
             ->slice(0, 3)
             ->all();
 
@@ -104,7 +108,7 @@ class FormBuilderService
             $record['id'] = $entry->id;
 
             foreach ($fieldNames as $fieldName) {
-                $field = collect($fields)->where('name', $fieldName)->first();
+                $field = collect($allFields)->where('name', $fieldName)->first();
 
                 $record[$fieldName] = $this->getDisplayValue(
                     $field,
@@ -118,8 +122,10 @@ class FormBuilderService
         return $records->paginate($perPage);
     }
 
-    public function getDataFromFields(array $fields, string $key): array
-    {
+    public function getDataFromFields(
+        array $fields,
+        string $key
+    ): array {
         $data = [];
 
         foreach ($fields as $field) {
@@ -163,15 +169,15 @@ class FormBuilderService
 
     public function getFormOptions(): array
     {
-        return FieldGroup::select([
-                'title',
+        return FormModel::select([
+                'key',
                 'name'
             ])
             ->orderBy('name')
             ->get()
             ->map(function ($field) {
                 return [
-                    'value' => $field->title,
+                    'value' => $field->key,
                     'name' => $field->name
                 ];
             })
@@ -192,14 +198,12 @@ class FormBuilderService
 
     public function getForm(?string $formId): ?Form
     {
-        $model = FieldGroup::formId($formId)->first();
+        $model = FormModel::key($formId)->first();
 
         if ($model) {
             $className = $this->getFormClassName();
-            $data = $model->data;
-            $data['settings'] = $model->settings;
 
-            $form = new $className($model->id, $data);
+            $form = new $className($model);
 
             if ($form->canBeAccessedByLocation()) {
                 $form->model = $model;
@@ -221,11 +225,11 @@ class FormBuilderService
         return $this->fieldPath.'\\'.Str::studly($type);
     }
 
-    public function saveValues($inputs): FieldGroupEntry
+    public function saveValues($inputs): FormEntry
     {
         $values = $this->getSavedValues($inputs);
 
-        $fieldGroupEntry = new FieldGroupEntry();
+        $fieldGroupEntry = new FormEntry();
 
         $fieldGroupEntry->saveFromInputs($values);
 
@@ -236,26 +240,29 @@ class FormBuilderService
     {
         $values = [];
 
-        $fieldGroup = FieldGroup::where('title', $inputs['form_id'])->first();
+        $form = FormModel::with('fieldGroups')
+            ->key($inputs['form_id'])
+            ->first();
 
-        if (!$fieldGroup) {
+        if (!$form) {
             $this->abortAction();
         }
 
-        $fields = collect($fieldGroup->data['fields']);
+        foreach ($form->fieldGroups as $fieldGroup) {
+            $fields = collect($fieldGroup->fields);
 
-        foreach($inputs as $key => $value) {
-            $fieldType = $fields->where('name', $key)->value('type');
+            foreach($inputs as $key => $value) {
+                $fieldType = $fields->where('name', $key)->value('type');
 
-            $fieldClassName = $this->getFieldClassName($fieldType);
+                $fieldClassName = $this->getFieldClassName($fieldType);
 
-            if (class_exists($fieldClassName)) {
-                $fieldClass = new $fieldClassName();
+                if (class_exists($fieldClassName)) {
+                    $fieldClass = new $fieldClassName();
 
-                $values[$key] = $fieldClass->getSavedData($value);
+                    $values[$key] = $fieldClass->getSavedData($value);
+                }
             }
         }
-
 
         if (Auth::check()) {
             $values['user_id'] = Auth::user()->id;
@@ -267,7 +274,7 @@ class FormBuilderService
         $agentBrowser = $agent->browser();
         $agentBrowserVersion = $agent->version($agentBrowser);
 
-        $values['field_group_id'] = $fieldGroup->id;
+        $values['form_id'] = $form->id;
         $values['page_url'] = url()->previous() ?? null;
         $values['ip_address'] = $ipService->getClientIp();
         $values['timezone'] = $ipService->getTimezone();
@@ -277,11 +284,12 @@ class FormBuilderService
         return $values;
     }
 
-    public function swapTagWithEntryValue(FieldGroupEntry $entry, string $value = null): ?string
+    public function swapTagWithEntryValue(FormEntry $entry, string $value = null): ?string
     {
         $swapLists = [];
-        $fields = $entry->fieldGroup->data['fields'];
-        $entryValues = $this->getDisplayValues($fields, $entry);
+
+        $allFields = $this->getAllFields($entry->form->fieldGroups);
+        $entryValues = $this->getDisplayValues($allFields, $entry);
 
         foreach ($entryValues as $key => $entryValue) {
             $swapLists['{'.$key.'}'] = $entryValue;
@@ -333,5 +341,16 @@ class FormBuilderService
         }
 
         return $entry->toArray();
+    }
+
+    public function getAllFields(Collection $fieldGroups): array
+    {
+        $fields = collect();
+
+        foreach ($fieldGroups as $fieldGroup) {
+            $fields = $fields->merge($fieldGroup->fields);
+        }
+
+        return $fields->all();
     }
 }
