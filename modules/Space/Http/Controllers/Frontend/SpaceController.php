@@ -14,12 +14,14 @@ use Modules\Space\Entities\Space;
 use Modules\Space\Exceptions\PageNotFoundException;
 use Modules\Space\ModuleService;
 use Modules\Space\Services\SpaceService;
+use Modules\Space\Services\PageSpaceService;
 
 class SpaceController extends Controller
 {
     use AuthorizesRequests;
 
     private $locale;
+    private $page;
 
     public function __construct()
     {
@@ -30,11 +32,13 @@ class SpaceController extends Controller
     {
         $slugs = collect(explode('/', $slugs));
 
-        $pageTranslation = PageTranslation::whereSlug($slugs->last())->first();
+        $pageTranslation = app(PageSpaceService::class)->getPageTranslationFromRequest();
 
         if (! $pageTranslation) {
             return $this->notFoundHandler();
         }
+
+        $this->page = $pageTranslation->page;
 
         return $this->showDetail($request, $pageTranslation);
     }
@@ -51,15 +55,13 @@ class SpaceController extends Controller
 
     private function showDetail(Request $request, PageTranslation $pageTranslation)
     {
-        $page = $pageTranslation->page;
-
-        if ($this->canAccessPage($page)) {
+        if ($this->canAccessPage($this->page)) {
             try {
                 if (
                     $request->exists('preview')
                     && $request->user()->can('managePage', Space::class)
                 ) {
-                    return $this->showPreview($page);
+                    return $this->showPreview($pageTranslation);
                 }
 
                 return $this->showGuest($pageTranslation);
@@ -88,35 +90,30 @@ class SpaceController extends Controller
         );
     }
 
-    private function showPreview(Page $page)
+    private function showPreview(PageTranslation $pageTranslation)
     {
-        $this->authorize('update', $page->space);
+        $this->authorize('update', $this->page->space);
 
-        $pageTranslation = $page->translate($this->locale);
+        if ($pageTranslation->locale != $this->locale) {
+            $pageTranslation = $this->page->translate($this->locale);
+        }
 
         return $this->showPage($pageTranslation);
     }
 
     private function showGuest(PageTranslation $pageTranslation)
     {
-        $page = $pageTranslation->page;
-        $newPageTranslation = $page->translate($this->locale);
+        $slug = $pageTranslation->slug;
 
-        if (
-            $newPageTranslation
-            && !$newPageTranslation->isDraft
-        ) {
-            return $this->redirectOrShowPage($newPageTranslation, $pageTranslation->slug);
+        if ($pageTranslation->locale != $this->locale) {
+            $pageTranslation = $this->page->translate($this->locale, true);
         }
 
-        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
-        $newPageTranslation = $page->translate($defaultLocale);
-
         if (
-            $newPageTranslation
-            && !$newPageTranslation->isDraft
+            $pageTranslation
+            && !$pageTranslation->isDraft
         ) {
-            return $this->redirectOrShowPage($newPageTranslation, $pageTranslation->slug);
+            return $this->redirectOrShowPage($pageTranslation, $slug);
         }
 
         throw new PageNotFoundException();
