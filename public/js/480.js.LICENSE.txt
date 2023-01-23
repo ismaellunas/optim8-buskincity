@@ -1,4 +1,83 @@
+/*!
+ * FilePond 4.30.4
+ * Licensed under MIT, https://opensource.org/licenses/MIT/
+ * Please visit https://pqina.nl/filepond/ for details.
+ */
+
+/*!
+ * FilePondPluginFileValidateSize 2.2.8
+ * Licensed under MIT, https://opensource.org/licenses/MIT/
+ * Please visit https://pqina.nl/filepond/ for details.
+ */
+
+/*!
+ * FilePondPluginFileValidateType 1.2.8
+ * Licensed under MIT, https://opensource.org/licenses/MIT/
+ * Please visit https://pqina.nl/filepond/ for details.
+ */
+
+/*!
+ * FilePondPluginImagePreview 4.6.11
+ * Licensed under MIT, https://opensource.org/licenses/MIT/
+ * Please visit https://pqina.nl/filepond/ for details.
+ */
+
+/*!
+ * JS File Downloader v 1.1.24
+ * https://github.com/AleeeKoi/js-file-downloader
+ *
+ * Copyright Alessandro Pellizzari
+ * Released under the MIT license
+ * http://opensource.org/licenses/MIT
+ */
+
+/*!
+ * vue-filepond v7.0.3
+ * A handy FilePond adapter component for Vue
+ * 
+ * Copyright (c) 2022 PQINA
+ * https://pqina.nl/filepond
+ * 
+ * Licensed under the MIT license.
+ */
+
+/*! ./exception */
+
+/*! ./signatures */
+
+/*! @babel/runtime/regenerator */
+
+/*! exports provided: DownloadException, downloadException */
+
+/*! exports provided: default */
+
+/*! exports provided: fileSignatures */
+
+/*! no static exports found */
+
+/*! regenerator-runtime */
+
 /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
+
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+
+/*!**************************!*\
+  !*** ./src/exception.js ***!
+  \**************************/
+
+/*!***************************!*\
+  !*** ./src/signatures.js ***!
+  \***************************/
+
+/*!*****************************************************!*\
+  !*** ./node_modules/regenerator-runtime/runtime.js ***!
+  \*****************************************************/
+
+/*!**********************************************************!*\
+  !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
+  \**********************************************************/
 
 /**!
  * Sortable 1.14.0
