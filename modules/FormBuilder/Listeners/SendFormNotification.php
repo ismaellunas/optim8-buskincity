@@ -27,8 +27,8 @@ class SendFormNotification implements ShouldQueue
      */
     public function handle(FormSubmitted $event)
     {
-        $entry = $event->fieldGroupEntry;
-        $notificationSettings = $entry->fieldGroup->activeNotificationSettings;
+        $entry = $event->formEntry;
+        $notificationSettings = $entry->form->activeNotificationSettings;
 
         foreach ($notificationSettings as $notificationSetting) {
             $recipients = json_decode($notificationSetting->send_to);

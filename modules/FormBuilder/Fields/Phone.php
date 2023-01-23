@@ -4,8 +4,6 @@ namespace Modules\FormBuilder\Fields;
 
 use Propaganistas\LaravelPhone\PhoneNumber;
 
-use Mews\Purifier\Facades\Purifier;
-
 class Phone extends BaseField
 {
     public function value(): mixed
@@ -17,7 +15,7 @@ class Phone extends BaseField
                 )
                 ->formatInternational();
 
-            return Purifier::clean($phoneNumber);
+            return $phoneNumber;
         }
 
         return '-';

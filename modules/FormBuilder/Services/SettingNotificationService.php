@@ -4,8 +4,8 @@ namespace Modules\FormBuilder\Services;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
-use Modules\FormBuilder\Entities\FieldGroup;
-use Modules\FormBuilder\Entities\FieldGroupNotificationSetting;
+use Modules\FormBuilder\Entities\Form;
+use Modules\FormBuilder\Entities\FormNotificationSetting;
 use Modules\FormBuilder\ModuleService;
 
 class SettingNotificationService
@@ -15,14 +15,14 @@ class SettingNotificationService
         string $term = null,
         int $perPage = 10
     ): LengthAwarePaginator {
-        $records = FieldGroupNotificationSetting::select([
+        $records = FormNotificationSetting::select([
                 'id',
                 'name',
                 'subject',
                 'is_active'
             ])
             ->orderBy('id', 'DESC')
-            ->where('field_group_id', $formBuilderId)
+            ->where('form_id', $formBuilderId)
             ->when($term, function ($query) use ($term) {
                 $query->where('name', 'ILIKE', '%'.$term.'%')
                     ->orWhere('subject', 'ILIKE', '%'.$term.'%');
@@ -43,20 +43,21 @@ class SettingNotificationService
         });
     }
 
-    public function getFieldNameOptions(FieldGroup $fieldGroup): array
+    public function getFieldNameOptions(Form $form): array
     {
         $fieldNames = [];
-        $fields = $fieldGroup->data['fields'];
 
-        foreach ($fields as $field) {
-            if (
-                array_key_exists('name', $field)
-                && isset($field['name'])
-            ) {
-                $fieldNames[] = [
-                    'id' => $field['name'],
-                    'value' => $field['label'] ?? Str::of($field['name'])->replace('_', ' ')->title(),
-                ];
+        foreach ($form->fieldGroups as $fieldGroup) {
+            foreach ($fieldGroup->fields as $field) {
+                if (
+                    array_key_exists('name', $field)
+                    && isset($field['name'])
+                ) {
+                    $fieldNames[] = [
+                        'id' => $field['name'],
+                        'value' => $field['label'] ?? Str::of($field['name'])->replace('_', ' ')->title(),
+                    ];
+                }
             }
         }
 

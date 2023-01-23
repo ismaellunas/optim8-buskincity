@@ -15,10 +15,9 @@ class CreateFieldGroupsTable extends Migration
     {
         Schema::create('field_groups', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 127)->unique();
-            $table->string('name', 127)->nullable();
-            $table->json('data')->nullable();
-            $table->string('type', 32)->nullable();
+            $table->string('title', 127)->nullable();
+            $table->integer('order')->default(1);
+            $table->json('fields')->nullable();
             $table->timestamps();
         });
     }

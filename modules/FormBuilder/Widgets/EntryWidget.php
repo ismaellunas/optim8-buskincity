@@ -5,7 +5,7 @@ namespace Modules\FormBuilder\Widgets;
 use App\Contracts\WidgetInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Modules\FormBuilder\Entities\FieldGroup;
+use Modules\FormBuilder\Entities\Form;
 
 class EntryWidget implements WidgetInterface
 {
@@ -41,7 +41,7 @@ class EntryWidget implements WidgetInterface
 
     private function getFormLists(): array
     {
-        return FieldGroup::select([
+        return Form::select([
                 'id',
                 'name',
             ])

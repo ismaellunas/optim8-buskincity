@@ -6,7 +6,7 @@
 
         <div class="box">
             <form-builder
-                v-model="formBuilder"
+                v-model="form"
                 v-model:input-config-id="inputConfigId"
             />
         </div>
@@ -23,7 +23,7 @@
     import { ref, onMounted, onUnmounted } from 'vue';
 
     export default {
-        name: 'Create',
+        name: 'FormBuilderCreate',
 
         components: {
             BizErrorNotifications,
@@ -53,7 +53,7 @@
 
             return {
                 inputConfigId,
-                formBuilder: useForm(getEmptyForm())
+                form: useForm(getEmptyForm())
             };
         },
     }

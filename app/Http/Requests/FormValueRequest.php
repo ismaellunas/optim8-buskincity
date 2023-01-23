@@ -60,7 +60,8 @@ class FormValueRequest extends BaseFormRequest
         $formService = app(FormService::class);
 
         if (is_null($this->forms)) {
-            $this->forms = $formService->getFormsOnRoute(
+            $this->forms = $formService->getFormsOnKeyAndRoute(
+                $this->get('key'),
                 $this->get('route_name'),
                 Auth::user()
             );

@@ -25,7 +25,7 @@
     import { ref, onMounted, onUnmounted } from 'vue';
 
     export default {
-        name: 'Edit',
+        name: 'FormBuilderEdit',
 
         components: {
             BizErrorNotifications,

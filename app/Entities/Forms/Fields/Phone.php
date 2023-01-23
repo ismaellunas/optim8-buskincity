@@ -49,6 +49,7 @@ class Phone extends BaseField
     {
         $rules[$this->name.".number"] = $this->validation['rules'] ?? [];
 
+        $this->transformToFlatten($rules);
         $this->adjustNullableRule($rules);
 
         $rules[$this->name.".number"][] = 'phone:'.$this->name.'.country';
