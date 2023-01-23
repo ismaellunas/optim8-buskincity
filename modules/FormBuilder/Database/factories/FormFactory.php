@@ -26,7 +26,6 @@ class FormFactory extends Factory
         return [
             'key' => Str::snake($title), // form id
             'name' => Str::title($title),
-            'type' => $this->model::TYPE,
             'setting' => [
                 'button' => [
                     'text' => 'Submit',
