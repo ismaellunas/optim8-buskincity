@@ -2,6 +2,7 @@
 
 namespace Modules\FormBuilder\Services;
 
+use App\Entities\Forms\Form;
 use App\Services\IPService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -10,12 +11,11 @@ use Illuminate\Support\Str;
 use Jenssegers\Agent\Agent;
 use Modules\FormBuilder\Entities\Form as FormModel;
 use Modules\FormBuilder\Entities\FormEntry;
-use Modules\FormBuilder\Forms\Form;
 use Symfony\Component\HttpFoundation\Response;
 
 class FormBuilderService
 {
-    private $formBasePath = 'Modules\\FormBuilder\\Forms';
+    private $formBasePath = 'App\\Entities\\Forms';
     private $formLocationBasePath = "Modules\\FormBuilder\\Forms\\Locations";
     private $fieldPath = "Modules\\FormBuilder\\Fields";
 
