@@ -1,7 +1,7 @@
 <template>
     <div>
         <general-form
-            v-if="isShown"
+            v-if="isFormShown"
             v-model="form"
             @on-submit="onSubmit()"
         />
@@ -12,9 +12,10 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import GeneralForm from './Form';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
+    import { cloneDeep } from 'lodash';
 
     export default {
-        name: 'General',
+        name: 'GeneralSetting',
 
         components: {
             GeneralForm,
@@ -28,13 +29,12 @@
             return {
                 baseRouteNameSetting: usePage().props.value.baseRouteNameSetting,
                 formBuilder: usePage().props.value.formBuilder,
-                form: useForm([]),
             };
         },
 
         data() {
             return {
-                isShown: false,
+                form: null,
             };
         },
 
@@ -42,29 +42,21 @@
             baseRouteName() {
                 return this.baseRouteNameSetting + '.general';
             },
+
+            isFormShown() {
+                return !!this.form;
+            },
         },
 
         mounted() {
-            this.getSettings();
+            this.createForm();
         },
 
         methods: {
-            getSettings() {
-                const self = this;
-
-                self.onStartLoadingOverlay()
-
-                axios.get(
-                    route(self.baseRouteName + '.form', self.formBuilder.id)
-                )
-                    .then((response) => {
-                        self.form = useForm(response.data);
-                    })
-                    .then(() => {
-                        self.isShown = true;
-
-                        self.onEndLoadingOverlay()
-                    });
+            createForm() {
+                this.form = useForm(
+                    cloneDeep(this.formBuilder.setting)
+                );
             },
 
             onSubmit() {

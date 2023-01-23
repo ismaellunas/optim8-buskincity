@@ -2,8 +2,9 @@
 
 namespace App\Services;
 
-use App\Entities\Forms\Form;
+use App\Entities\Form as EntityForm;
 use App\Models\{
+    Form,
     FieldGroup,
     User,
 };
@@ -20,7 +21,7 @@ class FormService
     private $formBasePath = 'App\\Entities\\Forms';
     private $formLocationBasePath = "App\\Entities\\Forms\\Locations";
 
-    public function getFormByName($name, User $author = null): ?Form
+    public function getFormByName($name, User $author = null): ?EntityForm
     {
         $model = FieldGroup::name($name)->first();
 
@@ -37,7 +38,7 @@ class FormService
         return null;
     }
 
-    private function getFormClassName(?string $type): string
+    private function getFormClassName(?string $type = null): string
     {
         return $this->formBasePath."\\".$type.'Form';
     }
@@ -49,14 +50,15 @@ class FormService
 
         $forms = collect();
 
-        $models = FieldGroup::whereJsonContains('data->locations', [ ['name' => $locationRoute] ])
+        $models = Form::with('fieldGroups')
+            ->locationRoute($locationRoute)
             ->get();
 
         foreach ($models as $model) {
 
-            $className = $this->getFormClassName($model->type);
+            $className = $this->getFormClassName();
 
-            $form = new $className($model->id, $model->data, $author);
+            $form = new $className($model, $author);
 
             if ($form->canBeAccessedByLocation($locationRoute)) {
                 $form->model = $model;
@@ -111,6 +113,7 @@ class FormService
 
     public function saveValues(
         array $inputs,
+        string $key,
         string $routeName,
         User $actor,
         int $entityId = null
@@ -122,7 +125,7 @@ class FormService
             $this->abortAction();
         }
 
-        $forms = $this->getFormsOnRoute($routeName, $actor);
+        $forms = $this->getFormsOnKeyAndRoute($key, $routeName, $actor);
 
         foreach ($forms as $form) {
             $formLocation->save($form->fields, $inputs);
@@ -167,30 +170,36 @@ class FormService
         return $schemas;
     }
 
-    public function getFieldGroupValues(User $user): array
-    {
-        $values = collect();
-
-        $models = FieldGroup::all();
-
-        foreach ($models as $model) {
-            $className = $this->getFormClassName($model->type);
-
-            $form = new $className($model->id, $model->data, $user);
-
-            $metas = $user->getMetas($form->fields->keys()->all());
-
-            $values->put(
-                $form->title,
-                $form->setFieldWithValues($metas->all())
-            );
-        }
-
-        return $values->all();
-    }
-
     private function abortAction(): void
     {
         abort(Response::HTTP_FORBIDDEN);
+    }
+
+    public function getFormsOnKeyAndRoute(
+        string $key,
+        string $locationRoute,
+        User $author = null
+    ): Collection {
+
+        $forms = collect();
+
+        $model = Form::with('fieldGroups')
+            ->key($key)
+            ->locationRoute($locationRoute)
+            ->first();
+
+        if ($model) {
+            $className = $this->getFormClassName();
+
+            $form = new $className($model, $author);
+
+            if ($form->canBeAccessedByLocation($locationRoute)) {
+                $form->model = $model;
+
+                $forms->put($form->name, $form);
+            }
+        }
+
+        return $forms;
     }
 }

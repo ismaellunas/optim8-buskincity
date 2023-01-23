@@ -16,45 +16,36 @@
             :errors="$page.props.errors"
         />
 
-        <form @submit.prevent="submit">
-            <field-group
-                v-for="(group, index) in sortedFieldGroups"
-                :key="index"
-                :ref="'field_group__'+index"
-                v-model="form"
-                :group="group"
-                :selected-locale="selectedLocale"
-            />
-
-            <slot name="buttons">
-                <div class="field">
-                    <biz-button class="is-medium is-primary">
-                        <span class="has-text-weight-bold">Submit</span>
-                    </biz-button>
-                </div>
-            </slot>
-        </form>
+        <form-field
+            v-for="(formField, index) in sortedForms"
+            :key="index"
+            class="mb-5"
+            :entity-id="entityId"
+            :form-field="formField"
+            :locale-options="localeOptions"
+            :selected-locale="selectedLocale"
+            :route-name="routeName"
+            :route-save="routeSave"
+            @on-success-submit="getSchemas()"
+        />
     </div>
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
     import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import BizLanguageTab from '@/Biz/LanguageTab';
-    import FieldGroup from './FieldGroup';
-    import { isEmpty, forOwn, sortBy, forEach, find } from 'lodash';
-    import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import FormField from './FormField';
+    import { isEmpty, sortBy, find } from 'lodash';
+    import { usePage } from '@inertiajs/inertia-vue3';
     import { ref } from 'vue';
 
     export default {
         name: 'FormBuilder',
 
         components: {
-            BizButton,
             BizErrorNotifications,
             BizLanguageTab,
-            FieldGroup,
+            FormField,
         },
 
         provide() {
@@ -103,15 +94,14 @@
 
         data() {
             return {
-                fieldGroups: {},
-                form: useForm({}),
+                forms: {},
                 loader: null,
             };
         },
 
         computed: {
-            sortedFieldGroups() {
-                return sortBy(this.fieldGroups, ['order']);
+            sortedForms() {
+                return sortBy(this.forms, ['order']);
             },
         },
 
@@ -133,13 +123,11 @@
                     }
 
                 ).then((response) => {
-                    self.fieldGroups = response.data;
-
-                    self.form = self.createForm(self.fieldGroups);
+                    self.forms = response.data;
 
                     self.$emit('loaded-successfully', response.data);
 
-                    if (isEmpty(this.fieldGroups)) {
+                    if (isEmpty(this.forms)) {
                         self.$emit('loaded-empty-field');
                     }
 
@@ -149,84 +137,6 @@
                             self.$emit('loaded-forbidden', error.response);
                         }
                     }
-                });
-            },
-
-            createForm(groupFields) {
-                let fieldValue = null;
-                const form = {
-                    id: this.entityId,
-                    _token: usePage().props.value.csrfToken,
-                };
-
-                forOwn(groupFields, (groupField, key) => {
-
-                    if (!isEmpty(groupField.fields)) {
-
-                        forOwn(groupField.fields, (field, key) => {
-                            if (typeof field.value === 'undefined') {
-                                form[ key ] = undefined;
-                            } else {
-                                form[ key ] = field.value;
-
-                                if (field.is_translated && field.value.length == 0) {
-                                    fieldValue = {};
-
-                                    this.localeOptions.forEach(function(locale) {
-                                        fieldValue[ locale.id ] = null
-                                    })
-
-                                    form[ key ] = fieldValue;
-                                }
-                            }
-                        });
-                    }
-                });
-
-                return useForm(form);
-            },
-
-            submit() {
-                const self = this;
-
-                this
-                    .form
-                    .transform((data) => ({
-                        ...data,
-                        route_name: self.routeName,
-                    }))
-                    .post(
-                        route(self.routeSave),
-                        {
-                            preserveScroll: true,
-                            onStart: () => {
-                                self.loader = self.$loading.show();
-                            },
-                            onSuccess: async (page) => {
-                                successAlert(page.props.flash.message);
-
-                                await self.getSchemas();
-
-                                self.resetFields();
-
-                            },
-                            onError: errors => {
-                                oopsAlert({isScrollToTop: false});
-                            },
-                            onFinish: (visit) => {
-                                self.loader.hide();
-                            },
-                        }
-                    );
-            },
-
-            resetFields() {
-                forEach(this.$refs, (fieldGroup, fieldGroupKey) => {
-                    forEach(fieldGroup.$refs, (field, fieldKey) => {
-                        if (field.reset) {
-                            field.reset();
-                        }
-                    });
                 });
             },
 

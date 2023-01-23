@@ -14,7 +14,7 @@ export default {
     validation: {
         rules: {
             required: false,
-            mimes: [],
+            mimes: ['image'],
             max: null,
         },
         message: []

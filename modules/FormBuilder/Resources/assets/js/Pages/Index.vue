@@ -45,7 +45,7 @@
                             :key="form.id"
                         >
                             <td>{{ form.name }}</td>
-                            <td>{{ form.title }}</td>
+                            <td>{{ form.key }}</td>
                             <td>
                                 <biz-link
                                     :href="route(baseRouteName + '.entries', form.id)"

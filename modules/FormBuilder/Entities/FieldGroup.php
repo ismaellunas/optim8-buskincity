@@ -7,49 +7,30 @@ use Illuminate\Database\Eloquent\Builder;
 
 class FieldGroup extends ModelFieldGroup
 {
-    public const TYPE = 'form_builder';
-
-    protected function customNewQuery($newQuery): Builder
-    {
-        return $newQuery->type(self::TYPE);
-    }
-
     protected static function newFactory()
     {
         return \Modules\FormBuilder\Database\factories\FieldGroupFactory::new();
     }
 
-    public function scopeFormId($query, $formId)
-    {
-        return $query->where('title', $formId);
-    }
-
     public function saveFromInputs(array $inputs): void
     {
-        $this->name = $inputs['name'];
-        $this->data = $inputs['builders'];
-        $this->title = $inputs['form_id'];
-        $this->type = self::TYPE;
+        $this->title = $inputs['title'];
+        $this->order = $inputs['order'];
+        $this->fields = $inputs['fields'];
+        $this->form_id = $inputs['form_id'];
         $this->save();
     }
 
-    public function entries()
+    public function syncFieldGroups(array $fieldGroups, int $formId): void
     {
-        return $this->hasMany(FieldGroupEntry::class, 'field_group_id');
-    }
+        self::where('form_id', $formId)->delete();
 
-    public function notificationSettings()
-    {
-        return $this->hasMany(FieldGroupNotificationSetting::class, 'field_group_id');
-    }
+        foreach ($fieldGroups as $index => $fieldGroup) {
+            $fieldGroup['order'] = $index + 1;
+            $fieldGroup['form_id'] = $formId;
 
-    public function activeNotificationSettings()
-    {
-        return $this->notificationSettings()->where('is_active', true);
-    }
-
-    public function settings()
-    {
-        return $this->hasMany(FieldGroupSetting::class, 'field_group_id');
+            $fieldGroupClass = new self;
+            $fieldGroupClass->saveFromInputs($fieldGroup);
+        }
     }
 }

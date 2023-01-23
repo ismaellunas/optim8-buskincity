@@ -3,7 +3,7 @@
 namespace Modules\FormBuilder\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-use Modules\FormBuilder\Entities\FieldGroup;
+use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Services\FormBuilderService;
 
 class ApiWidgetController extends Controller
@@ -15,11 +15,14 @@ class ApiWidgetController extends Controller
         $this->formBuilderService = $formBuilderService;
     }
 
-    public function getEntries(FieldGroup $formBuilder)
+    public function getEntries(Form $formBuilder)
     {
+        $allFields = $this->formBuilderService
+            ->getAllFields($formBuilder->fieldGroups);
+
         $fieldLabels = collect(
                 $this->formBuilderService->getFieldLabels(
-                    $formBuilder->data['fields'],
+                    $allFields,
                 )
             )
             ->slice(0, 3)
@@ -27,7 +30,7 @@ class ApiWidgetController extends Controller
 
         $fieldNames = collect(
                 $this->formBuilderService->getDataFromFields(
-                    $formBuilder->data['fields'],
+                    $allFields,
                     'name'
                 )
             )

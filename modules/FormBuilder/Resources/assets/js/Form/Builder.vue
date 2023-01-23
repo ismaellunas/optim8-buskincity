@@ -6,12 +6,16 @@
             :message="errorMessage"
         />
 
-        <form @submit.prevent="onSubmit">
+        <form
+            :key="formKey"
+            @submit.prevent="onSubmit"
+        >
             <field-group
-                ref="field_group"
-                :key="fieldGroupKey"
+                v-for="(group, index) in formSchema.fieldGroups"
+                :key="index"
+                :ref="'field_group__'+index"
                 v-model="form"
-                :group="fieldGroup"
+                :group="group"
                 :errors="formErrors"
             />
 
@@ -76,7 +80,7 @@
         data() {
             return {
                 errorMessage: null,
-                fieldGroup: {},
+                formSchema: {},
                 flash: {
                     message: null
                 },
@@ -87,13 +91,14 @@
                     getSchema: '/form-builders/schema',
                     save: '/form-builders/save',
                 },
-                fieldGroupKey: 0,
+                formKey: 0,
             };
         },
 
         computed: {
             submitLabel() {
-                return this.fieldGroup?.buttons?.submit?.label;
+                return this.formSchema?.button?.text
+                    ?? 'Submit';
             },
 
             isRecaptchaAvailable() {
@@ -118,13 +123,13 @@
                     }
 
                 ).then((response) => {
-                    self.fieldGroup = response.data;
+                    self.formSchema = response.data;
 
-                    self.form = self.createForm(self.fieldGroup);
+                    self.form = self.createForm(self.formSchema);
 
                     self.isShown = true;
 
-                    if (isEmpty(this.fieldGroup)) {
+                    if (isEmpty(this.formSchema)) {
                         self.isShown = false;
                     }
 
@@ -143,25 +148,29 @@
 
                 form['form_id'] = this.formId;
 
-                if (!isEmpty(groupField)) {
-                    forOwn(groupField.fields, (field, key) => {
-                        if (typeof field.value === 'undefined') {
-                            form[ key ] = undefined;
-                        } else {
-                            form[ key ] = field.value;
+                forOwn(this.formSchema.fieldGroups, (groupField, key) => {
 
-                            if (field.is_translated && field.value.length == 0) {
-                                fieldValue = {};
+                    if (!isEmpty(groupField.fields)) {
 
-                                this.localeOptions.forEach(function(locale) {
-                                    fieldValue[ locale.id ] = null
-                                })
+                        forOwn(groupField.fields, (field, key) => {
+                            if (typeof field.value === 'undefined') {
+                                form[ key ] = undefined;
+                            } else {
+                                form[ key ] = field.value;
 
-                                form[ key ] = fieldValue;
+                                if (field.is_translated && field.value.length == 0) {
+                                    fieldValue = {};
+
+                                    this.localeOptions.forEach(function(locale) {
+                                        fieldValue[ locale.id ] = null
+                                    })
+
+                                    form[ key ] = fieldValue;
+                                }
                             }
-                        }
-                    });
-                }
+                        });
+                    }
+                });
 
                 return reactive(form);
             },
@@ -214,7 +223,7 @@
                     .then(() => {
                         self.onEndLoadingOverlay();
 
-                        self.fieldGroupKey += 1;
+                        self.formKey += 1;
                     });
             },
         },
