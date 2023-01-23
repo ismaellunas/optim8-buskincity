@@ -32,7 +32,6 @@ class ProfileController extends Controller
         $viewName = 'profile-'.Str::kebab($role);
 
         $data = [
-            'fieldGroups' => $this->formService->getFieldGroupValues($user),
             'locale' => TranslationService::currentLanguage(),
             'user' => $user,
             'qrCode' => [

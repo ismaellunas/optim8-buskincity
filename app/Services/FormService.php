@@ -170,28 +170,6 @@ class FormService
         return $schemas;
     }
 
-    public function getFieldGroupValues(User $user): array
-    {
-        $values = collect();
-
-        $models = Form::all();
-
-        foreach ($models as $model) {
-            $className = $this->getFormClassName();
-
-            $form = new $className($model, $user);
-
-            $metas = $user->getMetas($form->fields->keys()->all());
-
-            $values->put(
-                $form->title,
-                $form->setFieldWithValues($metas->all())
-            );
-        }
-
-        return $values->all();
-    }
-
     private function abortAction(): void
     {
         abort(Response::HTTP_FORBIDDEN);
