@@ -248,19 +248,17 @@ class FormBuilderService
             $this->abortAction();
         }
 
-        foreach ($form->fieldGroups as $fieldGroup) {
-            $fields = collect($fieldGroup->fields);
+        $fields = collect($this->getAllFields($form->fieldGroups));
 
-            foreach($inputs as $key => $value) {
-                $fieldType = $fields->where('name', $key)->value('type');
+        foreach($inputs as $key => $value) {
+            $fieldType = $fields->where('name', $key)->value('type');
 
-                $fieldClassName = $this->getFieldClassName($fieldType);
+            $fieldClassName = $this->getFieldClassName($fieldType);
 
-                if (class_exists($fieldClassName)) {
-                    $fieldClass = new $fieldClassName();
+            if (class_exists($fieldClassName)) {
+                $fieldClass = new $fieldClassName();
 
-                    $values[$key] = $fieldClass->getSavedData($value);
-                }
+                $values[$key] = $fieldClass->getSavedData($value);
             }
         }
 
