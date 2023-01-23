@@ -11,7 +11,7 @@ class FieldNameRequired implements Rule
     public function passes($attribute, $value)
     {
         if ($value) {
-            foreach ($value['fields'] as $field) {
+            foreach ($value as $field) {
                 if (empty($field['name'])) {
                     $this->type = $field['type'];
 

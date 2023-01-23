@@ -77,32 +77,61 @@
 
             <div
                 class="column is-9"
-                :class="builderClasses"
             >
                 <draggable
                     class="dragArea list-group columns is-multiline"
-                    group="fields"
-                    handle=".handle-content"
+                    group="fieldGroups"
+                    handle=".handle-field-group"
                     item-key="id"
                     :animation="300"
-                    :empty-insert-threshold="emptyInsertThreshold"
-                    :list="computedFields"
-                    @change="log"
+                    :list="computedFieldGroups"
                 >
                     <template #item="{ element, index }">
-                        <component
-                            :is="element.type"
-                            :id="element.id"
-                            v-model="computedFields[index]"
-                            class="component-configurable builder-area column"
-                            :class="element.column"
-                            :data-id="element.id"
-                            @click="settingInput"
-                            @delete-content="deleteInput"
-                            @duplicate-content="duplicateInput"
-                        />
+                        <div class="column is-12">
+                            <div class="field has-addons is-pulled-right">
+                                <p class="control">
+                                    <biz-button
+                                        type="button"
+                                        class="is-small"
+                                        @click="deleteFieldGroup(index)"
+                                    >
+                                        <span class="icon">
+                                            <i :class="icon.remove" />
+                                        </span>
+                                    </biz-button>
+                                </p>
+                                <p class="control">
+                                    <biz-button
+                                        type="button"
+                                        class="is-small handle-field-group"
+                                    >
+                                        <span class="icon">
+                                            <i :class="icon.move" />
+                                        </span>
+                                    </biz-button>
+                                </p>
+                            </div>
+
+                            <div class="is-clearfix" />
+
+                            <field-group
+                                :field-group="element"
+                                @on-setting-input="onSettingInput"
+                            />
+                        </div>
                     </template>
                 </draggable>
+
+                <div class="columns">
+                    <div class="column is-12">
+                        <biz-button
+                            class="is-primary"
+                            @click="addFieldGroup()"
+                        >
+                            Add Field Group
+                        </biz-button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -136,16 +165,11 @@
     import BizFormInput from '@/Biz/Form/Input';
     import BizFormKey from '@/Biz/Form/Key';
     import Draggable from "vuedraggable";
-    import Email from './../Fields/Inputs/Email';
+    import FieldGroup from "./FieldGroup";
     import FieldStructures from './../FieldStructures';
-    import FileDragDrop from './../Fields/Inputs/FileDragDrop';
     import InputConfig from './../Fields/InputConfig';
-    import Number from './../Fields/Inputs/Number';
-    import Phone from './../Fields/Inputs/Phone';
-    import Select from './../Fields/Inputs/Select';
-    import Text from './../Fields/Inputs/Text';
-    import Textarea from './../Fields/Inputs/Textarea';
-    import { cloneDeep, isEmpty } from 'lodash';
+    import icon from '@/Libs/icon-class';
+    import { isEmpty } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
     import {
         isBlank,
@@ -153,6 +177,8 @@
         generateElementId,
         convertToKey,
     } from '@/Libs/utils';
+    import { getEmptyFieldGroup } from './../Libs/form';
+    import { confirmDelete } from '@/Libs/alert';
 
     export default {
         name: 'FormBuilder',
@@ -164,14 +190,8 @@
             BizFormInput,
             BizFormKey,
             Draggable,
-            Email,
-            FileDragDrop,
+            FieldGroup,
             InputConfig,
-            Number,
-            Phone,
-            Select,
-            Text,
-            Textarea,
         },
 
         mixins: [
@@ -204,37 +224,31 @@
         data() {
             return {
                 clonedComponent: null,
+                icon,
             };
         },
 
         computed: {
-            computedFields() {
-                return this.form.builders.fields;
-            },
-
-            isEmptyComponents() {
-                return !Array.isArray(this.computedFields) || !this.computedFields.length;
-            },
-
-            isDraggableEmpty() {
-                return this.isEmptyComponents;
-            },
-
-            emptyInsertThreshold() {
-                return this.isDraggableEmpty ? 50 : 5;
-            },
-
-            builderClasses() {
-                return {
-                    'has-background-grey-lighter has-text-centered': !this.hasFields,
-                    'builder-area': this.hasFields
-                };
+            computedFieldGroups() {
+                return this.form.field_groups;
             },
 
             fieldByConfigId() {
-                const index = this.computedFields.findIndex(field => field.id == this.inputConfigId);
+                const self = this;
 
-                return this.computedFields[index] ?? {};
+                let fieldGroupIndex = null;
+                let fieldIndex = null;
+
+                self.computedFieldGroups.forEach(function (fieldGroup, index) {
+                    let fieldIndexTmp = fieldGroup.fields.findIndex(field => field.id == self.inputConfigId);
+
+                    if (fieldIndexTmp !== -1) {
+                        fieldGroupIndex = index;
+                        fieldIndex = fieldIndexTmp;
+                    }
+                })
+
+                return self.computedFieldGroups[fieldGroupIndex]?.fields[fieldIndex] ?? {};
             },
 
             isComponentConfigOpen() {
@@ -253,7 +267,7 @@
             },
 
             hasFields() {
-                return isBlank(this.form.builders.fields) ? false : this.form.builders.fields.length > 0;
+                return isBlank(this.form.field_groups) ? false : this.form.field_groups.length > 0;
             },
         },
 
@@ -273,14 +287,22 @@
                 return this.clonedComponent;
             },
 
-            settingInput(event) {
-                let configComponent = event.target.closest('.component-configurable');
+            onSettingInput(dataId) {
+                this.computedInputConfigId = dataId;
+            },
 
-                if (configComponent) {
-                    if (configComponent.hasAttribute('data-id')) {
-                        this.computedInputConfigId = configComponent.getAttribute('data-id');
+            addFieldGroup() {
+                this.computedFieldGroups.push(getEmptyFieldGroup());
+            },
+
+            deleteFieldGroup(index) {
+                const self = this;
+
+                confirmDelete('Are you sure?').then((result) => {
+                    if (result.isConfirmed) {
+                        self.computedFieldGroups.splice(index, 1);
                     }
-                }
+                })
             },
 
             onSubmit() {
@@ -302,29 +324,6 @@
                             onFinish: () => self.onEndLoadingOverlay(),
                         }
                     )
-                }
-            },
-
-            deleteInput(id) {
-                if (!isBlank(id)) {
-                    this.computedFields.splice(
-                        this.computedFields.map(field => field.id).indexOf(id),
-                        1
-                    );
-                }
-            },
-
-            duplicateInput(id) {
-                if (!isBlank(id)) {
-                    const duplicateField = cloneDeep(
-                        this.computedFields[
-                            this.computedFields.map(field => field.id).indexOf(id)
-                        ]
-                    );
-
-                    duplicateField.id = generateElementId();
-
-                    this.computedFields.push(duplicateField);
                 }
             },
 

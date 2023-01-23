@@ -6,7 +6,10 @@
                     <div class="column">
                         {{ title }}
                     </div>
-                    <div class="column">
+                    <div
+                        v-if="hasFormLists"
+                        class="column"
+                    >
                         <biz-select
                             v-model="selectedForm"
                             class="is-small is-pulled-right"
@@ -128,7 +131,7 @@
     import BizSelect from '@/Biz/Select';
     import BizTable from '@/Biz/Table';
     import icon from '@/Libs/icon-class';
-    import { head } from 'lodash';
+    import { head, isEmpty } from 'lodash';
 
     export default {
         name: 'FormBuilderEntryWidget',
@@ -163,12 +166,18 @@
             hasRecords() {
                 return this.records?.data?.length > 0;
             },
+
+            hasFormLists() {
+                return !isEmpty(this.data.formLists);
+            }
         },
 
         mounted() {
-            this.selectedForm = head(Object.keys(this.data.formLists));
+            if (this.hasFormLists) {
+                this.selectedForm = head(Object.keys(this.data.formLists));
 
-            this.getRecords();
+                this.getRecords();
+            }
         },
 
         methods: {

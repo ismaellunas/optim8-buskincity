@@ -53,13 +53,6 @@ class ModuleService
         ];
     }
 
-    public static function defaultSettings(): array
-    {
-        return [
-            'submit_text' => 'Submit',
-        ];
-    }
-
     public static function widgets(): array
     {
         return [

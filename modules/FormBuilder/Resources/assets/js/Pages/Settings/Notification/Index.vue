@@ -175,8 +175,6 @@
                                 'notification': record.id
                             }),
                             {
-                                onStart: self.onStartLoadingOverlay,
-                                onFinish: self.onEndLoadingOverlay,
                                 onError: () => {
                                     oopsAlert();
                                 },

@@ -19,7 +19,7 @@ class FormBuilderFrontendRequest extends FormValueRequest
 
         $rules['form_id'] = [
             'required',
-            'exists:Modules\FormBuilder\Entities\FieldGroup,title'
+            'exists:Modules\FormBuilder\Entities\Form,key'
         ];
 
         return $rules;

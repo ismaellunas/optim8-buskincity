@@ -2,13 +2,21 @@ export function getEmptyForm() {
     return {
         name: null,
         form_id: null,
-        builders: {
-            name: null,
-            title: null,
-            order: null,
-            visibility: [],
-            locations: [],
-            fields: [],
-        }
+        setting: {
+            button: {
+                text: null,
+            },
+        },
+        field_groups: [
+            getEmptyFieldGroup(),
+        ]
+    };
+}
+
+export function getEmptyFieldGroup() {
+    return {
+        title: null,
+        order: null,
+        fields: [],
     };
 }
