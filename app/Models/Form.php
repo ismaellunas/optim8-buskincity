@@ -42,6 +42,11 @@ class Form extends Model
         return $query->where('type', $type);
     }
 
+    public function scopeLocationRoute($query, $locationRoute)
+    {
+        return $query->whereJsonContains('setting->locations', [ ['name' => $locationRoute] ]);
+    }
+
     public function fieldGroups()
     {
         return $this->hasMany(FieldGroup::class, 'form_id');

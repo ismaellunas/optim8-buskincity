@@ -51,7 +51,7 @@ class FormService
         $forms = collect();
 
         $models = Form::with('fieldGroups')
-            ->whereJsonContains('setting->locations', [ ['name' => $locationRoute] ])
+            ->locationRoute($locationRoute)
             ->get();
 
         foreach ($models as $model) {
@@ -206,8 +206,8 @@ class FormService
         $forms = collect();
 
         $model = Form::with('fieldGroups')
-            ->whereJsonContains('setting->locations', [ ['name' => $locationRoute] ])
             ->key($key)
+            ->locationRoute($locationRoute)
             ->first();
 
         if ($model) {
