@@ -225,37 +225,4 @@ class Form
 
         return true;
     }
-
-    public function setFieldWithValues($metas): array
-    {
-        $values = collect();
-
-        foreach ($this->rawFields as $field) {
-            $className = $this->getFieldClassName($field['type']);
-            $fieldName = $field['name'];
-
-            if (class_exists($className)) {
-                $fieldObject = new $className($fieldName, $field);
-
-                $fieldValues = [
-                    "type" => $field['type'],
-                    "label" => $field['label'],
-                    "value" => array_key_exists($fieldName, $metas)
-                        ? $metas[$fieldName]
-                        : null,
-                ];
-
-                if (
-                    $fieldObject instanceof TranslatableField
-                    && isset($field['translated'])
-                ) {
-                    $fieldValues['is_translated'] = $field['translated'];
-                }
-
-                $values->push($fieldValues);
-            }
-        }
-
-        return $values->all();
-    }
 }

@@ -32,9 +32,19 @@ class Form extends Model
         return $newQuery->whereNull('type');
     }
 
+    public function scopeKey($query, $key)
+    {
+        return $query->where('key', $key);
+    }
+
     public function scopeType($query, $type)
     {
         return $query->where('type', $type);
+    }
+
+    public function scopeLocationRoute($query, $locationRoute)
+    {
+        return $query->whereJsonContains('setting->locations', [ ['name' => $locationRoute] ]);
     }
 
     public function fieldGroups()
