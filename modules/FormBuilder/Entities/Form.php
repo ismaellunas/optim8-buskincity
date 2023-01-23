@@ -19,11 +19,6 @@ class Form extends ModelForm
         return \Modules\FormBuilder\Database\factories\FormFactory::new();
     }
 
-    public function scopeKey($query, $key)
-    {
-        return $query->where('key', $key);
-    }
-
     public function saveFromInputs(array $inputs): void
     {
         $this->name = $inputs['name'];
