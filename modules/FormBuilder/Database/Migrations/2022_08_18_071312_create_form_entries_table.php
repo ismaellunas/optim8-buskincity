@@ -13,15 +13,20 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('field_group_settings', function (Blueprint $table) {
+        Schema::create('form_entries', function (Blueprint $table) {
             $table->id();
-            $table->string('key');
-            $table->text('value')->nullable();
 
-            $table->foreignId('field_group_id')
-                ->constrained('field_groups')
+            $table->foreignId('form_id')
+                ->constrained('forms')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table->timestamps();
         });
     }
@@ -33,6 +38,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('field_group_settings');
+        Schema::dropIfExists('form_entries');
     }
 };

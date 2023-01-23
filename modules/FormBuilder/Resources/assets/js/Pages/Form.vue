@@ -8,7 +8,7 @@
                 title="Builder"
             >
                 <form-builder
-                    v-model="formBuilder"
+                    v-model="form"
                     v-model:input-config-id="computedInputConfigId"
                 />
             </biz-provide-inject-tab>
@@ -66,7 +66,7 @@
 
         setup(props, {emit}) {
             return {
-                formBuilder: useModelWrapper(props, emit),
+                form: useModelWrapper(props, emit),
                 computedInputConfigId: useModelWrapper(props, emit, 'inputConfigId'),
             };
         },

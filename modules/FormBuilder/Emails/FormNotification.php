@@ -6,8 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Mews\Purifier\Facades\Purifier;
-use Modules\FormBuilder\Entities\FieldGroupEntry;
-use Modules\FormBuilder\Entities\FieldGroupNotificationSetting;
+use Modules\FormBuilder\Entities\FormEntry;
+use Modules\FormBuilder\Entities\FormNotificationSetting;
 use Modules\FormBuilder\Services\FormBuilderService;
 
 class FormNotification extends Mailable
@@ -23,8 +23,8 @@ class FormNotification extends Mailable
      * @return void
      */
     public function __construct(
-        FieldGroupEntry $entry,
-        FieldGroupNotificationSetting $setting
+        FormEntry $entry,
+        FormNotificationSetting $setting
     ) {
         $this->entry = $entry;
         $this->setting = $setting;

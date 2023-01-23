@@ -44,14 +44,10 @@ Route::name('admin.')->prefix('admin/')->middleware([
             Route::prefix('settings')->name('settings.')->group(function() {
                 Route::get('notifications/records', [SettingNotificationController::class, 'records'])
                     ->name('notifications.records')
-                    ->middleware('can:viewAny,Modules\FormBuilder\Entities\FieldGroupNotificationSetting');
+                    ->middleware('can:viewAny,Modules\FormBuilder\Entities\FormNotificationSetting');
 
                 Route::resource('notifications', SettingNotificationController::class)
                     ->except(['show']);
-
-                Route::get('general/form', [SettingController::class, 'form'])
-                    ->name('general.form')
-                    ->can('update', 'form_builder');
 
                 Route::put('general/update', [SettingController::class, 'update'])
                     ->name('general.update')

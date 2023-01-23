@@ -6,8 +6,9 @@ use App\Http\Controllers\CrudController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
+use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FieldGroup;
-use Modules\FormBuilder\Entities\FieldGroupEntry;
+use Modules\FormBuilder\Entities\FormEntry;
 use Modules\FormBuilder\Events\FormSubmitted;
 use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
@@ -24,7 +25,7 @@ class FormBuilderController extends CrudController
 
     public function __construct(FormBuilderService $formBuilderService)
     {
-        $this->authorizeResource(FieldGroup::class, 'form_builder');
+        $this->authorizeResource(Form::class, 'form_builder');
 
         $this->formBuilderService = $formBuilderService;
     }
@@ -57,43 +58,57 @@ class FormBuilderController extends CrudController
     public function store(FormBuilderRequest $request)
     {
         $inputs = $request->validated();
-        $fieldGroup = new FieldGroup();
 
-        $fieldGroup->saveFromInputs($inputs);
+        $form = new Form();
+        $form->saveFromInputs($inputs);
+
+        if (!empty($inputs['field_groups'])) {
+            $fieldGroup = new FieldGroup();
+
+            $fieldGroup->syncFieldGroups($inputs['field_groups'], $form->id);
+        }
 
         $this->generateFlashMessage('Form created successfully!');
 
-        return redirect()->route($this->baseRouteName . '.edit', $fieldGroup->id);
+        return redirect()->route($this->baseRouteName . '.edit', $form->id);
     }
 
-    public function edit(FieldGroup $formBuilder)
+    public function edit(Form $formBuilder)
     {
-        $formBuilder->builders = $formBuilder->data;
-        $formBuilder->form_id = $formBuilder->title;
-        unset($formBuilder->data);
-        unset($formBuilder->title);
+        $formBuilder->load('fieldGroups');
+        $formBuilder = $formBuilder->toArray();
+
+        $formBuilder['form_id'] = $formBuilder['key'];
+
+        unset($formBuilder['key']);
 
         return Inertia::render('FormBuilder::Edit', $this->getData([
             'baseRouteNameSetting' => $this->baseRouteNameSetting,
             'formBuilder' => $formBuilder,
             'title' => __('Editing :name Form', [
-                'name' => $formBuilder->name
+                'name' => $formBuilder['name']
             ]),
         ]));
     }
 
-    public function update(FormBuilderRequest $request, FieldGroup $formBuilder)
+    public function update(FormBuilderRequest $request, Form $formBuilder)
     {
         $inputs = $request->validated();
 
         $formBuilder->saveFromInputs($inputs);
+
+        if (!empty($inputs['field_groups'])) {
+            $fieldGroup = new FieldGroup();
+
+            $fieldGroup->syncFieldGroups($inputs['field_groups'], $formBuilder->id);
+        }
 
         $this->generateFlashMessage('Form updated successfully!');
 
         return redirect()->route($this->baseRouteName . '.edit', $formBuilder->id);
     }
 
-    public function destroy(FieldGroup $formBuilder)
+    public function destroy(Form $formBuilder)
     {
         $formBuilder->delete();
 
@@ -102,8 +117,11 @@ class FormBuilderController extends CrudController
         return redirect()->route($this->baseRouteName.'.index');
     }
 
-    public function entries(Request $request, FieldGroup $formBuilder)
+    public function entries(Request $request, Form $formBuilder)
     {
+        $allFields = $this->formBuilderService
+            ->getAllFields($formBuilder->fieldGroups);
+
         return Inertia::render('FormBuilder::Entries', $this->getData([
             'title' => $this->title . ' Entries - ' . $formBuilder->name,
             'formBuilder' => $formBuilder,
@@ -113,29 +131,32 @@ class FormBuilderController extends CrudController
                 $this->recordsPerPage,
             ),
             'fieldLabels' => $this->formBuilderService->getFieldLabels(
-                $formBuilder->data['fields']
+                $allFields
             ),
             'fieldNames' => $this->formBuilderService->getDataFromFields(
-                $formBuilder->data['fields'],
+                $allFields,
                 'name'
             ),
         ]));
     }
 
-    public function entryShow(FieldGroup $formBuilder, FieldGroupEntry $entry)
+    public function entryShow(Form $formBuilder, FormEntry $entry)
     {
         $user = auth()->user();
+
+        $allFields = $this->formBuilderService
+            ->getAllFields($formBuilder->fieldGroups);
 
         return Inertia::render('FormBuilder::EntryDetail', $this->getData([
             'title' => $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $entry->id,
             'formBuilder' => $formBuilder,
             'entry' => $this->formBuilderService->transformEntry($entry),
             'entryDisplay' => $this->formBuilderService->getDisplayValues(
-                $formBuilder->data['fields'],
+                $allFields,
                 $entry,
             ),
             'fieldLabels' => $this->formBuilderService->getFieldLabelAndNames(
-                $entry->fieldGroup->data['fields']
+                $allFields
             ),
             'can' => [
                 'user' => [
@@ -162,9 +183,9 @@ class FormBuilderController extends CrudController
     {
         $inputs = $request->validated();
 
-        $fieldGroupEntry = $this->formBuilderService->saveValues($inputs);
+        $formEntry = $this->formBuilderService->saveValues($inputs);
 
-        FormSubmitted::dispatch($fieldGroupEntry);
+        FormSubmitted::dispatch($formEntry);
 
         return [
             'success' => true,

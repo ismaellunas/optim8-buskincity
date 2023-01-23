@@ -4,22 +4,22 @@ namespace Modules\FormBuilder\Events;
 
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Modules\FormBuilder\Entities\FieldGroupEntry;
+use Modules\FormBuilder\Entities\FormEntry;
 
 class FormSubmitted
 {
     use Dispatchable, SerializesModels;
 
-    public $fieldGroupEntry;
+    public $formEntry;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(FieldGroupEntry $fieldGroupEntry)
+    public function __construct(FormEntry $formEntry)
     {
-        $this->fieldGroupEntry = $fieldGroupEntry;
+        $this->formEntry = $formEntry;
     }
 
     /**

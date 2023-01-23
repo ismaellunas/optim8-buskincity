@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Kodeine\Metable\Metable;
 
-class FieldGroupEntry extends Model
+class FormEntry extends Model
 {
     use HasFactory;
     use Metable;
 
     protected static function newFactory()
     {
-        return \Modules\FormBuilder\Database\factories\FieldGroupEntryFactory::new();
+        return \Modules\FormBuilder\Database\factories\FormEntryFactory::new();
     }
 
     public function saveFromInputs(array $inputs): void
@@ -26,9 +26,9 @@ class FieldGroupEntry extends Model
         $this->save();
     }
 
-    public function fieldGroup()
+    public function form()
     {
-        return $this->belongsTo(FieldGroup::class, 'field_group_id');
+        return $this->belongsTo(Form::class, 'form_id');
     }
 
     public function user()

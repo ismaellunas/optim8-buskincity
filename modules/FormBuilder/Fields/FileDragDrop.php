@@ -41,7 +41,7 @@ class FileDragDrop extends BaseField
 
         $html .= "</ul>";
 
-        return Purifier::clean($html);
+        return $html;
     }
 
     private function uploadFiles($files): Collection
