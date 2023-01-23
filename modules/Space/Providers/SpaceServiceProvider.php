@@ -7,6 +7,7 @@ use App\Services\MediaService;
 use Illuminate\Support\ServiceProvider;
 use Modules\Space\Entities\Space;
 use Modules\Space\Services\PageService;
+use Modules\Space\Services\PageSpaceService;
 use Modules\Space\Services\SpaceService;
 
 class SpaceServiceProvider extends ServiceProvider
@@ -54,6 +55,10 @@ class SpaceServiceProvider extends ServiceProvider
 
         $this->app->singleton(SpaceService::class, function ($app) {
             return new SpaceService($app->make(MediaService::class));
+        });
+
+        $this->app->singleton(PageSpaceService::class, function ($app) {
+            return new PageSpaceService();
         });
     }
 
