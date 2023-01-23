@@ -1,25 +1,23 @@
 import { defaultOption, columnFieldSizes } from '@/ComponentStructures/style-options';
 
 export default {
-    type: "FileDragDrop",
-    title: "File Upload",
+    type: "Country",
+    title: "Country",
     column: 'is-full',
-    label: "File",
-    name: "file",
-    placeholder: "Drop files here...",
+    label: "Country",
+    name: 'country',
+    placeholder: null,
     note: null,
-    default_value: [],
-    max_file_number: 1,
-    min_file_number: 0,
+    default_value: null,
+    readonly: false,
+    disabled: false,
+    options: [],
     validation: {
         rules: {
             required: false,
-            mimes: ['image'],
-            max: null,
         },
         message: []
     },
-    is_multiple_upload: false,
     visibility: [],
     translated: false,
 };
@@ -40,10 +38,6 @@ export const config = {
                     placeholder: 'field_name'
                 },
             },
-            placeholder: {
-                component: "ConfigInput",
-                label: "Placeholder",
-            },
             note: {
                 component: "ConfigInput",
                 label: "Note",
@@ -57,6 +51,15 @@ export const config = {
             },
         }
     },
+    data: {
+        label: "Data",
+        config: {
+            default_value: {
+                component: "ConfigInput",
+                label: "Default Value",
+            },
+        },
+    },
     validation: {
         label: "Validation",
         config: {
@@ -64,31 +67,26 @@ export const config = {
                 component: "ConfigCheckbox",
                 label: "Is Required?",
             },
-            mimes: {
-                component: "ConfigCheckboxes",
-                label: "Accepted Type",
-                settings: {
-                    options: [
-                        { id: 'image', value: 'Image' },
-                        { id: 'video', value: 'Video' },
-                        { id: 'document', value: 'Document' },
-                        { id: 'spreadsheet', value: 'Spreadsheet' },
-                        { id: 'presentation', value: 'Presentation' },
-                    ]
-                },
-            },
-            max: {
-                component: "ConfigNumberAddons",
-                label: "Maximal File Size",
-                settings: {
-                    addons: 'KiB',
-                }
-            },
         },
 
     },
     attributes: {
         label: "Attributes",
-        component: "ConfigFileUploadAttribute",
+        config: {
+            disabled: {
+                component: "ConfigCheckbox",
+                label: "Is Disabled?",
+                settings: {
+                    disableBasedOn: 'validation.rules.required'
+                }
+            },
+            readonly: {
+                component: "ConfigCheckbox",
+                label: "Is Readonly?",
+                settings: {
+                    disableBasedOn: 'validation.rules.required'
+                }
+            },
+        },
     },
 };
