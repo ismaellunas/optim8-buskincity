@@ -41,32 +41,26 @@ class PageTranslation extends AppPageTranslation
         return $this->belongsTo(Page::class);
     }
 
-    public function getSlugs(Space $space = null): ?string
+    public function getSlugs(): string
     {
-        if (!$space) {
-            $space = $this->page->space;
-        }
+        $defaultLocale = defaultLocale();
+
+        $space = $this->space;
 
         $ancestors = $space->ancestors->toFlatTree();
 
-        $defaultLocale = app(TranslationService::class)->getDefaultLocale();
-
         $pageTranslations = $ancestors
-            ->pluck('page.translations')
+            ->pluck('pageTranslations')
             ->filter();
 
-        $pageTranslations->push($space->page->translations);
+        $pageTranslations->push($space->pageTranslations);
 
         if ($pageTranslations->isNotEmpty()) {
             return $pageTranslations
                 ->map(function ($translations) use ($defaultLocale) {
-                    $localeTranslation = $translations
-                        ->first(fn ($translation) => $translation->locale == $this->locale);
-
-                    if (!$localeTranslation) {
-                        $localeTranslation = $translations
-                            ->first(fn ($translation) => $translation->locale == $defaultLocale);
-                    }
+                    $localeTranslation =
+                        $translations->firstWhere('locale', $this->locale)
+                        ?? $translations->firstWhere('locale', $defaultLocale);
 
                     return $localeTranslation->slug ?? $localeTranslation->uniqueKey;
                 })->implode('/');

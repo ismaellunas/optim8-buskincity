@@ -107,6 +107,57 @@ class Space extends BaseModel implements TranslatableContract
         );
     }
 
+    public function scopeIsPageEnabled($query, bool $isEnabled = true)
+    {
+        return $query->where('is_page_enabled', $isEnabled);
+    }
+
+    public function scopeWithStructuredUrl($query, array $locales = [])
+    {
+        $pageTable = PageTranslation::getTableName();
+        $spaceTable = Space::getTableName();
+
+        $tableColumns = [
+            'space' => collect(['id', 'page_id', '_lft', '_rgt', 'parent_id', 'is_page_enabled', 'type_id', 'updated_at'])
+                ->map(fn ($column) => $spaceTable.'.'.$column)->all(),
+            'pageTranslations' => collect(['id', 'page_id', 'locale', 'status', 'slug', 'unique_key'])
+                ->map(fn ($column) => $pageTable.'.'.$column)->all(),
+        ];
+
+        $query->with([
+            'page' => function ($query) use ($locales, $tableColumns) {
+                $query->select('id', 'type');
+                $query->with('translations', function ($query) use ($locales, $tableColumns) {
+                    $columns = collect(['id', 'page_id', 'locale', 'status', 'updated_at']);
+                    $query->select($columns->map(fn ($column) => PageTranslation::getTableName().'.'.$column)->all());
+                    if ($locales) {
+                        $query->inLanguages($locales);
+                    }
+                    $query->with('space', function ($query) use ($locales, $tableColumns) {
+                        $query->select($tableColumns['space']);
+                        $query->with([
+                            'pageTranslations' => function ($query) use ($locales, $tableColumns) {
+                                $query->select($tableColumns['pageTranslations']);
+                                if ($locales) {
+                                    $query->inLanguages($locales);
+                                }
+                            },
+                            'ancestors' => function ($query) use ($locales, $tableColumns) {
+                                $query->select($tableColumns['space']);
+                                $query->with('pageTranslations', function ($query) use ($locales, $tableColumns) {
+                                    $query->select($tableColumns['pageTranslations']);
+                                    if ($locales) {
+                                        $query->inLanguages($locales);
+                                    }
+                                });
+                            },
+                        ]);
+                    });
+                });
+            },
+        ]);
+    }
+
     public function getLogoUrlAttribute(): ?string
     {
         return $this->logo ? $this->logo->file_url : null;
