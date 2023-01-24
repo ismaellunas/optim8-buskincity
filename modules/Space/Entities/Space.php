@@ -2,21 +2,22 @@
 
 namespace Modules\Space\Entities;
 
+use App\Models\BaseModel;
 use App\Models\GlobalOption;
 use App\Models\Media;
 use App\Models\MenuItem;
-use App\Models\PageTranslation;
 use App\Models\User;
 use App\Services\TranslationService;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Space\Entities\Page;
+use Modules\Space\Entities\PageTranslation;
 
-class Space extends Model implements TranslatableContract
+class Space extends BaseModel implements TranslatableContract
 {
     use HasFactory;
     use NodeTrait;
@@ -92,6 +93,18 @@ class Space extends Model implements TranslatableContract
     public function menuItems()
     {
         return $this->morphMany(MenuItem::class, 'menu_itemable');
+    }
+
+    public function pageTranslations()
+    {
+        return $this->hasManyThrough(
+            PageTranslation::class,
+            Page::class,
+            'id',
+            'page_id',
+            'page_id',
+            'id'
+        );
     }
 
     public function getLogoUrlAttribute(): ?string
