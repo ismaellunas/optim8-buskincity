@@ -21,6 +21,18 @@ class PageTranslation extends AppPageTranslation
         });
     }
 
+    public function space()
+    {
+        return $this->hasOneThrough(
+            Space::class,
+            Page::class,
+            'id',
+            'page_id',
+            'page_id',
+            'id'
+        );
+    }
+
     /**
      * @override
      */
