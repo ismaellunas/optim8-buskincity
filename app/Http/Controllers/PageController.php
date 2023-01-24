@@ -12,7 +12,6 @@ use App\Services\{
     MenuService,
     PageService,
     StorageService,
-    TranslationService,
 };
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,7 +52,7 @@ class PageController extends CrudController
                 $request->term,
                 $this->recordsPerPage,
             ),
-            'defaultLocale' => TranslationService::getDefaultLocale(),
+            'defaultLocale' => defaultLocale(),
             'title' => $this->getIndexTitle(),
         ]));
     }

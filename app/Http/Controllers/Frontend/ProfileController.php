@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Services\{
     FormService,
     SettingService,
-    TranslationService,
 };
 use Illuminate\Support\Str;
 
@@ -32,7 +31,7 @@ class ProfileController extends Controller
         $viewName = 'profile-'.Str::kebab($role);
 
         $data = [
-            'locale' => TranslationService::currentLanguage(),
+            'locale' => currentLocale(),
             'user' => $user,
             'qrCode' => [
                 'isDisplayed' => $qrCodeIsDisplayed

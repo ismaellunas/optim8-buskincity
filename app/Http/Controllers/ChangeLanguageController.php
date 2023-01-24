@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Entities\LifetimeCookie;
 use App\Helpers\Url;
-use App\Services\TranslationService as TranslationSv;
+use App\Services\TranslationService;
 use Illuminate\Support\Str;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -19,7 +19,7 @@ class ChangeLanguageController extends Controller
     public function __invoke($newLocale)
     {
         $url = url()->previous();
-        $defaultLocale = TranslationSv::getDefaultLocale();
+        $defaultLocale = defaultLocale();
 
         app(LifetimeCookie::class)->set(
             'origin_language',
@@ -78,7 +78,7 @@ class ChangeLanguageController extends Controller
     {
         $uriPath = Url::getPath($url);
         $uriSegments = explode('/', $uriPath);
-        $locales = app(TranslationSv::class)->getLocales();
+        $locales = app(TranslationService::class)->getLocales();
 
         if (in_array($uriSegments[1], $locales)) {
             $uriPath = Str::replaceFirst('/'.$uriSegments[1], '', $uriPath);

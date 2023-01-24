@@ -83,8 +83,8 @@ class HandleInertiaRequests extends Middleware
             'appLogoUrl' => $this->settingService->getLogoOrDefaultUrl(),
             'menus' => $this->getHeaderMenus($request),
             'footerMenus' => $this->getFooterMenus($request),
-            'currentLanguage' => TranslationSv::currentLanguage(),
-            'defaultLanguage' => TranslationSv::getDefaultLocale(),
+            'currentLanguage' => currentLocale(),
+            'defaultLanguage' => defaultLocale(),
             'languageOptions' => app(TranslationSv::class)->getLocaleOptions(),
             'css.frontend' => [
                 'app' => SettingService::getFrontendCssUrl(),
