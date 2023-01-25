@@ -6,19 +6,19 @@
         />
         <form-file-upload
             v-model="value"
-            :label="entity.label"
-            :required="entity.validation.rules.required"
+            :label="modelValue.label"
+            :required="modelValue.validation.rules.required"
             :disabled="true"
-            :placeholder="entity.placeholder"
+            :placeholder="modelValue.placeholder"
         >
             <template
-                v-if="entity.note"
+                v-if="modelValue.note"
                 #note
             >
                 <p
                     class="help"
                 >
-                    {{ entity.note }}
+                    {{ modelValue.note }}
                 </p>
             </template>
         </form-file-upload>
@@ -30,10 +30,9 @@
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import FormFileUpload from '@/Biz/Form/FileUpload';
-    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'FileDragDrop',
+        name: 'InputFileDragDrop',
 
         components: {
             BizToolbarContent,
@@ -48,12 +47,6 @@
         props: {
             id: { type: String, required: true },
             modelValue: { type: Object, required: true },
-        },
-
-        setup(props, { emit }) {
-            return {
-                entity: useModelWrapper(props, emit),
-            };
         },
 
         data() {

@@ -4,10 +4,8 @@ namespace App\Entities\Forms;
 
 use App\Entities\Forms\Fields\TranslatableField;
 use App\Models\Form as ModelForm;
-use App\Models\FieldGroup;
 use App\Models\User;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class Form
 {
@@ -16,11 +14,8 @@ class Form
     public $fields;
     public $id;
     public $locations;
-    public $model;
     public $name;
     public $order;
-    public $routeName;
-    public $title;
     public $visibility;
 
     public ?User $author = null;
@@ -29,19 +24,21 @@ class Form
     protected $originLanguage = null;
 
     private $key = null;
-    private $rawFields;
+    private $form;
 
     public function __construct(
         ModelForm $form,
         User $author = null
     ) {
-        $this->id = $form->id;
+        $this->form = $form;
 
-        $this->key = $form->key;
-        $this->name = $form->name;
-        $this->order = $form->order;
+        $this->id = $this->form->id;
 
-        $settings = $form->setting;
+        $this->key = $this->form->key;
+        $this->name = $this->form->name;
+        $this->order = $this->form->order;
+
+        $settings = $this->form->setting;
 
         $this->locations = $settings['locations'] ?? [];
         $this->button = $settings['button'] ?? [];
@@ -51,10 +48,9 @@ class Form
             $this->originLanguage = $author->origin_language_code;
         }
 
-        if ($form->fieldGroups->isNotEmpty()) {
-            $this->setFieldGroups($form->fieldGroups);
-
-            $this->setRawFields($form->fieldGroups);
+        if ($this->form->fieldGroups->isNotEmpty()) {
+            $this->setFields();
+            $this->setFieldGroups();
         }
 
         $this->visibility = $settings['visibility'] ?? [];
@@ -78,16 +74,19 @@ class Form
         return "\\App\\Entities\\Forms\\Fields\\".$type;
     }
 
-    protected function setFieldGroups(Collection $fieldGroups): void
+    private function setFields(): void
+    {
+        $this->fields = $this->getClassFields(
+            $this->form->getFields()->all()
+        );
+    }
+
+    private function setFieldGroups(): void
     {
         $fieldGroupCollection = collect();
 
-        $this->fields = collect();
-
-        foreach ($fieldGroups as $fieldGroup) {
-            $fields = $this->getFields($fieldGroup->fields);
-
-            $this->fields = $this->fields->merge($fields);
+        foreach ($this->form->fieldGroups as $fieldGroup) {
+            $fields = $this->getClassFields($fieldGroup->fields);
 
             $fieldGroupCollection->push([
                 'title' => $fieldGroup->title ?? null,
@@ -101,7 +100,7 @@ class Form
             ->values();
     }
 
-    protected function getFields(array $fields = []): Collection
+    private function getClassFields(array $fields = []): Collection
     {
         $fieldCollection = collect();
 
@@ -123,18 +122,6 @@ class Form
         }
 
         return $fieldCollection;
-    }
-
-    private function setRawFields(Collection $fieldGroups): void
-    {
-        $this->rawFields = [];
-
-        foreach ($fieldGroups as $fieldGroup) {
-            $this->rawFields = [
-                ...$this->rawFields,
-                ...$fieldGroup->fields,
-            ];
-        }
     }
 
     protected function getFieldGroupSchema(array $storedValues = []): Collection

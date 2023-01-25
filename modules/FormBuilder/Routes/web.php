@@ -63,7 +63,7 @@ Route::name('admin.')->prefix('admin/')->middleware([
             Route::prefix('page-builders')->name('page-builders.')->group(function() {
                 Route::get('form-options', [PageBuilderController::class, 'formOptions'])
                     ->name('form-options')
-                    ->middleware('can:viewAny,Modules\FormBuilder\Entities\FieldGroup');
+                    ->middleware('can:viewAny,Modules\FormBuilder\Entities\Form');
             });
 
             Route::get('widget/form-builder/{formBuilder}/entries', [ApiWidgetController::class, 'getEntries'])
