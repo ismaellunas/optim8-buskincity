@@ -8,7 +8,6 @@ use App\Models\{
     PageTranslation,
     Post,
 };
-use App\Services\TranslationService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -30,7 +29,7 @@ abstract class LocalizationRouteTestCase extends TestCase
     // https://github.com/mcamara/laravel-localization#testing
     protected function refreshApplicationWithLocale($locale)
     {
-        if (TranslationService::getDefaultLocale() != $locale) {
+        if (defaultLocale() != $locale) {
             self::tearDown();
             putenv(LaravelLocalization::ENV_ROUTE_KEY . '=' . $locale);
             self::setUp();

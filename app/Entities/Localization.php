@@ -2,10 +2,7 @@
 
 namespace App\Entities;
 
-use App\Services\{
-    LanguageService,
-    TranslationService
-};
+use App\Services\LanguageService;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
@@ -42,7 +39,7 @@ class Localization extends LaravelLocalization
 
             try {
 
-                $this->defaultLocale = TranslationService::getDefaultLocale();
+                $this->defaultLocale = defaultLocale();
 
             } catch (QueryException $e) {
 
@@ -120,7 +117,7 @@ class Localization extends LaravelLocalization
             $transRoute = $this->translator->get(
                 $routeName,
                 [],
-                TranslationService::getDefaultLocale()
+                defaultLocale()
             );
         }
 
@@ -151,7 +148,7 @@ class Localization extends LaravelLocalization
                     $translation = $this->translator->get(
                         $transKeyName,
                         [],
-                        TranslationService::getDefaultLocale()
+                        defaultLocale()
                     );
                 }
 

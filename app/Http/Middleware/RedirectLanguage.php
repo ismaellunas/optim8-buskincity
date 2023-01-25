@@ -56,7 +56,7 @@ class RedirectLanguage
     private function setOriginLanguage(): string
     {
         $originLanguage = app(LanguageService::class)->getOriginLanguageFromCookie();
-        $defaultLanguage = TranslationService::getDefaultLocale();
+        $defaultLanguage = defaultLocale();
         $locales = app(TranslationService::class)->getLocales();
 
         if (!in_array($originLanguage, $locales)) {
