@@ -2,12 +2,14 @@
 
 namespace Modules\Space\Entities;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
+use App\Traits\HasLocale;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class SpaceTranslation extends Model
+class SpaceTranslation extends BaseModel
 {
     use HasFactory;
+    use HasLocale;
 
     protected $fillable = [
         'condition',
