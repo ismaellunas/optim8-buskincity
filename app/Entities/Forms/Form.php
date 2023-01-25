@@ -29,7 +29,6 @@ class Form
     protected $originLanguage = null;
 
     private $key = null;
-    private $rawFields;
     private $form;
 
     public function __construct(
@@ -128,18 +127,6 @@ class Form
         }
 
         return $fieldCollection;
-    }
-
-    private function setRawFields(Collection $fieldGroups): void
-    {
-        $this->rawFields = [];
-
-        foreach ($fieldGroups as $fieldGroup) {
-            $this->rawFields = [
-                ...$this->rawFields,
-                ...$fieldGroup->fields,
-            ];
-        }
     }
 
     protected function getFieldGroupSchema(array $storedValues = []): Collection
