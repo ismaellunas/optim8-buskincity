@@ -3,47 +3,45 @@
 namespace App\Jobs;
 
 use App\Services\SettingService;
+use App\Services\ThemeService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\App;
+use \Exception;
 
 class CompileThemeCss implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * Execute the job.
      *
      * @return void
      */
-    public function handle(SettingService $settingService)
-    {
-        $settingService->generateVariablesSass();
+    public function handle(
+        ThemeService $themeService,
+        SettingService $settingService
+    ) {
+        try {
+            $themeService->generateVariablesSass();
 
-        $settingService->generateThemeCss();
+            $themeService->generateCss();
 
-        $folderPrefix = !App::environment('production')
-            ? config('app.env')
-            : null;
+            $uploadedCssFrontend = $themeService->uploadCssFrontend();
+            $uploadedCssBackend = $themeService->uploadCssBackend();
 
-        $assetFrontend = $settingService->uploadThemeCssFrontend($folderPrefix);
-        $settingService->saveCssUrlFrontend($assetFrontend->fileUrl);
+            $settingService->saveCssUrlFrontend($uploadedCssFrontend->fileUrl);
+            $settingService->saveCssUrlBackend($uploadedCssBackend->fileUrl);
 
-        $assetBackend = $settingService->uploadThemeCssBackend($folderPrefix);
-        $settingService->saveCssUrlBackend($assetBackend->fileUrl);
+        } catch (Exception $e) {
 
-        $settingService->clearStorageTheme();
+            throw $e;
+
+        } finally {
+
+            $themeService->clearStorageTheme();
+        }
     }
 }
