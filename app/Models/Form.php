@@ -35,7 +35,7 @@ class Form extends Model
         return $newQuery->whereNull('type');
     }
 
-    public function getFields(): collection
+    public function getFields(): Collection
     {
         $fields = collect();
 
