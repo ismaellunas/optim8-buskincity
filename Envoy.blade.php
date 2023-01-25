@@ -13,7 +13,7 @@
 
     $dotenv->safeLoad();
 
-    $branch = "master";
+    $branch = "main";
     $theme = $_ENV['THEME_ACTIVE'] ?? 'biz';
 
     $heroku_app = $_ENV['HEROKU_APP'];
@@ -30,11 +30,6 @@
         'CLOUDINARY_UPLOAD_PRESET',
         'CLOUDINARY_URL',
         'DB_CONNECTION',
-        'DB_DATABASE',
-        'DB_HOST',
-        'DB_PASSWORD',
-        'DB_PORT',
-        'DB_USERNAME',
         'FACEBOOK_CLIENT_ID',
         'FACEBOOK_CLIENT_SECRET',
         'GOOGLE_CLIENT_ID',
@@ -57,11 +52,17 @@
         'TELESCOPE_ENABLED',
         // 'REDIS_CLIENT',
         // 'REDIS_URL',
+        // 'DB_HOST',
+        // 'DB_DATABASE',
+        // 'DB_PASSWORD',
+        // 'DB_PORT',
+        // 'DB_USERNAME',
     ];
 @endsetup
 
 @story('heroku:deploy')
     git-restore-and-stash
+    git-checkout
     install-dependencies
     git-commit-deployment
     heroku:maintenance-on
@@ -76,6 +77,7 @@
 
 @story('heroku:deploy-full')
     git-restore-and-stash
+    git-checkout
     install-dependencies
     git-commit-deployment
     heroku:maintenance-on
@@ -106,6 +108,7 @@
     composer install
     yarn install
     rm public/js/*
+    rm public/themes/{{ $theme }}/js/*
     npm run prod
     npm run prod --theme={{ $theme }}
 @endtask
@@ -115,7 +118,12 @@
     git restore public/js/app.js
     git restore public/mix-manifest.json
     git stash -u
-    git pull
+@endtask
+
+@task('git-checkout')
+    git checkout {{ $branch }}
+    git fetch origin master
+    git merge master
 @endtask
 
 @task('git-commit-deployment')
@@ -123,7 +131,7 @@
 @endtask
 
 @task('git-push')
-    git push origin master
+    git push origin {{ $branch }}
 @endtask
 
 @task('heroku:maintenance-on')
@@ -143,11 +151,7 @@
 @endtask
 
 @task('heroku:push')
-    git push heroku master
-@endtask
-
-@task('heroku:postgresql-create-free')
-    heroku addons:create heroku-postgresql:hobby-dev
+    git push heroku {{ $branch }}
 @endtask
 
 @task('heroku:postgresql-credentials')
