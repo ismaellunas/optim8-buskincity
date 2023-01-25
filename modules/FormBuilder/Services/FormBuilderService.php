@@ -51,12 +51,13 @@ class FormBuilderService
     ): LengthAwarePaginator {
         $records = collect();
 
-        $allFields = $this->getAllFields($formBuilder->fieldGroups);
+        $allFields = $formBuilder->getFields();
 
-        $fieldNames = $this->getDataFromFields($allFields, 'name');
+        $fieldNames = $formBuilder->getFieldNames();
 
         $entries = $formBuilder
             ->entries()
+            ->with('metas')
             ->whereHas('metas', function ($query) use ($term) {
                 $query->when($term, function ($q) use ($term) {
                     $q->where('value', 'ILIKE', '%'.$term.'%');
@@ -71,7 +72,7 @@ class FormBuilderService
             $record['id'] = $entry->id;
 
             foreach ($fieldNames as $fieldName) {
-                $field = collect($allFields)->where('name', $fieldName)->first();
+                $field = $allFields->where('name', $fieldName)->first();
 
                 $record[$fieldName] = $this->getDisplayValue(
                     $field,
@@ -91,9 +92,9 @@ class FormBuilderService
     ): LengthAwarePaginator {
         $records = collect();
 
-        $allFields = $this->getAllFields($formBuilder->fieldGroups);
+        $allFields = $formBuilder->getFields();
 
-        $fieldNames = collect($this->getDataFromFields($allFields, 'name'))
+        $fieldNames = collect($formBuilder->getFieldNames())
             ->slice(0, 3)
             ->all();
 
@@ -108,7 +109,7 @@ class FormBuilderService
             $record['id'] = $entry->id;
 
             foreach ($fieldNames as $fieldName) {
-                $field = collect($allFields)->where('name', $fieldName)->first();
+                $field = $allFields->where('name', $fieldName)->first();
 
                 $record[$fieldName] = $this->getDisplayValue(
                     $field,
@@ -248,7 +249,7 @@ class FormBuilderService
             $this->abortAction();
         }
 
-        $fields = collect($this->getAllFields($form->fieldGroups));
+        $fields = $form->getFields();
 
         foreach($inputs as $key => $value) {
             $fieldType = $fields->where('name', $key)->value('type');
@@ -286,7 +287,7 @@ class FormBuilderService
     {
         $swapLists = [];
 
-        $allFields = $this->getAllFields($entry->form->fieldGroups);
+        $allFields = $entry->form->getFields();
         $entryValues = $this->getDisplayValues($allFields, $entry);
 
         foreach ($entryValues as $key => $entryValue) {
@@ -296,10 +297,9 @@ class FormBuilderService
         return Str::swap($swapLists, $value);
     }
 
-    public function getDisplayValues($fields, $entry)
+    public function getDisplayValues(Collection $fields, FormEntry $entry): array
     {
         $displayValues = [];
-        $fields = collect($fields);
         $entryValues = $entry->metas
             ->pluck('value', 'key')
             ->toArray();
@@ -318,7 +318,7 @@ class FormBuilderService
         return $displayValues;
     }
 
-    public function getDisplayValue($field, $value): mixed
+    public function getDisplayValue(array $field, mixed $value): mixed
     {
         $className = $this->getFieldClassName($field['type']);
 
@@ -339,16 +339,5 @@ class FormBuilderService
         }
 
         return $entry->toArray();
-    }
-
-    public function getAllFields(Collection $fieldGroups): array
-    {
-        $fields = collect();
-
-        foreach ($fieldGroups as $fieldGroup) {
-            $fields = $fields->merge($fieldGroup->fields);
-        }
-
-        return $fields->all();
     }
 }
