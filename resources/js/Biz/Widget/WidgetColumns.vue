@@ -33,7 +33,6 @@
 </template>
 
 <script>
-    import PerformerApplicationLink from '@/Biz/Widget/PerformerApplicationLink';
     import QrCode from '@/Biz/Widget/QrCode';
     import SocialMediaShare from '@/Biz/Widget/SocialMediaShare';
     import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
@@ -46,7 +45,6 @@
         name: 'BizWidgetColumns',
 
         components: {
-            PerformerApplicationLink,
             QrCode,
             SocialMediaShare,
             StreetPerformersYouMightLike,
