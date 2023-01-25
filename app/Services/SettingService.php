@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Entities\Caches\SettingCache;
-use App\Entities\CloudinaryStorage;
-use App\Entities\MediaAsset;
 use App\Helpers\CssUnitConverter;
 use App\Helpers\MinifyCss;
 use App\Models\{
@@ -12,29 +10,32 @@ use App\Models\{
     Setting,
 };
 use App\Services\StorageService;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\{
     Collection,
-    Facades\Artisan,
-    Facades\Storage,
     Str,
 };
 use Qirolab\Theme\Theme;
-use \finfo;
 
 class SettingService
 {
-    private static function getSetting(string $key): string
+    private static function getKey(string $key): string
     {
         return app(SettingCache::class)->remember($key, function () use ($key) {
             return Setting::key($key)->value('value') ?? "";
         });
     }
 
+    public function saveKey(string $key, mixed $value): bool
+    {
+        $setting = Setting::firstOrNew(['key' => $key]);
+        $setting->value = $value;
+
+        return $setting->save();
+    }
+
     public function getFrontendCssUrl(): string
     {
-        $urlCss = $this->getSetting('url_css');
+        $urlCss = $this->getKey('url_css');
 
         return empty($urlCss)
             ? mix('css/app.css', 'themes/'.Theme::active())->toHtml()
@@ -43,7 +44,7 @@ class SettingService
 
     public function getBackendCssUrl(): string
     {
-        $urlCss = $this->getSetting('url_css_backend');
+        $urlCss = $this->getKey('url_css_backend');
 
         return empty($urlCss)
             ? mix('css/app.css')->toHtml()
@@ -57,32 +58,24 @@ class SettingService
         });
     }
 
-    public static function getAdditionalJavascript(): string
+    public function getAdditionalJavascript(): string
     {
-        return app(SettingCache::class)->remember('additional_javascript', function () {
-            return Setting::key('additional_javascript')->value('value') ?? "";
-        });
+        return $this->getKey('additional_javascript');
     }
 
     public function getTrackingCodeInsideHead(): string
     {
-        return app(SettingCache::class)->remember('tracking_code_inside_head', function () {
-            return Setting::key('tracking_code_inside_head')->value('value') ?? "";
-        });
+        return $this->getKey('tracking_code_inside_head');
     }
 
     public function getTrackingCodeAfterBody(): string
     {
-        return app(SettingCache::class)->remember('tracking_code_after_body', function () {
-            return Setting::key('tracking_code_after_body')->value('value') ?? "";
-        });
+        return $this->getKey('tracking_code_after_body');
     }
 
     public function getTrackingCodeBeforeBody(): string
     {
-        return app(SettingCache::class)->remember('tracking_code_before_body', function () {
-            return Setting::key('tracking_code_before_body')->value('value') ?? "";
-        });
+        return $this->getKey('tracking_code_before_body');
     }
 
     private function getSettingsByGroup(
@@ -294,58 +287,44 @@ class SettingService
         });
     }
 
-    private function renderFontSizes(): string
+    public function getThemeFontSizes(): array
     {
-        $settings = Setting::where('group', 'font_size')
+        return array_merge(
+            config('constants.theme_font_sizes'),
+            Setting::where('group', 'font_size')
                 ->get(['key', 'value'])
                 ->mapWithKeys(function ($setting) {
                     return [$setting->key => CssUnitConverter::pxToEm($setting->value ?? 0)];
                 })
-                ->all();
-
-        return view('theme_options.font_size_sass', array_merge(
-            config('constants.theme_font_sizes'),
-            $settings
-        ))->render();
+                ->all()
+        );
     }
 
-    public function generateVariablesSass()
+    public function getThemeColors(): array
     {
-        $variablesSass = view('theme_options.colors_sass', array_merge(
+        return array_merge(
             config('constants.theme_colors'),
             Setting::where('group', 'theme_color')
                 ->get(['key', 'value'])
                 ->pluck('value', 'key')
                 ->all()
-        ));
-
-        $disk = Storage::build([
-            'driver' => 'local',
-            'root' => storage_path('theme/sass'),
-        ]);
-
-        $disk->put('variables.sass', $variablesSass);
-
-        $stylesAfterApp = view('theme_options.font_sass',
-            Setting::where('group', 'font')
-                ->get(['key', 'value'])
-                ->pluck('value', 'key')
-                ->map(function($value) {
-                    return json_decode($value);
-                })
-                ->all()
-        )->render();
-
-        $stylesAfterApp .= $this->renderFontSizes();
-
-        $disk->put('styles_after.sass', $stylesAfterApp);
+        );
     }
 
-    public function getHomePage()
+    public function getThemeFonts(): array
     {
-        return app(SettingCache::class)->remember('home_page', function () {
-            return Setting::key('home_page')->value('value') ?? "";
-        });
+        return Setting::where('group', 'font')
+            ->get(['key', 'value'])
+            ->pluck('value', 'key')
+            ->map(function($value) {
+                return json_decode($value);
+            })
+            ->all();
+    }
+
+    public function getHomePage(): string
+    {
+        return $this->getKey('home_page');
     }
 
     public function qrCodePublicPageIsDisplayed(): bool
@@ -416,82 +395,14 @@ class SettingService
         return $mediaId ? Media::find($mediaId) : null;
     }
 
-    public function generateThemeCss()
-    {
-        $activeTheme = Theme::active();
-
-        Artisan::call('webpack:theme-sass', [
-            'theme' => $activeTheme,
-        ]);
-    }
-
-    private function uploadThemeCssToCloudStorage(
-        string $cssFileName,
-        string $folderPrefix = null
-    ): MediaAsset {
-
-        $fileName = "theme/css/$cssFileName.css";
-        $filePath = storage_path($fileName);
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-
-        $file = new UploadedFile(
-            $filePath,
-            $fileName,
-            $finfo->file($filePath),
-            filesize($filePath),
-            0,
-            false
-        );
-
-        $storage = new CloudinaryStorage();
-
-        $folder = "assets";
-
-        if ($folderPrefix) {
-            $folder = $folderPrefix.'_'.$folder;
-        }
-
-        return $storage->upload(
-            $file,
-            "$cssFileName.css",
-            "css",
-            $folder
-        );
-    }
-
-    public function uploadThemeCssFrontend(string $folderPrefix = null): MediaAsset
-    {
-        return $this->uploadThemeCssToCloudStorage('app', $folderPrefix);
-    }
-
-    public function uploadThemeCssBackend(string $folderPrefix = null): MediaAsset
-    {
-        return $this->uploadThemeCssToCloudStorage('app_backend', $folderPrefix);
-    }
-
-    private function saveCssUrl(string $url, string $key): bool
-    {
-        $setting = Setting::firstOrNew(['key' => $key]);
-        $setting->value = $url;
-
-        return $setting->save();
-    }
-
     public function saveCssUrlFrontend(string $url): bool
     {
-        return $this->saveCssUrl($url, 'url_css');
+        return $this->saveKey('url_css', $url);
     }
 
     public function saveCssUrlBackend(string $url): bool
     {
-        return $this->saveCssUrl($url, 'url_css_backend');
-    }
-
-    public function clearStorageTheme(): bool
-    {
-        $file = new Filesystem;
-
-        return $file->cleanDirectory(storage_path('theme'));
+        return $this->saveKey('url_css_backend', $url);
     }
 
     public function getSocialiteDrivers(): ?array
@@ -520,11 +431,7 @@ class SettingService
 
     public function getGoogleApi(): string
     {
-        return app(SettingCache::class)->remember('google_api_key', function () {
-            $googleApi = Setting::key('google_api_key')->value('value');
-
-            return $googleApi ?? "";
-        });
+        return $this->getKey('google_api_key');
     }
 
     public function getRecaptchaKeys(): array
@@ -536,11 +443,7 @@ class SettingService
 
     public function getIpRegistryApi(): string
     {
-        return app(SettingCache::class)->remember('ipregistry_api_key', function () {
-            $ipRegistryApi = Setting::key('ipregistry_api_key')->value('value');
-
-            return $ipRegistryApi ?? "";
-        });
+        return $this->getKey('ipregistry_api_key');
     }
 
     public function getOAuthFacebookKeys(): array
@@ -573,11 +476,7 @@ class SettingService
 
     public function getTinyMCEKey(): string
     {
-        return app(SettingCache::class)->remember('tinymce_api_key', function () {
-            $ipRegistryApi = Setting::key('tinymce_api_key')->value('value');
-
-            return $ipRegistryApi ?? "";
-        });
+        return $this->getKey('tinymce_api_key');
     }
 
     private function getKeysByGroup(string $group): array
@@ -606,5 +505,15 @@ class SettingService
         }
 
         return true;
+    }
+
+    public function saveQrcodeLogo(?int $mediaId)
+    {
+        $this->saveKey('qrcode_public_page_logo_media_id', $mediaId);
+    }
+
+    public function saveFavicon(?int $mediaId)
+    {
+        $this->saveKey('favicon_media_id', $mediaId);
     }
 }
