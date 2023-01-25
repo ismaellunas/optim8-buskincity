@@ -283,8 +283,11 @@ class FormBuilderService
         return $values;
     }
 
-    public function swapTagWithEntryValue(FormEntry $entry, string $value = null): ?string
-    {
+    public function swapTagWithEntryValue(
+        FormEntry $entry,
+        string $value = null,
+        string $defaultValue = null,
+    ): ?string {
         $swapLists = [];
 
         $allFields = $entry->form->getFields();
@@ -294,7 +297,13 @@ class FormBuilderService
             $swapLists['{'.$key.'}'] = $entryValue;
         }
 
-        return Str::swap($swapLists, $value);
+        $value = Str::swap($swapLists, $value);
+
+        if (!$value || $value == "") {
+            return $defaultValue;
+        }
+
+        return $value;
     }
 
     public function getDisplayValues(Collection $fields, FormEntry $entry): array
