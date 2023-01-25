@@ -125,7 +125,6 @@ return [
     'widget_cache' => [
         'post' => 'widget_post',
         'user' => 'widget_user',
-        'performer_application_link' => 'widget_performer_application_link',
     ],
 
     'throttle' => [
