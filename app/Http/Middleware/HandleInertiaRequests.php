@@ -87,7 +87,7 @@ class HandleInertiaRequests extends Middleware
             'defaultLanguage' => defaultLocale(),
             'languageOptions' => app(TranslationSv::class)->getLocaleOptions(),
             'css.frontend' => [
-                'app' => SettingService::getFrontendCssUrl(),
+                'app' => app(SettingService::class)->getFrontendCssUrl(),
             ],
             'user' => function () use ($sharedUserData) {
                 return $this->removeSensitiveDataExposure($sharedUserData);
