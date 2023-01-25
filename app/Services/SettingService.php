@@ -25,19 +25,29 @@ use \finfo;
 
 class SettingService
 {
-    public static function getFrontendCssUrl(): string
+    private static function getSetting(string $key): string
     {
-        $urlCss = app(SettingCache::class)->remember('url_css', function () {
-            return Setting::key('url_css')->value('value') ?? "";
+        return app(SettingCache::class)->remember($key, function () use ($key) {
+            return Setting::key($key)->value('value') ?? "";
         });
+    }
 
-        if (!empty($urlCss)) {
-            return $urlCss;
-        } else {
-            $activeTheme = Theme::active();
+    public function getFrontendCssUrl(): string
+    {
+        $urlCss = $this->getSetting('url_css');
 
-            return mix('css/app.css', 'themes/'.$activeTheme)->toHtml();
-        }
+        return empty($urlCss)
+            ? mix('css/app.css', 'themes/'.Theme::active())->toHtml()
+            : $urlCss;
+    }
+
+    public function getBackendCssUrl(): string
+    {
+        $urlCss = $this->getSetting('url_css_backend');
+
+        return empty($urlCss)
+            ? mix('css/app.css')->toHtml()
+            : $urlCss;
     }
 
     public static function getAdditionalCss(): string
@@ -415,17 +425,20 @@ class SettingService
         ]);
     }
 
-    public function uploadThemeCssToCloudStorage(string $folderPrefix = null): MediaAsset
-    {
-        $file_name = 'theme/css/app.css';
-        $file_path = storage_path($file_name);
+    private function uploadThemeCssToCloudStorage(
+        string $cssFileName,
+        string $folderPrefix = null
+    ): MediaAsset {
+
+        $fileName = "theme/css/$cssFileName.css";
+        $filePath = storage_path($fileName);
         $finfo = new finfo(FILEINFO_MIME_TYPE);
 
         $file = new UploadedFile(
-            $file_path,
-            $file_name,
-            $finfo->file($file_path),
-            filesize($file_path),
+            $filePath,
+            $fileName,
+            $finfo->file($filePath),
+            filesize($filePath),
             0,
             false
         );
@@ -440,17 +453,38 @@ class SettingService
 
         return $storage->upload(
             $file,
-            "app.css",
+            "$cssFileName.css",
             "css",
             $folder
         );
     }
 
-    public function saveCssUrl(string $url): bool
+    public function uploadThemeCssFrontend(string $folderPrefix = null): MediaAsset
     {
-        $setting = Setting::firstOrNew(['key' => 'url_css']);
+        return $this->uploadThemeCssToCloudStorage('app', $folderPrefix);
+    }
+
+    public function uploadThemeCssBackend(string $folderPrefix = null): MediaAsset
+    {
+        return $this->uploadThemeCssToCloudStorage('app_backend', $folderPrefix);
+    }
+
+    private function saveCssUrl(string $url, string $key): bool
+    {
+        $setting = Setting::firstOrNew(['key' => $key]);
         $setting->value = $url;
+
         return $setting->save();
+    }
+
+    public function saveCssUrlFrontend(string $url): bool
+    {
+        return $this->saveCssUrl($url, 'url_css');
+    }
+
+    public function saveCssUrlBackend(string $url): bool
+    {
+        return $this->saveCssUrl($url, 'url_css_backend');
     }
 
     public function clearStorageTheme(): bool

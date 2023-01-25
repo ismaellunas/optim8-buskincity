@@ -14,8 +14,6 @@ class CompileThemeCss implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $settingService;
-
     /**
      * Create a new job instance.
      *
@@ -23,7 +21,6 @@ class CompileThemeCss implements ShouldQueue
      */
     public function __construct()
     {
-        $this->settingService = app(SettingService::class);
     }
 
     /**
@@ -31,20 +28,22 @@ class CompileThemeCss implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(SettingService $settingService)
     {
-        $this->settingService->generateVariablesSass();
+        $settingService->generateVariablesSass();
 
-        $this->settingService->generateThemeCss();
+        $settingService->generateThemeCss();
 
-        $asset = $this->settingService->uploadThemeCssToCloudStorage(
-            !App::environment('production')
+        $folderPrefix = !App::environment('production')
             ? config('app.env')
-            : null
-        );
+            : null;
 
-        $this->settingService->saveCssUrl($asset->fileUrl);
+        $assetFrontend = $settingService->uploadThemeCssFrontend($folderPrefix);
+        $settingService->saveCssUrlFrontend($assetFrontend->fileUrl);
 
-        $this->settingService->clearStorageTheme();
+        $assetBackend = $settingService->uploadThemeCssBackend($folderPrefix);
+        $settingService->saveCssUrlBackend($assetBackend->fileUrl);
+
+        $settingService->clearStorageTheme();
     }
 }
