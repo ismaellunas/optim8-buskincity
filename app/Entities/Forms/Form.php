@@ -14,11 +14,8 @@ class Form
     public $fields;
     public $id;
     public $locations;
-    public $model;
     public $name;
     public $order;
-    public $routeName;
-    public $title;
     public $visibility;
 
     public ?User $author = null;
