@@ -65,7 +65,7 @@ class ThemeFooterController extends CrudController
         $menu = Menu::firstOrCreate([
             'type' => Menu::TYPE_SOCIAL_MEDIA,
         ], [
-            'locale' => TranslationService::getDefaultLocale(),
+            'locale' => defaultLocale(),
             'type' => Menu::TYPE_SOCIAL_MEDIA,
         ]);
 

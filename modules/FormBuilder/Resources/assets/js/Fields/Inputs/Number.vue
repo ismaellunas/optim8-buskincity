@@ -6,20 +6,20 @@
         />
         <form-number
             v-model="value"
-            :label="entity.label"
-            :required="entity.validation.rules.required"
-            :disabled="entity.disabled"
-            :readonly="entity.readonly"
-            :placeholder="entity.placeholder"
+            :label="modelValue.label"
+            :required="modelValue.validation.rules.required"
+            :disabled="modelValue.disabled"
+            :readonly="modelValue.readonly"
+            :placeholder="modelValue.placeholder"
         >
             <template
-                v-if="entity.note"
+                v-if="modelValue.note"
                 #note
             >
                 <p
                     class="help"
                 >
-                    {{ entity.note }}
+                    {{ modelValue.note }}
                 </p>
             </template>
         </form-number>
@@ -31,10 +31,9 @@
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import FormNumber from '@/Biz/Form/Number';
-    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'Number',
+        name: 'InputNumber',
 
         components: {
             BizToolbarContent,
@@ -49,12 +48,6 @@
         props: {
             id: { type: String, required: true },
             modelValue: { type: Object, required: true },
-        },
-
-        setup(props, { emit }) {
-            return {
-                entity: useModelWrapper(props, emit),
-            };
         },
 
         data() {

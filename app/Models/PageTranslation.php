@@ -14,9 +14,8 @@ use App\Traits\HasLocale;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class PageTranslation extends Model implements PublishableInterface
+class PageTranslation extends BaseModel implements PublishableInterface
 {
     use HasFactory;
     use HasLocale;
@@ -235,6 +234,11 @@ class PageTranslation extends Model implements PublishableInterface
     public function getIsDraftAttribute(): bool
     {
         return $this->status == PageTranslation::STATUS_DRAFT;
+    }
+
+    public function getIsPublishedAttribute(): bool
+    {
+        return $this->status == PageTranslation::STATUS_PUBLISHED;
     }
 
     public function getIsLayoutNoHeaderAndFooterAttribute(): string

@@ -3,48 +3,45 @@
 namespace App\Jobs;
 
 use App\Services\SettingService;
+use App\Services\ThemeService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\App;
+use \Exception;
 
 class CompileThemeCss implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    private $settingService;
-
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->settingService = app(SettingService::class);
-    }
 
     /**
      * Execute the job.
      *
      * @return void
      */
-    public function handle()
-    {
-        $this->settingService->generateVariablesSass();
+    public function handle(
+        ThemeService $themeService,
+        SettingService $settingService
+    ) {
+        try {
+            $themeService->generateVariablesSass();
 
-        $this->settingService->generateThemeCss();
+            $themeService->generateCss();
 
-        $asset = $this->settingService->uploadThemeCssToCloudStorage(
-            !App::environment('production')
-            ? config('app.env')
-            : null
-        );
+            $uploadedCssFrontend = $themeService->uploadCssFrontend();
+            $uploadedCssBackend = $themeService->uploadCssBackend();
 
-        $this->settingService->saveCssUrl($asset->fileUrl);
+            $settingService->saveCssUrlFrontend($uploadedCssFrontend->fileUrl);
+            $settingService->saveCssUrlBackend($uploadedCssBackend->fileUrl);
 
-        $this->settingService->clearStorageTheme();
+        } catch (Exception $e) {
+
+            throw $e;
+
+        } finally {
+
+            $themeService->clearStorageTheme();
+        }
     }
 }

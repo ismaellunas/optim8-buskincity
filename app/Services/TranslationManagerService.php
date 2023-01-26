@@ -16,7 +16,7 @@ class TranslationManagerService
     ): LengthAwarePaginator {
 
         if (!$locale) {
-            $locale = TranslationService::getDefaultLocale();
+            $locale = defaultLocale();
         }
 
         $groupAndKeys = $this->getGroupAndKeys($groups, $term);

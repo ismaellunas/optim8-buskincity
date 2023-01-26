@@ -17,7 +17,7 @@ abstract class TranslatableField extends BaseField
     {
         parent::__construct($name, $data);
 
-        $this->defaultLocale = TranslationService::getDefaultLocale();
+        $this->defaultLocale = defaultLocale();
         $this->locales = app(TranslationService::class)->getLocales();
     }
 

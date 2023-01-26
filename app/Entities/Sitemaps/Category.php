@@ -6,7 +6,6 @@ use App\Contracts\SitemapInterface;
 use App\Models\Category as CategoryModel;
 use App\Models\CategoryTranslation;
 use App\Models\Post;
-use App\Services\TranslationService;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -55,7 +54,7 @@ class Category extends BaseSitemap implements SitemapInterface
     {
         $lastmod = Carbon::today();
         $latestCategoryTranslation = $this->getCategoryTranslation($this->locale)
-            ?? $this->getCategoryTranslation(TranslationService::getDefaultLocale())
+            ?? $this->getCategoryTranslation(defaultLocale())
             ?? $this->getCategoryTranslation();
 
         if ($latestCategoryTranslation) {

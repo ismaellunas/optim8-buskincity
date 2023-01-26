@@ -119,9 +119,6 @@ class FormBuilderController extends CrudController
 
     public function entries(Request $request, Form $formBuilder)
     {
-        $allFields = $this->formBuilderService
-            ->getAllFields($formBuilder->fieldGroups);
-
         return Inertia::render('FormBuilder::Entries', $this->getData([
             'title' => $this->title . ' Entries - ' . $formBuilder->name,
             'formBuilder' => $formBuilder,
@@ -130,13 +127,8 @@ class FormBuilderController extends CrudController
                 $request->term,
                 $this->recordsPerPage,
             ),
-            'fieldLabels' => $this->formBuilderService->getFieldLabels(
-                $allFields
-            ),
-            'fieldNames' => $this->formBuilderService->getDataFromFields(
-                $allFields,
-                'name'
-            ),
+            'fieldLabels' => $formBuilder->getFieldLabels(),
+            'fieldNames' => $formBuilder->getFieldNames(),
         ]));
     }
 
@@ -144,20 +136,15 @@ class FormBuilderController extends CrudController
     {
         $user = auth()->user();
 
-        $allFields = $this->formBuilderService
-            ->getAllFields($formBuilder->fieldGroups);
-
         return Inertia::render('FormBuilder::EntryDetail', $this->getData([
             'title' => $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $entry->id,
             'formBuilder' => $formBuilder,
             'entry' => $this->formBuilderService->transformEntry($entry),
             'entryDisplay' => $this->formBuilderService->getDisplayValues(
-                $allFields,
+                $formBuilder->getFields(),
                 $entry,
             ),
-            'fieldLabels' => $this->formBuilderService->getFieldLabelAndNames(
-                $allFields
-            ),
+            'fieldLabels' => $formBuilder->getFieldLabelAndNames(),
             'can' => [
                 'user' => [
                     'edit' => $user->can('user.edit'),

@@ -30,6 +30,7 @@ class SpaceServiceProvider extends ServiceProvider
 
     public $singletons = [
         PageService::class => PageService::class,
+        PageSpaceService::class => PageSpaceService::class,
     ];
 
     public function boot()
@@ -55,10 +56,6 @@ class SpaceServiceProvider extends ServiceProvider
 
         $this->app->singleton(SpaceService::class, function ($app) {
             return new SpaceService($app->make(MediaService::class));
-        });
-
-        $this->app->singleton(PageSpaceService::class, function ($app) {
-            return new PageSpaceService();
         });
     }
 

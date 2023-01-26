@@ -125,9 +125,7 @@ class MenuService
                 $menus = $this->getStructuredHeaderMenu($locale);
 
                 if ($menus->isEmpty()) {
-                    $menus = $this->getStructuredHeaderMenu(
-                        TranslationService::getDefaultLocale()
-                    );
+                    $menus = $this->getStructuredHeaderMenu(defaultLocale());
                 }
 
                 return $this->frontendMenuArrayFormater($menus);
@@ -225,9 +223,7 @@ class MenuService
                 $menus = $this->getStructuredFooterMenu($locale);
 
                 if ($menus->isEmpty()) {
-                    $menus = $this->getStructuredFooterMenu(
-                        TranslationService::getDefaultLocale()
-                    );
+                    $menus = $this->getStructuredFooterMenu(defaultLocale());
                 }
 
                 return $this->frontendMenuArrayFormater($menus);

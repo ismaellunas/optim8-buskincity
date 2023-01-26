@@ -26,12 +26,12 @@ if (theme) {
         ])
         */
         .sass('resources/sass/app.sass', 'public/css')
-        .css('resources/css/template.css', 'public/css')
         .js(['resources/js/bulma.js'], 'public/js/frontend-misc.js')
         .alias({
             '@booking': path.join(__dirname, 'modules/Booking/Resources/assets/js'),
             '@formbuilder': path.join(__dirname, 'modules/FormBuilder/Resources/assets/js'),
             '@mod': path.join(__dirname, 'modules'),
+            '@sass': path.join(__dirname, 'resources/sass'),
             '@': path.join(__dirname, 'resources/js')
         });
 

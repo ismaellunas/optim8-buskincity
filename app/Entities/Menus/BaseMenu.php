@@ -3,7 +3,6 @@
 namespace App\Entities\Menus;
 
 use App\Models\MenuItem;
-use App\Services\TranslationService;
 use App\Services\LoginService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -33,7 +32,7 @@ abstract class BaseMenu
     public function __construct($menuItem, $locale)
     {
         $this->locale = $locale;
-        $this->currentLocale = TranslationService::currentLanguage();
+        $this->currentLocale = currentLocale();
         $this->menuItem = $menuItem;
 
         foreach ($menuItem->getAttributes() as $attribute => $value) {

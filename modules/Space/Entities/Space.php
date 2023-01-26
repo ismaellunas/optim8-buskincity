@@ -2,21 +2,22 @@
 
 namespace Modules\Space\Entities;
 
+use App\Models\BaseModel;
 use App\Models\GlobalOption;
 use App\Models\Media;
 use App\Models\MenuItem;
-use App\Models\PageTranslation;
 use App\Models\User;
 use App\Services\TranslationService;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Space\Entities\Page;
+use Modules\Space\Entities\PageTranslation;
 
-class Space extends Model implements TranslatableContract
+class Space extends BaseModel implements TranslatableContract
 {
     use HasFactory;
     use NodeTrait;
@@ -92,6 +93,69 @@ class Space extends Model implements TranslatableContract
     public function menuItems()
     {
         return $this->morphMany(MenuItem::class, 'menu_itemable');
+    }
+
+    public function pageTranslations()
+    {
+        return $this->hasManyThrough(
+            PageTranslation::class,
+            Page::class,
+            'id',
+            'page_id',
+            'page_id',
+            'id'
+        );
+    }
+
+    public function scopeIsPageEnabled($query, bool $isEnabled = true)
+    {
+        return $query->where('is_page_enabled', $isEnabled);
+    }
+
+    public function scopeWithStructuredUrl($query, array $locales = [])
+    {
+        $pageTable = PageTranslation::getTableName();
+        $spaceTable = Space::getTableName();
+
+        $tableColumns = [
+            'space' => collect(['id', 'page_id', '_lft', '_rgt', 'parent_id', 'is_page_enabled', 'type_id', 'updated_at'])
+                ->map(fn ($column) => $spaceTable.'.'.$column)->all(),
+            'pageTranslations' => collect(['id', 'page_id', 'locale', 'status', 'slug', 'unique_key'])
+                ->map(fn ($column) => $pageTable.'.'.$column)->all(),
+        ];
+
+        $query->with([
+            'page' => function ($query) use ($locales, $tableColumns) {
+                $query->select('id', 'type');
+                $query->with('translations', function ($query) use ($locales, $tableColumns) {
+                    $columns = collect(['id', 'page_id', 'locale', 'status', 'updated_at']);
+                    $query->select($columns->map(fn ($column) => PageTranslation::getTableName().'.'.$column)->all());
+                    if ($locales) {
+                        $query->inLanguages($locales);
+                    }
+                    $query->with('space', function ($query) use ($locales, $tableColumns) {
+                        $query->select($tableColumns['space']);
+                        $query->with([
+                            'pageTranslations' => function ($query) use ($locales, $tableColumns) {
+                                $query->select($tableColumns['pageTranslations']);
+                                if ($locales) {
+                                    $query->inLanguages($locales);
+                                }
+                            },
+                            'ancestors' => function ($query) use ($locales, $tableColumns) {
+                                $query->select($tableColumns['space']);
+                                $query->with('pageTranslations', function ($query) use ($locales, $tableColumns) {
+                                    $query->select($tableColumns['pageTranslations']);
+                                    if ($locales) {
+                                        $query->inLanguages($locales);
+                                    }
+                                });
+                            },
+                        ]);
+                    });
+                });
+            },
+        ]);
     }
 
     public function getLogoUrlAttribute(): ?string

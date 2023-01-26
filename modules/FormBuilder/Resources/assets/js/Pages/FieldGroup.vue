@@ -57,6 +57,7 @@
     import FileDragDrop from './../Fields/Inputs/FileDragDrop';
     import Number from './../Fields/Inputs/Number';
     import Phone from './../Fields/Inputs/Phone';
+    import Postcode from './../Fields/Inputs/Postcode';
     import Select from './../Fields/Inputs/Select';
     import Text from './../Fields/Inputs/Text';
     import Textarea from './../Fields/Inputs/Textarea';
@@ -76,6 +77,7 @@
             FileDragDrop,
             Number,
             Phone,
+            Postcode,
             Select,
             Text,
             Textarea,

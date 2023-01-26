@@ -8,7 +8,8 @@ module.exports = (env) => {
   return {
     mode: 'production',
     entry: {
-        "app": theme ? './themes/'+theme+'/sass/theme_app.sass' : './resources/sass/theme_app.sass',
+        "app": './themes/'+theme+'/sass/theme_app.sass',
+        "app_backend": './resources/sass/theme_app.sass',
     },
     output: {
       path: path.resolve(__dirname, 'storage/theme/css'),
@@ -17,6 +18,7 @@ module.exports = (env) => {
     resolve: {
         alias: {
           '@sass': path.resolve(__dirname, 'resources/sass'),
+          '@mod': path.join(__dirname, 'modules'),
         }
     },
     module: {

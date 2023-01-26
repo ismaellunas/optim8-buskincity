@@ -23,7 +23,7 @@ class Header extends Component
     {
         $menuService = app(MenuService::class);
         $settingService = app(SettingService::class);
-        $currentLanguage = TranslationService::currentLanguage();
+        $currentLanguage = currentLocale();
 
         $this->logoUrl = $logoUrl !== "" ? $logoUrl : null;
         $this->currentLanguage = $currentLanguage;

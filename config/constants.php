@@ -122,11 +122,6 @@ return [
         'shown_language_option' => 'shown_language_option',
         'supported_languages' => 'supported_languages',
     ],
-    'widget_cache' => [
-        'post' => 'widget_post',
-        'user' => 'widget_user',
-        'performer_application_link' => 'widget_performer_application_link',
-    ],
 
     'throttle' => [
         'default' => 5,
