@@ -26,7 +26,6 @@ if (theme) {
         ])
         */
         .sass('resources/sass/app.sass', 'public/css')
-        .css('resources/css/template.css', 'public/css')
         .js(['resources/js/bulma.js'], 'public/js/frontend-misc.js')
         .alias({
             '@booking': path.join(__dirname, 'modules/Booking/Resources/assets/js'),
