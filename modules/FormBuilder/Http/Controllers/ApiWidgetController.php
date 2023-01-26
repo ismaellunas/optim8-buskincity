@@ -17,22 +17,14 @@ class ApiWidgetController extends Controller
 
     public function getEntries(Form $formBuilder)
     {
-        $allFields = $this->formBuilderService
-            ->getAllFields($formBuilder->fieldGroups);
-
         $fieldLabels = collect(
-                $this->formBuilderService->getFieldLabels(
-                    $allFields,
-                )
+                $formBuilder->getFieldLabels()
             )
             ->slice(0, 3)
             ->all();
 
         $fieldNames = collect(
-                $this->formBuilderService->getDataFromFields(
-                    $allFields,
-                    'name'
-                )
+                $formBuilder->getFieldNames()
             )
             ->slice(0, 3)
             ->all();

@@ -38,11 +38,6 @@ class WidgetService
         return $widgets->all();
     }
 
-    public function getWidgetName(string $widgetName): ?string
-    {
-        return config("constants.widget_cache.{$widgetName}");
-    }
-
     protected function moduleWidgets(): array
     {
         $modules = app(ModuleService::class)->getAllEnabledNames();
