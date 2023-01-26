@@ -7,20 +7,20 @@
         <form-input
             v-model="value"
             type="email"
-            :label="entity.label"
-            :required="entity.validation.rules.required"
-            :disabled="entity.disabled"
-            :readonly="entity.readonly"
-            :placeholder="entity.placeholder"
+            :label="modelValue.label"
+            :required="modelValue.validation.rules.required"
+            :disabled="modelValue.disabled"
+            :readonly="modelValue.readonly"
+            :placeholder="modelValue.placeholder"
         >
             <template
-                v-if="entity.note"
+                v-if="modelValue.note"
                 #note
             >
                 <p
                     class="help"
                 >
-                    {{ entity.note }}
+                    {{ modelValue.note }}
                 </p>
             </template>
         </form-input>
@@ -32,10 +32,9 @@
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import FormInput from '@/Biz/Form/Input';
-    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'Email',
+        name: 'InputEmail',
 
         components: {
             BizToolbarContent,
@@ -50,12 +49,6 @@
         props: {
             id: { type: String, required: true },
             modelValue: { type: Object, required: true },
-        },
-
-        setup(props, { emit }) {
-            return {
-                entity: useModelWrapper(props, emit),
-            };
         },
 
         data() {

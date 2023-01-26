@@ -8,7 +8,7 @@ use App\Entities\Sitemaps\UrlTag;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Modules\Space\Entities\PageTranslation;
+use Modules\Space\Entities\Space;
 
 class Sitemap extends BaseSitemap implements SitemapInterface
 {
@@ -22,57 +22,60 @@ class Sitemap extends BaseSitemap implements SitemapInterface
 
     public function urls(): array|Collection
     {
-        $urls = $this->getEloquentBuilder()
+        $urls = $this
+            ->getEloquentBuilder()
             ->get()
-            ->map(function ($pageTranslation) {
-                return $this->createUrlTag($pageTranslation);
+            ->map(function ($space) {
+                return new UrlTag(
+                    $this->locationUrl($space->pageLocalizeURL($this->locale)),
+                    ['lastmod' => $this->lastMod($space)]
+                );
             })
-            ->filter();
+            ->filter()
+            ->sortBy('loc');
 
         return $urls;
     }
 
-    public function optionalTags(): array
+    private function lastMod(Space $space): Carbon
     {
-        $lastmod = Carbon::today();
-        $latestPageTranslation = $this->getEloquentBuilder()
-            ->orderBy('updated_at', 'desc')
-            ->first();
+        $modifications = collect([
+            $space->updated_at,
+            $space->translations->max('updated_at') ?? null,
+        ]);
 
-        if ($latestPageTranslation) {
-            $lastmod = $latestPageTranslation->updated_at;
-        }
-
-        return array_merge(
-            parent::optionalTags(),
-            [
-                'lastmod' => $lastmod,
-            ]
+        $translationsMod = (
+            $space->page->translations->firstWhere('locale', $this->locale)
+            ?? $space->page->translations->firstWhere('locale', defaultLocale())
         );
+
+        $modifications->push($translationsMod->updated_at);
+
+        return $modifications
+            ->filter()
+            ->max();
     }
 
     private function getEloquentBuilder(): Builder
     {
-        return PageTranslation::select([
-                'slug',
-                'unique_key',
-                'updated_at',
-                'page_id',
-                'locale',
-            ])
-            ->with(['page'])
-            ->whereHas('page.space', function ($query) {
-                $query->where('is_page_enabled', true);
-            })
-            ->inLanguages([$this->locale])
-            ->published();
-    }
+        $locales = collect([$this->locale, defaultLocale()])->unique()->all();
 
-    private function createUrlTag(PageTranslation $pageTranslation): UrlTag
-    {
-        return new UrlTag(
-            $this->locationUrl($pageTranslation->landingPageSpaceUrl),
-            ['lastmod' => $pageTranslation->updated_at]
-        );
+        return Space::isPageEnabled()
+            ->whereHas('pageTranslations', function ($query) use ($locales) {
+                foreach ($locales as $key => $locale) {
+                    $methodName = ($key == 0) ? 'where' : 'orWhere';
+
+                    $query->$methodName(function ($query) use ($locale) {
+                        $query->where('locale', $locale);
+                        $query->published();
+                    });
+                }
+            })
+            ->withStructuredUrl($locales)
+            ->with([
+                'translations' => function ($query) {
+                    $query->select('id', 'space_id', 'locale', 'updated_at');
+                },
+            ]);
     }
 }

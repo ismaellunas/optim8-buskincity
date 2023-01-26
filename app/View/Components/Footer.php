@@ -2,10 +2,7 @@
 
 namespace App\View\Components;
 
-use App\Services\{
-    MenuService,
-    TranslationService,
-};
+use App\Services\MenuService;
 use Illuminate\View\Component;
 
 class Footer extends Component
@@ -17,7 +14,6 @@ class Footer extends Component
     public function __construct($logoUrl)
     {
         $menuService = app(MenuService::class);
-        $currentLanguage = TranslationService::currentLanguage();
 
         $this->logoUrl = $logoUrl !== "" ? $logoUrl : null;
         $this->menus = $menuService->getFrontendUserFooterMenus(request()) ?? [];

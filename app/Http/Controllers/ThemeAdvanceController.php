@@ -9,11 +9,11 @@ use App\Actions\{
 use App\Entities\CloudinaryStorage;
 use App\Helpers\HumanReadable;
 use App\Http\Requests\ThemeAdvanceRequest;
-use App\Models\Setting;
 use App\Services\{
     MediaService,
     MenuService,
     SettingService,
+    ThemeService,
 };
 use Inertia\Inertia;
 
@@ -22,17 +22,21 @@ class ThemeAdvanceController extends CrudController
     protected $baseRouteName = 'admin.theme.advance';
     protected $title = 'Advanced';
 
-    private $settingService;
+    private $mediaService;
     private $menuService;
+    private $settingService;
+    private $themeService;
 
     public function __construct(
         SettingService $settingService,
         MediaService $mediaService,
-        MenuService $menuService
+        MenuService $menuService,
+        ThemeService $themeService
     ) {
         $this->settingService = $settingService;
         $this->mediaService = $mediaService;
         $this->menuService = $menuService;
+        $this->themeService = $themeService;
     }
 
     public function edit()
@@ -94,10 +98,7 @@ class ThemeAdvanceController extends CrudController
 
                         $media = $uploadQrCodeLogo->handle($inputs, $key);
 
-                        $this->syncSetting(
-                            'qrcode_public_page_logo_media_id',
-                            $media->id
-                        );
+                        $this->settingService->saveQrcodeLogo($media->id);
                     }
                 break;
 
@@ -109,7 +110,7 @@ class ThemeAdvanceController extends CrudController
 
                         $media = $uploadFavicon->handle($inputs, $key);
 
-                        $this->syncSetting('favicon_media_id', $media->id);
+                        $this->settingService->saveFavicon($media->id);
 
                     } elseif ($inputs['is_favicon_deleted'] && $oldFaviconMedia) {
 
@@ -118,29 +119,20 @@ class ThemeAdvanceController extends CrudController
                             new CloudinaryStorage()
                         );
 
-                        $this->syncSetting('favicon_media_id', null);
+                        $this->settingService->saveFavicon(null);
                     }
                 break;
 
                 default:
-                    $this->syncSetting($key, $code);
+                    $this->settingService->saveKey($key, $code);
                 break;
             }
         }
 
-        $this->settingService->clearStorageTheme();
+        $this->themeService->clearStorageTheme();
 
         $this->generateFlashMessage($this->title.' updated successfully!');
 
         return redirect()->route($this->baseRouteName.'.edit');
-    }
-
-    private function syncSetting($key, $value): void
-    {
-        $setting = Setting::firstOrNew(['key' => $key]);
-
-        $setting->value = $value;
-
-        $setting->save();
     }
 }
