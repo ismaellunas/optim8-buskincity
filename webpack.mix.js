@@ -8,8 +8,10 @@
  | file for the application as well as bundling up all the JS files.
  |
  */
+require('dotenv').config();
 
 let theme = process.env.npm_config_theme;
+let themeActive = process.env.THEME_ACTIVE;
 
 if (theme) {
 
@@ -32,6 +34,7 @@ if (theme) {
             '@formbuilder': path.join(__dirname, 'modules/FormBuilder/Resources/assets/js'),
             '@mod': path.join(__dirname, 'modules'),
             '@sass': path.join(__dirname, 'resources/sass'),
+            '@themeActive': path.join(__dirname, 'themes/'+themeActive),
             '@': path.join(__dirname, 'resources/js')
         });
 
