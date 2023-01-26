@@ -56,10 +56,6 @@
         },
 
         props: {
-            widgets: {
-                type: Array,
-                default:() => [],
-            },
             widgets: { type: Array, default:() => [] },
             moduleWidgets: { type: Array, default:() => [] },
         },
