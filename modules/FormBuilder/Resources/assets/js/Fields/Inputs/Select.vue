@@ -7,13 +7,13 @@
         <form-select
             v-model="value"
             class="is-fullwidth"
-            :label="entity.label"
-            :required="entity.validation.rules.required"
-            :disabled="entity.disabled"
-            :readonly="entity.readonly"
+            :label="modelValue.label"
+            :required="modelValue.validation.rules.required"
+            :disabled="modelValue.disabled"
+            :readonly="modelValue.readonly"
         >
             <template
-                v-for="(option, index) in entity.options"
+                v-for="(option, index) in modelValue.options"
                 :key="index"
             >
                 <option :value="option.id">
@@ -22,13 +22,13 @@
             </template>
 
             <template
-                v-if="entity.note"
+                v-if="modelValue.note"
                 #note
             >
                 <p
                     class="help"
                 >
-                    {{ entity.note }}
+                    {{ modelValue.note }}
                 </p>
             </template>
         </form-select>
@@ -40,10 +40,9 @@
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
     import FormSelect from '@/Biz/Form/Select';
-    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'Select',
+        name: 'InputSelect',
 
         components: {
             BizToolbarContent,
@@ -58,12 +57,6 @@
         props: {
             id: { type: String, required: true },
             modelValue: { type: Object, required: true },
-        },
-
-        setup(props, { emit }) {
-            return {
-                entity: useModelWrapper(props, emit),
-            };
         },
 
         data() {

@@ -392,6 +392,8 @@ class SpaceService
                 'parent_id',
                 'is_page_enabled',
             ])
+            ->withStructuredUrl([currentLocale(), defaultLocale()])
+            ->with(['translations'])
             ->orderBy('name', 'asc')
             ->get();
     }

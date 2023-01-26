@@ -30,6 +30,7 @@ use App\Services\{
     SettingService,
     StripeService,
     StripeSettingService,
+    ThemeService,
     TranslationService,
     WidgetService,
 };
@@ -78,6 +79,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(\App\Services\UserProfileService::class, function ($app) {
             return new \App\Services\UserProfileService();
+        });
+
+        $this->app->singleton(ThemeService::class, function ($app) {
+            return new ThemeService($app->make(SettingService::class));
         });
 
         $this->app->extend(SocialiteFactory::class, function ($command, $app) {

@@ -11,10 +11,7 @@ use App\Http\Requests\{
     MediaUpdateRequest,
 };
 use App\Models\Media;
-use App\Services\{
-    MediaService,
-    TranslationService
-};
+use App\Services\MediaService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -50,7 +47,7 @@ class MediaController extends CrudController
                 'edit' => $user->can('media.edit'),
                 'read' => $user->can('media.read'),
             ],
-            'defaultLocale' => TranslationService::getDefaultLocale(),
+            'defaultLocale' => defaultLocale(),
             'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->all('term', 'view', 'types')),
             'acceptedTypes' => $this->mediaService->getDottedExtensions(),

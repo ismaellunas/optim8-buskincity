@@ -2,8 +2,6 @@
 
 namespace App\View\Components\Form\Fields;
 
-use App\Services\TranslationService;
-
 abstract class TranslatableField extends BaseField
 {
     protected $isTranslated = false;
@@ -27,8 +25,8 @@ abstract class TranslatableField extends BaseField
             return $value;
         }
 
-        $currentLocale = TranslationService::currentLanguage();
-        $userLocale = $this->userLocale ?? TranslationService::getDefaultLocale();
+        $currentLocale = currentLocale();
+        $userLocale = $this->userLocale ?? defaultLocale();
 
         return $value[$currentLocale] ?? $value[$userLocale];
     }

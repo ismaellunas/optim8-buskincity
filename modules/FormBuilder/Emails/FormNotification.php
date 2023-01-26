@@ -40,7 +40,13 @@ class FormNotification extends Mailable
         $entry = $this->entry;
         $setting = $this->setting;
 
-        $fromEmail = $setting->from_email ?? config('formbuilder.default_from_email');
+        $fromEmail = app(FormBuilderService::class)
+            ->swapTagWithEntryValue(
+                $entry,
+                $setting->from_email,
+                config('formbuilder.default_from_email')
+            );
+
         $fromName = app(FormBuilderService::class)
             ->swapTagWithEntryValue(
                 $entry,

@@ -4,11 +4,12 @@
             @delete-content="deleteContent"
             @duplicate-content="duplicateContent"
         />
-        <form-file-upload
+        <form-input
             v-model="value"
             :label="modelValue.label"
             :required="modelValue.validation.rules.required"
-            :disabled="true"
+            :disabled="modelValue.disabled"
+            :readonly="modelValue.readonly"
             :placeholder="modelValue.placeholder"
         >
             <template
@@ -21,7 +22,7 @@
                     {{ modelValue.note }}
                 </p>
             </template>
-        </form-file-upload>
+        </form-input>
     </div>
 </template>
 
@@ -29,14 +30,14 @@
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import FormFileUpload from '@/Biz/Form/FileUpload';
+    import FormInput from '@/Biz/Form/Input';
 
     export default {
-        name: 'InputFileDragDrop',
+        name: 'InputPostcode',
 
         components: {
             BizToolbarContent,
-            FormFileUpload,
+            FormInput,
         },
 
         mixins: [
@@ -51,8 +52,8 @@
 
         data() {
             return {
-                value: [],
+                value: null,
             };
         },
-    }
+    };
 </script>
