@@ -32,6 +32,7 @@ if (theme) {
             '@booking': path.join(__dirname, 'modules/Booking/Resources/assets/js'),
             '@formbuilder': path.join(__dirname, 'modules/FormBuilder/Resources/assets/js'),
             '@mod': path.join(__dirname, 'modules'),
+            '@sass': path.join(__dirname, 'resources/sass'),
             '@': path.join(__dirname, 'resources/js')
         });
 
