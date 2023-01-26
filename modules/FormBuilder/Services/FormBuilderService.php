@@ -100,6 +100,10 @@ class FormBuilderService
 
         $entries = $formBuilder
             ->entries()
+            ->with('metas', function ($query) use ($fieldNames) {
+                $query->whereIn('key', $fieldNames);
+                $query->select('id', 'type', 'key', 'value', 'form_entry_id');
+            })
             ->orderBy('id', 'DESC')
             ->get();
 
