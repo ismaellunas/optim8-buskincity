@@ -43,9 +43,9 @@ class DatabaseSeeder extends Seeder
 
         if (
             class_exists($className)
-            && method_exists($className, 'run')
+            && is_subclass_of($className, '\Illuminate\Database\Seeder')
         ) {
-            (new $className)->run();
+            $this->call([$className]);
         }
     }
 
