@@ -54,11 +54,12 @@
                     <tr>
                         <th>Status</th>
                         <th>Name</th>
-                        <th>Customer Name</th>
+                        <th>User</th>
                         <th>Date</th>
                         <th>Timezone</th>
                         <th>Time</th>
                         <th>Check-In</th>
+                        <th>City</th>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -78,6 +79,7 @@
                         <td>{{ record.timezone }}</td>
                         <td>{{ record.start_end_time }}</td>
                         <td>{{ record.check_in_time }}</td>
+                        <td>{{ record.city }}</td>
                         <td>
                             <div class="level-right">
                                 <div class="buttons">
