@@ -45,7 +45,8 @@ class FormSeeder extends Seeder
                     ],
                 ],
                 "button" => [
-                    "text" => "Update"
+                    "text" => "Update",
+                    "position" => null,
                 ]
             ],
             "fieldGroups" => [
@@ -104,7 +105,8 @@ class FormSeeder extends Seeder
                     ],
                 ],
                 "button" => [
-                    "text" => "Update"
+                    "text" => "Update",
+                    "position" => null,
                 ]
             ],
             "fieldGroups" => [
