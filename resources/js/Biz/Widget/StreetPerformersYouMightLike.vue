@@ -3,7 +3,7 @@
         class="column"
         :class="wrapperClass"
     >
-        <h2 class="title is-4 mt-5">
+        <h2 class="title is-4">
             {{ title }}
         </h2>
         <div class="box is-shadowless">
