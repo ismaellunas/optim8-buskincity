@@ -17,7 +17,6 @@ use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Services\OrderService;
 use Modules\Ecommerce\Services\ProductService;
-use Illuminate\Http\Request;
 
 class OrderController extends CrudController
 {

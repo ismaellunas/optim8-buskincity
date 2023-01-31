@@ -70,21 +70,20 @@ class OrderService
                 'firstEventLine' => function ($query) {
                     $query->with([
                         'latestEvent' => function ($query) {
-                            $query->with('schedule');
+                            $query->select(['id', 'order_line_id', 'schedule_id', 'booked_at', 'duration', 'duration_unit', 'status']);
+                            $query->with('schedule:id,timezone');
                         },
                         'purchasable' => function ($query) {
                             $query->with('product', function ($query) {
                                 $query->select('id', 'product_type_id', 'attribute_data');
+                                $query->with('metas', function ($query) {
+                                    $query->whereIn('key', ['locations']);
+                                });
                             });
                         },
                     ]);
                 },
-                'user' => function ($query) {
-                    $query->select('id', 'email', 'first_name', 'last_name');
-                },
-                'checkIn' => function ($query) {
-                    $query->select('id', 'checked_in_at', 'order_id', 'user_id');
-                },
+                'user:id,email,first_name,last_name',
             ])
             ->select(
                 'id',
@@ -100,7 +99,10 @@ class OrderService
         ?array $scopes = null,
         int $perPage = 15
     ): LengthAwarePaginator {
-        $records = $this->recordBuilder($term, $scopes)->paginate($perPage);
+        $records = $this
+            ->recordBuilder($term, $scopes)
+            ->with('checkIn:id,checked_in_at,order_id,user_id')
+            ->paginate($perPage);
 
         $this->transformRecords($records, $user);
 
@@ -115,6 +117,7 @@ class OrderService
     ): LengthAwarePaginator {
         $records = $this
             ->recordBuilder($term, $scopes)
+            ->with('checkIn:id,checked_in_at,order_id,user_id')
             ->where('user_id', $user->id)
             ->paginate($perPage);
 
@@ -167,6 +170,7 @@ class OrderService
                         ->setTimezone($event->schedule->timezone)
                         ->format('H:i')
                     : null,
+                'city' => $product->locations[0]['city'] ?? null,
                 'can' => [
                     'cancel' => $user->can('cancelBooking', $record),
                     'reschedule' => $user->can('rescheduleBooking', $record),
