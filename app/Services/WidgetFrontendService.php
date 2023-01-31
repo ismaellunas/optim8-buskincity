@@ -13,7 +13,6 @@ class WidgetFrontendService extends WidgetService
             'qrCode',
             'socialMediaShare',
             'stripeConnect',
-            'performer_application_link',
             'upcomingEvents',
             'streetPerformersYouMightLike',
             'wantToBecomeAStreetPerformer',
