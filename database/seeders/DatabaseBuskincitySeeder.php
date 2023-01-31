@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\Buskincity\PerformerApplicationSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseBuskincitySeeder extends Seeder
@@ -14,6 +15,7 @@ class DatabaseBuskincitySeeder extends Seeder
     public function run()
     {
         $this->call([
+            PerformerApplicationSeeder::class,
         ]);
     }
 }
