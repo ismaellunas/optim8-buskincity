@@ -26,10 +26,13 @@
             />
 
             <slot name="buttons">
-                <div class="field">
+                <div
+                    class="field"
+                    :class="containerButtonClasses"
+                >
                     <biz-button class="is-medium is-primary">
                         <span class="has-text-weight-bold">
-                            {{ submitLabel }}
+                            {{ submitButtonText }}
                         </span>
                     </biz-button>
                 </div>
@@ -96,9 +99,17 @@
         },
 
         computed: {
-            submitLabel() {
+            submitButtonText() {
                 return this.formSchema?.button?.text
                     ?? 'Submit';
+            },
+
+            containerButtonClasses() {
+                let classes = [];
+
+                return classes.concat([
+                    (this.formSchema?.button?.position ?? null),
+                ]).filter(Boolean);
             },
 
             isRecaptchaAvailable() {
