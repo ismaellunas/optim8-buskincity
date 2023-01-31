@@ -146,6 +146,10 @@ img {
     width: 650px;
 }
 
+.inner-body table {
+    width: 100%;
+}
+
 /* Subcopy */
 
 .subcopy {
