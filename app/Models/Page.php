@@ -182,4 +182,17 @@ class Page extends Model implements TranslatableContract
 
         return $this->id == $homePageId;
     }
+
+    public function getUrlDefaultLocaleAttribute(): ?string
+    {
+        $pageTranslationSlug = $this->translateOrDefault(defaultLocale())
+            ->slug
+            ?? null;
+
+        if (!$pageTranslationSlug) {
+            return null;
+        }
+
+        return route('frontend.pages.show', $pageTranslationSlug);
+    }
 }
