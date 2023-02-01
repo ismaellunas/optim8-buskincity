@@ -148,7 +148,7 @@ class FormBuilderController extends CrudController
             'title' => $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $entry->id,
             'formBuilder' => $formBuilder,
             'entry' => $this->formBuilderService->transformEntry($entry),
-            'entryDisplay' => $this->formBuilderService->getDisplayValues(
+            'entryDisplay' => $this->formBuilderService->getComponentDisplayValues(
                 $formBuilder->getFields(),
                 $entry,
             ),
