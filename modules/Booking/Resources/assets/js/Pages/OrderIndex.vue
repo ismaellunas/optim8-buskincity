@@ -8,10 +8,13 @@
                 />
             </div>
 
-            <div class="column is-2 is-1-fullhd">
-                <biz-dropdown :close-on-click="false">
+            <div class="column is-2 is-2-fullhd">
+                <biz-dropdown
+                    class="is-fullwidth"
+                    :close-on-click="false"
+                >
                     <template #trigger>
-                        <span>Filter</span>
+                        <span>Status ({{ statuses.length }})</span>
 
                         <span class="icon is-small">
                             <i
@@ -20,10 +23,6 @@
                             />
                         </span>
                     </template>
-
-                    <biz-dropdown-item>
-                        Status
-                    </biz-dropdown-item>
 
                     <biz-dropdown-item
                         v-for="status in statusOptions"
@@ -46,6 +45,34 @@
                     @update:model-value="onDateRangeChanged"
                 />
             </div>
+
+            <div class="column is-3 is-3-fullhd">
+                <biz-dropdown-search
+                    :close-on-click="true"
+                    class="is-fullwidth"
+                    @search="searchCity($event)"
+                >
+                    <template #trigger>
+                        <span>
+                            {{ queryParams.city ?? 'Any' }}
+                        </span>
+                    </template>
+
+                    <biz-dropdown-item
+                        @click="onCityChange()"
+                    >
+                        Any
+                    </biz-dropdown-item>
+
+                    <biz-dropdown-item
+                        v-for="(option, index) in filteredCities"
+                        :key="index"
+                        @click="onCityChange(option)"
+                    >
+                        {{ option }}
+                    </biz-dropdown-item>
+                </biz-dropdown-search>
+            </div>
         </div>
 
         <div class="table-container pb-6">
@@ -54,12 +81,12 @@
                     <tr>
                         <th>Status</th>
                         <th>Name</th>
+                        <th>City</th>
                         <th>User</th>
                         <th>Date</th>
                         <th>Timezone</th>
                         <th>Time</th>
                         <th>Check-In</th>
-                        <th>City</th>
                         <th>
                             <div class="level-right">
                                 Actions
@@ -74,12 +101,12 @@
                     >
                         <td>{{ record.status }}</td>
                         <td>{{ record.product_name }}</td>
+                        <td>{{ record.city }}</td>
                         <td>{{ record.customer_name ?? '-' }}</td>
                         <td>{{ record.date }}</td>
                         <td>{{ record.timezone }}</td>
                         <td>{{ record.start_end_time }}</td>
                         <td>{{ record.check_in_time }}</td>
-                        <td>{{ record.city }}</td>
                         <td>
                             <div class="level-right">
                                 <div class="buttons">
@@ -175,6 +202,7 @@
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizDropdownSearch from '@/Biz/DropdownSearch';
     import BizFilterDateRange from '@/Biz/Filter/DateRange';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
@@ -186,7 +214,8 @@
     import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { isArray, merge } from 'lodash';
+    import { debounceTime } from '@/Libs/defaults';
+    import { debounce, isEmpty, isArray, filter, merge } from 'lodash';
     import { ref } from "vue";
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -197,6 +226,7 @@
             BizCheckbox,
             BizDropdown,
             BizDropdownItem,
+            BizDropdownSearch,
             BizFilterDateRange,
             BizFilterSearch,
             BizIcon,
@@ -219,20 +249,16 @@
             pageQueryParams: { type: Object, default: () => {} },
             records: { type: Object, required: true },
             statusOptions: { type: Object, required: true },
+            cityOptions: { type: Object, required: true },
         },
 
         setup(props) {
-            const queryParams = merge(
-                {},
-                props.pageQueryParams
-            );
-
             const form = {
                 message: null,
             };
 
             return {
-                queryParams: ref(queryParams),
+                queryParams: ref({ ...{}, ...props.pageQueryParams }),
                 dates: ref(isArray(props.pageQueryParams?.dates)
                     ? props.pageQueryParams?.dates.filter(Boolean)
                     : []
@@ -242,6 +268,7 @@
                 form: useForm(form),
                 selectedOrder: ref(null),
                 icon,
+                filteredCities: ref(props.cityOptions.slice(0, 10)),
             };
         },
 
@@ -278,6 +305,11 @@
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
 
+            onCityChange(city = null) {
+                this.queryParams['city'] = city;
+                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
+            },
+
             cancel() {
                 const self = this;
 
@@ -309,6 +341,17 @@
             hasMoreAction(record) {
                 return (record.can.reschedule || record.can.cancel);
             },
+
+            searchCity: debounce(function(term) {
+                if (!isEmpty(term) && term.length > 1) {
+                    this.filteredCities = filter(this.cityOptions, function (city) {
+                        return new RegExp(term, 'i').test(city);
+                    }).slice(0, 10);
+                } else {
+                    this.filteredCities = this.cityOptions.slice(0, 10);
+                }
+            }, debounceTime),
+
         },
     };
 </script>

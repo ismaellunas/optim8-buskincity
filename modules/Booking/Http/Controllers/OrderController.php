@@ -61,6 +61,7 @@ class OrderController extends CrudController
 
         $scopes = [
             'inStatus' => $request->status ?? null,
+            'city' => $request->city ?? null,
         ];
 
         if (is_array($request->dates) && !empty(array_filter($request->dates))) {
@@ -69,12 +70,18 @@ class OrderController extends CrudController
 
         return Inertia::render('Booking::OrderIndex', $this->getData([
             'title' => $this->getIndexTitle(),
-            'pageQueryParams' => array_filter(request()->only('term', 'status', 'dates')),
+            'pageQueryParams' => array_filter($request->only(
+                'city',
+                'dates',
+                'status',
+                'term'
+            )),
             'records' => $this->orderService->getRecords(
                 $user,
-                request()->get('term'),
+                $request->get('term'),
                 $scopes
             ),
+            'cityOptions' => $this->productEventService->getCityOptions(),
             'statusOptions' => BookingStatus::options(),
             'can' => [
                 'read' => $user->can('order.read'),
