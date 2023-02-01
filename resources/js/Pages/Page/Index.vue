@@ -49,7 +49,14 @@
                             :key="page.id"
                         >
                             <th>{{ page.id }}</th>
-                            <td>{{ page.title }}</td>
+                            <td>
+                                <a
+                                    :href="page.urlDefaultLocale"
+                                    target="_blank"
+                                >
+                                    {{ page.title }}
+                                </a>
+                            </td>
                             <td>{{ page.slug }}</td>
                             <td>
                                 <biz-tag :class="statusClass(page.status)">
