@@ -2,8 +2,8 @@
 
 namespace Modules\Booking\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Booking\Http\Requests\LatestBookingWidgetRequest;
 use Modules\Ecommerce\Services\OrderService;
 
 class ApiWidgetController extends Controller
@@ -15,7 +15,7 @@ class ApiWidgetController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function getLatestBookings(Request $request)
+    public function getLatestBookings(LatestBookingWidgetRequest $request)
     {
         $scopes = [
             'inStatus' => $request->status ?? null,
