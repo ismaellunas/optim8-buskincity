@@ -22,6 +22,10 @@ class ApiWidgetController extends Controller
             'city' => $request->city ?? null,
         ];
 
+        if (is_array($request->dates) && !empty(array_filter($request->dates))) {
+            $scopes['dateRange'] = $request->dates;
+        }
+
         return [
             'records' => $this->orderService->getWidgetRecords(
                 auth()->user(),
