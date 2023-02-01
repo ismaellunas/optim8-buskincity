@@ -1,7 +1,15 @@
 <template>
     <tr>
         <th>{{ user.id }}</th>
-        <td>{{ user.full_name }}</td>
+        <td>
+            {{ user.full_name }}<br>
+            <span
+                v-if="user.is_suspended"
+                class="tag is-warning"
+            >
+                Suspended
+            </span>
+        </td>
         <td>{{ user.email }}</td>
         <td>{{ roleName }}</td>
         <td>
