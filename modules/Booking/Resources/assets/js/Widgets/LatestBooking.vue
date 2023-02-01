@@ -91,6 +91,7 @@
                                 v-model="dates"
                                 class="dashboard-widget-datepicker"
                                 input-class-name="input is-small"
+                                max-range="31"
                                 style="width: 210px"
                                 @update:model-value="getRecords()"
                             />
