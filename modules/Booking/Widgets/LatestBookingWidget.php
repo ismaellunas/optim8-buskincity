@@ -3,9 +3,6 @@
 namespace Modules\Booking\Widgets;
 
 use App\Contracts\WidgetInterface;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Modules\Booking\Entities\Event;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Services\ProductEventService;
 
