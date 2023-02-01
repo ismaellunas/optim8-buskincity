@@ -45,6 +45,7 @@ class OrderController extends CrudController
                 'column' => $request->column,
                 'order' => $request->order,
             ],
+            'city' => $request->city ?? null,
         ];
 
         if (is_array($request->dates) && !empty(array_filter($request->dates))) {
@@ -60,13 +61,15 @@ class OrderController extends CrudController
             ),
             'pageQueryParams' => array_filter(
                 $request->only(
-                    'term',
-                    'status',
-                    'dates',
+                    'city',
                     'column',
+                    'dates',
                     'order',
+                    'status',
+                    'term'
                 )
             ),
+            'cityOptions' => $this->productEventService->getCityOptions([$user->id]),
             'statusOptions' => BookingStatus::options(),
         ]));
     }
