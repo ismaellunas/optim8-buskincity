@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\GlobalOptionService;
 use App\Services\MediaService;
 use App\Services\MenuService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
@@ -26,141 +27,106 @@ class SpaceService
         $this->mediaService = $mediaService;
     }
 
-    private function filterRootIds(array $ids)
-    {
-        $spaceIds = collect($ids);
+    public function getRecords(
+        Authenticatable $user,
+        ?array $ids = null,
+        int $perPage = 15
+    ): LengthAwarePaginator {
+        Space::disableAutoloadTranslations();
 
-        foreach ($ids as $spaceId) {
-            $descendantIds = Space::whereDescendantOf($spaceId)
-                ->get('id')
-                ->pluck('id')
-                ->all();
+        $columnNames = ['id', 'name', 'parent_id', 'type_id', '_lft', '_rgt'];
 
-            $spaceIds = $spaceIds->diff($descendantIds);
+        $spaces = null;
+
+        if ($ids) {
+            $spaces = Space::select('id', '_lft', '_rgt')->whereIn('id', $ids)->get();
         }
 
-        return $spaceIds;
-    }
-
-    private function spaceRoots(array $ids = null): Collection
-    {
-        $roots = collect();
-        $spaceIds = null;
-
-        if (!is_null($ids)) {
-            $spaceIds = $this->filterRootIds($ids);
-        }
-
-        Space::select(['id', 'name', 'parent_id', '_lft', '_rgt'])
-            ->when(is_null($ids), function ($query) {
-                $query->whereNull('parent_id');
+        $records = Space::select($columnNames)
+            ->withDepth()
+            ->with([
+                'ancestors' => function ($query) use ($columnNames) {
+                    $query->select($columnNames);
+                    $query->defaultOrder();
+                    $query->withDepth();
+                    $query->with('type:id,name');
+                },
+                'type:id,name',
+            ])
+            ->when($spaces, function ($query, $spaces) {
+                foreach ($spaces as $key => $space) {
+                    $boolean = $key == 0 ? 'and' : 'or';
+                    $query->whereDescendantOrSelf($space, $boolean);
+                }
             })
-            ->when($spaceIds, function ($query, $spaceIds) {
-                $query->whereIn('id', $spaceIds->all());
-            })
-            ->orderBy('name', 'asc')
-            ->get()
-            ->each(function ($space) use ($roots) {
-                $tree = Space::select(['id', 'name', 'parent_id', '_lft', '_rgt'])
-                    ->orderBy('name', 'asc')
-                    ->withDepth()
-                    ->descendantsAndSelf($space);
+            ->defaultOrder()
+            ->paginate($perPage);
 
-                $roots->push($tree);
-            });
+        $records->getCollection()->transform(function ($space) use ($user) {
+            $space->makeHidden('type');
 
-        return $roots;
-    }
+            $space->ancestorNames = $space
+                   ->ancestors
+                   ->sortBy('depth')
+                   ->pluck('name')
+                   ->all();
 
-    public function spaceTree(Authenticatable $user, int $parentId = null): Collection
-    {
-        if (! is_null($parentId)) {
-            $spaceIds = [$parentId];
-        } else {
-            $spaceIds = null;
+            $space->typeName = $space->type->name ?? null;
+            $space->can = [
+                'edit' => $user->can('edit', $space),
+            ];
 
-            if (! $user->can('space.viewAny')) {
-                $spaceIds = $user->spaces->pluck('id')->all();
-            }
-        }
-
-        $roots = $this->spaceRoots($spaceIds);
-
-        return $roots->map(function ($root) {
-            return $root->toTree()->first();
+            return $space;
         });
-    }
 
-    private function parentOptionsBasedOnUser(
-        Authenticatable $user
-    ): Collection {
-        $spaceIds = null;
-
-        if (! $user->can('space.viewAny')) {
-            $spaceIds = $user->spaces->pluck('id')->all();
-        }
-
-        return $this->spaceRoots($spaceIds);
+        return $records;
     }
 
     public function parentOptions(
-        Authenticatable $user,
-        bool $isEmptyAllowed = true
+        ?array $ids = null,
+        string $label = null
     ): Collection {
-        $roots = $this->parentOptionsBasedOnUser($user);
+        Space::disableAutoloadTranslations();
 
-        $options = collect();
+        $spaces = null;
 
-        $roots->each(function ($root) use ($options) {
-            foreach ($root as $space) {
-                if ($space->depth <= 1) {
-                    $options->push([
-                        'id' => $space->id,
-                        'value' => $space->name,
-                        'depth' => $space->depth,
-                    ]);
-                }
-            }
-        });
-
-        $options = $options->sortBy([
-            ['depth', 'asc'],
-            ['value', 'asc']
-        ])->values();
-
-        if ($isEmptyAllowed) {
-            $options->prepend(['id' => null, 'value' => __('None')]);
+        if ($ids) {
+            $spaces = Space::select('id', '_lft', '_rgt')
+                ->whereIn('id', $ids)
+                ->get();
         }
 
-        return $options;
-    }
-
-    public function spaceFilterOptions(
-        Authenticatable $user,
-        bool $isEmptyAllowed = true
-    ): Collection {
-        $roots = $this->parentOptionsBasedOnUser($user);
-
-        $options = collect();
-
-        $roots->each(function ($root) use ($options) {
-            foreach ($root as $space) {
-                if (
-                    $space->depth <= 1
-                    && $space->children()->exists()
-                ) {
-                    $options->push([
-                        'id' => $space->id,
-                        'value' => $space->name,
-                    ]);
+        $options = Space::select(['id', 'name', 'parent_id', '_lft', '_rgt'])
+            ->withDepth()
+            ->with('ancestors', function ($query) {
+                $query->select(['id', 'name', 'parent_id', '_lft', '_rgt']);
+                $query->withDepth();
+            })
+            ->when($spaces, function ($query, $spaces) {
+                foreach ($spaces as $key => $space) {
+                    $boolean = $key == 0 ? 'and' : 'or';
+                    $query->whereDescendantOrSelf($space, $boolean);
                 }
-            }
-        });
+            })
+            ->hasChildren()
+            ->get()
+            ->toFlatTree()
+            ->filter(fn ($space) => $space->depth < 2)
+            ->map(function ($space) {
+                return [
+                    'id' => $space->id,
+                    'value' => $space->name,
+                    'depth' => $space->depth,
+                ];
+            })
+            ->sortBy([
+                ['depth', 'asc'],
+                ['value', 'asc']
+            ])
+            ->values();
 
-        $options = $options->sortBy('value')->values();
-
-        if ($isEmptyAllowed) {
-            $options->prepend(['id' => null, 'value' => __('Select Parent')]);
+        if ($label) {
+            $options->prepend(['id' => null, 'value' => $label]);
         }
 
         return $options;
