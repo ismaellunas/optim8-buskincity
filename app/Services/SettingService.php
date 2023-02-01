@@ -389,8 +389,7 @@ class SettingService
 
     private function getMediaFromSetting(string $key): ?Media
     {
-        $mediaId = Setting::key($key)
-            ->value('value');
+        $mediaId = $this->getKey($key);
 
         return $mediaId ? Media::find($mediaId) : null;
     }
