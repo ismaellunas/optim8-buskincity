@@ -16,7 +16,7 @@
             textInfo() {
                 let records = this.records;
 
-                return `Showing ${records.from} to ${records.to} of ${records.total} entries`;
+                return `Showing ${records.from ?? 0} to ${records.to ?? 0} of ${records.total ?? 0} entries`;
             },
         },
     }
