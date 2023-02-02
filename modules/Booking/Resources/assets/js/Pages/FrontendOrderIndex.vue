@@ -1,28 +1,25 @@
 <template>
     <div class="box">
-        <div class="columns">
-            <div class="column is-4">
-                <div class="is-pulled-left">
-                    <biz-filter-search
-                        v-model="term"
-                        @search="search"
-                    />
-                </div>
-
-                <div class="is-clearfix" />
+        <div class="columns is-multiline">
+            <div class="column is-4-desktop">
+                <biz-filter-search
+                    v-model="term"
+                    @search="search"
+                />
             </div>
 
-            <div class="column is-2">
-                <biz-dropdown :close-on-click="false">
+            <div class="column is-2-desktop">
+                <biz-dropdown
+                    class="is-fullwidth"
+                    :close-on-click="false"
+                >
                     <template #trigger>
                         <span>Status ({{ statuses.length }})</span>
 
-                        <span class="icon is-small">
-                            <i
-                                :class="icon.angleDown"
-                                aria-hidden="true"
-                            />
-                        </span>
+                        <biz-icon
+                            class="is-small"
+                            :icon="icon.angleDown"
+                        />
                     </template>
 
                     <biz-dropdown-item
@@ -40,7 +37,7 @@
                 </biz-dropdown>
             </div>
 
-            <div class="column is-4 is-3-fullhd">
+            <div class="column is-4 is-3-widescreen">
                 <biz-filter-date-range
                     v-model="dates"
                     max-range="31"
@@ -48,7 +45,7 @@
                 />
             </div>
 
-            <div class="column is-3">
+            <div class="column is-narrow">
                 <biz-dropdown-search
                     class="is-fullwidth"
                     :close-on-click="true"
