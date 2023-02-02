@@ -44,6 +44,30 @@ class FileDragDrop extends BaseField
         return $html;
     }
 
+    public function componentValue(): array
+    {
+        $mediaIds = $this->value['mediaId'] ?? [];
+
+        if (empty($mediaIds)) {
+            return "-";
+        }
+
+        $media = $this->getMedia($mediaIds);
+        $media = $media->transform(function ($medium) {
+            $medium->thumbnail_url = $medium->thumbnailUrl;
+            $medium->file_name_without_extension = $medium->fileNameWithoutExtension;
+            $medium->is_image = $medium->isImage;
+            $medium->display_file_name = $medium->displayFileName;
+
+            return $medium;
+        });
+
+        return [
+            'component' => 'MediaGallery',
+            'value' => $media,
+        ];
+    }
+
     private function uploadFiles($files): Collection
     {
         $media = collect();
@@ -66,6 +90,12 @@ class FileDragDrop extends BaseField
                 'file_name',
                 'extension',
                 'file_type',
+                'version',
+            ])
+            ->with([
+                'translations' => function ($q) {
+                    $q->select(['id', 'media_id', 'alt', 'description', 'locale']);
+                },
             ])
             ->whereIn('id', $mediaIds)
             ->get();
