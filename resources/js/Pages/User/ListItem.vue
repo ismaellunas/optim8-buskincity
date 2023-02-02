@@ -1,28 +1,44 @@
 <template>
     <tr>
         <th>{{ user.id }}</th>
-        <td>{{ user.full_name }}</td>
+        <td>
+            {{ user.full_name }}<br>
+            <biz-tag
+                v-if="user.is_suspended"
+                class="tag is-warning"
+            >
+                Suspended
+            </biz-tag>
+        </td>
         <td>{{ user.email }}</td>
         <td>{{ roleName }}</td>
         <td>
-            <slot name="actions"></slot>
+            <slot name="actions" />
         </td>
     </tr>
 </template>
 
 <script>
+    import BizTag from '@/Biz/Tag';
     import { isEmpty } from 'lodash';
 
     export default {
         name: 'UserListItem',
-        props: {
-            user: {type: Object, required: true},
+
+        components: {
+            BizTag,
         },
+
+        props: {
+            user: { type: Object, required: true },
+        },
+
         computed: {
             roleName() {
                 if (isEmpty(this.user.roles)) {
                     return null;
                 }
+
                 return this.user.roles[0].name;
             },
         },

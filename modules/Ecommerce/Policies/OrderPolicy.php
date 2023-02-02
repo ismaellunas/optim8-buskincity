@@ -13,7 +13,7 @@ class OrderPolicy extends BasePermissionPolicy
 {
     use Macroable;
 
-    private bool $isModuleSpaceActive;
+    private bool $isEcommerceModuleActive;
 
     protected $basePermission = 'order';
 

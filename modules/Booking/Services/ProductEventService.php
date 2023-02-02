@@ -396,7 +396,7 @@ class ProductEventService
         return implode("", $urlParts);
     }
 
-    public function getCityOptions(): array
+    public function getCityOptions(?array $relatedUserIds = null): array
     {
         $products = Product::with([
                 'metas' => function ($q){
@@ -406,8 +406,12 @@ class ProductEventService
             ->whereHas('productType', function ($query) {
                 $query->where('name', 'Event');
             })
-            ->whereHas('variants', function ($query) {
-                $query->whereHas('orderLine.order');
+            ->whereHas('variants', function ($query) use ($relatedUserIds) {
+                $query->whereHas('orderLine.order', function ($query) use ($relatedUserIds) {
+                    $query->when($relatedUserIds, function ($query, $relatedUserIds) {
+                        $query->whereIn('user_id', $relatedUserIds);
+                    });
+                });
                 $query->whereHas('orderLine.latestEvent');
             })
             ->whereHas('metas', function ($query) {

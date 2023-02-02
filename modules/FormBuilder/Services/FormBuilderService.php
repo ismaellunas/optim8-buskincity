@@ -100,6 +100,10 @@ class FormBuilderService
 
         $entries = $formBuilder
             ->entries()
+            ->with('metas', function ($query) use ($fieldNames) {
+                $query->whereIn('key', $fieldNames);
+                $query->select('id', 'type', 'key', 'value', 'form_entry_id');
+            })
             ->orderBy('id', 'DESC')
             ->get();
 
@@ -338,6 +342,43 @@ class FormBuilderService
         }
 
         return $value;
+    }
+
+    public function getComponentDisplayValues(Collection $fields, FormEntry $entry): array
+    {
+        $displayValues = [];
+        $entryValues = $entry->metas
+            ->pluck('value', 'key')
+            ->toArray();
+
+        foreach ($entryValues as $key => $entryValue) {
+            $value = $entryValue;
+            $field = $fields->where('name', $key)->first();
+
+            if ($field) {
+                $value = $this->getComponentDisplayValue($field, $value);
+            }
+
+            $displayValues[$key] = $value;
+        }
+
+        return $displayValues;
+    }
+
+    public function getComponentDisplayValue(array $field, mixed $value): mixed
+    {
+        $className = $this->getFieldClassName($field['type']);
+
+        if (class_exists($className)) {
+            $fieldClass = new $className($field, $value);
+
+            return $fieldClass->componentValue();
+        }
+
+        return [
+            'component' => null,
+            'value' => $value
+        ];
     }
 
     public function transformEntry($entry)

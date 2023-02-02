@@ -223,7 +223,10 @@
         setup(props, {emit}) {
             const messageConfig = {
                 inline: false,
-                toolbar: 'formatselect | bold italic forecolor backcolor link ' +
+                plugins: [
+                    'table'
+                ],
+                toolbar: 'formatselect | bold italic forecolor backcolor link table' +
                     '| align bullist numlist | removeformat | listTag',
                 setup: (editor) => {
                     editor.ui.registry.addMenuButton('listTag', {
