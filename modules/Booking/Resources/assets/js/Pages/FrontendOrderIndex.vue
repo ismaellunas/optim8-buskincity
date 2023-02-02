@@ -47,6 +47,7 @@
             <div class="column is-4">
                 <biz-filter-date-range
                     v-model="dates"
+                    max-range="31"
                     @update:model-value="onDateRangeChanged"
                 />
             </div>
