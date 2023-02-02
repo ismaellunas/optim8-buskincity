@@ -38,6 +38,10 @@ class OrderIndexRequest extends FormRequest
                 'nullable',
                 Rule::in(['asc', 'desc'])
             ],
+            'city' => [
+                'nullable',
+                'max:100',
+            ],
         ];
     }
 
