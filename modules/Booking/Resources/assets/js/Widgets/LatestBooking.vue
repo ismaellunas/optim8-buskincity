@@ -85,6 +85,17 @@
                                 </biz-dropdown-item>
                             </biz-dropdown-search>
                         </div>
+
+                        <div class="control">
+                            <biz-filter-date-range
+                                v-model="dates"
+                                class="dashboard-widget-datepicker"
+                                input-class-name="input is-small"
+                                max-range="31"
+                                style="width: 210px"
+                                @update:model-value="getRecords()"
+                            />
+                        </div>
                     </div>
                 </biz-panel-block>
 
@@ -176,14 +187,15 @@
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizDropdownSearch from '@/Biz/DropdownSearch';
+    import BizFilterDateRange from '@/Biz/Filter/DateRange';
     import BizInput from '@/Biz/Input';
     import BizLoader from '@/Biz/Loader';
     import BizPanel from '@/Biz/Panel';
     import BizPanelBlock from '@/Biz/PanelBlock';
     import BizTable from '@/Biz/Table';
     import icon from '@/Libs/icon-class';
-    import { debounceTime } from '@/Libs/defaults';
     import { debounce, isEmpty, filter } from 'lodash';
+    import { debounceTime } from '@/Libs/defaults';
 
     export default {
         name: 'LatestBookingWidget',
@@ -194,6 +206,7 @@
             BizDropdown,
             BizDropdownItem,
             BizDropdownSearch,
+            BizFilterDateRange,
             BizInput,
             BizLoader,
             BizPanel,
@@ -217,6 +230,7 @@
                     city: null,
                 },
                 filteredCities: this.data.cityOptions.slice(0, 10),
+                dates: [],
             };
         },
 
@@ -247,6 +261,7 @@
                             term: self.search.term,
                             status: self.search.statuses,
                             city: self.search.city,
+                            dates: self.dates.filter(Boolean),
                         },
                     }
                 )
