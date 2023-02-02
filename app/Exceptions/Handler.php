@@ -80,9 +80,15 @@ class Handler extends ExceptionHandler
                 !$this->isHttpException($exception)
                 || $exception->getStatusCode() > 499
             ) {
-                $errorLog = new ErrorLog();
+                try {
+                    $errorLog = new ErrorLog();
 
-                $errorLog->syncErrorLog($inputs);
+                    $errorLog->syncErrorLog($inputs);
+                } catch (\Throwable $th) {
+                    if (!app()->environment('local') || !app()->runningInConsole()) {
+                        throw $th;
+                    }
+                }
             }
         }
     }

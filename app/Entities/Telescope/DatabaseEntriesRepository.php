@@ -2,6 +2,7 @@
 
 namespace App\Entities\Telescope;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Laravel\Telescope\EntryResult;
 use Laravel\Telescope\Storage\DatabaseEntriesRepository as TelescopeDatabaseEntriesRepository;
@@ -50,5 +51,19 @@ class DatabaseEntriesRepository extends TelescopeDatabaseEntriesRepository imple
                     []
                 );
             })->values();
+    }
+
+    public function store(Collection $entries)
+    {
+        try {
+
+            parent::store($entries);
+
+        } catch (\Throwable $th) {
+
+            if (!app()->environment('local') || !app()->runningInConsole()) {
+                throw $th;
+            }
+        }
     }
 }

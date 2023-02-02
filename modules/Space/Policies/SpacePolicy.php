@@ -10,6 +10,11 @@ class SpacePolicy
 {
     use HandlesAuthorization;
 
+    public function __construct()
+    {
+        Space::disableAutoloadTranslations();
+    }
+
     public function viewAny(User $user)
     {
         return (
@@ -18,17 +23,9 @@ class SpacePolicy
         );
     }
 
-    public function create(User $user, ?Space $parentSpace = null)
+    public function create(User $user)
     {
-        if (is_null($parentSpace)) {
-            $parentSpace = Space::find(request()->get('parent'));
-        }
-
-        return (
-            $user->can('space.add')
-            || ($parentSpace && $this->manage($user, $parentSpace))
-            || (!$parentSpace && $user->spaces->isNotEmpty())
-        );
+        return $user->can('space.add');
     }
 
     public function update(User $user, Space $space)
@@ -41,10 +38,7 @@ class SpacePolicy
 
     public function delete(User $user, Space $space)
     {
-        return (
-            $user->can('space.delete')
-            || $this->manage($user, $space)
-        );
+        return $user->can('space.delete');
     }
 
     public function changeParent(User $user)

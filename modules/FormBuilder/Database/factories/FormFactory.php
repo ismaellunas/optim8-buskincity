@@ -29,6 +29,7 @@ class FormFactory extends Factory
             'setting' => [
                 'button' => [
                     'text' => 'Submit',
+                    "position" => null,
                 ],
             ],
         ];

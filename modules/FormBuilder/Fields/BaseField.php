@@ -22,4 +22,12 @@ class BaseField
     {
         return $this->value;
     }
+
+    public function componentValue(): array
+    {
+        return [
+            'component' => null,
+            'value' => $this->value()
+        ];
+    }
 }

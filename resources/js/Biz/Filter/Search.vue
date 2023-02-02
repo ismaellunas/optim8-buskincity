@@ -1,49 +1,47 @@
 <template>
-    <biz-form-field-horizontal>
-        <template #label>
-            Search
-        </template>
-
-        <div class="field has-addons">
-            <div class="control is-expanded">
-                <biz-input
-                    v-model="term"
-                    maxlength="255"
-                    @keyup.prevent="search(term)"
-                />
-            </div>
-
-            <div class="control">
-                <biz-button-icon
-                    type="button"
-                    :icon="iconClear"
-                    @click="reset()"
-                />
-            </div>
+    <biz-field class="has-addons">
+        <div class="control is-expanded">
+            <biz-input
+                v-model="term"
+                :maxlength="maxlength"
+                :placeholder="placeholder"
+                @keyup.prevent="search(term)"
+            />
         </div>
-    </biz-form-field-horizontal>
+
+        <div class="control">
+            <biz-button-icon
+                type="button"
+                :icon="iconClear"
+                :disabled="!clearable"
+                @click="reset()"
+            />
+        </div>
+    </biz-field>
 </template>
 
 <script>
     import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizFormFieldHorizontal from '@/Biz/Form/FieldHorizontal';
+    import BizField from '@/Biz/Field';
     import BizInput from '@/Biz/Input';
-    import { useModelWrapper } from '@/Libs/utils';
-    import { debounceTime } from '@/Libs/defaults';
-    import { debounce } from 'lodash';
     import { clear as iconClear } from '@/Libs/icon-class';
+    import { debounce, isEmpty } from 'lodash';
+    import { debounceTime } from '@/Libs/defaults';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'BizFilterSearch',
 
         components: {
             BizButtonIcon,
-            BizFormFieldHorizontal,
+            BizField,
             BizInput,
         },
 
         props: {
             modelValue: { type: String, default: '' },
+            maxlength: { type: Number, default: 255 },
+            placeholder: { type: String, default: 'Search ...' },
         },
 
         emits: [
@@ -56,6 +54,12 @@
                 term: useModelWrapper(props, emit),
                 iconClear,
             };
+        },
+
+        computed: {
+            clearable() {
+                return !isEmpty(this.term);
+            },
         },
 
         methods: {

@@ -63,7 +63,10 @@ class Product extends GetCandyProduct
         return $query
             ->where("attribute_data->name->value->{$locale}", 'ILIKE', "%{$term}%")
             ->orWhere("attribute_data->description->value->{$locale}", 'ILIKE', "%{$term}%")
-            ->orWhere("attribute_data->short_description->value->{$locale}", 'ILIKE', "%{$term}%");
+            ->orWhere("attribute_data->short_description->value->{$locale}", 'ILIKE', "%{$term}%")
+            ->orWhere(function ($query) use ($term) {
+                $query->city($term);
+            });
     }
 
     public function scopeOrderByColumn($query, array $orderConfig)
@@ -99,7 +102,7 @@ class Product extends GetCandyProduct
     {
         return $query->whereHas('metas', function ($q) use ($city) {
             $q->where('key', 'locations');
-            $q->where(DB::raw("value::json->0->>'city'"), $city);
+            $q->where(DB::raw("value::json->0->>'city'"), "ILIKE", "%{$city}%");
         });
     }
 

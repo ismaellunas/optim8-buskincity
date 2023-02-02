@@ -1,33 +1,26 @@
 <template>
     <div class="box">
-        <div class="columns">
-            <div class="column is-4">
-                <div class="is-pulled-left">
-                    <biz-filter-search
-                        v-model="term"
-                        @search="search"
-                    />
-                </div>
-
-                <div class="is-clearfix" />
+        <div class="columns is-multiline">
+            <div class="column is-4-desktop">
+                <biz-filter-search
+                    v-model="term"
+                    @search="search"
+                />
             </div>
 
-            <div class="column is-2">
-                <biz-dropdown :close-on-click="false">
+            <div class="column is-2-desktop">
+                <biz-dropdown
+                    class="is-fullwidth"
+                    :close-on-click="false"
+                >
                     <template #trigger>
-                        <span>Filter</span>
+                        <span>Status ({{ statuses.length }})</span>
 
-                        <span class="icon is-small">
-                            <i
-                                :class="icon.angleDown"
-                                aria-hidden="true"
-                            />
-                        </span>
+                        <biz-icon
+                            class="is-small"
+                            :icon="icon.angleDown"
+                        />
                     </template>
-
-                    <biz-dropdown-item>
-                        Status
-                    </biz-dropdown-item>
 
                     <biz-dropdown-item
                         v-for="status in statusOptions"
@@ -44,11 +37,40 @@
                 </biz-dropdown>
             </div>
 
-            <div class="column is-4">
+            <div class="column is-4 is-3-widescreen">
                 <biz-filter-date-range
                     v-model="dates"
+                    max-range="31"
                     @update:model-value="onDateRangeChanged"
                 />
+            </div>
+
+            <div class="column is-narrow">
+                <biz-dropdown-search
+                    class="is-fullwidth"
+                    :close-on-click="true"
+                    @search="searchCity($event)"
+                >
+                    <template #trigger>
+                        <span>
+                            {{ queryParams.city ?? 'Any' }}
+                        </span>
+                    </template>
+
+                    <biz-dropdown-item
+                        @click="onCityChange()"
+                    >
+                        Any
+                    </biz-dropdown-item>
+
+                    <biz-dropdown-item
+                        v-for="(option, index) in filteredCities"
+                        :key="index"
+                        @click="onCityChange(option)"
+                    >
+                        {{ option }}
+                    </biz-dropdown-item>
+                </biz-dropdown-search>
             </div>
         </div>
 
@@ -69,6 +91,13 @@
                             @click="orderColumn('name')"
                         >
                             Name
+                        </biz-table-column-sort>
+                        <biz-table-column-sort
+                            :order="order"
+                            :is-sorted="column == 'city'"
+                            @click="orderColumn('city')"
+                        >
+                            City
                         </biz-table-column-sort>
                         <biz-table-column-sort
                             :order="order"
@@ -110,6 +139,7 @@
                             </biz-tag>
                         </td>
                         <td>{{ order.product_name }}</td>
+                        <td>{{ order.city }}</td>
                         <td>{{ order.date }}</td>
                         <td>{{ order.timezone }}</td>
                         <td>{{ order.start_end_time }}</td>
@@ -146,6 +176,7 @@
     import BizCheckbox from '@/Biz/Checkbox';
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
+    import BizDropdownSearch from '@/Biz/DropdownSearch';
     import BizFilterDateRange from '@/Biz/Filter/DateRange';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
@@ -155,7 +186,8 @@
     import BizTag from '@/Biz/Tag';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { isArray, merge } from 'lodash';
+    import { debounce, isEmpty, isArray, filter, merge } from 'lodash';
+    import { debounceTime } from '@/Libs/defaults';
     import { ref } from "vue";
 
     export default {
@@ -164,6 +196,7 @@
             BizCheckbox,
             BizDropdown,
             BizDropdownItem,
+            BizDropdownSearch,
             BizFilterDateRange,
             BizFilterSearch,
             BizIcon,
@@ -183,24 +216,21 @@
             baseRouteName: { type: String, required: true },
             pageQueryParams: { type: Object, default: () => {} },
             orders: { type: Object, required: true },
+            cityOptions: { type: Object, required: true },
             statusOptions: { type: Object, required: true },
         },
 
         setup(props) {
-            const queryParams = merge(
-                {},
-                props.pageQueryParams
-            );
-
             return {
                 icon,
                 dates: ref(isArray(props.pageQueryParams?.dates)
                     ? props.pageQueryParams?.dates.filter(Boolean)
                     : []
                 ),
+                filteredCities: ref(props.cityOptions.slice(0, 10)),
+                queryParams: ref({ ...{}, ...props.pageQueryParams }),
                 statuses: ref(props.pageQueryParams?.status ?? []),
                 term: ref(props.pageQueryParams?.term ?? null),
-                queryParams: ref(queryParams),
             };
         },
 
@@ -214,6 +244,22 @@
                 this.queryParams['dates'] = this.dates;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
+
+            onCityChange(city = null) {
+                this.queryParams['city'] = city;
+                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
+            },
+
+            searchCity: debounce(function(term) {
+                if (!isEmpty(term) && term.length > 1) {
+                    this.filteredCities = filter(this.cityOptions, function (city) {
+                        return new RegExp(term, 'i').test(city);
+                    }).slice(0, 10);
+                } else {
+                    this.filteredCities = this.cityOptions.slice(0, 10);
+                }
+            }, debounceTime),
+
         },
     };
 </script>

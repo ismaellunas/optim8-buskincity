@@ -4,6 +4,7 @@ namespace Modules\Space\Entities;
 
 use App\Contracts\PublishableInterface;
 use App\Models\Page as ModelPage;
+use App\Models\PageTranslation as ModelPageTranslation;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Modules\Space\Entities\PageTranslation;
@@ -37,11 +38,28 @@ class Page extends ModelPage
     public static function createBasedOnSpace(string $title, ?int $authorId = null): Page
     {
         $page = new Page();
+        $baseSlug = Str::slug($title);
+
+        $canContinueLoop = function ($slug) {
+            return ModelPageTranslation::where('slug', $slug)
+                ->where('locale', defaultLocale())
+                ->exists();
+        };
+
+        $iteration = 0;
+
+        do {
+            $uniqueSlug = ($iteration > 0)
+                ? $baseSlug . '-' . random_int(100000, 999999)
+                : $baseSlug;
+
+            $iteration ++;
+        } while ($canContinueLoop($uniqueSlug));
 
         $page->saveFromInputs([
-            'en' => [
+            defaultLocale() => [
                 'title' => $title,
-                'slug' => Str::slug($title),
+                'slug' => $uniqueSlug,
                 'data' => [
                     "structures"=> [],
                     "entities"=> [],

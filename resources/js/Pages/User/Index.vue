@@ -56,6 +56,8 @@
             </div>
 
             <div class="table-container">
+                <biz-table-info :records="records" />
+
                 <biz-table class="is-striped is-hoverable is-fullwidth">
                     <thead>
                         <tr>
@@ -154,7 +156,6 @@
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import ModalFormDelete from '@/Pages/User/ModalFormDelete';
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizCheckbox from '@/Biz/Checkbox';
@@ -164,6 +165,8 @@
     import BizIcon from '@/Biz/Icon';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
+    import BizTableInfo from '@/Biz/TableInfo';
+    import ModalFormDelete from '@/Pages/User/ModalFormDelete';
     import UserListItem from '@/Pages/User/ListItem';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
@@ -172,7 +175,6 @@
 
     export default {
         components: {
-            ModalFormDelete,
             BizButtonIcon,
             BizButtonLink,
             BizCheckbox,
@@ -182,6 +184,8 @@
             BizIcon,
             BizPagination,
             BizTable,
+            BizTableInfo,
+            ModalFormDelete,
             UserListItem,
         },
 
