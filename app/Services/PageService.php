@@ -88,7 +88,13 @@ class PageService
             $record->status = $record->status ?? $record->translations[0]->status;
             $record->meta_title = $record->meta_title ?? $record->translations[0]->meta_title;
             $record->meta_description = $record->meta_description ?? $record->translations[0]->meta_description;
-            $record->setAppends(['statusText', 'hasMetaDescription', 'hasMetaTitle', 'availableTranslations']);
+            $record->setAppends([
+                'availableTranslations',
+                'hasMetaDescription',
+                'hasMetaTitle',
+                'statusText',
+                'urlDefaultLocale',
+            ]);
 
             return $record;
         });

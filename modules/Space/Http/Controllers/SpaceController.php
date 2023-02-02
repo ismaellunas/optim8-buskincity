@@ -34,15 +34,43 @@ class SpaceController extends CrudController
     {
         $user = auth()->user();
 
-        $spaces = $this->spaceService->spaceTree($user, $request->parent);
+        $managedSpaceIds = null;
+        $spaceIds = null;
 
-        $spaceOptions = $this->spaceService->spaceFilterOptions($user);
+        if (! $user->can('space.viewAny')) {
+            $managedSpaceIds = $user->spaces->pluck('id')->all();
+
+            $spaceIds = $managedSpaceIds;
+
+            if ($request->parent) {
+
+                $space = Space::select('id', '_lft', '_rgt')
+                    ->with('ancestors')
+                    ->find($request->parent);
+
+                if ($user->can('manage', $space)) {
+                    $spaceIds = [ $request->parent ];
+                }
+            }
+
+        } elseif ($request->parent) {
+
+            $spaceIds = [ $request->parent ];
+        }
+
+        $records = $this->spaceService->getRecords($user, $spaceIds);
+
+        $spaceOptions = $this->spaceService->parentOptions($managedSpaceIds, __('Select Parent'));
 
         return Inertia::render('Space::SpaceIndex', $this->getData([
-            'isSortableEnabled' => $user->can('changeParent', Space::class),
+            'can' => [
+                'add' => $user->can('create', Space::class),
+                'delete' => $user->can('space.delete')
+            ],
             'parent' => $request->parent,
             'parentOptions' => $spaceOptions,
-            'spaces' => $spaces,
+            'records' => $records,
+            'pageQueryParams' => (object) array_filter($request->only('term', 'parent')),
         ]));
     }
 
@@ -82,9 +110,18 @@ class SpaceController extends CrudController
         if ($request->parent) {
             $parentOptions = [Space::select('id', 'name as value')->find($request->parent)];
         } else {
+            $managedSpaceIds = null;
+
+            if (! $user->can('space.viewAny')) {
+
+                $user->load('spaces:id');
+
+                $managedSpaceIds = $user->spaces->pluck('id')->all();
+            }
+
             $parentOptions = $this->spaceService->parentOptions(
-                $user,
-                $user->can('space.create')
+                $managedSpaceIds,
+                $user->can('space.add') ? __("None") : null
             );
         }
 
