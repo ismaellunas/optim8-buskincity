@@ -26,6 +26,8 @@
             </div>
 
             <div class="table-container">
+                <biz-table-info :records="records" />
+
                 <table class="table is-striped is-hoverable is-fullwidth">
                     <thead>
                         <tr>
@@ -140,6 +142,7 @@
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import BizPagination from '@/Biz/Pagination';
+    import BizTableInfo from '@/Biz/TableInfo';
     import BizTag from '@/Biz/Tag';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, confirm } from '@/Libs/alert';
@@ -153,6 +156,7 @@
             BizFilterSearch,
             BizFlashNotifications,
             BizPagination,
+            BizTableInfo,
             BizTag,
         },
 

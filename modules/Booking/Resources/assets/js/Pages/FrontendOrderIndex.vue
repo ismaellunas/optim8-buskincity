@@ -54,6 +54,8 @@
         </div>
 
         <div class="table-container">
+            <biz-table-info :records="orders" />
+
             <biz-table class="is-striped is-hoverable is-fullwidth">
                 <thead>
                     <tr>
@@ -152,6 +154,7 @@
     import BizIcon from '@/Biz/Icon';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
+    import BizTableInfo from '@/Biz/TableInfo';
     import BizTableColumnSort from '@/Biz/TableColumnSort';
     import BizTag from '@/Biz/Tag';
     import icon from '@/Libs/icon-class';
@@ -170,6 +173,7 @@
             BizIcon,
             BizPagination,
             BizTable,
+            BizTableInfo,
             BizTableColumnSort,
             BizTag,
         },

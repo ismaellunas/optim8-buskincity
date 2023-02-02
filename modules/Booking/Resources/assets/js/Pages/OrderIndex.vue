@@ -50,6 +50,8 @@
         </div>
 
         <div class="table-container pb-6">
+            <biz-table-info :records="records" />
+
             <biz-table class="is-striped is-hoverable is-fullwidth">
                 <thead>
                     <tr>
@@ -182,6 +184,7 @@
     import BizLink from '@/Biz/Link';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
+    import BizTableInfo from '@/Biz/TableInfo';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
     import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation';
@@ -204,6 +207,7 @@
             BizLink,
             BizPagination,
             BizTable,
+            BizTableInfo,
             ModalCancelEventConfirmation,
         },
 

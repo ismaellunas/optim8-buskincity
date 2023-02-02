@@ -28,6 +28,8 @@
             </div>
 
             <div class="table-container">
+                <biz-table-info :records="types" />
+
                 <biz-table class="is-fullwidth">
                     <thead>
                         <tr>
@@ -97,6 +99,7 @@
     import BizListSection from '@/Biz/ListSection';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
+    import BizTableInfo from '@/Biz/TableInfo';
     import icon from '@/Libs/icon-class';
     import SpaceTypeFormModal from './SpaceTypeFormModal';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -111,6 +114,7 @@
             BizListSection,
             BizPagination,
             BizTable,
+            BizTableInfo,
             SpaceTypeFormModal,
         },
 

@@ -22,6 +22,8 @@
             </div>
 
             <div class="table-container">
+                <biz-table-info :records="records" />
+
                 <biz-table class="is-striped is-hoverable is-fullwidth">
                     <thead>
                         <tr>
@@ -89,6 +91,7 @@
     import BizIcon from '@/Biz/Icon';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
+    import BizTableInfo from '@/Biz/TableInfo';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge } from 'lodash';
@@ -103,6 +106,7 @@
             BizIcon,
             BizPagination,
             BizTable,
+            BizTableInfo,
         },
         mixins: [
             MixinFilterDataHandle,
