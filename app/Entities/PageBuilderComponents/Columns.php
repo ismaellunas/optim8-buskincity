@@ -12,13 +12,9 @@ class Columns extends BaseComponent
         $styleBlock = null;
 
         if ($this->doesConfigHaveDimension()) {
-            $styleBlock = $this->getDimensionStyleBlock(
+            $this->styleBlocks[] = $this->getDimensionStyleBlock(
                 $this->getSelector()
             );
-
-            $this->transformDimensionStyleBlock($styleBlock);
-
-            $this->styleBlocks[] = $styleBlock;
         }
 
         if ($this->doesWrapperHaveBackgroundImage()) {
@@ -30,28 +26,11 @@ class Columns extends BaseComponent
 
     protected function composeMobileStyleBlocks(): void
     {
-        $mobileStyleBlock = null;
-
         if ($this->doesConfigHaveDimension()) {
-            $mobileStyleBlock = $this->getMobileDimensionStyleBlock(
+            $this->mobileStyleBlocks[] = $this->getMobileDimensionStyleBlock(
                 $this->getSelector()
             );
-
-            $this->transformDimensionStyleBlock($mobileStyleBlock);
-
-            $this->mobileStyleBlocks[] = $mobileStyleBlock;
         }
-    }
-
-    private function transformDimensionStyleBlock(StyleBlock &$styleBlock): void
-    {
-        $styleBlock->styles->transform(function ($style, $key) {
-            if ($key == 'margin-bottom') {
-                return $style.' !important';
-            }
-
-            return $style;
-        });
     }
 
     private function doesWrapperHaveBackgroundImage(): bool

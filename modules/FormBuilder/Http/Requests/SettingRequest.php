@@ -18,7 +18,11 @@ class SettingRequest extends FormRequest
             'button.text' => [
                 'nullable',
                 'max:127'
-            ]
+            ],
+            'button.position' => [
+                'nullable',
+                'max:64'
+            ],
         ];
     }
 

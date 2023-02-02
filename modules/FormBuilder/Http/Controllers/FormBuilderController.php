@@ -127,8 +127,16 @@ class FormBuilderController extends CrudController
                 $request->term,
                 $this->recordsPerPage,
             ),
-            'fieldLabels' => $formBuilder->getFieldLabels(),
-            'fieldNames' => $formBuilder->getFieldNames(),
+            'fieldLabels' => collect(
+                    $formBuilder->getFieldLabels()
+                )
+                ->slice(0, 3)
+                ->all(),
+            'fieldNames' => collect(
+                    $formBuilder->getFieldNames()
+                )
+                ->slice(0, 3)
+                ->all(),
         ]));
     }
 
@@ -140,7 +148,7 @@ class FormBuilderController extends CrudController
             'title' => $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $entry->id,
             'formBuilder' => $formBuilder,
             'entry' => $this->formBuilderService->transformEntry($entry),
-            'entryDisplay' => $this->formBuilderService->getDisplayValues(
+            'entryDisplay' => $this->formBuilderService->getComponentDisplayValues(
                 $formBuilder->getFields(),
                 $entry,
             ),

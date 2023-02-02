@@ -5,6 +5,7 @@ export function getEmptyForm() {
         setting: {
             button: {
                 text: null,
+                position: null,
             },
         },
         field_groups: [
