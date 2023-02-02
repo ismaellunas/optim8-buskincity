@@ -30,6 +30,7 @@
 
                 <div class="column has-text-right">
                     <biz-button-link
+                        v-if="can.add"
                         class="is-primary"
                         :href="route('admin.spaces.create')"
                     >
@@ -39,15 +40,39 @@
                 </div>
             </div>
 
-            <div class="space-list">
-                <nested-draggable
-                    class="px-2 py-4"
-                    :spaces="spaces"
-                    :disabled="!isSortableEnabled"
-                    @on-end="onEnd"
-                    @delete-row="deleteSpace"
-                />
+            <div class="table-container">
+                <biz-table
+                    class="is-striped is-hoverable"
+                    is-fullwidth
+                >
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Parents</th>
+                            <th>Type</th>
+                            <th>
+                                <div class="level-right">
+                                    Actions
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <space-row
+                            v-for="space in records.data"
+                            :key="space.id"
+                            :space="space"
+                            :can="can"
+                            @delete-row="deleteSpace($event)"
+                        />
+                    </tbody>
+                </biz-table>
             </div>
+
+            <biz-pagination
+                :links="records.links"
+                :query-params="queryParams"
+            />
         </div>
     </div>
 </template>
@@ -59,11 +84,14 @@
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizDropdownScroll from '@/Biz/DropdownScroll';
     import BizIcon from '@/Biz/Icon';
-    import icon from '@/Libs/icon-class';
+    import BizPagination from '@/Biz/Pagination';
+    import BizTable from '@/Biz/Table';
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import NestedDraggable from './NestedDraggable';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import SpaceRow from './SpaceRow';
+    import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { find } from 'lodash';
+    import { ref } from 'vue';
 
     export default {
         components: {
@@ -72,7 +100,9 @@
             BizDropdownItem,
             BizDropdownScroll,
             BizIcon,
-            NestedDraggable,
+            BizPagination,
+            BizTable,
+            SpaceRow,
         },
 
         mixins: [
@@ -83,58 +113,44 @@
 
         props: {
             baseRouteName: { type: String, required: true },
-            isSortableEnabled: { type: Boolean, default: true },
-            parent: { type: [Object, null], required: true },
-            parentOptions: { type: Array, required: true },
-            spaces: { type: Array, required: true },
+            can: { type: Object, required: true },
+            pageQueryParams: { type: Object, default: () => {} },
+            parent: { type: String, default: null },
+            parentOptions: { type: Object, required: true },
+            records: { type: Object, required: true },
             title: { type: String, default: "" },
         },
 
         setup(props) {
             return {
-                form: useForm({
-                    spaces: props.spaces,
-                }),
-            };
-        },
-
-        data() {
-            return {
-                parentId: this.parent,
                 icon,
+                parentId: ref(props.parent),
+                queryParams: ref(props.pageQueryParams),
+                term: ref(props.pageQueryParams?.term ?? null),
             };
         },
 
         computed: {
             selectedParent() {
-                return this.parentOptions.find(option => option.id == this.parentId);
+                const parent = find(this.parentOptions, (option) => option.id == this.parentId);
+
+                if (!parent) {
+                    return this.parentOptions[0];
+                }
+
+                return parent;
             },
         },
 
         watch: {
             parentId(newParentId) {
                 const url = route('admin.spaces.index', {parent: newParentId});
+
                 this.$inertia.visit(url);
             },
         },
 
         methods: {
-            onEnd(evt) {
-                const toParent = evt.to.dataset.parent;
-                const current = evt.item.dataset.id
-
-                if (current) {
-                    const url = route('admin.spaces.move-node', {
-                        current: current,
-                        parent: toParent
-                    });
-
-                    this.$inertia.post(url, {
-                        replace: true,
-                    });
-                }
-            },
-
             deleteSpace(space) {
                 const self = this;
 
