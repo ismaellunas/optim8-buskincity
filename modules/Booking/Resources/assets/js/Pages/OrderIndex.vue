@@ -1,27 +1,24 @@
 <template>
     <div class="box">
-        <div class="columns">
-            <div class="column is-4 is-3-fullhd">
+        <div class="columns is-multiline">
+            <div class="column is-4-desktop">
                 <biz-filter-search
                     v-model="term"
                     @search="search"
                 />
             </div>
 
-            <div class="column is-2 is-2-fullhd">
+            <div class="column is-2-desktop">
                 <biz-dropdown
                     class="is-fullwidth"
                     :close-on-click="false"
                 >
                     <template #trigger>
                         <span>Status ({{ statuses.length }})</span>
-
-                        <span class="icon is-small">
-                            <i
-                                :class="icon.angleDown"
-                                aria-hidden="true"
-                            />
-                        </span>
+                        <biz-icon
+                            class="is-small"
+                            :icon="icon.angleDown"
+                        />
                     </template>
 
                     <biz-dropdown-item
@@ -39,7 +36,7 @@
                 </biz-dropdown>
             </div>
 
-            <div class="column is-4 is-3-fullhd">
+            <div class="column is-4 is-3-widescreen">
                 <biz-filter-date-range
                     v-model="dates"
                     max-range="31"
@@ -47,10 +44,10 @@
                 />
             </div>
 
-            <div class="column is-3 is-3-fullhd">
+            <div class="column is-narrow is-3-widescreen">
                 <biz-dropdown-search
-                    :close-on-click="true"
                     class="is-fullwidth"
+                    :close-on-click="true"
                     @search="searchCity($event)"
                 >
                     <template #trigger>
@@ -130,12 +127,10 @@
                                         :close-on-click="false"
                                     >
                                         <template #trigger>
-                                            <span class="icon is-small">
-                                                <i
-                                                    :class="icon.ellipsis"
-                                                    aria-hidden="true"
-                                                />
-                                            </span>
+                                            <biz-icon
+                                                class="is-small"
+                                                :icon="icon.ellipsis"
+                                            />
                                         </template>
 
                                         <biz-link
