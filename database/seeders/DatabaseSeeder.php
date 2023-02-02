@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -30,5 +31,26 @@ class DatabaseSeeder extends Seeder
             MenuSeeder::class,
             StripeSeeder::class,
         ]);
+
+        $this->runAppIdDatabaseSeeder();
+    }
+
+    public function runAppIdDatabaseSeeder(): void
+    {
+        $appId = config('app.id');
+
+        $className = $this->appIdDatabaseSeederClass($appId);
+
+        if (
+            class_exists($className)
+            && is_subclass_of($className, '\Illuminate\Database\Seeder')
+        ) {
+            $this->call([$className]);
+        }
+    }
+
+    private function appIdDatabaseSeederClass(string $appId): string
+    {
+        return "\\Database\\Seeders\\Database" . Str::studly($appId) . "Seeder";
     }
 }
