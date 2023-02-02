@@ -34,9 +34,34 @@
                                 >
                                     {{ label }}
                                 </td>
-                                <td
-                                    v-html="entryDisplay[key]"
-                                />
+
+                                <template
+                                    v-if="entryDisplay[key]?.component"
+                                >
+                                    <td>
+                                        <component
+                                            :is="entryDisplay[key]?.component"
+                                            :value="entryDisplay[key]?.value"
+                                        >
+                                            <template
+                                                #itemActions="{ mediumItem }"
+                                            >
+                                                <slot
+                                                    name="itemActions"
+                                                    :medium-item="mediumItem"
+                                                />
+                                            </template>
+                                        </component>
+                                    </td>
+                                </template>
+
+                                <template
+                                    v-else
+                                >
+                                    <td
+                                        v-html="entryDisplay[key]?.value"
+                                    />
+                                </template>
                             </tr>
                         </tbody>
                     </biz-table>
@@ -123,6 +148,7 @@
     import BizTable from '@/Biz/Table';
     import BizCard from '@/Biz/Card';
     import BizLink from '@/Biz/Link';
+    import MediaGallery from './EntryDisplay/MediaGallery';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
 
@@ -134,6 +160,7 @@
             BizButtonLink,
             BizTable,
             BizCard,
+            MediaGallery,
         },
 
         layout: AppLayout,
