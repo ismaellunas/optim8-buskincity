@@ -11,15 +11,15 @@
             <template v-if="data">
                 <p>Apply to become a performer on BuskinCity. It will allow you to have your page, receive donations, private bookings, and build a bigger audience.</p>
                 <div class="buttons are-small mt-5">
-                    <biz-button-link
-                        class="is-primary"
-                        :href="route(data.baseRouteName+'.index')"
+                    <a
+                        class="button is-primary"
+                        :href="data.pageUrl"
                     >
                         <span class="icon is-small">
                             <i class="fa-solid fa-arrow-up-right-from-square" />
                         </span>
                         <span class="has-text-weight-bold">Apply Now</span>
-                    </biz-button-link>
+                    </a>
                 </div>
             </template>
 
@@ -28,7 +28,6 @@
                 class="notification is-info is-light"
             >
                 <p>Our team is reviewing your application. Usually takes from 3-5 days to get approved. We will contact you by email with our decision. <strong>Have questions or comments?</strong></p>
-
                 <div class="buttons are-small mt-5">
                     <biz-button-link class="is-info">
                         <span class="icon is-small">
