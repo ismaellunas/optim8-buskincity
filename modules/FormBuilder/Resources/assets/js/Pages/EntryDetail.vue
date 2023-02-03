@@ -88,7 +88,7 @@
                         <th>User</th>
                         <td v-if="isUserExists">
                             <template
-                                v-if="canRedirectUser"
+                                v-if="can.user.redirectUser"
                             >
                                 <biz-link :href="route('admin.users.edit', entry.user.id)">
                                     {{ entry.user.full_name }}
@@ -194,19 +194,6 @@
             isUserExists() {
                 return !!this.entry?.user;
             },
-
-            canRedirectUser() {
-                if (this.isUserExists) {
-                    if (
-                        !this.entry.user.isSuperAdministrator
-                        && this.can.user.edit
-                    ) {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
         },
 
         methods: {

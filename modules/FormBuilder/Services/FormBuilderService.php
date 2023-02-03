@@ -393,10 +393,6 @@ class FormBuilderService
                     ]);
                 }
             ]);
-
-            $entry->user->append([
-                'isSuperAdministrator'
-            ]);
         }
 
         return $entry->toArray();
