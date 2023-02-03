@@ -4,8 +4,10 @@ namespace Modules\FormBuilder\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Modules\FormBuilder\Emails\FormNotification;
 use Modules\FormBuilder\Events\FormSubmitted;
+use Modules\FormBuilder\Services\FormBuilderService;
 
 class SendFormNotification implements ShouldQueue
 {
@@ -31,8 +33,15 @@ class SendFormNotification implements ShouldQueue
         $notificationSettings = $entry->form->activeNotificationSettings;
 
         foreach ($notificationSettings as $notificationSetting) {
-            $recipients = json_decode($notificationSetting->send_to);
-            $bcc = json_decode($notificationSetting->bcc);
+            $recipients = app(FormBuilderService::class)
+                ->validateEmails(
+                    json_decode($notificationSetting->send_to)
+                );
+
+            $bcc = app(FormBuilderService::class)
+                ->validateEmails(
+                    json_decode($notificationSetting->bcc)
+                );
 
             foreach ($recipients as $recipient) {
                 Mail::to($recipient)

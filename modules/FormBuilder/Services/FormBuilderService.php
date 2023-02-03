@@ -390,4 +390,30 @@ class FormBuilderService
 
         return $entry->toArray();
     }
+
+    public function validateEmails(array $emails = []): array
+    {
+        $validEmails = [];
+
+        foreach ($emails as $email) {
+            $email = $this->validateEmail($email);
+
+            if ($email) {
+                $validEmails[] = $email;
+            }
+        }
+
+        return $validEmails;
+    }
+
+    public function validateEmail(string $email = null): ?string
+    {
+        $email = Str::replace(' ', '', $email);
+
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return $email;
+        }
+
+        return null;
+    }
 }
