@@ -384,8 +384,15 @@ class FormBuilderService
     public function transformEntry($entry)
     {
         if (!empty($entry['user_id'])) {
-            $entry->load('user');
-            $entry->user->append('isSuperAdministrator');
+            $entry->load([
+                'user' => function ($query) {
+                    $query->select([
+                        'id',
+                        'first_name',
+                        'last_name',
+                    ]);
+                }
+            ]);
         }
 
         return $entry->toArray();
