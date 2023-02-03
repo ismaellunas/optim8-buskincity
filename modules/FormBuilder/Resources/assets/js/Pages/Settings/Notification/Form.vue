@@ -57,7 +57,7 @@
                 >
                     <template #afterInput>
                         <notification-tag-option
-                            :options="fieldNameOptions"
+                            :options="fieldNameEmailOptions"
                             input-name="from_email"
                             @on-select-option="onSelectOption"
                         />
@@ -77,7 +77,7 @@
                 >
                     <template #afterInput>
                         <notification-tag-option
-                            :options="fieldNameOptions"
+                            :options="fieldNameEmailOptions"
                             input-name="reply_to"
                             @on-select-option="onSelectOption"
                         />
@@ -186,6 +186,7 @@
     import icon from '@/Libs/icon-class';
     import { useModelWrapper } from '@/Libs/utils';
     import { emailConfig } from '@/Libs/tinymce-configs';
+    import { filter } from 'lodash';
 
     export default {
         name: 'Form',
@@ -261,6 +262,13 @@
             };
         },
 
+        computed: {
+            fieldNameEmailOptions() {
+                return filter(this.fieldNameOptions, {
+                    type: 'Email',
+                });
+            },
+        },
         methods: {
             onSelectOption(optionId, inputName) {
                 let appendText = '{' + optionId + '}';
