@@ -90,26 +90,18 @@
                     </template>
                 </biz-form-input-addons>
 
-                <biz-form-input-addons
+                <biz-form-input
                     v-model="form.bcc"
                     label="Bcc"
                     placeholder="Separate by comma"
                     :message="error('bcc')"
                 >
-                    <template #afterInput>
-                        <notification-tag-option
-                            :options="fieldNameOptions"
-                            input-name="bcc"
-                            @on-select-option="onSelectOption"
-                        />
-                    </template>
-
                     <template #note>
                         <p class="help is-info">
                             {{ fieldNotes.bcc }}
                         </p>
                     </template>
-                </biz-form-input-addons>
+                </biz-form-input>
 
                 <biz-form-input-addons
                     v-model="form.subject"
