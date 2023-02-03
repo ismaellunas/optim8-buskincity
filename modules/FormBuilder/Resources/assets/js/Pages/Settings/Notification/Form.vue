@@ -216,6 +216,7 @@
         setup(props, {emit}) {
             const messageConfig = {
                 inline: false,
+                height: 480,
                 plugins: [
                     'table'
                 ],
@@ -261,6 +262,7 @@
                 });
             },
         },
+
         methods: {
             onSelectOption(optionId, inputName) {
                 let appendText = '{' + optionId + '}';
