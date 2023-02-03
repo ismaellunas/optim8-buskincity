@@ -8,6 +8,10 @@ class Country extends BaseField
 {
     public function value(): mixed
     {
-        return app(CountryService::class)->getCountryName($this->value);
+        if ($this->value) {
+            return app(CountryService::class)->getCountryName($this->value);
+        }
+
+        return $this->value;
     }
 }
