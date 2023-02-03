@@ -1,6 +1,9 @@
 <template>
     <span class="icon">
-        <i :class="icon" />
+        <i
+            aria-hidden="true"
+            :class="icon"
+        />
     </span>
 </template>
 

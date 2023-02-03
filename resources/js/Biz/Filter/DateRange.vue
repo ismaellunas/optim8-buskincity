@@ -1,6 +1,7 @@
 <template>
     <biz-datepicker
         v-model="rawDates"
+        input-class-name="input"
         range
         :enable-time-picker="false"
         @update:model-value="onUpdate"

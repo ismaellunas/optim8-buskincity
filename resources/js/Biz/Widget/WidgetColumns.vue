@@ -7,6 +7,7 @@
             >
                 <component
                     :is="widget.componentName"
+                    class="mb-5"
                     :columns="widget.columns"
                     :data="widget.data"
                     :order="order"
@@ -22,6 +23,7 @@
             >
                 <component
                     :is="asyncComponents[ widget.componentName ]"
+                    class="mb-5"
                     :columns="widget.columns"
                     :data="widget.data"
                     :order="order"
@@ -54,10 +56,7 @@
         },
 
         props: {
-            widgets: {
-                type: Array,
-                default:() => [],
-            },
+            widgets: { type: Array, default:() => [] },
             moduleWidgets: { type: Array, default:() => [] },
         },
 
