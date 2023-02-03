@@ -3,6 +3,7 @@
 namespace Modules\Booking\Http\Controllers\Frontend;
 
 use App\Http\Controllers\CrudController;
+use App\Services\SettingService;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -105,6 +106,7 @@ class OrderController extends CrudController
                 ],
                 ['title' => $product->displayName],
             ],
+            'googleApiKey' => app(SettingService::class)->getGoogleApi(),
         ]));
     }
 
