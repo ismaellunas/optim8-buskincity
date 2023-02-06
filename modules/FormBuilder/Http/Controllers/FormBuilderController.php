@@ -156,6 +156,10 @@ class FormBuilderController extends CrudController
             'can' => [
                 'user' => [
                     'edit' => $user->can('user.edit'),
+                    'redirectUser' => (
+                        !$entry->user->isSuperAdministrator
+                        && !$entry->user->isAdministrator
+                    ),
                 ]
             ]
         ]));

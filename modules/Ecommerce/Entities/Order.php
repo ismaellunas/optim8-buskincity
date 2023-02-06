@@ -91,6 +91,10 @@ class Order extends GetCandyOrder
                 return $query->orderByCheckIn($order);
                 break;
 
+            case 'city':
+                return $query->orderByCity($order);
+                break;
+
             default:
                 return $query->orderBy('reference', 'DESC');
                 break;
@@ -134,6 +138,29 @@ class Order extends GetCandyOrder
     {
         return $query->orderBy(
             $this->getBuilderJoinEventToOrder("to_char(events.booked_at, 'HHMI')")
+        , $order);
+    }
+
+    public function scopeOrderByCity($query, string $order)
+    {
+        $tablePrefix = ModuleService::tablePrefix();
+        $moduleName = ModuleService::getName();
+
+        return $query->orderBy(
+            Product::selectRaw("prod_meta.value::json->0->>'city'")
+                ->join("{$tablePrefix}products_meta as prod_meta", function ($join) use ($tablePrefix) {
+                    $join
+                        ->on("prod_meta.product_id", "=", "{$tablePrefix}products.id")
+                        ->where('prod_meta.key', '=', 'locations');
+                })
+                ->join("{$tablePrefix}product_variants", "{$tablePrefix}product_variants.product_id", "=", "{$tablePrefix}products.id")
+                ->join("{$tablePrefix}order_lines", function ($join) use ($tablePrefix, $moduleName) {
+                    $purchasableType = "Modules\\{$moduleName}\\Entities\\ProductVariant";
+
+                    $join->on("{$tablePrefix}order_lines.purchasable_id", "=", "{$tablePrefix}product_variants.product_id")
+                        ->where("purchasable_type", $purchasableType);
+                })
+                ->whereColumn("{$tablePrefix}order_lines.order_id", "{$tablePrefix}orders.id")
         , $order);
     }
 
