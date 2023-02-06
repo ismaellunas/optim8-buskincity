@@ -34,12 +34,12 @@ class SendFormNotification implements ShouldQueue
 
         foreach ($notificationSettings as $notificationSetting) {
             $recipients = app(FormBuilderService::class)
-                ->validateEmails(
+                ->sanitizeEmails(
                     json_decode($notificationSetting->send_to)
                 );
 
             $bcc = app(FormBuilderService::class)
-                ->validateEmails(
+                ->sanitizeEmails(
                     json_decode($notificationSetting->bcc)
                 );
 

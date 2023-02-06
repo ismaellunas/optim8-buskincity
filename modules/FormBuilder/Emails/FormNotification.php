@@ -44,13 +44,14 @@ class FormNotification extends Mailable
         $entry = $this->entry;
         $setting = $this->setting;
 
-        $fromEmail = $this->formBuilderService->validateEmail(
+        $fromEmail = $this->formBuilderService->sanitizeEmail(
                 $this->formBuilderService
                     ->swapTagWithEntryValue(
                         $entry,
                         $setting->from_email,
+                        config('formbuilder.default_from_email')
                     )
-            ) ?? config('formbuilder.default_from_email');
+            );
 
         $fromName = $this->formBuilderService
             ->swapTagWithEntryValue(
@@ -58,13 +59,17 @@ class FormNotification extends Mailable
                 $setting->from_name
             );
 
-        $replyToEmail = $this->formBuilderService->validateEmail(
-                $this->formBuilderService
-                    ->swapTagWithEntryValue(
-                        $entry,
-                        $setting->reply_to
-                    )
+        $replyToEmail = $this->formBuilderService
+            ->swapTagWithEntryValue(
+                $entry,
+                $setting->reply_to
             );
+
+        if ($replyToEmail) {
+            $replyToEmail = $this->formBuilderService->sanitizeEmail(
+                $replyToEmail
+            );
+        }
 
         $subject = $this->formBuilderService
             ->swapTagWithEntryValue(

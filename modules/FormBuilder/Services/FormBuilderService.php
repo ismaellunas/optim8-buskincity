@@ -398,12 +398,15 @@ class FormBuilderService
         return $entry->toArray();
     }
 
-    public function validateEmails(array $emails = []): array
+    public function sanitizeEmails(array $emails = []): array
     {
         $validEmails = [];
+        $emails = array_values(
+            array_filter($emails)
+        );
 
         foreach ($emails as $email) {
-            $email = $this->validateEmail($email);
+            $email = $this->sanitizeEmail($email);
 
             if ($email) {
                 $validEmails[] = $email;
@@ -413,7 +416,7 @@ class FormBuilderService
         return $validEmails;
     }
 
-    public function validateEmail(string $email = null): ?string
+    public function sanitizeEmail(string $email): ?string
     {
         $email = Str::replace(' ', '', $email);
 
