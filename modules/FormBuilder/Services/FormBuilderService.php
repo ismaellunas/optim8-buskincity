@@ -225,7 +225,7 @@ class FormBuilderService
         abort(Response::HTTP_FORBIDDEN);
     }
 
-    protected function getFieldClassName($type): string
+    protected function getFieldClassName(string $type): string
     {
         return $this->fieldPath.'\\'.Str::studly($type);
     }
@@ -258,12 +258,14 @@ class FormBuilderService
         foreach($inputs as $key => $value) {
             $fieldType = $fields->where('name', $key)->value('type');
 
-            $fieldClassName = $this->getFieldClassName($fieldType);
+            if ($fieldType) {
+                $fieldClassName = $this->getFieldClassName($fieldType);
 
-            if (class_exists($fieldClassName)) {
-                $fieldClass = new $fieldClassName();
+                if (class_exists($fieldClassName)) {
+                    $fieldClass = new $fieldClassName();
 
-                $values[$key] = $fieldClass->getSavedData($value);
+                    $values[$key] = $fieldClass->getSavedData($value);
+                }
             }
         }
 
