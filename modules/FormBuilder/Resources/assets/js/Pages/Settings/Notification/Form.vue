@@ -57,7 +57,7 @@
                 >
                     <template #afterInput>
                         <notification-tag-option
-                            :options="fieldNameOptions"
+                            :options="fieldNameEmailOptions"
                             input-name="from_email"
                             @on-select-option="onSelectOption"
                         />
@@ -77,7 +77,7 @@
                 >
                     <template #afterInput>
                         <notification-tag-option
-                            :options="fieldNameOptions"
+                            :options="fieldNameEmailOptions"
                             input-name="reply_to"
                             @on-select-option="onSelectOption"
                         />
@@ -90,26 +90,18 @@
                     </template>
                 </biz-form-input-addons>
 
-                <biz-form-input-addons
+                <biz-form-input
                     v-model="form.bcc"
                     label="Bcc"
                     placeholder="Separate by comma"
                     :message="error('bcc')"
                 >
-                    <template #afterInput>
-                        <notification-tag-option
-                            :options="fieldNameOptions"
-                            input-name="bcc"
-                            @on-select-option="onSelectOption"
-                        />
-                    </template>
-
                     <template #note>
                         <p class="help is-info">
                             {{ fieldNotes.bcc }}
                         </p>
                     </template>
-                </biz-form-input-addons>
+                </biz-form-input>
 
                 <biz-form-input-addons
                     v-model="form.subject"
@@ -186,6 +178,7 @@
     import icon from '@/Libs/icon-class';
     import { useModelWrapper } from '@/Libs/utils';
     import { emailConfig } from '@/Libs/tinymce-configs';
+    import { filter } from 'lodash';
 
     export default {
         name: 'Form',
@@ -223,6 +216,7 @@
         setup(props, {emit}) {
             const messageConfig = {
                 inline: false,
+                height: 480,
                 plugins: [
                     'table'
                 ],
@@ -259,6 +253,14 @@
             return {
                 icon,
             };
+        },
+
+        computed: {
+            fieldNameEmailOptions() {
+                return filter(this.fieldNameOptions, {
+                    type: 'Email',
+                });
+            },
         },
 
         methods: {
