@@ -3,6 +3,7 @@
 namespace Modules\Booking\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
+use App\Services\SettingService;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
@@ -109,6 +110,7 @@ class OrderController extends CrudController
                 'cancel' => $user->can('cancelBooking', $order),
                 'reschedule' => $user->can('rescheduleBooking', $order),
             ],
+            'googleApiKey' => app(SettingService::class)->getGoogleApi(),
         ]));
     }
 

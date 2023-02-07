@@ -7,24 +7,25 @@
         </div>
 
         <div class="column is-11">
-            <h1 class="title is-2 mt-5 mb-2">
-                {{ order.product.name }}
-            </h1>
+            <div class="columns">
+                <div class="column is-7">
+                    <h1 class="title is-2 mt-5 mb-2">
+                        {{ order.product.name }}
+                    </h1>
 
-            <p class="is-size-7">
-                <biz-tag class="is-medium">
-                    {{ order.event.status }}
-                </biz-tag>
-            </p>
+                    <p class="is-size-7">
+                        <biz-tag class="is-medium">
+                            {{ order.event.status }}
+                        </biz-tag>
+                    </p>
 
-            <div class="columns is-multiline mt-3">
-                <div class="column is-8">
-                    <event-detail-table :event="order.event">
-                        <tr v-if="checkInTime">
-                            <th><biz-icon :icon="icon.buildingCheck" /></th>
-                            <td>{{ checkInTime }}</td>
-                        </tr>
-                    </event-detail-table>
+                    <event-detail-table
+                        class="mt-3"
+                        :check-in-time="checkInTime"
+                        :event="order.event"
+                        :location="order.location"
+                        :product="order.product"
+                    />
 
                     <div class="buttons">
                         <biz-button-link :href="route(baseRouteName + '.index')">
@@ -34,20 +35,37 @@
                     </div>
                 </div>
 
-                <div class="column is-4">
-                    <div class="columns is-multiline is-centered">
+                <div class="column is-5">
+                    <div class="columns is-multiline is-centered mt-5">
+                        <div
+                            v-if="mapPosition.latitude && mapPosition.latitude"
+                            class="column is-10"
+                        >
+                            <div class="card">
+                                <biz-gmap-marker
+                                    v-model="mapPosition"
+                                    :api-key="googleApiKey"
+                                    :init-position="mapPosition"
+                                    :map-style="['width: 100%', 'height: 378px']"
+                                    :enable-search-box="false"
+                                    :enable-marker-move="false"
+                                />
+                            </div>
+                        </div>
+
                         <div
                             v-if="can.reschedule"
                             class="column is-8"
                         >
                             <biz-button-link
-                                class="is-fullwidth"
+                                class="is-fullwidth is-warning"
                                 :href="route(baseRouteName+'.reschedule', order.id)"
                             >
                                 <biz-icon :icon="icon.recycle" />
                                 <span>Reschedule</span>
                             </biz-button-link>
                         </div>
+
                         <div
                             v-if="can.cancel"
                             class="column is-8"
@@ -61,6 +79,7 @@
                                 <span>Cancel</span>
                             </biz-button-icon>
                         </div>
+
                         <div
                             v-if="can.checkIn"
                             class="column is-8"
@@ -101,14 +120,15 @@
 </template>
 
 <script>
+    import Layout from '@/Layouts/User';
     import BizBreadcrumbs from '@/Biz/Breadcrumbs';
     import BizButton from '@/Biz/Button';
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
+    import BizGmapMarker from '@/Biz/GmapMarker';
     import BizIcon from '@/Biz/Icon';
     import BizTag from '@/Biz/Tag';
     import EventDetailTable from '@booking/Pages/TableEventDetail';
-    import Layout from '@/Layouts/User';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
@@ -124,6 +144,7 @@
             BizButton,
             BizButtonIcon,
             BizButtonLink,
+            BizGmapMarker,
             BizIcon,
             BizTag,
             EventDetailTable,
@@ -145,6 +166,7 @@
             description: { type: String, required: true },
             order: { type: Object, required: true },
             checkInTime: { type: [String, null], required: true },
+            googleApiKey: { type: String, default: null },
         },
 
         setup(props) {
@@ -155,6 +177,10 @@
             return {
                 form: useForm(form),
                 icon,
+                mapPosition: {
+                    latitude: props.order?.location?.latitude,
+                    longitude: props.order?.location?.longitude
+                },
             };
         },
 
