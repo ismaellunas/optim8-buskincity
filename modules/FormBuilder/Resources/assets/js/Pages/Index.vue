@@ -26,6 +26,8 @@
             </div>
 
             <div class="table-container">
+                <biz-table-info :records="records" />
+
                 <table class="table is-striped is-hoverable is-fullwidth">
                     <thead>
                         <tr>
@@ -107,6 +109,7 @@
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import BizPagination from '@/Biz/Pagination';
     import BizLink from '@/Biz/Link';
+    import BizTableInfo from '@/Biz/TableInfo';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge } from 'lodash';
@@ -122,6 +125,7 @@
             BizFlashNotifications,
             BizPagination,
             BizLink,
+            BizTableInfo,
         },
 
         mixins: [

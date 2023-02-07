@@ -48,6 +48,8 @@
         </div>
 
         <div class="table-container">
+            <biz-table-info :records="products" />
+
             <biz-table class="is-striped is-hoverable is-fullwidth">
                 <thead>
                     <tr>
@@ -121,6 +123,7 @@
     import BizIcon from '@/Biz/Icon';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
+    import BizTableInfo from '@/Biz/TableInfo';
     import BizTag from '@/Biz/Tag';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import icon from '@/Libs/icon-class';
@@ -139,6 +142,7 @@
             BizIcon,
             BizPagination,
             BizTable,
+            BizTableInfo,
             BizTag,
         },
 

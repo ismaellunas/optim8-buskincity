@@ -41,6 +41,8 @@
             </div>
 
             <div class="table-container">
+                <biz-table-info :records="records" />
+
                 <biz-table
                     class="is-striped is-hoverable"
                     is-fullwidth
@@ -79,6 +81,7 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
@@ -86,7 +89,7 @@
     import BizIcon from '@/Biz/Icon';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
-    import MixinHasLoader from '@/Mixins/HasLoader';
+    import BizTableInfo from '@/Biz/TableInfo';
     import SpaceRow from './SpaceRow';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -102,6 +105,7 @@
             BizIcon,
             BizPagination,
             BizTable,
+            BizTableInfo,
             SpaceRow,
         },
 

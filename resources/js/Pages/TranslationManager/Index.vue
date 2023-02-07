@@ -130,6 +130,8 @@
                     action="post"
                     @submit.prevent="onSubmit"
                 >
+                    <biz-table-info :records="records" />
+
                     <table class="table is-striped is-hoverable is-fullwidth">
                         <thead>
                             <tr>
@@ -310,6 +312,7 @@
     import BizInput from '@/Biz/Input';
     import BizModalCard from '@/Biz/ModalCard';
     import BizPagination from '@/Biz/Pagination';
+    import BizTableInfo from '@/Biz/TableInfo';
     import BizTextarea from '@/Biz/Textarea';
     import { merge, debounce } from 'lodash';
     import { ref } from 'vue';
@@ -337,6 +340,7 @@
             BizInput,
             BizModalCard,
             BizPagination,
+            BizTableInfo,
             BizTextarea,
         },
 

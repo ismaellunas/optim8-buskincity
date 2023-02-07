@@ -41,6 +41,8 @@
             </div>
 
             <div class="table-container">
+                <biz-table-info :records="records" />
+
                 <biz-table class="is-striped is-fullwidth">
                     <thead>
                         <tr>
@@ -122,6 +124,7 @@
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizPagination from '@/Biz/Pagination';
     import BizTable from '@/Biz/Table';
+    import BizTableInfo from '@/Biz/TableInfo';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge, isArray } from 'lodash';
@@ -138,6 +141,7 @@
             BizFilterSearch,
             BizPagination,
             BizTable,
+            BizTableInfo,
         },
 
         mixins: [
