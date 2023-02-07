@@ -28,12 +28,14 @@
                     <div class="column is-5">
                         <biz-filter-date-range
                             v-model="queryParams.dates"
+                            auto-apply
                             input-class-name="input"
                             max-range="7"
+                            :clearable="false"
+                            :format="'MMM d'"
                             :max-date="maxDate"
                             :min-date="minDate"
                             :year-range="yearRange"
-                            :clearable="false"
                         />
                     </div>
 

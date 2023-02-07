@@ -1,7 +1,7 @@
 <template>
     <div class="box">
         <div class="columns is-multiline">
-            <div class="column is-12">
+            <div class="column is-7">
                 <h1 class="title is-2 mt-5 mb-2">
                     {{ order.product.name }}
                 </h1>
@@ -11,19 +11,15 @@
                         {{ order.event.status }}
                     </biz-tag>
                 </p>
-            </div>
 
-            <div class="column is-8">
-                <event-detail-table :event="order.event">
-                    <tr>
-                        <th><biz-icon :icon="icon.user" /></th>
-                        <td>{{ order.user_full_name }}</td>
-                    </tr>
-                    <tr>
-                        <th><biz-icon :icon="icon.buildingCheck" /></th>
-                        <td>{{ checkInTime }}</td>
-                    </tr>
-                </event-detail-table>
+                <event-detail-table
+                    class="mt-3"
+                    :check-in-time="checkInTime"
+                    :event="order.event"
+                    :location="order.location"
+                    :product="order.product"
+                    :user-name="order.user_full_name"
+                />
 
                 <div class="buttons">
                     <biz-button-link :href="route(baseRouteName + '.index')">
@@ -33,8 +29,24 @@
                 </div>
             </div>
 
-            <div class="column is-4">
-                <div class="columns is-multiline is-centered">
+            <div class="column is-5">
+                <div class="columns is-multiline is-centered mt-5">
+                    <div
+                        v-if="mapPosition.latitude && mapPosition.latitude"
+                        class="column is-10"
+                    >
+                        <div class="card">
+                            <biz-gmap-marker
+                                v-model="mapPosition"
+                                :api-key="googleApiKey"
+                                :init-position="mapPosition"
+                                :map-style="['width: 100%', 'height: 378px']"
+                                :enable-search-box="false"
+                                :enable-marker-move="false"
+                            />
+                        </div>
+                    </div>
+
                     <div
                         v-if="can.reschedule"
                         class="column is-8"
@@ -91,6 +103,7 @@
     import BizButton from '@/Biz/Button';
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
+    import BizGmapMarker from '@/Biz/GmapMarker';
     import BizIcon from '@/Biz/Icon';
     import BizTag from '@/Biz/Tag';
     import EventDetailTable from '@booking/Pages/TableEventDetail';
@@ -106,6 +119,7 @@
             BizButton,
             BizButtonIcon,
             BizButtonLink,
+            BizGmapMarker,
             BizIcon,
             BizTag,
             EventDetailTable,
@@ -124,6 +138,7 @@
             baseRouteName: { type: String, required: true },
             order: { type: Object, required: true },
             checkInTime: { type: [String, null], required: true },
+            googleApiKey: { type: String, default: null },
         },
 
         setup(props) {
@@ -134,6 +149,10 @@
             return {
                 form: useForm(form),
                 icon,
+                mapPosition: {
+                    latitude: props.order?.location?.latitude,
+                    longitude: props.order?.location?.longitude
+                },
             };
         },
 

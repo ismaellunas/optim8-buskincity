@@ -49,7 +49,7 @@ class ProductSeeder extends Seeder
         ], [
             'title' => "Deutsches Museum",
             'address' => "Museumsinsel 1, 80538 4HHM+W9",
-            'latitude' => [ 48.13495937007051, 11.5840630265014 ],
+            'latlng' => [ 48.13495937007051, 11.5840630265014 ],
             'city' => 'Munich',
             'country_code' => 'DE',
         ], [ // ----- Sweden
