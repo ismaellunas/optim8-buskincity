@@ -15,7 +15,7 @@
                     v-model="space.parent_id"
                     class="is-fullwidth"
                     label="Parent"
-                    :disabled="!!space.id"
+                    :disabled="!canChangeParent"
                     :message="error('parent_id')"
                 >
                     <option
@@ -232,6 +232,7 @@
             logoUrl: { type: [String, null], default: '' },
             parentOptions: { type: Object, required: true },
             typeOptions: { type: Object, required: true },
+            canChangeParent: { type: Boolean, default: true },
         },
 
         setup(props, { emit }) {

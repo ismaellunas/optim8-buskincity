@@ -88,7 +88,7 @@
                     latitude: null,
                     longitude: null,
                     name: null,
-                    parent_id: this.parentOptions[0].id ?? null,
+                    parent_id: this.parentOptions[0]?.id ?? null,
                     type_id: null,
                     contacts: [],
                     logo: null,

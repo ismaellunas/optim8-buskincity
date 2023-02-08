@@ -74,6 +74,7 @@ class SpaceService
             $space->typeName = $space->type->name ?? null;
             $space->can = [
                 'edit' => $user->can('edit', $space),
+                'delete' => $user->can('delete', $space)
             ];
 
             return $space;

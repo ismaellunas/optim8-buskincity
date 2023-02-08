@@ -38,6 +38,7 @@
                             :logo-url="logoUrl"
                             :parent-options="parentOptions"
                             :type-options="typeOptions"
+                            :can-change-parent="can.changeParent"
                         >
                             <biz-form-select
                                 v-if="can.page.edit"
@@ -274,7 +275,7 @@
             },
 
             isEventRendered() {
-                return this.can.manager.edit;
+                return this.can.update;
             },
 
             currentTranslatedPage() {
