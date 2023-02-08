@@ -2,25 +2,11 @@
     <div>
         <div class="box">
             <div class="columns">
-                <div class="column">
-                    <biz-button-link
-                        class="is-link is-pulled-left mr-5"
-                        :href="route(baseRouteName + '.index')"
-                    >
-                        <span class="icon-text">
-                            <span class="icon">
-                                <i :class="icon.back" />
-                            </span>
-                            <span>Back</span>
-                        </span>
-                    </biz-button-link>
-
-                    <div class="is-pulled-left">
-                        <biz-filter-search
-                            v-model="term"
-                            @search="search"
-                        />
-                    </div>
+                <div class="column is-4">
+                    <biz-filter-search
+                        v-model="term"
+                        @search="search"
+                    />
                 </div>
             </div>
 
