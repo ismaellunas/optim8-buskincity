@@ -35,6 +35,8 @@ class SpaceServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        Space::disableAutoloadTranslations();
+
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
