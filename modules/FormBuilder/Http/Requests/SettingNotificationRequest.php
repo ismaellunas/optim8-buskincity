@@ -74,6 +74,8 @@ class SettingNotificationRequest extends FormRequest
     {
         $dataArray = array_filter(explode(',', str_replace(' ', '', $value)));
 
-        return json_encode($dataArray);
+        return json_encode(
+            array_values($dataArray)
+        );
     }
 }
