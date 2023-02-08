@@ -11,7 +11,8 @@ use Inertia\Inertia;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
-use Modules\Space\Http\Requests\SpaceRequest;
+use Modules\Space\Http\Requests\SpaceStoreRequest;
+use Modules\Space\Http\Requests\SpaceUpdateRequest;
 use Modules\Space\ModuleService;
 use Modules\Space\Services\SpaceService;
 
@@ -144,7 +145,7 @@ class SpaceController extends CrudController
         ]));
     }
 
-    public function store(SpaceRequest $request)
+    public function store(SpaceStoreRequest $request)
     {
         $space = new Space();
 
@@ -240,7 +241,7 @@ class SpaceController extends CrudController
         ]));
     }
 
-    public function update(SpaceRequest $request, Space $space)
+    public function update(SpaceUpdateRequest $request, Space $space)
     {
         $inputs = $request->validated();
 
