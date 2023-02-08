@@ -43,7 +43,11 @@ class SpaceServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
 
         User::resolveRelationUsing('spaces', function ($userModel) {
-            return $userModel->belongsToMany(Space::class);
+            return $userModel
+                ->belongsToMany(Space::class)
+                ->addSelect(Space::getTableName().'.*')
+                ->withDepth()
+            ;
         });
     }
 
