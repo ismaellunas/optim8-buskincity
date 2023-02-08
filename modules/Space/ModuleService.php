@@ -80,4 +80,9 @@ class ModuleService
             config('constants.default_images.logo_space')
         );
     }
+
+    public static function maxParentDepth(): int
+    {
+        return 2;
+    }
 }
