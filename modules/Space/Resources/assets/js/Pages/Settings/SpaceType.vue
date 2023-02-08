@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            <biz-table-container
+            <biz-table-index
                 :is-ajax="true"
                 :records="types"
                 :query-params="queryParams"
@@ -72,7 +72,7 @@
                         </div>
                     </td>
                 </tr>
-            </biz-table-container>
+            </biz-table-index>
         </biz-list-section>
 
         <space-type-form-modal
@@ -90,7 +90,7 @@
     import BizButton from '@/Biz/Button';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizListSection from '@/Biz/ListSection';
-    import BizTableContainer from '@/Biz/TableContainer';
+    import BizTableIndex from '@/Biz/TableIndex';
     import icon from '@/Libs/icon-class';
     import SpaceTypeFormModal from './SpaceTypeFormModal';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -103,7 +103,7 @@
             BizButton,
             BizFilterSearch,
             BizListSection,
-            BizTableContainer,
+            BizTableIndex,
             SpaceTypeFormModal,
         },
 

@@ -20,7 +20,7 @@
                 </div>
             </div>
 
-            <biz-table-container
+            <biz-table-index
                 :records="records"
                 :query-params="queryParams"
             >
@@ -58,7 +58,7 @@
                         </div>
                     </td>
                 </tr>
-            </biz-table-container>
+            </biz-table-index>
         </div>
     </div>
 </template>
@@ -70,7 +70,7 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
-    import BizTableContainer from '@/Biz/TableContainer';
+    import BizTableIndex from '@/Biz/TableIndex';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
@@ -84,7 +84,7 @@
             BizButtonLink,
             BizFilterSearch,
             BizIcon,
-            BizTableContainer
+            BizTableIndex
         },
 
         mixins: [

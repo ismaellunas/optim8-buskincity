@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <biz-table-container
+        <biz-table-index
             :records="products"
             :query-params="queryParams"
         >
@@ -101,7 +101,7 @@
                     </div>
                 </td>
             </tr>
-        </biz-table-container>
+        </biz-table-index>
     </div>
 </template>
 
@@ -114,7 +114,7 @@
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
-    import BizTableContainer from '@/Biz/TableContainer';
+    import BizTableIndex from '@/Biz/TableIndex';
     import BizTag from '@/Biz/Tag';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import icon from '@/Libs/icon-class';
@@ -131,7 +131,7 @@
             BizDropdownItem,
             BizFilterSearch,
             BizIcon,
-            BizTableContainer,
+            BizTableIndex,
             BizTag,
         },
 

@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <biz-table-container
+            <biz-table-index
                 :records="records"
                 :query-params="queryParams"
             >
@@ -130,7 +130,7 @@
                         </div>
                     </template>
                 </user-list-item>
-            </biz-table-container>
+            </biz-table-index>
         </div>
 
         <modal-form-delete
@@ -156,7 +156,7 @@
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
-    import BizTableContainer from '@/Biz/TableContainer';
+    import BizTableIndex from '@/Biz/TableIndex';
     import ModalFormDelete from '@/Pages/User/ModalFormDelete';
     import UserListItem from '@/Pages/User/ListItem';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -175,7 +175,7 @@
             BizDropdownItem,
             BizFilterSearch,
             BizIcon,
-            BizTableContainer,
+            BizTableIndex,
             ModalFormDelete,
             UserListItem,
         },

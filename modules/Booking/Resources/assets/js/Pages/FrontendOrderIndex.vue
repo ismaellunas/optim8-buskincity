@@ -74,100 +74,93 @@
             </div>
         </div>
 
-        <div class="table-container">
-            <biz-table-info :records="orders" />
-
-            <biz-table class="is-striped is-hoverable is-fullwidth">
-                <thead>
-                    <tr>
-                        <biz-table-column-sort
-                            :order="order"
-                            :is-sorted="column == 'status'"
-                            @click="orderColumn('status')"
-                        >
-                            Status
-                        </biz-table-column-sort>
-                        <biz-table-column-sort
-                            :order="order"
-                            :is-sorted="column == 'name'"
-                            @click="orderColumn('name')"
-                        >
-                            Name
-                        </biz-table-column-sort>
-                        <biz-table-column-sort
-                            :order="order"
-                            :is-sorted="column == 'city'"
-                            @click="orderColumn('city')"
-                        >
-                            City
-                        </biz-table-column-sort>
-                        <biz-table-column-sort
-                            :order="order"
-                            :is-sorted="column == 'date'"
-                            @click="orderColumn('date')"
-                        >
-                            Date
-                        </biz-table-column-sort>
-                        <th>Timezone</th>
-                        <biz-table-column-sort
-                            :order="order"
-                            :is-sorted="column == 'time'"
-                            @click="orderColumn('time')"
-                        >
-                            Time
-                        </biz-table-column-sort>
-                        <biz-table-column-sort
-                            :order="order"
-                            :is-sorted="column == 'checkin'"
-                            @click="orderColumn('checkin')"
-                        >
-                            Check-In
-                        </biz-table-column-sort>
-                        <th>
-                            <div class="level-right">
-                                Actions
-                            </div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        v-for="order in orders.data"
-                        :key="order.id"
-                    >
-                        <td>
-                            <biz-tag class="is-medium">
-                                {{ order.status }}
-                            </biz-tag>
-                        </td>
-                        <td>{{ order.product_name }}</td>
-                        <td>{{ order.city }}</td>
-                        <td>{{ order.date }}</td>
-                        <td>{{ order.timezone }}</td>
-                        <td>{{ order.start_end_time }}</td>
-                        <td>{{ order.check_in_time }}</td>
-                        <td>
-                            <div class="level-right">
-                                <biz-button-link
-                                    class="is-ghost has-text-black"
-                                    :href="route(baseRouteName+'.show', order.id)"
-                                >
-                                    <biz-icon
-                                        class="is-small"
-                                        :icon="icon.show"
-                                    />
-                                </biz-button-link>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </biz-table>
-        </div>
-
-        <biz-pagination
-            :links="orders.links"
+        <biz-table-index
+            :records="orders"
             :query-params="queryParams"
-        />
+        >
+            <template #thead>
+                <tr>
+                    <biz-table-column-sort
+                        :order="order"
+                        :is-sorted="column == 'status'"
+                        @click="orderColumn('status')"
+                    >
+                        Status
+                    </biz-table-column-sort>
+                    <biz-table-column-sort
+                        :order="order"
+                        :is-sorted="column == 'name'"
+                        @click="orderColumn('name')"
+                    >
+                        Name
+                    </biz-table-column-sort>
+                    <biz-table-column-sort
+                        :order="order"
+                        :is-sorted="column == 'city'"
+                        @click="orderColumn('city')"
+                    >
+                        City
+                    </biz-table-column-sort>
+                    <biz-table-column-sort
+                        :order="order"
+                        :is-sorted="column == 'date'"
+                        @click="orderColumn('date')"
+                    >
+                        Date
+                    </biz-table-column-sort>
+                    <th>Timezone</th>
+                    <biz-table-column-sort
+                        :order="order"
+                        :is-sorted="column == 'time'"
+                        @click="orderColumn('time')"
+                    >
+                        Time
+                    </biz-table-column-sort>
+                    <biz-table-column-sort
+                        :order="order"
+                        :is-sorted="column == 'checkin'"
+                        @click="orderColumn('checkin')"
+                    >
+                        Check-In
+                    </biz-table-column-sort>
+                    <th>
+                        <div class="level-right">
+                            Actions
+                        </div>
+                    </th>
+                </tr>
+            </template>
+
+            <tr
+                v-for="order in orders.data"
+                :key="order.id"
+            >
+                <td>
+                    <biz-tag class="is-medium">
+                        {{ order.status }}
+                    </biz-tag>
+                </td>
+                <td>{{ order.product_name }}</td>
+                <td>{{ order.city }}</td>
+                <td>{{ order.date }}</td>
+                <td>{{ order.timezone }}</td>
+                <td>{{ order.start_end_time }}</td>
+                <td>{{ order.check_in_time }}</td>
+                <td>
+                    <div class="level-right">
+                        <biz-button-link
+                            class="is-ghost has-text-black"
+                            :href="route(baseRouteName+'.show', order.id)"
+                        >
+                            <biz-icon
+                                class="is-small"
+                                :icon="icon.show"
+                            />
+                        </biz-button-link>
+                    </div>
+                </td>
+            </tr>
+        </biz-table-index>
     </div>
 </template>
 
@@ -182,10 +175,8 @@
     import BizFilterDateRange from '@/Biz/Filter/DateRange';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTable from '@/Biz/Table';
-    import BizTableInfo from '@/Biz/TableInfo';
     import BizTableColumnSort from '@/Biz/TableColumnSort';
+    import BizTableIndex from '@/Biz/TableIndex';
     import BizTag from '@/Biz/Tag';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -203,10 +194,8 @@
             BizFilterDateRange,
             BizFilterSearch,
             BizIcon,
-            BizPagination,
-            BizTable,
-            BizTableInfo,
             BizTableColumnSort,
+            BizTableIndex,
             BizTag,
         },
 

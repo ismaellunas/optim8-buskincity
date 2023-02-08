@@ -39,7 +39,7 @@
     import BizTableInfo from '@/Biz/TableInfo';
 
     export default {
-        name: 'BizTableContainer',
+        name: 'BizTableIndex',
 
         components: {
             BizPagination,

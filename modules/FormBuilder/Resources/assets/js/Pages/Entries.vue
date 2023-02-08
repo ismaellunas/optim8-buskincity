@@ -13,7 +13,7 @@
             <template
                 v-if="!isDataEmpty"
             >
-                <biz-table-container
+                <biz-table-index
                     :records="records"
                     :query-params="queryParams"
                 >
@@ -52,7 +52,7 @@
                             </biz-button-link>
                         </td>
                     </tr>
-                </biz-table-container>
+                </biz-table-index>
             </template>
 
             <template
@@ -71,7 +71,7 @@
     import AppLayout from '@/Layouts/AppLayout';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizTableContainer from '@/Biz/TableContainer';
+    import BizTableIndex from '@/Biz/TableIndex';
     import icon from '@/Libs/icon-class';
     import { merge, isEmpty } from 'lodash';
     import { ref } from 'vue';
@@ -82,7 +82,7 @@
         components: {
             BizButtonLink,
             BizFilterSearch,
-            BizTableContainer,
+            BizTableIndex,
         },
 
         mixins: [

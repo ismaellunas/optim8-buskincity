@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <biz-table-container
+            <biz-table-index
                 :records="records"
                 :query-params="queryParams"
             >
@@ -89,7 +89,7 @@
                         </div>
                     </td>
                 </tr>
-            </biz-table-container>
+            </biz-table-index>
         </div>
     </div>
 </template>
@@ -102,7 +102,7 @@
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
     import BizLink from '@/Biz/Link';
-    import BizTableContainer from '@/Biz/TableContainer';
+    import BizTableIndex from '@/Biz/TableIndex';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge } from 'lodash';
@@ -117,7 +117,7 @@
             BizFilterSearch,
             BizFlashNotifications,
             BizLink,
-            BizTableContainer,
+            BizTableIndex,
         },
 
         mixins: [

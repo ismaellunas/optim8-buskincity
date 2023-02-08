@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <biz-table-container
+            <biz-table-index
                 :records="records"
                 :query-params="queryParams"
             >
@@ -64,7 +64,7 @@
                     :can="can"
                     @delete-row="deleteSpace($event)"
                 />
-            </biz-table-container>
+            </biz-table-index>
         </div>
     </div>
 </template>
@@ -77,7 +77,7 @@
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizDropdownScroll from '@/Biz/DropdownScroll';
     import BizIcon from '@/Biz/Icon';
-    import BizTableContainer from '@/Biz/TableContainer';
+    import BizTableIndex from '@/Biz/TableIndex';
     import SpaceRow from './SpaceRow';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -91,7 +91,7 @@
             BizDropdownItem,
             BizDropdownScroll,
             BizIcon,
-            BizTableContainer,
+            BizTableIndex,
             SpaceRow,
         },
 

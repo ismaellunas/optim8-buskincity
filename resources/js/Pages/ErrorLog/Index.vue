@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <biz-table-container
+            <biz-table-index
                 :records="records"
                 :query-params="queryParams"
             >
@@ -93,7 +93,7 @@
                         />
                     </td>
                 </tr>
-            </biz-table-container>
+            </biz-table-index>
         </div>
 
         <modal-entry-detail
@@ -114,7 +114,7 @@
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizFilterDateRange from '@/Biz/Filter/DateRange';
     import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizTableContainer from '@/Biz/TableContainer';
+    import BizTableIndex from '@/Biz/TableIndex';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge, isArray } from 'lodash';
@@ -129,7 +129,7 @@
             BizButtonIcon,
             BizFilterDateRange,
             BizFilterSearch,
-            BizTableContainer,
+            BizTableIndex,
         },
 
         mixins: [

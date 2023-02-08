@@ -73,7 +73,7 @@
             </div>
         </div>
 
-        <biz-table-container
+        <biz-table-index
             :records="records"
             :query-params="queryParams"
         >
@@ -163,7 +163,7 @@
                     </div>
                 </td>
             </tr>
-        </biz-table-container>
+        </biz-table-index>
 
         <modal-cancel-event-confirmation
             v-if="isModalOpen && selectedOrder"
@@ -198,7 +198,7 @@
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
     import BizLink from '@/Biz/Link';
-    import BizTableContainer from '@/Biz/TableContainer';
+    import BizTableIndex from '@/Biz/TableIndex';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
     import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation';
@@ -221,7 +221,7 @@
             BizFilterSearch,
             BizIcon,
             BizLink,
-            BizTableContainer,
+            BizTableIndex,
             ModalCancelEventConfirmation,
         },
 

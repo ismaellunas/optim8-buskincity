@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <biz-table-container
+        <biz-table-index
             :is-ajax="true"
             :records="records"
             :query-params="queryParams"
@@ -78,7 +78,7 @@
                     </div>
                 </td>
             </tr>
-        </biz-table-container>
+        </biz-table-index>
     </div>
 </template>
 
@@ -88,7 +88,7 @@
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizTableContainer from '@/Biz/TableContainer';
+    import BizTableIndex from '@/Biz/TableIndex';
     import BizTag from '@/Biz/Tag';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -101,7 +101,7 @@
             BizButton,
             BizButtonLink,
             BizFilterSearch,
-            BizTableContainer,
+            BizTableIndex,
             BizTag,
         },
 

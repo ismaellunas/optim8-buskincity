@@ -129,7 +129,7 @@
                 action="post"
                 @submit.prevent="onSubmit"
             >
-                <biz-table-container
+                <biz-table-index
                     :is-ajax-pagination="true"
                     :query-params="queryParams"
                     :records="records"
@@ -211,7 +211,7 @@
                             </div>
                         </td>
                     </tr>
-                </biz-table-container>
+                </biz-table-index>
             </form>
         </div>
 
@@ -305,7 +305,7 @@
     import BizIcon from '@/Biz/Icon';
     import BizInput from '@/Biz/Input';
     import BizModalCard from '@/Biz/ModalCard';
-    import BizTableContainer from '@/Biz/TableContainer';
+    import BizTableIndex from '@/Biz/TableIndex';
     import BizTextarea from '@/Biz/Textarea';
     import { merge, debounce } from 'lodash';
     import { ref } from 'vue';
@@ -332,7 +332,7 @@
             BizIcon,
             BizInput,
             BizModalCard,
-            BizTableContainer,
+            BizTableIndex,
             BizTextarea,
         },
 

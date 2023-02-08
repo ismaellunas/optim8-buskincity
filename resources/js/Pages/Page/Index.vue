@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <biz-table-container
+            <biz-table-index
                 :records="records"
                 :query-params="queryParams"
             >
@@ -123,7 +123,7 @@
                         </div>
                     </td>
                 </tr>
-            </biz-table-container>
+            </biz-table-index>
         </div>
     </div>
 </template>
@@ -135,7 +135,7 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import BizTableContainer from '@/Biz/TableContainer';
+    import BizTableIndex from '@/Biz/TableIndex';
     import BizTag from '@/Biz/Tag';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, confirm } from '@/Libs/alert';
@@ -150,7 +150,7 @@
             BizButtonLink,
             BizFilterSearch,
             BizFlashNotifications,
-            BizTableContainer,
+            BizTableIndex,
             BizTag,
         },
 
