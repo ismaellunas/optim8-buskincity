@@ -83,35 +83,29 @@ class SpaceService
     }
 
     public function parentOptions(
-        ?array $ids = null,
-        string $label = null
+        ?Collection $managedSpaces = null,
+        string $label = null,
+        ?array $ignoreIds = null,
     ): Collection {
-        Space::disableAutoloadTranslations();
+        $builder = Space::select(['id', 'name', 'parent_id', '_lft', '_rgt'])
+            ->withDepth()
+            ->when($ignoreIds, function ($query, $ignoreIds) {
+                $query->whereNotIn('id', $ignoreIds);
+            });
 
-        $spaces = null;
-
-        if ($ids) {
-            $spaces = Space::select('id', '_lft', '_rgt')
-                ->whereIn('id', $ids)
-                ->get();
+        if (is_countable($managedSpaces)) {
+            if ($managedSpaces->isEmpty()) {
+                $builder->whereRaw('1 = 0');
+            } else {
+                foreach ($managedSpaces as $key => $id) {
+                    $boolean = $key == 0 ? 'and' : 'or';
+                    $builder->whereDescendantOrSelf($id, $boolean);
+                }
+            }
         }
 
-        $options = Space::select(['id', 'name', 'parent_id', '_lft', '_rgt'])
-            ->withDepth()
-            ->with('ancestors', function ($query) {
-                $query->select(['id', 'name', 'parent_id', '_lft', '_rgt']);
-                $query->withDepth();
-            })
-            ->when($spaces, function ($query, $spaces) {
-                foreach ($spaces as $key => $space) {
-                    $boolean = $key == 0 ? 'and' : 'or';
-                    $query->whereDescendantOrSelf($space, $boolean);
-                }
-            })
-            ->hasChildren()
-            ->get()
-            ->toFlatTree()
-            ->filter(fn ($space) => $space->depth < 2)
+        $options = $builder->get()
+            ->filter(fn ($space) => $space->isParentable)
             ->map(function ($space) {
                 return [
                     'id' => $space->id,
@@ -126,10 +120,41 @@ class SpaceService
             ->values();
 
         if ($label) {
-            $options->prepend(['id' => null, 'value' => $label]);
+            $options->prepend(['id' => null, 'value' => $label, 'depth' => -1]);
         }
 
         return $options;
+    }
+
+    public function parentOptionsFor(
+        Space $space,
+        ?Collection $managedSpaces = null,
+        ?string $label = null
+    ): Collection {
+        if (is_null($space->depth)) {
+            $space = Space::withDepth()->find($space->id);
+        }
+
+        $leafDepth = $space->descendants()
+            ->whereIsLeaf()
+            ->withDepth()
+            ->get(['id', 'parent_id', '_lft', '_rgt'])
+            ->max('depth') ?? $space->depth;
+
+        $maxAvailableDepth = ModuleService::maxParentDepth() - ($leafDepth - $space->depth + 1);
+
+        $options = $this->parentOptions(
+            $managedSpaces,
+            $label,
+            $space->descendants->pluck('id')->push($space->id)->all()
+        );
+
+        return $options->filter(function ($option) use ($maxAvailableDepth, $space) {
+            return (
+                $option['id'] == $space->parent_id
+                || $option['depth'] <= $maxAvailableDepth
+            );
+        });
     }
 
     public function managers(
