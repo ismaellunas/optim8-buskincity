@@ -1,43 +1,32 @@
 <template>
-    <div>
-        <div class="columns mb-0">
-            <div class="column">
-                <biz-breadcrumbs
-                    :breadcrumbs="breadcrumbs"
-                    class="is-medium"
-                />
-            </div>
-        </div>
-
-        <div class="box mb-6">
-            <form
-                action=""
-                @submit.prevent="submit"
-            >
-                <space-form
-                    v-model="space"
-                    :parent-options="parentOptions"
-                    :type-options="typeOptions"
-                    :default-country="defaultCountry"
-                    :instructions="instructions"
-                />
-                <div class="field is-grouped is-grouped-right mt-4">
-                    <div class="control">
-                        <biz-button-link
-                            :href="routeIndex"
-                            class="is-link is-light"
-                        >
-                            Cancel
-                        </biz-button-link>
-                    </div>
-                    <div class="control">
-                        <biz-button class="is-link">
-                            Create
-                        </biz-button>
-                    </div>
+    <div class="box mb-6">
+        <form
+            action=""
+            @submit.prevent="submit"
+        >
+            <space-form
+                v-model="space"
+                :parent-options="parentOptions"
+                :type-options="typeOptions"
+                :default-country="defaultCountry"
+                :instructions="instructions"
+            />
+            <div class="field is-grouped is-grouped-right mt-4">
+                <div class="control">
+                    <biz-button-link
+                        :href="routeIndex"
+                        class="is-link is-light"
+                    >
+                        Cancel
+                    </biz-button-link>
                 </div>
-            </form>
-        </div>
+                <div class="control">
+                    <biz-button class="is-link">
+                        Create
+                    </biz-button>
+                </div>
+            </div>
+        </form>
     </div>
 </template>
 

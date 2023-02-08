@@ -97,7 +97,18 @@ class OrderController extends CrudController
         $checkIn = $order->checkIn;
         $orderRecord = $this->orderService->getRecord($order);
 
+        $productName = Arr::get($orderRecord, 'product.name');
+
         return Inertia::render('Booking::OrderShow', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $productName,
+                ],
+            ],
             'title' => $this->title.': '.Arr::get($orderRecord, 'product.name'),
             'order' => $orderRecord,
             'checkInTime' => $checkIn
