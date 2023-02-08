@@ -289,31 +289,13 @@ class SpaceController extends CrudController
         return back();
     }
 
-    public function destroy(Request $request, Space $space)
+    public function destroy(Space $space)
     {
         $space->delete();
 
         $this->generateFlashMessage($this->title.' deleted successfully!');
 
         return redirect()->route($this->baseRouteName.'.index');
-    }
-
-    public function moveNode($current, $parent = null)
-    {
-        $this->authorize('changeParent', Space::class);
-
-        $currentSpace = Space::find($current);
-
-        if (! $parent) {
-            $currentSpace->saveAsRoot();
-
-        } else {
-
-            $parentSpace = Space::find($parent);
-            $parentSpace->appendNode($currentSpace);
-        }
-
-        return back();
     }
 
     public function searchManagers(Request $request)
