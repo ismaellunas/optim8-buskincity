@@ -125,100 +125,94 @@
                 </div>
             </div>
 
-            <div class="table-container">
-                <form
-                    action="post"
-                    @submit.prevent="onSubmit"
+            <form
+                action="post"
+                @submit.prevent="onSubmit"
+            >
+                <biz-table-container
+                    :is-ajax-pagination="true"
+                    :query-params="queryParams"
+                    :records="records"
+                    @on-clicked-pagination="onClickedPagination"
                 >
-                    <biz-table-info :records="records" />
+                    <template #thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Group</th>
+                            <th>Key</th>
+                            <th v-if="!isReferenceLanguage">
+                                English Value
+                            </th>
+                            <th>Value</th>
+                            <th>
+                                <div class="level-right">
+                                    Actions
+                                </div>
+                            </th>
+                        </tr>
+                    </template>
 
-                    <table class="table is-striped is-hoverable is-fullwidth">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Group</th>
-                                <th>Key</th>
-                                <th v-if="!isReferenceLanguage">
-                                    English Value
-                                </th>
-                                <th>Value</th>
-                                <th>
-                                    <div class="level-right">
-                                        Actions
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(page, index) in records.data"
-                                :key="page.id"
-                            >
-                                <th>{{ page.id ?? "-" }}</th>
-                                <td>{{ page.group }}</td>
-                                <td>
-                                    <template v-if="!page.group && isReferenceLanguage">
-                                        <biz-field class="mb-0">
-                                            <div class="control is-expanded">
-                                                <biz-input
-                                                    v-if="form.translations[index]"
-                                                    v-model="form.translations[index].key"
-                                                    placeholder="key"
-                                                />
-                                            </div>
-                                        </biz-field>
-                                    </template>
-
-                                    <template v-else>
-                                        {{ page.key }}
-                                    </template>
-                                </td>
-                                <td v-if="!isReferenceLanguage">
-                                    {{ page.en_value ?? "-" }}
-                                </td>
-                                <td>
-                                    <biz-field class="mb-0">
-                                        <div class="control is-expanded">
-                                            <biz-textarea
-                                                v-if="form.translations[index]"
-                                                v-model="form.translations[index].value"
-                                                placeholder="value"
-                                                style="min-width: 250px"
-                                                rows="3"
-                                            />
-                                        </div>
-                                    </biz-field>
-                                </td>
-                                <td>
-                                    <div class="level-right">
-                                        <biz-button-icon
-                                            v-if="page.value"
-                                            type="button"
-                                            class="is-ghost has-text-black ml-1"
-                                            :icon="icon.eraser"
-                                            @click.prevent="onClear(index)"
-                                        />
-
-                                        <biz-button-icon
-                                            v-if="!page.group && referenceLocale == page.locale"
-                                            type="button"
-                                            class="is-ghost has-text-black ml-1"
-                                            :icon="icon.remove"
-                                            @click.prevent="onDelete(page)"
+                    <tr
+                        v-for="(page, index) in records.data"
+                        :key="page.id"
+                    >
+                        <th>{{ page.id ?? "-" }}</th>
+                        <td>{{ page.group }}</td>
+                        <td>
+                            <template v-if="!page.group && isReferenceLanguage">
+                                <biz-field class="mb-0">
+                                    <div class="control is-expanded">
+                                        <biz-input
+                                            v-if="form.translations[index]"
+                                            v-model="form.translations[index].key"
+                                            placeholder="key"
                                         />
                                     </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
-            <biz-pagination
-                :is-ajax="true"
-                :links="records.links"
-                :query-params="queryParams"
-                @on-clicked-pagination="onClickedPagination"
-            />
+                                </biz-field>
+                            </template>
+
+                            <template v-else>
+                                {{ page.key }}
+                            </template>
+                        </td>
+                        <td v-if="!isReferenceLanguage">
+                            {{ page.en_value ?? "-" }}
+                        </td>
+                        <td>
+                            <biz-field class="mb-0">
+                                <div class="control is-expanded">
+                                    <biz-textarea
+                                        v-if="form.translations[index]"
+                                        v-model="form.translations[index].value"
+                                        placeholder="value"
+                                        style="min-width: 250px"
+                                        rows="3"
+                                    />
+                                </div>
+                            </biz-field>
+                        </td>
+                        <td>
+                            <div class="level-right">
+                                <biz-button-icon
+                                    v-if="page.value"
+                                    type="button"
+                                    class="is-ghost has-text-black ml-1"
+                                    :icon="icon.eraser"
+                                    @click.prevent="onClear(index)"
+                                />
+
+                                <biz-button-icon
+                                    v-if="!page.group && referenceLocale == page.locale"
+                                    type="button"
+                                    class="is-ghost has-text-black ml-1"
+                                    :icon="icon.remove"
+                                    @click.prevent="onDelete(page)"
+                                />
+                            </div>
+                        </td>
+                    </tr>
+                </biz-table-container>
+            </form>
         </div>
 
         <biz-modal-card
@@ -311,8 +305,7 @@
     import BizIcon from '@/Biz/Icon';
     import BizInput from '@/Biz/Input';
     import BizModalCard from '@/Biz/ModalCard';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTableInfo from '@/Biz/TableInfo';
+    import BizTableContainer from '@/Biz/TableContainer';
     import BizTextarea from '@/Biz/Textarea';
     import { merge, debounce } from 'lodash';
     import { ref } from 'vue';
@@ -339,8 +332,7 @@
             BizIcon,
             BizInput,
             BizModalCard,
-            BizPagination,
-            BizTableInfo,
+            BizTableContainer,
             BizTextarea,
         },
 

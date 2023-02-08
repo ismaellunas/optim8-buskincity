@@ -24,68 +24,61 @@
             </div>
         </div>
 
-        <div class="table-container">
-            <biz-table-info :records="records" />
-
-            <biz-table class="is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Subject</th>
-                        <th>Status</th>
-                        <th>
-                            <div class="level-right">
-                                Actions
-                            </div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        v-for="record in records.data"
-                        :key="record.id"
-                    >
-                        <td>{{ record.name }}</td>
-                        <td>{{ record.subject }}</td>
-                        <td>
-                            <biz-tag
-                                :class="{ 'is-success': record.is_active, 'is-dark': !record.is_active }"
-                            >
-                                {{ record.status }}
-                            </biz-tag>
-                        </td>
-                        <td>
-                            <div class="level-right">
-                                <biz-button-link
-                                    :href="route(baseRouteName + '.edit', {'form_builder': formBuilder.id, 'notification': record.id})"
-                                    class="is-ghost has-text-black"
-                                >
-                                    <span class="icon is-small">
-                                        <i :class="icon.edit" />
-                                    </span>
-                                </biz-button-link>
-                                <biz-button
-                                    type="button"
-                                    class="is-ghost has-text-black ml-1"
-                                    @click="onDelete(record)"
-                                >
-                                    <span class="icon is-small">
-                                        <i :class="icon.remove" />
-                                    </span>
-                                </biz-button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </biz-table>
-        </div>
-
-        <biz-pagination
+        <biz-table-container
             :is-ajax="true"
-            :links="records.links"
+            :records="records"
             :query-params="queryParams"
             @on-clicked-pagination="getSettingNotifications"
-        />
+        >
+            <template #thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Subject</th>
+                    <th>Status</th>
+                    <th>
+                        <div class="level-right">
+                            Actions
+                        </div>
+                    </th>
+                </tr>
+            </template>
+
+            <tr
+                v-for="record in records.data"
+                :key="record.id"
+            >
+                <td>{{ record.name }}</td>
+                <td>{{ record.subject }}</td>
+                <td>
+                    <biz-tag
+                        :class="{ 'is-success': record.is_active, 'is-dark': !record.is_active }"
+                    >
+                        {{ record.status }}
+                    </biz-tag>
+                </td>
+                <td>
+                    <div class="level-right">
+                        <biz-button-link
+                            :href="route(baseRouteName + '.edit', {'form_builder': formBuilder.id, 'notification': record.id})"
+                            class="is-ghost has-text-black"
+                        >
+                            <span class="icon is-small">
+                                <i :class="icon.edit" />
+                            </span>
+                        </biz-button-link>
+                        <biz-button
+                            type="button"
+                            class="is-ghost has-text-black ml-1"
+                            @click="onDelete(record)"
+                        >
+                            <span class="icon is-small">
+                                <i :class="icon.remove" />
+                            </span>
+                        </biz-button>
+                    </div>
+                </td>
+            </tr>
+        </biz-table-container>
     </div>
 </template>
 
@@ -95,9 +88,7 @@
     import BizButton from '@/Biz/Button';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTable from '@/Biz/Table';
-    import BizTableInfo from '@/Biz/TableInfo';
+    import BizTableContainer from '@/Biz/TableContainer';
     import BizTag from '@/Biz/Tag';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -110,9 +101,7 @@
             BizButton,
             BizButtonLink,
             BizFilterSearch,
-            BizPagination,
-            BizTable,
-            BizTableInfo,
+            BizTableContainer,
             BizTag,
         },
 

@@ -73,104 +73,97 @@
             </div>
         </div>
 
-        <div class="table-container pb-6">
-            <biz-table-info :records="records" />
-
-            <biz-table class="is-striped is-hoverable is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>Status</th>
-                        <th>Name</th>
-                        <th>City</th>
-                        <th>User</th>
-                        <th>Date</th>
-                        <th>Timezone</th>
-                        <th>Time</th>
-                        <th>Check-In</th>
-                        <th>
-                            <div class="level-right">
-                                Actions
-                            </div>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr
-                        v-for="(record, index) in records.data"
-                        :key="record.id"
-                    >
-                        <td>{{ record.status }}</td>
-                        <td>{{ record.product_name }}</td>
-                        <td>{{ record.city }}</td>
-                        <td>{{ record.customer_name ?? '-' }}</td>
-                        <td>{{ record.date }}</td>
-                        <td>{{ record.timezone }}</td>
-                        <td>{{ record.start_end_time }}</td>
-                        <td>{{ record.check_in_time }}</td>
-                        <td>
-                            <div class="level-right">
-                                <div class="buttons">
-                                    <biz-button-link
-                                        v-if="can.read"
-                                        class="has-text-black"
-                                        title="Detail"
-                                        :href="route(baseRouteName+'.show', record.id)"
-                                    >
-                                        <biz-icon
-                                            class="is-small"
-                                            :icon="icon.show"
-                                        />
-                                    </biz-button-link>
-
-                                    <biz-dropdown
-                                        v-if="hasMoreAction(record)"
-                                        class="is-right"
-                                        :class="{'is-up': index > records.data.length - 3}"
-                                        :close-on-click="false"
-                                    >
-                                        <template #trigger>
-                                            <biz-icon
-                                                class="is-small"
-                                                :icon="icon.ellipsis"
-                                            />
-                                        </template>
-
-                                        <biz-link
-                                            v-if="record.can.reschedule"
-                                            class="dropdown-item"
-                                            :href="route(baseRouteName + '.reschedule', record.id)"
-                                        >
-                                            <biz-icon
-                                                class="is-small"
-                                                :icon="icon.recycle"
-                                            />
-                                            &nbsp;<span>Reschedule</span>
-                                        </biz-link>
-
-                                        <biz-dropdown-item
-                                            v-if="record.can.cancel"
-                                            tag="a"
-                                            @click.prevent="openModal(record)"
-                                        >
-                                            <biz-icon
-                                                class="is-small"
-                                                :icon="icon.remove"
-                                            />
-                                            &nbsp;<span>Cancel</span>
-                                        </biz-dropdown-item>
-                                    </biz-dropdown>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </biz-table>
-        </div>
-
-        <biz-pagination
-            :links="records.links"
+        <biz-table-container
+            :records="records"
             :query-params="queryParams"
-        />
+        >
+            <template #thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Name</th>
+                    <th>City</th>
+                    <th>User</th>
+                    <th>Date</th>
+                    <th>Timezone</th>
+                    <th>Time</th>
+                    <th>Check-In</th>
+                    <th>
+                        <div class="level-right">
+                            Actions
+                        </div>
+                    </th>
+                </tr>
+            </template>
+
+            <tr
+                v-for="(record, index) in records.data"
+                :key="record.id"
+            >
+                <td>{{ record.status }}</td>
+                <td>{{ record.product_name }}</td>
+                <td>{{ record.city }}</td>
+                <td>{{ record.customer_name ?? '-' }}</td>
+                <td>{{ record.date }}</td>
+                <td>{{ record.timezone }}</td>
+                <td>{{ record.start_end_time }}</td>
+                <td>{{ record.check_in_time }}</td>
+                <td>
+                    <div class="level-right">
+                        <div class="buttons">
+                            <biz-button-link
+                                v-if="can.read"
+                                class="has-text-black"
+                                title="Detail"
+                                :href="route(baseRouteName+'.show', record.id)"
+                            >
+                                <biz-icon
+                                    class="is-small"
+                                    :icon="icon.show"
+                                />
+                            </biz-button-link>
+
+                            <biz-dropdown
+                                v-if="hasMoreAction(record)"
+                                class="is-right"
+                                :class="{'is-up': index > records.data.length - 3}"
+                                :close-on-click="false"
+                            >
+                                <template #trigger>
+                                    <biz-icon
+                                        class="is-small"
+                                        :icon="icon.ellipsis"
+                                    />
+                                </template>
+
+                                <biz-link
+                                    v-if="record.can.reschedule"
+                                    class="dropdown-item"
+                                    :href="route(baseRouteName + '.reschedule', record.id)"
+                                >
+                                    <biz-icon
+                                        class="is-small"
+                                        :icon="icon.recycle"
+                                    />
+                                    &nbsp;<span>Reschedule</span>
+                                </biz-link>
+
+                                <biz-dropdown-item
+                                    v-if="record.can.cancel"
+                                    tag="a"
+                                    @click.prevent="openModal(record)"
+                                >
+                                    <biz-icon
+                                        class="is-small"
+                                        :icon="icon.remove"
+                                    />
+                                    &nbsp;<span>Cancel</span>
+                                </biz-dropdown-item>
+                            </biz-dropdown>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </biz-table-container>
 
         <modal-cancel-event-confirmation
             v-if="isModalOpen && selectedOrder"
@@ -205,9 +198,7 @@
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
     import BizLink from '@/Biz/Link';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTable from '@/Biz/Table';
-    import BizTableInfo from '@/Biz/TableInfo';
+    import BizTableContainer from '@/Biz/TableContainer';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
     import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation';
@@ -230,9 +221,7 @@
             BizFilterSearch,
             BizIcon,
             BizLink,
-            BizPagination,
-            BizTable,
-            BizTableInfo,
+            BizTableContainer,
             ModalCancelEventConfirmation,
         },
 

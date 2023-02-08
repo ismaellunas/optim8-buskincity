@@ -13,52 +13,46 @@
             <template
                 v-if="!isDataEmpty"
             >
-                <div class="table-container">
-                    <biz-table-info :records="records" />
-
-                    <table class="table is-striped is-hoverable is-fullwidth">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th
-                                    v-for="(label, index) in fieldLabels"
-                                    :key="index"
-                                >
-                                    {{ label }}
-                                </th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(entry, index) in records.data"
+                <biz-table-container
+                    :records="records"
+                    :query-params="queryParams"
+                >
+                    <template #thead>
+                        <tr>
+                            <th>#</th>
+                            <th
+                                v-for="(label, index) in fieldLabels"
                                 :key="index"
                             >
-                                <td>{{ entry.id }}</td>
-                                <td
-                                    v-for="(name, nameIndex) in fieldNames"
-                                    :key="nameIndex"
-                                    v-html="entry[name]"
-                                />
-                                <td>
-                                    <biz-button-link
-                                        class="is-ghost has-text-black"
-                                        title="View"
-                                        :href="route(baseRouteName + '.entries.show', {form_builder: formBuilder.id, entry: entry.id})"
-                                    >
-                                        <span class="icon is-small">
-                                            <i :class="icon.eye" />
-                                        </span>
-                                    </biz-button-link>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <biz-pagination
-                    :links="records.links"
-                    :query-params="queryParams"
-                />
+                                {{ label }}
+                            </th>
+                            <th>Action</th>
+                        </tr>
+                    </template>
+
+                    <tr
+                        v-for="(entry, index) in records.data"
+                        :key="index"
+                    >
+                        <td>{{ entry.id }}</td>
+                        <td
+                            v-for="(name, nameIndex) in fieldNames"
+                            :key="nameIndex"
+                            v-html="entry[name]"
+                        />
+                        <td>
+                            <biz-button-link
+                                class="is-ghost has-text-black"
+                                title="View"
+                                :href="route(baseRouteName + '.entries.show', {form_builder: formBuilder.id, entry: entry.id})"
+                            >
+                                <span class="icon is-small">
+                                    <i :class="icon.eye" />
+                                </span>
+                            </biz-button-link>
+                        </td>
+                    </tr>
+                </biz-table-container>
             </template>
 
             <template
@@ -77,8 +71,7 @@
     import AppLayout from '@/Layouts/AppLayout';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTableInfo from '@/Biz/TableInfo';
+    import BizTableContainer from '@/Biz/TableContainer';
     import icon from '@/Libs/icon-class';
     import { merge, isEmpty } from 'lodash';
     import { ref } from 'vue';
@@ -89,8 +82,7 @@
         components: {
             BizButtonLink,
             BizFilterSearch,
-            BizPagination,
-            BizTableInfo,
+            BizTableContainer,
         },
 
         mixins: [
