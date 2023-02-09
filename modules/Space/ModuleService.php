@@ -19,7 +19,7 @@ class ModuleService
         $canManageSpace = $user->can('viewAny', Space::class);
 
         return [
-            'title' => 'Space',
+            'title' => __("Space"),
             'isActive' => $request->routeIs('admin.spaces.*'),
             'isEnabled' => $canManageSpace,
             'children' => [
