@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Services\MediaService;
 use Illuminate\Support\ServiceProvider;
 use Modules\Space\Entities\Space;
-use Modules\Space\Services\PageService;
 use Modules\Space\Services\PageSpaceService;
 use Modules\Space\Services\SpaceService;
 
@@ -29,7 +28,6 @@ class SpaceServiceProvider extends ServiceProvider
      */
 
     public $singletons = [
-        PageService::class => PageService::class,
         PageSpaceService::class => PageSpaceService::class,
     ];
 
