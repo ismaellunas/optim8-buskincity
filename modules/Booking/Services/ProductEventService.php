@@ -423,6 +423,7 @@ class ProductEventService
 
         $cities = $products
             ->map(fn ($product) => $product->locations[0]['city'])
+            ->filter()
             ->unique()
             ->values()
             ->all();
