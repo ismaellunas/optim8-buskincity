@@ -172,6 +172,16 @@ class FormBuilderController extends CrudController
     public function entryShow(Form $formBuilder, FormEntry $entry)
     {
         $user = auth()->user();
+        $userEntry = $entry->user;
+
+        $canRedirectUser = false;
+
+        if ($userEntry) {
+            $canRedirectUser = (
+                !$userEntry->isSuperAdministrator
+                && !$userEntry->isAdministrator
+            );
+        }
 
         $title = $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $entry->id;
 
@@ -200,10 +210,7 @@ class FormBuilderController extends CrudController
             'can' => [
                 'user' => [
                     'edit' => $user->can('user.edit'),
-                    'redirectUser' => (
-                        !$entry->user->isSuperAdministrator
-                        && !$entry->user->isAdministrator
-                    ),
+                    'redirectUser' => $canRedirectUser,
                 ]
             ]
         ]));
