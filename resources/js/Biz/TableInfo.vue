@@ -1,5 +1,5 @@
 <template>
-    <p class="mb-2">
+    <p>
         {{ textInfo }}
     </p>
 </template>

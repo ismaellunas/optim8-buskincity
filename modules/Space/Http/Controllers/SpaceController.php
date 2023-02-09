@@ -134,8 +134,11 @@ class SpaceController extends CrudController
             'instructions' => $this->instructions(),
             'breadcrumbs' => [
                 [
-                    'url' => route('admin.spaces.index'),
-                    'title' => 'Spaces',
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getCreateTitle(),
                 ],
             ],
         ]));
@@ -246,11 +249,11 @@ class SpaceController extends CrudController
             'instructions' => $this->instructions(),
             'breadcrumbs' => [
                 [
-                    'url' => route('admin.spaces.index'),
-                    'title' => 'Spaces',
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
                 ],
                 [
-                    'title' => $space->name,
+                    'title' => $this->getEditTitle(),
                 ],
             ],
         ]));

@@ -51,6 +51,15 @@ class FormBuilderController extends CrudController
     public function create()
     {
         return Inertia::render('FormBuilder::Create', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getCreateTitle(),
+                ],
+            ],
             'title' => $this->getCreateTitle(),
         ]));
     }
@@ -83,6 +92,15 @@ class FormBuilderController extends CrudController
         unset($formBuilder['key']);
 
         return Inertia::render('FormBuilder::Edit', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getEditTitle(),
+                ],
+            ],
             'baseRouteNameSetting' => $this->baseRouteNameSetting,
             'formBuilder' => $formBuilder,
             'title' => __('Editing :name Form', [
@@ -119,8 +137,19 @@ class FormBuilderController extends CrudController
 
     public function entries(Request $request, Form $formBuilder)
     {
+        $title = $this->title . ' Entries - ' . $formBuilder->name;
+
         return Inertia::render('FormBuilder::Entries', $this->getData([
-            'title' => $this->title . ' Entries - ' . $formBuilder->name,
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $title,
+                ],
+            ],
+            'title' => $title,
             'formBuilder' => $formBuilder,
             'records' => $this->formBuilderService->getEntryRecords(
                 $formBuilder,
@@ -143,9 +172,34 @@ class FormBuilderController extends CrudController
     public function entryShow(Form $formBuilder, FormEntry $entry)
     {
         $user = auth()->user();
+        $userEntry = $entry->user;
+
+        $canRedirectUser = false;
+
+        if ($userEntry) {
+            $canRedirectUser = (
+                !$userEntry->isSuperAdministrator
+                && !$userEntry->isAdministrator
+            );
+        }
+
+        $title = $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $entry->id;
 
         return Inertia::render('FormBuilder::EntryDetail', $this->getData([
-            'title' => $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $entry->id,
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->title . ' Entries - ' . $formBuilder->name,
+                    'url' => route($this->baseRouteName.'.entries', $formBuilder->id)
+                ],
+                [
+                    'title' => $title,
+                ],
+            ],
+            'title' => $title,
             'formBuilder' => $formBuilder,
             'entry' => $this->formBuilderService->transformEntry($entry),
             'entryDisplay' => $this->formBuilderService->getComponentDisplayValues(
@@ -156,10 +210,7 @@ class FormBuilderController extends CrudController
             'can' => [
                 'user' => [
                     'edit' => $user->can('user.edit'),
-                    'redirectUser' => (
-                        !$entry->user->isSuperAdministrator
-                        && !$entry->user->isAdministrator
-                    ),
+                    'redirectUser' => $canRedirectUser,
                 ]
             ]
         ]));
