@@ -17,11 +17,18 @@
             SpaceType,
         },
 
+        provide() {
+            return {
+                i18n: this.i18n,
+            };
+        },
+
         layout: AppLayout,
 
         props: {
             can: { type: Object, required: true },
             title: { type: String, default: "" },
+            i18n: { type: Object, default: () => {} },
         },
     };
 </script>
