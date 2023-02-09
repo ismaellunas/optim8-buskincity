@@ -66,10 +66,10 @@
                         />
                     </td>
                     <td>{{ record.createdAtFormatted }}</td>
-                    <td>{{ record.url }}</td>
+                    <td>{{ limitString(record.url) }}</td>
                     <td>{{ record.total_hit }}</td>
                     <td style="word-break: break-word">
-                        {{ record.message }}
+                        {{ limitString(record.message) }}
                     </td>
                     <td>
                         <biz-button-icon
@@ -253,6 +253,14 @@
             onFinishRefreshWithQueryParams() {
                 this.checkedRecords = [];
             },
+
+            limitString(text, limit = 100) {
+                if (text.length > 100) {
+                    return text.substring(0, limit) + '...';
+                }
+
+                return text;
+            }
         },
     };
 </script>
