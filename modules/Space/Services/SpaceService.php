@@ -86,8 +86,6 @@ class SpaceService
         ?array $ids = null,
         string $label = null
     ): Collection {
-        Space::disableAutoloadTranslations();
-
         $spaces = null;
 
         if ($ids) {
