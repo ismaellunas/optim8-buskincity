@@ -28,6 +28,8 @@
                 v-if="!isDataEmpty"
             >
                 <div class="table-container">
+                    <biz-table-info :records="records" />
+
                     <table class="table is-striped is-hoverable is-fullwidth">
                         <thead>
                             <tr>
@@ -90,6 +92,7 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizPagination from '@/Biz/Pagination';
+    import BizTableInfo from '@/Biz/TableInfo';
     import icon from '@/Libs/icon-class';
     import { merge, isEmpty } from 'lodash';
     import { ref } from 'vue';
@@ -101,6 +104,7 @@
             BizButtonLink,
             BizFilterSearch,
             BizPagination,
+            BizTableInfo,
         },
 
         mixins: [

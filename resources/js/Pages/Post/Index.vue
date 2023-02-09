@@ -110,6 +110,8 @@
                     </div>
                 </div>
 
+                <biz-table-info :records="records" />
+
                 <component
                     :is="isGalleryView ? 'BizPostGallery' : 'BizPostList'"
                     :records="records.data"
@@ -154,6 +156,7 @@
     import BizPostListItem from '@/Biz/Post/ListItem';
     import BizTab from '@/Biz/Tab';
     import BizTabList from '@/Biz/TabList';
+    import BizTableInfo from '@/Biz/TableInfo';
     import { confirmDelete } from '@/Libs/alert';
     import { clone, keys, head, merge } from 'lodash';
     import { ref } from 'vue';
@@ -177,6 +180,7 @@
             BizPostListItem,
             BizTab,
             BizTabList,
+            BizTableInfo,
         },
         mixins: [
             MixinFilterDataHandle,
