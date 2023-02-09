@@ -47,8 +47,8 @@ class SpaceController extends Controller
     {
         return view('spaces', [
             'defaultLogoUrl' => ModuleService::defaultLogoUrl(),
-            'metaDescription' => __('Space lists'),
-            'metaTitle' => __('Spaces'),
+            'metaDescription' => __("Spaces"),
+            'metaTitle' => __("Spaces"),
             'spaces' => app(SpaceService::class)->getTopParents(),
         ]);
     }
