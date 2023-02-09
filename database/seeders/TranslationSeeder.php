@@ -11,11 +11,13 @@ use Illuminate\Support\{
     Arr,
     Str
 };
+use App\Services\ModuleService;
 
 class TranslationSeeder extends Seeder
 {
     private $app;
     private $files;
+    private $translationManagerService;
 
     public function __construct(
         Application $app,
@@ -33,16 +35,21 @@ class TranslationSeeder extends Seeder
      */
     public function run(?bool $replace = true)
     {
-        $this->importTranslations($replace);
+        $this->importTranslations($this->app['path.lang'], $replace);
+
+        $this->importModuleTranslations($replace);
 
         app(TranslationCache::class)->flush();
     }
 
-    private function importTranslations($replace = false)
+    private function sourceFromFilename($filename): string
     {
-        $base = $this->app['path.lang'];
+        return Str::replace($this->app['path.base'].'/', '', $filename);
+    }
 
-        foreach ($this->files->directories($base) as $langPath) {
+    private function importTranslations(string $basePath, $replace = false)
+    {
+        foreach ($this->files->directories($basePath) as $langPath) {
             $locale = basename($langPath);
 
             foreach ($this->files->allfiles($langPath) as $file) {
@@ -57,19 +64,28 @@ class TranslationSeeder extends Seeder
                     $group = $subLangPath.'/'.$group;
                 }
 
+                if (! Str::endsWith($file, '.php')) {
+                    continue;
+                }
+
                 $translations = require $file;
 
                 if ($translations && is_array($translations)) {
                     foreach (Arr::dot($translations) as $key => $value) {
-                        $this
-                            ->translationManagerService
-                            ->saveTranslation($key, $value, $locale, $group, $replace);
+                        $this->translationManagerService->saveTranslation(
+                            $key,
+                            $value,
+                            $locale,
+                            $group,
+                            $replace,
+                            $this->sourceFromFilename($file)
+                        );
                     }
                 }
             }
         }
 
-        foreach ($this->files->files($base) as $jsonTranslationFile) {
+        foreach ($this->files->files($basePath) as $jsonTranslationFile) {
             if (strpos($jsonTranslationFile, '.json') === false) {
                 continue;
             }
@@ -82,12 +98,29 @@ class TranslationSeeder extends Seeder
             if ($translations && is_array($translations)) {
                 foreach ($translations as $key => $value) {
                     if (!Str::startsWith($key, '//')) {
-                        $this
-                            ->translationManagerService
-                            ->saveTranslation($key, $value, $locale, null, $replace);
+                        $this->translationManagerService->saveTranslation(
+                            $key,
+                            $value,
+                            $locale,
+                            null,
+                            $replace,
+                            $this->sourceFromFilename($jsonTranslationFile)
+                        );
                     }
                 }
             }
+        }
+    }
+
+    private function importModuleTranslations($replace = false)
+    {
+        foreach (app(ModuleService::class)->getAllEnabledNames() as $module) {
+
+            $basePath = $this->app['path.lang']."/modules/".strtolower($module);
+
+            if (! is_dir($basePath)) continue;
+
+            $this->importTranslations($basePath, $replace);
         }
     }
 }
