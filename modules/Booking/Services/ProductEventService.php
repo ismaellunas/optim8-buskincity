@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Entities\ScheduleRule;
@@ -416,14 +417,12 @@ class ProductEventService
             })
             ->whereHas('metas', function ($query) {
                 $query->where('key', 'locations');
+                $query->whereNotNull(DB::raw("value::json->0->>'city'"));
             })
             ->get(['id', 'product_type_id']);
 
         $cities = $products
-            ->filter(fn ($product) => !empty($product->locations) && is_array($product->locations))
-            ->map(function ($product) {
-                return $product->locations[0]['city'];
-            })
+            ->map(fn ($product) => $product->locations[0]['city'])
             ->unique()
             ->values()
             ->all();
