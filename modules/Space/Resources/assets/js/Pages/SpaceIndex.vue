@@ -40,41 +40,31 @@
                 </div>
             </div>
 
-            <div class="table-container">
-                <biz-table-info :records="records" />
-
-                <biz-table
-                    class="is-striped is-hoverable"
-                    is-fullwidth
-                >
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Parents</th>
-                            <th>Type</th>
-                            <th>
-                                <div class="level-right">
-                                    Actions
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <space-row
-                            v-for="space in records.data"
-                            :key="space.id"
-                            :space="space"
-                            :can="can"
-                            @delete-row="deleteSpace($event)"
-                        />
-                    </tbody>
-                </biz-table>
-            </div>
-
-            <biz-pagination
-                :links="records.links"
+            <biz-table-index
+                :records="records"
                 :query-params="queryParams"
-            />
+            >
+                <template #thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Parents</th>
+                        <th>Type</th>
+                        <th>
+                            <div class="level-right">
+                                Actions
+                            </div>
+                        </th>
+                    </tr>
+                </template>
+
+                <space-row
+                    v-for="space in records.data"
+                    :key="space.id"
+                    :space="space"
+                    :can="can"
+                    @delete-row="deleteSpace($event)"
+                />
+            </biz-table-index>
         </div>
     </div>
 </template>
@@ -87,9 +77,7 @@
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizDropdownScroll from '@/Biz/DropdownScroll';
     import BizIcon from '@/Biz/Icon';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTable from '@/Biz/Table';
-    import BizTableInfo from '@/Biz/TableInfo';
+    import BizTableIndex from '@/Biz/TableIndex';
     import SpaceRow from './SpaceRow';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -103,9 +91,7 @@
             BizDropdownItem,
             BizDropdownScroll,
             BizIcon,
-            BizPagination,
-            BizTable,
-            BizTableInfo,
+            BizTableIndex,
             SpaceRow,
         },
 

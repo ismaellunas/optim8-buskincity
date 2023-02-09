@@ -1,12 +1,9 @@
 <template>
-    <div class="columns mb-0">
-        <div class="column">
-            <biz-breadcrumbs
-                :breadcrumbs="breadcrumbs"
-                class="is-medium"
-            />
-        </div>
-        <div class="column">
+    <app-layout
+        :breadcrumbs="breadcrumbs"
+        :title="title"
+    >
+        <template #sideBreadcrumbs>
             <p class="buttons is-right">
                 <biz-button-icon
                     :disabled="!canPreviewPage"
@@ -16,150 +13,149 @@
                     <span>Page Preview</span>
                 </biz-button-icon>
             </p>
-        </div>
-    </div>
+        </template>
 
-    <div>
-        <div class="box mb-6">
-            <biz-provide-inject-tabs
-                v-model="activeTab"
-                class="is-boxed"
-            >
-                <biz-provide-inject-tab title="Space">
-                    <form
-                        action=""
-                        @submit.prevent="submit"
-                    >
-                        <space-form
-                            v-model="space"
-                            :cover-url="coverUrl"
-                            :default-country="defaultCountry"
-                            :instructions="instructions"
-                            :logo-url="logoUrl"
-                            :parent-options="parentOptions"
-                            :type-options="typeOptions"
+        <div>
+            <div class="box mb-6">
+                <biz-provide-inject-tabs
+                    v-model="activeTab"
+                    class="is-boxed"
+                >
+                    <biz-provide-inject-tab title="Space">
+                        <form
+                            action=""
+                            @submit.prevent="submit"
                         >
-                            <biz-form-select
-                                v-if="can.page.edit"
-                                v-model="space.is_page_enabled"
-                                label="Is Page Enabled ?"
-                            >
-                                <option
-                                    v-for="(optValue, optKey) in pageEnabledOptions"
-                                    :key="optKey"
-                                    :value="optValue"
-                                    class="is-capitalize"
-                                >
-                                    {{ optKey }}
-                                </option>
-                            </biz-form-select>
-
-                            <space-form-translatable
+                            <space-form
                                 v-model="space"
-                                class="py-2"
+                                :cover-url="coverUrl"
+                                :default-country="defaultCountry"
+                                :instructions="instructions"
+                                :logo-url="logoUrl"
+                                :parent-options="parentOptions"
+                                :type-options="typeOptions"
+                            >
+                                <biz-form-select
+                                    v-if="can.page.edit"
+                                    v-model="space.is_page_enabled"
+                                    label="Is Page Enabled ?"
+                                >
+                                    <option
+                                        v-for="(optValue, optKey) in pageEnabledOptions"
+                                        :key="optKey"
+                                        :value="optValue"
+                                        class="is-capitalize"
+                                    >
+                                        {{ optKey }}
+                                    </option>
+                                </biz-form-select>
+
+                                <space-form-translatable
+                                    v-model="space"
+                                    class="py-2"
+                                />
+
+                                <template #action>
+                                    <div class="field is-grouped is-grouped-right mt-4">
+                                        <div class="control">
+                                            <biz-button-link
+                                                :href="routeIndex"
+                                                class="is-link is-light"
+                                            >
+                                                Cancel
+                                            </biz-button-link>
+                                        </div>
+                                        <div class="control">
+                                            <biz-button class="is-link">
+                                                Update
+                                            </biz-button>
+                                        </div>
+                                    </div>
+                                </template>
+                            </space-form>
+                        </form>
+                    </biz-provide-inject-tab>
+
+                    <biz-provide-inject-tab
+                        title="Event"
+                        :is-rendered="isEventRendered"
+                    >
+                        <space-event
+                            :space="space"
+                        />
+                    </biz-provide-inject-tab>
+
+                    <biz-provide-inject-tab
+                        title="Manager"
+                        :is-rendered="isManagerRendered"
+                    >
+                        <form
+                            class="box"
+                            @submit.prevent="submitManager"
+                        >
+                            <biz-form-assign-user
+                                v-model="managers"
+                                label="Choose Manager"
+                                :get-users-url="route('admin.spaces.search-managers')"
                             />
 
-                            <template #action>
-                                <div class="field is-grouped is-grouped-right mt-4">
+                            <div class="field is-grouped is-grouped-right mt-4">
+                                <div class="control">
+                                    <biz-button class="is-link">
+                                        Update
+                                    </biz-button>
+                                </div>
+                            </div>
+                        </form>
+                    </biz-provide-inject-tab>
+
+                    <biz-provide-inject-tab
+                        title="Page"
+                        :is-rendered="isPageRendered"
+                    >
+                        <page-form
+                            v-model="pageForm[selectedLocale]"
+                            v-model:content-config-id="contentConfigId"
+                            :errors="errors"
+                            :is-dirty="pageForm.isDirty"
+                            :is-new="isPageNew"
+                            :is-page-builder-rendered="false"
+                            :is-page-setting-rendered="false"
+                            :locale-options="localeOptions"
+                            :selected-locale="selectedLocale"
+                            :status-options="statusOptions"
+                            @on-change-locale="onChangeLocale"
+                        >
+                            <template #action="pageFormProps">
+                                <div class="field is-grouped is-grouped-right">
                                     <div class="control">
                                         <biz-button-link
-                                            :href="routeIndex"
                                             class="is-link is-light"
+                                            :href="route('admin.spaces.index')"
                                         >
                                             Cancel
                                         </biz-button-link>
                                     </div>
                                     <div class="control">
-                                        <biz-button class="is-link">
-                                            Update
+                                        <biz-button
+                                            class="is-link"
+                                            @click="submitPage"
+                                        >
+                                            {{ pageFormProps.isNew ? 'Create' : 'Update' }}
                                         </biz-button>
                                     </div>
                                 </div>
                             </template>
-                        </space-form>
-                    </form>
-                </biz-provide-inject-tab>
-
-                <biz-provide-inject-tab
-                    title="Event"
-                    :is-rendered="isEventRendered"
-                >
-                    <space-event
-                        :space="space"
-                    />
-                </biz-provide-inject-tab>
-
-                <biz-provide-inject-tab
-                    title="Manager"
-                    :is-rendered="isManagerRendered"
-                >
-                    <form
-                        class="box"
-                        @submit.prevent="submitManager"
-                    >
-                        <biz-form-assign-user
-                            v-model="managers"
-                            label="Choose Manager"
-                            :get-users-url="route('admin.spaces.search-managers')"
-                        />
-
-                        <div class="field is-grouped is-grouped-right mt-4">
-                            <div class="control">
-                                <biz-button class="is-link">
-                                    Update
-                                </biz-button>
-                            </div>
-                        </div>
-                    </form>
-                </biz-provide-inject-tab>
-
-                <biz-provide-inject-tab
-                    title="Page"
-                    :is-rendered="isPageRendered"
-                >
-                    <page-form
-                        v-model="pageForm[selectedLocale]"
-                        v-model:content-config-id="contentConfigId"
-                        :errors="errors"
-                        :is-dirty="pageForm.isDirty"
-                        :is-new="isPageNew"
-                        :is-page-builder-rendered="false"
-                        :is-page-setting-rendered="false"
-                        :locale-options="localeOptions"
-                        :selected-locale="selectedLocale"
-                        :status-options="statusOptions"
-                        @on-change-locale="onChangeLocale"
-                    >
-                        <template #action="pageFormProps">
-                            <div class="field is-grouped is-grouped-right">
-                                <div class="control">
-                                    <biz-button-link
-                                        class="is-link is-light"
-                                        :href="route('admin.spaces.index')"
-                                    >
-                                        Cancel
-                                    </biz-button-link>
-                                </div>
-                                <div class="control">
-                                    <biz-button
-                                        class="is-link"
-                                        @click="submitPage"
-                                    >
-                                        {{ pageFormProps.isNew ? 'Create' : 'Update' }}
-                                    </biz-button>
-                                </div>
-                            </div>
-                        </template>
-                    </page-form>
-                </biz-provide-inject-tab>
-            </biz-provide-inject-tabs>
+                        </page-form>
+                    </biz-provide-inject-tab>
+                </biz-provide-inject-tabs>
+            </div>
         </div>
-    </div>
+    </app-layout>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
-    import BizBreadcrumbs from '@/Biz/Breadcrumbs';
     import BizButton from '@/Biz/Button';
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizButtonLink from '@/Biz/ButtonLink';
@@ -185,10 +181,10 @@
 
     export default {
         components: {
+            AppLayout,
             BizButton,
             BizButtonIcon,
             BizButtonLink,
-            BizBreadcrumbs,
             BizFormAssignUser,
             BizFormSelect,
             BizProvideInjectTab,
@@ -210,11 +206,9 @@
             }
         },
 
-        layout: AppLayout,
-
         props: {
             baseRouteName: { type: String, default: '' },
-            breadcrumbs: { type: Object, required: true },
+            breadcrumbs: { type: Array, default: () => [] },
             can: { type: Object, required: true },
             coverUrl: { type: String, default: '' },
             defaultCountry: { type: String, required: true },

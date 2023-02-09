@@ -20,52 +20,45 @@
                 </div>
             </div>
 
-            <div class="table-container">
-                <biz-table-info :records="records" />
-
-                <biz-table class="is-striped is-hoverable is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>
-                                <div class="level-right">
-                                    Actions
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="record in records.data"
-                            :key="record.id"
-                        >
-                            <th>{{ record.id }}</th>
-                            <td>{{ record.name }}</td>
-                            <td>
-                                <div class="level-right">
-                                    <biz-button-link
-                                        class="is-ghost has-text-black"
-                                        :href="route(baseRouteName + '.edit', record.id)"
-                                    >
-                                        <biz-icon :icon="icon.edit" />
-                                    </biz-button-link>
-                                    <biz-button-icon
-                                        class="is-ghost has-text-black ml-1"
-                                        :icon="icon.remove"
-                                        @click.prevent="deleteRecord(record)"
-                                    />
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </biz-table>
-            </div>
-
-            <biz-pagination
-                :links="records.links"
+            <biz-table-index
+                :records="records"
                 :query-params="queryParams"
-            />
+            >
+                <template #thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>
+                            <div class="level-right">
+                                Actions
+                            </div>
+                        </th>
+                    </tr>
+                </template>
+
+                <tr
+                    v-for="record in records.data"
+                    :key="record.id"
+                >
+                    <th>{{ record.id }}</th>
+                    <td>{{ record.name }}</td>
+                    <td>
+                        <div class="level-right">
+                            <biz-button-link
+                                class="is-ghost has-text-black"
+                                :href="route(baseRouteName + '.edit', record.id)"
+                            >
+                                <biz-icon :icon="icon.edit" />
+                            </biz-button-link>
+                            <biz-button-icon
+                                class="is-ghost has-text-black ml-1"
+                                :icon="icon.remove"
+                                @click.prevent="deleteRecord(record)"
+                            />
+                        </div>
+                    </td>
+                </tr>
+            </biz-table-index>
         </div>
     </div>
 </template>
@@ -77,35 +70,36 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTable from '@/Biz/Table';
-    import BizTableInfo from '@/Biz/TableInfo';
+    import BizTableIndex from '@/Biz/TableIndex';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from 'vue';
 
     export default {
+        name: 'RoleIndex',
+
         components: {
             BizButtonIcon,
             BizButtonLink,
             BizFilterSearch,
             BizIcon,
-            BizPagination,
-            BizTable,
-            BizTableInfo,
+            BizTableIndex
         },
+
         mixins: [
             MixinFilterDataHandle,
         ],
+
         layout: AppLayout,
+
         props: {
-            baseRouteName: String,
-            pageNumber: String,
-            pageQueryParams: Object,
-            records: {},
-            title: String,
+            baseRouteName: { type: String, required: true },
+            pageQueryParams: { type: Object, default: () => {} },
+            records: { type: Object, required: true },
+            title: { type: String, required: true },
         },
+
         setup(props) {
             const queryParams = merge(
                 {},
@@ -117,12 +111,14 @@
                 term: ref(props.pageQueryParams?.term ?? null),
             };
         },
+
         data() {
             return {
                 icon,
                 loader: null,
             };
         },
+
         methods: {
             deleteRecord(record) {
                 const self = this;
@@ -140,15 +136,19 @@
                     }
                 })
             },
+
             onError(errors) {
                 oopsAlert();
             },
+
             onSuccess(page) {
                 successAlert(page.props.flash.message);
             },
+
             onStartLoadingOverlay() {
                 this.loader = this.$loading.show();
             },
+
             onEndLoadingOverlay() {
                 this.loader.hide();
             },

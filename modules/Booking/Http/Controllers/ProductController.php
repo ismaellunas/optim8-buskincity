@@ -75,6 +75,15 @@ class ProductController extends CrudController
     public function create()
     {
         return Inertia::render('Booking::ProductCreate', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getCreateTitle(),
+                ],
+            ],
             'title' => $this->getCreateTitle(),
             'statusOptions' => [
                 [
@@ -172,6 +181,15 @@ class ProductController extends CrudController
         $product->load('eventSchedule.weeklyHours.times');
 
         return Inertia::render('Booking::ProductEdit', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getEditTitle(),
+                ],
+            ],
             'title' => $this->getEditTitle(),
             'imageMimes' => $this->getImageMimeTypes(),
             'countryOptions' => app(CountryService::class)->getCountryOptions(),

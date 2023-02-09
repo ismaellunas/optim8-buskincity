@@ -25,77 +25,71 @@
                 </div>
             </div>
 
-            <div class="table-container">
-                <biz-table-info :records="records" />
-
-                <table class="table is-striped is-hoverable is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Form ID</th>
-                            <th>Entries</th>
-                            <th>
-                                <div class="level-right">
-                                    Actions
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="form in records.data"
-                            :key="form.id"
-                        >
-                            <td>{{ form.name }}</td>
-                            <td>{{ form.key }}</td>
-                            <td>
-                                <biz-link
-                                    :href="route(baseRouteName + '.entries', form.id)"
-                                    title="List Entries"
-                                >
-                                    {{ form.totalEntries }}
-                                </biz-link>
-                            </td>
-                            <td>
-                                <div class="level-right">
-                                    <biz-button-link
-                                        v-if="can.browse"
-                                        class="is-ghost has-text-black"
-                                        title="List Entries"
-                                        :href="route(baseRouteName + '.entries', form.id)"
-                                    >
-                                        <span class="icon is-small">
-                                            <i :class="icon.rectangleList" />
-                                        </span>
-                                    </biz-button-link>
-                                    <biz-button-link
-                                        v-if="can.edit"
-                                        class="is-ghost has-text-black"
-                                        :href="route(baseRouteName+'.edit', {id: form.id})"
-                                    >
-                                        <span class="icon is-small">
-                                            <i :class="icon.edit" />
-                                        </span>
-                                    </biz-button-link>
-                                    <biz-button
-                                        v-if="can.delete"
-                                        class="is-ghost has-text-black ml-1"
-                                        @click.prevent="deleteRow(form.id)"
-                                    >
-                                        <span class="icon is-small">
-                                            <i :class="icon.remove" />
-                                        </span>
-                                    </biz-button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <biz-pagination
-                :links="records.links"
+            <biz-table-index
+                :records="records"
                 :query-params="queryParams"
-            />
+            >
+                <template #thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Form ID</th>
+                        <th>Entries</th>
+                        <th>
+                            <div class="level-right">
+                                Actions
+                            </div>
+                        </th>
+                    </tr>
+                </template>
+
+                <tr
+                    v-for="form in records.data"
+                    :key="form.id"
+                >
+                    <td>{{ form.name }}</td>
+                    <td>{{ form.key }}</td>
+                    <td>
+                        <biz-link
+                            :href="route(baseRouteName + '.entries', form.id)"
+                            title="List Entries"
+                        >
+                            {{ form.totalEntries }}
+                        </biz-link>
+                    </td>
+                    <td>
+                        <div class="level-right">
+                            <biz-button-link
+                                v-if="can.browse"
+                                class="is-ghost has-text-black"
+                                title="List Entries"
+                                :href="route(baseRouteName + '.entries', form.id)"
+                            >
+                                <span class="icon is-small">
+                                    <i :class="icon.rectangleList" />
+                                </span>
+                            </biz-button-link>
+                            <biz-button-link
+                                v-if="can.edit"
+                                class="is-ghost has-text-black"
+                                :href="route(baseRouteName+'.edit', {id: form.id})"
+                            >
+                                <span class="icon is-small">
+                                    <i :class="icon.edit" />
+                                </span>
+                            </biz-button-link>
+                            <biz-button
+                                v-if="can.delete"
+                                class="is-ghost has-text-black ml-1"
+                                @click.prevent="deleteRow(form.id)"
+                            >
+                                <span class="icon is-small">
+                                    <i :class="icon.remove" />
+                                </span>
+                            </biz-button>
+                        </div>
+                    </td>
+                </tr>
+            </biz-table-index>
         </div>
     </div>
 </template>
@@ -107,9 +101,8 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import BizPagination from '@/Biz/Pagination';
     import BizLink from '@/Biz/Link';
-    import BizTableInfo from '@/Biz/TableInfo';
+    import BizTableIndex from '@/Biz/TableIndex';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge } from 'lodash';
@@ -123,9 +116,8 @@
             BizButtonLink,
             BizFilterSearch,
             BizFlashNotifications,
-            BizPagination,
             BizLink,
-            BizTableInfo,
+            BizTableIndex,
         },
 
         mixins: [

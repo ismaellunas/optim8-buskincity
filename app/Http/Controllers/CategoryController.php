@@ -53,6 +53,15 @@ class CategoryController extends CrudController
     public function create()
     {
         return Inertia::render('Category/Create', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getCreateTitle(),
+                ],
+            ],
             'record' => new $this->model,
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
@@ -83,6 +92,15 @@ class CategoryController extends CrudController
     public function edit(Category $category)
     {
         return Inertia::render('Category/Edit', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getEditTitle(),
+                ],
+            ],
             'record' => $category,
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
