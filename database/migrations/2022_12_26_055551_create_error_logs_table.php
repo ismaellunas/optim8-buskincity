@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('error_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('url');
+            $table->text('url');
             $table->string('file')->nullable();
             $table->integer('line')->nullable();
             $table->text('message')->nullable();
