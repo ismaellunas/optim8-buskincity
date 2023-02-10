@@ -29,7 +29,6 @@ Route::name('admin.')->prefix('admin/')->middleware([
         ->except(['show']);
 
     Route::prefix('spaces')->name('spaces.')->group(function() {
-        Route::post('/move-node/{current}/{parent?}', 'SpaceController@moveNode')->name('move-node');
         Route::post('/update-manager/{space}', 'SpaceController@updateManagers')->name('update-managers');
         Route::get('/search-managers', 'SpaceController@searchManagers')->name('search-managers');
 

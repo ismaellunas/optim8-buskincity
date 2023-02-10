@@ -27,7 +27,7 @@
                 </biz-button-link>
 
                 <biz-button-icon
-                    v-if="can.delete"
+                    v-if="space.can.delete"
                     class="is-ghost has-text-black ml-1"
                     type="button"
                     :icon="iconRemove"
