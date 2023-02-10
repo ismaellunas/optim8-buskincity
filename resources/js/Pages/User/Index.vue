@@ -55,89 +55,82 @@
                 </div>
             </div>
 
-            <div class="table-container">
-                <biz-table-info :records="records" />
-
-                <biz-table class="is-striped is-hoverable is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>
-                                <div class="level-right">
-                                    Actions
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <user-list-item
-                            v-for="record in records.data"
-                            :key="record.id"
-                            :user="record"
-                        >
-                            <template #actions>
-                                <div class="level-right">
-                                    <a
-                                        v-if="record.can.public_profile"
-                                        class="button is-ghost has-text-black ml-1"
-                                        target="_blank"
-                                        title="Profile Page Url"
-                                        :href="record.profile_page_url"
-                                    >
-                                        <i :class="icon.idCard" />
-                                    </a>
-
-                                    <biz-button-link
-                                        v-if="can.edit"
-                                        class="is-ghost has-text-black"
-                                        :href="route(baseRouteName + '.edit', record.id)"
-                                    >
-                                        <span class="icon is-small">
-                                            <i :class="icon.edit" />
-                                        </span>
-                                    </biz-button-link>
-
-                                    <template
-                                        v-if="can.delete && record.can.delete_user"
-                                    >
-                                        <biz-button-icon
-                                            class="is-ghost has-text-black ml-1"
-                                            icon-class="is-small"
-                                            :icon="icon.remove"
-                                            title="Delete User"
-                                            @click.prevent="deleteUserModal(record)"
-                                        />
-                                        <biz-button-icon
-                                            v-if="!record.is_suspended"
-                                            class="is-ghost has-text-black ml-1"
-                                            icon-class="is-small"
-                                            :icon="icon.suspend"
-                                            title="Suspend User"
-                                            @click.prevent="suspendUser(record)"
-                                        />
-                                        <biz-button-icon
-                                            v-if="record.is_suspended"
-                                            class="is-ghost has-text-black ml-1"
-                                            icon-class="is-small"
-                                            :icon="icon.unsuspend"
-                                            title="Unsuspend User"
-                                            @click.prevent="unsuspendUser(record)"
-                                        />
-                                    </template>
-                                </div>
-                            </template>
-                        </user-list-item>
-                    </tbody>
-                </biz-table>
-            </div>
-
-            <biz-pagination
-                :links="records.links"
+            <biz-table-index
+                :records="records"
                 :query-params="queryParams"
-            />
+            >
+                <template #thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>
+                            <div class="level-right">
+                                Actions
+                            </div>
+                        </th>
+                    </tr>
+                </template>
+
+                <user-list-item
+                    v-for="record in records.data"
+                    :key="record.id"
+                    :user="record"
+                >
+                    <template #actions>
+                        <div class="level-right">
+                            <a
+                                v-if="record.can.public_profile"
+                                class="button is-ghost has-text-black ml-1"
+                                target="_blank"
+                                title="Profile Page Url"
+                                :href="record.profile_page_url"
+                            >
+                                <i :class="icon.idCard" />
+                            </a>
+
+                            <biz-button-link
+                                v-if="can.edit"
+                                class="is-ghost has-text-black"
+                                :href="route(baseRouteName + '.edit', record.id)"
+                            >
+                                <span class="icon is-small">
+                                    <i :class="icon.edit" />
+                                </span>
+                            </biz-button-link>
+
+                            <template
+                                v-if="can.delete && record.can.delete_user"
+                            >
+                                <biz-button-icon
+                                    class="is-ghost has-text-black ml-1"
+                                    icon-class="is-small"
+                                    :icon="icon.remove"
+                                    title="Delete User"
+                                    @click.prevent="deleteUserModal(record)"
+                                />
+                                <biz-button-icon
+                                    v-if="!record.is_suspended"
+                                    class="is-ghost has-text-black ml-1"
+                                    icon-class="is-small"
+                                    :icon="icon.suspend"
+                                    title="Suspend User"
+                                    @click.prevent="suspendUser(record)"
+                                />
+                                <biz-button-icon
+                                    v-if="record.is_suspended"
+                                    class="is-ghost has-text-black ml-1"
+                                    icon-class="is-small"
+                                    :icon="icon.unsuspend"
+                                    title="Unsuspend User"
+                                    @click.prevent="unsuspendUser(record)"
+                                />
+                            </template>
+                        </div>
+                    </template>
+                </user-list-item>
+            </biz-table-index>
         </div>
 
         <modal-form-delete
@@ -163,9 +156,7 @@
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizIcon from '@/Biz/Icon';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTable from '@/Biz/Table';
-    import BizTableInfo from '@/Biz/TableInfo';
+    import BizTableIndex from '@/Biz/TableIndex';
     import ModalFormDelete from '@/Pages/User/ModalFormDelete';
     import UserListItem from '@/Pages/User/ListItem';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -174,6 +165,8 @@
     import icon from '@/Libs/icon-class';
 
     export default {
+        name: 'UserIndex',
+
         components: {
             BizButtonIcon,
             BizButtonLink,
@@ -182,9 +175,7 @@
             BizDropdownItem,
             BizFilterSearch,
             BizIcon,
-            BizPagination,
-            BizTable,
-            BizTableInfo,
+            BizTableIndex,
             ModalFormDelete,
             UserListItem,
         },

@@ -40,66 +40,60 @@
                 </div>
             </div>
 
-            <div class="table-container">
-                <biz-table class="is-striped is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Created At</th>
-                            <th>URL</th>
-                            <th>Total Hit</th>
-                            <th width="30%">Message</th>
-                            <th width="12%">Actions</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr
-                            v-for="(record, index) in records.data"
-                            :key="index"
-                        >
-                            <td>
-                                <biz-checkbox
-                                    v-model:checked="checkedRecords"
-                                    :value="record.id"
-                                />
-                            </td>
-                            <td>{{ record.createdAtFormatted }}</td>
-                            <td>{{ record.url }}</td>
-                            <td>{{ record.total_hit }}</td>
-                            <td style="word-break: break-word">
-                                {{ record.message }}
-                            </td>
-                            <td>
-                                <biz-button-icon
-                                    v-if="can.read"
-                                    class="is-ghost has-text-black ml-1"
-                                    icon-class="is-small"
-                                    title="View"
-                                    type="button"
-                                    :icon="icon.eye"
-                                    @click.prevent="viewDetail(record)"
-                                />
-
-                                <biz-button-icon
-                                    v-if="can.delete"
-                                    class="is-ghost has-text-black ml-1"
-                                    icon-class="is-small"
-                                    title="Delete"
-                                    type="button"
-                                    :icon="icon.remove"
-                                    @click.prevent="deleteRecord(record)"
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                </biz-table>
-            </div>
-
-            <biz-pagination
-                :links="records.links"
+            <biz-table-index
+                :records="records"
                 :query-params="queryParams"
-            />
+            >
+                <template #thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Created At</th>
+                        <th>URL</th>
+                        <th>Total Hit</th>
+                        <th width="30%">Message</th>
+                        <th width="12%">Actions</th>
+                    </tr>
+                </template>
+
+                <tr
+                    v-for="(record, index) in records.data"
+                    :key="index"
+                >
+                    <td>
+                        <biz-checkbox
+                            v-model:checked="checkedRecords"
+                            :value="record.id"
+                        />
+                    </td>
+                    <td>{{ record.createdAtFormatted }}</td>
+                    <td>{{ limitString(record.url) }}</td>
+                    <td>{{ record.total_hit }}</td>
+                    <td style="word-break: break-word">
+                        {{ limitString(record.message) }}
+                    </td>
+                    <td>
+                        <biz-button-icon
+                            v-if="can.read"
+                            class="is-ghost has-text-black ml-1"
+                            icon-class="is-small"
+                            title="View"
+                            type="button"
+                            :icon="icon.eye"
+                            @click.prevent="viewDetail(record)"
+                        />
+
+                        <biz-button-icon
+                            v-if="can.delete"
+                            class="is-ghost has-text-black ml-1"
+                            icon-class="is-small"
+                            title="Delete"
+                            type="button"
+                            :icon="icon.remove"
+                            @click.prevent="deleteRecord(record)"
+                        />
+                    </td>
+                </tr>
+            </biz-table-index>
         </div>
 
         <modal-entry-detail
@@ -120,8 +114,7 @@
     import BizButtonIcon from '@/Biz/ButtonIcon';
     import BizFilterDateRange from '@/Biz/Filter/DateRange';
     import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTable from '@/Biz/Table';
+    import BizTableIndex from '@/Biz/TableIndex';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge, isArray } from 'lodash';
@@ -136,8 +129,7 @@
             BizButtonIcon,
             BizFilterDateRange,
             BizFilterSearch,
-            BizPagination,
-            BizTable,
+            BizTableIndex,
         },
 
         mixins: [
@@ -261,6 +253,14 @@
             onFinishRefreshWithQueryParams() {
                 this.checkedRecords = [];
             },
+
+            limitString(text, limit = 100) {
+                if (text.length > 100) {
+                    return text.substring(0, limit) + '...';
+                }
+
+                return text;
+            }
         },
     };
 </script>

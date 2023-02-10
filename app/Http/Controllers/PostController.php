@@ -62,6 +62,15 @@ class PostController extends CrudController
         return Inertia::render('Post/Create', $this->getData(
             array_merge_recursive(
                 [
+                    'breadcrumbs' => [
+                        [
+                            'title' => $this->getIndexTitle(),
+                            'url' => route($this->baseRouteName.'.index'),
+                        ],
+                        [
+                            'title' => $this->getCreateTitle(),
+                        ],
+                    ],
                     'can' => [
                         'media' => [
                             'browse' => $user->can('media.browse'),
@@ -122,6 +131,15 @@ class PostController extends CrudController
         return Inertia::render('Post/Edit', $this->getData(
             array_merge_recursive(
                 [
+                    'breadcrumbs' => [
+                        [
+                            'title' => $this->getIndexTitle(),
+                            'url' => route($this->baseRouteName.'.index'),
+                        ],
+                        [
+                            'title' => $this->getEditTitle(),
+                        ],
+                    ],
                     'can' => [
                         'media' => [
                             'browse' => $user->can('media.browse'),

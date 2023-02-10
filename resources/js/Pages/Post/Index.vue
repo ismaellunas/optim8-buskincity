@@ -110,6 +110,11 @@
                     </div>
                 </div>
 
+                <biz-table-info
+                    class="mb-2"
+                    :records="records"
+                />
+
                 <component
                     :is="isGalleryView ? 'BizPostGallery' : 'BizPostList'"
                     :records="records.data"
@@ -154,13 +159,16 @@
     import BizPostListItem from '@/Biz/Post/ListItem';
     import BizTab from '@/Biz/Tab';
     import BizTabList from '@/Biz/TabList';
+    import BizTableInfo from '@/Biz/TableInfo';
+    import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { clone, keys, head, merge } from 'lodash';
     import { ref } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
-    import icon from '@/Libs/icon-class';
 
     export default {
+        name: 'PageIndex',
+
         components: {
             BizButtonLink,
             BizButtonsDisplayView,
@@ -177,19 +185,23 @@
             BizPostListItem,
             BizTab,
             BizTabList,
+            BizTableInfo,
         },
+
         mixins: [
             MixinFilterDataHandle,
             MixinHasTab,
         ],
+
         layout: AppLayout,
+
         props: {
-            can: {},
-            categoryOptions: Object,
-            languageOptions: Object,
-            pageNumber: String,
-            pageQueryParams: Object,
-            records: {},
+            can: { type: Object, required: true },
+            categoryOptions: { type: Object, default: () => {} },
+            languageOptions: { type: Object, default: () => {} },
+            pageNumber: { type: String, default: null },
+            pageQueryParams: { type: Object, default: () => {} },
+            records: { type: Object, required: true },
             title: { type: String, required: true },
         },
         setup(props) {

@@ -3,6 +3,7 @@
 namespace Modules\Booking\Http\Controllers;
 
 use App\Http\Controllers\CrudController;
+use App\Services\SettingService;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
@@ -96,7 +97,18 @@ class OrderController extends CrudController
         $checkIn = $order->checkIn;
         $orderRecord = $this->orderService->getRecord($order);
 
+        $productName = Arr::get($orderRecord, 'product.name');
+
         return Inertia::render('Booking::OrderShow', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $productName,
+                ],
+            ],
             'title' => $this->title.': '.Arr::get($orderRecord, 'product.name'),
             'order' => $orderRecord,
             'checkInTime' => $checkIn
@@ -109,6 +121,7 @@ class OrderController extends CrudController
                 'cancel' => $user->can('cancelBooking', $order),
                 'reschedule' => $user->can('rescheduleBooking', $order),
             ],
+            'googleApiKey' => app(SettingService::class)->getGoogleApi(),
         ]));
     }
 

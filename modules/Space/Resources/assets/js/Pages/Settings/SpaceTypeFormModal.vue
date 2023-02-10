@@ -4,7 +4,7 @@
     >
         <template #header>
             <p class="modal-card-title has-text-weight-bold">
-                {{ !form.id ? 'Add New Space Type' : 'Edit Space Type' }}
+                <slot name="header" />
             </p>
 
             <button

@@ -10,6 +10,8 @@ use App\Http\Controllers\CrudController;
 
 class SpaceTypeController extends CrudController
 {
+    protected $title = "Space Type";
+
     public function __construct()
     {
         $this->authorizeResource(GlobalOption::class, 'space_type');
@@ -24,7 +26,7 @@ class SpaceTypeController extends CrudController
 
         $globalOption->saveFromInputs($inputs);
 
-        $this->generateFlashMessage('Space type created successfully!');
+        $this->generateFlashMessage("The :resource was created!", ['resource' => $this->title()]);
 
         return redirect()->back();
     }
@@ -33,7 +35,7 @@ class SpaceTypeController extends CrudController
     {
         $spaceType->saveFromInputs($request->all());
 
-        $this->generateFlashMessage('Space type updated successfully!');
+        $this->generateFlashMessage("The :resource was updated!", ['resource' => $this->title()]);
 
         return redirect()->back();
     }
@@ -42,7 +44,7 @@ class SpaceTypeController extends CrudController
     {
         $spaceType->delete();
 
-        $this->generateFlashMessage('Space type deleted successfully!');
+        $this->generateFlashMessage("The :resource was deleted!", ['resource' => $this->title()]);
 
         return redirect()->back();
     }

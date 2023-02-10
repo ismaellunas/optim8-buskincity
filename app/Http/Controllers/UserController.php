@@ -85,6 +85,15 @@ class UserController extends CrudController
         $record->language_id = app(LanguageService::class)->getDefaultId();
 
         return Inertia::render('User/Create', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getCreateTitle(),
+                ],
+            ],
             'record' => $record,
             'roleOptions' => $this->userService->getRoleOptions(),
             'supportedLanguageOptions' => app(LanguageService::class)->getSupportedLanguageOptions(),
@@ -151,6 +160,15 @@ class UserController extends CrudController
         $user->roles->makeHidden('pivot');
 
         return Inertia::render('User/Edit', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getEditTitle(),
+                ],
+            ],
             'can' => [
                 'public_profile' => $canPublicPage,
                 'update_password' => auth()->user()->can('updatePassword', $user),

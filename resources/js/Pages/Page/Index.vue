@@ -25,109 +25,105 @@
                 </div>
             </div>
 
-            <div class="table-container">
-                <table class="table is-striped is-hoverable is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Title</th>
-                            <th>Slug</th>
-                            <th>Status</th>
-                            <th>M.Title</th>
-                            <th>M.Description</th>
-                            <th>Language</th>
-                            <th>
-                                <div class="level-right">
-                                    Actions
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            v-for="page in records.data"
-                            :key="page.id"
-                        >
-                            <th>{{ page.id }}</th>
-                            <td>
-                                <a
-                                    :href="page.urlDefaultLocale"
-                                    target="_blank"
-                                >
-                                    {{ page.title }}
-                                </a>
-                            </td>
-                            <td>{{ page.slug }}</td>
-                            <td>
-                                <biz-tag :class="statusClass(page.status)">
-                                    {{ page.statusText }}
-                                </biz-tag>
-                            </td>
-                            <td>
-                                <i
-                                    v-if="page.hasMetaTitle"
-                                    :class="icon.checkCircle"
-                                />
-                            </td>
-                            <td>
-                                <i
-                                    v-if="page.hasMetaDescription"
-                                    :class="icon.checkCircle"
-                                />
-                            </td>
-                            <td>
-                                <div class="buttons">
-                                    <biz-button
-                                        v-for="(translation, index) in page.availableTranslations"
-                                        :key="index"
-                                        class="is-info px-2 mr-1 is-small"
-                                        @click="openShow(translation, page)"
-                                    >
-                                        {{ translation?.toUpperCase() }}
-                                    </biz-button>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="level-right">
-                                    <biz-button
-                                        v-if="can.add"
-                                        class="is-ghost has-text-black"
-                                        @click="duplicateRow(page)"
-                                    >
-                                        <span class="icon is-small">
-                                            <i :class="icon.copy" />
-                                        </span>
-                                    </biz-button>
-
-                                    <biz-button-link
-                                        v-if="can.edit"
-                                        class="is-ghost has-text-black"
-                                        :href="route('admin.pages.edit', {id: page.id})"
-                                    >
-                                        <span class="icon is-small">
-                                            <i :class="icon.edit" />
-                                        </span>
-                                    </biz-button-link>
-
-                                    <biz-button
-                                        v-if="can.delete"
-                                        class="is-ghost has-text-black ml-1"
-                                        @click.prevent="deleteRow(page)"
-                                    >
-                                        <span class="icon is-small">
-                                            <i :class="icon.remove" />
-                                        </span>
-                                    </biz-button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <biz-pagination
-                :links="records.links"
+            <biz-table-index
+                :records="records"
                 :query-params="queryParams"
-            />
+            >
+                <template #thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Slug</th>
+                        <th>Status</th>
+                        <th>M.Title</th>
+                        <th>M.Description</th>
+                        <th>Language</th>
+                        <th>
+                            <div class="level-right">
+                                Actions
+                            </div>
+                        </th>
+                    </tr>
+                </template>
+
+                <tr
+                    v-for="page in records.data"
+                    :key="page.id"
+                >
+                    <th>{{ page.id }}</th>
+                    <td>
+                        <a
+                            :href="page.urlDefaultLocale"
+                            target="_blank"
+                        >
+                            {{ page.title }}
+                        </a>
+                    </td>
+                    <td>{{ page.slug }}</td>
+                    <td>
+                        <biz-tag :class="statusClass(page.status)">
+                            {{ page.statusText }}
+                        </biz-tag>
+                    </td>
+                    <td>
+                        <i
+                            v-if="page.hasMetaTitle"
+                            :class="icon.checkCircle"
+                        />
+                    </td>
+                    <td>
+                        <i
+                            v-if="page.hasMetaDescription"
+                            :class="icon.checkCircle"
+                        />
+                    </td>
+                    <td>
+                        <div class="buttons">
+                            <biz-button
+                                v-for="(translation, index) in page.availableTranslations"
+                                :key="index"
+                                class="is-info px-2 mr-1 is-small"
+                                @click="openShow(translation, page)"
+                            >
+                                {{ translation?.toUpperCase() }}
+                            </biz-button>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="level-right">
+                            <biz-button
+                                v-if="can.add"
+                                class="is-ghost has-text-black"
+                                @click="duplicateRow(page)"
+                            >
+                                <span class="icon is-small">
+                                    <i :class="icon.copy" />
+                                </span>
+                            </biz-button>
+
+                            <biz-button-link
+                                v-if="can.edit"
+                                class="is-ghost has-text-black"
+                                :href="route('admin.pages.edit', {id: page.id})"
+                            >
+                                <span class="icon is-small">
+                                    <i :class="icon.edit" />
+                                </span>
+                            </biz-button-link>
+
+                            <biz-button
+                                v-if="can.delete"
+                                class="is-ghost has-text-black ml-1"
+                                @click.prevent="deleteRow(page)"
+                            >
+                                <span class="icon is-small">
+                                    <i :class="icon.remove" />
+                                </span>
+                            </biz-button>
+                        </div>
+                    </td>
+                </tr>
+            </biz-table-index>
         </div>
     </div>
 </template>
@@ -139,7 +135,7 @@
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizFilterSearch from '@/Biz/Filter/Search';
     import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import BizPagination from '@/Biz/Pagination';
+    import BizTableIndex from '@/Biz/TableIndex';
     import BizTag from '@/Biz/Tag';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, confirm } from '@/Libs/alert';
@@ -147,12 +143,14 @@
     import { ref } from 'vue';
 
     export default {
+        name: 'PageIndex',
+
         components: {
             BizButton,
             BizButtonLink,
             BizFilterSearch,
             BizFlashNotifications,
-            BizPagination,
+            BizTableIndex,
             BizTag,
         },
 
