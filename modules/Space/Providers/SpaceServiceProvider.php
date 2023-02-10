@@ -33,13 +33,19 @@ class SpaceServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        Space::disableAutoloadTranslations();
+
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
 
         User::resolveRelationUsing('spaces', function ($userModel) {
-            return $userModel->belongsToMany(Space::class);
+            return $userModel
+                ->belongsToMany(Space::class)
+                ->addSelect(Space::getTableName().'.*')
+                ->withDepth()
+            ;
         });
     }
 
