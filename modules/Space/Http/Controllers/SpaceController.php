@@ -11,7 +11,8 @@ use Inertia\Inertia;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
-use Modules\Space\Http\Requests\SpaceRequest;
+use Modules\Space\Http\Requests\SpaceStoreRequest;
+use Modules\Space\Http\Requests\SpaceUpdateRequest;
 use Modules\Space\ModuleService;
 use Modules\Space\Services\SpaceService;
 
@@ -34,18 +35,17 @@ class SpaceController extends CrudController
     {
         $user = auth()->user();
 
-        $managedSpaceIds = null;
+        $managedSpaces = null;
         $spaceIds = null;
 
         if (! $user->can('space.viewAny')) {
-            $managedSpaceIds = $user->spaces->pluck('id')->all();
+            $managedSpaces = $user->spaces;
 
-            $spaceIds = $managedSpaceIds;
+            $spaceIds = $managedSpaces->pluck('id')->all();
 
             if ($request->parent) {
 
                 $space = Space::select('id', '_lft', '_rgt')
-                    ->with('ancestors')
                     ->find($request->parent);
 
                 if ($user->can('manage', $space)) {
@@ -60,7 +60,7 @@ class SpaceController extends CrudController
 
         $records = $this->spaceService->getRecords($user, $spaceIds);
 
-        $spaceOptions = $this->spaceService->parentOptions($managedSpaceIds, __('Select Parent'));
+        $spaceOptions = $this->spaceService->parentOptions($managedSpaces, __('Select Parent'));
 
         return Inertia::render('Space::SpaceIndex', $this->getData([
             'can' => [
@@ -110,23 +110,20 @@ class SpaceController extends CrudController
         if ($request->parent) {
             $parentOptions = [Space::select('id', 'name as value')->find($request->parent)];
         } else {
-            $managedSpaceIds = null;
+            $managedSpaces = null;
 
-            if (! $user->can('space.viewAny')) {
-
-                $user->load('spaces:id');
-
-                $managedSpaceIds = $user->spaces->pluck('id')->all();
+            if (! $user->can('space.store')) {
+                $managedSpaces = $user->spaces;
             }
 
             $parentOptions = $this->spaceService->parentOptions(
-                $managedSpaceIds,
+                $managedSpaces,
                 $user->can('space.add') ? __("None") : null
             );
         }
 
         return Inertia::render('Space::SpaceCreate', $this->getData([
-            'title' => 'Add New Space',
+            'title' => $this->getCreateTitle(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $parentOptions,
             'typeOptions' => $this->spaceService->typeOptions(),
@@ -147,7 +144,7 @@ class SpaceController extends CrudController
         ]));
     }
 
-    public function store(SpaceRequest $request)
+    public function store(SpaceStoreRequest $request)
     {
         $space = new Space();
 
@@ -196,17 +193,34 @@ class SpaceController extends CrudController
                 'id' => $space->parent_id,
                 'value' => $space->parent->name,
             ]
-            : null
+            : [
+                'id' => null,
+                'value' => __('None'),
+            ]
+        );
+
+        $managedSpaces = null;
+
+        if (! $user->can('space.edit')) {
+            $managedSpaces = $user->spaces;
+        }
+
+        $parentOptions = $this->spaceService->parentOptionsFor(
+            $space,
+            $managedSpaces,
+            $user->can('space.add') ? __("None") : null
         );
 
         $page = $space->page_id
             ? $this->spaceService->pageFormRecord($space)
             : $this->makePage();
 
+        $canChangeParent = $user->can('changeParent', $space);
+
         return Inertia::render('Space::SpaceEdit', $this->getData([
-            'title' => 'Edit Space',
+            'title' => $this->getEditTitle(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
-            'parentOptions' => $parent ? [$parent] : [],
+            'parentOptions' => $canChangeParent ? $parentOptions : [$parent],
             'spaceManagers' => $this->spaceService->formattedManagers($space),
             'spaceRecord' => $this->spaceService->editableRecord($space),
             'typeOptions' => $this->spaceService->typeOptions(),
@@ -220,6 +234,8 @@ class SpaceController extends CrudController
                 'manager' => [
                     'edit' => $user->can('manageManager', Space::class),
                 ],
+                'update' => $user->can('update', $space),
+                'changeParent' => $canChangeParent,
             ],
             'page' => $page,
             'statusOptions' => Page::getStatusOptions(),
@@ -240,10 +256,13 @@ class SpaceController extends CrudController
                     'title' => $this->getEditTitle(),
                 ],
             ],
+            'i18n' => [
+                'space' => __("Space"),
+            ],
         ]));
     }
 
-    public function update(SpaceRequest $request, Space $space)
+    public function update(SpaceUpdateRequest $request, Space $space)
     {
         $inputs = $request->validated();
 
@@ -276,31 +295,13 @@ class SpaceController extends CrudController
         return back();
     }
 
-    public function destroy(Request $request, Space $space)
+    public function destroy(Space $space)
     {
         $space->delete();
 
         $this->generateFlashMessage($this->title.' deleted successfully!');
 
         return redirect()->route($this->baseRouteName.'.index');
-    }
-
-    public function moveNode($current, $parent = null)
-    {
-        $this->authorize('changeParent', Space::class);
-
-        $currentSpace = Space::find($current);
-
-        if (! $parent) {
-            $currentSpace->saveAsRoot();
-
-        } else {
-
-            $parentSpace = Space::find($parent);
-            $parentSpace->appendNode($currentSpace);
-        }
-
-        return back();
     }
 
     public function searchManagers(Request $request)

@@ -8,7 +8,7 @@
                     >
                         <template #trigger>
                             <span>
-                                {{ selectedParent ? selectedParent.value : 'Select Space' }}
+                                {{ selectedParent ? selectedParent.value : 'Select Parent' }}
                             </span>
 
                             <biz-icon :icon="icon.angleDown" />

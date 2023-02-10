@@ -2,7 +2,7 @@
     <div>
         <biz-list-section>
             <template #title>
-                Space Types
+                {{ i18n.spaceType }}
             </template>
 
             <div class="columns">
@@ -80,7 +80,11 @@
             :selected-type="selectedType"
             @close="closeModal()"
             @on-submit="onSubmit"
-        />
+        >
+            <template #header>
+                {{ !selectedType.id ? i18n.createSpaceType : i18n.editSpaceType }}
+            </template>
+        </space-type-form-modal>
     </div>
 </template>
 
@@ -110,6 +114,10 @@
         mixins: [
             MixinFilterDataHandle,
             MixinHasModal
+        ],
+
+        inject: [
+            'i18n',
         ],
 
         data() {
