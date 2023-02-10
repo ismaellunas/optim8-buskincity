@@ -225,7 +225,7 @@ class FormBuilderService
         abort(Response::HTTP_FORBIDDEN);
     }
 
-    protected function getFieldClassName($type): string
+    protected function getFieldClassName(string $type): string
     {
         return $this->fieldPath.'\\'.Str::studly($type);
     }
@@ -258,12 +258,14 @@ class FormBuilderService
         foreach($inputs as $key => $value) {
             $fieldType = $fields->where('name', $key)->value('type');
 
-            $fieldClassName = $this->getFieldClassName($fieldType);
+            if ($fieldType) {
+                $fieldClassName = $this->getFieldClassName($fieldType);
 
-            if (class_exists($fieldClassName)) {
-                $fieldClass = new $fieldClassName();
+                if (class_exists($fieldClassName)) {
+                    $fieldClass = new $fieldClassName();
 
-                $values[$key] = $fieldClass->getSavedData($value);
+                    $values[$key] = $fieldClass->getSavedData($value);
+                }
             }
         }
 
@@ -384,10 +386,46 @@ class FormBuilderService
     public function transformEntry($entry)
     {
         if (!empty($entry['user_id'])) {
-            $entry->load('user');
-            $entry->user->append('isSuperAdministrator');
+            $entry->load([
+                'user' => function ($query) {
+                    $query->select([
+                        'id',
+                        'first_name',
+                        'last_name',
+                    ]);
+                }
+            ]);
         }
 
         return $entry->toArray();
+    }
+
+    public function sanitizeEmails(array $emails = []): array
+    {
+        $validEmails = [];
+        $emails = array_values(
+            array_filter($emails)
+        );
+
+        foreach ($emails as $email) {
+            $email = $this->sanitizeEmail($email);
+
+            if ($email) {
+                $validEmails[] = $email;
+            }
+        }
+
+        return $validEmails;
+    }
+
+    public function sanitizeEmail(string $email): ?string
+    {
+        $email = Str::replace(' ', '', $email);
+
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return $email;
+        }
+
+        return null;
     }
 }

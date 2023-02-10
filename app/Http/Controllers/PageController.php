@@ -67,6 +67,15 @@ class PageController extends CrudController
         $user = auth()->user();
 
         return Inertia::render('Page/Create', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getCreateTitle(),
+                ],
+            ],
             'can' => [
                 'media' => [
                     'browse' => $user->can('media.browse'),
@@ -130,6 +139,15 @@ class PageController extends CrudController
         $user = auth()->user();
 
         return Inertia::render('Page/Edit', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getEditTitle(),
+                ],
+            ],
             'can' => [
                 'media' => [
                     'browse' => $user->can('media.browse'),

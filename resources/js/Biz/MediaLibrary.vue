@@ -80,6 +80,10 @@
             </div>
 
             <div class="column is-full">
+                <biz-table-info :records="records" />
+            </div>
+
+            <div class="column is-full">
                 <component
                     :is="isGalleryView ? 'BizMediaGallery' : 'BizMediaList'"
                     :media="records.data"
@@ -256,6 +260,7 @@
     import BizModalCard from '@/Biz/ModalCard';
     import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
     import BizPagination from '@/Biz/Pagination';
+    import BizTableInfo from '@/Biz/TableInfo';
     import { acceptedFileTypes, acceptedImageTypes } from '@/Libs/defaults';
     import { confirm as confirmAlert, confirmDelete, success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { getCanvasBlob } from '@/Libs/utils';
@@ -294,6 +299,7 @@
             BizModalCard,
             BizModalImageEditor,
             BizPagination,
+            BizTableInfo,
         },
 
         mixins: [

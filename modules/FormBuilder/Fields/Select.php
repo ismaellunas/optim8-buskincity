@@ -2,6 +2,8 @@
 
 namespace Modules\FormBuilder\Fields;
 
+use Mews\Purifier\Facades\Purifier;
+
 class Select extends BaseField
 {
     public function value(): mixed
@@ -15,7 +17,7 @@ class Select extends BaseField
             ->first();
 
         if ($option) {
-            return $option['value'];
+            return Purifier::clean($option['value']);
         }
 
         return '-';

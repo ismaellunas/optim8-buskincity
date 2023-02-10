@@ -8,7 +8,7 @@ use Modules\Space\Entities\Space;
 use Modules\Space\ModuleService;
 use Modules\Space\Services\SpaceService;
 
-class SpaceRequest extends FormRequest
+class SpaceStoreRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,8 +18,9 @@ class SpaceRequest extends FormRequest
     public function rules()
     {
         $user = auth()->user();
+        $spaceService = app(SpaceService::class);
 
-        $types = collect(app(SpaceService::class)->types())
+        $types = collect($spaceService->types())
             ->map(function ($type) {
                 return $type->id;
             })
@@ -105,29 +106,36 @@ class SpaceRequest extends FormRequest
             ],
         ];
 
-        $routeName = request()->route()->getName();
-
-        if ($routeName == 'admin.spaces.store') {
-            $rules['parent_id'] = [
-                'nullable',
-                'integer',
-                function ($attribute, $value, $fail) use ($user) {
-                    $space = Space::find($value);
-
-                    if (! $user->can('create', $space, Space::class)) {
-                        $fail(__('The Parent is invalid.'));
-                    }
-                },
-            ];
-        }
-
         if ($user->can('managePage', Space::class)) {
-            $rules['is_page_enabled'] = [
-                'boolean',
-            ];
+            $rules['is_page_enabled'] = [ 'boolean' ];
         }
+
+        $this->additionalRules($rules);
 
         return $rules;
+    }
+
+    protected function additionalRules(&$rules): void
+    {
+        $user = auth()->user();
+        $spaceService = app(SpaceService::class);
+
+        $rules['parent_id'] = ['integer'];
+
+        $managedSpaces = null;
+
+        if ($user->can('space.add')) {
+
+            $rules['parent_id'][] = ['nullable'];
+
+        } else {
+
+            $managedSpaces = $user->spaces;
+        }
+
+        $rules['parent_id'][] = Rule::in(
+            $spaceService->parentOptions($managedSpaces)->pluck('id')
+        );
     }
 
     /**

@@ -10,11 +10,6 @@ class SpacePolicy
 {
     use HandlesAuthorization;
 
-    public function __construct()
-    {
-        Space::disableAutoloadTranslations();
-    }
-
     public function viewAny(User $user)
     {
         return (
@@ -25,7 +20,10 @@ class SpacePolicy
 
     public function create(User $user)
     {
-        return $user->can('space.add');
+        return (
+            $user->can('space.add')
+            || $user->spaces->contains(fn ($space) => $space->isParentable)
+        );
     }
 
     public function update(User $user, Space $space)
@@ -36,27 +34,37 @@ class SpacePolicy
         );
     }
 
-    public function delete(User $user, Space $space)
+    private function manageAncestorOfSpace(User $user, Space $space)
     {
-        return $user->can('space.delete');
+        return $user->spaces->contains(
+            fn ($currentSpace) => $currentSpace->isAncestorOf($space)
+        );
     }
 
-    public function changeParent(User $user)
+    public function delete(User $user, Space $space)
     {
-        return $user->isAdministrator || $user->isSuperAdministrator;
+        return (
+            $user->can('space.delete')
+            || $this->manageAncestorOfSpace($user, $space)
+        );
+    }
+
+    public function changeParent(User $user, Space $space)
+    {
+        return (
+            $user->can('space.edit')
+            || (
+                $user->spaces->isNotEmpty()
+                && !$user->spaces->contains('id', $space->id)
+            )
+        );
     }
 
     public function manage(User $user, Space $space): bool
     {
-        if ($user->spaces->isEmpty()) {
-            return false;
-        }
-
         return (
             $user->spaces->contains('id', $space->id)
-            || $user->spaces->contains(function ($currentSpace) use ($space) {
-                return $currentSpace->isAncestorOf($space);
-            })
+            || $this->manageAncestorOfSpace($user, $space)
         );
     }
 
