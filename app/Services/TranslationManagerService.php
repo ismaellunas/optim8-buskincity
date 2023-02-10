@@ -266,7 +266,8 @@ class TranslationManagerService
         ?string $value,
         string $locale,
         string $group = null,
-        bool $replace = false
+        bool $replace = false,
+        string $source = null
     ): bool {
         $translation = Translation::firstOrNew([
             'locale' => $locale,
@@ -276,6 +277,10 @@ class TranslationManagerService
 
         if ($replace || !$translation->value) {
             $translation->value = $value;
+        }
+
+        if ($source) {
+            $translation->source = $source;
         }
 
         return $translation->save();

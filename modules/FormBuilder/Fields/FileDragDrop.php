@@ -14,12 +14,17 @@ class FileDragDrop extends BaseField
 {
     public function getSavedData(mixed $value): mixed
     {
+        $mediaId = [];
         $files = $value['files'] ?? [];
 
-        $media = $this->uploadFiles($files);
+        if (!empty($files)) {
+            $media = $this->uploadFiles($files);
+
+            $mediaId = $media->pluck('id')->toArray();
+        }
 
         return [
-            'mediaId' => $media->pluck('id')->toArray(),
+            'mediaId' => $mediaId,
         ];
     }
 
@@ -49,7 +54,7 @@ class FileDragDrop extends BaseField
         $mediaIds = $this->value['mediaId'] ?? [];
 
         if (empty($mediaIds)) {
-            return "-";
+            return [];
         }
 
         $media = $this->getMedia($mediaIds);
@@ -68,7 +73,7 @@ class FileDragDrop extends BaseField
         ];
     }
 
-    private function uploadFiles($files): Collection
+    private function uploadFiles(array $files): Collection
     {
         $media = collect();
 

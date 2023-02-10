@@ -17,6 +17,8 @@ class FormNotification extends Mailable
     public $entry;
     public $setting;
 
+    private $formBuilderService;
+
     /**
      * Create a new message instance.
      *
@@ -28,6 +30,8 @@ class FormNotification extends Mailable
     ) {
         $this->entry = $entry;
         $this->setting = $setting;
+
+        $this->formBuilderService = app(FormBuilderService::class);
     }
 
     /**
@@ -40,32 +44,40 @@ class FormNotification extends Mailable
         $entry = $this->entry;
         $setting = $this->setting;
 
-        $fromEmail = app(FormBuilderService::class)
-            ->swapTagWithEntryValue(
-                $entry,
-                $setting->from_email,
-                config('formbuilder.default_from_email')
+        $fromEmail = $this->formBuilderService->sanitizeEmail(
+                $this->formBuilderService
+                    ->swapTagWithEntryValue(
+                        $entry,
+                        $setting->from_email,
+                        config('formbuilder.default_from_email')
+                    )
             );
 
-        $fromName = app(FormBuilderService::class)
+        $fromName = $this->formBuilderService
             ->swapTagWithEntryValue(
                 $entry,
                 $setting->from_name
             );
 
-        $replyToEmail = app(FormBuilderService::class)
+        $replyToEmail = $this->formBuilderService
             ->swapTagWithEntryValue(
                 $entry,
                 $setting->reply_to
             );
 
-        $subject = app(FormBuilderService::class)
+        if ($replyToEmail) {
+            $replyToEmail = $this->formBuilderService->sanitizeEmail(
+                $replyToEmail
+            );
+        }
+
+        $subject = $this->formBuilderService
             ->swapTagWithEntryValue(
                 $entry,
                 $setting->subject
             );
 
-        $message = app(FormBuilderService::class)
+        $message = $this->formBuilderService
             ->swapTagWithEntryValue(
                 $entry,
                 $setting->message

@@ -18,6 +18,22 @@
             id="main-container"
             class="container mb-2"
         >
+            <div
+                v-if="!isBreadcrumbsEmpty"
+                class="columns mb-0"
+            >
+                <div class="column">
+                    <biz-breadcrumbs :breadcrumbs="breadcrumbs" />
+                </div>
+
+                <div
+                    v-if="hasSideBreadcrumbsSlot"
+                    class="column"
+                >
+                    <slot name="sideBreadcrumbs" />
+                </div>
+            </div>
+
             <biz-flash-expired :flash="$page.props.flash" />
 
             <slot />
@@ -26,27 +42,38 @@
 </template>
 
 <script>
-    import BizNavbarMenu from '@/Biz/NavbarMenu';
+    import BizBreadcrumbs from '@/Biz/Breadcrumbs';
     import BizFlashExpired from '@/Biz/FlashExpired';
+    import BizNavbarMenu from '@/Biz/NavbarMenu';
     import { Head as HeadTag } from '@inertiajs/inertia-vue3';
-    import { head } from 'lodash';
+    import { head, isEmpty } from 'lodash';
 
     export default {
         name: 'AppLayout',
 
         components: {
+            BizBreadcrumbs,
             BizNavbarMenu,
             BizFlashExpired,
             HeadTag,
         },
 
         props: {
+            breadcrumbs: { type: Array, default: () => [] },
             title: { type: String, default: null },
         },
 
         computed: {
             titleChild() {
                 return head(this.$slots.default())?.type.props.title?.default ?? '';
+            },
+
+            isBreadcrumbsEmpty() {
+                return isEmpty(this.breadcrumbs)
+            },
+
+            hasSideBreadcrumbsSlot() {
+                return !!this.$slots.sideBreadcrumbs;
             },
         },
     };

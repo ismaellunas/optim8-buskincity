@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Services\MediaService;
 use Illuminate\Support\ServiceProvider;
 use Modules\Space\Entities\Space;
-use Modules\Space\Services\PageService;
 use Modules\Space\Services\PageSpaceService;
 use Modules\Space\Services\SpaceService;
 
@@ -29,19 +28,24 @@ class SpaceServiceProvider extends ServiceProvider
      */
 
     public $singletons = [
-        PageService::class => PageService::class,
         PageSpaceService::class => PageSpaceService::class,
     ];
 
     public function boot()
     {
+        Space::disableAutoloadTranslations();
+
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'Database/Migrations'));
 
         User::resolveRelationUsing('spaces', function ($userModel) {
-            return $userModel->belongsToMany(Space::class);
+            return $userModel
+                ->belongsToMany(Space::class)
+                ->addSelect(Space::getTableName().'.*')
+                ->withDepth()
+            ;
         });
     }
 

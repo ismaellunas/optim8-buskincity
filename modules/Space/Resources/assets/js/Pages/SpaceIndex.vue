@@ -8,7 +8,7 @@
                     >
                         <template #trigger>
                             <span>
-                                {{ selectedParent ? selectedParent.value : 'Select Space' }}
+                                {{ selectedParent ? selectedParent.value : 'Select Parent' }}
                             </span>
 
                             <biz-icon :icon="icon.angleDown" />
@@ -40,53 +40,44 @@
                 </div>
             </div>
 
-            <div class="table-container">
-                <biz-table
-                    class="is-striped is-hoverable"
-                    is-fullwidth
-                >
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Parents</th>
-                            <th>Type</th>
-                            <th>
-                                <div class="level-right">
-                                    Actions
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <space-row
-                            v-for="space in records.data"
-                            :key="space.id"
-                            :space="space"
-                            :can="can"
-                            @delete-row="deleteSpace($event)"
-                        />
-                    </tbody>
-                </biz-table>
-            </div>
-
-            <biz-pagination
-                :links="records.links"
+            <biz-table-index
+                :records="records"
                 :query-params="queryParams"
-            />
+            >
+                <template #thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Parents</th>
+                        <th>Type</th>
+                        <th>
+                            <div class="level-right">
+                                Actions
+                            </div>
+                        </th>
+                    </tr>
+                </template>
+
+                <space-row
+                    v-for="space in records.data"
+                    :key="space.id"
+                    :space="space"
+                    :can="can"
+                    @delete-row="deleteSpace($event)"
+                />
+            </biz-table-index>
         </div>
     </div>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout';
+    import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButtonLink from '@/Biz/ButtonLink';
     import BizDropdown from '@/Biz/Dropdown';
     import BizDropdownItem from '@/Biz/DropdownItem';
     import BizDropdownScroll from '@/Biz/DropdownScroll';
     import BizIcon from '@/Biz/Icon';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTable from '@/Biz/Table';
-    import MixinHasLoader from '@/Mixins/HasLoader';
+    import BizTableIndex from '@/Biz/TableIndex';
     import SpaceRow from './SpaceRow';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
@@ -100,8 +91,7 @@
             BizDropdownItem,
             BizDropdownScroll,
             BizIcon,
-            BizPagination,
-            BizTable,
+            BizTableIndex,
             SpaceRow,
         },
 

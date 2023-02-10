@@ -22,6 +22,7 @@ class CreateTranslationsTable extends Migration {
             $table->string('group', 127)->nullable();
             $table->text('key');
             $table->text('value')->nullable();
+            $table->string('source', 127)->nullable();
             $table->timestamps();
         });
 	}

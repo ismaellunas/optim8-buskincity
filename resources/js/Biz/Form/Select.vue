@@ -64,7 +64,7 @@
                 default: ""
             },
             message: {
-                type: Object,
+                type: [Array, Object, String],
                 default: () => {}
             },
             modelValue: {

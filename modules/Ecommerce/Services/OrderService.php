@@ -3,6 +3,7 @@
 namespace Modules\Ecommerce\Services;
 
 use App\Models\User;
+use App\Services\CountryService;
 use Carbon\Carbon;
 use Carbon\CarbonTimeZone;
 use GetCandy\Base\OrderReferenceGeneratorInterface;
@@ -14,6 +15,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Event;
 use Modules\Booking\Enums\BookingStatus;
+use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Enums\OrderLineType;
@@ -216,6 +218,10 @@ class OrderService
 
         $product = $order->firstEventLine->purchasable->product;
 
+        $product->load(['metas' => function ($query) {
+            $query->whereIn('key', ['locations', 'is_check_in_required']);
+        }]);
+
         $carbonTimeZone = CarbonTimeZone::create($event->schedule->timezone);
 
         return [
@@ -223,7 +229,28 @@ class OrderService
             'product' => [
                 'id' => $product->id,
                 'name' => $product->displayName,
+                'is_check_in_required' => (bool) $product->is_check_in_required,
             ],
+            'location' => function () use ($product) {
+                $location = collect($product->locations[0] ?? null);
+
+                if ($location->has('country_code')) {
+                    $location['country_name'] = app(CountryService::class)->getCountryName(
+                        $location['country_code']
+                    );
+                }
+
+                $location['direction_url'] = app(ProductEventService::class)
+                    ->getGoogleMapDirectionUrl($product);
+
+                return $location->only('address',
+                    'country_name',
+                    'city',
+                    'direction_url',
+                    'latitude',
+                    'longitude'
+                );
+            },
             'event' => [
                 'date' => $event->timezonedBookedAt->format('d F Y'),
                 'duration' => $event->displayDuration,
