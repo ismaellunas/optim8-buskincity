@@ -19,7 +19,7 @@ class MenuOption implements MenuBuilderInterface
     {
         return [
             'id' => 'space',
-            'value' => 'Space',
+            'value' => __("Space"),
             'model' => 'Modules\Space\Entities\Space',
         ];
     }

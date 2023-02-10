@@ -19,7 +19,7 @@ abstract class CrudController extends Controller
         return array_merge(
             [
                 'baseRouteName' => $this->baseRouteName,
-                'title' => $this->title,
+                'title' => $this->title(),
             ],
             $additionalData
         );
@@ -27,16 +27,21 @@ abstract class CrudController extends Controller
 
     protected function getCreateTitle(): string
     {
-        return 'Add New '.$this->title;
+        return 'Add New '.$this->title();
     }
 
     protected function getEditTitle(): string
     {
-        return 'Edit '.$this->title;
+        return 'Edit '.$this->title();
     }
 
     protected function getIndexTitle(): string
     {
-        return Str::plural($this->title);
+        return Str::plural($this->title());
+    }
+
+    protected function title(): string
+    {
+        return __($this->title);
     }
 }

@@ -21,7 +21,7 @@
                     v-model="activeTab"
                     class="is-boxed"
                 >
-                    <biz-provide-inject-tab title="Space">
+                    <biz-provide-inject-tab :title="i18n.space">
                         <form
                             action=""
                             @submit.prevent="submit"
@@ -223,6 +223,7 @@
             statusOptions: { type: Array, default:() => [] },
             tab: { type: Number, default: 0 },
             title: { type: String, default: "" },
+            i18n: { type: Object, default: () => {} },
             typeOptions: { type: Object, default: () => {} },
         },
 
