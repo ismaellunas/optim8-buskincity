@@ -56,6 +56,7 @@ class SettingNotificationService
                     $fieldNames[] = [
                         'id' => $field['name'],
                         'value' => $field['label'] ?? Str::of($field['name'])->replace('_', ' ')->title(),
+                        'type' => $field['type'],
                     ];
                 }
             }

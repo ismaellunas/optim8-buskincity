@@ -50,6 +50,15 @@ class TranslationManagerController extends CrudController
         return Inertia::render(
             $this->componentName . 'Create',
             $this->getData([
+                'breadcrumbs' => [
+                    [
+                        'title' => $this->getIndexTitle(),
+                        'url' => route($this->baseRouteName.'.edit'),
+                    ],
+                    [
+                        'title' => $this->getCreateTitle(),
+                    ],
+                ],
                 'referenceLocale' => $this->referenceLocale,
                 'groupOptions' => config('constants.translations.groups'),
                 'title' => $this->getCreateTitle()

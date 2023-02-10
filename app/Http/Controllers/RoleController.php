@@ -48,6 +48,15 @@ class RoleController extends CrudController
     public function create()
     {
         return Inertia::render('Role/Create', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getCreateTitle(),
+                ],
+            ],
             'permissions' => $this->roleService->getPermissionOptions(),
             'title' => $this->getCreateTitle(),
         ]));
@@ -82,6 +91,15 @@ class RoleController extends CrudController
         $role->load('permissions');
 
         return Inertia::render('Role/Edit', $this->getData([
+            'breadcrumbs' => [
+                [
+                    'title' => $this->getIndexTitle(),
+                    'url' => route($this->baseRouteName.'.index'),
+                ],
+                [
+                    'title' => $this->getEditTitle(),
+                ],
+            ],
             'permissions' => $this->roleService->getPermissionOptions(),
             'record' => $role,
             'title' => $this->getEditTitle(),

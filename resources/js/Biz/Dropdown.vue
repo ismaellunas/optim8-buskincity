@@ -12,7 +12,7 @@
         >
             <biz-button
                 v-if="isTriggerButton"
-                :aria-controls="menuId"
+                :aria-controls="uniqueMenuId"
                 :class="classButton"
                 :style="styleButton"
                 aria-haspopup="true"
@@ -25,7 +25,7 @@
             <a
                 v-else
                 aria-haspopup="true"
-                :aria-controls="menuId"
+                :aria-controls="uniqueMenuId"
             >
                 <slot name="trigger" />
             </a>
@@ -33,7 +33,7 @@
 
         <div
             v-show="isActive || isHoverable"
-            :id="menuId"
+            :id="uniqueMenuId"
             ref="dropdownMenu"
             class="dropdown-menu"
             role="menu"
@@ -47,6 +47,7 @@
 
 <script>
     import BizButton from '@/Biz/Button';
+    import { generateElementId } from '@/Libs/utils';
     import { ref } from "vue";
 
     export default {
@@ -77,7 +78,7 @@
             },
             menuId: {
                 type: String,
-                default: 'dropdown-menu'
+                default: null,
             },
             styleButton: {
                 type: String,
@@ -102,10 +103,8 @@
         ],
 
         setup(props) {
-            const isActive = ref(props.active);
-
             return {
-                isActive,
+                isActive: ref(props.active),
             };
         },
 
@@ -116,6 +115,10 @@
                     'is-hoverable': this.isHoverable,
                     'is-fullwidth': this.isFullwidth,
                 };
+            },
+
+            uniqueMenuId() {
+                return this.menuId ?? generateElementId();
             },
         },
 

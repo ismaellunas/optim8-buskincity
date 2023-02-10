@@ -16,6 +16,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\PageTranslation;
+use Modules\Space\ModuleService;
 
 class Space extends BaseModel implements TranslatableContract
 {
@@ -166,6 +167,11 @@ class Space extends BaseModel implements TranslatableContract
     public function getCoverUrlAttribute(): ?string
     {
         return $this->cover ? $this->cover->file_url : null;
+    }
+
+    public function getIsParentableAttribute(): bool
+    {
+        return $this->depth < ModuleService::maxParentDepth();
     }
 
     public function pageLocalizeURL(string $locale): string

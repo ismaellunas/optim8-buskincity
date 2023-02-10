@@ -39,6 +39,19 @@ class SettingNotificationController extends CrudController
     {
         return Inertia::render('FormBuilder::Settings/Notification/Create', $this->getData([
             'activeOptions' => $this->settingNotificationService->getActiveOptions(),
+            'breadcrumbs' => [
+                [
+                    'title' => __('Form Builders'),
+                    'url' => route('admin.form-builders.index'),
+                ],
+                [
+                    'title' => __('Edit Form Builder'),
+                    'url' => route('admin.form-builders.edit', $formBuilder->id),
+                ],
+                [
+                    'title' => $this->getCreateTitle(),
+                ],
+            ],
             'title' => $this->getCreateTitle(),
             'formBuilder' => $formBuilder,
             'fieldNotes' => $this->fieldNotes(),
@@ -73,6 +86,19 @@ class SettingNotificationController extends CrudController
 
         return Inertia::render('FormBuilder::Settings/Notification/Edit', $this->getData([
             'activeOptions' => $this->settingNotificationService->getActiveOptions(),
+            'breadcrumbs' => [
+                [
+                    'title' => __('Form Builders'),
+                    'url' => route('admin.form-builders.index'),
+                ],
+                [
+                    'title' => __('Edit Form Builder'),
+                    'url' => route('admin.form-builders.edit', $formBuilder->id),
+                ],
+                [
+                    'title' => $this->getEditTitle(),
+                ],
+            ],
             'title' => $this->getEditTitle(),
             'formBuilder' => $formBuilder,
             'settingNotification' => $notification,

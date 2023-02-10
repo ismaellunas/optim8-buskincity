@@ -19,7 +19,7 @@ class ModuleService
         $canManageSpace = $user->can('viewAny', Space::class);
 
         return [
-            'title' => 'Space',
+            'title' => __("Space"),
             'isActive' => $request->routeIs('admin.spaces.*'),
             'isEnabled' => $canManageSpace,
             'children' => [
@@ -79,5 +79,10 @@ class ModuleService
         return StorageService::getImageUrl(
             config('constants.default_images.logo_space')
         );
+    }
+
+    public static function maxParentDepth(): int
+    {
+        return 2;
     }
 }
