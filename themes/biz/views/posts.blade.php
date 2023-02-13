@@ -53,18 +53,13 @@
                 </div>
             </div>
 
-            <div class="table-container">
-                <table class="table is-striped is-hoverable is-fullwidth">
-                    <tbody>
-                        @foreach ($records as $record)
-                            <x-post-list-item
-                                :post="$record"
-                                :link="route('blog.show', [$record->slug])"
-                            >
-                            </x-post-list-item>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div class="columns is-multiline">
+                @foreach ($records as $record)
+                    <x-post-item
+                        :post="$record"
+                        :link="route('blog.show', [$record->slug])"
+                    />
+                @endforeach
             </div>
 
             <x-pagination
