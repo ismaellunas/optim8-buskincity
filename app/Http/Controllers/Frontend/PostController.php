@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
     private $baseRouteName = 'blog';
-    private $perPage = 10;
+    private $perPage = 9;
 
     private $postService;
     private $translationService;
