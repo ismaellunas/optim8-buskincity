@@ -13,9 +13,11 @@
             <h1 class="title has-text-centered">
                 Welcome Back
             </h1>
+
             <h2 class="subtitle has-text-centered">
-                <span>Lorem ipsum dolor sit amet.</span>
+                <span>Fill in your email and password to login.</span>
             </h2>
+
             <div class="has-text-left">
                 <biz-error-notifications :errors="$page.props.errors" />
 
