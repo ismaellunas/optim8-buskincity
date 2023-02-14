@@ -7,9 +7,9 @@
 
         <div class="columns">
             <div
-                v-for="n in config.post.limit"
+                v-for="n in limit"
                 :key="n"
-                class="column is-4"
+                class="column"
             >
                 <article class="box is-clipped p-0">
                     <figure class="image is-3by2">
@@ -58,6 +58,12 @@
             return {
                 config: props.modelValue.config,
             };
+        },
+
+        computed: {
+            limit() {
+                return this.config?.post?.limit ?? 3;
+            },
         },
     }
 </script>
