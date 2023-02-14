@@ -12,6 +12,7 @@ import UserList from '@/Components/Builder/Content/UserList';
 import FormBuilder from '@mod/FormBuilder/Resources/assets/js/Form/Builder';
 import EventsCalendar from '@mod/Booking/Resources/assets/js/PageBuilderComponents/EventsCalendar';
 import SpaceEvents from '@mod/Space/Resources/assets/js/Frontend/SpaceEvents';
+import BookingEvents from '@mod/Booking/Resources/assets/js/Frontend/BookingEvents';
 
 export const components = {
     BizButton,
@@ -25,4 +26,5 @@ export const components = {
     EventsCalendar,
     FormBuilder,
     SpaceEvents,
+    BookingEvents,
 };

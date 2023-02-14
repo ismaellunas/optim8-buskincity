@@ -92,49 +92,13 @@
                         <div class="columns is-multiline mt-5">
                             <div class="column is-12">
                                 <h2 class="title is-3">
-                                    {{ __('Upcoming Bookings') }}
+                                    {{ __('Upcoming Events') }}
                                 </h2>
                             </div>
                             <div class="column is-12">
-                                @php
-                                    $upcomingBookings = $userProfile->getUpcomingBookings();
-                                @endphp
-                                <table class="table is-bordered is-fullwidth">
-                                    <thead>
-                                        <tr>
-                                            <th>{{ __('Event') }}</th>
-                                            <th>{{ __('Address') }}</th>
-                                            <th>{{ __('Booked At') }}</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        @if (!$upcomingBookings->isEmpty())
-                                            @foreach ($upcomingBookings as $booking)
-                                                <tr>
-                                                    <td style="width: 50%">
-                                                        <b>{{ $booking['name'] }}</b>
-                                                        <p>
-                                                            {{ $booking['short_description'] }}
-                                                        </p>
-                                                    </td>
-                                                    <td>{{ $booking['location']['address'] ?? '-' }}</td>
-                                                    <td>{{ $booking['booked_at'] }}</td>
-                                                </tr>
-                                            @endforeach
-                                        @else
-                                        <tr>
-                                            <td colspan="3" class="has-text-centered">
-                                                {{ __('Empty') }}
-                                            </td>
-                                        </tr>
-                                        @endif
-                                    </tbody>
-                                </table>
-
-                                <x-pagination
-                                    :paginator="$upcomingBookings"
-                                />
+                                <booking-events
+                                    get-record-url="{{ route('api.booking.upcoming-events', $user->unique_key) }}"
+                                ></booking-events>
                             </div>
                         </div>
                     @endif
