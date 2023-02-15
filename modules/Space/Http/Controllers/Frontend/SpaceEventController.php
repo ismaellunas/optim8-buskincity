@@ -4,14 +4,17 @@ namespace Modules\Space\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Modules\Space\Entities\Space;
 use Modules\Space\Services\SpaceEventService;
+use Modules\Space\Http\Requests\Frontend\SpaceEventRequest;
 
 class SpaceEventController extends Controller
 {
-    public function events(Request $request, Space $space, SpaceEventService $spaceEventService)
-    {
+    public function events(
+        SpaceEventRequest $request,
+        SpaceEventService $spaceEventService,
+    ) {
+        $space = $request->getSpace();
+
         $scopes = [];
 
         if ($request->has('dates')) {
@@ -27,7 +30,7 @@ class SpaceEventController extends Controller
 
         return [
             'records' => $spaceEventService->getSpaceEventRecords($space, $scopes),
-            'queryParams' => $request->only('dates'),
+            'queryParams' => $request->only('dates', 'space'),
             'options' => [
                 'spaces' => $spaceEventService->getSpaceRecordOptions($space, "- ".__('Select')." -"),
             ],

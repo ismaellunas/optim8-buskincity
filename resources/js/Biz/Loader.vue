@@ -13,7 +13,7 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: "Loader",
+        name: "BizLoader",
 
         components: {
             Loading,
