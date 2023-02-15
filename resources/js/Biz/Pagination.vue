@@ -73,6 +73,8 @@
     import { isBlank, serialize } from '@/Libs/utils';
 
     export default {
+        name: 'BizPagination',
+
         components: {
             BizButton,
             BizLink,

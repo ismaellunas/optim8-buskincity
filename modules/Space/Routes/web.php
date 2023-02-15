@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Modules\Space\Http\Controllers\ContactController;
 use Modules\Space\Http\Controllers\Frontend\SpaceController as FrontendSpaceController;
+use Modules\Space\Http\Controllers\Frontend\SpaceEventController;
 use Modules\Space\Http\Middleware\CanManageEvent;
 
 /*
@@ -80,4 +81,13 @@ Route::prefix(Localization::setLocale())
         Route::get(LaravelLocalization::transRoute('frontend.spaces.show'), [FrontendSpaceController::class, 'show'])
             ->name('frontend.spaces.show')
             ->where('slugs', '.+');
+});
+
+Route::prefix('api/space')
+    ->name('api.space.')
+    ->withoutMiddleware(HandleInertiaRequests::class)
+    ->middleware('throttle:api')
+    ->group(function () {
+        Route::get('space-events/{space}', [SpaceEventController::class, 'events'])
+            ->name('space-events');
 });
