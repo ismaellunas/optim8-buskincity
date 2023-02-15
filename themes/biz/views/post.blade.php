@@ -56,7 +56,10 @@
                     </div>
 
                     <div class="tags mt-6">
-                        <span class="tag">{{ $publishedOn }}</span>
+                        @if ($publishedOn)
+                            <span class="tag">{{ $publishedOn }}</span>
+                        @endif
+
                         <span class="tag">{{ $lastUpdatedOn }}</span>
                     </div>
 

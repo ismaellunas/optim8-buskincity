@@ -9,6 +9,8 @@ use Modules\Booking\Http\Requests\SettingRequest;
 
 class SettingController extends CrudController
 {
+    protected $title = 'Booking Settings';
+
     public function edit()
     {
         $settings = Setting::whereIn('key', [
@@ -22,7 +24,6 @@ class SettingController extends CrudController
         $settings['check_in_radius'] = json_decode($settings['check_in_radius']);
 
         return Inertia::render('Booking::Settings', $this->getData([
-            'title' => 'Booking Settings',
             'bookingSettings' => $settings,
         ]));
     }
