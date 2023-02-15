@@ -28,11 +28,15 @@ class SpaceEventController extends Controller
         return [
             'records' => $spaceEventService->getSpaceEventRecords($space, $scopes),
             'queryParams' => $request->only('dates'),
-            'options' => $spaceEventService->getSpaceRecordOptions($space, $scopes, "-".__('Space')."-"),
-            'minDate' => $minDate->toDateString(),
-            'maxDate' => $maxDate->toDateString(),
-            'yearRange' => [$minDate->year, $maxDate->year],
-            'isLeaf' => $space->isLeaf(),
+            'options' => [
+                'spaces' => $spaceEventService->getSpaceRecordOptions($space, "- ".__('Space')." -"),
+            ],
+            'setting' => [
+                'minDate' => $minDate->toDateString(),
+                'maxDate' => $maxDate->toDateString(),
+                'yearRange' => [$minDate->year, $maxDate->year],
+                'isLeaf' => $space->isLeaf(),
+            ],
         ];
     }
 }

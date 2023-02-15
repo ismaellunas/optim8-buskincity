@@ -16,15 +16,15 @@
                     max-range="7"
                     :clearable="true"
                     :format="'MMM d'"
-                    :max-date="maxDate"
-                    :min-date="minDate"
+                    :max-date="setting.maxDate"
+                    :min-date="setting.minDate"
                     :month-change-on-scroll="false"
-                    :year-range="yearRange"
+                    :year-range="setting.yearRange"
                 />
             </div>
 
             <div
-                v-if="!isLeaf"
+                v-if="!setting.isLeaf"
                 class="column is-3"
             >
                 <biz-select
@@ -32,7 +32,7 @@
                     class="is-fullwidth"
                 >
                     <option
-                        v-for="space in spaceOptions"
+                        v-for="space in options.spaces"
                         :key="space.id"
                         :value="space.id"
                     >
@@ -87,7 +87,7 @@
                         target="_blank"
                         :href="event.direction_url"
                     >
-                        <span>Direction</span>
+                        <span>Directions</span>
                     </a>
                 </td>
             </tr>
@@ -118,19 +118,15 @@
 
         props: {
             getRecordUrl: { type: [String, null], required: true },
-            spaceId: { type: [Number, String], required: true },
         },
 
         setup(props) {
             return {
                 isLoading: ref(false),
-                isLeaf: ref(true),
-                maxDate: ref(null),
-                minDate: ref(null),
+                options: ref([]),
                 queryParams: ref({}),
                 records: ref({}),
-                spaceOptions: ref([]),
-                yearRange: ref([]),
+                setting: ref({}),
             };
         },
 
@@ -170,11 +166,8 @@
                     })
                     .then((response) => {
                         self.records = response.data.records;
-                        self.minDate = response.data.minDate;
-                        self.maxDate = response.data.maxDate;
-                        self.spaceOptions = response.data.options;
-                        self.yearRange = response.data.yearRange;
-                        self.isLeaf = response.data.isLeaf;
+                        self.setting = response.data.setting;
+                        self.options = response.data.options;
 
                         if (scroll) {
                             self

@@ -12,8 +12,11 @@ use Modules\Space\Entities\SpaceEvent;
 
 class SpaceEventService
 {
-    private function scopeRecords($query, $space, $scopes)
-    {
+    private function scopeRecords(
+        Builder $query,
+        Space $space,
+        ?array $scopes = null
+    ) {
         $today = Carbon::today('UTC');
 
         $query->whereHasMorph(
@@ -81,11 +84,10 @@ class SpaceEventService
 
     public function getSpaceRecordOptions(
         Space $space,
-        array $scopes,
         string $noneLabel = null
     ): Collection {
-        $spaceEvents = SpaceEvent::where(function ($query) use ($space, $scopes) {
-                $this->scopeRecords($query, $space, $scopes);
+        $spaceEvents = SpaceEvent::where(function ($query) use ($space) {
+                $this->scopeRecords($query, $space);
             })
             ->with([
                 'eventable' => function ($query) {
