@@ -15,6 +15,8 @@ use Modules\Booking\Helpers\EventTimeHelper;
 
 class EventService
 {
+    private $cacheUserUpcomingEventCityOptions;
+
     private function scheduleDateOverrideDates(
         Schedule $schedule,
         Carbon $minDate,
@@ -301,8 +303,12 @@ class EventService
                 'orderLine' => function ($query) {
                     $query->select('id', 'order_id', 'purchasable_id', 'purchasable_type');
                     $query->with('purchasable', function ($query) {
+                        $query->select('id', 'product_id');
                         $query->with('product', function ($query) {
                             $query->select('id', 'attribute_data');
+                            $query->with('metas', function ($query) {
+                                $query->whereIn('key', ['locations']);
+                            });
                         });
                     });
                 },
@@ -334,28 +340,32 @@ class EventService
         return $events;
     }
 
-    public function getUpcomingEventByUserOptions(
+    public function getUserUpcomingEventCityOptions(
         int $userId,
         string $noneLabel = null,
     ): Collection {
-        $events = Event::where(function ($query) use ($userId ) {
-                $this->scopeUpcomingEventsByUser($query, $userId);
-            })
-            ->with([
-                'orderLine' => function ($query) {
-                    $query->select('id', 'order_id', 'purchasable_id', 'purchasable_type');
-                    $query->with('purchasable', function ($query) {
-                        $query->with('product', function ($query) {
-                            $query->select('id');
-                            $query->with('metas', function ($query) {
-                                $query->whereIn('key', ['locations']);
+        if (is_null($this->cacheUserUpcomingEventCityOptions)) {
+            $this->cacheUserUpcomingEventCityOptions = Event::
+                where(function ($query) use ($userId ) {
+                    $this->scopeUpcomingEventsByUser($query, $userId);
+                })
+                ->with([
+                    'orderLine' => function ($query) {
+                        $query->select('id', 'order_id', 'purchasable_id', 'purchasable_type');
+                        $query->with('purchasable', function ($query) {
+                            $query->select('id', 'product_id');
+                            $query->with('product', function ($query) {
+                                $query->select('id');
+                                $query->with('metas', function ($query) {
+                                    $query->whereIn('key', ['locations']);
+                                });
                             });
                         });
-                    });
-                },
-            ])->get();
+                    },
+                ])->get();
+        }
 
-        $options = $events
+        $options = $this->cacheUserUpcomingEventCityOptions
             ->pluck('orderLine.purchasable.product')
             ->unique(fn ($product) => $product->locations[0]['city'])
             ->map(fn ($product) => [

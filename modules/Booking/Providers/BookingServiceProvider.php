@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Modules\Booking\Entities\Event;
 use Modules\Booking\Entities\OrderCheckIn;
 use Modules\Booking\Policies\OrderPolicyMixin;
+use Modules\Booking\Services\EventService;
 use Modules\Ecommerce\Entities\Order;
 use Modules\Ecommerce\Entities\OrderLine;
 use Modules\Ecommerce\Policies\OrderPolicy;
@@ -23,6 +24,10 @@ class BookingServiceProvider extends ServiceProvider
      * @var string $moduleNameLower
      */
     protected $moduleNameLower = 'booking';
+
+    public $singletons = [
+        EventService::class => EventService::class,
+    ];
 
     /**
      * Boot the application events.
