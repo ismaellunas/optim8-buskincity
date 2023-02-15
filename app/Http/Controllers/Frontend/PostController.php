@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
     private $baseRouteName = 'blog';
-    private $perPage = 10;
+    private $perPage = 9;
 
     private $postService;
     private $translationService;
@@ -62,15 +62,20 @@ class PostController extends Controller
             return redirect()->route($this->baseRouteName.'.index');
         }
 
+        $publishedOn = null;
+        if ($post->published_at) {
+            $publishedOn = __('Published on :date', [
+                'date' => $post->published_at->format(config('constants.format.date_post')),
+            ]);
+        }
+
         return view('post', [
             'currentLanguage' => $this->translationService->currentLanguage(),
             'post' => $post,
             'content' => $this->postService->transformContent($post->purifiedContent),
             'readingTime' => $this->postService->readingTime($post->plain_text_content),
             'tableOfContents' => $this->postService->tableOfContents($post->content),
-            'publishedOn' => __('Published on :date', [
-                'date' => $post->published_at->format(config('constants.format.date_post')),
-            ]),
+            'publishedOn' => $publishedOn,
             'lastUpdatedOn' => __('Last updated on :date', [
                 'date' => $post->updated_at->format(config('constants.format.date_post')),
             ]),

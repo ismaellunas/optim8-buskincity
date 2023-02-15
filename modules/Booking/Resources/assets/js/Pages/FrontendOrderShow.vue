@@ -26,13 +26,6 @@
                         :location="order.location"
                         :product="order.product"
                     />
-
-                    <div class="buttons">
-                        <biz-button-link :href="route(baseRouteName + '.index')">
-                            <biz-icon :icon="icon.back" />
-                            <span>Back</span>
-                        </biz-button-link>
-                    </div>
                 </div>
 
                 <div class="column is-5">
