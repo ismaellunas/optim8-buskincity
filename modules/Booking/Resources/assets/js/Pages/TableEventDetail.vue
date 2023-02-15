@@ -27,7 +27,7 @@
                             target="_blank"
                             :href="location.direction_url"
                         >
-                            Direction
+                            Directions
                         </a>
                     </div>
                 </td>
