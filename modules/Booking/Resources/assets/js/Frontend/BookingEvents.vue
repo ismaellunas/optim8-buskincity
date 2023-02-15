@@ -65,7 +65,7 @@
                     <th>Name</th>
                     <th>Description</th>
                     <th>Address</th>
-                    <th>Direction</th>
+                    <th>Directions</th>
                 </tr>
             </template>
 
@@ -87,7 +87,7 @@
                         target="_blank"
                         :href="event.direction_url"
                     >
-                        <span>Direction</span>
+                        <span>Directions</span>
                     </a>
                 </td>
             </tr>
