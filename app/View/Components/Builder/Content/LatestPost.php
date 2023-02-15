@@ -8,6 +8,7 @@ use App\Services\PostService;
 class LatestPost extends BaseContent
 {
     public $posts;
+    public $limit;
 
     private $config;
 
@@ -16,13 +17,15 @@ class LatestPost extends BaseContent
         parent::__construct($entity);
 
         $this->config = $this->entity['config'];
+
+        $this->limit = $this->getLimit();
         $this->posts = $this->getPosts();
     }
 
     private function getPosts()
     {
         return app(PostService::class)->getLatestPost(
-            $this->getLimit(),
+            $this->limit,
             $this->getCategoryIds(),
         );
     }
@@ -31,7 +34,11 @@ class LatestPost extends BaseContent
     {
         $limit = $this->config['post']['limit'];
 
-        return $limit > 9 ? 9 : $limit;
+        if (!$limit || $limit > 6 || $limit < 1) {
+            return 3;
+        }
+
+        return $limit;
     }
 
     private function getCategoryIds()
