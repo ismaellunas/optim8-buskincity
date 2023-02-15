@@ -35,7 +35,6 @@
 <script>
     import LayoutBackendBlank from '@/Layouts/BackendBlank';
     import BizImage from '@/Biz/Image';
-    import { computed } from 'vue';
     import { Head, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
@@ -53,10 +52,8 @@
         },
 
         setup() {
-            const appLogoImageUrl = computed(() => usePage().props.value.appLogoUrl);
-
             return {
-                appLogoImageUrl,
+                appLogoImageUrl: usePage().props.value.appLogoUrl,
             };
         },
     }
