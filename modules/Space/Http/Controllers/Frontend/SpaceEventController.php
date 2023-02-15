@@ -29,7 +29,7 @@ class SpaceEventController extends Controller
             'records' => $spaceEventService->getSpaceEventRecords($space, $scopes),
             'queryParams' => $request->only('dates'),
             'options' => [
-                'spaces' => $spaceEventService->getSpaceRecordOptions($space, "- ".__('Space')." -"),
+                'spaces' => $spaceEventService->getSpaceRecordOptions($space, "- ".__('Select')." -"),
             ],
             'setting' => [
                 'minDate' => $minDate->toDateString(),
