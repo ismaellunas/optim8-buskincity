@@ -2,7 +2,9 @@
 
 namespace Modules\Booking\Services;
 
+use App\Helpers\GoogleMap;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Modules\Booking\Entities\Event;
@@ -264,11 +266,37 @@ class EventService
         return $times;
     }
 
+    private function scopeUpcomingEventsByUser(Builder $query,int $userId, $scopes = null)
+    {
+        $query
+            ->upcoming()
+            ->whereHas('orderLine.order', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->when($scopes, function ($query, $scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    if ($scopeName == 'city') {
+                        $query->whereHas(
+                            'orderLine.purchasable.product',
+                            function (Builder $query) use ($scopeName, $value) {
+                                $query->$scopeName($value);
+                            }
+                        );
+                    } else {
+                        $query->$scopeName($value);
+                    }
+                }
+            });
+    }
+
     public function getUpcomingEventsByUser(
         int $userId,
+        array $scopes = null,
         $perPage = 5
     ): LengthAwarePaginator {
-        $events = Event::upcoming()
+        $events = Event::where(function ($query) use ($userId, $scopes) {
+                $this->scopeUpcomingEventsByUser($query, $userId, $scopes);
+            })
             ->with([
                 'orderLine' => function ($query) {
                     $query->select('id', 'order_id', 'purchasable_id', 'purchasable_type');
@@ -282,21 +310,63 @@ class EventService
                     $query->select('id', 'timezone');
                 },
             ])
-            ->whereHas('orderLine.order', function ($query) use ($userId) {
-                $query->where('user_id', $userId);
-            })
             ->orderBy('booked_at', 'DESC')
             ->paginate($perPage);
 
         $events->transform(function ($event) {
+            $product = $event->orderLine->purchasable->product;
+            $location = $product->locations[0] ?? [];
+
             return [
-                'booked_at' => $event->displayStartEndTime . ', '. $event->timezonedBookedAt->format('d M Y') . ' (' . $event->schedule->timezone . ')',
-                'location' => $event->orderLine->purchasable->product->locations[0] ?? [],
+                'date' => $event->timezonedBookedAt->format('d M Y'),
+                'time' => $event->displayStartEndTime,
+                'timezone' => $event->schedule->timezone,
+                'location' => $location,
                 'name' => $event->orderLine->purchasable->product->displayName,
-                'short_description' => $event->orderLine->purchasable->product->displayShortDescription,
+                'description' => $event->orderLine->purchasable->product->displayShortDescription,
+                'direction_url' => GoogleMap::directionUrl(
+                    $location['latitude'],
+                    $location['longitude']
+                ),
             ];
         });
 
         return $events;
+    }
+
+    public function getUpcomingEventByUserOptions(
+        int $userId,
+        string $noneLabel = null,
+    ): Collection {
+        $events = Event::where(function ($query) use ($userId ) {
+                $this->scopeUpcomingEventsByUser($query, $userId);
+            })
+            ->with([
+                'orderLine' => function ($query) {
+                    $query->select('id', 'order_id', 'purchasable_id', 'purchasable_type');
+                    $query->with('purchasable', function ($query) {
+                        $query->with('product', function ($query) {
+                            $query->select('id');
+                            $query->with('metas', function ($query) {
+                                $query->whereIn('key', ['locations']);
+                            });
+                        });
+                    });
+                },
+            ])->get();
+
+        $options = $events
+            ->pluck('orderLine.purchasable.product')
+            ->unique(fn ($product) => $product->locations[0]['city'])
+            ->map(fn ($product) => [
+                'id' => $product->locations[0]['city'],
+                'value' => $product->locations[0]['city'],
+            ]);
+
+        if (!is_null($noneLabel)) {
+            $options->prepend(['id' => null, 'value' => $noneLabel]);
+        }
+
+        return $options->values();
     }
 }
