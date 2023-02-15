@@ -67,9 +67,18 @@
                     <div class="columns mt-3">
                         <div class="column">
                             <space-events
-                                space-id="{{ $space->id }}"
-                                get-record-url="{{ $spaceEventUrl }}"
-                            ></space-events>
+                                get-record-url="{{ route('api.space.space-events', [ encrypt($space->id) ]) }}"
+                            >
+                                <template #thead>
+                                    <tr>
+                                        <th>{{ __("Date") }}</th>
+                                        <th>{{ __("Name") }}</th>
+                                        <th>{{ __("Description") }}</th>
+                                        <th>{{ __("Address") }}</th>
+                                        <th>{{ __("Directions") }}</th>
+                                    </tr>
+                                </template>
+                            </space-events>
                         </div>
                     </div>
 

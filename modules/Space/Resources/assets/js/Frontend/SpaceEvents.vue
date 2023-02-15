@@ -1,11 +1,11 @@
 <template>
     <div>
+        <div ref="eventTableScrollPoint" />
+
         <biz-loader
             v-model="isLoading"
             :is-full-page="false"
         />
-
-        <div ref="spaceEventTableScrollPoint" />
 
         <div class="columns">
             <div class="column is-3">
@@ -24,7 +24,7 @@
             </div>
 
             <div
-                v-if="!setting.isLeaf"
+                v-if="!setting.isLeaf && options?.spaces && options.spaces.length > 0"
                 class="column is-3"
             >
                 <biz-select
@@ -89,6 +89,15 @@
                     >
                         <span>Directions</span>
                     </a>
+                </td>
+            </tr>
+
+            <tr v-if="!records.data">
+                <td
+                    class="has-text-centered"
+                    colspan="100"
+                >
+                    ...
                 </td>
             </tr>
         </biz-table-index>
@@ -171,9 +180,14 @@
 
                         if (scroll) {
                             self
-                                .$refs["spaceEventTableScrollPoint"]
-                                .scrollIntoView({behavior: "smooth", block: 'center' })
+                                .$refs["eventTableScrollPoint"]
+                                .scrollIntoView({behavior: "smooth" })
                         }
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        self.records = [];
+                        self.setting = self.options = {};
                     })
                     .then(() => {
                         self.isLoading = false;

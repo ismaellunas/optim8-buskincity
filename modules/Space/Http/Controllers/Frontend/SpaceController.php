@@ -208,7 +208,6 @@ class SpaceController extends Controller
             'metaDescription' => $pageTranslation->meta_description,
             'metaTitle' => $pageTranslation->meta_title,
             'space' => $pageTranslation->page->space,
-            'spaceEventUrl' => route('api.space.space-events', [ $pageTranslation->page->space->id ]),
         ], $additionalData);
     }
 

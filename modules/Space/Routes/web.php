@@ -88,6 +88,6 @@ Route::prefix('api/space')
     ->withoutMiddleware(HandleInertiaRequests::class)
     ->middleware('throttle:api')
     ->group(function () {
-        Route::get('space-events/{space}', [SpaceEventController::class, 'events'])
+        Route::get('space-events/{encryptedSpaceId}', [SpaceEventController::class, 'events'])
             ->name('space-events');
 });
