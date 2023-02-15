@@ -99,7 +99,7 @@
                                     target="_blank"
                                     :href="record.direction_url"
                                 >
-                                    Direction
+                                    Directions
                                 </a>
 
                                 <a
