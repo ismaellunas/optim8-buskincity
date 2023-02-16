@@ -22,6 +22,7 @@ class OrderPolicyMixin
                     $user->can('order.edit')
                     || $order->isPlacedByUser($user)
                 )
+                && !$order->user->trashed()
             );
         };
     }
