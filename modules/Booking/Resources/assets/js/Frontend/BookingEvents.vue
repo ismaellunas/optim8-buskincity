@@ -91,6 +91,15 @@
                     </a>
                 </td>
             </tr>
+
+            <tr v-if="!records.data || records.data.length <= 0">
+                <td
+                    colspan="100"
+                    class="has-text-centered"
+                >
+                    ...
+                </td>
+            </tr>
         </biz-table-index>
     </div>
 </template>
@@ -170,8 +179,13 @@
                         if (scroll) {
                             self
                                 .$refs["eventTableScrollPoint"]
-                                .scrollIntoView({behavior: "smooth", block: 'center' })
+                                .scrollIntoView({behavior: "smooth" })
                         }
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        self.records = self.setting = {};
+                        self.cityOptions = [];
                     })
                     .then(() => {
                         self.isLoading = false;
