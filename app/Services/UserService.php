@@ -157,4 +157,19 @@ class UserService
         Post::where('author_id', $userIdFrom)->update(['author_id' => $userIdTo]);
         Page::where('author_id', $userIdFrom)->update(['author_id' => $userIdTo]);
     }
+
+    public function deleteResources($userId): void
+    {
+        $pages = Page::where('author_id', $userId)->get();
+
+        foreach ($pages as $page) {
+            $page->delete();
+        }
+
+        $posts = Post::where('author_id', $userId)->get();
+
+        foreach ($posts as $post) {
+            $post->delete();
+        }
+    }
 }
