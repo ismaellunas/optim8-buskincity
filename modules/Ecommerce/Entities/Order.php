@@ -35,6 +35,13 @@ class Order extends GetCandyOrder
             ->where('type', OrderLineType::EVENT->value);
     }
 
+    public function user()
+    {
+        $relation = parent::user();
+
+        return $relation->withTrashed();
+    }
+
     public function getUserFullNameAttribute(): ?string
     {
         return $this->user->fullName ?? null;
