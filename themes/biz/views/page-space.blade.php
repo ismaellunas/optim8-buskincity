@@ -10,8 +10,8 @@
         {{ $metaDescription ?? $space->name }}
     </x-slot>
 
-    <div class="b752-public-profile section is-small">
-        <div class="container theme-font">
+    <div class="b752-public-profile section is-small theme-font">
+        <div class="container">
             <div class="columns is-multiline is-centered">
                 <div class="column is-12">
                     <div
