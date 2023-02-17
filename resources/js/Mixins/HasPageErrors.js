@@ -5,6 +5,8 @@ import { isArray } from 'lodash';
 export default {
     methods: {
         error(field, errorBag = 'default', errors = null) {
+            const self = this;
+
             if (!errors) {
                 errors = usePage().props.value.errors;
             }
@@ -21,18 +23,32 @@ export default {
                 errorContainer = errors[errorBag];
             }
 
-            if (errorContainer && errorContainer.hasOwnProperty(field)) {
-                if (
-                    isArray(errorContainer[field])
-                    && errorContainer[field].length == 1
-                ) {
-                    return errorContainer[field][0];
-                }
-
-                return errorContainer[field];
+            if (! errorContainer) {
+                return null;
             }
 
-            return null;
-        }
+            let messages = [];
+
+            if (isArray(field)) {
+                field.forEach(function (currentField) {
+                    self.getErrorFromContainer(errorContainer, currentField, messages);
+                });
+            } else {
+                this.getErrorFromContainer(errorContainer, field, messages);
+            }
+
+            return isBlank(messages.filter(Boolean)) ? null : messages;
+        },
+
+        getErrorFromContainer(errorContainer, field, messages) {
+            if (
+                isArray(errorContainer[field])
+                && errorContainer[field].length == 1
+            ) {
+                messages.push(errorContainer[field][0]);
+            } else if (errorContainer.hasOwnProperty(field)) {
+                messages.push(errorContainer[field])
+            }
+        },
     }
 }

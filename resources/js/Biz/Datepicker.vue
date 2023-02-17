@@ -10,6 +10,8 @@
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
+        name: 'BizDatepicker',
+
         components: {
             Datepicker
         },

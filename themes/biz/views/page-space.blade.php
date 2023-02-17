@@ -10,7 +10,7 @@
         {{ $metaDescription ?? $space->name }}
     </x-slot>
 
-    <div class="b752-public-profile section is-small">
+    <div class="b752-public-profile section is-small theme-font">
         <div class="container">
             <div class="columns is-multiline is-centered">
                 <div class="column is-12">
@@ -68,17 +68,7 @@
                         <div class="column">
                             <space-events
                                 get-record-url="{{ route('api.space.space-events', [ encrypt($space->id) ]) }}"
-                            >
-                                <template #thead>
-                                    <tr>
-                                        <th>{{ __("Date") }}</th>
-                                        <th>{{ __("Name") }}</th>
-                                        <th>{{ __("Description") }}</th>
-                                        <th>{{ __("Address") }}</th>
-                                        <th>{{ __("Directions") }}</th>
-                                    </tr>
-                                </template>
-                            </space-events>
+                            ></space-events>
                         </div>
                     </div>
 

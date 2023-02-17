@@ -7,6 +7,7 @@ use App\Services\MediaService;
 use Illuminate\Support\ServiceProvider;
 use Modules\Space\Entities\Space;
 use Modules\Space\Services\PageSpaceService;
+use Modules\Space\Services\SpaceEventService;
 use Modules\Space\Services\SpaceService;
 
 class SpaceServiceProvider extends ServiceProvider
@@ -29,6 +30,7 @@ class SpaceServiceProvider extends ServiceProvider
 
     public $singletons = [
         PageSpaceService::class => PageSpaceService::class,
+        SpaceEventService::class => SpaceEventService::class,
     ];
 
     public function boot()
