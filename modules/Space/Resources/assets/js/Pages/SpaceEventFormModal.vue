@@ -36,6 +36,7 @@
                         multi-calendars
                         multi-calendars-solo
                         range
+                        :utc="'preserve'"
                         :message="error(['started_at', 'ended_at'], null, formErrors)"
                         :start-time="[startTime, endTime]"
                     />
