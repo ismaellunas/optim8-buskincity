@@ -1,74 +1,48 @@
 <template>
-    <bulma-calendar
-        ref="datetimepicker"
-        :value="modelValue"
-        :options="options"
-        @input="onInput"
+    <biz-datepicker
+        ref="input"
+        v-model="dateValue"
+        auto-apply
+        keep-action-row
+        select-text="Close"
+        :cancel-text="null"
+        :close-on-auto-apply="false"
+        :flow="['calendar', 'time']"
+        :month-change-on-scroll="false"
     />
 </template>
 
 <script>
-    import BulmaCalendar from "bulma-calendar/dist/components/vue/bulma_calendar";
+    import BizDatepicker from '@/Biz/Datepicker';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'BizDateTime',
 
         components: {
-            BulmaCalendar,
+            BizDatepicker,
         },
 
         props: {
             modelValue: {
-                type: [Date, Array, null],
+                type: [String, Date, Array, null],
                 required: true,
-                default: null,
             },
-            options: {
-                type: Object,
-                default: () => {}
-            }
         },
 
         emits: [
             'update:modelValue',
-            'input',
         ],
 
-        computed: {
-            isRange() {
-                return this.$refs.datetimepicker.range;
-            },
-
-            isTimeType() {
-                return this.$refs.datetimepicker.type == 'time';
-            },
+        setup(props, { emit }) {
+            return {
+                dateValue: useModelWrapper(props, emit),
+            };
         },
 
         methods: {
             focus() {
-                this.$refs.input.focus()
-            },
-
-            onInput(date, event) {
-                if (this.isRange && this.isTimeType) {
-                    date = this.emitTimeRange(date);
-                }
-
-                this.$emit('update:modelValue', date, event);
-                this.$emit('input', date, event);
-            },
-
-            emitTimeRange(date) {
-                const timeRanges = this.$refs.datetimepicker.$refs.cal.value.split(' - ');
-
-                timeRanges.forEach((timeRange, index) => {
-                    const timeParts = timeRange.split(':');
-
-                    date[index].setHours(timeParts[0]);
-                    date[index].setMinutes(timeParts[1]);
-                });
-
-                return date;
+                this.$refs.input.focus();
             },
         },
     };
