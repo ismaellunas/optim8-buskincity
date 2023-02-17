@@ -92,7 +92,7 @@
                 </td>
             </tr>
 
-            <tr v-if="!records.data">
+            <tr v-if="!records.data || records.data.length <= 0">
                 <td
                     class="has-text-centered"
                     colspan="100"
@@ -186,8 +186,8 @@
                     })
                     .catch((error) => {
                         console.error(error);
-                        self.records = [];
-                        self.setting = self.options = {};
+                        self.records = self.setting = {};
+                        self.options = [];
                     })
                     .then(() => {
                         self.isLoading = false;
