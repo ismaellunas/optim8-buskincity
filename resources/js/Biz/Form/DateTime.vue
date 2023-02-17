@@ -7,8 +7,6 @@
         <biz-date-time
             v-model="dateValue"
             v-bind="$attrs"
-            :disabled="disabled"
-            @input="$emit('update:modelValue', $event)"
         />
 
         <template #error>
@@ -22,15 +20,19 @@
     import BizFormField from '@/Biz/Form/Field';
     import BizInputError from '@/Biz/InputError';
     import { ref } from 'vue';
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         name: 'BizFormDateTime',
+
         components: {
-            BizFormField,
             BizDateTime,
+            BizFormField,
             BizInputError,
         },
+
         inheritAttrs: false,
+
         props: {
             label: {
                 type: String,
@@ -41,25 +43,23 @@
                 default: undefined
             },
             modelValue: {
-                type: [Date, Array, null],
+                type: [String, Date, Array, null],
                 required: true,
                 default: null,
-            },
-            disabled: {
-                type: Boolean,
-                default: false
             },
             required: {
                 type: Boolean,
                 default: false,
             }
         },
+
         emits: [
             'update:modelValue',
         ],
-        setup(props) {
+
+        setup(props, { emit }) {
             return {
-                dateValue: ref(props.modelValue),
+                dateValue: useModelWrapper(props, emit),
             };
         },
     };
