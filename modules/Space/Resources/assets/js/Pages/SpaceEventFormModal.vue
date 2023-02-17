@@ -28,22 +28,17 @@
             />
 
             <div class="columns">
-                <div class="column">
+                <div class="column is-half">
                     <biz-form-date-time
-                        v-model="form.started_at"
-                        label="Started At"
+                        v-model="startedEndedAt"
+                        label="Started at and Ended at"
                         required
-                        dialog
-                        :message="error('started_at', null, formErrors)"
-                    />
-                </div>
-                <div class="column">
-                    <biz-form-date-time
-                        v-model="form.ended_at"
-                        label="Ended At"
-                        required
-                        dialog
-                        :message="error('ended_at', null, formErrors)"
+                        multi-calendars
+                        multi-calendars-solo
+                        range
+                        :utc="'preserve'"
+                        :message="error(['started_at', 'ended_at'], null, formErrors)"
+                        :start-time="[startTime, endTime]"
                     />
                 </div>
             </div>
@@ -177,6 +172,8 @@
                 defaultLocale,
                 localeOptions: localeOptions,
                 selectedLocale: ref(selectedLocale),
+                startTime: ref({ hours: 10, minutes: 0 }),
+                endTime: ref({ hours: 17, minutes: 0 }),
             };
         },
 
@@ -202,6 +199,26 @@
                     return [find(this.localeOptions, ['id', this.defaultLocale])];
                 }
                 return this.localeOptions;
+            },
+
+            startedEndedAt: {
+                get() {
+                    if (this.form.started_at) {
+                        return [
+                            this.form.started_at,
+                            this.form.ended_at,
+                        ];
+                    }
+                    return [];
+                },
+                set(newValue) {
+                    if (newValue == null) {
+                        this.form.started_at = this.form.ended_at = null;
+                    } else {
+                        this.form.started_at = newValue[0] ?? null;
+                        this.form.ended_at = newValue[1] ?? null;
+                    }
+                }
             },
         },
 
