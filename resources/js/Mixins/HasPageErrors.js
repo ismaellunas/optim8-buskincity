@@ -31,28 +31,24 @@ export default {
 
             if (isArray(field)) {
                 field.forEach(function (currentField) {
-                    messages.push(
-                        self.getErrorFromContainer(errorContainer, currentField)
-                    );
+                    self.getErrorFromContainer(errorContainer, currentField, messages);
                 });
             } else {
-                messages.push(
-                    this.getErrorFromContainer(errorContainer, field)
-                );
+                this.getErrorFromContainer(errorContainer, field, messages);
             }
 
-            return messages;
+            return isBlank(messages.filter(Boolean)) ? null : messages;
         },
 
-        getErrorFromContainer(errorContainer, field) {
+        getErrorFromContainer(errorContainer, field, messages) {
             if (
                 isArray(errorContainer[field])
                 && errorContainer[field].length == 1
             ) {
-                return errorContainer[field][0];
+                messages.push(errorContainer[field][0]);
+            } else if (errorContainer.hasOwnProperty(field)) {
+                messages.push(errorContainer[field])
             }
-
-            return errorContainer[field];
         },
     }
 }
