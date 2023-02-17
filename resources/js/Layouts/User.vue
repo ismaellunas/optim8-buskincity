@@ -25,8 +25,8 @@
             </div>
         </div>
 
-        <div class="section is-small has-background-light">
-            <div class="container theme-font">
+        <div class="section is-small has-background-light theme-font">
+            <div class="container">
                 <slot />
             </div>
         </div>
