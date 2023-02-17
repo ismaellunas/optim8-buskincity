@@ -9,7 +9,7 @@
         {{ $userProfile->getMeta('short_bio', $locale) ?? __('Public profile.') }}
     </x-slot>
 
-    <div class="b752-public-profile section is-small">
+    <div class="b752-public-profile section is-small theme-font">
         <div class="container">
             <div class="columns is-multiline is-centered">
                 <div class="column is-12">
