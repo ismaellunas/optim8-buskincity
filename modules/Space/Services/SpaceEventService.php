@@ -12,6 +12,8 @@ use Modules\Space\Entities\SpaceEvent;
 
 class SpaceEventService
 {
+    private $cacheSpaceOptions;
+
     private function scopeRecords(
         Builder $query,
         Space $space,
@@ -86,18 +88,21 @@ class SpaceEventService
         Space $space,
         string $noneLabel = null
     ): Collection {
-        $spaceEvents = SpaceEvent::where(function ($query) use ($space) {
-                $this->scopeRecords($query, $space);
-            })
-            ->with([
-                'eventable' => function ($query) {
-                    $query->select(['id', 'name']);
-                    $query->withDepth();
-                },
-            ])
-            ->get(['id', 'eventable_type', 'eventable_id']);
+        if (is_null($this->cacheSpaceOptions)) {
+            $this->cacheSpaceOptions = SpaceEvent::
+                where(function ($query) use ($space) {
+                    $this->scopeRecords($query, $space);
+                })
+                ->with([
+                    'eventable' => function ($query) {
+                        $query->select(['id', 'name']);
+                        $query->withDepth();
+                    },
+                ])
+                ->get(['id', 'eventable_type', 'eventable_id']);
+        }
 
-        $options = $spaceEvents
+        $options = $this->cacheSpaceOptions
             ->pluck('eventable')
             ->unique()
             ->sortBy([
