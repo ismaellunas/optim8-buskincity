@@ -287,4 +287,16 @@ class UserController extends CrudController
 
         return back();
     }
+
+    public function getTrashedRecords(UserIndexRequest $request) {
+        $scopes = [];
+
+        $scopes['inRoles'] = $request->roles ?? null;
+
+        return $this->userService->getTrashedRecords(
+            $request->term,
+            $this->recordsPerPage,
+            $scopes,
+        );
+    }
 }
