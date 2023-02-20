@@ -7,6 +7,8 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Mews\Purifier\Facades\Purifier;
 use Modules\Space\Entities\Space;
 use Modules\Space\Entities\SpaceEvent;
 
@@ -55,6 +57,7 @@ class SpaceEventService
                     $query->select('id', 'description', 'locale', 'space_event_id');
                 },
             ])
+            ->orderBy('started_at')
             ->paginate($perPage);
 
         $spaceEvents->getCollection()->transform(function ($event) {
@@ -65,7 +68,10 @@ class SpaceEventService
                 'started_at' => $event->started_at->format('d M Y H:i'),
                 'ended_at' => $event->ended_at->format('d M Y H:i'),
                 'title' => $event->title,
-                'description' => $event->description,
+                'short_description' => !empty($event->excerpt)
+                    ? nl2br(Purifier::clean($event->excerpt))
+                    : nl2br(Purifier::clean(Str::words($event->description, 60, ' ...'))),
+                'description' => nl2br(Purifier::clean($event->description)),
                 'space_name' => $space->name,
                 'space_url' => $space->pageLocalizeURL(currentLocale()),
                 'address' => $space->address,
