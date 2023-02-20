@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Mews\Purifier\Facades\Purifier;
 use Modules\Booking\Entities\Event;
 use Modules\Booking\Entities\Schedule;
 use Modules\Booking\Entities\ScheduleRule;
@@ -316,7 +317,7 @@ class EventService
                     $query->select('id', 'timezone');
                 },
             ])
-            ->orderBy('booked_at', 'DESC')
+            ->orderBy('booked_at', 'ASC')
             ->paginate($perPage);
 
         $events->transform(function ($event) {
@@ -329,7 +330,8 @@ class EventService
                 'timezone' => $event->schedule->timezone,
                 'location' => $location,
                 'name' => $event->orderLine->purchasable->product->displayName,
-                'description' => $event->orderLine->purchasable->product->displayShortDescription,
+                'short_description' => nl2br(Purifier::clean($event->orderLine->purchasable->product->displayShortDescription)),
+                'description' => nl2br(Purifier::clean($event->orderLine->purchasable->product->displayDescription)),
                 'direction_url' => GoogleMap::directionUrl(
                     $location['latitude'],
                     $location['longitude']

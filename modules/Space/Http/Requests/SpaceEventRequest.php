@@ -4,6 +4,7 @@ namespace Modules\Space\Http\Requests;
 
 use App\Helpers\StringManipulator;
 use App\Http\Requests\BaseFormRequest;
+use App\Rules\MaxWords;
 use Astrotomic\Translatable\Validation\RuleFactory;
 use Modules\Space\Entities\SpaceEventTranslation;
 
@@ -21,7 +22,7 @@ class SpaceEventRequest extends BaseFormRequest
         $translationRules = RuleFactory::make([
             'translations.%excerpt%' => [
                 'sometimes',
-                'max:150',
+                new MaxWords(config('constants.max_words.excerpt')),
             ],
             'translations.%description%' => [
                 'sometimes',
