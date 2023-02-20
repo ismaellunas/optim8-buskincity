@@ -19,6 +19,7 @@ use GetCandy\Base\Traits\GetCandyUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
@@ -33,15 +34,16 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
+    use GetCandyUser;
     use HasApiTokens;
-    use HasFactory;
     use HasConnectedAccounts;
+    use HasFactory;
+    use HasMetas;
+    use HasRoles;
     use Notifiable;
     use SetsProfilePhotoFromUrl;
+    use SoftDeletes;
     use TwoFactorAuthenticatable;
-    use HasRoles;
-    use HasMetas;
-    use GetCandyUser;
 
     protected $metaRelation = 'metas';
 
