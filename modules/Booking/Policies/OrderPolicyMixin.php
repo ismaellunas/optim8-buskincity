@@ -29,7 +29,8 @@ class OrderPolicyMixin
     public function rescheduleBooking()
     {
         return function(User $user, Order $order) {
-            return $this->cancelBooking($user, $order);
+            return $this->cancelBooking($user, $order)
+                && !$order->user->trashed();
         };
     }
 

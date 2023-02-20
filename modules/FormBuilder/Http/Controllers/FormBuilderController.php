@@ -180,6 +180,7 @@ class FormBuilderController extends CrudController
             $canRedirectUser = (
                 !$userEntry->isSuperAdministrator
                 && !$userEntry->isAdministrator
+                && !$userEntry->trashed()
             );
         }
 
