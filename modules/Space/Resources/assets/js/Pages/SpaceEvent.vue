@@ -15,63 +15,57 @@
             </div>
         </div>
 
-        <div class="table-container">
-            <biz-table class="is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Started At</th>
-                        <th>Ended At</th>
-                        <th>
-                            <div class="level-right">
-                                Actions
-                            </div>
-                        </th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr
-                        v-for="record in events.data"
-                        :key="record.id"
-                    >
-                        <td>{{ record.title }}</td>
-                        <td>{{ record.started_at }}</td>
-                        <td>{{ record.ended_at }}</td>
-                        <td>
-                            <div class="level-right">
-                                <biz-button
-                                    type="button"
-                                    class="is-ghost has-text-black"
-                                    @click="openModalEdit(record)"
-                                >
-                                    <span class="icon is-small">
-                                        <i :class="icon.edit" />
-                                    </span>
-                                </biz-button>
-
-                                <biz-button
-                                    type="button"
-                                    class="is-ghost has-text-black ml-1"
-                                    @click="onDelete(record)"
-                                >
-                                    <span class="icon is-small">
-                                        <i :class="icon.remove" />
-                                    </span>
-                                </biz-button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </biz-table>
-        </div>
-
-        <biz-pagination
-            :is-ajax="true"
-            :links="events.links"
+        <biz-table-index
+            :records="events"
+            :is-ajax-pagination="true"
             :query-params="queryParams"
             @on-clicked-pagination="getRecords"
-        />
+        >
+            <template #thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Started At</th>
+                    <th>Ended At</th>
+                    <th>
+                        <div class="level-right">
+                            Actions
+                        </div>
+                    </th>
+                </tr>
+            </template>
+
+            <tr
+                v-for="record in events.data"
+                :key="record.id"
+            >
+                <td>{{ record.title }}</td>
+                <td>{{ record.started_at }}</td>
+                <td>{{ record.ended_at }}</td>
+                <td>
+                    <div class="level-right">
+                        <biz-button
+                            type="button"
+                            class="is-ghost has-text-black"
+                            @click="openModalEdit(record)"
+                        >
+                            <span class="icon is-small">
+                                <i :class="icon.edit" />
+                            </span>
+                        </biz-button>
+
+                        <biz-button
+                            type="button"
+                            class="is-ghost has-text-black ml-1"
+                            @click="onDelete(record)"
+                        >
+                            <span class="icon is-small">
+                                <i :class="icon.remove" />
+                            </span>
+                        </biz-button>
+                    </div>
+                </td>
+            </tr>
+        </biz-table-index>
 
         <space-event-form-modal
             v-if="isModalOpen"
@@ -85,8 +79,7 @@
 
 <script>
     import BizButton from '@/Biz/Button';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTable from '@/Biz/Table';
+    import BizTableIndex from '@/Biz/TableIndex';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
@@ -99,9 +92,8 @@
         name: 'SpaceEvent',
 
         components: {
-            BizPagination,
-            BizTable,
             BizButton,
+            BizTableIndex,
             SpaceEventFormModal,
         },
 
