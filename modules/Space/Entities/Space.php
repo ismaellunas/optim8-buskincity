@@ -159,6 +159,16 @@ class Space extends BaseModel implements TranslatableContract
         ]);
     }
 
+    public function scopeSearch($query, string $term)
+    {
+        $query->where('name', 'ILIKE', '%'.$term.'%');
+    }
+
+    public function scopeInType($query, array $types = [])
+    {
+        $query->whereIn('type_id', $types);
+    }
+
     public function getLogoUrlAttribute(): ?string
     {
         return $this->logo ? $this->logo->file_url : null;
