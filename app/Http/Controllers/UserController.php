@@ -43,32 +43,25 @@ class UserController extends CrudController
     public function index(UserIndexRequest $request)
     {
         $user = auth()->user();
+        $scopes = [];
 
-        if ($user->isSuperAdministrator) {
-            $records = $this->userService->getRecords(
-                $request->term,
-                $this->recordsPerPage,
-                ['inRoles' => $request->roles ?? null]
-            );
-        } else {
-            $records = $this->userService->getNoSuperAdministratorRecords(
-                $request->term,
-                $this->recordsPerPage,
-                ['inRoles' => $request->roles ?? null]
-            );
-        }
-
-        $this->userService->transformRecords($records, $user);
+        $scopes['inRoles'] = $request->roles ?? null;
 
         return Inertia::render('User/Index', $this->getData([
             'can' => [
                 'add' => $user->can('user.add'),
                 'delete' => $user->can('user.delete'),
                 'edit' => $user->can('user.edit'),
+                'manageTrashed' => $user->isSuperAdministrator,
             ],
             'pageNumber' => $request->page,
             'pageQueryParams' => array_filter($request->only('term', 'roles')),
-            'records' => $records,
+            'records' => $this->userService->getRecords(
+                $user,
+                $request->term,
+                $this->recordsPerPage,
+                $scopes,
+            ),
             'roleOptions' => $this->userService->getRoleOptions(),
             'title' => $this->getIndexTitle(),
         ]));
