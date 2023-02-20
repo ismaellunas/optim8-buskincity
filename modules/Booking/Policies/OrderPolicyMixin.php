@@ -22,7 +22,6 @@ class OrderPolicyMixin
                     $user->can('order.edit')
                     || $order->isPlacedByUser($user)
                 )
-                && !$order->user->trashed()
             );
         };
     }
@@ -30,7 +29,8 @@ class OrderPolicyMixin
     public function rescheduleBooking()
     {
         return function(User $user, Order $order) {
-            return $this->cancelBooking($user, $order);
+            return $this->cancelBooking($user, $order)
+                && !$order->user->trashed();
         };
     }
 
