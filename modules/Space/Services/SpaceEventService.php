@@ -23,13 +23,9 @@ class SpaceEventService
     ) {
         $today = Carbon::today('UTC');
 
-        $query->whereHasMorph(
-            'eventable',
-            [Space::class],
-            function (Builder $query) use ($space) {
-                $query->whereDescendantOrSelf($space);
-            }
-        )
+        $query->whereHas('space', function (Builder $query) use ($space) {
+            $query->whereDescendantOrSelf($space);
+        })
         ->when($scopes, function ($query, $scopes) {
             foreach ($scopes as $scopeName => $value) {
                 $query->$scopeName($value);
@@ -47,7 +43,7 @@ class SpaceEventService
                 $this->scopeRecords($query, $space, $scopes);
             })
             ->with([
-                'eventable' => function ($query) {
+                'space' => function ($query) {
                     $query->select([
                         'id', 'page_id', '_lft', '_rgt', 'parent_id', 'is_page_enabled', 'type_id', 'address', 'latitude', 'longitude', 'updated_at'
                     ]);
@@ -61,16 +57,20 @@ class SpaceEventService
             ->paginate($perPage);
 
         $spaceEvents->getCollection()->transform(function ($event) {
-            $space = $event->eventable;
+            $space = $event->space;
+
+            $shortDescription = nl2br(preg_replace("/[\r\n]+/", "\n", Purifier::clean(
+                !empty($event->excerpt)
+                ? $event->excerpt
+                : Str::words($event->description, 60, ' ...')
+            )));
 
             $data = [
                 'id' => $event->id,
                 'started_at' => $event->started_at->format('d M Y H:i'),
                 'ended_at' => $event->ended_at->format('d M Y H:i'),
                 'title' => $event->title,
-                'short_description' => !empty($event->excerpt)
-                    ? nl2br(Purifier::clean($event->excerpt))
-                    : nl2br(Purifier::clean(Str::words($event->description, 60, ' ...'))),
+                'short_description' => $shortDescription,
                 'description' => nl2br(Purifier::clean($event->description)),
                 'space_name' => $space->name,
                 'space_url' => $space->pageLocalizeURL(currentLocale()),
@@ -100,16 +100,16 @@ class SpaceEventService
                     $this->scopeRecords($query, $space);
                 })
                 ->with([
-                    'eventable' => function ($query) {
+                    'space' => function ($query) {
                         $query->select(['id', 'name']);
                         $query->withDepth();
                     },
                 ])
-                ->get(['id', 'eventable_type', 'eventable_id']);
+                ->get(['id', 'space_id']);
         }
 
         $options = $this->cacheSpaceOptions
-            ->pluck('eventable')
+            ->pluck('space')
             ->unique()
             ->sortBy([
                 ['depth', 'asc'],
