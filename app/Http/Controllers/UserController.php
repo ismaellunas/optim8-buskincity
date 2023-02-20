@@ -239,6 +239,8 @@ class UserController extends CrudController
                 $user->id,
                 $request->assigned_user
             );
+        } else {
+            $this->userService->deleteResources($user->id);
         }
 
         $this->deleteUser->delete($user);
