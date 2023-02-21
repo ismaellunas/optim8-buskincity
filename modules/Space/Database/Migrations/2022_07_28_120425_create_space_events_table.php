@@ -20,7 +20,13 @@ return new class extends Migration
             $table->dateTime('started_at');
             $table->dateTime('ended_at');
 
-            $table->nullableMorphs('eventable');
+            $table
+                ->foreignId('space_id')
+                ->nullable()
+                ->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
             $table
                 ->foreignId('author_id')
                 ->nullable()

@@ -78,7 +78,19 @@
                     {{ event.time }} ({{ event.timezone }})
                 </td>
                 <td>{{ event.name }}</td>
-                <td>{{ event.description }}</td>
+                <td>
+                    <div>
+                        <p v-html="event.short_description" />
+
+                        <a
+                            href="#"
+                            class="has-text-primary has-text-weight-bold"
+                            @click.prevent="selectedEvent = event"
+                        >
+                            Read More
+                        </a>
+                    </div>
+                </td>
                 <td>{{ event.location.address }}, {{ event.location.city }}</td>
                 <td>
                     <a
@@ -101,6 +113,26 @@
                 </td>
             </tr>
         </biz-table-index>
+
+        <biz-modal-card
+            v-if="selectedEvent"
+            :is-close-hidden="true"
+            @click.prevent="closeDescriptionModal"
+        >
+            <template #header>
+                <p class="modal-card-title has-text-weight-bold">
+                    {{ selectedEvent.name }}
+                </p>
+
+                <button
+                    aria-label="close"
+                    class="delete"
+                    @click.prevent="closeDescriptionModal"
+                />
+            </template>
+
+            <div v-html="selectedEvent.description" />
+        </biz-modal-card>
     </div>
 </template>
 
@@ -108,6 +140,7 @@
     import BizButton from '@/Biz/Button';
     import BizFilterDateRange from '@/Biz/Filter/DateRange';
     import BizLoader from '@/Biz/Loader';
+    import BizModalCard from '@/Biz/ModalCard';
     import BizSelect from '@/Biz/Select';
     import BizTableIndex from '@/Biz/TableIndex';
     import { ref } from 'vue';
@@ -119,6 +152,7 @@
             BizButton,
             BizFilterDateRange,
             BizLoader,
+            BizModalCard,
             BizSelect,
             BizTableIndex,
         },
@@ -134,6 +168,7 @@
                 queryParams: ref({}),
                 records: ref({}),
                 setting: ref({}),
+                selectedEvent: ref(null),
             };
         },
 
@@ -190,6 +225,10 @@
                     .then(() => {
                         self.isLoading = false;
                     });
+            },
+
+            closeDescriptionModal() {
+                this.selectedEvent = null;
             },
         },
     };

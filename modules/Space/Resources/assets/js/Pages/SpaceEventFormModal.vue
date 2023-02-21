@@ -70,7 +70,7 @@
                         label="Excerpt"
                         placeholder="Excerpt"
                         rows="2"
-                        maxlength="150"
+                        maxlength="800"
                         :message="error('translations.'+selectedLocale+'.excerpt', null, formErrors)"
                     />
 
@@ -78,7 +78,7 @@
                         v-model="form.translations[ selectedLocale ].description"
                         label="Description"
                         placeholder="Description"
-                        rows="4"
+                        rows="5"
                         maxlength="65000"
                         :message="error('translations.'+selectedLocale+'.description', null, formErrors)"
                     />
