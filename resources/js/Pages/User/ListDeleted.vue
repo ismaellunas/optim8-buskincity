@@ -102,10 +102,6 @@
             'roleOptions',
         ],
 
-        setup() {
-
-        },
-
         data() {
             return {
                 icon,
