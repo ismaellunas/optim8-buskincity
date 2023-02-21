@@ -358,9 +358,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getHasPublicPageAttribute(): bool
     {
-        return $this->roles->contains(function ($role) {
+        $hasPermission = $this->roles->contains(function ($role) {
             return $role->hasPermissionTo('public_page.profile');
         });
+
+        return $hasPermission && $this->isAvailable;
     }
 
     public function saveDefaultMetas(array $metas = [])
@@ -374,5 +376,10 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         $this->saveMetas();
+    }
+
+    public function getIsAvailableAttribute(): bool
+    {
+        return !$this->is_suspended;
     }
 }

@@ -12,7 +12,7 @@
         </td>
         <td>{{ user.email }}</td>
         <td>{{ roleName }}</td>
-        <td>
+        <td v-if="hasActions">
             <slot name="actions" />
         </td>
     </tr>
@@ -34,6 +34,10 @@
         },
 
         computed: {
+            hasActions() {
+                return !!this.$slots.actions;
+            },
+
             roleName() {
                 if (isEmpty(this.user.roles)) {
                     return null;
