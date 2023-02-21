@@ -77,6 +77,9 @@ Route::middleware([
 
     Route::resource('/users', UserController::class)
         ->except(['show']);
+    Route::get('/users/trashed-records', [UserController::class, 'getTrashedRecords'])
+        ->middleware('can:manageUserTrashed,App\Models\User')
+        ->name('users.trashed-records');
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword'])
         ->name('users.password');
 
