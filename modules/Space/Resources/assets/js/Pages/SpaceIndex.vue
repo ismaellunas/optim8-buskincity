@@ -3,6 +3,13 @@
         <div class="box">
             <div class="columns">
                 <div class="column">
+                    <biz-filter-search
+                        v-model="term"
+                        @search="search"
+                    />
+                </div>
+
+                <div class="column">
                     <biz-dropdown
                         :close-on-click="false"
                     >
@@ -23,6 +30,38 @@
                                 @click="parentId = option.id"
                             >
                                 {{ option.value }}
+                            </biz-dropdown-item>
+                        </biz-dropdown-scroll>
+                    </biz-dropdown>
+
+                    <biz-dropdown
+                        class="ml-2"
+                        :close-on-click="false"
+                    >
+                        <template #trigger>
+                            <span>Type</span>
+                            <span
+                                class="ml-1"
+                            >
+                                ({{ types.length }})
+                            </span>
+                            <biz-icon :icon="icon.angleDown" />
+                        </template>
+
+                        <biz-dropdown-scroll
+                            :max-height="300"
+                        >
+                            <biz-dropdown-item
+                                v-for="typeOption in typeOptions"
+                                :key="typeOption.id"
+                            >
+                                <biz-checkbox
+                                    v-model:checked="types"
+                                    :value="typeOption.id"
+                                    @change="onTypesChanged"
+                                >
+                                    &nbsp; {{ typeOption.value }}
+                                </biz-checkbox>
                             </biz-dropdown-item>
                         </biz-dropdown-scroll>
                     </biz-dropdown>
@@ -70,12 +109,15 @@
 </template>
 
 <script>
+    import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
     import BizDropdown from '@/Biz/Dropdown.vue';
     import BizDropdownItem from '@/Biz/DropdownItem.vue';
     import BizDropdownScroll from '@/Biz/DropdownScroll.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
     import BizIcon from '@/Biz/Icon.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import SpaceRow from './SpaceRow.vue';
@@ -87,16 +129,18 @@
     export default {
         components: {
             BizButtonLink,
+            BizCheckbox,
             BizDropdown,
             BizDropdownItem,
             BizDropdownScroll,
+            BizFilterSearch,
             BizIcon,
             BizTableIndex,
             SpaceRow,
         },
 
         mixins: [
-            MixinHasLoader,
+            MixinFilterDataHandle,
         ],
 
         layout: AppLayout,
@@ -109,6 +153,7 @@
             parentOptions: { type: Object, required: true },
             records: { type: Object, required: true },
             title: { type: String, default: "" },
+            typeOptions: { type: Object, required: true },
         },
 
         setup(props) {
@@ -117,6 +162,7 @@
                 parentId: ref(props.parent),
                 queryParams: ref(props.pageQueryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
+                types: ref([]),
             };
         },
 
@@ -161,6 +207,11 @@
                         );
                     }
                 })
+            },
+
+            onTypesChanged() {
+                this.queryParams['types'] = this.types;
+                this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
         },
     };
