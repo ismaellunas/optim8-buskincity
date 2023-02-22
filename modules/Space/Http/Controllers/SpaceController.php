@@ -11,6 +11,7 @@ use Inertia\Inertia;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\PageTranslation;
 use Modules\Space\Entities\Space;
+use Modules\Space\Http\Requests\SpaceIndexRequest;
 use Modules\Space\Http\Requests\SpaceStoreRequest;
 use Modules\Space\Http\Requests\SpaceUpdateRequest;
 use Modules\Space\ModuleService;
@@ -31,12 +32,17 @@ class SpaceController extends CrudController
         $this->spaceService = $spaceService;
     }
 
-    public function index(Request $request)
+    public function index(SpaceIndexRequest $request)
     {
         $user = auth()->user();
-
         $managedSpaces = null;
         $spaceIds = null;
+
+        $scopes = [
+            'search' => $request->term,
+            'inType' => $request->types,
+        ];
+        $scopes = array_filter($scopes);
 
         if (! $user->can('space.viewAny')) {
             $managedSpaces = $user->spaces;
@@ -58,7 +64,7 @@ class SpaceController extends CrudController
             $spaceIds = [ $request->parent ];
         }
 
-        $records = $this->spaceService->getRecords($user, $spaceIds);
+        $records = $this->spaceService->getRecords($user, $spaceIds, $scopes);
 
         $spaceOptions = $this->spaceService->parentOptions($managedSpaces, __('Select Parent'));
 
@@ -70,7 +76,8 @@ class SpaceController extends CrudController
             'parent' => $request->parent,
             'parentOptions' => $spaceOptions,
             'records' => $records,
-            'pageQueryParams' => (object) array_filter($request->only('term', 'parent')),
+            'pageQueryParams' => (object) array_filter($request->only('term', 'parent', 'types')),
+            'typeOptions' => $this->spaceService->typeOptions()
         ]));
     }
 
@@ -126,7 +133,7 @@ class SpaceController extends CrudController
             'title' => $this->getCreateTitle(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
             'parentOptions' => $parentOptions,
-            'typeOptions' => $this->spaceService->typeOptions(),
+            'typeOptions' => $this->spaceService->typeOptions(__('None')),
             'maxLength' => [
                 'meta_title' => config('constants.max_length.meta_title'),
                 'meta_description' => config('constants.max_length.meta_description'),
@@ -223,7 +230,7 @@ class SpaceController extends CrudController
             'parentOptions' => $canChangeParent ? $parentOptions : [$parent],
             'spaceManagers' => $this->spaceService->formattedManagers($space),
             'spaceRecord' => $this->spaceService->editableRecord($space),
-            'typeOptions' => $this->spaceService->typeOptions(),
+            'typeOptions' => $this->spaceService->typeOptions(__('None')),
             'coverUrl' => $space->coverUrl,
             'logoUrl' => $space->logoUrl,
             'can' => [
