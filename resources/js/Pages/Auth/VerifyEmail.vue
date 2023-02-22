@@ -50,7 +50,7 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizButton from '@/Biz/Button';
+    import BizButton from '@/Biz/Button.vue';
 
     export default {
         components: {

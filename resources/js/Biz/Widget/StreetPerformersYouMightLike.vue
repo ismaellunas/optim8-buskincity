@@ -15,9 +15,10 @@
                     class="button"
                     target="_blank"
                 >
-                    <span class="icon is-small">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    </span>
+                    <biz-icon
+                        class="is-small"
+                        :icon="iconPreview"
+                    />
                     <span class="has-text-weight-bold">Get in Touch</span>
                 </a>
             </div>
@@ -26,14 +27,27 @@
 </template>
 
 <script>
+    import BizIcon from '@/Biz/Icon.vue';
+    import { preview as iconPreview } from '@/Libs/icon-class';
+
     export default {
         name: 'StreetPerformersYouMightLikeWidget',
+
+        components: {
+            BizIcon,
+        },
 
         props: {
             columns: {type: [Number, String], default: 6},
             data: {type: Object, required: true},
             order: {type: Number, required: true},
             title: {type: String, default: ""},
+        },
+
+        setup() {
+            return {
+                iconPreview,
+            };
         },
 
         computed: {

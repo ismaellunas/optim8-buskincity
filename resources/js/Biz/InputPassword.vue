@@ -15,14 +15,14 @@
         <div class="control">
             <biz-button-icon
                 v-show="isShowPassword"
-                :icon="icon.eyeSlash"
+                :icon="iconEyeSlash"
                 type="button"
                 tabindex="-1"
                 @click="changeTypeInput()"
             />
             <biz-button-icon
                 v-show="!isShowPassword"
-                :icon="icon.eye"
+                :icon="iconEye"
                 type="button"
                 tabindex="-1"
                 @click="changeTypeInput()"
@@ -32,9 +32,9 @@
 </template>
 
 <script>
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizField from '@/Biz/Field';
-    import icon from '@/Libs/icon-class';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizField from '@/Biz/Field.vue';
+    import { eye as iconEye, eyeSlash as iconEyeSlash } from '@/Libs/icon-class';
 
     export default {
         name: 'BizInputPassword',
@@ -58,7 +58,8 @@
 
         data() {
             return {
-                icon,
+                iconEye,
+                iconEyeSlash,
                 isShowPassword: false,
                 type: 'password',
             };

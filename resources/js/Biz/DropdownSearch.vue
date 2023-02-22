@@ -44,9 +44,9 @@
 </template>
 
 <script>
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizInput from '@/Biz/Input';
-    import BizIcon from '@/Biz/Icon';
+    import BizDropdown from '@/Biz/Dropdown.vue';
+    import BizInput from '@/Biz/Input.vue';
+    import BizIcon from '@/Biz/Icon.vue';
     import { angleDown as iconAngleDown, clear as iconClear } from '@/Libs/icon-class';
 
     export default {

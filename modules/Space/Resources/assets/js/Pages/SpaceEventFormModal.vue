@@ -113,12 +113,12 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizFormDateTime from '@/Biz/Form/DateTime';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormTextarea from '@/Biz/Form/Textarea';
-    import BizLanguageTab from '@/Biz/LanguageTab';
-    import BizModalCard from '@/Biz/ModalCard';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormDateTime from '@/Biz/Form/DateTime.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizLanguageTab from '@/Biz/LanguageTab.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
     import { cloneDeep, find, sortBy } from 'lodash';
     import { isBlank } from '@/Libs/utils';
     import { ref } from 'vue';

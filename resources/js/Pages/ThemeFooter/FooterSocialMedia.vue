@@ -81,8 +81,8 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizButton from '@/Biz/Button';
-    import FooterSocialMediaForm from './FooterSocialMediaForm';
+    import BizButton from '@/Biz/Button.vue';
+    import FooterSocialMediaForm from './FooterSocialMediaForm.vue';
     import { useModelWrapper } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
     import { cloneDeep } from 'lodash';

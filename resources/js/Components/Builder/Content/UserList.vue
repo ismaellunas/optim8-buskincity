@@ -86,8 +86,8 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizSelect from '@/Biz/Select';
-    import BizInput from '@/Biz/Input';
+    import BizSelect from '@/Biz/Select.vue';
+    import BizInput from '@/Biz/Input.vue';
     import { union, isEmpty, forEach, debounce } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
 

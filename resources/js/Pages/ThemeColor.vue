@@ -44,12 +44,12 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizInputColor from '@/Biz/InputColor';
-    import BizInputError from '@/Biz/InputError';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizInputColor from '@/Biz/InputColor.vue';
+    import BizInputError from '@/Biz/InputError.vue';
     import { forEach, has, isEmpty, mapValues, sortBy } from 'lodash';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';

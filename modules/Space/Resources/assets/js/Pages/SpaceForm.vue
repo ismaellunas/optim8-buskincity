@@ -190,17 +190,17 @@
 </template>
 
 <script>
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizCard from '@/Biz/Card';
-    import BizFormFile from '@/Biz/Form/File';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizFormTextarea from '@/Biz/Form/Textarea';
-    import BizIcon from '@/Biz/Icon';
-    import BizImage from '@/Biz/Image';
-    import BizLabel from '@/Biz/Label';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SpaceModalContact from './SpaceModalContact';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizCard from '@/Biz/Card.vue';
+    import BizFormFile from '@/Biz/Form/File.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import BizLabel from '@/Biz/Label.vue';
+    import SpaceModalContact from './SpaceModalContact.vue';
     import icon from '@/Libs/icon-class';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { find, set, unset } from 'lodash';

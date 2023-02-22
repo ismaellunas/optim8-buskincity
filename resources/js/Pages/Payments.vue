@@ -20,6 +20,8 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
 
     export default {
+        name: 'WidgetPayments',
+
         components: {
             BizWidgetStripeConnect,
         },

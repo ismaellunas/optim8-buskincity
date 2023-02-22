@@ -20,8 +20,8 @@
 </template>
 
 <script>
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizLabel from '@/Biz/Label';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizLabel from '@/Biz/Label.vue';
     import { isEmpty } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 

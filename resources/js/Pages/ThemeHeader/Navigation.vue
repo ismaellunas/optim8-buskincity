@@ -56,10 +56,10 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizLanguageTab from '@/Biz/LanguageTab';
-    import NavigationFormDuplicate from './NavigationFormDuplicate';
-    import NavigationFormMenu from './NavigationFormMenuItem';
-    import NavigationMenu from './NavigationMenu';
+    import BizLanguageTab from '@/Biz/LanguageTab.vue';
+    import NavigationFormDuplicate from './NavigationFormDuplicate.vue';
+    import NavigationFormMenu from './NavigationFormMenuItem.vue';
+    import NavigationMenu from './NavigationMenu.vue';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
     import { oops as oopsAlert, success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { forEach, cloneDeep } from 'lodash';

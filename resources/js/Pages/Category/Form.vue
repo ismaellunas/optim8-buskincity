@@ -77,13 +77,13 @@
 </template>
 
 <script>
-    import HasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizLanguageTab from '@/Biz/LanguageTab';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormSlug from '@/Biz/Form/Slug';
-    import BizFormTextarea from '@/Biz/Form/Textarea';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormSlug from '@/Biz/Form/Slug.vue';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizLanguageTab from '@/Biz/LanguageTab.vue';
     import { isEmpty } from 'lodash';
     import { useModelWrapper, convertToSlug } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3';
@@ -101,7 +101,7 @@
         },
 
         mixins: [
-            HasPageErrors
+            MixinHasPageErrors
         ],
 
         props: {
@@ -123,11 +123,6 @@
         setup(props, { emit }) {
             return {
                 form: useModelWrapper(props, emit),
-            };
-        },
-
-        data() {
-            return {
                 maxLength: usePage().props.value.maxLength,
             };
         },

@@ -35,7 +35,7 @@
 </template>
 
 <script>
-    import BizSectionTitle from './SectionTitle'
+    import BizSectionTitle from './SectionTitle.vue';
 
     export default {
         name: 'BizFormSection',

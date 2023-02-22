@@ -50,8 +50,8 @@
 </template>
 
 <script>
-    import BizIcon from '@/Biz/Icon';
-    import icon from '@/Libs/icon-class';
+    import BizIcon from '@/Biz/Icon.vue';
+    import { angleUp as iconAngleUp, angleDown as iconAngleDown } from '@/Libs/icon-class';
     import { ref } from 'vue';
 
     export default {
@@ -81,22 +81,18 @@
 
             return {
                 isContentShown: ref(isContentShown),
-            };
-        },
-
-        data () {
-            return {
-                icon,
+                iconAngleUp,
+                iconAngleDown,
             };
         },
 
         computed: {
             iconCollapseOrExpand() {
                 if (!this.isContentShown) {
-                    return this.iconCollapse ?? icon.angleDown;
+                    return this.iconCollapse ?? iconAngleDown;
                 }
 
-                return this.iconExpand ?? icon.angleUp;
+                return this.iconExpand ?? iconAngleUp;
             },
 
             cardHeaderStyle() {

@@ -96,7 +96,7 @@
                                         @click="deleteFieldGroup(index)"
                                     >
                                         <span class="icon">
-                                            <i :class="icon.remove" />
+                                            <i :class="iconRemove" />
                                         </span>
                                     </biz-button>
                                 </p>
@@ -106,7 +106,7 @@
                                         class="is-small handle-field-group"
                                     >
                                         <span class="icon">
-                                            <i :class="icon.move" />
+                                            <i :class="iconMove" />
                                         </span>
                                     </biz-button>
                                 </p>
@@ -159,16 +159,16 @@
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizCard from '@/Biz/Card';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormKey from '@/Biz/Form/Key';
     import Draggable from "vuedraggable";
+    import FieldStructures from './../FieldStructures/index';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizCard from '@/Biz/Card.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormKey from '@/Biz/Form/Key.vue';
     import FieldGroup from "./FieldGroup";
-    import FieldStructures from './../FieldStructures';
-    import InputConfig from './../Fields/InputConfig';
-    import icon from '@/Libs/icon-class';
+    import InputConfig from './../Fields/InputConfig.vue';
+    import { move as iconMove, remove as iconRemove } from '@/Libs/icon-class';
     import { isEmpty } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
     import {
@@ -218,13 +218,14 @@
                 computedInputConfigId: useModelWrapper(props, emit, 'inputConfigId'),
                 isDebugMode: false,
                 baseRouteName: usePage().props.value.baseRouteName,
+                iconMove,
+                iconRemove,
             };
         },
 
         data() {
             return {
                 clonedComponent: null,
-                icon,
             };
         },
 

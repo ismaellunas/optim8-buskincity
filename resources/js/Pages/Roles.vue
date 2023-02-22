@@ -78,10 +78,10 @@
 </template>
 
 <script>
-    import AppLayout from './../Layouts/AppLayout'
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizModal from '@/Biz/Modal'
+    import AppLayout from './../Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizModal from '@/Biz/Modal.vue';
 
     export default {
         components: {

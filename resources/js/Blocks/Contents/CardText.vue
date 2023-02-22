@@ -25,13 +25,13 @@
     import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
-    import BizEditor from '@/Biz/EditorTinymce';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizEditor from '@/Biz/EditorTinymce.vue';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'CardText',
+        name: 'ContentCardText',
         components: {
             BizEditor,
             BizToolbarContent,

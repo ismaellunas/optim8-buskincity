@@ -187,25 +187,25 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizDropdownSearch from '@/Biz/DropdownSearch';
-    import BizFilterDateRange from '@/Biz/Filter/DateRange';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizIcon from '@/Biz/Icon';
-    import BizLink from '@/Biz/Link';
-    import BizTableIndex from '@/Biz/TableIndex';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
-    import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdown from '@/Biz/Dropdown.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
+    import BizFilterDateRange from '@/Biz/Filter/DateRange.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizLink from '@/Biz/Link.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
+    import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { debounceTime } from '@/Libs/defaults';
     import { debounce, isEmpty, isArray, filter, merge } from 'lodash';
+    import { debounceTime } from '@/Libs/defaults';
     import { ref } from "vue";
     import { useForm } from '@inertiajs/inertia-vue3';
 

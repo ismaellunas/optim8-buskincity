@@ -27,5 +27,5 @@
                 computedValue: useModelWrapper(props, emit),
             };
         },
-    }
+    };
 </script>

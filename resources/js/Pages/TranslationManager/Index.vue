@@ -285,28 +285,28 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizButtonDownload from '@/Biz/ButtonDownload';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizDropdownScroll from '@/Biz/DropdownScroll';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizField from '@/Biz/Field';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import BizFormFile from '@/Biz/Form/File';
-    import BizIcon from '@/Biz/Icon';
-    import BizInput from '@/Biz/Input';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizTableIndex from '@/Biz/TableIndex';
-    import BizTextarea from '@/Biz/Textarea';
+    import AppLayout from '@/Layouts/AppLayout';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonDownload from '@/Biz/ButtonDownload.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdown from '@/Biz/Dropdown.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizDropdownScroll from '@/Biz/DropdownScroll.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizField from '@/Biz/Field.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
+    import BizFormFile from '@/Biz/Form/File.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizInput from '@/Biz/Input.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
+    import BizTextarea from '@/Biz/Textarea.vue';
     import { merge, debounce } from 'lodash';
     import { ref } from 'vue';
     import { success as successAlert, confirmDelete, confirmLeaveProgress } from '@/Libs/alert';

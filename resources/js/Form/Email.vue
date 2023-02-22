@@ -32,8 +32,8 @@
 </template>
 
 <script>
-    import BizIcon from '@/Biz/Icon';
-    import FormInput from '@/Biz/Form/Input';
+    import BizIcon from '@/Biz/Icon.vue';
+    import FormInput from '@/Biz/Form/Input.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { isEmpty } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';

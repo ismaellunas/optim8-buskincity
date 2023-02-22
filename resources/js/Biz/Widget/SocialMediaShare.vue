@@ -25,7 +25,7 @@
 </template>
 
 <script>
-    import BizSocialMediaShare from '@/Biz/SocialMediaShare';
+    import BizSocialMediaShare from '@/Biz/SocialMediaShare.vue';
 
     export default {
         name: 'SocialMediaShare',

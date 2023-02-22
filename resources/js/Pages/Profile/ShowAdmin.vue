@@ -5,8 +5,8 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import ShowContent from './Show';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import ShowContent from './Show.vue';
 
     export default {
         name: 'ProfileShow',

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-    import BizDatepicker from '@/Biz/Datepicker';
+    import BizDatepicker from '@/Biz/Datepicker.vue';
     import moment from 'moment';
     import { padStart } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';

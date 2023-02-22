@@ -82,9 +82,9 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizModalCard from '@/Biz/ModalCard';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
     import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
     import { merge } from 'lodash';
 

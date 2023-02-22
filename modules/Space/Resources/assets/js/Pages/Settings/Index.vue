@@ -7,8 +7,8 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import SpaceType from './SpaceType';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import SpaceType from './SpaceType.vue';
 
     export default {
         name: 'SettingIndex',

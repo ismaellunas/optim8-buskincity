@@ -37,10 +37,10 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizFormField from '@/Biz/Form/Field';
-    import BizIconBrowser from '@/Biz/Modal/IconBrowser';
-    import BizInputError from '@/Biz/InputError';
-    import BizInputIcon from '@/Biz/InputIcon';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizIconBrowser from '@/Biz/Modal/IconBrowser.vue';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizInputIcon from '@/Biz/InputIcon.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

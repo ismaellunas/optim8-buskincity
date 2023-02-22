@@ -125,11 +125,11 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizTable from '@/Biz/Table';
-    import BizCard from '@/Biz/Card';
-    import BizLink from '@/Biz/Link';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizTable from '@/Biz/Table.vue';
+    import BizCard from '@/Biz/Card.vue';
+    import BizLink from '@/Biz/Link.vue';
     import MediaGallery from './EntryDisplay/MediaGallery';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';

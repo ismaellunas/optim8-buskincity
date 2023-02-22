@@ -137,12 +137,12 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizFilterDateRange from '@/Biz/Filter/DateRange';
-    import BizLoader from '@/Biz/Loader';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizSelect from '@/Biz/Select';
-    import BizTableIndex from '@/Biz/TableIndex';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFilterDateRange from '@/Biz/Filter/DateRange.vue';
+    import BizLoader from '@/Biz/Loader.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizSelect from '@/Biz/Select.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
     import { ref } from 'vue';
 
     export default {

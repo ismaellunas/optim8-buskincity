@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import BizDatepicker from '@/Biz/Datepicker';
+    import BizDatepicker from '@/Biz/Datepicker.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

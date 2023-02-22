@@ -40,13 +40,13 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import ProductForm from './ProductForm';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import ProductForm from './ProductForm.vue';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -89,11 +89,6 @@
 
             return {
                 form: useForm(form),
-            };
-        },
-
-        data() {
-            return {
             };
         },
 

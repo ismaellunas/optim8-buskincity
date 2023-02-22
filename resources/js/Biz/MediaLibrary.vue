@@ -72,7 +72,7 @@
                     <div class="column is-one-fifth">
                         <biz-buttons-display-view
                             v-model="view"
-                            class="buttons is-right"
+                            class="is-right"
                             @on-view-changed="$emit('on-view-changed', $event)"
                         />
                     </div>
@@ -240,34 +240,34 @@
 </template>
 
 <script>
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonsDisplayView from '@/Biz/ButtonsDisplayView.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdown from '@/Biz/Dropdown.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import BizInputFile from '@/Biz/InputFile.vue';
+    import BizMediaGallery from '@/Biz/Media/Gallery.vue';
+    import BizMediaGalleryItem from '@/Biz/Media/GalleryItem.vue';
+    import BizMediaList from '@/Biz/Media/List.vue';
+    import BizMediaListItem from '@/Biz/Media/ListItem.vue';
+    import BizModal from '@/Biz/Modal.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizModalImageEditor from '@/Biz/Modal/ImageEditor.vue';
+    import BizPagination from '@/Biz/Pagination.vue';
+    import BizTableInfo from '@/Biz/TableInfo.vue';
     import HasModalMixin from '@/Mixins/HasModal';
     import HasPageErrors from '@/Mixins/HasPageErrors';
-    import MediaForm from '@/Pages/Media/Form';
-    import BizButton from '@/Biz/Button';
-    import BizButtonsDisplayView from '@/Biz/ButtonsDisplayView';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizFormField from '@/Biz/Form/Field';
-    import BizImage from '@/Biz/Image';
-    import BizInputFile from '@/Biz/InputFile';
-    import BizMediaGallery from '@/Biz/Media/Gallery';
-    import BizMediaGalleryItem from '@/Biz/Media/GalleryItem';
-    import BizMediaList from '@/Biz/Media/List';
-    import BizMediaListItem from '@/Biz/Media/ListItem';
-    import BizModal from '@/Biz/Modal';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTableInfo from '@/Biz/TableInfo';
+    import MediaForm from '@/Pages/Media/Form.vue';
+    import icon from '@/Libs/icon-class';
     import { acceptedFileTypes, acceptedImageTypes } from '@/Libs/defaults';
     import { confirm as confirmAlert, confirmDelete, success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { getCanvasBlob } from '@/Libs/utils';
     import { includes } from 'lodash';
     import { ref } from "vue";
     import { useForm } from '@inertiajs/inertia-vue3';
-    import icon from '@/Libs/icon-class';
 
     function getEmptyFormMedia() {
         return {

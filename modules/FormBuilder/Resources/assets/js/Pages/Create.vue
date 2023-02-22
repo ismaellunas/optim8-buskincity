@@ -14,9 +14,9 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import FormBuilder from './Form';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import FormBuilder from './Form.vue';
     import { getEmptyForm } from './../Libs/form';
     import { onFormEditorClicked } from './../Libs/form-builder';
     import { useForm } from '@inertiajs/inertia-vue3';

@@ -37,7 +37,7 @@
 </template>
 
 <script>
-    import FormFileUpload from '@/Biz/Form/FileUpload';
+    import FormFileUpload from '@/Biz/Form/FileUpload.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 

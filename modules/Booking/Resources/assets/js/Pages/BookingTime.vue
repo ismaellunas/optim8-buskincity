@@ -81,10 +81,10 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizDatepicker from '@/Biz/Datepicker';
-    import BizField from '@/Biz/Field';
-    import BizFormFieldHorizontal from '@/Biz/Form/FieldHorizontal';
+    import BizButton from '@/Biz/Button.vue';
+    import BizDatepicker from '@/Biz/Datepicker.vue';
+    import BizField from '@/Biz/Field.vue';
+    import BizFormFieldHorizontal from '@/Biz/Form/FieldHorizontal.vue';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import moment from 'moment';
     import { ref } from 'vue';
