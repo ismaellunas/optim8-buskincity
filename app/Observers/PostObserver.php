@@ -33,5 +33,7 @@ class PostObserver
     public function deleted(Post $post)
     {
         app(MenuService::class)->removeModelFromMenus($post);
+
+        $post->detachMedia();
     }
 }

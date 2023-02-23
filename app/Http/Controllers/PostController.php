@@ -101,7 +101,6 @@ class PostController extends CrudController
 
         $post->saveFromInputs($request->only([
             'content',
-            'cover_image_id',
             'excerpt',
             'locale',
             'meta_description',
@@ -117,6 +116,12 @@ class PostController extends CrudController
                 $request->input('categories'),
                 $request->input('primary_category')
             );
+        }
+
+        if ($request->has('cover_image_id')) {
+            $post->syncMedia([
+                (int)$request->input('cover_image_id')
+            ]);
         }
 
         $this->generateFlashMessage('Post created successfully!');
@@ -188,6 +193,10 @@ class PostController extends CrudController
                 $request->input('primary_category')
             );
         }
+
+        $post->syncMedia([
+            (int)$request->input('cover_image_id')
+        ]);
 
         $this->generateFlashMessage('Post updated successfully!');
 
