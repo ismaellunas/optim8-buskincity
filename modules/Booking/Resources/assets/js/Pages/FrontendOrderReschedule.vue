@@ -87,7 +87,7 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
-    import Layout from '@/Layouts/User';
+    import Layout from '@/Layouts/User.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BizIcon from '@/Biz/Icon.vue';

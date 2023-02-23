@@ -166,7 +166,7 @@
     import BizCard from '@/Biz/Card.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormKey from '@/Biz/Form/Key.vue';
-    import FieldGroup from "./FieldGroup";
+    import FieldGroup from './FieldGroup.vue';
     import InputConfig from './../Fields/InputConfig.vue';
     import { move as iconMove, remove as iconRemove } from '@/Libs/icon-class';
     import { isEmpty } from 'lodash';

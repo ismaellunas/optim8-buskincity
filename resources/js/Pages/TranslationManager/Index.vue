@@ -288,7 +288,7 @@
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import AppLayout from '@/Layouts/AppLayout';
+    import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizButtonDownload from '@/Biz/ButtonDownload.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';

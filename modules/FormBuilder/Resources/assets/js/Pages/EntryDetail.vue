@@ -130,7 +130,7 @@
     import BizTable from '@/Biz/Table.vue';
     import BizCard from '@/Biz/Card.vue';
     import BizLink from '@/Biz/Link.vue';
-    import MediaGallery from './EntryDisplay/MediaGallery';
+    import MediaGallery from './EntryDisplay/MediaGallery.vue';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
 

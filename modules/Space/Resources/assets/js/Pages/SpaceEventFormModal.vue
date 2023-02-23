@@ -122,7 +122,7 @@
     import { cloneDeep, find, sortBy } from 'lodash';
     import { isBlank } from '@/Libs/utils';
     import { ref } from 'vue';
-    import { confirmLeaveProgress, sconfirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
+    import { confirmLeaveProgress, confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     export default {

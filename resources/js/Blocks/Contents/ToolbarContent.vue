@@ -6,7 +6,7 @@
                 class="control"
             >
                 <biz-button-icon
-                    icon-class="is-small"
+                    class="is-small"
                     type="button"
                     :icon="iconCopy"
                     @click="$emit('duplicate-content', $event)"
@@ -17,7 +17,7 @@
                 class="control"
             >
                 <biz-button-icon
-                    icon-class="is-small"
+                    class="is-small"
                     type="button"
                     :icon="iconRemove"
                     @click="$emit('delete-content', $event)"
@@ -28,7 +28,7 @@
                 class="control"
             >
                 <biz-button-icon
-                    icon-class="is-small handle-content"
+                    class="is-small handle-content"
                     type="button"
                     :icon="iconMove"
                 />

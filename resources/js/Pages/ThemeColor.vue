@@ -103,7 +103,7 @@
             });
 
             const form = mapValues(props.colors, (color, key) => {
-                const colorValue = props.colors[key].value;
+                let colorValue = props.colors[key].value;
                 if (isEmpty(colorValue) && has(props.defaultColors, key)) {
                     colorValue = props.defaultColors[key];
                 }
