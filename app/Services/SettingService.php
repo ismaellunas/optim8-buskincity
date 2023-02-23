@@ -14,7 +14,7 @@ use Illuminate\Support\{
     Collection,
     Str,
 };
-use Qirolab\Theme\Theme;
+use Illuminate\Support\Facades\Vite;
 
 class SettingService
 {
@@ -38,7 +38,7 @@ class SettingService
         $urlCss = $this->getKey('url_css');
 
         return empty($urlCss)
-            ? mix('css/app.css', 'themes/'.Theme::active())->toHtml()
+            ? Vite::asset('themes/'.config('theme.active').'/sass/app.sass')
             : $urlCss;
     }
 
@@ -47,7 +47,7 @@ class SettingService
         $urlCss = $this->getKey('url_css_backend');
 
         return empty($urlCss)
-            ? mix('css/app.css')->toHtml()
+            ? Vite::asset('resources/sass/app.sass')
             : $urlCss;
     }
 

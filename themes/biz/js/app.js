@@ -4,7 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require("./bootstrap");
+import './bootstrap';
 
 /**
  * We will create a fresh Vue application instance.
@@ -21,7 +21,10 @@ const components = {
 };
 
 const app = createApp({
-        components: Object.assign(defaultComponents, components),
+        components: {
+            ...defaultComponents,
+            ...components
+        },
     })
     .use(VueLoading, {color: '#3280bf', loader: 'dots', opacity: 0.3, zIndex: 8000});
 
