@@ -253,9 +253,7 @@
     import BizImage from '@/Biz/Image';
     import BizInputFile from '@/Biz/InputFile';
     import BizMediaGallery from '@/Biz/Media/Gallery';
-    import BizMediaGalleryItem from '@/Biz/Media/GalleryItem';
     import BizMediaList from '@/Biz/Media/List';
-    import BizMediaListItem from '@/Biz/Media/ListItem';
     import BizModal from '@/Biz/Modal';
     import BizModalCard from '@/Biz/ModalCard';
     import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
@@ -292,9 +290,7 @@
             BizImage,
             BizInputFile,
             BizMediaGallery,
-            BizMediaGalleryItem,
             BizMediaList,
-            BizMediaListItem,
             BizModal,
             BizModalCard,
             BizModalImageEditor,
@@ -360,7 +356,6 @@
                 messageText: {
                     successSaveAsMedia: "A new media has been created",
                     successSubmitForm: "Media has been updated",
-                    successDeleteMedia: "Deleted",
                 },
                 icon,
             };
@@ -426,32 +421,38 @@
                 oopsAlert();
             },
             deleteRecord(record) {
-                confirmDelete('Are you sure?').then((result) => {
-                    const self = this;
-                    let loader = null;
+                if (record.canDeleted) {
+                    confirmDelete('Are you sure?').then((result) => {
+                        const self = this;
+                        let loader = null;
 
-                    if (result.isConfirmed) {
-                        this.$inertia.delete(
-                            route(this.baseRouteName+'.destroy', {id: record.id}),
-                            {
-                                onStart: visit => {
-                                    loader = self.$loading.show();
-                                    self.isDeleting = true;
-                                },
-                                onSuccess: page => {
-                                    successAlert(self.messageText.successDeleteMedia);
-                                },
-                                onError: errors => {
-                                    oopsAlert();
-                                },
-                                onFinish: visit => {
-                                    loader.hide();
-                                    self.isDeleting = false;
-                                },
-                            }
-                        );
-                    }
-                });
+                        if (result.isConfirmed) {
+                            this.$inertia.delete(
+                                route(this.baseRouteName+'.destroy', {id: record.id}),
+                                {
+                                    onStart: visit => {
+                                        loader = self.$loading.show();
+                                        self.isDeleting = true;
+                                    },
+                                    onSuccess: page => {
+                                        successAlert(page.props.flash.message);
+                                    },
+                                    onError: errors => {
+                                        oopsAlert();
+                                    },
+                                    onFinish: visit => {
+                                        loader.hide();
+                                        self.isDeleting = false;
+                                    },
+                                }
+                            );
+                        }
+                    });
+                } else {
+                    oopsAlert({
+                        text: "The action cannot be completed because the media is being used somewhere else.",
+                    });
+                }
             },
             openImageEditorModal() {
                 this.isImageEditing = true;
