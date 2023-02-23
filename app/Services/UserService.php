@@ -52,12 +52,33 @@ class UserService
     }
 
     public function getRecords(
+        User $user,
         string $term = null,
         int $perPage = 15,
         ?array $scopes = null
     ): LengthAwarePaginator {
-        return $this
-            ->getBuilderRecords($term, $scopes)
+        $records = $this->getBuilderRecords($term, $scopes);
+
+        if (!$user->isSuperAdministrator) {
+            $records = $records->whereDoesntHave('roles', function ($query) {
+                    $query->where('name', config('permission.super_admin_role'));
+                });
+        }
+
+        $records = $records->paginate($perPage);
+
+        $this->transformRecords($records, $user);
+
+        return $records;
+    }
+
+    public function getTrashedRecords(
+        string $term = null,
+        int $perPage = 15,
+        ?array $scopes = null
+    ): LengthAwarePaginator {
+        return $this->getBuilderRecords($term, $scopes)
+            ->onlyTrashed()
             ->paginate($perPage);
     }
 
@@ -96,20 +117,7 @@ class UserService
             ->toArray();
     }
 
-    public function getNoSuperAdministratorRecords(
-        string $term = null,
-        int $perPage = 15,
-        ?array $scopes = null
-    ): LengthAwarePaginator {
-        return $this
-            ->getBuilderRecords($term, $scopes)
-            ->whereDoesntHave('roles', function ($query) {
-                $query->where('name', config('permission.super_admin_role'));
-            })
-            ->paginate($perPage);
-    }
-
-    public function transformRecords(AbstractPaginator $records, User $actor)
+    private function transformRecords(AbstractPaginator $records, User $actor)
     {
         $records->getCollection()->transform(function ($user) use ($actor) {
             $user->can = [
@@ -156,5 +164,20 @@ class UserService
     {
         Post::where('author_id', $userIdFrom)->update(['author_id' => $userIdTo]);
         Page::where('author_id', $userIdFrom)->update(['author_id' => $userIdTo]);
+    }
+
+    public function deleteResources($userId): void
+    {
+        $pages = Page::where('author_id', $userId)->get();
+
+        foreach ($pages as $page) {
+            $page->delete();
+        }
+
+        $posts = Post::where('author_id', $userId)->get();
+
+        foreach ($posts as $post) {
+            $post->delete();
+        }
     }
 }

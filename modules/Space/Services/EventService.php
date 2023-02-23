@@ -37,14 +37,7 @@ class EventService
 
     public function getEditableRecord($space, $event)
     {
-        $event = SpaceEvent::
-            whereHasMorph(
-                'eventable',
-                Space::class,
-                function ($query) use ($space) {
-                    $query->where('id', $space->id);
-                }
-            )
+        $event = SpaceEvent::hasSpace($space->id)
             ->with('translations')
             ->find($event->id);
 

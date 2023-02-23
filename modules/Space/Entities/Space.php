@@ -7,7 +7,6 @@ use App\Models\GlobalOption;
 use App\Models\Media;
 use App\Models\MenuItem;
 use App\Models\User;
-use App\Services\TranslationService;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -83,7 +82,7 @@ class Space extends BaseModel implements TranslatableContract
 
     public function events()
     {
-        return $this->morphMany(SpaceEvent::class, 'eventable');
+        return $this->hasMany(SpaceEvent::class);
     }
 
     public function product()
@@ -157,6 +156,16 @@ class Space extends BaseModel implements TranslatableContract
                 });
             },
         ]);
+    }
+
+    public function scopeSearch($query, string $term)
+    {
+        $query->where('name', 'ILIKE', '%'.$term.'%');
+    }
+
+    public function scopeInType($query, array $types = [])
+    {
+        $query->whereIn('type_id', $types);
     }
 
     public function getLogoUrlAttribute(): ?string
