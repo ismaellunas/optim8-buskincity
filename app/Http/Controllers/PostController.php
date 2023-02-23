@@ -118,7 +118,7 @@ class PostController extends CrudController
             );
         }
 
-        if ($request->has('cover_image_id')) {
+        if ($request->filled('cover_image_id')) {
             $post->syncMedia([
                 (int)$request->input('cover_image_id')
             ]);

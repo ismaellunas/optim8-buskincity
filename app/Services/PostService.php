@@ -50,7 +50,6 @@ class PostService
                 'slug',
                 'excerpt',
                 'status',
-                'cover_image_id',
             ]);
 
         foreach ($scopeNames as $scopeName => $value) {
