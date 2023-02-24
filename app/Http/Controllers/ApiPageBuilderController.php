@@ -6,7 +6,6 @@ use App\Models\Role;
 use App\Services\CountryService;
 use App\Services\CategoryService;
 use App\Services\GlobalOptionService;
-use Illuminate\Support\Collection;
 
 class ApiPageBuilderController extends Controller
 {

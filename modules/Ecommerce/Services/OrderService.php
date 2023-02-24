@@ -85,7 +85,7 @@ class OrderService
                         },
                     ]);
                 },
-                'user:id,email,first_name,last_name',
+                'user:id,email,first_name,last_name,deleted_at',
             ])
             ->select(
                 'id',

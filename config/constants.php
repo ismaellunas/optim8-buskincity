@@ -148,6 +148,11 @@ return [
     'max_length' => [
         'meta_description' => 160,
         'meta_title' => 80,
+        'excerpt' => '800',
+    ],
+
+    'max_words' => [
+        'excerpt' => 60,
     ],
 
     'settings' => [

@@ -30,10 +30,9 @@ class SpaceService
     public function getRecords(
         Authenticatable $user,
         ?array $ids = null,
+        array $scopes = null,
         int $perPage = 15
     ): LengthAwarePaginator {
-        Space::disableAutoloadTranslations();
-
         $columnNames = ['id', 'name', 'parent_id', 'type_id', '_lft', '_rgt'];
 
         $spaces = null;
@@ -57,6 +56,11 @@ class SpaceService
                 foreach ($spaces as $key => $space) {
                     $boolean = $key == 0 ? 'and' : 'or';
                     $query->whereDescendantOrSelf($space, $boolean);
+                }
+            })
+            ->when($scopes, function ($query, $scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    $query->$scopeName($value);
                 }
             })
             ->defaultOrder()
@@ -194,11 +198,13 @@ class SpaceService
         );
     }
 
-    public function typeOptions(): Collection
+    public function typeOptions(string $noneLabel = null): Collection
     {
         $options = collect();
 
-        $options->push(['id' => null, 'value' => __('None')]);
+        if (!is_null($noneLabel)) {
+            $options->push(['id' => null, 'value' => $noneLabel]);
+        }
 
         foreach ($this->types() as $type) {
             $options->push(['id' => $type->id, 'value' => __($type->name)]);

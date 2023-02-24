@@ -2,12 +2,9 @@
 
 namespace Modules\Space\Database\Seeders;
 
-use App\Models\PageTranslation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use Modules\Space\Entities\Space;
-use Modules\Space\Entities\Page;
 use Modules\Space\Services\SpaceService;
 
 class SpaceSeeder extends Seeder
