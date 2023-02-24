@@ -96,4 +96,9 @@ class UserPolicy extends BasePermissionPolicy
         return app(StripeService::class)->isStripeKeyExists()
             && $user->can('system.payment');
     }
+
+    public function manageUserTrashed(User $user)
+    {
+        return $user->isSuperAdministrator;
+    }
 }

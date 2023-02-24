@@ -78,7 +78,19 @@
                     <biz-tag><b>End</b></biz-tag> {{ event.ended_at }}
                 </td>
                 <td>{{ event.title }}</td>
-                <td>{{ event.description }}</td>
+                <td>
+                    <div>
+                        <p v-html="event.short_description" />
+
+                        <a
+                            href="#"
+                            class="has-text-primary has-text-weight-bold"
+                            @click.prevent="selectedEvent = event"
+                        >
+                            Read More
+                        </a>
+                    </div>
+                </td>
                 <td>{{ event.address }}</td>
                 <td>
                     <a
@@ -101,6 +113,26 @@
                 </td>
             </tr>
         </biz-table-index>
+
+        <biz-modal-card
+            v-if="selectedEvent"
+            :is-close-hidden="true"
+            @click.prevent="closeDescriptionModal"
+        >
+            <template #header>
+                <p class="modal-card-title has-text-weight-bold">
+                    {{ selectedEvent.title }}
+                </p>
+
+                <button
+                    aria-label="close"
+                    class="delete"
+                    @click.prevent="closeDescriptionModal"
+                />
+            </template>
+
+            <div v-html="selectedEvent.description" />
+        </biz-modal-card>
     </div>
 </template>
 
@@ -108,6 +140,7 @@
     import BizButton from '@/Biz/Button';
     import BizFilterDateRange from '@/Biz/Filter/DateRange';
     import BizLoader from '@/Biz/Loader';
+    import BizModalCard from '@/Biz/ModalCard';
     import BizSelect from '@/Biz/Select';
     import BizTableIndex from '@/Biz/TableIndex';
     import BizTag from '@/Biz/Tag';
@@ -120,6 +153,7 @@
             BizButton,
             BizFilterDateRange,
             BizLoader,
+            BizModalCard,
             BizSelect,
             BizTableIndex,
             BizTag,
@@ -135,6 +169,7 @@
                 options: ref([]),
                 queryParams: ref({}),
                 records: ref({}),
+                selectedEvent: ref(null),
                 setting: ref({}),
             };
         },
@@ -192,6 +227,10 @@
                     .then(() => {
                         self.isLoading = false;
                     });
+            },
+
+            closeDescriptionModal() {
+                this.selectedEvent = null;
             },
         },
     };
