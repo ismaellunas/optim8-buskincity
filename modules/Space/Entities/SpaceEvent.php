@@ -42,9 +42,9 @@ class SpaceEvent extends Model implements TranslatableContract
         return \Modules\Space\Database\factories\SpaceEventFactory::new();
     }
 
-    public function eventable()
+    public function space()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Space::class);
     }
 
     public function scopeSearch($query, string $term)
@@ -80,12 +80,6 @@ class SpaceEvent extends Model implements TranslatableContract
 
     public function scopeHasSpace($query, int $spaceId)
     {
-        $query->whereHasMorph(
-            'eventable',
-            Space::class,
-            function ($query) use ($spaceId) {
-                $query->where('id', $spaceId);
-            }
-        );
+        $query->where('space_id', $spaceId);
     }
 }
