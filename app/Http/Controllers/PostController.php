@@ -118,11 +118,9 @@ class PostController extends CrudController
             );
         }
 
-        if ($request->filled('cover_image_id')) {
-            $post->syncMedia([
-                (int)$request->input('cover_image_id')
-            ]);
-        }
+        $post->saveMedia([
+            $request->input('cover_image_id')
+        ]);
 
         $this->generateFlashMessage('Post created successfully!');
 
@@ -194,8 +192,8 @@ class PostController extends CrudController
             );
         }
 
-        $post->syncMedia([
-            (int)$request->input('cover_image_id')
+        $post->saveMedia([
+            $request->input('cover_image_id')
         ]);
 
         $this->generateFlashMessage('Post updated successfully!');
