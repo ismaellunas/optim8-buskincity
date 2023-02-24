@@ -56,9 +56,9 @@
 <script>
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
-    import BizFormField from '@/Biz/Form/Field';
-    import BizButton from '@/Biz/Button';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizButton from '@/Biz/Button.vue';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { forEach } from 'lodash';
     import { inject } from "vue";

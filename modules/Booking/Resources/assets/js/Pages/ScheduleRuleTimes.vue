@@ -48,8 +48,8 @@
 </template>
 
 <script>
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import ScheduleRuleTime from '@booking/Pages/ScheduleRuleTime';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import ScheduleRuleTime from '@booking/Pages/ScheduleRuleTime.vue';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import { isEmpty, last } from 'lodash';

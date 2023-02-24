@@ -156,20 +156,20 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizFormAssignUser from '@/Biz/Form/AssignUser';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
-    import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasTab from '@/Mixins/HasTab';
-    import PageForm from '@/Pages/Page/Form';
-    import SpaceEvent from './SpaceEvent';
-    import SpaceForm from './SpaceForm';
-    import SpaceFormTranslatable from './SpaceFormTranslatable';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizFormAssignUser from '@/Biz/Form/AssignUser.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
+    import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
+    import PageForm from '@/Pages/Page/Form.vue';
+    import SpaceEvent from './SpaceEvent.vue';
+    import SpaceForm from './SpaceForm.vue';
+    import SpaceFormTranslatable from './SpaceFormTranslatable.vue';
     import { cloneDeep, pick, map } from 'lodash';
     import { confirmDelete, confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { getEmptyPageTranslation } from '@/Libs/page';

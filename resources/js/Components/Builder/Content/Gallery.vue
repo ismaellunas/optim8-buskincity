@@ -62,8 +62,8 @@
 </template>
 
 <script>
-    import BizIcon from '@/Biz/Icon';
-    import BizModal from '@/Biz/Modal';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizModal from '@/Biz/Modal.vue';
     import { nth } from 'lodash';
 
     export default {

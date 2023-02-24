@@ -123,13 +123,13 @@
 </template>
 
 <script>
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizLoader from '@/Biz/Loader';
-    import BizPagination from '@/Biz/Pagination';
-    import BizPanel from '@/Biz/Panel';
-    import BizPanelBlock from '@/Biz/PanelBlock';
-    import BizSelect from '@/Biz/Select';
-    import BizTable from '@/Biz/Table';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizLoader from '@/Biz/Loader.vue';
+    import BizPagination from '@/Biz/Pagination.vue';
+    import BizPanel from '@/Biz/Panel.vue';
+    import BizPanelBlock from '@/Biz/PanelBlock.vue';
+    import BizSelect from '@/Biz/Select.vue';
+    import BizTable from '@/Biz/Table.vue';
     import icon from '@/Libs/icon-class';
     import { head, isEmpty } from 'lodash';
 

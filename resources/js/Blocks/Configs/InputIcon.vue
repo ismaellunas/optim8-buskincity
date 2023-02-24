@@ -13,9 +13,9 @@
 </template>
 
 <script>
-    import BizFormInputIcon from '@/Biz/Form/InputIcon';
-    import fontawesomeAllClasses from '@/Json/fontawesome-all-classes';
-    import fontawesomeBrandClasses from '@/Json/fontawesome-brand-classes';
+    import BizFormInputIcon from '@/Biz/Form/InputIcon.vue';
+    import fontawesomeAllClasses from '@/Json/fontawesome-all-classes.json';
+    import fontawesomeBrandClasses from '@/Json/fontawesome-brand-classes.json';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

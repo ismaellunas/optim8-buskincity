@@ -34,7 +34,7 @@
 </template>
 
 <script>
-    import LatestRegistration from '@/Biz/Widget/LatestRegistration';
+    import LatestRegistration from '@/Biz/Widget/LatestRegistration.vue';
     import { defineAsyncComponent } from 'vue';
     import { sortBy } from 'lodash';
 

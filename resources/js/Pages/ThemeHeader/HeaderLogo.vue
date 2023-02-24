@@ -28,8 +28,8 @@
 </template>
 
 <script>
-    import BizFormFile from '@/Biz/Form/File';
-    import BizImage from '@/Biz/Image';
+    import BizFormFile from '@/Biz/Form/File.vue';
+    import BizImage from '@/Biz/Image.vue';
     import { useModelWrapper } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
 

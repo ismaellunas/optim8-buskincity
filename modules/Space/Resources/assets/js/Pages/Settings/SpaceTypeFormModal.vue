@@ -51,9 +51,9 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizModalCard from '@/Biz/ModalCard';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
     import { isEmpty } from '@/Libs/utils';
     import { ref } from 'vue';
     import { cloneDeep } from 'lodash';

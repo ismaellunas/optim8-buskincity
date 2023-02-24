@@ -25,9 +25,9 @@
 
     export default {
         props: {
-            contentClass: [Array, Object, String],
-            isActive: {type: Boolean, default: true},
-            isCloseHidden: {type: Boolean, default: false},
+            contentClass: { type: [Array, Object, String], default: null },
+            isActive: { type: Boolean, default: true },
+            isCloseHidden: { type: Boolean, default: false },
         },
 
         emits: ['close'],

@@ -15,11 +15,13 @@
 </template>
 
 <script>
-    import BizWidgetStripeConnect from '@/Biz/Widget/StripeConnect';
-    import Layout from '@/Layouts/User';
+    import BizWidgetStripeConnect from '@/Biz/Widget/StripeConnect.vue';
+    import Layout from '@/Layouts/User.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
 
     export default {
+        name: 'WidgetPayments',
+
         components: {
             BizWidgetStripeConnect,
         },

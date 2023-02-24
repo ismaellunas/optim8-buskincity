@@ -2,9 +2,7 @@
     <layout-admin title="Two Factor Authentication">
         <template #back>
             <a @click.prevent="redirectBack()">
-                <span class="icon">
-                    <i :class="icon.back" />
-                </span>
+                <biz-icon :icon="iconBack" />
                 <span>Back</span>
             </a>
         </template>
@@ -88,20 +86,22 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizRecaptcha from '@/Biz/Recaptcha';
-    import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
-    import icon from '@/Libs/icon-class';
+    import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizRecaptcha from '@/Biz/Recaptcha.vue';
+    import { back as iconBack, signIn as iconSignIn } from '@/Libs/icon-class';
 
     export default {
         components: {
+            LayoutAdmin,
             BizButton,
             BizErrorNotifications,
             BizFormInput,
+            BizIcon,
             BizRecaptcha,
-            LayoutAdmin,
         },
 
         mixins: [
@@ -120,7 +120,7 @@
                     code: '',
                     recovery_code: '',
                 }),
-                icon,
+                iconBack,
             }
         },
 

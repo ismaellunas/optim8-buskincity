@@ -68,10 +68,10 @@
 
 <script>
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizTableIndex from '@/Biz/TableIndex';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
     import icon from '@/Libs/icon-class';
     import { merge, isEmpty } from 'lodash';
     import { ref } from 'vue';

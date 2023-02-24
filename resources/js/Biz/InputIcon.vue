@@ -43,8 +43,8 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizField from '@/Biz/Field';
+    import BizButton from '@/Biz/Button.vue';
+    import BizField from '@/Biz/Field.vue';
 
     export default {
         name: 'BizInputIcon',

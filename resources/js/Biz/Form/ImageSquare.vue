@@ -107,13 +107,13 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizFormField from '@/Biz/Form/Field';
-    import BizImage from '@/Biz/Image';
-    import BizInputError from '@/Biz/InputError';
-    import BizInputFile from '@/Biz/InputFile';
-    import BizModalImageEditorSquare from '@/Biz/Modal/ImageEditorSquare';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizInputFile from '@/Biz/InputFile.vue';
+    import BizModalImageEditorSquare from '@/Biz/Modal/ImageEditorSquare.vue';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { confirmDelete, oops as oopsAlert } from '@/Libs/alert';
     import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';

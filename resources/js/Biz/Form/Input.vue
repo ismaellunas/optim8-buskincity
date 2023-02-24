@@ -39,9 +39,9 @@
 </template>
 
 <script>
-    import BizFormField from '@/Biz/Form/Field';
-    import BizInput from '@/Biz/Input';
-    import BizInputError from '@/Biz/InputError';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizInput from '@/Biz/Input.vue';
+    import BizInputError from '@/Biz/InputError.vue';
 
     export default {
         name: 'BizFormInput',

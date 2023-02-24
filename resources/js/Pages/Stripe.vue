@@ -243,21 +243,21 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
-    import BizFormField from '@/Biz/Form/Field';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormInputAddons from '@/Biz/Form/InputAddons';
-    import BizFormInputColor from '@/Biz/Form/InputColor';
-    import BizFormFile from '@/Biz/Form/File';
-    import BizImage from '@/Biz/Image';
-    import BizInputError from '@/Biz/InputError';
-    import BizSelect from '@/Biz/Select';
-    import BizTable from '@/Biz/Table';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch.vue';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormInputAddons from '@/Biz/Form/InputAddons.vue';
+    import BizFormInputColor from '@/Biz/Form/InputColor.vue';
+    import BizFormFile from '@/Biz/Form/File.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizSelect from '@/Biz/Select.vue';
+    import BizTable from '@/Biz/Table.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import icon from '@/Libs/icon-class';
     import { debounce, difference, isEmpty, filter, find, forEach } from 'lodash';

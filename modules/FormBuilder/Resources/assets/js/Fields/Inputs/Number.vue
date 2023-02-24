@@ -29,8 +29,8 @@
 <script>
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import FormNumber from '@/Biz/Form/Number';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
+    import FormNumber from '@/Biz/Form/Number.vue';
 
     export default {
         name: 'InputNumber',

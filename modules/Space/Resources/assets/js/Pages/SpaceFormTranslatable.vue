@@ -42,9 +42,9 @@
 </template>
 
 <script>
-    import BizFormTextarea from '@/Biz/Form/Textarea';
-    import BizLanguageTab from '@/Biz/LanguageTab';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizLanguageTab from '@/Biz/LanguageTab.vue';
     import { isEmpty, find, sortBy } from 'lodash';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';

@@ -3,6 +3,7 @@
         <p class="panel-heading">
             <slot name="heading" />
         </p>
+
         <slot />
     </article>
 </template>

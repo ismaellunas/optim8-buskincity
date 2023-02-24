@@ -168,13 +168,13 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormInputAddons from '@/Biz/Form/InputAddons';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizFormTextEditor from '@/Biz/Form/TextEditor';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import NotificationTagOption from './TagOption';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormInputAddons from '@/Biz/Form/InputAddons.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizFormTextEditor from '@/Biz/Form/TextEditor.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import NotificationTagOption from './TagOption.vue';
     import icon from '@/Libs/icon-class';
     import { useModelWrapper } from '@/Libs/utils';
     import { emailConfig } from '@/Libs/tinymce-configs';

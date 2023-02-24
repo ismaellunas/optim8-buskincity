@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import BizFormRadio from '@/Biz/Form/Radio';
+    import BizFormRadio from '@/Biz/Form/Radio.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 

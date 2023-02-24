@@ -11,8 +11,8 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import VerifyEmail from './VerifyEmail';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import VerifyEmail from './VerifyEmail.vue';
 
     export default {
         name: 'VerifyEmailAdmin',

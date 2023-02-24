@@ -27,11 +27,9 @@
     import { provide, computed, ref } from "vue";
 
     export default {
+        name: 'TabsProvideInjectTab',
         props: {
-            modelValue: {
-                type: [String, Number],
-                class: {},
-            },
+            modelValue: { type: [String, Number], default: "" },
             class: { type: [String, Object, Array], default: "" },
         },
         emits: ["update:modelValue"],

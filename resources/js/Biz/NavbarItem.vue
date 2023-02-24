@@ -17,7 +17,7 @@
 </template>
 
 <script>
-    import BizLink from '@/Biz/Link';
+    import BizLink from '@/Biz/Link.vue';
 
     export default {
         name: 'BizNavbarItem',
@@ -27,14 +27,8 @@
         },
 
         props: {
-            isInternalLink: {
-                type: Boolean,
-                default: false,
-            },
-            url: {
-                type: String,
-                required: true
-            },
+            isInternalLink: { type: Boolean, default: false },
+            url: { type: String, required: true },
         },
 
         emits: ['after-click'],

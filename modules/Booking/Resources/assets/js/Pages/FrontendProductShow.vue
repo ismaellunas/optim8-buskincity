@@ -230,15 +230,16 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizIcon from '@/Biz/Icon';
-    import BizImage from '@/Biz/Image';
-    import BizLink from '@/Biz/Link';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizTable from '@/Biz/Table';
-    import BizTag from '@/Biz/Tag';
-    import BookingTime from '@booking/Pages/BookingTime';
-    import Layout from '@/Layouts/User';
+    import BizButton from '@/Biz/Button.vue';
+    import BizGmapMarker from '@/Biz/GmapMarker.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import BizLink from '@/Biz/Link.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizTable from '@/Biz/Table.vue';
+    import BizTag from '@/Biz/Tag.vue';
+    import BookingTime from '@booking/Pages/BookingTime.vue';
+    import Layout from '@/Layouts/User.vue';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
@@ -247,7 +248,6 @@
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { ref } from 'vue';
-    import BizGmapMarker from '@/Biz/GmapMarker';
 
     export default {
         components: {

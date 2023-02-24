@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    import BizFormChecboxToggle from '@/Biz/Form/CheckboxToggle';
+    import BizFormChecboxToggle from '@/Biz/Form/CheckboxToggle.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 

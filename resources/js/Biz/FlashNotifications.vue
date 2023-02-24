@@ -18,7 +18,7 @@
 
     export default {
         props: {
-            flash: Object,
+            flash: { type: Object, required: true },
         },
         data() {
             return {

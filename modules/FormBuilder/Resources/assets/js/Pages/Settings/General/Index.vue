@@ -10,7 +10,7 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import GeneralForm from './Form';
+    import GeneralForm from './Form.vue';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
     import { cloneDeep } from 'lodash';
 

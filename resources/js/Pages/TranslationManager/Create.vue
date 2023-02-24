@@ -49,15 +49,17 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import TranslationManagerForm from '@/Pages/TranslationManager/Form';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import TranslationManagerForm from '@/Pages/TranslationManager/Form.vue';
     import { oops as oopsAlert } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'TranslationManagerCreate',
+
         components: {
             BizButton,
             BizButtonLink,

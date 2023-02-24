@@ -15,14 +15,14 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import NotificationForm from './Form';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import NotificationForm from './Form.vue';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { provide } from 'vue'
 
     export default {
-        name: 'Create',
+        name: 'SettingNotificationCreate',
 
         components: {
             BizErrorNotifications,

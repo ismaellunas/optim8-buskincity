@@ -42,7 +42,7 @@
 </template>
 
 <script>
-    import BizQrCode from '@/Biz/QrCode';
+    import BizQrCode from '@/Biz/QrCode.vue';
 
     export default {
         name: 'QrCode',

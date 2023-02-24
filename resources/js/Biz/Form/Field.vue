@@ -15,8 +15,8 @@
 </template>
 
 <script>
-    import BizField from '@/Biz/Field';
-    import BizLabel from '@/Biz/Label';
+    import BizField from '@/Biz/Field.vue';
+    import BizLabel from '@/Biz/Label.vue';
 
     export default {
         name: 'BizFormField',
@@ -27,14 +27,8 @@
         },
 
         props: {
-            isRequired: {
-                type: Boolean,
-                default: false,
-            },
-            labelClass: {
-                type: [Array, Object, String],
-                default: '',
-            },
+            isRequired: { type: Boolean, default: false },
+            labelClass: { type: [Array, Object, String], default: '' },
         },
 
         computed: {

@@ -219,11 +219,11 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizFormFieldHorizontal from '@/Biz/Form/FieldHorizontal';
-    import BizInput from '@/Biz/Input';
-    import BizModalCard from '@/Biz/ModalCard';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizFormFieldHorizontal from '@/Biz/Form/FieldHorizontal.vue';
+    import BizInput from '@/Biz/Input.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
     import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
 

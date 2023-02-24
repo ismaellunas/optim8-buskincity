@@ -53,11 +53,11 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizButton from '@/Biz/Button';
-    import BizLanguageTab from '@/Biz/LanguageTab';
+    import BizButton from '@/Biz/Button.vue';
+    import BizLanguageTab from '@/Biz/LanguageTab.vue';
+    import NavigationFormDuplicate from '@/Pages/ThemeHeader/NavigationFormDuplicate.vue';
+    import NavigationSegment from './NavigationSegment.vue';
     import icon from '@/Libs/icon-class';
-    import NavigationFormDuplicate from '@/Pages/ThemeHeader/NavigationFormDuplicate';
-    import NavigationSegment from './NavigationSegment';
     import { cloneDeep, isEmpty } from 'lodash';
     import { success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';

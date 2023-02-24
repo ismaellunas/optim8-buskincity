@@ -32,9 +32,9 @@
 </template>
 
 <script>
-    import BizFormField from '@/Biz/Form/Field';
-    import BizInputError from '@/Biz/InputError';
-    import BizDropdownSearch from '@/Biz/DropdownSearch';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
 
     export default {
         name: 'BizFormDropdownSearch',

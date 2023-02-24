@@ -68,8 +68,8 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizTag from '@/Biz/Tag';
+    import BizButton from '@/Biz/Button.vue';
+    import BizTag from '@/Biz/Tag.vue';
     import icon from '@/Libs/icon-class';
 
     export default {

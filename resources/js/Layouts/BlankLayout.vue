@@ -1,24 +1,24 @@
 <template>
     <div>
-        <Head>
+        <inertia-head>
             <link
                 rel="stylesheet"
                 :href="$page.props.css.frontend.app"
             >
-        </Head>
+        </inertia-head>
 
         <slot />
     </div>
 </template>
 
 <script>
-    import { Head } from '@inertiajs/inertia-vue3';
+    import { Head as InertiaHead } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'LayoutBlank',
 
         components: {
-            Head,
+            InertiaHead,
         },
     };
 </script>

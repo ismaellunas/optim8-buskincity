@@ -27,8 +27,8 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizButton from '@/Biz/Button';
-    import FieldGroup from './FieldGroup';
+    import BizButton from '@/Biz/Button.vue';
+    import FieldGroup from './FieldGroup.vue';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
     import { isEmpty, forOwn, forEach } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';

@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import BizFormCheckboxGroup from '@/Biz/Form/CheckboxGroup';
+    import BizFormCheckboxGroup from '@/Biz/Form/CheckboxGroup.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 

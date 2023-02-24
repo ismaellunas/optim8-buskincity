@@ -13,8 +13,8 @@
 </template>
 
 <script>
-    import Layout from '@/Layouts/User';
-    import VerifyEmail from './VerifyEmail';
+    import Layout from '@/Layouts/User.vue';
+    import VerifyEmail from './VerifyEmail.vue';
 
     export default {
         name: 'VerifyEmailFrontend',

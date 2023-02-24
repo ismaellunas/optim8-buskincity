@@ -56,11 +56,11 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizMediaLibrary from '@/Biz/MediaLibrary';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizPagination from '@/Biz/Pagination';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizMediaLibrary from '@/Biz/MediaLibrary.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizPagination from '@/Biz/Pagination.vue';
     import { acceptedImageTypes } from '@/Libs/defaults';
 
     export default {

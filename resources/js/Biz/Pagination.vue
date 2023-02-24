@@ -68,8 +68,8 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizLink from '@/Biz/Link';
+    import BizButton from '@/Biz/Button.vue';
+    import BizLink from '@/Biz/Link.vue';
     import { isBlank, serialize } from '@/Libs/utils';
 
     export default {

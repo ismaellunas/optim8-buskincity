@@ -25,9 +25,9 @@
 </template>
 
 <script>
-    import BizFormField from '@/Biz/Form/Field';
-    import BizInputError from '@/Biz/InputError';
-    import BizTextarea from '@/Biz/Textarea';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizTextarea from '@/Biz/Textarea.vue';
 
     export default {
         name: 'BizFormTextarea',

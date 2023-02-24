@@ -46,7 +46,7 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
+    import BizButton from '@/Biz/Button.vue';
     import { generateElementId } from '@/Libs/utils';
     import { ref } from "vue";
 

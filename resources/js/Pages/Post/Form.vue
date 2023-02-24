@@ -260,20 +260,20 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import MixinHasTab from '@/Mixins/HasTab';
     import MixinImageLibrary from '@/Mixins/MediaLibrary';
-    import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizFormDateTime from '@/Biz/Form/DateTime';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormSlug from '@/Biz/Form/Slug';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizFormTextEditorFull from '@/Biz/Form/TextEditorFull';
-    import BizFormTextarea from '@/Biz/Form/Textarea';
-    import BizImage from '@/Biz/Image';
-    import BizLabel from '@/Biz/Label';
-    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
-    import BizTab from '@/Biz/Tab';
-    import BizTabList from '@/Biz/TabList';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizFormDateTime from '@/Biz/Form/DateTime.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizFormSlug from '@/Biz/Form/Slug.vue';
+    import BizFormTextEditorFull from '@/Biz/Form/TextEditorFull.vue';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import BizLabel from '@/Biz/Label.vue';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
+    import BizTab from '@/Biz/Tab.vue';
+    import BizTabList from '@/Biz/TabList.vue';
     import icon from '@/Libs/icon-class';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { convertToSlug } from '@/Libs/utils';
@@ -292,8 +292,8 @@
             BizButtonLink,
             BizFormDateTime,
             BizFormInput,
-            BizFormSlug,
             BizFormSelect,
+            BizFormSlug,
             BizFormTextEditorFull,
             BizFormTextarea,
             BizImage,

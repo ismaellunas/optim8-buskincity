@@ -108,13 +108,13 @@
 </template>
 
 <script>
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
-    import BizFormImageSquare from '@/Biz/Form/ImageSquare';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizImage from '@/Biz/Image';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch.vue';
+    import BizFormImageSquare from '@/Biz/Form/ImageSquare.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizImage from '@/Biz/Image.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { debounceTime, userImage } from '@/Libs/defaults';
