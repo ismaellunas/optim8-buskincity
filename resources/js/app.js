@@ -1,10 +1,11 @@
-require('./bootstrap');
+import './bootstrap';
 
 // Import modules...
 import { appName } from '@/Libs/defaults';
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue3'
 import { InertiaProgress } from '@inertiajs/progress';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import VueSweetalert2 from 'vue-sweetalert2';
 import VueLoading from 'vue-loading-overlay';
 import VueSocialSharing from 'vue-social-sharing'
@@ -17,19 +18,31 @@ createInertiaApp({
 
         if (module[1]) {
             if (module[0] == 'Space') {
-                return import(`@mod/Space/Resources/assets/js/Pages/${module[1]}`);
+                return resolvePageComponent(
+                    `../../modules/Space/Resources/assets/js/Pages/${module[1]}.vue`,
+                    import.meta.glob(`../../modules/Space/Resources/assets/js/Pages/**/*.vue`)
+                );
             }
 
             if (module[0] == 'Booking') {
-                return import(`@mod/Booking/Resources/assets/js/Pages/${module[1]}`);
+                return resolvePageComponent(
+                    `../../modules/Booking/Resources/assets/js/Pages/${module[1]}.vue`,
+                    import.meta.glob(`../../modules/Booking/Resources/assets/js/Pages/**/*.vue`)
+                );
             }
 
             if (module[0] == 'FormBuilder') {
-                return import(`@mod/FormBuilder/Resources/assets/js/Pages/${module[1]}`);
+                return resolvePageComponent(
+                    `../../modules/FormBuilder/Resources/assets/js/Pages/${module[1]}.vue`,
+                    import.meta.glob(`../../modules/FormBuilder/Resources/assets/js/Pages/**/*.vue`)
+                );
             }
         }
 
-        return import(`./Pages/${name}`);
+        return resolvePageComponent(
+            `./Pages/${name}.vue`,
+            import.meta.glob('./Pages/**/*.vue')
+        );
     },
     setup({ el, app, props, plugin }) {
         createApp({ render: () => h(app, props) })

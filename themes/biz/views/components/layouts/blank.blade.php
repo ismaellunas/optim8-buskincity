@@ -30,7 +30,7 @@
 
         @stack('bottom_scripts')
 
-        <script src="{{ mix('js/app.js', 'themes/' . config('theme.active')) }}" defer></script>
+        @vite(['themes/'.config('theme.active').'/js/app.js'])
 
         @if ($additionalJavascript)
             <script>

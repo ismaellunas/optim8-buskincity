@@ -33,13 +33,10 @@
         @endenv
 
         @env ('local')
-            <!-- Styles -->
-            <link rel="stylesheet" href="{{ mix('css/local.css') }}">
-            <!-- Scripts -->
-            <script src="{{ mix('js/local.js') }}" defer></script>
+            @vite(['resources/sass/local.sass'])
 
             @if (config('constants.fontawesome_local'))
-                <script src="{{ mix('js/fontawesome.js') }}" defer></script>
+                @vite(['resources/js/fontawesome.js'])
             @else
                 <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
             @endif
@@ -76,7 +73,7 @@
 
         @stack('bottom_scripts')
 
-        <script src="{{ mix('js/app.js', 'themes/' . config('theme.active')) }}" defer></script>
+        @vite(['themes/'.config('theme.active').'/js/app.js'])
 
         @if ($additionalJavascript)
             <script>
@@ -86,5 +83,4 @@
 
         {!! $trackingCodeBeforeBody !!}
     </body>
-
 </html>
