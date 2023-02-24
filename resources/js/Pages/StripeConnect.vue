@@ -213,12 +213,12 @@
 </template>
 
 <script>
-    import Layout from '@/Layouts/User';
-    import BizButton from '@/Biz/Button';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizTable from '@/Biz/Table';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import Layout from '@/Layouts/User.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizTable from '@/Biz/Table.vue';
     import { confirm as confirmAlert, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { ref } from 'vue';
     import { merge } from 'lodash';

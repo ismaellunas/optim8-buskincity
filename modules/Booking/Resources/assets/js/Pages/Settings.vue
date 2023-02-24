@@ -113,14 +113,14 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizSelect from '@/Biz/Select';
-    import BizFormNumberAddons from '@/Biz/Form/NumberAddons';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizFormTextEditor from '@/Biz/Form/TextEditor';
-    import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
-    import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizSelect from '@/Biz/Select.vue';
+    import BizFormNumberAddons from '@/Biz/Form/NumberAddons.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizFormTextEditor from '@/Biz/Form/TextEditor.vue';
+    import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
+    import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import MixinHasTab from '@/Mixins/HasTab';

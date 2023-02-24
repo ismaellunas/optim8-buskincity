@@ -8,6 +8,7 @@
     import { computed, inject, watchEffect, getCurrentInstance } from "vue";
 
     export default {
+        name: 'TabProvideInjectTab',
         props: {
             title: { type: String, required: true },
             isRendered: {type: Boolean, default: true },

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import BizFormNumber from '@/Biz/Form/Number';
+    import BizFormNumber from '@/Biz/Form/Number.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 

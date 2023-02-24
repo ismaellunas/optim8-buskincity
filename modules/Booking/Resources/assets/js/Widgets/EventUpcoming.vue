@@ -50,9 +50,9 @@
 </template>
 
 <script>
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizIcon from '@/Biz/Icon';
-    import BizTable from '@/Biz/Table';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizTable from '@/Biz/Table.vue';
     import icon from '@/Libs/icon-class';
 
     export default {

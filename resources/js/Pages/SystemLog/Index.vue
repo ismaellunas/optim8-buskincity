@@ -141,16 +141,16 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
     import MixinHasModal from '@/Mixins/HasModal';
-    import ModalEntryDetail from './ModalEntryDetail';
-    import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
-    import BizLink from '@/Biz/Link';
-    import BizTable from '@/Biz/Table';
-    import BizTag from '@/Biz/Tag';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import ModalEntryDetail from './ModalEntryDetail.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch.vue';
+    import BizLink from '@/Biz/Link.vue';
+    import BizTable from '@/Biz/Table.vue';
+    import BizTag from '@/Biz/Tag.vue';
     import _ from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
     import { eye as iconEye } from '@/Libs/icon-class';

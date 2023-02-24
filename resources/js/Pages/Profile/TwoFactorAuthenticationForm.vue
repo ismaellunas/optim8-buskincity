@@ -96,10 +96,10 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizConfirmPassword from '@/Biz/ConfirmPassword';
-    import FormActionSection from '@/Frontend/ActionSection';
     import MixinHasLoader from '@/Mixins/HasLoader';
+    import BizButton from '@/Biz/Button.vue';
+    import BizConfirmPassword from '@/Biz/ConfirmPassword.vue';
+    import FormActionSection from '@/Frontend/ActionSection.vue';
     import { oops as oopsAlert } from '@/Libs/alert';
 
     export default {

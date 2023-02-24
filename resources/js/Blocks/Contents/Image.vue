@@ -5,24 +5,13 @@
             @duplicate-content="duplicateContent"
         />
 
-        <biz-button
-            class="is-small is-fullwidth"
+        <biz-button-icon
+            v-if="hasImage"
+            class="is-fullwidth is-small"
             type="button"
+            :icon="isFormDisplayed ? iconClear : iconEdit"
             @click="toggleEdit"
-        >
-            <span
-                v-if="isFormDisplayed"
-                class="icon"
-            >
-                <i class="fas fa-times-circle" />
-            </span>
-            <span
-                v-else
-                class="icon"
-            >
-                <i class="fas fa-pen" />
-            </span>
-        </biz-button>
+        />
 
         <div
             :class="config?.image?.position"
@@ -44,16 +33,15 @@
             class="card-content has-background-info-light"
         >
             <div class="block has-text-centered">
-                <biz-button
+                <biz-button-icon
+                    icon-class="is-small"
                     type="button"
                     :disabled="!can.media.browse"
+                    :icon="iconImage"
                     @click="openModal()"
                 >
                     <span>Open Media</span>
-                    <span class="icon is-small">
-                        <i class="far fa-image" />
-                    </span>
-                </biz-button>
+                </biz-button-icon>
             </div>
         </div>
 
@@ -79,17 +67,18 @@
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizButton from '@/Biz/Button';
-    import BizImage from '@/Biz/Image';
-    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
     import { inject } from "vue";
+    import { clear as iconClear, edit as iconEdit, image as iconImage } from '@/Libs/icon-class';
 
     export default {
-        name: 'Image',
+        name: 'ContentImage',
         components: {
-            BizButton,
+            BizButtonIcon,
             BizImage,
             BizModalMediaBrowser,
             BizToolbarContent,
@@ -113,6 +102,9 @@
                 dataImages: inject('dataImages'),
                 entity: useModelWrapper(props, emit),
                 pageMedia: inject('dataMedia'),
+                iconClear,
+                iconEdit,
+                iconImage,
             };
         },
         data() {

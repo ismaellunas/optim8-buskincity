@@ -187,16 +187,16 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFormFile from '@/Biz/Form/File';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizImage from '@/Biz/Image';
-    import BizInputError from '@/Biz/InputError';
-    import BizTextarea from '@/Biz/Textarea';
-    import BizFormImageSquare from '@/Biz/Form/ImageSquare';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFormFile from '@/Biz/Form/File.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizTextarea from '@/Biz/Textarea.vue';
+    import BizFormImageSquare from '@/Biz/Form/ImageSquare.vue';
     import { assign, mapValues, sortBy, isEmpty } from 'lodash';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { success as successAlert } from '@/Libs/alert';

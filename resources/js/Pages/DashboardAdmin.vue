@@ -12,11 +12,11 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizWidgetColumnsAdmin from '@/Biz/Widget/WidgetColumnsAdmin';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizWidgetColumnsAdmin from '@/Biz/Widget/WidgetColumnsAdmin.vue';
 
     export default {
-        name: 'Dashboard',
+        name: 'DashboardAdmin',
 
         components: {
             BizWidgetColumnsAdmin,

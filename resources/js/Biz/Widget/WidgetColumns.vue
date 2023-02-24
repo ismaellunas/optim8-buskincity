@@ -35,12 +35,12 @@
 </template>
 
 <script>
-    import QrCode from '@/Biz/Widget/QrCode';
-    import SocialMediaShare from '@/Biz/Widget/SocialMediaShare';
-    import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike';
-    import StripeConnect from '@/Biz/Widget/StripeConnect';
-    import UpcomingEvents from '@/Biz/Widget/UpcomingEvents';
-    import WantToBecomeAStreetPerformer from '@/Biz/Widget/WantToBecomeAStreetPerformer';
+    import QrCode from '@/Biz/Widget/QrCode.vue';
+    import SocialMediaShare from '@/Biz/Widget/SocialMediaShare.vue';
+    import StreetPerformersYouMightLike from '@/Biz/Widget/StreetPerformersYouMightLike.vue';
+    import StripeConnect from '@/Biz/Widget/StripeConnect.vue';
+    import UpcomingEvents from '@/Biz/Widget/UpcomingEvents.vue';
+    import WantToBecomeAStreetPerformer from '@/Biz/Widget/WantToBecomeAStreetPerformer.vue';
     import { defineAsyncComponent } from 'vue';
 
     export default {
@@ -66,7 +66,9 @@
 
             props.moduleWidgets.forEach((widget) => {
                 if (widget.moduleName == 'Booking') {
-                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import('@booking/Widgets/'+widget.componentName));
+                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import(
+                        `../../../../modules/Booking/Resources/assets/js/Widgets/${widget.componentName}.vue`)
+                    );
                 }
             });
 

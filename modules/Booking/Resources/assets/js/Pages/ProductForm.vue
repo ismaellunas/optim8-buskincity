@@ -87,11 +87,11 @@
 </template>
 
 <script>
-    import BizFormCheckboxToggle from '@/Biz/Form/CheckboxToggle';
-    import BizFormFileUpload from '@/Biz/Form/FileUpload';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizFormTextarea from '@/Biz/Form/Textarea';
+    import BizFormCheckboxToggle from '@/Biz/Form/CheckboxToggle.vue';
+    import BizFormFileUpload from '@/Biz/Form/FileUpload.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 

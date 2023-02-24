@@ -40,9 +40,9 @@
 </template>
 
 <script>
-    import BizInput from '@/Biz/Input';
-    import BizCard from '@/Biz/Card';
-    import BizButton from '@/Biz/Button';
+    import BizInput from '@/Biz/Input.vue';
+    import BizCard from '@/Biz/Card.vue';
+    import BizButton from '@/Biz/Button.vue';
     import Draggable from "vuedraggable";
     import { cloneDeep } from 'lodash';
     import {
@@ -52,15 +52,15 @@
     } from '@/Libs/utils';
 
     // Form Builder Fields
-    import Country from './../Fields/Inputs/Country';
-    import Email from './../Fields/Inputs/Email';
-    import FileDragDrop from './../Fields/Inputs/FileDragDrop';
-    import Number from './../Fields/Inputs/Number';
-    import Phone from './../Fields/Inputs/Phone';
-    import Postcode from './../Fields/Inputs/Postcode';
-    import Select from './../Fields/Inputs/Select';
-    import Text from './../Fields/Inputs/Text';
-    import Textarea from './../Fields/Inputs/Textarea';
+    import Country from './../Fields/Inputs/Country.vue';
+    import Email from './../Fields/Inputs/Email.vue';
+    import FileDragDrop from './../Fields/Inputs/FileDragDrop.vue';
+    import Number from './../Fields/Inputs/Number.vue';
+    import Phone from './../Fields/Inputs/Phone.vue';
+    import Postcode from './../Fields/Inputs/Postcode.vue';
+    import Select from './../Fields/Inputs/Select.vue';
+    import Text from './../Fields/Inputs/Text.vue';
+    import Textarea from './../Fields/Inputs/Textarea.vue';
 
     export default {
         name: 'FieldGroup',

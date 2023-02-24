@@ -34,10 +34,10 @@
 </template>
 
 <script>
-    import BizField from '@/Biz/Field';
-    import BizInput from '@/Biz/Input';
-    import BizInputError from '@/Biz/InputError';
-    import BizLabel from '@/Biz/Label';
+    import BizField from '@/Biz/Field.vue';
+    import BizInput from '@/Biz/Input.vue';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizLabel from '@/Biz/Label.vue';
 
     export default {
         name: 'BizFormInputAddons',

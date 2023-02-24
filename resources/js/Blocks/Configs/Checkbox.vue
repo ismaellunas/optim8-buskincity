@@ -14,7 +14,7 @@
 </template>
 
 <script>
-    import BizCheckbox from '@/Biz/Checkbox';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
     import { useModelWrapper } from '@/Libs/utils';
     import { get } from 'lodash';
 

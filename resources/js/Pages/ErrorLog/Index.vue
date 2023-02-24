@@ -50,8 +50,12 @@
                         <th>Created At</th>
                         <th>URL</th>
                         <th>Total Hit</th>
-                        <th width="30%">Message</th>
-                        <th width="12%">Actions</th>
+                        <th width="30%">
+                            Message
+                        </th>
+                        <th width="12%">
+                            Actions
+                        </th>
                     </tr>
                 </template>
 
@@ -106,15 +110,15 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
-    import ModalEntryDetail from './ModalEntryDetail';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizFilterDateRange from '@/Biz/Filter/DateRange';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizTableIndex from '@/Biz/TableIndex';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import ModalEntryDetail from './ModalEntryDetail.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizFilterDateRange from '@/Biz/Filter/DateRange.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge, isArray } from 'lodash';

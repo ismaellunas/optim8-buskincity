@@ -57,19 +57,19 @@
 </template>
 
 <script>
-    import BizFormField from '@/Biz/Form/Field';
-    import BizInputError from '@/Biz/InputError';
-    import BizMediaGallery from '@/Biz/Media/Gallery';
-    import BizMediaText from '@/Biz/Media/Text';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizMediaGallery from '@/Biz/Media/Gallery.vue';
+    import BizMediaText from '@/Biz/Media/Text.vue';
     import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
-    import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
-    import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-    import vueFilePond from "vue-filepond";
+    import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+    import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
+    import vueFilePond from 'vue-filepond';
     import { confirmDelete } from '@/Libs/alert';
     import { useModelWrapper } from '@/Libs/utils';
 
-    import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css";
-    import "filepond/dist/filepond.min.css";
+    import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
+    import 'filepond/dist/filepond.min.css';
 
     const FilePond = vueFilePond(
         FilePondPluginFileValidateSize,

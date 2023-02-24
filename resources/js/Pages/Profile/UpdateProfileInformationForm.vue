@@ -99,21 +99,23 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
-    import BizFormImageSquare from '@/Biz/Form/ImageSquare';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizImage from '@/Biz/Image';
-    import FormSection from '@/Frontend/FormSection';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import BizButton from '@/Biz/Button.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch.vue';
+    import BizFormImageSquare from '@/Biz/Form/ImageSquare.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import FormSection from '@/Frontend/FormSection.vue';
     import { acceptedImageTypes, debounceTime, userImage } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'ProfileUpdateProfileInformationForm',
+
         components: {
             BizButton,
             BizDropdownItem,

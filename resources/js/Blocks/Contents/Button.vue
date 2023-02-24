@@ -59,13 +59,13 @@
 </template>
 
 <script>
-    import DeletableContentMixin from '@/Mixins/DeletableContent';
     import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
+    import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinHasModal from '@/Mixins/HasModal';
     import fontawesomeAllClasses from '@/Json/fontawesome-all-classes';
-    import BizIconBrowser from '@/Biz/Modal/IconBrowser';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizIconBrowser from '@/Biz/Modal/IconBrowser.vue';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -78,8 +78,8 @@
         },
 
         mixins: [
-            DeletableContentMixin,
             MixinContentHasDimension,
+            MixinDeletableContent,
             MixinDuplicableContent,
             MixinHasModal,
         ],

@@ -38,10 +38,10 @@
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinMediaLibrary from '@/Mixins/MediaLibrary';
     import MixinMediaTextEditor from '@/Mixins/MediaTextEditor';
-    import BizInputError from '@/Biz/InputError';
-    import BizLabel from '@/Biz/Label';
-    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
-    import BizTextEditor from '@/Biz/EditorTinymce';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizLabel from '@/Biz/Label.vue';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
+    import BizTextEditor from '@/Biz/EditorTinymce.vue';
     import { fullConfig } from '@/Libs/tinymce-configs';
     import { useModelWrapper, isEmpty } from '@/Libs/utils';
 

@@ -30,9 +30,9 @@
 </template>
 
 <script>
-    import BizFieldHorizontal from '@/Biz/Form/FieldHorizontal';
-    import BizLabel from '@/Biz/Label';
-    import BizNumber from '@/Biz/Number';
+    import BizFieldHorizontal from '@/Biz/Form/FieldHorizontal.vue';
+    import BizLabel from '@/Biz/Label.vue';
+    import BizNumber from '@/Biz/Number.vue';
     import { capitalize, keys } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
@@ -50,7 +50,7 @@
 
         emits: ['update:modelValue'],
 
-        setup(props, {emit}) {
+        setup(props, { emit }) {
 
             if (typeof props.modelValue === "undefined") {
                 emit('update:modelValue', {

@@ -96,13 +96,13 @@
 
 <script>
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import BizLink from '@/Biz/Link';
-    import BizTableIndex from '@/Biz/TableIndex';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
+    import BizLink from '@/Biz/Link.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge } from 'lodash';

@@ -90,8 +90,8 @@
 </template>
 
 <script>
-    import BizLink from '@/Biz/Link';
-    import BizNavbarItem from '@/Biz/NavbarItem';
+    import BizLink from '@/Biz/Link.vue';
+    import BizNavbarItem from '@/Biz/NavbarItem.vue';
 
     export default {
         name: 'NavbarLayoutOne',
@@ -102,10 +102,10 @@
         },
 
         props: {
-            availableLanguages: {type: Array, default: []},
+            availableLanguages: {type: Array, default: () => []},
             currentLanguage: {type: String, default: "en"},
             logoUrl: {type: String, required: true},
-            menus: {type: Array, default: []},
+            menus: {type: Array, default: () => []},
         },
     }
 </script>

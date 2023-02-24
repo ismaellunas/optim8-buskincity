@@ -4,16 +4,16 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require("./bootstrap");
+import './bootstrap';
 
 /**
  * We will create a fresh Vue application instance.
  */
-import FormDonation from './components/FormDonation';
-import LoadingOverlay from './components/LoadingOverlay';
+import FormDonation from './components/FormDonation.vue';
+import LoadingOverlay from './components/LoadingOverlay.vue';
 import VueLoading from 'vue-loading-overlay';
 import { components as defaultComponents } from '@/frontend-bootstrap';
-import { createApp } from "vue";
+import { createApp } from 'vue';
 
 const components = {
     FormDonation,
@@ -21,7 +21,10 @@ const components = {
 };
 
 const app = createApp({
-        components: Object.assign(defaultComponents, components),
+        components: {
+            ...defaultComponents,
+            ...components
+        },
     })
     .use(VueLoading, {color: '#3280bf', loader: 'dots', opacity: 0.3, zIndex: 8000});
 

@@ -28,9 +28,9 @@
 </template>
 
 <script>
-    import BizFormField from '@/Biz/Form/Field';
-    import BizPhone from '@/Biz/Phone';
-    import BizInputError from '@/Biz/InputError';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizPhone from '@/Biz/Phone.vue';
+    import BizInputError from '@/Biz/InputError.vue';
     import { isEmpty } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 

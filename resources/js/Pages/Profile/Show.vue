@@ -56,14 +56,14 @@
 </template>
 
 <script>
-    import BiodataForm from './BiodataForm';
-    import ConnectedAccountsForm from './ConnectedAccountsForm';
-    import DeleteUserForm from './DeleteUserForm';
-    import LogoutOtherBrowserSessionsForm from './LogoutOtherBrowserSessionsForm';
-    import SetPasswordForm from './SetPasswordForm';
-    import TwoFactorAuthenticationForm from './TwoFactorAuthenticationForm';
-    import UpdatePasswordForm from './UpdatePasswordForm';
-    import UpdateProfileInformationForm from './UpdateProfileInformationForm';
+    import BiodataForm from './BiodataForm.vue';
+    import ConnectedAccountsForm from './ConnectedAccountsForm.vue';
+    import DeleteUserForm from './DeleteUserForm.vue';
+    import LogoutOtherBrowserSessionsForm from './LogoutOtherBrowserSessionsForm.vue';
+    import SetPasswordForm from './SetPasswordForm.vue';
+    import TwoFactorAuthenticationForm from './TwoFactorAuthenticationForm.vue';
+    import UpdatePasswordForm from './UpdatePasswordForm.vue';
+    import UpdateProfileInformationForm from './UpdateProfileInformationForm.vue';
     import { success, oops } from '@/Libs/alert';
 
     export default {

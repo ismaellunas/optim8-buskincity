@@ -7,7 +7,7 @@
             <div class="column">
                 <p class="buttons is-right">
                     <biz-button-icon
-                        :icon="icon.preview"
+                        :icon="iconPreview"
                         :disabled="!canPreview"
                         @click="openShow(modelValue)"
                     >
@@ -180,24 +180,26 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizLanguageTab from '@/Biz/LanguageTab';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
-    import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
-    import FormBuilder from './FormBuilder';
-    import FormDetail from './FormDetail';
-    import FormSetting from './FormSetting';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizLanguageTab from '@/Biz/LanguageTab.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
+    import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
+    import FormBuilder from './FormBuilder.vue';
+    import FormDetail from './FormDetail.vue';
+    import FormSetting from './FormSetting.vue';
+    import { cloneDeep } from 'lodash';
     import { isBlank, useModelWrapper } from '@/Libs/utils';
+    import { preview as iconPreview } from '@/Libs/icon-class';
     import { ref } from "vue";
     import { usePage } from '@inertiajs/inertia-vue3';
-    import { cloneDeep } from 'lodash';
-    import icon from '@/Libs/icon-class';
 
     export default {
+        name: 'PageForm',
+
         components: {
             BizButton,
             BizButtonIcon,
@@ -267,13 +269,13 @@
                 computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
                 defaultLocale: usePage().props.value.defaultLanguage,
                 images: !isBlank(images) ? images : {},
+                iconPreview,
             };
         },
 
         data() {
             return {
                 disableInput: false,
-                icon,
                 formDuplicate: {
                     to: null,
                 },

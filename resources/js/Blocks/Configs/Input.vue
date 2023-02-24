@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import BizFormInput from '@/Biz/Form/Input';
+    import BizFormInput from '@/Biz/Form/Input.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

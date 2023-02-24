@@ -21,14 +21,15 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import BizMediaLibrary from '@/Biz/MediaLibrary';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizMediaLibrary from '@/Biz/MediaLibrary.vue';
     import { success as successAlert } from '@/Libs/alert';
     import { merge, clone } from 'lodash';
     import { ref } from 'vue';
 
     export default {
+        name: 'MediaIndex',
         components: {
             BizMediaLibrary,
         },

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
+    import BizButton from '@/Biz/Button.vue';
 
     export default {
         name: 'LanguageTab',

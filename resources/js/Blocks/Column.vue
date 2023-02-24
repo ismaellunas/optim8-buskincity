@@ -12,7 +12,7 @@
         >
             <template #item="{ element }">
                 <component
-                    :is="element.componentName"
+                    :is="'PB'+element.componentName"
                     :id="element.id"
                     v-model="computedDataEntities[element.id]"
                     class="component-configurable"
@@ -27,46 +27,47 @@
 </template>
 
 <script>
-    import Button from '@/Blocks/Contents/Button';
-    import Card from '@/Blocks/Contents/Card';
-    import CardText from '@/Blocks/Contents/CardText';
-    import Carousel from '@/Blocks/Contents/Carousel';
     import Draggable from 'vuedraggable';
-    import EventsCalendar from '@mod/Booking/Resources/assets/js/Blocks/Contents/EventsCalendar';
-    import Faq from '@/Blocks/Contents/Faq';
-    import FormBuilder from '@mod/FormBuilder/Resources/assets/js/Blocks/Contents/FormBuilder';
-    import Heading from '@/Blocks/Contents/Heading';
-    import Icon from '@/Blocks/Contents/Icon';
-    import IconText from '@/Blocks/Contents/IconText';
-    import Image from '@/Blocks/Contents/Image';
-    import LatestPost from '@/Blocks/Contents/LatestPost';
-    import Tabs from '@/Blocks/Contents/Tabs';
-    import Text from '@/Blocks/Contents/Text';
-    import UserList from '@/Blocks/Contents/UserList';
-    import Video from '@/Blocks/Contents/Video';
+    import PBButton from '@/Blocks/Contents/Button.vue';
+    import PBCard from '@/Blocks/Contents/Card.vue';
+    import PBCardText from '@/Blocks/Contents/CardText.vue';
+    import PBCarousel from '@/Blocks/Contents/Carousel.vue';
+    import PBEventsCalendar from '@mod/Booking/Resources/assets/js/Blocks/Contents/EventsCalendar.vue';
+    import PBFaq from '@/Blocks/Contents/Faq.vue';
+    import PBFormBuilder from '@mod/FormBuilder/Resources/assets/js/Blocks/Contents/FormBuilder.vue';
+    import PBHeading from '@/Blocks/Contents/Heading.vue';
+    import PBIcon from '@/Blocks/Contents/Icon.vue';
+    import PBIconText from '@/Blocks/Contents/IconText.vue';
+    import PBImage from '@/Blocks/Contents/Image.vue';
+    import PBLatestPost from '@/Blocks/Contents/LatestPost.vue';
+    import PBTabs from '@/Blocks/Contents/Tabs.vue';
+    import PBText from '@/Blocks/Contents/Text.vue';
+    import PBUserList from '@/Blocks/Contents/UserList.vue';
+    import PBVideo from '@/Blocks/Contents/Video.vue';
     import { isBlank, useModelWrapper, generateElementId } from '@/Libs/utils';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { cloneDeep } from 'lodash';
 
     export default {
+        name: 'PBColumn',
         components: {
-            Button,
-            Card,
-            CardText,
-            Carousel,
             Draggable,
-            EventsCalendar,
-            Faq,
-            FormBuilder,
-            Heading,
-            Icon,
-            IconText,
-            Image,
-            LatestPost,
-            Tabs,
-            Text,
-            UserList,
-            Video,
+            PBButton,
+            PBCard,
+            PBCardText,
+            PBCarousel,
+            PBEventsCalendar,
+            PBFaq,
+            PBFormBuilder,
+            PBHeading,
+            PBIcon,
+            PBIconText,
+            PBImage,
+            PBLatestPost,
+            PBTabs,
+            PBText,
+            PBUserList,
+            PBVideo,
         },
         props: {
             id: { type: String, required: true },

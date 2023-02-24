@@ -17,7 +17,7 @@
 </template>
 
 <script>
-    import BizImage from '@/Biz/Image';
+    import BizImage from '@/Biz/Image.vue';
 
     export default {
         name: 'CarouselSlide',

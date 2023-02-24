@@ -49,8 +49,8 @@
 
 <script>
     import HasModalMixin from '@/Mixins/HasModal';
-    import BizMediaGalleryItem from '@/Biz/Media/GalleryItem';
-    import BizModal from '@/Biz/Modal';
+    import BizMediaGalleryItem from '@/Biz/Media/GalleryItem.vue';
+    import BizModal from '@/Biz/Modal.vue';
 
     export default {
         name: 'MediaGallery',

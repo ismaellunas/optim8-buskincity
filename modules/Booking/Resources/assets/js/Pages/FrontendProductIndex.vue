@@ -60,13 +60,13 @@
 
 <script>
     import MixinHasColumnSorted from '@/Mixins/HasColumnSorted';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizIcon from '@/Biz/Icon';
-    import BizTableColumnSort from '@/Biz/TableColumnSort';
-    import BizTableIndex from '@/Biz/TableIndex';
+    import Layout from '@/Layouts/User.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizTableColumnSort from '@/Biz/TableColumnSort.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
     import icon from '@/Libs/icon-class';
-    import Layout from '@/Layouts/User';
     import { merge } from 'lodash';
     import { ref } from "vue";
 

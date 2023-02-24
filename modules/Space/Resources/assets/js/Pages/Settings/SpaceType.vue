@@ -91,12 +91,12 @@
 <script>
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizButton from '@/Biz/Button';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizListSection from '@/Biz/ListSection';
-    import BizTableIndex from '@/Biz/TableIndex';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizListSection from '@/Biz/ListSection.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
+    import SpaceTypeFormModal from './SpaceTypeFormModal.vue';
     import icon from '@/Libs/icon-class';
-    import SpaceTypeFormModal from './SpaceTypeFormModal';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 

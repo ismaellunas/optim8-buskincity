@@ -42,15 +42,17 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import FormRole from '@/Pages/Role/Form';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import FormRole from '@/Pages/Role/Form.vue';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'RoleEdit',
+
         components: {
             BizButton,
             BizButtonLink,

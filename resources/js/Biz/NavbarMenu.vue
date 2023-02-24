@@ -128,17 +128,18 @@
 </template>
 
 <script>
-    import BizLink from '@/Biz/Link';
-    import BizNavbarItem from '@/Biz/NavbarItem';
-    import { computed, onMounted, onUnmounted } from 'vue';
+    import BizLink from '@/Biz/Link.vue';
+    import BizNavbarItem from '@/Biz/NavbarItem.vue';
+    import { computed, onMounted, onUnmounted, ref } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'BizNavbarMenu',
         components: {
             BizLink,
             BizNavbarItem,
         },
-        setup() {
+        setup(props) {
             const navMenus = computed(() => usePage().props.value.menus.nav);
             const navLogo = computed(() => usePage().props.value.menus.navLogo);
             const navProfile = computed(() => usePage().props.value.menus.navProfile);
@@ -179,15 +180,11 @@
 
             return {
                 appLogoImageUrl,
-                navMenus,
+                csrfToken: usePage().props.value.csrfToken,
+                isMenuDisplay: ref(false),
                 navLogo,
+                navMenus,
                 navProfile,
-            };
-        },
-        data() {
-            return {
-                isMenuDisplay: false,
-                csrfToken: this.$page.props.csrfToken,
             };
         },
         methods: {
