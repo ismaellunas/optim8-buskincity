@@ -91,7 +91,7 @@
                     :is-download-enabled="isDownloadEnabled"
                     :is-edit-enabled="isEditEnabled"
                     :is-select-enabled="isSelectEnabled"
-                    @on-delete-clicked="deleteRecord"
+                    @on-delete-clicked="onDeleteRecord"
                     @on-edit-clicked="openEditModal"
                 >
                     <template
@@ -240,6 +240,7 @@
 </template>
 
 <script>
+    import HasLoader from '@/Mixins/HasLoader';
     import HasModalMixin from '@/Mixins/HasModal';
     import HasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button.vue';
@@ -299,8 +300,9 @@
         },
 
         mixins: [
-            HasPageErrors,
+            HasLoader,
             HasModalMixin,
+            HasPageErrors,
         ],
 
         props: {
@@ -351,7 +353,6 @@
                 isImageEditing: false,
                 isUploading: false,
                 isDeleting: false,
-                loader: null,
                 previewImageSrc: null,
                 messageText: {
                     successSaveAsMedia: "A new media has been created",
@@ -420,39 +421,54 @@
             onErrorSubmit() {
                 oopsAlert();
             },
-            deleteRecord(record) {
-                if (record.canDeleted) {
-                    confirmDelete('Are you sure?').then((result) => {
-                        const self = this;
-                        let loader = null;
+            onDeleteRecord(record) {
+                const self = this;
 
+                if (!record.canDeleted) {
+                    confirmAlert(
+                        'Delete Media?',
+                        'This media is still being used in another place. If you delete this media, it may have an effect on that other place.',
+                        'Yes',
+                        {
+                            icon: 'warning'
+                        }
+                    ).then((result) => {
                         if (result.isConfirmed) {
-                            this.$inertia.delete(
-                                route(this.baseRouteName+'.destroy', {id: record.id}),
-                                {
-                                    onStart: visit => {
-                                        loader = self.$loading.show();
-                                        self.isDeleting = true;
-                                    },
-                                    onSuccess: page => {
-                                        successAlert(page.props.flash.message);
-                                    },
-                                    onError: errors => {
-                                        oopsAlert();
-                                    },
-                                    onFinish: visit => {
-                                        loader.hide();
-                                        self.isDeleting = false;
-                                    },
-                                }
-                            );
+                            self.deleteRecord(record);
                         }
                     });
                 } else {
-                    oopsAlert({
-                        text: "The action cannot be completed because the media is being used somewhere else.",
-                    });
+                    self.deleteRecord(record);
                 }
+            },
+            deleteRecord(record) {
+                const self = this;
+
+                confirmDelete('Are you sure?').then((result) => {
+                    if (result.isConfirmed) {
+                        self.$inertia.delete(
+                            route(self.baseRouteName+'.destroy', {id: record.id}),
+                            {
+                                onStart: visit => {
+                                    self.onStartLoadingOverlay();
+
+                                    self.isDeleting = true;
+                                },
+                                onSuccess: page => {
+                                    successAlert(page.props.flash.message);
+                                },
+                                onError: errors => {
+                                    oopsAlert();
+                                },
+                                onFinish: visit => {
+                                    self.onEndLoadingOverlay();
+
+                                    self.isDeleting = false;
+                                },
+                            }
+                        );
+                    }
+                });
             },
             openImageEditorModal() {
                 this.isImageEditing = true;
@@ -575,12 +591,6 @@
                     }
                 }
                 return "far fa-file-alt";
-            },
-            onStartLoadingOverlay() {
-                this.loader = this.$loading.show();
-            },
-            onEndLoadingOverlay() {
-                this.loader.hide();
             },
         },
     }

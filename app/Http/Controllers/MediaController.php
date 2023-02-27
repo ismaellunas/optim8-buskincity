@@ -157,13 +157,9 @@ class MediaController extends CrudController
      */
     public function destroy(Request $request, Media $media)
     {
-        if ($media->canDeleted) {
-            $this->mediaService->destroy($media, new CloudinaryStorage());
+        $this->mediaService->destroy($media, new CloudinaryStorage());
 
-            $this->generateFlashMessage('Media deleted successfully!');
-        } else {
-            $this->generateFlashMessage('Media cannot be deleted!');
-        }
+        $this->generateFlashMessage('Media deleted successfully!');
 
         return redirect()->back();
     }
