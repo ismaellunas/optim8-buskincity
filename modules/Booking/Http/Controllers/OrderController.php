@@ -85,7 +85,10 @@ class OrderController extends CrudController
             'cityOptions' => $this->productEventService->getCityOptions(),
             'statusOptions' => BookingStatus::options(),
             'can' => [
-                'read' => $user->can('order.read'),
+                'read' => (
+                    $user->can('order.read')
+                    || $user->products->isNotEmpty()
+                ),
             ],
         ]));
     }

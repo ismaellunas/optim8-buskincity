@@ -189,4 +189,17 @@ class Order extends GetCandyOrder
             ->join("{$tablePrefix}order_lines", "{$tablePrefix}order_lines.id", "=", "events.id")
             ->whereColumn("{$tablePrefix}order_lines.order_id", "{$tablePrefix}orders.id");
     }
+
+    public function scopeProductManager($query, int $userId)
+    {
+        return $query->whereHas('firstEventLine', function ($query) use ($userId) {
+            $query->whereHas('purchasable', function ($query) use ($userId) {
+                $query->whereHas('product', function ($query) use ($userId) {
+                    $query->whereHas('managers', function ($query) use ($userId) {
+                        $query->where('user_id', $userId);
+                    });
+                });
+            });
+        });
+    }
 }
