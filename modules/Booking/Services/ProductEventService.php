@@ -399,12 +399,24 @@ class ProductEventService
 
     public function getCityOptions(?array $relatedUserIds = null): array
     {
+        $user = auth()->user();
+        $isUserProductManager = false;
+
+         if ($user) {
+            $isUserProductManager = $user->products->isNotEmpty();
+         }
+
         $products = Product::with([
                 'metas' => function ($q){
                     $q->whereIn('key', ['locations']);
                 },
             ])
-            ->whereHas('productType', function ($query) {
+            ->when($isUserProductManager, function ($query) use ($user) {
+                $query->whereHas('managers', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                });
+            })
+            ->whereHas('productType', function ($query) use ($user) {
                 $query->where('name', 'Event');
             })
             ->whereHas('variants', function ($query) use ($relatedUserIds) {
