@@ -29,7 +29,8 @@ class OrderPolicy extends BasePermissionPolicy
         }
 
         if (LoginService::isAdminHomeUrl()) {
-            return parent::viewAny($user);
+            return parent::viewAny($user)
+                || $user->products->isNotEmpty();
         }
 
         return auth()->check();
@@ -41,9 +42,12 @@ class OrderPolicy extends BasePermissionPolicy
             return false;
         }
 
+        $product = $order->firstEventLine->purchasable->product;
+
         return (
             parent::view($user, $order)
             || $order->isPlacedByUser($user)
+            || $user->products->contains($product)
         );
     }
 }
