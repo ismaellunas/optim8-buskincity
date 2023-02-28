@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('form_entries', function (Blueprint $table) {
             $table->id();
+            $table->dateTime('read_at')->nullable();
 
             $table->foreignId('form_id')
                 ->constrained('forms')
@@ -28,6 +29,7 @@ return new class extends Migration
                 ->onDelete('cascade');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
