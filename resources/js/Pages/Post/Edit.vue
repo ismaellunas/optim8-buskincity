@@ -55,7 +55,7 @@
                 categories: map(props.post.categories, 'id'),
                 primary_category: primaryCategory?.id ?? null,
                 content: props.post.content,
-                cover_image_id: props.post.cover_image_id,
+                cover_image_id: props.coverImage?.id,
                 excerpt: props.post.excerpt,
                 locale: props.post.locale,
                 meta_description: props.post.meta_description,
