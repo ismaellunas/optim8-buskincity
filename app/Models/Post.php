@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Media;
 use App\Services\PostService;
 use App\Traits\HasLocale;
+use App\Traits\Mediable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
@@ -17,12 +18,12 @@ class Post extends BaseModel implements PublishableInterface
 {
     use HasFactory;
     use HasLocale;
+    use Mediable;
 
     const STATUS_SCHEDULED = 2;
 
     protected $fillable = [
         'content',
-        'cover_image_id',
         'excerpt',
         'locale',
         'meta_description',
@@ -61,11 +62,6 @@ class Post extends BaseModel implements PublishableInterface
     public function getCategoryAttribute(): ?Category
     {
         return $this->primaryCategories->first();
-    }
-
-    public function coverImage()
-    {
-        return $this->hasOne(Media::class, 'id', 'cover_image_id');
     }
 
     public function menuItems()
@@ -151,6 +147,17 @@ class Post extends BaseModel implements PublishableInterface
         return $this->coverImage->optimizedImageUrl ?? null;
     }
 
+    public function getPurifiedContentAttribute(): string
+    {
+        return Purifier::clean($this->content, 'tinymce');
+    }
+
+    public function getCoverImageAttribute()
+    {
+        return $this->media->first();
+    }
+
+    /* Custom Methods: */
     public function getOptimizedCoverImageUrl(int $width, int $height): ?string
     {
         if ($this->coverImage) {
@@ -235,8 +242,13 @@ class Post extends BaseModel implements PublishableInterface
         return $this->categories->implode('name', ', ');
     }
 
-    public function getPurifiedContentAttribute(): string
+    public function saveMedia(array $mediaIds)
     {
-        return Purifier::clean($this->content, 'tinymce');
+        $mediaIds = collect($mediaIds)
+            ->filter()
+            ->map(fn($mediaId) => (int)$mediaId)
+            ->all();
+
+        $this->syncMedia($mediaIds);
     }
 }

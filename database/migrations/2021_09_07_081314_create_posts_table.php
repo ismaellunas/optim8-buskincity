@@ -27,12 +27,6 @@ class CreatePostsTable extends Migration
             $table->dateTime('scheduled_at')->nullable();
             $table->dateTime('published_at')->nullable();
             $table
-                ->foreignId('cover_image_id')
-                ->nullable()
-                ->constrained('media')
-                ->onUpdate('cascade')
-                ->onDelete('set null');
-            $table
                 ->foreignId('author_id')
                 ->nullable()
                 ->constrained('users')
