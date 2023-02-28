@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\FormBuilder\Http\Controllers\{
     ApiWidgetController,
     FormBuilderController,
+    FormEntryController,
     SettingController,
     SettingNotificationController,
     PageBuilderController,
@@ -27,11 +28,11 @@ Route::name('admin.')->prefix('admin/')->middleware([
     'can:system.dashboard',
     'ensureLoginFromAdminLoginRoute',
 ])->group(function () {
-    Route::get('form-builders/{form_builder}/entries', [FormBuilderController::class, 'entries'])
-        ->name('form-builders.entries')
+    Route::get('form-builders/{form_builder}/entries', [FormEntryController::class, 'index'])
+        ->name('form-builders.entries.index')
         ->can('viewAny', 'form_builder');
 
-    Route::get('form-builders/{form_builder}/entries/{entry}', [FormBuilderController::class, 'entryShow'])
+    Route::get('form-builders/{form_builder}/entries/{entry}', [FormEntryController::class, 'show'])
         ->name('form-builders.entries.show')
         ->can('view', 'form_builder');
 

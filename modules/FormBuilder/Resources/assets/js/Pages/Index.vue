@@ -50,7 +50,7 @@
                     <td>{{ form.key }}</td>
                     <td>
                         <biz-link
-                            :href="route(baseRouteName + '.entries', form.id)"
+                            :href="route(baseRouteName + '.entries.index', {form_builder: form.id})"
                             title="List Entries"
                         >
                             {{ form.totalEntries }}
@@ -62,7 +62,7 @@
                                 v-if="can.browse"
                                 class="is-ghost has-text-black"
                                 title="List Entries"
-                                :href="route(baseRouteName + '.entries', form.id)"
+                                :href="route(baseRouteName + '.entries.index', {form_builder: form.id})"
                             >
                                 <span class="icon is-small">
                                     <i :class="icon.rectangleList" />

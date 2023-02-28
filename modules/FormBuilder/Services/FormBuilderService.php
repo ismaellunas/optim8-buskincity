@@ -47,9 +47,12 @@ class FormBuilderService
     public function getEntryRecords(
         FormModel $formBuilder,
         string $term = null,
+        array $scopes = null,
         int $perPage = 15
     ): LengthAwarePaginator {
         $records = collect();
+
+        $user = auth()->user();
 
         $allFields = $formBuilder->getFields();
 
@@ -62,6 +65,11 @@ class FormBuilderService
                 $query->when($term, function ($q) use ($term) {
                     $q->where('value', 'ILIKE', '%'.$term.'%');
                 });
+            })
+            ->when($scopes, function ($query, $scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    $query->$scopeName($value);
+                }
             })
             ->orderBy('id', 'DESC')
             ->get();
@@ -79,6 +87,18 @@ class FormBuilderService
                     $entry[$fieldName] ?? '-'
                 );
             }
+
+            $record['can'] = [
+                'archive' => $user->can('delete', $formBuilder),
+                'mark_as_read' => (
+                    $user->can('update', $formBuilder)
+                    && !$entry->isRead
+                ),
+                'mark_as_unread' => (
+                    $user->can('update', $formBuilder)
+                    && $entry->isRead
+                ),
+            ];
 
             $records->push($record);
         }
