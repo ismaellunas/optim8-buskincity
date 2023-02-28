@@ -11,6 +11,7 @@ use App\Helpers\Url;
 use App\Models\Page;
 use App\Services\PageService;
 use App\Traits\HasLocale;
+use App\Traits\Mediable;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,7 +20,7 @@ class PageTranslation extends BaseModel implements PublishableInterface
 {
     use HasFactory;
     use HasLocale;
-    use MediaAlly;
+    use Mediable;
 
     private $uniqueKeyLength = 6;
 

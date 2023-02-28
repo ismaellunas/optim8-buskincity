@@ -115,6 +115,7 @@ class MediaService
         $record->readable_size = $record->readableSize;
         $record->date_modified = $record->updated_at->format('d/m/Y H:m');
         $record->display_file_name = $record->displayFileName;
+        $record->canDeleted = $record->canDeleted;
 
         return $record;
     }
