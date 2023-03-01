@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FieldGroup;
-use Modules\FormBuilder\Entities\FormEntry;
 use Modules\FormBuilder\Events\FormSubmitted;
 use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
