@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Support\Facades\Route;
+use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Http\Controllers\{
     ApiWidgetController,
     FormBuilderController,
@@ -38,6 +39,20 @@ Route::name('admin.')->prefix('admin/')->middleware([
 
     Route::resource('form-builders', FormBuilderController::class)
         ->except(['show']);
+
+    Route::name('form-builders.entries.')->prefix('form-builders/{form_builder}/entries/')->group(function () {
+        Route::post('bulk-mark-as-read', [FormEntryController::class, 'bulkMarkAsRead'])
+            ->name('bulk-mark-as-read');
+
+        Route::post('bulk-mark-as-unread', [FormEntryController::class, 'bulkMarkAsUnread'])
+            ->name('bulk-mark-as-unread');
+
+        Route::post('bulk-archive', [FormEntryController::class, 'bulkArchive'])
+            ->name('bulk-archive');
+
+        Route::post('bulk-restore', [FormEntryController::class, 'bulkRestore'])
+            ->name('bulk-restore');
+    });
 
     Route::prefix('form-builders/{form_builder}')
         ->name('form-builders.')

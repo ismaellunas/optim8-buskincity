@@ -88,6 +88,7 @@ class FormBuilderService
                 );
             }
 
+            $record['isRead'] = $entry->isRead;
             $record['can'] = [
                 'archive' => $user->can('delete', $formBuilder),
                 'mark_as_read' => (
