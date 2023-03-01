@@ -108,7 +108,6 @@ class PostService
                 'slug',
                 'excerpt',
                 'status',
-                'cover_image_id',
             ])
             ->paginate($recordsPerPage);
 
