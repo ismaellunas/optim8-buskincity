@@ -110,7 +110,7 @@
                             <biz-button-link
                                 v-if="!!selectedForm"
                                 class="is-primary is-outlined is-small"
-                                :href="route(data.baseRouteName + '.entries', selectedForm)"
+                                :href="route(data.baseRouteName + '.entries.index', selectedForm)"
                             >
                                 View All
                             </biz-button-link>
