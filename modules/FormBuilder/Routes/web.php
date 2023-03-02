@@ -52,6 +52,9 @@ Route::name('admin.')->prefix('admin/')->middleware([
 
         Route::post('bulk-restore', [FormEntryController::class, 'bulkRestore'])
             ->name('bulk-restore');
+
+        Route::post('bulk-force-delete', [FormEntryController::class, 'bulkForceDelete'])
+            ->name('bulk-force-delete');
     });
 
     Route::prefix('form-builders/{form_builder}')

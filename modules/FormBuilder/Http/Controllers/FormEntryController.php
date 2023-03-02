@@ -198,4 +198,17 @@ class FormEntryController extends CrudController
             $this->pageParams($request, $paginator)
         );
     }
+
+    public function bulkForceDelete(FormEntryArchiveRequest $request, FormBuilderService $formBuilderService, Form $formBuilder)
+    {
+        $this->formEntryService->forceDelete($formBuilder->id, $request->entries);
+
+        $paginator = $this->getPaginator($request, $formBuilderService);
+
+        $this->generateFlashMessage('The action ran successfully!');
+
+        return redirect()->route($this->baseRouteName.'.index',
+            $this->pageParams($request, $paginator)
+        );
+    }
 }

@@ -58,4 +58,13 @@ class FormEntryService
             ->get()
             ->each(fn ($entry) => $entry->restore());
     }
+
+    public function forceDelete(int $formBuilderId, array $entryIds)
+    {
+        FormEntry::whereIn('id', $entryIds)
+            ->where('form_id', $formBuilderId)
+            ->onlyTrashed()
+            ->get()
+            ->each(fn ($entry) => $entry->forceDelete());
+    }
 }

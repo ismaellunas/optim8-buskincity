@@ -123,6 +123,19 @@
                         Restore
                     </biz-button>
                 </biz-dropdown-item>
+                <biz-dropdown-item
+                    v-if="can.restore"
+                    class="px-0"
+                >
+                    <biz-button
+                        class="is-white is-fullwidth"
+                        type="button"
+                        :disabled="!canBulkForceDelete"
+                        @click="bulkForceDelete()"
+                    >
+                        Delete
+                    </biz-button>
+                </biz-dropdown-item>
             </template>
         </biz-dropdown>
 
@@ -164,16 +177,70 @@
                     :key="nameIndex"
                     v-html="entry[name]"
                 />
-                <td>
-                    <biz-button-link
-                        class="is-ghost has-text-black"
-                        title="View"
-                        :href="route(baseRouteName + '.show', {form_builder: formBuilder.id, entry: entry.id})"
-                    >
-                        <span class="icon is-small">
-                            <i :class="icon.eye" />
-                        </span>
-                    </biz-button-link>
+                <td class="has-text-weight-normal">
+                    <div class="buttons">
+                        <biz-button-link
+                            class="is-ghost has-text-black"
+                            title="View"
+                            :href="route(baseRouteName + '.show', {form_builder: formBuilder.id, form_entry: entry.id})"
+                        >
+                            <span class="icon is-small">
+                                <i :class="icon.eye" />
+                            </span>
+                        </biz-button-link>
+
+                        <biz-dropdown
+                            class="is-right"
+                            :class="{'is-up': index > records.data.length - 3}"
+                        >
+                            <template #trigger>
+                                <biz-icon
+                                    class="is-small"
+                                    :icon="icon.ellipsis"
+                                />
+                            </template>
+
+                            <biz-dropdown-item
+                                v-if="entry.can.mark_as_read"
+                                tag="a"
+                                @click.prevent="markAsRead(entry)"
+                            >
+                                Mark as read
+                            </biz-dropdown-item>
+
+                            <biz-dropdown-item
+                                v-if="entry.can.mark_as_unread"
+                                tag="a"
+                                @click.prevent="markAsUnread(entry)"
+                            >
+                                Mark as unread
+                            </biz-dropdown-item>
+
+                            <biz-dropdown-item
+                                v-if="entry.can.archive"
+                                tag="a"
+                                @click.prevent="archive(entry)"
+                            >
+                                Archive
+                            </biz-dropdown-item>
+
+                            <biz-dropdown-item
+                                v-if="entry.can.restore"
+                                tag="a"
+                                @click.prevent="restore(entry)"
+                            >
+                                Restore
+                            </biz-dropdown-item>
+
+                            <biz-dropdown-item
+                                v-if="entry.can.force_delete"
+                                tag="a"
+                                @click.prevent="forceDelete(entry)"
+                            >
+                                Delete
+                            </biz-dropdown-item>
+                        </biz-dropdown>
+                    </div>
                 </td>
             </tr>
 
@@ -211,9 +278,9 @@
     import BizTabList from '@/Biz/TabList.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
     import icon from '@/Libs/icon-class';
+    import { confirm as confirmAlert, oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
     import { isEmpty } from 'lodash';
     import { ref, computed } from 'vue';
-    import { confirm as confirmAlert, oops as oopsAlert, success as successAlert, confirmDelete } from '@/Libs/alert';
 
     export default {
         name: 'FormBuilderEntries',
@@ -315,6 +382,9 @@
                     && this.isArchivedTab
                 );
             },
+            canBulkForceDelete() {
+                return this.canBulkRestore;
+            },
         },
 
         methods: {
@@ -379,6 +449,34 @@
                 );
             },
 
+            actionRequest(routeName, entry, afterSuccess) {
+                const self = this;
+
+                this.$inertia.post(
+                    route(routeName, {
+                        ...{ form_builder: this.formBuilder.id },
+                        ...this.queryParams,
+                    }),
+                    { entries: [entry.id] },
+                    {
+                        onStart: () => this.onStartLoadingOverlay(),
+                        onFinish: (visit) => {
+                            self.onEndLoadingOverlay();
+                        },
+                        onError: (errors) => {
+                            oopsAlert();
+                        },
+                        onSuccess: (page) => {
+                            successAlert(page.props.flash.message);
+
+                            if (_.isFunction(afterSuccess)) {
+                                afterSuccess(page);
+                            }
+                        },
+                    }
+                );
+            },
+
             bulkMarkAsRead() {
                 this.bulkActionRequest(this.baseRouteName + '.bulk-mark-as-read');
             },
@@ -390,23 +488,86 @@
             bulkArchive() {
                 const self = this;
 
-                this.bulkActionRequest(
-                    this.baseRouteName + '.bulk-archive',
-                    function () {
-                        self.rawSelectedEntries = [];
+                confirmDelete("Confirm Archive", "Are you sure?").then(result => {
+                    if (result.isConfirmed) {
+                        this.bulkActionRequest(
+                            this.baseRouteName + '.bulk-archive',
+                            function () {
+                                self.rawSelectedEntries = [];
+                            }
+                        );
                     }
-                );
+                });
             },
 
             bulkRestore() {
                 const self = this;
 
-                this.bulkActionRequest(
-                    this.baseRouteName + '.bulk-restore',
-                    function () {
-                        self.rawSelectedEntries = [];
+                confirmDelete("Confirm Restore", "Are you sure?").then(result => {
+                    if (result.isConfirmed) {
+                        this.bulkActionRequest(
+                            this.baseRouteName + '.bulk-restore',
+                            function () {
+                                self.rawSelectedEntries = [];
+                            }
+                        );
                     }
-                );
+                });
+            },
+
+            bulkForceDelete() {
+                const self = this;
+
+                confirmDelete(
+                    'Are you sure?',
+                    'Once the resources are deleted, they will be permanently deleted.',
+                    'Confirm Deletion'
+                ).then(result => {
+                    if (result.isConfirmed) {
+                        this.bulkActionRequest(
+                            this.baseRouteName + '.bulk-restore',
+                            function () {
+                                self.rawSelectedEntries = [];
+                            }
+                        );
+                    }
+                });
+            },
+
+            markAsRead(entry) {
+                this.actionRequest(this.baseRouteName + '.bulk-mark-as-read', entry);
+            },
+
+            markAsUnread(entry) {
+                this.actionRequest(this.baseRouteName + '.bulk-mark-as-unread', entry);
+            },
+
+            archive(entry) {
+                confirmDelete("Confirm Archive", "Are you sure?").then(result => {
+                    if (result.isConfirmed) {
+                        this.actionRequest(this.baseRouteName + '.bulk-archive', entry);
+                    }
+                });
+            },
+
+            restore(entry) {
+                confirmDelete("Confirm Restore", "Are you sure?").then(result => {
+                    if (result.isConfirmed) {
+                        this.actionRequest(this.baseRouteName + '.bulk-restore', entry);
+                    }
+                });
+            },
+
+            forceDelete(entry) {
+                confirmDelete(
+                    'Are you sure?',
+                    'Once the resource is deleted, it will be permanently deleted.',
+                    'Confirm Deletion'
+                ).then(result => {
+                    if (result.isConfirmed) {
+                        this.actionRequest(this.baseRouteName + '.bulk-force-delete', entry);
+                    }
+                });
             },
         },
     };
