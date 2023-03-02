@@ -14,7 +14,7 @@ class OrderPolicyMixin
     public function cancelBooking()
     {
         return function (User $user, Order $order) {
-            $product = $order->firstEventLine->purchasable->product;
+            $product = $order->firstProduct;
 
             return (
                 $order->status != OrderStatus::CANCELED->value

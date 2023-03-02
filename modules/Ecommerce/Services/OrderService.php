@@ -227,7 +227,7 @@ class OrderService
     {
         $event = $order->firstEventLine->latestEvent;
 
-        $product = $order->firstEventLine->purchasable->product;
+        $product = $order->firstProduct;
 
         $product->load(['metas' => function ($query) {
             $query->whereIn('key', ['locations', 'is_check_in_required']);

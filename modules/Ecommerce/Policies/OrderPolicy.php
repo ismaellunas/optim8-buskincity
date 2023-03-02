@@ -42,7 +42,7 @@ class OrderPolicy extends BasePermissionPolicy
             return false;
         }
 
-        $product = $order->firstEventLine->purchasable->product;
+        $product = $order->firstProduct;
 
         return (
             parent::view($user, $order)
