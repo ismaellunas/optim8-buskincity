@@ -328,12 +328,19 @@
                     available: props.can.restore,
                 },
             };
+            const filterParams = ref({});
 
             return {
                 activeTab: ref(props.pageQueryParams?.tab ?? 'entries'),
                 icon,
                 isAll: ref(false),
-                queryParams: computed(() => props.pageQueryParams),
+                filterParams,
+                queryParams: computed(() => {
+                    return _.pickBy({
+                        ...props.pageQueryParams,
+                        ...filterParams.value,
+                    }, (param) => !_.isNull(param));
+                }),
                 queryReads: ref([]),
                 rawSelectedEntries: ref([]),
                 term: ref(props.pageQueryParams?.term ?? null),
@@ -406,7 +413,7 @@
             },
 
             onReadOptionChanged(option) {
-                this.queryParams['read'] = option.id;
+                this.filterParams['read'] = option.id;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
 
