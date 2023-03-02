@@ -19,6 +19,7 @@ trait Mediable
             ->filter()
             ->map(fn($mediaId) => (int)$mediaId)
             ->all();
+
         if (!empty($mediaIds)) {
             $this->media()->sync($mediaIds);
         } else {
@@ -26,8 +27,8 @@ trait Mediable
         }
     }
 
-    public function detachMedia(): void
+    public function detachMedia(?int $mediaId = null): void
     {
-        $this->media()->detach();
+        $this->media()->detach($mediaId);
     }
 }
