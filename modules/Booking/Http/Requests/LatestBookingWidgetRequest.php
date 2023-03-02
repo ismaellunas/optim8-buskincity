@@ -8,6 +8,6 @@ class LatestBookingWidgetRequest extends OrderIndexRequest
     {
         $user = auth()->user();
         return $user->can('order.browse')
-            || $user->products->isNotEmpty();
+            || $user->isProductManager();
     }
 }

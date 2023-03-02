@@ -403,7 +403,7 @@ class ProductEventService
         $isUserProductManager = false;
 
          if ($user) {
-            $isUserProductManager = $user->products->isNotEmpty();
+            $isUserProductManager = $user->isProductManager();
          }
 
         $products = Product::with([

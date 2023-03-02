@@ -87,7 +87,7 @@ class OrderController extends CrudController
             'can' => [
                 'read' => (
                     $user->can('order.read')
-                    || $user->products->isNotEmpty()
+                    || $user->isProductManager()
                 ),
             ],
         ]));

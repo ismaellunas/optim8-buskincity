@@ -28,7 +28,7 @@ class OrderService
         ?array $scopes = null
     ): Builder {
         $user = auth()->user();
-        $isUserProductManager = $user->products->isNotEmpty();
+        $isUserProductManager = $user->isProductManager();
 
         return Order::when($term, function ($query) use ($term) {
                 $query

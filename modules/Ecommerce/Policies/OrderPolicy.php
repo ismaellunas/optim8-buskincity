@@ -30,7 +30,7 @@ class OrderPolicy extends BasePermissionPolicy
 
         if (LoginService::isAdminHomeUrl()) {
             return parent::viewAny($user)
-                || $user->products->isNotEmpty();
+                || $user->isProductManager();
         }
 
         return auth()->check();
