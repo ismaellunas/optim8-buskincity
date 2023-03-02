@@ -192,14 +192,11 @@ class Order extends GetCandyOrder
 
     public function scopeProductManager($query, int $userId)
     {
-        return $query->whereHas('firstEventLine', function ($query) use ($userId) {
-            $query->whereHas('purchasable', function ($query) use ($userId) {
-                $query->whereHas('product', function ($query) use ($userId) {
-                    $query->whereHas('managers', function ($query) use ($userId) {
-                        $query->where('user_id', $userId);
-                    });
-                });
-            });
-        });
+        return $query->whereHas(
+            'firstEventLine.purchasable.product.managers',
+            function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            }
+        );
     }
 }
