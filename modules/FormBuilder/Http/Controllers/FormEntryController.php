@@ -73,10 +73,16 @@ class FormEntryController extends CrudController
 
         $user = auth()->user();
 
+        if ($request->page > $paginator->lastPage()) {
+            return redirect()->route($this->baseRouteName.'.index',
+                $this->pageParams($request, $paginator)
+            );
+        }
+
         return Inertia::render('FormBuilder::Entries', $this->getData([
             'breadcrumbs' => [
                 [
-                    'title' => __('Forms'),
+                    'title' => __('Form Builders'),
                     'url' => route('admin.form-builders.index'),
                 ],
                 [
@@ -128,7 +134,7 @@ class FormEntryController extends CrudController
         return Inertia::render('FormBuilder::EntryDetail', $this->getData([
             'breadcrumbs' => [
                 [
-                    'title' => __('Forms'),
+                    'title' => __('Form Builders'),
                     'url' => route('admin.form-builders.index'),
                 ],
                 [
