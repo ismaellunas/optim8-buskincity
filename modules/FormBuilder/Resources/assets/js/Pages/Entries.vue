@@ -56,7 +56,7 @@
         </div>
 
         <biz-dropdown
-            v-if="can.markAsRead || can.markAsUnread || can.archive || can.restore"
+            v-if="can.markAsRead || can.markAsUnread || can.archive || can.restore || can.forceDelete"
             class="mb-4"
             :close-on-click="true"
         >
@@ -244,9 +244,7 @@
                 </td>
             </tr>
 
-            <template
-                v-if="isDataEmpty"
-            >
+            <template v-if="isDataEmpty && records.current_page == 1">
                 <tr>
                     <td
                         colspan="99"

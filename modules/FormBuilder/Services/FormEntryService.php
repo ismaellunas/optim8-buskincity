@@ -2,6 +2,7 @@
 
 namespace Modules\FormBuilder\Services;
 
+use App\Models\User;
 use Modules\FormBuilder\Entities\FormEntry;
 
 class FormEntryService
@@ -14,6 +15,32 @@ class FormEntryService
             [ 'id' => 0, 'value' => 'Unread' ],
         ];
     }
+
+    public function transformEntry(FormEntry $entry, User $user)
+    {
+        if (!empty($entry['user_id'])) {
+            $entry->load([
+                'user' => function ($query) {
+                    $query->select([
+                        'id',
+                        'first_name',
+                        'last_name',
+                    ]);
+                }
+            ]);
+        }
+
+        $entry->can = [
+            'mark_as_read' => $user->can('markAsRead', $entry),
+            'mark_as_unread' => $user->can('markAsUnread', $entry),
+            'archive' => $user->can('delete', $entry),
+            'restore' => $user->can('restore', $entry),
+            'force_delete' => $user->can('forceDelete', $entry),
+        ];
+
+        return $entry->toArray();
+    }
+
 
     public function markAsRead(int $formBuilderId, array $entryIds)
     {

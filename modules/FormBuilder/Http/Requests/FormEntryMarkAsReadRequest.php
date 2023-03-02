@@ -8,10 +8,14 @@ class FormEntryMarkAsReadRequest extends FormRequest
 {
     public function rules()
     {
-        return [
-            'entries' => ['array'],
-            'entries.*' => ['integer'],
-        ];
+        if (!$this->route('form_entry')) {
+            return [
+                'entries' => ['array'],
+                'entries.*' => ['integer'],
+            ];
+        }
+
+        return [];
     }
 
     public function authorize()

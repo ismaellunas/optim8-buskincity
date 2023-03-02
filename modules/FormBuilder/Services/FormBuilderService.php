@@ -400,23 +400,6 @@ class FormBuilderService
         ];
     }
 
-    public function transformEntry($entry)
-    {
-        if (!empty($entry['user_id'])) {
-            $entry->load([
-                'user' => function ($query) {
-                    $query->select([
-                        'id',
-                        'first_name',
-                        'last_name',
-                    ]);
-                }
-            ]);
-        }
-
-        return $entry->toArray();
-    }
-
     public function sanitizeEmails(array $emails = []): array
     {
         $validEmails = [];

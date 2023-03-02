@@ -103,6 +103,7 @@ class FormEntryController extends CrudController
                 'markAsUnread' => $user->can('update', $formBuilder),
                 'archive' => $user->can('delete', $formBuilder),
                 'restore' => $user->can('delete', $formBuilder),
+                'forceDelete' => $user->can('delete', $formBuilder),
             ],
         ]));
     }
@@ -140,7 +141,7 @@ class FormEntryController extends CrudController
             ],
             'title' => $title,
             'formBuilder' => $formBuilder,
-            'entry' => $formBuilderService->transformEntry($formEntry),
+            'entry' => $this->formEntryService->transformEntry($formEntry, $user),
             'entryDisplay' => $formBuilderService->getComponentDisplayValues(
                 $formBuilder->getFields(),
                 $formEntry,
@@ -155,60 +156,103 @@ class FormEntryController extends CrudController
         ]));
     }
 
+    private function afterAction()
+    {
+        $this->generateFlashMessage('The action ran successfully!');
+
+        return back();
+    }
+
+    private function afterBulkAction(Request $request)
+    {
+        $this->generateFlashMessage('The action ran successfully!');
+
+        return to_route($this->baseRouteName.'.index', $this->pageParams($request));
+    }
+
+    private function afterBulkDangerAction(Request $request, FormBuilderService $formBuilderService)
+    {
+        $paginator = $this->getPaginator($request, $formBuilderService);
+
+        $this->generateFlashMessage('The action ran successfully!');
+
+        return redirect()->route($this->baseRouteName.'.index',
+            $this->pageParams($request, $paginator)
+        );
+    }
+
     public function bulkMarkAsRead(FormEntryMarkAsReadRequest $request, Form $formBuilder)
     {
         $this->formEntryService->markAsRead($formBuilder->id, $request->entries);
 
-        $this->generateFlashMessage('The action ran successfully!');
-
-        return to_route($this->baseRouteName.'.index', $this->pageParams($request));
+        return $this->afterBulkAction($request);
     }
 
     public function bulkMarkAsUnread(FormEntryMarkAsReadRequest $request, Form $formBuilder)
     {
         $this->formEntryService->markAsUnread($formBuilder->id, $request->entries);
 
-        $this->generateFlashMessage('The action ran successfully!');
-
-        return to_route($this->baseRouteName.'.index', $this->pageParams($request));
+        return $this->afterBulkAction($request);
     }
 
     public function bulkArchive(FormEntryArchiveRequest $request, FormBuilderService $formBuilderService, Form $formBuilder)
     {
         $this->formEntryService->archive($formBuilder->id, $request->entries);
 
-        $paginator = $this->getPaginator($request, $formBuilderService);
-
-        $this->generateFlashMessage('The action ran successfully!');
-
-        return redirect()->route($this->baseRouteName.'.index',
-            $this->pageParams($request, $paginator)
-        );
+        return $this->afterBulkDangerAction($request, $formBuilderService);
     }
 
     public function bulkRestore(FormEntryArchiveRequest $request, FormBuilderService $formBuilderService, Form $formBuilder)
     {
         $this->formEntryService->restore($formBuilder->id, $request->entries);
 
-        $paginator = $this->getPaginator($request, $formBuilderService);
-
-        $this->generateFlashMessage('The action ran successfully!');
-
-        return redirect()->route($this->baseRouteName.'.index',
-            $this->pageParams($request, $paginator)
-        );
+        return $this->afterBulkDangerAction($request, $formBuilderService);
     }
 
     public function bulkForceDelete(FormEntryArchiveRequest $request, FormBuilderService $formBuilderService, Form $formBuilder)
     {
         $this->formEntryService->forceDelete($formBuilder->id, $request->entries);
 
-        $paginator = $this->getPaginator($request, $formBuilderService);
+        return $this->afterBulkDangerAction($request, $formBuilderService);
+    }
+
+    public function markAsRead(FormEntryMarkAsReadRequest $request, Form $formBuilder, FormEntry $formEntry)
+    {
+        $this->formEntryService->markAsRead($formBuilder->id, [$formEntry->id]);
+
+        return $this->afterAction();
+    }
+
+    public function markAsUnread(FormEntryMarkAsReadRequest $request, Form $formBuilder, FormEntry $formEntry)
+    {
+        $this->formEntryService->markAsUnread($formBuilder->id, [$formEntry->id]);
+
+        return $this->afterAction();
+    }
+
+    public function archive(FormEntryArchiveRequest $request, Form $formBuilder, FormEntry $formEntry)
+    {
+        $this->formEntryService->archive($formBuilder->id, [$formEntry->id]);
+
+        return $this->afterAction();
+    }
+
+    public function restore(FormEntryArchiveRequest $request, Form $formBuilder, FormEntry $formEntry)
+    {
+        $this->formEntryService->restore($formBuilder->id, [$formEntry->id]);
+
+        return $this->afterAction();
+    }
+
+    public function forceDelete(FormEntryArchiveRequest $request, Form $formBuilder, FormEntry $formEntry)
+    {
+        $this->formEntryService->forceDelete($formBuilder->id, [$formEntry->id]);
 
         $this->generateFlashMessage('The action ran successfully!');
 
-        return redirect()->route($this->baseRouteName.'.index',
-            $this->pageParams($request, $paginator)
-        );
+        return to_route($this->baseRouteName.'.index', [
+            'form_builder' => $formBuilder->id,
+            'tab' => 'archived'
+        ]);
     }
 }
