@@ -37,6 +37,7 @@ class EcommerceServiceProvider extends ServiceProvider
         User::resolveRelationUsing('products', function ($userModel) {
             return $userModel->belongsToMany(Product::class, 'product_user');
         });
+
         User::macro('isProductManager', function () {
             return $this->products->isNotEmpty();
         });
