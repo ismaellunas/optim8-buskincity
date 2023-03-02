@@ -164,7 +164,6 @@ class ProductController extends CrudController
                 $media[] = $this->productService->upload(
                     $product,
                     $file,
-                    EcommerceModuleService::MEDIA_TYPE_PRODUCT
                 );
             }
         }
@@ -257,7 +256,6 @@ class ProductController extends CrudController
                 $media[] = $this->productService->upload(
                     $product,
                     $file,
-                    EcommerceModuleService::MEDIA_TYPE_PRODUCT
                 );
             }
         }
@@ -267,7 +265,7 @@ class ProductController extends CrudController
         $deletedMedia = Media::whereIn('id', $mediaIds)->get();
 
         foreach ($deletedMedia as $medium) {
-            $this->mediaService->destroy($medium, app(MediaStorage::class));
+            $product->detachGallery($medium->id);
         }
 
         $this->generateFlashMessage('Successfully updating '.$this->title.'!');

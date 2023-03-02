@@ -33,7 +33,8 @@ class Product extends GetCandyProduct
 
     public function gallery()
     {
-        return $this->morphMany(Media::class, 'medially');
+        return $this->morphToMany(Media::class, 'mediable')
+            ->withTimestamps();
     }
 
     public function eventSchedule()
@@ -150,5 +151,10 @@ class Product extends GetCandyProduct
     public function getDisplayDescriptionAttribute(): string
     {
         return $this->translateAttribute('description', config('app.locale'));
+    }
+
+    public function detachGallery(?int $mediaId = null): void
+    {
+        $this->gallery()->detach($mediaId);
     }
 }

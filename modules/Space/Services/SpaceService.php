@@ -253,26 +253,14 @@ class SpaceService
     public function upload(
         UploadedFile $file,
         string $fileName,
-        string $mediaType = null,
     ): Media {
-        $folder = ModuleService::mediaFolder();
-
-        $folderPrefix = !app()->environment('production')
-            ? config('app.env')
-            : null;
-
-        if ($folderPrefix) {
-            $folder = $folderPrefix.'_'.$folder;
-        }
 
         $media = $this->mediaService->upload(
             $file,
             $fileName,
             app(MediaStorage::class),
-            $folder
         );
 
-        $media->type = $mediaType;
         $media->save();
 
         return $media;
@@ -283,7 +271,6 @@ class SpaceService
         return $this->upload(
             $file,
             'logo_'.Str::random(10),
-            ModuleService::MEDIA_TYPE_LOGO
         );
     }
 
@@ -292,25 +279,24 @@ class SpaceService
         return $this->upload(
             $file,
             'cover_'.Str::random(10),
-            ModuleService::MEDIA_TYPE_COVER
         );
     }
 
-    private function deleteLogoFromStorage(Space $space)
+    private function deleteLogoFromRelation(Space $space)
     {
-        $media = $space->logo;
+        $logoMediaId = $space->logo_media_id;
 
-        if ($media) {
-            $this->mediaService->destroy($media, app(MediaStorage::class));
+        if ($logoMediaId) {
+            $space->detachMedia($logoMediaId);
         }
     }
 
-    private function deleteCoverFromStorage(Space $space)
+    private function deleteCoverFromRelation(Space $space)
     {
-        $media = $space->cover;
+        $coverMediaId = $space->cover_media_id;
 
-        if ($media) {
-            $this->mediaService->destroy($media, app(MediaStorage::class));
+        if ($coverMediaId) {
+            $space->detachMedia($coverMediaId);
         }
     }
 
@@ -320,7 +306,7 @@ class SpaceService
 
         $space->media()->save($media);
 
-        $this->deleteLogoFromStorage($space);
+        $this->deleteLogoFromRelation($space);
 
         $space->logo_media_id = $media->id;
         $space->save();
@@ -332,7 +318,7 @@ class SpaceService
 
         $space->media()->save($media);
 
-        $this->deleteCoverFromStorage($space);
+        $this->deleteCoverFromRelation($space);
 
         $space->cover_media_id = $media->id;
         $space->save();
@@ -340,7 +326,7 @@ class SpaceService
 
     public function deleteLogo(Space $space)
     {
-        $this->deleteLogoFromStorage($space);
+        $this->deleteLogoFromRelation($space);
 
         $space->logo_media_id = null;
         $space->save();
@@ -348,7 +334,7 @@ class SpaceService
 
     public function deleteCover(Space $space)
     {
-        $this->deleteCoverFromStorage($space);
+        $this->deleteCoverFromRelation($space);
 
         $space->cover_media_id = null;
         $space->save();
@@ -357,8 +343,8 @@ class SpaceService
     public function removeAllMedia(array $spaces): void
     {
         foreach ($spaces as $space) {
-            $this->deleteLogoFromStorage($space);
-            $this->deleteCoverFromStorage($space);
+            $this->deleteLogoFromRelation($space);
+            $this->deleteCoverFromRelation($space);
         }
     }
 

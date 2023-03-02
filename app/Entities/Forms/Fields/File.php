@@ -81,7 +81,6 @@ class File extends BaseField
                 $file,
                 new CloudinaryStorage(),
                 $this->entity,
-                (!App::environment('production') ? 'local_' : null)
             ));
         }
 

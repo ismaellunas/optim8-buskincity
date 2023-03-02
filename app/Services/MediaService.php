@@ -348,7 +348,6 @@ class MediaService
         UploadedFile $file,
         MediaStorage $mediaStorage,
         User $user,
-        string $folderPrefix = null
     ): Media {
         $media = new Media();
 
@@ -366,10 +365,7 @@ class MediaService
             $extension = $clientExtension;
         }
 
-        $folder = 'user_assets/'.$user->id;
-        if ($folderPrefix) {
-            $folder = $folderPrefix.$folder;
-        }
+        $folder = $this->getFolderPrefix().'user_assets/'.$user->id;
 
         $fileName = $this->getUniqueFileName(
             $fileName,
@@ -402,7 +398,7 @@ class MediaService
         }
     }
 
-    private function getFolderPrefix(): ?string
+    protected function getFolderPrefix(): ?string
     {
         return (!App::environment('production') ? config('app.env').'_' : null);
     }
