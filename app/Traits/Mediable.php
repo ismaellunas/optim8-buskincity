@@ -9,7 +9,8 @@ trait Mediable
     // Relations
     public function media()
     {
-        return $this->morphToMany(Media::class, 'mediable');
+        return $this->morphToMany(Media::class, 'mediable')
+            ->withTimestamps();
     }
 
     // Custom Methods
