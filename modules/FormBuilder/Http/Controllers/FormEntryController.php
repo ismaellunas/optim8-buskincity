@@ -107,10 +107,10 @@ class FormEntryController extends CrudController
         ]));
     }
 
-    public function show(FormBuilderService $formBuilderService, Form $formBuilder, FormEntry $entry)
+    public function show(FormBuilderService $formBuilderService, Form $formBuilder, FormEntry $formEntry)
     {
         $user = auth()->user();
-        $userEntry = $entry->user;
+        $userEntry = $formEntry->user;
 
         $canRedirectUser = false;
 
@@ -122,7 +122,7 @@ class FormEntryController extends CrudController
             );
         }
 
-        $title = $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $entry->id;
+        $title = $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $formEntry->id;
 
         return Inertia::render('FormBuilder::EntryDetail', $this->getData([
             'breadcrumbs' => [
@@ -140,10 +140,10 @@ class FormEntryController extends CrudController
             ],
             'title' => $title,
             'formBuilder' => $formBuilder,
-            'entry' => $formBuilderService->transformEntry($entry),
+            'entry' => $formBuilderService->transformEntry($formEntry),
             'entryDisplay' => $formBuilderService->getComponentDisplayValues(
                 $formBuilder->getFields(),
-                $entry,
+                $formEntry,
             ),
             'fieldLabels' => $formBuilder->getFieldLabelAndNames(),
             'can' => [
