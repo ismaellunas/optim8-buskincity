@@ -96,7 +96,7 @@ class ThemeAdvanceController extends CrudController
                     if ($request->hasFile('qrcode_public_page_logo')) {
                         $uploadQrCodeLogo = new UploadQrCodeLogo();
 
-                        $media = $uploadQrCodeLogo->handle($inputs, $key);
+                        $media = $uploadQrCodeLogo->handle($inputs[$key]);
 
                         $this->settingService->saveQrcodeLogo($media->id);
                     }
@@ -108,7 +108,7 @@ class ThemeAdvanceController extends CrudController
                     if ($request->hasFile('favicon')) {
                         $uploadFavicon = new UploadFavicon();
 
-                        $media = $uploadFavicon->handle($inputs, $key);
+                        $media = $uploadFavicon->handle($inputs[$key]);
 
                         $this->settingService->saveFavicon($media->id);
 

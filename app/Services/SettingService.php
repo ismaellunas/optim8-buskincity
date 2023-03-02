@@ -525,8 +525,12 @@ class SettingService
         ]);
     }
 
-    public function saveFavicon(?int $mediaId)
+    public function saveFavicon(?int $mediaId): void
     {
-        $this->saveKey('favicon_media_id', $mediaId);
+        $setting = $this->saveKey('favicon_media_id', $mediaId);
+
+        $setting->syncMedia([
+            $mediaId
+        ]);
     }
 }
