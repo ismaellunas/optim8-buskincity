@@ -21,12 +21,11 @@ class PostService
     ) {
         $query = Post::orderBy('id', 'DESC')
             ->with([
-                'coverImage' => function ($query) {
+                'media' => function ($query) {
                     $query->select([
                         'extension',
                         'file_name',
                         'file_url',
-                        'id',
                         'version',
                     ]);
                 },
@@ -51,7 +50,6 @@ class PostService
                 'slug',
                 'excerpt',
                 'status',
-                'cover_image_id',
             ]);
 
         foreach ($scopeNames as $scopeName => $value) {
@@ -85,12 +83,11 @@ class PostService
             })
             ->published()
             ->with([
-                'coverImage' => function ($query) {
+                'media' => function ($query) {
                     $query->select([
                         'extension',
                         'file_name',
                         'file_url',
-                        'id',
                         'version',
                     ]);
                 },
@@ -111,7 +108,6 @@ class PostService
                 'slug',
                 'excerpt',
                 'status',
-                'cover_image_id',
             ])
             ->paginate($recordsPerPage);
 
@@ -182,7 +178,14 @@ class PostService
         return Post::where('slug', $slug)
             ->with([
                 'author',
-                'coverImage',
+                'media' => function ($query) {
+                    $query->select([
+                        'extension',
+                        'file_name',
+                        'file_url',
+                        'version',
+                    ]);
+                },
             ])
             ->when($locale, function ($query) use ($locale) {
                 $query->where('locale', $locale);
@@ -275,7 +278,6 @@ class PostService
                     'id',
                     'title',
                     'slug',
-                    'cover_image_id'
                 ])
                 ->with([
                     'categories.translations' => function ($q) {
@@ -286,7 +288,14 @@ class PostService
                             'category_id'
                         ]);
                     },
-                    'coverImage',
+                    'media' => function ($query) {
+                        $query->select([
+                            'extension',
+                            'file_name',
+                            'file_url',
+                            'version',
+                        ]);
+                    },
                 ])
                 ->published()
                 ->whereHas('primaryCategories', function ($q) use ($categoryId) {
@@ -307,7 +316,6 @@ class PostService
                 'id',
                 'title',
                 'slug',
-                'cover_image_id'
             ])
             ->with([
                 'categories.translations' => function ($q) {
@@ -318,7 +326,14 @@ class PostService
                         'category_id'
                     ]);
                 },
-                'coverImage',
+                'media' => function ($query) {
+                    $query->select([
+                        'extension',
+                        'file_name',
+                        'file_url',
+                        'version',
+                    ]);
+                },
             ])
             ->published()
             ->when($categoryIds, function ($q) use ($categoryIds) {

@@ -2,9 +2,7 @@
     <layout-admin title="Login">
         <template #back>
             <a @click.prevent="back">
-                <span class="icon">
-                    <i :class="icon.back" />
-                </span>
+                <biz-icon :icon="iconBack" />
                 <span>Back</span>
             </a>
         </template>
@@ -69,7 +67,8 @@
                     <biz-button
                         class="is-block is-info is-fullwidth"
                     >
-                        Log In <i :class="icon.signIn" />
+                        <span>Log In</span>
+                        <biz-icon :icon="iconSignIn" />
                     </biz-button>
                 </form>
             </div>
@@ -79,18 +78,21 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizButton from '@/Biz/Button';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormPassword from '@/Biz/Form/Password';
-    import BizLink from '@/Biz/Link';
-    import BizRecaptcha from '@/Biz/Recaptcha';
-    import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
-    import icon from '@/Libs/icon-class';
+    import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormPassword from '@/Biz/Form/Password.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizLink from '@/Biz/Link.vue';
+    import BizRecaptcha from '@/Biz/Recaptcha.vue';
+    import { back as iconBack, signIn as iconSignIn } from '@/Libs/icon-class';
 
     export default {
+        name: 'AuthAdminLogin',
+
         components: {
             BizButton,
             BizCheckbox,
@@ -98,6 +100,7 @@
             BizFlashNotifications,
             BizFormInput,
             BizFormPassword,
+            BizIcon,
             BizLink,
             BizRecaptcha,
             LayoutAdmin,
@@ -122,7 +125,8 @@
                     password: '',
                     remember: false,
                 }),
-                icon,
+                iconBack,
+                iconSignIn,
             }
         },
 

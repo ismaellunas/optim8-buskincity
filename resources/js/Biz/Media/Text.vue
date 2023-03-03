@@ -33,8 +33,8 @@
 
 <script>
     import HasModalMixin from '@/Mixins/HasModal';
-    import BizMediaTextItem from '@/Biz/Media/TextItem';
-    import BizModal from '@/Biz/Modal';
+    import BizMediaTextItem from '@/Biz/Media/TextItem.vue';
+    import BizModal from '@/Biz/Modal.vue';
 
     export default {
         name: 'MediaText',

@@ -47,9 +47,12 @@ class FormBuilderService
     public function getEntryRecords(
         FormModel $formBuilder,
         string $term = null,
+        array $scopes = null,
         int $perPage = 15
     ): LengthAwarePaginator {
         $records = collect();
+
+        $user = auth()->user();
 
         $allFields = $formBuilder->getFields();
 
@@ -62,6 +65,11 @@ class FormBuilderService
                 $query->when($term, function ($q) use ($term) {
                     $q->where('value', 'ILIKE', '%'.$term.'%');
                 });
+            })
+            ->when($scopes, function ($query, $scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    $query->$scopeName($value);
+                }
             })
             ->orderBy('id', 'DESC')
             ->get();
@@ -79,6 +87,15 @@ class FormBuilderService
                     $entry[$fieldName] ?? '-'
                 );
             }
+
+            $record['isRead'] = $entry->isRead;
+            $record['can'] = [
+                'mark_as_read' => $user->can('markAsRead', $entry),
+                'mark_as_unread' => $user->can('markAsUnread', $entry),
+                'archive' => $user->can('delete', $entry),
+                'restore' => $user->can('restore', $entry),
+                'force_delete' => $user->can('forceDelete', $entry),
+            ];
 
             $records->push($record);
         }
@@ -381,23 +398,6 @@ class FormBuilderService
             'component' => null,
             'value' => $value
         ];
-    }
-
-    public function transformEntry($entry)
-    {
-        if (!empty($entry['user_id'])) {
-            $entry->load([
-                'user' => function ($query) {
-                    $query->select([
-                        'id',
-                        'first_name',
-                        'last_name',
-                    ]);
-                }
-            ]);
-        }
-
-        return $entry->toArray();
     }
 
     public function sanitizeEmails(array $emails = []): array

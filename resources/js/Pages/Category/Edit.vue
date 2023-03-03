@@ -21,15 +21,17 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import CategoryForm from '@/Pages/Category/Form';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import CategoryForm from '@/Pages/Category/Form.vue';
     import { getTranslation } from '@/Libs/translation';
     import { isBlank } from '@/Libs/utils';
     import { success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'CategoryEdit',
+
         components: {
             BizErrorNotifications,
             CategoryForm,

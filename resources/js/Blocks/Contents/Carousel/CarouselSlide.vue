@@ -76,8 +76,8 @@
 <script>
     import MixinContentHasMediaLibrary from '@/Mixins/ContentHasMediaLibrary';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
-    import BizButton from '@/Biz/Button';
-    import BizImage from '@/Biz/Image';
+    import BizButton from '@/Biz/Button.vue';
+    import BizImage from '@/Biz/Image.vue';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
 
     export default {

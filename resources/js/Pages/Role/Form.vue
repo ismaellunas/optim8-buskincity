@@ -46,8 +46,8 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizFormInput from '@/Biz/Form/Input';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
     import { pull } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 

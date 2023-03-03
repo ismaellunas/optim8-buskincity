@@ -8,14 +8,14 @@ use App\Services\MenuService;
 
 class PageTranslationObserver
 {
-    protected function flushMenuCache($pageTranslation)
+    protected function flushMenuCache(PageTranslation $pageTranslation)
     {
         if ($pageTranslation->isClearingMenuCacheRequired()) {
             app(MenuCache::class)->flush();
         }
     }
 
-    protected function removeFromMenus($pageTranslation)
+    protected function removeFromMenus(PageTranslation $pageTranslation)
     {
         if (
             $pageTranslation->isDirty('status')
@@ -28,25 +28,27 @@ class PageTranslationObserver
         }
     }
 
-    public function saved($pageTranslation)
+    public function saved(PageTranslation $pageTranslation)
     {
         $this->flushMenuCache($pageTranslation);
     }
 
-    public function updated($pageTranslation)
+    public function updated(PageTranslation $pageTranslation)
     {
         $this->removeFromMenus($pageTranslation);
     }
 
-    public function saving($pageTranslation)
+    public function saving(PageTranslation $pageTranslation)
     {
         if ($pageTranslation->isDirty('data')) {
             $pageTranslation->setGeneratedStyle();
         }
     }
 
-    public function deleted($pageTranslation)
+    public function deleted(PageTranslation $pageTranslation)
     {
         app(MenuCache::class)->flush();
+
+        $pageTranslation->detachMedia();
     }
 }

@@ -58,6 +58,11 @@ class Media extends CloudinaryMedia implements TranslatableContract
         return $this->morphTo();
     }
 
+    public function mediable()
+    {
+        return $this->hasMany(Mediable::class, 'media_id');
+    }
+
     // Scopes:
     public function scopeImage($query)
     {
@@ -229,5 +234,10 @@ class Media extends CloudinaryMedia implements TranslatableContract
         }
 
         return $slice;
+    }
+
+    public function getCanDeletedAttribute(): bool
+    {
+        return $this->mediable->isEmpty();
     }
 }

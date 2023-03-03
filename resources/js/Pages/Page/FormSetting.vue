@@ -81,13 +81,13 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizFormNumberAddons from '@/Biz/Form/NumberAddons';
-    import BizFormSelect from '@/Biz/Form/Select';
+    import BizFormNumberAddons from '@/Biz/Form/NumberAddons.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
     import { useModelWrapper } from '@/Libs/utils';
     import { backgroundColors } from '@/ComponentStructures/style-options';
 
     export default {
-        name: 'FormSetting',
+        name: 'PageFormSetting',
 
         components: {
             BizFormNumberAddons,

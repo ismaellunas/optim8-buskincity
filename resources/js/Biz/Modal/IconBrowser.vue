@@ -117,11 +117,11 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizInput from '@/Biz/Input';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizSelect from '@/Biz/Select';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizInput from '@/Biz/Input.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizSelect from '@/Biz/Select.vue';
     import { debounceTime } from '@/Libs/defaults';
     import { debounce, filter, isEmpty } from 'lodash';
 

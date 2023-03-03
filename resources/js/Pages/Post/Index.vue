@@ -104,7 +104,7 @@
                         <biz-buttons-display-view
                             v-model="view"
                             wrapper-tag="div"
-                            class="buttons is-right"
+                            class="is-right"
                             @on-view-changed="onViewChanged"
                         />
                     </div>
@@ -143,23 +143,23 @@
 <script>
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasTab from '@/Mixins/HasTab';
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizButtonsDisplayView from '@/Biz/ButtonsDisplayView';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizDropdownScroll from '@/Biz/DropdownScroll';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizIcon from '@/Biz/Icon';
-    import BizPagination from '@/Biz/Pagination';
-    import BizPostGallery from '@/Biz/Post/Gallery';
-    import BizPostGalleryItem from '@/Biz/Post/GalleryItem';
-    import BizPostList from '@/Biz/Post/List';
-    import BizPostListItem from '@/Biz/Post/ListItem';
-    import BizTab from '@/Biz/Tab';
-    import BizTabList from '@/Biz/TabList';
-    import BizTableInfo from '@/Biz/TableInfo';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizButtonsDisplayView from '@/Biz/ButtonsDisplayView.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdown from '@/Biz/Dropdown.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizDropdownScroll from '@/Biz/DropdownScroll.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizPagination from '@/Biz/Pagination.vue';
+    import BizPostGallery from '@/Biz/Post/Gallery.vue';
+    import BizPostGalleryItem from '@/Biz/Post/GalleryItem.vue';
+    import BizPostList from '@/Biz/Post/List.vue';
+    import BizPostListItem from '@/Biz/Post/ListItem.vue';
+    import BizTab from '@/Biz/Tab.vue';
+    import BizTabList from '@/Biz/TabList.vue';
+    import BizTableInfo from '@/Biz/TableInfo.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { clone, keys, head, merge } from 'lodash';

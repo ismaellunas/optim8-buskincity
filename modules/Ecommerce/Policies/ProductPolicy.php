@@ -18,7 +18,7 @@ class ProductPolicy extends BasePermissionPolicy
         if (LoginService::isAdminHomeUrl()) {
             return (
                 $user->can('product.browse')
-                || $user->products->isNotEmpty()
+                || $user->isProductManager()
             );
         }
 

@@ -36,9 +36,9 @@
 </template>
 
 <script>
-    import BizCard from '@/Biz/Card';
-    import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
-    import ConfigNumber from '@/Blocks/Configs/Number';
+    import BizCard from '@/Biz/Card.vue';
+    import ConfigCheckbox from '@/Blocks/Configs/Checkbox.vue';
+    import ConfigNumber from '@/Blocks/Configs/Number.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

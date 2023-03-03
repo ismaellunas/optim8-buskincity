@@ -31,8 +31,8 @@
 </template>
 
 <script>
-    import BizFormInputAddons from '@/Biz/Form/InputAddons';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
+    import BizFormInputAddons from '@/Biz/Form/InputAddons.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import { useModelWrapper, regexSlug } from '@/Libs/utils';
     import icon from '@/Libs/icon-class';
 

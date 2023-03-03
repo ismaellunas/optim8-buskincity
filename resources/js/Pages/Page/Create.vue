@@ -22,9 +22,9 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import AppLayout from '@/Layouts/AppLayout';
-    import PageForm from '@/Pages/Page/Form';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import PageForm from '@/Pages/Page/Form.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import { getEmptyPageTranslation } from '@/Libs/page';
     import { onPageEditorClicked } from '@/Libs/page-builder';
     import { oops as oopsAlert } from '@/Libs/alert';
@@ -32,6 +32,8 @@
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'PageCreate',
+
         components: {
             PageForm,
             BizErrorNotifications,

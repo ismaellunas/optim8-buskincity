@@ -324,17 +324,17 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizInput from '@/Biz/Input';
-    import BizInputError from '@/Biz/InputError';
-    import BizLabel from '@/Biz/Label';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizInput from '@/Biz/Input.vue';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizLabel from '@/Biz/Label.vue';
     import { Head, useForm } from '@inertiajs/inertia-vue3';
     import { concat, debounce, filter, isEmpty, replace } from 'lodash';
     import { success as successAlert } from '@/Libs/alert';

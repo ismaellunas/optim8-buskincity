@@ -31,8 +31,8 @@
 <script>
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import BizFormPhone from '@/Biz/Form/Phone';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
+    import BizFormPhone from '@/Biz/Form/Phone.vue';
     import { isEmpty } from '@/Libs/utils';
 
     export default {

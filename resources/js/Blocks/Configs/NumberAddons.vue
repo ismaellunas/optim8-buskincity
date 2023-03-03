@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import BizFormNumberAddons from '@/Biz/Form/NumberAddons';
+    import BizFormNumberAddons from '@/Biz/Form/NumberAddons.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

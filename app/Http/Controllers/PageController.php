@@ -114,10 +114,12 @@ class PageController extends CrudController
      */
     public function store(PageRequest $request)
     {
+        $inputs = $request->all();
         $page = new $this->model;
 
-        $page->saveFromInputs($request->all());
+        $page->saveFromInputs($inputs);
         $page->saveAuthorId(Auth::id());
+        $page->syncMediaFromInputs($inputs);
 
         $this->generateFlashMessage('Page created successfully!');
 
@@ -193,9 +195,12 @@ class PageController extends CrudController
      */
     public function update(PageRequest $request, Page $page)
     {
-        $inputs = $request->all();
+        $inputs = $this->pageService->filterInputs(
+            $request->all()
+        );
 
         $page->saveFromInputs($inputs);
+        $page->syncMediaFromInputs($inputs);
 
         $this->generateFlashMessage('Page updated successfully!');
 

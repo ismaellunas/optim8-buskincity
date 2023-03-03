@@ -27,6 +27,9 @@ class OrderService
         string $term = null,
         ?array $scopes = null
     ): Builder {
+        $user = auth()->user();
+        $isUserProductManager = $user->isProductManager();
+
         return Order::when($term, function ($query) use ($term) {
                 $query
                     ->where('reference', 'ILIKE', '%'.$term.'%')
@@ -68,6 +71,9 @@ class OrderService
                     });
                 }
             })
+            ->when($isUserProductManager, function ($query) use ($user) {
+                $query->productManager($user->id);
+            })
             ->with([
                 'firstEventLine' => function ($query) {
                     $query->with([
@@ -78,9 +84,14 @@ class OrderService
                         'purchasable' => function ($query) {
                             $query->with('product', function ($query) {
                                 $query->select('id', 'product_type_id', 'attribute_data');
-                                $query->with('metas', function ($query) {
-                                    $query->whereIn('key', ['locations']);
-                                });
+                                $query->with([
+                                    'metas' => function ($query) {
+                                        $query->whereIn('key', ['locations']);
+                                    },
+                                    'managers' => function ($query) {
+                                        $query->select('user_id');
+                                    }
+                                ]);
                             });
                         },
                     ]);
@@ -197,7 +208,7 @@ class OrderService
                 'start_end_time' => $event->displayStartEndTime,
                 'date' => $event->timezonedBookedAt->format('d M Y'),
                 'can' => [
-                    'read' => $user->can('order.read'),
+                    'read' => $user->can('view', $record)
                 ],
             ];
         });
@@ -216,7 +227,7 @@ class OrderService
     {
         $event = $order->firstEventLine->latestEvent;
 
-        $product = $order->firstEventLine->purchasable->product;
+        $product = $order->firstProduct;
 
         $product->load(['metas' => function ($query) {
             $query->whereIn('key', ['locations', 'is_check_in_required']);

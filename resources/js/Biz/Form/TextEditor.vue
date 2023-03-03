@@ -29,9 +29,9 @@
 </template>
 
 <script>
-    import BizFormField from '@/Biz/Form/Field';
-    import BizInputError from '@/Biz/InputError';
-    import BizTextEditor from '@/Biz/EditorTinymce';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizTextEditor from '@/Biz/EditorTinymce.vue';
     import { emailConfig } from '@/Libs/tinymce-configs';
     import { useModelWrapper } from '@/Libs/utils';
 

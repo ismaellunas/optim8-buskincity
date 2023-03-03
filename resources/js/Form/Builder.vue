@@ -32,9 +32,9 @@
 </template>
 
 <script>
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizLanguageTab from '@/Biz/LanguageTab';
-    import FormField from './FormField';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizLanguageTab from '@/Biz/LanguageTab.vue';
+    import FormField from './FormField.vue';
     import { isEmpty, sortBy, find } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { ref } from 'vue';

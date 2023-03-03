@@ -3,13 +3,13 @@
 </template>
 
 <script>
-    import FacebookIcon from './ProviderIcons/FacebookIcon';
-    import GoogleIcon from './ProviderIcons/GoogleIcon';
-    import TwitterIcon from './ProviderIcons/TwitterIcon';
-    import LinkedinIcon from './ProviderIcons/LinkedInIcon';
-    import GithubIcon from './ProviderIcons/GithubIcon';
-    import GitlabIcon from './ProviderIcons/GitLabIcon';
-    import BitbucketIcon from './ProviderIcons/BitbucketIcon';
+    import FacebookIcon from './ProviderIcons/FacebookIcon.vue';
+    import GoogleIcon from './ProviderIcons/GoogleIcon.vue';
+    import TwitterIcon from './ProviderIcons/TwitterIcon.vue';
+    import LinkedinIcon from './ProviderIcons/LinkedInIcon.vue';
+    import GithubIcon from './ProviderIcons/GithubIcon.vue';
+    import GitlabIcon from './ProviderIcons/GitLabIcon.vue';
+    import BitbucketIcon from './ProviderIcons/BitbucketIcon.vue';
 
     export default {
         components: {

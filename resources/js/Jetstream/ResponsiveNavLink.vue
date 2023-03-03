@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import BizLink from '@/Biz/Link';
+    import BizLink from '@/Biz/Link.vue';
 
     export default {
         components: {

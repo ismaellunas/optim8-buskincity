@@ -27,8 +27,8 @@
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinMediaLibrary from '@/Mixins/MediaLibrary';
     import MixinMediaTextEditor from '@/Mixins/MediaTextEditor';
-    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
-    import BizTextEditor from '@/Biz/EditorTinymce';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
+    import BizTextEditor from '@/Biz/EditorTinymce.vue';
     import { fullConfig } from '@/Libs/tinymce-configs';
     import { useModelWrapper } from '@/Libs/utils';
 

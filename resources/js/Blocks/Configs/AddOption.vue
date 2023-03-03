@@ -47,7 +47,7 @@
 </template>
 
 <script>
-    import FormInput from '@/Biz/Form/Input';
+    import FormInput from '@/Biz/Form/Input.vue';
     import icon from '@/Libs/icon-class';
     import { useModelWrapper } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';

@@ -131,10 +131,10 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizTable from '@/Biz/Table';
-    import BizTag from '@/Biz/Tag';
+    import BizButton from '@/Biz/Button.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizTable from '@/Biz/Table.vue';
+    import BizTag from '@/Biz/Tag.vue';
     import { statusCodeColor } from '@/Libs/utils';
 
     export default {

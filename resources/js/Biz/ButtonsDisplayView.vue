@@ -1,10 +1,10 @@
 <template>
     <component
         :is="wrapperTag"
-        :class="class"
+        class="buttons"
     >
         <biz-button-icon
-            :icon="icon.grid"
+            :icon="iconGrid"
             title="Gallery View"
             type="button"
             :class="{'is-primary': view === 'gallery'}"
@@ -12,7 +12,7 @@
         />
 
         <biz-button-icon
-            :icon="icon.list"
+            :icon="iconList"
             title="List View"
             type="button"
             :class="{'is-primary': view === 'list'}"
@@ -22,9 +22,9 @@
 </template>
 
 <script>
-    import BizButtonIcon from '@/Biz/ButtonIcon';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import { useModelWrapper } from '@/Libs/utils';
-    import icon from '@/Libs/icon-class';
+    import { grid as iconGrid, list as iconList } from '@/Libs/icon-class';
 
     export default {
         name: 'BizButtonsDisplayView',
@@ -32,8 +32,13 @@
             BizButtonIcon,
         },
         props: {
-            class: {default: 'buttons'},
-            modelValue: {default: 'gallery'},
+            modelValue: {
+                type: String,
+                default: 'gallery',
+                validator(value) {
+                    return ['gallery', 'list'].includes(value)
+                }
+            },
             wrapperTag: {type: String, default: 'p'},
         },
         emits: [
@@ -42,7 +47,8 @@
         ],
         setup(props, {emit}) {
             return {
-                icon,
+                iconGrid,
+                iconList,
                 view: useModelWrapper(props, emit),
             }
         },

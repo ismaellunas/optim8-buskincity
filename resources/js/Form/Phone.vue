@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    import BizFormPhone from '@/Biz/Form/Phone';
+    import BizFormPhone from '@/Biz/Form/Phone.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';

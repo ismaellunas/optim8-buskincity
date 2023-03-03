@@ -65,7 +65,7 @@
                                         <td>
                                             <biz-button-link
                                                 class="is-primary is-outlined is-small"
-                                                :href="route(data.baseRouteName + '.entries.show', {form_builder: selectedForm, entry: entry.id})"
+                                                :href="route(data.baseRouteName + '.entries.show', {form_builder: selectedForm, form_entry: entry.id})"
                                             >
                                                 View Detail
                                             </biz-button-link>
@@ -110,7 +110,7 @@
                             <biz-button-link
                                 v-if="!!selectedForm"
                                 class="is-primary is-outlined is-small"
-                                :href="route(data.baseRouteName + '.entries', selectedForm)"
+                                :href="route(data.baseRouteName + '.entries.index', selectedForm)"
                             >
                                 View All
                             </biz-button-link>
@@ -123,13 +123,13 @@
 </template>
 
 <script>
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizLoader from '@/Biz/Loader';
-    import BizPagination from '@/Biz/Pagination';
-    import BizPanel from '@/Biz/Panel';
-    import BizPanelBlock from '@/Biz/PanelBlock';
-    import BizSelect from '@/Biz/Select';
-    import BizTable from '@/Biz/Table';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizLoader from '@/Biz/Loader.vue';
+    import BizPagination from '@/Biz/Pagination.vue';
+    import BizPanel from '@/Biz/Panel.vue';
+    import BizPanelBlock from '@/Biz/PanelBlock.vue';
+    import BizSelect from '@/Biz/Select.vue';
+    import BizTable from '@/Biz/Table.vue';
     import icon from '@/Libs/icon-class';
     import { head, isEmpty } from 'lodash';
 

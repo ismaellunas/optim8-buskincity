@@ -37,7 +37,7 @@
 </template>
 
 <script>
-    import FormFieldFiles from '@/Biz/Form/FieldFiles';
+    import FormFieldFiles from '@/Biz/Form/FieldFiles.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 

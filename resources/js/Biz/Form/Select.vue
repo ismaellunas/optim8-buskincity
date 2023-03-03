@@ -38,9 +38,9 @@
 </template>
 
 <script>
-    import BizFormField from '@/Biz/Form/Field';
-    import BizInputError from '@/Biz/InputError';
-    import BizSelect from '@/Biz/Select';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizSelect from '@/Biz/Select.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

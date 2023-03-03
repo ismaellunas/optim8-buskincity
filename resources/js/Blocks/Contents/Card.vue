@@ -14,55 +14,42 @@
                 :class="cardImageClass"
             >
                 <div
-                    :class="this.config?.image?.position"
+                    :class="config?.image?.position"
                 >
                     <biz-image
                         v-if="hasImage"
                         :src="imageSrc"
                         :alt="altText"
-                        :ratio="this.config?.image?.ratio"
-                        :rounded="this.config?.image?.rounded"
-                        :square="this.config?.image?.fixedSquare"
+                        :ratio="config?.image?.ratio"
+                        :rounded="config?.image?.rounded"
+                        :square="config?.image?.fixedSquare"
                         :img-style="imageStyles"
                         :has-position="hasPosition"
                     />
                 </div>
 
-                <biz-button
+                <biz-button-icon
                     v-if="hasImage"
-                    type="button"
                     class="is-overlay is-small"
+                    type="button"
+                    :icon="isFormDisplayed ? iconClear : iconEdit"
                     @click="toggleEdit"
-                >
-                    <span
-                        v-if="isFormDisplayed"
-                        class="icon"
-                    >
-                        <i class="fas fa-times-circle" />
-                    </span>
-                    <span
-                        v-else
-                        class="icon"
-                    >
-                        <i class="fas fa-pen" />
-                    </span>
-                </biz-button>
+                />
 
                 <div
                     v-if="isFormDisplayed"
                     class="card-content has-background-info-light"
                 >
                     <div class="block has-text-centered">
-                        <biz-button
+                        <biz-button-icon
+                            icon-class="is-small"
                             type="button"
                             :disabled="!can.media.browse"
+                            :icon="iconImage"
                             @click="openModal()"
                         >
                             <span>Open Media</span>
-                            <span class="icon is-small">
-                                <i class="far fa-image" />
-                            </span>
-                        </biz-button>
+                        </biz-button-icon>
                     </div>
                 </div>
             </div>
@@ -98,19 +85,22 @@
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizButton from '@/Biz/Button';
-    import BizEditor from '@/Biz/EditorTinymce';
-    import BizImage from '@/Biz/Image';
-    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizEditor from '@/Biz/EditorTinymce.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
+    import icon from '@/Libs/icon-class';
+    import { clear as iconClear, edit as iconEdit, image as iconImage } from '@/Libs/icon-class';
     import { concat } from 'lodash';
-    import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { inject } from "vue";
+    import { isBlank, useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'Card',
+        name: 'ContentCard',
+
         components: {
-            BizButton,
+            BizButtonIcon,
             BizEditor,
             BizImage,
             BizModalMediaBrowser,
@@ -135,6 +125,9 @@
                 dataImages: inject('dataImages'),
                 entity: useModelWrapper(props, emit),
                 pageMedia: inject('dataMedia'),
+                iconClear,
+                iconEdit,
+                iconImage,
             };
         },
         data() {

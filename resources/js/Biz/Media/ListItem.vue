@@ -64,9 +64,9 @@
 
 <script>
     import MixinMediaItem from '@/Mixins/MediaItem';
-    import BizButtonDownload from '@/Biz/ButtonDownload';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizImage from '@/Biz/Image';
+    import BizButtonDownload from '@/Biz/ButtonDownload.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizImage from '@/Biz/Image.vue';
 
     export default {
         name: 'MediaListItem',

@@ -159,7 +159,7 @@ class MediaController extends CrudController
     {
         $this->mediaService->destroy($media, new CloudinaryStorage());
 
-        $request->session()->flash('message', 'Media deleted successfully!'.$media->file_name);
+        $this->generateFlashMessage('Media deleted successfully!');
 
         return redirect()->back();
     }

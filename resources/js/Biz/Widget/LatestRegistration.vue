@@ -148,15 +148,15 @@
 </template>
 
 <script>
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizImage from '@/Biz/Image';
-    import BizInput from '@/Biz/Input';
-    import BizLoader from '@/Biz/Loader';
-    import BizPanel from '@/Biz/Panel';
-    import BizPanelBlock from '@/Biz/PanelBlock';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdown from '@/Biz/Dropdown.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import BizInput from '@/Biz/Input.vue';
+    import BizLoader from '@/Biz/Loader.vue';
+    import BizPanel from '@/Biz/Panel.vue';
+    import BizPanelBlock from '@/Biz/PanelBlock.vue';
     import icon from '@/Libs/icon-class';
     import { debounce } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';

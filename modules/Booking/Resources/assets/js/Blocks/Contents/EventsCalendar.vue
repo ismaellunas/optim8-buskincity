@@ -119,8 +119,8 @@
     import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
-    import BizIcon from '@/Biz/Icon';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import { calendarCirclePlus as iconCalendar } from '@/Libs/icon-class';
     import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';

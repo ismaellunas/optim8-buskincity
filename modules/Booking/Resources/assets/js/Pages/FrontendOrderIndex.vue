@@ -18,7 +18,7 @@
 
                         <biz-icon
                             class="is-small"
-                            :icon="icon.angleDown"
+                            :icon="iconAngleDown"
                         />
                     </template>
 
@@ -154,7 +154,7 @@
                         >
                             <biz-icon
                                 class="is-small"
-                                :icon="icon.show"
+                                :icon="iconShow"
                             />
                         </biz-button-link>
                     </div>
@@ -166,19 +166,19 @@
 
 <script>
     import MixinHasColumnSorted from '@/Mixins/HasColumnSorted';
-    import Layout from '@/Layouts/User';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizDropdownSearch from '@/Biz/DropdownSearch';
-    import BizFilterDateRange from '@/Biz/Filter/DateRange';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizIcon from '@/Biz/Icon';
-    import BizTableColumnSort from '@/Biz/TableColumnSort';
-    import BizTableIndex from '@/Biz/TableIndex';
-    import BizTag from '@/Biz/Tag';
-    import icon from '@/Libs/icon-class';
+    import Layout from '@/Layouts/User.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdown from '@/Biz/Dropdown.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
+    import BizFilterDateRange from '@/Biz/Filter/DateRange.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizTableColumnSort from '@/Biz/TableColumnSort.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
+    import BizTag from '@/Biz/Tag.vue';
+    import { angleDown as iconAngleDown, show as iconShow } from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { debounce, isEmpty, isArray, filter, merge } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
@@ -215,7 +215,8 @@
 
         setup(props) {
             return {
-                icon,
+                iconAngleDown,
+                iconShow,
                 dates: ref(isArray(props.pageQueryParams?.dates)
                     ? props.pageQueryParams?.dates.filter(Boolean)
                     : []

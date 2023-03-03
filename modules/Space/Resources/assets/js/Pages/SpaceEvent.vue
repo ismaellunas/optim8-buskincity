@@ -78,12 +78,12 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizTableIndex from '@/Biz/TableIndex';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import SpaceEventFormModal from './SpaceEventFormModal';
+    import BizButton from '@/Biz/Button.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
+    import SpaceEventFormModal from './SpaceEventFormModal.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useModelWrapper } from '@/Libs/utils';

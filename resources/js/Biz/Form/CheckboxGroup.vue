@@ -58,9 +58,9 @@
 </template>
 
 <script>
-    import BizFormField from '@/Biz/Form/Field';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizInputError from '@/Biz/InputError';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizInputError from '@/Biz/InputError.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

@@ -20,13 +20,14 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import PostForm from '@/Pages/Post/Form';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import PostForm from '@/Pages/Post/Form.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
     import { success as successAlert } from '@/Libs/alert';
 
     export default {
+        name: 'PostCreate',
         components: {
             PostForm,
             BizErrorNotifications,

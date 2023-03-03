@@ -27,9 +27,9 @@
 </template>
 
 <script>
-    import BizFormField from '@/Biz/Form/Field';
-    import BizNumber from '@/Biz/Number';
-    import BizInputError from '@/Biz/InputError';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizNumber from '@/Biz/Number.vue';
+    import BizInputError from '@/Biz/InputError.vue';
 
     export default {
         name: 'BizFormNumber',
