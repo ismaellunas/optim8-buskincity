@@ -48,7 +48,8 @@ class Product extends GetCandyProduct
 
     public function managers()
     {
-        return $this->belongsToMany(User::class, 'product_user');
+        return $this->belongsToMany(User::class, 'product_user')
+            ->withPivot(['user_id']);
     }
 
     public function scopePublished($query)
