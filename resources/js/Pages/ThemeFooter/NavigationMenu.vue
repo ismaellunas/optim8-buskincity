@@ -48,7 +48,7 @@
 
 <script>
     import Draggable from "vuedraggable";
-    import ThemeMenuItem from '@/Biz/ThemeMenuItem';
+    import ThemeMenuItem from '@/Biz/ThemeMenuItem.vue';
     import icon from '@/Libs/icon-class';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { confirmDelete } from '@/Libs/alert';

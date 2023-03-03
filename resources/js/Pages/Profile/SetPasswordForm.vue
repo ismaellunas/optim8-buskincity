@@ -49,10 +49,10 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizActionMessage from '@/Biz/ActionMessage';
-    import BizButton from '@/Biz/Button';
-    import BizFormPassword from '@/Biz/Form/Password';
-    import BizFormSection from '@/Biz/FormSection';
+    import BizActionMessage from '@/Biz/ActionMessage.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormPassword from '@/Biz/Form/Password.vue';
+    import BizFormSection from '@/Biz/FormSection.vue';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
 
     export default {

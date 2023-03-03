@@ -26,7 +26,7 @@
                     :index="index"
                     :selected-locale="selectedLocale"
                     :visible-slide="visibleSlide"
-                    @openModal="openModalMedia(index)"
+                    @open-modal="openModalMedia(index)"
                 />
             </template>
         </carousel-main>
@@ -55,13 +55,14 @@
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import { cloneDeep } from 'lodash';
     import { useModelWrapper, isBlank } from '@/Libs/utils';
     import { inject } from "vue";
 
     export default {
+        name: 'ContentCarousel',
         components: {
             CarouselMain,
             CarouselSlide,

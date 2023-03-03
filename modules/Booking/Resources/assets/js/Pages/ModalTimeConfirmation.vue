@@ -65,11 +65,11 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizFormTextarea from '@/Biz/Form/Textarea';
-    import BizIcon from '@/Biz/Icon';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizTable from '@/Biz/Table';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizTable from '@/Biz/Table.vue';
     import bookingIcon from '@booking/Libs/booking-icon';
     import { computed } from 'vue';
     import { durationDateTimeText } from '@booking/Libs/event';

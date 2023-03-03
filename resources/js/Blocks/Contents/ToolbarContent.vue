@@ -5,54 +5,45 @@
                 v-if="canDuplicate"
                 class="control"
             >
-                <biz-button
-                    type="button"
+                <biz-button-icon
                     class="is-small"
+                    type="button"
+                    :icon="iconCopy"
                     @click="$emit('duplicate-content', $event)"
-                >
-                    <span class="icon">
-                        <i :class="icon.copy" />
-                    </span>
-                </biz-button>
+                />
             </p>
             <p
                 v-if="canDelete"
                 class="control"
             >
-                <biz-button
-                    type="button"
+                <biz-button-icon
                     class="is-small"
+                    type="button"
+                    :icon="iconRemove"
                     @click="$emit('delete-content', $event)"
-                >
-                    <span class="icon">
-                        <i :class="icon.remove" />
-                    </span>
-                </biz-button>
+                />
             </p>
             <p
                 v-if="canMove"
                 class="control"
             >
-                <biz-button
-                    type="button"
+                <biz-button-icon
                     class="is-small handle-content"
-                >
-                    <span class="icon">
-                        <i :class="icon.move" />
-                    </span>
-                </biz-button>
+                    type="button"
+                    :icon="iconMove"
+                />
             </p>
         </div>
     </div>
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import icon from '@/Libs/icon-class';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import { copy as iconCopy, remove as iconRemove, move as iconMove } from '@/Libs/icon-class';
 
     export default {
         components: {
-            BizButton,
+            BizButtonIcon,
         },
 
         props: {
@@ -66,9 +57,11 @@
             'duplicate-content',
         ],
 
-        data() {
+        setup() {
             return {
-                icon,
+                iconCopy,
+                iconRemove,
+                iconMove,
             };
         },
     }

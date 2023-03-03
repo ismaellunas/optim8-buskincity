@@ -1,3 +1,5 @@
+/** TODO: if it's possible to load tinymce from local */
+
 // Tiny MCE
 import 'tinymce/tinymce.min';
 import 'tinymce/themes/silver/theme.min';
@@ -24,3 +26,8 @@ import 'tinymce/plugins/searchreplace';
 import 'tinymce/plugins/table';
 import 'tinymce/plugins/visualblocks';
 import 'tinymce/plugins/wordcount';
+
+import 'tinymce/skins/ui/oxide/skin.min.css';
+import 'tinymce/skins/ui/oxide/content.min.css';
+import 'tinymce/skins/ui/oxide/content.inline.min.css';
+import 'tinymce/skins/content/default/content.css';

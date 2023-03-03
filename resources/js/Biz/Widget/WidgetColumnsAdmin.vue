@@ -34,7 +34,7 @@
 </template>
 
 <script>
-    import LatestRegistration from '@/Biz/Widget/LatestRegistration';
+    import LatestRegistration from '@/Biz/Widget/LatestRegistration.vue';
     import { defineAsyncComponent } from 'vue';
     import { sortBy } from 'lodash';
 
@@ -56,11 +56,15 @@
 
             props.moduleWidgets.forEach((widget) => {
                 if (widget.moduleName == 'FormBuilder') {
-                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import('@formbuilder/Widgets/'+widget.componentName));
+                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import(
+                        `../../../../modules/FormBuilder/Resources/assets/js/Widgets/${widget.componentName}.vue`
+                    ));
                 }
 
                 if (widget.moduleName == 'Booking') {
-                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import('@booking/Widgets/'+widget.componentName));
+                    asyncComponents[widget.componentName] = defineAsyncComponent(() => import(
+                        `../../../../modules/Booking/Resources/assets/js/Widgets/${widget.componentName}.vue`
+                    ));
                 }
             });
 

@@ -64,13 +64,13 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizIcon from '@/Biz/Icon';
-    import BizTableIndex from '@/Biz/TableIndex';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';

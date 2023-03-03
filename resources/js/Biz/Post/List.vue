@@ -5,14 +5,14 @@
                 v-for="record in records"
                 :key="record.id"
             >
-                <slot :record="record"></slot>
+                <slot :record="record" />
             </template>
         </tbody>
     </biz-table>
 </template>
 
 <script>
-    import BizTable from '@/Biz/Table';
+    import BizTable from '@/Biz/Table.vue';
 
     export default {
         name: 'PostList',

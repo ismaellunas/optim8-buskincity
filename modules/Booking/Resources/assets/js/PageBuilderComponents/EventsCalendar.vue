@@ -140,11 +140,11 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizButton from '@/Biz/Button';
-    import BizFilterDateRange from '@/Biz/Filter/DateRange';
-    import BizIcon from '@/Biz/Icon';
-    import BizPagination from '@/Biz/Pagination';
-    import BizSelect from '@/Biz/Select';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFilterDateRange from '@/Biz/Filter/DateRange.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizPagination from '@/Biz/Pagination.vue';
+    import BizSelect from '@/Biz/Select.vue';
     import bookingIcon from '@mod/Booking/Resources/assets/js/Libs/booking-icon';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';

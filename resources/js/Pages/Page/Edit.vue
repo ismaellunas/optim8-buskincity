@@ -29,10 +29,10 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import PageForm from '@/Pages/Page/Form';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
+    import PageForm from '@/Pages/Page/Form.vue';
     import { confirmDelete, confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { find } from 'lodash';
     import { getEmptyPageTranslation } from '@/Libs/page';
@@ -44,6 +44,8 @@
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'PageEdit',
+
         components: {
             BizErrorNotifications,
             BizFlashNotifications,

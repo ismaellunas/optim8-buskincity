@@ -15,15 +15,15 @@
     import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import BizImage from '@/Biz/Image';
+    import BizImage from '@/Biz/Image.vue';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
 
     export default {
-        name: 'Video',
+        name: 'ContentVideo',
 
         components: {
-            BizToolbarContent,
             BizImage,
+            BizToolbarContent,
         },
 
         mixins: [
@@ -33,5 +33,5 @@
         ],
 
         inject: ['media'],
-    }
+    };
 </script>

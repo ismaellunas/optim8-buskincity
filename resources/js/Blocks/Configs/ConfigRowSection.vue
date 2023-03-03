@@ -48,8 +48,8 @@
 </template>
 
 <script>
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizCard from '@/Biz/Card';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizCard from '@/Biz/Card.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

@@ -17,7 +17,7 @@
 </template>
 
 <script>
-    import BizIcon from '@/Biz/Icon';
+    import BizIcon from '@/Biz/Icon.vue';
 
     export default {
         name: 'BizIconText',

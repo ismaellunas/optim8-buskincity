@@ -43,11 +43,11 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizButton from '@/Biz/Button';
-    import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import BizNotifications from '@/Biz/Notifications';
-    import BizRecaptcha from '@/Biz/Recaptcha';
-    import FieldGroup from '@/Form/FieldGroup';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
+    import BizNotifications from '@/Biz/Notifications.vue';
+    import BizRecaptcha from '@/Biz/Recaptcha.vue';
+    import FieldGroup from '@/Form/FieldGroup.vue';
     import { inRange, isEmpty, forOwn } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { reactive } from 'vue';

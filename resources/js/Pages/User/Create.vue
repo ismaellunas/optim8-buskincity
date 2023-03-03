@@ -47,16 +47,17 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import FormUserPassword from '@/Pages/User/FormPassword';
-    import FormUserProfile from '@/Pages/User/FormProfile';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import FormUserPassword from '@/Pages/User/FormPassword.vue';
+    import FormUserProfile from '@/Pages/User/FormProfile.vue';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { success as successAlert } from '@/Libs/alert';
 
     export default {
+        name: 'UserCreate',
         components: {
             BizButton,
             BizButtonLink,

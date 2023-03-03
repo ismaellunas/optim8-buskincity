@@ -26,9 +26,9 @@
 </template>
 
 <script>
-    import BizFormField from '@/Biz/Form/Field';
-    import BizInputColor from '@/Biz/InputColor';
-    import BizInputError from '@/Biz/InputError';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizInputColor from '@/Biz/InputColor.vue';
+    import BizInputError from '@/Biz/InputError.vue';
     import MixinHasModal from '@/Mixins/HasModal';
     import { useModelWrapper } from '@/Libs/utils';
 

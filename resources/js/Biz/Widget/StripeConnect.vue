@@ -75,8 +75,8 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizInputError from '@/Biz/InputError';
-    import BizLink from '@/Biz/Link';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizLink from '@/Biz/Link.vue';
     import { confirm as confirmAlert, oops as oopsAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 

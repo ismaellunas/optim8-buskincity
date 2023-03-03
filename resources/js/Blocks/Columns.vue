@@ -60,14 +60,16 @@
     import MixinContentHasImage from '@/Mixins/ContentHasImage';
     import MixinEditModeComponent from '@/Mixins/EditModeComponent';
     import MixinMediaImage from '@/Mixins/MediaImage';
-    import BizButton from '@/Biz/Button';
-    import BlockColumn from '@/Blocks/Column';
+    import BizButton from '@/Biz/Button.vue';
+    import BlockColumn from '@/Blocks/Column.vue';
     import { confirm, confirmDelete } from '@/Libs/alert';
     import { useModelWrapper, isEmpty, getResourceFromDataObject } from '@/Libs/utils';
     import { inject } from "vue";
     import icon from '@/Libs/icon-class';
 
     export default {
+        name: 'PBColumn',
+
         components: {
             BizButton,
             BlockColumn,

@@ -127,10 +127,10 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import ActionSection from '@/Frontend/ActionSection';
-    import BizButton from '@/Biz/Button';
-    import BizFormPassword from '@/Biz/Form/Password';
-    import BizModalCard from '@/Biz/ModalCard';
+    import ActionSection from '@/Frontend/ActionSection.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormPassword from '@/Biz/Form/Password.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
 
     export default {

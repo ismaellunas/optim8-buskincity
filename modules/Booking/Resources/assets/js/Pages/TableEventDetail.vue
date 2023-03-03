@@ -56,8 +56,8 @@
 </template>
 
 <script>
-    import BizIcon from '@/Biz/Icon';
-    import BizTable from '@/Biz/Table';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizTable from '@/Biz/Table.vue';
     import bookingIcon from '@booking/Libs/booking-icon';
     import {
         locationMark as iconLocationMark,
@@ -66,6 +66,8 @@
     } from '@/Libs/icon-class';
 
     export default {
+        name: 'TableEventDetail',
+
         components: {
             BizIcon,
             BizTable,

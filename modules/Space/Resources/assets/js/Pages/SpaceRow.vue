@@ -39,9 +39,9 @@
 </template>
 
 <script>
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizIcon from '@/Biz/Icon';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizIcon from '@/Biz/Icon.vue';
     import { add as iconAdd, edit as iconEdit, remove as iconRemove } from '@/Libs/icon-class';
     import { repeat } from 'lodash';
 

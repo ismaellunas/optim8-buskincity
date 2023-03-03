@@ -76,21 +76,21 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizButtonOption from '@/Biz/ButtonOption';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
-    import BizLabel from '@/Biz/Label';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonOption from '@/Biz/ButtonOption.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch.vue';
+    import BizLabel from '@/Biz/Label.vue';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { debounce, filter, find, isEmpty, sortBy } from 'lodash';
 
     export default {
-        name: 'Language',
+        name: 'LanguageIndex',
 
         components: {
             BizButton,

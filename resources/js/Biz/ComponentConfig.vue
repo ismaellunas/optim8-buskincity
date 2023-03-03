@@ -48,26 +48,25 @@
 </template>
 
 <script>
-    import icon from '@/Libs/icon-class';
-    import BizCard from '@/Biz/Card';
-    import BizIcon from '@/Biz/Icon';
-    import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
-    import ConfigCheckboxes from '@/Blocks/Configs/Checkboxes';
-    import ConfigImageBrowser from '@/Blocks/Configs/ImageBrowser';
-    import ConfigInput from '@/Blocks/Configs/Input';
-    import ConfigInputIcon from '@/Blocks/Configs/InputIcon';
-    import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons';
-    import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
-    import ConfigColumns from '@/Blocks/Configs/ConfigColumns';
+    import BizCard from '@/Biz/Card.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import ConfigCheckbox from '@/Blocks/Configs/Checkbox.vue';
+    import ConfigCheckboxes from '@/Blocks/Configs/Checkboxes.vue';
+    import ConfigColumns from '@/Blocks/Configs/ConfigColumns.vue';
+    import ConfigImageBrowser from '@/Blocks/Configs/ImageBrowser.vue';
+    import ConfigInput from '@/Blocks/Configs/Input.vue';
+    import ConfigInputIcon from '@/Blocks/Configs/InputIcon.vue';
+    import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons.vue';
+    import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection.vue';
+    import ConfigSelect from '@/Blocks/Configs/Select.vue';
+    import ConfigSelectMultiple from '@/Blocks/Configs/SelectMultiple.vue';
+    import TRBL from '@/Blocks/Configs/TRBL.vue';
+    import TRBLInput from '@/Blocks/Configs/TRBLInput.vue';
     import configs from '@/ComponentStructures/configs';
-    import ConfigSelect from '@/Blocks/Configs/Select';
-    import ConfigSelectMultiple from '@/Blocks/Configs/SelectMultiple';
     import moduleConfigs from '@/Modules/ComponentStructures/configs';
-    import TRBL from '@/Blocks/Configs/TRBL';
-    import TRBLInput from '@/Blocks/Configs/TRBLInput';
-    import { camelCase, merge, forEach } from "lodash";
+    import { camelCase, merge, forEach } from 'lodash';
     import { isBlank } from '@/Libs/utils';
-    import { useModelWrapper } from '@/Libs/utils'
+    import { useModelWrapper } from '@/Libs/utils';
 
     export default {
 
@@ -110,12 +109,6 @@
             return {
                 entity,
                 computedStructure: useModelWrapper(props, emit, 'structure'),
-            };
-        },
-
-        data() {
-            return {
-                icon,
             };
         },
 

@@ -92,17 +92,17 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizGmapMarker from '@/Biz/GmapMarker';
-    import BizIcon from '@/Biz/Icon';
-    import BizTag from '@/Biz/Tag';
-    import EventDetailTable from '@booking/Pages/TableEventDetail';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
-    import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizGmapMarker from '@/Biz/GmapMarker.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizTag from '@/Biz/Tag.vue';
+    import EventDetailTable from '@booking/Pages/TableEventDetail.vue';
+    import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation.vue';
     import icon from '@/Libs/icon-class';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';

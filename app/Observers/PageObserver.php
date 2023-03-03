@@ -11,4 +11,11 @@ class PageObserver
     {
         app(MenuService::class)->removeModelFromMenus($page);
     }
+
+    public function deleting(Page $page)
+    {
+        foreach ($page->translations as $pageTranslation) {
+            $pageTranslation->detachMedia();
+        }
+    }
 }

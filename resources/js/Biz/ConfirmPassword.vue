@@ -54,9 +54,9 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizButton from '@/Biz/Button';
-    import BizFormPassword from '@/Biz/Form/Password';
-    import BizModalCard from '@/Biz/ModalCard';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormPassword from '@/Biz/Form/Password.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
 
     export default {
         name: 'BizConfirmPassword',

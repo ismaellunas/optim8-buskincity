@@ -72,7 +72,7 @@
                     <div class="column is-one-fifth">
                         <biz-buttons-display-view
                             v-model="view"
-                            class="buttons is-right"
+                            class="is-right"
                             @on-view-changed="$emit('on-view-changed', $event)"
                         />
                     </div>
@@ -91,7 +91,7 @@
                     :is-download-enabled="isDownloadEnabled"
                     :is-edit-enabled="isEditEnabled"
                     :is-select-enabled="isSelectEnabled"
-                    @on-delete-clicked="deleteRecord"
+                    @on-delete-clicked="onDeleteRecord"
                     @on-edit-clicked="openEditModal"
                 >
                     <template
@@ -240,34 +240,33 @@
 </template>
 
 <script>
+    import HasLoader from '@/Mixins/HasLoader';
     import HasModalMixin from '@/Mixins/HasModal';
     import HasPageErrors from '@/Mixins/HasPageErrors';
-    import MediaForm from '@/Pages/Media/Form';
-    import BizButton from '@/Biz/Button';
-    import BizButtonsDisplayView from '@/Biz/ButtonsDisplayView';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizFormField from '@/Biz/Form/Field';
-    import BizImage from '@/Biz/Image';
-    import BizInputFile from '@/Biz/InputFile';
-    import BizMediaGallery from '@/Biz/Media/Gallery';
-    import BizMediaGalleryItem from '@/Biz/Media/GalleryItem';
-    import BizMediaList from '@/Biz/Media/List';
-    import BizMediaListItem from '@/Biz/Media/ListItem';
-    import BizModal from '@/Biz/Modal';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizModalImageEditor from '@/Biz/Modal/ImageEditor';
-    import BizPagination from '@/Biz/Pagination';
-    import BizTableInfo from '@/Biz/TableInfo';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonsDisplayView from '@/Biz/ButtonsDisplayView.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdown from '@/Biz/Dropdown.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import BizInputFile from '@/Biz/InputFile.vue';
+    import BizMediaGallery from '@/Biz/Media/Gallery.vue';
+    import BizMediaList from '@/Biz/Media/List.vue';
+    import BizModal from '@/Biz/Modal.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizModalImageEditor from '@/Biz/Modal/ImageEditor.vue';
+    import BizPagination from '@/Biz/Pagination.vue';
+    import BizTableInfo from '@/Biz/TableInfo.vue';
+    import icon from '@/Libs/icon-class';
+    import MediaForm from '@/Pages/Media/Form.vue';
     import { acceptedFileTypes, acceptedImageTypes } from '@/Libs/defaults';
     import { confirm as confirmAlert, confirmDelete, success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { getCanvasBlob } from '@/Libs/utils';
     import { includes } from 'lodash';
     import { ref } from "vue";
     import { useForm } from '@inertiajs/inertia-vue3';
-    import icon from '@/Libs/icon-class';
 
     function getEmptyFormMedia() {
         return {
@@ -292,9 +291,7 @@
             BizImage,
             BizInputFile,
             BizMediaGallery,
-            BizMediaGalleryItem,
             BizMediaList,
-            BizMediaListItem,
             BizModal,
             BizModalCard,
             BizModalImageEditor,
@@ -303,8 +300,9 @@
         },
 
         mixins: [
-            HasPageErrors,
+            HasLoader,
             HasModalMixin,
+            HasPageErrors,
         ],
 
         props: {
@@ -355,12 +353,10 @@
                 isImageEditing: false,
                 isUploading: false,
                 isDeleting: false,
-                loader: null,
                 previewImageSrc: null,
                 messageText: {
                     successSaveAsMedia: "A new media has been created",
                     successSubmitForm: "Media has been updated",
-                    successDeleteMedia: "Deleted",
                 },
                 icon,
             };
@@ -425,27 +421,48 @@
             onErrorSubmit() {
                 oopsAlert();
             },
-            deleteRecord(record) {
-                confirmDelete('Are you sure?').then((result) => {
-                    const self = this;
-                    let loader = null;
+            onDeleteRecord(record) {
+                const self = this;
 
+                if (!record.canDeleted) {
+                    confirmAlert(
+                        'Delete Media?',
+                        'This media is still being used in another place. If you delete this media, it may have an effect on that other place.',
+                        'Yes',
+                        {
+                            icon: 'warning'
+                        }
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            self.deleteRecord(record);
+                        }
+                    });
+                } else {
+                    self.deleteRecord(record);
+                }
+            },
+            deleteRecord(record) {
+                const self = this;
+
+                confirmDelete('Are you sure?').then((result) => {
                     if (result.isConfirmed) {
-                        this.$inertia.delete(
-                            route(this.baseRouteName+'.destroy', {id: record.id}),
+                        self.$inertia.delete(
+                            route(self.baseRouteName+'.destroy', {id: record.id}),
                             {
                                 onStart: visit => {
-                                    loader = self.$loading.show();
+                                    self.onStartLoadingOverlay();
+
                                     self.isDeleting = true;
                                 },
                                 onSuccess: page => {
-                                    successAlert(self.messageText.successDeleteMedia);
+                                    successAlert(page.props.flash.message);
                                 },
                                 onError: errors => {
                                     oopsAlert();
                                 },
                                 onFinish: visit => {
-                                    loader.hide();
+                                    self.onEndLoadingOverlay();
+
                                     self.isDeleting = false;
                                 },
                             }
@@ -574,12 +591,6 @@
                     }
                 }
                 return "far fa-file-alt";
-            },
-            onStartLoadingOverlay() {
-                this.loader = this.$loading.show();
-            },
-            onEndLoadingOverlay() {
-                this.loader.hide();
             },
         },
     }

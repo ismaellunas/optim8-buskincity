@@ -11,8 +11,8 @@
 </template>
 
 <script>
+    import BizButton from '@/Biz/Button.vue';
     import JsFileDownloader from 'js-file-downloader';
-    import BizButton from '@/Biz/Button';
 
     export default {
         name: 'BizButtonDownload',

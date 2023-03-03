@@ -129,14 +129,14 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import BizTableIndex from '@/Biz/TableIndex';
-    import BizTag from '@/Biz/Tag';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
+    import BizTag from '@/Biz/Tag.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, confirm } from '@/Libs/alert';
     import { merge, filter } from 'lodash';

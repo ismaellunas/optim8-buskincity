@@ -8,10 +8,12 @@
 </template>
 
 <script>
-    import BizWidgetColumns from '@/Biz/Widget/WidgetColumns';
-    import Layout from '@/Layouts/User';
+    import Layout from '@/Layouts/User.vue';
+    import BizWidgetColumns from '@/Biz/Widget/WidgetColumns.vue';
 
     export default {
+        name: 'DashboardDefault',
+
         components: {
             BizWidgetColumns,
         },

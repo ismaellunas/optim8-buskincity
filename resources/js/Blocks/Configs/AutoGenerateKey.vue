@@ -11,7 +11,7 @@
 </template>
 
 <script>
-    import BizFormKey from '@/Biz/Form/Key';
+    import BizFormKey from '@/Biz/Form/Key.vue';
     import { useModelWrapper, convertToKey } from '@/Libs/utils';
 
     export default {

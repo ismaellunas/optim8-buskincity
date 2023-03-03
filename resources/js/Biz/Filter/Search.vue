@@ -21,9 +21,9 @@
 </template>
 
 <script>
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizField from '@/Biz/Field';
-    import BizInput from '@/Biz/Input';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizField from '@/Biz/Field.vue';
+    import BizInput from '@/Biz/Input.vue';
     import { clear as iconClear } from '@/Libs/icon-class';
     import { debounce, isEmpty } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';

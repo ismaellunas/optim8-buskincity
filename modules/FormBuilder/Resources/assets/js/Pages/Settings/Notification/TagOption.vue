@@ -23,14 +23,14 @@
 </template>
 
 <script>
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizDropdownSearch from '@/Biz/DropdownSearch';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
     import icon from '@/Libs/icon-class';
     import { debounce, isEmpty, filter } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
 
     export default {
-        name: 'TagOption',
+        name: 'SettingNotificationTagOption',
 
         components: {
             BizDropdownItem,

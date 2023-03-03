@@ -43,7 +43,7 @@
 
 <script>
     export default {
-        name: 'Tabs',
+        name: 'ContentComponentTabs',
 
         props: {
             classes: {type: Object, default:() => {}},

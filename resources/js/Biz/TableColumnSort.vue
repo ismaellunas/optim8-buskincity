@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import BizIconText from '@/Biz/IconText';
+    import BizIconText from '@/Biz/IconText.vue';
     import icon from '@/Libs/icon-class';
 
     export default {
