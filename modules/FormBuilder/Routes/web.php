@@ -2,9 +2,11 @@
 
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Support\Facades\Route;
+use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Http\Controllers\{
     ApiWidgetController,
     FormBuilderController,
+    FormEntryController,
     SettingController,
     SettingNotificationController,
     PageBuilderController,
@@ -27,16 +29,30 @@ Route::name('admin.')->prefix('admin/')->middleware([
     'can:system.dashboard',
     'ensureLoginFromAdminLoginRoute',
 ])->group(function () {
-    Route::get('form-builders/{form_builder}/entries', [FormBuilderController::class, 'entries'])
-        ->name('form-builders.entries')
+    Route::get('form-builders/{form_builder}/entries', [FormEntryController::class, 'index'])
+        ->name('form-builders.entries.index')
         ->can('viewAny', 'form_builder');
 
-    Route::get('form-builders/{form_builder}/entries/{entry}', [FormBuilderController::class, 'entryShow'])
+    Route::get('form-builders/{form_builder}/entries/{entry}', [FormEntryController::class, 'show'])
         ->name('form-builders.entries.show')
         ->can('view', 'form_builder');
 
     Route::resource('form-builders', FormBuilderController::class)
         ->except(['show']);
+
+    Route::name('form-builders.entries.')->prefix('form-builders/{form_builder}/entries/')->group(function () {
+        Route::post('bulk-mark-as-read', [FormEntryController::class, 'bulkMarkAsRead'])
+            ->name('bulk-mark-as-read');
+
+        Route::post('bulk-mark-as-unread', [FormEntryController::class, 'bulkMarkAsUnread'])
+            ->name('bulk-mark-as-unread');
+
+        Route::post('bulk-archive', [FormEntryController::class, 'bulkArchive'])
+            ->name('bulk-archive');
+
+        Route::post('bulk-restore', [FormEntryController::class, 'bulkRestore'])
+            ->name('bulk-restore');
+    });
 
     Route::prefix('form-builders/{form_builder}')
         ->name('form-builders.')
