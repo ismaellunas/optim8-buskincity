@@ -1,0 +1,1 @@
+function n(t){t={isDefaultSettingsProvided:!0,...t};const e={id:null,title:null,slug:null,excerpt:null,data:{structures:[],entities:{},media:[]},meta_description:null,meta_title:null,status:0};return t.isDefaultSettingsProvided&&(e.settings=l()),e}function l(){return{layout:null,main_background_color:null,height:null}}export{l as a,n as g};

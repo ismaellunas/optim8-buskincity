@@ -1,0 +1,1 @@
+import{o,f as s,x as t}from"./vue-loading.min-a6a947f0.js";import{_ as r}from"./_plugin-vue_export-helper-c27b6911.js";const n={name:"BizField"},a={class:"field"};function c(e,i,d,l,_,f){return o(),s("div",a,[t(e.$slots,"default")])}const B=r(n,[["render",c]]);export{B};
