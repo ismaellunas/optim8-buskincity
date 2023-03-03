@@ -28,6 +28,8 @@
             :is-ajax="isAjaxPagination"
             :links="records.links"
             :query-params="queryParams"
+            :last-page="records.last_page ?? null"
+            :current-page="records.current_page ?? null"
             @on-clicked-pagination="onClickedPagination"
         />
     </div>

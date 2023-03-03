@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Entities\FieldGroup;
-use Modules\FormBuilder\Entities\FormEntry;
 use Modules\FormBuilder\Events\FormSubmitted;
 use Modules\FormBuilder\Http\Requests\FormBuilderFrontendRequest;
 use Modules\FormBuilder\Http\Requests\FormBuilderRequest;
@@ -133,88 +132,6 @@ class FormBuilderController extends CrudController
         $this->generateFlashMessage('Form deleted successfully!');
 
         return redirect()->route($this->baseRouteName.'.index');
-    }
-
-    public function entries(Request $request, Form $formBuilder)
-    {
-        $title = $this->title . ' Entries - ' . $formBuilder->name;
-
-        return Inertia::render('FormBuilder::Entries', $this->getData([
-            'breadcrumbs' => [
-                [
-                    'title' => $this->getIndexTitle(),
-                    'url' => route($this->baseRouteName.'.index'),
-                ],
-                [
-                    'title' => $title,
-                ],
-            ],
-            'title' => $title,
-            'formBuilder' => $formBuilder,
-            'records' => $this->formBuilderService->getEntryRecords(
-                $formBuilder,
-                $request->term,
-                $this->recordsPerPage,
-            ),
-            'fieldLabels' => collect(
-                    $formBuilder->getFieldLabels()
-                )
-                ->slice(0, 3)
-                ->all(),
-            'fieldNames' => collect(
-                    $formBuilder->getFieldNames()
-                )
-                ->slice(0, 3)
-                ->all(),
-        ]));
-    }
-
-    public function entryShow(Form $formBuilder, FormEntry $entry)
-    {
-        $user = auth()->user();
-        $userEntry = $entry->user;
-
-        $canRedirectUser = false;
-
-        if ($userEntry) {
-            $canRedirectUser = (
-                !$userEntry->isSuperAdministrator
-                && !$userEntry->isAdministrator
-                && !$userEntry->trashed()
-            );
-        }
-
-        $title = $this->title . ' Entry - ' . $formBuilder->name . ' # ' . $entry->id;
-
-        return Inertia::render('FormBuilder::EntryDetail', $this->getData([
-            'breadcrumbs' => [
-                [
-                    'title' => $this->getIndexTitle(),
-                    'url' => route($this->baseRouteName.'.index'),
-                ],
-                [
-                    'title' => $this->title . ' Entries - ' . $formBuilder->name,
-                    'url' => route($this->baseRouteName.'.entries', $formBuilder->id)
-                ],
-                [
-                    'title' => $title,
-                ],
-            ],
-            'title' => $title,
-            'formBuilder' => $formBuilder,
-            'entry' => $this->formBuilderService->transformEntry($entry),
-            'entryDisplay' => $this->formBuilderService->getComponentDisplayValues(
-                $formBuilder->getFields(),
-                $entry,
-            ),
-            'fieldLabels' => $formBuilder->getFieldLabelAndNames(),
-            'can' => [
-                'user' => [
-                    'edit' => $user->can('user.edit'),
-                    'redirectUser' => $canRedirectUser,
-                ]
-            ]
-        ]));
     }
 
     public function getSchema(Request $request)

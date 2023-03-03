@@ -39,6 +39,7 @@ class LatestBookingWidget implements WidgetInterface
 
     public function canBeAccessed(): bool
     {
-        return $this->user->can('order.browse');
+        return $this->user->can('order.browse')
+            || $this->user->products->isNotEmpty();
     }
 }
