@@ -64,7 +64,7 @@
     import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

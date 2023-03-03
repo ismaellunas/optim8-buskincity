@@ -33,11 +33,11 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
-    import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
-    import UserList from './List';
-    import UserListDeleted from './ListDeleted';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
+    import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
+    import UserList from './List.vue';
+    import UserListDeleted from './ListDeleted.vue';
 
     export default {
         name: 'UserIndex',

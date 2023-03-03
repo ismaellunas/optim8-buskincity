@@ -76,11 +76,11 @@
 
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizButton from '@/Biz/Button';
-    import BizInput from '@/Biz/Input';
+    import BizButton from '@/Biz/Button.vue';
+    import BizInput from '@/Biz/Input.vue';
+    import NavigationFormMenu from '@/Pages/ThemeHeader/NavigationFormMenuItem.vue';
+    import NavigationMenu from './NavigationMenu.vue';
     import Draggable from "vuedraggable";
-    import NavigationFormMenu from '@/Pages/ThemeHeader/NavigationFormMenuItem';
-    import NavigationMenu from './NavigationMenu';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { confirmDelete } from '@/Libs/alert';
     import { cloneDeep } from 'lodash';

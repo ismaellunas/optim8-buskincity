@@ -16,10 +16,10 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import FormBuilder from './Form';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
+    import FormBuilder from './Form.vue';
     import { onFormEditorClicked } from './../Libs/form-builder';
     import { useForm } from '@inertiajs/inertia-vue3';
     import { ref, onMounted, onUnmounted } from 'vue';

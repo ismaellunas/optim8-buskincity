@@ -66,11 +66,11 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizCard from '@/Biz/Card';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizFormSlider from '@/Biz/Form/Slider';
+    import BizButton from '@/Biz/Button.vue';
+    import BizCard from '@/Biz/Card.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizFormSlider from '@/Biz/Form/Slider.vue';
     import { useModelWrapper } from '@/Libs/utils';
     import { confirm } from '@/Libs/alert';
     import { createColumn } from '@/Libs/page-builder.js';

@@ -20,13 +20,13 @@
     import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
-    import BizTinymce from '@/Biz/EditorTinymce';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizTinymce from '@/Biz/EditorTinymce.vue';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import { concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'Text',
+        name: 'ContentText',
         components: {
             BizTinymce,
             BizToolbarContent,

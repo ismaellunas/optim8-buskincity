@@ -69,14 +69,14 @@
 
 <script>
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizIcon from '@/Biz/Icon';
-    import BizTableIndex from '@/Biz/TableIndex';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdown from '@/Biz/Dropdown.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
+    import UserListItem from '@/Pages/User/ListItem.vue';
     import icon from '@/Libs/icon-class';
-    import UserListItem from '@/Pages/User/ListItem';
     import { oops as oopsAlert } from '@/Libs/alert';
     import { isEmpty } from 'lodash';
 

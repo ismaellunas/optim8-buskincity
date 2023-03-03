@@ -99,9 +99,9 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizTable from '@/Biz/Table';
+    import BizButton from '@/Biz/Button.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizTable from '@/Biz/Table.vue';
     import { isEmpty, upperFirst } from 'lodash';
 
     export default {

@@ -83,10 +83,10 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
-    import ActionSection from '@/Frontend/ActionSection';
-    import BizButton from '@/Biz/Button';
-    import BizModalCard from '@/Biz/ModalCard';
-    import ConnectedAccountIcon from '@/Socialstream/ConnectedAccountIcon';
+    import ActionSection from '@/Frontend/ActionSection.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import ConnectedAccountIcon from '@/Socialstream/ConnectedAccountIcon.vue';
 
     export default {
         components: {

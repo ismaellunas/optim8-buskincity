@@ -141,7 +141,7 @@
 </template>
 
 <script>
-    import BizLink from '@/Biz/Link';
+    import BizLink from '@/Biz/Link.vue';
 
     export default {
         name: 'NavbarLayoutTwo',
@@ -151,10 +151,10 @@
         },
 
         props: {
-            availableLanguages: {type: Array, default: []},
+            availableLanguages: {type: Array, default: () => [] },
             currentLanguage: {type: String, default: "en"},
             logoUrl: {type: String, required: true},
-            menus: {type: Array, default: []},
+            menus: {type: Array, default: () => []},
         },
 
         computed: {

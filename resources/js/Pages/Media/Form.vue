@@ -84,13 +84,13 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizButtonDelete from '@/Biz/ButtonDelete';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormTextarea from '@/Biz/Form/Textarea';
-    import BizSelect from '@/Biz/Select';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonDelete from '@/Biz/ButtonDelete.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizSelect from '@/Biz/Select.vue';
     import icon from '@/Libs/icon-class';
     import { buildFormData, regexFileName } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';

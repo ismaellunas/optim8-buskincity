@@ -2,9 +2,7 @@
     <layout-admin title="Reset Password">
         <template #back>
             <biz-link :href="route('admin.login')">
-                <span class="icon">
-                    <i :class="icon.back" />
-                </span>
+                <biz-icon :icon="iconBack" />
                 <span>Back</span>
             </biz-link>
         </template>
@@ -68,22 +66,24 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormPassword from '@/Biz/Form/Password';
-    import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin';
-    import BizLink from '@/Biz/Link';
-    import icon from '@/Libs/icon-class';
+    import LayoutAdmin from '@/Pages/Auth/Admin/LayoutAdmin.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormPassword from '@/Biz/Form/Password.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizLink from '@/Biz/Link.vue';
+    import { back as iconBack } from '@/Libs/icon-class';
 
     export default {
         components: {
+            LayoutAdmin,
             BizButton,
             BizErrorNotifications,
             BizFormInput,
             BizFormPassword,
+            BizIcon,
             BizLink,
-            LayoutAdmin,
         },
 
         mixins: [
@@ -111,7 +111,7 @@
                     password_confirmation: '',
                     processing: true,
                 }),
-                icon,
+                iconBack,
             }
         },
 

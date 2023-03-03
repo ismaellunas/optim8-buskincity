@@ -3,8 +3,6 @@
 namespace Modules\FormBuilder\Widgets;
 
 use App\Contracts\WidgetInterface;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Modules\FormBuilder\Entities\Form;
 
 class EntryWidget implements WidgetInterface

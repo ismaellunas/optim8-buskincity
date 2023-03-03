@@ -72,11 +72,11 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormPhone from '@/Biz/Form/Phone';
-    import BizModalCard from '@/Biz/ModalCard';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormPhone from '@/Biz/Form/Phone.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

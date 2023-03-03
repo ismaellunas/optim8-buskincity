@@ -58,20 +58,20 @@
 </template>
 
 <script>
-    import BizCard from '@/Biz/Card';
-    import ConfigAddOption from '@/Blocks/Configs/AddOption';
-    import ConfigAutoGenerateKey from '@/Blocks/Configs/AutoGenerateKey';
-    import ConfigCheckbox from '@/Blocks/Configs/Checkbox';
-    import ConfigCheckboxes from '@/Blocks/Configs/Checkboxes';
-    import ConfigFileUploadAttribute from './Configs/FileUploadAttribute';
-    import ConfigInput from '@/Blocks/Configs/Input';
-    import ConfigNumber from '@/Blocks/Configs/Number';
-    import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons';
-    import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection';
+    import BizCard from '@/Biz/Card.vue';
+    import ConfigAddOption from '@/Blocks/Configs/AddOption.vue';
+    import ConfigAutoGenerateKey from '@/Blocks/Configs/AutoGenerateKey.vue';
+    import ConfigCheckbox from '@/Blocks/Configs/Checkbox.vue';
+    import ConfigCheckboxes from '@/Blocks/Configs/Checkboxes.vue';
+    import ConfigFileUploadAttribute from './Configs/FileUploadAttribute.vue';
+    import ConfigInput from '@/Blocks/Configs/Input.vue';
+    import ConfigNumber from '@/Blocks/Configs/Number.vue';
+    import ConfigNumberAddons from '@/Blocks/Configs/NumberAddons.vue';
+    import ConfigRowSection from '@/Blocks/Configs/ConfigRowSection.vue';
+    import ConfigSelect from '@/Blocks/Configs/Select.vue';
+    import TRBL from '@/Blocks/Configs/TRBL.vue';
+    import TRBLInput from '@/Blocks/Configs/TRBLInput.vue';
     import configs from './../FieldStructures/configs';
-    import ConfigSelect from '@/Blocks/Configs/Select';
-    import TRBL from '@/Blocks/Configs/TRBL';
-    import TRBLInput from '@/Blocks/Configs/TRBLInput';
     import { camelCase, forEach } from "lodash";
     import { isBlank } from '@/Libs/utils';
     import { useModelWrapper } from '@/Libs/utils'

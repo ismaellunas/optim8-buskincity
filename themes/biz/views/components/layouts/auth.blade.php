@@ -17,6 +17,7 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+
         <link rel="stylesheet" href="{{ $appCssUrl }}">
 
         @if (!empty($fontUrls['mainTextFont']))
@@ -41,13 +42,10 @@
         @endenv
 
         @env ('local')
-            <!-- Styles -->
-            <link rel="stylesheet" href="{{ mix('css/local.css') }}">
-            <!-- Scripts -->
-            <script src="{{ mix('js/local.js') }}" defer></script>
+            @vite(['resources/sass/local.sass'])
 
             @if (config('constants.fontawesome_local'))
-                <script src="{{ mix('js/fontawesome.js') }}" defer></script>
+                @vite(['resources/js/fontawesome.js'])
             @else
                 <script src="https://kit.fontawesome.com/632bc9cc22.js" crossorigin="anonymous"></script>
             @endif
@@ -90,11 +88,7 @@
             </section>
         </div>
 
-        @env ('local')
-            <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>
-        @endenv
-
-        <script src="{{ mix('js/app.js', 'themes/biz') }}" defer></script>
+        @vite(['themes/'.config('theme.active').'/js/app.js'])
 
         <script>
             function showForm() {
@@ -128,7 +122,6 @@
                     } else {
                         el.classList.add('is-hidden');
                     }
-
                 });
             }
 
@@ -138,7 +131,6 @@
         </script>
 
         @stack('bottom_scripts')
-
 
         @if ($additionalJavascript)
             <script>

@@ -28,8 +28,8 @@
 <script>
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import FormFileUpload from '@/Biz/Form/FileUpload';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
+    import FormFileUpload from '@/Biz/Form/FileUpload.vue';
 
     export default {
         name: 'InputFileDragDrop',

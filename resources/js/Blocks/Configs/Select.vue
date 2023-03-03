@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import BizFormSelect from '@/Biz/Form/Select';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

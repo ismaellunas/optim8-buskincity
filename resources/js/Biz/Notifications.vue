@@ -17,7 +17,7 @@
     import { isBlank } from '@/Libs/utils';
 
     export default {
-        name: 'Notification',
+        name: 'BizNotification',
 
         props: {
             message: {type: String, default: null},

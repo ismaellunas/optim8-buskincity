@@ -50,7 +50,7 @@
                     <td>{{ form.key }}</td>
                     <td>
                         <biz-link
-                            :href="route(baseRouteName + '.entries', form.id)"
+                            :href="route(baseRouteName + '.entries.index', {form_builder: form.id})"
                             title="List Entries"
                         >
                             {{ form.totalEntries }}
@@ -62,7 +62,7 @@
                                 v-if="can.browse"
                                 class="is-ghost has-text-black"
                                 title="List Entries"
-                                :href="route(baseRouteName + '.entries', form.id)"
+                                :href="route(baseRouteName + '.entries.index', {form_builder: form.id})"
                             >
                                 <span class="icon is-small">
                                     <i :class="icon.rectangleList" />
@@ -96,13 +96,13 @@
 
 <script>
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizFlashNotifications from '@/Biz/FlashNotifications';
-    import BizLink from '@/Biz/Link';
-    import BizTableIndex from '@/Biz/TableIndex';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
+    import BizLink from '@/Biz/Link.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge } from 'lodash';

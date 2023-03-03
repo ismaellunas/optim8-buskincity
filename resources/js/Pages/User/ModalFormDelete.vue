@@ -91,10 +91,10 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizRadio from '@/Biz/Radio';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizRadio from '@/Biz/Radio.vue';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {

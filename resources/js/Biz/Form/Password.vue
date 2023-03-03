@@ -28,9 +28,9 @@
 </template>
 
 <script>
-    import BizFormField from '@/Biz/Form/Field';
-    import BizInputPassword from '@/Biz/InputPassword';
-    import BizInputError from '@/Biz/InputError';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizInputPassword from '@/Biz/InputPassword.vue';
+    import BizInputError from '@/Biz/InputError.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

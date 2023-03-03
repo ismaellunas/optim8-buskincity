@@ -27,11 +27,11 @@
 </template>
 
 <script>
-    import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
-    import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
-    import FormBuilder from './FormBuilder';
-    import NotificationSetting from './Settings/Notification/Index';
-    import GeneralSetting from './Settings/General/Index';
+    import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
+    import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
+    import FormBuilder from './FormBuilder.vue';
+    import NotificationSetting from './Settings/Notification/Index.vue';
+    import GeneralSetting from './Settings/General/Index.vue';
     import { useModelWrapper, getPhoneCountries } from '@/Libs/utils';
 
     export default {

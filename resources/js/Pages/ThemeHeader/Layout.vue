@@ -15,8 +15,8 @@
 </template>
 
 <script>
-    import HeaderLayout from './HeaderLayout';
-    import HeaderLogo from './HeaderLogo';
+    import HeaderLayout from './HeaderLayout.vue';
+    import HeaderLogo from './HeaderLogo.vue';
     import { success as successAlert  } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
 

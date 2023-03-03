@@ -13,7 +13,7 @@
 </template>
 
 <script>
-    import JetActionSection from '@/Jetstream/ActionSection';
+    import JetActionSection from '@/Jetstream/ActionSection.vue';
 
     export default {
         components: {

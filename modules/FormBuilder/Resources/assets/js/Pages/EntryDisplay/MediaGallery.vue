@@ -9,7 +9,7 @@
 </template>
 
 <script>
-    import BizMediaGallery from '@/Biz/Media/Gallery';
+    import BizMediaGallery from '@/Biz/Media/Gallery.vue';
 
     export default {
         name: 'MediaGallery',

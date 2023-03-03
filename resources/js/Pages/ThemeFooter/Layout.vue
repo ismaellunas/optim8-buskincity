@@ -14,8 +14,8 @@
 </template>
 
 <script>
-    import FooterLayout from './FooterLayout';
-    import FooterSocialMedia from './FooterSocialMedia';
+    import FooterLayout from './FooterLayout.vue';
+    import FooterSocialMedia from './FooterSocialMedia.vue';
     import { success as successAlert  } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
     import { cloneDeep } from 'lodash';

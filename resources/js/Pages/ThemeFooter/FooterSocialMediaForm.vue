@@ -64,12 +64,12 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormInputIcon from '@/Biz/Form/InputIcon';
-    import BizModalCard from '@/Biz/ModalCard';
-    import fontawesomeBrandClasses from '@/Json/fontawesome-brand-classes';
+    import BizButton from '@/Biz/Button.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormInputIcon from '@/Biz/Form/InputIcon.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import fontawesomeBrandClasses from '@/Json/fontawesome-brand-classes.json';
     import { isBlank } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';

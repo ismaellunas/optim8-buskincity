@@ -92,12 +92,12 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizDatepicker from '@/Biz/Datepicker';
-    import BizModalCard from '@/Biz/ModalCard';
-    import BizTag from '@/Biz/Tag';
-    import ScheduleRuleTimes from '@booking/Pages/ScheduleRuleTimes';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizDatepicker from '@/Biz/Datepicker.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
+    import BizTag from '@/Biz/Tag.vue';
+    import ScheduleRuleTimes from '@booking/Pages/ScheduleRuleTimes.vue';
     import moment from 'moment';
     import { add as iconAdd } from '@/Libs/icon-class';
     import { cloneDeep, difference } from 'lodash';

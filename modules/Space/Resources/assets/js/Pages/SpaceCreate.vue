@@ -31,18 +31,16 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizBreadcrumbs from '@/Biz/Breadcrumbs';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import SpaceForm from './SpaceForm';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import SpaceForm from './SpaceForm.vue';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { useForm } from '@inertiajs/inertia-vue3';
 
     export default {
         components: {
-            BizBreadcrumbs,
             BizButton,
             BizButtonLink,
             SpaceForm,

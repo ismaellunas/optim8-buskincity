@@ -31,9 +31,9 @@
 </template>
 
 <script>
-    import BizCheckboxToggle from '@/Biz/CheckboxToggle';
-    import BizFormField from '@/Biz/Form/Field';
-    import BizInputError from '@/Biz/InputError';
+    import BizCheckboxToggle from '@/Biz/CheckboxToggle.vue';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizInputError from '@/Biz/InputError.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

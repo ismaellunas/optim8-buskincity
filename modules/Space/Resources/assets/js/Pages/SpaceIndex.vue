@@ -109,18 +109,18 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizDropdownScroll from '@/Biz/DropdownScroll';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizIcon from '@/Biz/Icon';
-    import BizTableIndex from '@/Biz/TableIndex';
-    import SpaceRow from './SpaceRow';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdown from '@/Biz/Dropdown.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizDropdownScroll from '@/Biz/DropdownScroll.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
+    import SpaceRow from './SpaceRow.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { find } from 'lodash';

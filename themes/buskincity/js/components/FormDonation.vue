@@ -87,7 +87,7 @@
 </template>
 
 <script>
-    import BizSelect from '@/Biz/Select';
+    import BizSelect from '@/Biz/Select.vue';
     import { find } from 'lodash';
 
     export default {

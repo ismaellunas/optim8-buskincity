@@ -47,9 +47,9 @@
 </template>
 
 <script>
-    import BizFormField from '@/Biz/Form/Field';
-    import BizRadio from '@/Biz/Radio';
-    import BizInputError from '@/Biz/InputError';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizRadio from '@/Biz/Radio.vue';
+    import BizInputError from '@/Biz/InputError.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

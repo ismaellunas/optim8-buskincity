@@ -43,12 +43,12 @@
     import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import { useModelWrapper } from '@/Libs/utils';
-    import { ref } from "vue";
+    import { ref } from 'vue';
 
     export default {
-        name: 'UserList',
+        name: 'ContentUserList',
 
         components: {
             BizToolbarContent,

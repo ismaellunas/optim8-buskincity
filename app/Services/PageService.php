@@ -165,4 +165,13 @@ class PageService
     {
         return PageTranslation::where('slug', $slug)->exists();
     }
+
+    public function filterInputs(array $inputs): array
+    {
+        return collect($inputs)
+            ->filter(function ($input) {
+                return !empty($input);
+            })
+            ->all();
+    }
 }

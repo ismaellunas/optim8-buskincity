@@ -42,9 +42,9 @@
 </template>
 
 <script>
-    import BizBreadcrumbs from '@/Biz/Breadcrumbs';
-    import BizFlashExpired from '@/Biz/FlashExpired';
-    import BizNavbarMenu from '@/Biz/NavbarMenu';
+    import BizBreadcrumbs from '@/Biz/Breadcrumbs.vue';
+    import BizFlashExpired from '@/Biz/FlashExpired.vue';
+    import BizNavbarMenu from '@/Biz/NavbarMenu.vue';
     import { Head as HeadTag } from '@inertiajs/inertia-vue3';
     import { head, isEmpty } from 'lodash';
 

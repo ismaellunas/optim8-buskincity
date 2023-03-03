@@ -71,11 +71,11 @@
 </template>
 
 <script>
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizFormField from '@/Biz/Form/Field';
-    import BizInputError from '@/Biz/InputError';
-    import BizInputFile from '@/Biz/InputFile';
-    import BizMediaTextItem from '@/Biz/Media/TextItem';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizInputError from '@/Biz/InputError.vue';
+    import BizInputFile from '@/Biz/InputFile.vue';
+    import BizMediaTextItem from '@/Biz/Media/TextItem.vue';
     import { confirmDelete } from '@/Libs/alert';
     import { useModelWrapper } from '@/Libs/utils';
 

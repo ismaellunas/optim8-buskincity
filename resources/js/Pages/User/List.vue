@@ -146,17 +146,17 @@
 <script>
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasModal from '@/Mixins/HasModal';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizIcon from '@/Biz/Icon';
-    import BizTableIndex from '@/Biz/TableIndex';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdown from '@/Biz/Dropdown.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
+    import ModalFormDelete from '@/Pages/User/ModalFormDelete.vue';
+    import UserListItem from '@/Pages/User/ListItem.vue';
     import icon from '@/Libs/icon-class';
-    import ModalFormDelete from '@/Pages/User/ModalFormDelete';
-    import UserListItem from '@/Pages/User/ListItem';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from 'vue';

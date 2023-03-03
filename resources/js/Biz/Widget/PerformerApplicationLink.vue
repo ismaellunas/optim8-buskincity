@@ -42,7 +42,7 @@
 </template>
 
 <script>
-    import BizButtonLink from '@/Biz/ButtonLink';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
 
     export default {
         name: 'PerformerApplicationLink',

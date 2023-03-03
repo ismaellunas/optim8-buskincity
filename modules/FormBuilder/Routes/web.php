@@ -2,9 +2,11 @@
 
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Support\Facades\Route;
+use Modules\FormBuilder\Entities\Form;
 use Modules\FormBuilder\Http\Controllers\{
     ApiWidgetController,
     FormBuilderController,
+    FormEntryController,
     SettingController,
     SettingNotificationController,
     PageBuilderController,
@@ -27,16 +29,52 @@ Route::name('admin.')->prefix('admin/')->middleware([
     'can:system.dashboard',
     'ensureLoginFromAdminLoginRoute',
 ])->group(function () {
-    Route::get('form-builders/{form_builder}/entries', [FormBuilderController::class, 'entries'])
-        ->name('form-builders.entries')
+    Route::get('form-builders/{form_builder}/entries', [FormEntryController::class, 'index'])
+        ->name('form-builders.entries.index')
         ->can('viewAny', 'form_builder');
 
-    Route::get('form-builders/{form_builder}/entries/{entry}', [FormBuilderController::class, 'entryShow'])
+    Route::get('form-builders/{form_builder}/entries/{form_entry}', [FormEntryController::class, 'show'])
         ->name('form-builders.entries.show')
+        ->withTrashed()
         ->can('view', 'form_builder');
 
     Route::resource('form-builders', FormBuilderController::class)
         ->except(['show']);
+
+    Route::name('form-builders.entries.')->prefix('form-builders/{form_builder}/entries/')->group(function () {
+        Route::post('bulk-mark-as-read', [FormEntryController::class, 'bulkMarkAsRead'])
+            ->name('bulk-mark-as-read');
+
+        Route::post('bulk-mark-as-unread', [FormEntryController::class, 'bulkMarkAsUnread'])
+            ->name('bulk-mark-as-unread');
+
+        Route::post('bulk-archive', [FormEntryController::class, 'bulkArchive'])
+            ->name('bulk-archive');
+
+        Route::post('bulk-restore', [FormEntryController::class, 'bulkRestore'])
+            ->name('bulk-restore');
+
+        Route::post('bulk-force-delete', [FormEntryController::class, 'bulkForceDelete'])
+            ->name('bulk-force-delete');
+
+        Route::post('mark-as-read/{form_entry}', [FormEntryController::class, 'markAsRead'])
+            ->name('mark-as-read');
+
+        Route::post('mark-as-unread/{form_entry}', [FormEntryController::class, 'markAsUnread'])
+            ->name('mark-as-unread');
+
+        Route::post('archive/{form_entry}', [FormEntryController::class, 'archive'])
+            ->name('archive')
+            ->withTrashed();
+
+        Route::post('restore/{form_entry}', [FormEntryController::class, 'restore'])
+            ->name('restore')
+            ->withTrashed();
+
+        Route::post('force-delete/{form_entry}', [FormEntryController::class, 'forceDelete'])
+            ->name('force-delete')
+            ->withTrashed();
+    });
 
     Route::prefix('form-builders/{form_builder}')
         ->name('form-builders.')

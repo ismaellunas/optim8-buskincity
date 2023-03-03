@@ -14,6 +14,8 @@ class OrderPolicyMixin
     public function cancelBooking()
     {
         return function (User $user, Order $order) {
+            $product = $order->firstProduct;
+
             return (
                 $order->status != OrderStatus::CANCELED->value
                 && !$order->hasCheckIn()
@@ -21,6 +23,7 @@ class OrderPolicyMixin
                 && (
                     $user->can('order.edit')
                     || $order->isPlacedByUser($user)
+                    || $user->products->contains($product)
                 )
             );
         };

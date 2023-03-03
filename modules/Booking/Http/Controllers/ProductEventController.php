@@ -47,7 +47,10 @@ class ProductEventController extends CrudController
                 $location['longitude']
             );
 
-            if ($response->ok()) {
+            if (
+                $response->ok()
+                && $response->json()['status'] != 'REQUEST_DENIED'
+            ) {
                 $location['geocode'] = $response->json()['results'][0];
             }
         }

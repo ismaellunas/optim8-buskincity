@@ -55,10 +55,10 @@
 </template>
 
 <script>
-    import draggable from "vuedraggable";
-    import BizButton from '@/Biz/Button';
-    import BizFormTextEditorFullInline from '@/Biz/Form/TextEditorFullInline';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import draggable from 'vuedraggable';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormTextEditorFullInline from '@/Biz/Form/TextEditorFullInline.vue';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import { generateElementId, useModelWrapper } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
     import { confirmDelete } from '@/Libs/alert';
