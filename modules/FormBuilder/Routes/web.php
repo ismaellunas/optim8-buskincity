@@ -33,8 +33,9 @@ Route::name('admin.')->prefix('admin/')->middleware([
         ->name('form-builders.entries.index')
         ->can('viewAny', 'form_builder');
 
-    Route::get('form-builders/{form_builder}/entries/{entry}', [FormEntryController::class, 'show'])
+    Route::get('form-builders/{form_builder}/entries/{form_entry}', [FormEntryController::class, 'show'])
         ->name('form-builders.entries.show')
+        ->withTrashed()
         ->can('view', 'form_builder');
 
     Route::resource('form-builders', FormBuilderController::class)
@@ -52,6 +53,27 @@ Route::name('admin.')->prefix('admin/')->middleware([
 
         Route::post('bulk-restore', [FormEntryController::class, 'bulkRestore'])
             ->name('bulk-restore');
+
+        Route::post('bulk-force-delete', [FormEntryController::class, 'bulkForceDelete'])
+            ->name('bulk-force-delete');
+
+        Route::post('mark-as-read/{form_entry}', [FormEntryController::class, 'markAsRead'])
+            ->name('mark-as-read');
+
+        Route::post('mark-as-unread/{form_entry}', [FormEntryController::class, 'markAsUnread'])
+            ->name('mark-as-unread');
+
+        Route::post('archive/{form_entry}', [FormEntryController::class, 'archive'])
+            ->name('archive')
+            ->withTrashed();
+
+        Route::post('restore/{form_entry}', [FormEntryController::class, 'restore'])
+            ->name('restore')
+            ->withTrashed();
+
+        Route::post('force-delete/{form_entry}', [FormEntryController::class, 'forceDelete'])
+            ->name('force-delete')
+            ->withTrashed();
     });
 
     Route::prefix('form-builders/{form_builder}')

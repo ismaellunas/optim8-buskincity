@@ -90,15 +90,11 @@ class FormBuilderService
 
             $record['isRead'] = $entry->isRead;
             $record['can'] = [
-                'archive' => $user->can('delete', $formBuilder),
-                'mark_as_read' => (
-                    $user->can('update', $formBuilder)
-                    && !$entry->isRead
-                ),
-                'mark_as_unread' => (
-                    $user->can('update', $formBuilder)
-                    && $entry->isRead
-                ),
+                'mark_as_read' => $user->can('markAsRead', $entry),
+                'mark_as_unread' => $user->can('markAsUnread', $entry),
+                'archive' => $user->can('delete', $entry),
+                'restore' => $user->can('restore', $entry),
+                'force_delete' => $user->can('forceDelete', $entry),
             ];
 
             $records->push($record);
@@ -402,23 +398,6 @@ class FormBuilderService
             'component' => null,
             'value' => $value
         ];
-    }
-
-    public function transformEntry($entry)
-    {
-        if (!empty($entry['user_id'])) {
-            $entry->load([
-                'user' => function ($query) {
-                    $query->select([
-                        'id',
-                        'first_name',
-                        'last_name',
-                    ]);
-                }
-            ]);
-        }
-
-        return $entry->toArray();
     }
 
     public function sanitizeEmails(array $emails = []): array
