@@ -1,0 +1,1 @@
+import{o,f as n,i as s,n as a}from"./vue-loading.min-aa20e13d.js";import{_ as c}from"./_plugin-vue_export-helper-c27b6911.js";const t={name:"BizIcon",props:{icon:{type:[Array,Object,String],default:""}}},r={class:"icon"};function i(p,_,e,l,d,f){return o(),n("span",r,[s("i",{"aria-hidden":"true",class:a(e.icon)},null,2)])}const B=c(t,[["render",i]]);export{B};

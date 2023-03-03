@@ -1,0 +1,1 @@
+import{a6 as e,r as t,o as r,u as s,q as a,x as i}from"./vue-loading.min-aa20e13d.js";import{_ as c}from"./_plugin-vue_export-helper-c27b6911.js";const p={name:"BizLink",components:{InertiaLink:e}};function _(n,l,m,f,k,u){const o=t("inertia-link");return r(),s(o,null,{default:a(()=>[i(n.$slots,"default")]),_:3})}const $=c(p,[["render",_]]);export{$ as B};

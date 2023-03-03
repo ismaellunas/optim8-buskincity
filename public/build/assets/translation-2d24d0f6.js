@@ -1,1 +1,0 @@
-import{i as a}from"./utils-caa7a80b.js";import{a as r}from"./page-9994df2c.js";function o(e,n,i={}){i={isDefaultSettingsProvided:!0,...i};let t=e.translations.find(s=>s.locale===n);return!a(t)&&i.isDefaultSettingsProvided&&a(t.settings)&&(t.settings=r()),t}export{o as g};
