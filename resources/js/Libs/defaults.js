@@ -43,7 +43,7 @@ export const acceptedVideoTypes = [
 
 export const debounceTime = 750;
 
-export const appName = process.env.MIX_APP_NAME;
+export const appName = import.meta.env.VITE_APP_NAME;
 
 export const oneMegabyte = 1024;
 

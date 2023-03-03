@@ -22,14 +22,14 @@
     import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
-    import BizTinymce from '@/Biz/EditorTinymce';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
-    import FaqQuestionAnswer from '@/Blocks/Contents/Faq/QuestionAnswer';
+    import BizTinymce from '@/Biz/EditorTinymce.vue';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
+    import FaqQuestionAnswer from '@/Blocks/Contents/Faq/QuestionAnswer.vue';
     import { last } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
-        name: 'Faq',
+        name: 'ContentFaq',
         components: {
             BizTinymce,
             BizToolbarContent,
@@ -67,5 +67,5 @@
                 this.entity.content.heading.html = evt.target.innerText;
             },
         }
-    }
+    };
 </script>

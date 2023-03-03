@@ -421,28 +421,28 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizFormAssignUser from '@/Biz/Form/AssignUser';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormNumberAddons from '@/Biz/Form/NumberAddons';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizFormTextarea from '@/Biz/Form/Textarea';
-    import BizGmapMarker from '@/Biz/GmapMarker';
-    import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab';
-    import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs';
-    import BizTag from '@/Biz/Tag';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import MixinHasTab from '@/Mixins/HasTab';
-    import ProductEditModalDateOverride from './ProductEditModalDateOverride';
-    import ProductForm from './ProductForm';
-    import ScheduleRuleTimes from '@booking/Pages/ScheduleRuleTimes';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFormAssignUser from '@/Biz/Form/AssignUser.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormNumberAddons from '@/Biz/Form/NumberAddons.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
+    import BizGmapMarker from '@/Biz/GmapMarker.vue';
+    import BizProvideInjectTab from '@/Biz/ProvideInjectTab/Tab.vue';
+    import BizProvideInjectTabs from '@/Biz/ProvideInjectTab/Tabs.vue';
+    import BizTag from '@/Biz/Tag.vue';
+    import ProductEditModalDateOverride from './ProductEditModalDateOverride.vue';
+    import ProductForm from './ProductForm.vue';
+    import ScheduleRuleTimes from '@booking/Pages/ScheduleRuleTimes.vue';
     import icon from '@/Libs/icon-class';
     import moment from 'moment';
     import { cloneDeep, forEach, map, sortBy, isEqual, groupBy, intersection, remove, uniq } from 'lodash';

@@ -39,10 +39,10 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizInput from '@/Biz/Input';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizInput from '@/Biz/Input.vue';
     import { isBlank } from '@/Libs/utils';
     import { useForm } from '@inertiajs/inertia-vue3'
 
@@ -84,7 +84,7 @@
             };
 
             return {
-                form, 
+                form,
                 submit,
                 isNew,
             };

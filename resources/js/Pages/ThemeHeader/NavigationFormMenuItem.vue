@@ -105,11 +105,11 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizModalCard from '@/Biz/ModalCard';
+    import BizButton from '@/Biz/Button.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
     import { cloneDeep } from 'lodash';
     import { isBlank } from '@/Libs/utils';
     import { reactive } from 'vue';

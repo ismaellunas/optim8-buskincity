@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Head :title="title" />
+        <inertia-head :title="title" />
 
         <section class="hero is-fullheight">
             <div class="hero-body">
@@ -33,16 +33,16 @@
 </template>
 
 <script>
-    import LayoutBackendBlank from '@/Layouts/BackendBlank';
-    import BizImage from '@/Biz/Image';
-    import { Head, usePage } from '@inertiajs/inertia-vue3';
+    import LayoutBackendBlank from '@/Layouts/BackendBlank.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import { Head as InertiaHead, usePage } from '@inertiajs/inertia-vue3';
 
     export default {
         name: 'LayoutAdmin',
 
         components: {
             BizImage,
-            Head,
+            InertiaHead,
         },
 
         layout: LayoutBackendBlank,

@@ -15,7 +15,7 @@
                         class="is-primary"
                         :href="route(baseRouteName+'.create')"
                     >
-                        <biz-icon :icon="icon.add" />
+                        <biz-icon :icon="iconAdd" />
                         <span>Create New</span>
                     </biz-button-link>
                 </div>
@@ -60,12 +60,12 @@
                                 class="is-ghost has-text-black"
                                 :href="route(baseRouteName + '.edit', record.id)"
                             >
-                                <biz-icon :icon="icon.edit" />
+                                <biz-icon :icon="iconEdit" />
                             </biz-button-link>
                             <biz-button-icon
                                 v-if="can.delete"
                                 class="is-ghost has-text-black ml-1"
-                                :icon="icon.remove"
+                                :icon="iconRemove"
                                 @click.prevent="deleteRow(record)"
                             />
                         </div>
@@ -77,20 +77,22 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizIcon from '@/Biz/Icon';
-    import BizTableIndex from '@/Biz/TableIndex';
-    import icon from '@/Libs/icon-class';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizIcon from '@/Biz/Icon.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
+    import { add as iconAdd, edit as iconEdit, remove as iconRemove } from '@/Libs/icon-class';
     import { confirmDelete } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'CategoryIndex',
+
         components: {
             BizButtonIcon,
             BizButtonLink,
@@ -119,13 +121,10 @@
                 localeOptions: usePage().props.value.languageOptions,
                 queryParams: ref(merge({},props.pageQueryParams)),
                 term: ref(props.pageQueryParams?.term ?? null),
-            };
-        },
-
-        data() {
-            return {
-                loader: null,
-                icon,
+                loader: ref(null),
+                iconAdd,
+                iconEdit,
+                iconRemove,
             };
         },
 

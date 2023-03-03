@@ -68,11 +68,11 @@
 </template>
 
 <script>
-    import HasPageErrors from '@/Mixins/HasPageErrors';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormSelect from '@/Biz/Form/Select';
-    import BizFormSlug from '@/Biz/Form/Slug';
-    import BizFormTextarea from '@/Biz/Form/Textarea';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
+    import BizFormSlug from '@/Biz/Form/Slug.vue';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import { useModelWrapper, convertToSlug } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
     import { usePage } from '@inertiajs/inertia-vue3';
@@ -85,7 +85,7 @@
             BizFormTextarea,
         },
 
-        mixins: [HasPageErrors],
+        mixins: [MixinHasPageErrors],
 
         props: {
             disableInput: { type: Boolean, default: false },

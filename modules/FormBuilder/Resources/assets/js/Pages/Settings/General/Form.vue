@@ -54,9 +54,9 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormSelect from '@/Biz/Form/Select';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
     import { useModelWrapper } from '@/Libs/utils';
     import { defaultOption, contentPositions } from '@/ComponentStructures/style-options';
 

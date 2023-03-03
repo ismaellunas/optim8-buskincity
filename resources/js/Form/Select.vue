@@ -40,7 +40,7 @@
 </template>
 
 <script>
-    import BizFormSelect from '@/Biz/Form/Select';
+    import BizFormSelect from '@/Biz/Form/Select.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 

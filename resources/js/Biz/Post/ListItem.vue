@@ -70,10 +70,10 @@
 
 <script>
     import MixinPostItem from '@/Mixins/PostItem';
-    import BizButtonIcon from '@/Biz/ButtonIcon';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizImage from '@/Biz/Image';
-    import BizTag from '@/Biz/Tag';
+    import BizButtonIcon from '@/Biz/ButtonIcon.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizImage from '@/Biz/Image.vue';
+    import BizTag from '@/Biz/Tag.vue';
     import icon from '@/Libs/icon-class';
 
     export default {

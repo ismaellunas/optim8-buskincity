@@ -63,14 +63,14 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BookingTime from '@booking/Pages/BookingTime';
     import MixinHasLoader from '@/Mixins/HasLoader';
     import MixinHasModal from '@/Mixins/HasModal';
-    import ModalTimeConfirmation from '@booking/Pages/ModalTimeConfirmation';
-    import TableEventRescheduleDetail from '@booking/Pages/TableEventRescheduleDetail';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BookingTime from '@booking/Pages/BookingTime.vue';
+    import ModalTimeConfirmation from '@booking/Pages/ModalTimeConfirmation.vue';
+    import TableEventRescheduleDetail from '@booking/Pages/TableEventRescheduleDetail.vue';
     import moment from 'moment';
     import { reactive, ref } from 'vue';
     import { success as successAlert } from '@/Libs/alert';

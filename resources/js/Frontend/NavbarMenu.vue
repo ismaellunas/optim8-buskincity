@@ -137,8 +137,8 @@
 </template>
 
 <script>
-    import BizLink from '@/Biz/Link';
-    import BizNavbarItem from '@/Biz/NavbarItem';
+    import BizLink from '@/Biz/Link.vue';
+    import BizNavbarItem from '@/Biz/NavbarItem.vue';
     import { computed, onMounted, onUnmounted } from 'vue';
     import { usePage } from '@inertiajs/inertia-vue3';
     import { ref } from 'vue';

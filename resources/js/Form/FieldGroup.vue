@@ -50,18 +50,18 @@
 </template>
 
 <script>
-    import Checkbox from './Checkbox';
-    import CheckboxGroup from './CheckboxGroup';
-    import Email from './Email';
-    import File from './File';
-    import FileDragDrop from './FileDragDrop';
-    import Number from './Number';
-    import Phone from './Phone';
-    import Radio from './Radio';
-    import Select from './Select';
-    import Text from './Text';
-    import Textarea from './Textarea';
-    import Video from './Video';
+    import Checkbox from './Checkbox.vue';
+    import CheckboxGroup from './CheckboxGroup.vue';
+    import Email from './Email.vue';
+    import File from './File.vue';
+    import FileDragDrop from './FileDragDrop.vue';
+    import Number from './Number.vue';
+    import Phone from './Phone.vue';
+    import Radio from './Radio.vue';
+    import Select from './Select.vue';
+    import Text from './Text.vue';
+    import Textarea from './Textarea.vue';
+    import Video from './Video.vue';
     import { useModelWrapper, isEmpty } from '@/Libs/utils';
 
     export default {

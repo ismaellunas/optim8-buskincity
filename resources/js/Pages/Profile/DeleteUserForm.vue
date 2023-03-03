@@ -77,10 +77,10 @@
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizActionSection from '@/Biz/ActionSection';
-    import BizButton from '@/Biz/Button';
-    import BizFormPassword from '@/Biz/Form/Password';
-    import BizModalCard from '@/Biz/ModalCard';
+    import BizActionSection from '@/Biz/ActionSection.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormPassword from '@/Biz/Form/Password.vue';
+    import BizModalCard from '@/Biz/ModalCard.vue';
 
     export default {
         components: {

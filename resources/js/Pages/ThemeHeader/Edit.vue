@@ -44,14 +44,14 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import Layout from './Layout';
-    import Navigation from './Navigation';
     import MixinHasTab from '@/Mixins/HasTab';
-    import BizButton from '@/Biz/Button';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import BizTab from '@/Biz/Tab';
-    import BizTabList from '@/Biz/TabList';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import Layout from './Layout.vue';
+    import Navigation from './Navigation.vue';
+    import BizButton from '@/Biz/Button.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizTab from '@/Biz/Tab.vue';
+    import BizTabList from '@/Biz/TabList.vue';
     import { confirmLeaveProgress } from '@/Libs/alert';
 
     export default {

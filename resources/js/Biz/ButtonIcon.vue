@@ -10,8 +10,8 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizIcon from '@/Biz/Icon';
+    import BizButton from '@/Biz/Button.vue';
+    import BizIcon from '@/Biz/Icon.vue';
 
     export default {
         name: 'BizButtonIcon',

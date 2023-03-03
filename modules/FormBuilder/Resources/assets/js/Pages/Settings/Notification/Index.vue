@@ -85,17 +85,17 @@
 <script>
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import BizButton from '@/Biz/Button';
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizFilterSearch from '@/Biz/Filter/Search';
-    import BizTableIndex from '@/Biz/TableIndex';
-    import BizTag from '@/Biz/Tag';
+    import BizButton from '@/Biz/Button.vue';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizFilterSearch from '@/Biz/Filter/Search.vue';
+    import BizTableIndex from '@/Biz/TableIndex.vue';
+    import BizTag from '@/Biz/Tag.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { usePage } from '@inertiajs/inertia-vue3';
 
     export default {
-        name: 'Notification',
+        name: 'SettingNotificationIndex',
 
         components: {
             BizButton,

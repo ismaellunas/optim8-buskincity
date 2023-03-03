@@ -21,14 +21,15 @@
 </template>
 
 <script>
-    import AppLayout from '@/Layouts/AppLayout';
-    import PostForm from '@/Pages/Post/Form';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import PostForm from '@/Pages/Post/Form.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import { map, find } from 'lodash';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
     import { success as successAlert } from '@/Libs/alert';
 
     export default {
+        name: 'PostEdit',
         components: {
             PostForm,
             BizErrorNotifications,
@@ -54,7 +55,7 @@
                 categories: map(props.post.categories, 'id'),
                 primary_category: primaryCategory?.id ?? null,
                 content: props.post.content,
-                cover_image_id: props.post.cover_image_id,
+                cover_image_id: props.coverImage?.id,
                 excerpt: props.post.excerpt,
                 locale: props.post.locale,
                 meta_description: props.post.meta_description,

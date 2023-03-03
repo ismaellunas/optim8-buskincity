@@ -27,22 +27,22 @@
 </template>
 
 <script>
-    import DeletableContentMixin from '@/Mixins/DeletableContent';
+    import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinContentHasDimension from '@/Mixins/ContentHasDimension';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import { useModelWrapper } from '@/Libs/utils';
     import { concat } from 'lodash';
 
     export default {
-        name: "Icon",
+        name: "ContentIcon",
 
         components: {
             BizToolbarContent,
         },
 
         mixins: [
-            DeletableContentMixin,
+            MixinDeletableContent,
             MixinContentHasDimension,
             MixinDuplicableContent,
         ],

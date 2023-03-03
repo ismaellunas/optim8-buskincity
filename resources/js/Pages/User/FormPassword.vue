@@ -18,7 +18,7 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizFormPassword from '@/Biz/Form/Password';
+    import BizFormPassword from '@/Biz/Form/Password.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

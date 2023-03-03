@@ -20,7 +20,7 @@
 </template>
 
 <script>
-    import BizFormNumber from '@/Biz/Form/Number';
+    import BizFormNumber from '@/Biz/Form/Number.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

@@ -94,17 +94,17 @@
     import MixinDeletableContent from '@/Mixins/DeletableContent';
     import MixinDuplicableContent from '@/Mixins/DuplicableContent';
     import MixinHasModal from '@/Mixins/HasModal';
-    import fontawesomeAllClasses from '@/Json/fontawesome-all-classes';
-    import BizButton from '@/Biz/Button';
-    import BizFormTextEditorFullInline from '@/Biz/Form/TextEditorFullInline';
-    import BizIconBrowser from '@/Biz/Modal/IconBrowser';
-    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent';
+    import fontawesomeAllClasses from '@/Json/fontawesome-all-classes.json';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormTextEditorFullInline from '@/Biz/Form/TextEditorFullInline.vue';
+    import BizIconBrowser from '@/Biz/Modal/IconBrowser.vue';
+    import BizToolbarContent from '@/Blocks/Contents/ToolbarContent.vue';
     import { cloneDeep, concat } from 'lodash';
     import { useModelWrapper } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
 
     export default {
-        name: 'Tabs',
+        name: 'ContentTabs',
 
         components: {
             BizButton,

@@ -51,9 +51,9 @@
 </template>
 
 <script>
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizDropdownScroll from '@/Biz/DropdownScroll';
-    import BizDropdownSearch from '@/Biz/DropdownSearch';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizDropdownScroll from '@/Biz/DropdownScroll.vue';
+    import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
     import { useModelWrapper } from '@/Libs/utils';
     import { debounceTime } from '@/Libs/defaults';
     import { debounce, filter, find, isEmpty } from 'lodash';

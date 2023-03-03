@@ -42,10 +42,10 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizFormPassword from '@/Biz/Form/Password';
-    import FormSection from '@/Frontend/FormSection';
     import MixinHasLoader from '@/Mixins/HasLoader';
+    import BizButton from '@/Biz/Button.vue';
+    import BizFormPassword from '@/Biz/Form/Password.vue';
+    import FormSection from '@/Frontend/FormSection.vue';
     import { oops as oopsAlert } from '@/Libs/alert';
 
     export default {

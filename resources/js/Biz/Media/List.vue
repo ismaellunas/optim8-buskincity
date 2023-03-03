@@ -60,9 +60,9 @@
 
 <script>
     import HasModalMixin from '@/Mixins/HasModal';
-    import BizTable from '@/Biz/Table';
-    import BizMediaListItem from '@/Biz/Media/ListItem';
-    import BizModal from '@/Biz/Modal';
+    import BizTable from '@/Biz/Table.vue';
+    import BizMediaListItem from '@/Biz/Media/ListItem.vue';
+    import BizModal from '@/Biz/Modal.vue';
 
     export default {
         name: 'MediaList',

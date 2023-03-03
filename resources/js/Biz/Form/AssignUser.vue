@@ -40,11 +40,11 @@
 </template>
 
 <script>
-    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import { debounceTime } from '@/Libs/defaults';
+    import BizFormDropdownSearch from '@/Biz/Form/DropdownSearch.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import { debounceTime } from '@/Libs/defaults.js';
     import { debounce, remove } from 'lodash';
-    import { useModelWrapper } from '@/Libs/utils';
+    import { useModelWrapper } from '@/Libs/utils.js';
 
     export default {
         components: {

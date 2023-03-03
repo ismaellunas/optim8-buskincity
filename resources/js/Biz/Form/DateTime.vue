@@ -16,9 +16,9 @@
 </template>
 
 <script>
-    import BizDateTime from '@/Biz/DateTime';
-    import BizFormField from '@/Biz/Form/Field';
-    import BizInputError from '@/Biz/InputError';
+    import BizDateTime from '@/Biz/DateTime.vue';
+    import BizFormField from '@/Biz/Form/Field.vue';
+    import BizInputError from '@/Biz/InputError.vue';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
 

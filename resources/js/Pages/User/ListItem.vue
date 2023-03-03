@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import BizTag from '@/Biz/Tag';
+    import BizTag from '@/Biz/Tag.vue';
     import { isEmpty } from 'lodash';
 
     export default {

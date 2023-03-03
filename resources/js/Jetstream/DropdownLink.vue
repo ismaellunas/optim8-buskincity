@@ -3,7 +3,7 @@
         <button type="submit" class="block px-4 py-2" v-if="as == 'button'">
             <slot></slot>
         </button>
-        
+
         <a :href="href" class="block px-4 py-2" v-else-if="as =='a'">
             <slot></slot>
         </a>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-    import BizLink from '@/Biz/Link';
+    import BizLink from '@/Biz/Link.vue';
 
     export default {
         components: { BizLink },

@@ -182,17 +182,17 @@
 </template>
 
 <script>
-    import BizButtonLink from '@/Biz/ButtonLink';
-    import BizCheckbox from '@/Biz/Checkbox';
-    import BizDropdown from '@/Biz/Dropdown';
-    import BizDropdownItem from '@/Biz/DropdownItem';
-    import BizDropdownSearch from '@/Biz/DropdownSearch';
-    import BizFilterDateRange from '@/Biz/Filter/DateRange';
-    import BizInput from '@/Biz/Input';
-    import BizLoader from '@/Biz/Loader';
-    import BizPanel from '@/Biz/Panel';
-    import BizPanelBlock from '@/Biz/PanelBlock';
-    import BizTable from '@/Biz/Table';
+    import BizButtonLink from '@/Biz/ButtonLink.vue';
+    import BizCheckbox from '@/Biz/Checkbox.vue';
+    import BizDropdown from '@/Biz/Dropdown.vue';
+    import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
+    import BizFilterDateRange from '@/Biz/Filter/DateRange.vue';
+    import BizInput from '@/Biz/Input.vue';
+    import BizLoader from '@/Biz/Loader.vue';
+    import BizPanel from '@/Biz/Panel.vue';
+    import BizPanelBlock from '@/Biz/PanelBlock.vue';
+    import BizTable from '@/Biz/Table.vue';
     import icon from '@/Libs/icon-class';
     import { debounce, isEmpty, filter } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';

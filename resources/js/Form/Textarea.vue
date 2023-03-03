@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import BizFormTextarea from '@/Biz/Form/Textarea';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 

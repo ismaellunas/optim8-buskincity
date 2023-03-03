@@ -1,6 +1,6 @@
 <template>
     <li :class="{'is-active': isActive}">
-        <slot></slot>
+        <slot />
     </li>
 </template>
 

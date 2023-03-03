@@ -1,5 +1,5 @@
 <template>
-    <div v-if="links.length > 3">
+    <div v-if="isPaginationDisplayed">
         <nav
             class="pagination is-centered"
             role="navigation"
@@ -68,8 +68,8 @@
 </template>
 
 <script>
-    import BizButton from '@/Biz/Button';
-    import BizLink from '@/Biz/Link';
+    import BizButton from '@/Biz/Button.vue';
+    import BizLink from '@/Biz/Link.vue';
     import { isBlank, serialize } from '@/Libs/utils';
 
     export default {
@@ -80,18 +80,12 @@
             BizLink,
         },
         props: {
-            links: {
-                type: Array,
-                default: () => [],
-            },
-            isAjax: {
-                type: Boolean,
-                default: false,
-            },
-            queryParams: {
-                type: Object,
-                default:() => {}
-            },
+            links: { type: Array, default: () => [] },
+            isAjax: { type: Boolean, default: false },
+            queryParams: { type: Object, default:() => {} },
+            currentPage: { type: [Number, null], default: null },
+            lastPage: { type: [Number, null], default: null },
+            pagePropertyName: { type: String, default: 'page' },
         },
         emits: ['on-clicked-pagination'],
         computed: {
@@ -121,12 +115,26 @@
 
                 return paginationLinks;
             },
+            sanitizedQueryParams() {
+                return _.omit(this.queryParams, [this.pagePropertyName]);
+            },
             serializedParams() {
-                if (!isBlank(this.queryParams)) {
-                    return '&'+serialize( this.queryParams );
+                if (!isBlank(this.sanitizedQueryParams)) {
+                    return '&'+serialize( this.sanitizedQueryParams );
                 }
                 return '';
             },
+            isPaginationDisplayed() {
+                if (
+                    (!_.isNull(this.currentPage) && !_.isNull(this.lastPage))
+                    && this.currentPage > this.lastPage
+                ) {
+                    return true;
+                }
+
+                return this.links.length > 3
+            },
+
         },
         methods: {
             isBlank: isBlank,

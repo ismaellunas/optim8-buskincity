@@ -26,8 +26,8 @@
 </template>
 
 <script>
-    import FormBuilder from '@/Form/Builder';
-    import FormSection from '@/Frontend/FormSection';
+    import FormBuilder from '@/Form/Builder.vue';
+    import FormSection from '@/Frontend/FormSection.vue';
 
     export default {
         name: 'BiodataForm',

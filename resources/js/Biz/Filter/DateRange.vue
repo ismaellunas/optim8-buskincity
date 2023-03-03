@@ -10,7 +10,7 @@
 </template>
 
 <script>
-    import BizDatepicker from '@/Biz/Datepicker';
+    import BizDatepicker from '@/Biz/Datepicker.vue';
     import moment from 'moment';
     import { ref } from "vue";
     import { useModelWrapper } from '@/Libs/utils';

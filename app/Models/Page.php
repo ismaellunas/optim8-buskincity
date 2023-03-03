@@ -11,9 +11,9 @@ use App\Services\{
     PageService,
     SettingService,
 };
+use App\Traits\Mediable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
-use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model implements TranslatableContract
 {
     use HasFactory;
-    use MediaAlly;
+    use Mediable;
     use Translatable;
 
     public $translatedAttributes = [
@@ -83,6 +83,22 @@ class Page extends Model implements TranslatableContract
         $this->save();
     }
 
+    public function syncMediaFromInputs(array $inputs): void
+    {
+        $locales = array_keys($inputs);
+
+        if ($locales) {
+            foreach ($locales as $locale) {
+                $pageTranslation = $this->translate($locale);
+                $mediaIds = collect($inputs[$locale]['data']['media'])
+                    ->pluck('id')
+                    ->all();
+
+                $pageTranslation->syncMedia($mediaIds);
+            }
+        }
+    }
+
     public function saveAuthorId(int $authorId)
     {
         $this->author_id = $authorId;
@@ -113,6 +129,7 @@ class Page extends Model implements TranslatableContract
         }
 
         $this->saveFromInputs($inputs);
+        $this->syncMediaFromInputs($inputs);
     }
 
     // Scopes:

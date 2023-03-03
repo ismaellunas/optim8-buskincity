@@ -21,13 +21,15 @@
 
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
-    import AppLayout from '@/Layouts/AppLayout';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications';
-    import CategoryForm from '@/Pages/Category/Form';
+    import AppLayout from '@/Layouts/AppLayout.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import CategoryForm from '@/Pages/Category/Form.vue';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { usePage, useForm } from '@inertiajs/inertia-vue3';
 
     export default {
+        name: 'CategoryCreate',
+
         components: {
             BizErrorNotifications,
             CategoryForm,

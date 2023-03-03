@@ -28,8 +28,8 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizFormInput from '@/Biz/Form/Input';
-    import BizFormTextarea from '@/Biz/Form/Textarea';
+    import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {

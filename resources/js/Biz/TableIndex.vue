@@ -28,15 +28,17 @@
             :is-ajax="isAjaxPagination"
             :links="records.links"
             :query-params="queryParams"
+            :last-page="records.last_page ?? null"
+            :current-page="records.current_page ?? null"
             @on-clicked-pagination="onClickedPagination"
         />
     </div>
 </template>
 
 <script>
-    import BizPagination from '@/Biz/Pagination';
-    import BizTable from '@/Biz/Table';
-    import BizTableInfo from '@/Biz/TableInfo';
+    import BizPagination from '@/Biz/Pagination.vue';
+    import BizTable from '@/Biz/Table.vue';
+    import BizTableInfo from '@/Biz/TableInfo.vue';
 
     export default {
         name: 'BizTableIndex',

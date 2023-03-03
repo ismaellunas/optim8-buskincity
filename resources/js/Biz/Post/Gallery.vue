@@ -5,7 +5,7 @@
             :key="record.id"
             :class="class"
         >
-            <slot :record="record"></slot>
+            <slot :record="record" />
         </div>
     </div>
 </template>
@@ -13,9 +13,10 @@
 <script>
     export default {
         name: 'PostGallery',
+
         props: {
             records: {},
-            class: {default: ['column','is-3']},
+            class: { type: [Array, String, Object], default: () => ['column','is-3']},
         },
     };
 </script>

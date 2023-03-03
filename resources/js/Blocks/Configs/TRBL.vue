@@ -28,9 +28,9 @@
 </template>
 
 <script>
-    import BizFieldHorizontal from '@/Biz/Form/FieldHorizontal';
-    import BizLabel from '@/Biz/Label';
-    import BizSelect from '@/Biz/Select';
+    import BizFieldHorizontal from '@/Biz/Form/FieldHorizontal.vue';
+    import BizLabel from '@/Biz/Label.vue';
+    import BizSelect from '@/Biz/Select.vue';
     import { capitalize } from 'lodash';
     import { defaultOption, suffixNumbers } from '@/ComponentStructures/style-options';
     import { useModelWrapper } from '@/Libs/utils';
