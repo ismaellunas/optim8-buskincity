@@ -31,6 +31,7 @@ use JoelButcher\Socialstream\SetsProfilePhotoFromUrl;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Traits\HasMacros;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -44,6 +45,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use SetsProfilePhotoFromUrl;
     use SoftDeletes;
     use TwoFactorAuthenticatable;
+    use HasMacros;
 
     protected $metaRelation = 'metas';
 
