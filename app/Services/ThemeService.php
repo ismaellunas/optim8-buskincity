@@ -7,7 +7,6 @@ use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Qirolab\Theme\Theme;
@@ -15,13 +14,17 @@ use Qirolab\Theme\Theme;
 class ThemeService
 {
     private $settingService;
+    private $mediaService;
 
     private $cssFilenameFrontend = 'app';
     private $cssFilenameBackend  = 'app_backend';
 
-    public function __construct(SettingService $settingService)
-    {
+    public function __construct(
+        SettingService $settingService,
+        MediaService $mediaService
+    ) {
         $this->settingService = $settingService;
+        $this->mediaService = $mediaService;
     }
 
     private function renderFontSizes(): string
@@ -81,12 +84,7 @@ class ThemeService
 
         $storage = new CloudinaryStorage();
 
-        $folder = "assets";
-        $folderPrefix = $this->getFolderPrefix();
-
-        if ($folderPrefix) {
-            $folder = $folderPrefix . $folder;
-        }
+        $folder = $this->mediaService->getFolderPrefix()."assets";
 
         return $storage->upload(
             $file,
@@ -111,17 +109,5 @@ class ThemeService
         $file = new Filesystem();
 
         return $file->cleanDirectory(storage_path('theme'));
-    }
-
-    private function getFolderPrefix(): ?string
-    {
-        $fileSystemPrefix = config('filesystems.folder_prefix');
-        $folderPrefix = (!App::environment('production') ? config('app.env').'_' : null);
-
-        if ($fileSystemPrefix) {
-            $folderPrefix = $fileSystemPrefix . '/' . $folderPrefix;
-        }
-
-        return $folderPrefix;
     }
 }

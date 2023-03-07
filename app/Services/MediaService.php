@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\App;
 
 class MediaService
 {
@@ -177,11 +176,9 @@ class MediaService
 
         if (! is_null($folder)) {
             $folder = $this->getFolderPrefix().$folder;
-        } else {
-            $folder = config('filesystems.folder_prefix');
-        }
 
-        array_push($params, $folder);
+            array_push($params, $folder);
+        }
 
         $this->fillMediaWithMediaAsset(
             $media,
@@ -190,6 +187,7 @@ class MediaService
                 $params
             )
         );
+
         $media->save();
         $media->saveUserId(auth()->user()->id);
 
@@ -400,13 +398,12 @@ class MediaService
         }
     }
 
-    protected function getFolderPrefix(): ?string
+    public function getFolderPrefix(): ?string
     {
-        $fileSystemPrefix = config('filesystems.folder_prefix');
-        $folderPrefix = (!App::environment('production') ? config('app.env').'_' : null);
+        $folderPrefix = config('filesystems.folder_prefix');
 
-        if ($fileSystemPrefix) {
-            $folderPrefix = $fileSystemPrefix . '/' . $folderPrefix;
+        if ($folderPrefix) {
+            $folderPrefix = $folderPrefix . '_';
         }
 
         return $folderPrefix;
