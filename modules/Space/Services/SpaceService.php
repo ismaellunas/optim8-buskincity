@@ -282,7 +282,7 @@ class SpaceService
         );
     }
 
-    private function deleteLogoFromRelation(Space $space)
+    private function detachLogo(Space $space)
     {
         $logoMediaId = $space->logo_media_id;
 
@@ -291,7 +291,7 @@ class SpaceService
         }
     }
 
-    private function deleteCoverFromRelation(Space $space)
+    private function detchCover(Space $space)
     {
         $coverMediaId = $space->cover_media_id;
 
@@ -306,7 +306,7 @@ class SpaceService
 
         $space->media()->save($media);
 
-        $this->deleteLogoFromRelation($space);
+        $this->detachLogo($space);
 
         $space->logo_media_id = $media->id;
         $space->save();
@@ -318,7 +318,7 @@ class SpaceService
 
         $space->media()->save($media);
 
-        $this->deleteCoverFromRelation($space);
+        $this->detchCover($space);
 
         $space->cover_media_id = $media->id;
         $space->save();
@@ -326,7 +326,7 @@ class SpaceService
 
     public function deleteLogo(Space $space)
     {
-        $this->deleteLogoFromRelation($space);
+        $this->detachLogo($space);
 
         $space->logo_media_id = null;
         $space->save();
@@ -334,7 +334,7 @@ class SpaceService
 
     public function deleteCover(Space $space)
     {
-        $this->deleteCoverFromRelation($space);
+        $this->detchCover($space);
 
         $space->cover_media_id = null;
         $space->save();
@@ -343,8 +343,8 @@ class SpaceService
     public function removeAllMedia(array $spaces): void
     {
         foreach ($spaces as $space) {
-            $this->deleteLogoFromRelation($space);
-            $this->deleteCoverFromRelation($space);
+            $this->detachLogo($space);
+            $this->detchCover($space);
         }
     }
 

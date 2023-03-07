@@ -2,14 +2,15 @@
 
 namespace App\Services;
 
+use \finfo;
 use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Qirolab\Theme\Theme;
-use \finfo;
 
 class ThemeService
 {
@@ -80,7 +81,12 @@ class ThemeService
 
         $storage = new CloudinaryStorage();
 
-        $folder = config('filesystem.folder_prefix')."assets";
+        $folder = "assets";
+        $folderPrefix = $this->getFolderPrefix();
+
+        if ($folderPrefix) {
+            $folder = $folderPrefix . $folder;
+        }
 
         return $storage->upload(
             $file,
@@ -105,5 +111,17 @@ class ThemeService
         $file = new Filesystem();
 
         return $file->cleanDirectory(storage_path('theme'));
+    }
+
+    private function getFolderPrefix(): ?string
+    {
+        $fileSystemPrefix = config('filesystems.folder_prefix');
+        $folderPrefix = (!App::environment('production') ? config('app.env').'_' : null);
+
+        if ($fileSystemPrefix) {
+            $folderPrefix = $fileSystemPrefix . '/' . $folderPrefix;
+        }
+
+        return $folderPrefix;
     }
 }

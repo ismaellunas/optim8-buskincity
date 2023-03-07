@@ -71,7 +71,7 @@ class MediaService
         int $recordsPerPage = 12
     ) {
         $user = auth()->user();
-        $hasAccessToOtherMedia = $user->hasAccessToOtherMedia;
+        $hasAccessToOtherMedia = $user->can('media.other_users');
 
         $query = Media::orderBy('id', 'DESC')
             ->when(!$hasAccessToOtherMedia, function (Builder $query) use ($user) {
@@ -177,9 +177,11 @@ class MediaService
 
         if (! is_null($folder)) {
             $folder = $this->getFolderPrefix().$folder;
-
-            array_push($params, $folder);
+        } else {
+            $folder = config('filesystems.folder_prefix');
         }
+
+        array_push($params, $folder);
 
         $this->fillMediaWithMediaAsset(
             $media,
@@ -400,6 +402,13 @@ class MediaService
 
     protected function getFolderPrefix(): ?string
     {
-        return (!App::environment('production') ? config('app.env').'_' : null);
+        $fileSystemPrefix = config('filesystems.folder_prefix');
+        $folderPrefix = (!App::environment('production') ? config('app.env').'_' : null);
+
+        if ($fileSystemPrefix) {
+            $folderPrefix = $fileSystemPrefix . '/' . $folderPrefix;
+        }
+
+        return $folderPrefix;
     }
 }
