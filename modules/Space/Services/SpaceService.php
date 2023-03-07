@@ -436,4 +436,17 @@ class SpaceService
 
         return $page;
     }
+
+    public function totalSpaceByType(Authenticatable $user, int $typeId): int
+    {
+        $spaceIds = null;
+
+        if (! $user->can('space.viewAny')) {
+            $spaceIds = $user->spaces->pluck('id')->all();
+        }
+
+        return $this->conditionsBuilder($spaceIds, [
+            'inType' => [$typeId],
+        ])->count();
+    }
 }

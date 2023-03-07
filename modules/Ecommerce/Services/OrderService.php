@@ -411,4 +411,16 @@ class OrderService
 
         return $recipients;
     }
+
+    public function getWidgetTotalBooking(): int
+    {
+        return $this->conditionsBuilder(auth()->user())->count();
+    }
+
+    public function getWidgetTotalUpcomingBooking(): int
+    {
+        return $this->conditionsBuilder(auth()->user(), null, [
+            'inStatus' => [BookingStatus::UPCOMING->value],
+        ])->count();
+    }
 }

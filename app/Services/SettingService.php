@@ -515,4 +515,15 @@ class SettingService
     {
         $this->saveKey('favicon_media_id', $mediaId);
     }
+
+    public function adminDashboardWidgets(): Collection
+    {
+        $key = 'dashboard_widget_admin';
+
+        return app(SettingCache::class)->remember($key, function () use ($key) {
+            $value = Setting::key($key)->value('value');
+
+            return ($value) ? collect(json_decode($value, true)) : collect();
+        });
+    }
 }
