@@ -385,9 +385,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return !$this->is_suspended;
     }
-
-    public function getHasAccessToOtherMediaAttribute(): bool
-    {
-        return $this->can('media.other_users') ?? false;
-    }
 }
