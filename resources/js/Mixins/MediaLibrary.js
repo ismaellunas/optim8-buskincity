@@ -2,15 +2,21 @@ import { oops as oopsAlert } from '@/Libs/alert';
 
 export default {
     name: 'MediaLibraryMixin',
+
+    props: {
+        mediaTypes: { type: Array, default: () => ['image'] },
+    },
+
     data() {
         return {
             media: [],
             mediaListQueryParams: {
-                type: ['image'],
+                type: this.mediaTypes,
             },
             mediaListRouteName: 'admin.media.lists',
         };
     },
+
     methods: {
         getMediaList(url) {
             const self = this;

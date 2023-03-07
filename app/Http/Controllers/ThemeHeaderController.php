@@ -43,13 +43,28 @@ class ThemeHeaderController extends CrudController
 
     public function edit()
     {
+        $user = auth()->user();
+
+        $logoMedia = $this->settingService->getLogoMedia();
+        $logoMedia->append(['isImage', 'thumbnail_url', 'display_file_name']);
+
+        if ($logoMedia) {
+            $this->transformLogoMedia($logoMedia);
+        }
+
         return Inertia::render(
             $this->componentName.'Edit',
             $this->getData([
+                'can' => [
+                    'media' => [
+                        'read' => $user->can('media.read'),
+                        'add' => $user->can('media.add'),
+                    ]
+                ],
                 'headerMenus' => $this->menuService->getHeaderMenus(
                     app(TranslationService::class)->getLocales()
                 ),
-                'logoUrl' => $this->settingService->getLogoUrl(),
+                'logoMedia' => $logoMedia,
                 'menu' => $this->modelMenu::header()->first(),
                 'menuOptions' => $this->menuService->getMenuOptions(),
                 'settings' => $this->settingService->getHeader(),

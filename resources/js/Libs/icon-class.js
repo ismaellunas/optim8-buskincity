@@ -19,6 +19,12 @@ export const eraser = iconFormatter('fa-eraser');
 export const expand = iconFormatter('fa-expand');
 export const eye = iconFormatter('fa-eye');
 export const eyeSlash = iconFormatter('fa-eye-slash');
+export const file = iconFormatter('fa-file-alt');
+export const fileExcel = iconFormatter('fa-file-excel');
+export const filePdf = iconFormatter('fa-file-pdf');
+export const filePowerpoint = iconFormatter('fa-file-powerpoint');
+export const fileVideo = iconFormatter('fa-file-video');
+export const fileWord = iconFormatter('fa-file-word');
 export const globe = iconFormatter('fa-globe');
 export const grid = iconFormatter('fa-th');
 export const idCard = iconFormatter('fa-id-card');
@@ -66,6 +72,12 @@ export default {
     expand,
     eye,
     eyeSlash,
+    file,
+    fileExcel,
+    filePdf,
+    filePowerpoint,
+    fileVideo,
+    fileWord,
     globe,
     grid,
     idCard,
