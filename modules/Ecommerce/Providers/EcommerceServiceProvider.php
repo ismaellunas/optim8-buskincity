@@ -8,6 +8,7 @@ use GetCandy\Base\OrderReferenceGenerator;
 use GetCandy\Base\OrderReferenceGeneratorInterface;
 use Illuminate\Support\ServiceProvider;
 use Modules\Ecommerce\Entities\Product;
+use Modules\Ecommerce\Services\OrderService;
 use Modules\Ecommerce\Services\ProductService;
 
 class EcommerceServiceProvider extends ServiceProvider
@@ -21,6 +22,10 @@ class EcommerceServiceProvider extends ServiceProvider
      * @var string $moduleNameLower
      */
     protected $moduleNameLower = 'ecommerce';
+
+    public $singletons = [
+        OrderService::class => OrderService::class,
+    ];
 
     /**
      * Boot the application events.
