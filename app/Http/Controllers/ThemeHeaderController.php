@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\UploadLogo;
 use App\Entities\CloudinaryStorage;
 use App\Helpers\HumanReadable;
 use App\Http\Requests\ThemeHeaderLayoutRequest;
@@ -93,12 +92,8 @@ class ThemeHeaderController extends CrudController
         $setting->value = $inputs['layout'];
         $setting->save();
 
-        if ($request->hasFile('logo')) {
-            $uploadLogo = new UploadLogo();
-
-            $media = $uploadLogo->handle($inputs['logo']);
-
-            $this->settingService->saveLogo($media->id);
+        if ($request->has('logo')) {
+            $this->settingService->saveLogo($inputs['logo']);
         }
 
         $this->generateFlashMessage('Header layout updated successfully!');
