@@ -71,7 +71,7 @@ class MediaService
         int $recordsPerPage = 12
     ) {
         $user = auth()->user();
-        $hasAccessToOtherMedia = $user->can('media.other_users');
+        $hasAccessToOtherMedia = $user->can('manageOtherMedia', Media::class);
 
         $query = Media::orderBy('id', 'DESC')
             ->when(!$hasAccessToOtherMedia, function (Builder $query) use ($user) {
