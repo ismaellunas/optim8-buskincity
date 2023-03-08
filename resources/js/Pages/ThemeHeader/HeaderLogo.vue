@@ -32,7 +32,6 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizFormMediaLibrary from '@/Biz/Form/MediaLibrary.vue';
     import { useModelWrapper } from '@/Libs/utils';
-    import { isEmpty } from 'lodash';
 
     export default {
         name: 'HeaderLogo',
@@ -59,24 +58,6 @@
             return {
                 logo: useModelWrapper(props, emit),
             };
-        },
-
-        data() {
-            return {
-                logoImgUrl: this.logoUrl,
-            };
-        },
-
-        computed: {
-            hasImage() {
-                return !isEmpty(this.logoImgUrl);
-            },
-        },
-
-        methods: {
-            onFilePicked(event) {
-                this.logoImgUrl = event.target.result;
-            },
         },
     }
 </script>
