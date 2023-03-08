@@ -86,6 +86,11 @@ class UserAndPermissionSeeder extends Seeder
             'payment.management',
             'public_page.profile',
         ]);
+
+        $authorRole = Role::whereName('Author')->first();
+        $authorRole->syncPermissions([
+            'system.dashboard',
+        ]);
     }
 
     private function populateUserPerformer()

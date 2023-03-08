@@ -77,4 +77,26 @@ class SpacePolicy
     {
         return $user->isAdministrator || $user->isSuperAdministrator;
     }
+
+    public function totalSpaceByTypeWidget(User $user, int $typeId)
+    {
+        if ($user->can('space.read')) {
+            return true;
+        }
+
+        $spaces = $user->spaces;
+
+        if ($user->spaces->isEmpty()) {
+            return false;
+        }
+
+        return Space::where(function ($query) use ($spaces) {
+                foreach ($spaces as $key => $space) {
+                    $boolean = $key == 0 ? 'and' : 'or';
+                    $query->whereDescendantOrSelf($space, $boolean);
+                }
+            })
+            ->whereHas('type', fn ($query) => $query->where('id', $typeId))
+            ->exists();
+    }
 }

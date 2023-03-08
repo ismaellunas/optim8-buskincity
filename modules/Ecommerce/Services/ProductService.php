@@ -140,18 +140,7 @@ class ProductService
     public function upload(
         Product $product,
         UploadedFile $file,
-        string $mediaType = null,
     ): Media {
-        $folder = ModuleService::productMediaFolder().'/'.$product->id;
-
-        $folderPrefix = !app()->environment('production')
-            ? config('app.env')
-            : null;
-
-        if ($folderPrefix) {
-            $folder = $folderPrefix.'_'.$folder;
-        }
-
         $fileName = preg_replace(
             '/[^a-z0-9]+/',
             '-',
@@ -162,10 +151,8 @@ class ProductService
             $file,
             $fileName,
             app(MediaStorage::class),
-            $folder
         );
 
-        $media->type = $mediaType;
         $media->save();
 
         $product->gallery()->save($media);

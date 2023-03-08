@@ -7,6 +7,7 @@ use App\Listeners\SendErrorReportNotification;
 use App\Models\{
     Category,
     GlobalOption,
+    Media,
     Page,
     PageTranslation,
     Post,
@@ -15,6 +16,7 @@ use App\Models\{
 use App\Observers\{
     CategoryObserver,
     GlobalOptionObserver,
+    MediaObserver,
     PageObserver,
     PageTranslationObserver,
     PostObserver,
@@ -50,6 +52,7 @@ class EventServiceProvider extends ServiceProvider
     {
         Category::observe(CategoryObserver::class);
         GlobalOption::observe(GlobalOptionObserver::class);
+        Media::observe(MediaObserver::class);
         Page::observe(PageObserver::class);
         PageTranslation::observe(PageTranslationObserver::class);
         Post::observe(PostObserver::class);

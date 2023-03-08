@@ -293,15 +293,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function updateProfilePhoto(UploadedFile $photo): void
     {
-        $user = Auth::user();
+        $fileName = $this->first_name.'-'.$this->last_name.'-'.Str::random(10);
+
         $media = app(MediaService::class)->uploadProfile(
             $photo,
+            $fileName,
             new CloudinaryStorage(),
-            $user,
             "profiles",
         );
 
-        app(MediaService::class)->setMedially($user, [
+        app(MediaService::class)->setMedially($this, [
             $media->id
         ]);
 
