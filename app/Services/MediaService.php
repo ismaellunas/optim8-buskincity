@@ -176,9 +176,11 @@ class MediaService
 
         if (! is_null($folder)) {
             $folder = $this->getFolderPrefix().$folder;
-
-            array_push($params, $folder);
+        } else {
+            $folder = Str::of($this->getFolderPrefix())->rtrim('_')->value();
         }
+
+        array_push($params, $folder);
 
         $this->fillMediaWithMediaAsset(
             $media,
@@ -221,9 +223,11 @@ class MediaService
 
         if (! is_null($folder)) {
             $folder = $this->getFolderPrefix().$folder;
-
-            array_push($params, $folder);
+        } else {
+            $folder = Str::of($this->getFolderPrefix())->rtrim('_')->value();
         }
+
+        array_push($params, $folder);
 
         $this->fillMediaWithMediaAsset(
             $media,
