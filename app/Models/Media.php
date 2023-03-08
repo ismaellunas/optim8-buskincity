@@ -104,6 +104,11 @@ class Media extends CloudinaryMedia implements TranslatableContract
         return $query->where('type', self::TYPE_PROFILE);
     }
 
+    public function scopeUploader($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
     // Accessors:
     public function getFileNameWithoutExtensionAttribute(): string
     {
@@ -239,5 +244,11 @@ class Media extends CloudinaryMedia implements TranslatableContract
     public function getCanDeletedAttribute(): bool
     {
         return $this->mediable->isEmpty();
+    }
+
+    public function saveUserId(int $userId): void
+    {
+        $this->user_id = $userId;
+        $this->save();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\UploadStripeLogo;
 use App\Helpers\HumanReadable;
 use App\Http\Requests\StripeSettingRequest;
 use App\Jobs\{
@@ -105,17 +106,10 @@ class StripeController extends Controller
         if ($request->hasFile('logo')) {
             $logoFile = $request->file('logo');
 
-            $existingMedia = $this->stripeSettingService->logoMedia();
+            $uploadStripeLogo = new UploadStripeLogo();
 
-            $media = $this
-                ->stripeSettingService
-                ->uploadLogo($logoFile);
-
+            $media = $uploadStripeLogo->handle($logoFile);
             $this->stripeSettingService->saveLogoMedia($media);
-
-            if ($existingMedia) {
-                $this->stripeSettingService->deleteLogoFromStorage($existingMedia);
-            }
 
             $job = new UpdateStripeConnectedAccountbrandingLogo();
             $job->delay(now()->addMinutes(1));

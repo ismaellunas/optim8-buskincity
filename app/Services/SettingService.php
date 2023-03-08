@@ -25,12 +25,13 @@ class SettingService
         });
     }
 
-    public function saveKey(string $key, mixed $value): bool
+    public function saveKey(string $key, mixed $value): Setting
     {
         $setting = Setting::firstOrNew(['key' => $key]);
         $setting->value = $value;
+        $setting->save();
 
-        return $setting->save();
+        return $setting;
     }
 
     public function getFrontendCssUrl(): string
@@ -394,12 +395,12 @@ class SettingService
         return $mediaId ? Media::find($mediaId) : null;
     }
 
-    public function saveCssUrlFrontend(string $url): bool
+    public function saveCssUrlFrontend(string $url): Setting
     {
         return $this->saveKey('url_css', $url);
     }
 
-    public function saveCssUrlBackend(string $url): bool
+    public function saveCssUrlBackend(string $url): Setting
     {
         return $this->saveKey('url_css_backend', $url);
     }
@@ -506,13 +507,30 @@ class SettingService
         return true;
     }
 
-    public function saveQrcodeLogo(?int $mediaId)
+    public function saveLogo(?int $mediaId): void
     {
-        $this->saveKey('qrcode_public_page_logo_media_id', $mediaId);
+        $setting = $this->saveKey('header_logo_media_id', $mediaId);
+
+        $setting->syncMedia([
+            $mediaId
+        ]);
     }
 
-    public function saveFavicon(?int $mediaId)
+    public function saveQrcodeLogo(?int $mediaId): void
     {
-        $this->saveKey('favicon_media_id', $mediaId);
+        $setting = $this->saveKey('qrcode_public_page_logo_media_id', $mediaId);
+
+        $setting->syncMedia([
+            $mediaId
+        ]);
+    }
+
+    public function saveFavicon(?int $mediaId): void
+    {
+        $setting = $this->saveKey('favicon_media_id', $mediaId);
+
+        $setting->syncMedia([
+            $mediaId
+        ]);
     }
 }

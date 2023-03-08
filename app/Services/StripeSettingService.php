@@ -186,8 +186,13 @@ class StripeSettingService
             'key' => 'stripe_logo_media_id',
             'group' => 'stripe'
         ]);
+
         $setting->value = $media->id;
         $setting->save();
+
+        $setting->syncMedia([
+            $media->id
+        ]);
     }
 
     public function logoUrl(): string
@@ -195,21 +200,6 @@ class StripeSettingService
         $media = $this->logoMedia();
 
         return !empty($media) ? $media->file_url : "";
-    }
-
-    public function deleteLogoFromStorage(Media $media)
-    {
-        app(MediaService::class)->destroy($media, new CloudinaryStorage());
-    }
-
-    public function uploadLogo(UploadedFile $file): Media
-    {
-        return app(MediaService::class)->uploadSetting(
-            $file,
-            Str::random(10),
-            new CloudinaryStorage(),
-            (!app()->environment('production') ? config('app.env') : null)
-        );
     }
 
     public function logoMimeTypes(): array

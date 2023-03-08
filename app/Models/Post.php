@@ -241,14 +241,4 @@ class Post extends BaseModel implements PublishableInterface
     {
         return $this->categories->implode('name', ', ');
     }
-
-    public function saveMedia(array $mediaIds)
-    {
-        $mediaIds = collect($mediaIds)
-            ->filter()
-            ->map(fn($mediaId) => (int)$mediaId)
-            ->all();
-
-        $this->syncMedia($mediaIds);
-    }
 }

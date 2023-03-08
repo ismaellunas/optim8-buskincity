@@ -37,7 +37,7 @@ class RoleService
                     'value' => $permission->name,
                     'groupTitle' => $groupTitle,
                     'isAll' => $isAll,
-                    'title' => $isAll ? 'All' : Str::of(Str::afterLast($permission->name, '.'))->title(),
+                    'title' => $isAll ? 'All' : Str::of(Str::afterLast($permission->name, '.'))->title()->replace('_', ' '),
                 ];
             })
             ->groupBy('groupTitle')

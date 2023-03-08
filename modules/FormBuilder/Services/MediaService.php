@@ -13,7 +13,6 @@ class MediaService extends AppMediaService
     public function uploadField(
         UploadedFile $file,
         MediaStorage $mediaStorage,
-        string $folderPrefix = null
     ): Media {
         $media = new Media();
 
@@ -31,10 +30,7 @@ class MediaService extends AppMediaService
             $extension = $clientExtension;
         }
 
-        $folder = 'form_builder_assets';
-        if ($folderPrefix) {
-            $folder = $folderPrefix.$folder;
-        }
+        $folder = $this->getFolderPrefix().'form_builder_assets';
 
         $fileName = $this->getUniqueFileName(
             $fileName,

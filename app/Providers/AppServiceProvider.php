@@ -82,7 +82,10 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(ThemeService::class, function ($app) {
-            return new ThemeService($app->make(SettingService::class));
+            return new ThemeService(
+                $app->make(SettingService::class),
+                $app->make(MediaService::class)
+            );
         });
 
         $this->app->extend(SocialiteFactory::class, function ($command, $app) {

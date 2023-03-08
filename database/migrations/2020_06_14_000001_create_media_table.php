@@ -19,6 +19,11 @@ class CreateMediaTable extends Migration
             $table->json('assets')->nullable();
             $table->nullableMorphs('medially');
             $table->tinyInteger('type')->default(0);
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained('users')
+                ->onUpdate('cascade')
+                ->onDelete('set null');
             $table->timestamps();
         });
     }
