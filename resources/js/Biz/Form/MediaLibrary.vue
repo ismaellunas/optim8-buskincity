@@ -15,7 +15,10 @@
                 v-if="hasMediumPreview"
                 class="columns"
             >
-                <div class="column is-3">
+                <div
+                    class="column"
+                    :class="imagePreviewSize"
+                >
                     <div class="card card-equal-height">
                         <div class="card-image px-2 pt-2 has-text-centered">
                             <biz-image
@@ -165,6 +168,7 @@
             message: { type: [Array, Object, String], default: undefined },
             modelValue: { type: [String, Number, null], required: true },
             required: { type: Boolean, default: false },
+            imagePreviewSize: { type: [String, Object], default: 'is-3' },
         },
 
         emits: [
