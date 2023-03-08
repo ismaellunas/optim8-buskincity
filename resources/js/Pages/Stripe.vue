@@ -224,8 +224,8 @@
                         <biz-form-media-library
                             v-model="form.logo"
                             image-preview-size="is-6"
-                            :is-download-enabled="true"
-                            :is-upload-enabled="true"
+                            :is-download-enabled="can?.media?.read ?? false"
+                            :is-upload-enabled="can?.media?.add ?? false"
                             :medium="logoMedia"
                             :message="error('logo')"
                         >
@@ -304,6 +304,10 @@
             applicationFeePercentage: {
                 type: Number,
                 default: null,
+            },
+            can: {
+                type: Object,
+                default: () => {}
             },
             colorPrimary: {
                 type: String,

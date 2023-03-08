@@ -31,6 +31,7 @@ class StripeController extends Controller
 
     public function edit()
     {
+        $user = auth()->user();
         $settings = $this->stripeSettingService->getAll();
 
         $currencyOptions = collect($this->stripeService->getCurrencyOptions())
@@ -43,6 +44,12 @@ class StripeController extends Controller
         return Inertia::render('Stripe', [
             'amountOptions' => $settings->get('stripe_amount_options'),
             'applicationFeePercentage' => $settings->get('stripe_application_fee_percentage'),
+            'can' => [
+                'media' => [
+                    'read' => $user->can('media.read'),
+                    'add' => $user->can('media.add'),
+                ]
+            ],
             'colorPrimary' => $settings->get('stripe_color_primary'),
             'colorSecondary' => $settings->get('stripe_color_secondary'),
             'countryOptions' => $this->stripeService->getCountryOptions(),
