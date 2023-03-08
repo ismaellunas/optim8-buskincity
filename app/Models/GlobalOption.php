@@ -20,4 +20,9 @@ class GlobalOption extends BaseModel
     {
         $query->where('type', $value);
     }
+
+    public function scopeName($query, $value)
+    {
+        $query->where('name', $value);
+    }
 }
