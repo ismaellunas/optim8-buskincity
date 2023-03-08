@@ -28,6 +28,17 @@ class OrderService
         ?array $scopes = null
     ): Builder {
         $user = auth()->user();
+
+        $queryBuilder = $this->conditionsBuilder($user, $term, $scopes);
+
+        return $this->columnsBuilder($queryBuilder);
+    }
+
+    private function conditionsBuilder(
+        User $user,
+        string $term = null,
+        ?array $scopes = null
+    ): Builder {
         $isUserProductManager = $user->isProductManager();
 
         return Order::when($term, function ($query) use ($term) {
@@ -73,37 +84,41 @@ class OrderService
             })
             ->when($isUserProductManager, function ($query) use ($user) {
                 $query->productManager($user->id);
-            })
-            ->with([
-                'firstEventLine' => function ($query) {
-                    $query->with([
-                        'latestEvent' => function ($query) {
-                            $query->select(['id', 'order_line_id', 'schedule_id', 'booked_at', 'duration', 'duration_unit', 'status']);
-                            $query->with('schedule:id,timezone');
-                        },
-                        'purchasable' => function ($query) {
-                            $query->with('product', function ($query) {
-                                $query->select('id', 'product_type_id', 'attribute_data');
-                                $query->with([
-                                    'metas' => function ($query) {
-                                        $query->whereIn('key', ['locations']);
-                                    },
-                                    'managers' => function ($query) {
-                                        $query->select('user_id');
-                                    }
-                                ]);
-                            });
-                        },
-                    ]);
-                },
-                'user:id,email,first_name,last_name,deleted_at',
-            ])
-            ->select(
-                'id',
-                'user_id',
-                'status',
-                'placed_at',
-            );
+            });
+    }
+
+    private function columnsBuilder(Builder $query): Builder
+    {
+        return $query->with([
+            'firstEventLine' => function ($query) {
+                $query->with([
+                    'latestEvent' => function ($query) {
+                        $query->select(['id', 'order_line_id', 'schedule_id', 'booked_at', 'duration', 'duration_unit', 'status']);
+                        $query->with('schedule:id,timezone');
+                    },
+                    'purchasable' => function ($query) {
+                        $query->with('product', function ($query) {
+                            $query->select('id', 'product_type_id', 'attribute_data');
+                            $query->with([
+                                'metas' => function ($query) {
+                                    $query->whereIn('key', ['locations']);
+                                },
+                                'managers' => function ($query) {
+                                    $query->select('user_id');
+                                }
+                            ]);
+                        });
+                    },
+                ]);
+            },
+            'user:id,email,first_name,last_name,deleted_at',
+        ])
+        ->select(
+            'id',
+            'user_id',
+            'status',
+            'placed_at',
+        );
     }
 
     public function getRecords(
@@ -395,5 +410,17 @@ class OrderService
         ]);
 
         return $recipients;
+    }
+
+    public function getWidgetTotalBooking(): int
+    {
+        return $this->conditionsBuilder(auth()->user())->count();
+    }
+
+    public function getWidgetTotalUpcomingBooking(): int
+    {
+        return $this->conditionsBuilder(auth()->user(), null, [
+            'inStatus' => [BookingStatus::UPCOMING->value],
+        ])->count();
     }
 }

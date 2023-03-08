@@ -118,7 +118,7 @@ class PostController extends CrudController
             );
         }
 
-        $post->saveMedia([
+        $post->syncMedia([
             $request->input('cover_image_id')
         ]);
 
@@ -192,7 +192,7 @@ class PostController extends CrudController
             );
         }
 
-        $post->saveMedia([
+        $post->syncMedia([
             $request->input('cover_image_id')
         ]);
 

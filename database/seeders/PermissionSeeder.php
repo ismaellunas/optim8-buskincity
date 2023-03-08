@@ -42,6 +42,7 @@ class PermissionSeeder extends Seeder
             'media.edit',
             'media.add',
             'media.delete',
+            'media.other_users',
 
             'user.*',
             'user.browse',
