@@ -81,7 +81,6 @@ class FileDragDrop extends BaseField
             $media->push(app(MediaService::class)->uploadField(
                 $file,
                 new CloudinaryStorage(),
-                (!App::environment('production') ? 'local_' : null)
             ));
         }
 

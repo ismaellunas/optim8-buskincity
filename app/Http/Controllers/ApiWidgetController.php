@@ -3,30 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Services\UserService;
-use App\Models\User;
+use App\Services\WidgetService;
 use Illuminate\Http\Request;
 
 class ApiWidgetController extends Controller
 {
-    private $userService;
-
-    public function __construct(UserService $userService)
-    {
-        $this->userService = $userService;
-    }
-
-    public function getLatestRegistrations(Request $request)
+    public function getLatestRegistrations(Request $request, UserService $userService)
     {
         $scopes = [
             'inRoles' => $request->roles ?? null,
         ];
 
         return [
-            'records' => $this->userService->getLatestRegistrations(
+            'records' => $userService->getLatestRegistrations(
                 auth()->user(),
                 $request->term,
                 $scopes,
             ),
         ];
+    }
+
+    public function getStoredWidgetData(
+        WidgetService $widgetService,
+        string $uuid
+    ) {
+        $widget = $widgetService->getWidgetHandler($uuid);
+
+        return $widget->response();
     }
 }
