@@ -169,9 +169,15 @@ class SettingService
 
     public function getLogoMedia(): ?Media
     {
-        return $this->getMediaFromSetting(
+        $media = $this->getMediaFromSetting(
             config("constants.theme_header.header_logo_media.key")
         );
+
+        if ($media) {
+            $this->transformMedia($media);
+        }
+
+        return $media;
     }
 
     public function getHeaderLayout(): int
@@ -532,5 +538,9 @@ class SettingService
         $setting->syncMedia([
             $mediaId
         ]);
+    }
+    private function transformMedia(Media $media)
+    {
+        $media->append(['isImage', 'thumbnail_url', 'display_file_name']);
     }
 }

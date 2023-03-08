@@ -44,7 +44,6 @@ class ThemeHeaderController extends CrudController
         $user = auth()->user();
 
         $logoMedia = $this->settingService->getLogoMedia();
-        $logoMedia->append(['isImage', 'thumbnail_url', 'display_file_name']);
 
         return Inertia::render(
             $this->componentName.'Edit',
