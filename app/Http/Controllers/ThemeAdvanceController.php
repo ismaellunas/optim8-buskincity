@@ -2,12 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\{
-    UploadFavicon,
-    UploadQrCodeLogo
-};
 use App\Entities\CloudinaryStorage;
-use App\Helpers\HumanReadable;
 use App\Http\Requests\ThemeAdvanceRequest;
 use App\Services\{
     MediaService,
@@ -41,6 +36,7 @@ class ThemeAdvanceController extends CrudController
 
     public function edit()
     {
+        $user = auth()->user();
         $pageOptions = $this->menuService->getPageOptions();
         $pageOptions[] = [
             'id' => "",
@@ -48,38 +44,28 @@ class ThemeAdvanceController extends CrudController
             'locales' => null,
         ];
 
+        $faviconMedia = $this->settingService->getFaviconMedia();
+        $qrCodeMedia = $this->settingService->getQrCodePublicPageLogoMedia();
+
         return Inertia::render(
             'ThemeAdvance',
             $this->getData([
                 'additionalCodes' => $this->settingService->getAdditionalCodes(),
-                'faviconUrl' => $this->settingService->getFaviconUrl(),
+                'can' => [
+                    'media' => [
+                        'read' => $user->can('media.read'),
+                        'add' => $user->can('media.add'),
+                    ]
+                ],
+                'faviconMedia' => $faviconMedia,
                 'homePageId' => $this->settingService->getHomePage(),
                 'pageOptions' => $pageOptions,
+                'qrCodeMedia' => $qrCodeMedia,
                 'qrCodePublicPageIsDisplayed' => $this->settingService->qrCodePublicPageIsDisplayed(),
-                'qrCodePublicPageLogo' => $this->settingService->qrCodePublicPageLogo(),
                 'trackingCodes' => $this->settingService->getTrackingCodes(),
                 'instructions' => [
-                    'qrcode' => [
-                        __('Accepted file extensions: :extensions.', [
-                            'extensions' => implode(', ', config('constants.extensions.image'))
-                        ]),
-                        __('Max file size: :filesize.', [
-                            'filesize' => HumanReadable::bytesToHuman(
-                                (50 * config('constants.one_megabyte')) * 1024
-                            )
-                        ]),
-                    ],
-                    'favicon' => [
-                        __('Accepted file extensions: :extensions.', [
-                            'extensions' => implode(', ', config('constants.extensions.image'))
-                        ]),
-                        __('Max file size: :filesize.', [
-                            'filesize' => HumanReadable::bytesToHuman(
-                                (1 * config('constants.one_megabyte')) * 1024
-                            )
-                        ]),
-                    ]
-                ]
+                    'mediaLibrary' => defaultMediaLibraryInstructions(),
+                ],
             ])
         );
     }
@@ -93,34 +79,11 @@ class ThemeAdvanceController extends CrudController
 
             switch ($key) {
                 case 'qrcode_public_page_logo':
-                    if ($request->hasFile('qrcode_public_page_logo')) {
-                        $uploadQrCodeLogo = new UploadQrCodeLogo();
-
-                        $media = $uploadQrCodeLogo->handle($inputs[$key]);
-
-                        $this->settingService->saveQrcodeLogo($media->id);
-                    }
+                    $this->settingService->saveQrcodeLogo($inputs[$key]);
                 break;
 
                 case 'favicon':
-                    $oldFaviconMedia = $this->settingService->getFaviconMedia();
-
-                    if ($request->hasFile('favicon')) {
-                        $uploadFavicon = new UploadFavicon();
-
-                        $media = $uploadFavicon->handle($inputs[$key]);
-
-                        $this->settingService->saveFavicon($media->id);
-
-                    } elseif ($inputs['is_favicon_deleted'] && $oldFaviconMedia) {
-
-                        $this->mediaService->destroy(
-                            $oldFaviconMedia,
-                            new CloudinaryStorage()
-                        );
-
-                        $this->settingService->saveFavicon(null);
-                    }
+                    $this->settingService->saveFavicon($inputs[$key]);
                 break;
 
                 default:
