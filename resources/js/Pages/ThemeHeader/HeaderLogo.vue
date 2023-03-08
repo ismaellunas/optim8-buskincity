@@ -14,7 +14,7 @@
                         <p class="help is-info">
                             <ul>
                                 <li
-                                    v-for="note, index in instructions.logo"
+                                    v-for="note, index in instructions.mediaLibrary"
                                     :key="index"
                                 >
                                     {{ note }}
