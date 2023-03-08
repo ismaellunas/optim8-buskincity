@@ -240,6 +240,7 @@
             VueCropper,
         },
         props: {
+            croppedImageType: { type: String, default: 'image/jpeg' },
             cropper: {},
             fileName: String,
             isDebugMode: {type: Boolean, default: false},
@@ -304,14 +305,17 @@
             },
             cropAndReplace() {
                 const self = this;
-                getCanvasBlob(this.cropper.getCroppedCanvas())
+                getCanvasBlob(
+                    self.cropper.getCroppedCanvas(),
+                    self.croppedImageType
+                )
                     .then(blob => {
                         const objectURL = URL.createObjectURL(blob);
                         self.previewFileSrc = objectURL;
                         self.cropper.replace(objectURL, false);
                     });
 
-                this.disableState();
+                self.disableState();
             },
             resizeAndReplace() {
                 const self = this;
