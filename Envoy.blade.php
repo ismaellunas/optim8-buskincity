@@ -109,7 +109,6 @@
     yarn install
     rm public/js/*
     rm public/themes/{{ $theme }}/js/*
-    yarn run build
 @endtask
 
 @task('git-restore-and-stash')
