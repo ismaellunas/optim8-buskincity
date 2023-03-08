@@ -107,8 +107,6 @@
 @task('install-dependencies')
     composer install
     yarn install
-    rm public/js/*
-    rm public/themes/{{ $theme }}/js/*
 @endtask
 
 @task('git-restore-and-stash')
