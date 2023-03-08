@@ -8,12 +8,13 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    public function index(WidgetService $widgetService, Request $request)
     {
         return Inertia::render('DashboardAdmin', [
             "title" => __('Dashboard'),
-            "widgets" => app(WidgetService::class)->generateWidgets(),
-            "moduleWidgets" => app(WidgetService::class)->generateModuleWidgets($request),
+            "widgets" => $widgetService->generateWidgets(),
+            "moduleWidgets" => $widgetService->generateModuleWidgets($request),
+            "storedWidgets" => $widgetService->storedWidgets(),
         ]);
     }
 }

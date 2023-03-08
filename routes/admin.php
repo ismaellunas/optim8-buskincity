@@ -228,6 +228,9 @@ Route::name('api.')
 
         Route::get('widget/latest-registrations', [ApiWidgetController::class, 'getLatestRegistrations'])
             ->name('widget.latest-registrations');
+
+        Route::get('widget/data/{uuid}', [ApiWidgetController::class, 'getStoredWidgetData'])
+            ->name('widget.data');
     });
 
 Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
