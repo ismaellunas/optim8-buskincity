@@ -2563,7 +2563,7 @@
     "src": "modules/Space/Resources/assets/js/Pages/SpaceFormTranslatable.vue"
   },
   "modules/Space/Resources/assets/js/Pages/SpaceIndex.vue": {
-    "file": "assets/SpaceIndex-d03f00d9.js",
+    "file": "assets/SpaceIndex-d698ae08.js",
     "imports": [
       "_FilterDataHandle-94157290.js",
       "_AppLayout-25ccdbdb.js",
@@ -2961,7 +2961,7 @@
       "modules/Booking/Resources/assets/js/Widgets/EventUpcoming.vue",
       "modules/Booking/Resources/assets/js/Widgets/LatestBooking.vue"
     ],
-    "file": "assets/Dashboard-f590c26d.js",
+    "file": "assets/Dashboard-a7e4a9d3.js",
     "imports": [
       "_User-145a30bc.js",
       "resources/js/app.js",
@@ -2991,10 +2991,10 @@
       "modules/Booking/Resources/assets/js/Widgets/EventUpcoming.vue",
       "modules/Booking/Resources/assets/js/Widgets/LatestBooking.vue"
     ],
-    "file": "assets/DashboardAdmin-7c7727c0.js",
+    "file": "assets/DashboardAdmin-d7a8c6eb.js",
     "imports": [
-      "_AppLayout-25ccdbdb.js",
       "resources/js/app.js",
+      "_AppLayout-25ccdbdb.js",
       "_dynamic-import-helper-be004503.js",
       "_ButtonLink-71ebb617.js",
       "_Checkbox-8d9a17c8.js",
@@ -5450,7 +5450,7 @@
       "resources/js/Pages/User/ListItem.vue",
       "resources/js/Pages/User/ModalFormDelete.vue"
     ],
-    "file": "assets/app-e2e2f86f.js",
+    "file": "assets/app-4659c85c.js",
     "imports": [
       "_vue-loading.min-aa20e13d.js"
     ],
@@ -5535,18 +5535,20 @@
     "src": "resources/sass/app.sass"
   },
   "resources/sass/local.sass": {
-    "file": "assets/local-8fa3e3f0.css",
-    "src": "themes/buskincity/js/app.css"
+    "file": "assets/app-8fa3e3f0.css",
+    "isEntry": true,
+    "src": "resources/sass/local.sass"
   },
   "themes/buskincity/js/app.css": {
-    "file": "assets/local-8fa3e3f0.css",
-    "src": "themes/buskincity/js/app.css"
+    "file": "assets/app-8fa3e3f0.css",
+    "isEntry": true,
+    "src": "resources/sass/local.sass"
   },
   "themes/buskincity/js/app.js": {
     "css": [
-      "assets/local-8fa3e3f0.css"
+      "assets/app-8fa3e3f0.css"
     ],
-    "file": "assets/app-b7ea84ec.js",
+    "file": "assets/app-e7b78171.js",
     "imports": [
       "_vue-loading.min-aa20e13d.js",
       "_Select-9fda6861.js",
