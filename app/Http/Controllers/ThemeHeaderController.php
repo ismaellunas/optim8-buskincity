@@ -47,10 +47,6 @@ class ThemeHeaderController extends CrudController
         $logoMedia = $this->settingService->getLogoMedia();
         $logoMedia->append(['isImage', 'thumbnail_url', 'display_file_name']);
 
-        if ($logoMedia) {
-            $this->transformLogoMedia($logoMedia);
-        }
-
         return Inertia::render(
             $this->componentName.'Edit',
             $this->getData([
