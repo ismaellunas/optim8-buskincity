@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\UploadStripeLogo;
-use App\Helpers\HumanReadable;
 use App\Http\Requests\StripeSettingRequest;
 use App\Jobs\{
     UpdateStripeConnectedAccountColor,
@@ -40,10 +38,7 @@ class StripeController extends Controller
                 return $option['id'];
             });
 
-        $logoMimeTypes = array_map(
-            fn ($mime): string => '.'.$mime,
-            $this->stripeSettingService->logoMimeTypes()
-        );
+        $logoMedia = $this->stripeSettingService->logoMedia();
 
         return Inertia::render('Stripe', [
             'amountOptions' => $settings->get('stripe_amount_options'),
@@ -54,18 +49,10 @@ class StripeController extends Controller
             'currencyOptions' => $currencyOptions,
             'defaultCountry' => $settings->get('stripe_default_country'),
             'isEnabled' => $settings->get('stripe_is_enabled'),
-            'logoInstructions' => [
-                __('Accepted file extensions: :extensions.', [
-                    'extensions' => implode(', ', $logoMimeTypes)
-                ]),
-                __('Max file size: :filesize.', [
-                    'filesize' => HumanReadable::bytesToHuman(
-                        $this->stripeSettingService->maxLogoSize() * config('constants.one_megabyte')
-                    )
-                ]),
+            'instructions' => [
+                'mediaLibrary' => defaultMediaLibraryInstructions(),
             ],
-            'logoMimeTypes' => $logoMimeTypes,
-            'logoStripeUrl' => $this->stripeSettingService->logoUrl(),
+            'logoMedia' => $logoMedia,
             'minimalAmounts' => $settings->get('stripe_minimal_amounts'),
             'paymentCurrencies' => $settings->get('stripe_payment_currencies'),
             'title' => __('Stripe'),
@@ -103,13 +90,10 @@ class StripeController extends Controller
             dispatch($job);
         }
 
-        if ($request->hasFile('logo')) {
-            $logoFile = $request->file('logo');
+        if ($request->has('logo')) {
+            $logoMediaId = $request->logo;
 
-            $uploadStripeLogo = new UploadStripeLogo();
-
-            $media = $uploadStripeLogo->handle($logoFile);
-            $this->stripeSettingService->saveLogoMedia($media);
+            $this->stripeSettingService->saveLogoMedia($logoMediaId);
 
             $job = new UpdateStripeConnectedAccountbrandingLogo();
             $job->delay(now()->addMinutes(1));
