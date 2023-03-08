@@ -107,6 +107,7 @@
 @task('install-dependencies')
     composer install
     yarn install
+    yarn build
 @endtask
 
 @task('git-restore-and-stash')
