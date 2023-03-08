@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\App;
 
 class MediaService
 {
@@ -71,7 +70,7 @@ class MediaService
         int $recordsPerPage = 12
     ) {
         $user = auth()->user();
-        $hasAccessToOtherMedia = $user->hasAccessToOtherMedia;
+        $hasAccessToOtherMedia = $user->can('manageOtherMedia', Media::class);
 
         $query = Media::orderBy('id', 'DESC')
             ->when(!$hasAccessToOtherMedia, function (Builder $query) use ($user) {
@@ -177,9 +176,11 @@ class MediaService
 
         if (! is_null($folder)) {
             $folder = $this->getFolderPrefix().$folder;
-
-            array_push($params, $folder);
+        } else {
+            $folder = Str::of($this->getFolderPrefix())->rtrim('_')->value();
         }
+
+        array_push($params, $folder);
 
         $this->fillMediaWithMediaAsset(
             $media,
@@ -188,6 +189,7 @@ class MediaService
                 $params
             )
         );
+
         $media->save();
         $media->saveUserId(auth()->user()->id);
 
@@ -221,9 +223,11 @@ class MediaService
 
         if (! is_null($folder)) {
             $folder = $this->getFolderPrefix().$folder;
-
-            array_push($params, $folder);
+        } else {
+            $folder = Str::of($this->getFolderPrefix())->rtrim('_')->value();
         }
+
+        array_push($params, $folder);
 
         $this->fillMediaWithMediaAsset(
             $media,
@@ -398,8 +402,14 @@ class MediaService
         }
     }
 
-    protected function getFolderPrefix(): ?string
+    public function getFolderPrefix(): ?string
     {
-        return (!App::environment('production') ? config('app.env').'_' : null);
+        $folderPrefix = config('filesystems.folder_prefix');
+
+        if ($folderPrefix) {
+            $folderPrefix = $folderPrefix . '_';
+        }
+
+        return $folderPrefix;
     }
 }

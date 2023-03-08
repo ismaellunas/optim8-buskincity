@@ -16,7 +16,7 @@ class MediaPolicy extends BasePermissionPolicy
             && $media->isDefaultType
             && (
                 $media->user_id == $user->id
-                || $user->hasAccessToOtherMedia
+                || $this->manageOtherMedia($user)
             )
         );
     }
@@ -28,8 +28,13 @@ class MediaPolicy extends BasePermissionPolicy
             && $media->isDefaultType
             && (
                 $media->user_id == $user->id
-                || $user->hasAccessToOtherMedia
+                || $this->manageOtherMedia($user)
             )
         );
+    }
+
+    public function  manageOtherMedia(User $user)
+    {
+        return $user->can($this->basePermission.'.other_users');
     }
 }

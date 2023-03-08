@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use \finfo;
 use App\Entities\CloudinaryStorage;
 use App\Entities\MediaAsset;
 use Illuminate\Filesystem\Filesystem;
@@ -9,18 +10,21 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Qirolab\Theme\Theme;
-use \finfo;
 
 class ThemeService
 {
     private $settingService;
+    private $mediaService;
 
     private $cssFilenameFrontend = 'app';
     private $cssFilenameBackend  = 'app_backend';
 
-    public function __construct(SettingService $settingService)
-    {
+    public function __construct(
+        SettingService $settingService,
+        MediaService $mediaService
+    ) {
         $this->settingService = $settingService;
+        $this->mediaService = $mediaService;
     }
 
     private function renderFontSizes(): string
@@ -80,7 +84,7 @@ class ThemeService
 
         $storage = new CloudinaryStorage();
 
-        $folder = config('filesystem.folder_prefix')."assets";
+        $folder = $this->mediaService->getFolderPrefix()."assets";
 
         return $storage->upload(
             $file,
