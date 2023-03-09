@@ -1,1 +1,0 @@
-import{o as s,f as e,x as t}from"./vue-loading.min-aa20e13d.js";import{_ as a}from"./_plugin-vue_export-helper-c27b6911.js";const r={name:"BizTag"},n={class:"tag"};function c(o,p,_,f,i,l){return s(),e("span",n,[t(o.$slots,"default")])}const B=a(r,[["render",c]]);export{B};

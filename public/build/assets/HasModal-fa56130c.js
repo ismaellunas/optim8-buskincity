@@ -1,1 +1,0 @@
-const o={data(){return{isModalOpen:!1}},methods:{openModal(){this.isModalOpen=!0,this.onShownModal()},closeModal(){this.isModalOpen=!1,this.onCloseModal()},onShownModal(){},onCloseModal(){}}};export{o as M};

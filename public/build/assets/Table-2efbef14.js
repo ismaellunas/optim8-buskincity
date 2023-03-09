@@ -1,1 +1,0 @@
-import{o as a,f as t,x as l,n as o}from"./vue-loading.min-aa20e13d.js";import{_ as r}from"./_plugin-vue_export-helper-c27b6911.js";const n={name:"BizTable",props:{isFullwidth:{type:Boolean,default:!1}}};function i(e,c,s,f,p,d){return a(),t("table",{class:o(["table",{"is-fullwidth":s.isFullwidth}])},[l(e.$slots,"default")],2)}const _=r(n,[["render",i]]);export{_ as B};

@@ -1,1 +1,0 @@
-import{B as n}from"./Link-2bcf0cab.js";import{r as s,o as e,u as r,q as a,x as c}from"./vue-loading.min-aa20e13d.js";import{_ as i}from"./_plugin-vue_export-helper-c27b6911.js";const p={components:{BizLink:n}};function _(o,l,m,f,u,B){const t=s("biz-link");return e(),r(t,{class:"button"},{default:a(()=>[c(o.$slots,"default")]),_:3})}const x=i(p,[["render",_]]);export{x as B};
