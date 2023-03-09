@@ -75,32 +75,6 @@
         <div class="columns">
             <div class="column is-half">
                 <div class="field">
-                    <!-- <biz-label>Logo</biz-label>
-
-                    <biz-image
-                        v-if="logoDisplay"
-                        :src="logoDisplay"
-                        :img-style="{'max-width': '300px', 'max-height': '300px'}"
-                    />
-
-                    <biz-button-icon
-                        v-if="logoDisplay"
-                        class="is-small is-danger"
-                        type="button"
-                        :icon="icon.remove"
-                        @click="deleteLogo"
-                    >
-                        <span>Delete</span>
-                    </biz-button-icon>
-
-                    <biz-form-file
-                        v-model="space.logo"
-                        :is-name-displayed="false"
-                        :message="error('logo')"
-                        :notes="instructions.logo"
-                        @on-file-picked="onFilePicked"
-                    /> -->
-
                     <biz-form-media-library
                         v-model="space.logo"
                         label="Logo"
@@ -127,30 +101,6 @@
             </div>
             <div class="column is-half">
                 <div class="field">
-                    <!-- <biz-image
-                        v-if="coverDisplay"
-                        :src="coverDisplay"
-                        :img-style="{'max-width': '600px', 'max-height': '400px'}"
-                    />
-
-                    <biz-button-icon
-                        v-if="coverDisplay"
-                        class="is-small is-danger"
-                        type="button"
-                        :icon="icon.remove"
-                        @click="deleteCover"
-                    >
-                        <span>Delete</span>
-                    </biz-button-icon>
-
-                    <biz-form-file
-                        v-model="space.cover"
-                        :is-name-displayed="false"
-                        :message="error('cover')"
-                        :notes="instructions.cover"
-                        @on-file-picked="onCoverFilePicked"
-                    /> -->
-
                     <biz-form-media-library
                         v-model="space.cover"
                         label="Cover"
