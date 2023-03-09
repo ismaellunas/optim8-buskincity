@@ -67,10 +67,6 @@
             </div>
         </div>
 
-        @env ('local')
-            <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>
-        @endenv
-
         @stack('bottom_scripts')
 
         @vite(['themes/'.config('theme.active').'/js/app.js'])
