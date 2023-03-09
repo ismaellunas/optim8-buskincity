@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             PostSeeder::class,
             MenuSeeder::class,
             StripeSeeder::class,
+            DashboardWidgetSeeder::class,
         ]);
 
         $this->runAppIdDatabaseSeeder();

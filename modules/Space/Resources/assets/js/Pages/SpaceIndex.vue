@@ -162,7 +162,7 @@
                 parentId: ref(props.parent),
                 queryParams: ref(props.pageQueryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
-                types: ref([]),
+                types: ref(props.pageQueryParams?.types ?? []),
             };
         },
 

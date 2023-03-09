@@ -9,6 +9,7 @@ use App\Services\GlobalOptionService;
 use App\Services\MediaService;
 use App\Services\MenuService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
@@ -27,6 +28,29 @@ class SpaceService
         $this->mediaService = $mediaService;
     }
 
+    private function conditionsBuilder(
+        ?array $ids = null,
+        array $scopes = null,
+    ): Builder {
+        $spaces = null;
+
+        if ($ids) {
+            $spaces = Space::select('id', '_lft', '_rgt')->whereIn('id', $ids)->get();
+        }
+
+        return Space::when($spaces, function ($query, $spaces) {
+                foreach ($spaces as $key => $space) {
+                    $boolean = $key == 0 ? 'and' : 'or';
+                    $query->whereDescendantOrSelf($space, $boolean);
+                }
+            })
+            ->when($scopes, function ($query, $scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    $query->$scopeName($value);
+                }
+            });
+    }
+
     public function getRecords(
         Authenticatable $user,
         ?array $ids = null,
@@ -41,7 +65,9 @@ class SpaceService
             $spaces = Space::select('id', '_lft', '_rgt')->whereIn('id', $ids)->get();
         }
 
-        $records = Space::select($columnNames)
+        $records = $this
+            ->conditionsBuilder($ids, $scopes)
+            ->select($columnNames)
             ->withDepth()
             ->with([
                 'ancestors' => function ($query) use ($columnNames) {
@@ -52,17 +78,6 @@ class SpaceService
                 },
                 'type:id,name',
             ])
-            ->when($spaces, function ($query, $spaces) {
-                foreach ($spaces as $key => $space) {
-                    $boolean = $key == 0 ? 'and' : 'or';
-                    $query->whereDescendantOrSelf($space, $boolean);
-                }
-            })
-            ->when($scopes, function ($query, $scopes) {
-                foreach ($scopes as $scopeName => $value) {
-                    $query->$scopeName($value);
-                }
-            })
             ->defaultOrder()
             ->paginate($perPage);
 
@@ -406,5 +421,18 @@ class SpaceService
         });
 
         return $page;
+    }
+
+    public function totalSpaceByType(Authenticatable $user, int $typeId): int
+    {
+        $spaceIds = null;
+
+        if (! $user->can('space.viewAny')) {
+            $spaceIds = $user->spaces->pluck('id')->all();
+        }
+
+        return $this->conditionsBuilder($spaceIds, [
+            'inType' => [$typeId],
+        ])->count();
     }
 }

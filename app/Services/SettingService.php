@@ -552,8 +552,19 @@ class SettingService
         ]);
     }
 
-    private function transformMedia(Media $media)
+    private function transformMedia(Media $media): void
     {
         $media->append(['isImage', 'thumbnail_url', 'display_file_name']);
+    }
+
+    public function adminDashboardWidgets(): Collection
+    {
+        $key = 'dashboard_widget_admin';
+
+        return app(SettingCache::class)->remember($key, function () use ($key) {
+            $value = Setting::key($key)->value('value');
+
+            return ($value) ? collect(json_decode($value, true)) : collect();
+        });
     }
 }
