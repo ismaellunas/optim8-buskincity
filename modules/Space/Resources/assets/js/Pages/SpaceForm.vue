@@ -82,21 +82,9 @@
                         :is-download-enabled="true"
                         :is-upload-enabled="true"
                         :medium="logoMedia"
+                        :instructions="instructions.mediaLibrary"
                         :message="error('logo')"
-                    >
-                        <template #note>
-                            <p class="help is-info">
-                                <ul>
-                                    <li
-                                        v-for="note, index in instructions.mediaLibrary"
-                                        :key="index"
-                                    >
-                                        {{ note }}
-                                    </li>
-                                </ul>
-                            </p>
-                        </template>
-                    </biz-form-media-library>
+                    />
                 </div>
             </div>
             <div class="column is-half">
@@ -108,21 +96,9 @@
                         :is-download-enabled="true"
                         :is-upload-enabled="true"
                         :medium="coverMedia"
+                        :instructions="instructions.mediaLibrary"
                         :message="error('cover')"
-                    >
-                        <template #note>
-                            <p class="help is-info">
-                                <ul>
-                                    <li
-                                        v-for="note, index in instructions.mediaLibrary"
-                                        :key="index"
-                                    >
-                                        {{ note }}
-                                    </li>
-                                </ul>
-                            </p>
-                        </template>
-                    </biz-form-media-library>
+                    />
                 </div>
             </div>
         </div>
