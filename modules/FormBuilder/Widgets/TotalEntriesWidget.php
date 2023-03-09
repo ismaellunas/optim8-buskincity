@@ -9,7 +9,8 @@ use Modules\FormBuilder\Entities\FormEntry;
 
 class TotalEntriesWidget implements WidgetInterface
 {
-    private $vueTemplate = 'Biz/Widget/TotalWidget';
+    private $vueComponent = 'TotalWidget';
+    private $vueComponentModule = null;
     private $storedSetting;
     private $formId;
 
@@ -40,7 +41,8 @@ class TotalEntriesWidget implements WidgetInterface
             'title' => $this->storedSetting['title'] ?? 'Entries',
             'url' => $this->url(),
             'module' => null,
-            'vue' => $this->vueTemplate,
+            'vueComponent' => $this->vueComponent,
+            'vueComponentModule' => $this->vueComponentModule,
             'grid' => $storedSetting['grid'] ?? 6,
             'backgroudColor' => $this->storedSetting['background_color'],
         ];
