@@ -227,21 +227,9 @@
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="logoMedia"
+                            :instructions="instructions.mediaLibrary"
                             :message="error('logo')"
-                        >
-                            <template #note>
-                                <p class="help is-info">
-                                    <ul>
-                                        <li
-                                            v-for="note, index in instructions.mediaLibrary"
-                                            :key="index"
-                                        >
-                                            {{ note }}
-                                        </li>
-                                    </ul>
-                                </p>
-                            </template>
-                        </biz-form-media-library>
+                        />
                     </div>
                 </div>
             </form>

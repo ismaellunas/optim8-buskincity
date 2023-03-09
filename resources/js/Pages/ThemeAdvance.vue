@@ -68,21 +68,9 @@
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="faviconMedia"
+                            :instructions="instructions.mediaLibrary"
                             :message="error('favicon')"
-                        >
-                            <template #note>
-                                <p class="help is-info">
-                                    <ul>
-                                        <li
-                                            v-for="note, index in instructions.mediaLibrary"
-                                            :key="index"
-                                        >
-                                            {{ note }}
-                                        </li>
-                                    </ul>
-                                </p>
-                            </template>
-                        </biz-form-media-library>
+                        />
                     </div>
                 </div>
 
@@ -125,21 +113,9 @@
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="qrCodeMedia"
+                            :instructions="instructions.mediaLibrary"
                             :message="error('qrcode_public_page_logo')"
-                        >
-                            <template #note>
-                                <p class="help is-info">
-                                    <ul>
-                                        <li
-                                            v-for="note, index in instructions.mediaLibrary"
-                                            :key="index"
-                                        >
-                                            {{ note }}
-                                        </li>
-                                    </ul>
-                                </p>
-                            </template>
-                        </biz-form-media-library>
+                        />
                     </div>
                 </div>
 

@@ -10,7 +10,8 @@ use Modules\Ecommerce\Services\OrderService;
 
 class TotalBookingsWidget implements WidgetInterface
 {
-    private string $vueTemplate = 'Biz/Widget/TotalWidget';
+    private $vueComponent = 'TotalWidget';
+    private $vueComponentModule = null;
     private array $storedSetting;
     private User $user;
 
@@ -38,7 +39,8 @@ class TotalBookingsWidget implements WidgetInterface
             'title' => $this->storedSetting['title'] ?? 'Bookings',
             'url' => $this->url(),
             'module' => null,
-            'vue' => $this->vueTemplate,
+            'vueComponent' => $this->vueComponent,
+            'vueComponentModule' => $this->vueComponentModule,
             'grid' => $storedSetting['grid'] ?? 6,
             'backgroudColor' => $this->storedSetting['background_color'],
         ];

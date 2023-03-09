@@ -2,7 +2,10 @@
 
 namespace Modules\FormBuilder\Services;
 
+use App\Entities\Forms\Fields\FileDragDrop;
+use App\Models\Media;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Modules\FormBuilder\Entities\FormEntry;
 
 class FormEntryService
@@ -92,6 +95,41 @@ class FormEntryService
             ->where('form_id', $formBuilderId)
             ->onlyTrashed()
             ->get()
-            ->each(fn ($entry) => $entry->forceDelete());
+            ->each(function ($entry) {
+                $entry->forceDelete();
+            });
+    }
+
+    public function getUploadedMedia(FormEntry $formEntry): Collection
+    {
+        $types = [
+            FileDragDrop::TYPE,
+        ];
+
+        $keys = $formEntry
+            ->form
+            ->fieldGroups
+            ->map(function ($fieldGroup) use ($types) {
+                return collect($fieldGroup->fields)
+                    ->filter(fn ($field) => in_array($field['type'], $types))
+                    ->pluck('name');
+            })
+            ->filter()
+            ->flatten();
+
+        $mediaIds = $formEntry
+            ->metas
+            ->filter(function ($meta) use ($keys) {
+                return (
+                    $keys->contains($meta->key)
+                    && array_key_exists('mediaId', $meta->value)
+                );
+            })
+            ->map(function ($meta) {
+                return $meta->value['mediaId'];
+            })
+            ->flatten();
+
+        return Media::whereIn('id', $mediaIds)->get();
     }
 }
