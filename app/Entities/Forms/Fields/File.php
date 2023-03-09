@@ -10,11 +10,12 @@ use App\Rules\FieldMinFile;
 use App\Services\MediaService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 class File extends BaseField
 {
+    const TYPE = "File";
+
     protected $type = "File";
 
     public $fileLabel;
