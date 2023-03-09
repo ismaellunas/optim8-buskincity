@@ -104,6 +104,7 @@
                 :is-upload-enabled="isUploadEnabled"
                 :query-params="mediaListQueryParams"
                 :search="search"
+                :instructions="instructions"
                 @close="closeModal"
                 @on-clicked-pagination="getMediaList"
                 @on-media-selected="onSelectMedia"
@@ -111,8 +112,6 @@
                 @on-view-changed="setView"
             />
         </div>
-
-        <slot name="note" />
 
         <template #error>
             <biz-input-error :message="message" />
@@ -157,6 +156,7 @@
         props: {
             disabled: { type: Boolean, default: false },
             fieldClass: { type: [Object, Array, String], default: undefined },
+            instructions: {type: Array, default: () => []},
             isDownloadEnabled: { type: Boolean, default: true },
             isUploadEnabled: { type: Boolean, default: true },
             label: { type: String, default: null},

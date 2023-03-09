@@ -9,20 +9,8 @@
                     :is-upload-enabled="can?.media?.add ?? false"
                     :medium="logoMedia"
                     :message="error('logo')"
-                >
-                    <template #note>
-                        <p class="help is-info">
-                            <ul>
-                                <li
-                                    v-for="note, index in instructions.logo"
-                                    :key="index"
-                                >
-                                    {{ note }}
-                                </li>
-                            </ul>
-                        </p>
-                    </template>
-                </biz-form-media-library>
+                    :instructions="instructions.logo"
+                />
             </div>
         </div>
     </div>
