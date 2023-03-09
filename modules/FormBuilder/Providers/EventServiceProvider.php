@@ -3,8 +3,10 @@
 namespace Modules\FormBuilder\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Modules\FormBuilder\Entities\FormEntry;
 use Modules\FormBuilder\Events\FormSubmitted;
 use Modules\FormBuilder\Listeners\SendFormNotification;
+use Modules\FormBuilder\Observers\FormEntryObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -18,4 +20,9 @@ class EventServiceProvider extends ServiceProvider
             SendFormNotification::class,
         ],
     ];
+
+    public function boot()
+    {
+        FormEntry::observe(FormEntryObserver::class);
+    }
 }

@@ -50,17 +50,16 @@
             let widgets = [];
 
             props.storedWidgets.forEach(storedWidget => {
-                const componentName = /[^/]*$/.exec(storedWidget.vue)[0];
+                const componentName = storedWidget.vueComponent;
+                const module = storedWidget.vueComponentModule;
 
-                if (! storedWidget.module) {
+                if (! module) {
                     asyncComponents[componentName] = defineAsyncComponent(() => import(
-                        /* @vite-ignore */
-                        './../'+storedWidget.vue+'.vue'
+                        `./../Biz/Widget/${componentName}.vue`
                     ));
-                } else {
+                } else if (module == 'Booking') {
                     asyncComponents[componentName] = defineAsyncComponent(() => import(
-                        /* @vite-ignore */
-                        './../../../modules/'+storedWidget.module+'/Resources/assets/js/Widgets/'+storedWidget.vue+'.vue'
+                        `./../../../modules/Booking/Resources/assets/js/Widgets/${componentName}.vue`
                     ));
                 }
 
