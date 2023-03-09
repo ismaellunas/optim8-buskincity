@@ -4,7 +4,7 @@
             <biz-image
                 v-if="isImage"
                 :alt="medium.display_file_name"
-                :src="medium.thumbnail_url"
+                :src="medium.thumbnail_url ?? medium.file_url"
             />
             <span
                 v-else
