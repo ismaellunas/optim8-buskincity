@@ -2,8 +2,8 @@
 
 namespace Modules\Space\Http\Controllers;
 
-use App\Helpers\HumanReadable;
 use App\Http\Controllers\CrudController;
+use App\Models\Media;
 use App\Services\IPService;
 use App\Services\MenuService;
 use Illuminate\Http\Request;
@@ -83,30 +83,8 @@ class SpaceController extends CrudController
 
     private function instructions(): array
     {
-        $extensions = implode(', ', config('constants.extensions.image'));
-
-        $imageExtensionsText = __(
-            'Accepted file extensions: :extensions.',
-            [ 'extensions' => $extensions ]
-        );
-
-        $maxFileText = function ($megaBytes) {
-            return __('Max file size: :filesize.', [
-                'filesize' => HumanReadable::bytesToHuman(
-                    ($megaBytes * config('constants.one_megabyte')) * 1024
-                )
-            ]);
-        };
-
         return [
-            'logo' => [
-                $imageExtensionsText,
-                $maxFileText(5),
-            ],
-            'cover' => [
-                $imageExtensionsText,
-                $maxFileText(50),
-            ],
+            'mediaLibrary' => defaultMediaLibraryInstructions(),
         ];
     }
 
@@ -159,12 +137,12 @@ class SpaceController extends CrudController
 
         $space->saveFromInputs($inputs);
 
-        if ($request->hasFile('logo')) {
-            $this->spaceService->replaceLogo($space, $request->file('logo'));
+        if ($request->has('logo')) {
+            $this->spaceService->replaceLogo($space, $request->logo);
         }
 
-        if ($request->hasFile('cover')) {
-            $this->spaceService->replaceCover($space, $request->file('cover'));
+        if ($request->has('cover')) {
+            $this->spaceService->replaceCover($space, $request->cover);
         }
 
         $this->generateFlashMessage('Successfully creating '.$this->title.'!');
@@ -224,6 +202,16 @@ class SpaceController extends CrudController
 
         $canChangeParent = $user->can('changeParent', $space);
 
+        $coverMedia = $space->cover;
+        if ($coverMedia) {
+            $this->transformMedia($coverMedia);
+        }
+
+        $logoMedia = $space->logo;
+        if ($logoMedia) {
+            $this->transformMedia($logoMedia);
+        }
+
         return Inertia::render('Space::SpaceEdit', $this->getData([
             'title' => $this->getEditTitle(),
             'defaultCountry' => app(IPService::class)->getCountryCode(),
@@ -231,8 +219,8 @@ class SpaceController extends CrudController
             'spaceManagers' => $this->spaceService->formattedManagers($space),
             'spaceRecord' => $this->spaceService->editableRecord($space),
             'typeOptions' => $this->spaceService->typeOptions(__('None')),
-            'coverUrl' => $space->coverUrl,
-            'logoUrl' => $space->logoUrl,
+            'coverMedia' => $coverMedia,
+            'logoMedia' => $logoMedia,
             'can' => [
                 'page' => [
                     'read' => $user->can('managePage', Space::class),
@@ -273,26 +261,12 @@ class SpaceController extends CrudController
     {
         $inputs = $request->validated();
 
-        if (
-            !empty($request->get('deleted_media')['logo'])
-            && !$request->hasFile('logo')
-        ) {
-            $this->spaceService->deleteLogo($space);
+        if ($request->has('logo')) {
+            $this->spaceService->replaceLogo($space, $request->logo);
         }
 
-        if (
-            !empty($request->get('deleted_media')['cover'])
-            && !$request->hasFile('cover')
-        ) {
-            $this->spaceService->deleteCover($space);
-        }
-
-        if ($request->hasFile('logo')) {
-            $this->spaceService->replaceLogo($space, $request->file('logo'));
-        }
-
-        if ($request->hasFile('cover')) {
-            $this->spaceService->replaceCover($space, $request->file('cover'));
+        if ($request->has('cover')) {
+            $this->spaceService->replaceCover($space, $request->cover);
         }
 
         $space->saveFromInputs($inputs);
@@ -333,5 +307,10 @@ class SpaceController extends CrudController
     public function isUsedByMenus(Space $space, ?string $locale = null)
     {
         return app(MenuService::class)->isModelUsedByMenu($space, $locale);
+    }
+
+    private function transformMedia(Media $media): void
+    {
+        $media->append(['isImage', 'thumbnail_url', 'display_file_name']);
     }
 }
