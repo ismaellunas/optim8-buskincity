@@ -10,7 +10,8 @@ use Modules\Space\Services\SpaceService;
 
 class TotalCitiesWidget implements WidgetInterface
 {
-    private string $vueTemplate = 'Biz/Widget/TotalWidget';
+    private $vueComponent = 'TotalWidget';
+    private $vueComponentModule = null;
     private array $storedSetting;
 
     public function __construct(array $storedSetting)
@@ -36,7 +37,8 @@ class TotalCitiesWidget implements WidgetInterface
             'title' => $this->storedSetting['title'] ?? 'Cities',
             'url' => $this->url(),
             'module' => null,
-            'vue' => $this->vueTemplate,
+            'vueComponent' => $this->vueComponent,
+            'vueComponentModule' => $this->vueComponentModule,
             'grid' => $storedSetting['grid'] ?? 6,
             'backgroudColor' => $this->storedSetting['background_color'],
         ];
