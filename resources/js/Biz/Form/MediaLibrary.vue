@@ -19,57 +19,13 @@
                     class="column"
                     :class="imagePreviewSize"
                 >
-                    <div class="card card-equal-height">
-                        <div class="card-image px-2 pt-2 has-text-centered">
-                            <biz-image
-                                v-if="isImage"
-                                :alt="mediumPreview.display_file_name"
-                                :src="mediumPreview.thumbnail_url ?? mediumPreview.file_url"
-                            />
-                            <span
-                                v-else
-                                class="icon is-large"
-                            >
-                                <span class="fa-stack fa-lg">
-                                    <i :class="[thumbnailIcon, 'fa-5x']" />
-                                </span>
-                            </span>
-                        </div>
-
-                        <div class="card-content p-2">
-                            <div
-                                class="content"
-                                style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
-                            >
-                                <p>{{ mediumPreview.display_file_name }}</p>
-                            </div>
-                        </div>
-
-                        <footer class="card-footer">
-                            <biz-button-icon
-                                v-if="isImage"
-                                :icon="icon.expand"
-                                title="Preview"
-                                type="button"
-                                :class="[actionClass, 'is-info']"
-                                @click="onPreviewOpened(mediumPreview)"
-                            />
-                            <biz-button-icon
-                                :icon="icon.remove"
-                                title="Delete"
-                                type="button"
-                                :class="[actionClass, 'is-danger']"
-                                @click="onDeleted"
-                            />
-                            <biz-button-download
-                                v-if="isDownloadEnabled"
-                                title="Download"
-                                type="button"
-                                :class="[actionClass, 'is-link']"
-                                :url="mediumPreview.file_url"
-                            />
-                        </footer>
-                    </div>
+                    <biz-media-gallery-item
+                        :medium="mediumPreview"
+                        :is-edit-enabled="false"
+                        :is-download-enabled="isDownloadEnabled"
+                        @on-preview-clicked="onPreviewOpened"
+                        @on-delete-clicked="onDeleted"
+                    />
                 </div>
             </div>
 
@@ -107,6 +63,7 @@
                 :is-upload-enabled="isUploadEnabled"
                 :query-params="mediaListQueryParams"
                 :search="search"
+                :instructions="instructions"
                 @close="closeModal"
                 @on-clicked-pagination="getMediaList"
                 @on-media-selected="onSelectMedia"
@@ -114,8 +71,6 @@
                 @on-view-changed="setView"
             />
         </div>
-
-        <slot name="note" />
 
         <template #error>
             <biz-input-error :message="message" />
@@ -126,13 +81,12 @@
 <script>
     import MixinHasModal from '@/Mixins/HasModal';
     import MixinMediaLibrary from '@/Mixins/MediaLibrary';
-    import BizButtonDownload from '@/Biz/ButtonDownload.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizFormField from '@/Biz/Form/Field.vue';
-    import BizImage from '@/Biz/Image.vue';
     import BizInputError from '@/Biz/InputError.vue';
     import BizModal from '@/Biz/Modal.vue';
     import BizModalMediaBrowser from '@/Biz/Modal/MediaBrowser.vue';
+    import BizMediaGalleryItem from '@/Biz/Media/GalleryItem.vue';
     import icon from '@/Libs/icon-class.js';
     import { useModelWrapper } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
@@ -144,12 +98,11 @@
 
         components: {
             BizButtonIcon,
-            BizButtonDownload,
-            BizImage,
             BizModal,
             BizModalMediaBrowser,
             BizFormField,
             BizInputError,
+            BizMediaGalleryItem,
         },
 
         mixins: [
@@ -160,6 +113,7 @@
         props: {
             disabled: { type: Boolean, default: false },
             fieldClass: { type: [Object, Array, String], default: undefined },
+            instructions: {type: Array, default: () => []},
             isDownloadEnabled: { type: Boolean, default: true },
             isUploadEnabled: { type: Boolean, default: true },
             label: { type: String, default: null},
@@ -209,30 +163,6 @@
             hasMediumPreview() {
                 return !isEmpty(this.mediumPreview);
             },
-
-            isImage() {
-                return (
-                    (this.mediumPreview?.isImage)
-                    || (this.mediumPreview?.file_type && this.mediumPreview.file_type.startsWith("image"))
-                );
-            },
-
-            thumbnailIcon() {
-                if (this.mediumPreview?.file_type === "video") {
-                    return this.icon.fileVideo;
-                } else if (this.mediumPreview?.extension) {
-                    if (this.mediumPreview?.extension === "pdf") {
-                        return this.icon.filePdf;
-                    } else if (this.mediumPreview?.extension.startsWith('doc')) {
-                        return this.icon.fileWord;
-                    } else if (this.mediumPreview?.extension.startsWith('ppt')) {
-                        return this.icon.filePowerpoint;
-                    } else if (this.mediumPreview?.extension.startsWith('xls')) {
-                        return this.icon.fileExcel;
-                    }
-                }
-                return this.icon.file;
-            }
         },
 
         methods: {

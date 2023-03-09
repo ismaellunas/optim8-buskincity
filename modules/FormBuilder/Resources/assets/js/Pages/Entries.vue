@@ -530,7 +530,7 @@
                 ).then(result => {
                     if (result.isConfirmed) {
                         this.bulkActionRequest(
-                            this.baseRouteName + '.bulk-restore',
+                            this.baseRouteName + '.bulk-force-delete',
                             function () {
                                 self.rawSelectedEntries = [];
                             }

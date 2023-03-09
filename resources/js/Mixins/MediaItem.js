@@ -4,8 +4,10 @@ export default {
             return (
                 (this.medium?.is_image)
                 || (this.medium?.file && this.medium.file.type.startsWith("image"))
+                || (this.medium?.isImage)
             );
         },
+
         thumbnailIcon() {
             if (this.medium.file_type === "video") {
                 return "far fa-file-video";
