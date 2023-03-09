@@ -274,7 +274,7 @@ class SpaceService
         }
     }
 
-    private function detchCover(Space $space): void
+    private function detachCover(Space $space): void
     {
         $coverMediaId = $space->cover_media_id;
 
@@ -297,7 +297,7 @@ class SpaceService
 
     public function replaceCover(Space $space, ?int $mediaId = null): void
     {
-        $this->detchCover($space);
+        $this->detachCover($space);
 
         if ($mediaId) {
             $space->media()->attach($mediaId);
@@ -311,7 +311,7 @@ class SpaceService
     {
         foreach ($spaces as $space) {
             $this->detachLogo($space);
-            $this->detchCover($space);
+            $this->detachCover($space);
         }
     }
 
