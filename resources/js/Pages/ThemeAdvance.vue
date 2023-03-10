@@ -64,7 +64,7 @@
                     <div class="column">
                         <biz-form-media-library
                             v-model="form.favicon"
-                            image-preview-size="is-6"
+                            image-preview-size="6"
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="faviconMedia"
@@ -109,7 +109,7 @@
                     <div class="column">
                         <biz-form-media-library
                             v-model="form.qrcode_public_page_logo"
-                            image-preview-size="is-6"
+                            image-preview-size="6"
                             :is-download-enabled="can?.media?.read ?? false"
                             :is-upload-enabled="can?.media?.add ?? false"
                             :medium="qrCodeMedia"

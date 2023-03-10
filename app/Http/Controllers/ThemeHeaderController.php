@@ -63,7 +63,7 @@ class ThemeHeaderController extends CrudController
                 'settings' => $this->settingService->getHeader(),
                 'typeOptions' => $this->menuService->getMenuItemTypeOptions(),
                 'instructions' => [
-                    'mediaLibrary' => defaultMediaLibraryInstructions(),
+                    'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
                 ],
             ]),
         );
