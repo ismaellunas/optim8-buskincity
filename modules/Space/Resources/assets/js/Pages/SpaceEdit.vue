@@ -28,10 +28,10 @@
                         >
                             <space-form
                                 v-model="space"
-                                :cover-url="coverUrl"
+                                :cover-media="coverMedia"
                                 :default-country="defaultCountry"
                                 :instructions="instructions"
-                                :logo-url="logoUrl"
+                                :logo-media="logoMedia"
                                 :parent-options="parentOptions"
                                 :type-options="typeOptions"
                                 :can-change-parent="can.changeParent"
@@ -211,11 +211,11 @@
             baseRouteName: { type: String, default: '' },
             breadcrumbs: { type: Array, default: () => [] },
             can: { type: Object, required: true },
-            coverUrl: { type: String, default: '' },
+            coverMedia: { type: Object, default: () => {} },
             defaultCountry: { type: String, required: true },
             errors: { type: Object, default:() => {} },
             instructions: { type: Object, required: true },
-            logoUrl: { type: String, default: '' },
+            logoMedia: { type: Object, default: () => {} },
             page: { type: Object, required: true },
             parentOptions: { type: Object, default: () => {} },
             spaceManagers: { type: Array, default: () => [] },
@@ -314,10 +314,6 @@
                     .post(url, {
                         onStart: self.onStartLoadingOverlay,
                         onSuccess: (page) => {
-                            self.space.deleted_media = {};
-                            self.space.logo = null;
-                            self.space.cover = null;
-
                             successAlert(page.props.flash.message);
                         },
                         onError: () => { oopsAlert() },
@@ -358,9 +354,8 @@
                     'type_id',
                 ]);
 
-                space['logo'] = null;
-                space['cover'] = null;
-                space['deleted_media'] = {};
+                space['logo'] = this.logoMedia?.id ?? null;
+                space['cover'] = this.coverMedia?.id ?? null;
 
                 this.space = useForm(space);
             },
