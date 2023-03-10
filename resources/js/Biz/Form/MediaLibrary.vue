@@ -17,7 +17,7 @@
             >
                 <div
                     class="column"
-                    :class="imagePreviewSize"
+                    :class="imagePreviewSizeClass"
                 >
                     <biz-media-gallery-item
                         :medium="mediumPreview"
@@ -122,7 +122,13 @@
             message: { type: [Array, Object, String], default: undefined },
             modelValue: { type: [String, Number, null], required: true },
             required: { type: Boolean, default: false },
-            imagePreviewSize: { type: [String, Object], default: 'is-3' },
+            imagePreviewSize: {
+                type: [String, Number],
+                default: 3,
+                validator(value) {
+                    return (value >= 1 && value <= 12);
+                }
+            },
         },
 
         emits: [
@@ -162,6 +168,10 @@
 
             hasMediumPreview() {
                 return !isEmpty(this.mediumPreview);
+            },
+
+            imagePreviewSizeClass() {
+                return "is-" + this.imagePreviewSize;
             },
         },
 
