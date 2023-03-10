@@ -16,6 +16,20 @@
                                 @on-file-picked="onFilePicked"
                             />
                         </div>
+
+                        <p
+                            v-if="hasInstructions"
+                            class="help is-info"
+                        >
+                            <ul :style="instructionStyle">
+                                <li
+                                    v-for="note, index in instructions"
+                                    :key="index"
+                                >
+                                    {{ note }}
+                                </li>
+                            </ul>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -264,7 +278,7 @@
     import { acceptedFileTypes, acceptedImageTypes } from '@/Libs/defaults';
     import { confirm as confirmAlert, confirmDelete, success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { getCanvasBlob } from '@/Libs/utils';
-    import { includes } from 'lodash';
+    import { includes, isEmpty } from 'lodash';
     import { ref } from "vue";
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -319,6 +333,7 @@
             queryParams: {type: Object, default: () => {}},
             records: {type: Object, required: true},
             search: {type: Function, required: true},
+            instructions: {type: Array, default: () => []},
             typeOptions: {type: Object, default() {
                 return {
                     'image': "Image",
@@ -371,6 +386,16 @@
             },
             isGalleryView() {
                 return this.view === 'gallery';
+            },
+            hasInstructions() {
+                return !isEmpty(this.instructions);
+            },
+            instructionStyle() {
+                return {
+                    'list-style-type': 'none',
+                    'padding': 0,
+                    'margin': 0
+                };
             },
         },
 

@@ -2,25 +2,14 @@
     <div>
         <div class="columns">
             <div class="column">
-                <div class="is-pulled-left">
-                    <b>Upload Logo</b><br>
-                </div>
-            </div>
-        </div>
-        <div class="columns">
-            <div class="column">
-                <biz-image
-                    v-if="hasImage"
-                    class="mb-2"
-                    style="width: 200px; border: 1px solid #000"
-                    :src="logoImgUrl"
-                />
-                <biz-form-file
-                    v-model="formMedia"
-                    :accept="acceptedTypes"
-                    :is-name-displayed="false"
-                    :notes="instructions.logo"
-                    @on-file-picked="onFilePicked"
+                <biz-form-media-library
+                    v-model="logo"
+                    label="Logo"
+                    :is-download-enabled="can?.media?.read ?? false"
+                    :is-upload-enabled="can?.media?.add ?? false"
+                    :medium="logoMedia"
+                    :message="error('logo')"
+                    :instructions="instructions.logo"
                 />
             </div>
         </div>
@@ -28,8 +17,8 @@
 </template>
 
 <script>
-    import BizFormFile from '@/Biz/Form/File.vue';
-    import BizImage from '@/Biz/Image.vue';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
+    import BizFormMediaLibrary from '@/Biz/Form/MediaLibrary.vue';
     import { useModelWrapper } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
 
@@ -37,36 +26,31 @@
         name: 'HeaderLogo',
 
         components: {
-            BizFormFile,
-            BizImage,
+            BizFormMediaLibrary,
         },
 
-        inject: ['instructions'],
+        mixins: [
+            MixinHasPageErrors
+        ],
+
+        inject: [
+            'can',
+            'instructions',
+        ],
 
         props: {
-            logoUrl: {
-                type: String,
-                default: "",
-            },
-            modelValue: {
-                type: [File, Blob, null],
-                required: true,
-            },
+            logoMedia: { type: Object, default: () => {} },
+            modelValue: { type: [String, Number, null], required: true },
         },
 
         setup(props, { emit }) {
             return {
-                formMedia: useModelWrapper(props, emit),
+                logo: useModelWrapper(props, emit),
             };
         },
 
         data() {
             return {
-                acceptedTypes: [
-                    '.jpeg',
-                    '.jpg',
-                    '.png',
-                ],
                 logoImgUrl: this.logoUrl,
             };
         },

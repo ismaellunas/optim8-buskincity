@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\UploadLogo;
 use App\Entities\CloudinaryStorage;
 use App\Helpers\HumanReadable;
 use App\Http\Requests\ThemeHeaderLayoutRequest;
@@ -43,13 +42,24 @@ class ThemeHeaderController extends CrudController
 
     public function edit()
     {
+        $user = auth()->user();
+
+        $logoMedia = $this->settingService->getLogoMedia();
+        $logoMedia->append(['isImage', 'thumbnail_url', 'display_file_name']);
+
         return Inertia::render(
             $this->componentName.'Edit',
             $this->getData([
+                'can' => [
+                    'media' => [
+                        'read' => $user->can('media.read'),
+                        'add' => $user->can('media.add'),
+                    ]
+                ],
                 'headerMenus' => $this->menuService->getHeaderMenus(
                     app(TranslationService::class)->getLocales()
                 ),
-                'logoUrl' => $this->settingService->getLogoUrl(),
+                'logoMedia' => $logoMedia,
                 'menu' => $this->modelMenu::header()->first(),
                 'menuOptions' => $this->menuService->getMenuOptions(),
                 'settings' => $this->settingService->getHeader(),
@@ -78,12 +88,8 @@ class ThemeHeaderController extends CrudController
         $setting->value = $inputs['layout'];
         $setting->save();
 
-        if ($request->hasFile('logo')) {
-            $uploadLogo = new UploadLogo();
-
-            $media = $uploadLogo->handle($inputs['logo']);
-
-            $this->settingService->saveLogo($media->id);
+        if ($request->has('logo')) {
+            $this->settingService->saveLogo($inputs['logo']);
         }
 
         $this->generateFlashMessage('Header layout updated successfully!');

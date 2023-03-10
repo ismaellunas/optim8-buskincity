@@ -8,7 +8,7 @@
             <hr>
             <header-logo
                 v-model="form.logo"
-                :logo-url="logoUrl"
+                :logo-media="logoMedia"
             />
         </form>
     </section>
@@ -29,36 +29,29 @@
         },
 
         props: {
-            logoUrl: { type: String, default: "" },
+            logoMedia: { type: Object, default: () => {} },
             settings: { type: Object, required: true },
         },
 
-        setup() {
+        setup(props) {
             return {
                 baseRouteName: usePage().props.value.baseRouteName ?? null,
+                form: useForm({
+                    layout: parseInt(props?.settings?.header_layout?.value ?? null),
+                    logo: parseInt(props?.settings?.header_logo_media_id?.value ?? null),
+                }),
             };
         },
 
         data() {
             return {
                 loader: null,
-                form: useForm({
-                    layout: parseInt(this.settings.header_layout.value),
-                    logo: null
-                })
             };
         },
 
         methods: {
             isFormDirty() {
                 return this.form?.isDirty;
-            },
-
-            getLayoutForm() {
-                return useForm({
-                    layout: parseInt(this.settings.header_layout.value),
-                    logo: null
-                });
             },
 
             onSubmit() {
@@ -69,7 +62,6 @@
                     route(self.baseRouteName+".layout.update"), {
                         onSuccess: (page) => {
                             successAlert(page.props.flash.message);
-                            self.form = self.getLayoutForm();
                         },
                         onFinish: () => {
                             self.loader.hide();
