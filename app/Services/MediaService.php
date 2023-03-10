@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Entities\MediaAsset;
+use App\Helpers\HumanReadable;
 use App\Models\{
     Media,
     User
@@ -411,5 +412,19 @@ class MediaService
         }
 
         return $folderPrefix;
+    }
+
+    public static function defaultMediaLibraryInstructions(): array
+    {
+        return [
+            __('Accepted file extensions: :extensions.', [
+                'extensions' => implode(', ', config('constants.extensions.image'))
+            ]),
+            __('Max file size: :filesize.', [
+                'filesize' => HumanReadable::bytesToHuman(
+                    (50 * config('constants.one_megabyte')) * 1024
+                )
+            ]),
+        ];
     }
 }
