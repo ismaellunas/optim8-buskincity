@@ -2,7 +2,6 @@
 
 use App\Services\TranslationService;
 
-
 if (! function_exists('defaultLocale')) {
     function defaultLocale()
     {
