@@ -15,7 +15,10 @@
                 v-if="hasMediumPreview"
                 class="columns"
             >
-                <div class="column is-3">
+                <div
+                    class="column"
+                    :class="imagePreviewSizeClass"
+                >
                     <biz-media-gallery-item
                         :medium="mediumPreview"
                         :is-edit-enabled="false"
@@ -119,6 +122,13 @@
             message: { type: [Array, Object, String], default: undefined },
             modelValue: { type: [String, Number, null], required: true },
             required: { type: Boolean, default: false },
+            imagePreviewSize: {
+                type: [String, Number],
+                default: 3,
+                validator(value) {
+                    return (value >= 1 && value <= 12);
+                }
+            },
         },
 
         emits: [
@@ -158,6 +168,10 @@
 
             hasMediumPreview() {
                 return !isEmpty(this.mediumPreview);
+            },
+
+            imagePreviewSizeClass() {
+                return "is-" + this.imagePreviewSize;
             },
         },
 

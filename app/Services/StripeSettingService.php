@@ -169,29 +169,34 @@ class StripeSettingService
 
     public function logoMedia(): ?Media
     {
+        $media = null;
         $mediaId = Setting::key('stripe_logo_media_id')
             ->group('stripe')
             ->value('value');
 
         if (!empty($mediaId)) {
-            return Media::find($mediaId);
+            $media = Media::find($mediaId);
+
+            if ($media) {
+                $media->append(['isImage', 'thumbnail_url', 'display_file_name']);
+            }
         }
 
-        return null;
+        return $media;
     }
 
-    public function saveLogoMedia(Media $media)
+    public function saveLogoMedia($mediaId)
     {
         $setting = Setting::firstOrNew([
             'key' => 'stripe_logo_media_id',
             'group' => 'stripe'
         ]);
 
-        $setting->value = $media->id;
+        $setting->value = $mediaId;
         $setting->save();
 
         $setting->syncMedia([
-            $media->id
+            $mediaId
         ]);
     }
 

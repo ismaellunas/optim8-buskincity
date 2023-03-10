@@ -207,6 +207,7 @@
             v-if="isImageEditing"
             v-model="formMedia.file_url"
             v-model:cropper="cropper"
+            :cropped-image-type="croppedImageType"
             :file-name="formMedia.file_name"
             :is-processing="isProcessing"
             @close="closeImageEditorModal"
@@ -362,6 +363,7 @@
         data() {
             return {
                 cropper: null,
+                croppedImageType: "image/png",
                 file: null,
                 formMedia: getEmptyFormMedia(),
                 isEditing: false,
@@ -503,7 +505,10 @@
             },
             /* @return Promise */
             getCropperBlob() {
-                return getCanvasBlob(this.cropper.getCroppedCanvas());
+                return getCanvasBlob(
+                    this.cropper.getCroppedCanvas(),
+                    this.croppedImageType
+                );
             },
             updateFile() {
                 const self = this;

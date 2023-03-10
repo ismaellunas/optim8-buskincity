@@ -52,9 +52,7 @@ class StripeSettingRequest extends BaseFormRequest
             ],
             'logo' => [
                 'nullable',
-                'file',
-                'max:'.$stripeSettingService->maxLogoSize(),
-                'mimes:'.implode(',', $stripeSettingService->logoMimeTypes()),
+                'exists:media,id',
             ],
             'minimal_amounts' => [
                 'array'
