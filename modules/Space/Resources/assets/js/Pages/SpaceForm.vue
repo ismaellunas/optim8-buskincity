@@ -78,7 +78,7 @@
                     <biz-form-media-library
                         v-model="space.logo"
                         label="Logo"
-                        image-preview-size="is-6"
+                        image-preview-size="6"
                         :is-download-enabled="true"
                         :is-upload-enabled="true"
                         :medium="logoMedia"
@@ -92,7 +92,7 @@
                     <biz-form-media-library
                         v-model="space.cover"
                         label="Cover"
-                        image-preview-size="is-6"
+                        image-preview-size="6"
                         :is-download-enabled="true"
                         :is-upload-enabled="true"
                         :medium="coverMedia"

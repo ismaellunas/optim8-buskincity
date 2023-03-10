@@ -5,6 +5,7 @@ namespace Modules\Space\Http\Controllers;
 use App\Http\Controllers\CrudController;
 use App\Models\Media;
 use App\Services\IPService;
+use App\Services\MediaService;
 use App\Services\MenuService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -84,7 +85,7 @@ class SpaceController extends CrudController
     private function instructions(): array
     {
         return [
-            'mediaLibrary' => defaultMediaLibraryInstructions(),
+            'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
         ];
     }
 
