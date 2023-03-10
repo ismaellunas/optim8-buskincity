@@ -25,13 +25,6 @@ export const acceptedImageTypes = [
     '.gif',
 ];
 
-export const acceptedImageMimes = [
-    'image/jpeg',
-    'image/jpg',
-    'image/png',
-    'image/gif',
-];
-
 export const acceptedVideoTypes = [
     '.mp4',
     '.mov',
@@ -39,6 +32,42 @@ export const acceptedVideoTypes = [
     '.mpg',
     '.ogv',
     '.3gp',
+];
+
+export const acceptedDocumentTypes = [
+    '.pdf',
+    '.doc',
+    '.docx',
+];
+
+export const acceptedSpreadsheetTypes = [
+    '.xls',
+    '.xlsx',
+];
+
+export const acceptedPresentationTypes = [
+    '.ppt',
+    '.pptx',
+];
+
+export const acceptedImportTypes = [
+    '.csv',
+];
+
+export const acceptedFileGroups = {
+    image: acceptedImageTypes,
+    video: acceptedVideoTypes,
+    document: acceptedDocumentTypes,
+    spreadsheet: acceptedSpreadsheetTypes,
+    presentation: acceptedPresentationTypes,
+    import: acceptedImportTypes,
+};
+
+export const acceptedImageMimes = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/gif',
 ];
 
 export const debounceTime = 750;

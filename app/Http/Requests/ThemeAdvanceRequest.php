@@ -27,18 +27,14 @@ class ThemeAdvanceRequest extends BaseFormRequest
             'home_page' => ['nullable', 'exists:pages,id'],
             'favicon' => [
                 'nullable',
-                'file',
-                'max:'.config('constants.one_megabyte') * 1,
-                'mimes:'.implode(',', config('constants.extensions.image')),
+                'exists:media,id',
             ],
             'qrcode_public_page_is_displayed' => [
                 'nullable'
             ],
             'qrcode_public_page_logo' => [
                 'nullable',
-                'file',
-                'max:'.config('constants.one_megabyte') * 50,
-                'mimes:'.implode(',', config('constants.extensions.image')),
+                'exists:media,id',
             ],
             'additional_css' => ['nullable', 'string'],
             'additional_javascript' => ['nullable', 'string'],

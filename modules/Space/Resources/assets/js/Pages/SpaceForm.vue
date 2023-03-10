@@ -75,59 +75,29 @@
         <div class="columns">
             <div class="column is-half">
                 <div class="field">
-                    <biz-label>Logo</biz-label>
-
-                    <biz-image
-                        v-if="logoDisplay"
-                        :src="logoDisplay"
-                        :img-style="{'max-width': '300px', 'max-height': '300px'}"
-                    />
-
-                    <biz-button-icon
-                        v-if="logoDisplay"
-                        class="is-small is-danger"
-                        type="button"
-                        :icon="icon.remove"
-                        @click="deleteLogo"
-                    >
-                        <span>Delete</span>
-                    </biz-button-icon>
-
-                    <biz-form-file
+                    <biz-form-media-library
                         v-model="space.logo"
-                        :is-name-displayed="false"
+                        label="Logo"
+                        image-preview-size="6"
+                        :is-download-enabled="true"
+                        :is-upload-enabled="true"
+                        :medium="logoMedia"
+                        :instructions="instructions.mediaLibrary"
                         :message="error('logo')"
-                        :notes="instructions.logo"
-                        @on-file-picked="onFilePicked"
                     />
                 </div>
             </div>
             <div class="column is-half">
                 <div class="field">
-                    <biz-label>Cover</biz-label>
-
-                    <biz-image
-                        v-if="coverDisplay"
-                        :src="coverDisplay"
-                        :img-style="{'max-width': '600px', 'max-height': '400px'}"
-                    />
-
-                    <biz-button-icon
-                        v-if="coverDisplay"
-                        class="is-small is-danger"
-                        type="button"
-                        :icon="icon.remove"
-                        @click="deleteCover"
-                    >
-                        <span>Delete</span>
-                    </biz-button-icon>
-
-                    <biz-form-file
+                    <biz-form-media-library
                         v-model="space.cover"
-                        :is-name-displayed="false"
+                        label="Cover"
+                        image-preview-size="6"
+                        :is-download-enabled="true"
+                        :is-upload-enabled="true"
+                        :medium="coverMedia"
+                        :instructions="instructions.mediaLibrary"
                         :message="error('cover')"
-                        :notes="instructions.cover"
-                        @on-file-picked="onCoverFilePicked"
                     />
                 </div>
             </div>
@@ -200,10 +170,10 @@
     import BizIcon from '@/Biz/Icon.vue';
     import BizImage from '@/Biz/Image.vue';
     import BizLabel from '@/Biz/Label.vue';
+    import BizFormMediaLibrary from '@/Biz/Form/MediaLibrary.vue';
     import SpaceModalContact from './SpaceModalContact.vue';
     import icon from '@/Libs/icon-class';
-    import { acceptedImageTypes } from '@/Libs/defaults';
-    import { find, set, unset } from 'lodash';
+    import { find } from 'lodash';
     import { useModelWrapper, getPhoneCountries } from '@/Libs/utils';
 
     export default {
@@ -217,6 +187,7 @@
             BizIcon,
             BizImage,
             BizLabel,
+            BizFormMediaLibrary,
             SpaceModalContact,
         },
 
@@ -226,10 +197,10 @@
 
         props: {
             modelValue: { type: Object, required: true },
-            coverUrl: { type: [String, null], default: '' },
+            coverMedia: { type: Object, default: () => {} },
             defaultCountry: { type: String, default: '' },
             instructions: { type: Object, default: () => {} },
-            logoUrl: { type: [String, null], default: '' },
+            logoMedia: { type: Object, default: () => {} },
             parentOptions: { type: Object, required: true },
             typeOptions: { type: Object, required: true },
             canChangeParent: { type: Boolean, default: true },
@@ -247,20 +218,8 @@
                 isContactModalOpen: false,
                 contactErrors: {},
                 icon,
-                logoSrc: this.logoUrl,
-                coverSrc: this.coverUrl,
                 countryOptions: [],
             };
-        },
-
-        computed: {
-            logoDisplay() {
-                return this.logoSrc ?? null;
-            },
-
-            coverDisplay() {
-                return this.coverSrc ?? null;
-            },
         },
 
         mounted: async function() {
@@ -314,32 +273,6 @@
 
                 return "";
             },
-
-            onFilePicked(event) {
-                this.logoSrc = event.target.result;
-
-                unset(this.space, 'deleted_media.logo');
-            },
-
-            onCoverFilePicked(event) {
-                this.coverSrc = event.target.result;
-
-                unset(this.space, 'deleted_media.cover');
-            },
-
-            deleteLogo() {
-                this.space.logo = null;
-                this.logoSrc = null;
-
-                set(this.space, 'deleted_media.logo', true);
-            },
-
-            deleteCover() {
-                this.space.cover = null;
-                this.coverSrc = null;
-
-                set(this.space, 'deleted_media.cover', true);
-            }
         },
     };
 </script>
