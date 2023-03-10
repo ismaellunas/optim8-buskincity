@@ -221,19 +221,14 @@
                     </div>
 
                     <div class="column">
-                        <biz-image
-                            v-if="hasImageLogo"
-                            class="mb-2"
-                            style="width: 200px; border: 1px solid #000"
-                            :src="logoImgUrl"
-                        />
-                        <biz-form-file
+                        <biz-form-media-library
                             v-model="form.logo"
-                            :accepted-types="logoMimeTypes"
-                            :is-name-displayed="false"
+                            image-preview-size="6"
+                            :is-download-enabled="can?.media?.read ?? false"
+                            :is-upload-enabled="can?.media?.add ?? false"
+                            :medium="logoMedia"
+                            :instructions="instructions.mediaLibrary"
                             :message="error('logo')"
-                            :notes="logoInstructions"
-                            @on-file-picked="onFilePicked"
                         />
                     </div>
                 </div>
@@ -253,11 +248,10 @@
     import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormInputAddons from '@/Biz/Form/InputAddons.vue';
     import BizFormInputColor from '@/Biz/Form/InputColor.vue';
-    import BizFormFile from '@/Biz/Form/File.vue';
-    import BizImage from '@/Biz/Image.vue';
     import BizInputError from '@/Biz/InputError.vue';
     import BizSelect from '@/Biz/Select.vue';
     import BizTable from '@/Biz/Table.vue';
+    import BizFormMediaLibrary from '@/Biz/Form/MediaLibrary.vue';
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import icon from '@/Libs/icon-class';
     import { debounce, difference, isEmpty, filter, find, forEach } from 'lodash';
@@ -278,11 +272,10 @@
             BizFormInput,
             BizFormInputAddons,
             BizFormInputColor,
-            BizFormFile,
-            BizImage,
             BizInputError,
             BizSelect,
             BizTable,
+            BizFormMediaLibrary,
         },
 
         mixins: [
@@ -299,6 +292,10 @@
             applicationFeePercentage: {
                 type: Number,
                 default: null,
+            },
+            can: {
+                type: Object,
+                default: () => {}
             },
             colorPrimary: {
                 type: String,
@@ -328,17 +325,13 @@
                 type: Boolean,
                 default: false,
             },
-            logoStripeUrl: {
-                type: String,
-                default: "",
+            logoMedia: {
+                type: Object,
+                default: () => {},
             },
-            logoMimeTypes: {
-                type: Array,
-                default: () => [],
-            },
-            logoInstructions: {
-                type: Array,
-                default: () => [],
+            instructions: {
+                type: Object,
+                default: () => {},
             },
             minimalAmounts: {
                 type: Object,
@@ -364,7 +357,7 @@
                 payment_currencies: props.paymentCurrencies ?? [],
                 color_primary: props.colorPrimary ?? '',
                 color_secondary: props.colorSecondary ?? '',
-                logo: null,
+                logo: props.logoMedia?.id ?? null,
             };
 
             return {
@@ -377,7 +370,6 @@
                 filteredCountries: this.countryOptions.slice(0, 10),
                 icon,
                 loader: null,
-                logoImgUrl: this.logoStripeUrl,
                 tempAmountOptions: {},
             }
         },
@@ -399,10 +391,6 @@
                 set(country) {
                     this.form.default_country = country.id;
                 }
-            },
-
-            hasImageLogo() {
-                return !isEmpty(this.logoImgUrl);
             },
         },
 
@@ -470,7 +458,6 @@
                     },
                     onSuccess: (page) => {
                         successAlert(page.props.flash.message);
-                        self.resetFormLogo();
                     },
                     onError(errors) {
                         oopsAlert();
@@ -479,15 +466,6 @@
                         self.loader.hide();
                     }
                 });
-            },
-
-            onFilePicked(event) {
-                this.logoImgUrl = event.target.result;
-            },
-
-            resetFormLogo() {
-                this.form.logo = null;
-                this.logoImgUrl = this.logoStripeUrl;
             },
         },
     };

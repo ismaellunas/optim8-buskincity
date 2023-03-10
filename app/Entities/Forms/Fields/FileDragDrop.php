@@ -6,6 +6,8 @@ use App\Helpers\MimeType;
 
 class FileDragDrop extends File
 {
+    const TYPE = "FileDragDrop";
+
     protected $type = "FileDragDrop";
 
     public $maxFileSize;

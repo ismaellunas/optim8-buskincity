@@ -25,9 +25,7 @@ class ThemeHeaderLayoutRequest extends BaseFormRequest
             'layout' => ['required', 'integer'],
             'logo' => [
                 'nullable',
-                'file',
-                'max:'.config('constants.one_megabyte') * 50,
-                'mimes:'.implode(',', config('constants.extensions.image')),
+                'exists:media,id',
             ],
         ];
     }

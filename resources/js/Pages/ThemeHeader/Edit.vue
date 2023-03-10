@@ -28,7 +28,7 @@
             <layout
                 v-if="activeTab == 'layout'"
                 ref="layout"
-                :logo-url="logoUrl"
+                :logo-media="logoMedia"
                 :settings="settings"
                 :instructions="instructions"
             />
@@ -73,6 +73,7 @@
         provide() {
             return {
                 instructions: this.instructions,
+                can: this.can,
             };
         },
 
@@ -80,9 +81,10 @@
 
         props: {
             baseRouteName: { type: String, required: true },
+            can: { type: Object, default: () => {} },
             headerMenus: { type: Object, default: () => {} },
             instructions: { type: Object, default: () => {} },
-            logoUrl: { type: String, default: "" },
+            logoMedia: { type: Object, default: () => {} },
             menu: { type: Object, required: true },
             settings: { type: Object, required: true },
             title: { type: String, default: "-" },

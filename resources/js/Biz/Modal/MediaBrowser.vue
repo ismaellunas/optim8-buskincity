@@ -35,6 +35,7 @@
             :query-params="queryParams"
             :records="data"
             :search="search"
+            :instructions="instructions"
             @on-media-submitted="$emit('on-media-submitted', $event)"
             @on-view-changed="$emit('on-view-changed', $event)"
         >
@@ -82,6 +83,7 @@
             queryParams: { type: Object, default: () => {} },
             search: { type: Function, required: true },
             title: { type: String, default: 'Images' },
+            instructions: {type: Array, default: () => []},
         },
 
         emits: [
