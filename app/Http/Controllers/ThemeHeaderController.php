@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Entities\CloudinaryStorage;
-use App\Helpers\HumanReadable;
 use App\Http\Requests\ThemeHeaderLayoutRequest;
 use App\Models\{
     Menu,
@@ -42,29 +41,30 @@ class ThemeHeaderController extends CrudController
 
     public function edit()
     {
+        $user = auth()->user();
+
+        $logoMedia = $this->settingService->getLogoMedia();
+
         return Inertia::render(
             $this->componentName.'Edit',
             $this->getData([
+                'can' => [
+                    'media' => [
+                        'read' => $user->can('media.read'),
+                        'add' => $user->can('media.add'),
+                    ]
+                ],
                 'headerMenus' => $this->menuService->getHeaderMenus(
                     app(TranslationService::class)->getLocales()
                 ),
-                'logoUrl' => $this->settingService->getLogoUrl(),
+                'logoMedia' => $logoMedia,
                 'menu' => $this->modelMenu::header()->first(),
                 'menuOptions' => $this->menuService->getMenuOptions(),
                 'settings' => $this->settingService->getHeader(),
                 'typeOptions' => $this->menuService->getMenuItemTypeOptions(),
                 'instructions' => [
-                    'logo' => [
-                        __('Accepted file extensions: :extensions.', [
-                            'extensions' => implode(', ', config('constants.extensions.image'))
-                        ]),
-                        __('Max file size: :filesize.', [
-                            'filesize' => HumanReadable::bytesToHuman(
-                                (50 * config('constants.one_megabyte')) * 1024
-                            )
-                        ]),
-                    ]
-                ]
+                    'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+                ],
             ]),
         );
     }
@@ -77,28 +77,8 @@ class ThemeHeaderController extends CrudController
         $setting->value = $inputs['layout'];
         $setting->save();
 
-        if ($request->hasFile('logo')) {
-            $media = $this->mediaService->uploadSetting(
-                $inputs['logo'],
-                Str::random(10),
-                new CloudinaryStorage(),
-                (!App::environment('production') ? config('app.env') : null)
-            );
-
-            $existingMedia = $this->settingService->getLogoMedia();
-
-            $setting = Setting::firstOrNew([
-                'key' => config("constants.theme_header.header_logo_media.key")
-            ]);
-            $setting->value = $media->id;
-            $setting->save();
-
-            if ($existingMedia) {
-                $this->mediaService->destroy(
-                    $existingMedia,
-                    new CloudinaryStorage()
-                );
-            }
+        if ($request->has('logo')) {
+            $this->settingService->saveLogo($inputs['logo']);
         }
 
         $this->generateFlashMessage('Header layout updated successfully!');

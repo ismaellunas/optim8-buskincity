@@ -9,6 +9,8 @@ use Modules\Booking\Events\EventRescheduled;
 use Modules\Booking\Listeners\SendBookedEventNotification;
 use Modules\Booking\Listeners\SendCanceledEventNotification;
 use Modules\Booking\Listeners\SendRescheduledEventNotification;
+use Modules\Booking\Observers\ProductObserver;
+use Modules\Ecommerce\Entities\Product;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -28,4 +30,9 @@ class EventServiceProvider extends ServiceProvider
             SendCanceledEventNotification::class,
         ],
     ];
+
+    public function boot()
+    {
+        Product::observe(ProductObserver::class);
+    }
 }

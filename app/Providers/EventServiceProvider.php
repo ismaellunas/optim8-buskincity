@@ -7,6 +7,7 @@ use App\Listeners\SendErrorReportNotification;
 use App\Models\{
     Category,
     GlobalOption,
+    Media,
     Page,
     PageTranslation,
     Post,
@@ -15,6 +16,7 @@ use App\Models\{
 use App\Observers\{
     CategoryObserver,
     GlobalOptionObserver,
+    MediaObserver,
     PageObserver,
     PageTranslationObserver,
     PostObserver,
@@ -23,7 +25,6 @@ use App\Observers\{
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -50,6 +51,7 @@ class EventServiceProvider extends ServiceProvider
     {
         Category::observe(CategoryObserver::class);
         GlobalOption::observe(GlobalOptionObserver::class);
+        Media::observe(MediaObserver::class);
         Page::observe(PageObserver::class);
         PageTranslation::observe(PageTranslationObserver::class);
         Post::observe(PostObserver::class);

@@ -7,6 +7,7 @@ use App\Models\GlobalOption;
 use App\Models\Media;
 use App\Models\MenuItem;
 use App\Models\User;
+use App\Traits\Mediable;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,6 +21,7 @@ use Modules\Space\ModuleService;
 class Space extends BaseModel implements TranslatableContract
 {
     use HasFactory;
+    use Mediable;
     use NodeTrait;
     use Translatable;
 
@@ -63,11 +65,6 @@ class Space extends BaseModel implements TranslatableContract
     public function type()
     {
         return $this->belongsTo(GlobalOption::class, 'type_id');
-    }
-
-    public function media()
-    {
-        return $this->morphMany(Media::class, 'medially');
     }
 
     public function logo()

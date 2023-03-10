@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Services\ModuleService;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class WidgetService
@@ -79,5 +80,43 @@ class WidgetService
         }
 
         return $widgets->all();
+    }
+
+    public function storedWidgets(): Collection
+    {
+        $widgets = collect();
+
+        $widgetSettings = app(SettingService::class)
+            ->adminDashboardWidgets()
+            ->sortBy('order');
+
+        foreach ($widgetSettings as $widgetSetting) {
+            $className = $widgetSetting['widget'];
+
+            if (class_exists($className)) {
+                $widgetObject = new $className($widgetSetting);
+
+                if ($widgetObject->canBeAccessed()) {
+                    $widgets->push($widgetObject->data());
+                }
+            }
+        }
+
+        return $widgets;
+    }
+
+    public function getWidgetHandler(string $uuid): object
+    {
+        $widgetSetting = app(SettingService::class)
+            ->adminDashboardWidgets()
+            ->first(fn ($widget) => $widget['uuid'] == $uuid);
+
+        $className = $widgetSetting['widget'];
+
+        if ($className && class_exists($className)) {
+            return new $className($widgetSetting);
+        }
+
+        return null;
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\HumanReadable;
 use App\Http\Requests\StripeSettingRequest;
 use App\Jobs\{
     UpdateStripeConnectedAccountColor,
     UpdateStripeConnectedAccountBrandingLogo,
 };
 use App\Services\{
+    MediaService,
     StripeService,
     StripeSettingService,
 };
@@ -32,6 +32,7 @@ class StripeController extends Controller
 
     public function edit()
     {
+        $user = auth()->user();
         $settings = $this->stripeSettingService->getAll();
 
         $currencyOptions = collect($this->stripeService->getCurrencyOptions())
@@ -39,32 +40,27 @@ class StripeController extends Controller
                 return $option['id'];
             });
 
-        $logoMimeTypes = array_map(
-            fn ($mime): string => '.'.$mime,
-            $this->stripeSettingService->logoMimeTypes()
-        );
+        $logoMedia = $this->stripeSettingService->logoMedia();
 
         return Inertia::render('Stripe', [
             'amountOptions' => $settings->get('stripe_amount_options'),
             'applicationFeePercentage' => $settings->get('stripe_application_fee_percentage'),
+            'can' => [
+                'media' => [
+                    'read' => $user->can('media.read'),
+                    'add' => $user->can('media.add'),
+                ]
+            ],
             'colorPrimary' => $settings->get('stripe_color_primary'),
             'colorSecondary' => $settings->get('stripe_color_secondary'),
             'countryOptions' => $this->stripeService->getCountryOptions(),
             'currencyOptions' => $currencyOptions,
             'defaultCountry' => $settings->get('stripe_default_country'),
             'isEnabled' => $settings->get('stripe_is_enabled'),
-            'logoInstructions' => [
-                __('Accepted file extensions: :extensions.', [
-                    'extensions' => implode(', ', $logoMimeTypes)
-                ]),
-                __('Max file size: :filesize.', [
-                    'filesize' => HumanReadable::bytesToHuman(
-                        $this->stripeSettingService->maxLogoSize() * config('constants.one_megabyte')
-                    )
-                ]),
+            'instructions' => [
+                'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
             ],
-            'logoMimeTypes' => $logoMimeTypes,
-            'logoStripeUrl' => $this->stripeSettingService->logoUrl(),
+            'logoMedia' => $logoMedia,
             'minimalAmounts' => $settings->get('stripe_minimal_amounts'),
             'paymentCurrencies' => $settings->get('stripe_payment_currencies'),
             'title' => __('Stripe'),
@@ -102,20 +98,10 @@ class StripeController extends Controller
             dispatch($job);
         }
 
-        if ($request->hasFile('logo')) {
-            $logoFile = $request->file('logo');
+        if ($request->has('logo')) {
+            $logoMediaId = $request->logo;
 
-            $existingMedia = $this->stripeSettingService->logoMedia();
-
-            $media = $this
-                ->stripeSettingService
-                ->uploadLogo($logoFile);
-
-            $this->stripeSettingService->saveLogoMedia($media);
-
-            if ($existingMedia) {
-                $this->stripeSettingService->deleteLogoFromStorage($existingMedia);
-            }
+            $this->stripeSettingService->saveLogoMedia($logoMediaId);
 
             $job = new UpdateStripeConnectedAccountbrandingLogo();
             $job->delay(now()->addMinutes(1));

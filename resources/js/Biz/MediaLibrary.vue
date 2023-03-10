@@ -16,6 +16,20 @@
                                 @on-file-picked="onFilePicked"
                             />
                         </div>
+
+                        <p
+                            v-if="hasInstructions"
+                            class="help is-info"
+                        >
+                            <ul :style="instructionStyle">
+                                <li
+                                    v-for="note, index in instructions"
+                                    :key="index"
+                                >
+                                    {{ note }}
+                                </li>
+                            </ul>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -193,6 +207,7 @@
             v-if="isImageEditing"
             v-model="formMedia.file_url"
             v-model:cropper="cropper"
+            :cropped-image-type="croppedImageType"
             :file-name="formMedia.file_name"
             :is-processing="isProcessing"
             @close="closeImageEditorModal"
@@ -264,7 +279,7 @@
     import { acceptedFileTypes, acceptedImageTypes } from '@/Libs/defaults';
     import { confirm as confirmAlert, confirmDelete, success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { getCanvasBlob } from '@/Libs/utils';
-    import { includes } from 'lodash';
+    import { includes, isEmpty } from 'lodash';
     import { ref } from "vue";
     import { useForm } from '@inertiajs/inertia-vue3';
 
@@ -319,6 +334,7 @@
             queryParams: {type: Object, default: () => {}},
             records: {type: Object, required: true},
             search: {type: Function, required: true},
+            instructions: {type: Array, default: () => []},
             typeOptions: {type: Object, default() {
                 return {
                     'image': "Image",
@@ -347,6 +363,7 @@
         data() {
             return {
                 cropper: null,
+                croppedImageType: "image/png",
                 file: null,
                 formMedia: getEmptyFormMedia(),
                 isEditing: false,
@@ -371,6 +388,16 @@
             },
             isGalleryView() {
                 return this.view === 'gallery';
+            },
+            hasInstructions() {
+                return !isEmpty(this.instructions);
+            },
+            instructionStyle() {
+                return {
+                    'list-style-type': 'none',
+                    'padding': 0,
+                    'margin': 0
+                };
             },
         },
 
@@ -478,7 +505,10 @@
             },
             /* @return Promise */
             getCropperBlob() {
-                return getCanvasBlob(this.cropper.getCroppedCanvas());
+                return getCanvasBlob(
+                    this.cropper.getCroppedCanvas(),
+                    this.croppedImageType
+                );
             },
             updateFile() {
                 const self = this;

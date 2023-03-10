@@ -71,19 +71,11 @@ class SpaceStoreRequest extends FormRequest
             ],
             'logo' => [
                 'nullable',
-                'file',
-                'max:'.config('constants.one_megabyte') * 5,
-                'mimes:'.implode(',', config('constants.extensions.image')),
+                'exists:media,id',
             ],
             'cover' => [
                 'nullable',
-                'file',
-                'max:'.config('constants.one_megabyte') * 50,
-                'mimes:'.implode(',', config('constants.extensions.image')),
-            ],
-            'deleted_media' => [
-                'nullable',
-                'array'
+                'exists:media,id',
             ],
             'translations' => [
                 'array'

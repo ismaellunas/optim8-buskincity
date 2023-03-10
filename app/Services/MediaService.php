@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Contracts\MediaStorageInterface as MediaStorage;
 use App\Entities\MediaAsset;
+use App\Helpers\HumanReadable;
 use App\Models\{
     Media,
     User
@@ -14,7 +15,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\App;
 
 class MediaService
 {
@@ -70,7 +70,13 @@ class MediaService
         ?array $scopeNames = null,
         int $recordsPerPage = 12
     ) {
+        $user = auth()->user();
+        $hasAccessToOtherMedia = $user->can('manageOtherMedia', Media::class);
+
         $query = Media::orderBy('id', 'DESC')
+            ->when(!$hasAccessToOtherMedia, function (Builder $query) use ($user) {
+                $query->uploader($user->id);
+            })
             ->when($term, function (Builder $query, $term) {
                 $query->where('file_name', 'ILIKE', '%'.$term.'%');
                 $query->orWhereHas('translations', function (Builder $query) use ($term) {
@@ -170,8 +176,12 @@ class MediaService
         $params = [$file, $fileName, $extension];
 
         if (! is_null($folder)) {
-            array_push($params, $folder);
+            $folder = $this->getFolderPrefix().$folder;
+        } else {
+            $folder = Str::of($this->getFolderPrefix())->rtrim('_')->value();
         }
+
+        array_push($params, $folder);
 
         $this->fillMediaWithMediaAsset(
             $media,
@@ -180,16 +190,18 @@ class MediaService
                 $params
             )
         );
+
         $media->save();
+        $media->saveUserId(auth()->user()->id);
 
         return $media;
     }
 
-    public function uploadSetting(
+    public function uploadProfile(
         UploadedFile $file,
         string $fileName,
         MediaStorage $mediaStorage,
-        string $folderPrefix = null
+        string $folder = null,
     ): Media {
         $media = new Media();
 
@@ -204,57 +216,31 @@ class MediaService
         $fileName = MediaService::getUniqueFileName(
             Str::lower($fileName),
             [],
-            $extension
-        );
-
-        $folder = 'settings';
-        if ($folderPrefix) {
-            $folder = $folderPrefix.'_'.$folder;
-        }
-
-        $this->fillMediaWithMediaAsset(
-            $media,
-            $mediaStorage->upload($file, $fileName, $extension, $folder)
-        );
-        $media->type = Media::TYPE_SETTING;
-        $media->save();
-
-        return $media;
-    }
-
-    public function uploadProfile(
-        UploadedFile $file,
-        MediaStorage $mediaStorage,
-        User $user,
-        string $folder = null,
-    ): Media {
-        $media = new Media();
-
-        $extension = null;
-
-        $clientExtension = $file->getClientOriginalExtension();
-
-        if ($this->isOriginalExtensionNeeded($file)) {
-            $extension = $clientExtension;
-        }
-
-        $fileName = MediaService::getUniqueFileName(
-            Str::lower($user->first_name.'-'.$user->last_name.'-'.Str::random(10)),
-            [],
             $extension,
             $folder
         );
 
-        if ($folder) {
+        $params = [$file, $fileName, $extension];
+
+        if (! is_null($folder)) {
             $folder = $this->getFolderPrefix().$folder;
+        } else {
+            $folder = Str::of($this->getFolderPrefix())->rtrim('_')->value();
         }
+
+        array_push($params, $folder);
 
         $this->fillMediaWithMediaAsset(
             $media,
-            $mediaStorage->upload($file, $fileName, $extension, $folder)
+            call_user_func_array(
+                [$mediaStorage, 'upload'],
+                $params
+            )
         );
+
         $media->type = Media::TYPE_PROFILE;
         $media->save();
+        $media->saveUserId(auth()->user()->id);
 
         return $media;
     }
@@ -275,6 +261,7 @@ class MediaService
         );
         $replicatedMedia->created_at = Carbon::now();
         $replicatedMedia->save();
+        $replicatedMedia->saveUserId(auth()->user()->id);
 
         return $replicatedMedia;
     }
@@ -366,7 +353,6 @@ class MediaService
         UploadedFile $file,
         MediaStorage $mediaStorage,
         User $user,
-        string $folderPrefix = null
     ): Media {
         $media = new Media();
 
@@ -384,10 +370,7 @@ class MediaService
             $extension = $clientExtension;
         }
 
-        $folder = 'user_assets/'.$user->id;
-        if ($folderPrefix) {
-            $folder = $folderPrefix.$folder;
-        }
+        $folder = $this->getFolderPrefix().'user_assets/'.$user->id;
 
         $fileName = $this->getUniqueFileName(
             $fileName,
@@ -403,6 +386,7 @@ class MediaService
 
         $media->type = Media::TYPE_USER_META;
         $media->save();
+        $media->saveUserId(auth()->user()->id);
 
         return $media;
     }
@@ -419,8 +403,28 @@ class MediaService
         }
     }
 
-    private function getFolderPrefix(): ?string
+    public function getFolderPrefix(): ?string
     {
-        return (!App::environment('production') ? config('app.env').'_' : null);
+        $folderPrefix = config('filesystems.folder_prefix');
+
+        if ($folderPrefix) {
+            $folderPrefix = $folderPrefix . '_';
+        }
+
+        return $folderPrefix;
+    }
+
+    public static function defaultMediaLibraryInstructions(): array
+    {
+        return [
+            __('Accepted file extensions: :extensions.', [
+                'extensions' => implode(', ', config('constants.extensions.image'))
+            ]),
+            __('Max file size: :filesize.', [
+                'filesize' => HumanReadable::bytesToHuman(
+                    (50 * config('constants.one_megabyte')) * 1024
+                )
+            ]),
+        ];
     }
 }

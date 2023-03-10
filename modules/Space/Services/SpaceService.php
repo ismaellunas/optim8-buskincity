@@ -9,6 +9,7 @@ use App\Services\GlobalOptionService;
 use App\Services\MediaService;
 use App\Services\MenuService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
@@ -27,6 +28,29 @@ class SpaceService
         $this->mediaService = $mediaService;
     }
 
+    private function conditionsBuilder(
+        ?array $ids = null,
+        array $scopes = null,
+    ): Builder {
+        $spaces = null;
+
+        if ($ids) {
+            $spaces = Space::select('id', '_lft', '_rgt')->whereIn('id', $ids)->get();
+        }
+
+        return Space::when($spaces, function ($query, $spaces) {
+                foreach ($spaces as $key => $space) {
+                    $boolean = $key == 0 ? 'and' : 'or';
+                    $query->whereDescendantOrSelf($space, $boolean);
+                }
+            })
+            ->when($scopes, function ($query, $scopes) {
+                foreach ($scopes as $scopeName => $value) {
+                    $query->$scopeName($value);
+                }
+            });
+    }
+
     public function getRecords(
         Authenticatable $user,
         ?array $ids = null,
@@ -41,7 +65,9 @@ class SpaceService
             $spaces = Space::select('id', '_lft', '_rgt')->whereIn('id', $ids)->get();
         }
 
-        $records = Space::select($columnNames)
+        $records = $this
+            ->conditionsBuilder($ids, $scopes)
+            ->select($columnNames)
             ->withDepth()
             ->with([
                 'ancestors' => function ($query) use ($columnNames) {
@@ -52,17 +78,6 @@ class SpaceService
                 },
                 'type:id,name',
             ])
-            ->when($spaces, function ($query, $spaces) {
-                foreach ($spaces as $key => $space) {
-                    $boolean = $key == 0 ? 'and' : 'or';
-                    $query->whereDescendantOrSelf($space, $boolean);
-                }
-            })
-            ->when($scopes, function ($query, $scopes) {
-                foreach ($scopes as $scopeName => $value) {
-                    $query->$scopeName($value);
-                }
-            })
             ->defaultOrder()
             ->paginate($perPage);
 
@@ -250,115 +265,53 @@ class SpaceService
         return $spaceData;
     }
 
-    public function upload(
-        UploadedFile $file,
-        string $fileName,
-        string $mediaType = null,
-    ): Media {
-        $folder = ModuleService::mediaFolder();
-
-        $folderPrefix = !app()->environment('production')
-            ? config('app.env')
-            : null;
-
-        if ($folderPrefix) {
-            $folder = $folderPrefix.'_'.$folder;
-        }
-
-        $media = $this->mediaService->upload(
-            $file,
-            $fileName,
-            app(MediaStorage::class),
-            $folder
-        );
-
-        $media->type = $mediaType;
-        $media->save();
-
-        return $media;
-    }
-
-    private function uploadLogo(UploadedFile $file): Media
+    private function detachLogo(Space $space): void
     {
-        return $this->upload(
-            $file,
-            'logo_'.Str::random(10),
-            ModuleService::MEDIA_TYPE_LOGO
-        );
-    }
+        $logoMediaId = $space->logo_media_id;
 
-    private function uploadCover(UploadedFile $file): Media
-    {
-        return $this->upload(
-            $file,
-            'cover_'.Str::random(10),
-            ModuleService::MEDIA_TYPE_COVER
-        );
-    }
-
-    private function deleteLogoFromStorage(Space $space)
-    {
-        $media = $space->logo;
-
-        if ($media) {
-            $this->mediaService->destroy($media, app(MediaStorage::class));
+        if ($logoMediaId) {
+            $space->detachMedia($logoMediaId);
         }
     }
 
-    private function deleteCoverFromStorage(Space $space)
+    private function detachCover(Space $space): void
     {
-        $media = $space->cover;
+        $coverMediaId = $space->cover_media_id;
 
-        if ($media) {
-            $this->mediaService->destroy($media, app(MediaStorage::class));
+        if ($coverMediaId) {
+            $space->detachMedia($coverMediaId);
         }
     }
 
-    public function replaceLogo(Space $space, UploadedFile $file)
+    public function replaceLogo(Space $space, ?int $mediaId = null): void
     {
-        $media = $this->uploadLogo($file);
+        $this->detachLogo($space);
 
-        $space->media()->save($media);
+        if ($mediaId) {
+            $space->media()->attach($mediaId);
+        }
 
-        $this->deleteLogoFromStorage($space);
-
-        $space->logo_media_id = $media->id;
+        $space->logo_media_id = $mediaId;
         $space->save();
     }
 
-    public function replaceCover(Space $space, UploadedFile $file)
+    public function replaceCover(Space $space, ?int $mediaId = null): void
     {
-        $media = $this->uploadCover($file);
+        $this->detachCover($space);
 
-        $space->media()->save($media);
+        if ($mediaId) {
+            $space->media()->attach($mediaId);
+        }
 
-        $this->deleteCoverFromStorage($space);
-
-        $space->cover_media_id = $media->id;
-        $space->save();
-    }
-
-    public function deleteLogo(Space $space)
-    {
-        $this->deleteLogoFromStorage($space);
-
-        $space->logo_media_id = null;
-        $space->save();
-    }
-
-    public function deleteCover(Space $space)
-    {
-        $this->deleteCoverFromStorage($space);
-
-        $space->cover_media_id = null;
+        $space->cover_media_id = $mediaId;
         $space->save();
     }
 
     public function removeAllMedia(array $spaces): void
     {
         foreach ($spaces as $space) {
-            $this->deleteLogoFromStorage($space);
-            $this->deleteCoverFromStorage($space);
+            $this->detachLogo($space);
+            $this->detachCover($space);
         }
     }
 
@@ -420,5 +373,18 @@ class SpaceService
         });
 
         return $page;
+    }
+
+    public function totalSpaceByType(Authenticatable $user, int $typeId): int
+    {
+        $spaceIds = null;
+
+        if (! $user->can('space.viewAny')) {
+            $spaceIds = $user->spaces->pluck('id')->all();
+        }
+
+        return $this->conditionsBuilder($spaceIds, [
+            'inType' => [$typeId],
+        ])->count();
     }
 }
