@@ -169,6 +169,7 @@ class StripeSettingService
 
     public function logoMedia(): ?Media
     {
+        $media = null;
         $mediaId = Setting::key('stripe_logo_media_id')
             ->group('stripe')
             ->value('value');
@@ -179,11 +180,9 @@ class StripeSettingService
             if ($media) {
                 $media->append(['isImage', 'thumbnail_url', 'display_file_name']);
             }
-
-            return $media;
         }
 
-        return null;
+        return $media;
     }
 
     public function saveLogoMedia($mediaId)
