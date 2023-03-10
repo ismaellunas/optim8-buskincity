@@ -4,7 +4,6 @@ namespace Modules\FormBuilder\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Modules\FormBuilder\Emails\FormNotification;
 use Modules\FormBuilder\Events\FormSubmitted;
 use Modules\FormBuilder\Services\FormBuilderService;

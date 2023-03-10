@@ -62,18 +62,14 @@
                     </div>
 
                     <div class="column">
-                        <biz-form-image-square
+                        <biz-form-media-library
                             v-model="form.favicon"
-                            v-model:photo-url="faviconImageUrl"
-                            modal-title="Favicon"
-                            wrapper-class="field-body is-align-items-center"
-                            cropped-image-type="image/png"
+                            image-preview-size="6"
+                            :is-download-enabled="can?.media?.read ?? false"
+                            :is-upload-enabled="can?.media?.add ?? false"
+                            :medium="faviconMedia"
+                            :instructions="instructions.mediaLibrary"
                             :message="error('favicon')"
-                            :notes="instructions.favicon"
-                            :original-image="faviconUrl"
-                            :show-delete-button="true"
-                            @on-cropped-image="onCroppedImage(form, 'favicon')"
-                            @on-delete-image="onDeleteImage(form, 'favicon')"
                         />
                     </div>
                 </div>
@@ -111,19 +107,14 @@
                     </div>
 
                     <div class="column">
-                        <biz-image
-                            v-if="hasQrCodeLogo"
-                            class="mb-2"
-                            style="width: 200px; border: 1px solid #000"
-                            :src="qrCodeLogoUrl"
-                        />
-                        <biz-form-file
+                        <biz-form-media-library
                             v-model="form.qrcode_public_page_logo"
-                            :accepted-types="imageTypes"
-                            :is-name-displayed="false"
+                            image-preview-size="6"
+                            :is-download-enabled="can?.media?.read ?? false"
+                            :is-upload-enabled="can?.media?.add ?? false"
+                            :medium="qrCodeMedia"
+                            :instructions="instructions.mediaLibrary"
                             :message="error('qrcode_public_page_logo')"
-                            :notes="instructions.qrcode"
-                            @on-file-picked="onFilePickedQrCode"
                         />
                     </div>
                 </div>
@@ -191,13 +182,11 @@
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
-    import BizFormFile from '@/Biz/Form/File.vue';
+    import BizFormMediaLibrary from '@/Biz/Form/MediaLibrary.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
-    import BizImage from '@/Biz/Image.vue';
     import BizInputError from '@/Biz/InputError.vue';
     import BizTextarea from '@/Biz/Textarea.vue';
-    import BizFormImageSquare from '@/Biz/Form/ImageSquare.vue';
-    import { assign, mapValues, sortBy, isEmpty } from 'lodash';
+    import { assign, mapValues, sortBy } from 'lodash';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { success as successAlert } from '@/Libs/alert';
     import { useForm, usePage } from '@inertiajs/inertia-vue3';
@@ -208,10 +197,8 @@
         components: {
             BizButton,
             BizErrorNotifications,
-            BizFormFile,
-            BizFormImageSquare,
+            BizFormMediaLibrary,
             BizFormSelect,
-            BizImage,
             BizInputError,
             BizTextarea,
         },
@@ -225,13 +212,14 @@
         props: {
             additionalCodes: {type: Object, required: true},
             baseRouteName: {type: String, required: true},
+            can: { type: Object, default: () => {} },
             errors: {type: Object, default: () => {}},
-            faviconUrl: {type: String, default: ""},
+            faviconMedia: { type: Object, default: () => {} },
             homePageId: {type: [Number, String, null], default: null},
             instructions: {type: Object, default: () => {}},
             pageOptions: {type: Object, default: () => {}},
             qrCodePublicPageIsDisplayed: {type: Boolean, required: true},
-            qrCodePublicPageLogo: {type: String, required: true},
+            qrCodeMedia: { type: Object, default: () => {} },
             title: {type: String, required: true},
             trackingCodes: {type: Object, required: true},
         },
@@ -260,14 +248,13 @@
 
             const qrCodeLogo = {
                 qrcode_public_page_is_displayed: props.qrCodePublicPageIsDisplayed,
-                qrcode_public_page_logo: null
+                qrcode_public_page_logo: props.qrCodeMedia?.id ?? null,
             };
 
             const homePageForm = { home_page: props.homePageId };
 
             const favicon = {
-                favicon: null,
-                is_favicon_deleted: false
+                favicon: props.faviconMedia?.id ?? null,
             };
 
             return {
@@ -287,21 +274,11 @@
             return {
                 isProcessing: false,
                 loader: null,
-                qrCodeLogoUrl: this.qrCodePublicPageLogo,
-                faviconImageUrl: this.faviconUrl,
                 imageTypes: acceptedImageTypes,
             };
         },
 
         computed: {
-            hasQrCodeLogo() {
-                return !isEmpty(this.qrCodeLogoUrl);
-            },
-
-            hasFavicon() {
-                return !isEmpty(this.faviconImageUrl);
-            },
-
             sortedAdditionalCodes() {
                 return sortBy(this.additionalCodes, ['order']);
             },
@@ -324,37 +301,13 @@
                         successAlert(page.props.flash.message);
                         self.form.isDirty = false;
 
-                        self.form.qrcode_public_page_logo = null;
-                        self.qrCodeLogoUrl = self.qrCodePublicPageLogo;
-
-                        self.form.favicon = null;
-                        self.faviconImageUrl = self.faviconUrl;
+                        location.reload();
                     },
                     onFinish: () => {
                         self.loader.hide();
                         self.isProcessing = false;
-
-                        location.reload();
                     }
                 });
-            },
-
-            onFilePickedQrCode(event) {
-                this.qrCodeLogoUrl = event.target.result;
-            },
-
-            onFilePickedFavicon(event) {
-                this.faviconImageUrl = event.target.result;
-            },
-
-            onCroppedImage(form, name) {
-                form[`is_${name}_deleted`] = false;
-            },
-
-            onDeleteImage(form, name) {
-                form[name] = null;
-                form[`${name}_url`] = null;
-                form[`is_${name}_deleted`] = true;
             },
 
         },

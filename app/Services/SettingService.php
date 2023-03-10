@@ -169,9 +169,15 @@ class SettingService
 
     public function getLogoMedia(): ?Media
     {
-        return $this->getMediaFromSetting(
+        $media = $this->getMediaFromSetting(
             config("constants.theme_header.header_logo_media.key")
         );
+
+        if ($media) {
+            $this->transformMedia($media);
+        }
+
+        return $media;
     }
 
     public function getHeaderLayout(): int
@@ -360,7 +366,13 @@ class SettingService
 
     public function getQrCodePublicPageLogoMedia(): ?Media
     {
-        return $this->getMediaFromSetting('qrcode_public_page_logo_media_id');
+        $media = $this->getMediaFromSetting('qrcode_public_page_logo_media_id');
+
+        if ($media) {
+            $this->transformMedia($media);
+        }
+
+        return $media;
     }
 
     public function getFaviconUrl(int $width = null): string
@@ -385,7 +397,13 @@ class SettingService
 
     public function getFaviconMedia(): ?Media
     {
-        return $this->getMediaFromSetting('favicon_media_id');
+        $media = $this->getMediaFromSetting('favicon_media_id');
+
+        if ($media) {
+            $this->transformMedia($media);
+        }
+
+        return $media;
     }
 
     private function getMediaFromSetting(string $key): ?Media
@@ -532,6 +550,11 @@ class SettingService
         $setting->syncMedia([
             $mediaId
         ]);
+    }
+
+    private function transformMedia(Media $media): void
+    {
+        $media->append(['isImage', 'thumbnail_url', 'display_file_name']);
     }
 
     public function adminDashboardWidgets(): Collection

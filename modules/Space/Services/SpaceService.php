@@ -265,39 +265,7 @@ class SpaceService
         return $spaceData;
     }
 
-    public function upload(
-        UploadedFile $file,
-        string $fileName,
-    ): Media {
-
-        $media = $this->mediaService->upload(
-            $file,
-            $fileName,
-            app(MediaStorage::class),
-        );
-
-        $media->save();
-
-        return $media;
-    }
-
-    private function uploadLogo(UploadedFile $file): Media
-    {
-        return $this->upload(
-            $file,
-            'logo_'.Str::random(10),
-        );
-    }
-
-    private function uploadCover(UploadedFile $file): Media
-    {
-        return $this->upload(
-            $file,
-            'cover_'.Str::random(10),
-        );
-    }
-
-    private function detachLogo(Space $space)
+    private function detachLogo(Space $space): void
     {
         $logoMediaId = $space->logo_media_id;
 
@@ -306,7 +274,7 @@ class SpaceService
         }
     }
 
-    private function detchCover(Space $space)
+    private function detachCover(Space $space): void
     {
         $coverMediaId = $space->cover_media_id;
 
@@ -315,43 +283,27 @@ class SpaceService
         }
     }
 
-    public function replaceLogo(Space $space, UploadedFile $file)
-    {
-        $media = $this->uploadLogo($file);
-
-        $space->media()->save($media);
-
-        $this->detachLogo($space);
-
-        $space->logo_media_id = $media->id;
-        $space->save();
-    }
-
-    public function replaceCover(Space $space, UploadedFile $file)
-    {
-        $media = $this->uploadCover($file);
-
-        $space->media()->save($media);
-
-        $this->detchCover($space);
-
-        $space->cover_media_id = $media->id;
-        $space->save();
-    }
-
-    public function deleteLogo(Space $space)
+    public function replaceLogo(Space $space, ?int $mediaId = null): void
     {
         $this->detachLogo($space);
 
-        $space->logo_media_id = null;
+        if ($mediaId) {
+            $space->media()->attach($mediaId);
+        }
+
+        $space->logo_media_id = $mediaId;
         $space->save();
     }
 
-    public function deleteCover(Space $space)
+    public function replaceCover(Space $space, ?int $mediaId = null): void
     {
-        $this->detchCover($space);
+        $this->detachCover($space);
 
-        $space->cover_media_id = null;
+        if ($mediaId) {
+            $space->media()->attach($mediaId);
+        }
+
+        $space->cover_media_id = $mediaId;
         $space->save();
     }
 
@@ -359,7 +311,7 @@ class SpaceService
     {
         foreach ($spaces as $space) {
             $this->detachLogo($space);
-            $this->detchCover($space);
+            $this->detachCover($space);
         }
     }
 
