@@ -240,7 +240,18 @@
             VueCropper,
         },
         props: {
-            croppedImageType: { type: String, default: 'image/jpeg' },
+            croppedImageType: {
+                type: String,
+                default: 'image/jpeg',
+                validator(value) {
+                    let availableCroppedImageType = [
+                        'image/jpeg',
+                        'image/png',
+                    ];
+
+                    return availableCroppedImageType.includes(value);
+                },
+            },
             cropper: {},
             fileName: String,
             isDebugMode: {type: Boolean, default: false},
