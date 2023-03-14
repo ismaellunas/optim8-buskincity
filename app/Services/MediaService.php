@@ -166,6 +166,12 @@ class MediaService
             $extension = $clientExtension;
         }
 
+        if (! is_null($folder)) {
+            $folder = $this->getFolderPrefix().$folder;
+        } else {
+            $folder = Str::of($this->getFolderPrefix())->rtrim('_')->value();
+        }
+
         $fileName = MediaService::getUniqueFileName(
             Str::lower($fileName),
             [],
@@ -173,15 +179,7 @@ class MediaService
             $folder
         );
 
-        $params = [$file, $fileName, $extension];
-
-        if (! is_null($folder)) {
-            $folder = $this->getFolderPrefix().$folder;
-        } else {
-            $folder = Str::of($this->getFolderPrefix())->rtrim('_')->value();
-        }
-
-        array_push($params, $folder);
+        $params = [$file, $fileName, $extension, $folder];
 
         $this->fillMediaWithMediaAsset(
             $media,
@@ -213,6 +211,12 @@ class MediaService
             $extension = $clientExtension;
         }
 
+        if (! is_null($folder)) {
+            $folder = $this->getFolderPrefix().$folder;
+        } else {
+            $folder = Str::of($this->getFolderPrefix())->rtrim('_')->value();
+        }
+
         $fileName = MediaService::getUniqueFileName(
             Str::lower($fileName),
             [],
@@ -220,15 +224,7 @@ class MediaService
             $folder
         );
 
-        $params = [$file, $fileName, $extension];
-
-        if (! is_null($folder)) {
-            $folder = $this->getFolderPrefix().$folder;
-        } else {
-            $folder = Str::of($this->getFolderPrefix())->rtrim('_')->value();
-        }
-
-        array_push($params, $folder);
+        $params = [$file, $fileName, $extension, $folder];
 
         $this->fillMediaWithMediaAsset(
             $media,
