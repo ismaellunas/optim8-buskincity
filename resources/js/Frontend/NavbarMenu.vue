@@ -102,8 +102,8 @@
 
                             <biz-link
                                 v-if="$page.props.jetstream.hasApiFeatures"
-                                :href="route('api-tokens.index')"
                                 class="navbar-item"
+                                :href="route('api-tokens.index')"
                             >
                                 API Tokens
                             </biz-link>
@@ -123,6 +123,7 @@
                                 >
                                 <biz-link
                                     class="navbar-item"
+                                    href="#"
                                     @click.prevent="logout"
                                 >
                                     Logout

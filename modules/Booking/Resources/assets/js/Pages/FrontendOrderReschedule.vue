@@ -17,7 +17,10 @@
                         </biz-link>
                     </li>
                     <li class="is-active">
-                        <biz-link aria-current="page">
+                        <biz-link
+                            aria-current="page"
+                            href="#"
+                        >
                             Reschedule
                         </biz-link>
                     </li>
