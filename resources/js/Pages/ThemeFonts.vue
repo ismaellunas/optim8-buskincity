@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Head>
+        <inertia-head>
             <link
                 rel="preconnect"
                 href="https://fonts.googleapis.com"
@@ -25,7 +25,7 @@
                 rel="stylesheet"
                 :href="buttonsFontHref"
             >
-        </Head>
+        </inertia-head>
 
         <biz-error-notifications
             :errors="$page.props.errors"
@@ -344,7 +344,7 @@
         name: 'ThemeOptionFonts',
 
         components: {
-            Head,
+            InertiaHead,
             BizButton,
             BizCheckbox,
             BizDropdownItem,
