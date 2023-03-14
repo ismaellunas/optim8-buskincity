@@ -48,7 +48,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import ProductForm from './ProductForm.vue';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {

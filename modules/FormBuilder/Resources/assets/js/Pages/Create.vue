@@ -19,7 +19,7 @@
     import FormBuilder from './Form.vue';
     import { getEmptyForm } from './../Libs/form';
     import { onFormEditorClicked } from './../Libs/form-builder';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
     import { ref, onMounted, onUnmounted } from 'vue';
 
     export default {

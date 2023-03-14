@@ -140,7 +140,7 @@
     import BizLink from '@/Biz/Link.vue';
     import BizNavbarItem from '@/Biz/NavbarItem.vue';
     import { computed, onMounted, onUnmounted } from 'vue';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
     import { ref } from 'vue';
 
     export default {
@@ -150,9 +150,9 @@
         },
 
         setup() {
-            const navLogo = computed(() => usePage().props.value.menus.navLogo);
+            const navLogo = computed(() => usePage().props.menus.navLogo);
 
-            const appLogoImageUrl = computed(() => usePage().props.value.appLogoUrl);
+            const appLogoImageUrl = computed(() => usePage().props.appLogoUrl);
 
             const navbarDropdown = document.getElementsByClassName('navbar-item-dropdown');
 

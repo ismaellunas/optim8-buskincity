@@ -25,7 +25,7 @@
     import PostForm from '@/Pages/Post/Form.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import { map, find } from 'lodash';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
     import { success as successAlert } from '@/Libs/alert';
 
     export default {
@@ -47,7 +47,7 @@
             modules: { type: Object, default: () => {} },
         },
         setup(props) {
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
             const primaryCategory = find(props.post.categories, function (category) {
                 return category.pivot.is_primary;
             });

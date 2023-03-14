@@ -207,7 +207,7 @@
     import { debounce, isEmpty, isArray, filter, merge } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
     import { ref } from "vue";
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {

@@ -164,7 +164,7 @@
     import { confirmDelete } from '@/Libs/alert';
     import { clone, keys, head, merge } from 'lodash';
     import { ref } from 'vue';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'PageIndex',
@@ -214,7 +214,7 @@
                 categories: ref(props.pageQueryParams?.categories ?? []),
                 icon,
                 languages: ref(props.pageQueryParams?.languages ?? []),
-                localeOptions: ref(usePage().props.value.languageOptions ?? []),
+                localeOptions: ref(usePage().props.languageOptions ?? []),
                 queryParams: ref(queryParams),
                 term: ref(props.pageQueryParams?.term ?? null),
                 view: ref(props.pageQueryParams?.view ?? 'gallery'),

@@ -335,7 +335,7 @@
     import BizInput from '@/Biz/Input.vue';
     import BizInputError from '@/Biz/InputError.vue';
     import BizLabel from '@/Biz/Label.vue';
-    import { Head, useForm } from '@inertiajs/inertia-vue3';
+    import { Head as InertiaHead, useForm } from '@inertiajs/vue3';
     import { concat, debounce, filter, isEmpty, replace } from 'lodash';
     import { success as successAlert } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';

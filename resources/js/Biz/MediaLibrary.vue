@@ -281,7 +281,7 @@
     import { getCanvasBlob } from '@/Libs/utils';
     import { includes, isEmpty } from 'lodash';
     import { ref } from "vue";
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     function getEmptyFormMedia() {
         return {

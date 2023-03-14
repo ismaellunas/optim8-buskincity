@@ -96,7 +96,7 @@
     import { confirmDelete } from '@/Libs/alert';
     import { isEmpty, keys, last } from 'lodash';
     import { reactive, ref } from "vue";
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
 
     function generateNewTranslation() {
         return {
@@ -139,7 +139,7 @@
         },
         setup(props) {
             let translations = {};
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
 
             if (isEmpty(props.media.translations)) {
                 translations[defaultLocale] = generateNewTranslation();
@@ -163,7 +163,7 @@
                 translations: translations,
             });
 
-            const localeOptions = usePage().props.value.languageOptions;
+            const localeOptions = usePage().props.languageOptions;
 
             const firstAvailabeLocale = getFirstAvailableLocale(
                 translations,

@@ -56,7 +56,7 @@
     import Draggable from "vuedraggable";
     import ThemeMenuItem from '@/Biz/ThemeMenuItem.vue';
     import icon from '@/Libs/icon-class';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
     import { confirmDelete } from '@/Libs/alert';
 
     export default {
@@ -96,7 +96,7 @@
 
         setup() {
             return {
-                baseRouteName: usePage().props.value.baseRouteName ?? null,
+                baseRouteName: usePage().props.baseRouteName ?? null,
             };
         },
 

@@ -92,7 +92,7 @@
     import BizTag from '@/Biz/Tag.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'SettingNotificationIndex',
@@ -112,8 +112,8 @@
 
         setup() {
             return {
-                baseRouteNameSetting: usePage().props.value.baseRouteNameSetting,
-                formBuilder: usePage().props.value.formBuilder,
+                baseRouteNameSetting: usePage().props.baseRouteNameSetting,
+                formBuilder: usePage().props.formBuilder,
             };
         },
 
