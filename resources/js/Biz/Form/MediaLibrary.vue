@@ -213,7 +213,7 @@
             },
 
             onUpdateMedia(response) {
-                this.onSelectMedia(response.data);
+                this.onSelectMedia(response.data[0]);
 
                 this.closeModal();
             },

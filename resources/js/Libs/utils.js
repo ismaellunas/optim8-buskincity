@@ -1,5 +1,6 @@
 import { computed } from 'vue';
 import { inRange} from 'lodash';
+import mime from 'mime';
 
 export const regexFileName = "a-z0-9\-";
 export const regexSlug = regexFileName;
@@ -163,4 +164,14 @@ export function statusCodeColor(code) {
     }
 
     return "";
+}
+
+export function extensionToMimes(extensions) {
+    const mimes = [];
+
+    extensions.forEach(function (extension) {
+        mimes.push(mime.getType(extension));
+    });
+
+    return mimes.filter(Boolean);
 }

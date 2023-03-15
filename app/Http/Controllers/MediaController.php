@@ -3,17 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Entities\CloudinaryStorage;
+use App\Helpers\HumanReadable;
 use App\Http\Requests\{
     MediaIndexRequest,
     MediaSaveAsImageRequest,
     MediaStoreRequest,
     MediaUpdateImageRequest,
-    MediaUpdateRequest,
 };
 use App\Models\Media;
 use App\Services\MediaService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+
 
 class MediaController extends CrudController
 {
@@ -55,6 +56,21 @@ class MediaController extends CrudController
                 ->mediaService
                 ->getRecords($request->term, $request->types, $this->recordsPerPage),
             'title' => $this->getIndexTitle(),
+            'instructions' => [
+                'mediaLibrary' => [
+                    __('Accepted file extensions: :extensions.', [
+                        'extensions' => implode(',', MediaService::getExtensions()),
+                    ]),
+                    __('Max file upload: :maxupload.', [
+                        'maxupload' => 5
+                    ]),
+                    __('Max file size: :filesize.', [
+                        'filesize' => HumanReadable::bytesToHuman(
+                            (50 * config('constants.one_megabyte')) * 1024
+                        )
+                    ]),
+                ],
+            ],
         ]));
     }
 
@@ -70,24 +86,31 @@ class MediaController extends CrudController
         ]));
     }
 
-    protected function storeProcess(Request $request)
+    private function storeProcess(array $inputs): array
     {
-        $media = $this->mediaService->upload(
-            $request->file,
-            $this->mediaService->sanitizeFileName($request->input('file_name')),
-            new CloudinaryStorage()
-        );
+        $allMedia = [];
 
-        if ($request->has('translations')) {
-            foreach ($request->input('translations') as $locale => $translation) {
-                $data[$locale] = $translation;
+        foreach ($inputs as $input) {
+            $media = $this->mediaService->upload(
+                $input['file'],
+                $this->mediaService->sanitizeFileName($input['file_name']),
+                new CloudinaryStorage()
+            );
+
+            if (!empty($input['translations'])) {
+                foreach ($input['translations'] as $locale => $translation) {
+                    $data[$locale] = $translation;
+                }
+
+                $media->update($data);
             }
-            $media->update($data);
 
             $media->append(['is_image', 'display_file_name']);
+
+            $allMedia[] = $media;
         }
 
-        return $media;
+        return $allMedia;
     }
 
     /**
@@ -98,8 +121,28 @@ class MediaController extends CrudController
      */
     public function store(MediaStoreRequest $request)
     {
-        $this->storeProcess($request);
+        $this->syncMedia($request);
+
         return redirect()->route($this->baseRouteName.'.index');
+    }
+
+    private function syncMedia(Request $request)
+    {
+        $storeInputs = collect($request->all())
+            ->filter(fn ($media) => empty($media['id']))
+            ->all();
+
+        if (!empty($storeInputs)) {
+            $this->storeProcess($storeInputs);
+        }
+
+        $updateInputs = collect($request->all())
+            ->filter(fn ($media) => !empty($media['id']))
+            ->all();
+
+        if (!empty($updateInputs)) {
+            $this->updateProsess($updateInputs);
+        }
     }
 
     /**
@@ -110,45 +153,49 @@ class MediaController extends CrudController
      */
     public function apiStore(MediaStoreRequest $request)
     {
-        $media = $this->storeProcess($request);
-        return $media->attributesToArray();
+        $allMedia = $this->storeProcess($request->all());
+
+        return $allMedia;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(MediaUpdateRequest $request, Media $media)
+    private function updateProsess(array $inputs)
     {
-        $data = [];
-        $fileName = $request->input('file_name');
-        $fileName = $this->mediaService->sanitizeFileName($fileName);
-        if ($media->file_name != $fileName) {
-            $media = $this->mediaService->rename(
-                $media,
-                $fileName,
-                new CloudinaryStorage()
-            );
+        $allMedia = [];
+
+        foreach ($inputs as $input) {
+            $data = [];
+
+            $media = Media::find($input['id']);
+            $fileName = $this->mediaService->sanitizeFileName($input['file_name']);
+
+            if ($media->file_name != $fileName) {
+                $media = $this->mediaService->rename(
+                    $media,
+                    $fileName,
+                    new CloudinaryStorage()
+                );
+            }
+
+            if (!empty($input['translations'])) {
+                foreach ($input['translations'] as $locale => $translation) {
+                    $data[$locale] = $translation;
+                }
+            }
+
+            $assignedLocales = array_keys($media->getTranslationsArray());
+            $providedLocales = array_keys($input['translations'] ?? []);
+            $localeToBeDeleted = array_diff($assignedLocales, $providedLocales);
+
+            $media->update($data);
+
+            if (!empty($localeToBeDeleted)) {
+                $media->deleteTranslations($localeToBeDeleted);
+            }
+
+            $allMedia[] = $media;
         }
 
-        foreach ($request->input('translations') as $locale => $translation) {
-            $data[$locale] = $translation;
-        }
-
-        $assignedLocales = array_keys($media->getTranslationsArray());
-        $providedLocales = array_keys($request->input('translations', []));
-        $localeToBeDeleted = array_diff($assignedLocales, $providedLocales);
-
-        $media->update($data);
-
-        if (!empty($localeToBeDeleted)) {
-            $media->deleteTranslations($localeToBeDeleted);
-        }
-
-        return redirect()->back();
+        return $allMedia;
     }
 
     /**

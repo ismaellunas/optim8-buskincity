@@ -8,12 +8,14 @@
                 <div class="content box">
                     <div class="field">
                         <div class="control">
-                            <biz-input-file
-                                v-model="file"
-                                :accept="acceptedTypes"
-                                :is-name-displayed="false"
+                            <biz-file-upload
+                                :key="fileUploadKey"
+                                :accepted-types="acceptedMimesTypes"
+                                :allow-multiple="allowMultiple"
                                 :disabled="isProcessing"
-                                @on-file-picked="onFilePicked"
+                                :max-files="maxFiles"
+                                required
+                                @on-update-files="onUpdateFiles"
                             />
                         </div>
 
@@ -133,7 +135,7 @@
 
         <biz-modal-card
             v-if="isEditing"
-            :content-class="{'is-huge': isImage(formMedia)}"
+            content-class="is-huge"
             :is-close-hidden="true"
             @close="closeEditModal"
         >
@@ -149,125 +151,73 @@
                 />
             </template>
 
-            <div class="columns">
-                <div class="column">
-                    <div
-                        v-if="isImage(formMedia)"
-                        class="card"
-                    >
-                        <div class="card-image">
-                            <biz-image
-                                :src="previewFileSrc"
-                                :img-style="{maxHeight: 500+'px'}"
-                            />
-                        </div>
-                        <footer class="card-footer">
-                            <biz-button
-                                class="card-footer-item is-borderless is-shadowless"
-                                type="button"
-                                @click="openImageEditorModal"
-                            >
-                                Edit Image
-                            </biz-button>
-                        </footer>
-                    </div>
-                    <div
-                        v-else
-                        class="card"
-                        style="height: 90%"
-                    >
-                        <div
-                            class="card-image"
-                            style="height: inherit"
-                        >
-                            <span
-                                class="icon is-large"
-                                style="width: 100%"
-                            >
-                                <span class="fa-stack fa-lg">
-                                    <i :class="[mediaIconThumbnail(formMedia), 'fa-6x']" />
-                                </span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="column">
-                    <media-form
-                        :media="formMedia"
-                        :is-ajax="isAjax"
-                        @on-success-submit="onSuccessSubmit"
-                        @on-error-submit="onErrorSubmit"
-                        @cancel="closeEditModal"
-                    />
-                </div>
-            </div>
-        </biz-modal-card>
+            <biz-error-notifications
+                :errors="$page.props.errors"
+            />
 
-        <biz-modal-image-editor
-            v-if="isImageEditing"
-            v-model="formMedia.file_url"
-            v-model:cropper="cropper"
-            :cropped-image-type="croppedImageType"
-            :file-name="formMedia.file_name"
-            :is-processing="isProcessing"
-            @close="closeImageEditorModal"
-        >
-            <template #actions="slotProps">
-                <template v-if="formMedia.id">
-                    <biz-button
-                        type="button"
-                        :class="{'is-loading': isUploading, 'is-link': true}"
-                        :disabled="isProcessing"
-                        @click="updateImage"
-                    >
-                        Save
-                    </biz-button>
-                    <biz-button
-                        type="button"
-                        :class="{'is-loading': isUploading, 'is-primary': true}"
-                        :disabled="isProcessing"
-                        @click="saveAsImageConfirm"
-                    >
-                        Save As New
-                    </biz-button>
-                    <biz-button
-                        type="button"
-                        class="is-link is-light"
-                        :disabled="isProcessing"
-                        @click="closeImageEditorModal"
-                    >
-                        Cancel
-                    </biz-button>
-                </template>
-                <template v-else>
-                    <biz-button
-                        type="button"
-                        :class="{'is-loading': isUploading, 'is-link': true}"
-                        :disabled="isProcessing"
-                        @click="updateFile"
-                    >
-                        Done
-                    </biz-button>
-                </template>
+            <template
+                v-for="(media, index) in formMedia"
+                :key="index"
+            >
+                <biz-media-library-detail
+                    :media="formMedia[index]"
+                    :allow-multiple="allowMultiple"
+                    :is-ajax="isAjax"
+                    :is-processing="isProcessing"
+                    @on-close-edit-modal="closeEditModal()"
+                    @on-delete-edit="onDeleteEdit(index)"
+                />
+
+                <hr v-if="formMedia.length != (index + 1)">
             </template>
-        </biz-modal-image-editor>
+
+            <template #footer>
+                <div
+                    class="columns"
+                    style="width: 100%"
+                >
+                    <div class="column">
+                        <div class="buttons is-pulled-right">
+                            <biz-button
+                                type="button"
+                                class="is-link"
+                                @click="onSubmit()"
+                            >
+                                Submit
+                            </biz-button>
+
+                            <biz-button
+                                class="is-link is-light ml-2"
+                                type="button"
+                                @click="closeEditModal"
+                            >
+                                Cancel
+                            </biz-button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </biz-modal-card>
     </div>
 </template>
 
 <script>
-    import HasLoader from '@/Mixins/HasLoader';
-    import HasModalMixin from '@/Mixins/HasModal';
-    import HasPageErrors from '@/Mixins/HasPageErrors';
+    import MixinHasLoader from '@/Mixins/HasLoader';
+    import MixinHasModal from '@/Mixins/HasModal';
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizButton from '@/Biz/Button.vue';
     import BizButtonsDisplayView from '@/Biz/ButtonsDisplayView.vue';
     import BizCheckbox from '@/Biz/Checkbox.vue';
     import BizDropdown from '@/Biz/Dropdown.vue';
     import BizDropdownItem from '@/Biz/DropdownItem.vue';
+    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
+    import BizFileUpload from '@/Biz/FileUpload.vue';
     import BizFilterSearch from '@/Biz/Filter/Search.vue';
     import BizFormField from '@/Biz/Form/Field.vue';
     import BizImage from '@/Biz/Image.vue';
     import BizInputFile from '@/Biz/InputFile.vue';
     import BizMediaGallery from '@/Biz/Media/Gallery.vue';
+    import BizMediaLibraryDetail from '@/Biz/MediaLibraryDetail.vue';
     import BizMediaList from '@/Biz/Media/List.vue';
     import BizModal from '@/Biz/Modal.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
@@ -278,16 +228,15 @@
     import MediaForm from '@/Pages/Media/Form.vue';
     import { acceptedFileTypes, acceptedImageTypes } from '@/Libs/defaults';
     import { confirm as confirmAlert, confirmDelete, success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { getCanvasBlob } from '@/Libs/utils';
-    import { includes, isEmpty } from 'lodash';
+    import { extensionToMimes, buildFormData } from '@/Libs/utils';
+    import { includes, isEmpty, cloneDeep } from 'lodash';
     import { ref } from "vue";
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/inertia-vue3';
 
-    function getEmptyFormMedia() {
+    function generateNewTranslation() {
         return {
-            file: null,
-            file_url: null,
-            file_name: null,
+            alt: '',
+            description: '',
         };
     };
 
@@ -295,46 +244,51 @@
         name: 'MediaLibrary',
 
         components: {
-            MediaForm,
             BizButton,
             BizButtonsDisplayView,
             BizCheckbox,
             BizDropdown,
             BizDropdownItem,
+            BizErrorNotifications,
+            BizFileUpload,
             BizFilterSearch,
             BizFormField,
             BizImage,
             BizInputFile,
             BizMediaGallery,
+            BizMediaLibraryDetail,
             BizMediaList,
             BizModal,
             BizModalCard,
             BizModalImageEditor,
             BizPagination,
             BizTableInfo,
+            MediaForm,
         },
 
         mixins: [
-            HasLoader,
-            HasModalMixin,
-            HasPageErrors,
+            MixinHasLoader,
+            MixinHasModal,
+            MixinHasPageErrors,
         ],
 
         props: {
             acceptedTypes: {type: Array, default: acceptedFileTypes},
+            allowMultiple: { type: Boolean, default: false, },
             baseRouteName: {type: String, default: 'admin.media'},
+            instructions: {type: Array, default: () => []},
             isAjax: {type: Boolean, default: false},
             isDeleteEnabled: {type: Boolean, default: true},
             isDownloadEnabled: {type: Boolean, default: true},
             isEditEnabled: {type: Boolean, default: true},
-            isSelectEnabled: {type: Boolean, default: false},
             isFilterEnabled: {type: Boolean, default: false},
             isPaginationDisplayed: {type: Boolean, default: true},
+            isSelectEnabled: {type: Boolean, default: false},
             isUploadEnabled: {type: Boolean, default: true},
+            maxFiles: { type: Number, default: 1, },
             queryParams: {type: Object, default: () => {}},
             records: {type: Object, required: true},
             search: {type: Function, required: true},
-            instructions: {type: Array, default: () => []},
             typeOptions: {type: Object, default() {
                 return {
                     'image': "Image",
@@ -354,44 +308,39 @@
 
         setup(props) {
             return {
-                view: ref(props.queryParams.view ?? 'gallery'),
+                defaultLocale: usePage().props.value.defaultLanguage,
                 term: ref(props.queryParams.term),
                 types: ref(props.queryParams?.types ?? []),
+                view: ref(props.queryParams.view ?? 'gallery'),
             };
         },
 
         data() {
             return {
-                cropper: null,
-                croppedImageType: "image/png",
-                file: null,
-                formMedia: getEmptyFormMedia(),
+                formMedia: [],
+                fileUploadKey: 0,
                 isEditing: false,
-                isImageEditing: false,
-                isUploading: false,
                 isDeleting: false,
-                previewImageSrc: null,
                 messageText: {
                     successSaveAsMedia: "A new media has been created",
-                    successSubmitForm: "Media has been updated",
                 },
                 icon,
             };
         },
 
         computed: {
-            previewFileSrc() {
-                return this.formMedia?.file_url ?? this.formMedia?.file ?? '';
-            },
             isProcessing() {
-                return this.isUploading || this.isDeleting;
+                return this.isDeleting;
             },
+
             isGalleryView() {
                 return this.view === 'gallery';
             },
+
             hasInstructions() {
                 return !isEmpty(this.instructions);
             },
+
             instructionStyle() {
                 return {
                     'list-style-type': 'none',
@@ -399,55 +348,52 @@
                     'margin': 0
                 };
             },
+
+            acceptedMimesTypes() {
+                return extensionToMimes(this.acceptedTypes);
+            },
+
+            isFormMediaEmpty() {
+                return this.formMedia.length == 0;
+            },
         },
 
         methods: {
-            isImage(media) {
-                return (
-                    (media?.is_image)
-                    || (media?.file && media.file.type.startsWith("image"))
-                );
-            },
-            previewImage(media) {
-                this.previewImageSrc = media.file_url;
-                this.openModal();
-            },
             openEditModal(media) {
                 this.isEditing = true;
+
                 if (media) {
-                    this.formMedia = media;
-                    this.formMedia.file_name = media.file_name_without_extension;
+                    let form = cloneDeep(media);
+                    let translations = {};
+
+                    if (isEmpty(media.translations)) {
+                        translations[this.defaultLocale] = generateNewTranslation();
+                    } else {
+                        media.translations.forEach(translation => {
+                            translations[translation.locale] = {
+                                alt: translation.alt ?? null,
+                                description: translation.description ?? null,
+                            };
+                        });
+
+                        if (!translations[this.defaultLocale]) {
+                            translations[this.defaultLocale] = generateNewTranslation();
+                        }
+                    }
+
+                    form.file_name = media.file_name_without_extension;
+                    form.translations = translations;
+
+                    this.formMedia.push(form);
                 }
             },
+
             closeEditModal() {
                 this.isEditing = false;
+                this.formMedia = [];
+                this.fileUploadKey += 1;
             },
-            onFilePicked(event) {
-                let fileName = this.file.name
-                    .split('.').slice(0, -1).join('.')
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]/gi, '-')
-                    .replace(/-+/g, "-")
-                let fileType = "." + this.file.type
-                    .split('/')[1];
 
-                this.formMedia = {
-                    file: this.file,
-                    file_name: fileName,
-                    file_url: event.target.result,
-                    is_image: includes(acceptedImageTypes, fileType),
-                };
-                this.openEditModal();
-            },
-            onSuccessSubmit(page) {
-                this.file = null;
-                this.formMedia = getEmptyFormMedia();
-                this.closeEditModal();
-                this.$emit('on-media-submitted', page);
-            },
-            onErrorSubmit() {
-                oopsAlert();
-            },
             onDeleteRecord(record) {
                 const self = this;
 
@@ -468,6 +414,7 @@
                     self.deleteRecord(record);
                 }
             },
+
             deleteRecord(record) {
                 const self = this;
 
@@ -497,130 +444,118 @@
                     }
                 });
             },
-            openImageEditorModal() {
-                this.isImageEditing = true;
-            },
-            closeImageEditorModal() {
-                this.isImageEditing = false;
-            },
-            /* @return Promise */
-            getCropperBlob() {
-                return getCanvasBlob(
-                    this.cropper.getCroppedCanvas(),
-                    this.croppedImageType
-                );
-            },
-            updateFile() {
+
+            onUpdateFiles(files) {
                 const self = this;
-                self.getCropperBlob()
-                    .then((blob) => {
-                        self.formMedia.file_url = URL.createObjectURL(blob);
-                        self.formMedia.file = blob;
-                        self.formMedia.is_image = true;
-                        self.closeImageEditorModal();
-                    });
-            },
-            updateImage() {
-                const self = this;
-                const media = this.formMedia;
-                const url = route(this.baseRouteName+'.update-image', media.id);
-                const cropper = this.cropper;
 
-                self.isUploading = true;
+                self.formMedia = [];
 
-                self.getCropperBlob().then((blob) => {
-                    cropper.disable();
+                files.forEach(function (file) {
+                    let translations = {};
 
-                    const form = useForm({
-                        image: blob,
-                        file_name: media.file_name,
-                    });
+                    translations[self.defaultLocale] = generateNewTranslation();
 
-                    form.post(url, {
-                        preserveState: true,
-                        preserveScroll: true,
-                        onStart: () => self.onStartLoadingOverlay(),
-                        onSuccess: (page) => {
-                            const updatedMedia = page.props.records.data.find((record) => record.id === media.id);
-                            self.formMedia.file_url = updatedMedia.file_url;
-                            self.closeImageEditorModal();
-                        },
-                        onError: (errors) => {
-                            if (self.$page.props.debug) {
-                                console.log(error);
-                            }
-                        },
-                        onFinish: () => {
-                            if (cropper) {
-                                cropper.enable();
-                            }
-                            self.isUploading = false;
-                            self.onEndLoadingOverlay();
-                        },
-                    });
+                    self.formMedia.push({
+                        file: file,
+                        file_url: URL.createObjectURL(file),
+                        file_name: self.fileNameFormatter(file),
+                        is_image: includes(
+                            acceptedImageTypes,
+                            "." + file.type.split('/')[1]
+                        ),
+                        translations: translations
+                    })
                 });
-            },
-            saveAsImageConfirm() {
-                confirmAlert("Are you sure?", "You will create a new image")
-                    .then((result) => result.isConfirmed ? this.saveAsImage() : false);
-            },
-            saveAsImage() {
-                const self = this;
-                const media = this.formMedia;
-                const url = route(this.baseRouteName+'.save-as-image', media.id);
 
-                self.isUploading = true;
-
-                self.getCropperBlob().then((blob) => {
-
-                    self.cropper.disable();
-
-                    const form = useForm({
-                        image: blob,
-                        filename: media.file_name,
-                    });
-
-                    form.post(url, {
-                        preserveState: true,
-                        preserveScroll: true,
-                        onStart: () => self.onStartLoadingOverlay(),
-                        onSuccess: (page) => {
-                            self.closeImageEditorModal();
-                            self.closeEditModal();
-                            successAlert(self.messageText.successSaveAsMedia);
-                        },
-                        onError: (errors) => {
-                            if (self.$page.props.debug) {
-                                console.log(error);
-                            }
-                        },
-                        onFinish: () => {
-                            if (self.cropper) {
-                                self.cropper.enable();
-                            }
-                            self.isUploading = false;
-                            self.onEndLoadingOverlay();
-                        },
-                    });
-                });
-            },
-            mediaIconThumbnail(media) {
-                if (!media) return;
-
-                if (media.file_type === "video") {
-                    return "far fa-file-video";
-                } else if (media.extension) {
-                    if (media.extension === "pdf") {
-                        return "far fa-file-pdf";
-                    } else if (media.extension.startsWith('doc')) {
-                        return "far fa-file-word";
-                    } else if (media.extension.startsWith('ppt')) {
-                        return "far fa-file-powerpoint";
-                    } else if (media.extension.startsWith('xls')) {
-                        return "far fa-file-excel";
-                    }
+                if (files.length > 0) {
+                    this.openEditModal();
                 }
-                return "far fa-file-alt";
+            },
+
+            fileNameFormatter(file) {
+                return file.name
+                    .split('.').slice(0, -1).join('.')
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]/gi, '-')
+                    .replace(/-+/g, "-");
+            },
+
+            onSubmit() {
+                const self = this;
+                const currentForm = self.formMedia;
+
+                let url = null;
+
+                if (self.isAjax) {
+                    url = route('admin.api.media.store');
+                } else {
+                    url = route('admin.media.store');
+                }
+
+                self.onStartLoadingOverlay();
+                self.isInputDisabled = true;
+
+                if (self.isAjax) {
+                    const formData = new FormData();
+                    buildFormData(formData, currentForm);
+
+                    axios.post(
+                        url,
+                        formData,
+                        {headers: {'Content-Type': 'multipart/form-data'}}
+                    )
+                        .then((response) => {
+                            self.onSuccessSubmit(response);
+                        })
+                        .catch(() => {
+                            oopsAlert();
+                        }).then(() => {
+                            self.onEndLoadingOverlay();
+
+                            self.isInputDisabled = false;
+                        });
+                } else {
+                    const form = useForm(currentForm);
+                    form.post(url, {
+                        onSuccess: (page) => {
+                            self.onSuccessSubmit(page);
+                        },
+                        onError: () => {
+                            oopsAlert();
+                        },
+                        onFinish: () => {
+                            self.onEndLoadingOverlay();
+
+                            self.isInputDisabled = false;
+                        },
+                    });
+                }
+            },
+
+            onSuccessSubmit(page) {
+                successAlert('Successfully');
+                this.closeEditModal();
+
+                this.formMedia = [];
+                this.fileUploadKey += 1;
+
+                this.$emit('on-media-submitted', page);
+            },
+
+            onDeleteEdit(index) {
+                const self = this;
+
+                confirmDelete().then((result) => {
+                    if (result.isConfirmed) {
+                        self.formMedia.splice(index, 1);
+
+                        if (self.isFormMediaEmpty) {
+                            self.closeEditModal();
+
+                            self.fileUploadKey += 1;
+                        }
+                    }
+                });
             },
         },
     }
