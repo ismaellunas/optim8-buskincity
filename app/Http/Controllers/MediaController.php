@@ -83,6 +83,8 @@ class MediaController extends CrudController
                 $data[$locale] = $translation;
             }
             $media->update($data);
+
+            $media->append(['is_image', 'display_file_name']);
         }
 
         return $media;
