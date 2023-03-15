@@ -415,7 +415,7 @@
                 this.form.cover_image_id = null;
             },
             updateImage(response) {
-                this.selectFile(response.data);
+                this.selectFile(response.data[0]);
                 this.closeModal();
             },
             populateSlug(event) {
