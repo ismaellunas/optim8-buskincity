@@ -246,6 +246,7 @@
             :is-upload-enabled="can.media.add"
             :query-params="mediaListQueryParams"
             :search="search"
+            :instructions="instructions.mediaLibrary"
             @close="closeModal"
             @on-clicked-pagination="getMediaList"
             @on-media-selected="selectFile"
@@ -321,6 +322,7 @@
             modelValue: { type: Object, required: true },
             modules: { type: Object, default: () => {} },
             statusOptions: { type: Array, default: () => [] },
+            instructions: { type: Object, default: () => {} },
         },
 
         emits: ['on-submit'],
