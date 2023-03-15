@@ -269,9 +269,11 @@
             }, debounceTime),
 
             filterCities() {
+                const self = this;
+
                 if (!isEmpty(this.search.cityTerm) && this.search.cityTerm.length > 1) {
                     return filter(this.cityOptions, function (city) {
-                        return new RegExp(this.search.cityTerm, 'i').test(city);
+                        return new RegExp(self.search.cityTerm, 'i').test(city);
                     }).slice(0, 10);
                 } else {
                     return this.cityOptions.slice(0, 10);

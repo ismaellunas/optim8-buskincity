@@ -7,7 +7,6 @@ use App\Services\SettingService;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Events\EventBooked;
 use Modules\Booking\Events\EventRescheduled;
 use Modules\Booking\Http\Requests\EventBookRequest;
@@ -40,17 +39,17 @@ class OrderController extends CrudController
     {
         $user = auth()->user();
 
-        $scopes = [
-            'inStatus' => $request->status ?? null,
+        $scopes = collect([
+            'inStatus' => $request->status ? [$request->status] : null,
             'orderByColumn' => [
                 'column' => $request->column,
                 'order' => $request->order,
             ],
             'city' => $request->city ?? null,
-        ];
+        ]);
 
         if (is_array($request->dates) && !empty(array_filter($request->dates))) {
-            $scopes['dateRange'] = $request->dates;
+            $scopes->put('dateRange', $request->dates);
         }
 
         return Inertia::render('Booking::FrontendOrderIndex', $this->getData([
@@ -58,7 +57,7 @@ class OrderController extends CrudController
             'orders' => $this->orderService->getFrontendRecords(
                 $user,
                 $request->get('term'),
-                $scopes
+                $scopes->all(),
             ),
             'pageQueryParams' => array_filter(
                 $request->only(
@@ -70,8 +69,15 @@ class OrderController extends CrudController
                     'term'
                 )
             ),
-            'cityOptions' => $this->productEventService->getCityOptions([$user->id]),
-            'statusOptions' => BookingStatus::options(),
+            'cityOptions' => $this->orderService->cityOptions(
+                $user,
+                $scopes->only('inStatus')->all()
+            ),
+            'statusOptions' => $this->orderService->statusOptions(
+                $user,
+                $scopes->only('city')->all(),
+                __('Status')
+            ),
         ]));
     }
 

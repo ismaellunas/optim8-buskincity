@@ -241,7 +241,7 @@
                 ),
                 status: ref(props.pageQueryParams?.status ?? null),
                 term: ref(props.pageQueryParams?.term ?? null),
-                cityTerm: ref(props.pageQueryParams?.cityTerm ?? null),
+                cityTerm: ref(null),
                 form: useForm(form),
                 selectedOrder: ref(null),
                 icon,
@@ -320,9 +320,10 @@
             },
 
             filterCities() {
+                const self = this;
                 if (!isEmpty(this.cityTerm) && this.cityTerm.length > 1) {
                     return filter(this.cityOptions, function (city) {
-                        return new RegExp(term, 'i').test(city);
+                        return new RegExp(self.cityTerm, 'i').test(city);
                     }).slice(0, 10);
                 } else {
                     return this.cityOptions.slice(0, 10);
