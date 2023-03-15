@@ -21,9 +21,6 @@ class OrderIndexRequest extends FormRequest
             ],
             'status' => [
                 'nullable',
-                'array'
-            ],
-            'status.*' => [
                 Rule::in(BookingStatus::options()->pluck('id'))
             ],
             'term' => [

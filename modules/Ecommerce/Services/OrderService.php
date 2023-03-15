@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Event;
+use Modules\Booking\Entities\Scopes\WithBookingCityScope;
+use Modules\Booking\Entities\Scopes\WithBookingStatusScope;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Services\ProductEventService;
 use Modules\Ecommerce\Entities\Order;
@@ -118,7 +120,8 @@ class OrderService
             'user_id',
             'status',
             'placed_at',
-        );
+        )
+        ->scoped(new WithBookingStatusScope());
     }
 
     public function getRecords(
@@ -161,6 +164,7 @@ class OrderService
         int $limit = 10,
     ): Collection {
         $records = $this->recordBuilder($term, $scopes)
+            ->scoped(new WithBookingStatusScope())
             ->latest()
             ->limit($limit)
             ->get();
@@ -182,7 +186,7 @@ class OrderService
                 'product_name' => $product->displayName,
                 'customer_name' => $record->user->fullName ?? null,
                 'reference' => $record->reference,
-                'status' => Str::title($event->status),
+                'status' => Str::title($record->booking_status),
                 'start_end_time' => $event->displayStartEndTime,
                 'date' => $event->timezonedBookedAt->format('d M Y'),
                 'timezone' => $event->timezonedBookedAt->format('P'),
@@ -219,7 +223,7 @@ class OrderService
                 'product_name' => $product->displayName,
                 'city' => $product->locations[0]['city'] ?? null,
                 'customer_name' => $record->user->fullName ?? null,
-                'status' => Str::title($event->status),
+                'status' => Str::title($record->booking_status),
                 'start_end_time' => $event->displayStartEndTime,
                 'date' => $event->timezonedBookedAt->format('d M Y'),
                 'can' => [
@@ -422,5 +426,41 @@ class OrderService
         return $this->conditionsBuilder(auth()->user(), null, [
             'inStatus' => [BookingStatus::UPCOMING->value],
         ])->count();
+    }
+
+    public function statusOptions(
+        User $user,
+        ?array $scopes = null,
+        ?string $noneLabel = null
+    ): Collection {
+        $statuses = $this
+            ->conditionsBuilder($user, null, $scopes)
+            ->scoped(new WithBookingStatusScope())
+            ->distinct()
+            ->get();
+
+        $options = BookingStatus::options()
+            ->filter(fn ($option) => $statuses->contains('booking_status', $option['id']));
+
+        if (! is_null($noneLabel)) {
+            $options->prepend(['id' => null, 'value' => $noneLabel]);
+        }
+
+        return $options;
+    }
+
+    public function cityOptions(
+        User $user,
+        ?array $scopes = null
+    ): Collection {
+        $options = $this
+            ->conditionsBuilder($user, null, $scopes)
+            ->scoped(new WithBookingCityScope())
+            ->distinct()
+            ->get()
+            ->pluck('city')
+            ->filter();
+
+        return $options;
     }
 }
