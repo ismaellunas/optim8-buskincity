@@ -14,6 +14,7 @@
                                 :allow-multiple="allowMultiple"
                                 :disabled="isProcessing"
                                 :max-files="maxFiles"
+                                :max-file-size="maxFileSize"
                                 required
                                 @on-update-files="onUpdateFiles"
                             />
@@ -106,7 +107,6 @@
                     :is-delete-enabled="isDeleteEnabled"
                     :is-download-enabled="isDownloadEnabled"
                     :is-edit-enabled="isEditEnabled"
-                    :is-select-enabled="isSelectEnabled"
                     @on-delete-clicked="onDeleteRecord"
                     @on-edit-clicked="openEditModal"
                 >
@@ -286,6 +286,7 @@
             isSelectEnabled: {type: Boolean, default: false},
             isUploadEnabled: {type: Boolean, default: true},
             maxFiles: { type: Number, default: 1, },
+            maxFileSize: { type: [String, Number], default: null, },
             queryParams: {type: Object, default: () => {}},
             records: {type: Object, required: true},
             search: {type: Function, required: true},
