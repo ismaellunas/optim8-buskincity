@@ -21,11 +21,12 @@
                         <product-form
                             ref="product_form"
                             v-model="form"
-                            :role-options="roleOptions"
-                            :status-options="statusOptions"
                             :gallery="product.gallery"
-                            :rules="rules"
                             :image-mimes="imageMimes"
+                            :instructions="instructions"
+                            :role-options="roleOptions"
+                            :rules="rules"
+                            :status-options="statusOptions"
                         />
 
                         <hr>
@@ -503,9 +504,10 @@
             formatDateUser: { type: String, default: 'D MMM YYYY' },
             productManagerBaseRoute: { type: String, required: true },
             rules: { type: Object, required: true },
+            instructions: {type: Object, default: () => {}},
         },
 
-        setup(props, { emit }) {
+        setup(props) {
             const form = {
                 name: props.product.name,
                 status: props.product.status,
@@ -513,10 +515,7 @@
                 short_description: props.product.short_description,
                 roles: props.product.roles,
                 is_check_in_required: props.product.is_check_in_required,
-                gallery: {
-                    deleted_media: [],
-                    files: [],
-                },
+                gallery: props.product.gallery.map(media => media.id),
             };
 
             const eventForm = {
@@ -664,9 +663,6 @@
                         forceFormData: true,
                         onStart: self.onStartLoadingOverlay,
                         onSuccess: (page) => {
-                            self.form.gallery.files = [];
-                            self.$refs.product_form.$refs.file_upload.reset();
-
                             successAlert(page.props.flash.message);
                         },
                         onError: () => { oopsAlert() },
