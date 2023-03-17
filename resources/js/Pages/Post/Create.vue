@@ -13,6 +13,7 @@
                 :locale-options="localeOptions"
                 :category-options="categoryOptions"
                 :modules="modules"
+                :instructions="instructions"
                 @on-submit="onSubmit"
             />
         </div>
@@ -23,7 +24,7 @@
     import AppLayout from '@/Layouts/AppLayout.vue';
     import PostForm from '@/Pages/Post/Form.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
     import { success as successAlert } from '@/Libs/alert';
 
     export default {
@@ -42,9 +43,10 @@
             statusOptions: { type: Array, default:() => [] },
             title: { type: String, required: true },
             modules: { type: Object, default: () => {} },
+            instructions: { type: Object, default: () => {} },
         },
         setup(props) {
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
 
             const postForm = {
                 categories: [],

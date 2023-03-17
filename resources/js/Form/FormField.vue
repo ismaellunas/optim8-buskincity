@@ -29,7 +29,7 @@
     import MixinHasLoader from '@/Mixins/HasLoader';
     import BizButton from '@/Biz/Button.vue';
     import FieldGroup from './FieldGroup.vue';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
     import { isEmpty, forOwn, forEach } from 'lodash';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
 
@@ -80,7 +80,7 @@
                 let fieldValue = null;
                 const form = {
                     id: this.entityId,
-                    _token: usePage().props.value.csrfToken,
+                    _token: usePage().props.csrfToken,
                 };
 
                 forOwn(this.formField.fieldGroups, (groupField, key) => {

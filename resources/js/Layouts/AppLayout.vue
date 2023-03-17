@@ -45,7 +45,7 @@
     import BizBreadcrumbs from '@/Biz/Breadcrumbs.vue';
     import BizFlashExpired from '@/Biz/FlashExpired.vue';
     import BizNavbarMenu from '@/Biz/NavbarMenu.vue';
-    import { Head as HeadTag } from '@inertiajs/inertia-vue3';
+    import { Head as HeadTag } from '@inertiajs/vue3';
     import { head, isEmpty } from 'lodash';
 
     export default {

@@ -170,7 +170,7 @@
     import InputConfig from './../Fields/InputConfig.vue';
     import { move as iconMove, remove as iconRemove } from '@/Libs/icon-class';
     import { isEmpty } from 'lodash';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
     import {
         isBlank,
         useModelWrapper,
@@ -217,7 +217,7 @@
                 form: useModelWrapper(props, emit),
                 computedInputConfigId: useModelWrapper(props, emit, 'inputConfigId'),
                 isDebugMode: false,
-                baseRouteName: usePage().props.value.baseRouteName,
+                baseRouteName: usePage().props.baseRouteName,
                 iconMove,
                 iconRemove,
             };

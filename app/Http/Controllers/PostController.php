@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PostIndexRequest;
 use App\Http\Requests\PostRequest;
 use App\Models\Post;
+use App\Services\MediaService;
 use App\Services\PostService;
 use App\Traits\HasModuleViewData;
 use Illuminate\Http\Request;
@@ -89,6 +90,9 @@ class PostController extends CrudController
                         'meta_description' => config('constants.max_length.meta_description'),
                     ],
                     'title' => $this->getCreateTitle(),
+                    'instructions' => [
+                        'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+                    ],
                 ],
                 $this->getModulesViewData()
             )
@@ -162,6 +166,9 @@ class PostController extends CrudController
                         'meta_description' => config('constants.max_length.meta_description'),
                     ],
                     'title' => $this->getEditTitle(),
+                    'instructions' => [
+                        'mediaLibrary' => MediaService::defaultMediaLibraryInstructions(),
+                    ],
                 ],
                 $this->getModulesViewData()
             )

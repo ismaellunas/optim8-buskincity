@@ -74,7 +74,7 @@
     import moment from 'moment';
     import { reactive, ref } from 'vue';
     import { success as successAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {

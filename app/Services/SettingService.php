@@ -554,7 +554,7 @@ class SettingService
 
     private function transformMedia(Media $media): void
     {
-        $media->append(['isImage', 'thumbnail_url', 'display_file_name']);
+        $media->append(['is_image', 'thumbnail_url', 'display_file_name']);
     }
 
     public function adminDashboardWidgets(): Collection

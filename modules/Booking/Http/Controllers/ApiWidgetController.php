@@ -17,21 +17,32 @@ class ApiWidgetController extends Controller
 
     public function getLatestBookings(LatestBookingWidgetRequest $request)
     {
-        $scopes = [
-            'inStatus' => $request->status ?? null,
+        $scopes = collect([
+            'inStatus' => $request->status ? [$request->status] : null,
             'city' => $request->city ?? null,
-        ];
+        ]);
 
         if (is_array($request->dates) && !empty(array_filter($request->dates))) {
-            $scopes['dateRange'] = $request->dates;
+            $scopes->put('dateRange', $request->dates);
         }
 
         return [
             'records' => $this->orderService->getWidgetRecords(
                 auth()->user(),
                 $request->term,
-                $scopes,
+                $scopes->all(),
             ),
+            'options' => [
+                'status' => $this->orderService->statusOptions(
+                    auth()->user(),
+                    $scopes->only('city')->all(),
+                    __('Status')
+                ),
+                'city' => $this->orderService->cityOptions(
+                    auth()->user(),
+                    $scopes->only('inStatus')->all(),
+                ),
+            ],
         ];
     }
 }

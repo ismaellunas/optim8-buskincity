@@ -3,8 +3,7 @@
 namespace Modules\Booking\Widgets;
 
 use App\Contracts\WidgetInterface;
-use Modules\Booking\Enums\BookingStatus;
-use Modules\Booking\Services\ProductEventService;
+use Modules\Ecommerce\Services\OrderService;
 
 class LatestBookingWidget implements WidgetInterface
 {
@@ -13,25 +12,31 @@ class LatestBookingWidget implements WidgetInterface
     private $componentName = "LatestBooking";
     private $title = "Latest Bookings";
     private $baseRouteName = "admin.booking.orders";
-    private $productEventService;
 
     public function __construct($request)
     {
         $this->user = $request->user();
-
-        $this->productEventService = new ProductEventService();
     }
 
     public function data(): array
     {
+        $orderService = app(OrderService::class);
+
         return [
             'title' => $this->title,
             'componentName' => $this->componentName,
             'moduleName' => config('booking.name'),
             'data' => [
                 'baseRouteName' => $this->baseRouteName,
-                'statusOptions' => BookingStatus::options(),
-                'cityOptions' => $this->productEventService->getCityOptions(),
+                'cityOptions' => $orderService->cityOptions(
+                    $this->user,
+                    null
+                ),
+                'statusOptions' => $orderService->statusOptions(
+                    $this->user,
+                    null,
+                    __('Status')
+                ),
             ],
             'order' => 1,
         ];

@@ -62,7 +62,7 @@
     import BizInput from '@/Biz/Input.vue';
     import BizInputError from '@/Biz/InputError.vue';
     import { success as successAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
     import { forEach } from 'lodash';
 
     export default {

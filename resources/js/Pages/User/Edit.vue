@@ -125,7 +125,7 @@
     import FormUserPassword from '@/Pages/User/FormPassword.vue';
     import FormUserProfile from '@/Pages/User/FormProfile.vue';
     import { success as successAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'UserEdit',

@@ -62,7 +62,7 @@ class TotalBookingsWidget implements WidgetInterface
             'totals' => [
                 [
                     'text' => $orderService->getWidgetTotalUpcomingBooking(),
-                    'url' => $this->viewUrl(['status' => [BookingStatus::UPCOMING->value]])
+                    'url' => $this->viewUrl(['status' => BookingStatus::UPCOMING->value])
                 ],
                 [
                     'text' => $orderService->getWidgetTotalBooking(),

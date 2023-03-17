@@ -312,6 +312,6 @@ class SpaceController extends CrudController
 
     private function transformMedia(Media $media): void
     {
-        $media->append(['isImage', 'thumbnail_url', 'display_file_name']);
+        $media->append(['is_image', 'thumbnail_url', 'display_file_name']);
     }
 }

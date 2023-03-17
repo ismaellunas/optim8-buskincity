@@ -1,8 +1,6 @@
 <template>
     <div>
-        <biz-error-notifications :errors="formErrors"/>
-
-        <form @submit.prevent="submit(form, media.id)">
+        <form>
             <biz-form-input
                 v-model="form.file_name"
                 label="File Name"
@@ -17,11 +15,14 @@
                 <ul>
                     <li
                         v-for="option in usedLocales"
-                        :class="{'is-active': option.id == activeTab}"
                         :key="option.id"
+                        :class="{'is-active': option.id == activeTab}"
                     >
-                        <a @click.prevent="setActiveTab(option.id)" >
-                            <span>{{ option.id.toUpperCase() }}</span>
+                        <a @click.prevent="setActiveTab(option.id)">
+                            <span>
+                                {{ option.id.toUpperCase() }}
+                            </span>
+
                             <biz-button-delete
                                 v-if="option.id !== defaultLocale"
                                 class="ml-1"
@@ -32,10 +33,16 @@
                     </li>
                     <li v-if="availableLocales.length">
                         <biz-select v-model="selectedLocale">
-                            <template v-for="locale in availableLocales">
-                                <option :value="locale.id">{{ locale.name }}</option>
+                            <template
+                                v-for="(locale, index) in availableLocales"
+                                :key="index"
+                            >
+                                <option :value="locale.id">
+                                    {{ locale.name }}
+                                </option>
                             </template>
                         </biz-select>
+
                         <biz-button-icon
                             :icon="icon.add"
                             type="button"
@@ -44,7 +51,10 @@
                     </li>
                 </ul>
             </div>
-            <div v-if="form.translations[activeTab]" class="content">
+            <div
+                v-if="form.translations[activeTab]"
+                class="content"
+            >
                 <biz-form-input
                     v-if="isImage"
                     v-model="form.translations[activeTab].alt"
@@ -54,29 +64,13 @@
                     :message="error('translations.'+ activeTab +'.alt')"
                 />
                 <biz-form-textarea
-                    :label="label.description"
                     v-model="form.translations[ activeTab ].description"
+                    :label="label.description"
                     placeholder="..."
                     rows="3"
                     :message="error('translations.'+ activeTab +'.description')"
                     :disabled="isInputDisabled"
                 />
-            </div>
-
-            <div class="field is-grouped is-pulled-right">
-                <biz-button
-                    class="is-link"
-                    :disabled="!canSubmit"
-                >
-                    Submit
-                </biz-button>
-                <biz-button
-                    class="is-link is-light ml-2"
-                    type="button"
-                    @click="$emit('cancel')"
-                >
-                    Cancel
-                </biz-button>
             </div>
         </form>
     </div>
@@ -84,19 +78,17 @@
 
 <script>
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
-    import BizButton from '@/Biz/Button.vue';
     import BizButtonDelete from '@/Biz/ButtonDelete.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
-    import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import BizSelect from '@/Biz/Select.vue';
     import icon from '@/Libs/icon-class';
-    import { buildFormData, regexFileName } from '@/Libs/utils';
+    import { regexFileName, useModelWrapper } from '@/Libs/utils';
     import { confirmDelete } from '@/Libs/alert';
     import { isEmpty, keys, last } from 'lodash';
-    import { reactive, ref } from "vue";
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { ref } from "vue";
+    import { usePage } from '@inertiajs/vue3';
 
     function generateNewTranslation() {
         return {
@@ -116,57 +108,36 @@
 
     export default {
         name: 'MediaForm',
-        mixins: [
-            MixinHasPageErrors,
-        ],
+
         components: {
-            BizButton,
             BizButtonDelete,
             BizButtonIcon,
-            BizErrorNotifications,
             BizFormInput,
             BizFormTextarea,
             BizSelect,
         },
+
+        mixins: [
+            MixinHasPageErrors,
+        ],
+
+        props: {
+            isAjax: { type: Boolean, default: false },
+            media: { type: Object, default: () => {} },
+        },
+
         emits: [
-            'cancel',
             'on-success-submit',
             'on-error-submit',
         ],
-        props: {
-            isAjax: {type: Boolean, default: false},
-            media: Object,
-        },
-        setup(props) {
-            let translations = {};
-            const defaultLocale = usePage().props.value.defaultLanguage;
 
-            if (isEmpty(props.media.translations)) {
-                translations[defaultLocale] = generateNewTranslation();
-            } else {
-                props.media.translations.forEach(translation => {
-                    translations[translation.locale] = {
-                        alt: translation.alt ?? null,
-                        description: translation.description ?? null,
-                    };
-                });
+        setup(props, {emit}) {
+            const defaultLocale = usePage().props.defaultLanguage;
 
-                if (!translations[defaultLocale]) {
-                    translations[defaultLocale] = generateNewTranslation();
-                }
-            }
-
-            let form = reactive({
-                _method: 'post',
-                file: null,
-                file_name: props.media.file_name,
-                translations: translations,
-            });
-
-            const localeOptions = usePage().props.value.languageOptions;
+            const localeOptions = usePage().props.languageOptions;
 
             const firstAvailabeLocale = getFirstAvailableLocale(
-                translations,
+                props.media.translations,
                 localeOptions
             );
 
@@ -175,11 +146,12 @@
             return {
                 activeTab: ref(defaultLocale),
                 defaultLocale,
-                form,
+                form: useModelWrapper(props, emit, 'media'),
                 localeOptions,
                 selectedLocale,
             };
         },
+
         data() {
             return {
                 isInputDisabled: false,
@@ -192,6 +164,7 @@
                 icon,
             };
         },
+
         computed: {
             availableLocales() {
                 return getAvailableLocales(
@@ -199,19 +172,23 @@
                     this.localeOptions
                 );
             },
+
             usedLocales() {
                 const locales = keys(this.form.translations);
                 return this.localeOptions.filter(locale => {
                     return locales.includes(locale.id);
                 });
             },
+
             isImage() {
                 return this.media.is_image;
             },
+
             canSubmit() {
                 return !isEmpty(this.form.file_name);
             }
         },
+
         methods: {
             resetFirstAvailableLocale() {
                 const firstAvailabeLocale = getFirstAvailableLocale(
@@ -223,20 +200,24 @@
                     this.selectedLocale = firstAvailabeLocale?.id ?? null;
                 }
             },
+
             createNewTranslation(locale) {
                 this.form.translations[locale] = generateNewTranslation();
             },
+
             setActiveTab(locale) {
                 if (this.activeTab !== locale) {
                     this.activeTab = locale;
                 }
             },
+
             addTranslation() {
                 const locale = this.selectedLocale;
                 this.createNewTranslation(locale);
                 this.setActiveTab(locale);
                 this.resetFirstAvailableLocale();
             },
+
             deleteTranslation(event, locale) {
                 confirmDelete().then((result) => {
                     if (result.isConfirmed) {
@@ -252,6 +233,7 @@
                     }
                 });
             },
+
             keyPressFileName(event) {
                 // @see https://stackoverflow.com/questions/61938667/vue-js-how-to-allow-an-user-to-type-only-letters-in-an-input-field
                 let char = String.fromCharCode(event.keyCode);
@@ -266,60 +248,6 @@
                 }
                 event.preventDefault();
             },
-            submit() {
-                const currentForm = this.form;
-                const self = this;
-                let url = null;
-
-                if (this.media.id) {
-                    url = route('admin.media.update', this.media.id);
-                    currentForm._method = 'put';
-                } else {
-                    if (this.isAjax) {
-                        url = route('admin.api.media.store');
-                    } else {
-                        url = route('admin.media.store');
-                    }
-                    currentForm.file = this.media.file;
-                }
-
-                self.loader = self.$loading.show();
-                self.isInputDisabled = true;
-
-                if (this.isAjax) {
-                    const formData = new FormData();
-                    buildFormData(formData, currentForm);
-
-                    axios.post(
-                        url,
-                        formData,
-                        {headers: {'Content-Type': 'multipart/form-data'}}
-                    ).then(function(response) {
-                        self.$emit('on-success-submit', response);
-                    })
-                    .catch(function(error) {
-                        self.$emit('on-error-submit', error);
-                    }).then(() => {
-                        self.loader.hide();
-                        self.isInputDisabled = false;
-                    });
-                } else {
-                    const form = useForm(currentForm);
-                    form.post(url, {
-                        onSuccess: (page) => {
-                            self.$emit('on-success-submit', page);
-                            self.formErrors = {};
-                        },
-                        onError: errors => {
-                            self.formErrors = errors;
-                        },
-                        onFinish: () => {
-                            self.loader.hide();
-                            self.isInputDisabled = false;
-                        },
-                    });
-                }
-            }
         },
     }
 </script>

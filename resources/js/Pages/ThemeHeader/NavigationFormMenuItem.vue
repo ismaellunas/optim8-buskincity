@@ -113,7 +113,7 @@
     import { cloneDeep } from 'lodash';
     import { isBlank } from '@/Libs/utils';
     import { reactive } from 'vue';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'NavigationFormMenu',
@@ -180,11 +180,11 @@
             }
 
             return {
-                defaultLocale: usePage().props.value.defaultLanguage,
+                defaultLocale: usePage().props.defaultLanguage,
                 firstFields: cloneDeep(fields),
                 form: fields,
-                menuOptions: usePage().props.value.menuOptions,
-                typeOptions: usePage().props.value.typeOptions,
+                menuOptions: usePage().props.menuOptions,
+                typeOptions: usePage().props.typeOptions,
             };
         },
 

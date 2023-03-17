@@ -88,7 +88,7 @@
     import { confirmDelete } from '@/Libs/alert';
     import { merge } from 'lodash';
     import { ref } from 'vue';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'CategoryIndex',
@@ -117,8 +117,8 @@
 
         setup(props) {
             return {
-                defaultLocale: usePage().props.value.defaultLanguage,
-                localeOptions: usePage().props.value.languageOptions,
+                defaultLocale: usePage().props.defaultLanguage,
+                localeOptions: usePage().props.languageOptions,
                 queryParams: ref(merge({},props.pageQueryParams)),
                 term: ref(props.pageQueryParams?.term ?? null),
                 loader: ref(null),

@@ -45,7 +45,7 @@
     import PBUserList from '@/Blocks/Contents/UserList.vue';
     import PBVideo from '@/Blocks/Contents/Video.vue';
     import { isBlank, useModelWrapper, generateElementId } from '@/Libs/utils';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
     import { cloneDeep } from 'lodash';
 
     export default {
@@ -80,7 +80,7 @@
             return {
                 computedComponents: useModelWrapper(props, emit, 'components'),
                 computedDataEntities: useModelWrapper(props, emit, 'dataEntities'),
-                entityId: usePage().props.value.entityId ?? null,
+                entityId: usePage().props.entityId ?? null,
             };
         },
         computed: {

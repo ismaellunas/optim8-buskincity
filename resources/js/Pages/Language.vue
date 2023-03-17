@@ -86,7 +86,7 @@
     import BizLabel from '@/Biz/Label.vue';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
     import { debounce, filter, find, isEmpty, sortBy } from 'lodash';
 
     export default {

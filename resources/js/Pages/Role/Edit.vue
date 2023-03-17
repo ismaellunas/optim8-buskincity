@@ -48,7 +48,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import FormRole from '@/Pages/Role/Form.vue';
     import { success as successAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'RoleEdit',
