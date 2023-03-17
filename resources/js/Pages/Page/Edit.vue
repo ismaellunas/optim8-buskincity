@@ -41,7 +41,7 @@
     import { onPageEditorClicked } from '@/Libs/page-builder';
     import { pageStatus } from '@/Libs/defaults';
     import { ref, onMounted, onUnmounted } from 'vue';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'PageEdit',
@@ -79,7 +79,7 @@
         },
 
         setup(props) {
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
             const translationForm = { [defaultLocale]: {} };
 
             let translatedPage = getTranslation(props.page, defaultLocale);
@@ -110,7 +110,7 @@
                 footerMenuItems: props.footerMenuItems,
                 form: useForm(translationForm),
                 headerMenuItems: props.headerMenuItems,
-                localeOptions: usePage().props.value.languageOptions,
+                localeOptions: usePage().props.languageOptions,
             };
         },
 

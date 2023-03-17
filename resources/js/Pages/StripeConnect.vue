@@ -222,7 +222,7 @@
     import { confirm as confirmAlert, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { ref } from 'vue';
     import { merge } from 'lodash';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
     import { isBlank } from '@/Libs/utils';
 
     export default {

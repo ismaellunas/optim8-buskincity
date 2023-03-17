@@ -231,7 +231,7 @@
     import { extensionToMimes, buildFormData } from '@/Libs/utils';
     import { includes, isEmpty, cloneDeep } from 'lodash';
     import { ref } from "vue";
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
 
     function generateNewTranslation() {
         return {
@@ -308,7 +308,7 @@
 
         setup(props) {
             return {
-                defaultLocale: usePage().props.value.defaultLanguage,
+                defaultLocale: usePage().props.defaultLanguage,
                 term: ref(props.queryParams.term),
                 types: ref(props.queryParams?.types ?? []),
                 view: ref(props.queryParams.view ?? 'gallery'),

@@ -95,7 +95,7 @@
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizModalCard from '@/Biz/ModalCard.vue';
     import BizRadio from '@/Biz/Radio.vue';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'ModalFormDeleteUser',

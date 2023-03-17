@@ -55,7 +55,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import TranslationManagerForm from '@/Pages/TranslationManager/Form.vue';
     import { oops as oopsAlert } from '@/Libs/alert';
-    import { usePage, useForm } from '@inertiajs/inertia-vue3';
+    import { usePage, useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'TranslationManagerCreate',
@@ -78,14 +78,14 @@
 
         setup() {
             let value = {};
-            let localeOptions = usePage().props.value.languageOptions;
+            let localeOptions = usePage().props.languageOptions;
 
             localeOptions.forEach(function (locale) {
                 value[locale.id] = null;
             });
 
             return {
-                defaultLocale: usePage().props.value.defaultLanguage,
+                defaultLocale: usePage().props.defaultLanguage,
                 localeOptions: localeOptions,
                 form: useForm({
                     key: null,

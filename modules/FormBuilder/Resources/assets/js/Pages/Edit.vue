@@ -21,7 +21,7 @@
     import BizFlashNotifications from '@/Biz/FlashNotifications.vue';
     import FormBuilder from './Form.vue';
     import { onFormEditorClicked } from './../Libs/form-builder';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
     import { ref, onMounted, onUnmounted } from 'vue';
 
     export default {

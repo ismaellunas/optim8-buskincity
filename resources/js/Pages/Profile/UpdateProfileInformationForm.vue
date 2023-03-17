@@ -111,7 +111,7 @@
     import { acceptedImageTypes, debounceTime, userImage } from '@/Libs/defaults';
     import { find, debounce, isEmpty, filter } from 'lodash';
     import { oops as oopsAlert, confirmDelete, success as successAlert } from '@/Libs/alert';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'ProfileUpdateProfileInformationForm',
@@ -146,7 +146,7 @@
         data() {
             const language = find(
                 this.languageOptions,
-                ['code', usePage().props.value.userOriginLanguage]
+                ['code', usePage().props.userOriginLanguage]
             );
 
             return {

@@ -257,7 +257,7 @@
     import { debounce, difference, isEmpty, filter, find, forEach } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'StripeSettings',

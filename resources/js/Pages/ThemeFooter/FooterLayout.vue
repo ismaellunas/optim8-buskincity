@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'FooterLayout',
@@ -50,7 +50,7 @@
 
         setup() {
             return {
-                baseRouteName: usePage().props.value.baseRouteName ?? null,
+                baseRouteName: usePage().props.baseRouteName ?? null,
             };
         },
 

@@ -78,7 +78,7 @@
     import BizInputError from '@/Biz/InputError.vue';
     import BizLink from '@/Biz/Link.vue';
     import { confirm as confirmAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'StripeConnect',
