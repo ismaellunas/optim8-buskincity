@@ -110,6 +110,7 @@
 @endtask
 
 @task('git-restore-and-stash')
+    rm -rf public/build
     git restore public/css/app.css
     git restore public/js/app.js
     git restore public/mix-manifest.json
