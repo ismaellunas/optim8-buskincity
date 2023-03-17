@@ -36,7 +36,7 @@
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
     import FormField from './FormField.vue';
     import { isEmpty, sortBy, find } from 'lodash';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
     import { ref } from 'vue';
 
     export default {
@@ -70,11 +70,11 @@
         ],
 
         setup(props) {
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
             let selectedLocale = props.locale ?? defaultLocale;
 
             const localeOptions = sortBy(
-                usePage().props.value.languageOptions,
+                usePage().props.languageOptions,
                 [
                     function(locale) {
                         return locale.id != selectedLocale;

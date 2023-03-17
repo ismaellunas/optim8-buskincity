@@ -44,7 +44,7 @@
     import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BizInput from '@/Biz/Input.vue';
     import { isBlank } from '@/Libs/utils';
-    import { useForm } from '@inertiajs/inertia-vue3'
+    import { useForm } from '@inertiajs/vue3'
 
     export default {
         components: {

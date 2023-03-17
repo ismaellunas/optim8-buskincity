@@ -311,10 +311,12 @@
     import { ref } from 'vue';
     import { success as successAlert, confirmDelete, confirmLeaveProgress } from '@/Libs/alert';
     import { debounceTime } from '@/Libs/defaults';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
     import icon from '@/Libs/icon-class';
 
     export default {
+        name: 'TranslationManagerIndex',
+
         components: {
             BizButton,
             BizButtonDownload,

@@ -1,14 +1,18 @@
 <template>
-    <Link :href="href" :class="classes">
-        <slot></slot>
-    </Link>
+    <inertia-link
+        :href="href"
+        :class="classes"
+    >
+        <slot />
+    </inertia-link>
 </template>
 
 <script>
-    import { Link } from '@inertiajs/inertia-vue3'
+    import { Link as InertiaLink } from '@inertiajs/vue3'
 
     export default {
-        components: {Link},
+        name: 'JetNavLink',
+        components: {InertiaLink},
         props: ['href', 'active'],
 
         computed: {

@@ -72,7 +72,7 @@
     import fontawesomeBrandClasses from '@/Json/fontawesome-brand-classes.json';
     import { isBlank } from '@/Libs/utils';
     import { cloneDeep } from 'lodash';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
     import { reactive } from 'vue';
 
     export default {
@@ -126,7 +126,7 @@
             }
 
             return {
-                baseRouteName: usePage().props.value.baseRouteName ?? null,
+                baseRouteName: usePage().props.baseRouteName ?? null,
                 form: reactive(fields),
                 firstFields: cloneDeep(fields),
                 iconClasses: fontawesomeBrandClasses,

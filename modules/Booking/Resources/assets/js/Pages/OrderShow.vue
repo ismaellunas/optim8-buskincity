@@ -105,7 +105,7 @@
     import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation.vue';
     import icon from '@/Libs/icon-class';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {

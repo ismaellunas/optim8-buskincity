@@ -246,7 +246,7 @@
     import bookingIcon from '@booking/Libs/booking-icon';
     import moment from 'moment';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
     import { ref } from 'vue';
 
     export default {
