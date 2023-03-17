@@ -122,9 +122,9 @@
     import BizImage from '@/Biz/Image.vue';
     import BizModalImageEditor from '@/Biz/Modal/ImageEditor.vue';
     import MediaForm from '@/Pages/Media/Form.vue';
-    import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
-    import { useForm } from '@inertiajs/inertia-vue3';
     import { confirm as confirmAlert, success as successAlert } from '@/Libs/alert';
+    import { getCanvasBlob, useModelWrapper } from '@/Libs/utils';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'BizMediaLibraryDetail',

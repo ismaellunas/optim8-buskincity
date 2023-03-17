@@ -98,7 +98,7 @@
     import SpaceTypeFormModal from './SpaceTypeFormModal.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'SpaceType',

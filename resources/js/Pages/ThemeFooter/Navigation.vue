@@ -60,7 +60,7 @@
     import icon from '@/Libs/icon-class';
     import { cloneDeep, isEmpty } from 'lodash';
     import { success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
-    import { usePage, useForm } from '@inertiajs/inertia-vue3';
+    import { usePage, useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'ThemeFooterNavigation',
@@ -93,9 +93,9 @@
 
         setup() {
             return {
-                baseRouteName: usePage().props.value.baseRouteName ?? null,
-                defaultLocale: usePage().props.value.defaultLanguage,
-                localeOptions: usePage().props.value.languageOptions ?? [],
+                baseRouteName: usePage().props.baseRouteName ?? null,
+                defaultLocale: usePage().props.defaultLanguage,
+                localeOptions: usePage().props.languageOptions ?? [],
                 tabs: {
                     layout: { title: 'Layout'},
                     navigation: {title: 'Navigation'},
@@ -122,7 +122,7 @@
                     menu_id: this.menu.id,
                     order: null,
                     title: null,
-                    type: usePage().props.value.typeSegment,
+                    type: usePage().props.typeSegment,
                     url: null,
                 }
             };

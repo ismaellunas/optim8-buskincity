@@ -29,7 +29,7 @@
     import { onPageEditorClicked } from '@/Libs/page-builder';
     import { oops as oopsAlert } from '@/Libs/alert';
     import { ref, onMounted, onUnmounted } from 'vue';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'PageCreate',
@@ -64,7 +64,7 @@
         },
 
         setup() {
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
             const translations = {};
 
             translations[defaultLocale] = getEmptyPageTranslation();
@@ -90,7 +90,7 @@
                 contentConfigId,
                 defaultLocale: defaultLocale,
                 form: useForm(translationForm),
-                localeOptions: usePage().props.value.languageOptions,
+                localeOptions: usePage().props.languageOptions,
             };
         },
 

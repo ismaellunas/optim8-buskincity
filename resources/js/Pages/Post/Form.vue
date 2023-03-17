@@ -282,7 +282,7 @@
     import { head, isEmpty, keys, pull, sortBy } from 'lodash';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'PostForm',
@@ -373,7 +373,7 @@
                 baseRouteName: 'admin.posts',
                 icon,
                 isSlugDisabled: true,
-                maxLength: usePage().props.value.maxLength,
+                maxLength: usePage().props.maxLength,
             };
         },
 

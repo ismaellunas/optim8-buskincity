@@ -54,14 +54,14 @@
 
 <script>
     import { computed } from 'vue';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
     import { appName } from '@/Libs/defaults';
 
     export default {
         name: 'FrontendFooterMenu',
 
         setup() {
-            const appLogoImageUrl = computed(() => usePage().props.value.appLogoUrl);
+            const appLogoImageUrl = computed(() => usePage().props.appLogoUrl);
 
             return {
                 appName: appName,

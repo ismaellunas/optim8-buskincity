@@ -88,7 +88,7 @@
     import { confirmDelete } from '@/Libs/alert';
     import { isEmpty, keys, last } from 'lodash';
     import { ref } from "vue";
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     function generateNewTranslation() {
         return {
@@ -132,9 +132,9 @@
         ],
 
         setup(props, {emit}) {
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
 
-            const localeOptions = usePage().props.value.languageOptions;
+            const localeOptions = usePage().props.languageOptions;
 
             const firstAvailabeLocale = getFirstAvailableLocale(
                 props.media.translations,

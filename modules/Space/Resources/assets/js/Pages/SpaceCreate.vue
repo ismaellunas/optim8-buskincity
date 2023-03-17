@@ -37,7 +37,7 @@
     import BizButtonLink from '@/Biz/ButtonLink.vue';
     import SpaceForm from './SpaceForm.vue';
     import { oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {

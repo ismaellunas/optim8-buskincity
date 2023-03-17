@@ -25,7 +25,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import CategoryForm from '@/Pages/Category/Form.vue';
     import { success as successAlert, oops as oopsAlert } from '@/Libs/alert';
-    import { usePage, useForm } from '@inertiajs/inertia-vue3';
+    import { usePage, useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'CategoryCreate',
@@ -48,7 +48,7 @@
         },
 
         setup() {
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
             const translationForm = {
                 [defaultLocale]: {
                     name: null,
@@ -61,7 +61,7 @@
             return {
                 defaultLocale: defaultLocale,
                 form: useForm(translationForm),
-                localeOptions: usePage().props.value.languageOptions,
+                localeOptions: usePage().props.languageOptions,
             };
         },
 
