@@ -246,6 +246,7 @@
             :is-upload-enabled="can.media.add"
             :query-params="mediaListQueryParams"
             :search="search"
+            :instructions="instructions.mediaLibrary"
             @close="closeModal"
             @on-clicked-pagination="getMediaList"
             @on-media-selected="selectFile"
@@ -281,7 +282,7 @@
     import { head, isEmpty, keys, pull, sortBy } from 'lodash';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'PostForm',
@@ -321,6 +322,7 @@
             modelValue: { type: Object, required: true },
             modules: { type: Object, default: () => {} },
             statusOptions: { type: Array, default: () => [] },
+            instructions: { type: Object, default: () => {} },
         },
 
         emits: ['on-submit'],
@@ -371,7 +373,7 @@
                 baseRouteName: 'admin.posts',
                 icon,
                 isSlugDisabled: true,
-                maxLength: usePage().props.value.maxLength,
+                maxLength: usePage().props.maxLength,
             };
         },
 
@@ -415,7 +417,7 @@
                 this.form.cover_image_id = null;
             },
             updateImage(response) {
-                this.selectFile(response.data);
+                this.selectFile(response.data[0]);
                 this.closeModal();
             },
             populateSlug(event) {

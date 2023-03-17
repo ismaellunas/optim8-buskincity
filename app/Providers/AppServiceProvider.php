@@ -34,10 +34,14 @@ use App\Services\{
     TranslationService,
     WidgetService,
 };
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Scope;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
+use LogicException;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -111,6 +115,32 @@ class AppServiceProvider extends ServiceProvider
                 });
             }
         );
+
+        Builder::macro('addSubSelect', function ($column, $query, bool $isSelectAll = true): Builder {
+            /** @var Builder $this */
+            if (is_null($this->columns) && $isSelectAll) {
+                $this->select($this->from.'.*');
+            }
+
+            return $this->selectSub($query, $column);
+        });
+
+        EloquentBuilder::macro('scoped', function ($scope, ...$parameters): EloquentBuilder {
+            /** @var EloquentBuilder $query */
+            $query = $this;
+
+            if (is_string($scope)) {
+                $scope = new $scope(...$parameters);
+            }
+
+            if (!$scope instanceof Scope) {
+                throw new LogicException('$scope must be an instance of Scope');
+            }
+
+            $scope->apply($query, $query->getModel());
+
+            return $query;
+        });
 
         if (env('APP_HTTPS_IS_ON', false)) {
             URL::forceScheme('https');

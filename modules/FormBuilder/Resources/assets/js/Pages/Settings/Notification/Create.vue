@@ -18,8 +18,8 @@
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import NotificationForm from './Form.vue';
-    import { useForm } from '@inertiajs/inertia-vue3';
-    import { provide } from 'vue'
+    import { useForm } from '@inertiajs/vue3';
+    import { provide } from 'vue';
 
     export default {
         name: 'SettingNotificationCreate',

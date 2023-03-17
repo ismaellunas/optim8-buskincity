@@ -12,7 +12,7 @@
 </template>
 
 <script>
-    import { Head as InertiaHead } from '@inertiajs/inertia-vue3';
+    import { Head as InertiaHead } from '@inertiajs/vue3';
 
     export default {
         name: 'LayoutBlank',

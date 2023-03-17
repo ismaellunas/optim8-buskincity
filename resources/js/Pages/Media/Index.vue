@@ -2,6 +2,8 @@
     <div>
         <div class="box">
             <biz-media-library
+                :allow-multiple="true"
+                :max-files="5"
                 :accepted-types="acceptedTypes"
                 :display-view="displayView"
                 :is-delete-enabled="can.delete"
@@ -12,7 +14,7 @@
                 :query-params="queryParams"
                 :records="records"
                 :search="search"
-                @on-media-submitted="onMediaUploadSuccess"
+                :instructions="instructions.mediaLibrary"
                 @on-view-changed="onViewChanged"
                 @on-type-changed="onTypeChanged"
             />
@@ -24,28 +26,33 @@
     import MixinFilterDataHandle from '@/Mixins/FilterDataHandle';
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizMediaLibrary from '@/Biz/MediaLibrary.vue';
-    import { success as successAlert } from '@/Libs/alert';
     import { merge, clone } from 'lodash';
     import { ref } from 'vue';
 
     export default {
         name: 'MediaIndex',
+
         components: {
             BizMediaLibrary,
         },
+
         mixins: [
             MixinFilterDataHandle,
         ],
+
         layout: AppLayout,
+
         props: {
-            acceptedTypes: Array,
-            baseRouteName: String,
-            can: {},
-            pageNumber: String,
-            pageQueryParams: Object,
-            records: {},
+            acceptedTypes: { type: Array, required: true },
+            baseRouteName: { type: String, required: true },
+            can: { type: Object, required: true },
+            pageNumber: { type: String, default: null },
+            pageQueryParams: { type: Object, default: () => {} },
+            records: { type: Object, required: true },
             title: { type: String, required: true },
+            instructions: { type: Object, default: () => {} },
         },
+
         setup(props) {
             const queryParams = merge(
                 {view: 'gallery'},
@@ -56,15 +63,14 @@
                 queryParams: ref(queryParams),
             };
         },
+
         data() {
             return {
                 displayView: 'gallery',
             };
         },
+
         methods: {
-            onMediaUploadSuccess(response) {
-                successAlert('File has been uploaded');
-            },
             onViewChanged(view) {
                 this.queryParams['view'] = view;
                 const clonedQueryParam = clone(this.queryParams);
@@ -83,6 +89,7 @@
                     }
                 );
             },
+
             onTypeChanged(types) {
                 this.queryParams['types'] = types;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle

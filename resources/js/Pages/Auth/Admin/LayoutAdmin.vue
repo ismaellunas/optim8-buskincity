@@ -35,7 +35,7 @@
 <script>
     import LayoutBackendBlank from '@/Layouts/BackendBlank.vue';
     import BizImage from '@/Biz/Image.vue';
-    import { Head as InertiaHead, usePage } from '@inertiajs/inertia-vue3';
+    import { Head as InertiaHead, usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'LayoutAdmin',
@@ -53,7 +53,7 @@
 
         setup() {
             return {
-                appLogoImageUrl: usePage().props.value.appLogoUrl,
+                appLogoImageUrl: usePage().props.appLogoUrl,
             };
         },
     }

@@ -178,7 +178,7 @@
     import { pageStatus } from '@/Libs/defaults';
     import { preview as iconPreview } from '@/Libs/icon-class';
     import { ref } from "vue";
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -228,7 +228,7 @@
         },
 
         setup(props) {
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
 
             const emptyTranslatedPage = getEmptyPageTranslation({
                 isDefaultSettingsProvided: false
@@ -240,7 +240,7 @@
                 defaultLocale,
                 emptyTranslatedPage,
                 iconPreview,
-                localeOptions: usePage().props.value.languageOptions,
+                localeOptions: usePage().props.languageOptions,
                 pageEnabledOptions: { No: false, Yes: true },
                 pageForm: ref(null),
                 routeIndex: route(props.baseRouteName+'.index'),

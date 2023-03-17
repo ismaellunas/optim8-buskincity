@@ -145,7 +145,7 @@
                 this.closeModal();
             },
             onMediaSubmitted(response) {
-                this.selectFile(response.data);
+                this.selectFile(response.data[0]);
             },
             filePickerCallback(callback, value, meta) {
                 const self = this;

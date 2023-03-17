@@ -123,7 +123,7 @@
     import { isBlank } from '@/Libs/utils';
     import { ref } from 'vue';
     import { confirmLeaveProgress, confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'SpaceEventFormModal',
@@ -152,11 +152,11 @@
         ],
 
         setup(props) {
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
             let selectedLocale = props.locale ?? defaultLocale;
 
             const localeOptions = sortBy(
-                usePage().props.value.languageOptions,
+                usePage().props.languageOptions,
                 [
                     function(locale) {
                         return locale.id != selectedLocale;

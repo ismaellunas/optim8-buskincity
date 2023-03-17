@@ -81,7 +81,7 @@
     import NavigationFormMenu from '@/Pages/ThemeHeader/NavigationFormMenuItem.vue';
     import NavigationMenu from './NavigationMenu.vue';
     import Draggable from "vuedraggable";
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
     import { confirmDelete } from '@/Libs/alert';
     import { cloneDeep } from 'lodash';
 
@@ -128,7 +128,7 @@
 
         setup() {
             return {
-                baseRouteName: usePage().props.value.baseRouteName ?? null,
+                baseRouteName: usePage().props.baseRouteName ?? null,
                 validationRoute: route('admin.api.theme.header.menu-item.validate'),
             };
         },

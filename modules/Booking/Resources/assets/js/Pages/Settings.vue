@@ -125,7 +125,7 @@
     import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import MixinHasTab from '@/Mixins/HasTab';
     import { confirmLeaveProgress, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
     import { ref } from 'vue';
 
     export default {

@@ -86,7 +86,7 @@
     import BizLanguageTab from '@/Biz/LanguageTab.vue';
     import { isEmpty } from 'lodash';
     import { useModelWrapper, convertToSlug } from '@/Libs/utils';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'CategoryForm',
@@ -123,7 +123,7 @@
         setup(props, { emit }) {
             return {
                 form: useModelWrapper(props, emit),
-                maxLength: usePage().props.value.maxLength,
+                maxLength: usePage().props.maxLength,
             };
         },
 

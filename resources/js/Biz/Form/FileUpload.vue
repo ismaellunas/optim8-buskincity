@@ -15,21 +15,18 @@
         />
 
         <div class="control">
-            <file-pond
+            <biz-file-upload
                 v-if="maxFileNumber > 0"
-                ref="pond"
                 :key="filePondKey"
-                name="file_upload"
-                class-name="my-pond"
-                :accepted-file-types="acceptedTypes"
+                :accepted-types="acceptedTypes"
                 :allow-multiple="allowMultiple"
-                :label-idle="placeholder"
-                :max-files="maxFileNumber"
-                :max-file-size="maxFileSizeUpload"
-                :max-total-file-size="maxTotalFileSizeUpload"
-                :required="isRequired"
                 :disabled="disabled"
-                @updatefiles="onUpdateFiles"
+                :max-file-size="maxFileSizeUpload"
+                :max-files="maxFileNumber"
+                :max-total-file-size="maxTotalFileSizeUpload"
+                :placeholder="placeholder"
+                :required="isRequired"
+                @on-update-files="onUpdateFiles"
             />
         </div>
 
@@ -57,35 +54,23 @@
 </template>
 
 <script>
+    import BizFileUpload from '@/Biz/FileUpload.vue';
     import BizFormField from '@/Biz/Form/Field.vue';
     import BizInputError from '@/Biz/InputError.vue';
     import BizMediaGallery from '@/Biz/Media/Gallery.vue';
     import BizMediaText from '@/Biz/Media/Text.vue';
-    import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
-    import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-    import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-    import vueFilePond from 'vue-filepond';
     import { confirmDelete } from '@/Libs/alert';
     import { useModelWrapper } from '@/Libs/utils';
-
-    import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
-    import 'filepond/dist/filepond.min.css';
-
-    const FilePond = vueFilePond(
-        FilePondPluginFileValidateSize,
-        FilePondPluginFileValidateType,
-        FilePondPluginImagePreview
-    );
 
     export default {
         name: 'FileUpload',
 
         components: {
+            BizFileUpload,
             BizFormField,
             BizInputError,
             BizMediaGallery,
             BizMediaText,
-            FilePond,
         },
 
         inheritAttrs: false,
@@ -211,13 +196,7 @@
 
         methods: {
             onUpdateFiles(files) {
-                let tmpFiles = [];
-
-                files.forEach(function (file) {
-                    tmpFiles.push(file.source);
-                });
-
-                this.fileUploadField.files = tmpFiles;
+                this.fileUploadField.files = files;
             },
 
             onDeleteMedium(medium) {
@@ -236,9 +215,3 @@
         },
     }
 </script>
-
-<style>
-    .filepond--credits {
-        display: none !important;
-    }
-</style>

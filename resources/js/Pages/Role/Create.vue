@@ -22,8 +22,9 @@
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
                                 <biz-button-link
+                                    class="is-link is-light"
                                     :href="route(baseRouteName+'.index')"
-                                    class="is-link is-light">
+                                >
                                     Cancel
                                 </biz-button-link>
                             </div>
@@ -46,7 +47,7 @@
     import BizButtonLink from '@/Biz/ButtonLink.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import FormRole from '@/Pages/Role/Form.vue';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
     import { success as successAlert } from '@/Libs/alert';
 
     export default {
