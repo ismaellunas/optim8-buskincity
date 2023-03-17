@@ -165,9 +165,6 @@
                 cropper: null,
                 croppedImageType: "image/png",
                 isUploading: false,
-                messageText: {
-                    successSaveAsMedia: "A new media has been created",
-                },
             };
         },
 
@@ -275,7 +272,7 @@
                         onStart: () => self.onStartLoadingOverlay(),
                         onSuccess: (page) => {
                             self.closeModal();
-                            successAlert(self.messageText.successSaveAsMedia);
+                            successAlert(page.props.flash.message);
 
                             self.$emit('on-close-edit-modal');
                         },
