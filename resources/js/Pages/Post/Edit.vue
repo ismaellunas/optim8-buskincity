@@ -14,6 +14,7 @@
                 :status-options="statusOptions"
                 :cover-image="coverImage"
                 :modules="modules"
+                :instructions="instructions"
                 @on-submit="onSubmit"
             />
         </div>
@@ -45,6 +46,7 @@
             statusOptions: { type: Array, required: true, },
             title: { type: String, required: true },
             modules: { type: Object, default: () => {} },
+            instructions: { type: Object, default: () => {} },
         },
         setup(props) {
             const defaultLocale = usePage().props.defaultLanguage;

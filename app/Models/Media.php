@@ -112,10 +112,12 @@ class Media extends CloudinaryMedia implements TranslatableContract
     // Accessors:
     public function getFileNameWithoutExtensionAttribute(): string
     {
+        $slice = Str::afterLast($this->file_name, '/');
+
         if (!in_array($this->file_type, ['image', 'video'])) {
-            return Str::replaceLast('.'.$this->extension, '', $this->file_name);
+            return Str::replaceLast('.'.$this->extension, '', $slice);
         }
-        return $this->file_name;
+        return $slice;
     }
 
     public function getIsImageAttribute(): bool

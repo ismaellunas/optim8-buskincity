@@ -60,7 +60,7 @@ Route::middleware([
         ->can('page.delete');
 
     Route::resource('/media', MediaController::class)
-        ->except(['edit', 'show']);
+        ->except(['edit', 'show', 'update']);
 
     Route::post('/media/update-image/{medium}', [MediaController::class, 'updateImage'])
         ->name('media.update-image');
