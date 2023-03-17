@@ -27,7 +27,7 @@
     import { getTranslation } from '@/Libs/translation';
     import { isBlank } from '@/Libs/utils';
     import { success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
-    import { usePage, useForm } from '@inertiajs/inertia-vue3';
+    import { usePage, useForm } from '@inertiajs/vue3';
 
     export default {
         name: 'CategoryEdit',
@@ -51,7 +51,7 @@
         },
 
         setup(props) {
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
             const translationForm = { [defaultLocale]: {} };
 
             let translatedCategory = getTranslation(props.record, defaultLocale);
@@ -69,7 +69,7 @@
 
             return {
                 defaultLocale: defaultLocale,
-                localeOptions: usePage().props.value.languageOptions,
+                localeOptions: usePage().props.languageOptions,
                 form: useForm(translationForm),
             };
         },

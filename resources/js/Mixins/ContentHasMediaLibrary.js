@@ -24,6 +24,7 @@ export default {
         selectImage(image) {
             let hasImage = false;
             const locale = this.selectedLocale;
+
             if (!isBlank(this.entityImage.mediaId)) {
                 this.detachImageFromMedia(this.entityImage.mediaId, this.pageMedia);
             }
@@ -50,7 +51,7 @@ export default {
             this.onImageSelected();
         },
         updateImage(response) {
-            this.selectImage(response.data);
+            this.selectImage(response.data[0]);
             this.onImageUpdated();
         },
         getImagesList(url) {

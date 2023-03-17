@@ -195,7 +195,7 @@
     import { isBlank, useModelWrapper } from '@/Libs/utils';
     import { preview as iconPreview } from '@/Libs/icon-class';
     import { ref } from "vue";
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'PageForm',
@@ -260,14 +260,13 @@
                 activeTab = ref(0);
             }
 
-            // Set provide and inject of images data
-            const images = usePage().props.value.images;
+            const images = usePage().props.images;
 
             return {
                 activeTab,
                 form: useModelWrapper(props, emit),
                 computedContentConfigId: useModelWrapper(props, emit, 'contentConfigId'),
-                defaultLocale: usePage().props.value.defaultLanguage,
+                defaultLocale: usePage().props.defaultLanguage,
                 images: !isBlank(images) ? images : {},
                 iconPreview,
             };

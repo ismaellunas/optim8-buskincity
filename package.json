@@ -6,9 +6,7 @@
         "preview": "vite preview"
     },
     "devDependencies": {
-        "@inertiajs/inertia": "^0.11.0",
-        "@inertiajs/inertia-vue3": "^0.6.0",
-        "@inertiajs/progress": "^0.2.7",
+        "@inertiajs/vue3": "~1.0.2",
         "@vitejs/plugin-vue": "^4.0.0",
         "@vue/compiler-sfc": "^3.1.5",
         "axios": "^0.21.1",
@@ -45,6 +43,7 @@
         "filepond-plugin-file-validate-type": "^1.2.7",
         "filepond-plugin-image-preview": "^4.6.11",
         "js-file-downloader": "^1.1.22",
+        "mime": "^3.0.0",
         "mini-css-extract-plugin": "^2.4.2",
         "moment": "^2.29.4",
         "object-to-formdata": "^4.4.2",

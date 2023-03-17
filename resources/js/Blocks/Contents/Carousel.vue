@@ -197,7 +197,7 @@
             },
 
             updateImage(response) {
-                this.selectImage(response.data);
+                this.selectImage(response.data[0]);
                 this.onImageUpdated();
             },
 

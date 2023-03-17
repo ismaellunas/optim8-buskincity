@@ -60,7 +60,7 @@
     import NavigationFormDuplicate from './NavigationFormDuplicate.vue';
     import NavigationFormMenu from './NavigationFormMenuItem.vue';
     import NavigationMenu from './NavigationMenu.vue';
-    import { usePage, useForm } from '@inertiajs/inertia-vue3';
+    import { usePage, useForm } from '@inertiajs/vue3';
     import { oops as oopsAlert, success as successAlert, confirmLeaveProgress } from '@/Libs/alert';
     import { forEach, cloneDeep } from 'lodash';
 
@@ -95,9 +95,9 @@
 
         setup() {
             return {
-                baseRouteName: usePage().props.value.baseRouteName ?? null,
-                localeOptions: usePage().props.value.languageOptions ?? [],
-                defaultLocale: usePage().props.value.defaultLanguage,
+                baseRouteName: usePage().props.baseRouteName ?? null,
+                localeOptions: usePage().props.languageOptions ?? [],
+                defaultLocale: usePage().props.defaultLanguage,
                 tabs: {
                     layout: { title: 'Layout'},
                     navigation: {title: 'Navigation'},

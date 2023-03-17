@@ -17,7 +17,7 @@
     import FooterLayout from './FooterLayout.vue';
     import FooterSocialMedia from './FooterSocialMedia.vue';
     import { success as successAlert  } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
     import { cloneDeep } from 'lodash';
 
     export default {
@@ -41,7 +41,7 @@
 
         setup() {
             return {
-                baseRouteName: usePage().props.value.baseRouteName ?? null,
+                baseRouteName: usePage().props.baseRouteName ?? null,
             };
         },
 

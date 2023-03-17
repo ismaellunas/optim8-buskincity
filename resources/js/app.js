@@ -3,8 +3,7 @@ import './bootstrap';
 // Import modules...
 import { appName } from '@/Libs/defaults';
 import { createApp, h } from 'vue';
-import { createInertiaApp } from '@inertiajs/inertia-vue3'
-import { InertiaProgress } from '@inertiajs/progress';
+import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import VueSweetalert2 from 'vue-sweetalert2';
 import VueLoading from 'vue-loading-overlay';
@@ -13,6 +12,9 @@ import VueSocialSharing from 'vue-social-sharing'
 createInertiaApp({
     title: title => `${title} | ${appName}`,
     //resolve: name => require(`./Pages/${name}`),
+    progress: {
+        color: '#29d',
+    },
     resolve: (name) => {
         let module = name.split('::');
 
@@ -44,8 +46,8 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.vue')
         );
     },
-    setup({ el, app, props, plugin }) {
-        createApp({ render: () => h(app, props) })
+    setup({ el, App, props, plugin }) {
+        createApp({ render: () => h(App, props) })
             .mixin({ methods: { route } })
             .use(plugin)
             .use(VueSweetalert2)
@@ -54,5 +56,3 @@ createInertiaApp({
             .mount(el)
     },
 })
-
-InertiaProgress.init({ color: '#4B5563' });

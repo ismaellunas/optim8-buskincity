@@ -48,7 +48,7 @@
     import { isEmpty, find, sortBy } from 'lodash';
     import { ref } from 'vue';
     import { useModelWrapper } from '@/Libs/utils';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -65,11 +65,11 @@
         },
 
         setup(props, { emit }) {
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
             let selectedLocale = props.locale ?? defaultLocale;
 
             const localeOptions = sortBy(
-                usePage().props.value.languageOptions,
+                usePage().props.languageOptions,
                 [
                     function(locale) {
                         return locale.id != selectedLocale;
@@ -82,7 +82,7 @@
             }
 
             return {
-                maxLength: usePage().props.value.maxLength,
+                maxLength: usePage().props.maxLength,
                 localeOptions: localeOptions,
                 selectedLocale: ref(selectedLocale),
                 space: useModelWrapper(props, emit),

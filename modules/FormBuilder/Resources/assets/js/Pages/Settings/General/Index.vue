@@ -11,7 +11,7 @@
 <script>
     import MixinHasLoader from '@/Mixins/HasLoader';
     import GeneralForm from './Form.vue';
-    import { usePage, useForm } from '@inertiajs/inertia-vue3';
+    import { usePage, useForm } from '@inertiajs/vue3';
     import { cloneDeep } from 'lodash';
 
     export default {
@@ -27,8 +27,8 @@
 
         setup() {
             return {
-                baseRouteNameSetting: usePage().props.value.baseRouteNameSetting,
-                formBuilder: usePage().props.value.formBuilder,
+                baseRouteNameSetting: usePage().props.baseRouteNameSetting,
+                formBuilder: usePage().props.formBuilder,
             };
         },
 

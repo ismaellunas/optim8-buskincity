@@ -6,6 +6,7 @@ use App\Models\Media;
 use App\Rules\AlphaNumericDash;
 use App\Services\MediaService;
 use App\Services\TranslationService;
+use Illuminate\Support\Str;
 
 class MediaStoreRequest extends BaseFormRequest
 {
@@ -16,7 +17,7 @@ class MediaStoreRequest extends BaseFormRequest
      */
     public function authorize()
     {
-        return auth()->user()->can('create', Media::class);
+        return true;
     }
 
     /**
@@ -28,30 +29,62 @@ class MediaStoreRequest extends BaseFormRequest
     {
         $mimes = MediaService::getExtensions();
 
-        return array_merge(
-            MediaService::getTranslationRules(),
-            [
-                'file_name' => [
+        return [
+            ...[
+                '*.file_name' => [
                     'required',
                     new AlphaNumericDash(),
                     'max:250',
                 ],
-                'file' => [
-                    'required',
+                '*.file' => [
+                    'sometimes',
                     'file',
                     'max:'.config('constants.one_megabyte') * 50,
                     'mimes:'.implode(',', $mimes),
                 ],
-            ]
-        );
+            ],
+            ...collect(MediaService::getTranslationRules())
+                ->mapWithKeys(function ($rule, $key) {
+                    return [
+                        '*.'.$key => $rule
+                    ];
+                })
+                ->all()
+        ];
     }
 
     protected function customAttributes(): array
     {
-        $attrs = TranslationService::getCustomAttributes(
-            array_keys($this->input('translations', [])),
-            ['alt', 'description']
-        );
+        $attrs = [];
+
+        foreach ($this->all() as $index => $inputs) {
+            $translationAttrs = TranslationService::getCustomAttributes(
+                array_keys($inputs['translations']),
+                ['alt', 'description']
+            );
+
+            $inputs = collect($inputs)->except('translations')->all();
+
+            foreach (array_keys($inputs) as $inputKey) {
+                $attrIndex = $index . '.' . $inputKey;
+
+                $attrs[$attrIndex] = Str::of($inputKey)
+                    ->replace('_', ' ')
+                    ->value();
+            }
+
+            $attrs = [
+                ...$attrs,
+                ...collect($translationAttrs)
+                    ->mapWithKeys(function ($attr, $key) use ($index) {
+                        return [
+                            $index.'.'.$key => $attr
+                        ];
+                    })
+                    ->all()
+            ];
+        }
+
         return $attrs;
     }
 }
