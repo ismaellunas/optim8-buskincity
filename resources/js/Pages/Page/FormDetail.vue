@@ -75,7 +75,7 @@
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
     import { useModelWrapper, convertToSlug } from '@/Libs/utils';
     import { isEmpty } from 'lodash';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         components: {
@@ -123,7 +123,7 @@
 
         data() {
             return {
-                maxLength: usePage().props.value.maxLength,
+                maxLength: usePage().props.maxLength,
             };
         },
 

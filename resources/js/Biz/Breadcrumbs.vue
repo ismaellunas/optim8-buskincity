@@ -21,7 +21,10 @@
                     v-else
                     class="is-active"
                 >
-                    <biz-link aria-current="page">
+                    <biz-link
+                        aria-current="page"
+                        href="#"
+                    >
                         {{ breadcrumb.title }}
                     </biz-link>
                 </li>

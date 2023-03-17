@@ -189,7 +189,7 @@
     import { assign, mapValues, sortBy } from 'lodash';
     import { acceptedImageTypes } from '@/Libs/defaults';
     import { success as successAlert } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'ThemeOptionAdvance',
@@ -266,7 +266,7 @@
                     qrCodePublicPageForm,
                     trackingCodeForm,
                 )),
-                sortedPageOptions: sortBy(usePage().props.value.pageOptions, [(option) => option.value]),
+                sortedPageOptions: sortBy(usePage().props.pageOptions, [(option) => option.value]),
             };
         },
 

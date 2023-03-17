@@ -53,7 +53,7 @@
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import FormUserPassword from '@/Pages/User/FormPassword.vue';
     import FormUserProfile from '@/Pages/User/FormProfile.vue';
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
     import { success as successAlert } from '@/Libs/alert';
 
     export default {

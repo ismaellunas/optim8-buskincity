@@ -1,4 +1,4 @@
-import { usePage } from '@inertiajs/inertia-vue3';
+import { usePage } from '@inertiajs/vue3';
 import { isBlank } from '@/Libs/utils';
 import { isArray } from 'lodash';
 
@@ -8,7 +8,7 @@ export default {
             const self = this;
 
             if (!errors) {
-                errors = usePage().props.value.errors;
+                errors = usePage().props.errors;
             }
 
             if (isBlank(errors)) {

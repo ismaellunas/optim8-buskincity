@@ -14,6 +14,7 @@
                 :status-options="statusOptions"
                 :cover-image="coverImage"
                 :modules="modules"
+                :instructions="instructions"
                 @on-submit="onSubmit"
             />
         </div>
@@ -25,7 +26,7 @@
     import PostForm from '@/Pages/Post/Form.vue';
     import BizErrorNotifications from '@/Biz/ErrorNotifications.vue';
     import { map, find } from 'lodash';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
     import { success as successAlert } from '@/Libs/alert';
 
     export default {
@@ -45,9 +46,10 @@
             statusOptions: { type: Array, required: true, },
             title: { type: String, required: true },
             modules: { type: Object, default: () => {} },
+            instructions: { type: Object, default: () => {} },
         },
         setup(props) {
-            const defaultLocale = usePage().props.value.defaultLanguage;
+            const defaultLocale = usePage().props.defaultLanguage;
             const primaryCategory = find(props.post.categories, function (category) {
                 return category.pivot.is_primary;
             });

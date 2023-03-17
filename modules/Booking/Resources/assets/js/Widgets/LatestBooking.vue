@@ -18,44 +18,19 @@
                 <biz-panel-block>
                     <div class="field is-grouped is-grouped-multiline">
                         <div class="control">
-                            <biz-input
-                                v-model="search.term"
+                            <biz-select
+                                v-model="search.status"
                                 class="is-small"
-                                placeholder="Search..."
-                                maxlength="255"
-                                @keyup.prevent="onSearch(search.term)"
-                            />
-                        </div>
-
-                        <div class="control">
-                            <biz-dropdown
-                                :close-on-click="false"
-                                class-button="is-small"
+                                @change="getRecords()"
                             >
-                                <template #trigger>
-                                    <span>Status ({{ totalStatusSelected }})</span>
-
-                                    <span class="icon is-small">
-                                        <i
-                                            :class="icon.angleDown"
-                                            aria-hidden="true"
-                                        />
-                                    </span>
-                                </template>
-
-                                <biz-dropdown-item
-                                    v-for="status in data.statusOptions"
+                                <option
+                                    v-for="status in statusOptions"
                                     :key="status.id"
+                                    :value="status.id"
                                 >
-                                    <biz-checkbox
-                                        v-model:checked="search.statuses"
-                                        :value="status.id"
-                                        @change="getRecords()"
-                                    >
-                                        &nbsp; {{ status.value }}
-                                    </biz-checkbox>
-                                </biz-dropdown-item>
-                            </biz-dropdown>
+                                    &nbsp; {{ status.value }}
+                                </option>
+                            </biz-select>
                         </div>
 
                         <div class="control">
@@ -94,6 +69,16 @@
                                 max-range="31"
                                 style="width: 210px"
                                 @update:model-value="getRecords()"
+                            />
+                        </div>
+
+                        <div class="control">
+                            <biz-input
+                                v-model="search.term"
+                                class="is-small"
+                                placeholder="Search..."
+                                maxlength="255"
+                                @keyup.prevent="onSearch(search.term)"
                             />
                         </div>
                     </div>
@@ -183,8 +168,6 @@
 
 <script>
     import BizButtonLink from '@/Biz/ButtonLink.vue';
-    import BizCheckbox from '@/Biz/Checkbox.vue';
-    import BizDropdown from '@/Biz/Dropdown.vue';
     import BizDropdownItem from '@/Biz/DropdownItem.vue';
     import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
     import BizFilterDateRange from '@/Biz/Filter/DateRange.vue';
@@ -192,6 +175,7 @@
     import BizLoader from '@/Biz/Loader.vue';
     import BizPanel from '@/Biz/Panel.vue';
     import BizPanelBlock from '@/Biz/PanelBlock.vue';
+    import BizSelect from '@/Biz/Select.vue';
     import BizTable from '@/Biz/Table.vue';
     import icon from '@/Libs/icon-class';
     import { debounce, isEmpty, filter } from 'lodash';
@@ -202,8 +186,6 @@
 
         components: {
             BizButtonLink,
-            BizCheckbox,
-            BizDropdown,
             BizDropdownItem,
             BizDropdownSearch,
             BizFilterDateRange,
@@ -211,6 +193,7 @@
             BizLoader,
             BizPanel,
             BizPanelBlock,
+            BizSelect,
             BizTable,
         },
 
@@ -226,11 +209,14 @@
                 records: [],
                 search: {
                     term: null,
-                    statuses: [],
+                    status: null,
                     city: null,
+                    cityTerm: null,
                 },
                 filteredCities: this.data.cityOptions.slice(0, 10),
                 dates: [],
+                cityOptions: this.data.cityOptions ?? [],
+                statusOptions: this.data.statusOptions ?? [],
             };
         },
 
@@ -259,7 +245,7 @@
                     {
                         params: {
                             term: self.search.term,
-                            status: self.search.statuses,
+                            status: self.search.status,
                             city: self.search.city,
                             dates: self.dates.filter(Boolean),
                         },
@@ -267,9 +253,12 @@
                 )
                     .then((response) => {
                         self.records = response.data.records;
+                        self.statusOptions = response.data.options.status;
+                        self.cityOptions = response.data.options.city;
                     })
                     .then(() => {
                         self.isLoading = false;
+                        self.filteredCities = self.filterCities();
                     });
             },
 
@@ -279,14 +268,21 @@
                 }
             }, debounceTime),
 
-            searchCity: debounce(function(term) {
-                if (!isEmpty(term) && term.length > 1) {
-                    this.filteredCities = filter(this.data.cityOptions, function (city) {
-                        return new RegExp(term, 'i').test(city);
+            filterCities() {
+                const self = this;
+
+                if (!isEmpty(this.search.cityTerm) && this.search.cityTerm.length > 1) {
+                    return filter(this.cityOptions, function (city) {
+                        return new RegExp(self.search.cityTerm, 'i').test(city);
                     }).slice(0, 10);
                 } else {
-                    this.filteredCities = this.data.cityOptions.slice(0, 10);
+                    return this.cityOptions.slice(0, 10);
                 }
+            },
+
+            searchCity: debounce(function(term) {
+                this.search.cityTerm = term;
+                this.filteredCities = this.filterCities();
             }, debounceTime),
 
             onCityChange(city = null) {

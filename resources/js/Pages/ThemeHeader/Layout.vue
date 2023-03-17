@@ -18,7 +18,7 @@
     import HeaderLayout from './HeaderLayout.vue';
     import HeaderLogo from './HeaderLogo.vue';
     import { success as successAlert  } from '@/Libs/alert';
-    import { useForm, usePage } from '@inertiajs/inertia-vue3';
+    import { useForm, usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'ThemeHeaderLayoutTab',
@@ -35,7 +35,7 @@
 
         setup(props) {
             return {
-                baseRouteName: usePage().props.value.baseRouteName ?? null,
+                baseRouteName: usePage().props.baseRouteName ?? null,
                 form: useForm({
                     layout: parseInt(props?.settings?.header_layout?.value ?? null),
                     logo: parseInt(props?.settings?.header_logo_media_id?.value ?? null),

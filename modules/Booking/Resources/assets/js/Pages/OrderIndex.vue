@@ -9,31 +9,18 @@
             </div>
 
             <div class="column is-2-desktop">
-                <biz-dropdown
-                    class="is-fullwidth"
-                    :close-on-click="false"
+                <biz-select
+                    v-model="status"
+                    @change="onStatusChanged()"
                 >
-                    <template #trigger>
-                        <span>Status ({{ statuses.length }})</span>
-                        <biz-icon
-                            class="is-small"
-                            :icon="icon.angleDown"
-                        />
-                    </template>
-
-                    <biz-dropdown-item
-                        v-for="status in statusOptions"
-                        :key="status.id"
+                    <option
+                        v-for="statusOption in statusOptions"
+                        :key="statusOption.id"
+                        :value="statusOption.id"
                     >
-                        <biz-checkbox
-                            v-model:checked="statuses"
-                            :value="status.id"
-                            @change="onStatusChanged"
-                        >
-                            &nbsp; {{ status.value }}
-                        </biz-checkbox>
-                    </biz-dropdown-item>
-                </biz-dropdown>
+                        <span>{{ statusOption.value }}</span>
+                    </option>
+                </biz-select>
             </div>
 
             <div class="column is-4 is-3-widescreen">
@@ -192,7 +179,6 @@
     import AppLayout from '@/Layouts/AppLayout.vue';
     import BizButton from '@/Biz/Button.vue';
     import BizButtonLink from '@/Biz/ButtonLink.vue';
-    import BizCheckbox from '@/Biz/Checkbox.vue';
     import BizDropdown from '@/Biz/Dropdown.vue';
     import BizDropdownItem from '@/Biz/DropdownItem.vue';
     import BizDropdownSearch from '@/Biz/DropdownSearch.vue';
@@ -201,19 +187,19 @@
     import BizIcon from '@/Biz/Icon.vue';
     import BizLink from '@/Biz/Link.vue';
     import BizTableIndex from '@/Biz/TableIndex.vue';
+    import BizSelect from '@/Biz/Select.vue';
     import ModalCancelEventConfirmation from '@booking/Pages/ModalCancelEventConfirmation.vue';
     import icon from '@/Libs/icon-class';
     import { confirmDelete, oops as oopsAlert, success as successAlert } from '@/Libs/alert';
     import { debounce, isEmpty, isArray, filter, merge } from 'lodash';
     import { debounceTime } from '@/Libs/defaults';
     import { ref } from "vue";
-    import { useForm } from '@inertiajs/inertia-vue3';
+    import { useForm } from '@inertiajs/vue3';
 
     export default {
         components: {
             BizButton,
             BizButtonLink,
-            BizCheckbox,
             BizDropdown,
             BizDropdownItem,
             BizDropdownSearch,
@@ -221,6 +207,7 @@
             BizFilterSearch,
             BizIcon,
             BizLink,
+            BizSelect,
             BizTableIndex,
             ModalCancelEventConfirmation,
         },
@@ -252,8 +239,9 @@
                     ? props.pageQueryParams?.dates.filter(Boolean)
                     : []
                 ),
-                statuses: ref(props.pageQueryParams?.status ?? []),
+                status: ref(props.pageQueryParams?.status ?? null),
                 term: ref(props.pageQueryParams?.term ?? null),
+                cityTerm: ref(null),
                 form: useForm(form),
                 selectedOrder: ref(null),
                 icon,
@@ -285,7 +273,7 @@
             },
 
             onStatusChanged() {
-                this.queryParams['status'] = this.statuses;
+                this.queryParams['status'] = this.status;
                 this.refreshWithQueryParams(); // on mixin MixinFilterDataHandle
             },
 
@@ -331,16 +319,21 @@
                 return (record.can.reschedule || record.can.cancel);
             },
 
-            searchCity: debounce(function(term) {
-                if (!isEmpty(term) && term.length > 1) {
-                    this.filteredCities = filter(this.cityOptions, function (city) {
-                        return new RegExp(term, 'i').test(city);
+            filterCities() {
+                const self = this;
+                if (!isEmpty(this.cityTerm) && this.cityTerm.length > 1) {
+                    return filter(this.cityOptions, function (city) {
+                        return new RegExp(self.cityTerm, 'i').test(city);
                     }).slice(0, 10);
                 } else {
-                    this.filteredCities = this.cityOptions.slice(0, 10);
+                    return this.cityOptions.slice(0, 10);
                 }
-            }, debounceTime),
+            },
 
+            searchCity: debounce(function(term) {
+                this.cityTerm = term;
+                this.filteredCities = this.filterCities();
+            }, debounceTime),
         },
     };
 </script>

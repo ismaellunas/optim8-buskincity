@@ -128,7 +128,7 @@
     import BizModalCard from '@/Biz/ModalCard.vue';
     import { cloneDeep } from 'lodash';
     import { reactive } from 'vue';
-    import { usePage } from '@inertiajs/inertia-vue3';
+    import { usePage } from '@inertiajs/vue3';
 
     export default {
         name: 'NavigationFormDuplicate',
@@ -168,8 +168,8 @@
         setup(props) {
             return {
                 form: reactive(cloneDeep(props.menuItem)),
-                menuOptions: usePage().props.value.menuOptions,
-                typeOptions: usePage().props.value.typeOptions,
+                menuOptions: usePage().props.menuOptions,
+                typeOptions: usePage().props.typeOptions,
             };
         },
 
