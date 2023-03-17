@@ -134,6 +134,8 @@ class MediaController extends CrudController
 
         if (!empty($storeInputs)) {
             $this->storeProcess($storeInputs);
+
+            $this->generateFlashMessage('A new media has been created.');
         }
 
         $updateInputs = collect($request->all())
@@ -142,6 +144,8 @@ class MediaController extends CrudController
 
         if (!empty($updateInputs)) {
             $this->updateProsess($updateInputs);
+
+            $this->generateFlashMessage('The media has been edited.');
         }
     }
 
@@ -239,6 +243,8 @@ class MediaController extends CrudController
             ->saveMany($media->translations->map(function ($translation, $key) {
                 return $translation->replicate();
             }));
+
+        $this->generateFlashMessage('A new media has been created.');
 
         return redirect()->back();
     }

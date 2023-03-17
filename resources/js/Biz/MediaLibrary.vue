@@ -519,7 +519,10 @@
                     const form = useForm(currentForm);
                     form.post(url, {
                         onSuccess: (page) => {
-                            self.onSuccessSubmit(page);
+                            self.onSuccessSubmit(
+                                page,
+                                page.props.flash.message
+                            );
                         },
                         onError: () => {
                             oopsAlert();
@@ -533,14 +536,17 @@
                 }
             },
 
-            onSuccessSubmit(page) {
-                successAlert('Successfully');
+            onSuccessSubmit(response, message = null) {
+                if (message) {
+                    successAlert(message);
+                }
+
                 this.closeEditModal();
 
                 this.formMedia = [];
                 this.fileUploadKey += 1;
 
-                this.$emit('on-media-submitted', page);
+                this.$emit('on-media-submitted', response);
             },
 
             onDeleteEdit(index) {
