@@ -43,12 +43,12 @@ use Laravel\Fortify\Http\Controllers\NewPasswordController;
 |--------------------------------------------------------------------------
 */
 
-Route::middleware([
+Route::middleware(array_filter([
     'auth:sanctum',
     'verified',
     'can:system.dashboard',
-    'ensureLoginFromAdminLoginRoute',
-])->group(function () {
+    env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromAdminLoginRoute' : null,
+]))->group(function () {
 
     Route::resource('/pages', PageController::class)
         ->except(['show']);
@@ -243,7 +243,7 @@ Route::middleware(['guest:'.config('fortify.guard')])->group(function () {
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])
         ->middleware(array_filter([
             $limiter ? 'throttle:'.$limiter : null,
-            'recaptcha',
+            env('MID_RECAPTCHA_ENABLED', true) ? 'recaptcha' : null,
         ]))
         ->name('login.attempt');
 

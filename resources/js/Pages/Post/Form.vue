@@ -14,6 +14,7 @@
                         <ul>
                             <biz-tab-list
                                 v-for="(tab, index) in tabs"
+                                :id="tab.id"
                                 :key="index"
                                 :is-active="isTabActive(index)"
                             >
@@ -28,9 +29,10 @@
                         <biz-form-input
                             v-model="form.title"
                             label="Title"
-                            :message="error('title')"
                             placeholder="e.g A Good News"
                             required
+                            name="title"
+                            :message="error('title')"
                             @on-blur="populateSlug"
                             @on-keypress="keyPressTitle"
                         />
@@ -38,6 +40,7 @@
                         <biz-form-slug
                             v-model="form.slug"
                             label="Slug"
+                            name="slug"
                             :message="error('slug')"
                             :disabled="isInputDisabled"
                         />
@@ -162,7 +165,7 @@
                     <div v-show="isTabActive('seo')">
                         <biz-form-input
                             v-model="form.meta_title"
-                            label="Meta Title"
+                            label="Meta title"
                             placeholder="Meta title"
                             :maxlength="maxLength.meta_title"
                             :message="error('meta_title')"
@@ -170,7 +173,7 @@
 
                         <biz-form-textarea
                             v-model="form.meta_description"
-                            label="Meta Description"
+                            label="Meta description"
                             placeholder="Meta description"
                             rows="2"
                             :maxlength="maxLength.meta_description"
@@ -360,8 +363,8 @@
                 editorConfig,
                 form: useModelWrapper(props, emit),
                 tabs: {
-                    content: { title: "Content"},
-                    seo: { title: "SEO"},
+                    content: { title: "Content", id: 'content-tab-trigger' },
+                    seo: { title: "SEO", id: 'seo-tab-trigger' },
                 },
             };
         },

@@ -13,13 +13,13 @@
                     <div class="buttons is-right">
                         <biz-button-download
                             :url="route(baseRouteName + '.export', {locale: locale, groups: groups})"
-                            class="mr-2"
+                            class="export-translation mr-2"
                         >
                             Export
                         </biz-button-download>
 
                         <biz-button
-                            class="mr-2"
+                            class="import-translation mr-2"
                             @click="openModal"
                         >
                             Import
@@ -27,14 +27,14 @@
 
                         <biz-button-link
                             :href="route(baseRouteName + '.create')"
-                            class="is-primary mr-2"
+                            class="create-translation is-primary mr-2"
                         >
                             <biz-icon :icon="icon.add" />
                             <span>Add New</span>
                         </biz-button-link>
 
                         <biz-button-icon
-                            class="is-link"
+                            class="update-translation is-link"
                             :icon="icon.edit"
                             @click="onSubmit"
                         >
@@ -80,7 +80,7 @@
                     </biz-dropdown>
 
                     <biz-dropdown
-                        class="ml-3"
+                        class="group-filter ml-3"
                         :close-on-click="false"
                     >
                         <template #trigger>
@@ -217,6 +217,7 @@
 
         <biz-modal-card
             v-show="isModalOpen"
+            class="import-modal"
             @close="closeModal()"
         >
             <template #header>
