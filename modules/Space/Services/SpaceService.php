@@ -267,7 +267,7 @@ class SpaceService
 
     private function detachLogo(Space $space): void
     {
-        $logoMediaId = $space->logo_media_id;
+        $logoMediaId = $space->logoMedia->id ?? null;
 
         if ($logoMediaId) {
             $space->detachMedia($logoMediaId);
@@ -276,7 +276,7 @@ class SpaceService
 
     private function detachCover(Space $space): void
     {
-        $coverMediaId = $space->cover_media_id;
+        $coverMediaId = $space->coverMedia->id ?? null;
 
         if ($coverMediaId) {
             $space->detachMedia($coverMediaId);
@@ -288,11 +288,10 @@ class SpaceService
         $this->detachLogo($space);
 
         if ($mediaId) {
-            $space->media()->attach($mediaId);
+            $space->media()->attach($mediaId, [
+                'type' => Space::TYPE_LOGO
+            ]);
         }
-
-        $space->logo_media_id = $mediaId;
-        $space->save();
     }
 
     public function replaceCover(Space $space, ?int $mediaId = null): void
@@ -300,11 +299,10 @@ class SpaceService
         $this->detachCover($space);
 
         if ($mediaId) {
-            $space->media()->attach($mediaId);
+            $space->media()->attach($mediaId, [
+                'type' => Space::TYPE_COVER
+            ]);
         }
-
-        $space->cover_media_id = $mediaId;
-        $space->save();
     }
 
     public function removeAllMedia(array $spaces): void
@@ -337,8 +335,6 @@ class SpaceService
             ->select([
                 'id',
                 'name',
-                'logo_media_id',
-                'cover_media_id',
                 'page_id',
                 'parent_id',
                 'is_page_enabled',

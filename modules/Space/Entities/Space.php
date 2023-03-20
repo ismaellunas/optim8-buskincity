@@ -25,6 +25,9 @@ class Space extends BaseModel implements TranslatableContract
     use NodeTrait;
     use Translatable;
 
+    const TYPE_LOGO = 'logo';
+    const TYPE_COVER = 'cover';
+
     public $translatedAttributes = [
         'condition',
         'description',
@@ -69,12 +72,22 @@ class Space extends BaseModel implements TranslatableContract
 
     public function logo()
     {
-        return $this->hasOne(Media::class, 'id', 'logo_media_id');
+        return $this->media()->wherePivot('type', self::TYPE_LOGO);
+    }
+
+    public function getLogoMediaAttribute(): ?Media
+    {
+        return $this->logo->first() ?? null;
     }
 
     public function cover()
     {
-        return $this->hasOne(Media::class, 'id', 'cover_media_id');
+        return $this->media()->wherePivot('type', self::TYPE_COVER);
+    }
+
+    public function getCoverMediaAttribute(): ?Media
+    {
+        return $this->cover->first() ?? null;
     }
 
     public function events()
@@ -167,12 +180,12 @@ class Space extends BaseModel implements TranslatableContract
 
     public function getLogoUrlAttribute(): ?string
     {
-        return $this->logo ? $this->logo->file_url : null;
+        return $this->logoMedia ? $this->logoMedia->file_url : null;
     }
 
     public function getCoverUrlAttribute(): ?string
     {
-        return $this->cover ? $this->cover->file_url : null;
+        return $this->coverMedia ? $this->coverMedia->file_url : null;
     }
 
     public function getIsParentableAttribute(): bool
@@ -194,8 +207,8 @@ class Space extends BaseModel implements TranslatableContract
         ?int $width = null,
         ?int $height = null
     ): ?string {
-        if ($this->cover) {
-            return $this->cover->getOptimizedImageUrl($width, $height);
+        if ($this->coverMedia) {
+            return $this->coverMedia->getOptimizedImageUrl($width, $height);
         }
 
         return null;
@@ -205,8 +218,8 @@ class Space extends BaseModel implements TranslatableContract
         ?int $width = null,
         ?int $height = null
     ): ?string {
-        return $this->logo
-            ? $this->logo->getOptimizedImageUrl($width, $height)
+        return $this->logoMedia
+            ? $this->logoMedia->getOptimizedImageUrl($width, $height)
             : null;
     }
 
