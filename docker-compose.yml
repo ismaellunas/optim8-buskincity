@@ -31,7 +31,7 @@ services:
 #            - meilisearch
             - mailhog
     pgsql:
-        image: 'postgres:14'
+        image: '${DOCKER_IMAGE_DB:-postgres:14}'
         ports:
             - '${FORWARD_DB_PORT:-5432}:5432'
         environment:
@@ -55,7 +55,7 @@ services:
             reservations:
               memory: 10M
     redis:
-        image: 'redis:alpine'
+        image: '${DOCKER_IMAGE_REDIS:-redis:alpine}'
         ports:
             - '${FORWARD_REDIS_PORT:-6379}:6379'
         volumes:
