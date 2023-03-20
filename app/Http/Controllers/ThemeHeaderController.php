@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Entities\CloudinaryStorage;
 use App\Http\Requests\ThemeHeaderLayoutRequest;
 use App\Models\{
     Menu,
@@ -14,13 +13,10 @@ use App\Services\{
     SettingService,
     TranslationService,
 };
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ThemeHeaderController extends CrudController
 {
-    private $mediaService;
     private $menuService;
     private $settingService;
     private $modelMenu = Menu::class;
@@ -30,11 +26,9 @@ class ThemeHeaderController extends CrudController
     protected $title = "Header";
 
     public function __construct(
-        MediaService $mediaService,
         MenuService $menuService,
         SettingService $settingService
     ) {
-        $this->mediaService = $mediaService;
         $this->menuService = $menuService;
         $this->settingService = $settingService;
     }
