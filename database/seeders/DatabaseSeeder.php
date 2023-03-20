@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             MenuSeeder::class,
             MenuItemSeeder::class,
             StripeSeeder::class,
+            StripeSettingSeeder::class,
             DashboardWidgetSeeder::class,
         ]);
 
