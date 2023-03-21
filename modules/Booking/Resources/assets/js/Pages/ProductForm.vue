@@ -68,38 +68,34 @@
             Gallery
         </h5>
 
-        <biz-form-file-upload
-            ref="file_upload"
+        <biz-form-multiple-media-library
             v-model="form.gallery"
             label="Upload"
-            :accepted-types="['image/jpeg', 'image/png']"
+            :is-download-enabled="true"
+            :is-upload-enabled="true"
+            :mediums="gallery"
             :allow-multiple="true"
-            :max-file-size="rules.maxProductFileSize"
             :max-files="rules.maxProductFileNumber"
-            :media="gallery"
+            :instructions="instructions.mediaLibrary"
             :message="error('gallery')"
-        >
-            <template #medium="mediumProps">
-                {{ mediumProps.file_url }}
-            </template>
-        </biz-form-file-upload>
+        />
     </div>
 </template>
 
 <script>
+    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import BizFormCheckboxToggle from '@/Biz/Form/CheckboxToggle.vue';
-    import BizFormFileUpload from '@/Biz/Form/FileUpload.vue';
     import BizFormInput from '@/Biz/Form/Input.vue';
+    import BizFormMultipleMediaLibrary from '@/Biz/Form/MultipleMediaLibrary.vue';
     import BizFormSelect from '@/Biz/Form/Select.vue';
     import BizFormTextarea from '@/Biz/Form/Textarea.vue';
-    import MixinHasPageErrors from '@/Mixins/HasPageErrors';
     import { useModelWrapper } from '@/Libs/utils';
 
     export default {
         components: {
             BizFormCheckboxToggle,
-            BizFormFileUpload,
             BizFormInput,
+            BizFormMultipleMediaLibrary,
             BizFormSelect,
             BizFormTextarea,
         },
@@ -115,6 +111,7 @@
             gallery: { type: Array, default: () => [] },
             rules: { type: Object, required: true },
             imageMimes: { type: Array, required: true },
+            instructions: {type: Object, default: () => {}},
         },
 
         setup(props, { emit }) {

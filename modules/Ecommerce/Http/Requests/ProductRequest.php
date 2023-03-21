@@ -8,7 +8,7 @@ use Modules\Ecommerce\Enums\ProductStatus;
 use Modules\Ecommerce\ModuleService as EcommerceModuleService;
 use Modules\Ecommerce\Services\ProductService;
 
-class ProductCreateRequest extends FormRequest
+class ProductRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -37,12 +37,13 @@ class ProductCreateRequest extends FormRequest
                 'required',
                 'boolean',
             ],
-            'gallery.files.*' => [
-                'max:'.EcommerceModuleService::maxProductFileSize(),
-                'mimes:'.implode(',', config('constants.extensions.image')),
-            ],
             'gallery' => [
-                'max:'.EcommerceModuleService::maxProductMediaNumber(),
+                'nullable',
+                'array',
+                'max:'.EcommerceModuleService::maxProductMediaNumber()
+            ],
+            'gallery.*' => [
+                'exists:media,id',
             ],
         ];
     }

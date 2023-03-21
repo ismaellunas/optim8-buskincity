@@ -26,7 +26,6 @@
                         :is-download-enabled="isDownloadEnabled"
                         :is-edit-enabled="isEditEnabled"
                         :is-preview-enabled="isPreviewEnabled"
-                        :is-select-enabled="isSelectEnabled"
                         @on-delete-clicked="$emit('on-delete-clicked', $event)"
                         @on-edit-clicked="$emit('on-edit-clicked', $event)"
                         @on-preview-clicked="onPreviewClicked"
@@ -82,7 +81,6 @@
             isDownloadEnabled: { type: Boolean, default: true },
             isEditEnabled: { type: Boolean, default: true },
             isPreviewEnabled: { type: Boolean, default: true },
-            isSelectEnabled: { type: Boolean, default: false },
             media: { type: Array, default: () => [] },
         },
 
