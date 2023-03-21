@@ -4,15 +4,15 @@ namespace Modules\Ecommerce\Entities;
 
 use App\Models\Media;
 use App\Models\User;
-use GetCandy\FieldTypes\TranslatedText;
-use GetCandy\Models\Product as GetCandyProduct;
+use Lunar\FieldTypes\TranslatedText;
+use Lunar\Models\Product as LunarProduct;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Kodeine\Metable\Metable;
 use Modules\Booking\Entities\Schedule;
 use Modules\Ecommerce\Enums\ProductStatus;
 
-class Product extends GetCandyProduct
+class Product extends LunarProduct
 {
     use Metable;
 
@@ -23,7 +23,7 @@ class Product extends GetCandyProduct
 
     public function getMetaTable(): string
     {
-        return config('getcandy.database.table_prefix').'products_meta';
+        return config('lunar.database.table_prefix').'products_meta';
     }
 
     public function variants()

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table
                 ->foreignId('product_id')
-                ->constrained(config('getcandy.database.table_prefix').'products')
+                ->constrained(config('lunar.database.table_prefix').'products')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table

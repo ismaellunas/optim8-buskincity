@@ -2,11 +2,11 @@
 
 namespace Modules\Ecommerce\Database\Seeders;
 
-use GetCandy\Models\Channel;
-use GetCandy\Models\Currency;
-use GetCandy\Models\Language;
-use GetCandy\Models\ProductType;
-use GetCandy\Models\TaxClass;
+use Lunar\Models\Channel;
+use Lunar\Models\Currency;
+use Lunar\Models\Language;
+use Lunar\Models\ProductType;
+use Lunar\Models\TaxClass;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 

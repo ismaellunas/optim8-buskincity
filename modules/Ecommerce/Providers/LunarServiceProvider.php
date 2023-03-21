@@ -3,56 +3,53 @@
 namespace Modules\Ecommerce\Providers;
 
 use Cartalyst\Converter\Laravel\Facades\Converter;
-use GetCandy\Console\Commands\AddonsDiscover;
-use GetCandy\Console\Commands\Import\AddressData;
-use GetCandy\Console\Commands\MeilisearchSetup;
-use GetCandy\Console\Commands\ScoutIndexer;
-use GetCandy\Console\InstallGetCandy;
-use GetCandy\GetCandyServiceProvider as VendorGetCandyServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Str;
+use Lunar\Console\Commands\AddonsDiscover;
+use Lunar\Console\Commands\Import\AddressData;
+use Lunar\Console\Commands\MigrateGetCandy;
+use Lunar\Console\Commands\ScoutIndexer;
+use Lunar\Console\InstallLunar;
+use Lunar\LunarServiceProvider as VendorLunarServiceProvider;
 
-class GetCandyServiceProvider extends VendorGetCandyServiceProvider
+class LunarServiceProvider extends VendorLunarServiceProvider
 {
     public function boot(): void
     {
         //$this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         Relation::morphMap([
-            'product_type' => GetCandy\Models\ProductType::class,
-            //'order' => GetCandy\Models\Order::class,
+            'product_type' => Lunar\Models\ProductType::class,
+            //'order' => Lunar\Models\Order::class,
         ]);
 
         $this->registerObservers();
         $this->registerBlueprintMacros();
-
-        if (!$this->app->environment('testing')) {
-            $this->registerStateListeners();
-        }
+        $this->registerStateListeners();
 
         if ($this->app->runningInConsole()) {
             collect($this->configFiles)->each(function ($config) {
                 $this->publishes([
-                    "{$this->root}/config/$config.php" => config_path("getcandy/$config.php"),
-                ], 'getcandy');
+                    "{$this->root}/config/$config.php" => config_path("lunar/$config.php"),
+                ], 'lunar');
             });
 
             $this->publishes([
-                base_path('vendor/getcandy/core/database/migrations/') => database_path('migrations'),
-            ], 'getcandy-migrations');
+                __DIR__.'/../database/migrations/' => database_path('migrations'),
+            ], 'lunar.migrations');
 
             $this->commands([
-                InstallGetCandy::class,
+                InstallLunar::class,
                 AddonsDiscover::class,
-                MeilisearchSetup::class,
                 AddressData::class,
                 ScoutIndexer::class,
+                MigrateGetCandy::class,
             ]);
         }
 
-        Arr::macro('permutate', [\GetCandy\Utils\Arr::class, 'permutate']);
+        Arr::macro('permutate', [\Lunar\Utils\Arr::class, 'permutate']);
 
         // Handle generator
         Str::macro('handle', function ($string) {
@@ -60,7 +57,7 @@ class GetCandyServiceProvider extends VendorGetCandyServiceProvider
         });
 
         Converter::setMeasurements(
-            config('getcandy.shipping.measurements', [])
+            config('lunar.shipping.measurements', [])
         );
 
         Event::listen(

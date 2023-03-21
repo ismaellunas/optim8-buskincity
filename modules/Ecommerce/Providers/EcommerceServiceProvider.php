@@ -4,8 +4,8 @@ namespace Modules\Ecommerce\Providers;
 
 use App\Models\User;
 use App\Services\MediaService;
-use GetCandy\Base\OrderReferenceGenerator;
-use GetCandy\Base\OrderReferenceGeneratorInterface;
+use Lunar\Base\OrderReferenceGenerator;
+use Lunar\Base\OrderReferenceGeneratorInterface;
 use Illuminate\Support\ServiceProvider;
 use Modules\Ecommerce\Entities\Product;
 use Modules\Ecommerce\Services\OrderService;
