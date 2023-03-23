@@ -2,18 +2,13 @@
 
 namespace Modules\Space\Services;
 
-use App\Contracts\MediaStorageInterface as MediaStorage;
-use App\Models\Media;
 use App\Models\User;
 use App\Services\GlobalOptionService;
-use App\Services\MediaService;
 use App\Services\MenuService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Kalnoy\Nestedset\Collection as NestedSetCollection;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\Space;
@@ -21,13 +16,6 @@ use Modules\Space\ModuleService;
 
 class SpaceService
 {
-    private $mediaService;
-
-    public function __construct(MediaService $mediaService)
-    {
-        $this->mediaService = $mediaService;
-    }
-
     private function conditionsBuilder(
         ?array $ids = null,
         array $scopes = null,
@@ -58,12 +46,6 @@ class SpaceService
         int $perPage = 15
     ): LengthAwarePaginator {
         $columnNames = ['id', 'name', 'parent_id', 'type_id', '_lft', '_rgt'];
-
-        $spaces = null;
-
-        if ($ids) {
-            $spaces = Space::select('id', '_lft', '_rgt')->whereIn('id', $ids)->get();
-        }
 
         $records = $this
             ->conditionsBuilder($ids, $scopes)
