@@ -322,7 +322,17 @@ class SpaceService
                 'is_page_enabled',
             ])
             ->withStructuredUrl([currentLocale(), defaultLocale()])
-            ->with(['translations'])
+            ->with([
+                'translations',
+                'logoMedia' => function ($query) {
+                    $query->select([
+                        'extension',
+                        'file_name',
+                        'file_url',
+                        'version',
+                    ]);
+                },
+            ])
             ->orderBy('name', 'asc')
             ->get();
     }
