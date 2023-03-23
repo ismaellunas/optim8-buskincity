@@ -15,7 +15,7 @@
         name: 'PostGallery',
 
         props: {
-            records: {},
+            records: { type: Array, required: true },
             class: { type: [Array, String, Object], default: () => ['column','is-3']},
         },
     };

@@ -2,18 +2,13 @@
 
 namespace Modules\Space\Services;
 
-use App\Contracts\MediaStorageInterface as MediaStorage;
-use App\Models\Media;
 use App\Models\User;
 use App\Services\GlobalOptionService;
-use App\Services\MediaService;
 use App\Services\MenuService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use Kalnoy\Nestedset\Collection as NestedSetCollection;
 use Modules\Space\Entities\Page;
 use Modules\Space\Entities\Space;
@@ -21,13 +16,6 @@ use Modules\Space\ModuleService;
 
 class SpaceService
 {
-    private $mediaService;
-
-    public function __construct(MediaService $mediaService)
-    {
-        $this->mediaService = $mediaService;
-    }
-
     private function conditionsBuilder(
         ?array $ids = null,
         array $scopes = null,
@@ -58,12 +46,6 @@ class SpaceService
         int $perPage = 15
     ): LengthAwarePaginator {
         $columnNames = ['id', 'name', 'parent_id', 'type_id', '_lft', '_rgt'];
-
-        $spaces = null;
-
-        if ($ids) {
-            $spaces = Space::select('id', '_lft', '_rgt')->whereIn('id', $ids)->get();
-        }
 
         $records = $this
             ->conditionsBuilder($ids, $scopes)
@@ -267,7 +249,7 @@ class SpaceService
 
     private function detachLogo(Space $space): void
     {
-        $logoMediaId = $space->logo_media_id;
+        $logoMediaId = $space->logo->id ?? null;
 
         if ($logoMediaId) {
             $space->detachMedia($logoMediaId);
@@ -276,7 +258,7 @@ class SpaceService
 
     private function detachCover(Space $space): void
     {
-        $coverMediaId = $space->cover_media_id;
+        $coverMediaId = $space->cover->id ?? null;
 
         if ($coverMediaId) {
             $space->detachMedia($coverMediaId);
@@ -288,11 +270,10 @@ class SpaceService
         $this->detachLogo($space);
 
         if ($mediaId) {
-            $space->media()->attach($mediaId);
+            $space->media()->attach($mediaId, [
+                'type' => Space::TYPE_LOGO
+            ]);
         }
-
-        $space->logo_media_id = $mediaId;
-        $space->save();
     }
 
     public function replaceCover(Space $space, ?int $mediaId = null): void
@@ -300,11 +281,10 @@ class SpaceService
         $this->detachCover($space);
 
         if ($mediaId) {
-            $space->media()->attach($mediaId);
+            $space->media()->attach($mediaId, [
+                'type' => Space::TYPE_COVER
+            ]);
         }
-
-        $space->cover_media_id = $mediaId;
-        $space->save();
     }
 
     public function removeAllMedia(array $spaces): void
@@ -337,14 +317,22 @@ class SpaceService
             ->select([
                 'id',
                 'name',
-                'logo_media_id',
-                'cover_media_id',
                 'page_id',
                 'parent_id',
                 'is_page_enabled',
             ])
             ->withStructuredUrl([currentLocale(), defaultLocale()])
-            ->with(['translations'])
+            ->with([
+                'translations',
+                'logoMedia' => function ($query) {
+                    $query->select([
+                        'extension',
+                        'file_name',
+                        'file_url',
+                        'version',
+                    ]);
+                },
+            ])
             ->orderBy('name', 'asc')
             ->get();
     }

@@ -28,20 +28,6 @@ class CreateSpacesTable extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('set null');
 
-            $table
-                ->foreignId('logo_media_id')
-                ->nullable()
-                ->constrained('media')
-                ->onUpdate('cascade')
-                ->onDelete('set null');
-
-            $table
-                ->foreignId('cover_media_id')
-                ->nullable()
-                ->constrained('media')
-                ->onUpdate('cascade')
-                ->onDelete('set null');
-
             $table->foreignId('page_id')
                 ->nullable()
                 ->constrained('pages')

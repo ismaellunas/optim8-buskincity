@@ -14,6 +14,7 @@ export default defineConfig((command, mode) => {
     ];
 
     const env = loadEnv(mode, process.cwd(), '');
+    const hostUrl = new URL(`${env.APP_URL}`);
 
     input.push(`themes/${env.THEME_ACTIVE}/js/app.js`);
     input.push(`themes/${env.THEME_ACTIVE}/sass/app.sass`);
@@ -41,6 +42,11 @@ export default defineConfig((command, mode) => {
                 '@mod': '/modules',
                 '@booking': '/modules/Booking/Resources/assets/js',
                 '@formbuilder': '/modules/FormBuilder/Resources/assets/js',
+            },
+        },
+        server: {
+            hmr: {
+                host: hostUrl.hostname,
             },
         },
     };
