@@ -2,13 +2,10 @@
 
 namespace Modules\Ecommerce\Providers;
 
-//use Lunar\Console\Commands\MigrateGetCandy;
-//use Lunar\Database\State\EnsureMediaCollectionsAreRenamed;
 use Cartalyst\Converter\Laravel\Facades\Converter;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Lunar\Console\Commands\AddonsDiscover;
 use Lunar\Console\Commands\Import\AddressData;
@@ -19,7 +16,6 @@ use Lunar\Database\State\EnsureBrandsAreUpgraded;
 use Lunar\Database\State\EnsureDefaultTaxClassExists;
 use Lunar\LunarServiceProvider as VendorLunarServiceProvider;
 use Modules\Ecommerce\Console\MigrateGetCandy;
-use Nwidart\Modules\Facades\Module;
 
 class LunarServiceProvider extends VendorLunarServiceProvider
 {
