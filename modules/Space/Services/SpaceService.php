@@ -249,7 +249,7 @@ class SpaceService
 
     private function detachLogo(Space $space): void
     {
-        $logoMediaId = $space->logoMedia->id ?? null;
+        $logoMediaId = $space->logo->id ?? null;
 
         if ($logoMediaId) {
             $space->detachMedia($logoMediaId);
@@ -258,7 +258,7 @@ class SpaceService
 
     private function detachCover(Space $space): void
     {
-        $coverMediaId = $space->coverMedia->id ?? null;
+        $coverMediaId = $space->cover->id ?? null;
 
         if ($coverMediaId) {
             $space->detachMedia($coverMediaId);

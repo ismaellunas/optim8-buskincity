@@ -203,12 +203,12 @@ class SpaceController extends CrudController
 
         $canChangeParent = $user->can('changeParent', $space);
 
-        $coverMedia = $space->coverMedia;
+        $coverMedia = $space->cover;
         if ($coverMedia) {
             $this->transformMedia($coverMedia);
         }
 
-        $logoMedia = $space->logoMedia;
+        $logoMedia = $space->logo;
         if ($logoMedia) {
             $this->transformMedia($logoMedia);
         }
