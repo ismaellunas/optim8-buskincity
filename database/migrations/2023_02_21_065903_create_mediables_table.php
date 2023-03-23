@@ -20,6 +20,7 @@ return new class extends Migration
                 ->constrained('media')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->string('type', 64)->nullable();
 
             $table->timestamps();
         });
