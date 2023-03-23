@@ -2,23 +2,30 @@
 
 namespace Modules\Ecommerce\Providers;
 
+//use Lunar\Console\Commands\MigrateGetCandy;
+//use Lunar\Database\State\EnsureMediaCollectionsAreRenamed;
 use Cartalyst\Converter\Laravel\Facades\Converter;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Lunar\Console\Commands\AddonsDiscover;
 use Lunar\Console\Commands\Import\AddressData;
-use Lunar\Console\Commands\MigrateGetCandy;
 use Lunar\Console\Commands\ScoutIndexer;
 use Lunar\Console\InstallLunar;
+use Lunar\Database\State\ConvertProductTypeAttributesToProducts;
+use Lunar\Database\State\EnsureBrandsAreUpgraded;
+use Lunar\Database\State\EnsureDefaultTaxClassExists;
 use Lunar\LunarServiceProvider as VendorLunarServiceProvider;
+use Modules\Ecommerce\Console\MigrateGetCandy;
+use Nwidart\Modules\Facades\Module;
 
 class LunarServiceProvider extends VendorLunarServiceProvider
 {
     public function boot(): void
     {
-        //$this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(module_path('Ecommerce', 'Database/Migrations/lunar'));
 
         Relation::morphMap([
             'product_type' => Lunar\Models\ProductType::class,
@@ -69,5 +76,29 @@ class LunarServiceProvider extends VendorLunarServiceProvider
             Logout::class,
             [CartSessionAuthListener::class, 'logout']
         );
+    }
+
+    protected function registerStateListeners()
+    {
+        $states = [
+            ConvertProductTypeAttributesToProducts::class,
+            EnsureDefaultTaxClassExists::class,
+            EnsureBrandsAreUpgraded::class,
+            //EnsureMediaCollectionsAreRenamed::class,
+        ];
+
+        foreach ($states as $state) {
+            $class = new $state;
+
+            Event::listen(
+                [MigrationsStarted::class],
+                [$class, 'prepare']
+            );
+
+            Event::listen(
+                [MigrationsEnded::class, NoPendingMigrations::class],
+                [$class, 'run']
+            );
+        }
     }
 }
