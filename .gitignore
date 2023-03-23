@@ -6,6 +6,7 @@
 .env
 .env.backup
 .env.deploy
+.env.dusk.local
 .env.sail
 .env.testing
 .phpunit.result.cache

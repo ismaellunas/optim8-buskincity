@@ -3,11 +3,18 @@ import './bootstrap';
 // Import modules...
 import { appName } from '@/Libs/defaults';
 import { createApp, h } from 'vue';
-import { createInertiaApp } from '@inertiajs/vue3'
+import { createInertiaApp, router } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import VueSweetalert2 from 'vue-sweetalert2';
 import VueLoading from 'vue-loading-overlay';
 import VueSocialSharing from 'vue-social-sharing'
+
+window.inertiaEventsCount = {
+    navigateCount: 0,
+    successCount: 0,
+    errorCount: 0,
+    isDebug: true,
+};
 
 createInertiaApp({
     title: title => `${title} | ${appName}`,
@@ -56,3 +63,22 @@ createInertiaApp({
             .mount(el)
     },
 })
+
+router.on('success', (event) => {
+    window.inertiaEventsCount.successCount++;
+    if (window.inertiaEventsCount.isDebug) {
+        console.log(`Successfully made a visit to ${event.detail.page.url}`)
+    }
+});
+router.on('error', (errors) => {
+    window.inertiaEventsCount.errorCount++;
+    if (window.inertiaEventsCount.isDebug) {
+        console.log(errors)
+    }
+});
+router.on('navigate', (event) => {
+    window.inertiaEventsCount.navigateCount++;
+    if (window.inertiaEventsCount.isDebug) {
+        console.log(`Navigated to ${event.detail.page.url}`);
+    }
+});

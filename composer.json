@@ -49,12 +49,14 @@
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
-        "spatie/laravel-ignition": "^1.0",
+        "laravel/dusk": "^7.7",
         "laravel/envoy": "^2.7",
         "laravel/sail": "^1.12",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.3.3"
+        "phpunit/phpunit": "^9.3.3",
+        "protonemedia/inertiajs-events-laravel-dusk": "^1.3",
+        "spatie/laravel-ignition": "^1.0"
     },
     "autoload": {
         "files": [
