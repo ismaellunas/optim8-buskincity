@@ -36,12 +36,12 @@ class ApiWidgetController extends Controller
             'options' => [
                 'status' => $this->orderService->statusOptions(
                     auth()->user(),
-                    $scopes->only('city')->all(),
+                    $scopes->except('inStatus')->all(),
                     __('Status')
                 ),
                 'location' => $this->orderService->getLocationOptions(
                     auth()->user(),
-                    $scopes->only('inStatus')->all(),
+                    $scopes->except('city', 'country')->all(),
                 ),
             ],
         ];

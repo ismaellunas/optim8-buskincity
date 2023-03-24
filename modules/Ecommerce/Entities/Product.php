@@ -105,7 +105,7 @@ class Product extends GetCandyProduct
     {
         return $query->whereHas('metas', function ($q) use ($city) {
             $q->where('key', 'locations');
-            $q->where(DB::raw("value::json->0->>'city'"), $city);
+            $q->where(DB::raw("value::json->0->>'city'"), "ILIKE", $city);
         });
     }
 
@@ -113,7 +113,7 @@ class Product extends GetCandyProduct
     {
         return $query->whereHas('metas', function ($q) use ($country) {
             $q->where('key', 'locations');
-            $q->where(DB::raw("value::json->0->>'country_code'"), $country);
+            $q->where(DB::raw("value::json->0->>'country_code'"), "ILIKE", $country);
         });
     }
 

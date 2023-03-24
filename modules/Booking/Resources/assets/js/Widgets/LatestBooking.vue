@@ -280,7 +280,6 @@
                     })
                     .then(() => {
                         self.isLoading = false;
-                        self.filteredCities = self.filterCities();
                     });
             },
 
