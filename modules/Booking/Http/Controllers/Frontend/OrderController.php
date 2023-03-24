@@ -46,6 +46,7 @@ class OrderController extends CrudController
                 'order' => $request->order,
             ],
             'city' => $request->city ?? null,
+            'country' => $request->country ?? null,
         ]);
 
         if (is_array($request->dates) && !empty(array_filter($request->dates))) {
@@ -62,6 +63,7 @@ class OrderController extends CrudController
             'pageQueryParams' => array_filter(
                 $request->only(
                     'city',
+                    'country',
                     'column',
                     'dates',
                     'order',
@@ -69,9 +71,9 @@ class OrderController extends CrudController
                     'term'
                 )
             ),
-            'cityOptions' => $this->orderService->cityOptions(
-                $user,
-                $scopes->only('inStatus')->all()
+            'locationOptions' => $this->orderService->getLocationOptions(
+                auth()->user(),
+                $scopes->except('city', 'country')->all(),
             ),
             'statusOptions' => $this->orderService->statusOptions(
                 $user,

@@ -204,7 +204,7 @@ class OrderService
                         ->setTimezone($event->schedule->timezone)
                         ->format('H:i')
                     : null,
-                'city' => $product->locations[0]['city'] ?? null,
+                'location' => $product->location,
                 'can' => [
                     'cancel' => $user->can('cancelBooking', $record),
                     'reschedule' => $user->can('rescheduleBooking', $record),
