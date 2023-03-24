@@ -13,7 +13,7 @@ window.inertiaEventsCount = {
     navigateCount: 0,
     successCount: 0,
     errorCount: 0,
-    isDebug: true,
+    isDebug: false,
 };
 
 createInertiaApp({
