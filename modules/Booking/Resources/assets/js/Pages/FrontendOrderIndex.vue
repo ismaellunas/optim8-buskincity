@@ -70,8 +70,8 @@
                     </biz-table-column-sort>
                     <biz-table-column-sort
                         :order="order"
-                        :is-sorted="column == 'city'"
-                        @click="orderColumn('city')"
+                        :is-sorted="column == 'location'"
+                        @click="orderColumn('location')"
                     >
                         Location
                     </biz-table-column-sort>
