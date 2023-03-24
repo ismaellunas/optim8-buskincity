@@ -4,8 +4,9 @@ namespace App\Models;
 
 use App\Helpers\Url;
 use App\Models\{
+    Media,
+    PageTranslation,
     User,
-    PageTranslation
 };
 use App\Services\{
     PageService,
@@ -94,7 +95,12 @@ class Page extends Model implements TranslatableContract
                     ->pluck('id')
                     ->all();
 
-                $pageTranslation->syncMedia($mediaIds);
+                $mediaIdExists = Media::whereIn('id', $mediaIds)
+                    ->get()
+                    ->pluck('id')
+                    ->all();
+
+                $pageTranslation->syncMedia($mediaIdExists);
             }
         }
     }

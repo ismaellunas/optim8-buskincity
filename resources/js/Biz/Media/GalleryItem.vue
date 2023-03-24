@@ -1,5 +1,8 @@
 <template>
-    <div class="card card-equal-height">
+    <div
+        class="card card-equal-height"
+        :class="cardClasses"
+    >
         <div class="card-image px-2 pt-2 has-text-centered">
             <biz-image
                 v-if="isImage"
@@ -71,33 +74,59 @@
     import BizButtonDownload from '@/Biz/ButtonDownload.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizImage from '@/Biz/Image.vue';
+    import { isEmpty } from 'lodash';
 
     export default {
         name: 'MediaGalleryItem',
+
         components: {
             BizButtonDownload,
             BizButtonIcon,
             BizImage,
         },
+
         mixins: [
             MixinMediaItem,
         ],
+
+        inject: {
+            selectedMedia: { default: () => {} }
+        },
+
         props: {
             isDeleteEnabled: { type: Boolean, default: true },
             isDownloadEnabled: { type: Boolean, default: true },
             isEditEnabled: { type: Boolean, default: true },
             isPreviewEnabled: { type: Boolean, default: true },
+            isSelectEnabled: { type: Boolean, default: true },
             medium: { type: Object, default: () => {}},
         },
+
         emits: [
             'on-delete-clicked',
             'on-edit-clicked',
             'on-preview-clicked',
         ],
+
         data() {
             return {
                 actionClass: "card-footer-item p-2 is-borderless is-shadowless is-inverted",
             };
+        },
+
+        computed: {
+            cardClasses() {
+                if (
+                    !isEmpty(this.selectedMedia)
+                    && this.isSelectEnabled
+                ) {
+                    return {
+                        'selected': this.selectedMedia.mediaIds.includes(this.medium.id),
+                    };
+                }
+
+                return {};
+            },
         },
     }
 </script>

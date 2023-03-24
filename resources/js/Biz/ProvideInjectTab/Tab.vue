@@ -12,6 +12,7 @@
         props: {
             title: { type: String, required: true },
             isRendered: {type: Boolean, default: true },
+            tabId: { type: String, default: ''},
         },
         setup(props) {
             const instance = getCurrentInstance();

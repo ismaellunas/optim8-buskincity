@@ -2,7 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class CreateUsersTable extends Migration
 {
@@ -37,6 +39,10 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        if (! Str::startsWith(config('database.default'), 'pgsql')) {
+            Schema::dropIfExists('users');
+        } else {
+            DB::statement("DROP TABLE IF EXISTS users CASCADE");
+        }
     }
 }

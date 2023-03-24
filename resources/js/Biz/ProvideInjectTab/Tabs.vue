@@ -8,6 +8,7 @@
                 >
                     <li
                         v-if="tab.props.isRendered"
+                        :id="tab.props.tabId"
                         :class="active === i ? 'is-active' : ''"
                         @click="selectTab(i)"
                     >

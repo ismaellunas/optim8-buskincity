@@ -5,6 +5,7 @@
                 <biz-form-input
                     v-model="computedTitle"
                     label="Title"
+                    name="title"
                     placeholder="e.g A Good News"
                     required
                     :disabled="disableInput"
@@ -17,6 +18,7 @@
                 <biz-form-slug
                     v-model="computedSlug"
                     label="Slug"
+                    name="slug"
                     :disabled="disableInput"
                     :message="error(selectedLocale+'.slug')"
                 />
@@ -26,6 +28,7 @@
                     v-model="computedStatus"
                     class="is-fullwidth"
                     label="Status"
+                    name="status"
                     :disabled="disableInput"
                     :message="error(selectedLocale+'.status')"
                 >

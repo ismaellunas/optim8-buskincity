@@ -1,5 +1,5 @@
 <template>
-    <tr>
+    <tr :class="trClasses">
         <td>
             <biz-image
                 v-if="medium.is_image"
@@ -67,40 +67,65 @@
     import BizButtonDownload from '@/Biz/ButtonDownload.vue';
     import BizButtonIcon from '@/Biz/ButtonIcon.vue';
     import BizImage from '@/Biz/Image.vue';
+    import { isEmpty } from 'lodash';
 
     export default {
         name: 'MediaListItem',
+
         components: {
             BizButtonDownload,
             BizButtonIcon,
             BizImage,
         },
+
         mixins: [
             MixinMediaItem,
         ],
+
+        inject: {
+            selectedMedia: { default: () => {} }
+        },
+
         props: {
             isDeleteEnabled: {type: Boolean, default: true},
             isDownloadEnabled: {type: Boolean, default: true},
             isEditEnabled: {type: Boolean, default: true},
             isPreviewEnabled: {type: Boolean, default: true},
-            medium: Object,
+            isSelectEnabled: { type: Boolean, default: true },
+            medium: { type: Object, default: () => {}},
         },
+
         emits: [
             'on-delete-clicked',
             'on-edit-clicked',
             'on-preview-clicked',
         ],
+
         data() {
             return {
                 actionClass: "is-borderless is-shadowless is-inverted",
             };
         },
+
         computed: {
             type() {
                 if (this.isImage) {
                     return 'Image';
                 }
                 return 'File';
+            },
+
+            trClasses() {
+                if (
+                    !isEmpty(this.selectedMedia)
+                    && this.isSelectEnabled
+                ) {
+                    return {
+                        'selected': this.selectedMedia.mediaIds.includes(this.medium.id),
+                    };
+                }
+
+                return {};
             },
         },
     }
