@@ -20,6 +20,7 @@ class ApiWidgetController extends Controller
         $scopes = collect([
             'inStatus' => $request->status ? [$request->status] : null,
             'city' => $request->city ?? null,
+            'country' => $request->country ?? null,
         ]);
 
         if (is_array($request->dates) && !empty(array_filter($request->dates))) {
@@ -38,7 +39,7 @@ class ApiWidgetController extends Controller
                     $scopes->only('city')->all(),
                     __('Status')
                 ),
-                'city' => $this->orderService->cityOptions(
+                'location' => $this->orderService->getLocationOptions(
                     auth()->user(),
                     $scopes->only('inStatus')->all(),
                 ),
