@@ -4,27 +4,31 @@
             v-model="activeTab"
             class="is-boxed"
         >
-            <biz-provide-inject-tab title="Email">
+            <biz-provide-inject-tab
+                title="Email"
+                tab-id="email-tab-trigger"
+            >
                 <form
+                    id="email-form"
                     method="post"
                     @submit.prevent="submit"
                 >
                     <biz-form-text-editor
                         v-model="form.email_new_booking"
                         height="200"
-                        label="New Booking"
+                        label="New booking"
                         mode="email"
                     />
                     <biz-form-text-editor
                         v-model="form.email_reminder"
                         height="200"
-                        label="Booking Reminder"
+                        label="Booking reminder"
                         mode="email"
                     />
                     <biz-form-text-editor
                         v-model="form.email_cancellation"
                         height="200"
-                        label="Booking Cancellation"
+                        label="Booking cancellation"
                         mode="email"
                     />
 
@@ -38,8 +42,12 @@
                 </form>
             </biz-provide-inject-tab>
 
-            <biz-provide-inject-tab title="Check In">
+            <biz-provide-inject-tab
+                title="Check In"
+                tab-id="check-in-tab-trigger"
+            >
                 <form
+                    id="check-in-form"
                     method="post"
                     @submit.prevent="submit"
                 >
@@ -47,7 +55,7 @@
                         <div class="column is-6">
                             <biz-form-select
                                 v-model="form.allowed_early_check_in"
-                                label="Available Check In before"
+                                label="Available check in before"
                                 :message="error('duration')"
                                 has-addons
                                 is-fullwidth

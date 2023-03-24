@@ -13,12 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('admin/ecommerce')->name('admin.ecommerce.')->middleware([
+Route::prefix('admin/ecommerce')->name('admin.ecommerce.')->middleware(array_filter([
     'auth:sanctum',
-    'verified',
     'can:system.dashboard',
-    'ensureLoginFromAdminLoginRoute',
-])->group(function () {
+    env('MID_ENSURE_HOME_ENABLED', true) ? 'ensureLoginFromAdminLoginRoute' : null,
+]))->group(function () {
     Route::prefix('products')->name('products.')->group(function() {
         Route::middleware('can:manageManager,Modules\Ecommerce\Entities\Product')->group(function () {
             Route::get('{product}/managers/search', 'ProductManagerController@search')

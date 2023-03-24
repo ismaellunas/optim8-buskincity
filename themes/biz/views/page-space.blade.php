@@ -62,7 +62,7 @@
                         @endif
                     </div>
 
-                    <h1 class="title is-2 mt-5 mb-2">{{ $eventTitleSection ?? __('Events') }}</h1>
+                    <h1 class="title is-2 mt-5 mb-2">{{ __('Upcoming Events') }}</h1>
 
                     <div class="columns mt-3">
                         <div class="column">

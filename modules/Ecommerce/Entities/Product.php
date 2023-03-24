@@ -154,6 +154,20 @@ class Product extends GetCandyProduct
         return $this->translateAttribute('description', config('app.locale'));
     }
 
+    public function syncMedia(array $mediaIds = []): void
+    {
+        $mediaIds = collect($mediaIds)
+            ->filter()
+            ->map(fn($mediaId) => (int)$mediaId)
+            ->all();
+
+        if (!empty($mediaIds)) {
+            $this->gallery()->sync($mediaIds);
+        } else {
+            $this->detachGallery();
+        }
+    }
+
     public function detachGallery(?int $mediaId = null): void
     {
         $this->gallery()->detach($mediaId);

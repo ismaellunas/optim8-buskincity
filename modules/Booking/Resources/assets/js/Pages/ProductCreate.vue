@@ -11,6 +11,7 @@
                     <product-form
                         v-model="form"
                         :image-mimes="imageMimes"
+                        :instructions="instructions"
                         :role-options="roleOptions"
                         :rules="rules"
                         :status-options="statusOptions"
@@ -67,10 +68,11 @@
 
         props: {
             baseRouteName: {type: String, required: true},
-            roleOptions: { type: Array, required: true },
-            statusOptions: { type: Array, required: true },
             imageMimes: {type: Array, required: true },
+            instructions: {type: Object, default: () => {}},
+            roleOptions: { type: Array, required: true },
             rules: { type: Object, required: true },
+            statusOptions: { type: Array, required: true },
         },
 
         setup(props, { emit }) {
@@ -81,10 +83,7 @@
                 short_description: null,
                 roles: null,
                 is_check_in_required: false,
-                gallery: {
-                    deleted_media: [],
-                    files: [],
-                },
+                gallery: [],
             };
 
             return {

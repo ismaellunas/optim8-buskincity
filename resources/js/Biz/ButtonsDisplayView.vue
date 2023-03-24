@@ -4,18 +4,20 @@
         class="buttons"
     >
         <biz-button-icon
-            :icon="iconGrid"
+            class="gallery-view-button"
             title="Gallery View"
             type="button"
             :class="{'is-primary': view === 'gallery'}"
+            :icon="iconGrid"
             @click="setView('gallery')"
         />
 
         <biz-button-icon
-            :icon="iconList"
+            class="list-view-button"
             title="List View"
             type="button"
             :class="{'is-primary': view === 'list'}"
+            :icon="iconList"
             @click="setView('list')"
         />
     </component>
