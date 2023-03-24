@@ -86,7 +86,7 @@
                                     <th>User</th>
                                     <th>Date</th>
                                     <th>Time</th>
-                                    <th>City</th>
+                                    <th>Location</th>
                                     <th>&nbsp;</th>
                                 </tr>
                             </thead>
@@ -116,7 +116,7 @@
                                         <td>{{ record.customer_name }}</td>
                                         <td>{{ record.date }}</td>
                                         <td>{{ record.start_end_time }}</td>
-                                        <td>{{ record.city ?? '-' }}</td>
+                                        <td>{{ record.location ?? '-' }}</td>
                                         <td>
                                             <biz-button-link
                                                 v-if="record.can.read"

@@ -4,6 +4,7 @@ namespace Modules\Ecommerce\Entities;
 
 use App\Models\Media;
 use App\Models\User;
+use App\Services\CountryService;
 use GetCandy\FieldTypes\TranslatedText;
 use GetCandy\Models\Product as GetCandyProduct;
 use Illuminate\Support\Arr;
@@ -179,5 +180,21 @@ class Product extends GetCandyProduct
     public function detachGallery(?int $mediaId = null): void
     {
         $this->gallery()->detach($mediaId);
+    }
+
+    public function getLocationAttribute()
+    {
+        $city = $this->locations[0]['city'] ?? null;
+        $countryCode = $this->locations[0]['country_code'] ?? null;
+
+        if ($countryCode) {
+            $countryName = app(CountryService::class)->getCountryName($countryCode);
+
+            return $countryName
+                ? $countryName . ($city ? ', ' . $city : null)
+                : null;
+        }
+
+        return null;
     }
 }
