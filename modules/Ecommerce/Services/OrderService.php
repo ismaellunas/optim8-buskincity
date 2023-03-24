@@ -2,6 +2,7 @@
 
 namespace Modules\Ecommerce\Services;
 
+use App\Models\Country;
 use App\Models\User;
 use App\Services\CountryService;
 use Carbon\Carbon;
@@ -15,6 +16,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Booking\Entities\Event;
 use Modules\Booking\Entities\Scopes\WithBookingCityScope;
+use Modules\Booking\Entities\Scopes\WithBookingLocationScope;
 use Modules\Booking\Entities\Scopes\WithBookingStatusScope;
 use Modules\Booking\Enums\BookingStatus;
 use Modules\Booking\Services\ProductEventService;
@@ -71,7 +73,7 @@ class OrderService
                                     $query->$scopeName($value);
                                 }
                             );
-                        } elseif ($scopeName == 'city') {
+                        } elseif ($scopeName == 'city' || $scopeName == 'country') {
                             $query->whereHas(
                                 'firstEventLine.purchasable.product',
                                 function (Builder $query) use ($scopeName, $value) {
@@ -221,7 +223,7 @@ class OrderService
             return (object) [
                 'id' => $record->id,
                 'product_name' => $product->displayName,
-                'city' => $product->locations[0]['city'] ?? null,
+                'location' => $product->location,
                 'customer_name' => $record->user->fullName ?? null,
                 'status' => Str::title($record->booking_status),
                 'start_end_time' => $event->displayStartEndTime,
@@ -462,5 +464,49 @@ class OrderService
             ->filter();
 
         return $options;
+    }
+
+    public function getLocationOptions(
+        User $user,
+        ?array $scopes = null
+    ): Array {
+        $locations = $this
+            ->conditionsBuilder($user, null, $scopes)
+            ->scoped(new WithBookingLocationScope())
+            ->get()
+            ->map(function ($order) {
+                $location = collect(json_decode($order->location, true));
+
+                return $location->only(['country_code', 'city'])
+                    ->all();
+            })
+            ->unique()
+            ->values()
+            ->mapToGroups(function ($location) {
+                return [$location['country_code'] => $location['city']];
+            });
+
+        $countries = collect();
+
+        if ($locations->keys()->isNotEmpty()) {
+            $countries = Country::
+                whereIn('alpha2', $locations->keys())
+                ->get([
+                    'alpha2',
+                    'display_name',
+                ]);
+        }
+
+        return $locations->transform(function ($location, $key) use ($countries) {
+            return [
+                'country_code' => $key,
+                'country' => $countries->where('alpha2', $key)->first()->display_name ?? '',
+                'cities' => collect($location)
+                    ->map(fn ($value) => trim($value))
+                    ->filter()
+                    ->unique()
+                    ->all(),
+            ];
+        })->all();
     }
 }
